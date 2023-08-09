@@ -48,6 +48,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { CurrentUser } from '@services/system-user.types';
 import {
     CameraStatus,
     NxSystemCamera,
@@ -184,7 +185,7 @@ export class NxLayoutViewComponent {
 
     layoutItemLookup$ = this.selectedSystem$.pipe(
         switchMap(system => this.updateLayoutItems$.pipe(map(() => system))),
-        switchMap(({ mediaserver, serverManager, cameraManager, userManager }) =>
+        switchMap(({ mediaserver, serverManager, cameraManager, permissionManager }) =>
             combineLatest([
                 defer(() => cameraManager.getCameras()).pipe(
                     switchMap(cameras =>
@@ -207,10 +208,7 @@ export class NxLayoutViewComponent {
                     : Promise.resolve([] as WebPages),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.availableLayouts$.pipe(startWith([])),
-                userManager.getUsersDataFromTheSystem().then(() => {
-                    const { currentOwner, currentUser } = userManager;
-                    return { currentUser, currentOwner };
-                }),
+                new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser())),
             ]),
         ),
         map(
@@ -220,7 +218,7 @@ export class NxLayoutViewComponent {
                 webPages,
                 currentLayout,
                 layouts,
-                { currentUser, currentOwner },
+                currentUser,
             ]): LayoutResourceTree => {
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
 
