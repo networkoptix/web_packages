@@ -1,5 +1,5 @@
 from selenium import webdriver
-from resource_import import get_headless_chrome, get_random_email, activate
+from resource_import import get_headless_chrome, get_random_email, activate, register_account, register_and_activate_account
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from test_account import cloud_login
@@ -198,6 +198,28 @@ def privacy_policy_in_new_page():
     robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
     driver.close()
 
+def cant_register_email_already_registered():
+    """19. Cannot register email that is already registered"""
+    email = get_random_email()
+    register_account("mark", "hamill", email, rb.BASE_PASSWORD)
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    register_form.account_already_exists_error()
+    driver.close()
+
+def cant_register_email_already_activated():
+    """20. Cannot register email that is already activated"""
+    email = get_random_email()
+    driver = get_headless_chrome()
+    register_and_activate_account(driver, "mark", "hamill", email, rb.BASE_PASSWORD)
+    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    register_form.account_already_exists_error()
+    driver.close()
+
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
     print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t\t\t{Fore.GREEN}| PASS |')
@@ -231,3 +253,9 @@ if __name__ == "__main__":
 
     privacy_policy_in_new_page()
     print(f'{Fore.WHITE}{privacy_policy_in_new_page.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    cant_register_email_already_registered()
+    print(f'{Fore.WHITE}{cant_register_email_already_registered.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    cant_register_email_already_activated()
+    print(f'{Fore.WHITE}{cant_register_email_already_activated.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')

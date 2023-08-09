@@ -62,6 +62,9 @@ class RegisterForm:
     
     def password_special_chars_error(self):
         return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_SPECIAL_CHARS_TEXT}')]", time_out=.5)
+    
+    def account_already_exists_error(self):
+        return Element(self.driver, f"//p[contains(@class,'error-label') and contains(text(),'{self.rb.ACCOUNT_ALREADY_EXISTS}')]", time_out=.5)
 
     def password_is_weak_error(self):
         return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]", time_out=.5)
