@@ -117,12 +117,35 @@ def search_highlights_owner_name():
     sys_page.update_system_tiles()
     assert "highlighted" in sys_page.tiles[0].owner().find_element_by_xpath(".//nx-search-highlight/span").get_attribute("class")
 
+    robot_keywords.close_browser(driver)
+    print("pass")
+
+def search_is_cleared_by_x_button():
+    driver = get_headless_chrome()
+
+    robot_keywords.go_to_url(driver, ENV + "/systems")
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    HeaderNav(driver).account_dropdown()
+
+    sys_page = SystemsPage(driver)
+    sys_page.search_bar().input_text(SERVERS[0]['name'])
+    assert sys_page.systems_found(1).in_dom, \
+        "System tiles not found or incorrect number of tiles."
+    sys_page.search_x_button().click()
+    time.sleep(1)
+    sys_page.update_system_tiles()
+    assert len(sys_page.tiles) == 9, \
+        "9 tiles were not present."
+
+    robot_keywords.close_browser(driver)
     print("pass")
 
 
 if __name__ == "__main__":
-    system_tiles_represent_actual_information()
-    no_systems_connected()
-    search_highlights_system_name()
-    search_highlights_owner_name()
+    # system_tiles_represent_actual_information()
+    # no_systems_connected()
+    # search_highlights_system_name()
+    # search_highlights_owner_name()
+    search_is_cleared_by_x_button()
+
     keywords.teardown_servers(SERVERS)
