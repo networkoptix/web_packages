@@ -874,6 +874,7 @@ class GenericKeywords:
                             logger.trace(email, r)
                             server["cloudUsers"].update({permission: email})
                             self.cloud_api.activate_account_via_api(server["cloudUsers"][permission], "qweasd 123")
+                            time.sleep(.1)
                         logger.trace(server["cloudUsers"])
 
                     for user in server["cloudUsers"]:

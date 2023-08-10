@@ -753,7 +753,7 @@ class GenericKeywords(object):
         if isThere:
             logger.info(email + " already in system")
         else:
-            r = self.cloud_api.share(auth, systemId, accessRole, email, self.permissions[accessRole])
+            r = self.cloud_aqpi.share(auth, systemId, accessRole, email, self.permissions[accessRole])
             logger.info(r)
 
     @keyword

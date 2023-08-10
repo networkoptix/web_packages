@@ -4,6 +4,7 @@ import selenium.common.exceptions
 
 import robot_keywords
 
+
 class Element:
     def __init__(self, driver: webdriver, locator, time_out=10):
         self.driver = driver

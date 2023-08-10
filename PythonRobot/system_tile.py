@@ -8,6 +8,7 @@ from text_field import TextField
 from button import Button
 from RobotVariables import RobotVariables
 from variables import ENV
+from generic_element import Element
 
 
 class SystemTile:
@@ -16,11 +17,12 @@ class SystemTile:
         self.selenium_element = tile_element
         self.rb = RobotVariables(lang)
 
-    def get_title(self):
-        return self.selenium_element.find_element_by_xpath(".//nx-search-highlight").text
+    def title(self):
+        return self.selenium_element.find_element_by_xpath(".//nx-search-highlight/span")
 
     def get_owner(self):
-        return self.selenium_element.find_element_by_xpath(".//span[contains(@class, 'user-name')]").text
+        xpath = self.selenium_element.find_element_by_xpath(".//span[contains(@class, 'user-name')]")
+        return Element(self.driver, xpath)
 
     def online(self):
         try:
