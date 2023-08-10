@@ -10,6 +10,7 @@
         ".gitignore",
         "README.md",
         ".npmignore",
-        "*_check_excluded*"
+        "*_check_excluded*",
+	".prettier*"
     ]
 }
