@@ -242,15 +242,27 @@ class CustomContextForm(forms.Form):
 
         if not context.translatable:
             self.remove_language()
-
+        cur_version = asset.version_id()
+        data_records = DataStructure.find_actual_values(
+            data_structures, asset=asset, language=language, draft=True, as_records=True)
         for ds in data_structures:
             label = ds.label if ds.label else ds.name
-            description = generate_description(ds, self.branding_shortcuts, self.hidden_branding_shortcuts, request=self.request)
+            description = generate_description(
+                ds, self.branding_shortcuts, self.hidden_branding_shortcuts, request=self.request)
             ds_language = language
             if not ds.translatable:
                 if context.translatable:
                     description += "<br>This record is the same for every language."
                 ds_language = None
+            if isinstance(data_records.get(ds), DataRecord):
+                if data_records.get(ds).version_id is None:
+                    description += '<br><span class="label label-warning">DRAFT</span>'
+                elif data_records.get(ds).version_id > cur_version:
+                    description += '<br><span class="label label-warning">PENDING</span>'
+                elif data_records.get(ds).version_id and \
+                        not data_records.get(ds).version.assetcustomizationreview_set.exists():
+                    description += '<br><span class="label label-warning">PENDING. NO REVIEW</span>'
+
 
             record_value = get_record_value(ds, asset, ds_language)
             disabled = datastructure_is_disabled(ds, asset, context, language, can_edit_advanced)
