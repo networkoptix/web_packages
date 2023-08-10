@@ -378,6 +378,7 @@ export class UserManager {
         }
 
         let userData: NxUser | NewUserData;
+        user.email = user.email.toLowerCase();
         if ('id' in user) {
             // Modifying existing user
             userData = user;
