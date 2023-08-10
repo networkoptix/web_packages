@@ -230,7 +230,7 @@ open-source:open-source-checker:
     changes:
     - open/**/*
     - open_candidate/**/*
-    - open-source-checker-config.json
+    - open_source_check_config.json
 
 node-license-check:
   extends: .frontend-node
