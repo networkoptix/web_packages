@@ -18,11 +18,10 @@ class SystemTile:
         self.rb = RobotVariables(lang)
 
     def title(self):
-        return self.selenium_element.find_element_by_xpath(".//nx-search-highlight/span")
+        return self.selenium_element.find_element_by_xpath(".//h2//nx-search-highlight")
 
-    def get_owner(self):
-        xpath = self.selenium_element.find_element_by_xpath(".//span[contains(@class, 'user-name')]")
-        return Element(self.driver, xpath)
+    def owner(self):
+        return self.selenium_element.find_element_by_xpath(".//span[contains(@class, 'user-name')]")
 
     def online(self):
         try:
