@@ -250,6 +250,7 @@
         "url": "/docs/developers",
         "new_window": false,
         "authentication": "both",
+        "condition": "%DEVELOPERS_ENABLED%",
         "enabled": true,
         "nodes": [
           {
