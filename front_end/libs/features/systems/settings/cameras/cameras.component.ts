@@ -1,36 +1,36 @@
-import { Component, OnDestroy, OnInit, Inject, ViewContainerRef } from '@angular/core';
+import { Component, Inject, OnDestroy, OnInit, ViewContainerRef } from '@angular/core';
 import { FormControl, FormGroup } from '@angular/forms';
 import { ActivatedRoute, NavigationStart, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import {
-    Subscription,
     BehaviorSubject,
-    from,
-    throwError,
-    of,
-    Observable,
     combineLatest,
+    from,
+    Observable,
+    of,
+    Subscription,
+    throwError,
 } from 'rxjs';
 import {
-    filter,
-    map,
-    retryWhen,
+    catchError,
     delay,
     distinctUntilChanged,
+    filter,
+    map,
     retry,
-    tap,
-    catchError,
-    switchMap,
+    retryWhen,
     share,
+    switchMap,
+    tap,
 } from 'rxjs/operators';
 
 import { NxMenuService } from '@app/menu/menu.service';
 import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockColumns,
-    InfoBlockSection,
     InfoBlockLine,
+    InfoBlockSection,
     InfoBlockSize,
 } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -46,12 +46,12 @@ import type { AlarmsReply } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     CameraUpdate,
-    RecordingModes,
     MotionType,
     NxSystemCamera,
+    RecordingModes,
     RecordingType,
-    TaskUpdate,
     StreamQuality,
+    TaskUpdate,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
@@ -63,8 +63,8 @@ import { NxSettingsService } from '../settings.service';
 
 import type {
     AspectRatioDropdownItem,
-    RotationDropdownItem,
     QualityDropdownItem,
+    RotationDropdownItem,
 } from './cameras.component.types';
 
 type SensitivityButtonValue = number | boolean | 'reset';
@@ -369,7 +369,7 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
     set motionEnabled(enabled: boolean) {
         let value: MotionType;
         if (!enabled) {
-            value = MotionType.NoMotion;
+            value = MotionType.None;
         } else if (
             ![MotionType.NoMotion, MotionType.None].includes(
                 this.motionEnabledWatcher.originalValue,
@@ -657,19 +657,16 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                         overrideAr,
                         rotation,
                     }),
-                ]).then(_ => {
-                    return this.system.cameraManager.getCameras().then(res => {
-                        this.selectedAspectWatcher.value = undefined;
-                        this.selectedRotationWatcher.value = undefined;
-                        this.setCamera(true);
-                        this.toggleMotionGrid();
-                        this.settingsService.system = this.system;
-                        this.system.systemInfo = this.system;
-                        return res;
-                    });
-                });
+                ]).then(_ =>
+                    this.system.cameraManager.getCameras().then(res => this.setCamera(true)),
+                );
             },
             { ignoreError: true },
+            () => {
+                this.toggleMotionGrid();
+                this.settingsService.system = this.system;
+                this.system.systemInfo = this.system;
+            },
         );
     }
 
@@ -836,9 +833,9 @@ export class NxCamerasComponent implements OnInit, OnDestroy {
                 addParams: { supportedMotion, motionStream },
             },
         } = this;
-        return supportedMotion === MotionType.HardwareGrid || motionStream === undefined
-            ? MotionType.HardwareGrid
-            : MotionType.SoftwareGrid;
+        return supportedMotion === MotionType.Hardware || motionStream === undefined
+            ? MotionType.Hardware
+            : MotionType.Software;
     }
 
     private setCamera = async (forceUpdate = false): Promise<void> => {
