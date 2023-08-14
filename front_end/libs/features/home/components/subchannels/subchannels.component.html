@@ -8,9 +8,18 @@
         >
             New Partner
         </button>
+
+        <nx-search
+            class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+            [ngModel]="search"
+            (ngModelChange)="setSearch($event)"
+            layout="compact"
+            [placeholder]="'Search' | translate"
+            instant
+        ></nx-search>
     </div>
     <div class="px-3 cards-container">
-        <ng-container *ngFor="let channel of subchannels$ | async">
+        <ng-container *ngFor="let channel of filteredSubchannels$ | async">
             <div
                 class="system-button card-condensed system-card"
                 (click)="handleChannelClick(channel.id)"

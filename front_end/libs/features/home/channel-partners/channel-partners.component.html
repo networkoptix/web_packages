@@ -33,18 +33,19 @@
                 >
                     New Organization
                 </button>
-                <div class="input px-2">
-                    <span class="glyphicon web-icon-search icon-search"></span>
-                    <input
-                        class="pl-2"
-                        [placeholder]="'Search' | translate"
-                    />
-                </div>
+                <nx-search
+                    class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+                    [ngModel]="search"
+                    (ngModelChange)="setSearch($event)"
+                    layout="compact"
+                    [placeholder]="'Search' | translate"
+                    instant
+                ></nx-search>
             </div>
             <nx-pre-loader *ngIf="isLoading; else cards"></nx-pre-loader>
             <ng-template #cards>
                 <div class="px-3 cards-container">
-                    <ng-container *ngFor="let organization of organizations$ | async">
+                    <ng-container *ngFor="let organization of filteredOrganizations$ | async">
                         <div
                             class="system-button card-condensed system-card"
                             (click)="handleOrgClick(organization.id)"

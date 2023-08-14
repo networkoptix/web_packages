@@ -2,6 +2,7 @@ import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
+import { FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
 import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,6 +11,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { accountReducer } from '@common/store/account';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSearchComponent } from '@components/search/search.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
@@ -74,6 +76,23 @@ const homeRoutes: Routes = [
 ];
 
 @NgModule({
+    declarations: [
+        NxGroupsCardsComponent,
+        NxOrganizationsComponent,
+        NxTabsDirective,
+        NxChannelPartnersComponent,
+        NxHomeComponent,
+    ],
+    providers: [
+        TabResolver,
+        OrgResolver,
+        SubChannelResolver,
+        WithParentDataResolver,
+        TabGuard,
+        RoleResolver,
+        CPResovler,
+    ],
+    exports: [],
     imports: [
         CommonModule,
         RouterModule.forChild(homeRoutes),
@@ -93,23 +112,8 @@ const homeRoutes: Routes = [
         NxSystemGroupsSidebarComponent,
         NxSystemCardComponent,
         NxGroupCardComponent,
+        NxSearchComponent,
+        FormsModule,
     ],
-    declarations: [
-        NxGroupsCardsComponent,
-        NxOrganizationsComponent,
-        NxTabsDirective,
-        NxChannelPartnersComponent,
-        NxHomeComponent,
-    ],
-    providers: [
-        TabResolver,
-        OrgResolver,
-        SubChannelResolver,
-        WithParentDataResolver,
-        TabGuard,
-        RoleResolver,
-        CPResovler,
-    ],
-    exports: [],
 })
 export class NxHomeModule {}

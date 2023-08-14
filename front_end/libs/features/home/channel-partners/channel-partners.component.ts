@@ -1,8 +1,8 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, DestroyRef, inject } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
-import { catchError, combineLatestWith, of } from 'rxjs';
+import { Observable, Subject, catchError, combineLatestWith, debounceTime, map, of } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
@@ -11,6 +11,8 @@ import {
     ChannelPartner,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { caseInsenstiveSearch } from '@utils/general';
+import { search } from '@variables/static-variables';
 
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
@@ -20,7 +22,6 @@ import {
     selectCurrentPartnerOrgs,
 } from '../store/channel-partners/channel-partners.selectors';
 
-@UntilDestroy()
 @Component({
     selector: 'nx-channel-partners',
     templateUrl: 'channel-partners.component.html',
@@ -40,6 +41,8 @@ export class NxChannelPartnersComponent implements OnInit {
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
     currentPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
+    filteredOrganizations$: Observable<Organization[]>;
+    destroyRef = inject(DestroyRef);
     @Input() isAdmin: boolean;
     @Input() currentTabRoute: string;
     currentTab: Tab;
@@ -58,6 +61,9 @@ export class NxChannelPartnersComponent implements OnInit {
         },
     ];
     defaultImage = 'https://picsum.photos/100/50';
+
+    search = { value: '' };
+    searchChanged = new Subject<void>();
 
     constructor(
         private store: Store,
@@ -84,7 +90,7 @@ export class NxChannelPartnersComponent implements OnInit {
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
         this.route.params
-            .pipe(untilDestroyed(this), combineLatestWith(this.channelPartners$))
+            .pipe(takeUntilDestroyed(this.destroyRef), combineLatestWith(this.channelPartners$))
             .subscribe(([{ id }, partners]) => {
                 this.currentPartnerId = id;
                 if (partners.length && !partners.find(p => p.id === this.currentPartnerId)) {
@@ -108,6 +114,15 @@ export class NxChannelPartnersComponent implements OnInit {
                         },
                     });
             });
+
+        this.searchChanged
+            .pipe(debounceTime(search.debounceTime), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.searchSystems();
+            });
+
+        this.search.value = this.route.snapshot.queryParams.search;
+        this.searchSystems();
     }
 
     newOrgDialog(): void {
@@ -130,5 +145,22 @@ export class NxChannelPartnersComponent implements OnInit {
 
     handleOrgClick(id: string): void {
         this.router.navigate(['organization', id, 'systems'], { relativeTo: this.route });
+    }
+
+    searchSystems(): void {
+        const search = this.search.value;
+
+        if (search) {
+            this.filteredOrganizations$ = this.organizations$.pipe(
+                map(res => res.filter(org => caseInsenstiveSearch(org.name, search))),
+            );
+        } else {
+            this.filteredOrganizations$ = this.organizations$;
+        }
+    }
+
+    setSearch(model: { query: string }): void {
+        this.search.value = model.query;
+        this.searchChanged.next();
     }
 }

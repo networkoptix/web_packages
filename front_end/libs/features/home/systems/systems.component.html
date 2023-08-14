@@ -13,6 +13,14 @@
     >
         <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
         <ng-container *ngSwitchCase="LoadingState.LOADED">
+            <nx-search
+                class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+                [ngModel]="search"
+                (ngModelChange)="setSearch($event)"
+                layout="compact"
+                [placeholder]="'Search' | translate"
+                instant
+            ></nx-search>
             <div
                 [ngClass]="{ shared: !showPersonal }"
                 *ngFor="let user of systems$ | async | keyvalue"
