@@ -111,6 +111,9 @@ def regular_open_browser() -> webdriver:
 def sleep(duration: int) -> None:
     time.sleep(duration)
 
+def wait_until_element_contains(driver, locator, expected_text, timeout: int = 10) -> None:
+    WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element((By.XPATH, locator), expected_text))
+
 def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
     def check_style(driver):
         try:
@@ -186,7 +189,7 @@ def title_should_be(driver, title: str, message: str = None):
             if message is None:
                 message = f"Title should have been '{title}' but was '{actual}'."
             raise AssertionError(message)
-        driver.info(f"Page title is '{title}'.")
+
 
 def get_title(driver) -> str:
         """Returns the title of the current page."""

@@ -24,6 +24,7 @@ from random import randint
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI 
 from NoptixLibrary import *
 from googletrans import Translator
+from login import LoginDialog
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -89,15 +90,17 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         robot_keywords.sleep(1)
         robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_BUTTON)
         robot_keywords.click_element(driver, rb.LOG_IN_BUTTON)
-
     else:
-        robot_keywords.wait_until_element_is_visible(driver,rb.ACCOUNT_DOES_NOT_EXIST,rb.YOU_CAN_CREATE_AN_ACCOUNT)
+        robot_keywords.wait_until_elements_are_visible(driver,[rb.ACCOUNT_DOES_NOT_EXIST,rb.YOU_CAN_CREATE_AN_ACCOUNT])
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
-        # todo: remove this
-        sleep(5)
         robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
     robot_keywords.sleep(0.5)
+
+def check_log_in(driver: webdriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
+    random_email = get_random_email(rb.BASE_EMAIL)
+    #LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
+    LoginDialog(driver).basic_cloud_login(user, password)
 
 def check_password_badge(driver: webdriver, password, new_focus):
     if password != "":
@@ -262,24 +265,12 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
         print(f"An error occurred: {e}")
         return None
 
-# def register(first_name, last_name, email, password, checked=False, view_type=""):
-#     if view_type:
-#         robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
-#     else:
-#         robot_keywords.go_to_url(rb.ENV + "/authorize?client_type=create")
-#     validate_on_register_page()
-#     robot_keywords.input_text(rb.REGISTER_FIRST_NAME_INPUT, first_name)
-#     robot_keywords.input_text(rb.REGISTER_LAST_NAME_INPUT, last_name)
+def open_page_anonymously(driver: webdriver, url: str, title: str):
+    robot_keywords.go_to_url(driver, url)
+    robot_keywords.location_should_be(driver, url)
+    time.sleep(3)
+    robot_keywords.title_should_be(driver, title)
 
-#     try:
-#         robot_keywords.wait_until_element_is_visible(rb.REGISTER_EMAIL_INPUT_LOCKED, 5)
-#     except selenium.common.exceptions.TimeoutException:
-#         robot_keywords.input_text(rb.REGISTER_EMAIL_INPUT, email)
-
-#     robot_keywords.input_text(rb.REGISTER_PASSWORD_INPUT, password)
-#     if not checked:
-#         robot_keywords.click_element(rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)
-#     robot_keywords.click_button(rb.CREATE_ACCOUNT_BUTTON)
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
     api = CloudPortalAPI.CloudPortalAPI()
@@ -291,19 +282,33 @@ def register_and_activate_account(driver, first_name, last_name, email, password
     robot_keywords.sleep(1)
     activate(driver, email, password, from_email=from_email)
 
-def register_account(firstName, lastName, email, password):
-    body = {
-        "email": email,
-        "password": password,
-        "first_name": firstName,
-        "last_name": lastName
-    }
-    register_response = requests.post('https://cloud-test.hdw.mx/api/account/register',
-                                      auth=HTTPBasicAuth("noptixautoqa@gmail.com", password),
-                                      json=body,
-                                      verify=False)
-    register_response.raise_for_status()
-    return register_response.json()
+def register_and_activate_random_email(driver, first_name, last_name, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
+    random_email = get_random_email(sendemal=from_email)
+    register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg, from_email=from_email)  
+    return random_email
+
+def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
+    if view_type:
+        robot_keywords.go_to_url(driver, rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
+    else:
+        robot_keywords.go_to_url(driver, "https://cloud-test.hdw.mx/authorize?client_type=create")
+    validate_on_register_page(driver)
+
+    robot_keywords.input_text(driver, rb.REGISTER_FIRST_NAME_INPUT, first_name)
+    robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
+    # continue on failure
+    try:
+        robot_keywords.wait_until_element_is_visible(driver, rb.REGISTER_EMAIL_INPUT_LOCKED)
+    except:
+        pass
+    robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
+    robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
+    if not checked:
+        robot_keywords.click_element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)  
+    robot_keywords.click_element(driver, rb.CREATE_ACCOUNT_BUTTON)
+
+
+
 
 def set_language_anonymous():
     # currently disabled
@@ -322,6 +327,13 @@ def send_restore_password_email(driver: webdriver, email: str)->  None:
     robot_keywords.click_element(driver, rb.FORGOT_PASSWORD_BUTTON)
     robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
     robot_keywords.click_element(driver, rb.RESET_PASSWORD_BUTTON)
+
+def validate_log_in(driver: webdriver, email: str, password: str, timeout: int = 10) -> None:
+    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
+    robot_keywords.wait_until_element_is_not_visible(driver, """//div[@class="placeholder"]""")
+    # TODO: get ${mode} and define CLOUD_NAME
+    # if mode == 'webadmin':
+    #     robot_keywords.wait_until_element_is_visible(driver, rb.CLOUD_NAME)
 
 def validate_log_out(driver: webdriver):
     robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
@@ -361,28 +373,24 @@ def wait_for_email(mail, recipient, timeout, status='UNSEEN'):
                 return email_id
         time.sleep(1)
 
+def verify_delete_user_dialog(driver: webdriver):
+    robot_keywords.wait_until_elements_are_visible(driver,
+                                                   [rb.DELETE_ACCOUNT_MODAL_BUTTON, 
+                                                     rb.DELETE_ACCOUNT_CANCEL_BUTTON,
+                                                     rb.DELETE_ACCOUNT_PASSWORD_INPUT,
+                                                     rb.DELETE_ACCOUNT_CLOSE_BUTTON,
+                                                     rb.DELETE_ACCOUNT_PASSWORD_LABEL,
+                                                     rb.DELETE_ACCOUNT_INFO,
+                                                     rb.DELETE_ACCOUNT_HEADER])
+    
+def validate_on_register_page(driver: webdriver):
+    robot_keywords.wait_until_elements_are_visible(driver, 
+                                                   [rb.REGISTER_FIRST_NAME_INPUT, 
+                                                    rb.REGISTER_LAST_NAME_INPUT, 
+                                                    rb.REGISTER_PASSWORD_INPUT, 
+                                                    rb.CREATE_ACCOUNT_BUTTON])
 
-# def validate_on_register_page(driver: webdriver):
-#     for element in [rb.REGISTER_FIRST_NAME_INPUT, rb.REGISTER_LAST_NAME_INPUT, rb.REGISTER_PASSWORD_INPUT, rb.CREATE_ACCOUNT_BUTTON]:
-#         robot_keywords.wait_until_element
-#     is_visible(driver, element)
 
-# def get_code_from_api(email, message_type):
-#     with self._session(self.baseEmail, self.password) as s:
-#         s.headers.update({"referer": f"{rb.ENV}/authorize"})
-#         get_code_response = s.post(
-#             f'{rb.ENV}/api/robot/get_code',
-#             json={'email': email, 'type': message_type})
-#     get_code_response.raise_for_status()
-#     return get_code_response.json()['code']
-
-# def activate_account_via_api(email, password):
-#     code = get_code_from_api(email, "activate_account")
-#     code = re.sub(r'%3D', '=', code)
-#     code = re.sub(r'%2B', '+', code)
-#     activate_response = requests.post(f'{rb.ENV}/api/account/activate', auth=HTTPBasicAuth(email, password), json={"code": code}, verify=False)
-#     activate_response.raise_for_status()
-#     return f"{rb.ENV}/authorize/activate/{activate_response.json()}"
 
 
 
