@@ -1,5 +1,6 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
+import selenium.common.exceptions
 
 import robot_keywords
 
@@ -7,14 +8,15 @@ from generic_element import Element
 
 
 class TextField:
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: webdriver, locator, time_out=10):
         self.driver = driver
-        robot_keywords.wait_until_element_is_visible(self.driver, locator)
-
-        element = Element(self.driver, locator)
-        self.selenium_element = element.get_selenium_element()
-        self.is_visible = element.is_visible()
-        self.is_focused = element.is_focused()
+        self.locator = locator
+        try:
+            robot_keywords.wait_until_page_contains_element(self.driver, self.locator, time_out)
+            self.selenium_element = self.driver.find_element(By.XPATH, locator)
+            self.in_dom = True
+        except selenium.common.exceptions.TimeoutException:
+            self.in_dom = False
 
     def input_text(self, text: str):
         self.selenium_element.clear()

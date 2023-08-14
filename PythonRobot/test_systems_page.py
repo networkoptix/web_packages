@@ -28,6 +28,16 @@ CLOUD_API.share([SERVERS[1]['cloudOwner'], password],
                 viewer_permissions)
 
 
+def should_open_systems_page_from_anonymous_state():
+    driver = get_headless_chrome()
+
+    robot_keywords.go_to_url(driver, ENV + "/systems")
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    HeaderNav(driver).account_dropdown()
+
+    SystemsPage(driver)
+
+
 def system_tiles_represent_actual_information():
     driver = get_headless_chrome()
 
@@ -59,16 +69,16 @@ def no_systems_connected():
     print("pass")
 
 
-def one_system_directs_you_to_system_admin():
-    # Todo need system admin class to test this
-    pass
-
-
 # . Should show the system page instead of all systems when user only has one
 #   [Tags]    C41878    threaded
 #   Log In    ${extra system}[cloudOwner]    ${base password}   api=${False}
 #   Wait until Location Is    ${ENV}/systems/${extra system}[cloud id]
 #   Validate Header Button Text    ${extra system}[name]    systems=False
+
+def one_system_directs_you_to_system_admin():
+    # Todo need system admin class to test this
+    pass
+
 
 def opens_system_admin_when_tile_is_clicked():
     # Todo need system admin class to test this
@@ -100,7 +110,6 @@ def search_highlights_system_name():
     robot_keywords.close_browser(driver)
     print("pass")
 
-
 def search_highlights_owner_name():
     driver = get_headless_chrome()
 
@@ -121,6 +130,7 @@ def search_highlights_owner_name():
     print("pass")
 
 def search_is_cleared_by_x_button():
+
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
@@ -140,12 +150,47 @@ def search_is_cleared_by_x_button():
     robot_keywords.close_browser(driver)
     print("pass")
 
+def should_update_owner_name():
+
+    CLOUD_API.set_account_name(SERVERS[1]['cloudOwner'], password, "carrie", "fisher")
+    driver = get_headless_chrome()
+
+    robot_keywords.go_to_url(driver, ENV + "/systems")
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    HeaderNav(driver).account_dropdown()
+
+    sys_page = SystemsPage(driver)
+    for tile in sys_page.tiles:
+        if tile.owner().text == "carrie fisher":
+            break
+        else:
+            raise RuntimeError("carrie fisher was not the owner on any tiles")
+
+    robot_keywords.close_browser(driver)
+    print("pass")
+
+def search_only_visible_with_more_than_eight_systems():
+    CLOUD_API.disconnect_server_via_api([SERVERS[1]['cloudOwner'], password], SERVERS[1]['id'], password, SERVERS[1]['cloudOwner'])
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, ENV + "/systems")
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    HeaderNav(driver).account_dropdown()
+
+    sys_page = SystemsPage(driver)
+    assert len(sys_page.tiles) == 8, f"Number of tiles was: {len(sys_page.tiles)}.  Expected 8."
+    assert not sys_page.search_bar().in_dom, "Search bar was still visible."
+
+    robot_keywords.close_browser(driver)
+    print("pass")
+
+
 
 if __name__ == "__main__":
-    # system_tiles_represent_actual_information()
-    # no_systems_connected()
-    # search_highlights_system_name()
-    # search_highlights_owner_name()
+    system_tiles_represent_actual_information()
+    no_systems_connected()
+    search_highlights_system_name()
+    search_highlights_owner_name()
     search_is_cleared_by_x_button()
-
+    should_update_owner_name()
+    search_only_visible_with_more_than_eight_systems()
     keywords.teardown_servers(SERVERS)
