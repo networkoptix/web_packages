@@ -530,9 +530,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkBackupCodeProcess = this.processService.createProcess(
             async () => {
                 this.backupCodeErrorCode = '';
-                return this.action === 'restore_password'
+                return lastValueFrom(this.action === 'restore_password'
                     ? this.authService.restorePassword(this.loginCode, this.resetPassword, this.backupCode, true)
-                    : this.authService.verifyBackupCode(this.backupCode, this.loginCode).toPromise();
+                    : this.authService.verifyBackupCode(this.backupCode, this.loginCode));
             },
             { ignoreError: true, timeoutMs },
             res => {
