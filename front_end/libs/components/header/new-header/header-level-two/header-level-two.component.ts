@@ -8,8 +8,10 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { filter } from 'rxjs';
 
 import { icons, images } from '@lib/variables/static-variables';
+import { NxApplyService } from '@services/apply.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -51,11 +53,21 @@ export class NxHeaderLevelTwoComponent {
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
         private scrollMechanics: NxScrollMechanicsService,
+        nxApplyService: NxApplyService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
             this.recalculateSizes(size.width);
         });
+
+        nxApplyService.popupActive$
+            .pipe(
+                untilDestroyed(this),
+                filter(value => !!value),
+            )
+            .subscribe(() => {
+                this.optimisticSelectedSubNode = null;
+            });
     }
 
     handleLogoClick(clickType: logoClickType): void {
