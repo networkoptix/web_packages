@@ -9,8 +9,9 @@
         "*.json",
         ".gitignore",
         "README.md",
+        "readme.md",
         ".npmignore",
         "*_check_excluded*",
-	".prettier*"
+	    ".prettier*"
     ]
 }
