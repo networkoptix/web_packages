@@ -242,7 +242,7 @@ export class UserWithGroupsManager extends UserManager {
          */
         return (
             !user.isOwner &&
-            !user.attributes.includes('readonly') &&
+            !user.attributes?.includes('readonly') &&
             (this.isMySystem || !user.isAdmin)
         );
     }
