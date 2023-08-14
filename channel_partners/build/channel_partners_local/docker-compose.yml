@@ -1,0 +1,40 @@
+version: '2'
+services:
+  redis:
+    image: redis:5.0.6
+    container_name: redis_cp
+    restart: always
+    ports:
+      - "6379:6379"
+    expose:
+      - "6379"
+    command:
+      - redis-server
+      - --databases 32
+
+  postgres:
+    image: postgres:15.3-bullseye
+    container_name: postgres_cp
+    domainname: postgres_cp
+    restart: always
+    ports:
+      - "5432:5432"
+    expose:
+      - "5432"
+    environment:
+      POSTGRES_USER: channel
+      POSTGRES_PASSWORD: partners
+      POSTGRES_DB: channel_partners
+      POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
+
+#  nginx:
+#    image: nginx:1.25-alpine
+#    container_name: cloud_portal_nginx
+#    ports:
+#      - "80:80"
+#
+#    environment:
+#      - PORTAL_HOST=host.docker.internal
+#    volumes:
+#      - ../../src/static:/app/static
+#      - ../nginx/nginx.conf:/etc/nginx/nginx.conf

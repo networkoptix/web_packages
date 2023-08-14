@@ -1,0 +1,42 @@
+[tool.poetry]
+name = "channel-partners"
+version = "0.1.0"
+description = ""
+authors = ["Kyrylo Apanovych <kapanovich@networkoptix.com>"]
+readme = "README.md"
+packages = []
+
+[tool.poetry.dependencies]
+python = "~3.11"
+django = "~4.2.3"
+redis = "~4.6.0"
+psycopg = "~3.1.9"
+pyyaml = "^6.0.1"
+uvicorn = "^0.23.2"
+gunicorn = "^21.2.0"
+
+
+[tool.poetry.group.test.dependencies]
+pytest = "^7.4.0"
+pytest-asyncio = "^0.21.1"
+pytest-django = "^4.5.2"
+mock = "^5.1.0"
+model-bakery = "^1.13.0"
+pytest-mock = "^3.11.1"
+pytest-cov = "^4.1.0"
+pytest-env = "^0.8.2"
+
+
+[[tool.poetry.source]]
+name = "pypi-remote"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+priority = "default"
+
+[[tool.poetry.source]]
+name = "pypi-local"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-local/simple"
+priority = "primary"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
