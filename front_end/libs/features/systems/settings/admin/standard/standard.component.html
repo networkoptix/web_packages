@@ -368,10 +368,7 @@
                             >
                         </label>
                     </ng-container>
-                    <div
-                        class="d-flex checkbox-block align-items-center mt-1"
-                        *ngIf="systemAndSecuritySettings.sessionLimitMinutes !== undefined"
-                    >
+                    <div class="d-flex checkbox-block align-items-center mt-1">
                         <nx-checkbox
                             name="sessionLimitMinutesToggle"
                             componentId="sessionLimitMinutesToggle"
@@ -404,6 +401,11 @@
                                 'Unlimited user session lifetime threatens overall system security'
                                     | translate
                             "
+                            [nxForceVisibility]="sessionLimitMinutes.touched"
+                            [intersectionDebounce]="50"
+                            [visibilityMargin]="'0px 0px -105px 0px'"
+                            [visibilityThreshold]="1"
+                            forceVisibilityOnce
                         ></nx-alert-block>
                     </div>
                     <div class="row ml-4 my-2">
@@ -444,7 +446,8 @@
                                     | translate
                             "
                             [nxForceVisibility]="sessionLimitValueInput.touched"
-                            [visibilityMargin]="'-65px'"
+                            [intersectionDebounce]="50"
+                            [visibilityMargin]="'0px 0px -65px 0px'"
                             [visibilityThreshold]="1"
                             forceVisibilityOnce
                         ></nx-alert-block>

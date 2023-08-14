@@ -14,6 +14,7 @@ import { IntersectionStatus } from './nx-intersection.directive.types';
                 'intersectionRootMargin: visibilityMargin',
                 'emitVisibleOnlyOnce: forceVisibilityOnce',
                 'intersectionThreshold: visibilityThreshold',
+                'intersectionDebounce',
             ],
             // eslint-disable-next-line @angular-eslint/no-outputs-metadata-property
             outputs: ['nxOnIntersect'],
