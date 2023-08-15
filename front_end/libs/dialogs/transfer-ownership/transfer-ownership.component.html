@@ -36,7 +36,6 @@
                         [items]="userItems"
                         [ngModel]="selectedUser"
                         (ngModelChange)="selectUser($event)"
-                        (onClickElsewhere)="checkUser($event)"
                         [selected]="selectedUser"
                         canSearch
                         [noMatchMsg]="LANG.search.userNotFound"

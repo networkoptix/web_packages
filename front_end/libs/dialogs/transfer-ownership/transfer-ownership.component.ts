@@ -113,6 +113,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         if (!user.value) {
             this.form.control.setErrors({ userDisabled: false });
         }
+        this.checkUser(user.value);
         this.selectedUser = { ...user };
     }
 
