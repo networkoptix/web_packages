@@ -1492,7 +1492,8 @@ class DataStructure(models.Model):
             records = records.filter(version_id__lte=version_id)
             if customization_name:
                 records = records.filter(
-                    version__assetcustomizationreview__customization__name=customization_name)
+                    version__assetcustomizationreview__customization__name=customization_name
+                )
 
         if not (draft or only_review):
             records = records.filter(
@@ -2236,6 +2237,17 @@ class DataRecord(models.Model):
         from cms.helpers.cached_asset import AssetCacheLoaderBase
         AssetCacheLoaderBase.invalidate_changed_dr(self)
         super(DataRecord, self).delete(*args, **kwargs)
+
+    def clean_fields(self, exclude=None):
+        super().clean_fields(exclude=exclude)
+        if self.version:
+            if DataRecord.objects.filter(
+                    id__lt=self.id, version_id__isnull=False, version_id__gt=self.version_id).exists() \
+                or DataRecord.objects.filter(
+                    id__gt=self.id, version_id__isnull=False, version_id__lt=self.version_id).exists():
+                raise ValidationError({"version": [f"Version {self.version_id} cannot be applied to this record"]})
+
+
 
 
 @receiver(post_delete, sender=DataRecord)

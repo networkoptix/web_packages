@@ -574,7 +574,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkBackupCodeProcess = this.processService.createProcess(
             async () => {
                 this.backupCodeErrorCode = '';
-                return this.action === 'restore_password'
+                return lastValueFrom(this.action === 'restore_password'
                     ? this.authService.restorePassword(
                           this.loginCode,
                           this.resetPassword,
@@ -582,8 +582,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                           true,
                       )
                     : this.authService
-                          .verifyBackupCode(this.backupCode, this.loginCode)
-                          .toPromise();
+                          .verifyBackupCode(this.backupCode, this.loginCode));
             },
             { ignoreError: true, timeoutMs },
             res => {
@@ -614,17 +613,13 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         // use factory if account properties are not needed outside of the create component
         // this.createProcessFactory = (props) => this.processService.createProcess(() => {
         this.createProcess = this.processService.createProcess(
-            () =>
-                lastValueFrom(
-                    this.authService.register(
-                        this.accountInfo.email,
-                        this.accountInfo.password,
-                        this.accountInfo.firstName,
-                        this.accountInfo.lastName,
-                        this.CONFIG.customization,
-                        this.loginCode,
-                    ),
-                ),
+            () => this.cloudService.registerUser(
+                this.accountInfo.email,
+                this.accountInfo.password,
+                this.accountInfo.firstName,
+                this.accountInfo.lastName,
+                this.loginCode,
+            ),
             { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);
@@ -742,20 +737,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             });
     };
 
-    redirect = async (route?: string): Promise<void> => {
-        if (route?.startsWith('/')) {
-            try {
-                const [link, search] = route.split('?');
-                const params = new URLSearchParams(search);
-                const code = params.get('code');
-                params.delete('code');
-                await this.cloudService.loginCode(code);
-                const paramString = params.toString();
-                route = `${link}?${paramString}`;
-            } catch (err) {
-                console.error(err);
-            }
-        }
+    redirect = (route?: string): void => {
         this.window.location.href = route || this.initialData.redirect_uri || '/';
     };
 

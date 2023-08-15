@@ -205,7 +205,6 @@ nx-dynamic-table {
           &:hover {
             td {
               color: var(--card-header-text) !important;
-              ;
               background: var(--table-row-hover-bg);
             }
           }
@@ -213,11 +212,11 @@ nx-dynamic-table {
           &.selected,
           &:active,
           &:focus {
-            color: var(--light1) !important;
-            background-color: var(--light16);
+            color: var(--table-row-selected-color) !important;
+            background-color: var(--table-row-selected-bg);
 
             &:hover {
-              background-color: var(--dynamic-table-row-hover-bg) !important;
+              background-color: var(--table-row-hover-bg) !important;
             }
 
             td {

@@ -183,7 +183,8 @@
         }
 
         &.selected {
-            background-color: var(--table-row-hover-bg);
+            background-color: var(--table-row-selected-bg);
+            color: var(--table-row-selected-color);
         }
 
         //&:last-child {

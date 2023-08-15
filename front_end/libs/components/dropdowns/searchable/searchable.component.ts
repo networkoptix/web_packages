@@ -128,11 +128,16 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
     onSearchInput(_event: Event): void {
         this.form?.form.get(this.componentId)?.markAsUntouched();
 
-        let filter = this.searchInput.nativeElement.innerText;
-        this.helpText = '';
+        const input = this.searchInput.nativeElement.innerText;
+        const filter = input.replace(/\s+/g, ' ').trim();
 
-        // long strings may produce line break when deleted
-        filter = filter.replace(/\n/g, '');
+        if (input !== filter) {
+            _event.preventDefault();
+            this.searchInput.nativeElement.innerText = filter;
+            return;
+        }
+
+        this.helpText = '';
 
         if (filter) {
             this.filter = new RegExp(`(${escapeRegExp(filter)})`, 'i');
@@ -146,16 +151,21 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
             this._items = [...this.items];
         }
 
-        if (this.freeText) {
+        if (!this._items.length) {
             const freeTypeItem: Item = {
-                name: this.searchInput.nativeElement.innerText,
-                value: this.searchInput.nativeElement.innerText,
+                name: filter,
+                value: filter,
+                disabled: false,
             };
+            // this.selectItem(freeTypeItem);
             this._selectedItem = freeTypeItem;
             this.onSelected.emit(freeTypeItem);
             this.onChangeCallback(freeTypeItem);
-            this.show = this._items.length !== 0;
-            return;
+
+            if (this.freeText) {
+                this.show = this._items.length !== 0;
+                return;
+            }
         }
 
         this.show = true;
@@ -193,15 +203,18 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
         }
     }
 
-    handleSearchEnter(event: KeyboardEvent): void {
-        if (event.key === 'Enter') {
-            event.preventDefault();
-            // Don't allow newline
-            if (this._items.length === 1) {
-                this.selectItem(this._items[0]);
-            }
-        }
-    }
+    // handleSearchEnter(event: KeyboardEvent): void {
+    //     if (event.key === 'Enter') {
+    //         event.preventDefault();
+    //         // Don't allow newline
+    //         if (this._items.length === 1) {
+    //             this.selectItem(this._items[0]);
+    //         } else {
+    //             this.searchInput.nativeElement.innerText = this._selectedItem.name;
+    //             this.onBlur();
+    //         }
+    //     }
+    // }
 
     focusSearchInput(event: MouseEvent): void {
         if (

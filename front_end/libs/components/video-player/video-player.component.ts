@@ -7,10 +7,11 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
+import { NxAppStateService } from '@services/nx-app-state.service';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -112,6 +113,7 @@ export class NxVideoPlayerComponent {
 
     constructor(
         configService: NxConfigService,
+        private appStateService: NxAppStateService,
         private elRef: ElementRef,
     ) {
         this.CONFIG = configService.config;
@@ -198,7 +200,10 @@ export class NxVideoPlayerComponent {
             }
         })
 
-        return canvas.captureStream();
+        const newStream = canvas.captureStream();
+        stream.getAudioTracks().forEach(track => newStream.addTrack(track));
+
+        return newStream;
     }
 
     cancelMonitoringFps$ = new Subject<void>();
@@ -259,12 +264,32 @@ export class NxVideoPlayerComponent {
                 if (stream) {
                     this.monitorFps(connection);
                     this.webRtcPlayerRef.nativeElement.srcObject = await this.zoomStream(stream);
-                    this.webRtcPlayerRef.nativeElement.muted = true;
+                    // Checks if user has interacted to unmute
+                    this.webRtcPlayerRef.nativeElement.muted = await firstValueFrom(
+                        this.appStateService.userInteracted$.pipe(
+                            map(() => false),
+                            timeout(10),
+                            catchError(() => of(true)),
+                        ),
+                    );
                     this.webRtcPlayerRef.nativeElement.autoplay = true;
 
-                    while (this.webRtcPlayerRef.nativeElement.paused || this.webRtcPlayerRef.nativeElement.currentTime < 1) {
+                    while (this.webRtcPlayerRef.nativeElement.paused) {
+                        await new Promise(resolve => setTimeout(resolve, 10));
+                    }
+
+                    if (this.webRtcPlayerRef.nativeElement.muted) {
+                        // Unmute and autoplay when user interacts with the page
+                        this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
+                            this.webRtcPlayerRef.nativeElement.muted = false;
+                            this.webRtcPlayerRef.nativeElement.autoplay = true;
+                        })
+                    }
+
+                    while (this.webRtcPlayerRef.nativeElement.currentTime < 1) {
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
+
 
                     this.connectionEstablished = true;
 

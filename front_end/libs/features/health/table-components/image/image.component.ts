@@ -29,10 +29,11 @@ export class NxImageComponent implements OnChanges {
     @Input() motionPreview: boolean = false;
     @Input() preloader: boolean = false;
     @Input() aspect: string = 'Auto';
-    @Input() unavailableMessage: string = staticLang.common.cameraStates.unavailable;
+    @Input() unavailableMessage: string;
     @Output() loaded = new EventEmitter<boolean>();
     show: boolean;
     isLive: boolean;
+    defaultUnavailableMessage = staticLang.common.cameraStates.unavailable;
 
     CameraStatus = CameraStatus;
 

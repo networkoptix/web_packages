@@ -503,7 +503,9 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --tabset-color : #A5B7C0; //$light10;
 
     --table-alt-row-bg: #171C1F; //$dark5;
-    --table-row-hover-bg : #35464F; //$dark11;
+    --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
+    --table-row-selected-bg : #{$light16};
+    --table-row-selected-color : #{$light1};
 
     --dynamic-table-row-hover-bg : var(--light16) !important;
 

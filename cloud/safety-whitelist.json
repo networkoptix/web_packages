@@ -145,5 +145,9 @@
   "58755": {
     "name": "requests",
     "note": "Requests is a HTTP library. Since Requests 2.3.0, Requests has been leaking Proxy-Authorization headers to destination servers when redirected to an HTTPS endpoint. This is a product of how we use 'rebuild_proxies' to reattach the 'Proxy-Authorization' header to requests."
+  },
+  "59293": {
+    "name": "Django",
+    "note": "CVE-2023-36053: Potential regular expression denial of service vulnerability in EmailValidator/URLValidator://www.djangoproject.com/weblog/2023/may/03/security-releases"
   }
 }

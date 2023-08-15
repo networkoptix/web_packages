@@ -697,7 +697,9 @@ html[data-theme="hsl"] {
     --tabset-color : var(--new-light10);
 
     --table-alt-row-bg: var(--new-dark5);
-    --table-row-hover-bg : var(--new-dark11);
+    --table-row-hover-bg : rgba(var(--brand-core--rgb), .1);
+    --table-row-selected-bg : var(--new-light16);
+    --table-row-selected-color : var(--new-light1);
 
     --dynamic-table-row-hover-bg : var(--new-light16) !important;
 

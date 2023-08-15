@@ -15,8 +15,8 @@ from rest_framework.permissions import AllowAny, IsAuthenticated
 from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
-from cloud.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException,\
-    api_success, ErrorCodes, get_client_ip
+from cloud.helpers.exceptions import handle_exceptions, APIRequestException, APIServiceException, \
+    api_success, ErrorCodes, get_client_ip, APITooManyRequestsException
 from api.models import Account
 from cms.models import Customization, Asset, UserGroupsToAssetPermissions, cloud_portal_customization_cache
 from cms.permissions import IsSuperuser
@@ -235,7 +235,12 @@ def send_notification(request):
         if validation_error:
             raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters,
                                       error_data=error_data)
-        NotificationRateThrottle.is_allowed(request=request)
+        if not NotificationRateThrottle().allow_request(request=request, view=None):
+            logger.warning(
+                f'Request throttled for {request.data["user_email"]}::{request.data["type"]}'
+                f' in customization {request.data["customization"]}'
+            )
+            raise APITooManyRequestsException('Too many request. Please try again later')
         # Clouddb doesn't always return a full name so try to get it from cloud portal
         if 'userFullName' not in request.data['message'] or not request.data['message']['userFullName']:
             user_account = Account.objects.filter(

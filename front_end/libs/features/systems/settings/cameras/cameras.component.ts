@@ -17,8 +17,8 @@ import { filter, map, delay, retry, catchError, switchMap, share } from 'rxjs/op
 import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockColumns,
-    InfoBlockSection,
     InfoBlockLine,
+    InfoBlockSection,
     InfoBlockSize,
 } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -34,12 +34,12 @@ import type { AlarmsReply } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     CameraUpdate,
-    RecordingModes,
     MotionType,
     NxSystemCamera,
+    RecordingModes,
     RecordingType,
-    TaskUpdate,
     StreamQuality,
+    TaskUpdate,
     CameraStatus,
     DeviceType,
 } from '@services/system.service/camera-manager/camera-manager-types';

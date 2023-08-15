@@ -605,9 +605,7 @@
                                         <h4
                                             *ngIf="
                                                 additionalErrorMessages[itemDetail.details.id] ||
-                                                LANG.layouts.additionalErrorMessages[
-                                                    status
-                                                ] as additionalMessage
+                                                additionalErrorMessages[status] as additionalMessage
                                             "
                                             [ngClass]="{
                                                 'main-panel':

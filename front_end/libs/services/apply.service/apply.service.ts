@@ -56,11 +56,11 @@ export class NxApplyService {
     private discardFunctions: (() => void)[] = [];
     private discardFunction = () => this.discardFunctions.forEach(discFunc => discFunc());
     private nonSystem$ = new BehaviorSubject(true);
-    private popupActive = false;
     private form: NgForm;
     private watchers: Watcher<any>[];
     private isInvalid: boolean;
     private invalidFieldsSet: Set<string> = new Set();
+    popupActive$ = new BehaviorSubject(false);
 
     private updatedWatchers$ = new Subject<string>();
     applyOnNavSubject = new BehaviorSubject('');
@@ -71,6 +71,14 @@ export class NxApplyService {
         private processService: NxProcessService,
         @Inject(DOCUMENT) private document: Document,
     ) {}
+
+    get popupActive() {
+        return this.popupActive$.value;
+    }
+
+    set popupActive(value) {
+        this.popupActive$.next(value);
+    }
 
     get locked() {
         return !!this.applyComponentInstance?.show;

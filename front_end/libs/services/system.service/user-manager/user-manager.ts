@@ -305,6 +305,7 @@ export class UserManager {
         }
 
         const userData: NxUser = user;
+        user.email = user.email.toLowerCase();
         // The mediaserver doesn't like any attempts to change admin's permissions
         if (userData.isLocalOwner) {
             delete userData.name;

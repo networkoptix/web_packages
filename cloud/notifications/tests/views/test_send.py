@@ -19,15 +19,25 @@ class TestSend:
     }
     data = [
         {'user_email': 'DUMmY@example.com', 'type': 'restore_password',
-         'message': msg, 'customization': settings.TEST_CUSTOMIZATION},
+         'message': msg, 'customization': settings.CUSTOMIZATION},
         {'user_email': 'DummY@example.com', 'type': 'RESTORE_password',
-         'message': msg, 'customization': settings.TEST_CUSTOMIZATION}
+         'message': msg, 'customization': settings.CUSTOMIZATION},
+        {'user_email': 'DummY@example.com', 'type': 'RESTORE_password',
+         'message': msg,
+         'customization': settings.CUSTOMIZATION}
     ]
-    data_with_sysid = {
-        'user_email': 'dummy@example.com', 'type': 'restore_password',
-        'message': msg, 'customization': settings.TEST_CUSTOMIZATION,
-        'system_id': uuid4()
-    }
+    data_with_sysid = [
+        {
+            'user_email': 'dummy@example.com', 'type': 'restore_password',
+            'message': msg, 'customization': settings.CUSTOMIZATION,
+            'system_id': uuid4()
+        },
+        {
+            'user_email': 'DummY@example.com', 'type': 'RESTORE_password',
+            'message': {"userFullName": 'user dummy', 'system_id': uuid4()},
+            'customization': settings.CUSTOMIZATION
+        }
+    ]
 
     @pytest.fixture(autouse=True)
     def setup(self, db):
@@ -56,10 +66,17 @@ class TestSend:
         req = self.make_request(arf, data=self.data[0])
         req.data = self.data[0]
         key = NotificationRateThrottle().get_cache_key(req, send_notification)
-        assert f'notification_rate_limit-{self.data_with_sysid["user_email"]}-{self.data_with_sysid["type"]}' == key
+        assert key == f'notification_rate_limit-{self.data[0]["type"]}-' \
+               f'{self.data[0]["user_email"]}-{"not_presented"}'.lower()
         # with system id
         req = self.make_request(arf, data=self.data_with_sysid)
-        req.data = self.data_with_sysid
+        req.data = self.data_with_sysid[0]
         key = NotificationRateThrottle().get_cache_key(req, send_notification)
-        assert f'notification_rate_limit-{self.data_with_sysid["user_email"]}-' \
-               f'{self.data_with_sysid["type"]}-{self.data_with_sysid["system_id"]}' == key
+        assert key == f'notification_rate_limit-{self.data_with_sysid[0]["type"]}-' \
+               f'{self.data_with_sysid[0]["user_email"]}-{self.data_with_sysid[0]["system_id"]}'.lower()
+
+        req = self.make_request(arf, data=self.data_with_sysid[1])
+        req.data = self.data_with_sysid[1]
+        key = NotificationRateThrottle().get_cache_key(req, send_notification)
+        assert key == f'notification_rate_limit-{self.data_with_sysid[1]["type"]}-' \
+               f'{self.data_with_sysid[1]["user_email"]}-{self.data_with_sysid[1]["message"]["system_id"]}'.lower()

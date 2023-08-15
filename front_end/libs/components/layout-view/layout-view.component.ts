@@ -58,7 +58,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphabeticalSort, cleanId, dirtyId } from '@utils/general';
+import { alphaNumericSort, alphabeticalSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
@@ -294,8 +294,7 @@ export class NxLayoutViewComponent {
                     }),
                     {} as ResourceLookup<(typeof webPages)[0]>,
                 );
-
-                const byName = alphabeticalSort<Pick<Resource, 'name'>>(
+                const byName = alphaNumericSort<Pick<Resource, 'name'>>(
                     this.locale,
                     r => r.name || '',
                 );
@@ -313,8 +312,8 @@ export class NxLayoutViewComponent {
                         shared: details.parentId === '{00000000-0000-0000-0000-000000000000}',
                         type: ResourceType.LAYOUT,
                         details,
-                    }));
-
+                    }))
+                    .sort((a, b) => (a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1));
                 const parsedResources = Object.entries({
                     ...parsedServers,
                     ...parsedCameras,

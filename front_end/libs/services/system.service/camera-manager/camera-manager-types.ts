@@ -112,10 +112,10 @@ export enum MotionType {
     NoMotion = 'none',
 
     // All systems
-    Default = '2',
+    Default = '0',
     Hardware = '1',
     Software = '2',
-    MotionWIndow = '4',
+    MotionWindow = '4',
     None = '8',
 }
 

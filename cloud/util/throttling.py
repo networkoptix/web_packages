@@ -1,3 +1,4 @@
+from logging import getLogger
 from typing import List
 
 from django.core.cache import caches
@@ -5,6 +6,8 @@ from django.core.exceptions import ImproperlyConfigured
 from rest_framework.throttling import SimpleRateThrottle
 
 from cloud.helpers.exceptions import APIRequestException, APITooManyRequestsException
+
+logger = getLogger(__name__)
 
 
 class RequestDataThrottleBase(SimpleRateThrottle):
@@ -32,20 +35,21 @@ class RequestDataThrottleBase(SimpleRateThrottle):
         super().__init__()
 
     def get_cache_key(self, request, view):
-        data = [
-            str(request.data.get(attr))
-            for attr in self.data_attrs
-            if request.data.get(attr) or attr in self.required_attrs
-        ]
-        return f'{self.scope}-{"-".join([d.lower() for d in data])}'
+        user_email = request.data.get('user_email', 'not_presented')
+        typ = request.data.get('type', 'not_presented')
+        if not (system_id := request.data.get('system_id')):
+            system_id = request.data.get('message', {}).get('system_id', 'not_presented')
+        return f'{self.scope}-{typ}-{user_email}-{system_id}'.lower()
 
     def check_throttle(self, request):
         if not self.allow_request(request, view=None):
+            logger.warning(f"Request throttled for key {self.get_cache_key(request, view=None)}")
             raise APITooManyRequestsException('Too many request. Please try again later')
 
     @classmethod
     def is_allowed(cls, request):
         if not cls().allow_request(request, view=None):
+            logger.warning(f"Request throttled for key {cls().get_cache_key(request, view=None)}")
             raise APITooManyRequestsException('Too many request. Please try again later')
 
 

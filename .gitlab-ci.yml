@@ -100,7 +100,7 @@ no-changes:
     - job: docker:build-django-python
       optional: true
   services:
-    - name: mysql:5.7
+    - name: mysql:8.0
       alias: mysql
     - name: redis:5.0.6-alpine
       alias: redis

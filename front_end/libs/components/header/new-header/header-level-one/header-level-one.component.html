@@ -1,14 +1,11 @@
 <div class="menu-level-one">
     <ng-container *ngFor="let node of menuNodes">
-        <a
-            *ngIf="!node.invisible"
-            (click)="handleNavigation(node, $event); onNodeSelect(node)"
-            [ngClass]="{ active: node?.name === selectedNode?.name }"
-            class="menu-item btn btn-menu"
-            [href]="node.url"
-        >
-            {{ node.display_name | translate }}
-        </a>
+        <ng-container
+            *ngTemplateOutlet="
+                node.new_window ? externalLink : internalLink;
+                context: { node: node }
+            "
+        ></ng-container>
     </ng-container>
     <ng-container *ngIf="loggedIn !== undefined">
         <nx-account-settings-select *ngIf="loggedIn"></nx-account-settings-select>
@@ -29,3 +26,32 @@
         ></nx-header-language-select>
     </ng-container>
 </div>
+
+<ng-template
+    #internalLink
+    let-node="node"
+>
+    <a
+        *ngIf="!node.invisible"
+        (click)="handleNavigation(node, $event); onNodeSelect(node)"
+        [ngClass]="{ active: node?.name === selectedNode?.name }"
+        class="menu-item btn btn-menu"
+        [href]="node.url"
+    >
+        {{ node.display_name | translate }}
+    </a>
+</ng-template>
+
+<ng-template
+    #externalLink
+    let-node="node"
+>
+    <a
+        *ngIf="!node.invisible"
+        [href]="node.url"
+        target="_blank"
+        class="menu-item btn btn-menu"
+    >
+        {{ node.display_name | translate }}
+    </a>
+</ng-template>

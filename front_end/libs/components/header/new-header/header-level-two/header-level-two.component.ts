@@ -11,10 +11,12 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { filter } from 'rxjs';
 
 import { NxMainActionComponent } from '@components/header/new-header/header-level-two/main-action/main-action.component';
 import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
 import { icons, images } from '@lib/variables/static-variables';
+import { NxApplyService } from '@services/apply.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -64,11 +66,21 @@ export class NxHeaderLevelTwoComponent {
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
         private scrollMechanics: NxScrollMechanicsService,
+        nxApplyService: NxApplyService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
             this.recalculateSizes(size.width);
         });
+
+        nxApplyService.popupActive$
+            .pipe(
+                untilDestroyed(this),
+                filter(value => !!value),
+            )
+            .subscribe(() => {
+                this.optimisticSelectedSubNode = null;
+            });
     }
 
     handleLogoClick(clickType: logoClickType): void {

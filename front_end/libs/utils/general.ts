@@ -3,7 +3,7 @@
 third party data/types it should probably go in nx.ts instead. */
 
 import { Location } from '@angular/common';
-import { last } from 'lodash-es';
+import { last, zip } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
@@ -191,6 +191,26 @@ export function paramSortFunc<Param>(
     };
 }
 
+/**
+ * Generates a function for updating result depending on ascending or descending order.
+ *
+ * @param ascendingOrder - Sort by ascending order (default)
+ * @returns - (result: number) => number
+ */
+function sortOrderFactory(ascendingOrder = true): (result: number) => number {
+    return result => (ascendingOrder ? result : -result);
+}
+
+/**
+ * Updates result depending on ascending or descending order.
+ *
+ * @param result - Result of comparison
+ * @param ascendingOrder - Sort by ascending order (default)
+ */
+function sortOrder(result: number, ascendingOrder = true): number {
+    return sortOrderFactory(ascendingOrder)(result);
+}
+
 /** Generates a function for alphabetic sorting (case insensitive).
  * @param locale - Locale to use for comparison
  * @param fn - A function which returns a string from item being sorted
@@ -201,10 +221,55 @@ export function alphabeticalSort<P>(
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
 ): (a: P, b: P) => number {
-    return (a, b) => {
-        const result = fn(a).localeCompare(fn(b), locale);
-        return ascendingOrder ? result : -result;
-    };
+    return (a, b) => sortOrder(fn(a).localeCompare(fn(b), locale), ascendingOrder);
+}
+
+/** Generates a function for sorting mixed alphabetic and numeric strings.
+ *
+ * Numeric segments are sorted numerically, while alphabetic segments are sorted alphabetically.
+ *
+ * This is to match the sorting behavior used within the thick client.
+ *
+ * @param locale - Locale to use for comparison
+ * @param fn - A function which returns a string from item being sorted
+ * @param ascendingOrder - Sort by ascending order (default)
+ */
+export function alphaNumericSort<P>(
+    locale: string,
+    fn: (param: P) => string,
+    ascendingOrder: boolean = true,
+): (a: P, b: P) => number {
+    return (...args): number =>
+        sortOrder(
+            (() => {
+                const [a, b] = args.map(fn);
+                const alphaNumericalSplit = [a, b].map(cur =>
+                    cur.match(/[\D]+|(?:\d+(?:\.\d*)?|\.\d+)/g),
+                );
+                const zipped = zip(...alphaNumericalSplit);
+                const firstVariance = zipped.find(([a, b]) => a !== b);
+
+                if (!firstVariance) {
+                    return 0;
+                }
+
+                const numericSegments = firstVariance.map(segment => parseFloat(segment));
+                const bothStrings = numericSegments.every(isNaN);
+                const someStrings = !bothStrings && numericSegments.some(isNaN);
+
+                if (bothStrings) {
+                    const [aSegment, bSegment] = firstVariance;
+                    return aSegment.localeCompare(bSegment, locale);
+                }
+
+                if (someStrings) {
+                    return isNaN(numericSegments[0]) ? 1 : -1;
+                }
+
+                return numericSegments[0] - numericSegments[1];
+            })(),
+            ascendingOrder,
+        );
 }
 
 /* Object */

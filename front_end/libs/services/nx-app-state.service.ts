@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
-import { BehaviorSubject } from 'rxjs';
-import { debounceTime } from 'rxjs/operators';
+import { BehaviorSubject, fromEvent } from 'rxjs';
+import { debounceTime, shareReplay, take } from 'rxjs/operators';
 
 @Injectable({
     providedIn: 'root',
@@ -14,6 +14,8 @@ export class NxAppStateService {
     headerVisibleSubject = new BehaviorSubject(true);
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject<number>(undefined);
+    // eslint-disable-next-line nx/ban-global-variables
+    userInteracted$ = fromEvent(document, 'click').pipe(take(1), shareReplay({ bufferSize: 1, refCount: false }));
     appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
 

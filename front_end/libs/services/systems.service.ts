@@ -124,19 +124,13 @@ export class NxSystemsService {
             const systemService = this.injector.get(NxSystemService);
             for (const { stateOfHealth, id, system2faEnabled } of systems) {
                 if (stateOfHealth === 'online' && !system2faEnabled) {
-                    const system = systemService.createSystem(this.userEmail, id, null, true, true);
-                    try {
-                        (async () => {
-                            await system.update();
-                            if (system.permissionManager.isAdmin()) {
-                                // Prefetch initial data
-                                await firstValueFrom(system.updateOrGetSystemSettings());
-                                await firstValueFrom(system.getAggregateLicenseInfo());
-                            }
-                        })();
-                    } catch (error) {
-                        console.error(error);
-                    }
+                    systemService.createSystem(
+                        this.userEmail,
+                        id,
+                        null,
+                        true,
+                        true,
+                    );
                 }
             }
         });
