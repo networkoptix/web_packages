@@ -210,7 +210,8 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         if (user.value !== this.selectedUser?.value) {
             this.form.control.setErrors(null);
         }
-        if (!user.userEnabled && user.disabled === undefined) { // Not a "free type" user --TT
+        if (!user.userEnabled && user.disabled === undefined) {
+            // Not a "free type" user --TT
             this.form.control.setErrors({ userDisabled: true });
         }
         if (!user.value) {

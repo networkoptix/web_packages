@@ -96,7 +96,7 @@ export class PermissionManager {
             group.permissions
                 ?.split('|')
                 .forEach(permission => aggregatedPermissions.add(permission));
-            group.resourceAccessRights[ResourceGroups.devices]
+            group.resourceAccessRights?.[ResourceGroups.devices]
                 ?.split('|')
                 .forEach(permission => aggregatedDeviceAccessRights.add(permission));
         }

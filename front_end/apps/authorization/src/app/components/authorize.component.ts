@@ -574,15 +574,16 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkBackupCodeProcess = this.processService.createProcess(
             async () => {
                 this.backupCodeErrorCode = '';
-                return lastValueFrom(this.action === 'restore_password'
-                    ? this.authService.restorePassword(
-                          this.loginCode,
-                          this.resetPassword,
-                          this.backupCode,
-                          true,
-                      )
-                    : this.authService
-                          .verifyBackupCode(this.backupCode, this.loginCode));
+                return lastValueFrom(
+                    this.action === 'restore_password'
+                        ? this.authService.restorePassword(
+                              this.loginCode,
+                              this.resetPassword,
+                              this.backupCode,
+                              true,
+                          )
+                        : this.authService.verifyBackupCode(this.backupCode, this.loginCode),
+                );
             },
             { ignoreError: true, timeoutMs },
             res => {
@@ -613,13 +614,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         // use factory if account properties are not needed outside of the create component
         // this.createProcessFactory = (props) => this.processService.createProcess(() => {
         this.createProcess = this.processService.createProcess(
-            () => this.cloudService.registerUser(
-                this.accountInfo.email,
-                this.accountInfo.password,
-                this.accountInfo.firstName,
-                this.accountInfo.lastName,
-                this.loginCode,
-            ),
+            () =>
+                this.cloudService.registerUser(
+                    this.accountInfo.email,
+                    this.accountInfo.password,
+                    this.accountInfo.firstName,
+                    this.accountInfo.lastName,
+                    this.loginCode,
+                ),
             { ignoreError: true, timeoutMs },
             res => {
                 this.errorDialog$.value && this.errorDialog$.next(false);

@@ -1252,7 +1252,7 @@ export class NxLayoutGridComponent {
             this.changingLayout = cleanId(id);
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
-            if (!this.system.userManager.permissions.editCameras) {
+            if (!this.system.permissionManager.permissions().editCameras) {
                 delete this.additionalErrorMessages.defaultPassword;
                 delete this.additionalErrorMessages.unauthorized;
             }

@@ -124,13 +124,7 @@ export class NxSystemsService {
             const systemService = this.injector.get(NxSystemService);
             for (const { stateOfHealth, id, system2faEnabled } of systems) {
                 if (stateOfHealth === 'online' && !system2faEnabled) {
-                    systemService.createSystem(
-                        this.userEmail,
-                        id,
-                        null,
-                        true,
-                        true,
-                    );
+                    systemService.createSystem(this.userEmail, id, null, true, true);
                 }
             }
         });

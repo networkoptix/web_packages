@@ -15,7 +15,10 @@ export class NxAppStateService {
     systemAvailable$ = new BehaviorSubject(true);
     lastErrorStatus$ = new BehaviorSubject<number>(undefined);
     // eslint-disable-next-line nx/ban-global-variables
-    userInteracted$ = fromEvent(document, 'click').pipe(take(1), shareReplay({ bufferSize: 1, refCount: false }));
+    userInteracted$ = fromEvent(document, 'click').pipe(
+        take(1),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
     appContainerHeight = 'calc(100% - 48px)';
     altBackground = false;
 
