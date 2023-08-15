@@ -794,8 +794,7 @@ export class NxLayoutGridComponent {
         status: string,
     ): void => {
         const hasAdditionalMessage = Boolean(
-            this.additionalErrorMessages[this.layoutItemLookup[id]?.details.id || ''] ||
-                this.LANG.layouts.additionalErrorMessages[status],
+            this.additionalErrorMessages[this.layoutItemLookup[id]?.details.id || status],
         );
         const iconSizeConfigs: {
             minWidth: number;
@@ -1215,7 +1214,11 @@ export class NxLayoutGridComponent {
         if (id && cleanId(id) !== cleanId(this.layout.id)) {
             this.changingLayout = cleanId(id);
             this.errors = {};
-            this.additionalErrorMessages = {};
+            this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
+            if (!this.system.userManager.permissions.editCameras) {
+                delete this.additionalErrorMessages.defaultPassword;
+                delete this.additionalErrorMessages.unauthorized;
+            }
             this.layoutChanged.emit(id);
         }
 
