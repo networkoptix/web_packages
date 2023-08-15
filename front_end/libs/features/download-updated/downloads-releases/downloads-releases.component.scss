@@ -1,36 +1,36 @@
 @use "typography";
-@use "theme_variables_common" as *;
+@use "theme_variables_common" as theme_vars;
 @use "bootstrap_utils" as bootstrap;
 
 .fixed-sidebar {
-    overflow-x: hidden;
-    overflow-y: auto !important;
-    margin: 0 !important;
-    padding-left: 0 !important;
-    padding-right: 0 !important;
-    background: var(--developer-menu-bg);
-    height: calc(100% - 130px);
+  margin: 0 !important;
+  padding-left: 1rem !important;
+  padding-right: 0 !important;
 
-    @include bootstrap.media-breakpoint-down(sm) {
-        height: auto !important;
-        top: 0;
-        left: 0;
-        padding-right: 1rem !important;
-        width: 100vw !important;
-    }
+  @include bootstrap.media-breakpoint-down(lg) {
+    height: auto;
+    padding-right: 1rem !important;
+  }
 
-    @include bootstrap.media-breakpoint-up(md) {
-        position: fixed;
-        left: 0;
-        width : calc((100% - #{$scrollbar-height}) / 3)
-    }
+  // replicate col-md-4
+  @include bootstrap.media-breakpoint-up(lg) {
+    position: fixed;
+    left: 0;
+    width: calc((100% - #{theme_vars.$scrollbar-height}) / 3)
+  }
 
-    @include bootstrap.media-breakpoint-up(xl) {
-        width : calc((100% - #{$scrollbar-height}) / 4);
-        max-width : calc(#{$fluid-container-max-width} / 4);
-    }
+  // replicate col-xl-3
+  @include bootstrap.media-breakpoint-up(xl) {
+    width: calc((100% - #{theme_vars.$scrollbar-height}) / 4);
+    max-width: calc(#{theme_vars.$fluid-container-max-width} / 4);
+  }
 
-    ::-webkit-scrollbar-track {
-        background-color: transparent;
+  nx-menu::ng-deep {
+    height: 100%;
+    margin: -16px 0 0 -16px;
+    .nx-menu {
+      height: 100%;
     }
+  }
 }
+

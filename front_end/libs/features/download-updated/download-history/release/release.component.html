@@ -10,7 +10,7 @@
     {{ LANG.pages.downloadHistory.published | translate : { date: release.date } }}
 </h4>
 
-<div *ngIf="release.releaseNotes">
+<div>
     <h4 translate>Release Notes</h4>
     <div [innerHTML]="release.releaseNotes | safe : 'html'"></div>
 </div>

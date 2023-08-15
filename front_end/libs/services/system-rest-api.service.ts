@@ -40,6 +40,10 @@ import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-use
 import { getUsersRestV1 } from '@services/mediaserver-apis/endpoints/get-users';
 import { NxStorageService } from '@services/storage.service';
 import { SystemUser, RestV1User, NxUser, Role, UserType } from '@services/system-user.types';
+import {
+    serverKeyMapV1,
+    type RestV1ServerCompat,
+} from '@services/system.service/system-server-types';
 import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { buildTopLevelKeyMap } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
@@ -96,7 +100,6 @@ import {
     DeviceType,
     type RestV1CameraCompat,
 } from './system.service/camera-manager/camera-manager-types';
-import { serverKeyMapV1, type RestV1ServerCompat } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 /**

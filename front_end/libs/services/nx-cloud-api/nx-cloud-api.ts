@@ -34,6 +34,7 @@ import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
 import { CustomClientAPI } from './custom-client-api';
 import * as t from './nx-cloud-api.types';
+import { DownloadReleases } from './nx-cloud-api.types';
 
 type ResponseTypes = 'arraybuffer' | 'blob' | 'text' | 'json';
 
@@ -786,6 +787,13 @@ export class NxCloudApiService {
     @memoizeAsyncPersistent
     getDownloads(): Promise<t.Downloads | null> {
         return this.cachedGet<t.Downloads | null>(apiBase + '/utils/downloads').toPromise();
+    }
+
+    @memoizeAsyncPersistent
+    getDownloadsReleases(): Promise<DownloadReleases | null> {
+        return this.cachedGet<t.DownloadReleases | null>(
+            apiBase + '/utils/downloads-releases',
+        ).toPromise();
     }
 
     @memoizeAsyncPersistent

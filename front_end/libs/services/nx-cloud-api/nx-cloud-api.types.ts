@@ -217,6 +217,12 @@ export interface Downloads {
     meta_version: string | null; // Used for metavms builds
 }
 
+export interface DownloadReleases {
+    releases?: Downloads;
+    betas?: Downloads;
+    patches?: Downloads;
+}
+
 type ReadOnlyAPIType = 'VMS';
 
 export interface ReadOnlyAPI {

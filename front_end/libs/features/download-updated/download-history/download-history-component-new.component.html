@@ -1,7 +1,4 @@
-<div
-    class="container"
-    *ngIf="canViewRelease"
->
+<div class="container">
     <h1 translate>Release notes</h1>
 
     <div
@@ -10,10 +7,7 @@
     >
         <nx-pre-loader *ngIf="!activeBuilds"></nx-pre-loader>
 
-        <div
-            class="nx-tab-set"
-            *ngIf="tabsVisible"
-        >
+        <div class="nx-tab-set">
             <ul class="justify-content-start nav nav-tabs nx-tab-set-tabs">
                 <li
                     *ngFor="let type of noteTypes"

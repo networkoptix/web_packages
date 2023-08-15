@@ -27,7 +27,7 @@ export class OsResolver {
     resolve(): typeof empty {
         this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || this.windows;
         this.router
-            .navigate(['/downloads-releases/' + this.platform.toLowerCase()])
+            .navigate(['/downloads-releases/releases/' + this.platform.toLowerCase()])
             .catch(error => {
                 console.error(error);
             });

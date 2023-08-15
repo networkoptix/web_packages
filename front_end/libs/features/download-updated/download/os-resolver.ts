@@ -14,12 +14,12 @@ export class OsResolver {
     windows: string;
 
     constructor(
-        private configService: NxConfigService,
+        configService: NxConfigService,
         private router: Router,
         private deviceService: DeviceDetectorService,
     ) {
         this.deviceInfo = this.deviceService.getDeviceInfo();
-        const configDownloads = this.configService.getConfig().downloads;
+        const configDownloads = configService.getConfig().downloads;
         this.windows = configDownloads.groups.windows.name;
         this.platformMatch = configDownloads.platformMatch;
     }

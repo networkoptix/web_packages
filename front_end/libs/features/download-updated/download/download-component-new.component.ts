@@ -1,84 +1,69 @@
-import { DOCUMENT, isPlatformBrowser } from '@angular/common';
-import { Component, OnInit, Inject, PLATFORM_ID } from '@angular/core';
-import { ActivatedRoute, ActivationEnd, Router } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { DeviceDetectorService } from 'ngx-device-detector';
-import { Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { CommonModule, DOCUMENT } from '@angular/common';
+import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { RouterModule } from '@angular/router';
+import { UntilDestroy } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxFooterComponent } from '@components/footer/footer.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
+import { DirectivesModule } from '@directives/directives.module';
 import { images } from '@lib/variables/static-variables';
-import { permissions } from '@pages/static-variables-features';
-import { NxAccountService } from '@services/account.service';
-import { isAccount } from '@services/account.service/account';
-import { NxCloudApiService } from '@services/nx-cloud-api';
+import { OsResolver } from '@pages/download-updated/download/os-resolver';
+import { DownloadMobileComponent } from '@pages/download-updated/download-mobile/download-mobile.component';
+import { PipesModule } from '@pipes/pipes.module';
 import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { Arm, Groups } from '@services/nx-config/base-config';
+import type { Groups } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-// import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'nx-download-component',
-    templateUrl: 'download.component.html',
-    styleUrls: ['download.component.scss'],
+    selector: 'nx-download-component-new',
+    templateUrl: 'download-component-new.component.html',
+    styleUrls: ['download-component-new.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        FormsModule,
+        RouterModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        DirectivesModule,
+        NxFooterComponent,
+        PipesModule,
+        NxPreLoaderComponent,
+        NxSectionPlaceholderComponent,
+        TranslateModule,
+        DownloadMobileComponent,
+    ],
+    providers: [OsResolver],
 })
-export class DownloadComponentNewComponent implements OnInit {
-    private sub: Subscription;
-    private platform: string;
-    private activeOs: string;
-    public canViewDownloads: boolean = false;
-    private paramPlatform: string;
+export class DownloadComponentNew implements OnChanges {
+    @Input() releaseType: string;
+    @Input('platform') activePlatform: string;
+    @Input() downloadData: Downloads;
+    @Input() sortedPlatforms: Platform[];
 
     CONFIG: IConfig;
     LANG = staticLang;
     images = images;
 
-    activePlatform: Platform;
-
     downloadButton: Installer;
-    downloadsData: Downloads | null;
-    canSeeHistory: boolean;
-    tabsVisible: boolean = false;
-    sortedPlatforms: Platform[];
-    checkedDownloads: boolean = false;
     // Placeholder should not appear while downloads are loading
     otherPackages: Installer[];
 
     // TODO: Fix arm supported. It says the same thing as linux
 
-    constructor(
-        configService: NxConfigService,
-        private cloudApi: NxCloudApiService,
-        private accountService: NxAccountService,
-        private deviceService: DeviceDetectorService,
-        private route: ActivatedRoute,
-        private router: Router,
-        // private pageService: NxPageService,
-        @Inject(PLATFORM_ID) private platformId: object,
-        @Inject(DOCUMENT) private document: Document,
-    ) {
+    constructor(configService: NxConfigService, @Inject(DOCUMENT) private document: Document) {
         this.CONFIG = configService.getConfig();
+    }
 
-        if (isPlatformBrowser(this.platformId)) {
-            this.router.events
-                .pipe(
-                    untilDestroyed(this),
-                    filter(event => event instanceof ActivationEnd),
-                )
-                .subscribe((event: ActivationEnd) => {
-                    this.paramPlatform = event.snapshot.params.platform;
-
-                    if (this.paramPlatform && this.sortedPlatforms?.length) {
-                        this.calcDisplayedPackages(this.paramPlatform);
-                        this.activePlatform = this.sortedPlatforms.find(
-                            platform => platform.name === this.paramPlatform,
-                        );
-                    }
-                    // }
-                });
-        }
+    ngOnChanges(): void {
+        this.parsePlatform();
     }
 
     private calcDisplayedPackages(platformName: string): void {
@@ -106,103 +91,47 @@ export class DownloadComponentNewComponent implements OnInit {
             }
         }
     }
-
-    private getDownloads(): void {
-        this.sub = this.route.params.subscribe(params => {
-            this.platform = params.platform.toLowerCase();
-
-            for (const mobile in this.CONFIG.downloads.mobile) {
-                const { name, os } = this.CONFIG.downloads.mobile[mobile];
-                if (os === this.activeOs) {
-                    const link = this.LANG.downloads.mobile[name].link;
-                    if (link !== 'disabled') {
-                        this.document.location.href = link;
-                        return;
-                    }
-                    break;
-                }
-            }
-        });
-
-        this.cloudApi.getDownloads().then(response => {
-            // Response is null if no releases
-            this.downloadsData = response;
-            this.sortedPlatforms = [];
-            // Sorts platforms based on order defined in nx-config service
-            Object.values(this.CONFIG.downloads.groups).forEach((checkPlatform: Arm) => {
-                const platform = this.downloadsData?.platforms.find(
-                    downloadsPlatform => downloadsPlatform.name === checkPlatform.name,
-                );
-                if (!platform) {
+    private parsePlatform(): void {
+        for (const mobile in this.CONFIG.downloads.mobile) {
+            const { name, os } = this.CONFIG.downloads.mobile[mobile];
+            if (os === this.activePlatform) {
+                const link = this.LANG.downloads.mobile[name].link;
+                if (link !== 'disabled') {
+                    this.document.location.href = link;
                     return;
                 }
-                platform.files = platform.files
-                    .filter(installer =>
-                        this.CONFIG.downloads.groups[
-                            platform.name as keyof Groups
-                        ].appTypes.includes(installer.appType),
-                    )
-                    .map(installer => {
-                        if (!installer.niceName) {
-                            const translatedPlatform =
-                                this.LANG.downloads.platforms[installer.platform];
-                            const translatedAppType =
-                                this.LANG.downloads.appTypes[installer.appType];
-                            if (platform.name === 'sdk' && translatedAppType) {
-                                installer.niceName = translatedAppType;
-                            } else if (translatedPlatform && translatedAppType) {
-                                installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
-                            } else {
-                                installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package}`;
-                            }
-                        }
-                        return installer;
-                    });
-
-                if (platform.files.length > 0) {
-                    this.sortedPlatforms.push(platform);
-                }
-            });
-
-            if (!this.sortedPlatforms.some(platform => platform.name === this.platform)) {
-                const configDownloads = this.CONFIG.downloads;
-                const detectedOS = this.deviceService.getDeviceInfo().os.toLowerCase();
-                this.platform =
-                    configDownloads.platformMatch[detectedOS] ||
-                    configDownloads.groups.windows.name;
+                break;
             }
-            this.calcDisplayedPackages(this.platform);
-            this.activePlatform = this.sortedPlatforms.find(
-                platform => platform.name === this.platform,
-            );
-            this.checkedDownloads = true;
-
-            this.sub.unsubscribe();
-        });
-    }
-
-    ngOnInit(): void {
-        this.accountService.get().then(account => {
-            this.canSeeHistory =
-                !!this.CONFIG.cloudCapabilities.publicReleases ||
-                (account &&
-                    (account.is_superuser ||
-                        account.permissions.includes(permissions.canViewRelease)));
-        });
-
-        if (!this.CONFIG.cloudCapabilities.publicDownloads) {
-            this.accountService.requireLogin().then(result => {
-                if (isAccount(result)) {
-                    this.canViewDownloads = true;
-                    this.getDownloads();
-                }
-            });
-        } else {
-            this.canViewDownloads = true;
-            this.getDownloads();
         }
-    }
+        const platform = this.downloadData.platforms.find(
+            ({ name }) => name === this.activePlatform,
+        );
+        if (platform) {
+            platform.files = platform.files
+                .filter(installer =>
+                    this.CONFIG.downloads.groups[platform.name as keyof Groups].appTypes.includes(
+                        installer.appType,
+                    ),
+                )
+                .map(installer => {
+                    if (!installer.niceName) {
+                        const translatedPlatform =
+                            this.LANG.downloads.platforms[installer.platform];
+                        const translatedAppType = this.LANG.downloads.appTypes[installer.appType];
+                        if (platform.name === 'sdk' && translatedAppType) {
+                            installer.niceName = translatedAppType;
+                        } else if (translatedPlatform && translatedAppType) {
+                            installer.niceName = `${translatedPlatform} - ${translatedAppType}`;
+                        } else {
+                            installer.niceName = `${installer.platform} - ${this.LANG.downloads.appTypes.package}`;
+                        }
+                    }
+                    return installer;
+                });
+        }
 
+        this.calcDisplayedPackages(this.activePlatform);
+    }
     installerName(platformName: string): string {
         return (
             this.LANG.downloads.groups[platformName].shortLabel ||

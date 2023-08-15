@@ -819,6 +819,9 @@
             "macos": {
                 "label": "Mac OS"
             },
+            "mobile": {
+                "label": "Mobile"
+            },
             "sdk": {
                 "label": "SDK",
                 "shortLabel": "SDK"

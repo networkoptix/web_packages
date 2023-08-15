@@ -1,0 +1,20 @@
+<div class="card card-default">
+    <div class="card-body flex-md">
+        <div class="col-md-8 order-1 order-md-1 p-0">
+            <div class="clearfix">
+                <div
+                    class="mobile-badge"
+                    *ngFor="let platform of CONFIG.downloads.mobile"
+                >
+                    <a
+                        *ngIf="LANG.downloads.mobile[platform.name].link !== 'disabled'"
+                        class="mobile-link"
+                        [ngClass]="platform.os"
+                        [href]="LANG.downloads.mobile[platform.name].link | translate"
+                    >
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
