@@ -11,6 +11,7 @@ import paramiko
 import re
 import socket
 import subprocess
+import sys
 import time
 import uuid
 
@@ -773,9 +774,10 @@ class GenericKeywords:
 
     
     def create_systems(self):
+        json_file = sys.argv[0].replace('.py', '' )
         jsonPath = os.path.join(
             "server_json",
-            "systems_page.json",
+            f"{json_file}.json"
         )
         with open(jsonPath, encoding="utf-8") as suite_json:
             serversJson = json.load(suite_json)
