@@ -19,23 +19,23 @@ class TestSend:
     }
     data = [
         {'user_email': 'DUMmY@example.com', 'type': 'restore_password',
-         'message': msg, 'customization': settings.CUSTOMIZATION},
+         'message': msg, 'customization': settings.TEST_CUSTOMIZATION},
         {'user_email': 'DummY@example.com', 'type': 'RESTORE_password',
-         'message': msg, 'customization': settings.CUSTOMIZATION},
+         'message': msg, 'customization': settings.TEST_CUSTOMIZATION},
         {'user_email': 'DummY@example.com', 'type': 'RESTORE_password',
          'message': msg,
-         'customization': settings.CUSTOMIZATION}
+         'customization': settings.TEST_CUSTOMIZATION}
     ]
     data_with_sysid = [
         {
             'user_email': 'dummy@example.com', 'type': 'restore_password',
-            'message': msg, 'customization': settings.CUSTOMIZATION,
+            'message': msg, 'customization': settings.TEST_CUSTOMIZATION,
             'system_id': uuid4()
         },
         {
             'user_email': 'DummY@example.com', 'type': 'RESTORE_password',
             'message': {"userFullName": 'user dummy', 'system_id': uuid4()},
-            'customization': settings.CUSTOMIZATION
+            'customization': settings.TEST_CUSTOMIZATION
         }
     ]
 
