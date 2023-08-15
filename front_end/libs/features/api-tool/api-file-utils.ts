@@ -67,7 +67,12 @@ export const addAPITypeToTags = (api: APIDoc, type: number | string) => {
     Object.keys(api.paths).forEach(endpoint => {
         const endpointObj = Object.entries(api.paths[endpoint]);
         endpointObj.forEach(method => {
-            const modifiedTag = api.paths[endpoint][method[0]].tags[0] + tagModifier;
+            if (!api.paths[endpoint][method[0]].tags) {
+                // If tags do not exist, create tags array and assign the first tag to it
+                api.paths[endpoint][method[0]].tags = [];
+                api.paths[endpoint][method[0]].tags.push(api.tags[0].name.slice(0, -2));
+            }
+            const modifiedTag = api.paths[endpoint][method[0]]?.tags[0] + tagModifier;
             checkMethodResponseDescription(method[1]);
             api.paths[endpoint][method[0]].tags[0] = modifiedTag;
             // Adds the endpoint/summary itself as a tag so that swagger can filter for just the endpoint
