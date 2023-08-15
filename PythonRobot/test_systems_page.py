@@ -12,6 +12,7 @@ from change_pass_form import ChangePassForm
 from landing_page import LandingPage
 from selenium.webdriver.common.keys import Keys
 from systems_page import SystemsPage
+from system_admin import SystemAdmin
 
 from NoptixLibrary.GenericKeywords import GenericKeywords
 
@@ -69,27 +70,32 @@ def no_systems_connected():
     print("pass")
 
 
-# . Should show the system page instead of all systems when user only has one
-#   [Tags]    C41878    threaded
-#   Log In    ${extra system}[cloudOwner]    ${base password}   api=${False}
-#   Wait until Location Is    ${ENV}/systems/${extra system}[cloud id]
-#   Validate Header Button Text    ${extra system}[name]    systems=False
-
 def one_system_directs_you_to_system_admin():
-    # Todo need system admin class to test this
-    pass
+    driver = get_headless_chrome()
+
+    robot_keywords.go_to_url(driver, ENV + "/systems")
+    LoginDialog(driver).basic_cloud_login(SERVERS[1]['cloudOwner'], password)
+    HeaderNav(driver).account_dropdown()
+
+    SystemAdmin(driver)
+
+    robot_keywords.close_browser(driver)
+    print("pass")
 
 
 def opens_system_admin_when_tile_is_clicked():
-    # Todo need system admin class to test this
-    pass
-    # 4. Should open system page when clicked on system
-    # [Tags]    C41893    threaded
-    # Log In    ${system}[cloudOwner]    ${base password}    api=${False}
-    # Validate on Systems Page
-    # Click Element    //h2[contains(text(), "${system}[name]")]
-    # Verify In System    ${system}[name]
-    # Validate Header Button Text    ${system}[name]    systems=False
+    driver = get_headless_chrome()
+
+    robot_keywords.go_to_url(driver, ENV + "/systems")
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    HeaderNav(driver).account_dropdown()
+
+    systems_page = SystemsPage(driver)
+    systems_page.tiles[0].click()
+    SystemAdmin(driver)
+
+    robot_keywords.close_browser(driver)
+    print("pass")
 
 
 def search_highlights_system_name():
@@ -110,6 +116,7 @@ def search_highlights_system_name():
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def search_highlights_owner_name():
     driver = get_headless_chrome()
 
@@ -124,13 +131,14 @@ def search_highlights_owner_name():
         "System tiles not found or incorrect number of tiles."
 
     sys_page.update_system_tiles()
-    assert "highlighted" in sys_page.tiles[0].owner().find_element_by_xpath(".//nx-search-highlight/span").get_attribute("class")
+    assert "highlighted" in sys_page.tiles[0].owner().find_element_by_xpath(
+        ".//nx-search-highlight/span").get_attribute("class")
 
     robot_keywords.close_browser(driver)
     print("pass")
 
-def search_is_cleared_by_x_button():
 
+def search_is_cleared_by_x_button():
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
@@ -150,8 +158,8 @@ def search_is_cleared_by_x_button():
     robot_keywords.close_browser(driver)
     print("pass")
 
-def should_update_owner_name():
 
+def should_update_owner_name():
     CLOUD_API.set_account_name(SERVERS[1]['cloudOwner'], password, "carrie", "fisher")
     driver = get_headless_chrome()
 
@@ -169,8 +177,10 @@ def should_update_owner_name():
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def search_only_visible_with_more_than_eight_systems():
-    CLOUD_API.disconnect_server_via_api([SERVERS[1]['cloudOwner'], password], SERVERS[1]['id'], password, SERVERS[1]['cloudOwner'])
+    CLOUD_API.disconnect_server_via_api([SERVERS[1]['cloudOwner'], password], SERVERS[1]['id'], password,
+                                        SERVERS[1]['cloudOwner'])
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV + "/systems")
     LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
@@ -184,10 +194,11 @@ def search_only_visible_with_more_than_eight_systems():
     print("pass")
 
 
-
 if __name__ == "__main__":
     system_tiles_represent_actual_information()
     no_systems_connected()
+    one_system_directs_you_to_system_admin()
+    opens_system_admin_when_tile_is_clicked()
     search_highlights_system_name()
     search_highlights_owner_name()
     search_is_cleared_by_x_button()

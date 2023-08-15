@@ -29,3 +29,6 @@ class SystemTile:
             return True
         except selenium.common.exceptions.NoSuchElementException:
             return False
+
+    def click(self):
+        self.selenium_element.click()
