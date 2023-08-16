@@ -52,7 +52,7 @@ export class NxConfigService {
             this.window.location.reload();
 
         const debugHandlerFactory = (
-            (configRef = this.config, session = this.session) =>
+            (configRef = this.config, session = this.session, windowRef = this.window) =>
             (nodeNames: (string | symbol)[] = []): ProxyHandler<IConfig> => ({
                 set(target, property, value) {
                     const currentNodeString = [...nodeNames, property].join('.');
@@ -60,8 +60,8 @@ export class NxConfigService {
                         ...session.retrieve(NxConfigService.OVERRIDE_KEY),
                         [currentNodeString]: value,
                     });
-                    if (this.window.confirm('Reload window to apply changes?')) {
-                        this.window.location.reload();
+                    if (windowRef.confirm('Reload window to apply changes?')) {
+                        windowRef.location.reload();
                     }
                     return true;
                 },
@@ -79,7 +79,7 @@ export class NxConfigService {
                             value,
                             settingType,
                             get showPromptNewValue() {
-                                const newValue = this.window.prompt(
+                                const newValue = windowRef.prompt(
                                     `Updated Value for "${currentNodeString}"`,
                                     value as string,
                                 );
@@ -87,8 +87,8 @@ export class NxConfigService {
                                     ...session.retrieve(NxConfigService.OVERRIDE_KEY),
                                     [currentNodeString]: newValue,
                                 });
-                                if (this.window.confirm('Reload window to apply changes?')) {
-                                    this.window.location.reload();
+                                if (windowRef.confirm('Reload window to apply changes?')) {
+                                    windowRef.location.reload();
                                 }
                                 return newValue;
                             },
@@ -98,7 +98,7 @@ export class NxConfigService {
                                     [currentNodeString]: newValue,
                                 });
                                 if (reload) {
-                                    this.window.location.reload();
+                                    windowRef.location.reload();
                                 }
                             },
                         };
