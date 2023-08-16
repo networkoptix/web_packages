@@ -8,9 +8,11 @@ import { combineLatest, distinctUntilChanged, firstValueFrom, of, timer } from '
 import { catchError, debounceTime, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { environment } from '@environments/environment';
 import { redirect, responseOk, updateInterval } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
+import { nxConfig } from '@services/nx-config/config';
 import { OauthService } from '@services/oauth.service';
 import { NxToastService } from '@services/toast.service';
 
@@ -222,9 +224,8 @@ export class CloudAccount extends BaseAccount {
             if (account) {
                 this.router
                     .navigate([
-                        this.CONFIG.featureFlags.dashboardRedirect ||
-                        this.cookieService.get('devServer')
-                            ? '/dashboard'
+                        !environment.isLocal && nxConfig.featureFlags.channelPartners
+                            ? redirect.channelPartners
                             : redirect.authorised,
                     ])
                     .catch(error => {

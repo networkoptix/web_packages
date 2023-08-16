@@ -672,6 +672,7 @@ export interface Permissions {
 
 export interface Redirect {
     authorised: string;
+    channelPartners: string;
     unauthorised: string;
     page404: string;
     paths: string[];

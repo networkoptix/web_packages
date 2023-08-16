@@ -486,6 +486,7 @@ export const oauthStore: configTypes.OauthStoreFlags = {
 
 export const redirect: configTypes.Redirect = {
     authorised: environment.isLocal ? '/settings' : '/systems',
+    channelPartners: '/home',
     unauthorised: '/',
     page404: '/404',
     paths: ['/', '/register', '/restore_password', '/activate', '/404'],
