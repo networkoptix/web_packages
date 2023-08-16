@@ -84,7 +84,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     getModuleSymbol = (): symbol => NxSystemOldModule.moduleSymbol;
 
-    supportedVersions = [0, 5.0, 5.1, 5.2] as const;
+    supportedVersions = [0, 5.0, 5.1, 6.0] as const;
 
     id: string = '';
     canMerge: boolean = false;

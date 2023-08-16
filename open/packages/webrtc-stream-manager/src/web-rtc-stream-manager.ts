@@ -5,7 +5,7 @@ import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip, pair
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FrameTracker, FocusTracker, MosScoreTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, StreamOrUrl } from './types';
 import { BaseTracker } from './trackers/base-tracker';
 import { calculateElementFocus, calculateWindowFocusThreshold, sanitizeUrl } from './utils';
 
@@ -303,13 +303,13 @@ export class WebRTCStreamManager {
      * @param webRtcUrlFactory () => string
      * @param videoElement HTMLVideoElement
      * @param hasSecondary boolean - if the camera has a secondary stream available
-     * @returns Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
+     * @returns Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
      */
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
         hasSecondary = true,
-    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
+    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]> {
         const webRtcUrl = sanitizeUrl(webRtcUrlFactory());
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(
@@ -364,7 +364,7 @@ export class WebRTCStreamManager {
 
     /** Public methods and properties */
     /** Updates whenever the mediasserver sends a new stream */
-    mediaStream$ = new BehaviorSubject<[MediaStream, ConnectionError, WebRTCStreamManager]>(null);
+    mediaStream$ = new BehaviorSubject<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>(null);
 
     /**
      * Get current count of players connected to stream.
@@ -522,7 +522,15 @@ export class WebRTCStreamManager {
     /**
      * Stop all tracks on the stream to ensure mediaserver resources are freed up.
      */
-    private stopCurrentStream = (): void => this.mediaStream$.value?.[0]?.getTracks().forEach(track => track.stop());
+    private stopCurrentStream = (): void => {
+        const currentSource = this.mediaStream$.value?.[0]
+
+        if (!currentSource || typeof currentSource === 'string') {
+            return;
+        }
+
+        currentSource.getTracks().forEach(track => track.stop())
+    };
 
     /** Peer Connection Helpers */
     /**
@@ -545,13 +553,49 @@ export class WebRTCStreamManager {
         this.stream$.next(this.hasSecondary ? stream : 0);
     }
 
+    private mediaSource: MediaSource = null;
+    private sourceBuffer: SourceBuffer = null;
+    private mseDataBuffer: BufferSource[] = [];
+
+    private appendBuffer = () => {
+        if (this.sourceBuffer.updating) {
+            return;
+        }
+        const nextSource = this.mseDataBuffer.shift();
+        if (nextSource) {
+            console.log('appending buffer')
+            this.sourceBuffer.appendBuffer(nextSource);
+        }
+    }
+
+    private initializeMse = (mimeType: string): void => {
+        if (!MediaSource || !MediaSource.isTypeSupported(mimeType)) {
+            this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
+            return;
+        }
+
+        if (!this.mediaSource) {
+            this.mediaSource = new MediaSource();
+            this.mediaStream$.next([URL.createObjectURL(this.mediaSource), null, this]);
+            this.mediaSource.onsourceopen = () => {
+                console.log(`ms is opened: ${mimeType}`);
+                this.sourceBuffer = this.mediaSource.addSourceBuffer(mimeType);
+                this.sourceBuffer.onupdateend = this.appendBuffer;
+            }
+        }
+
+    }
+
     /**
      * Handles websocket messages to negotiate connection.
      *
      * @param message MessageEvent<string>
      */
-    private gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg): void => {
+    private gotMessageFromServer = (signal: SdpInit | IceInit | ErrorMsg | MimeInit): void => {
         this.initPeerConnection();
+        if ('mime' in signal) {
+            this.initializeMse(signal.mime);
+        }
 
         if ('sdp' in signal) {
             this.peerConnection
@@ -680,7 +724,7 @@ export class WebRTCStreamManager {
     };
 
     /**
-     * Initializes peer connection cleanup. Closes all websockets and peer connections when mediastream doesn't have any observers.
+     * Initializes peer connection cleanup. Closes all websockets and peer connections when mediasource doesn't have any observers.
      */
     #initPeerConnectionCleanup = (): void => {
         WebRTCStreamManager.sync$
@@ -712,6 +756,13 @@ export class WebRTCStreamManager {
                 console.log(stream);
                 this.stopCurrentStream();
                 this.mediaStream$.next([stream, null, this]);
+            },
+            buffer => {
+                this.mseDataBuffer.push(buffer)
+                if (!this.sourceBuffer.updating) {
+                    console.log('updating buffer')
+                    this.appendBuffer();
+                }
             }
         );
 

@@ -6,7 +6,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
+import { ConnectionError, WebRTCStreamManager, StreamOrUrl } from '@openLibs/webrtc-stream-manager';
 import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
@@ -164,17 +164,23 @@ export class NxVideoPlayerComponent {
 
     zoomStreamCleanup: () => void;
 
-    zoomStream = async (stream: MediaStream): Promise<MediaStream> => {
+    zoomStream = async (stream: StreamOrUrl): Promise<MediaStream> => {
         this.zoomStreamCleanup?.();
 
         const video = this.originalStream.nativeElement;
         video.autoplay = true;
         video.muted = true;
-        video.srcObject = stream;
+        if (typeof stream === 'string') {
+            video.src = stream;
+        } else {
+            video.srcObject = stream;
+        }
         const canvas = this.document.createElement('canvas');
 
         this.zoomStreamCleanup = () => {
-            stream.getTracks().forEach(track => track.stop());
+            if (typeof stream !== 'string' && 'getTracks' in stream) {
+                stream.getTracks().forEach(track => track.stop())
+            }
         }
 
         await new Promise(resolve => {
@@ -201,7 +207,9 @@ export class NxVideoPlayerComponent {
         })
 
         const newStream = canvas.captureStream();
-        stream.getAudioTracks().forEach(track => newStream.addTrack(track));
+        if (typeof stream !== 'string') {
+            stream.getAudioTracks().forEach(track => newStream.addTrack(track));
+        }
 
         return newStream;
     }
@@ -242,20 +250,18 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        const [primary, secondary] = this.camera.parameters.mediaStreams?.streams ?? [];
+        const [secondary] = this.camera.parameters.mediaStreams?.streams ?? [];
         const codecH265 = 173;
         const codecMjpeg = 7;
-        const primaryIsH265 = primary?.codec === codecH265;
-        const primaryIsMJPEG = primary?.codec === codecMjpeg;
         const hasSecondary = secondary && ![codecH265, codecMjpeg].includes(secondary.codec);
 
-        if (primaryIsH265) {
-            return this.showError.emit(ConnectionError.transcodingDisabled)
-        }
+        // if (primaryIsH265) {
+        //     return this.showError.emit(ConnectionError.transcodingDisabled)
+        // }
 
-        if (primaryIsMJPEG) {
-            return this.showError.emit(ConnectionError.mjpegDisabled)
-        }
+        // if (primaryIsMJPEG) {
+        //     return this.showError.emit(ConnectionError.mjpegDisabled)
+        // }
 
         const stream$ = this.reconnect$.pipe(
             switchMap(this.pingServer),

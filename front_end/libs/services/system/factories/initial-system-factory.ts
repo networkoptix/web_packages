@@ -10,8 +10,8 @@ type NewModules = StorageManagerModule & ServerManagerModule & CameraManagerModu
 
 export type BaseModules = NxSystemOldModule & Partial<NewModules>;
 
-class NxSystemV52 extends NxSystemBase {
-    version: SystemVersion = 5.2 as const;
+class NxSystemV60 extends NxSystemBase {
+    version: SystemVersion = 6.0 as const;
 }
 
 class NxSystemV51 extends NxSystemBase {
@@ -30,7 +30,7 @@ const classes = {
     0: NxSystemLegacy,
     5.0: NxSystemV50,
     5.1: NxSystemV51,
-    5.2: NxSystemV52,
+    6.0: NxSystemV60,
 };
 
 // eslint-disable-next-line @typescript-eslint/explicit-function-return-type

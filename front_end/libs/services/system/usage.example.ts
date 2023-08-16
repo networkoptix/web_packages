@@ -24,7 +24,7 @@ export class NxModernModule extends NxSystemModuleBase {
 
     getModuleSymbol = (): symbol => NxModernModule.moduleSymbol;
 
-    supportedVersions = [5.0, 5.1, 5.2] as const;
+    supportedVersions = [5.0, 5.1, 6.0] as const;
 
     someMethod(): boolean {
         return true;
@@ -58,13 +58,13 @@ export class NxSystemV51 extends NxSystemBase {
     version = 5.1 as const;
 }
 
-export class NxSystemV52 extends NxSystemBase {
-    version = 5.2 as const;
+export class NxSystemV60 extends NxSystemBase {
+    version = 6.0 as const;
 }
 
 export const systemWithModernModule = new NxSystemV51().with(new NxModernModule());
 export const systemWithLegacyModule = new NxSystemLegacy().with(new NxLegacyModule());
-export const systemWithIncompatibleModule = new NxSystemV52().with(new NxLegacyModule()); // Won't compile since NxSystemV52 doesn't support NxLegacyModule.
+export const systemWithIncompatibleModule = new NxSystemV60().with(new NxLegacyModule()); // Won't compile since NxSystemV52 doesn't support NxLegacyModule.
 
 export const systemWithMultipleModules = new NxSystemV51()
     .with(new NxLegacyModule())

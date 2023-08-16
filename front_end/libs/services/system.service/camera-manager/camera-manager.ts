@@ -113,6 +113,10 @@ export class CameraManager {
         const { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled } =
             this.parseParameters(camera);
 
+        const nonWebRtcCodec = [7, 173].includes(
+            (parameters.mediaStreams?.streams ?? [])[0]?.codec,
+        );
+
         const backupQuality = (camera as ec2CameraEx).backupType || camera.backupQuality;
 
         const webRtcUrl =
@@ -120,7 +124,13 @@ export class CameraManager {
                 ? ({ position } = { position: null }): string => {
                       return this.serverManager.mediaserverConnections[
                           camera.parentId
-                      ].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
+                      ].getPlaybackUrl(
+                          camera.id,
+                          this.system.version > 5.1 ? 'webRtc2' : 'webRtc',
+                          'low',
+                          position,
+                          nonWebRtcCodec ? 'mse' : 'srtp',
+                      );
                   }
                 : null;
 

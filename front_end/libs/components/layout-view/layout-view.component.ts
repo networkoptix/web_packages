@@ -168,7 +168,13 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
+    // Temporary version refrence. To prevent conflicts with Parti's open MR.
+    useV2api = false;
+
     systemOnline$ = this.selectedSystem$.pipe(
+        tap(system => {
+            this.useV2api = system.version >= 6.0;
+        }),
         switchMap(system =>
             system.isOnline
                 ? Promise.resolve(true)
@@ -240,6 +246,10 @@ export class NxLayoutViewComponent {
                             camera.recordingStatus = RecordingStatus.Scheduled;
                         }
                     }
+
+                    const nonWebRtcCodec = [7, 173].includes(
+                        (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
+                    );
                     return {
                         ...cameras,
                         [camera.id]: {
@@ -249,9 +259,7 @@ export class NxLayoutViewComponent {
                                 ...camera,
                                 online,
                                 unauthorized,
-                                requiresTranscoding: [7, 173].includes(
-                                    (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
-                                ),
+                                requiresTranscoding: nonWebRtcCodec && !this.useV2api,
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
                                 status: (camera.recordingStatus || camera.status).toLowerCase(),

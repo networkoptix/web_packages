@@ -4,6 +4,8 @@ export type PlaybackDetails = Record<string, unknown>;
 
 export type StreamHandler = (stream: MediaStream) => unknown;
 
+export type BufferHandler = (buffer: Uint8Array) => unknown;
+
 interface IceCandidate {
     ice: RTCIceCandidate;
 }
@@ -16,11 +18,15 @@ export interface IceInit {
     ice: RTCIceCandidateInit;
 }
 
+export interface MimeInit {
+    mime: string;
+}
+
 export interface ErrorMsg {
     error: unknown;
 }
 
-export type SignalingMessage = SdpInit | IceInit | IceCandidate | ErrorMsg;
+export type SignalingMessage = SdpInit | IceInit | MimeInit | IceCandidate | ErrorMsg;
 
 export enum ConnectionError {
     websocket = 'websocket',
@@ -117,3 +123,5 @@ type Enumerate<N extends number, Acc extends number[] = []> = Acc['length'] exte
     : Enumerate<N, [...Acc, Acc['length']]>
 
 export type IntRange<F extends number, T extends number> = Exclude<Enumerate<T>, Enumerate<F>>
+
+export type StreamOrUrl = MediaStream | string;

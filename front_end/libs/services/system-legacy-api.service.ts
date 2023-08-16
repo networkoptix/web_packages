@@ -1125,6 +1125,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         transport = 'webm',
         resolution = 'low',
         position = undefined,
+        deliveryMethod = '',
     ): string {
         let url;
         function hlsResolutionOrEmpty(res) {
@@ -1138,6 +1139,13 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(
                     cameraId,
                 )}&x-server-guid=${this.cleanId(this.serverId)}&`;
+                break;
+            case 'webRtc2':
+                url = `${this.getUrlBase('wss:')}/rest/v3/devices/${this.cleanId(
+                    cameraId,
+                )}/webrtc?x-server-guid=${this.cleanId(this.serverId)}&api=v2&deliveryMethod=${
+                    deliveryMethod || 'srtp'
+                }&`;
                 break;
             case 'hls':
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(
