@@ -56,27 +56,28 @@
                         [src]="noBksImgSrc"
                     >
                     </svg-icon>
-                    <h2
-                        class="no-bookmarks-text"
-                        [ngClass]="{
-                            'no-bookmarks-text-dark': CONFIG.isDarkTheme
-                        }"
+                    <div
+                        class="no-bookmarks-content"
+                        *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText"
                     >
-                        <div *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText">
-                            <span translate> No matching results. </span>
-                            <button
-                                (click)="clearAllFilters()"
-                                class="clear-filters"
-                                type="button"
-                                translate
-                            >
-                                Clear Filters
-                            </button>
-                        </div>
-                        <ng-template #noBookmarksText>
-                            <span translate>You don't have any Bookmarks yet.</span>
-                        </ng-template>
-                    </h2>
+                        <h2 translate>Nothing found</h2>
+                        <span
+                            class="no-bookmarks-info"
+                            translate
+                            >Please change search keywords</span
+                        >
+                        <button
+                            (click)="clearAllFilters()"
+                            class="btn btn-primary clear-filters"
+                            type="button"
+                            translate
+                        >
+                            Clear search
+                        </button>
+                    </div>
+                    <ng-template #noBookmarksText>
+                        <span translate>You don't have any Bookmarks yet.</span>
+                    </ng-template>
                 </ng-container>
                 <div
                     *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"

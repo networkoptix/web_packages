@@ -122,7 +122,7 @@ export class NxBookmarksComponent implements OnInit {
 
     ngOnInit(): void {
         this.noBksImgSrc = `${icons.dirSectionPlaceholder}empty-bookmarks${
-            this.CONFIG.isDarkTheme ? '' : '-cloud'
+            this.CONFIG.isDarkTheme ? '-dark' : '-light'
         }.svg`;
 
         this.route.queryParams.pipe(take(1)).subscribe(queryParams => {

@@ -683,6 +683,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
     --bookmarks-card-video-bg: inherit;
+    --bookmarks-no-results-text: var(--dark17);
+    --bookmarks-no-results-title: var(--dark17);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
