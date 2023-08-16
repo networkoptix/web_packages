@@ -304,6 +304,12 @@ def download_build(request, build):
     return Response(downloads_json)
 
 
+def get_updates_json():
+    updates_json = requests.get(settings.UPDATE_JSON)
+    updates_json.raise_for_status()
+    return updates_json.json()
+
+
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns the download information for the current build.")
 @swagger_auto_schema(method="POST",  # auto_schema=None,
@@ -326,9 +332,7 @@ def downloads(request):
     downloads_json = global_cache.get(cache_key, False)
     if not downloads_json:
         # get updates.json
-        updates_json = requests.get(settings.UPDATE_JSON)
-        updates_json.raise_for_status()
-        updates_json = updates_json.json()
+        updates_json = get_updates_json()
 
         # find settings for customizations
         if customization not in updates_json:
@@ -399,11 +403,14 @@ def clean_platforms(release, available_platforms):
     return platforms
 
 
-def get_latest_vms_build_by_release_type(downloads_data, release_type):
+def get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url):
     PRODUCT_DESCRIPTION = "Video Management System"
     # Gets the first build for the release type that's a vms. Sometimes mobile builds are there in releases.
     if release := next(filter(lambda build: build.get('productDescription') == PRODUCT_DESCRIPTION, downloads_data.get(release_type, [])), None):
         del release['releaseNotes'] # Don't need on the releases page since its only show on the Other page.
+        updates_prefix = downloads_data.get('updatesPrefix')
+        release['releaseNotes'] = release_notes_url
+        release['releaseUrl'] = updates_prefix + '/' + release.get('buildNumber') + '/'
     return release
 
 
@@ -432,6 +439,10 @@ def downloads_releases(request):
     downloads_releases_json = global_cache.get(cache_key, False)
 
     if not downloads_releases_json:
+        release_notes_url = get_updates_json().get(customization, {}).get('release_notes', '')
+        if release_notes_url == 'https://updates.hdwitness.com/release_notes.html':
+            release_notes_url = ''
+
         try:
             customization_downloads_url = settings.DOWNLOADS_JSON.replace('{{customization}}', customization)
             res = requests.get(customization_downloads_url)
@@ -443,7 +454,7 @@ def downloads_releases(request):
             return Response(None)
 
         release_types = ['betas', 'patches', 'releases']
-        data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type)
+        data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url)
                  for release_type in release_types }
         global_cache.set(cache_key, json.dumps(data))
     else:
