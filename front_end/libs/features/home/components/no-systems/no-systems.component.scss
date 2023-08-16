@@ -1,0 +1,60 @@
+@use "typography";
+@use "theme_palette" as colors;
+
+nx-no-systems-cards {
+    .no-systems-header {
+        text-align: center;
+        @include typography.regular20nocolor
+    }
+
+    .cards-container {
+        display: flex;
+        flex-wrap: wrap;
+        justify-content: center;
+        @include typography.regular14nocolor
+    }
+
+    .card {
+        max-width: 336px;
+        margin: 12px;
+    }
+
+    .card-interior {
+        height: 100%;
+        padding: 24px;
+        display: flex;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .number-row {
+        display: flex;
+        align-items: center;
+    }
+
+    .number-circle {
+        height: 28px;
+        width: 28px;
+        text-align: center;
+        line-height: 28px;
+        background: #4f6976;
+        border-radius: 9999px;
+        // color: black;
+        color: var(--promo-tile-bg);
+        margin-right: 15px;
+        flex-shrink: 0;
+    }
+
+    .description-text {
+        @include typography.regular14nocolor;
+        color: var(--no-systems-description-color);
+    }
+
+    .red-text {
+        color: colors.$red_main;
+    }
+
+    .green-text {
+        color: colors.$green_main;
+    }
+}

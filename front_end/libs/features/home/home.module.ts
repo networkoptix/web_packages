@@ -22,6 +22,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
+import { NxNoSystemsCardsComponent } from './components/no-systems/no-systems.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxHomeComponent } from './home.component';
@@ -114,6 +115,7 @@ const homeRoutes: Routes = [
         NxGroupCardComponent,
         NxSearchComponent,
         FormsModule,
+        NxNoSystemsCardsComponent,
     ],
 })
 export class NxHomeModule {}

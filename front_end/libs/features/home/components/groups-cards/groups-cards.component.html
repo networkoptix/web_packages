@@ -3,9 +3,8 @@
 <div
     *ngIf="!(currentGroups$ | async)?.length && !(currentSystems$ | async)?.length; else showGroups"
     class="no-systems"
-    translate
 >
-    No systems
+    <nx-no-systems-cards></nx-no-systems-cards>
 </div>
 
 <ng-template

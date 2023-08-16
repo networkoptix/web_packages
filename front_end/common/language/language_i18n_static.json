@@ -1183,6 +1183,10 @@
         "systemLoadFailureApiTool": {
             "title": "System failed to load",
             "message": ""
+        },
+        "noSystems": {
+            "connected": "If the system is <span class=\"green-text\">connected</span> to the Cloud",
+            "notConnected": "If the system is <span class=\"red-text\">not connected</span> to the Cloud"
         }
     },
     "pleaseSelect": "Please select...",
