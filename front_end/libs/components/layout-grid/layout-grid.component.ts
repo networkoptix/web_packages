@@ -1,6 +1,6 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDrag, CdkDragEnter, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkTreeModule, NestedTreeControl } from '@angular/cdk/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
@@ -23,34 +23,34 @@ import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
     combineLatest,
+    firstValueFrom,
+    forkJoin,
+    from,
+    fromEvent,
     interval,
     Observable,
-    Subject,
-    timer,
-    firstValueFrom,
-    from,
     of,
+    Subject,
     throwError,
-    fromEvent,
-    forkJoin,
+    timer,
 } from 'rxjs';
 import {
+    catchError,
+    debounceTime,
+    delay,
+    delayWhen,
     distinctUntilChanged,
     filter,
     map,
-    shareReplay,
-    take,
-    tap,
-    switchMap,
-    skip,
-    debounceTime,
-    takeUntil,
-    startWith,
-    catchError,
-    delay,
-    retry,
-    delayWhen,
     repeat,
+    retry,
+    shareReplay,
+    skip,
+    startWith,
+    switchMap,
+    take,
+    takeUntil,
+    tap,
     timeout,
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
@@ -58,6 +58,7 @@ import { v4 as uuid } from 'uuid';
 import staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
+import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
@@ -70,8 +71,7 @@ import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-ma
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
+import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
@@ -97,14 +97,15 @@ import {
     ParsedLayout,
     ParsedLayoutItem,
     ParsedLayoutItems,
+    PlaceholderClasses,
     PlaceholderState,
     Point,
     Position,
     ResourceNode,
+    ResourceType,
+    ServerStatsObservable,
     Setting,
     Size,
-    ResourceType,
-    PlaceholderClasses,
 } from './layout-grid.types';
 
 const SETTINGS_CONFIG: Setting[] = [
@@ -176,11 +177,6 @@ interface Collisions {
     background?: string;
 }
 
-interface LayoutSettings {
-    openMenu: 'left' | 'right' | 'both';
-    previousOpenMenu: 'left' | 'right' | 'both';
-}
-
 @UntilDestroy()
 @Component({
     selector: 'nx-layout-grid',
@@ -188,18 +184,18 @@ interface LayoutSettings {
     styleUrls: ['layout-grid.component.scss'],
     standalone: true,
     imports: [
-        CommonModule,
-        TranslateModule,
         AngularSvgIconModule,
-        CdkTreeModule,
-        DragDropModule,
+        CommonModule,
         DirectivesModule,
-        NxMonitoringGraphComponent,
+        DragDropModule,
         NxImageComponent,
-        PipesModule,
+        NxLayoutGridTreeComponent,
+        NxMonitoringGraphComponent,
         NxPreLoaderComponent,
+        PipesModule,
         ResizeModule,
         TourMatMenuModule,
+        TranslateModule,
         VideoPlayerModule,
     ],
 })
@@ -233,34 +229,6 @@ export class NxLayoutGridComponent {
         shareReplay({ bufferSize: 1, refCount: false }),
     );
 
-    handleMenuClose = (): void => {
-        this.layoutSettings.update(
-            curr =>
-                curr.openMenu
-                    ? {
-                          ...curr,
-                          previousOpenMenu: curr.openMenu,
-                          openMenu: null,
-                      }
-                    : curr,
-            true,
-        );
-    };
-
-    handleMenuOpen = (): void => {
-        this.layoutSettings.update(
-            curr =>
-                curr.previousOpenMenu
-                    ? {
-                          ...curr,
-                          openMenu: curr.previousOpenMenu,
-                          previousOpenMenu: null,
-                      }
-                    : curr,
-            true,
-        );
-    };
-
     @HostListener('window:resize', ['$event'])
     onResize({ target: { innerWidth: width } }: { target: Window }): void {
         const closeOnResize =
@@ -272,9 +240,9 @@ export class NxLayoutGridComponent {
             width > ViewportBreakpoints.Tablet.width;
 
         if (closeOnResize) {
-            this.handleMenuClose();
+            this.layoutGridService.handleMenuClose();
         } else if (openOnResize) {
-            this.handleMenuOpen();
+            this.layoutGridService.handleMenuOpen();
         }
 
         this.#lastWidth = width;
@@ -284,8 +252,6 @@ export class NxLayoutGridComponent {
 
     treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
     dataSource: ArrayDataSource<BaseResourceNode>;
-
-    layoutSettings: CustomAccountProperty<LayoutSettings>;
 
     previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
@@ -308,18 +274,16 @@ export class NxLayoutGridComponent {
     };
     readonly SETTINGS_CONFIG = SETTINGS_CONFIG;
 
-    #initialLayout$ = new BehaviorSubject<Layout>(null);
+    initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
     #countdownTimer$ = new Subject<number>();
     unsubTooltip$ = new Subject<string>();
 
-    layout$ = this.#initialLayout$.pipe(
+    // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
+    layout$ = this.initialLayout$.pipe(
         filter(layout => !!layout),
         map(layout => ({ ...layout, items: this.filterRemovedResources(layout.items || []) })),
         map(initial => this.parseLayout(initial)),
-        // tap(layout => {
-        //     console.log(layout);
-        // }),
         map(({ items, renderConfig, ...layout }) => ({
             ...layout,
             renderConfig,
@@ -559,19 +523,27 @@ export class NxLayoutGridComponent {
         private dialogsService: NxDialogsService,
         private toastService: NxToastService,
         public tourService: TourService,
-        private cloudApi: NxCloudApiService,
         private systemsService: NxSystemsService,
         @Inject(WINDOW) public window: Window,
         private pageService: NxPageService,
+        public layoutGridService: NxLayoutGridService,
     ) {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
-        this.layoutSettings = this.cloudApi.customAccountPropertyFactory(
-            `layouts_${activatedRoute.snapshot.params.systemId}`,
-            { openMenu: 'left', previousOpenMenu: null },
-        );
+
+        // TODO - start - following should be moved to layout-greed-tree
+        layoutGridService.changeView
+            .pipe(untilDestroyed(this))
+            .subscribe(resourceNode => this.changeView(resourceNode));
+        layoutGridService.addItem
+            .pipe(untilDestroyed(this))
+            .subscribe(resourceNode => this.addItem(resourceNode));
+        layoutGridService.moveAddedItem
+            .pipe(untilDestroyed(this))
+            .subscribe(({ event, itemParent }) => this.moveAddedItem(event, itemParent));
+        // TODO - end -
     }
 
     async ngOnChanges({
@@ -583,7 +555,7 @@ export class NxLayoutGridComponent {
             if (this.unsaved) {
                 await this.saveLayout(layout.currentValue.id);
             }
-            this.#initialLayout$.next(layout.currentValue);
+            this.initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
         }
 
@@ -771,26 +743,12 @@ export class NxLayoutGridComponent {
 
     cleanId = cleanId;
 
-    toggleMenu(menu: 'left' | 'right' | 'both' = null, force = false): void {
-        this.layoutSettings.update(curr => {
-            menu ||= curr.previousOpenMenu;
-            if (!curr.openMenu || force) {
-                if (curr.openMenu) {
-                    curr.previousOpenMenu = curr.openMenu;
-                }
-                curr.openMenu = curr.openMenu === menu ? null : menu;
-            }
-
-            return curr;
-        }, true);
-    }
-
     getScale = (itemId: string, resize: Point): string => {
         if (resize.x === 0 && resize.y === 0) {
             return;
         }
 
-        const item = this.#initialLayout$.value.items.find(({ id }) => id === itemId);
+        const item = this.initialLayout$.value.items.find(({ id }) => id === itemId);
         return `scale(${this.getConstraint(item, resize).scale})`;
     };
 
@@ -1080,7 +1038,7 @@ export class NxLayoutGridComponent {
     };
 
     updateLayout = (): void => {
-        this.#initialLayout$.next(this.layout);
+        this.initialLayout$.next(this.layout);
         this.#draggingPosition$.next(this.INITIAL_DRAG_STATE);
         this.cd.markForCheck();
     };
@@ -1100,6 +1058,7 @@ export class NxLayoutGridComponent {
         this.editResource.emit({ resourceType, details });
     };
 
+    // TODO remove
     hasActions: Partial<
         Record<ResourceType, { action: string; icon: string; handler: unknown; tooltip?: string }[]>
     > = {
@@ -1224,7 +1183,7 @@ export class NxLayoutGridComponent {
 
     async changeView(node: ResourceNode | LayoutItem): Promise<void> {
         if (!('children' in node) && this.#lastWidth <= ViewportBreakpoints.Tablet.width) {
-            this.handleMenuClose();
+            this.layoutGridService.handleMenuClose();
         }
 
         const isLayoutItem = 'id' in node;
@@ -1569,7 +1528,7 @@ export class NxLayoutGridComponent {
                 .ping()
                 .pipe(catchError(() => Promise.resolve()));
 
-    serverStats$ = this.tooltipTarget$.pipe(
+    serverStats$: ServerStatsObservable = this.tooltipTarget$.pipe(
         filter(id => !!id),
         distinctUntilChanged(),
         switchMap(serverId =>

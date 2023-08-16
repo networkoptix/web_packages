@@ -1,3 +1,5 @@
+import { Observable, ObservedValueOf } from 'rxjs';
+
 import type { Layout, LayoutItem } from '@services/system-api.types';
 
 export interface Setting {
@@ -110,3 +112,14 @@ export interface ResourceNode<T = { id: string }> {
 export interface LayoutResourceTree {
     tree: BaseResourceNode[];
 }
+
+export type ServerStats = { description: string; value: string }[] | undefined | null;
+
+export type ServerStatsObservable = Observable<
+    ObservedValueOf<
+        Observable<{
+            error: string;
+            statistics: ServerStats;
+        }>
+    >
+>;

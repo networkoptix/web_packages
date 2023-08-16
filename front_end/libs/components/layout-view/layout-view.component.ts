@@ -41,12 +41,18 @@ import { environment } from '@environments/environment';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
+import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
+import {
+    AddResourceType,
+    EditResourceType,
+    RemoveResourceType,
+} from '@services/layout-grid/layout-grid.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
-import { Layouts, Layout, WebPages, LayoutItem } from '@services/system-api.types';
+import { Layout, LayoutItem, Layouts, WebPages } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CurrentUser } from '@services/system-user.types';
 import {
@@ -537,22 +543,39 @@ export class NxLayoutViewComponent {
     );
 
     constructor(
-        configService: NxConfigService,
-        private router: Router,
-        // private location: Location,
-        private systemService: NxSystemService,
-        private activatedRoute: ActivatedRoute,
         private accountService: NxAccountService,
-        private systemsService: NxSystemsService,
-        private dialogsService: NxDialogsService,
-        @Inject(LOCALE_ID) private locale: string,
-        private tourService: TourService,
-        private translate: TranslateService,
+        private activatedRoute: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
+        configService: NxConfigService,
+        private dialogsService: NxDialogsService,
+        layoutGridService: NxLayoutGridService,
+        // private location: Location,
+        @Inject(LOCALE_ID) private locale: string,
         private pageService: NxPageService,
+        private router: Router,
+        private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
+        private tourService: TourService,
+        private translate: TranslateService,
     ) {
         this.CONFIG = configService.config;
+
+        layoutGridService.addResource
+            .pipe(untilDestroyed(this))
+            .subscribe(async (event: AddResourceType) => {
+                await this.handleAddingResource(event);
+            });
+        layoutGridService.editResource
+            .pipe(untilDestroyed(this))
+            .subscribe(async (event: EditResourceType) => {
+                await this.handleEditingResource(event);
+            });
+        layoutGridService.removeResource
+            .pipe(untilDestroyed(this))
+            .subscribe(async (event: RemoveResourceType) => {
+                await this.handleRemovingResource(event);
+            });
     }
 
     ngOnInit(): void {
@@ -722,12 +745,7 @@ export class NxLayoutViewComponent {
         );
     };
 
-    handleRemovingResource = async ({
-        details: { id },
-    }: {
-        resourceType: ResourceType;
-        details: Record<string, unknown>;
-    }): Promise<unknown> =>
+    handleRemovingResource = async ({ details: { id } }: RemoveResourceType): Promise<unknown> =>
         firstValueFrom(
             this.layoutItemLookup$.pipe(
                 switchMap(items => {
@@ -755,13 +773,7 @@ export class NxLayoutViewComponent {
             ),
         );
 
-    handleEditingResource = async ({
-        resourceType,
-        details,
-    }: {
-        resourceType: ResourceType;
-        details: Record<string, unknown>;
-    }): Promise<boolean> =>
+    handleEditingResource = async ({ resourceType, details }: EditResourceType): Promise<boolean> =>
         this.dialogsService.edit({
             contextManifest: editManifests[resourceType],
             values: details,
@@ -791,7 +803,7 @@ export class NxLayoutViewComponent {
                       }),
         });
 
-    handleAddingResource = async (resourceType: ResourceType): Promise<boolean> =>
+    handleAddingResource = async (resourceType: AddResourceType): Promise<boolean> =>
         this.dialogsService.edit({
             contextManifest: createManifests[resourceType],
             handlerProcess: ({ name }: Record<string, unknown>) =>

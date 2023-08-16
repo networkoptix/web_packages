@@ -1,4 +1,6 @@
 import { HttpClient } from '@angular/common/http';
+import { Signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
 import { catchError, switchMap, shareReplay, take, debounceTime } from 'rxjs/operators';
 
@@ -14,6 +16,7 @@ export class CustomAccountProperty<T> {
     #value$ = new BehaviorSubject<T>(null);
 
     value$: Observable<T>;
+    signal$$: Signal<T>;
 
     static getInstance<T>(
         http: HttpClient,
@@ -67,6 +70,8 @@ export class CustomAccountProperty<T> {
             switchMap(val => (val ? saveValue(val) : getValue())),
             shareReplay({ bufferSize: 1, refCount: false }),
         );
+
+        this.signal$$ = toSignal(this.value$);
     }
 
     get(forceUpdate?: boolean): Observable<T>;
