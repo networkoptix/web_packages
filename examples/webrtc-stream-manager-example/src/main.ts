@@ -4,7 +4,7 @@ import './style.css';
 
 import { description } from '../package.json';
 import { Subject, takeUntil } from 'rxjs';
-import { WebRTCStreamManager } from './open_check_excluded';
+import { WebRTCStreamManager, generateWebRtcUrlFactory } from './open_check_excluded';
 
 const newStream$ = new Subject<void>();
 
@@ -14,8 +14,6 @@ let cloudInstance = window.localStorage.getItem('cloudInstance');
 
 const tokenEndpoint = `${cloudInstance}/oauth/token/`;
 const systemsEndpoint = `${cloudInstance}/api/systems/`;
-const systemAuthEndopint = (systemId: string) =>
-  `${systemsEndpoint}${systemId}/auth/`;
 
 const authCodeGrant = {
   grant_type: 'authorization_code',
@@ -57,6 +55,7 @@ interface BasicCameraInfo {
 
 let cloudToken: TokenInfo;
 let systemToken: TokenInfo;
+let systemsInfo: BasicSystemInfo[];
 let cameras: BasicCameraInfo[];
 let systemRelay: string;
 
@@ -89,6 +88,7 @@ if (urlParams.has('code')) {
       }).then((response) => response.json())
     )
     .then((systems: BasicSystemInfo[]) => {
+      systemsInfo = systems;
       const systemOptions = systems.map(
         (system) =>
           `<option value="${system.id}" ${
@@ -130,14 +130,17 @@ const videoElement = document.querySelector('video');
 const clean = (id: string): string => id.replace('{', '').replace('}', '');
 
 const startStream = (relayUrl: string, cameraId: string, serverId: string) => {
-  const webRtcUrlFactory = () =>
-  `wss://${relayUrl}/webrtc-tracker/?camera_id=${cameraId}&x-server-guid=${serverId}`;
+  const version = parseFloat(systemsInfo.find(({ id }) => id === systemSelect.value ).version);
 
-WebRTCStreamManager.connect(webRtcUrlFactory, videoElement)
+WebRTCStreamManager.connect(generateWebRtcUrlFactory(relayUrl, cameraId, serverId, version), videoElement)
   .pipe(takeUntil(newStream$))
   .subscribe(([stream, error]) => {
     if (stream) {
-      videoElement.srcObject = stream;
+      if (typeof stream === 'string') {
+        videoElement.src = stream;
+      } else {
+        videoElement.srcObject = stream;
+      }
       videoElement.muted = true;
       videoElement.autoplay = true;
     }

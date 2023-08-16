@@ -1,7 +1,7 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
 import { WebSocketSubject } from 'rxjs/webSocket';
-import { SignalingMessage, StreamHandler } from './types';
+import { BufferHandler, SignalingMessage, StreamHandler } from './types';
 import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
@@ -32,14 +32,31 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         private closeWebsocket: () => void,
         private reconnectionHandler: (lostConnection: number | true) => void,
         trackHandler: StreamHandler,
+        bufferHandler: BufferHandler,
     ) {
         super({
             iceServers,
         });
 
-        // TODO: Need to fix handling audio playback.
-        // Mediaserver sends a stream with just video then separately sends a stream with just audio.
-        // Need to figure out how to handle this to enable audio in next release.
         this.ontrack = (event: RTCTrackEvent): unknown => event.track.kind === 'video' && trackHandler(event.streams[0]);
+
+        this.addEventListener('datachannel', ({ channel }) => {
+            channel.binaryType = 'arraybuffer';
+            channel.addEventListener('message', ({ data }: MessageEvent<string | ArrayBuffer | { status: number }>) => {
+                if (typeof(data) === 'string') {
+                    console.log('dc message: ' + data);
+                } else if ('status' in data) {
+                    console.log('dc status: ' + data.status);
+                    // if (webrtc.deliveryMethod != null && webrtc.deliveryMethod == 'mse') {
+                    //     // Note that initial segment can be received before 200, so restarting MSE on 100.
+                    //     restartMse();
+                    //   }
+                } else {
+                    const buffer = new Uint8Array(data);
+                    console.log('dc binary: type = ' + typeof(data) +  ' len = ' + buffer.length);
+                    bufferHandler(new Uint8Array(data));
+                }
+            })
+        });
     }
 }
