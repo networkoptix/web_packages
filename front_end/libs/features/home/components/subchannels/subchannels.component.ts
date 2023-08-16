@@ -1,5 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { AsyncPipe, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, CommonModule, NgFor, NgIf } from '@angular/common';
 import { Component, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -10,6 +10,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable, Subject, debounceTime, map } from 'rxjs';
 
+import { NxButtonComponent } from '@components/button/button.component';
+import { ButtonType } from '@components/button/button.component.types';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
@@ -45,10 +47,13 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
         AsyncPipe,
         NxSearchComponent,
         FormsModule,
+        CommonModule,
+        NxButtonComponent,
         TranslateModule,
     ],
 })
 export class NxSubchannelsComponent {
+    buttonType = ButtonType.brand;
     icons = icons;
     isAdmin = true;
     currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);

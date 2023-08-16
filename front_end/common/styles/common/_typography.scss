@@ -166,6 +166,10 @@ p {
     @include font-source($font-family-regular, $font-size-base, $dark10);
 }
 
+@mixin regular13dark17 {
+    @include font-source($font-family-regular, $font-size-base, $dark17);
+}
+
 @mixin regular13nocolor {
     @include font-source($font-family-regular, $font-size-base, false, 400);
 }

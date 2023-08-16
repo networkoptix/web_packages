@@ -1,3 +1,5 @@
+@use "typography";
+
 .card-body {
   display: flex;
   flex-direction: column;
@@ -14,4 +16,34 @@
       color: var(--subchannel-partner-card-color);
     }
   }
+}
+
+:host {
+  height: 100%;
+}
+
+.subchannels-placeholder {
+  height: 100%;
+  display: flex;
+  justify-content: center;
+}
+
+.placeholder-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  height: 100%;
+  justify-content: center;
+  max-width: 250px;
+  text-align: center;
+  gap: 12px;
+}
+
+.placeholder-heading {
+  @include typography.medium15dark17;
+}
+
+.placeholder-body {
+  @include typography.regular13dark17;
+  margin-bottom: 15px;
 }

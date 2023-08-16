@@ -1,58 +1,93 @@
-<div *ngIf="!(inSubchannels$ | async); else outlet">
-    <div class="actions p-3">
-        <button
-            [disabled]="!isAdmin"
-            class="btn btn-default"
-            translate
-            (click)="newPartnerDialog()"
-        >
-            New Partner
-        </button>
+<div [ngClass]="{ 'subchannels-placeholder': (subchannels$ | async).length === 0 }">
+    <div *ngIf="(subchannels$ | async).length > 0; else subchannelsEmpty">
+        <div *ngIf="!(inSubchannels$ | async); else outlet">
+            <div class="actions p-3">
+                <button
+                    [disabled]="!isAdmin"
+                    class="btn btn-default"
+                    translate
+                    (click)="newPartnerDialog()"
+                >
+                    New Partner
+                </button>
 
-        <nx-search
-            class="col-sm-9 col-md-8 col-lg-6 input-overlay"
-            [ngModel]="search"
-            (ngModelChange)="setSearch($event)"
-            layout="compact"
-            [placeholder]="'Search' | translate"
-            instant
-        ></nx-search>
-    </div>
-    <div class="px-3 cards-container">
-        <ng-container *ngFor="let channel of filteredSubchannels$ | async">
-            <div
-                class="system-button card-condensed system-card"
-                (click)="handleChannelClick(channel.id)"
-            >
-                <div class="card-body">
-                    <h3>{{ channel.name }}</h3>
-                    <div class="bottom">
-                        <div class="px-2 id">#{{ channel.id.slice(0, 3) }}</div>
-                        <div class="organizations">
-                            <svg-icon
-                                nx-add-svg-src
-                                [src]="icons.dir + 'organization.svg'"
-                                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                            ></svg-icon>
-                            12
+                <nx-search
+                    class="col-sm-9 col-md-8 col-lg-6 input-overlay"
+                    [ngModel]="search"
+                    (ngModelChange)="setSearch($event)"
+                    layout="compact"
+                    [placeholder]="'Search' | translate"
+                    instant
+                ></nx-search>
+            </div>
+            <div class="px-3 cards-container">
+                <ng-container *ngFor="let channel of filteredSubchannels$ | async">
+                    <div
+                        class="system-button card-condensed system-card"
+                        (click)="handleChannelClick(channel.id)"
+                    >
+                        <div class="card-body">
+                            <h3>{{ channel.name }}</h3>
+                            <div class="bottom">
+                                <div class="px-2 id">#{{ channel.id.slice(0, 3) }}</div>
+                                <div class="organizations">
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="icons.dir + 'organization.svg'"
+                                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                                    ></svg-icon>
+                                    12
+                                </div>
+                            </div>
+                        </div>
+                        <div
+                            class="three-dots"
+                            [cdkMenuTriggerFor]="menu"
+                        >
+                            <div class="dot"></div>
+                            <div class="dot"></div>
+                            <div class="dot"></div>
                         </div>
                     </div>
-                </div>
-                <div
-                    class="three-dots"
-                    [cdkMenuTriggerFor]="menu"
-                >
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                    <div class="dot"></div>
-                </div>
+                    <ng-template #menu>
+                        <div class="card-menu"></div>
+                    </ng-template>
+                </ng-container>
             </div>
-            <ng-template #menu>
-                <div class="card-menu"></div>
-            </ng-template>
-        </ng-container>
+        </div>
+        <ng-template #outlet>
+            <router-outlet></router-outlet>
+        </ng-template>
     </div>
+    <ng-template #subchannelsEmpty>
+        <div class="placeholder-container">
+            <div>
+                <!-- TEMPORARY SVG - replace Aria label -->
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'height.px': 64,
+                        'width.px': 64,
+                        'pointer-events': 'none'
+                    }"
+                    [src]="icons.dirSectionPlaceholder + 'cantconnect.svg'"
+                    svgAriaLabel="change me please"
+                ></svg-icon>
+            </div>
+            <div class="placeholder-heading">{{ 'No Partners' | translate }}</div>
+            <!-- eslint-disable-next-line nx/template/no-untranslated -->
+            <div class="placeholder-body">
+                <!-- TEMPORARY COPY -->
+                Drag video files or images to the client window, or add local media folder through
+                the Local Settings dialog.'
+            </div>
+            <div>
+                <nx-button
+                    text="{{ 'New Partner' | translate }}"
+                    [type]="buttonType"
+                    (onClick)="newPartnerDialog()"
+                ></nx-button>
+            </div>
+        </div>
+    </ng-template>
 </div>
-<ng-template #outlet>
-    <router-outlet></router-outlet>
-</ng-template>
