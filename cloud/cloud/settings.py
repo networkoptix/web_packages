@@ -31,11 +31,12 @@ import os
 import re
 import json
 import sys
+from enum import Enum
 
 from botocore.config import Config
 from django.core.exceptions import ImproperlyConfigured
 
-from util.instance_config import get_init_config, get_structures_hash
+from util.instance_config import get_init_config, get_structures_hash, CmsConfig
 from cloud.logger import downgrade_requests
 
 
@@ -938,3 +939,8 @@ UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'
 #     s3.put_bucket_cors(Bucket=UPLOAD_BUCKET, CORSConfiguration=CORS_CONFIG)
 
 STRUCTURES_HASH = get_structures_hash()
+
+
+CMS_CONFIG = os.getenv('CMS_CONFIG')
+
+

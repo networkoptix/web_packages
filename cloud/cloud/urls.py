@@ -34,6 +34,11 @@ from cms.views import static_serve
 from notifications import urls as notifications_urls
 from cloud.views.meta import app_view, robots_txt
 from cloud.views.utils import serve_static
+from util.instance_config import CmsConfig
+
+# Remove forbidden admin site interfaces for private cloud
+# !!! Must be called before any url is added !!!
+CmsConfig().unregister_forbidden()
 
 
 def redirect_login(request):

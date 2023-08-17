@@ -67,7 +67,11 @@
                                     for="{{ field.name }}">{{ field.label }}{% if not data_structure.optional %}*{% endif %}
                                 {% if user.is_superuser %}<p class="help">{{ field.name }}</p>{% endif %}
                                 {% if not data_structure.optional %} <p class="help">required</p> {% endif %}
-                                {% if data_structure and can_edit_datastructure %}<a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>{% endif %}
+                                {% if data_structure and can_edit_datastructure %}
+                                    {% if not PRIVATE_1 %}
+                                        <a href="{% url 'admin:cms_datastructure_change' data_structure.id %}">Edit Data Structure</a>
+                                    {% endif %}
+                                {% endif %}
                             </label>
                             <div id="{{ field.name }}" class="ml-160 position-relative">
                                 {% if data_structure.has_image_field and field.value %}

@@ -48,3 +48,50 @@ def get_structures_hash():
             for chunk in iter(lambda: f.read(4096), b''):
                 md5hash.update(chunk)
     return md5hash.hexdigest()
+
+
+class CloudType:
+    private_1 = 'private-1'
+
+
+class CmsConfig:
+
+    _allowed_models = {
+        CloudType.private_1: [
+            'api.account',
+            'api.proxygroup',
+            'api.accountloginhistory',
+            'cms.asset',
+            'cms.assetcustomizationreview',
+        ]
+    }
+
+    def __init__(self):
+        from django.conf import settings
+        self._value = settings.CMS_CONFIG
+
+    @property
+    def value(self) -> str:
+        return self._value
+
+    @property
+    def is_private_1(self) -> bool:
+        return self.value == CloudType.private_1
+
+    @property
+    def allowed_models(self) -> list:
+        return self._allowed_models.get(self.value)
+
+    def unregister_forbidden(self):
+        if self.allowed_models is None:
+            return
+        from django.contrib import admin
+
+        def model_name(model):
+            return f'{model._meta.app_label.lower()}.{model._meta.model_name.lower()}'
+
+        _models = list(admin.site._registry.keys())
+        for _model in _models:
+            if model_name(_model) not in self.allowed_models:
+                logger.info(f"Unregistering model admin: {model_name(_model)}")
+                admin.site.unregister(_model)
