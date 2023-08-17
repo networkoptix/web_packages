@@ -32,7 +32,7 @@ def get_config(customization=None):
     PYTHON_RUNNING = any(['manage.py' in arg for arg in sys.argv])
     if not customization:
         customization = os.getenv('CUSTOMIZATION')
-    if not customization:
+    if not customization or customization == 'vmsdemoblue':  # CLOUD-11205: Added vmsdemoblue as an exception for rdep
         customization = 'default'
 
     conf_dir = os.getenv('CLOUD_PORTAL_BASE_CONF_DIR')
