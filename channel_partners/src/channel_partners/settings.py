@@ -8,6 +8,8 @@ import os
 import sys
 from pathlib import Path
 
+from corsheaders.defaults import default_headers
+
 from channel_partners.tools.config import get_config
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -18,6 +20,7 @@ TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 USE_SQLITE = os.getenv('USE_SQLITE', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
+DOMAIN_NAME = os.getenv('DOMAIN_NAME', '')
 
 if LOCAL_ENV:
     ENV_NAME = 'local'
@@ -46,13 +49,19 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
+
+    'django_extensions',
+    'corsheaders',
     'accounts',
     'utils',
+    'drf_spectacular',
+    'partners'
 ]
 
 AUTH_USER_MODEL = 'accounts.account'
 
 MIDDLEWARE = [
+    'corsheaders.middleware.CorsMiddleware',
     'django.middleware.security.SecurityMiddleware',
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
@@ -155,3 +164,43 @@ STATIC_URL = 'static/'
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
+
+REST_FRAMEWORK = {
+    # 'EXCEPTION_HANDLER': 'nxlicensed.utils.custom_exception_handler',
+    'DEFAULT_SCHEMA_CLASS': 'channel_partners.utils.NxAutoSchema'
+}
+
+SPECTACULAR_SETTINGS = {
+    # 'SERVE_PERMISSIONS': ['licensing.views.ui.api_management.APIManagementPermission'],
+    'TITLE': 'Nx Channel Partners API',
+    'DESCRIPTION': '',
+    'VERSION': '2.0.0',
+    'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
+    'SERVERS': [
+        {
+            'url': f'https://{DOMAIN_NAME}/api/v2' if DOMAIN_NAME else '/api/v2'
+        }
+    ],
+    'POSTPROCESSING_HOOKS': [
+        'partners.authentication.system_authentication_hook'
+    ],
+    'SWAGGER_UI_SETTINGS': {
+        'persistAuthorization': True,
+        'showExtensions': True,
+        'deepLinking': True,
+    }
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+CORS_ALLOW_CREDENTIALS = True
+CORS_URLS_REGEX = r'^/nxlicensed/api/v2.*$'
+CORS_ALLOW_HEADERS = list(default_headers) + [
+    'cloud-host',
+    'requestinterceptorrequest'
+]
+
+
+KEYS_PATH = os.path.join(BASE_DIR, 'keys')
+RSA_KEY1 = open(os.path.join(KEYS_PATH, 'vms.nop.pvt')).read()
+RSA_KEY2 = open(os.path.join(KEYS_PATH, 'vms2.nop.pvt')).read()
+RSA_KEY3 = open(os.path.join(KEYS_PATH, 'vms3.nop.pvt')).read()

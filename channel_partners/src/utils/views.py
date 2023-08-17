@@ -4,10 +4,14 @@ from django.db import connections, DEFAULT_DB_ALIAS
 from django.db.migrations.executor import MigrationExecutor
 from django.http import JsonResponse
 from django.core.cache import caches
-from django.shortcuts import render
 from django.views import View
 
+
 logger = logging.getLogger(__name__)
+
+
+def simple_health_check(request):
+    return JsonResponse(data={'alive': True}, status=200)
 
 
 class HealthCheckView(View):

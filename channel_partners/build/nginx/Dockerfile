@@ -1,4 +1,4 @@
-FROM nginx:1.14.0-alpine
+FROM --platform=linux/amd64 nginx:1.14.0-alpine
 
 ARG BUILD_NUMBER=''
 #ENV PORTAL_HOST=127.0.0.1
