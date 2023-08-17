@@ -30,7 +30,7 @@ ${QA BURBANK SYSTEM ID}               032c7c41-0ddd-48d7-ab09-616bfad7b5cc
 ${BASE EMAIL}                         ${TEST EMAIL}+sendemail@gmail.com
 ${BASE EMAIL NO SEND}                 ${TEST EMAIL}@gmail.com
 ${BASE EMAIL DOMAIN}                  @gmail.com
-${BASE EMAIL PASSWORD}                lvhnwgmuoofzmvza
+${BASE EMAIL PASSWORD}                ulmgatwvhjbtylhc
 
 ${BASE HOST}                          imap.gmail.com
 ${BASE PORT}                          993
