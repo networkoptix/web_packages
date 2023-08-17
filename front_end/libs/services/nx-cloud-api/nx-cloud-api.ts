@@ -29,6 +29,7 @@ import { NxUriCacheService } from '../uri-cache.service';
 import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-partners-api';
 import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
+import { DocDbAPI } from './cloud-services/doc-db/doc-db-api';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
 import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
@@ -134,6 +135,7 @@ export class NxCloudApiService {
     ) => LicenseServerAPI;
     public cloudStorageApi: CloudStorageAPI;
     public cloudDbApi: CloudDbAPI;
+    public docDbApi: DocDbAPI;
     public cloudChannelPartnersApi: ChannelPartnersApi;
     public targetInstance: string;
 
@@ -176,6 +178,11 @@ export class NxCloudApiService {
             this.getTokensFromCloud('session', 'refresh_token', 'code'),
         ).pipe(map(({ code }) => code));
         this.cloudDbApi = CloudDbAPI.createApiFactory(
+            this.http,
+            this.#withFreshSession,
+            refreshToken,
+        )(this.targetInstance, () => this.CONFIG.customization);
+        this.docDbApi = DocDbAPI.createApiFactory(
             this.http,
             this.#withFreshSession,
             refreshToken,

@@ -15,6 +15,7 @@ const PROXY_CONFIG = [
     {
         context: [
             '/cdb',
+            '/docdb',
             '/api',
             '/oauth',
             // mediaserver specific apis

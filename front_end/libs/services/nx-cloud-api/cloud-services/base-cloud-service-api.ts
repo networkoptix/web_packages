@@ -83,7 +83,7 @@ export abstract class BaseCloudServiceAPI {
             Injector.create({ providers: WINDOWS_PROVIDERS }).get(WINDOW).location.hostname;
     }
 
-    protected get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> =>
+    public get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> =>
         this.#handle<T>(
             endpoint,
             (url, { body, ...options }) =>
@@ -91,28 +91,28 @@ export abstract class BaseCloudServiceAPI {
             this.#processOptionsFactory(options),
         );
 
-    protected post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+    public post = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
         this.#handle<T>(
             endpoint,
             (url, { body, ...options }) => this.http.post<T>(url, body, options),
             this.#processOptionsFactory(options),
         );
 
-    protected patch = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+    public patch = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
         this.#handle<T>(
             endpoint,
             (url, { body, ...options }) => this.http.patch<T>(url, body, options),
             this.#processOptionsFactory(options),
         );
 
-    protected put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+    public put = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
         this.#handle<T>(
             endpoint,
             (url, { body, ...options }) => this.http.put<T>(url, body, options),
             this.#processOptionsFactory(options),
         );
 
-    protected delete = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
+    public delete = <T>(endpoint: string, options?: PostRequestOptions): Observable<T> =>
         this.#handle<T>(
             endpoint,
             (url, { body, ...options }) => this.http.delete<T>(url, { ...options, body }),
