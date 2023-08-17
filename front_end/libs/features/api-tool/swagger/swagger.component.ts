@@ -583,6 +583,11 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         for (const paramDescription of paramsDescriptions) {
             paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, query);
         }
+
+        const jsons = this.document.querySelectorAll('.microlight');
+        for (const json of jsons) {
+            json.innerHTML = highlightAll(json.innerHTML, query);
+        }
     };
 
     ngOnChanges(changes: NgChanges<NxSwaggerComponent>): void {
