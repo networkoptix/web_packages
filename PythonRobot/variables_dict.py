@@ -39,7 +39,10 @@ variables_dict = {
     'BASE_PORT' : '993',
     'ANONYMOUS_BODY' : """//body[contains(@class,'anonymous')]//h1[@data-testid="welcomeCaption" or @id="welcomeCaption"]""",
     'BASE_EMAIL_DEFAULT' : False ,
-    'CREATE_ACCOUNT_BODY' : "//nx-landing-component//a[@href='/authorize?client_type=create']"
+    'CREATE_ACCOUNT_BODY' : "//nx-landing-component//a[@href='/authorize?client_type=create']",
+    "COPYRIGHT SYMBOL" : "©",
+    "COMPANY" : "Network Optix",
+    "PRIVACY_POLICY_FULL_URL" : "https://www.networkoptix.com/privacy-policy"
 }
 variables = {
     'url': 'ENV',

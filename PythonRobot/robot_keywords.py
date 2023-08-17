@@ -92,6 +92,9 @@ def go_to_url(driver: webdriver, url: str) -> None:
 
 def location_should_be(driver: webdriver, url: str) -> None:
     WebDriverWait(driver, 10).until(EC.url_to_be(url))
+
+def location_should_contain(driver: webdriver, url: str) -> None:
+    WebDriverWait(driver, 10).until(EC.url_contains(url))
     
 def input_text(driver: webdriver, locator: Tuple, text: str) -> None:
     element = driver.find_element(By.XPATH, locator)
@@ -194,3 +197,16 @@ def title_should_be(driver, title: str, message: str = None):
 def get_title(driver) -> str:
         """Returns the title of the current page."""
         return driver.title
+
+def wait_until_number_of_tabs_are_open(driver, number, timeout=30):
+        timeout = timeout + time.time()
+        found = None
+        handles = driver.window_handles
+        while time.time() < timeout:
+            try:    
+                if str(len(handles)) == str(number):
+                    return
+            except:
+                found = f"Looking for {number} tabs, found {len(handles)} tabs."
+            time.sleep(.2)
+        raise AssertionError(found)
