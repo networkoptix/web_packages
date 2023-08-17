@@ -13,7 +13,7 @@ from django.shortcuts import redirect
 from django.views.static import serve
 
 from cloud.helpers.exceptions import APINotFoundException
-from cms.controllers.static_files import get_template, get_customizable_static
+from cms.controllers.static_files import get_template, get_customizable_static, TemplatesCache
 from cms.models import get_cloud_portal_asset, Asset, AssetType
 
 logger = getLogger(__name__)
@@ -106,18 +106,29 @@ async def static_template(request):
 
 
 async def skin_styles(request):
-    cloud_portal = await Asset.objects.filter(customizations__name__in=[request.CUSTOMIZATION], asset_type__name="",
-                                              asset_type__type=AssetType.ASSET_TYPES.cloud_portal).afirst()
+    cloud_portal = await sync_to_async(get_cloud_portal_asset)(customization=request.CUSTOMIZATION)
     if not cloud_portal:
         raise APINotFoundException(f"Customization {request.CUSTOMIZATION} not found.")
     skin = await sync_to_async(cloud_portal.read_global_value)('%SKIN%')
-    redirect_url = f'/static/skin/{skin}/skin.css'
-    return redirect(redirect_url)
+    cache = TemplatesCache(customization_name=None,
+                           template_name='_source/{{skin}}/static/styles/skin.css',
+                           language_code=None, skin=skin, version_id=None)
+    if not (style := cache.get_value()):
+        skin_path = os.path.join(settings.STATIC_LOCATION, f'_source/{skin}/static/styles/skin.css')
+        blue_path = os.path.join(settings.STATIC_LOCATION, f'_source/blue/static/styles/skin.css')
+        if os.path.exists(skin_path):
+            path = skin_path
+            note = ''
+        elif not os.path.exists(skin_path) and os.path.exists(blue_path) and settings.LOCAL_ENVIRONMENT:
+            path = blue_path
+            note = f'/* it must be {skin} but it does not exist, so blue is used */\n\n'
+        else:
+            return HttpResponse(status=404)
 
+        with open(path, 'r') as f:
+            style = f.read()
+        if note and settings.LOCAL_ENVIRONMENT:
+            style = note + style
 
-async def skin_style(request, skin):
-    """
-    For local usage only. Returns style for current skin
-    """
-    styles_dir = os.path.join(settings.STATIC_LOCATION, f'_source/{skin}/static/styles')
-    return serve(request, 'skin.css', document_root=styles_dir)
+        cache.set_value(style)
+    return HttpResponse(content=style, content_type='text/css')

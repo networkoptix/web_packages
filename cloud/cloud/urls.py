@@ -123,7 +123,6 @@ urlpatterns = [
 ]
 
 if settings.LOCAL_ENVIRONMENT:
-    urlpatterns += [re_path(r'^static/skin/(?P<skin>blue|orange|green)/skin.css', static_serve.skin_style)]
     urlpatterns += staticfiles_urlpatterns()
 
 # if settings.LOCAL_ENVIRONMENT and not settings.TESTING:
