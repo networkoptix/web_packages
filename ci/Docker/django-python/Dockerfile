@@ -6,37 +6,19 @@ ARG ARTIFACTORY_URL
 ENV PIP_INDEX_URL "https://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 ENV PIP_EXTRA_INDEX_URL "https://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-local/simple"
 ENV PIP_TRUSTED_HOST $PIP_TRUSTED_HOST
+ENV POETRY_VERSION="1.5.1" \
+    POETRY_HOME="/opt/poetry"
+ENV PATH="$POETRY_HOME/bin:$PATH"
 
 WORKDIR /app
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
         bash netcat jq curl libmariadb-dev libcurl4-openssl-dev tini  \
-        gettext-base mariadb-client-core-10.5 pkg-config \
+        gettext-base mariadb-client-core-10.5 pkg-config gcc \
+    && curl -sSL https://install.python-poetry.org | python3 - \
+    && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/* \
+    && python -m pip install --upgrade --no-cache-dir pip \
+    #    jsonschema version cannot be solved in correctly
+    && python -m pip install --prefer-binary --no-cache-dir jsonschema==4.17.3 \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
-
-
-FROM builder as requirements
-
-ENV POETRY_VERSION="1.5.1" \
-    POETRY_HOME="/opt/poetry"
-ENV PATH="$POETRY_HOME/bin:$PATH"
-
-COPY cloud/pyproject.toml /app/
-COPY cloud/poetry.lock /app/
-WORKDIR /app
-RUN set -ex \
-    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
-    && poetry config virtualenvs.create false --local \
-    && poetry lock --check \
-    && poetry export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt \
-    && pip freeze | xargs pip uninstall -y \
-    && rm -rf /root/.cache/pip
-
-
-FROM builder AS runtime
-COPY --from=requirements /app/requirements.txt /app/requirements.txt
-RUN set -ex \
-    && apt-get update && apt-get install --no-install-suggests --no-install-recommends -y gcc \
-    && pip install --no-cache-dir -r /app/requirements.txt \
-    && apt remove gcc -y && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*

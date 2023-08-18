@@ -147,6 +147,9 @@ django-checks:
   variables:
     USE_SQLITE: "true"
   script:
+    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
+    - cat /app/requirements.txt
+    - pip install --upgrade --no-cache-dir -r /app/requirements.txt
     - cd cloud
     - python -m pip install safety==2.2.0
     - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi

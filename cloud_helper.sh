@@ -345,16 +345,16 @@ function export_poetry_requirements() {
 
 function check_licenses() {
     check_poetry_lock
-    ALLOWED="$(cat etc/allowed_licenses.txt)"
+    ALLOWED="$(cat cloud/allowed_licenses.txt)"
     pip-licenses --format=json --with-urls --allow-only="$ALLOWED"
 }
 
 function poetry_lock() {
-    poetry -C cloud/ lock
+    poetry -C cloud/ lock --no-update
 }
 
 function check_poetry_lock() {
-    if poetry -C cloud/ lock --check; then
+    if ! poetry -C cloud/ lock --check; then
         echo "Poetry lock file is not up to date."
         exit 1
     fi
@@ -363,6 +363,23 @@ function check_poetry_lock() {
 function update_requirements_licenses_poetry() {
     echo "Command deprecated. Licenses list is checked and generated in CI and build."
     exit 1
+}
+
+function update_package() {
+    echo "Command 'poetry update -C cloud/ --lock --only=prod $1' will be executed."
+    echo "This will update pyproject.toml and poetry.lock files only."
+    read -p "Do you want to proceed? (yes/no) " yn
+    case $yn in
+        yes ) echo "Updating $1";;
+        no ) echo exiting...;
+            exit;;
+        * ) echo invalid response;
+            exit 1;;
+    esac
+
+    poetry update -C cloud/ --lock --only=prod $1
+    exit
+
 }
 
 function setup_git_aliases() {
@@ -607,6 +624,9 @@ do
         setup_git_aliases)
             setup_git_aliases
             ;;
+        update_py_package)
+            update_package $2
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -637,6 +657,7 @@ do
             echo 'update_package_licenses - Update package-license.json with latest licensing information for cloud_portal project'
             echo 'install_cli - Installs cloud-helper CLI command globally'
             echo 'setup_git_aliases - Sets up git aliases for cloud_portal project'
+            echo 'update_py_package - Updates poetry requirements. Accepts package name. "./cloud_helper.sh update_py_package {package name}"'
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then

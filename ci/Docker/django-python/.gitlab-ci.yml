@@ -1,6 +1,6 @@
 variables:
   DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/cloud_portal_django_python'
-  DJANGO_PYTHON_IMAGE_VERSION: '1.4.3'
+  DJANGO_PYTHON_IMAGE_VERSION: '1.4.4'
   DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${DJANGO_PYTHON_IMAGE_VERSION}'
 
 
@@ -46,24 +46,3 @@ docker:build-django-python:
     - cloud/**/poetry.lock
     - cloud/**/poetry.toml
     - cloud/**/allowed_licenses.txt
-
-docker:build-django-python-manual:
-  extends: docker:build-django-python
-  allow_failure: true
-  before_script:
-    - |
-      DOCKER_DIR="ci/Docker/django-python"
-      touch build-django.env
-      
-      DJANGO_PYTHON_IMAGE_TAG="${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${DJANGO_PYTHON_IMAGE_VERSION}"
-      echo "DJANGO_PYTHON_IMAGE_TAG=${DJANGO_PYTHON_IMAGE_TAG}" > build-django.env
-      
-      TARGET_IMAGE="${DJANGO_PYTHON_IMAGE}"
-      TARGET_IMAGE_TAG="${DJANGO_PYTHON_IMAGE_TAG}"
-  rules:
-    - if: $CI_PIPELINE_SOURCE == "merge_request_event" || ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
-      changes:
-        - ci/Docker/django-python/*
-        - cloud/**/*
-      when: manual
-
