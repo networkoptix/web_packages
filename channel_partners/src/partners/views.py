@@ -5,6 +5,7 @@ from drf_spectacular.utils import extend_schema_view, inline_serializer
 
 
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
+from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
@@ -18,6 +19,12 @@ from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPart
 from .serializers import *
 # from channel_partners.utils import nx_extend_schema as extend_schema
 from drf_spectacular.utils import extend_schema
+
+
+class DefaultPagination(PageNumberPagination):
+    page_size = 100
+    page_size_query_param = 'page_size'
+    max_page_size = 1000
 
 
 @extend_schema(
@@ -128,6 +135,7 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     # Base queryset used by NestedViewSetMixin
     queryset = ChannelPartner.objects.all()
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return super().get_queryset().filter(instance=self.request.cloud_host.instance)
@@ -284,6 +292,7 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
 class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
+    pagination_class = DefaultPagination
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
@@ -357,6 +366,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     serializer_class = OrganizationSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     queryset = Organization.objects.all()
+    pagination_class = DefaultPagination
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
@@ -386,6 +396,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+    pagination_class = DefaultPagination
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -506,6 +517,7 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     queryset = CloudSystemId.objects.all()
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         return super().get_queryset().filter(organization__channel_partner__instance=self.request.cloud_host.instance)
@@ -538,6 +550,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
     serializer_class = CloudSystemSerializer
     lookup_field = 'system_id'
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
+    pagination_class = DefaultPagination
 
     def get_queryset(self):
         if self.detail:
