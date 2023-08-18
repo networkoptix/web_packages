@@ -1,28 +1,19 @@
-import { Injectable } from '@angular/core';
+import { inject } from '@angular/core';
 import {
     ActivatedRouteSnapshot,
-    CanActivate,
+    CanActivateFn,
     Router,
     RouterStateSnapshot,
-    UrlTree,
 } from '@angular/router';
-import { Observable } from 'rxjs';
 
-@Injectable()
-export class TabGuard implements CanActivate {
-    constructor(private router: Router) {}
-    canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): boolean | UrlTree | Observable<boolean | UrlTree> | Promise<boolean | UrlTree> {
-        return new Promise(resolve =>
-            setTimeout(() => {
-                if (route.parent?.parent?.data?.isAdmin || route.parent?.data?.isAdmin) {
-                    return resolve(true);
-                }
-                this.router.navigate(['404']);
-                resolve(false);
-            }),
-        );
+export const TabGuard: CanActivateFn = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+): boolean => {
+    const router: Router = inject(Router);
+    if (route.parent?.parent?.data?.isAdmin || route.parent?.data?.isAdmin) {
+        return true;
     }
-}
+    router.navigate(['404']);
+    return false;
+};

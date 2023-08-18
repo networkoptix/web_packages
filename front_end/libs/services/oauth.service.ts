@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import { memoizeAsyncShort } from '@utils/memoize';
 
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
@@ -47,6 +48,7 @@ export class OauthService {
             .toPromise();
     }
 
+    @memoizeAsyncShort
     redirectOauth(
         state?: string,
         email?: string,

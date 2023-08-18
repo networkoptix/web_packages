@@ -1110,6 +1110,7 @@ export class NxCloudApiService {
         '/api/account/refreshAccessToken',
     );
 
+    @memoizeAsyncShort
     getAccessToken(): Observable<string> {
         return this.#withFreshSession()(({ accessToken }) => of(accessToken));
     }

@@ -3,9 +3,8 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
-import { FeatureGuard } from '@guards/feature.guard';
+import { FeatureGuardMatch } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -48,7 +47,7 @@ const lazyRoutes: Routes = [
         path: 'systems/:systemId/layouts',
         loadChildren: () =>
             import('@pages/systems/layout-view/layout-view.module').then(m => m.NxLayoutViewModule),
-        canLoad: [FeatureGuard],
+        canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         data: {
             flags: FeatureFlagStrings.layouts,
@@ -60,7 +59,7 @@ const lazyRoutes: Routes = [
             import('@pages/theme-generator-demo/theme-generator-demo.module').then(
                 m => m.NxThemeGeneratorDemoModule,
             ),
-        canLoad: [FeatureGuard],
+        canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard],
         data: {
             flags: FeatureFlagStrings.themeGenerator,
@@ -90,7 +89,7 @@ const lazyRoutes: Routes = [
         path: 'home',
         loadChildren: () => import('@pages/home/home.module').then(m => m.NxHomeModule),
         canActivate: [() => nxConfig.featureFlags.channelPartners],
-        canLoad: [FeatureGuard],
+        canLoad: [FeatureGuardMatch],
         data: {
             flags: FeatureFlagStrings.systemGroups,
         },
@@ -161,7 +160,7 @@ const lazyRoutes: Routes = [
             import('@pages/developer-console/developer-console.module').then(
                 m => m.NxDeveloperConsoleModule,
             ),
-        canLoad: [FeatureGuard],
+        canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard],
         data: {
             flags: FeatureFlagStrings.customClients,
@@ -253,7 +252,7 @@ const lazyRoutes: Routes = [
     },
     {
         path: 'dashboard',
-        canLoad: [FeatureGuard],
+        canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard],
         data: {
             flags: FeatureFlagStrings.dashboard,
@@ -282,9 +281,6 @@ const lazyRoutes: Routes = [
     ],
     declarations: [],
     providers: [
-        ApplyGuard,
-        AuthGuard,
-        RedirectAuthGuard,
         {
             provide: TitleStrategy,
             useClass: NxPageTitleStrategy,

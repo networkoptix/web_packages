@@ -22,7 +22,6 @@ import * as patchWindow from 'test_utils/patch_window';
 
 import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
-import { SystemGuard } from '@routeGuards/systemGuard';
 import { NxAccountService } from '@services/account.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
@@ -91,7 +90,6 @@ export const testBedSetupFactory =
             HttpTestingController,
             WINDOWS_PROVIDERS,
             NxAccountService,
-            SystemGuard,
             { provide: DynamicConfig, useValue: new DynamicConfig(nxConfig) },
             {
                 provide: NxConfigService,

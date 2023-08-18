@@ -4,8 +4,6 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 
 import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { ApplyGuard } from '@guards/applyGuard';
-import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 
@@ -108,8 +106,6 @@ const lazyRoutes: Routes = [
     ],
     declarations: [],
     providers: [
-        ApplyGuard,
-        AuthGuard,
         {
             provide: TitleStrategy,
             useClass: NxPageTitleStrategy,

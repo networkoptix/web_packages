@@ -26,7 +26,6 @@ import { filter, take } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { SystemGuard } from '@guards/systemGuard';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -132,7 +131,6 @@ export class AppComponent implements AfterViewInit {
     constructor(
         configService: NxConfigService,
         public appStateService: NxAppStateService,
-        public systemGuard: SystemGuard,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
         private applyService: NxApplyService,

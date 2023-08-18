@@ -28,9 +28,6 @@ import { PopoverModule } from '@components/popover/popover.module';
 import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { environment } from '@environments/environment';
-import { AuthGuard } from '@guards/authGuard';
-import { DevelopersGuard } from '@guards/developersGuard';
-import { SystemGuard } from '@guards/systemGuard';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
@@ -119,9 +116,6 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        AuthGuard,
-        DevelopersGuard,
-        SystemGuard,
         DatePipe,
         {
             provide: APP_INITIALIZER,

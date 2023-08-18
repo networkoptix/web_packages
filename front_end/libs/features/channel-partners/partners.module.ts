@@ -7,7 +7,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { FeatureGuard } from '@guards/feature.guard';
+import { FeatureGuardActivate } from '@guards/feature.guard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@menu/menu.module';
 import { NxCustomizationComponent } from '@pages/channel-partners/customization/customization.component';
@@ -23,7 +23,7 @@ export const cloudPartnersRoutes: Routes = [
     {
         path: '',
         component: NxChannelPartnersComponent,
-        canActivate: [FeatureGuard, TwofaGuard],
+        canActivate: [FeatureGuardActivate, TwofaGuard],
         data: {
             flags: FeatureFlagStrings.channelPartners,
             override: FeatureFlagStrings.channelPartners,

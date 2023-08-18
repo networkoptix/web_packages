@@ -1,6 +1,11 @@
 import { Location } from '@angular/common';
-import { Injectable, Inject } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree, Router } from '@angular/router';
+import { inject } from '@angular/core';
+import {
+    ActivatedRouteSnapshot,
+    RouterStateSnapshot,
+    Router,
+    CanActivateFn,
+} from '@angular/router';
 import { lastValueFrom, Observable, switchMap, take } from 'rxjs';
 
 import { NxAccountService } from '@services/account.service';
@@ -11,58 +16,50 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
 
-@Injectable({
-    providedIn: 'root',
-})
-export class TwofaGuard {
-    constructor(
-        private router: Router,
-        private accountService: NxAccountService,
-        private cloudApi: NxCloudApiService,
-        private systemsService: NxSystemsService,
-        private oauthService: OauthService,
-        @Inject(WINDOW) private window: Window,
-    ) {}
-
-    canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        return this.systemsService.systemsSubject.pipe(
-            take(1),
-            switchMap(async (systems: NxSystemInfo[]) => {
-                const { systemId } = route.params;
-                const systemInfo = systems.find(system => system.id === systemId);
-                let account: Account = await this.accountService.get();
-                if (systemInfo?.system2faEnabled && !account.sessionVerified) {
-                    account = await this.accountService.get(true);
-                }
-                if (systemInfo?.system2faEnabled && !account.sessionVerified) {
-                    if (!account.totpExistsForAccount) {
-                        const noRedirect = this.window.location.href.endsWith(
-                            `twofa-required?systemName=${systemInfo.name}`,
-                        );
-                        if (!noRedirect) {
-                            this.router.navigate(['twofa-required'], {
-                                queryParams: { systemName: systemInfo.name },
-                            });
-                        } else {
-                            return false;
-                        }
+export const TwofaGuard: CanActivateFn = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+): Observable<boolean> | boolean => {
+    const systemsService: NxSystemsService = inject(NxSystemsService);
+    const accountService: NxAccountService = inject(NxAccountService);
+    const router: Router = inject(Router);
+    const cloudApi: NxCloudApiService = inject(NxCloudApiService);
+    const oauthService: OauthService = inject(OauthService);
+    const iWindow: Window = inject(WINDOW);
+    return systemsService.systemsSubject.pipe(
+        take(1),
+        switchMap(async (systems: NxSystemInfo[]) => {
+            const { systemId } = route.params;
+            const systemInfo = systems.find(system => system.id === systemId);
+            let account: Account = await accountService.get();
+            if (systemInfo?.system2faEnabled && !account.sessionVerified) {
+                account = await accountService.get(true);
+            }
+            if (systemInfo?.system2faEnabled && !account.sessionVerified) {
+                if (!account.totpExistsForAccount) {
+                    const noRedirect = iWindow.location.href.endsWith(
+                        `twofa-required?systemName=${systemInfo.name}`,
+                    );
+                    if (!noRedirect) {
+                        router.navigate(['twofa-required'], {
+                            queryParams: { systemName: systemInfo.name },
+                        });
                     } else {
-                        const accessToken = await lastValueFrom(this.cloudApi.getAccessToken());
-                        this.oauthService.redirectOauth(
-                            'system2faAuth',
-                            account.email,
-                            undefined,
-                            accessToken,
-                            Location.joinWithSlash(this.window.location.origin, state.url),
-                        );
+                        return false;
                     }
                 } else {
-                    return true;
+                    const accessToken = await lastValueFrom(cloudApi.getAccessToken());
+                    oauthService.redirectOauth(
+                        'system2faAuth',
+                        account.email,
+                        undefined,
+                        accessToken,
+                        Location.joinWithSlash(iWindow.location.origin, state.url),
+                    );
                 }
-            }),
-        );
-    }
-}
+            } else {
+                return true;
+            }
+        }),
+    );
+};

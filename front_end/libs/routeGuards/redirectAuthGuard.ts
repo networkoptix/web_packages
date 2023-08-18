@@ -1,28 +1,23 @@
-import { Inject, Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot, UrlTree } from '@angular/router';
-import { Observable } from 'rxjs';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
 
 import { WINDOW } from '@services/window-provider';
 
-@Injectable()
-export class RedirectAuthGuard {
-    constructor(@Inject(WINDOW) private window: Window) {}
-
-    canActivate(
-        route: ActivatedRouteSnapshot,
-        state: RouterStateSnapshot,
-    ): Observable<boolean | UrlTree> | Promise<boolean | UrlTree> | boolean | UrlTree {
-        const { url } = state;
-        let newUrl = '';
-        // exists to handle register & restore password for systems < 5.0 on desktop login
-        if (url.includes('register')) {
-            newUrl = '/authorize?client_type=create';
-        } else if (url.includes('restore_password')) {
-            newUrl = '/authorize/restore_password';
-        }
-        if (newUrl) {
-            this.window.location.href = newUrl;
-        }
-        return false;
+export const RedirectAuthGuard: CanActivateFn = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+): boolean => {
+    const iWindow: Window = inject(WINDOW);
+    const { url } = state;
+    let newUrl = '';
+    // exists to handle register & restore password for systems < 5.0 on desktop login
+    if (url.includes('register')) {
+        newUrl = '/authorize?client_type=create';
+    } else if (url.includes('restore_password')) {
+        newUrl = '/authorize/restore_password';
     }
-}
+    if (newUrl) {
+        iWindow.location.href = newUrl;
+    }
+    return false;
+};

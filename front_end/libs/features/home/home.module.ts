@@ -32,7 +32,6 @@ import { WithParentDataResolver } from './resolvers/data-resolver';
 import { OrgResolver } from './resolvers/org-resolver';
 import { RoleResolver } from './resolvers/role-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
-import { TabGuard } from './resolvers/tab-guard';
 import { TabResolver } from './resolvers/tab-resolver';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
@@ -89,7 +88,6 @@ const homeRoutes: Routes = [
         OrgResolver,
         SubChannelResolver,
         WithParentDataResolver,
-        TabGuard,
         RoleResolver,
         CPResovler,
     ],
