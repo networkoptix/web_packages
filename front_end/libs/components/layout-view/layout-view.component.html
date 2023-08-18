@@ -18,16 +18,9 @@
         [layout]="selectedLayout$ | async"
         [layoutItemLookup]="layoutItemLookup$ | async"
         [system]="selectedSystem$ | async"
-    ></nx-layout-grid>
-    <nx-layout-timeline
-        *ngIf="
-            !ptzControlTarget &&
-            (CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo)
-        "
         [cameras]="cameras$ | async"
-        [layoutItemLookup]="layoutItemLookup$ | async"
-        [records]="recordedTimes$ | async"
-    ></nx-layout-timeline>
+    ></nx-layout-grid>
+
     <nx-layout-ptz
         *ngIf="
             ptzControlTarget && (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo)

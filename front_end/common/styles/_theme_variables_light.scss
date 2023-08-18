@@ -322,6 +322,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --timeline-selection-panel-close-hover-bg : var(--brand-d1);
     --timeline-selection-panel-close-active-bg : var(--brand-d4);
     --timeline-control-color : #{$dark9};
+    --timeline-chunk-color : var(--green_l2);
+    --timeline-background : rgba(var(--green_l2--rgb), 0.1);
 
     --paginator-bg : #{$light4};
     --paginator-color : #{$light16};

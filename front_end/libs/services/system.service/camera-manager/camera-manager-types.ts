@@ -151,12 +151,11 @@ export enum RecordingType {
 export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various';
 
 export interface TimeDetail {
-    cameraId: string;
-    startTimeMs: number;
-    endTimeMs: number;
-    durationMs: number;
-    start: number;
-    end: number;
+    guid: string;
+    periods: {
+        durationMs: string;
+        startTimeMs: string;
+    }[];
 }
 
 export type TaskUpdate = Pick<Task, 'fps' | 'recordingType' | 'streamQuality'>;

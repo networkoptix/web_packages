@@ -518,6 +518,8 @@ html[data-theme="hsl"] {
     --timeline-selection-panel-close-hover-bg        : var(--new-brand-d5);
     --timeline-selection-panel-close-active-bg        : var(--new-brand-d4);
     --timeline-control-color            : var(--new-light4);
+    --timeline-chunk-color : var(--green_l2);
+    --timeline-background : rgba(var(--green_l2--rgb), 0.1);
 
     --paginator-bg           : var(--new-dark6);
     --paginator-color        : var(--new-light10);

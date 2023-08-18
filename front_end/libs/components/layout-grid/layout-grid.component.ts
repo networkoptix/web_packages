@@ -88,6 +88,7 @@ import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 import {
     BaseResourceNode,
@@ -197,12 +198,14 @@ interface Collisions {
         TourMatMenuModule,
         TranslateModule,
         VideoPlayerModule,
+        WebGLTimelineModule,
     ],
 })
 export class NxLayoutGridComponent {
     @Input() layout: Layout;
     @Input() layoutItemLookup: LayoutResourceTree;
     @Input() system: NxSystem;
+    @Input() cameras: string[];
 
     @Output() layoutChanged = new EventEmitter<string>();
     @Output() showPtz = new EventEmitter<NxSystemCamera>();

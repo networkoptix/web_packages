@@ -5,7 +5,7 @@
     <div class="col-12 col-md-4 border-right">
         <form
             #testForm="ngForm"
-            (ngSubmit)="onSubmit()"
+            (submit)="onSubmit()"
             name="testForm"
             novalidate
         >
@@ -149,7 +149,6 @@
                     [placeholder]="'Email' | translate"
                     [noMatchMsg]="'No matches found' | translate"
                     [freeText]="true"
-                    #ddSearchableSingle="ngModel"
                 >
                 </nx-searchable-select>
             </div>
@@ -184,7 +183,7 @@
 
         <form
             #testForm2="ngForm"
-            (ngSubmit)="onSubmit()"
+            (submit)="onSubmit()"
             name="testForm2"
             novalidate
         >
@@ -269,14 +268,14 @@
                     [noMatchMsg]="'No peers found' | translate"
                     [freeText]="true"
                     [validation]="urlRegex"
-                    #mergeDropdown="ngModel"
-                    required
+                    [required]="true"
                 ></nx-mat-like-type-ahead-select>
             </div>
 
             <br /><br />
 
             <nx-slider
+                name="slider"
                 [ngModelOptions]="{ standalone: true }"
                 [range]="{ start: 0, end: 360 }"
                 [(ngModel)]="sliderValue"
@@ -295,7 +294,7 @@
 
         <form
             #testForm3="ngForm"
-            (ngSubmit)="onSubmit()"
+            (submit)="onSubmit()"
             name="testForm3"
             novalidate
         >

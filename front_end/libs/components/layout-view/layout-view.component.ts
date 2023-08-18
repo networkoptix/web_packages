@@ -8,7 +8,6 @@ import { TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
     combineLatest,
-    concat,
     defer,
     firstValueFrom,
     merge,
@@ -316,7 +315,7 @@ export class NxLayoutViewComponent {
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')
                     .filter(layout =>
-                        [currentUser.id, '{00000000-0000-0000-0000-000000000000}'].includes(
+                        [currentUser?.id, '{00000000-0000-0000-0000-000000000000}'].includes(
                             layout.parentId,
                         ),
                     )
@@ -489,7 +488,7 @@ export class NxLayoutViewComponent {
 
     #fetchingLayout$: Subject<'fetching'> = new Subject();
 
-    selectedLayout$ = merge(this.#selectedLayout$, this.#fetchingLayout$).pipe(
+    selectedLayout$: Observable<Layout> = merge(this.#selectedLayout$, this.#fetchingLayout$).pipe(
         map(current => (current === 'fetching' ? null : current)),
         filter(layout => !!layout),
         shareReplay({
@@ -528,19 +527,19 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
-    recordedTimes$ = this.selectedLayout$.pipe(
-        switchMap(() =>
-            concat(
-                Promise.resolve(null),
-                combineLatest([this.cameras$, this.selectedSystem$]).pipe(
-                    switchMap(([cameras, system]) =>
-                        system.cameraManager.getRecordedTimes(cameras),
-                    ),
-                ),
-            ),
-        ),
-        untilDestroyed(this),
-    );
+    // recordedTimes$ = this.selectedLayout$.pipe(
+    //     switchMap(() =>
+    //         concat(
+    //             Promise.resolve(null),
+    //             combineLatest([this.cameras$, this.selectedSystem$]).pipe(
+    //                 switchMap(([cameras, system]) =>
+    //                     system.cameraManager.getRecordedTimes(cameras),
+    //                 ),
+    //             ),
+    //         ),
+    //     ),
+    //     untilDestroyed(this),
+    // );
 
     constructor(
         private accountService: NxAccountService,

@@ -370,26 +370,30 @@
                                                 "
                                             ></ng-container>
                                         </ng-template>
-                                        <nx-video-player
-                                            cdkDragHandle
-                                            (resize)="
-                                                updatePlaceholderConfig($event, item, 'offline')
-                                            "
-                                            [cdkDragHandleDisabled]="layout.locked"
-                                            [camera]="itemDetail.details"
-                                            [fullScreenTarget]="layoutItemWrapper"
-                                            [pingServer]="pingServer(itemDetail.details)"
-                                            [showFullScreenButton]="mouseMoving$ | async"
-                                            [rotation]="item.rotation"
-                                            (showError)="handleVideoError(itemDetail, $event)"
-                                            (showPtz)="showPtz.emit($event)"
-                                            [zoom]="item"
-                                            [lostConnectionPlaceholder]="offlinePlaceholder"
-                                            [skipCredentialsCheck]="
-                                                skipDefaultCredentialsCheck[itemDetail.details.id]
-                                            "
-                                        >
-                                        </nx-video-player>
+                                        <div class="d-flex flex-column h-100 w-100">
+                                            <nx-video-player
+                                                cdkDragHandle
+                                                (resize)="
+                                                    updatePlaceholderConfig($event, item, 'offline')
+                                                "
+                                                [cdkDragHandleDisabled]="layout.locked"
+                                                [camera]="itemDetail.details"
+                                                [fullScreenTarget]="layoutItemWrapper"
+                                                [pingServer]="pingServer(itemDetail.details)"
+                                                [showFullScreenButton]="mouseMoving$ | async"
+                                                [rotation]="item.rotation"
+                                                (showError)="handleVideoError(itemDetail, $event)"
+                                                (showPtz)="showPtz.emit($event)"
+                                                [zoom]="item"
+                                                [lostConnectionPlaceholder]="offlinePlaceholder"
+                                                [skipCredentialsCheck]="
+                                                    skipDefaultCredentialsCheck[
+                                                        itemDetail.details.id
+                                                    ]
+                                                "
+                                            >
+                                            </nx-video-player>
+                                        </div>
                                     </ng-container>
                                     <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
                                         <ng-template #offlinePlaceholder>
@@ -479,4 +483,11 @@
             </ng-template>
         </ng-container>
     </div>
+
+    <nx-webgl-canvas
+        *ngIf="CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo"
+        [cameras]="cameras"
+        [system]="system"
+        [selectedLayout]="layout"
+    ></nx-webgl-canvas>
 </div>

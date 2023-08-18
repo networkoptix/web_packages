@@ -15,10 +15,16 @@ export class NxSandboxComponent {
     constructor(private menuService: NxMenuService) {
         effect(() => {
             const selection = this.menuService.selectedSection();
-            if (this.content.selectedSection === selection) {
+            const detailSelection = this.menuService.selectedDetailsSection();
+            if (
+                !this.content ||
+                (this.content.selectedSection === selection &&
+                    this.content.selectedDetailsSection === detailSelection)
+            ) {
                 return;
             }
             this.content.selectedSection = selection;
+            this.content.selectedDetailsSection = detailSelection;
             this.content = { ...this.content }; // trigger onChange
         });
 

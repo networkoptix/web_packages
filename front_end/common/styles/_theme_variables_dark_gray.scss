@@ -304,6 +304,8 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --timeline-selection-panel-close-hover-bg        : var(--brand-d5);
     --timeline-selection-panel-close-active-bg        : var(--brand-d4);
     --timeline-control-color            : #{$light_gray_4};
+    --timeline-chunk-color : var(--green_d2);
+    --timeline-background : rgba(var(--green_d2--rgb), 0.1);
 
     --paginator-bg           : #282828; //$dark_gray_6;
     --paginator-color        : #B8B8B8; //$light_gray_10;

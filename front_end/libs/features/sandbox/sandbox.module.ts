@@ -14,6 +14,9 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
+import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
+import { NxMatLikePasswordComponent } from '@components/mat-like-components/mat-like-password-input/password.component';
+import { NxMatLikeTypeAheadDropdown } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component';
 import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSearchComponent } from '@components/search/search.component';
@@ -204,6 +207,9 @@ const appRoutes: Routes = [
         NxRadioComponent,
         NxTagComponent,
         NxButtonComponent,
+        NxMatLikeTypeAheadDropdown,
+        NxMatLikeInputComponent,
+        NxMatLikePasswordComponent,
     ],
     providers: [],
 

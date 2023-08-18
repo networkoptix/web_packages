@@ -1,8 +1,10 @@
-<nx-pre-loader *ngIf="!initialData.length"></nx-pre-loader>
-
+<nx-pre-loader
+    *ngIf="cameras.length && (!data?.length || !dataAllCameras?.length)"
+    [minHeight]="85"
+></nx-pre-loader>
 <div
     class="d-flex timeline-container"
-    *ngIf="initialData.length"
+    *ngIf="data?.length || dataAllCameras?.length"
 >
     <div>
         <nx-timeline-zoom
@@ -14,9 +16,17 @@
         <div id="nx-x-axis-major"></div>
         <div id="nx-x-axis-minor"></div>
         <div
+            [ngClass]="{ 'multi-layer': cameras.length > 1 }"
             (mousemove)="mouseMoveHandler($event)"
             (mouseleave)="mouseLeaveHandler()"
             id="chart"
+            use-device-pixel-ratio
+        ></div>
+        <div
+            *ngIf="cameras.length > 1"
+            (mousemove)="mouseMoveHandler($event)"
+            (mouseleave)="mouseLeaveHandler()"
+            id="chartAll"
             use-device-pixel-ratio
         ></div>
         <nx-timeline-scroll
@@ -29,6 +39,13 @@
             (constantScroll)="constantScroll($event)"
         >
         </nx-timeline-scroll>
+
+        <div
+            class="canvas-camera-name"
+            [ngClass]="{ short: cameras.length > 1 }"
+        >
+            {{ selectedCamera?.name || selectedCamera?.model }}
+        </div>
 
         <nx-webgl-time-under-mouse
             [position]="timeLabelPosition"
@@ -47,26 +64,5 @@
         ></nx-webgl-timeline-selection>
 
         <nx-webgl-timeline-selection-action-panel></nx-webgl-timeline-selection-action-panel>
-    </div>
-</div>
-
-<div *ngIf="initialData.length">
-    <div class="row mt-3">
-        <div class="col-6">
-            <span translate>zLevel</span> : {{ webglService.levelZoom$.value }} <br />
-            <span translate>xPos</span> : {{ xPos }} <br />
-            <span translate>canvas</span> : {{ webglService.canvasWidth$.value }} <br />
-            <span translate>width</span> :
-            {{ webglService.canvasWidth$.value * webglService.levelZoom$.value }} <br />
-            <span translate>BarPos</span> : {{ scrollBarPos }} <br />
-            <span translate>BarWidth</span> : {{ scrollBarWidth }} <br />
-            <!--    tPos : {{ timeLabelPosition }} <br />-->
-        </div>
-        <div class="col-6">
-            <span translate>CurrPointer</span> : {{ currentPointer?.getTime() }} /
-            {{ timeLabelPosition }} <br />
-            <span translate>PlaybackPointer</span> : {{ playbackPointer?.getTime() }} /
-            {{ playbackLabelPosition }}<br />
-        </div>
     </div>
 </div>

@@ -31,6 +31,14 @@
     }
 }
 
+nx-webgl-canvas {
+    height: 105px;
+    width: 100%;
+    display: block;
+    position: absolute;
+    bottom: 0;
+}
+
 .centered-anchor {
     position: absolute;
     left: calc(50% - 140px);

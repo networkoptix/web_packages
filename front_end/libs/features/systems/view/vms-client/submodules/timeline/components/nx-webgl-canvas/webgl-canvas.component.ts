@@ -12,8 +12,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
 import { D3ZoomEvent, ScaleTime } from 'd3';
 import * as fc from 'd3fc';
-import { animationFrameScheduler, interval, Subject, takeUntil } from 'rxjs';
+import { animationFrameScheduler, interval, Subject, takeUntil, timer } from 'rxjs';
 
+import { Layout } from '@services/system-api.types';
+import {
+    NxSystemCamera,
+    TimeDetail,
+} from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystem } from '@services/system.service/system';
+import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import {
     CONSTANT_SCROLL_FACTOR_PX,
@@ -22,6 +29,12 @@ import {
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 import {
+    CHUNK_TYPE,
+    DATA,
+    RECORD_DATA,
+    TICK_BREAKPOINTS,
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
+import {
     CONSTANT_ZOOM_FACTOR,
     FORCE_ZOOM_FACTOR,
     ZOOM_DIRECTION,
@@ -29,28 +42,9 @@ import {
     ZOOM_FACTOR,
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
-enum CHUNK {
-    RECORDS,
-    BOOKMARK,
-    ANALYTICS,
-}
-
-interface DATA {
-    width: number;
-    x: number;
-    y: number;
-    type?: CHUNK;
-}
-
-enum TICK_BREAKPOINTS {
-    lowMAJOR = 12,
-    lowMINOR = 17,
-    denseMAJOR = 20,
-    denseMINOR = 25,
-}
-
 const ZOOM_WINDOW_TO_ANIMATE_MS = 30 * 60 * 1000;
 const LAST_MINUTE_SIZE = 1.5 * 60 * 1000; // 1.5 minutes
+const TEN_SEC_IN_MS = 10 * 1000;
 
 @UntilDestroy()
 @Component({
@@ -60,10 +54,10 @@ const LAST_MINUTE_SIZE = 1.5 * 60 * 1000; // 1.5 minutes
     encapsulation: ViewEncapsulation.None,
 })
 export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
-    @Input() initialData: Array<Record<string, string>>;
-    @Input() pushData: Array<Record<string, string>>;
-    @Input() bookmarksData: Array<Record<string, string>>;
-    @Input() analyticsData: Array<Record<string, string>>;
+    @Input() selectedCameraId: string;
+    @Input() system: NxSystem;
+    @Input() cameras: string[];
+    @Input() selectedLayout: Layout;
 
     @Input() showData: Record<string, boolean> = {
         records: true,
@@ -71,21 +65,36 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         analytics: true,
     };
 
+    destroy$ = new Subject<boolean>();
+    selectedCamera: NxSystemCamera;
+    // eslint-disable-next-line nx/no-untyped-init
+    firstRender;
+
+    initialData: Array<Record<string, string>>;
+    pushData: Array<Record<string, string>>;
+    bookmarksData: Array<Record<string, string>>;
+    analyticsData: Array<Record<string, string>>;
+    end: number;
+
     // eslint-disable-next-line nx/no-untyped-init
     chart;
     // eslint-disable-next-line nx/no-untyped-init
+    chartAll;
+    // eslint-disable-next-line nx/no-untyped-init
     zoom;
-    // eslint-disable-next-line nx/no-untyped-init
-    data = [];
+    data: DATA[];
+    dataAllCameras: DATA[];
     dataSet: number;
-    // eslint-disable-next-line nx/no-untyped-init
-    sampledData;
+    dataAllSet: number;
     // eslint-disable-next-line nx/no-untyped-init
     canvas;
+    // eslint-disable-next-line nx/no-untyped-init
+    canvasAll;
 
     wrapperScroll: d3.Selection<never, never, HTMLElement, never>;
     container: HTMLDivElement;
     barSeries: never | undefined;
+    barSeriesAll: never | undefined;
     timeFrameInS: number;
     start: number;
     nowMs: number;
@@ -150,49 +159,63 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
 
     constructor(public webglService: NxWebGLService, @Inject(DOCUMENT) private document: Document) {
         this.data = [];
+        this.dataAllCameras = [];
+    }
+
+    private periodToChunk(period: RECORD_DATA): DATA {
+        const startTimeMs = +period.startTimeMs;
+        const durationMs = +period.durationMs > 0 ? +period.durationMs : Date.now() - startTimeMs;
+        return {
+            x: startTimeMs,
+            y: 30,
+            width: durationMs,
+            type: CHUNK_TYPE.RECORDS,
+        };
+    }
+
+    private resetChart(): void {
+        this.destroy$.next(true);
+        this.data = [];
+        this.dataAllCameras = [];
+        this.end = 0;
     }
 
     ngOnChanges(changes: NgChanges<NxWebGLCanvasComponent>): void {
-        if (changes.initialData?.currentValue?.length) {
-            this.data = this.initialData.map((chunk: Record<string, string>) => {
-                const chunkStart = parseInt(chunk.startTimeMs);
-                let chunkEnd = parseInt(chunk.durationMs);
-                chunkEnd = chunkEnd > 0 ? chunkEnd : Date.now() - chunkStart;
+        // if (changes.selectedCameraId?.currentValue) {
+        //     this.selectedCameraId = changes.selectedCameraId.currentValue;
+        //     this.selectedCamera = this.system.cameraManager.cameras.find(
+        //         camera => camera.id === this.selectedCameraId,
+        //     );
+        // }
 
-                return { x: chunkStart, y: 30, width: chunkEnd, type: CHUNK.RECORDS };
-            });
+        if (changes.cameras?.currentValue) {
+            this.resetChart();
 
-            this.initStartEndTime();
+            if (changes.cameras.currentValue.length) {
+                // test data
+                this.selectedCameraId = this.cameras[0];
+                this.selectedCamera = this.system.cameraManager.cameras.find(
+                    camera => camera.id === cleanId(this.selectedCameraId),
+                );
+                // ****************************
 
-            // just to be sure ngIf renders container
-            setTimeout(() => {
-                this.initContainer();
-                this.initXscale();
-                this.initAxisMajor();
-                this.initAxisMinor();
-                this.initZoom();
-                // this.initChart();
-                this.webglService.updateTimelineRange();
-                this.render(this.data);
-            });
+                const camerasInLayout = changes.cameras.currentValue;
 
-            // this.singleScroll(SCROLL_DIRECTION.right);
-            // this.xScaleOriginal = xScale.copy();
-
-            // this.redraw();
+                this.getRecords(camerasInLayout);
+            }
         }
-
-        if (changes.pushData?.currentValue?.length) {
-            this.addData(this.pushData, CHUNK.RECORDS);
-        }
-
-        if (changes.bookmarksData?.currentValue?.length) {
-            this.addData(this.bookmarksData, CHUNK.BOOKMARK);
-        }
-
-        if (changes.analyticsData?.currentValue?.length) {
-            this.addData(this.analyticsData, CHUNK.ANALYTICS);
-        }
+        // DATA will be fetched here not outside
+        // if (changes.pushData?.currentValue?.length) {
+        //     this.addData(this.pushData, CHUNK.RECORDS);
+        // }
+        //
+        // if (changes.bookmarksData?.currentValue?.length) {
+        //     this.addData(this.bookmarksData, CHUNK.BOOKMARK);
+        // }
+        //
+        // if (changes.analyticsData?.currentValue?.length) {
+        //     this.addData(this.analyticsData, CHUNK.ANALYTICS);
+        // }
 
         if (changes.showData?.currentValue) {
             this.redraw();
@@ -241,8 +264,110 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             });
     }
 
+    initChart(): void {
+        this.firstRender = setTimeout(() => {
+            this.initContainer();
+            this.initXscale();
+            this.initAxisMajor();
+            this.initAxisMinor();
+            this.initZoom();
+            // Test data for Bookmarks, Events ... etc.
+            this.mockBookmarksData();
+            // ****************************
+            this.webglService.updateTimelineRange();
+            this.render(this.data);
+
+            clearTimeout(this.firstRender);
+        });
+    }
+
+    mockBookmarksData(): void {
+        this.analyticsData = [
+            { startTimeMs: '1689008629000', durationMs: '300000' },
+            { startTimeMs: '1690736629000', durationMs: '300000' },
+            { startTimeMs: '1691255029000', durationMs: '300000' },
+        ];
+        this.addData(this.analyticsData, CHUNK_TYPE.BOOKMARK);
+
+        this.bookmarksData = [
+            { startTimeMs: '1689872629000', durationMs: '300000' },
+            { startTimeMs: '1686848629000', durationMs: '3000' },
+            { startTimeMs: '1687712629000', durationMs: '500000' },
+            { startTimeMs: '1688058229000', durationMs: '500000' },
+        ];
+        this.addData(this.bookmarksData, CHUNK_TYPE.ANALYTICS);
+    }
+
+    private getMainCameraRecords(records: TimeDetail[]): void {
+        const mainCamera = records.filter(item => item.guid === this.selectedCameraId)[0];
+
+        if (mainCamera) {
+            this.data.push(
+                ...mainCamera.periods.map((period): DATA => {
+                    return this.periodToChunk(period);
+                }),
+            );
+        }
+    }
+
+    private getAllCamerasRecords(records: TimeDetail[]): boolean {
+        this.getMainCameraRecords(records);
+
+        let recordsAllCameras: RECORD_DATA[] = records.flatMap((rec): RECORD_DATA[] => {
+            return [...recordsAllCameras, ...rec.periods];
+        });
+
+        if (!this.dataAllCameras.length && recordsAllCameras.length) {
+            recordsAllCameras = recordsAllCameras.sort((a, b) => {
+                const ms1 = +a.startTimeMs;
+                const ms2 = +b.startTimeMs;
+                if (ms1 < ms2) {
+                    return -1;
+                }
+                if (ms1 > ms2) {
+                    return 1;
+                }
+
+                // names must be equal
+                return 0;
+            });
+        }
+
+        this.dataAllCameras.push(
+            ...recordsAllCameras.map((period): DATA => {
+                return this.periodToChunk(period);
+            }),
+        );
+
+        this.initStartEndTime();
+
+        return this.dataAllCameras.length === recordsAllCameras.length; // first data load?
+    }
+
+    getRecords(camerasInLayout: string[]): void {
+        timer(0, TEN_SEC_IN_MS)
+            .pipe(untilDestroyed(this), takeUntil(this.destroy$))
+            .subscribe(() => {
+                this.system.cameraManager
+                    .getRecordedTimes(camerasInLayout, this.end)
+                    .pipe(untilDestroyed(this), takeUntil(this.destroy$))
+                    .subscribe((records: TimeDetail[]) => {
+                        if (!records.length) {
+                            return;
+                        }
+
+                        if (this.getAllCamerasRecords(records)) {
+                            this.initChart();
+                        } else {
+                            this.redraw();
+                        }
+                    });
+            });
+    }
+
     initStartEndTime(): void {
-        this.start = parseInt(this.initialData[0].startTimeMs);
+        this.end = Date.now();
+        this.start = this.dataAllCameras[0].x;
         this.nowMs = Date.now();
         this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
     }
@@ -260,8 +385,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         data: Array<DATA>,
         xScale: d3.ScaleTime<number, number, never>,
         yScale: d3.ScaleLinear<number, number, never>,
-    ): void {
-        this.barSeries = fc
+    ): never {
+        return fc
             .seriesWebglBar(data)
             .equals((previousData, currentData) => previousData === currentData)
             .xScale(xScale)
@@ -277,12 +402,12 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                     .data(data)
                     .value(d => {
                         switch (d.type) {
-                            case CHUNK.BOOKMARK:
+                            case CHUNK_TYPE.BOOKMARK:
                                 return [1.0, 0, 0, 0.5];
-                            case CHUNK.ANALYTICS:
+                            case CHUNK_TYPE.ANALYTICS:
                                 return [0, 0, 1.0, 0.5];
                             default:
-                                // [r / 255, g / 255, b / 255, opacity] .. setting green_l2 here
+                                // [r / 255, g / 255, b / 255, opacity] ... setting green_l2 here
                                 return [76 / 255, 188 / 255, 40 / 255, 1];
                         }
                     })(context);
@@ -542,7 +667,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
 
                 if (!this.scrollInProcess) {
                     checkZoomLevel(event.transform.k);
-                    this.scrollBarPos = Math.trunc(-this.xPos / this.webglService.levelZoom$.value);
                     this.scrollBarWidth = Math.max(
                         Math.trunc(
                             this.webglService.canvasWidth$.value /
@@ -550,6 +674,15 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                         ),
                         50,
                     );
+                    this.scrollBarPos = Math.trunc(-this.xPos / this.webglService.levelZoom$.value);
+
+                    if (
+                        this.scrollBarPos >
+                        this.webglService.canvasWidth$.value - this.scrollBarWidth
+                    ) {
+                        this.scrollBarPos =
+                            this.webglService.canvasWidth$.value - this.scrollBarWidth;
+                    }
                 }
             })
             .on('end', event => {
@@ -567,7 +700,11 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         }
 
         // this.initAxisFormat();
-        this.initBars(data, this.xScale, d3.scaleLinear());
+        this.barSeries = this.initBars(data, this.xScale, d3.scaleLinear());
+
+        if (this.cameras.length > 1) {
+            this.barSeriesAll = this.initBars(this.dataAllCameras, this.xScale, d3.scaleLinear());
+        }
 
         const pointer = fc.pointer().on('point', ([coord]) => {
             if (!coord) {
@@ -596,6 +733,13 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
 
             return data[left].x;
         }
+
+        this.chartAll = chartCartesian(this.xScale, d3.scaleLinear())
+            .webglPlotArea(this.barSeriesAll)
+            .xDomain(this.xScale.domain())
+            .decorate(context =>
+                context.enter().select('d3fc-canvas.webgl-plot-area').call(this.zoom),
+            );
 
         this.chart = chartCartesian(this.xScale, d3.scaleLinear())
             .webglPlotArea(this.barSeries)
@@ -668,18 +812,29 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         }
 
         this.chart.xDomain(this.xScale.domain());
+        this.chartAll.xDomain(this.xScale.domain());
 
         const displayData = this.data.filter(
             d =>
                 !(
-                    (d.type === CHUNK.BOOKMARK && !this.showData.bookmarks) ||
-                    (d.type === CHUNK.ANALYTICS && !this.showData.analytics) ||
-                    (d.type === CHUNK.RECORDS && !this.showData.records)
+                    (d.type === CHUNK_TYPE.BOOKMARK && !this.showData.bookmarks) ||
+                    (d.type === CHUNK_TYPE.ANALYTICS && !this.showData.analytics) ||
+                    (d.type === CHUNK_TYPE.RECORDS && !this.showData.records)
                 ),
         );
 
-        if (this.dataSet !== displayData.length) {
+        const displayAllData = this.dataAllCameras.filter(
+            d =>
+                !(
+                    (d.type === CHUNK_TYPE.BOOKMARK && !this.showData.bookmarks) ||
+                    (d.type === CHUNK_TYPE.ANALYTICS && !this.showData.analytics) ||
+                    (d.type === CHUNK_TYPE.RECORDS && !this.showData.records)
+                ),
+        );
+
+        if (this.dataSet !== displayData.length || this.dataAllSet !== displayAllData.length) {
             this.dataSet = displayData.length;
+            this.dataAllSet = displayAllData.length;
             this.render(displayData);
             return;
         }
@@ -688,10 +843,14 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             .select('#chart')
             .datum(displayData) // sampleData as datum kills chunks width
             .call(this.chart);
+
+        this.canvasAll = d3
+            .select('#chartAll')
+            .datum(displayAllData) // sampleData as datum kills chunks width
+            .call(this.chartAll);
     }
 
-    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
-    transform(direction: SCROLL_DIRECTION) {
+    transform(direction: SCROLL_DIRECTION): d3.ZoomTransform {
         let position: number;
         switch (direction) {
             case SCROLL_DIRECTION.left:
@@ -722,12 +881,16 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         if (this.canvas) {
             this.canvas.transition().call(this.zoom.transform, this.transform(direction));
         }
+        if (this.canvasAll) {
+            this.canvasAll.transition().call(this.zoom.transform, this.transform(direction));
+        }
     }
 
     doTransform(): void {
         const t = d3.zoomIdentity.translate(this.xPos, 0).scale(this.webglService.levelZoom$.value);
 
         this.canvas.call(this.zoom.transform, t);
+        this.canvasAll && this.canvasAll.call(this.zoom.transform, t);
     }
 
     /*
@@ -802,6 +965,10 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             .transition()
             .duration(ZOOM_DURATION)
             .call(this.zoom.transform, d3.zoomIdentity.scale(zoomK));
+        this.canvasAll
+            .transition()
+            .duration(ZOOM_DURATION)
+            .call(this.zoom.transform, d3.zoomIdentity.scale(zoomK));
     }
 
     constantZoom(params: { direction: ZOOM_DIRECTION; action: string }): void {
@@ -822,7 +989,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         }
     }
 
-    private addData(dataObj: Record<string, string>[], type?: CHUNK): void {
+    private addData(dataObj: Record<string, string>[], type?: CHUNK_TYPE): void {
         const newData = dataObj.map((chunk: Record<string, string>) => {
             const chunkStart = parseInt(chunk.startTimeMs);
             let chunkEnd = parseInt(chunk.durationMs);

@@ -9,11 +9,11 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 
 // SOFIA
-// const SERVER_ID = '5231712d-503a-41fc-bc51-96f3ab13567c';
-// const CAMERA_ID = '28211a91-4d61-e6b9-da49-172c127da68b?time=live';
+const SERVER_ID = '5231712d-503a-41fc-bc51-96f3ab13567c';
+const CAMERA_ID = '28211a91-4d61-e6b9-da49-172c127da68b?time=live';
 // DESKTOP-UBUNTU
-const SERVER_ID = '4087425b-f052-413d-96d9-79385ae2cdb6';
-const CAMERA_ID = 'd4650aab-4812-f660-683e-a2c3f866028b?time=live';
+// const SERVER_ID = '4087425b-f052-413d-96d9-79385ae2cdb6';
+// const CAMERA_ID = 'd4650aab-4812-f660-683e-a2c3f866028b?time=live';
 // QA
 // const SERVER_ID = 'b1012488-9fd0-449d-99f9-8c0604b99a45';
 // const CAMERA_ID = '3645c7ee-ca91-e579-e753-1d85af1fd08c';

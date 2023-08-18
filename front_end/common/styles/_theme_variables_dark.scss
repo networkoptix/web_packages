@@ -323,6 +323,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --timeline-selection-panel-close-hover-bg        : var(--brand-d5);
     --timeline-selection-panel-close-active-bg        : var(--brand-d4);
     --timeline-control-color            : #{$light4};
+    --timeline-chunk-color : var(--green_d2);
+    --timeline-background : rgba(var(--green_d2--rgb), 0.1);
 
     --paginator-bg           : #1C2327; //$dark6;
     --paginator-color        : #A5B7C0; //$light10;
