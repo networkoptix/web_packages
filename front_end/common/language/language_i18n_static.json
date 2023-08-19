@@ -90,6 +90,7 @@
     },
     "layouts": {
         "createNew": "Create new layout",
+        "newLayout": "New Layout",
         "edit": "Edit \"{name}\" layout",
         "delete": "Delete \"{name}\" layout",
         "pleaseAddNew": "Please add layout on thick client to view layouts",

@@ -2,6 +2,7 @@
 import { ChangeDetectorRef, Component, Inject, LOCALE_ID } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { omit, pick, uniq } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
@@ -46,6 +47,14 @@ import {
     EditResourceType,
     RemoveResourceType,
 } from '@services/layout-grid/layout-grid.types';
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import {
+    ActiveLayoutActions,
+    ActiveLayoutSelectors,
+} from '@services/layout-state/store/active-layout';
+import { LocalLayoutsActions } from '@services/layout-state/store/local-layouts';
+import { SharedSelectors } from '@services/layout-state/store/shared';
+import { LayoutTypes } from '@services/layout-state/store/shared/types/layout-state.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
@@ -393,10 +402,13 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
-    availableLayouts$: Observable<Layouts> = this.refreshLayouts$.pipe(
-        switchMap(_ => this.selectedSystem$),
-        switchMap(({ mediaserver }) => (mediaserver as NxSystemRestAPI).getLayouts()),
-        map(layouts => layouts.sort(alphabeticalSort(this.locale, layout => layout.name))),
+    availableLayouts$: Observable<Layouts> = this.store.select(SharedSelectors.selectLayouts).pipe(
+        map(layouts =>
+            layouts
+                .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
+                .map(({ layout }) => layout as Layout)
+                .sort(alphabeticalSort(this.locale, layout => layout.name)),
+        ),
         shareReplay({
             bufferSize: 1,
             refCount: false,
@@ -432,8 +444,9 @@ export class NxLayoutViewComponent {
         distinctUntilChanged(),
     );
 
-    #layoutId$ = this.activatedRoute.params.pipe(
-        switchMap(({ layoutId }) =>
+    #layoutId$ = this.store.select(ActiveLayoutSelectors.selectActiveLayoutState).pipe(
+        filter(layoutId => !!layoutId),
+        switchMap(layoutId =>
             this.CONFIG.featureFlags.layoutsEditable || layoutId !== 'new'
                 ? Promise.resolve(layoutId.replace('new', ''))
                 : this.#defaultLayout$,
@@ -498,15 +511,6 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
-    selectedLayoutDropdown$ = this.#selectedLayout$.pipe(
-        map(this.layoutToDropdown),
-        shareReplay({
-            bufferSize: 1,
-            refCount: false,
-        }),
-        untilDestroyed(this),
-    );
-
     layoutAndItems$ = combineLatest([this.selectedLayout$, this.layoutItemLookup$]).pipe(
         shareReplay({
             bufferSize: 1,
@@ -557,6 +561,8 @@ export class NxLayoutViewComponent {
         private systemsService: NxSystemsService,
         private tourService: TourService,
         private translate: TranslateService,
+        private store: Store,
+        public layoutStateService: LayoutStateService,
     ) {
         this.CONFIG = configService.config;
 
@@ -575,7 +581,41 @@ export class NxLayoutViewComponent {
             .subscribe(async (event: RemoveResourceType) => {
                 await this.handleRemovingResource(event);
             });
+
+        /**
+         * TODO: Need to find a better way to sync state from routes.
+         */
+        this.startSync();
     }
+
+    /** Store Sync Actions: We'll need to find a better way to handle updating the active layout */
+    updateActiveLayout$ = this.observeParam('layoutId').pipe(
+        map(layoutId => ActiveLayoutActions.set({ id: layoutId })),
+    );
+
+    updateLayouts$ = this.selectedSystem$.pipe(
+        switchMap(async system => {
+            const layouts = await firstValueFrom(
+                (system.mediaserver as NxSystemRestAPI).getLayouts(),
+            );
+            return LocalLayoutsActions.set({ layouts });
+        }),
+    );
+
+    private observeParam(param: string): Observable<string> {
+        return this.activatedRoute.params.pipe(
+            map(params => params[param]),
+            distinctUntilChanged(),
+        );
+    }
+
+    startSync(): void {
+        merge(this.updateActiveLayout$, this.updateLayouts$)
+            .pipe(untilDestroyed(this))
+            .subscribe(action => this.store.dispatch(action));
+    }
+
+    /** End Store Sync Actions */
 
     ngOnInit(): void {
         this.layoutAndItems$

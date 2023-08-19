@@ -27,6 +27,7 @@ import { icons } from '@lib/variables/static-variables';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layout } from '@services/system-api.types';
@@ -85,6 +86,7 @@ export class NxLayoutGridTreeComponent {
         configService: NxConfigService,
         public layoutGridService: NxLayoutGridService,
         public tourService: TourService,
+        private layoutStateService: LayoutStateService,
     ) {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
@@ -115,7 +117,7 @@ export class NxLayoutGridTreeComponent {
                 action: 'create',
                 icon: 'plus',
                 tooltip: this.LANG.layouts.createNew,
-                handler: this.addNewResource,
+                handler: () => this.layoutStateService.createNewLocalLayout(),
             },
         ],
         [ResourceType.LAYOUT]: [

@@ -6,6 +6,7 @@ import { NxLayoutGridComponent } from '@components/layout-grid/layout-grid.compo
 import { NxLayoutPtzComponent } from '@components/layout-ptz/layout-ptz.component';
 // import { NxLayoutTimelineComponent } from '@components/layout-timeline/layout-timeline.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
+import { LayoutStateModule } from '@services/layout-state/layout-state.module';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 import { NxLayoutViewComponent } from './layout-view.component';
@@ -19,6 +20,7 @@ import { NxLayoutViewComponent } from './layout-view.component';
         TourMatMenuModule,
         NxPagePlaceholderComponent,
         WebGLTimelineModule,
+        LayoutStateModule,
     ],
     declarations: [NxLayoutViewComponent],
     providers: [NxLayoutViewComponent],

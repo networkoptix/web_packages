@@ -1,4 +1,4 @@
-import { Observable, catchError } from 'rxjs';
+import { Observable, catchError, map } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { BaseCloudServiceAPI } from '../base-cloud-service-api';
@@ -24,7 +24,16 @@ export class DocHandler<DocType extends DocId> {
      * @returns Observable<DocType[]>
      */
     list(): Observable<DocType[]> {
-        return this.api.get<DocType[]>(`${this.prefix}?matchPrefix&responseType=dataOnly`);
+        return this.api
+            .get<{ key: string; contents: DocType }[]>(`${this.prefix}?matchPrefix`)
+            .pipe(
+                map(res =>
+                    res.map(({ key: docId, contents }) => ({
+                        docId,
+                        ...contents,
+                    })),
+                ),
+            );
     }
 
     /**
@@ -34,7 +43,9 @@ export class DocHandler<DocType extends DocId> {
      * @returns Observable<DocType>
      */
     retrieve(docId: string): Observable<DocType> {
-        return this.api.get<DocType>(`${this.prefix}/${docId}`);
+        return this.api
+            .get<DocType>(`${this.prefix}/${docId}`)
+            .pipe(map(doc => ({ docId, ...doc })));
     }
 
     /**
