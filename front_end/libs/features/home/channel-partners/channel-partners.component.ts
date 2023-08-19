@@ -1,10 +1,18 @@
+import { CdkMenuModule } from '@angular/cdk/menu';
+import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
 import { Component, Input, OnInit, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, Router } from '@angular/router';
+import { FormsModule } from '@angular/forms';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 import { Observable, Subject, catchError, combineLatestWith, debounceTime, map, of } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxTabsComponent } from '@components/tabs/tabs.component';
+import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import {
@@ -29,6 +37,21 @@ import {
         'channel-partners.component.scss',
         '../components/groups-cards/groups-cards.component.scss',
         '../components/system-card/system-card.component.scss',
+    ],
+    standalone: true,
+    imports: [
+        NxSearchComponent,
+        NxTabsComponent,
+        NxPreLoaderComponent,
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        RouterModule,
+        CdkMenuModule,
+        NgIf,
+        NgClass,
+        NgFor,
+        NxTabsDirective,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {

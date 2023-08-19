@@ -15,14 +15,12 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
-import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
-import { NxNoSystemsCardsComponent } from './components/no-systems/no-systems.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxHomeComponent } from './home.component';
@@ -76,13 +74,7 @@ const homeRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations: [
-        NxGroupsCardsComponent,
-        NxOrganizationsComponent,
-        NxTabsDirective,
-        NxChannelPartnersComponent,
-        NxHomeComponent,
-    ],
+    declarations: [],
     providers: [
         TabResolver,
         OrgResolver,
@@ -93,6 +85,7 @@ const homeRoutes: Routes = [
     ],
     exports: [],
     imports: [
+        NxHomeComponent,
         CommonModule,
         RouterModule.forChild(homeRoutes),
         TranslateModule,
@@ -113,7 +106,9 @@ const homeRoutes: Routes = [
         NxGroupCardComponent,
         NxSearchComponent,
         FormsModule,
-        NxNoSystemsCardsComponent,
+        NxChannelPartnersComponent,
+        NxGroupsCardsComponent,
+        NxOrganizationsComponent,
     ],
 })
 export class NxHomeModule {}

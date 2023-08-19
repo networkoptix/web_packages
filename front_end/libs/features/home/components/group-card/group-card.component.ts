@@ -1,6 +1,8 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
+import { CommonModule, NgFor } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
@@ -16,7 +18,14 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
     templateUrl: 'group-card.component.html',
     styleUrls: ['../system-card/system-card.component.scss', 'group-card.component.scss'],
     standalone: true,
-    imports: [CdkMenuModule, NxSearchHighlightComponent, AngularSvgIconModule],
+    imports: [
+        CdkMenuModule,
+        NxSearchHighlightComponent,
+        AngularSvgIconModule,
+        TranslateModule,
+        CommonModule,
+        NgFor,
+    ],
 })
 export class NxGroupCardComponent {
     @Input() group: GroupItem;

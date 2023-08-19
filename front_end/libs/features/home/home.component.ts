@@ -1,11 +1,13 @@
+import { NgIf } from '@angular/common';
 import { Component, OnDestroy, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -22,6 +24,8 @@ import {
 @Component({
     selector: 'nx-home',
     templateUrl: 'home.component.html',
+    imports: [NxPreLoaderComponent, RouterModule, NgIf],
+    standalone: true,
 })
 export class NxHomeComponent implements OnInit, OnDestroy {
     readonly LANG = staticLang;

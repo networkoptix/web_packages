@@ -1,7 +1,10 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkMenuModule } from '@angular/cdk/menu';
+import { CommonModule } from '@angular/common';
 import { Component, Input, booleanAttribute } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
+import { TranslateModule } from '@ngx-translate/core';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
@@ -18,11 +21,24 @@ import {
     selectCurrentSystemItems,
     selectHasGroups,
 } from '../../store/groups/groups.selectors';
+import { NxGroupCardComponent } from '../group-card/group-card.component';
+import { NxNoSystemsCardsComponent } from '../no-systems/no-systems.component';
+import { NxSystemCardComponent } from '../system-card/system-card.component';
 
 @Component({
     selector: 'nx-groups-cards',
     templateUrl: 'groups-cards.component.html',
     styleUrls: ['groups-cards.component.scss'],
+    standalone: true,
+    imports: [
+        TranslateModule,
+        CdkMenuModule,
+        CommonModule,
+        NxSystemCardComponent,
+        DragDropModule,
+        NxGroupCardComponent,
+        NxNoSystemsCardsComponent,
+    ],
 })
 export class NxGroupsCardsComponent {
     LANG = staticLang;

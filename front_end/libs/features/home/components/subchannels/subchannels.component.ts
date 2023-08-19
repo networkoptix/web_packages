@@ -13,6 +13,7 @@ import { Observable, Subject, debounceTime, map } from 'rxjs';
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
 import { NxSearchComponent } from '@components/search/search.component';
+import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
@@ -50,6 +51,7 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
         CommonModule,
         NxButtonComponent,
         TranslateModule,
+        NxTabsDirective,
     ],
 })
 export class NxSubchannelsComponent {

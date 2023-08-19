@@ -1,11 +1,15 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CommonModule, NgClass, NgIf } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import { icons } from '@lib/variables/static-variables';
 import { Account } from '@services/account.service/account';
@@ -15,6 +19,9 @@ import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-accoun
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 
+import { NxTabsComponent } from '../../../components/tabs/tabs.component';
+import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
+import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { GroupsItem, Crumb, OpenGroups, GroupPath } from '../home.types';
 import { NxSystemGroupsService } from '../services/system-groups.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
@@ -41,6 +48,19 @@ interface SidebarSettings {
     selector: 'nx-organization',
     templateUrl: 'organization.component.html',
     styleUrls: ['organization.component.scss'],
+    standalone: true,
+    imports: [
+        RouterModule,
+        NxPreLoaderComponent,
+        CommonModule,
+        AngularSvgIconModule,
+        NgClass,
+        NgIf,
+        NxSystemGroupsSidebarComponent,
+        NxGroupsCardsComponent,
+        NxTabsComponent,
+        NxTabsDirective,
+    ],
 })
 export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
