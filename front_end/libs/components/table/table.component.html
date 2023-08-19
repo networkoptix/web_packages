@@ -71,7 +71,7 @@
                             [ngClass]="selectedItemId === row['id'] ? 'selected' : ''"
                             [style.display]="'grid'"
                             [style.gridTemplateAreas]="template"
-                            (click)="rowClick(row)"
+                            (mouseup)="rowClick(row)"
                         >
                             <ng-container
                                 *ngTemplateOutlet="

@@ -59,3 +59,10 @@ export enum LoadingState {
     LOADED = 2,
     NOT_FOUND = 404,
 }
+
+export interface HEADER_ITEM {
+    name: string;
+    value: string;
+    sort?: string;
+    align?: string;
+}

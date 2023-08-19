@@ -28,6 +28,7 @@ import { DirectivesModule } from '@directives/directives.module';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { MenuModule } from '@menu/menu.module';
+import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
 import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
@@ -210,6 +211,7 @@ const appRoutes: Routes = [
         NxMatLikeTypeAheadDropdown,
         NxMatLikeInputComponent,
         NxMatLikePasswordComponent,
+        NxUsersTableComponent,
     ],
     providers: [],
 

@@ -9,45 +9,61 @@
     >
     </nx-checkbox>
 </div>
-<div class="nx-new-table-container px-3">
+<div class="nx-new-table-container">
     <nx-table
+        class="CP-users"
+        [style.height]="'calc(100% - 12px)'"
         set-pagination
         set-sorting
-        set-rows
-        [rows-per-page]="rowsPerPage"
+        set-rows-auto
+        [set-arrange]="setHeaders"
         [set-row-expand]="subLevels"
+        [set-selected-item-id]="selectedRecordId"
         [data]="records"
+        (onRowClick)="onRowClickAction($event)"
     >
         <ng-template #header>
             <div style="grid-area: userId">
                 <nx-checkbox
                     componentId="checkAll"
-                    style="margin-left: 6px"
                     (onClick)="selectAll()"
                 >
                 </nx-checkbox>
             </div>
             <div
+                *ngFor="let head of headers"
                 #sortItem
-                data-sort-string
-                style="grid-area: email"
+                [attr.id]="head.name"
+                [attr.data-sort]="head.sort"
+                [style.justify-content]="head.align || 'flex-start'"
             >
-                {{ headers['email'].name }}
+                <span
+                    class="head-title ellipsis caption"
+                    title="{{ head.value }}"
+                    >{{ head.value }}</span
+                >
             </div>
-            <div
-                #sortItem
-                data-sort-string
-                style="grid-area: fullName"
-            >
-                {{ headers['fullName'].name }}
-            </div>
-            <div style="grid-area: accessLevel">
-                {{ headers['accessLevel'].name }}
-            </div>
-            <div style="grid-area: roles">
-                {{ headers['roles'].name }}
-            </div>
-            <div>&nbsp;</div>
+            <!--            <div-->
+            <!--                #sortItem-->
+            <!--                data-sort-string-->
+            <!--                style="grid-area: email"-->
+            <!--            >-->
+            <!--                {{ headers['email'].name }}-->
+            <!--            </div>-->
+            <!--            <div-->
+            <!--                #sortItem-->
+            <!--                data-sort-string-->
+            <!--                style="grid-area: fullName"-->
+            <!--            >-->
+            <!--                {{ headers['fullName'].name }}-->
+            <!--            </div>-->
+            <!--            <div style="grid-area: accessLevel">-->
+            <!--                {{ headers['accessLevel'].name }}-->
+            <!--            </div>-->
+            <!--            <div style="grid-area: roles">-->
+            <!--                {{ headers['roles'].name }}-->
+            <!--            </div>-->
+            <!--            <div>&nbsp;</div>-->
         </ng-template>
         <ng-template
             #rows
@@ -59,7 +75,6 @@
             >
                 <nx-checkbox
                     componentId="checkBox{{ row.email }}"
-                    style="margin-left: 6px"
                     (onClick)="selectRecord(row)"
                 >
                 </nx-checkbox>

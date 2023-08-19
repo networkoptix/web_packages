@@ -15,7 +15,16 @@
         />
     </div>
 </div>
-<nx-users-table
-    [headers]="headers"
-    [records]="records$ | async"
-></nx-users-table>
+<div
+    #tableContainer
+    class="m-0 table-grid"
+>
+    <div [style.display]="'block'">
+        <nx-users-table
+            [headers]="headers"
+            [records]="records$ | async"
+            [selectedRecordId]="selectedUserId"
+            (onRowClick)="selectUser($event)"
+        ></nx-users-table>
+    </div>
+</div>

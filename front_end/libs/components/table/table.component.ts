@@ -29,10 +29,10 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxPaginatorComponent } from '@components/paginator/paginator.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
+import { SortParams } from '@components/table/table.types';
 import { Size } from '@directives/resize/nx-resize.directive.types';
 import { ResizeModule } from '@directives/resize/resize.module';
 import staticLang from '@language/language_i18n_static.json';
-import { IpvdParams } from '@pages/ipvd/ipvd.types';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -80,6 +80,7 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
     ],
 })
 export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
+    @Input() headers: T[] = [];
     @Input() data: T[] = [];
 
     @Input({ alias: 'set-pagination', transform: booleanAttribute }) setPagination: boolean;
@@ -124,7 +125,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     template: string = '';
     _headers: Prop = [];
-    headers: Prop = [];
+    // headers: Prop = [];
 
     tableClasses: string;
 
@@ -357,12 +358,12 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.renderer.addClass(target, this.sortOrderASC ? 'sort-svg-asc' : 'sort-svg-desc');
         this.toggleSort(targetId, sortType, false);
 
-        const queryParams: IpvdParams = {
+        const queryParams: SortParams = {
             page: undefined,
             sortBy: `${targetId},${this.sortOrderASC ? 'ASC' : 'DESC'}`,
         };
 
-        this.uri.updateURI('/ipvd', queryParams).catch(error => {
+        this.uri.updateURI('', queryParams).catch(error => {
             console.error(error);
         });
     }

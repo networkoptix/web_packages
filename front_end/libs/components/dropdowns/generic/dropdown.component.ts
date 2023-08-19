@@ -58,14 +58,14 @@ export class NxGenericDropdown<
     @Input({ transform: booleanAttribute }) hideSelectedItem: boolean = false;
     @Input({ transform: booleanAttribute }) canSearch: boolean;
     @Input() noMatchMsg: string;
+    @Input({ transform: booleanAttribute }) disabled: boolean;
     @Input() forcePosition: {
         left?: number;
         top?: number | 'auto';
         bottom?: number | 'auto';
         width?: number;
         offsetTop?: number;
-    };
-    @Input({ transform: booleanAttribute }) disabled: boolean;
+    } = { top: 'auto', bottom: 'auto' };
 
     @Output() onSelected = new EventEmitter<Item>();
     icons = icons;

@@ -1,0 +1,14 @@
+:host {
+    height: 100%;
+
+    .table-grid {
+        height: calc(100% - 48px);
+        display: grid;
+        column-gap: 1rem;
+
+        .nx-new-table-container {
+            margin: 0;
+            height: 100% !important;
+        }
+    }
+}

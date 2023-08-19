@@ -6,6 +6,7 @@ import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
@@ -30,7 +31,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;
 
     currentOrgId$: Observable<string>;
-    headers: Record<string, Record<string, number | string>>;
+    headers: HEADER_ITEM[];
     records$: Observable<ChannelPartnerUserExt[]>;
 
     constructor(
@@ -54,20 +55,20 @@ export class NxOrganizationUsersComponent implements OnInit {
                 }),
             ),
         );
-        this.headers = {
-            email: {
-                name: this.LANG.channelPartners.usersTableHeaders.login,
+        this.headers = [
+            {
+                name: 'email',
+                value: this.LANG.channelPartners.usersTableHeaders.login,
+                sort: 'string',
             },
-            fullName: {
-                name: this.LANG.channelPartners.usersTableHeaders.fullName,
+            {
+                name: 'fullName',
+                value: this.LANG.channelPartners.usersTableHeaders.fullName,
+                sort: 'string',
             },
-            accessLevel: {
-                name: this.LANG.channelPartners.usersTableHeaders.accessLevel,
-            },
-            roles: {
-                name: this.LANG.channelPartners.usersTableHeaders.groups,
-            },
-        };
+            { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
+            { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
+        ];
     }
 
     newUserDialog(orgId: string): void {

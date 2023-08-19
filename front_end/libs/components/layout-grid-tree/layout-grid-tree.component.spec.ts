@@ -8,6 +8,7 @@ import {
     EditResourceType,
     RemoveResourceType,
 } from '@services/layout-grid/layout-grid.types';
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
@@ -32,6 +33,7 @@ describe('NxLayoutGridTreeComponent', () => {
                     },
                 },
                 { provide: TourService, useValue: {} },
+                { provide: LayoutStateService, useValue: {} },
             ],
         }).compileComponents();
 

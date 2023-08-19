@@ -46,6 +46,12 @@ export interface ChannelPartnerUser {
     userId: Id;
 }
 
+export interface ChannelPartnerUserExt extends ChannelPartnerUser {
+    id?: Id;
+    fullName: string;
+    accessLevel: string[];
+}
+
 export interface CreateChannelPartnerUser {
     email: string;
     role: string;

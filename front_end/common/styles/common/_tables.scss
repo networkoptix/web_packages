@@ -132,6 +132,10 @@
         margin : 1rem 0 1rem;
     }
 
+    .nx-new-table-wrapper {
+        min-width: 787px;
+    }
+
     .header {
         grid-template-columns: 50px repeat(4, 1fr) 32px;
 
@@ -147,7 +151,6 @@
 
             &:last-child {
                 border-right: none;
-                padding-left: 0;
             }
 
             .head-title {
@@ -173,7 +176,8 @@
 
     .big-row {
         display: grid;
-        grid-template-columns: 50px repeat(4, 1fr) 32px;
+        // define it per table (see .cameras) --TT
+        //grid-template-columns: 50px repeat(4, 1fr) 32px;
         grid-template-rows: minmax(2.5rem, auto);
         background-color: var(--card-body-bg);
         border-bottom: 1px solid var(--border-color);
@@ -192,10 +196,6 @@
         //}
 
         & div {
-            display: flex;
-            flex-wrap: wrap;
-            align-content: center;
-            justify-items: flex-start;
             line-height: 1rem;
 
             svg-icon.icon-expand {
@@ -205,7 +205,8 @@
 
         & > div {
             border-right: 1px solid var(--border-color);
-            padding-left: 8px;
+            padding: 10px 8px;
+            @include ellipsis;
 
             *[id^='sortKey-']{
                 height: 0;
@@ -213,13 +214,9 @@
                 padding: 0;
             }
 
-            #sortKey-DWC-BVI2IR {
-                background-color: darkred;
-            }
-
             &:last-child {
-                border-right: none;
-                padding-left: 4px;
+                border-right: 1px solid var(--border-color);
+                padding-left: 8px;
             }
         }
 
@@ -269,14 +266,38 @@
                 grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px;
 
                 &.service {
-                    grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px 0px 80px 80px;
+                    grid-template-columns: repeat(2, 150px) repeat(2, 100px) repeat(7, 80px) 90px 0 80px 80px;
                 }
             }
 
+            & > div {
+                padding: 0 8px;
+                white-space: break-spaces;
+                display: flex;
+                flex-wrap: wrap;
+                align-content: center;
+                justify-items: flex-start;
+            }
+        }
+    }
+}
+
+.CP-users {
+    .nx-new-table {
+        .header {
+            grid-template-columns: 42px auto repeat(3, 150px) 50px;
+        }
+        .big-row {
+            grid-template-columns: 42px auto repeat(3, 150px) 42px;
+            grid-template-rows: 40px;
+
             & > div:last-child {
-                border-right: 1px solid var(--border-color);
                 padding-left: 8px;
             }
+        }
+
+        .header, .body {
+            width: 100% !important;
         }
     }
 }
