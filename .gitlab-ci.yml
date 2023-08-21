@@ -116,6 +116,8 @@ no-changes:
   before_script:
     - cd cloud
     - echo "Waiting for mysql server to be ready"
+    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
+    - pip install --upgrade --no-cache-dir -r /app/requirements.txt
     - >
       for i in {1..60}; do
         if ! mysql --host=mysql -u root -e ";"
@@ -146,12 +148,12 @@ django-checks:
   stage: check
   variables:
     USE_SQLITE: "true"
-  script:
+  before_script:
     - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
-    - cat /app/requirements.txt
     - pip install --upgrade --no-cache-dir -r /app/requirements.txt
+  script:
     - cd cloud
-    - python -m pip install safety==2.2.0
+    - python -m pip install safety==2.3.5
     - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
     - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
     - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
@@ -178,6 +180,7 @@ django-unit-test-fast:
         coverage_format: cobertura
         path: cloud/fast-coverage.xml
   script:
+    - ls -las /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
 
 .frontend-node:
