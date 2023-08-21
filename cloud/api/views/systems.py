@@ -12,7 +12,7 @@ from api.account_backend import get_ip
 from api.views.account import AccountCache
 from cloud.controllers import cloud_api, cloud_gateway
 from cloud.controllers.cloud_api import Auth
-from cloud.drf_async import async_api_view
+from nx_drf.drf_async import async_api_view
 from cloud.helpers.exceptions import api_success, require_params, \
      APINotAuthorisedException, APIRequestException, ErrorCodes, APIException, APIInternalException
 from api.serializers import *

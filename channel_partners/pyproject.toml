@@ -22,6 +22,7 @@ drf-spectacular = "^0.26.4"
 requests = "^2.31.0"
 django-extensions = "^3.2.3"
 django-cors-headers = "^4.2.0"
+httpx = "^0.24.1"
 
 
 [tool.poetry.group.test.dependencies]

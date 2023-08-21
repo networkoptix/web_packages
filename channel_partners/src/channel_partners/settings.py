@@ -29,6 +29,10 @@ elif CI:
 else:
     ENV_NAME = 'prod'
 
+if not LOCAL_ENV:
+    from channel_partners.tools.check_imports import check
+    check()
+
 INSTANCE_CONFIG = get_config(ENV_NAME)
 
 # SECURITY WARNING: keep the secret key used in production secret!

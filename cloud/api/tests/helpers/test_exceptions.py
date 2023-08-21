@@ -5,7 +5,7 @@ from random import randint
 import pytest
 from unittest.mock import call
 
-from cloud.drf_async import async_api_view
+from nx_drf.drf_async import async_api_view
 from cloud.helpers.exceptions import *
 
 

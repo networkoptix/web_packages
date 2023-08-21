@@ -4,7 +4,7 @@ from drf_yasg.utils import swagger_auto_schema
 
 from cloud.helpers.exceptions import handle_exceptions, api_success
 from cloud.controllers import cloud_api
-from cloud.drf_async import async_api_view as api_view
+from nx_drf.drf_async import async_api_view as api_view
 
 from asgiref.sync import sync_to_async
 import asyncio

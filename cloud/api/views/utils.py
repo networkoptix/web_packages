@@ -25,7 +25,7 @@ from cloud import settings
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
-from cloud.drf_async import async_api_view as api_view, async_api_view
+from nx_drf.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
 from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
     cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key, get_cloud_portal_asset

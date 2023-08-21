@@ -9,7 +9,7 @@ from asgiref.sync import sync_to_async
 
 from api.views.account import AccountCache
 from cloud.controllers.cloud_api import Auth
-from cloud.drf_async import async_api_view, AsyncAPIView
+from nx_drf.drf_async import async_api_view, AsyncAPIView
 from cloud.helpers.exceptions import api_success, APINotAuthorisedException
 from api.serializers import CreateBackupCodeSerializer, DeleteBackupCodeSerializer, TwoFaSerializer, CloudResponseSerializer, VerificationSerializer
 from cloud.utils import method_decorator_async

@@ -7,7 +7,7 @@ from drf_yasg import openapi
 from drf_yasg.utils import swagger_auto_schema
 
 from cloud.helpers.exceptions import require_params, api_success, APIForbiddenException
-from cloud.drf_async import async_api_view as api_view
+from nx_drf.drf_async import async_api_view as api_view
 from cms.models import Flag
 from notifications.models import Message
 from waffle.models import Switch

@@ -92,6 +92,10 @@ no-changes:
         - cloud/poetry.lock
         - cloud/pyproject.toml
         - cloud/allowed_licenses.txt
+  before_script:
+    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
+    - cat /app/requirements.txt
+    - pip install --upgrade --no-cache-dir -r /app/requirements.txt
 
 .django-python:
   extends: .backend-changes
@@ -109,6 +113,7 @@ no-changes:
         - --databases 32
   variables:
     TESTING: "true"
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
     MYSQL_DATABASE: "cloudportal"
     MYSQL_ROOT_PASSWORD: ""
     MYSQL_ALLOW_EMPTY_PASSWORD: "yes"
@@ -148,9 +153,7 @@ django-checks:
   stage: check
   variables:
     USE_SQLITE: "true"
-  before_script:
-    - poetry -C /builds/dev/cloud_portal/cloud export --with prod,test,front-build --without-hashes --without-urls -o /app/requirements.txt
-    - pip install --upgrade --no-cache-dir -r /app/requirements.txt
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
   script:
     - cd cloud
     - python -m pip install safety==2.3.5
@@ -180,8 +183,28 @@ django-unit-test-fast:
         coverage_format: cobertura
         path: cloud/fast-coverage.xml
   script:
-    - ls -las /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
+
+common-python-unit-test:
+  extends: .django-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: common/python/fast-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: common/python/fast-coverage.xml
+  script:
+    - cd /builds/dev/cloud_portal/common/python
+    - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - cloud/common/python/**/*
+        - cloud/poetry.toml
+        - cloud/poetry.lock
+        - cloud/pyproject.toml
+        - cloud/allowed_licenses.txt
 
 .frontend-node:
   extends: .frontend-changes

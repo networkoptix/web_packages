@@ -1,11 +1,12 @@
 import logging
 
+import httpx
 from django.db import connections, DEFAULT_DB_ALIAS
 from django.db.migrations.executor import MigrationExecutor
 from django.http import JsonResponse
 from django.core.cache import caches
 from django.views import View
-
+from nx_drf.drf_async import AsyncAPIView
 
 logger = logging.getLogger(__name__)
 
@@ -39,3 +40,11 @@ class HealthCheckView(View):
             logger.error(f"Cannot retrieve cache server info. Exception: {ex}")
             errors = True
         return errors
+
+
+class HealthCheckAsyncImports(AsyncAPIView):
+    async def get(self, request):
+        async with httpx.AsyncClient() as client:
+            resp = await client.get('https://1.1.1.1/')
+
+        return JsonResponse({'is_ok': not resp.is_error}, status=resp.status_code)

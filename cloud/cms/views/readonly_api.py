@@ -1,6 +1,6 @@
 from uuid import uuid4
 
-from cloud.drf_async import async_api_view
+from nx_drf.drf_async import async_api_view
 from util.base_cache import ReadOnlyAPICache, BaseCacheV2
 from cms.serializers import ReadOnlyAPIDetailSerializer, ReadOnlyAPIListSerializer
 

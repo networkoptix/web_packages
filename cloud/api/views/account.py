@@ -36,7 +36,7 @@ from cloud.helpers.exceptions import (
     require_params, kill_session, kill_tokens)
 from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
-from cloud.drf_async import async_api_view as api_view, AsyncAPIView as APIView
+from nx_drf.drf_async import async_api_view as api_view, AsyncAPIView as APIView
 from cloud.utils import get_authenticated_session_cookie_age, method_decorator_async
 
 logger = logging.getLogger(__name__)

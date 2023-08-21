@@ -47,6 +47,8 @@ ENV C_FORCE_ROOT true
 ENV VERSION=$VERSION
 
 COPY stage/cloud /app/app
+COPY stage/common_python /app/common_python
+ENV PYTHONPATH="/app/common_python"
 COPY docker/merge_config.py /usr/local/bin/
 COPY docker/entrypoint.sh /app/
 WORKDIR /app/app

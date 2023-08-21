@@ -54,7 +54,10 @@ WORKDIR /app/app
 VOLUME /app/app/static
 
 COPY stage/src /app/app
+COPY stage/common_python /app/common_python
+ENV PYTHONPATH="/app/common_python"
 RUN python manage.py collectstatic --noinput
 COPY stage/version.txt /app/app/static/version.txt
+
 
 ENTRYPOINT ["/usr/bin/tini", "--", "/app/entrypoint.sh"]

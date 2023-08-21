@@ -11,7 +11,7 @@ from api.models import Account
 from api.serializers import CloudResponseSerializer, TransferSystemActionSerializer,\
     TransferSystemOwnerSerializer, TransferSystemSerializer
 from cloud.controllers.cloud_api import OwnershipTransfer, System
-from cloud.drf_async import AsyncAPIView
+from nx_drf.drf_async import AsyncAPIView
 from cloud.helpers.exceptions import api_success
 from cloud.utils import method_decorator_async
 from notifications import notifications_api
