@@ -26,6 +26,10 @@
         color: var(--light16);
         margin-left: 28px;
     }
+
+    button.enable {
+        max-width: 320px;
+    }
 }
 
 $border-blue: rgba(theme_vars.$blue10, 0.3);
