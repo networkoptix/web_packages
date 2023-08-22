@@ -157,8 +157,11 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 maxDisplayedTags: expand === 'full' ? 1 : undefined,
                 requestInterceptor: request => {
                     this.authenticateRequest(request);
+                    request.curlOptions = [];
                     if (environment.isLocal) {
-                        request.curlOptions = ['--insecure']; // CLOUD-7904
+                        request.curlOptions.push('--insecure'); // CLOUD-7904
+                    } else {
+                        request.curlOptions.push('-i', '--location-trusted');
                     }
                     this.handlePotentialRTSPRoute(request);
                     return request;
