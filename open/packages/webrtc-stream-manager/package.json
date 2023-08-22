@@ -1,6 +1,6 @@
 {
     "name": "@networkoptix/webrtc-stream-manager",
-    "version": "0.1.6",
+    "version": "0.1.7",
     "author": "Network Optix",
     "main": "dist/lib/index.js",
     "types": "dist/types/index.d.ts",
