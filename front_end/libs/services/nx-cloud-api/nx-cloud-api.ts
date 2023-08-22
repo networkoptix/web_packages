@@ -194,7 +194,7 @@ export class NxCloudApiService {
             this.http,
             this.#withFreshSession,
             refreshToken,
-        )(tempPartnersInstance, () => '');
+        )(tempPartnersInstance);
     }
 
     getSubAPI(route: ConsoleSection) {
