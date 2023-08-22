@@ -143,12 +143,13 @@
 
 
     .auth-window {
-        min-width: 320px;
+        min-width: 325px;
         max-width: 480px;
         width: 100%;
         min-height: 320px;
-        max-height: 482px;
+        max-height: 484px;
         height: 100vh;
+
 
         &.show-scrollbar {
             overflow-y: scroll;
@@ -157,6 +158,7 @@
         &.window-w {
             border: 1px solid var(--border-color);
             border-radius: $border-radius-base;
+            background-color: var(--auth-body-bg);
         }
 
         .authorize-header {
