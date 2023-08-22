@@ -93,9 +93,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
             this.system.userManager as UserWithGroupsManager
         ).userGroups.reduce((groups, { id, name, description }) => {
             if (newList.includes(id)) {
-                if (localOwner) {
-                    description = this.LANG.accessRoles.Administrator.description;
-                }
                 groups.push({ name, description });
             }
             return groups;
