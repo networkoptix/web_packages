@@ -28,10 +28,10 @@ import { RotateModule } from './rotate/rotate.module';
         ResizeModule,
         NxIntersectionObserver,
         NxForceVisibility,
+        NxClickElsewhereDirective,
     ],
     declarations: [
         NxArrowNavDirective,
-        NxClickElsewhereDirective,
         NxFocusMeDirective,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,

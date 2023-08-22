@@ -346,16 +346,13 @@ export class AppComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.themeService.initTheme().then(
-            () => {
-                this.themeSet = true;
-                setTimeout(() => {
-                    this.initComponents();
-                    this.initScroll();
-                });
-            },
-            () => {},
-        );
+        this.themeService.initTheme().finally(() => {
+            this.themeSet = true;
+            setTimeout(() => {
+                this.initComponents();
+                this.initScroll();
+            });
+        });
     }
 
     headerResize(size: { width: number; height: number }): void {
