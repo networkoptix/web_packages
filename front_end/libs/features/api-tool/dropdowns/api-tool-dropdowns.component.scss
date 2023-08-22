@@ -11,4 +11,9 @@
     @include bootstrap.media-breakpoint-down(sm) {
         margin-left: 16px;
     }
+
+    nx-select:first-of-type {
+        display: block;
+        margin-bottom: 8px;
+    }
 }

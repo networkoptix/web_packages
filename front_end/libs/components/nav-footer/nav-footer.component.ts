@@ -97,6 +97,12 @@ export class NxNavFooterComponent implements OnInit {
     }
 
     checkVisible(url: string): void {
-        this.visible$.next(!(url.includes('/systems') || url.includes('/health-report')));
+        this.visible$.next(
+            !(
+                url.includes('/systems') ||
+                url.includes('/health-report') ||
+                url.includes('/doc/developers/api-tool')
+            ),
+        );
     }
 }

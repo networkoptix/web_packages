@@ -310,7 +310,7 @@ export class NxDevelopersMenuComponent implements OnInit {
                 this.displayedMenuNodes = menu.nodes;
                 this.menuNodes = menu.nodes;
                 if (this.searchEnabled && this.uriService.queryParams.search) {
-                    this.updateSearchQuery(this.uriService.queryParams.search);
+                    this.searchQuery$.next(this.uriService.queryParams.search);
                 }
                 if (this.service.activeNode) {
                     this.openNodeAndParents(this.service.activeNode);
