@@ -3,6 +3,7 @@ import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DropMenuModule } from '@components/dropdowns/drop-menu/drop-menu.module';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 
 import { NxHeaderMainButtonComponent } from './main-button.component';
 
@@ -11,6 +12,7 @@ import { NxHeaderMainButtonComponent } from './main-button.component';
         CommonModule,
         AngularSvgIconModule,
         DropMenuModule,
+        NxClickElsewhereDirective
     ],
     declarations: [
         NxHeaderMainButtonComponent

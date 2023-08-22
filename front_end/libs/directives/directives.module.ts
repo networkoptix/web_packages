@@ -24,11 +24,11 @@ import { RotateModule } from './rotate/rotate.module';
     imports: [
         AngularSvgIconModule,
         OverlayModule,
-        ResizeModule
+        ResizeModule,
+        NxClickElsewhereDirective
     ],
     declarations: [
         NxArrowNavDirective,
-        NxClickElsewhereDirective,
         NxFocusMeDirective,
         NxScrollHelperDirective,
         NxScrollMechanicsDirective,

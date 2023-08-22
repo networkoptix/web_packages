@@ -9,6 +9,7 @@ import { DropMenuModule } from '@components/dropdowns/drop-menu/drop-menu.module
 import { NavigationTileModule } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.module';
 import { SystemTileModule } from '@components/dropdowns/drop-menu/system-tile/system-tile.module';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { ResizeModule } from '@directives/resize/resize.module';
 
 import { NxHeaderComponent } from './header.component';
@@ -30,7 +31,8 @@ import { TabsModule } from './tabs/tabs.module';
         DropMenuModule,
         AdditionalSystemsTileModule,
         NavigationTileModule,
-        SystemTileModule
+        SystemTileModule,
+        NxClickElsewhereDirective
     ],
     declarations: [
         NxHeaderComponent
