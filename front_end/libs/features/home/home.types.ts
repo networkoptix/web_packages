@@ -66,3 +66,8 @@ export interface HEADER_ITEM {
     sort?: string;
     align?: string;
 }
+
+export enum SystemsDisplayMode {
+    Personal = 1,
+    Shared = 2,
+}

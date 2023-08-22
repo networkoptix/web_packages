@@ -1,49 +1,6 @@
-<div class="cards-container">
-    <h2
-        *ngIf="showPersonal"
-        class="pb-3"
-        translate
-    >
-        My System
-    </h2>
-
-    <ng-container
-        *ngIf="loadingState$ | async as loadingState"
-        [ngSwitch]="loadingState"
-    >
-        <nx-pre-loader *ngSwitchCase="LoadingState.LOADING"></nx-pre-loader>
-        <ng-container *ngSwitchCase="LoadingState.LOADED">
-            <nx-search
-                class="col-sm-9 col-md-8 col-lg-6 input-overlay"
-                [ngModel]="search"
-                (ngModelChange)="setSearch($event)"
-                layout="compact"
-                [placeholder]="'Search' | translate"
-                instant
-            ></nx-search>
-            <div
-                [ngClass]="{ shared: !showPersonal }"
-                *ngFor="let user of systems$ | async | keyvalue"
-            >
-                <div *ngIf="!showPersonal">
-                    {{ user.key }}
-                </div>
-                <div class="systems-row">
-                    <div *ngFor="let system of user.value.systems; trackBy: trackItem">
-                        <nx-system-card
-                            [system]="system"
-                            [search]="''"
-                            [showOwner]="!showPersonal"
-                        ></nx-system-card>
-                    </div>
-                </div>
-            </div>
-        </ng-container>
-        <div
-            *ngSwitchDefault
-            translate
-        >
-            No systems
-        </div>
-    </ng-container>
-</div>
+<ng-template #loading>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
+<ng-container *ngIf="systems$$().length > 0; else loading">
+    <nx-systems-list-component [systemsToShow]="systems$$()"></nx-systems-list-component>
+</ng-container>

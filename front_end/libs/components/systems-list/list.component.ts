@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { booleanAttribute, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -74,9 +74,10 @@ export class NxSystemsListComponent implements OnInit {
 
     @Input() base: string;
     @Input() size: 'full' | 'mid' | 'compact';
-    @Input() disableSearch: boolean;
+    @Input({ transform: booleanAttribute }) disableSearch: boolean;
     @Input() systemsToShow: string[];
     @Input() linkHandler: Function;
+    @Input({ transform: booleanAttribute }) enableRedirect: boolean = false;
 
     @Output() availableSystems = new EventEmitter<NxSystemInfo[]>();
 
@@ -118,15 +119,17 @@ export class NxSystemsListComponent implements OnInit {
             }
 
             this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
+                if (this.systemsToShow?.length) {
+                    systems = systems.filter(({ id }) => this.systemsToShow.includes(id));
+                }
+
                 this.systems = systems;
                 this.availableSystems.emit(systems);
                 if (this.systems === undefined) {
                     return;
                 }
-
                 this.hasOneSystem = this.systems.length === 1;
-
-                if (this.location.path().startsWith(this.base)) {
+                if (this.enableRedirect && this.location.path().startsWith(this.base)) {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be
                     // established, and we'll get into a loop. It's safer not to open the system.
                     if (this.hasOneSystem) {
@@ -135,11 +138,11 @@ export class NxSystemsListComponent implements OnInit {
                             this.openSystem(system);
                         }
                     }
-
-                    this.showSearch = this.systems.length >= search.minSystems;
-
-                    this.searchSystems();
                 }
+
+                this.showSearch = this.systems.length >= search.minSystems;
+
+                this.searchSystems();
             });
         });
 

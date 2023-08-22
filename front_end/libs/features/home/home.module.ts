@@ -17,6 +17,7 @@ import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
+import { SystemsDisplayMode } from '@pages/home/home.types';
 
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
@@ -49,10 +50,16 @@ const homeRoutes: Routes = [
             },
             {
                 path: 'personal',
+                data: {
+                    displayMode: SystemsDisplayMode.Personal,
+                },
                 component: NxGroupsSystemsComponent,
             },
             {
                 path: 'shared',
+                data: {
+                    displayMode: SystemsDisplayMode.Shared,
+                },
                 component: NxGroupsSystemsComponent,
             },
             {
