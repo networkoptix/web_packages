@@ -1,6 +1,7 @@
 import { CdkDragMove } from '@angular/cdk/drag-drop';
-import { computed, EventEmitter, Injectable, Signal } from '@angular/core';
+import { computed, Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
+import { Subject } from 'rxjs';
 
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import {
@@ -24,13 +25,13 @@ export class NxLayoutGridService {
     private layoutSettings: CustomAccountProperty<LayoutSettings>;
 
     // TODO change to signals later on, move to "LayoutLayouts" Service - start
-    addResource = new EventEmitter<AddResourceType>();
-    editResource = new EventEmitter<EditResourceType>();
-    removeResource = new EventEmitter<RemoveResourceType>();
+    addResource = new Subject<AddResourceType>();
+    editResource = new Subject<EditResourceType>();
+    removeResource = new Subject<RemoveResourceType>();
 
-    addItem = new EventEmitter<ResourceNode>();
-    moveAddedItem = new EventEmitter<{ event: CdkDragMove; itemParent?: HTMLElement }>();
-    changeView = new EventEmitter<ResourceNode | LayoutItem>();
+    addItem = new Subject<ResourceNode>();
+    moveAddedItem = new Subject<{ event: CdkDragMove; itemParent?: HTMLElement }>();
+    changeView = new Subject<ResourceNode | LayoutItem>();
     // TODO - end
 
     constructor(activatedRoute: ActivatedRoute, private cloudApi: NxCloudApiService) {
@@ -41,9 +42,7 @@ export class NxLayoutGridService {
         });
     }
 
-    isLeftMenuOpen$$: Signal<boolean> = computed(
-        () => this.layoutSettings.signal$$().openMenu === 'left',
-    );
+    isLeftMenuOpen$$ = computed<boolean>(() => this.layoutSettings.signal$$().openMenu === 'left');
 
     toggleMenu(menu: 'left' | 'right' | 'both' = null, force = false): void {
         this.layoutSettings.update(curr => {

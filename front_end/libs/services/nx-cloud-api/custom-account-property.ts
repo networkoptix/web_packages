@@ -2,7 +2,7 @@ import { HttpClient } from '@angular/common/http';
 import { Signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
-import { catchError, switchMap, shareReplay, take, debounceTime } from 'rxjs/operators';
+import { catchError, debounceTime, shareReplay, switchMap, take } from 'rxjs/operators';
 
 import { apiBase } from '@lib/variables/static-variables';
 

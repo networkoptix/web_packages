@@ -176,12 +176,12 @@
                 (click)="layoutGridService.changeView.next(node)"
                 (cdkDragStarted)="dragging = true"
                 (cdkDragMoved)="
-                    layoutGridService.moveAddedItem.emit({
+                    layoutGridService.moveAddedItem.next({
                         event: $event,
                         itemParent: currentItem
                     })
                 "
-                (cdkDragReleased)="dragging = false; layoutGridService.addItem.emit(node)"
+                (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
                 [alternativeTargetRef]="tooltipOffsetTarget"
                 [nxTooltip]="
                     (showTooltip$ | async) &&
@@ -246,15 +246,15 @@
             <div
                 cdkTreeNodeToggle
                 cdkDrag
-                (click)="layoutGridService.changeView.emit(node)"
+                (click)="layoutGridService.changeView.next(node)"
                 [cdkDragDisabled]="!node.details || layout.locked"
                 (cdkDragStarted)="dragging = true"
                 (cdkDragMoved)="
-                    layoutGridService.moveAddedItem.emit({
+                    layoutGridService.moveAddedItem.next({
                         event: $event
                     })
                 "
-                (cdkDragReleased)="dragging = false; layoutGridService.addItem.emit(node)"
+                (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
             >
                 <ng-container
                     *ngTemplateOutlet="

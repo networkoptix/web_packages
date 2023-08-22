@@ -72,7 +72,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { alphaNumericSort, alphabeticalSort, cleanId, dirtyId } from '@utils/general';
+import { alphabeticalSort, alphaNumericSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
@@ -146,6 +146,7 @@ const editManifests: Partial<Record<ResourceType, ContextManifest>> = {
     selector: 'nx-layout-view',
     templateUrl: 'layout-view.component.html',
     styleUrls: ['layout-view.component.scss'],
+    providers: [NxLayoutGridService],
 })
 export class NxLayoutViewComponent {
     LANG = staticLang;

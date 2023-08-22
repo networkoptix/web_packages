@@ -48,7 +48,7 @@
                 <p *ngIf="helpMessage.help as help">{{ help | translate }}</p>
                 <button
                     *ngIf="layout.items.length"
-                    (click)="layoutGridService.addResource.emit(RESOURCE_TYPE.LAYOUTS)"
+                    (click)="layoutGridService.addResource.next(RESOURCE_TYPE.LAYOUTS)"
                     class="btn btn-primary"
                     translate
                 >

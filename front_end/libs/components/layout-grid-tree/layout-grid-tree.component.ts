@@ -95,18 +95,18 @@ export class NxLayoutGridTreeComponent {
     }
 
     addNewResource = (resourceType: ResourceType): void => {
-        this.layoutGridService.addResource.emit(resourceType);
+        this.layoutGridService.addResource.next(resourceType);
     };
 
     removeExistingResource = (
         resourceType: ResourceType,
         details: Record<string, unknown>,
     ): void => {
-        this.layoutGridService.removeResource.emit({ resourceType, details });
+        this.layoutGridService.removeResource.next({ resourceType, details });
     };
 
     editExistingResource = (resourceType: ResourceType, details: Record<string, unknown>): void => {
-        this.layoutGridService.editResource.emit({ resourceType, details });
+        this.layoutGridService.editResource.next({ resourceType, details });
     };
 
     hasActions: Partial<

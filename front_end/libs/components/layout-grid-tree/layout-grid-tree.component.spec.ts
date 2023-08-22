@@ -1,6 +1,6 @@
-import { EventEmitter } from '@angular/core';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { TourService } from 'ngx-ui-tour-md-menu';
+import { Subject } from 'rxjs';
 
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import {
@@ -26,9 +26,9 @@ describe('NxLayoutGridTreeComponent', () => {
                 {
                     provide: NxLayoutGridService,
                     useValue: {
-                        addResource: () => new EventEmitter<AddResourceType>(),
-                        editResource: () => new EventEmitter<EditResourceType>(),
-                        removeResource: () => new EventEmitter<RemoveResourceType>(),
+                        addResource: () => new Subject<AddResourceType>(),
+                        editResource: () => new Subject<EditResourceType>(),
+                        removeResource: () => new Subject<RemoveResourceType>(),
                         isLeftMenuOpen$$: () => false,
                     },
                 },
