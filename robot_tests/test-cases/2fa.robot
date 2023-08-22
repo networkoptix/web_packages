@@ -66,6 +66,7 @@ Force Tags
     [Tags]    smoke    ci    C110067
     @{auth}    Set Variable    ${login user}    ${password}
     ${id}=     API Connect To Cloud    ${auth}    https://${QA BURBANK IP}:${servers}[1][port][0]    ${ENV}    name=${servers}[1][name]
+    sleep   90
     Log In    ${login user}    ${password}
     sleep    2
     Go to    ${ENV}/systems/${id}
