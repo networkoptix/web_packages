@@ -2,6 +2,7 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { BaseDropdown } from '../injDropdown';
@@ -26,7 +27,7 @@ import type { ActionItems } from './three-dot.component.types';
             multi: true,
         },
     ],
-    imports: [CommonModule],
+    imports: [CommonModule, NxClickElsewhereDirective],
     standalone: true,
 })
 export class NxThreeDotDropdown extends BaseDropdown {

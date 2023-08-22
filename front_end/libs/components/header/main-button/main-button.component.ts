@@ -5,6 +5,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
@@ -21,7 +22,7 @@ import { mainButtonState } from './main-button.types';
         environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss',
     ],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, NxDropMenu],
+    imports: [CommonModule, AngularSvgIconModule, NxDropMenu, NxClickElsewhereDirective],
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;
