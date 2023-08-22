@@ -78,21 +78,6 @@ export class NxDropMenu extends BaseDropdown {
             .subscribe(() => {
                 this.headerService.show$ = false;
             });
-
-        translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
-            setTimeout(() => {
-                this.getMenu();
-                if (environment.isLocal) {
-                    return;
-                }
-
-                const activeSystem =
-                    this.headerService.activeSystem ||
-                    this.headerService.lastActive$.value ||
-                    this.systems?.[0];
-                this.menusService.updateActiveSystemMenu(activeSystem);
-            });
-        });
     }
 
     private getMenu(): void {
@@ -158,13 +143,7 @@ export class NxDropMenu extends BaseDropdown {
 
     updateURI(sid = this.headerService.activeSystem.id, endpoint, home = false): void {
         this.headerService.show$ = false;
-        this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home)).then(() => {
-            const activeSystem =
-                this.headerService.activeSystem ||
-                this.headerService.lastActive$.value ||
-                this.systems[0];
-            this.menusService.updateActiveSystemMenu(activeSystem);
-        });
+        this.uriService.updateURI(this.menusService.getUrl(sid, endpoint, home));
     }
 
     async ngOnChanges(changes: NgChanges<NxDropMenu>): Promise<void> {
@@ -173,14 +152,6 @@ export class NxDropMenu extends BaseDropdown {
                 return; // Account for weird state to avoid errors
             }
             this.systems$.next(changes.systems.currentValue);
-            const activeSystem =
-                this.headerService.activeSystem ||
-                this.headerService.lastActive$.value ||
-                this.systems[0];
-            this.menusService.updateActiveSystemMenu(
-                activeSystem,
-                activeSystem?.permissionManager?.isAdmin(),
-            );
         }
         this.systemCounter = this.systems && this.systems.length;
     }

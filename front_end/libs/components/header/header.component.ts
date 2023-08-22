@@ -417,7 +417,6 @@ export class NxHeaderComponent implements OnInit {
                         this.systems = [system as any]; // TODO: Not sure what is happening with this type, either this.systems should not be assigned to the value that comes out of infoSubject or the NxSystemOldModule type should be updated
                         this.updateActiveSystem();
                         this.updateActive();
-                        this.headerService.activeSystem = system?.serverManager.moduleInfo;
                     });
                 });
             });
@@ -492,26 +491,14 @@ export class NxHeaderComponent implements OnInit {
         if (!this.systems) {
             return;
         }
-        if (this.singleSystem || this.environment.isLocal) {
-            // Special case for a single system - it always active
-            this.headerService.activeSystem = this.systems[0];
-        } else if (this.systemId) {
-            // Will only have multiple systems on cloud
-            this.headerService.activeSystem = this.systems.find(system => {
-                return this.systemId === system.id;
-            });
-        } else {
-            this.headerService.activeSystem = undefined;
-        }
+        const system = this.systemService.getCurrentSystem();
+        this.headerService.activeSystem = system;
 
         if (!this.environment.isLocal) {
-            if (this.headerService.activeSystem) {
+            if (system) {
                 if (!this.system || this.system.id !== this.systemId) {
                     this.stopActiveSubscription();
-                    this.system = this.systemService.createSystem(
-                        this.userEmail,
-                        this.headerService.activeSystem.id,
-                    );
+                    this.system = this.systemService.createSystem(this.userEmail, system.id);
 
                     this.system
                         .getInfoAndPermissions(false)

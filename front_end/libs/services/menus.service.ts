@@ -297,7 +297,7 @@ export class NxMenusService {
         return welcomeNode;
     }
 
-    updateActiveSystemMenu(activeSystem, isLocalAdmin?): void {
+    updateActiveSystemMenu(activeSystem): void {
         if (!activeSystem) {
             return;
         }

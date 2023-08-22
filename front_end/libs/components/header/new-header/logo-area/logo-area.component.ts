@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -15,7 +15,7 @@ import { icons, images } from '@lib/variables/static-variables';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { activeSystemType } from '@services/nx-header.service.types';
+import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -47,6 +47,8 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         this.headerService.activeSystem$,
     ]).pipe(map(info => this.getMainUrl(...info)));
 
+    activeSystemName$$ = signal<string>('');
+
     constructor(
         public headerService: NxHeaderService,
         systemsService: NxSystemsService,
@@ -65,9 +67,13 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         });
     }
 
-    getMainUrl(isAuthenticated: boolean, activeSystem: activeSystemType): string {
+    getMainUrl(isAuthenticated: boolean, activeSystem: NxSystem): string {
         if (!isAuthenticated) {
             return '/';
+        }
+
+        if (activeSystem) {
+            this.activeSystemName$$.set(activeSystem?.info?.name || '');
         }
 
         if (this.singleSystem && activeSystem?.id) {

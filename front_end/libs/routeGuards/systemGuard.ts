@@ -129,7 +129,7 @@ export const SystemGuard: CanActivateFn = (
         }
 
         menusService.currentUser = currSystem.permissionManager.currentUser();
-        menusService.updateActiveSystemMenu(currSystem, currSystem.permissionManager.isAdmin());
+        menusService.updateActiveSystemMenu(currSystem);
 
         if (currentRoute) {
             return checkPermissionsFor(currSystem);

@@ -490,7 +490,8 @@ export class NxAPIToolSystemService {
         this.getServers.errorCount = 0;
     }
 
-    systemIsOnline = (system: NxSystemInfo) => system.stateOfHealth === 'online';
+    systemIsOnline = (system: NxSystem | NxSystemInfo) =>
+        this.systemsService.systems.find(({ id }) => id === system.id)?.stateOfHealth === 'online';
 
     private getAPIDoc(type: APIDocType) {
         return this.currentSystem.serverManager.getApiDoc(type);

@@ -35,7 +35,7 @@
                         *ngSwitchCase="'system'"
                         class="ellipsis"
                         [style.max-width.px]="maxWidth"
-                        >{{ headerService.activeSystem?.name || node?.display_name }}</span
+                        >{{ headerService.activeSystem?.info?.name || node?.display_name }}</span
                     >
                     <span *ngSwitchCase="'systems'"
                         >{{ systemCounter }}&nbsp;<span translate>Systems</span></span

@@ -4,11 +4,12 @@ import { untilDestroyed, UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
 import { environment } from '@environments/environment';
+import { NxSystem } from '@services/system.service/system';
 
 import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
 import { ContextManifest } from './nx-cloud-api/nx-cloud-api.types';
-import { activeSystemType, createButtonType, MenuNodeNavProps } from './nx-header.service.types';
+import { createButtonType, MenuNodeNavProps } from './nx-header.service.types';
 import { windowFactory } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
@@ -18,8 +19,8 @@ import { windowFactory } from './window-provider';
 export class NxHeaderService {
     private window: Window = windowFactory();
     public showSubject = new BehaviorSubject(false);
-    public activeSystem$ = new BehaviorSubject<activeSystemType>(null);
-    public lastActive$ = new BehaviorSubject(null);
+    public activeSystem$ = new BehaviorSubject<NxSystem>(null);
+    public lastActive$ = new BehaviorSubject<NxSystem>(null);
     public nodes$ = new BehaviorSubject<MenuNode[]>([]);
     public currentLocation$ = new BehaviorSubject<any>({});
     public createAccountButtonType$ = new BehaviorSubject<createButtonType>('primary');

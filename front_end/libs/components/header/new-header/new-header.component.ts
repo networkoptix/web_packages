@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router, NavigationEnd } from '@angular/router';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { cloneDeep } from 'lodash-es';
@@ -40,39 +40,6 @@ export class NxNewHeaderComponent {
         systemsService: NxSystemsService,
         private store: Store,
     ) {
-        if (router.url.includes('/systems/')) {
-            menusService.updateActiveSystemMenu(
-                this.headerService.activeSystem || this.headerService.lastActive$.value,
-            );
-        }
-
-        this.headerService.activeSystem$
-            .pipe(
-                untilDestroyed(this),
-                filter(activeSystem => !!activeSystem),
-            )
-            .subscribe(activeSystem => {
-                menusService.updateActiveSystemMenu(activeSystem);
-            });
-
-        router.events
-            .pipe(
-                filter(event => event instanceof NavigationEnd),
-                untilDestroyed(this),
-            )
-            .subscribe((event: NavigationEnd) => {
-                if (event.url.includes('/systems/')) {
-                    menusService.updateActiveSystemMenu(
-                        this.headerService.activeSystem || this.headerService.lastActive$.value,
-                    );
-                }
-                this.headerService.setLocation(event.url);
-                this.selectedNode = this.findNodeBasedOnURL(
-                    this.displayedNodes,
-                    this.headerService.currentLocation?.path,
-                );
-            });
-
         menusService.currentSystemNode$
             .pipe(
                 filter(node => !!node),
@@ -80,9 +47,8 @@ export class NxNewHeaderComponent {
             )
             .subscribe(node => {
                 if (
-                    headerService.currentLocation?.path?.includes('/systems/') &&
-                    (this.selectedNode?.url !== node.url ||
-                        this.selectedNode.nodes.length !== node.nodes.length)
+                    this.selectedNode?.url !== node.url ||
+                    this.selectedNode.nodes.length !== node.nodes.length
                 ) {
                     // specific system page
                     this.selectedNode = cloneDeep({ ...node, name: 'systems' });

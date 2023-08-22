@@ -101,7 +101,6 @@ export const cloudSettingsRoutes: Routes = [
                 path: 'users/:userId',
                 title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
-                canActivate: [SystemGuard],
                 canDeactivate: [ApplyGuard],
                 resolve: {
                     system: currentSystemResolver,

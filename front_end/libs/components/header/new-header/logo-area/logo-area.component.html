@@ -26,11 +26,11 @@
             </div>
             <span
                 class="system-name"
-                [nxTooltip]="headerService.activeSystem.name"
+                [nxTooltip]="activeSystemName$$()"
                 alternateStyle
                 forceDark
             >
-                {{ headerService.activeSystem.name }}
+                {{ activeSystemName$$() }}
             </span>
         </div>
         <ng-container *ngSwitchCase="'logo'">

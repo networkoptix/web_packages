@@ -33,7 +33,9 @@ const headerMock = {
     },
     showSubject: new BehaviorSubject(true),
     activeSystem: {
-        name: 'activeSystemName',
+        info: {
+            name: 'activeSystemName',
+        },
     },
     lastActive$: new BehaviorSubject(true),
 };
@@ -55,7 +57,7 @@ const setupMainbuttonComponent = async (): ReturnType<
         ],
     )(NxHeaderMainButtonComponent);
     setup.component.node = node;
-    setup.component.headerService = headerMock as typeof setup.component.headerService;
+    setup.component.headerService = headerMock as unknown as typeof setup.component.headerService;
     setup.fixture.detectChanges();
     return setup;
 };
@@ -106,7 +108,9 @@ describe('NxHeaderMainButtonComponent', () => {
         });
         headerMock.currentLocation.isSystem = false;
         headerMock.activeSystem = {
-            name: undefined,
+            info: {
+                name: undefined,
+            },
         };
         fixture.detectChanges();
         const span: HTMLSpanElement = debugElement.nativeElement.querySelector('span');
