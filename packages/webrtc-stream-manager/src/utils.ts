@@ -57,11 +57,11 @@ export const sanitizeUrl = (webRtcUrl: string): string => {
     return `${origin}?camera_id=${cameraId}`
 }
 
-export const generateWebRtcUrlFactory = (relayUrl: string, cameraId: string, serverId: string, version: number) => (additionalParams: Record<string, unknown> = {}) => {
+export const generateWebRtcUrlFactory = (relayUrl: string, camera_id: string, serverId: string, version: number) => (additionalParams: Record<string, unknown> = {}) => {
     const useV2 = version >= 6.0;
     additionalParams['x-server-guid'] = serverId;
-    const queryParams = new URLSearchParams(useV2 ? { api: 'v2', deliveryMethod: 'mse', ...additionalParams } : { cameraId, ...additionalParams }).toString();
-    const v1Endpoint = `webrtc-tracker`
-    const v2Endpoint = `rest/v3/devices/${cameraId}/webrtc?api`
+    const queryParams = new URLSearchParams(useV2 ? { api: 'v2', deliveryMethod: 'mse', ...additionalParams } : { camera_id, ...additionalParams }).toString();
+    const v1Endpoint = `webrtc-tracker/`
+    const v2Endpoint = `rest/v3/devices/${camera_id}/webrtc?api`
     return `wss://${relayUrl}/${useV2 ? v2Endpoint : v1Endpoint}?${queryParams}`
 }
