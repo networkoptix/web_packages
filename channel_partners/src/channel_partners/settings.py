@@ -29,9 +29,6 @@ elif CI:
 else:
     ENV_NAME = 'prod'
 
-if not LOCAL_ENV:
-    from channel_partners.tools.check_imports import check
-    check()
 
 INSTANCE_CONFIG = get_config(ENV_NAME)
 
@@ -173,6 +170,7 @@ REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'nxlicensed.utils.custom_exception_handler',
     'DEFAULT_SCHEMA_CLASS': 'channel_partners.utils.NxAutoSchema'
 }
+
 
 SPECTACULAR_SETTINGS = {
     # 'SERVE_PERMISSIONS': ['licensing.views.ui.api_management.APIManagementPermission'],
