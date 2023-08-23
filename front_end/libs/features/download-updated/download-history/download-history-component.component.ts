@@ -17,9 +17,9 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'nx-download-history-new',
-    templateUrl: 'download-history-component-new.component.html',
-    styleUrls: ['download-history-component-new.component.scss'],
+    selector: 'nx-download-history',
+    templateUrl: 'download-history-component.component.html',
+    styleUrls: ['download-history-component.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -32,7 +32,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     ],
     providers: [TypeResolver],
 })
-export class DownloadHistoryComponentNew implements OnInit {
+export class DownloadHistoryComponent implements OnInit {
     readonly releases = 'releases';
     LANG = staticLang;
 
@@ -66,7 +66,7 @@ export class DownloadHistoryComponentNew implements OnInit {
             })
             .reverse();
     }
-    public switchTo(name: string): false {
+    public switchTabs(name: string): false {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
 

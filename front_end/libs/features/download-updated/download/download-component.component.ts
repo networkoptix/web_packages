@@ -22,9 +22,9 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
-    selector: 'nx-download-component-new',
-    templateUrl: 'download-component-new.component.html',
-    styleUrls: ['download-component-new.component.scss'],
+    selector: 'nx-download-component',
+    templateUrl: 'download-component.component.html',
+    styleUrls: ['download-component.component.scss'],
     standalone: true,
     imports: [
         CommonModule,
@@ -42,7 +42,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     ],
     providers: [OsResolver],
 })
-export class DownloadComponentNew implements OnChanges {
+export class DownloadComponent implements OnChanges {
     @Input() releaseType: string;
     @Input('platform') activePlatform: string;
     @Input() downloadData: Downloads;

@@ -18,8 +18,8 @@ import { images, menus } from '@lib/variables/static-variables';
 import { MenuModule } from '@menu/menu.module';
 import { NxMenuService } from '@menu/menu.service';
 import { Content } from '@menu/menu.types';
-import { DownloadComponentNew } from '@pages/download-updated/download/download-component-new.component';
-import { DownloadHistoryComponentNew } from '@pages/download-updated/download-history/download-history-component-new.component';
+import { DownloadComponent } from '@pages/download-updated/download/download-component.component';
+import { DownloadHistoryComponent } from '@pages/download-updated/download-history/download-history-component.component';
 import { ribbonHeight } from '@pages/static-variables-features';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -48,8 +48,8 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
         NxSectionPlaceholderComponent,
         MenuModule,
         NxCheckboxComponent,
-        DownloadHistoryComponentNew,
-        DownloadComponentNew,
+        DownloadHistoryComponent,
+        DownloadComponent,
     ],
 })
 export class NxDownloadsReleasesComponentNew implements AfterViewInit {
@@ -62,11 +62,8 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
     CONFIG: IConfig;
     LANG = staticLang;
     images = images;
-
     content: Content;
-
     deviceInfo: DeviceInfo;
-
     headerHeight: number;
 
     constructor(
