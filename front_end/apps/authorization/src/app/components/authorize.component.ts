@@ -490,7 +490,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 this.authCodeErrorCode = '';
                 if (this.clientType === ClientType.system2faAuth && !this.initialData.redirect_uri.includes('redirect-oauth')) {
                     const accessCodeOrToken = this.initialData.access_code || this.initialData.access_token;
-                    return this.cloudService.verify2FaKey(accessCodeOrToken, this.authCode);
+                    return this.cloudService.verify2FaKey(this.authCode, accessCodeOrToken);
                 }
 
                 return lastValueFrom(this.action === 'restore_password'
@@ -530,6 +530,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         this.checkBackupCodeProcess = this.processService.createProcess(
             async () => {
                 this.backupCodeErrorCode = '';
+                if (this.clientType === ClientType.system2faAuth && !this.initialData.redirect_uri.includes('redirect-oauth')) {
+                    const accessCodeOrToken = this.initialData.access_code || this.initialData.access_token;
+                    return lastValueFrom(this.cloudService.verifyBackupCode(this.backupCode, accessCodeOrToken));
+                }
                 return lastValueFrom(this.action === 'restore_password'
                     ? this.authService.restorePassword(this.loginCode, this.resetPassword, this.backupCode, true)
                     : this.authService.verifyBackupCode(this.backupCode, this.loginCode));

@@ -271,7 +271,7 @@ export class NxCloudApiService {
         return this.http.post<t.TwoFactorBackupCodes[]>(apiBase + '/2fa/backup', {}).toPromise();
     }
 
-    verify2FaKey(code, verificationCode) {
+    verify2FaKey(verificationCode, code) {
         const uri = `${apiBase}/2fa/verification?verification_code=${verificationCode}&code=${code}`;
         return this.http.get(uri).toPromise();
     }
