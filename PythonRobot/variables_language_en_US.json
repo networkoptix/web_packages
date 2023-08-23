@@ -16,6 +16,7 @@
     "DISCONNECT_FORM_SYSTEM_WILL_BE_ACCESSIBLE_TEXT": "System will be accessible only via local network.",
     "DISCONNECT_FORM_ENTER_PASSWORD_TO_CONTINUE_TEXT": "Enter password to continue",
     "SYSTEM_NO_ACCESS_TEXT": "Failed to access system",
+    "USERS": "Users",
     "DISCONNECT_FROM_CLOUD_TEXT": "Disconnect from %PRODUCT_NAME%",
     "RENAME": "Rename",
     "RESTART": "Restart",

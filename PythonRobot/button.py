@@ -8,7 +8,6 @@ import robot_keywords
 class Button:
     def __init__(self, driver: webdriver, locator):
         self.driver = driver
-        robot_keywords.wait_until_element_is_visible(self.driver, locator)
 
         element = Element(self.driver, locator)
         self.selenium_element = element.get_selenium_element()

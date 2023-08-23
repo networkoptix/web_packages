@@ -1,0 +1,32 @@
+import robot_keywords
+from generic_element import Element
+from page_text import PageText
+from text_field import TextField
+from toast_notification import ToastNotification
+from button import Button
+from RobotVariables import RobotVariables
+from variables import ENV
+
+
+class SystemLeftMenu:
+    def __init__(self, driver, lang="en_US"):
+        self.driver = driver
+        self.rb = RobotVariables(lang)
+        self._wait_until_page_loaded()
+        self.users = []
+        # Todo: find way to pass id in
+        # self._location_is_correct()
+
+    def users_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//span[contains(text(), '{USERS}')]")
+        return Button(self.driver, translated_xpath)
+
+    def update_users_list(self):
+        self.users = self.driver.find_elements_by_xpath("//div[@id='level3users']//nx-level-3-item")
+
+    def _wait_until_page_loaded(self):
+        robot_keywords.wait_until_page_contains_element(self.driver, "//nx-menu")
+
+    def _location_is_correct(self):
+        robot_keywords.location_should_be(self.driver, f"{ENV}systems/")

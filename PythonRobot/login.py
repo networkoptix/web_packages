@@ -22,10 +22,22 @@ class LoginDialog:
         return TextField(self.driver, translated_xpath)
 
     def next_button(self):
-        return Button(self.driver, "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']")
+        translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{NEXT_TEXT}')]")
+        return Button(self.driver, translated_xpath)
 
     def login_button(self):
         return Button(self.driver, "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']")
+
+    def forgot_password_button(self):
+        translated_xpath = self.rb.replace_nested_variables("//button//span[contains(text(),'{FORGOT_PASSWORD_TEXT}')]")
+        return Button(self.driver, translated_xpath)
+
+    def reset_password_email_input(self):
+        return TextField(self.driver, "//input[@id='resetPasswordEmail']")
+
+    def reset_password_button(self):
+        translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{RESET_PASSWORD_BUTTON_TEXT}')]")
+        return Button(self.driver, translated_xpath)
 
     def basic_cloud_login(self, email, password):
         email_field = self.email_input()
