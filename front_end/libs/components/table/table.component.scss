@@ -17,7 +17,7 @@
     .nx-new-table {
         display: grid;
         border-collapse: collapse;
-        min-width: 100%;
+        width: fit-content;
         height: inherit;
         grid-template-rows: auto var(--table-row-height);
         //grid-template-areas:
