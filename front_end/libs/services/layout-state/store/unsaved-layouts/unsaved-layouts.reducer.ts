@@ -2,6 +2,7 @@ import { createReducer, on } from '@ngrx/store';
 
 import { onSyncState } from '@store/sync.utils';
 
+import { SharedLayoutsActions } from '../shared';
 import { UnsavedLayoutState } from '../shared/types/layout-state.types';
 import { createNewUnsavedLocalLayout } from '../utils/create-new-local-layout';
 
@@ -18,10 +19,20 @@ export const reducer = createReducer(
     on(UnsavedLayoutActions.clear, (_state): UnsavedLayoutState[] => []),
     on(
         UnsavedLayoutActions.createNewLocalLayout,
-        (state, { name, items }): UnsavedLayoutState[] => [
+        (state, { id, name, items }): UnsavedLayoutState[] => [
             ...state,
-            createNewUnsavedLocalLayout(name, items),
+            createNewUnsavedLocalLayout(id, name, items),
         ],
     ),
+    on(
+        UnsavedLayoutActions.remove,
+        SharedLayoutsActions.deleteLayout,
+        (state, { layoutIds }): UnsavedLayoutState[] =>
+            state.filter(({ layout: { id } }) => !layoutIds.includes(id)),
+    ),
+    on(UnsavedLayoutActions.update, (state, { layouts }): UnsavedLayoutState[] => [
+        ...state.map(layout => layouts.find(({ id }) => id === layout.id) || layout),
+        ...layouts.filter(({ id }) => !state.find(layout => layout.id === id)),
+    ]),
     onSyncState<UnsavedLayoutState[]>(),
 );

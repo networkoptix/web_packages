@@ -22,6 +22,7 @@ import {
     ServerStatsObservable,
 } from '@components/layout-grid/layout-grid.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
 import { icons } from '@lib/variables/static-variables';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
@@ -49,6 +50,7 @@ import { cleanId } from '@utils/general';
         PipesModule,
         TourMatMenuModule,
         TranslateModule,
+        NxTagComponent,
     ],
     templateUrl: './layout-grid-tree.component.html',
     styleUrls: ['./layout-grid-tree.component.scss'],
@@ -86,28 +88,13 @@ export class NxLayoutGridTreeComponent {
         configService: NxConfigService,
         public layoutGridService: NxLayoutGridService,
         public tourService: TourService,
-        private layoutStateService: LayoutStateService,
+        public layoutStateService: LayoutStateService,
     ) {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
     }
-
-    addNewResource = (resourceType: ResourceType): void => {
-        this.layoutGridService.addResource.next(resourceType);
-    };
-
-    removeExistingResource = (
-        resourceType: ResourceType,
-        details: Record<string, unknown>,
-    ): void => {
-        this.layoutGridService.removeResource.next({ resourceType, details });
-    };
-
-    editExistingResource = (resourceType: ResourceType, details: Record<string, unknown>): void => {
-        this.layoutGridService.editResource.next({ resourceType, details });
-    };
 
     hasActions: Partial<
         Record<ResourceType, { action: string; icon: string; handler: unknown; tooltip?: string }[]>
@@ -125,13 +112,17 @@ export class NxLayoutGridTreeComponent {
                 action: 'edit',
                 icon: 'edit',
                 tooltip: this.LANG.layouts.edit,
-                handler: this.editExistingResource,
+                handler: (_, layout: Layout) =>
+                    this.layoutStateService.updateLayout({
+                        ...layout,
+                        name: prompt('Updated Layout Name'),
+                    }),
             },
             {
                 action: 'delete',
                 icon: 'delete',
                 tooltip: this.LANG.layouts.delete,
-                handler: this.removeExistingResource,
+                handler: (_, layout: Layout) => this.layoutStateService.deleteLayout(layout.id),
             },
         ],
     };

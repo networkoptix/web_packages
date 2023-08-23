@@ -82,8 +82,12 @@
             <span
                 class="ellipsis"
                 #nodeName
-                >{{ node.name }}</span
             >
+                {{ node.name }}
+                <nx-tag *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved">{{
+                    unsaved | translate
+                }}</nx-tag>
+            </span>
             <ng-container
                 *ngIf="
                     (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
@@ -246,7 +250,7 @@
             <div
                 cdkTreeNodeToggle
                 cdkDrag
-                (click)="layoutGridService.changeView.next(node)"
+                (click)="layoutStateService.changeLayout(node)"
                 [cdkDragDisabled]="!node.details || layout.locked"
                 (cdkDragStarted)="dragging = true"
                 (cdkDragMoved)="

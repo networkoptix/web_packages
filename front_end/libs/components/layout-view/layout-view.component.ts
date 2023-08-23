@@ -17,7 +17,6 @@ import {
 } from 'rxjs';
 import {
     catchError,
-    delay,
     distinctUntilChanged,
     filter,
     map,
@@ -37,7 +36,6 @@ import {
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { environment } from '@environments/environment';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
@@ -53,7 +51,7 @@ import {
     ActiveLayoutSelectors,
 } from '@services/layout-state/store/active-layout';
 import { LocalLayoutsActions } from '@services/layout-state/store/local-layouts';
-import { SharedSelectors } from '@services/layout-state/store/shared';
+import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { LayoutTypes } from '@services/layout-state/store/shared/types/layout-state.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -71,7 +69,6 @@ import {
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { NxSystemsService } from '@services/systems.service';
 import { alphabeticalSort, alphaNumericSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
@@ -153,33 +150,18 @@ export class NxLayoutViewComponent {
     CONFIG: IConfig;
     ptzControlTarget: NxSystemCamera;
 
-    refreshLayouts$ = new BehaviorSubject('');
-
     selectedSystem$: Observable<NxSystem> = this.activatedRoute.params.pipe(
-        switchMap(async ({ systemId }) => {
-            let system: NxSystem;
-            if (environment.isLocal) {
-                const account = await this.accountService.get();
-                system = this.systemService.createLocalSystem(
-                    this.accountService.mediaServerApi,
-                    account.id,
-                    account.email,
-                );
-            } else {
-                await this.systemsService.getSystemAsPromise(systemId);
-                system = this.systemService.createSystem(
-                    this.accountService.account.email,
-                    systemId,
-                );
-            }
-            await system.update();
-            return system;
+        map(async ({ systemId }) => systemId),
+        distinctUntilChanged(),
+        switchMap(async () => {
+            const current = this.systemService.getCurrentSystem();
+            await current.update();
+            return current;
         }),
         shareReplay({
             bufferSize: 1,
             refCount: false,
         }),
-        distinctUntilChanged((prev, cur) => prev.id === cur.id),
         untilDestroyed(this),
     );
 
@@ -403,19 +385,21 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
-    availableLayouts$: Observable<Layouts> = this.store.select(SharedSelectors.selectLayouts).pipe(
-        map(layouts =>
-            layouts
-                .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
-                .map(({ layout }) => layout as Layout)
-                .sort(alphabeticalSort(this.locale, layout => layout.name)),
-        ),
-        shareReplay({
-            bufferSize: 1,
-            refCount: false,
-        }),
-        untilDestroyed(this),
-    );
+    availableLayouts$: Observable<Layouts> = this.store
+        .select(SharedLayoutsSelectors.selectLayouts)
+        .pipe(
+            map(layouts =>
+                layouts
+                    .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
+                    .map(({ layout }) => layout as Layout)
+                    .sort(alphabeticalSort(this.locale, layout => layout.name)),
+            ),
+            shareReplay({
+                bufferSize: 1,
+                refCount: false,
+            }),
+            untilDestroyed(this),
+        );
 
     availableLayoutsDropdown$ = this.availableLayouts$.pipe(
         map(layouts => layouts.map(this.layoutToDropdown)),
@@ -466,8 +450,7 @@ export class NxLayoutViewComponent {
                 );
             }
 
-            const systemId = (await firstValueFrom(this.selectedSystem$)).id;
-            const systemName = this.systemsService.systems.find(({ id }) => id === systemId).name;
+            const systemName = this.systemService.getCurrentSystem().info.name;
 
             this.pageService.pageTitle(
                 [staticLang.pageTitles.layouts, systemName, this.CONFIG.cloudName].join(' - '),
@@ -559,7 +542,6 @@ export class NxLayoutViewComponent {
         private pageService: NxPageService,
         private router: Router,
         private systemService: NxSystemService,
-        private systemsService: NxSystemsService,
         private tourService: TourService,
         private translate: TranslateService,
         private store: Store,
@@ -619,14 +601,14 @@ export class NxLayoutViewComponent {
     /** End Store Sync Actions */
 
     ngOnInit(): void {
-        this.layoutAndItems$
-            .pipe(
-                filter(([layout, items]) => layout && !!items),
-                take(1),
-                delay(100),
-                untilDestroyed(this),
-            )
-            .subscribe(() => this.initTour());
+        // this.layoutAndItems$
+        //     .pipe(
+        //         filter(([layout, items]) => layout && !!items),
+        //         take(1),
+        //         delay(100),
+        //         untilDestroyed(this),
+        //     )
+        //     .subscribe(() => this.initTour());
 
         this.selectedSystem$
             .pipe(untilDestroyed(this))
@@ -710,12 +692,12 @@ export class NxLayoutViewComponent {
 
         if (!details) {
             // Redirect to 404 if no layout or device found.
-            await this.pageService.redirect404();
+            // await this.pageService.redirect404();
         }
 
-        const rotation = details.parameters.rotation ?? 0;
+        const rotation = details.parameters?.rotation ?? 0;
         const rotatedAspect = Boolean(rotation % 180);
-        const aspect = details.parameters.overrideAr || details.defaultRatio;
+        const aspect = details.parameters?.overrideAr || details.defaultRatio;
         const cellAspectRatio = rotatedAspect ? 1 / aspect : aspect;
         return {
             backgroundHeight: -1,
@@ -773,9 +755,6 @@ export class NxLayoutViewComponent {
 
     updateLayout = (layoutId: string): Promise<string> => {
         this.changeLayout(layoutId);
-        if (layoutId) {
-            this.refreshLayouts$.next(layoutId);
-        }
 
         return firstValueFrom(
             this.#selectedLayout$.pipe(
@@ -800,15 +779,7 @@ export class NxLayoutViewComponent {
                 switchMap(
                     (system: NxSystem) =>
                         system &&
-                        (system.mediaserver as NxSystemRestAPI)
-                            .deleteLayout(id as string)
-                            .pipe(
-                                tap(() =>
-                                    this.updateLayout(
-                                        this.refreshLayouts$.value.replace(id as string, ''),
-                                    ),
-                                ),
-                            ),
+                        (system.mediaserver as NxSystemRestAPI).deleteLayout(id as string),
                 ),
             ),
         );

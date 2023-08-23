@@ -1,19 +1,20 @@
 import { inject } from '@angular/core';
-import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import { nxConfig } from '@services/nx-config/config';
 import { LayoutItem } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { dirtyId } from '@utils/general';
 
 import { LayoutTypes, UnsavedLayoutState, UnsavedState } from '../shared/types/layout-state.types';
 
 export const createNewUnsavedLocalLayout = (
+    id: string,
     name: string,
     items: LayoutItem[],
 ): UnsavedLayoutState => {
-    const id = `{${uuid()}}`;
+    id = dirtyId(id);
     const system = inject(NxSystemService).getCurrentSystem();
     return {
         id,

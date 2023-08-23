@@ -18,12 +18,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { cloneDeep, flatten, groupBy, isEqual, mapValues, omit, pick, values } from 'lodash-es';
+import { flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
     combineLatest,
-    firstValueFrom,
     forkJoin,
     from,
     fromEvent,
@@ -36,7 +35,6 @@ import {
 } from 'rxjs';
 import {
     catchError,
-    debounceTime,
     delay,
     delayWhen,
     distinctUntilChanged,
@@ -45,7 +43,6 @@ import {
     repeat,
     retry,
     shareReplay,
-    skip,
     startWith,
     switchMap,
     take,
@@ -56,7 +53,6 @@ import {
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
-import { ConfigType } from '@components/console-table/console-table.component.types';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -72,21 +68,21 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     CameraStatus,
     NxSystemCamera,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
-import { NxSystemsService } from '@services/systems.service';
+import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
-import { cleanId } from '@utils/general';
+import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
@@ -279,7 +275,6 @@ export class NxLayoutGridComponent {
 
     initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
-    #countdownTimer$ = new Subject<number>();
     unsubTooltip$ = new Subject<string>();
 
     // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
@@ -526,10 +521,11 @@ export class NxLayoutGridComponent {
         private dialogsService: NxDialogsService,
         private toastService: NxToastService,
         public tourService: TourService,
-        private systemsService: NxSystemsService,
+        private systemService: NxSystemService,
         @Inject(WINDOW) public window: Window,
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
+        private layoutStateService: LayoutStateService,
     ) {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
@@ -555,11 +551,9 @@ export class NxLayoutGridComponent {
     }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
             // this.openMenu = false;
-            if (this.unsaved) {
-                await this.saveLayout(layout.currentValue.id);
-            }
             this.initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
+            this.updateLayout();
         }
 
         if (
@@ -665,31 +659,12 @@ export class NxLayoutGridComponent {
             .subscribe();
     }
 
-    ngOnInit(): void {
-        this.pingOfflineCameras();
-        this.#countdownTimer$
-            .pipe(
-                debounceTime(2500),
-                skip(1),
-                switchMap(time => interval(1000).pipe(map(cur => time - cur))),
-                tap(time => !time && this.saveLayout()),
-                shareReplay({
-                    bufferSize: 1,
-                    refCount: true,
-                }),
-                untilDestroyed(this),
-            )
-            .subscribe();
-    }
+    // ngOnInit(): void {
+    //     this.pingOfflineCameras();
+    // }
 
     ngAfterViewInit(): void {
         this.onResize({ target: this.window });
-    }
-
-    async ngOnDestroy(): Promise<void> {
-        if (this.unsaved) {
-            await this.saveLayout();
-        }
     }
 
     startTour = (): void => this.tourService.start();
@@ -1041,7 +1016,6 @@ export class NxLayoutGridComponent {
     };
 
     updateLayout = (): void => {
-        this.initialLayout$.next(this.layout);
         this.#draggingPosition$.next(this.INITIAL_DRAG_STATE);
         this.cd.markForCheck();
     };
@@ -1102,87 +1076,73 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
-                this.layout.items = this.layout.items.map(item => {
+                const items = this.layout.items.map(item => {
+                    item = structuredClone(item);
                     const dragging = item.id === id;
-                    const resolvedCollision = collisions[item.id];
                     if (dragging) {
                         const { x: resizeX, y: resizeY } = this.getConstraint(item, resize);
                         item.top += y;
                         item.bottom += y + resizeY;
                         item.left += x;
                         item.right += x + resizeX;
-                    } else if (resolvedCollision) {
-                        item = { ...item, ...resolvedCollision.moveTo };
                     }
-
                     return item;
                 });
-                this.autoSave();
+
+                this.layoutStateService.updateLayout({ ...this.layout, items });
+                this.updateLayout();
             });
     };
 
-    autoSave<T = unknown>(settingName?: string, value?: T): void {
-        if (settingName) {
-            this.layout[settingName] = value;
-        }
-
-        this.updateLayout();
-        this.unsaved = cloneDeep(this.layout);
-
-        if (this.layout.id) {
-            this.#countdownTimer$.next(this.SAVE_DELAY);
-        }
-    }
-
-    saveLayout = async (nextLayoutId?: string): Promise<void> => {
-        const mediaserver = this.system.mediaserver as NxSystemRestAPI;
-        const { systemId: _, ..._layout } = this.unsaved || this.layout;
-        this.unsaved = false;
-        if (!_layout.id) {
-            const layoutToSave = omit(_layout, ['name', 'id']);
-            await this.dialogsService.edit(
-                {
-                    heading: staticLang.layouts.actions.unsaved.label,
-                    contextManifest: {
-                        ...pick(staticLang.layouts.actions.unsaved, ['label']),
-                        fields: [
-                            {
-                                ...staticLang.layouts.actions.unsaved.fields.info,
-                                type: null,
-                                name: 'info',
-                            },
-                            {
-                                ...staticLang.layouts.actions.unsaved.fields.name,
-                                type: ConfigType.TEXT,
-                                name: 'name',
-                                meta: {
-                                    options: {
-                                        required: true,
-                                    },
-                                },
-                            },
-                        ],
-                    },
-                    handlerProcess: ({ name }) =>
-                        firstValueFrom(
-                            mediaserver.createLayout({ ...layoutToSave, name }).pipe(
-                                tap(_ => {
-                                    this.unsaved = false;
-                                    this.layoutChanged.emit(nextLayoutId || this.layout.id);
-                                }),
-                            ),
-                        ),
-                },
-                layoutToSave,
-            );
-        } else if (_layout.id) {
-            await mediaserver.putLayout(_layout.id, _layout).toPromise();
-        }
-        if (_layout.id && _layout.id === this.layout.id) {
-            this.layoutChanged.emit(_layout.id);
-            this.showPtz.emit();
-        }
-    };
+    // saveLayout = async (nextLayoutId?: string): Promise<void> => {
+    //     const mediaserver = this.system.mediaserver as NxSystemRestAPI;
+    //     const { systemId: _, ..._layout } = this.unsaved || this.layout;
+    //     this.unsaved = false;
+    //     if (!_layout.id) {
+    //         const layoutToSave = omit(_layout, ['name', 'id']);
+    //         await this.dialogsService.edit(
+    //             {
+    //                 heading: staticLang.layouts.actions.unsaved.label,
+    //                 contextManifest: {
+    //                     ...pick(staticLang.layouts.actions.unsaved, ['label']),
+    //                     fields: [
+    //                         {
+    //                             ...staticLang.layouts.actions.unsaved.fields.info,
+    //                             type: null,
+    //                             name: 'info',
+    //                         },
+    //                         {
+    //                             ...staticLang.layouts.actions.unsaved.fields.name,
+    //                             type: ConfigType.TEXT,
+    //                             name: 'name',
+    //                             meta: {
+    //                                 options: {
+    //                                     required: true,
+    //                                 },
+    //                             },
+    //                         },
+    //                     ],
+    //                 },
+    //                 handlerProcess: ({ name }) =>
+    //                     firstValueFrom(
+    //                         mediaserver.createLayout({ ...layoutToSave, name }).pipe(
+    //                             tap(_ => {
+    //                                 this.unsaved = false;
+    //                                 this.layoutChanged.emit(nextLayoutId || this.layout.id);
+    //                             }),
+    //                         ),
+    //                     ),
+    //             },
+    //             layoutToSave,
+    //         );
+    //     } else if (_layout.id) {
+    //         await mediaserver.putLayout(_layout.id, _layout).toPromise();
+    //     }
+    //     if (_layout.id && _layout.id === this.layout.id) {
+    //         this.layoutChanged.emit(_layout.id);
+    //         this.showPtz.emit();
+    //     }
+    // };
 
     async changeView(node: ResourceNode | LayoutItem): Promise<void> {
         if (!('children' in node) && this.#lastWidth <= ViewportBreakpoints.Tablet.width) {
@@ -1221,7 +1181,7 @@ export class NxLayoutGridComponent {
             this.layoutChanged.emit(id);
         }
 
-        const systemName = this.systemsService.systems.find(({ id }) => id === this.system.id).name;
+        const systemName = this.systemService.getCurrentSystem().info.name;
 
         this.pageService.pageTitle(
             [staticLang.pageTitles.layouts, systemName, this.CONFIG.cloudName].join(' - '),
@@ -1377,7 +1337,7 @@ export class NxLayoutGridComponent {
         const top = y === Infinity ? 0 : y;
         const right = left + 1;
         const bottom = top + 1;
-        const id = `{${uuid()}}`;
+        const id = dirtyId(uuid());
         return {
             bottom,
             contrastParams: {
@@ -1400,7 +1360,7 @@ export class NxLayoutGridComponent {
             flags: 1,
             id,
             left,
-            resourceId,
+            resourceId: dirtyId(resourceId),
             resourcePath: '',
             right,
             rotation: 0,
@@ -1424,13 +1384,16 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
-                this.layout.items.push(this.generateLayoutItem(node, { x, y }));
+                const items = [...this.layout.items, this.generateLayoutItem(node, { x, y })];
+                if (this.layoutItemLookup[dirtyId(this.layout.id)]?.type === 'layout') {
+                    this.layoutStateService.updateLayout({ ...this.layout, items });
+                } else {
+                    this.layoutStateService.createNewLocalLayout(items);
+                }
                 if (this.layoutItemLookup[`{${this.layout.id}}`]) {
                     this.layout.id = '';
                     this.showPtz.emit();
                 }
-
-                this.autoSave();
             });
     };
 
@@ -1503,8 +1466,8 @@ export class NxLayoutGridComponent {
         }
 
         if (update) {
-            this.layout.items = this.layout.items.filter(item => item.id !== id);
-            this.autoSave();
+            const items = this.layout.items.filter(item => item.id !== id);
+            this.layoutStateService.updateLayout({ ...this.layout, items });
         }
     };
 

@@ -95,6 +95,11 @@
         "delete": "Delete \"{name}\" layout",
         "pleaseAddNew": "Please add layout on thick client to view layouts",
         "statistics": "{resourceType} \"{name}\" Statistics",
+        "unsavedStates": {
+            "changed": "Changed",
+            "unsaved": "Unsaved",
+            "saving": "Saving"
+        },
         "additionalErrorMessages": {
             "UNAVAILABLE": "can't connect to the camera",
             "webpage": "expect in future versions",

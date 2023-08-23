@@ -11,7 +11,7 @@ export const incrementUntilUnique = (name: string, existingNames: string[]): str
             .filter(nameDiff => !nameDiff.includes(' '))
             .map(nameDiff => parseInt(nameDiff))
             .filter(nameDiff => !isNaN(nameDiff))
-            .sort()
+            .sort((a, b) => a - b)
             .pop() || 1;
 
     return `${name} ${lastVersion + 1}`;
