@@ -31,7 +31,7 @@ QA_BURBANK_SYSTEM_ID = f"032c7c41-0ddd-48d7-ab09-616bfad7b5cc"
 BASE_EMAIL = f"{TEST_EMAIL}+sendemail@gmail.com"
 BASE_EMAIL_NO_SEND = f"{TEST_EMAIL}@gmail.com"
 BASE_EMAIL_DOMAIN = f"@gmail.com"
-BASE_EMAIL_PASSWORD = f"lvhnwgmuoofzmvza"
+BASE_EMAIL_PASSWORD = f"ulmgatwvhjbtylhc"
 
 BASE_HOST = f"imap.gmail.com"
 BASE_PORT = f"993"

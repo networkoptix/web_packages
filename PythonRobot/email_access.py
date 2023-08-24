@@ -8,6 +8,7 @@ from random import randint
 
 rb = RobotVariables("en_US")
 
+
 class Email:
 
     def __init__(self, user_email=rb.BASE_EMAIL, email_alias=None):

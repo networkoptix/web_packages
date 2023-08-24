@@ -33,7 +33,7 @@ variables_dict = {
     'RESET_PASSWORD_PAGE_BUTTON': "//nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '{RESET PASSWORD BUTTON TEXT}')]",
     'RESET_PASSWORD_BUTTON' : """//button[contains(@class,"btn btn-primary") and contains(text(), "{RESET_PASSWORD_BUTTON_TEXT}")]""",
     'BASE_HOST' : 'imap.gmail.com',
-    'BASE_EMAIL_PASSWORD' : 'lvhnwgmuoofzmvza',
+    'BASE_EMAIL_PASSWORD' : 'ulmgatwvhjbtylhc',
     'BASE_EMAIL' : 'noptixautoqa@gmail.com',
     'BASE_EMAIL_SENDEMAIL' : 'noptixautoqa+sendemail@gmail.com',
     'BASE_PORT' : '993',

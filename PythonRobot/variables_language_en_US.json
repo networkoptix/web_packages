@@ -142,6 +142,7 @@
     "RESET_PASSWORD_EMAIL_SUBJECT": "Reset your password",
     "RESET_PASSWORD_BUTTON_TEXT": "Reset Password",
     "INVITED_TO_SYSTEM_EMAIL_SUBJECT": "Video system {{message.system_name}} was shared with you",
+    "INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED": "{{message.sharer_name}} invites you to %PRODUCT_NAME%",
     "DISCONNECT_FORM_HEADER_TEXT": "Disconnect System from %PRODUCT_NAME%?",
     "REQUIRED_TEXT": "Required",
     "EMAIL_ALREADY_REGISTERED_TEXT": "Account already exists",
