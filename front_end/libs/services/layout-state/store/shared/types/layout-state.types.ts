@@ -37,7 +37,11 @@ export interface SavedCrossSystemLayoutState
     extends BaseLayoutState<LayoutTypes.CROSS_SYSTEM, CrossSystemLayout, UnsavedState.SAVED> {}
 
 export interface UnsavedLocalLayoutState
-    extends BaseLayoutState<LayoutTypes.LOCAL, Layout, UnsavedState.UNSAVED> {}
+    extends BaseLayoutState<
+        LayoutTypes.LOCAL,
+        Layout,
+        UnsavedState.UNSAVED | UnsavedState.PENDING
+    > {}
 
 export interface UnsavedCrossSystemLayoutState
     extends BaseLayoutState<

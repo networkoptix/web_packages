@@ -1,13 +1,28 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { distinctUntilChanged, filter, map, switchMap, take } from 'rxjs';
+import {
+    catchError,
+    distinctUntilChanged,
+    filter,
+    firstValueFrom,
+    map,
+    of,
+    switchMap,
+    take,
+} from 'rxjs';
 
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
+import { NxSystemService } from '@services/system.service/system.service';
 import { dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
+import { LocalLayoutsActions } from './store/local-layouts';
+import { SharedLayoutsActions } from './store/shared';
 import { selectLayouts } from './store/shared/selectors';
+import { LayoutTypes, UnsavedLocalLayoutState } from './store/shared/types/layout-state.types';
 import { UnsavedLayoutsActions } from './store/unsaved-layouts';
+import { selectUnsavedLayoutsState } from './store/unsaved-layouts/unsaved-layouts.selectors';
 
 @Injectable()
 export class LayoutStateEffects {
@@ -27,5 +42,75 @@ export class LayoutStateEffects {
         );
     });
 
-    constructor(private store: Store, private actions: Actions) {}
+    persistLayout$ = createEffect(() => {
+        return this.actions.pipe(
+            ofType(SharedLayoutsActions.saveLayout),
+            map(({ layoutIds }) => layoutIds),
+            distinctUntilChanged(),
+            switchMap(layoutsToSave => {
+                return this.store.select(selectUnsavedLayoutsState).pipe(
+                    map(layouts => layouts.filter(({ id }) => layoutsToSave.includes(id))),
+                    switchMap(async layouts => {
+                        const mediaserver = this.systemService.getCurrentSystem()
+                            .mediaserver as NxSystemRestAPI3;
+
+                        const savingLocalLayouts = layouts
+                            .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
+                            .map((layout: UnsavedLocalLayoutState) =>
+                                firstValueFrom(
+                                    mediaserver.putLayout(layout.id, layout.layout).pipe(
+                                        map(updatedLayout => updatedLayout),
+                                        catchError(() => of(null)),
+                                        filter(Boolean),
+                                    ),
+                                ),
+                            );
+
+                        const savedLayouts = await Promise.all(savingLocalLayouts);
+
+                        return LocalLayoutsActions.update({
+                            layouts: savedLayouts,
+                        });
+                    }),
+                    take(1),
+                );
+            }),
+        );
+    });
+
+    discardPersistedLayout$ = createEffect(() => {
+        return this.actions.pipe(
+            ofType(LocalLayoutsActions.update),
+            map(({ layouts }) => layouts.map(({ id }) => id)),
+            map(layoutIds => UnsavedLayoutsActions.remove({ layoutIds })),
+        );
+    });
+
+    deleteLayout$ = createEffect(() => {
+        return this.actions.pipe(
+            ofType(SharedLayoutsActions.deleteLayout),
+            switchMap(async ({ layoutIds }) => {
+                const mediaserver = this.systemService.getCurrentSystem()
+                    .mediaserver as NxSystemRestAPI3;
+                const deletedLocalLayouts = layoutIds.map(layoutId =>
+                    firstValueFrom(
+                        mediaserver.deleteLayout(layoutId).pipe(
+                            map(() => layoutId),
+                            catchError(() => of(null)),
+                            filter(Boolean),
+                        ),
+                    ),
+                );
+
+                const removedLayouts = await Promise.all(deletedLocalLayouts);
+                return LocalLayoutsActions.remove({ layoutIds: removedLayouts });
+            }),
+        );
+    });
+
+    constructor(
+        private store: Store,
+        private actions: Actions,
+        private systemService: NxSystemService,
+    ) {}
 }

@@ -16,11 +16,12 @@ export const selectUnsavedLayoutsIds = createSelector(
     selectLocalLayoutsState,
     (unsavedLayouts, existingLayouts): Record<string, string> =>
         unsavedLayouts.reduce((unsavedLayouts, layout) => {
-            unsavedLayouts[layout.id] = existingLayouts.find(({ id }) => id === layout.id)
-                ? layout.unsaved === UnsavedState.PENDING
+            unsavedLayouts[layout.id] =
+                layout.unsaved === UnsavedState.PENDING
                     ? unsavedStates.saving
-                    : unsavedStates.changed
-                : unsavedStates.unsaved;
+                    : existingLayouts.find(({ id }) => id === layout.id)
+                    ? unsavedStates.changed
+                    : unsavedStates.unsaved;
             return unsavedLayouts;
         }, {} as Record<string, string>),
 );

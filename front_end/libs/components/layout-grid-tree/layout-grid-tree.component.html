@@ -84,9 +84,12 @@
                 #nodeName
             >
                 {{ node.name }}
-                <nx-tag *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved">{{
-                    unsaved | translate
-                }}</nx-tag>
+                <nx-tag
+                    *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved"
+                    (click)="layoutStateService.saveLayout(node.id)"
+                    locked
+                    >{{ unsaved | translate }}</nx-tag
+                >
             </span>
             <ng-container
                 *ngIf="

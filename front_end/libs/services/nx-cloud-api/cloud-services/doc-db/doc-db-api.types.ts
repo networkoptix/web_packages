@@ -1,5 +1,6 @@
 export interface DocId {
-    docId: string;
+    readonly docId?: string;
+    id: string;
 }
 
 /**

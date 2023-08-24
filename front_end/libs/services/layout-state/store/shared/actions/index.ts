@@ -1,6 +1,11 @@
 import { createAction, props } from '@ngrx/store';
 
 export const deleteLayout = createAction(
-    '[Delete Layout] Remove Layouts by Ids',
+    '[Shared Action] Remove Layouts by Ids',
+    props<{ layoutIds: string[] }>(),
+);
+
+export const saveLayout = createAction(
+    '[Shared Action] Save Layouts by Ids',
     props<{ layoutIds: string[] }>(),
 );

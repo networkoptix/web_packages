@@ -187,6 +187,9 @@ export class NxLayoutViewComponent {
     updateLayoutItems = (): void => this.updateLayoutItems$.next(null);
 
     layoutItemLookup$ = this.selectedSystem$.pipe(
+        switchMap(system =>
+            this.layoutStateService.loadUnsavedLayouts(system.id).pipe(map(() => system)),
+        ),
         switchMap(system => this.updateLayoutItems$.pipe(map(() => system))),
         switchMap(({ mediaserver, serverManager, cameraManager, permissionManager }) =>
             combineLatest([
@@ -473,7 +476,9 @@ export class NxLayoutViewComponent {
                 }
             }
             return layoutId
-                ? this.createFocusLayout(system.id, layoutId)
+                ? this.createFocusLayout(system.id, layoutId).catch(() =>
+                      this.createNewLayout(system.id),
+                  )
                 : this.createNewLayout(system.id);
         }),
         shareReplay({

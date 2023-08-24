@@ -25,7 +25,7 @@ export const remove = createAction(
 );
 
 export const update = createAction(
-    '[Local Layouts] Update Local Layouts',
+    '[Unsaved Layouts] Update Unsaved Layouts',
     props<{ layouts: UnsavedLayoutState[] }>(),
 );
 

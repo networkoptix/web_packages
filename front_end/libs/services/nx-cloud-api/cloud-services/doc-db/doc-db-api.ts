@@ -1,5 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 
+import { UnsavedLayoutState } from '@services/layout-state/store/shared/types/layout-state.types';
+
 import { WithFreshSession } from '../../nx-cloud-api.types';
 import {
     BaseCloudServiceAPI,
@@ -7,7 +9,7 @@ import {
     implementsCloudServiceApi,
 } from '../base-cloud-service-api';
 
-import { CachedLayout, CrossSystemLayout, DocId } from './doc-db-api.types';
+import { CrossSystemLayout, DocId } from './doc-db-api.types';
 import { DocDirectory } from './doc-directory';
 
 /**
@@ -55,7 +57,7 @@ export class DocDbAPI extends BaseCloudServiceAPI {
      * Cross system layouts aren't system specific so they could be stored in the
      * root directory by calling getDocHandler instead of getChildDocDirectory.
      */
-    cachedLayout = new DocDirectory<CachedLayout>(this, 'cachedLayouts');
+    unsavedLayouts = new DocDirectory<UnsavedLayoutState>(this, 'unsavedLayouts');
 
     /**
      * Sandbox for experiementing with docDb.

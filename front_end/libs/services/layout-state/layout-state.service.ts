@@ -1,22 +1,29 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { take } from 'rxjs';
+import { Observable, take, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import staticLang from '@common/language/language_i18n_static.json';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { LayoutItem, Layout } from '@services/system-api.types';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
-import { LayoutTypes, UnsavedState } from './store/shared/types/layout-state.types';
+import {
+    LayoutTypes,
+    UnsavedLayoutState,
+    UnsavedState,
+} from './store/shared/types/layout-state.types';
 import { UnsavedLayoutsActions } from './store/unsaved-layouts';
 import { selectUnsavedLayoutsIds } from './store/unsaved-layouts/unsaved-layouts.selectors';
 import { incrementUntilUnique } from './store/utils/increment-until-unique';
 
 @Injectable()
 export class LayoutStateService {
+    static runInInjectionContext: <T>(callback: () => T) => T;
+
     createNewLocalLayout(items?: LayoutItem[]): string;
     createNewLocalLayout(name: string, items?: LayoutItem[]): string;
     createNewLocalLayout(
@@ -33,7 +40,7 @@ export class LayoutStateService {
             .pipe(take(1))
             .subscribe(layouts => {
                 const existingNames = layouts.map(layout => layout.layout.name);
-                runInInjectionContext(this.injector, () =>
+                LayoutStateService.runInInjectionContext(() =>
                     this.store.dispatch(
                         UnsavedLayoutsActions.createNewLocalLayout({
                             id,
@@ -54,6 +61,26 @@ export class LayoutStateService {
         }
 
         this.store.dispatch(SharedLayoutsActions.deleteLayout({ layoutIds }));
+    }
+
+    discardUnsavedLayout(layoutId: string): void;
+    discardUnsavedLayout(layoutIds: string[]): void;
+    discardUnsavedLayout(layoutIds: string[] | string): void {
+        if (typeof layoutIds === 'string') {
+            layoutIds = [layoutIds];
+        }
+
+        this.store.dispatch(UnsavedLayoutsActions.remove({ layoutIds }));
+    }
+
+    saveLayout(layoutId: string): void;
+    saveLayout(layoutIds: string[]): void;
+    saveLayout(layoutIds: string[] | string): void {
+        if (typeof layoutIds === 'string') {
+            layoutIds = [layoutIds];
+        }
+
+        this.store.dispatch(SharedLayoutsActions.saveLayout({ layoutIds }));
     }
 
     updateLayout(layout: Layout): void;
@@ -84,9 +111,26 @@ export class LayoutStateService {
         this.store.dispatch(ActiveLayoutActions.set({ id }));
     }
 
+    public loadUnsavedLayouts(systemId: string): Observable<UnsavedLayoutState[]> {
+        return this.cloudApi.docDbApi.unsavedLayouts
+            .getDocHandler(systemId)
+            .list()
+            .pipe(
+                tap(unsavedLayouts =>
+                    this.store.dispatch(UnsavedLayoutsActions.set({ unsavedLayouts })),
+                ),
+            );
+    }
+
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));
 
-    constructor(private store: Store, private injector: Injector) {
+    constructor(
+        private store: Store,
+        private injector: Injector,
+        private cloudApi: NxCloudApiService,
+    ) {
+        LayoutStateService.runInInjectionContext = callback =>
+            runInInjectionContext(this.injector, callback);
         // eslint-disable-next-line ngrx/no-store-subscription
         this.store.subscribe(state => {
             console.info('currentState', state);

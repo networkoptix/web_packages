@@ -1,6 +1,8 @@
 import { Observable, catchError, map } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+import { cleanId } from '@utils/general';
+
 import { BaseCloudServiceAPI } from '../base-cloud-service-api';
 
 import { DocId } from './doc-db-api.types';
@@ -62,8 +64,8 @@ export class DocHandler<DocType extends DocId> {
      *
      * @param doc DocType
      */
-    save(docId: string, doc: Omit<DocType, 'docId'>): Observable<DocType>;
-    save(docIdOrDoc: string | Omit<DocType, 'docId'>, doc?: DocType): Observable<DocType> {
+    save(docId: string, doc: DocType): Observable<DocType>;
+    save(docIdOrDoc: string | DocType, doc?: DocType): Observable<DocType> {
         const { body } = this.normalizeFromOverloads(docIdOrDoc, doc);
         return this.update(body).pipe(catchError(() => this.create(body)));
     }
@@ -73,7 +75,7 @@ export class DocHandler<DocType extends DocId> {
      *
      * @param doc DocType
      */
-    create(doc: Omit<DocType, 'docId'>): Observable<DocType>;
+    create(doc: DocId): Observable<DocType>;
     /**
      * Create a new document. The docId is passed as the first argument
      * and the doc as the second argument.
@@ -82,8 +84,8 @@ export class DocHandler<DocType extends DocId> {
      *
      * @param doc DocType
      */
-    create(docId: string, doc: Omit<DocType, 'docId'>): Observable<DocType>;
-    create(docIdOrDoc: string | Omit<DocType, 'docId'>, doc?: DocType): Observable<DocType> {
+    create(docId: string, doc: DocId): Observable<DocType>;
+    create(docIdOrDoc: string | DocId, doc?: DocType): Observable<DocType> {
         return this.api.post<DocType>(...this.generateSavePayload(docIdOrDoc, doc));
     }
 
@@ -101,8 +103,8 @@ export class DocHandler<DocType extends DocId> {
      *
      * @param doc DocType
      */
-    update(docId: string, doc: Omit<DocType, 'docId'>): Observable<DocType>;
-    update(docIdOrDoc: string | Omit<DocType, 'docId'>, doc?: DocType): Observable<DocType> {
+    update(docId: string, doc: DocId): Observable<DocType>;
+    update(docIdOrDoc: string | DocId, doc?: DocType): Observable<DocType> {
         return this.api.put<DocType>(...this.generateSavePayload(docIdOrDoc, doc));
     }
 
@@ -111,8 +113,11 @@ export class DocHandler<DocType extends DocId> {
      *
      * @param docId UUID
      */
-    delete(docId: string): Observable<unknown> {
-        return this.api.delete<Record<string, never>>(`${this.prefix}/${docId}`);
+    delete(docId: string): Observable<unknown>;
+    delete(docId: DocType): Observable<unknown>;
+    delete(docIdOrDoc: string | DocType): Observable<unknown> {
+        const docId = typeof docIdOrDoc === 'string' ? docIdOrDoc : docIdOrDoc.id;
+        return this.api.delete<Record<string, never>>(`${this.prefix}/${cleanId(docId)}`);
     }
 
     /**
@@ -123,23 +128,24 @@ export class DocHandler<DocType extends DocId> {
      * @returns [string, { body: DocType }]
      */
     private generateSavePayload(
-        docIdOrDoc: string | (Omit<DocType, 'docId'> & Partial<Pick<DocType, 'docId'>>),
+        docIdOrDoc: string | (DocId & Partial<Pick<DocType, 'id'>>),
         doc?: DocType,
     ): [string, { body: DocType }] {
         const { docId, body } = this.normalizeFromOverloads(docIdOrDoc, doc);
-        return [`${this.prefix}/${docId}`, { body }];
+        return [docId, { body }];
     }
 
     /**
      * Helper method to normalize the payload from method overloads.
      */
     private normalizeFromOverloads(
-        docIdOrDoc: string | (Omit<DocType, 'docId'> & Partial<Pick<DocType, 'docId'>>),
+        docIdOrDoc: string | (DocId & Partial<Pick<DocType, 'id'>>),
         doc: DocType,
     ): { docId: string; body: DocType } {
         const isDocId = typeof docIdOrDoc === 'string';
-        const docId = isDocId ? docIdOrDoc : docIdOrDoc.docId || uuid();
-        const body = { ...(isDocId ? doc : docIdOrDoc), docId } as DocType;
+        const id = isDocId ? docIdOrDoc : docIdOrDoc.id || uuid();
+        const docId = `${this.prefix}/${cleanId(id)}`;
+        const body = { ...(isDocId ? doc : docIdOrDoc), id, docId } as DocType;
         return { docId, body };
     }
 }

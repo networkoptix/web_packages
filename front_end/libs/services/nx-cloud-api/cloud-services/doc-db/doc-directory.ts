@@ -32,7 +32,26 @@ export class DocDirectory<DocType extends DocId> {
      *
      * @returns DocHandler<DocType>
      */
-    getDocHandler(postFixContents = true): DocHandler<DocType> {
+    getDocHandler(...subDirectories: string[]): DocHandler<DocType>;
+    getDocHandler(postFixContents: boolean, ...subDirectories: string[]): DocHandler<DocType>;
+    getDocHandler(
+        postFixContentsOrDirectory: boolean | string = true,
+        ...subDirectories: string[]
+    ): DocHandler<DocType> {
+        const firstIsPostFixContents = typeof postFixContentsOrDirectory === 'boolean';
+        const postFixContents = firstIsPostFixContents ? postFixContentsOrDirectory : true;
+        subDirectories = firstIsPostFixContents
+            ? subDirectories
+            : [postFixContentsOrDirectory, ...subDirectories];
+
+        if (subDirectories.length) {
+            const directory = subDirectories.reduce(
+                (docDirectory, subDirectory) => docDirectory.getChildDocDirectory(subDirectory),
+                this,
+            );
+            return directory.getDocHandler(postFixContents);
+        }
+
         return new DocHandler(this.api, this.prefix, postFixContents);
     }
 }
