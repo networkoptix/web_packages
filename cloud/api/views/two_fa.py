@@ -91,9 +91,6 @@ class BackupCode(TwoFactorPermissionsMixin, AsyncAPIView):
                                               session_access_token=request.session.get("access_token"))
 
         if request.user and request.user.is_authenticated and request.user.email == email:
-            await sync_to_async(Auth.verify_backup_code, thread_sensitive=False)(
-                data["verification_code"], request.session.get("access_token")
-            )
             AccountCache.delete(request)
             request.session["has2fa"] = True
 
