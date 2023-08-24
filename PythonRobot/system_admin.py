@@ -15,7 +15,7 @@ class SystemAdmin:
         # Todo: find way to pass id in
         #self._location_is_correct()
 
-    def disconnect_button(self):
+    def disconnect_from_cloud_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(),'{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
 
@@ -25,9 +25,30 @@ class SystemAdmin:
         print(translated_xpath)
         return Button(self.driver, translated_xpath)
 
-    def disconnect_toast_notification(self):
+    def disconnect_from_account_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//button[contains(text(),'{DISCONNECT_FROM_MY_ACCOUNT_TEXT}')]")
+        return Button(self.driver, translated_xpath)
+
+    def disconnect_from_account_confirm_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//nx-modal-generic-content//button[contains(text(),'{DISCONNECT_BUTTON_TEXT}')]")
+        return Button(self.driver, translated_xpath)
+
+    def disconnect_from_account_cancel_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//nx-modal-generic-content//button[contains(text(),'{CANCEL_BUTTON_TEXT}')]")
+        return Button(self.driver, translated_xpath)
+
+    def disconnect_from_cloud_toast_notification(self):
         disconnect_message = self.rb.__getattr__('SUCCESSFULLY_DISCONNECTED')
         return ToastNotification(self.driver, disconnect_message)
+
+    def disconnect_from_account_toast_notification(self, system_name):
+        disconnect_message = self.rb.__getattr__("SYSTEM_DELETED_FROM_ACCOUNT")
+        replaced_disconnect_message = disconnect_message.replace("{{system_name}}", system_name)
+        return ToastNotification(self.driver, replaced_disconnect_message)
+
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")

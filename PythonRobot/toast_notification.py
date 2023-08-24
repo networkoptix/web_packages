@@ -12,7 +12,7 @@ class ToastNotification:
 
     def message(self):
         message = Element(self.driver,
-                          f"//span[contains(@class,'toast-content')]/../span[contains(text(),'{self.alert_text}')]")
+                          f"//nx-toast//span[contains(text(),'{self.alert_text}')]")
         return self._wait_until_notification_disappears(message)
 
     def _wait_until_notification_disappears(self, message, timeout=10):
