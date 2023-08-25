@@ -32,7 +32,13 @@ class LoginDialog:
         return TextField(self.driver, "//nx-authorize-component//nx-authorize-auth-code-component//input[@id='authCode']")
 
     def twofa_login_button(self):
-        return Button(self.driver, f"//nx-authorize-component//nx-process-button//button[contains(text(),'Log In')]")
+        return Button(self.driver, f"//nx-authorize-component//nx-process-button//button[@type='submit']")
+    
+    def twofa_backup_code_button(self):
+        return Button(self.driver, f"//nx-authorize-auth-code-component//span[text()='{self.rb.TWOFA_BACKUP_CODE_BTN_TEXT}']")
+    
+    def twofa_backup_code_input(self):
+        return TextField(self.driver, "//nx-authorize-backup-code-component//input[@id='backupCode']")
 
     def forgot_password_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button//span[contains(text(),'{FORGOT_PASSWORD_TEXT}')]")
@@ -46,29 +52,27 @@ class LoginDialog:
         return Button(self.driver, translated_xpath)
 
     def basic_cloud_login(self, email, password):
-        email_field = self.email_input()
-        email_field.input_text(email)
-        next_button = self.next_button()
-        next_button.click()
-        password_input = self.password_input()
-        password_input.input_text(password)
-        login_button = self.login_button()
-        login_button.click()
+        self.email_input().input_text(email)
+        self.next_button().click()
+        self.password_input().input_text(password)
+        self.login_button().click()
 
     def twofa_cloud_login(self, email, password, twofa):
-        email_field = self.email_input()
-        email_field.input_text(email)
-        next_button = self.next_button()
-        next_button.click()
-        password_input = self.password_input()
-        password_input.input_text(password)
-        login_button = self.login_button()
-        login_button.click()
-        twofa_field = self.twofa_auth_code_input()
-        twofa_field.input_text(twofa)
-        twofa_login = self.twofa_login_button()
-        twofa_login.click()
+        self.email_input().input_text(email)
+        self.next_button().click()
+        self.password_input().input_text(password)
+        self.login_button().click()
+        self.twofa_auth_code_input().input_text(twofa)
+        self.twofa_login_button().click()
+
+    def twofa_backup_cloud_login(self, email, password, backup_code):
+        self.email_input().input_text(email)
+        self.next_button().click()
+        self.password_input().input_text(password)
+        self.login_button().click()
+        self.twofa_backup_code_button().click()
+        self.twofa_backup_code_input().input_text(backup_code)
+        self.twofa_login_button().click()
 
     def _wait_until_modal_is_visible(self):
-        robot_keywords.wait_until_element_is_visible(self.driver,
-                                                     "//nx-authorize-component/div[@class='authorize-main main-w']")
+        robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-component/div[@class='authorize-main main-w']")

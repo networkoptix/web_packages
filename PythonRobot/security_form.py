@@ -68,7 +68,7 @@ class SecurityForm:
         self.twofa_copy_all_button()
         randInt = random.randint(1, 8)
         randomOneTimeBackupCode = PageText(self.driver, f"//nx-two-fa-modal-content//span[text()='{randInt}']/..").text
-        randomOneTimeBackupCode = randomOneTimeBackupCode[1]
+        randomOneTimeBackupCode = randomOneTimeBackupCode[1:12]
         self.twofa_ok_button().click()
         twofa_codes = {"totp" : totp, "backup": randomOneTimeBackupCode}
         return twofa_codes
