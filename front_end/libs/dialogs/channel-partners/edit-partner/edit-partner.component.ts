@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
 import LANG from '@common/language/language_i18n_static.json';
+import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -14,10 +15,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { EditChannelPartner as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import {
-    State,
-    Id,
-} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
@@ -33,6 +31,7 @@ import { NxToastService } from '@services/toast.service';
         TranslateModule,
 
         NxGenericDropdownModule,
+        NxCheckboxComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
     ],
@@ -40,15 +39,17 @@ import { NxToastService } from '@services/toast.service';
 export class NxEditPartnerModalContent extends ModalBase<DT['return']> implements OnInit {
     states: DropdownItem<State>[];
     state: DropdownItem<State>;
-    parentPartners: DropdownItem<Id>[] = [];
-    selectedParent: DropdownItem<Id>;
+    parentPartners: DropdownItem<string>[] = [];
+    selectedParent: DropdownItem<string>;
     name: string;
+    canCreateSubChannels: boolean;
 
     editPartnerProcess: Process;
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
-        @Inject(DIALOG_DATA) { state, parentChannelPartner, name, id }: DT['data'],
+        @Inject(DIALOG_DATA)
+        { state, parentChannelPartner, name, id, canCreateSubChannels }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
@@ -60,7 +61,7 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
         }));
         this.state = this.states.find(s => s.value === state);
         cpService.getChannelPartners().subscribe(partners => {
-            this.parentPartners = partners.map<DropdownItem<Id>>(p => ({
+            this.parentPartners = partners.map<DropdownItem<string>>(p => ({
                 name: p.name,
                 value: p.id,
                 help: LANG.systemGroups.status[p.state],
@@ -68,6 +69,7 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
             this.selectedParent = this.parentPartners.find(p => p.value === parentChannelPartner);
         });
         this.name = name;
+        this.canCreateSubChannels = canCreateSubChannels;
 
         this.editPartnerProcess = processService.createProcess(
             () => {
@@ -75,8 +77,9 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
                 return firstValueFrom(
                     cpService.updateChannelPartner(id, {
                         state: this.state.value,
-                        parentChannelPartner: this.selectedParent.value,
+                        // parentChannelPartner: this.selectedParent.value,
                         name: this.name,
+                        canCreateSubChannels: this.canCreateSubChannels,
                     }),
                 );
             },

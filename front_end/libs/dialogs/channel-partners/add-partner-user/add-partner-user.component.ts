@@ -15,7 +15,6 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { AddPartnerUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
@@ -41,8 +40,8 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
 
     public email: string;
 
-    roles: DropdownItem<Id>[] = [];
-    selectedRole: DropdownItem<Id>;
+    roles: DropdownItem<number>[] = [];
+    selectedRole: DropdownItem<number>;
 
     createUserProcess: Process;
 
@@ -57,7 +56,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
         // There's probably a smarter place to put this so we only have
         // to fetch once, but putting here for now
         cpService.getChannelPartnerRoles().subscribe(roles => {
-            this.roles = roles.map<DropdownItem<Id>>(role => ({
+            this.roles = roles.map<DropdownItem<number>>(role => ({
                 name: role.name,
                 value: role.id,
             }));

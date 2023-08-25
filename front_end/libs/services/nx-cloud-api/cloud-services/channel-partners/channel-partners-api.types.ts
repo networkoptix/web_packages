@@ -1,7 +1,3 @@
-/** Swagger on {{licenseServerInstance}}/nxlicensed/api-docs-internal */
-
-export type Id = string;
-
 // e.g. https://nxlicensed.test.hdw.mx/nxlicensed/api/v2/partners/organizations/5/users/
 type Url = string;
 
@@ -11,110 +7,133 @@ export enum State {
     ShutDown = 'shutdown',
 }
 
-/* Channel Partners */
-export interface ChannelPartner {
-    effectiveState: State;
-    id: Id;
-    name: string;
-    organizations: Url;
-    parentChannelPartner: Id | null;
-    state: State;
-    users: Url;
-}
-
-export interface CreateChannelPartner {
-    name: string;
-    parentChannelPartner: Id;
-}
-
-export type UpdateChannelPartner = Partial<{
-    name: string;
-    parentChannelPartner: Id;
-    state: State;
-}>;
+export type Page<Results> = {
+    count: number;
+    next: string | null;
+    previous: string | null;
+    results: Results[];
+};
 
 /* Channel Partner Users */
 export interface ChannelPartnerRole {
-    id: Id;
-    name: string;
+    id: number;
     permissions: string[];
+    name: string;
 }
 
 export interface ChannelPartnerUser {
     email: string;
     roles: string[];
-    userId: Id;
-}
-
-export interface ChannelPartnerUserExt extends ChannelPartnerUser {
-    id?: Id;
-    fullName: string;
-    accessLevel: string[];
+    title: string;
+    created: string; // e.g. "2023-08-24T19:14:46.748Z"
 }
 
 export interface CreateChannelPartnerUser {
     email: string;
     role: string;
+    title?: string;
 }
 
 export type UpdateChannelPartnerUser = CreateChannelPartnerUser;
 
+/* Channel Partners */
+export interface ChannelPartner {
+    id: string;
+    users: Url;
+    organizations: Url;
+    state: State;
+    effectiveState: State;
+    parentChannelPartner: string | null;
+    monthlyAdditionalServiceLimit: number | null;
+    attributes: Record<string, unknown>;
+    canCreateSubChannels: boolean;
+    name: string;
+}
+
+export type PaginatedChannelPartnerList = Page<ChannelPartner>;
+
+export interface CreateChannelPartner {
+    name: string;
+    parentChannelPartner: string;
+    attributes?: Record<string, unknown>;
+    canCreateSubChannels?: boolean;
+    monthlyAdditionalServiceLimit?: number | null;
+}
+
+export type UpdateChannelPartner = Partial<{
+    state: State;
+    monthlyAdditionalServiceLimit: number | null;
+    attributes: Record<string, unknown>;
+    canCreateSubChannels: boolean;
+    name: string;
+}>;
+
 /* Organizations */
 export interface Organization {
-    channelPartner: Id;
-    channelPartnerCanAdminister: boolean;
-    cloudSystems: Url;
-    effectiveState: State;
-    id: Id;
-    name: string;
-    state: State;
+    id: string;
     users: Url;
+    cloudSystems: Url;
+    state: State;
+    effectiveState: State;
+    channelPartner: string;
+    channelPartnerCanAdminister: boolean;
+    attributes: Record<string, unknown>;
+    name: string;
+}
+
+export type PaginatedOrganizationList = Page<Organization>;
+
+export interface CreateOrganization {
+    name: string;
+    channelPartner: string;
+    attributes?: Record<string, unknown>;
 }
 
 export type UpdateOrganization = Partial<{
-    channelPartner: Id;
-    channelPartnerCanAdminister: boolean;
-    name: string;
     state: State;
+    channelPartner: string;
+    channelPartnerCanAdminister: boolean;
+    attributes?: Record<string, unknown>;
+    name: string;
 }>;
 
-export interface CreateOrganization {
-    channelPartner: Id;
+/* Systems */
+export interface CloudSystem {
+    id: number;
+    state: string;
+    effectiveState: string;
+    systemId: string;
     name: string;
+    organization: string;
+    services: Record<string, unknown>;
+}
+
+export type PaginatedCloudSystemList = Page<CloudSystem>;
+
+export interface BindSystemToOrganization {
+    cloudSystemId: string;
+    organization?: string;
 }
 
 /* Oraganization users */
 export interface OrganizationRole {
-    id: Id;
-    name: string;
+    id: number;
     permissions: string[];
     systemRole: string;
+    name: string;
 }
 
 export interface OrganizationUser {
     email: string;
     roles: string[];
-    userId: Id;
+    title: string;
+    created: string;
 }
 
 export interface CreateOrganizationUser {
     email: string;
     role: string;
+    title?: string;
 }
 
 export type UpdateOrganizationUser = CreateOrganizationUser;
-
-/* Systems */
-export interface OrganizationSystem {
-    id: number;
-    state: string;
-    effectiveState?: string;
-    systemId: Id;
-    name: string;
-    organization: string;
-}
-
-export interface BindSystemToOrganization {
-    cloudSystemId: string;
-    organization: string;
-}

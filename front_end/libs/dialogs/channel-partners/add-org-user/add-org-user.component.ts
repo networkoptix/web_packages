@@ -16,7 +16,6 @@ import { ToastType } from '@components/toast-container/toast.types';
 import type { AddOrgUser as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
@@ -49,8 +48,8 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
     // permissions: MultiSelectItem[];
     // selectedPermissions: string[] = [];
 
-    roles: DropdownItem<Id>[] = [];
-    selectedRole: DropdownItem<Id>;
+    roles: DropdownItem<number>[] = [];
+    selectedRole: DropdownItem<number>;
 
     addUserProcess: Process;
 
@@ -63,7 +62,7 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
     ) {
         super(dialogRef);
         cpService.getOrganizationRoles().subscribe(roles => {
-            this.roles = roles.map<DropdownItem<Id>>(role => ({
+            this.roles = roles.map<DropdownItem<number>>(role => ({
                 name: role.name,
                 value: role.id,
             }));

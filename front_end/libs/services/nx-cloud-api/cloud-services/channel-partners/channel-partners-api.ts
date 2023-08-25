@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Observable } from 'rxjs';
+import { Observable, OperatorFunction, map } from 'rxjs';
 
 import { slashJoin } from '@utils/general';
 
@@ -18,7 +18,6 @@ import type {
     CreateChannelPartner,
     CreateOrganization,
     CreateOrganizationUser,
-    Id,
     Organization,
     OrganizationRole,
     OrganizationUser,
@@ -26,8 +25,12 @@ import type {
     UpdateChannelPartnerUser,
     UpdateOrganization,
     UpdateOrganizationUser,
-    OrganizationSystem,
+    CloudSystem,
     BindSystemToOrganization,
+    PaginatedChannelPartnerList,
+    PaginatedOrganizationList,
+    PaginatedCloudSystemList,
+    Page,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -40,12 +43,17 @@ import type {
 //     };
 // }
 
+function getResults<T>(): OperatorFunction<Page<T>, T[]> {
+    return map(page => page.results);
+}
+
 @implementsCloudServiceApi
 export class ChannelPartnersApi extends BaseCloudServiceAPI {
     /**
      * Api base for supported license server version. Future versions of license server can be supported by extending LicenseServerAPI.
      */
-    static readonly API_BASE = '/nxlicensed/api/v2/partners';
+    // static readonly API_BASE = '/nxlicensed/api/v2/partners';
+    static readonly API_BASE = '/api/v2/partners';
 
     static INSTANCES: Record<string, ChannelPartnersApi> = {};
 
@@ -88,29 +96,31 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     /* Channel Partners */
     public getChannelPartners = (): Observable<ChannelPartner[]> => {
-        return this.get('/channel_partners/');
+        return this.get<PaginatedChannelPartnerList>('/channel_partners/').pipe(getResults());
     };
 
     public createChannelPartner = (body: CreateChannelPartner): Observable<ChannelPartner> => {
         return this.post('/channel_partners/', { body });
     };
 
-    getSubChannelPartners = (parentPartnerId: Id): Observable<ChannelPartner[]> => {
-        return this.get(this.cpUrl([parentPartnerId, 'sub_channel_partners']));
+    getSubChannelPartners = (parentPartnerId: string): Observable<ChannelPartner[]> => {
+        return this.get<PaginatedChannelPartnerList>(
+            this.cpUrl([parentPartnerId, 'sub_channel_partners']),
+        ).pipe(getResults());
     };
 
-    getChannelPartner = (partnerId: Id): Observable<ChannelPartner> => {
+    getChannelPartner = (partnerId: string): Observable<ChannelPartner> => {
         return this.get(this.cpUrl([partnerId]));
     };
 
     updateChannelPartner = (
-        partnerId: Id,
+        partnerId: string,
         body: UpdateChannelPartner,
     ): Observable<ChannelPartner> => {
         return this.patch(this.cpUrl([partnerId]), { body });
     };
 
-    removeChannelPartner = (partnerId: Id): Observable<void> => {
+    removeChannelPartner = (partnerId: string): Observable<void> => {
         return this.delete(this.cpUrl([partnerId]));
     };
 
@@ -119,12 +129,12 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get('/channel_partner_roles');
     };
 
-    getChannelPartnerUsers = (partnerId: Id): Observable<ChannelPartnerUser[]> => {
+    getChannelPartnerUsers = (partnerId: string): Observable<ChannelPartnerUser[]> => {
         return this.get(this.cpUrl([partnerId, 'users']));
     };
 
     createChannelPartnerUser = (
-        partnerId: Id,
+        partnerId: string,
         body: CreateChannelPartnerUser,
     ): Observable<ChannelPartnerUser> => {
         return this.post(this.cpUrl([partnerId, 'users']), { body });
@@ -132,42 +142,44 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     // Updates role
     updateChannelPartnerUser = (
-        partnerId: Id,
+        partnerId: string,
         body: UpdateChannelPartnerUser,
     ): Observable<ChannelPartnerUser> => {
         return this.post(this.cpUrl([partnerId, 'users']), { body });
     };
 
-    getChannelPartnerUser = (partnerId: Id, userId: Id): Observable<ChannelPartnerUser> => {
-        return this.get(this.cpUrl([partnerId, 'users', userId]));
+    getChannelPartnerUser = (partnerId: string, email: string): Observable<ChannelPartnerUser> => {
+        return this.get(this.cpUrl([partnerId, 'users', email]));
     };
 
-    deleteChannelPartnerUser = (partnerId: Id, userId: Id): Observable<void> => {
-        return this.delete(this.cpUrl([partnerId, 'users', userId]));
+    deleteChannelPartnerUser = (partnerId: string, email: string): Observable<void> => {
+        return this.delete(this.cpUrl([partnerId, 'users', email]));
     };
 
     /* Organizations */
-    public getPartnerOrganizations = (partnerId: Id): Observable<Organization[]> => {
-        return this.get(this.cpUrl([partnerId, 'organizations']));
+    public getPartnerOrganizations = (partnerId: string): Observable<Organization[]> => {
+        return this.get<PaginatedOrganizationList>(this.cpUrl([partnerId, 'organizations'])).pipe(
+            getResults(),
+        );
     };
 
     getOrganizations = (): Observable<Organization[]> => {
-        return this.get('/organizations/');
+        return this.get<PaginatedOrganizationList>('/organizations/').pipe(getResults());
     };
 
     createOrganization = (body: CreateOrganization): Observable<Organization> => {
         return this.post('/organizations/', { body });
     };
 
-    getOrganization = (orgId: Id): Observable<Organization> => {
+    getOrganization = (orgId: string): Observable<Organization> => {
         return this.get(this.orgUrl([orgId]));
     };
 
-    updateOrganization = (orgId: Id, body: UpdateOrganization): Observable<Organization> => {
+    updateOrganization = (orgId: string, body: UpdateOrganization): Observable<Organization> => {
         return this.patch(this.orgUrl([orgId]), { body });
     };
 
-    removeOrganization = (orgId: Id): Observable<void> => {
+    removeOrganization = (orgId: string): Observable<void> => {
         return this.delete(this.orgUrl([orgId]));
     };
 
@@ -176,43 +188,45 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.get('/organization_roles');
     };
 
-    getOrganizationUsers = (orgId: Id): Observable<OrganizationUser[]> => {
+    getOrganizationUsers = (orgId: string): Observable<OrganizationUser[]> => {
         return this.get(this.orgUrl([orgId, 'users']));
     };
 
     createOrganizationUser = (
-        orgId: Id,
+        orgId: string,
         body: CreateOrganizationUser,
     ): Observable<OrganizationUser> => {
         return this.post(this.orgUrl([orgId, 'users']), { body });
     };
 
     updateOrganizationUser = (
-        orgId: Id,
+        orgId: string,
         body: UpdateOrganizationUser,
     ): Observable<OrganizationUser> => {
         return this.post(this.orgUrl([orgId, 'users']), { body });
     };
 
-    getOrganizationUser = (orgId: Id, userId: Id): Observable<OrganizationUser> => {
-        return this.get(this.orgUrl([orgId, 'users', userId]));
+    getOrganizationUser = (orgId: string, email: string): Observable<OrganizationUser> => {
+        return this.get(this.orgUrl([orgId, 'users', email]));
     };
 
-    deleteOrganizationUser = (orgId: Id, userId: Id): Observable<void> => {
-        return this.delete(this.orgUrl([orgId, 'users', userId]));
-    };
-
-    getOrgSystems = (orgId: string): Observable<OrganizationSystem[]> => {
-        return this.get(this.orgUrl([orgId, 'cloud_systems']));
+    deleteOrganizationUser = (orgId: string, email: string): Observable<void> => {
+        return this.delete(this.orgUrl([orgId, 'users', email]));
     };
 
     /* Systems */
-    getUserSystems = (): Observable<OrganizationSystem[]> => {
-        return this.get('/cloud_systems/');
+    getUserSystems = (): Observable<CloudSystem[]> => {
+        return this.get<PaginatedCloudSystemList>('/cloud_systems/').pipe(getResults());
     };
 
-    bindSystemToOrg = (body: BindSystemToOrganization): Observable<OrganizationSystem> => {
+    bindSystemToOrg = (body: BindSystemToOrganization): Observable<CloudSystem> => {
         return this.post('/cloud_systems/', { body });
+    };
+
+    getOrgSystems = (orgId: string): Observable<CloudSystem[]> => {
+        return this.get<PaginatedCloudSystemList>(this.orgUrl([orgId, 'cloud_systems'])).pipe(
+            getResults(),
+        );
     };
 
     /* Internal */

@@ -4,8 +4,8 @@ import { Size } from '@directives/resize/nx-resize.directive.types';
 import staticLang from '@language/language_i18n_static.json';
 import { icons } from '@lib/variables/static-variables';
 import { NxMenuService } from '@menu/menu.service';
+import { ChannelPartnerUserExt } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
-import { ChannelPartnerUserExt } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Component({
     selector: 'sandbox-table',
@@ -58,6 +58,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc2@networkoptix.com',
@@ -65,6 +67,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc3@networkoptix.com',
@@ -72,6 +76,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc4@networkoptix.com',
@@ -79,6 +85,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc5@networkoptix.com',
@@ -86,6 +94,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc6@networkoptix.com',
@@ -93,6 +103,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc7@networkoptix.com',
@@ -100,6 +112,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc8@networkoptix.com',
@@ -107,6 +121,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc9@networkoptix.com',
@@ -114,6 +130,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc10@networkoptix.com',
@@ -121,6 +139,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc11@networkoptix.com',
@@ -128,6 +148,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc12@networkoptix.com',
@@ -135,6 +157,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
             {
                 userId: 'abc13@networkoptix.com',
@@ -142,6 +166,8 @@ export class SandboxTableComponent {
                 fullName: 'N/A',
                 accessLevel: ['N/A'],
                 roles: ['Administrator', 'Manager'],
+                title: '',
+                created: '2023-08-24T19:14:46.748Z',
             },
         ];
     }

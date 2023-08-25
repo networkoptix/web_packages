@@ -23,7 +23,7 @@
         <nx-users-table
             [headers]="headers"
             [records]="records$ | async"
-            [selectedRecordId]="selectedUserId"
+            [selectedRecordId]="selectedUserEmail"
             (onRowClick)="selectUser($event)"
         ></nx-users-table>
     </div>

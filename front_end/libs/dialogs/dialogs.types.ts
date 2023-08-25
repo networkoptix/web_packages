@@ -11,7 +11,6 @@ import type { Translatable } from '@pipes/nx-translate.types';
 import type {
     ChannelPartner,
     ChannelPartnerUser,
-    Id as CpId,
     Organization,
     OrganizationUser,
     State,
@@ -132,17 +131,17 @@ export type Account2faReturn = string;
 /* Systems */
 
 /* Channel partners */
-export type AddChannelPartner = DialogType<CpId, ChannelPartner>;
+export type AddChannelPartner = DialogType<string, ChannelPartner>;
 export type EditChannelPartner = DialogType<ChannelPartner, ChannelPartner>;
-export type AddPartnerUser = DialogType<CpId, ChannelPartnerUser>;
+export type AddPartnerUser = DialogType<string, ChannelPartnerUser>;
 export type EditPartnerUser = DialogType<
-    { channelPartner: CpId; user: ChannelPartnerUser },
+    { channelPartner: string; user: ChannelPartnerUser },
     ChannelPartnerUser
 >;
-export type AddOrganization = DialogType<CpId, Organization>;
+export type AddOrganization = DialogType<string, Organization>;
 export type EditOrganization = DialogType<Organization, Organization>;
-export type AddOrgUser = DialogType<CpId, OrganizationUser>;
-export type EditOrgUser = DialogType<{ orgId: CpId; user: OrganizationUser }, OrganizationUser>;
+export type AddOrgUser = DialogType<string, OrganizationUser>;
+export type EditOrgUser = DialogType<{ orgId: string; user: OrganizationUser }, OrganizationUser>;
 export type ChangeCpState = DialogType<
     { currentState: State; update: (newState: State) => Observable<unknown> },
     State

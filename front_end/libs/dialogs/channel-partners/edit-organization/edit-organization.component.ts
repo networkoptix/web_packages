@@ -16,7 +16,6 @@ import type { EditOrganization as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import type { Id } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
@@ -40,8 +39,8 @@ import { NxToastService } from '@services/toast.service';
 export class NxEditOrganizationModalContent extends ModalBase<DT['return']> implements OnInit {
     states: DropdownItem<State>[];
     state: DropdownItem<State>;
-    channelPartners: DropdownItem<Id>[] = [];
-    selectedPartner: DropdownItem<Id>;
+    channelPartners: DropdownItem<string>[] = [];
+    selectedPartner: DropdownItem<string>;
     channelPartnerCanAdminister: boolean;
     name: string;
 
@@ -62,7 +61,7 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
         }));
         this.state = this.states.find(s => s.value === state);
         cpService.getChannelPartners().subscribe(partners => {
-            this.channelPartners = partners.map<DropdownItem<Id>>(p => ({
+            this.channelPartners = partners.map<DropdownItem<string>>(p => ({
                 name: p.name,
                 value: p.id,
                 help: LANG.systemGroups.status[p.state],

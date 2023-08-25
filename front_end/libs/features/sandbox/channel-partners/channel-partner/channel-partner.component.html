@@ -52,20 +52,18 @@
         >
             New Sub Partner
         </button>
-        <div *ngFor="let partner of subPartners$ | ngrxPush">
+        <div *ngFor="let sub of subPartners$ | ngrxPush">
             <h4>
-                <a [routerLink]="'../' + partner.id">{{ partner.name }}</a>
+                <a [routerLink]="'../' + sub.id">{{ sub.name }}</a>
             </h4>
             <button
                 class="btn-danger"
-                (click)="deleteChannelPartner(partner.id)"
+                (click)="deleteChannelPartner(sub.id)"
             >
                 Delete
             </button>
             <ul>
-                <li *ngFor="let prop of partner | keyvalue">
-                    {{ prop.key }}: {{ prop.value | json }}
-                </li>
+                <li *ngFor="let prop of sub | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
             </ul>
         </div>
 
@@ -112,7 +110,7 @@
                 </button>
                 <button
                     class="btn-danger"
-                    (click)="deletePartnerUser(partner.id, user.userId)"
+                    (click)="deletePartnerUser(partner.id, user.email)"
                 >
                     Delete
                 </button>

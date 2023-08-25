@@ -32,7 +32,7 @@
                 required
             />
         </div>
-        <div class="form-group">
+        <!-- <div class="form-group">
             <label
                 for="parentPartner"
                 translate
@@ -46,6 +46,16 @@
                 [selected]="selectedParent"
                 [(ngModel)]="selectedParent"
             ></nx-select>
+        </div> -->
+        <div>
+            <label>
+                <nx-checkbox
+                    name="canCreateSubChannels"
+                    componentId="canCreateSubChannels"
+                    [(ngModel)]="canCreateSubChannels"
+                ></nx-checkbox>
+                <span translate>Can create subchannels</span>
+            </label>
         </div>
         <div class="form-group">
             <label

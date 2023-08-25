@@ -9,7 +9,6 @@ import { NxChannelPartnersService } from '@pages/home/services/channel-partners.
 import {
     ChannelPartner,
     ChannelPartnerUser,
-    Id,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxToastService } from '@services/toast.service';
 
@@ -19,7 +18,7 @@ import { NxToastService } from '@services/toast.service';
     styleUrls: ['channel-partner.component.scss'],
 })
 export class NxChannelPartnerComponent implements OnInit {
-    private id$ = this.route.params.pipe(map<Params, Id>(p => p.id));
+    private id$ = this.route.params.pipe(map<Params, string>(p => p.id));
     private refresh$ = new Subject<void>();
     private update$ = merge(this.id$, this.refresh$.pipe(mergeMap(() => this.id$)));
 
@@ -56,11 +55,11 @@ export class NxChannelPartnerComponent implements OnInit {
         this.router.navigate(['sandbox', 'channel-partners']);
     }
 
-    up(parent: Id): void {
+    up(parent: string): void {
         this.router.navigate(['../', parent], { relativeTo: this.route });
     }
 
-    newChannelPartner(parentChannelPartner: Id): void {
+    newChannelPartner(parentChannelPartner: string): void {
         this.dialogs.createChannelPartner(parentChannelPartner).then(res => {
             if (res) {
                 this.refresh$.next();
@@ -95,7 +94,7 @@ export class NxChannelPartnerComponent implements OnInit {
             });
     }
 
-    deleteChannelPartner(channelPartner: Id): void {
+    deleteChannelPartner(channelPartner: string): void {
         this.cpService.removeChannelPartner(channelPartner).subscribe({
             next: () => {
                 this.refresh$.next();
@@ -108,7 +107,7 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
-    newPartnerUser(channelPartner: Id): void {
+    newPartnerUser(channelPartner: string): void {
         this.dialogs.addPartnerUser(channelPartner).then(res => {
             if (res) {
                 this.refresh$.next();
@@ -117,7 +116,7 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
-    updatePartnerUser(channelPartner: Id, user: ChannelPartnerUser): void {
+    updatePartnerUser(channelPartner: string, user: ChannelPartnerUser): void {
         this.dialogs.updatePartnerUser({ channelPartner, user }).then(res => {
             if (res) {
                 this.refresh$.next();
@@ -126,8 +125,8 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
-    deletePartnerUser(channelPartner: Id, userId: Id): void {
-        this.cpService.deleteChannelPartnerUser(channelPartner, userId).subscribe({
+    deletePartnerUser(channelPartner: string, userEmail: string): void {
+        this.cpService.deleteChannelPartnerUser(channelPartner, userEmail).subscribe({
             next: () => {
                 this.refresh$.next();
                 this.toastService.notify(`Deleted partner user`);
@@ -139,7 +138,7 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
-    newOrganization(channelPartner: Id): void {
+    newOrganization(channelPartner: string): void {
         this.dialogs.createOrganization(channelPartner).then(res => {
             if (res) {
                 this.refresh$.next();
@@ -148,7 +147,7 @@ export class NxChannelPartnerComponent implements OnInit {
         });
     }
 
-    deleteOrganization(orgId: Id): void {
+    deleteOrganization(orgId: string): void {
         this.cpService.removeOrganization(orgId).subscribe({
             next: () => {
                 this.refresh$.next();

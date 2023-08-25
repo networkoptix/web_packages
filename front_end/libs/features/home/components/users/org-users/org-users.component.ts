@@ -8,14 +8,10 @@ import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 
-interface ChannelPartnerUserExt extends ChannelPartnerUser {
-    fullName: string;
-    accessLevel: string[];
-}
+import type { OrgUserExt } from './org-users.types';
 
 @Component({
     selector: 'nx-org-users',
@@ -32,7 +28,7 @@ export class NxOrganizationUsersComponent implements OnInit {
 
     currentOrgId$: Observable<string>;
     headers: HEADER_ITEM[];
-    records$: Observable<ChannelPartnerUserExt[]>;
+    records$: Observable<OrgUserExt[]>;
 
     constructor(
         private route: ActivatedRoute,
@@ -48,11 +44,12 @@ export class NxOrganizationUsersComponent implements OnInit {
         this.records$ = this.currentOrgId$.pipe(
             switchMap(id => this.CPService.getOrganizationUsers(id)),
             map(users =>
-                users.map((user: ChannelPartnerUserExt): ChannelPartnerUserExt => {
-                    user.fullName = 'N/A';
-                    user.accessLevel = ['N/A'];
-                    return user;
-                }),
+                users.map(user => ({
+                    ...user,
+                    userId: user.email,
+                    fullName: 'N/A',
+                    accessLevel: ['N/A'],
+                })),
             ),
         );
         this.headers = [

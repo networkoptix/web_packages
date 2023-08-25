@@ -10,9 +10,10 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ResizeModule } from '@directives/resize/resize.module';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { ChannelPartnerUserExt } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
+
+import type { ChannelPartnerUserExt } from './channel-partner-users.types';
 
 @Component({
     selector: 'nx-channel-partner-users',
@@ -38,7 +39,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     currentPartnerId$: Observable<string>;
     headers: HEADER_ITEM[];
     records$: Observable<ChannelPartnerUserExt[]>;
-    selectedUserId: string;
+    selectedUserEmail: string;
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -55,12 +56,12 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 return this.CPService.getChannelPartnerUsers(id);
             }),
             map(users =>
-                users.map((user: ChannelPartnerUserExt): ChannelPartnerUserExt => {
-                    user.userId = user.email;
-                    user.fullName = 'N/A';
-                    user.accessLevel = ['N/A'];
-                    return user;
-                }),
+                users.map(user => ({
+                    ...user,
+                    userId: user.email,
+                    fullName: 'N/A',
+                    accessLevel: ['N/A'],
+                })),
             ),
         );
     }
@@ -87,6 +88,6 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     }
 
     selectUser(rec: ChannelPartnerUserExt): void {
-        this.selectedUserId = rec.userId;
+        this.selectedUserEmail = rec.email;
     }
 }

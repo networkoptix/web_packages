@@ -7,7 +7,6 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
-    Id,
     Organization,
     OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -19,7 +18,7 @@ import { NxToastService } from '@services/toast.service';
     styleUrls: ['organization.component.scss'],
 })
 export class NxOrganizationComponent implements OnInit {
-    private id$ = this.route.params.pipe(map<Params, Id>(p => p.id));
+    private id$ = this.route.params.pipe(map<Params, string>(p => p.id));
     private refresh$ = new Subject<void>();
     private update$ = merge(this.id$, this.refresh$.pipe(mergeMap(() => this.id$)));
 
@@ -55,7 +54,7 @@ export class NxOrganizationComponent implements OnInit {
         this.router.navigate(['sandbox', 'channel-partners']);
     }
 
-    up(parent: Id): void {
+    up(parent: string): void {
         this.router.navigate(['../../', parent], { relativeTo: this.route });
     }
 
@@ -85,7 +84,7 @@ export class NxOrganizationComponent implements OnInit {
             });
     }
 
-    newOrgUser(orgId: Id): void {
+    newOrgUser(orgId: string): void {
         this.dialogs.addOrgUser(orgId).then(res => {
             if (res) {
                 this.refresh$.next();
@@ -94,7 +93,7 @@ export class NxOrganizationComponent implements OnInit {
         });
     }
 
-    updateOrgUser(orgId: Id, user: OrganizationUser): void {
+    updateOrgUser(orgId: string, user: OrganizationUser): void {
         this.dialogs.editOrgUser({ orgId, user }).then(res => {
             if (res) {
                 this.refresh$.next();
@@ -103,8 +102,8 @@ export class NxOrganizationComponent implements OnInit {
         });
     }
 
-    deleteOrgUser(orgId: Id, userId: Id): void {
-        this.cpService.deleteOrganizationUser(orgId, userId).subscribe({
+    deleteOrgUser(orgId: string, userEmail: string): void {
+        this.cpService.deleteOrganizationUser(orgId, userEmail).subscribe({
             next: () => {
                 this.refresh$.next();
                 this.toastService.notify(`Deleted org user`);
