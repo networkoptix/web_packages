@@ -644,11 +644,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         // ID properties with enclosing brackets {} that we want to trim
         // while ignoring JSON strings
         const mediaServers =
-            apiReply.reply['/ec2/getMediaServers']?.map(ms => {
+            apiReply.reply['/ec2/getMediaServersEx']?.map(ms => {
                 msIds.forEach(id => {
                     ms[id] = cleanId(ms[id]);
                 });
-                return ms;
+                return { ...ms, endpoints: ms.networkAddresses.split(';') };
             }) || [];
         const cameras =
             apiReply.reply['/ec2/getCamerasEx']?.map(cam => {
