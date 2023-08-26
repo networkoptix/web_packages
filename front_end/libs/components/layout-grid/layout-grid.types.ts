@@ -1,6 +1,11 @@
 import { Observable, ObservedValueOf } from 'rxjs';
 
-import type { Layout, LayoutItem } from '@services/system-api.types';
+import type { Layout, LayoutItem, WebPage } from '@services/system-api.types';
+import {
+    NxSystemCamera,
+    RecordingStatus,
+} from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystemServer } from '@services/system.service/system-server-types';
 
 export interface Setting {
     label: string;
@@ -98,16 +103,77 @@ export enum ResourceType {
 export interface BaseResourceNode {
     name: string;
     type: ResourceType;
-    children?: BaseResourceNode[];
 }
 
-export interface ResourceNode<T = { id: string }> {
+export interface ResourceParentNode<T = { id: string }> {
     name: string;
-    aspectRatio?: number;
     type: ResourceType;
-    children?: ResourceNode[];
+    children: ResourceLeafNode<T>[];
     details: T;
 }
+
+export interface ResourceLeafNode<T = { id: string }> {
+    name: string;
+    aspectRatio: number;
+    type: ResourceType;
+    details: T;
+}
+
+export interface SharableResourceLeafNode<T = { id: string }>
+    extends Omit<ResourceLeafNode<T>, 'aspectRatio'> {
+    shared: boolean;
+}
+
+export interface MergedResourceNode<T = { id: string }>
+    extends ResourceLeafNode<T>,
+        ResourceParentNode<T> {}
+
+export type ResourceNode<T = { id: string }> = Partial<MergedResourceNode<T>> & BaseResourceNode;
+
+export interface CameraWithRecordingStatus extends NxSystemCamera {
+    recordingStatus: RecordingStatus;
+}
+
+export interface ResourceParentNodeMap {
+    [ResourceType.LAYOUTS]: ResourceParentNode<Layout>;
+    [ResourceType.CAMERAS]: ResourceParentNode<CameraWithRecordingStatus>;
+    [ResourceType.SERVERS]: ResourceParentNode<NxSystemServer>;
+    [ResourceType.WEB_PAGES]: ResourceParentNode<WebPage>;
+}
+
+export interface ResourceLeafNodeMap {
+    [ResourceType.LAYOUT]: SharableResourceLeafNode<Layout>;
+    [ResourceType.CAMERA]: ResourceLeafNode<CameraWithRecordingStatus>;
+    [ResourceType.SERVER]: ResourceLeafNode<NxSystemServer>;
+    [ResourceType.WEB_PAGE]: ResourceLeafNode<WebPage>;
+    [ResourceType.IO_DEVICE]: ResourceLeafNode<CameraWithRecordingStatus>;
+}
+
+export interface ResourceNodeMap extends ResourceParentNodeMap, ResourceLeafNodeMap {}
+
+export type isResourceType<T extends ResourceType> = (
+    node: BaseResourceNode,
+) => node is ResourceNodeMap[T];
+
+export type ResourceTypeAssertMap = {
+    [key in keyof ResourceNodeMap]: isResourceType<key>;
+};
+
+// export type isParentNodeResourceType<T extends keyof ResourceParentNodeMap> = (
+//     node: BaseResourceNode,
+// ) => node is ResourceParentNodeMap[T];
+
+// export type ResourceParentNodeAssertMap = {
+//     [key in keyof ResourceParentNodeMap]: isParentNodeResourceType<key>;
+// };
+
+// export type isLeafNodeResourceType<T extends keyof ResourceLeafNodeMap> = (
+//     node: BaseResourceNode,
+// ) => node is ResourceLeafNodeMap[T];
+
+// export type ResourceLeafNodeAssertMap = {
+//     [key in keyof ResourceLeafNodeMap]: isLeafNodeResourceType<key>;
+// };
 
 export interface LayoutResourceTree {
     tree: BaseResourceNode[];

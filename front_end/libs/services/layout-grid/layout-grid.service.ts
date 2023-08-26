@@ -4,11 +4,6 @@ import { ActivatedRoute } from '@angular/router';
 import { Subject } from 'rxjs';
 
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
-import {
-    AddResourceType,
-    EditResourceType,
-    RemoveResourceType,
-} from '@services/layout-grid/layout-grid.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { LayoutItem } from '@services/system-api.types';
@@ -25,10 +20,6 @@ export class NxLayoutGridService {
     private layoutSettings: CustomAccountProperty<LayoutSettings>;
 
     // TODO change to signals later on, move to "LayoutLayouts" Service - start
-    addResource = new Subject<AddResourceType>();
-    editResource = new Subject<EditResourceType>();
-    removeResource = new Subject<RemoveResourceType>();
-
     addItem = new Subject<ResourceNode>();
     moveAddedItem = new Subject<{ event: CdkDragMove; itemParent?: HTMLElement }>();
     changeView = new Subject<ResourceNode | LayoutItem>();

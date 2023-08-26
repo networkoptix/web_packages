@@ -1,5 +1,4 @@
-import { BaseCloudServiceAPI } from '../base-cloud-service-api';
-
+import { DocDbAPI } from './doc-db-api';
 import { DocId } from './doc-db-api.types';
 import { DocHandler } from './doc-handler';
 
@@ -8,9 +7,19 @@ import { DocHandler } from './doc-handler';
  *
  * The class constructor accepts the DocDbAPI as the first argument and the prefix
  * tied to the directory as the second argument.
+ *
+ * Optionally also accepts a nameSpaceForUser boolean as the third argument that defaults to true.
+ *
+ * The nameSpaceForUser argument should be set to false when working with directories that are not user
+ * specific and are potentially shared between users; an example being cross system layouts. For user
+ * specific data such as unsavedLayouts then the prefix is updated with a sha256 hash of the user's email.
+ *
+ * See https://networkoptix.atlassian.net/wiki/spaces/PM/pages/2694250499/JSON+document+storage#HTTP-API
+ * for documentation regarding the need for unique doc paths and why we want to prevent collisions
+ * between users.
  */
 export class DocDirectory<DocType extends DocId> {
-    constructor(private api: BaseCloudServiceAPI, private prefix: string) {}
+    constructor(private api: DocDbAPI, private prefix: string, private nameSpaceForUser = true) {}
 
     /**
      * Creates a DocDirectory for a child directory within the current directory.
@@ -19,7 +28,7 @@ export class DocDirectory<DocType extends DocId> {
      * @returns DocDirectory<DocType>
      */
     getChildDocDirectory(childPrefix: string): DocDirectory<DocType> {
-        return new DocDirectory(this.api, `${this.prefix}/${childPrefix}`);
+        return new DocDirectory(this.api, `${this.prefix}/${childPrefix}`, this.nameSpaceForUser);
     }
 
     /**
@@ -52,6 +61,6 @@ export class DocDirectory<DocType extends DocId> {
             return directory.getDocHandler(postFixContents);
         }
 
-        return new DocHandler(this.api, this.prefix, postFixContents);
+        return new DocHandler(this.api, this.prefix, postFixContents, this.nameSpaceForUser);
     }
 }

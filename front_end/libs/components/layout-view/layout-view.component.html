@@ -11,10 +11,6 @@
     <nx-layout-grid
         (layoutChanged)="updateLayout($event)"
         (showPtz)="ptzControlTarget = $event"
-        (addResource)="handleAddingResource($event)"
-        (editResource)="handleEditingResource($event)"
-        (removeResource)="handleRemovingResource($event)"
-        (updateLayoutItems)="updateLayoutItems()"
         [layout]="selectedLayout$ | async"
         [layoutItemLookup]="layoutItemLookup$ | async"
         [system]="selectedSystem$ | async"

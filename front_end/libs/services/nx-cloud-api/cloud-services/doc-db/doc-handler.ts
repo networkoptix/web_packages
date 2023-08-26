@@ -1,7 +1,10 @@
-import { Observable, catchError, map } from 'rxjs';
+import { inject } from '@angular/core';
+import { Observable, catchError, from, map, switchMap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+import { NxCloudApiService } from '@services/nx-cloud-api/nx-cloud-api';
 import { cleanId } from '@utils/general';
+import { sha256 } from '@utils/sha256';
 
 import { BaseCloudServiceAPI } from '../base-cloud-service-api';
 
@@ -14,10 +17,33 @@ import { DocId } from './doc-db-api.types';
  * tied to directory as the second argument.
  */
 export class DocHandler<DocType extends DocId> {
+    static runInInjectionContext: <T>(callback: () => T) => T;
+
     prefix: string;
 
-    constructor(private api: BaseCloudServiceAPI, prefix: string, postFixContents = true) {
+    constructor(
+        private api: BaseCloudServiceAPI,
+        prefix: string,
+        postFixContents = true,
+        private nameSpaceForUser = true,
+    ) {
         this.prefix = postFixContents ? `${prefix}/contents` : prefix;
+    }
+
+    private async getNameSpacedPrefix(): Promise<string> {
+        if (this.nameSpaceForUser) {
+            const cloudApi = DocHandler.runInInjectionContext(() => inject(NxCloudApiService));
+            const shaEmail = await sha256(cloudApi.currentAccount.email);
+            return `${shaEmail}/${this.prefix}`;
+        }
+
+        return this.prefix;
+    }
+
+    private withPrefix<Handler extends (prefix: string) => Observable<U>, U>(
+        handler: Handler,
+    ): Observable<U> {
+        return from(this.getNameSpacedPrefix()).pipe(switchMap(prefix => handler(prefix)));
     }
 
     /**
@@ -26,16 +52,16 @@ export class DocHandler<DocType extends DocId> {
      * @returns Observable<DocType[]>
      */
     list(): Observable<DocType[]> {
-        return this.api
-            .get<{ key: string; contents: DocType }[]>(`${this.prefix}?matchPrefix`)
-            .pipe(
+        return this.withPrefix(prefix =>
+            this.api.get<{ key: string; contents: DocType }[]>(`${prefix}?matchPrefix`).pipe(
                 map(res =>
                     res.map(({ key: docId, contents }) => ({
                         docId,
                         ...contents,
                     })),
                 ),
-            );
+            ),
+        );
     }
 
     /**
@@ -45,9 +71,9 @@ export class DocHandler<DocType extends DocId> {
      * @returns Observable<DocType>
      */
     retrieve(docId: string): Observable<DocType> {
-        return this.api
-            .get<DocType>(`${this.prefix}/${docId}`)
-            .pipe(map(doc => ({ docId, ...doc })));
+        return this.withPrefix(prefix =>
+            this.api.get<DocType>(`${prefix}/${docId}`).pipe(map(doc => ({ docId, ...doc }))),
+        );
     }
 
     /**
@@ -66,8 +92,10 @@ export class DocHandler<DocType extends DocId> {
      */
     save(docId: string, doc: DocType): Observable<DocType>;
     save(docIdOrDoc: string | DocType, doc?: DocType): Observable<DocType> {
-        const { body } = this.normalizeFromOverloads(docIdOrDoc, doc);
-        return this.update(body).pipe(catchError(() => this.create(body)));
+        return this.withPrefix(prefix => {
+            const { body } = this.normalizeFromOverloads(docIdOrDoc, doc, prefix);
+            return this.update(body).pipe(catchError(() => this.create(body)));
+        });
     }
 
     /**
@@ -86,7 +114,9 @@ export class DocHandler<DocType extends DocId> {
      */
     create(docId: string, doc: DocId): Observable<DocType>;
     create(docIdOrDoc: string | DocId, doc?: DocType): Observable<DocType> {
-        return this.api.post<DocType>(...this.generateSavePayload(docIdOrDoc, doc));
+        return this.withPrefix(prefix =>
+            this.api.post<DocType>(...this.generateSavePayload(docIdOrDoc, doc, prefix)),
+        );
     }
 
     /**
@@ -105,7 +135,9 @@ export class DocHandler<DocType extends DocId> {
      */
     update(docId: string, doc: DocId): Observable<DocType>;
     update(docIdOrDoc: string | DocId, doc?: DocType): Observable<DocType> {
-        return this.api.put<DocType>(...this.generateSavePayload(docIdOrDoc, doc));
+        return this.withPrefix(prefix =>
+            this.api.put<DocType>(...this.generateSavePayload(docIdOrDoc, doc, prefix)),
+        );
     }
 
     /**
@@ -117,7 +149,9 @@ export class DocHandler<DocType extends DocId> {
     delete(docId: DocType): Observable<unknown>;
     delete(docIdOrDoc: string | DocType): Observable<unknown> {
         const docId = typeof docIdOrDoc === 'string' ? docIdOrDoc : docIdOrDoc.id;
-        return this.api.delete<Record<string, never>>(`${this.prefix}/${cleanId(docId)}`);
+        return this.api.delete<Record<string, never>>(
+            `${this.getNameSpacedPrefix()}/${cleanId(docId)}`,
+        );
     }
 
     /**
@@ -130,8 +164,9 @@ export class DocHandler<DocType extends DocId> {
     private generateSavePayload(
         docIdOrDoc: string | (DocId & Partial<Pick<DocType, 'id'>>),
         doc?: DocType,
+        prefix?: string,
     ): [string, { body: DocType }] {
-        const { docId, body } = this.normalizeFromOverloads(docIdOrDoc, doc);
+        const { docId, body } = this.normalizeFromOverloads(docIdOrDoc, doc, prefix);
         return [docId, { body }];
     }
 
@@ -141,10 +176,11 @@ export class DocHandler<DocType extends DocId> {
     private normalizeFromOverloads(
         docIdOrDoc: string | (DocId & Partial<Pick<DocType, 'id'>>),
         doc: DocType,
+        prefix: string,
     ): { docId: string; body: DocType } {
         const isDocId = typeof docIdOrDoc === 'string';
         const id = isDocId ? docIdOrDoc : docIdOrDoc.id || uuid();
-        const docId = `${this.prefix}/${cleanId(id)}`;
+        const docId = `${prefix}/${cleanId(id)}`;
         const body = { ...(isDocId ? doc : docIdOrDoc), id, docId } as DocType;
         return { docId, body };
     }

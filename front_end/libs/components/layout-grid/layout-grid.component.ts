@@ -1,5 +1,5 @@
 import { ArrayDataSource } from '@angular/cdk/collections';
-import { CdkDrag, CdkDragEnter, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -31,7 +31,6 @@ import {
     of,
     Subject,
     throwError,
-    timer,
 } from 'rxjs';
 import {
     catchError,
@@ -46,7 +45,6 @@ import {
     startWith,
     switchMap,
     take,
-    takeUntil,
     tap,
     timeout,
 } from 'rxjs/operators';
@@ -61,7 +59,6 @@ import { VideoPlayerModule } from '@components/video-player/video-player.module'
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
 import { ResizeModule } from '@directives/resize/resize.module';
-import { environment } from '@environments/environment';
 import { icons } from '@lib/variables/static-variables';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
@@ -86,11 +83,11 @@ import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
+import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
     BaseResourceNode,
     LayoutRenderConfig,
     LayoutResourceTree,
-    NewPosition,
     ParsedLayout,
     ParsedLayoutItem,
     ParsedLayoutItems,
@@ -100,7 +97,6 @@ import {
     Position,
     ResourceNode,
     ResourceType,
-    ServerStatsObservable,
     Setting,
     Size,
 } from './layout-grid.types';
@@ -205,16 +201,6 @@ export class NxLayoutGridComponent {
 
     @Output() layoutChanged = new EventEmitter<string>();
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
-    @Output() addResource = new EventEmitter<ResourceType>();
-    @Output() removeResource = new EventEmitter<{
-        resourceType: ResourceType;
-        details: Record<string, unknown>;
-    }>();
-    @Output() editResource = new EventEmitter<{
-        resourceType: ResourceType;
-        details: Record<string, unknown>;
-    }>();
-    @Output() updateLayoutItems = new EventEmitter<null>();
 
     editCameras: Signal<boolean> = computed(
         () => this.system.permissionManager.permissions().editCameras,
@@ -249,7 +235,9 @@ export class NxLayoutGridComponent {
 
     SAVE_DELAY = 0;
 
-    treeControl = new NestedTreeControl<ResourceNode>(node => node.children);
+    treeControl = new NestedTreeControl<ResourceNode>(node =>
+        assertResourceParentNode(node) ? node.children : [],
+    );
     dataSource: ArrayDataSource<BaseResourceNode>;
 
     previousOpenMenu: 'left' | 'right' | 'both' = null;
@@ -525,7 +513,7 @@ export class NxLayoutGridComponent {
         @Inject(WINDOW) public window: Window,
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
-        private layoutStateService: LayoutStateService,
+        public layoutStateService: LayoutStateService,
     ) {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
@@ -562,19 +550,6 @@ export class NxLayoutGridComponent {
         ) {
             this.dataSource = new ArrayDataSource(layoutItemLookup.currentValue.tree);
         }
-
-        const layoutId = this.layout?.id;
-        const layoutItems = this.layoutItemLookup?.tree;
-
-        // if (layout?.firstChange) {
-        //     this.treeControl.collapseAll();
-        // }
-
-        if (layoutId && layoutItems) {
-            const openNodes = this.getOpenNodes();
-
-            this.expandNodes(layoutItems, [layoutId, ...openNodes]);
-        }
     }
 
     /**
@@ -590,12 +565,10 @@ export class NxLayoutGridComponent {
      * spam the mediaservers with requests to open a websocket connection.
      */
     pingOfflineCameras(pollingInterval = this.CONFIG.offlineCameraPollingInterval): void {
-        const isCamera = (node: ResourceNode<unknown>): node is ResourceNode<NxSystemCamera> =>
-            node.type === ResourceType.CAMERA;
         const getOfflineCameras = (): Record<string, NxSystemCamera[]> => {
             const offlineCameras = this.layout.items
                 .map(({ resourceId }) => this.layoutItemLookup[resourceId])
-                .filter(isCamera)
+                .filter(assertResourceOfType.camera)
                 .map(({ details }) => details)
                 .filter(({ status }) => status === CameraStatus.Offline);
             return groupBy(offlineCameras, 'parentId');
@@ -638,7 +611,7 @@ export class NxLayoutGridComponent {
             cameraIds.forEach(cameraId => {
                 const camera = this.layoutItemLookup[cameraId];
 
-                if (isCamera(camera)) {
+                if (assertResourceOfType.camera(camera)) {
                     camera.details.status = CameraStatus.Online;
                     delete this.errors[cameraId];
                     delete this.errorIcons[cameraId];
@@ -701,23 +674,6 @@ export class NxLayoutGridComponent {
             Object.keys(this.layoutItemLookup).map(cleanId).includes(nodeId),
         );
     };
-
-    expandNodes = (
-        nodes: BaseResourceNode[],
-        nodeIds: string[],
-        parents: ResourceNode[] = [],
-    ): void =>
-        (nodes as ResourceNode[]).forEach(node => {
-            const nodeId = cleanId(node.details?.id);
-            nodeIds = nodeIds.map(cleanId);
-            if (nodeId && nodeIds.includes(nodeId)) {
-                [...parents, node].forEach(node => this.treeControl.expand(node));
-            }
-
-            if (node.children) {
-                this.expandNodes(node.children, nodeIds, [...parents, node]);
-            }
-        });
 
     cleanId = cleanId;
 
@@ -925,12 +881,10 @@ export class NxLayoutGridComponent {
         { renderConfig, top, bottom, right, left, rotation }: ParsedLayoutItem,
         item: ResourceNode,
     ): void => {
-        const isCamera = (item: ResourceNode<unknown>): item is ResourceNode<NxSystemCamera> =>
-            item?.type === ResourceType.CAMERA;
         const width = cellWidth * (right - left);
         const height = cellHeight * (bottom - top);
         renderConfig.showTooltip = width < 360;
-        if (isCamera(item)) {
+        if (assertResourceOfType.camera(item)) {
             if (!item.aspectRatio) {
                 item.aspectRatio = renderConfig.aspect;
             }
@@ -991,10 +945,6 @@ export class NxLayoutGridComponent {
         settings: this.SETTINGS_CONFIG,
     });
 
-    entered(event: CdkDragEnter): void {
-        // console.log(event);
-    }
-
     updateBackground = (
         { distance }: { distance: Point },
         { id }: ParsedLayoutItem,
@@ -1018,49 +968,6 @@ export class NxLayoutGridComponent {
     updateLayout = (): void => {
         this.#draggingPosition$.next(this.INITIAL_DRAG_STATE);
         this.cd.markForCheck();
-    };
-
-    addNewResource = (resourceType: ResourceType): void => {
-        this.addResource.emit(resourceType);
-    };
-
-    removeExistingResource = (
-        resourceType: ResourceType,
-        details: Record<string, unknown>,
-    ): void => {
-        this.removeResource.emit({ resourceType, details });
-    };
-
-    editExistingResource = (resourceType: ResourceType, details: Record<string, unknown>): void => {
-        this.editResource.emit({ resourceType, details });
-    };
-
-    // TODO remove
-    hasActions: Partial<
-        Record<ResourceType, { action: string; icon: string; handler: unknown; tooltip?: string }[]>
-    > = {
-        [ResourceType.LAYOUTS]: [
-            {
-                action: 'create',
-                icon: 'plus',
-                tooltip: this.LANG.layouts.createNew,
-                handler: this.addNewResource,
-            },
-        ],
-        [ResourceType.LAYOUT]: [
-            {
-                action: 'edit',
-                icon: 'edit',
-                tooltip: this.LANG.layouts.edit,
-                handler: this.editExistingResource,
-            },
-            {
-                action: 'delete',
-                icon: 'delete',
-                tooltip: this.LANG.layouts.delete,
-                handler: this.removeExistingResource,
-            },
-        ],
     };
 
     moveItem = ({ id }: LayoutItem): void => {
@@ -1093,56 +1000,6 @@ export class NxLayoutGridComponent {
                 this.updateLayout();
             });
     };
-
-    // saveLayout = async (nextLayoutId?: string): Promise<void> => {
-    //     const mediaserver = this.system.mediaserver as NxSystemRestAPI;
-    //     const { systemId: _, ..._layout } = this.unsaved || this.layout;
-    //     this.unsaved = false;
-    //     if (!_layout.id) {
-    //         const layoutToSave = omit(_layout, ['name', 'id']);
-    //         await this.dialogsService.edit(
-    //             {
-    //                 heading: staticLang.layouts.actions.unsaved.label,
-    //                 contextManifest: {
-    //                     ...pick(staticLang.layouts.actions.unsaved, ['label']),
-    //                     fields: [
-    //                         {
-    //                             ...staticLang.layouts.actions.unsaved.fields.info,
-    //                             type: null,
-    //                             name: 'info',
-    //                         },
-    //                         {
-    //                             ...staticLang.layouts.actions.unsaved.fields.name,
-    //                             type: ConfigType.TEXT,
-    //                             name: 'name',
-    //                             meta: {
-    //                                 options: {
-    //                                     required: true,
-    //                                 },
-    //                             },
-    //                         },
-    //                     ],
-    //                 },
-    //                 handlerProcess: ({ name }) =>
-    //                     firstValueFrom(
-    //                         mediaserver.createLayout({ ...layoutToSave, name }).pipe(
-    //                             tap(_ => {
-    //                                 this.unsaved = false;
-    //                                 this.layoutChanged.emit(nextLayoutId || this.layout.id);
-    //                             }),
-    //                         ),
-    //                     ),
-    //             },
-    //             layoutToSave,
-    //         );
-    //     } else if (_layout.id) {
-    //         await mediaserver.putLayout(_layout.id, _layout).toPromise();
-    //     }
-    //     if (_layout.id && _layout.id === this.layout.id) {
-    //         this.layoutChanged.emit(_layout.id);
-    //         this.showPtz.emit();
-    //     }
-    // };
 
     async changeView(node: ResourceNode | LayoutItem): Promise<void> {
         if (!('children' in node) && this.#lastWidth <= ViewportBreakpoints.Tablet.width) {
@@ -1247,13 +1104,6 @@ export class NxLayoutGridComponent {
         }
     }
 
-    openCameraSettings(cameraId: string): void {
-        const base = environment.isLocal
-            ? '/settings/cameras'
-            : `/systems/${this.system.id}/cameras`;
-        this.window.open(`${base}/${cleanId(cameraId)}`, '_blank');
-    }
-
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
         const defaultPassword = camera.status !== CameraStatus.Unauthorized;
         const retriesTimeout = 30 * 1000;
@@ -1317,7 +1167,9 @@ export class NxLayoutGridComponent {
                             this.skipDefaultCredentialsCheck[selectedCamera.id] = true;
                         }
                     }
-                    this.updateLayoutItems.emit();
+
+                    // TODO: This needs to be updated to update the resources store once it's setup.
+                    // this.updateLayoutItems.emit();
                 });
         };
 
@@ -1385,7 +1237,7 @@ export class NxLayoutGridComponent {
                 }
 
                 const items = [...this.layout.items, this.generateLayoutItem(node, { x, y })];
-                if (this.layoutItemLookup[dirtyId(this.layout.id)]?.type === 'layout') {
+                if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
                     this.layoutStateService.updateLayout({ ...this.layout, items });
                 } else {
                     this.layoutStateService.createNewLocalLayout(items);
@@ -1405,25 +1257,11 @@ export class NxLayoutGridComponent {
         item.top < itemTwo.bottom &&
         item.bottom > itemTwo.top;
 
-    getNewPosition = (
-        { top, bottom, left, right }: LayoutItem,
-        dragging: CdkDrag<LayoutItem>,
-    ): NewPosition => {
-        const x = -1;
-        const y = 1;
-        const translateX = (x / Math.abs(right - left)) * 100;
-        const translateY = (y / Math.abs(top - bottom)) * 100;
-        const transform = `translate(${translateX}%, ${translateY}%)`;
-        return { top: top + y, bottom: bottom + y, left: left + x, right: right + x, transform };
-    };
-
     getCollisionStyle = (
         item: LayoutItem,
         dragging: Partial<Position>,
         items: LayoutItems,
     ): Collisions => {
-        // TODO: Need to find algorithm for finding best position
-        // const { transform, ...targetPosition } = this.getNewPosition(item, dragging);
         const collided = items.length;
 
         if (collided) {
@@ -1435,13 +1273,6 @@ export class NxLayoutGridComponent {
         }
 
         return {};
-
-        // return {
-        //     moveTo: targetPosition,
-        //     transform,
-        //     opacity: 0.4,
-        //     background: 'green'
-        // };
     };
 
     preventDrop = (dragging: CdkDrag<LayoutItem>, target: CdkDropList<LayoutItem>): boolean => {
@@ -1471,47 +1302,10 @@ export class NxLayoutGridComponent {
         }
     };
 
-    hasChild = (_: number, node: ResourceNode): boolean =>
-        [
-            ResourceType.CAMERAS,
-            ResourceType.WEB_PAGES,
-            ResourceType.SERVERS,
-            ResourceType.LAYOUTS,
-        ].includes(node.type)
-            ? !!node.children
-            : !!node.children?.length;
-
-    unsubTooltips = (): void => this.unsubTooltip$.next('unsub');
-
-    tooltipTarget$ = new BehaviorSubject<string>('');
-
-    updateTooltipTarget = (id: string): void => this.tooltipTarget$.next(id);
-
     pingServer =
         ({ parentId: serverId }: { parentId: string }) =>
         (): Observable<unknown> =>
             this.system.serverManager.mediaserverConnections[serverId]
                 .ping()
                 .pipe(catchError(() => Promise.resolve()));
-
-    serverStats$: ServerStatsObservable = this.tooltipTarget$.pipe(
-        filter(id => !!id),
-        distinctUntilChanged(),
-        switchMap(serverId =>
-            timer(0, 1000).pipe(
-                // switchMap(() => this.system.serverManager.initSystemMediaServers()),
-                switchMap(() => this.system.serverManager.getStatistics(serverId)),
-                map(({ reply, errorString: error }) => ({
-                    error,
-                    statistics: reply.statistics?.map(({ description, value }) => ({
-                        description,
-                        value: `${(value * 100).toFixed(2)}%`,
-                    })),
-                })),
-                startWith(null),
-                untilDestroyed(this),
-                takeUntil(this.unsubTooltip$),
-            ),
-        ),
-    );
 }

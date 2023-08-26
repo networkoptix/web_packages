@@ -2,7 +2,7 @@ import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { CdkTreeModule, NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -11,10 +11,10 @@ import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
 import staticLang from '@common/language/language_i18n_static.json';
+import { assertResourceParentNode } from '@components/layout-grid/layout-grid.type-guards';
 import {
     BaseResourceNode,
     LayoutRenderConfig,
-    LayoutResourceTree,
     ParsedLayoutItems,
     ResourceNode,
     ResourceType,
@@ -56,7 +56,6 @@ import { cleanId } from '@utils/general';
     styleUrls: ['./layout-grid-tree.component.scss'],
 })
 export class NxLayoutGridTreeComponent {
-    @Input() layoutItemLookup: LayoutResourceTree;
     @Input() layout: {
         items: ParsedLayoutItems;
         renderConfig: LayoutRenderConfig;
@@ -64,15 +63,12 @@ export class NxLayoutGridTreeComponent {
         id?: string;
     };
     @Input() system: NxSystem;
-    @Input() initialLayout$: BehaviorSubject<Layout>;
     @Input() dataSource: ArrayDataSource<BaseResourceNode>;
     @Input() treeControl: NestedTreeControl<ResourceNode>;
     @Input() errorIcons: Record<string, string>;
     @Input() dragging: boolean;
     @Input() showTooltip$: Observable<boolean>;
     @Input() changingLayout: string | boolean = true;
-
-    @Output() saveLayout = new EventEmitter<string>();
 
     icons = icons;
 
@@ -127,15 +123,7 @@ export class NxLayoutGridTreeComponent {
         ],
     };
 
-    hasChild = (_: number, node: ResourceNode): boolean =>
-        [
-            ResourceType.CAMERAS,
-            ResourceType.WEB_PAGES,
-            ResourceType.SERVERS,
-            ResourceType.LAYOUTS,
-        ].includes(node.type)
-            ? !!node.children
-            : !!node.children?.length;
+    hasChild = (_: number, node: ResourceNode): boolean => assertResourceParentNode(node);
 
     tooltipTarget$ = new BehaviorSubject<string>('');
     unsubTooltip$ = new Subject<string>();

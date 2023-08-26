@@ -48,7 +48,7 @@
                 <p *ngIf="helpMessage.help as help">{{ help | translate }}</p>
                 <button
                     *ngIf="layout.items.length"
-                    (click)="layoutGridService.addResource.next(RESOURCE_TYPE.LAYOUTS)"
+                    (click)="layoutStateService.createNewLocalLayout()"
                     class="btn btn-primary"
                     translate
                 >
@@ -71,7 +71,6 @@
     </div>
     <nx-layout-grid-tree
         [layout]="layout"
-        [layoutItemLookup]="layoutItemLookup"
         [dataSource]="dataSource"
         [treeControl]="treeControl"
         [errorIcons]="errorIcons"

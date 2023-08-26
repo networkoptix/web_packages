@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
@@ -30,6 +30,7 @@ import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-pa
 import { CloudDbAPI } from './cloud-services/cloud-db/cloud-db-api';
 import { CloudStorageAPI } from './cloud-services/cloud-storage/cloud-storage-api';
 import { DocDbAPI } from './cloud-services/doc-db/doc-db-api';
+import { DocHandler } from './cloud-services/doc-db/doc-handler';
 import { LicenseServerAPI } from './cloud-services/license-server/license-server-api';
 import { TokenSessionManager } from './cloud-session-manager';
 import { CustomAccountProperty } from './custom-account-property';
@@ -151,7 +152,10 @@ export class NxCloudApiService {
         private cookieService: CookieService,
         @Inject(WINDOW) private window: Window,
         private db: NxDbService,
+        private injector: Injector,
     ) {
+        DocHandler.runInInjectionContext = callback =>
+            runInInjectionContext(this.injector, callback);
         // check the parameters before pushing this
         this.customClient = new CustomClientAPI(this.http, this.consoleService);
         this.licenseServerApiFactory = LicenseServerAPI.createApiFactory(
