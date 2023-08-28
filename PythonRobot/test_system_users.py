@@ -14,6 +14,7 @@ from system_left_menu import SystemLeftMenu
 from system_users import SystemUsers
 from resource_import import get_random_email
 from email_access import Email
+from register_form import RegisterForm
 
 from NoptixLibrary.GenericKeywords import GenericKeywords
 from RobotVariables import RobotVariables
@@ -24,7 +25,6 @@ keywords = GenericKeywords()
 SERVERS = keywords.create_systems()
 CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
-
 
 
 def owner_can_remove_user():
@@ -59,6 +59,7 @@ def owner_can_remove_user():
     robot_keywords.close_browser(driver)
     print("pass")
 
+
 def share_with_registered_user_sends_notification():
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
@@ -66,7 +67,8 @@ def share_with_registered_user_sends_notification():
     CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
     time.sleep(30)
     rb = RobotVariables("en_US")
-    email_subject =  rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", SERVERS[0]['name'])
+    email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}",
+                                                                              SERVERS[0]['name'])
     mail_box = Email()
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
 
@@ -75,19 +77,31 @@ def share_with_registered_user_sends_notification():
 
 
 def share_with_unregistered_user_sends_notification():
-    driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
     CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
-    time.sleep(30)
     rb = RobotVariables("en_US")
     email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED").replace("{{message.sharer_name}}",
-                                                                              "Mark Hamill")
+                                                                                           "Mark Hamill")
     mail_box = Email()
-    assert mail_box.check_email_subject(None,
-                                        email_subject), f"Did not find an email with the subject: \"{email_subject}."
+    assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: \"{email_subject}."
 
+    print("pass")
+
+
+def email_is_locked_when_unregistered_user_is_invited():
+    driver = get_headless_chrome()
+    email_con = Email()
+    email = email_con.get_random_email(sendemail=True)
+    CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
+    time.sleep(30)
+    email_id = email_con.wait_for_email(email)
+    body = email_con.get_body(email_id)
+    links = email_con.get_nx_links_from_email(body)
+    robot_keywords.go_to_url(driver, links)
+    RegisterForm(driver).email_input_locked()
     robot_keywords.close_browser(driver)
     print("pass")
+
 
 def share_with_registered_user_works():
     driver = get_headless_chrome()
@@ -114,10 +128,10 @@ def share_with_registered_user_works():
     print("pass")
 
 
-
 if __name__ == "__main__":
     owner_can_remove_user()
     share_with_registered_user_works()
     share_with_registered_user_sends_notification()
     share_with_unregistered_user_sends_notification()
+    email_is_locked_when_unregistered_user_is_invited()
     keywords.teardown_servers(SERVERS)

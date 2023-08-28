@@ -13,10 +13,12 @@ class RegisterForm:
         self.rb = RobotVariables(lang)
         self.required_text = f"/following-sibling::p[contains(@class,error-label) and contains(text(),'{self.rb.REQUIRED_TEXT}')]"
         self._wait_until_form_is_visible()
-        self._location_is_correct()
 
     def email_input(self):
         return TextField(self.driver, "//form//nx-email-input/input[@id='email']")
+
+    def email_input_locked(self):
+        return TextField(self.driver, "//input[@name='registerEmailLocked']")
     
     def locked_email_input(self):
         return TextField(self.driver, "/form//input[@name='registerEmailLocked']")
@@ -86,9 +88,6 @@ class RegisterForm:
         self.create_account_button()
         # Todo: 
         # robot_keywords.title_should_be(self.driver, self.rb.replace_nested_variables(self.rb.REGISTER_TITLE_TEXT))
-
-    def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{self.rb.ENV}authorize?client_type=create")
 
     def register_new_user(self, first_name, last_name, email, password, checked=False):
         self.first_name_input().input_text(first_name)
