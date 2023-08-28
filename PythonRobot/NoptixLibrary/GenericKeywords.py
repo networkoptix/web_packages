@@ -829,7 +829,7 @@ class GenericKeywords:
             # Connect systems to cloud
             for server in serversJson:
                 if 'cloudOwnerId' in server:
-                    serverId = self.server_api.API_connect_to_cloud(
+                    serverId = self.server_api.api_connect_to_cloud(
                         [server["cloudOwner"], self.password],
                         f"https://{self.docker_host_ip}:{server['port'][0]}",
                         self.cloud_host,
@@ -861,7 +861,7 @@ class GenericKeywords:
                             f"noptixautoqa+local_{user}@gmail.com",
                             "Local User",
                             self.password,
-                            isCloud=False
+                            is_cloud=False
                         )
                         localUsers.update(
                             {user: {"login": "Local" + user, "email": f"noptixautoqa+local_{user}@gmail.com"}})
@@ -955,7 +955,7 @@ class GenericKeywords:
                 f'noptixautoqa+local_{user}@gmail.com',
                 'Local User',
                 password,
-                isCloud=False
+                is_cloud=False
             )
             local_users[user].update(
                 login=f'Local+{user}',
@@ -1070,8 +1070,8 @@ class GenericKeywords:
                 f"noptixautoqa+local_{user_type}@gmail.com",
                 "Local User",
                 BuiltIn().get_variable_value("${BASE_PASSWORD}"),
-                userId=user['id'],
-                isCloud=False,
+                user_id=user['id'],
+                is_cloud=False,
                 patch=True
             )
 
