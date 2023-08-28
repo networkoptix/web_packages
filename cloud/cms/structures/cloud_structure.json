@@ -316,7 +316,7 @@
           {
             "label": "Light Theme - Portal header logo",
             "name": "static/customizable/images/logo.png",
-            "value": "",
+            "value": "/static/images/logo.png",
             "description": "Light Theme logo for branding. ",
             "type": "external_image",
             "protected": true,
@@ -331,7 +331,7 @@
           {
             "label": "Dark Theme - Portal header logo",
             "name": "static/customizable/images/dark_logo.png",
-            "value": "",
+            "value": "/static/images/dark_logo.png",
             "description": "Dark Theme logo for branding. ",
             "type": "external_image",
             "protected": true,
@@ -346,7 +346,7 @@
           {
             "label": "Email Logo",
             "name": "static/customizable/templates/email_logo.png",
-            "value": "",
+            "value": "/static/templates/email_logo.png",
             "description": "Logo for email. ",
             "type": "external_image",
             "protected": true,

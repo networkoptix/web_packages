@@ -289,9 +289,6 @@ def set_latest_value(customization: Customization, asset: Asset, context: Contex
         return
     actual_content = old_structure.find_actual_value(
         asset=asset, customization_name=customization.name, use_cached=False)
-    if actual_content == old_structure.default:
-        # do not create record if actual is a default one
-        return
     if new_structure.translatable:
         language = asset.default_language or customization.default_language
     else:
@@ -300,7 +297,7 @@ def set_latest_value(customization: Customization, asset: Asset, context: Contex
                                                                 version=review.version, data_structure=new_structure,
                                                                 language=language)
     if not created:
-        logger.warning(f"Data record for structure {new_structure} already exist. Skipping!")
+        logger.warning(f"Data record for structure {new_structure} already exist. Skipping structure!")
         return
     content = base64.b64decode(actual_content)
     ext_file = ExternalFile.objects.create(file=ContentFile(content, name=new_structure.name.split('/')[-1]),
