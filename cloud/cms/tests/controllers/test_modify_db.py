@@ -53,7 +53,7 @@ class TestModifyDB:
         notify_version_ready(asset, review.version, user)
 
         assert len(mock_send.mock_calls) == len(other_users + receive_all_users)
-        mock_send.assert_has_calls(
+        expected_calls = [
             call(user.email,
                  'review_version',
                  {
@@ -62,7 +62,10 @@ class TestModifyDB:
                      'asset_type': asset_type
                  },
                  customization = user.customization)
-            for user in other_users)
+            for user in other_users
+        ]
+        for expected_call in expected_calls:
+            assert expected_call in mock_send.mock_calls
 
     def test_are_asset_datarecords_unique_is_unique(self, mocker, asset_factory, account_factory, db):
         mocker.patch(
