@@ -149,9 +149,7 @@ export class DocHandler<DocType extends DocId> {
     delete(docId: DocType): Observable<unknown>;
     delete(docIdOrDoc: string | DocType): Observable<unknown> {
         const docId = typeof docIdOrDoc === 'string' ? docIdOrDoc : docIdOrDoc.id;
-        return this.api.delete<Record<string, never>>(
-            `${this.getNameSpacedPrefix()}/${cleanId(docId)}`,
-        );
+        return this.withPrefix(prefix => this.api.delete(`${prefix}/${cleanId(docId)}`));
     }
 
     /**
