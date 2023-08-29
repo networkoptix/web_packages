@@ -24,7 +24,6 @@ from notifications import notifications_api
 from notifications.models import *
 from notifications.tasks import send_to_all_users
 from util.helpers import get_customization
-from util.throttling import NotificationRateThrottle
 
 logger = logging.getLogger(__name__)
 
@@ -236,12 +235,6 @@ def send_notification(request):
         if validation_error:
             raise APIRequestException('Not enough parameters in request', ErrorCodes.wrong_parameters,
                                       error_data=error_data)
-        if not NotificationRateThrottle().allow_request(request=request, view=None):
-            logger.warning(
-                f'Request throttled for {request.data["user_email"]}::{request.data["type"]}'
-                f' in customization {request.data["customization"]}'
-            )
-            raise APITooManyRequestsException('Too many request. Please try again later')
         # Clouddb doesn't always return a full name so try to get it from cloud portal
         if 'userFullName' not in request.data['message'] or not request.data['message']['userFullName']:
             user_account = Account.objects.filter(

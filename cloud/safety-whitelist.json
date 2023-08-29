@@ -149,5 +149,13 @@
   "59293": {
     "name": "Django",
     "note": "CVE-2023-36053: Potential regular expression denial of service vulnerability in EmailValidator/URLValidator://www.djangoproject.com/weblog/2023/may/03/security-releases"
+  },
+  "59473": {
+    "name": "cryptography",
+    "note": "CVE-2023-38325: ADVISORY: The cryptography package before 41.0.2 for Python mishandles SSH certificates that have critical options."
+  },
+  "59956": {
+    "name": "certifi",
+    "note": "Certifi 2023.07.22 includes a fix for CVE-2023-37920: Certifi prior to version 2023.07.22 recognizes \"e-Tugra\" root certificates. e-Tugra's root certificates were subject to an investigation prompted by reporting of security issues in their systems. Certifi 2023.07.22 removes root certificates from \"e-Tugra\" from the root store."
   }
 }
