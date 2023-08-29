@@ -1,5 +1,6 @@
 import {
     Component,
+    computed,
     Input,
     OnChanges,
     OnDestroy,
@@ -52,6 +53,10 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
     protected isLocal = signal(false);
     protected isMe = signal(false);
     protected canBeEdited = signal(false);
+
+    protected formDisabled = computed(
+        () => !(this.environment.isLocal && this.isMe()) && !this.canBeEdited(),
+    );
 
     systemAvailable: boolean;
     deleteMessage: string;

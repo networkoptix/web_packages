@@ -73,6 +73,7 @@ export enum UserType {
     cloud = 'cloud',
     ldap = 'ldap',
     local = 'local',
+    temporaryLocal = 'temporaryLocal',
 }
 
 /* Types for cloud users

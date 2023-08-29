@@ -735,7 +735,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         disabled: !user.isEnabled,
                         label: user.name || user.email,
                         path: 'users/' + id,
-                        svgIcon: 'user',
+                        svgIcon: user.type === UserType.temporaryLocal ? 'user_temp' : 'user',
                     };
                     if (user.type === UserType.cloud) {
                         node.svgIcon = 'user_cloud';

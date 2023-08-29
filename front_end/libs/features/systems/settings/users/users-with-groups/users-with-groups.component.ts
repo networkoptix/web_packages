@@ -1,4 +1,4 @@
-import { Component, ViewChild } from '@angular/core';
+import { Component, ViewChild, signal } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -26,11 +26,14 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     selectedGroups: string[];
     selectedGroupsList: { name: string; description: string }[];
 
+    temporaryUser = signal<boolean>(false);
+
     @ViewChild('userGroupsForm', { read: NgForm }) private userGroupsForm: NgForm;
     protected changeUser(user: NxUser): void {
         this.selectedGroups = user.groupIds;
         const isLocalOwner = !this.isCloud() && user.isOwner;
         this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
+        this.temporaryUser.set(this.selectedUser.type === this.UserType.temporaryLocal);
 
         this.applyService.resetFormWatchers();
         setTimeout(() => {
@@ -40,7 +43,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 this.editUser,
             );
 
-            if (user.canBeEdited) {
+            if (user.canBeEdited && !this.temporaryUser()) {
                 this.applyService.createFormWatcher(
                     'userGroupsForm',
                     this.userGroupsForm,

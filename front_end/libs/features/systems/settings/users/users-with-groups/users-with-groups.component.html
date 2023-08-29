@@ -49,7 +49,7 @@
 
             <nx-section>
                 <div
-                    *ngIf="canBeEdited()"
+                    *ngIf="canBeEdited() && !temporaryUser()"
                     class="mr-2 mt-2 mb-3 pl-2"
                     style="width: 300px"
                 >
@@ -108,8 +108,7 @@
                             for="fullName"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label':
-                                    !(environment.isLocal && isMe()) && !canBeEdited()
+                                'disabled-input-label': formDisabled()
                             }"
                             translate
                             >Name</label
@@ -120,7 +119,7 @@
                             [(ngModel)]="fullName"
                             name="fullName"
                             id="fullName"
-                            [disabled]="!(environment.isLocal && isMe()) && !canBeEdited()"
+                            [disabled]="formDisabled() || temporaryUser()"
                             maxlength="255"
                         />
                     </div>
@@ -129,8 +128,7 @@
                             for="email"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label':
-                                    !(environment.isLocal && isMe()) && !canBeEdited()
+                                'disabled-input-label': formDisabled()
                             }"
                             translate
                             >Email</label
@@ -144,7 +142,7 @@
                             #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
                             [readonly]="isLdap()"
-                            [disabled]="!(environment.isLocal && isMe()) && !canBeEdited()"
+                            [disabled]="formDisabled() || temporaryUser()"
                             maxlength="255"
                         />
                         <span
@@ -179,7 +177,9 @@
                     </button>
                 </div>
                 <div
-                    *ngIf="(!isCloud() && canBeEdited()) || (isLocal() && isMe())"
+                    *ngIf="
+                        (!isCloud() && canBeEdited() && !temporaryUser()) || (isLocal() && isMe())
+                    "
                     class="float-left"
                 >
                     <button

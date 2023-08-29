@@ -184,7 +184,8 @@ export class PermissionManager {
     });
     isCloud = computed<boolean>(() => this.type() === UserType.cloud);
     isLdap = computed<boolean>(() => this.type() === UserType.ldap);
-    isLocal = computed<boolean>(() => this.type() === UserType.local);
+    isTemporaryLocal = computed<boolean>(() => this.type() === UserType.temporaryLocal);
+    isLocal = computed<boolean>(() => this.type() === UserType.local || this.isTemporaryLocal());
     isOwner = computed<boolean>(() => {
         const user = this.user();
         if (!user) {
