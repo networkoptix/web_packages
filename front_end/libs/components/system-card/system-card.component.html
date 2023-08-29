@@ -27,6 +27,7 @@
                 style="display: block; margin-top: 24px"
                 [clickable]="false"
                 [type]="tagType"
+                [id]="system.id"
                 *ngIf="canShowTag"
             >
                 <ng-container>{{ systemState | translate }}</ng-container>

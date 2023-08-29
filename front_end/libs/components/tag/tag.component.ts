@@ -43,7 +43,8 @@ import type { Params } from '@angular/router';
 export class NxTagComponent implements OnInit, ControlValueAccessor {
     @Input() type: string;
     @Input() element: string = 'badge';
-    @Input() name: string;
+    @Input('name') _name: string = '';
+    @Input('id') _id: string = '';
     @Input() size: string = 'small';
     @Input({ transform: booleanAttribute }) clickable: boolean = true;
     @Input({ transform: booleanAttribute }) locked: boolean;
