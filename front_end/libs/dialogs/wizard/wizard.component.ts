@@ -13,14 +13,15 @@ import { PipesModule } from '@pipes/pipes.module';
     imports: [CommonModule, PipesModule],
 })
 export class WizardModalContent implements OnInit {
-    public inlineUrl: string = '/static/inline.html';
+    readonly baseInlineUrl: string = '/static/inline.html';
+    inlineUrl: string;
 
     @ViewChild('iframe', { static: false }) iframe: ElementRef<HTMLIFrameElement>;
 
     constructor(private translate: TranslateService) {}
 
     ngOnInit(): void {
-        this.inlineUrl = '?lang=' + this.translate.currentLang;
+        this.inlineUrl = `${this.baseInlineUrl}?lang=${this.translate.currentLang}`;
         if (environment.setupUrl) {
             // if running webadmin locally and want to use setup wizard
             // run setup wizard too and adjust port if needed
