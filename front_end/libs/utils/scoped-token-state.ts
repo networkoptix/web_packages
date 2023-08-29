@@ -87,10 +87,10 @@ export class ScopedTokenState {
             }: {
                 data: ScopedTokenState & { pending: boolean; sync: boolean };
             }): void => {
-                if (data.sync) {
+                if (data?.sync) {
                     return;
                 }
-                if (data.pending) {
+                if (data?.pending) {
                     clearTimeout(autoResolve);
                     return;
                 }
@@ -105,11 +105,11 @@ export class ScopedTokenState {
     };
 
     private handleFresh = (data: ScopedTokenState): void => {
-        if (data.accessToken) {
+        if (data?.accessToken) {
             this.accessToken = Promise.resolve(data.accessToken);
         }
 
-        if (data.expiresAt) {
+        if (data?.expiresAt) {
             this.expiresAt = Promise.resolve(data.expiresAt);
         }
     };
@@ -189,7 +189,7 @@ export class ScopedTokenState {
     ) {
         this.tokenBc = new BroadcastChannel(refreshTokenEndpoint);
         this.tokenBc.onmessage = async ({ data }) => {
-            if (data.sync) {
+            if (data?.sync) {
                 this.emitState();
                 return;
             }

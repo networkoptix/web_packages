@@ -132,11 +132,20 @@ export class DynamicConfig {
 
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     private mapPropertiesToConfig(data: any): IConfig {
+        // TODO: remove this when property is moved to config from CMS
+        data.clientProtocol = data.clientProtocol ?? 'nx-vms';
+
         nxConfig.preloadedAccount = data.preloadedAccount;
         nxConfig.preloadedTranslation = data.preloadedTranslation;
         if (environment.isLocal) {
             // weird timing issue occur when using method updateConfig. Re-factored to explicit assignment. (TT)
-            const { defaultLanguage, description, webadminConfig, supportedLanguages } = data;
+            const {
+                clientProtocol,
+                defaultLanguage,
+                description,
+                webadminConfig,
+                supportedLanguages,
+            } = data;
             nxConfig.dynamicMenus = webadminConfig.dynamicMenus?.reduce((menu, { name, nodes }) => {
                 menu[name] = {
                     title: name,
@@ -167,6 +176,8 @@ export class DynamicConfig {
             nxConfig.supportedLanguages = supportedLanguages.length
                 ? supportedLanguages
                 : [nxConfig.defaultLanguage];
+
+            nxConfig.clientProtocol = clientProtocol;
         } else if (!environment.isLocal && Object.keys(data).length > 0) {
             // extend CONFIG ... ugly // @ts-ignore ... no implementation for // @ts-ignore-start/end
             // This was done every time a system is created. Its only need once

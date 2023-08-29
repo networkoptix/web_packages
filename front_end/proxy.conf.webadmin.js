@@ -55,6 +55,8 @@ const PROXY_CONFIG = [
             '/static/lang_ru_RU',
             '/static/lang_ja_JP',
             '/static/images/logo.png',
+            '/static/images/welcome_page_logo.png',
+            '/static/images/welcome_page_logo@2x.png',
             '/static/supported_languages.json', // Comment out to use your own supported_languages.json.
             '/static/languages.json',
             '/swagger-ui',

@@ -1,0 +1,28 @@
+@use "typography";
+
+.temp-auth-container {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 16px;
+}
+
+.text-header {
+    @include typography.medium18nocolor;
+}
+
+.text-link {
+    @include typography.regular14nocolor;
+    cursor: pointer;
+}
+
+:host {
+    position: absolute;
+    height: 100vh;
+    width: 100vw;
+    top: 0;
+    left: 0;
+    display: flex;
+    justify-content: center;
+}

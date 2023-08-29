@@ -27,6 +27,8 @@ import { NxStorageService } from '@services/storage.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 
+import { TemporaryAuthLoginComponent } from './temporary-auth-login/temporary-auth-login.component';
+
 /**
  * Parse url string to:
  *
@@ -72,6 +74,7 @@ function getRelativeLocation(href: string): string {
         FormsModule,
         ReactiveFormsModule,
         DirectivesModule,
+        TemporaryAuthLoginComponent,
     ],
 })
 export class LoginWebadminModalContent extends ModalBase<DT['return']> implements OnInit {
@@ -92,9 +95,9 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
     account2faRequired: boolean;
     icons = icons;
 
-    private readonly urlUpdateTimeout: number = 150;
+    readonly urlUpdateTimeout: number = 150;
 
-    @ViewChild('loginForm', { static: true }) private loginForm: NgForm;
+    @ViewChild('loginForm', { static: false }) private loginForm: NgForm;
 
     private setupDefaults(): void {
         this.auth = { email: this.storageService.email };
@@ -108,7 +111,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
         private location: Location,
         private account: NxAccountService,
-        private oauthService: OauthService,
+        public oauthService: OauthService,
         private renderer: Renderer2,
         private processService: NxProcessService,
         private storageService: NxStorageService,
@@ -182,7 +185,11 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             if (auth) {
                 this.removeParamFromUrl(url, hash, params, 'auth');
             }
-            this.tokenLogin(token || auth);
+            if (token.startsWith('vmsTmp-')) {
+                this.oauthService.temporaryAuthToken.set(token);
+            } else {
+                this.tokenLogin(token || auth);
+            }
             return;
         } else {
             this.loading = false;

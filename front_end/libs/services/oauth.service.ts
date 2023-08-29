@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -26,6 +26,8 @@ export class OauthService {
     get cloudApiRefreshToken() {
         return this.storage.cloudApiRefreshToken;
     }
+
+    temporaryAuthToken = signal<string>(null);
 
     logoutTokens(accessToken?: string, refreshToken?: string) {
         if (!accessToken) {

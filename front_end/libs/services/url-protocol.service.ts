@@ -32,13 +32,14 @@ export class NxUrlProtocolService {
         private cloudApiService: NxCloudApiService,
     ) {}
 
+    get baseUri(): string {
+        return `${this.CONFIG.clientProtocol}://`;
+    }
+
     public generateLink(systemId: string, auth: string, code: string): string {
-        const base = slashJoin(
-            [`${this.CONFIG.clientProtocol}://${this.host}`, 'client', systemId],
-            {
-                trailing: true,
-            },
-        );
+        const base = slashJoin([`${this.baseUri}${this.host}`, 'client', systemId], {
+            trailing: true,
+        });
         const url = new URL(base);
         if (auth) {
             url.searchParams.append('auth', auth);
@@ -46,7 +47,6 @@ export class NxUrlProtocolService {
         if (code) {
             url.searchParams.append('code', code);
         }
-
         return url.toString();
     }
 
@@ -80,5 +80,10 @@ export class NxUrlProtocolService {
                 );
             });
         });
+    }
+
+    openBasic(token: string): void {
+        const uri = `${this.baseUri}${this.window.location.host}?token=${token}`;
+        this.window.location.href = uri;
     }
 }

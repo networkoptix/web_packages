@@ -167,4 +167,14 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
             groupIds: [],
         };
     }
+
+    temporaryUserTokenExchange(token: string): Observable<{
+        id: string;
+        username: string;
+        token: string;
+        ageS: number;
+        expiresInS: number;
+    }> {
+        return this.post('/rest/v3/login/temporaryToken', { token, setCookie: true });
+    }
 }

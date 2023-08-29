@@ -5,6 +5,13 @@
     <nx-pre-loader type="page"></nx-pre-loader>
 </div>
 
+<ng-template #tempAuthLogin>
+    <nx-temporary-auth-login
+        [token]="oauthService.temporaryAuthToken()"
+        [urlUpdateTimeout]="urlUpdateTimeout"
+    ></nx-temporary-auth-login>
+</ng-template>
+
 <form
     #loginForm="ngForm"
     name="loginForm"
@@ -14,6 +21,7 @@
         loading: loading
     }"
     (submit)="hideErrors = false"
+    *ngIf="!oauthService.temporaryAuthToken(); else tempAuthLogin"
 >
     <div class="modal-body">
         <div
