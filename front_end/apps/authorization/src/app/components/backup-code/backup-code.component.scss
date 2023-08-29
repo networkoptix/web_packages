@@ -2,10 +2,12 @@
 //@use "mixins";
 //@use "theme_variables_common" as *;
 
-.cloud-header-st0 {
+.cloud-header-st0,
+.cloud-header-desktop-st0 {
     stroke: var(--svg-path-light-color);
 }
 
-.cloud-header-st1 {
+.cloud-header-st1,
+.cloud-header-desktop-st1 {
     stroke: var(--svg-path-dark-color);
 }

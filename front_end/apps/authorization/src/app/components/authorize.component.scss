@@ -11,11 +11,13 @@
         min-width: 160px !important;
     }
 
-    .cloud-header-st0 {
+    .cloud-header-st0,
+    .cloud-header-desktop-st0{
         stroke: var(--svg-path-light-color);
     }
 
-    .cloud-header-st1 {
+    .cloud-header-st1,
+    .cloud-header-desktop-st1{
         stroke: var(--svg-path-dark-color);
     }
 
@@ -93,7 +95,6 @@
 }
 
 .authorize-main {
-
     .main-w .stroke-color-main,
     .header-w .stroke-color-main {
         stroke: var(--btn-text-color);
@@ -225,10 +226,7 @@
                 }
 
                 .authorize-subheader {
-                    color: var(--light10)  !important;
-
                     .for-account {
-                        background-color: var(--dark9);
                         border: 1px solid var(--dark10);
 
                         &:not(.span-disabled):hover {
@@ -255,10 +253,7 @@
                 }
 
                 .authorize-subheader {
-                    color: var(--light10)  !important;
-
                     .for-account {
-                        background-color: $dark7;
                         border: 1px solid $dark8;
 
                         &:not(.span-disabled):active {
@@ -346,7 +341,8 @@
             }
 
             &.main-d {
-                background-color: $dark7;
+                background-color: var(--auth-body-bg);
+                color: var(--body-text-color);
 
                 label,
                 p:not(.error-label) {
