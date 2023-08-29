@@ -55,6 +55,15 @@ class SecurityForm:
     def twofa_ok_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[@id='wizardDone']")
     
+    def twofa_backup_code_error(self):
+        return Element(self.driver, "//nx-authorize-backup-code-component//p")
+    
+    def twofa_verification_checkbox(self):
+        return Checkbox(self.driver, "//nx-account-security-component//nx-section//nx-checkbox", "//input[@id='skip-tfauth']" )
+    
+    def twofa_disable_modal_button(self):
+        return Button(self.driver, f"{self.twofa_modal}//button[@type='submit']")
+    
     def turn_on_2fa(self, password, qr_code=False):
         self.twofa_enable_button().click()
         self.twofa_password_modal_input().input_text(password)
@@ -78,6 +87,11 @@ class SecurityForm:
         twofa_codes = {"totp" : totp, "backup": randomOneTimeBackupCode}
         return twofa_codes
     
+    def turn_off_2fa(self, totp):
+        self.twofa_disable_button().click()
+        self.twofa_totp_input().input_text(totp)
+        self.twofa_disable_modal_button().click()
+
     def _get_key_from_qr_code(self):
         Element(self.driver, "//nx-two-fa-modal-content//qr-code").get_selenium_element().screenshot('qr_code.png')
         return Cloud2fa().decode_qr('qr_code.png')
