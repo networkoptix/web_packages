@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountService } from '@services/account.service';
 import { nxConfig } from '@services/nx-config/config';
-import { LayoutItem } from '@services/system-api.types';
+import { Layout, LayoutItem } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { dirtyId } from '@utils/general';
 
@@ -35,6 +35,26 @@ export const createNewUnsavedLocalLayout = (
             logicalId: 0,
             name: name || staticLang.layouts.helpMessages.unsaved.title,
             systemId: system.id,
+            parentId:
+                inject(NxAccountService).account.id || system.permissionManager.currentUser().id,
+        },
+    };
+};
+
+export const createNewUnsavedLocalLayoutDuplicate = (
+    id: string,
+    layout: Layout,
+): UnsavedLayoutState => {
+    id = dirtyId(id);
+    const system = inject(NxSystemService).getCurrentSystem();
+    return {
+        id,
+        layoutType: LayoutTypes.LOCAL,
+        unsaved: UnsavedState.UNSAVED,
+        layout: {
+            ...layout,
+            id,
+            locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
             parentId:
                 inject(NxAccountService).account.id || system.permissionManager.currentUser().id,
         },

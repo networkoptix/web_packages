@@ -7,7 +7,10 @@ import { onSyncState } from '@store/sync.utils';
 
 import { SharedLayoutsActions } from '../shared';
 import { UnsavedLayoutState, UnsavedState } from '../shared/types/layout-state.types';
-import { createNewUnsavedLocalLayout } from '../utils/create-new-local-layout';
+import {
+    createNewUnsavedLocalLayout,
+    createNewUnsavedLocalLayoutDuplicate,
+} from '../utils/create-new-local-layout';
 
 import * as UnsavedLayoutActions from './unsaved-layouts.actions';
 
@@ -57,6 +60,10 @@ export const reducer = createReducer(
             syncUnsavedLayoutState([createNewUnsavedLocalLayout(id, name, items)], 'save').pop(),
         ],
     ),
+    on(UnsavedLayoutActions.duplicateLayout, (state, { id, layout }): UnsavedLayoutState[] => [
+        ...state,
+        syncUnsavedLayoutState([createNewUnsavedLocalLayoutDuplicate(id, layout)], 'save').pop(),
+    ]),
     on(
         UnsavedLayoutActions.remove,
         SharedLayoutsActions.deleteLayout,

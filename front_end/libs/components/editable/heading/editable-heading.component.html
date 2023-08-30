@@ -5,8 +5,8 @@
     <nx-text-editable
         [id]="componentId"
         required="true"
-        [disabled]="!editEnabled"
-        (onEditModeChanged)="editModeChanged($event)"
+        [editEnabled]="editEnabled"
+        (onFocusChanged)="editModeChanged($event)"
         [ngClass]="{ 'has-edit-icon': !editMode }"
         [(ngModel)]="value"
         (ngModelChange)="onChange()"

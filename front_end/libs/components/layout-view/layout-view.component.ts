@@ -298,13 +298,15 @@ export class NxLayoutViewComponent {
                 return {
                     tree: [
                         {
-                            name: 'Layouts',
+                            name: staticLang.layouts.titles.resourceTypes[ResourceType.LAYOUTS],
+                            details: { id: ResourceType.LAYOUTS },
                             type: ResourceType.LAYOUTS,
                             children: layoutsForTree,
                         },
                         (this.CONFIG.featureFlags.layoutsServers ||
                             this.CONFIG.featureFlags.layoutsDemo) && {
-                            name: 'Servers',
+                            name: staticLang.layouts.titles.resourceTypes[ResourceType.SERVERS],
+                            details: { id: ResourceType.SERVERS },
                             type: ResourceType.SERVERS,
                             children: serversForTree.map(server => ({
                                 ...server,
@@ -313,13 +315,15 @@ export class NxLayoutViewComponent {
                             })),
                         },
                         {
-                            name: 'Cameras',
+                            name: staticLang.layouts.titles.resourceTypes[ResourceType.CAMERAS],
+                            details: { id: ResourceType.CAMERAS },
                             type: ResourceType.CAMERAS,
                             children: camerasForTree,
                         },
                         (this.CONFIG.featureFlags.layoutsWebpages ||
                             this.CONFIG.featureFlags.layoutsDemo) && {
-                            name: 'Web Pages',
+                            name: staticLang.layouts.titles.resourceTypes[ResourceType.WEB_PAGES],
+                            details: { id: ResourceType.WEB_PAGES },
                             type: ResourceType.WEB_PAGES,
                             children: webPagesForTree,
                         },

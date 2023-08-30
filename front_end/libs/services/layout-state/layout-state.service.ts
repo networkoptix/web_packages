@@ -1,6 +1,7 @@
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
+import { TranslateService } from '@ngx-translate/core';
 import { Observable, take, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
@@ -12,6 +13,7 @@ import { LayoutItem, Layout } from '@services/system-api.types';
 import { ActiveLayoutActions } from './store/active-layout';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import {
+    LayoutState,
     LayoutTypes,
     UnsavedLayoutState,
     UnsavedState,
@@ -31,7 +33,7 @@ export class LayoutStateService {
         items: LayoutItem[] = [],
     ): string {
         const isName = typeof nameOrItems === 'string';
-        const name = isName ? nameOrItems : staticLang.layouts.newLayout;
+        const name = isName ? nameOrItems : this.translate.instant(staticLang.layouts.newLayout);
         items = isName ? items : nameOrItems;
         const id = uuid();
 
@@ -50,6 +52,35 @@ export class LayoutStateService {
                     ),
                 );
             });
+
+        return id;
+    }
+
+    duplicateLayoutAsNewLocalLayout(layout: Layout): string {
+        const id = uuid();
+
+        this.store
+            .select(SharedLayoutsSelectors.selectLayouts)
+            .pipe(take(1))
+            .subscribe((layouts: LayoutState[]) => {
+                const copyName = `${layout.name} ${this.translate.instant(
+                    staticLang.layouts.layoutCopy,
+                )}`;
+                const existingNames = layouts.map(layout => layout.layout.name);
+                LayoutStateService.runInInjectionContext(() =>
+                    this.store.dispatch(
+                        UnsavedLayoutsActions.duplicateLayout({
+                            id,
+                            layout: {
+                                ...layout,
+                                name: incrementUntilUnique(copyName, existingNames),
+                                id,
+                            },
+                        }),
+                    ),
+                );
+            });
+
         return id;
     }
 
@@ -125,9 +156,10 @@ export class LayoutStateService {
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));
 
     constructor(
-        private store: Store,
-        private injector: Injector,
         private cloudApi: NxCloudApiService,
+        private injector: Injector,
+        private store: Store,
+        private translate: TranslateService,
     ) {
         LayoutStateService.runInInjectionContext = callback =>
             runInInjectionContext(this.injector, callback);

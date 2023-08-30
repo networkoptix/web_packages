@@ -1,3 +1,5 @@
+import { SimpleChange } from '@angular/core';
+
 import { setupComponent } from '../src/setup';
 
 import { NxTextEditableComponent } from './editable.component';
@@ -28,12 +30,16 @@ describe('NxTextEditableComponent', () => {
     it('should set valid value', async () => {
         const { component, fixture } = await handleSetup();
         const el = fixture.elementRef.nativeElement;
-        jest.spyOn(component.onEditModeChanged, 'emit');
+        jest.spyOn(component.onFocusChanged, 'emit');
+
+        component.ngOnChanges({
+            editEnabled: new SimpleChange(component.editEnabled, !component.editEnabled, true),
+        });
+        expect(el.getAttribute('contenteditable')).toBe('true');
 
         el.dispatchEvent(new Event('focus'));
-        expect(el.getAttribute('contenteditable')).toBe('true');
         expect(el.classList.contains('editable-edit')).toBeTruthy();
-        expect(component.onEditModeChanged.emit).toHaveBeenCalledWith(true);
+        expect(component.onFocusChanged.emit).toHaveBeenCalledWith(true);
 
         el.textContent = 'Sofia';
         el.dispatchEvent(new Event('input'));
@@ -41,7 +47,7 @@ describe('NxTextEditableComponent', () => {
 
         el.dispatchEvent(new Event('blur'));
         expect(el.classList.contains('editable-initial')).toBeTruthy();
-        expect(component.onEditModeChanged.emit).toHaveBeenCalledWith(false);
+        expect(component.onFocusChanged.emit).toHaveBeenCalledWith(false);
     });
 
     it('should handle "ENTER" key', async () => {
@@ -97,11 +103,21 @@ describe('NxTextEditableComponent', () => {
         expect(el.innerHTML).toBe('Test');
     });
 
-    it('should set disabled state', async () => {
-        const { fixture, component } = await handleSetup();
-        const el = fixture.elementRef.nativeElement;
-        component.setDisabledState(true);
-        expect(el.getAttribute('contenteditable')).toBe('false');
-        expect(el.getAttribute('disabled')).toBe('true');
+    describe('toggleEdit', () => {
+        it('should set read state', async () => {
+            const { fixture, component } = await handleSetup();
+            const el = fixture.elementRef.nativeElement;
+            component.toggleEdit(false);
+            expect(el.getAttribute('contenteditable')).toBe('false');
+            expect(el.getAttribute('disabled')).toBe('true');
+        });
+
+        it('should set edit state', async () => {
+            const { fixture, component } = await handleSetup();
+            const el = fixture.elementRef.nativeElement;
+            component.toggleEdit(true);
+            expect(el.getAttribute('contenteditable')).toBe('true');
+            expect(el.getAttribute('disabled')).toBe('false');
+        });
     });
 });

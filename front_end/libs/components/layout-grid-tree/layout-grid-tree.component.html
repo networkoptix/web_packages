@@ -7,117 +7,6 @@
         [dataSource]="dataSource"
         [treeControl]="treeControl"
     >
-        <ng-template
-            #nodeInfo
-            let-node="node"
-            let-expandable="expandable"
-            let-expanded="expanded"
-            let-preview="preview"
-        >
-            <ng-template #recordingIcon>
-                <svg-icon
-                    *ngIf="
-                        ['recording', 'scheduled', 'archive'].includes(node.details.status)
-                            ? '1'
-                            : '0' as opacity
-                    "
-                    nx-add-svg-src
-                    [svgStyle]="{
-                        'width.px': '24',
-                        'height.px': '24',
-                        'margin-left.px': '6',
-                        'margin-right.px': '-6',
-                        opacity: opacity,
-                        display: opacity === '0' && preview && 'none'
-                    }"
-                    svgClass="recording-icon"
-                    [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
-                >
-                </svg-icon>
-            </ng-template>
-            <svg-icon
-                *ngIf="!preview && node.type !== 'camera'; else recordingIcon"
-                nx-add-svg-src
-                [svgStyle]="{
-                    'width.px': '18',
-                    'height.px': '18',
-                    fill: 'none !important',
-                    opacity: expandable ? '1' : '0',
-                    transform: expanded ? 'rotate(-90deg)' : 'rotate(0deg)'
-                }"
-                svgClass="dark-17-svg"
-                [src]="icons.dirTextButtons + 'arrow_open.svg'"
-            >
-            </svg-icon>
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{
-                    'width.px': '24',
-                    'height.px': '24',
-                    'margin-right.px': '2'
-                }"
-                [src]="
-                    icons.dirLayouts +
-                    node.type +
-                    (node.details && (errorIcons[node.details.id] || node.details.status)
-                        ? '_' +
-                          (node.type !== 'camera' ||
-                          ['warning', 'unauthorized'].includes(
-                              errorIcons[node.details.id] || node.details.status
-                          )
-                              ? errorIcons[node.details.id] || node.details.status
-                              : node.details.unauthorized
-                              ? 'unauthorized'
-                              : node.details.online && node.details.requiresTranscoding
-                              ? 'warning'
-                              : node.details.online
-                              ? 'online'
-                              : 'offline')
-                        : '') +
-                    (node.shared ? '_shared' : '') +
-                    '.svg'
-                "
-            >
-            </svg-icon>
-            <span
-                class="ellipsis"
-                #nodeName
-            >
-                {{ node.name }}
-                <nx-tag
-                    *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved"
-                    (click)="layoutStateService.saveLayout(node.id)"
-                    locked
-                    >{{ unsaved | translate }}</nx-tag
-                >
-            </span>
-            <ng-container
-                *ngIf="
-                    (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
-                    hasActions[node.type] as nodeActions
-                "
-            >
-                <button
-                    *ngFor="let action of nodeActions"
-                    [nxTooltip]="action.tooltip | translate : node.details"
-                    (click)="action.handler(node.type, node.details); $event.stopPropagation()"
-                    [tourAnchor]="
-                        node.type === RESOURCE_TYPE.LAYOUTS ? 'cloud-layouts_add_layout' : ''
-                    "
-                    class="action-button"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="{
-                            'width.px': '20',
-                            'height.px': '20'
-                        }"
-                        [src]="icons.dir + action.icon + '.svg'"
-                    >
-                    </svg-icon>
-                </button>
-            </ng-container>
-        </ng-template>
         <!-- This is the tree node template for leaf nodes -->
         <cdk-nested-tree-node
             *cdkTreeNodeDef="let node"
@@ -125,56 +14,6 @@
             cdkDropList
             class="tree-node"
         >
-            <ng-template #cameraTooltip>
-                <div class="camera-tooltip-wrapper">
-                    <nx-health-image
-                        [isPrimary]="true"
-                        aspect="override"
-                        [preloader]="true"
-                        [state]="node.details.status"
-                        [unavailableMessage]="'Cannot load preview' | translate"
-                        [url]="
-                            node?.details?.requiresTranscoding
-                                ? ''
-                                : (node?.details?.previewUrl | async)
-                        "
-                        class="generic"
-                    ></nx-health-image>
-                </div>
-            </ng-template>
-            <ng-template #serverTooltip>
-                <ng-template #tooltipLoading>
-                    <nx-pre-loader [minHeight]="108"></nx-pre-loader>
-                </ng-template>
-                <div class="server-tooltip-wrapper">
-                    <h4>
-                        {{ { value: LANG.layouts.statistics, params: node.details } | nxTranslate }}
-                    </h4>
-                    <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
-                        <div
-                            *ngIf="res.statistics | as : ServerStats as stats"
-                            class="stats-grid"
-                        >
-                            <div translate>Description</div>
-                            <div translate>Usage</div>
-                            <ng-container *ngFor="let type of stats">
-                                <div>
-                                    {{ type.description }}
-                                </div>
-                                <div>
-                                    {{ type.value }}
-                                </div>
-                            </ng-container>
-                        </div>
-                        <div
-                            *ngIf="res.error as error"
-                            class="error-label"
-                        >
-                            {{ error | translate }}
-                        </div>
-                    </ng-container>
-                </div>
-            </ng-template>
             <div
                 cdkDrag
                 [cdkDragDisabled]="
@@ -231,6 +70,7 @@
                         ></ng-container>
                     </div>
                 </div>
+
                 <ng-container
                     *ngTemplateOutlet="
                         nodeInfo;
@@ -242,6 +82,58 @@
                     "
                 ></ng-container>
             </div>
+
+            <ng-template #cameraTooltip>
+                <div class="camera-tooltip-wrapper">
+                    <nx-health-image
+                        [isPrimary]="true"
+                        aspect="override"
+                        [preloader]="true"
+                        [state]="node.details.status"
+                        [unavailableMessage]="'Cannot load preview' | translate"
+                        [url]="
+                            node?.details?.requiresTranscoding
+                                ? ''
+                                : (node?.details?.previewUrl | async)
+                        "
+                        class="generic"
+                    ></nx-health-image>
+                </div>
+            </ng-template>
+
+            <ng-template #serverTooltip>
+                <ng-template #tooltipLoading>
+                    <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+                </ng-template>
+                <div class="server-tooltip-wrapper">
+                    <h4>
+                        {{ { value: LANG.layouts.statistics, params: node.details } | nxTranslate }}
+                    </h4>
+                    <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
+                        <div
+                            *ngIf="res.statistics | as : ServerStats as stats"
+                            class="stats-grid"
+                        >
+                            <div translate>Description</div>
+                            <div translate>Usage</div>
+                            <ng-container *ngFor="let type of stats">
+                                <div>
+                                    {{ type.description }}
+                                </div>
+                                <div>
+                                    {{ type.value }}
+                                </div>
+                            </ng-container>
+                        </div>
+                        <div
+                            *ngIf="res.error as error"
+                            class="error-label"
+                        >
+                            {{ error | translate }}
+                        </div>
+                    </ng-container>
+                </div>
+            </ng-template>
         </cdk-nested-tree-node>
 
         <!-- This is the tree node template for expandable nodes -->
@@ -262,6 +154,7 @@
                     })
                 "
                 (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
+                class="root-node"
             >
                 <ng-container
                     *ngTemplateOutlet="
@@ -287,5 +180,194 @@
                 <ng-container cdkTreeNodeOutlet></ng-container>
             </div>
         </cdk-nested-tree-node>
+
+        <ng-template
+            #nodeInfo
+            let-node="node"
+            let-expandable="expandable"
+            let-expanded="expanded"
+            let-preview="preview"
+        >
+            <ng-container
+                *ngIf="!preview && node.type !== 'camera'; then expandStateIcon"
+            ></ng-container>
+            <ng-container
+                *ngIf="preview || node.type === 'camera'; then recordingIcon"
+            ></ng-container>
+            <ng-container *ngTemplateOutlet="nodeTypeIcon"></ng-container>
+            <ng-container
+                *ngIf="
+                    !(CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) ||
+                        !hasActions[node.type];
+                    then simpleNodeText
+                "
+            />
+            <ng-container
+                *ngIf="
+                    (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
+                    hasActions[node.type] as nodeActions
+                "
+            >
+                <ng-container
+                    *ngIf="node.type === RESOURCE_TYPE.LAYOUTS; then layoutsMenu; else layoutMenu"
+                ></ng-container>
+
+                <ng-template #layoutsMenu>
+                    <ng-container [ngTemplateOutlet]="simpleNodeText" />
+                    <button
+                        *ngFor="let action of nodeActions"
+                        class="action-button"
+                        [nxTooltip]="action.tooltip | translate : node.details"
+                        (click)="
+                            $event.preventDefault(); action.handler(); treeControl.expand(node)
+                        "
+                        [tourAnchor]="'cloud-layouts_add_layout'"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [svgStyle]="{
+                                'width.px': '20',
+                                'height.px': '20'
+                            }"
+                            [src]="icons.dir + action.icon + '.svg'"
+                        >
+                        </svg-icon>
+                    </button>
+                </ng-template>
+                <ng-template #layoutMenu>
+                    <div
+                        class="node-editable"
+                        [cdkContextMenuTriggerFor]="nodeActionMenu"
+                    >
+                        <nx-text-editable
+                            class="node-name ellipsis"
+                            [(ngModel)]="node.name"
+                            [allowUserFocus]="false"
+                            [editEnabled]="editedLayout$$() === node.id"
+                            (onFocusChanged)="!$event && handleRename(node)"
+                            (onEditModeCancelled)="editedLayout$$.set(null)"
+                        >
+                        </nx-text-editable>
+                        <nx-tag
+                            *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved"
+                            (click)="layoutStateService.saveLayout(node.id)"
+                            locked
+                            >{{ unsaved | translate }}</nx-tag
+                        >
+                    </div>
+                    <button
+                        [cdkMenuTriggerFor]="nodeActionMenu"
+                        (click)="$event.stopPropagation()"
+                        [tourAnchor]="''"
+                        class="action-button"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [svgStyle]="{
+                                'width.px': '20',
+                                'height.px': '20',
+                            }"
+                            [src]="icons.dir + 'menu_icn.svg'"
+                        >
+                        </svg-icon>
+                    </button>
+                    <ng-template #nodeActionMenu>
+                        <div
+                            cdkMenu
+                            class="node-action-menu"
+                        >
+                            <ng-container *ngFor="let action of nodeActions">
+                                <button
+                                    *ngIf="action.action !== 'divider'"
+                                    [nxTooltip]="action.tooltip | translate : node.details"
+                                    (click)="
+                                        action.handler(node.type, node); $event.stopPropagation()
+                                    "
+                                    cdkMenuItem
+                                >
+                                    {{ action.name | translate }}
+                                </button>
+                                <mat-divider *ngIf="action.action === 'divider'" />
+                            </ng-container>
+                        </div>
+                    </ng-template>
+                </ng-template>
+            </ng-container>
+
+            <ng-template #recordingIcon>
+                <svg-icon
+                    *ngIf="
+                        ['recording', 'scheduled', 'archive'].includes(node.details.status)
+                            ? '1'
+                            : '0' as opacity
+                    "
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '20',
+                        'height.px': '24',
+                        'margin-left.px': '6',
+                        'margin-right.px': '-6',
+                        opacity: opacity,
+                        display: opacity === '0' && preview && 'none'
+                    }"
+                    svgClass="recording-icon"
+                    [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
+                >
+                </svg-icon>
+            </ng-template>
+            <ng-template #expandStateIcon>
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                'width.px': '20',
+                'height.px': '24',
+                'padding-bottom.px': '4',
+                fill: 'none !important',
+                opacity: expandable ? '1' : '0',
+                }"
+                    svgClass="dark-17-svg"
+                    [src]="icons.dirTextButtons + (expanded ? 'arrow_close.svg' : 'arrow_open.svg')"
+                >
+                </svg-icon>
+            </ng-template>
+            <ng-template #nodeTypeIcon>
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                'width.px': '20',
+                'height.px': '24',
+                }"
+                    [src]="
+                        icons.dirLayouts +
+                        node.type +
+                        (node.details && (errorIcons[node.details.id] || node.details.status)
+                            ? '_' +
+                              (node.type !== 'camera' ||
+                              ['warning', 'unauthorized'].includes(
+                                  errorIcons[node.details.id] || node.details.status
+                              )
+                                  ? errorIcons[node.details.id] || node.details.status
+                                  : node.details.unauthorized
+                                  ? 'unauthorized'
+                                  : node.details.online && node.details.requiresTranscoding
+                                  ? 'warning'
+                                  : node.details.online
+                                  ? 'online'
+                                  : 'offline')
+                            : '') +
+                        (node.shared ? '_shared' : '') +
+                        '.svg'
+                    "
+                />
+            </ng-template>
+            <ng-template #simpleNodeText>
+                <!-- node.name is also used for Layouts, Cameras, etc. root nodes. Needs to be translated -->
+                <span
+                    class="ellipsis node-name"
+                    #nodeName
+                    >{{ node.name }}</span
+                ></ng-template
+            >
+        </ng-template>
     </cdk-tree>
 </div>

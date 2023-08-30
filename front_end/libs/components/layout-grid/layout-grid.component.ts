@@ -235,8 +235,11 @@ export class NxLayoutGridComponent {
 
     SAVE_DELAY = 0;
 
-    treeControl = new NestedTreeControl<ResourceNode>(node =>
-        assertResourceParentNode(node) ? node.children : [],
+    treeControl = new NestedTreeControl<ResourceNode, string>(
+        node => (assertResourceParentNode(node) ? node.children : []),
+        {
+            trackBy: node => node.details?.id,
+        },
     );
     dataSource: ArrayDataSource<BaseResourceNode>;
 

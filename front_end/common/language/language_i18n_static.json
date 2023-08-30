@@ -89,12 +89,35 @@
         "error": "Only Errors"
     },
     "layouts": {
-        "createNew": "Create new layout",
         "newLayout": "New Layout",
-        "edit": "Edit \"{name}\" layout",
-        "delete": "Delete \"{name}\" layout",
-        "pleaseAddNew": "Please add layout on thick client to view layouts",
+        "layoutCopy": "(copy)",
         "statistics": "{resourceType} \"{name}\" Statistics",
+        "treeActions": {
+            "create": {
+                "name": "Create",
+                "tooltip": "Create new layout"
+            },
+            "rename": {
+                "name": "Rename",
+                "tooltip": "Rename \"{name}\" layout"
+            },
+            "duplicate": {
+                "name": "Duplicate",
+                "tooltip": "Duplicate \"{name}\" layout"
+            },
+            "delete": {
+                "name": "Delete",
+                "tooltip": "Delete \"{name}\" layout"
+            },
+            "openNewTab": {
+                "name": "Open in New Tab",
+                "tooltip": "Open layout \"{name}\" in a new tab"
+            },
+            "openNewWindow": {
+                "name": "Open in New Window",
+                "tooltip": "Open layout \"{name}\" in a new window"
+            }
+        },
         "unsavedStates": {
             "changed": "Changed",
             "unsaved": "Unsaved",
@@ -111,8 +134,12 @@
         },
         "titles": {
             "resourceTypes": {
+                "layouts": "Layouts",
+                "servers": "Servers",
                 "server": "Server",
-                "camera": "Camera"
+                "cameras": "Cameras",
+                "camera": "Camera",
+                "webpages": "Web Pages"
             }
         },
         "toasts": {
@@ -787,7 +814,7 @@
         },
         "channelPartners": {
             "usersAccess": "All users have access to the cloud",
-            "usersNoAccess":  "All users have \u200B | no access | \u200B to the cloud",
+            "usersNoAccess": "All users have \u200B | no access | \u200B to the cloud",
             "systemsAccess": "All systems have access to services",
             "systemsNoAccess": "All systems have \u200B | no access | \u200B to services",
             "recordingEnabled": "Recording is enabled for cameras",
@@ -1047,13 +1074,13 @@
     "alertsCount": "{count, plural, =0{# alerts} one{# alert} other{# alerts}}",
     "channelPartners": {
         "tabNames": {
-            "information" : "Information",
-            "organizations" : "Organizations",
-            "reports" : "Reports",
-            "settings" : "Settings",
-            "subchannel" : "Subchannel",
-            "systems" : "Systems",
-            "users" : "Users"
+            "information": "Information",
+            "organizations": "Organizations",
+            "reports": "Reports",
+            "settings": "Settings",
+            "subchannel": "Subchannel",
+            "systems": "Systems",
+            "users": "Users"
         },
         "usersTableHeaders": {
             "login": "Login",
@@ -1407,7 +1434,7 @@
         "orgRoles": {
             "Organization Administrator": "Organization Administrator",
             "Administrator": "Administrator",
-            "Power User":  "Power User",
+            "Power User": "Power User",
             "System Health Viewer": "System Health Viewer",
             "Advanced Viewer": "Advanced Viewer",
             "Viewer": "Viewer",

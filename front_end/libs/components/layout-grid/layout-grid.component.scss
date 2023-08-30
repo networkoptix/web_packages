@@ -515,37 +515,6 @@ iframe {
     outline: 2px solid var(--brand-core);
 }
 
-.action-button {
-    margin: 4px;
-    background: transparent;
-    height: 24px !important;
-    width: 24px !important;
-    padding: 0 !important;
-    border-radius: 24px !important;
-
-    span+& {
-        margin-left: auto !important;
-    }
-
-    & .st0 {
-        stroke: var(--body-text-color);
-        fill: var(--body-text-color);
-    }
-
-    &:hover {
-        border: 1px solid var(--body-text-color);
-    }
-
-    &:active {
-        background: var(--left-menu-l3-selected-bg);
-
-        & .st0 {
-            stroke: var(--left-menu-l3-selected-color);
-            fill: var(--left-menu-l3-selected-color);
-        }
-    }
-}
-
 .help-text {
     position: absolute;
     top: 4px;

@@ -33,7 +33,7 @@
         display: flex;
 
         &.selected:not(:hover) {
-            span {
+            .node-name {
                 color: var(--brand-core);
             }
 
@@ -59,12 +59,8 @@
         }
 
         & .cdk-tree-node {
-            font-size: 14px;
-            font-weight: 500;
-
             & > .cdk-drag {
-                padding: 0 0 0 24px;
-                line-height: 14px;
+                padding-left: 24px;
                 align-items: center;
 
                 &:not(:hover) > .action-button {
@@ -93,6 +89,10 @@
                         stroke: var(--left-menu-l3-hover-color);
                         fill: var(--left-menu-l3-hover-color);
                     }
+
+                    .node-editable {
+                        max-width: calc(100% - 60px);
+                    }
                 }
             }
         }
@@ -107,26 +107,19 @@ cdk-tree {
     display: none;
 }
 
-// duplicated
 .action-button {
-    margin: 4px;
     background: transparent;
-    height: 24px !important;
-    width: 24px !important;
+    height: 20px !important;
+    width: 20px !important;
     padding: 0 !important;
-    border-radius: 24px !important;
 
-    span+& {
+    span + & {
         margin-left: auto !important;
     }
 
     & .st0 {
         stroke: var(--body-text-color);
         fill: var(--body-text-color);
-    }
-
-    &:hover {
-        border: 1px solid var(--body-text-color);
     }
 
     &:active {
@@ -169,7 +162,7 @@ cdk-tree {
         border-top: 1px solid var(--border-color);
         border-left: 1px solid var(--border-color);
 
-        &>div {
+        & > div {
             border-right: 1px solid var(--border-color);
             border-bottom: 1px solid var(--border-color);
             padding: 8px;
@@ -194,7 +187,7 @@ cdk-tree {
 .resource-tree-wrapper {
     max-height: 100%;
     overflow-y: auto;
-    padding-right: 24px
+    padding-right: 24px;
 }
 
 .add-preview {
@@ -212,12 +205,6 @@ cdk-tree {
     }
 }
 
-// duplicated
-.ellipsis {
-    line-height: initial !important;
-    padding-right: 8px;
-}
-
 .tooltip-offset {
     &-parent {
         position: relative;
@@ -233,7 +220,6 @@ cdk-tree {
 }
 
 .offline:not(.selected) {
-
     span,
     svg-icon {
         opacity: 0.5;
@@ -266,5 +252,78 @@ cdk-tree {
 
     &:hover .st1 {
         fill: var(--left-menu-l3-selected-bg);
+    }
+}
+
+.root-node {
+    height: 24px;
+    padding: 2px 0;
+    line-height: 20px;
+    font-size: 14px;
+    font-weight: 500;
+
+    &:not(:hover) {
+        button {
+            display: none !important;
+        }
+    }
+
+    .action-button {
+        .st0 {
+            stroke: var(--btn-text-hover-color);
+        }
+        &:hover {
+            .st0 {
+                stroke: var(--btn-text-color);
+            }
+        }
+    }
+
+    svg {
+        padding-bottom: 2px;
+    }
+}
+
+.node-name {
+    margin: 0 0 0 4px;
+    flex-grow: 1;
+}
+
+.node-editable {
+    flex-grow: 1;
+    max-width: calc(100% - 48px);
+    display: flex;
+    flex-direction: row;
+}
+
+// quick and raw styling for now. will be improved in upcoming story
+::ng-deep .node-action-menu {
+    width: 195px;
+    background-color: var(--dropdown-menu-bg);
+    border: var(--dropdown-menu-border);
+    border-radius: 2px;
+    box-shadow: var(--dropdown-menu-shadow-upper);
+    font-size: 14px;
+    font-weight: 400;
+    padding: 6px;
+
+    button {
+        border: none;
+        height: 24px !important;
+        margin: 6px 0;
+        width: 100%;
+        font-weight: 500 !important;
+        font-size: 0.8125rem !important;
+        color: var(--dropdown-item-color) !important;
+        background-color: transparent;
+        justify-content: left;
+        &:hover {
+            background-color: var(--dropdown-item-hover-bg);
+            color: var(--dropdown-item-hover-color) !important;
+        }
+    }
+
+    mat-divider {
+     margin: 6px 0 4px 0;
     }
 }

@@ -28,7 +28,10 @@ import { selectUnsavedLayoutsState } from './store/unsaved-layouts/unsaved-layou
 export class LayoutStateEffects {
     autoSelectNewLayout$ = createEffect(() => {
         return this.actions.pipe(
-            ofType(UnsavedLayoutsActions.createNewLocalLayout),
+            ofType(
+                UnsavedLayoutsActions.createNewLocalLayout,
+                UnsavedLayoutsActions.duplicateLayout,
+            ),
             map(({ id }) => id),
             distinctUntilChanged(),
             switchMap(createdLayoutId => {
@@ -109,8 +112,8 @@ export class LayoutStateEffects {
     });
 
     constructor(
-        private store: Store,
         private actions: Actions,
+        private store: Store,
         private systemService: NxSystemService,
     ) {}
 }

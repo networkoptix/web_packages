@@ -1,16 +1,19 @@
 import {
     Component,
     ElementRef,
-    HostListener,
-    forwardRef,
-    Input,
     EventEmitter,
+    forwardRef,
+    HostListener,
+    Input,
+    OnChanges,
+    OnInit,
     Output,
     ViewEncapsulation,
-    OnInit,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { escape } from 'lodash-es';
+
+import { NgChanges } from '@utils/ng-changes';
 
 @Component({
     selector: 'nx-text-editable',
@@ -26,15 +29,15 @@ import { escape } from 'lodash-es';
     styleUrls: ['editable.component.scss'],
     encapsulation: ViewEncapsulation.None,
 })
-export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
+export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueAccessor {
     /*
        USAGE:
            <nx-text-editable
                 [(ngModel)]="name"
                 ngDefaultControl
                 required?="true" [OR] [required]?="isRequired"
-                [disabled]?="!editEnabled"
-                (onEditModeChanged)?="editModeChanged($event)"
+                [editEnabled]?="editEnabled"
+                (onFocusChanged)?="editModeChanged($event)"
                 [ngClass]?="{'has-edit-icon': !editMode}"
             ></nx-text-editable>
     * */
@@ -42,12 +45,43 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     @Input() editClass = 'editable-edit';
     @Input() initialClass = 'editable-initial';
     @Input() errorClass = 'editable-error';
+    @Input() allowUserFocus = true;
+    @Input() editEnabled = false;
     @Input() required;
 
-    @Output() onEditModeChanged = new EventEmitter<any>();
+    @Output() onFocusChanged = new EventEmitter<any>();
+    @Output() onEditModeCancelled = new EventEmitter<any>();
 
     private _initialValue: string;
-    private _disabled: boolean;
+
+    ngOnChanges(changes: NgChanges<NxTextEditableComponent>) {
+        if (changes.editEnabled) {
+            this.toggleEdit(changes.editEnabled?.currentValue);
+
+            if (this.allowUserFocus) {
+                return;
+            }
+
+            const { currentValue, previousValue } = changes.editEnabled;
+            if (currentValue && !previousValue) {
+                setTimeout(() => {
+                    this.el.nativeElement.focus();
+                }, 0);
+            }
+        }
+    }
+
+    private focusTextEnd(el: ElementRef) {
+        // eslint-disable-next-line nx/ban-global-variables
+        const selection = window.getSelection();
+        selection.selectAllChildren(el.nativeElement);
+        selection.collapseToEnd();
+    }
+
+    @HostListener('click', ['$event'])
+    callOnClick($event: MouseEvent): void {
+        this.editEnabled && $event.stopPropagation();
+    }
 
     @HostListener('input')
     callOnChange(): void {
@@ -71,7 +105,7 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
 
         this.el.nativeElement.classList.remove(this.editClass);
         this.el.nativeElement.classList.add(this.initialClass);
-        this.onEditModeChanged.emit(false);
+        this.onFocusChanged.emit(false);
         this.onTouchedCallback();
     }
 
@@ -79,12 +113,23 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
     callOnFocus(): void {
         this.el.nativeElement.classList.remove(this.initialClass);
         this.el.nativeElement.classList.add(this.editClass);
-        this.onEditModeChanged.emit(true);
+        this.onFocusChanged.emit(true);
+
+        if (!this.allowUserFocus) {
+            this.focusTextEnd(this.el);
+        }
     }
 
     @HostListener('keyup.enter')
     callOnEnter(): void {
         this.el.nativeElement.innerText = this.el.nativeElement.textContent;
+        this.el.nativeElement.blur();
+    }
+
+    @HostListener('keyup.esc')
+    callOnEscape(): void {
+        this.onEditModeCancelled.emit();
+        this.el.nativeElement.textContent = this._initialValue;
         this.el.nativeElement.blur();
     }
 
@@ -115,7 +160,7 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
             this._initialValue = value;
             this.el.nativeElement.textContent = value || '';
             this.el.nativeElement.classList.add(this.initialClass);
-            !this._disabled && this.el.nativeElement.setAttribute('contenteditable', 'true');
+            this.editEnabled && this.el.nativeElement.setAttribute('contenteditable', 'true');
             this.checkError();
         }
     }
@@ -128,10 +173,8 @@ export class NxTextEditableComponent implements OnInit, ControlValueAccessor {
         this.onTouchedCallback = fn;
     }
 
-    // called when element property disabled is changed
-    setDisabledState(val: boolean): void {
-        this._disabled = val;
-        this.el.nativeElement.setAttribute('disabled', String(val));
-        this.el.nativeElement.setAttribute('contenteditable', String(!val));
+    toggleEdit(isEditEnabled: boolean): void {
+        this.el.nativeElement.setAttribute('disabled', String(!isEditEnabled));
+        this.el.nativeElement.setAttribute('contenteditable', String(isEditEnabled));
     }
 }

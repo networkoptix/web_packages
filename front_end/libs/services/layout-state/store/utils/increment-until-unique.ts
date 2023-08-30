@@ -3,7 +3,8 @@ export const incrementUntilUnique = (name: string, existingNames: string[]): str
         return name;
     }
 
-    const nameRegExp = new RegExp(`^${name} `);
+    const escapedName = name.replace(/([!@#$%^&*()_+])/g, '\\$1');
+    const nameRegExp = new RegExp(`^${escapedName} `);
     const lastVersion =
         existingNames
             .filter(existingName => nameRegExp.test(existingName))
@@ -12,7 +13,7 @@ export const incrementUntilUnique = (name: string, existingNames: string[]): str
             .map(nameDiff => parseInt(nameDiff))
             .filter(nameDiff => !isNaN(nameDiff))
             .sort((a, b) => a - b)
-            .pop() || 1;
+            .pop() || 0;
 
     return `${name} ${lastVersion + 1}`;
 };
