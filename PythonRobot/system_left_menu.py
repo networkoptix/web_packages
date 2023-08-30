@@ -14,6 +14,7 @@ class SystemLeftMenu:
         self.rb = RobotVariables(lang)
         self._wait_until_page_loaded()
         self.users = []
+        self.servers = []
         # Todo: find way to pass id in
         # self._location_is_correct()
 
@@ -24,6 +25,14 @@ class SystemLeftMenu:
 
     def update_users_list(self):
         self.users = self.driver.find_elements_by_xpath("//div[@id='level3users']//nx-level-3-item")
+
+    def servers_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//span[contains(text(), '{SERVERS}')]")
+        return Button(self.driver, translated_xpath)
+
+    def update_servers_list(self):
+        self.servers = self.driver.find_elements_by_xpath("//div[@id='level3servers']//nx-level-3-item")
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-menu")

@@ -61,6 +61,7 @@ def non_owner_can_disconnect_account_from_system():
     sys_admin = SystemAdmin(driver)
     time.sleep(2)
     sys_admin.disconnect_from_account_button().click()
+    time.sleep(1)
     sys_admin.disconnect_from_account_cancel_button().click()
     sys_admin.disconnect_from_account_button().click()
     sys_admin.disconnect_from_account_confirm_button().click()

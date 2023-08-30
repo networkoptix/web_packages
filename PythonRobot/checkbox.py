@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 
 import robot_keywords
 
+
 class Checkbox:
     def __init__(self, driver: webdriver, visible_locator, actual_locator):
         self.driver = driver

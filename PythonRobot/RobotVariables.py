@@ -46,10 +46,12 @@ class RobotVariables():
                 value = value.replace('{' + match + '}' if '{' in pattern else '%' + match + '%', replacement_value)
         return value
 
-    def __getattr__(self, variable_name):
-        if variable_name not in self.variables:
-            raise AttributeError(f"Variable {variable_name} not found in {self.language} or in variables_dict.py")
-        result = self.variables[variable_name]
-        if isinstance(result, str):
-            return self.replace_nested_variables(result)
-        return result
+    def __getattr__(self, variable_name, get_replacements=True):
+        if get_replacements:
+            if variable_name not in self.variables:
+                raise AttributeError(f"Variable {variable_name} not found in {self.language} or in variables_dict.py")
+            result = self.variables[variable_name]
+            if isinstance(result, str):
+                return self.replace_nested_variables(result)
+            return result
+        return self.variables[variable_name]

@@ -17,6 +17,7 @@
     "DISCONNECT_FORM_ENTER_PASSWORD_TO_CONTINUE_TEXT": "Enter password to continue",
     "SYSTEM_NO_ACCESS_TEXT": "Failed to access system",
     "USERS": "Users",
+    "SERVERS": "Servers",
     "DISCONNECT_FROM_CLOUD_TEXT": "Disconnect from %PRODUCT_NAME%",
     "RENAME": "Rename",
     "RESTART": "Restart",
