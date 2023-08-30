@@ -17,19 +17,17 @@ export class HelperMockProvider<Provider, Value> {
 
 export const sanitizerMock = {
     sanitize: (_, val) => val,
-    bypassSecurityTrustHtml: val => val
+    bypassSecurityTrustHtml: val => val,
 };
 
-const parseStaticTranslations = staticLangNode => Object.entries(
-    staticLangNode
-).reduce((
-    parsed, [key, value]
-) => ({
-    ...parsed,
-    [key]: typeof value === 'string'
-        ? () => value
-        : parseStaticTranslations(value)
-}), {});
+const parseStaticTranslations = staticLangNode =>
+    Object.entries(staticLangNode).reduce(
+        (parsed, [key, value]) => ({
+            ...parsed,
+            [key]: typeof value === 'string' ? () => value : parseStaticTranslations(value),
+        }),
+        {},
+    );
 
 const buildMapped = (overrides, mappedTarget, nodes = []) => {
     Object.entries(overrides).forEach(([node, value]) => {
@@ -37,7 +35,7 @@ const buildMapped = (overrides, mappedTarget, nodes = []) => {
         if (typeof value === 'function') {
             mappedTarget.push({
                 nodeList,
-                value
+                value,
             });
         } else {
             buildMapped(value, mappedTarget, nodeList);
@@ -88,6 +86,6 @@ export const getMockTranslations = (overrides?: any) => {
     return {
         translations,
         getTranslations: () => translations,
-        translateSubject: new Subject()
+        translateSubject: new Subject(),
     };
 };

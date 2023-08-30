@@ -19,14 +19,14 @@ export function getModuleInformation() {
             '192.168.5.5',
             'fe80::1516:de34:71dc:2a4e%3',
             '47.44.180.186',
-            'a29fc3f4-0de6-0ed6-be0a-a55bc0ea5393.fac2a73c-dac1-4291-a988-a93ba84cbfb2'
+            'a29fc3f4-0de6-0ed6-be0a-a55bc0ea5393.fac2a73c-dac1-4291-a988-a93ba84cbfb2',
         ],
         runtimeId: '{cf696617-178e-4150-b075-b77666fbb90a}',
         serverFlags: 'SF_HasPublicIP|SF_Has_HDD|SF_SupportsTranscoding',
         sslAllowed: true,
         systemName: 'Sofia',
         type: 'Media Server',
-        version: '4.3.0.692'
+        version: '4.3.0.692',
     };
 }
 
@@ -41,11 +41,11 @@ export function getLocalSettings() {
             defaultLanguage: 'en_US',
             contact: {
                 companyUrl: 'No address',
-                supportAddress: 'No address'
+                supportAddress: 'No address',
             },
             desktop: {
-                trialLicenseKey: '0000-0000-0000-0000'
-            }
+                trialLicenseKey: '0000-0000-0000-0000',
+            },
         },
         webadminConfig: {
             dynamicMenus: [
@@ -56,91 +56,91 @@ export function getLocalSettings() {
                             enabled: true,
                             name: 'Download %VMS_NAME%',
                             newWindow: false,
-                            url: '{{CLOUD_HOST}}/download'
+                            url: '{{CLOUD_HOST}}/download',
                         },
                         {
                             enabled: true,
                             name: 'Support',
                             newWindow: true,
-                            url: 'https://support.networkoptix.com'
+                            url: 'https://support.networkoptix.com',
                         },
                         {
                             enabled: true,
                             name: 'API Documentation',
                             newWindow: true,
-                            url: '/swagger-ui/index.html'
+                            url: '/swagger-ui/index.html',
                         },
                         {
                             enabled: true,
                             name: 'Download SDK',
                             newWindow: true,
-                            url: '{{CLOUD_HOST}}/download/sdk'
-                        }
-                    ]
-                }
+                            url: '{{CLOUD_HOST}}/download/sdk',
+                        },
+                    ],
+                },
             ],
             licenseTypes: [
                 {
                     deactivationsAllowed: 3,
                     name: 'time',
-                    title: 'Time'
+                    title: 'Time',
                 },
                 {
                     deactivationsAllowed: 0,
                     name: 'trial',
-                    title: 'Trial'
+                    title: 'Trial',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'digital',
-                    title: 'Professional'
+                    title: 'Professional',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'analog',
-                    title: 'Analog'
+                    title: 'Analog',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'edge',
-                    title: 'Edge'
+                    title: 'Edge',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'vmax',
-                    title: 'VMAX'
+                    title: 'VMAX',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'videowall',
-                    title: 'Video Wall'
+                    title: 'Video Wall',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'analogencoder',
-                    title: 'Analog Encoder'
+                    title: 'Analog Encoder',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'starter',
-                    title: 'Starter'
+                    title: 'Starter',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'iomodule',
-                    title: 'IO Module'
+                    title: 'IO Module',
                 },
                 {
                     deactivationsAllowed: 3,
                     name: 'bridge',
-                    title: 'Bridge'
+                    title: 'Bridge',
                 },
                 {
                     deactivationsAllowed: 0,
                     name: 'nvr',
-                    title: 'NVR'
-                }
-            ]
+                    title: 'NVR',
+                },
+            ],
         },
         supportedLanguages: [
             'en_US',
@@ -152,44 +152,21 @@ export function getLocalSettings() {
             'ja_JP',
             'ko_KR',
             'zh_CN',
-            'zh_TW'
-        ]
+            'zh_TW',
+        ],
     };
 }
 
 export function getCloudSettings() {
     return {
         appTypesForPlatform: {
-            arm: [
-                'client',
-                'server'
-            ],
-            linux: [
-                'bundle',
-                'client',
-                'server'
-            ],
-            macos: [
-                'client'
-            ],
-            sdk: [
-                'metadata_sdk',
-                'storage_sdk',
-                'video_source_sdk'
-            ],
-            windows: [
-                'bundle',
-                'client',
-                'server'
-            ]
+            arm: ['client', 'server'],
+            linux: ['bundle', 'client', 'server'],
+            macos: ['client'],
+            sdk: ['metadata_sdk', 'storage_sdk', 'video_source_sdk'],
+            windows: ['bundle', 'client', 'server'],
         },
-        availableDownloadsPlatform: [
-            'arm',
-            'linux',
-            'macos',
-            'sdk',
-            'windows'
-        ],
+        availableDownloadsPlatform: ['arm', 'linux', 'macos', 'sdk', 'windows'],
         cloudName: 'Xyz Witness Cloud',
         vmsName: 'Xyz Witness',
         cloudStorageEnabled: false,
@@ -203,51 +180,52 @@ export function getCloudSettings() {
             {
                 id: 'automation',
                 name: 'Automation',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'videoAnalytics',
                 name: 'Video Analytics',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'objectDetection',
                 name: 'Object Detection',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'eventDetection',
                 name: 'Event Detection',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'faceRecognition',
                 name: 'Face Recognition',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'licensePlateRecognition',
                 name: 'License Plate Recognition',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'health',
                 name: 'Health Monitoring',
-                enabled: false
+                enabled: false,
             },
             {
                 id: 'storage',
                 name: 'Storage',
-                enabled: true
+                enabled: true,
             },
             {
                 id: 'mine',
                 name: 'My Integrations',
-                enabled: true
-            }
+                enabled: true,
+            },
         ],
         integrationFilterLimitation: '12',
-        integrationSeoPageDescription: 'The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like Xyz Witness, all available in Xyz Witness Cloud so that you can find solutions to build and customize your IP Video system.',
+        integrationSeoPageDescription:
+            'The Integrations Marketplace is a centralized ecosystem of products that integrate seamlessly with VMS products like Xyz Witness, all available in Xyz Witness Cloud so that you can find solutions to build and customize your IP Video system.',
         integrationStoreEnabled: true,
         healthMonitorCacheTimeout: 60,
         trafficRelayHost: '{systemId}.relay.vmsproxy.hdw.mx',
@@ -258,131 +236,131 @@ export function getCloudSettings() {
         testedOperatingSystems: {
             linux: 'Ubuntu LTS: 16.04, 18.04, 20.04',
             macos: 'OS X 10.13: “High Sierra”, 10.14: “Mojave”, 10.15 “Catalina”.',
-            windows: 'Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607'
+            windows: 'Windows 7, 8, 8.1, 10/Enterprise, 2008 R2, 2012, 2012 R2, 2016 v1607',
         },
         supportLink: 'https://support.networkoptix.com',
         privacyLink: 'https://www.networkoptix.com/privacy-policy/',
         supportedResolutions: [
             {
                 value: '0',
-                name: 'All'
+                name: 'All',
             },
             {
                 value: '84480',
-                name: '1CIF'
+                name: '1CIF',
             },
             {
                 value: '168960',
-                name: '2CIF'
+                name: '2CIF',
             },
             {
                 value: '337920',
-                name: 'D1'
+                name: 'D1',
             },
             {
                 value: '307200',
-                name: 'VGA'
+                name: 'VGA',
             },
             {
                 value: '786432',
-                name: 'SVGA'
+                name: 'SVGA',
             },
             {
                 value: '921600',
-                name: '720p'
+                name: '720p',
             },
             {
                 value: '1310720',
-                name: '1mp'
+                name: '1mp',
             },
             {
                 value: '2073600',
-                name: '1080p'
+                name: '1080p',
             },
             {
                 value: '1920000',
-                name: '2mp'
+                name: '2mp',
             },
             {
                 value: '3145728',
-                name: '3mp'
+                name: '3mp',
             },
             {
                 value: '4915200',
-                name: '5mp'
+                name: '5mp',
             },
             {
                 value: '8000000',
-                name: '8mp'
+                name: '8mp',
             },
             {
                 value: '10039296',
-                name: '10mp'
-            }
+                name: '10mp',
+            },
         ],
         supportedHardwareTypes: [
             {
                 id: 'camera',
-                label: 'Camera'
+                label: 'Camera',
             },
             {
                 id: 'multiSensorCamera',
-                label: 'Multi-Sensor Camera'
+                label: 'Multi-Sensor Camera',
             },
             {
                 id: 'encoder',
-                label: 'Encoder'
+                label: 'Encoder',
             },
             {
                 id: 'dvr',
-                label: 'DVR'
+                label: 'DVR',
             },
             {
                 id: 'other',
-                label: 'Other'
-            }
+                label: 'Other',
+            },
         ],
         searchTags: [
             {
                 id: 'isAudioSupported',
-                value: false
+                value: false,
             },
             {
                 id: 'isTwAudioSupported',
-                value: false
+                value: false,
             },
             {
                 id: 'isPtzSupported',
-                value: false
+                value: false,
             },
             {
                 id: 'isAptzSupported',
-                value: false
+                value: false,
             },
             {
                 id: 'isFisheye',
-                value: false
+                value: false,
             },
             {
                 id: 'isMdSupported',
-                value: false
+                value: false,
             },
             {
                 id: 'isIoSupported',
-                value: false
+                value: false,
             },
             {
                 id: 'isH265',
-                value: false
+                value: false,
             },
             {
                 id: 'isMultiSensor',
-                value: false
+                value: false,
             },
             {
                 id: 'isAnalyticsSupported',
-                value: false
-            }
+                value: false,
+            },
         ],
         vendorsShown: '30',
         pushConfig: {
@@ -392,7 +370,7 @@ export function getCloudSettings() {
             projectId: 'nx-push-test',
             storageBucket: 'nx-push-test.appspot.com',
             messagingSenderId: '627461092708',
-            appId: '1:627461092708:web:1b140238961b4213'
+            appId: '1:627461092708:web:1b140238961b4213',
         },
         googleTagManagerId: '  ',
         trialLicenseKey: '0000-0000-0000-0005',
@@ -414,7 +392,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: null,
-                        display_name: 'About Xyz Witness Cloud'
+                        display_name: 'About Xyz Witness Cloud',
                     },
                     {
                         name: 'Download Xyz Witness',
@@ -431,7 +409,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: null,
-                        display_name: 'Download Xyz Witness'
+                        display_name: 'Download Xyz Witness',
                     },
                     {
                         name: 'Integrations',
@@ -448,7 +426,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 2,
                         urlified: null,
-                        display_name: 'Integrations'
+                        display_name: 'Integrations',
                     },
                     {
                         name: 'Support',
@@ -465,7 +443,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 4,
                         urlified: null,
-                        display_name: 'Support'
+                        display_name: 'Support',
                     },
                     {
                         name: 'Terms',
@@ -482,7 +460,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 5,
                         urlified: null,
-                        display_name: 'Terms'
+                        display_name: 'Terms',
                     },
                     {
                         name: 'Privacy',
@@ -499,7 +477,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 6,
                         urlified: null,
-                        display_name: 'Privacy'
+                        display_name: 'Privacy',
                     },
                     {
                         name: 'Supported Devices',
@@ -516,7 +494,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 7,
                         urlified: null,
-                        display_name: 'Supported Devices'
+                        display_name: 'Supported Devices',
                     },
                     {
                         name: 'System Calculator',
@@ -533,14 +511,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 8,
                         urlified: null,
-                        display_name: 'System Calculator'
-                    }
+                        display_name: 'System Calculator',
+                    },
                 ],
                 type: 0,
                 base_url: '',
                 id: 2,
                 title: '',
-                description: ''
+                description: '',
             },
             'platform overview (for developers landing)': {
                 nodes: [
@@ -559,7 +537,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: '208-develop-with-nx-meta',
-                        display_name: 'Develop with Xyz Meta'
+                        display_name: 'Develop with Xyz Meta',
                     },
                     {
                         name: 'What is Possible',
@@ -593,7 +571,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '368-build',
-                                display_name: 'build'
+                                display_name: 'build',
                             },
                             {
                                 name: 'develop',
@@ -610,7 +588,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: '354-develop',
-                                display_name: 'develop'
+                                display_name: 'develop',
                             },
                             {
                                 name: 'create',
@@ -627,9 +605,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: '366-create',
-                                display_name: 'create'
-                            }
-                        ]
+                                display_name: 'create',
+                            },
+                        ],
                     },
                     {
                         name: 'Supported Tech',
@@ -680,7 +658,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '364-apple',
-                                        display_name: 'Apple'
+                                        display_name: 'Apple',
                                     },
                                     {
                                         name: 'Ubuntu',
@@ -697,7 +675,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '364-ubuntu',
-                                        display_name: 'Ubuntu'
+                                        display_name: 'Ubuntu',
                                     },
                                     {
                                         name: 'Windows',
@@ -714,7 +692,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '364-windows',
-                                        display_name: 'Windows'
+                                        display_name: 'Windows',
                                     },
                                     {
                                         name: 'Android',
@@ -731,7 +709,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '364-android',
-                                        display_name: 'Android'
+                                        display_name: 'Android',
                                     },
                                     {
                                         name: 'Docker',
@@ -748,7 +726,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 4,
                                         urlified: '404-docker',
-                                        display_name: 'Docker'
+                                        display_name: 'Docker',
                                     },
                                     {
                                         name: 'ARM',
@@ -765,7 +743,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 5,
                                         urlified: '451-arm',
-                                        display_name: 'ARM'
+                                        display_name: 'ARM',
                                     },
                                     {
                                         name: 'VMware',
@@ -782,9 +760,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 6,
                                         urlified: '453-vmware',
-                                        display_name: 'VMware'
-                                    }
-                                ]
+                                        display_name: 'VMware',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Text Links',
@@ -818,7 +796,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '361-c++',
-                                        display_name: 'C++'
+                                        display_name: 'C++',
                                     },
                                     {
                                         name: 'Node.js',
@@ -835,7 +813,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '361-node.js',
-                                        display_name: 'Node.js'
+                                        display_name: 'Node.js',
                                     },
                                     {
                                         name: '.NET, C#',
@@ -852,7 +830,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '361-.net,-c#',
-                                        display_name: '.NET, C#'
+                                        display_name: '.NET, C#',
                                     },
                                     {
                                         name: 'Python',
@@ -869,7 +847,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '361-python',
-                                        display_name: 'Python'
+                                        display_name: 'Python',
                                     },
                                     {
                                         name: 'Javascript/Typescript',
@@ -886,7 +864,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 4,
                                         urlified: '361-javascript/typescript',
-                                        display_name: 'Javascript/Typescript'
+                                        display_name: 'Javascript/Typescript',
                                     },
                                     {
                                         name: '+ Others',
@@ -903,11 +881,11 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 5,
                                         urlified: '361-+-others',
-                                        display_name: '+ Others'
-                                    }
-                                ]
-                            }
-                        ]
+                                        display_name: '+ Others',
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         name: 'Get Started',
@@ -941,7 +919,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '351-for-any-platform',
-                                display_name: 'For any Platform'
+                                display_name: 'For any Platform',
                             },
                             {
                                 name: 'Only for Developers',
@@ -958,7 +936,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: '352-only-for-developers',
-                                display_name: 'Only for Developers'
+                                display_name: 'Only for Developers',
                             },
                             {
                                 name: 'Learn about Components',
@@ -975,7 +953,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: '220-learn-about-components',
-                                display_name: 'Learn about Components'
+                                display_name: 'Learn about Components',
                             },
                             {
                                 name: 'Documentation and Samples',
@@ -992,9 +970,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 4,
                                 urlified: '243-documentation-and-samples',
-                                display_name: 'Documentation and Samples'
-                            }
-                        ]
+                                display_name: 'Documentation and Samples',
+                            },
+                        ],
                     },
                     {
                         name: 'Developer Tools',
@@ -1028,7 +1006,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '418-server-http-rest-api',
-                                display_name: 'Server HTTP Rest API'
+                                display_name: 'Server HTTP Rest API',
                             },
                             {
                                 name: 'Server Plugin SDK (C++)',
@@ -1045,7 +1023,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: '357-server-plugin-sdk-(c++)',
-                                display_name: 'Server Plugin SDK (C++)'
+                                display_name: 'Server Plugin SDK (C++)',
                             },
                             {
                                 name: 'Cloud API',
@@ -1062,7 +1040,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: '358-cloud-api',
-                                display_name: 'Cloud API'
+                                display_name: 'Cloud API',
                             },
                             {
                                 name: 'Other Tools',
@@ -1079,9 +1057,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: '355-other-tools',
-                                display_name: 'Other Tools'
-                            }
-                        ]
+                                display_name: 'Other Tools',
+                            },
+                        ],
                     },
                     {
                         name: 'Integrations Marketplace',
@@ -1115,7 +1093,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '244-about-marketplace',
-                                display_name: 'About Marketplace'
+                                display_name: 'About Marketplace',
                             },
                             {
                                 name: 'Examples of Plugins',
@@ -1149,7 +1127,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '29-visionlabs',
-                                        display_name: 'VisionLabs'
+                                        display_name: 'VisionLabs',
                                     },
                                     {
                                         name: 'Face Recognition',
@@ -1166,7 +1144,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '39-face-recognition',
-                                        display_name: 'Face Recognition'
+                                        display_name: 'Face Recognition',
                                     },
                                     {
                                         name: 'Test',
@@ -1183,11 +1161,11 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '68-test',
-                                        display_name: 'Test'
-                                    }
-                                ]
-                            }
-                        ]
+                                        display_name: 'Test',
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         name: 'Developer Support',
@@ -1204,14 +1182,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 7,
                         urlified: '211-developer-support',
-                        display_name: 'Developer Support'
-                    }
+                        display_name: 'Developer Support',
+                    },
                 ],
                 type: 1,
                 base_url: 'developers',
                 id: 4,
                 title: '',
-                description: ''
+                description: '',
             },
             'test - developer tools': {
                 nodes: [
@@ -1230,7 +1208,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: '212-nx-server-http-rest-api',
-                        display_name: 'Xyz Server HTTP REST API'
+                        display_name: 'Xyz Server HTTP REST API',
                     },
                     {
                         name: 'Xyz Server Plugin SDK (C++)',
@@ -1247,7 +1225,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: '213-nx-server-plugin-sdk-(c++)',
-                        display_name: 'Xyz Server Plugin SDK (C++)'
+                        display_name: 'Xyz Server Plugin SDK (C++)',
                     },
                     {
                         name: 'Cloud API: Route API Calls via Xyz Cloud',
@@ -1264,7 +1242,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 2,
                         urlified: '214-cloud-api:-route-api-calls-via-nx-cloud',
-                        display_name: 'Cloud API: Route API Calls via Xyz Cloud'
+                        display_name: 'Cloud API: Route API Calls via Xyz Cloud',
                     },
                     {
                         name: 'Testcamera: IP Camera Emulator',
@@ -1281,7 +1259,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: '215-testcamera:-ip-camera-emulator',
-                        display_name: 'Testcamera: IP Camera Emulator'
+                        display_name: 'Testcamera: IP Camera Emulator',
                     },
                     {
                         name: 'Node.js Integration Library',
@@ -1298,7 +1276,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 4,
                         urlified: '216-node.js-integration-library',
-                        display_name: 'Node.js Integration Library'
+                        display_name: 'Node.js Integration Library',
                     },
                     {
                         name: 'Test DocPage1',
@@ -1315,14 +1293,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 5,
                         urlified: '337-test-docpage1',
-                        display_name: 'Test DocPage1'
-                    }
+                        display_name: 'Test DocPage1',
+                    },
                 ],
                 type: 1,
                 base_url: 'developers',
                 id: 5,
                 title: '',
-                description: ''
+                description: '',
             },
             'test - knowledgebase zd sandbox': {
                 nodes: [],
@@ -1330,7 +1308,7 @@ export function getCloudSettings() {
                 base_url: 'zdsandbox',
                 id: 6,
                 title: '',
-                description: ''
+                description: '',
             },
             'for developers knowledge base': {
                 nodes: [
@@ -1366,7 +1344,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '351-get-an-nx-witness-build',
-                                display_name: 'Get an Xyz Witness Build'
+                                display_name: 'Get an Xyz Witness Build',
                             },
                             {
                                 name: 'Getting Licenses for Developers',
@@ -1383,7 +1361,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: '352-getting-licenses-for-developers',
-                                display_name: 'Getting Licenses for Developers'
+                                display_name: 'Getting Licenses for Developers',
                             },
                             {
                                 name: 'Xyz Witness Architecture Overview',
@@ -1400,7 +1378,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: '220-nx-witness-architecture-overview',
-                                display_name: 'Xyz Witness Architecture Overview'
+                                display_name: 'Xyz Witness Architecture Overview',
                             },
                             {
                                 name: 'Submitting an Integration to the Cloud Marketplace',
@@ -1417,9 +1395,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 4,
                                 urlified: '354-submitting-an-integration-to-the-cloud-marketplace',
-                                display_name: 'Submitting an Integration to the Cloud Marketplace'
-                            }
-                        ]
+                                display_name: 'Submitting an Integration to the Cloud Marketplace',
+                            },
+                        ],
                     },
                     {
                         name: 'Developer Tools',
@@ -1453,7 +1431,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '418-server-http-rest-api',
-                                display_name: 'Server HTTP REST API'
+                                display_name: 'Server HTTP REST API',
                             },
                             {
                                 name: 'Server Plugin SDK (C++)',
@@ -1470,7 +1448,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: '357-server-plugin-sdk-(c++)',
-                                display_name: 'Server Plugin SDK (C++)'
+                                display_name: 'Server Plugin SDK (C++)',
                             },
                             {
                                 name: 'Cloud API: Route API Calls via Xyz Witness Cloud',
@@ -1487,7 +1465,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: '358-cloud-api:-route-api-calls-via-nx-witness-cloud',
-                                display_name: 'Cloud API: Route API Calls via Xyz Witness Cloud'
+                                display_name: 'Cloud API: Route API Calls via Xyz Witness Cloud',
                             },
                             {
                                 name: 'Test Camera: IP Camera Emulator',
@@ -1504,7 +1482,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: '359-test-camera:-ip-camera-emulator',
-                                display_name: 'Test Camera: IP Camera Emulator'
+                                display_name: 'Test Camera: IP Camera Emulator',
                             },
                             {
                                 name: 'Node.js Integration Library',
@@ -1521,7 +1499,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 4,
                                 urlified: '360-node.js-integration-library',
-                                display_name: 'Node.js Integration Library'
+                                display_name: 'Node.js Integration Library',
                             },
                             {
                                 name: 'Open-Source OpenVINO Analytics Plugin',
@@ -1538,9 +1516,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 5,
                                 urlified: '355-open-source-openvino-analytics-plugin',
-                                display_name: 'Open-Source OpenVINO Analytics Plugin'
-                            }
-                        ]
+                                display_name: 'Open-Source OpenVINO Analytics Plugin',
+                            },
+                        ],
                     },
                     {
                         name: 'Supported Technology',
@@ -1591,7 +1569,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '454-windows-os-installation-guide',
-                                        display_name: 'Windows OS Installation Guide'
+                                        display_name: 'Windows OS Installation Guide',
                                     },
                                     {
                                         name: 'Ubuntu Linux OS Installation Guide',
@@ -1608,7 +1586,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '455-ubuntu-linux-os-installation-guide',
-                                        display_name: 'Ubuntu Linux OS Installation Guide'
+                                        display_name: 'Ubuntu Linux OS Installation Guide',
                                     },
                                     {
                                         name: 'Mac OS Installation Guide',
@@ -1625,9 +1603,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '456-mac-os-installation-guide',
-                                        display_name: 'Mac OS Installation Guide'
-                                    }
-                                ]
+                                        display_name: 'Mac OS Installation Guide',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Supported Platforms',
@@ -1661,7 +1639,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '450-x64-architecture',
-                                        display_name: 'x64 Architecture'
+                                        display_name: 'x64 Architecture',
                                     },
                                     {
                                         name: 'ARM',
@@ -1678,7 +1656,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '451-arm',
-                                        display_name: 'ARM'
+                                        display_name: 'ARM',
                                     },
                                     {
                                         name: 'Docker',
@@ -1695,7 +1673,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '452-docker',
-                                        display_name: 'Docker'
+                                        display_name: 'Docker',
                                     },
                                     {
                                         name: 'Virtual Machines',
@@ -1712,7 +1690,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '453-virtual-machines',
-                                        display_name: 'Virtual Machines'
+                                        display_name: 'Virtual Machines',
                                     },
                                     {
                                         name: 'Which browser does Xyz Witness use?',
@@ -1729,9 +1707,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 4,
                                         urlified: '471-which-browser-does-nx-witness-use?',
-                                        display_name: 'Which browser does Xyz Witness use?'
-                                    }
-                                ]
+                                        display_name: 'Which browser does Xyz Witness use?',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Supported Programming Languages',
@@ -1748,7 +1726,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: '361-supported-programming-languages',
-                                display_name: 'Supported Programming Languages'
+                                display_name: 'Supported Programming Languages',
                             },
                             {
                                 name: 'Building Linux-based NVRs',
@@ -1765,9 +1743,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 4,
                                 urlified: '362-building-linux-based-nvrs',
-                                display_name: 'Building Linux-based NVRs'
-                            }
-                        ]
+                                display_name: 'Building Linux-based NVRs',
+                            },
+                        ],
                     },
                     {
                         name: 'Knowledge Base',
@@ -1818,7 +1796,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '365-benefits-of-integrating-with-nx-witness',
-                                        display_name: 'Benefits of Integrating with Xyz Witness'
+                                        display_name: 'Benefits of Integrating with Xyz Witness',
                                     },
                                     {
                                         name: 'What is a Powered-by-Xyz product?',
@@ -1835,7 +1813,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '366-what-is-a-powered-by-nx-product?',
-                                        display_name: 'What is a Powered-by-Xyz product?'
+                                        display_name: 'What is a Powered-by-Xyz product?',
                                     },
                                     {
                                         name: 'Meta Release Process',
@@ -1852,9 +1830,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '367-meta-release-process',
-                                        display_name: 'Meta Release Process'
-                                    }
-                                ]
+                                        display_name: 'Meta Release Process',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Integrating Video Analytics - Overview',
@@ -1887,8 +1865,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 0,
-                                        urlified: '368-1.-integration-capabilities-–-what-to-expect',
-                                        display_name: '1. Integration Capabilities – What to Expect'
+                                        urlified:
+                                            '368-1.-integration-capabilities-–-what-to-expect',
+                                        display_name:
+                                            '1. Integration Capabilities – What to Expect',
                                     },
                                     {
                                         name: '2. Integration Architecture - Understanding Plugins',
@@ -1904,8 +1884,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 1,
-                                        urlified: '369-2.-integration-architecture---understanding-plugins',
-                                        display_name: '2. Integration Architecture - Understanding Plugins'
+                                        urlified:
+                                            '369-2.-integration-architecture---understanding-plugins',
+                                        display_name:
+                                            '2. Integration Architecture - Understanding Plugins',
                                     },
                                     {
                                         name: '3. Exploring Plugin Code Examples',
@@ -1922,7 +1904,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '370-3.-exploring-plugin-code-examples',
-                                        display_name: '3. Exploring Plugin Code Examples'
+                                        display_name: '3. Exploring Plugin Code Examples',
                                     },
                                     {
                                         name: '4. Implementation Best Practices',
@@ -1939,7 +1921,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '371-4.-implementation-best-practices',
-                                        display_name: '4. Implementation Best Practices'
+                                        display_name: '4. Implementation Best Practices',
                                     },
                                     {
                                         name: '5. Configuring Regions of Interests for event generation',
@@ -1955,8 +1937,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 4,
-                                        urlified: '372-5.-configuring-regions-of-interests-for-event-generation',
-                                        display_name: '5. Configuring Regions of Interests for event generation'
+                                        urlified:
+                                            '372-5.-configuring-regions-of-interests-for-event-generation',
+                                        display_name:
+                                            '5. Configuring Regions of Interests for event generation',
                                     },
                                     {
                                         name: '6. Example: Integrating with Face Recognition',
@@ -1972,8 +1956,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 5,
-                                        urlified: '373-6.-example:-integrating-with-face-recognition',
-                                        display_name: '6. Example: Integrating with Face Recognition'
+                                        urlified:
+                                            '373-6.-example:-integrating-with-face-recognition',
+                                        display_name:
+                                            '6. Example: Integrating with Face Recognition',
                                     },
                                     {
                                         name: '7. Example: Create an LPR Recognition Plugin',
@@ -1989,8 +1975,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 6,
-                                        urlified: '374-7.-example:-create-an-lpr-recognition-plugin',
-                                        display_name: '7. Example: Create an LPR Recognition Plugin'
+                                        urlified:
+                                            '374-7.-example:-create-an-lpr-recognition-plugin',
+                                        display_name:
+                                            '7. Example: Create an LPR Recognition Plugin',
                                     },
                                     {
                                         name: '8. Create a Smart IP Camera Plugin',
@@ -2007,7 +1995,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 7,
                                         urlified: '375-8.-create-a-smart-ip-camera-plugin',
-                                        display_name: '8. Create a Smart IP Camera Plugin'
+                                        display_name: '8. Create a Smart IP Camera Plugin',
                                     },
                                     {
                                         name: '9. Important Technical Considerations w/ Xyz Witness',
@@ -2023,8 +2011,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 8,
-                                        urlified: '376-9.-important-technical-considerations-w/-nx-witness',
-                                        display_name: '9. Important Technical Considerations w/ Xyz Witness'
+                                        urlified:
+                                            '376-9.-important-technical-considerations-w/-nx-witness',
+                                        display_name:
+                                            '9. Important Technical Considerations w/ Xyz Witness',
                                     },
                                     {
                                         name: '10. Development Tools & Tips',
@@ -2041,9 +2031,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 9,
                                         urlified: '377-10.-development-tools-&-tips',
-                                        display_name: '10. Development Tools & Tips'
-                                    }
-                                ]
+                                        display_name: '10. Development Tools & Tips',
+                                    },
+                                ],
                             },
                             {
                                 name: 'How to Create a Video Analytics Plugin',
@@ -2076,8 +2066,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 0,
-                                        urlified: '378-introduction-to-creating-a-video-analytics-plugin',
-                                        display_name: 'Introduction to Creating a Video Analytics Plugin'
+                                        urlified:
+                                            '378-introduction-to-creating-a-video-analytics-plugin',
+                                        display_name:
+                                            'Introduction to Creating a Video Analytics Plugin',
                                     },
                                     {
                                         name: 'Plugin Control Flow',
@@ -2094,7 +2086,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '379-plugin-control-flow',
-                                        display_name: 'Plugin Control Flow'
+                                        display_name: 'Plugin Control Flow',
                                     },
                                     {
                                         name: 'Plugin Subsystem Architecture',
@@ -2111,7 +2103,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '380-plugin-subsystem-architecture',
-                                        display_name: 'Plugin Subsystem Architecture'
+                                        display_name: 'Plugin Subsystem Architecture',
                                     },
                                     {
                                         name: 'Step 0. Preparing a Workspace',
@@ -2128,7 +2120,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '381-step-0.-preparing-a-workspace',
-                                        display_name: 'Step 0. Preparing a Workspace'
+                                        display_name: 'Step 0. Preparing a Workspace',
                                     },
                                     {
                                         name: 'Step 1. Adjusting the Names',
@@ -2145,7 +2137,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 4,
                                         urlified: '382-step-1.-adjusting-the-names',
-                                        display_name: 'Step 1. Adjusting the Names'
+                                        display_name: 'Step 1. Adjusting the Names',
                                     },
                                     {
                                         name: 'Step 2. Introducing new detectable object types',
@@ -2161,8 +2153,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 5,
-                                        urlified: '383-step-2.-introducing-new-detectable-object-types',
-                                        display_name: 'Step 2. Introducing new detectable object types'
+                                        urlified:
+                                            '383-step-2.-introducing-new-detectable-object-types',
+                                        display_name:
+                                            'Step 2. Introducing new detectable object types',
                                     },
                                     {
                                         name: 'Step 3. Adding object detection',
@@ -2179,7 +2173,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 6,
                                         urlified: '384-step-3.-adding-object-detection',
-                                        display_name: 'Step 3. Adding object detection'
+                                        display_name: 'Step 3. Adding object detection',
                                     },
                                     {
                                         name: 'Step 4. Adding object tracking',
@@ -2196,9 +2190,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 7,
                                         urlified: '385-step-4.-adding-object-tracking',
-                                        display_name: 'Step 4. Adding object tracking'
-                                    }
-                                ]
+                                        display_name: 'Step 4. Adding object tracking',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Xyz Server Plugin Debugging',
@@ -2232,7 +2226,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '386-introduction-to-plugin-debugging',
-                                        display_name: 'Introduction to Plugin Debugging'
+                                        display_name: 'Introduction to Plugin Debugging',
                                     },
                                     {
                                         name: 'Logging from the Plugin',
@@ -2249,7 +2243,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '387-logging-from-the-plugin',
-                                        display_name: 'Logging from the Plugin'
+                                        display_name: 'Logging from the Plugin',
                                     },
                                     {
                                         name: 'Configuring via .ini files – IniConfig',
@@ -2266,7 +2260,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '388-configuring-via-.ini-files-–-iniconfig',
-                                        display_name: 'Configuring via .ini files – IniConfig'
+                                        display_name: 'Configuring via .ini files – IniConfig',
                                     },
                                     {
                                         name: 'Loading Plugins',
@@ -2283,7 +2277,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '389-loading-plugins',
-                                        display_name: 'Loading Plugins'
+                                        display_name: 'Loading Plugins',
                                     },
                                     {
                                         name: 'Debugging Reference Counting – RefCountableRegistry',
@@ -2299,8 +2293,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 4,
-                                        urlified: '390-debugging-reference-counting-–-refcountableregistry',
-                                        display_name: 'Debugging Reference Counting – RefCountableRegistry'
+                                        urlified:
+                                            '390-debugging-reference-counting-–-refcountableregistry',
+                                        display_name:
+                                            'Debugging Reference Counting – RefCountableRegistry',
                                     },
                                     {
                                         name: 'Using Stub Analytics Plugin and Sample Analytics Plugin',
@@ -2316,8 +2312,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 5,
-                                        urlified: '391-using-stub-analytics-plugin-and-sample-analytics-plugin',
-                                        display_name: 'Using Stub Analytics Plugin and Sample Analytics Plugin'
+                                        urlified:
+                                            '391-using-stub-analytics-plugin-and-sample-analytics-plugin',
+                                        display_name:
+                                            'Using Stub Analytics Plugin and Sample Analytics Plugin',
                                     },
                                     {
                                         name: 'Capturing and Substituting Manifests and Settings',
@@ -2333,8 +2331,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 6,
-                                        urlified: '392-capturing-and-substituting-manifests-and-settings',
-                                        display_name: 'Capturing and Substituting Manifests and Settings'
+                                        urlified:
+                                            '392-capturing-and-substituting-manifests-and-settings',
+                                        display_name:
+                                            'Capturing and Substituting Manifests and Settings',
                                     },
                                     {
                                         name: 'Analytics Logs: Monitoring Metadata Flow',
@@ -2351,7 +2351,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 7,
                                         urlified: '393-analytics-logs:-monitoring-metadata-flow',
-                                        display_name: 'Analytics Logs: Monitoring Metadata Flow'
+                                        display_name: 'Analytics Logs: Monitoring Metadata Flow',
                                     },
                                     {
                                         name: 'Supplying test video streams: Testcamera and Image Library Plugin',
@@ -2367,8 +2367,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 8,
-                                        urlified: '394-supplying-test-video-streams:-testcamera-and-image-library-plugin',
-                                        display_name: 'Supplying test video streams: Testcamera and Image Library Plugin'
+                                        urlified:
+                                            '394-supplying-test-video-streams:-testcamera-and-image-library-plugin',
+                                        display_name:
+                                            'Supplying test video streams: Testcamera and Image Library Plugin',
                                     },
                                     {
                                         name: 'Error Handling in the Plugin',
@@ -2385,9 +2387,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 9,
                                         urlified: '395-error-handling-in-the-plugin',
-                                        display_name: 'Error Handling in the Plugin'
-                                    }
-                                ]
+                                        display_name: 'Error Handling in the Plugin',
+                                    },
+                                ],
                             },
                             {
                                 name: 'API Examples',
@@ -2421,7 +2423,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '396-adding-a-camera-or-a-rtsp-stream-using-api',
-                                        display_name: 'Adding a camera or a RTSP stream using API'
+                                        display_name: 'Adding a camera or a RTSP stream using API',
                                     },
                                     {
                                         name: 'API tip: How to create or modify Event Rule',
@@ -2438,7 +2440,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '397-api-tip:-how-to-create-or-modify-event-rule',
-                                        display_name: 'API tip: How to create or modify Event Rule'
+                                        display_name: 'API tip: How to create or modify Event Rule',
                                     },
                                     {
                                         name: 'API Tip: Video Footage Export',
@@ -2455,7 +2457,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '398-api-tip:-video-footage-export',
-                                        display_name: 'API Tip: Video Footage Export'
+                                        display_name: 'API Tip: Video Footage Export',
                                     },
                                     {
                                         name: 'Changing resource attributes using API',
@@ -2472,7 +2474,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 3,
                                         urlified: '399-changing-resource-attributes-using-api',
-                                        display_name: 'Changing resource attributes using API'
+                                        display_name: 'Changing resource attributes using API',
                                     },
                                     {
                                         name: 'Camera Identifiers',
@@ -2489,7 +2491,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 4,
                                         urlified: '400-camera-identifiers',
-                                        display_name: 'Camera Identifiers'
+                                        display_name: 'Camera Identifiers',
                                     },
                                     {
                                         name: 'Virtual Camera API Calls: How to Import Files to Camera Archive via the Server API',
@@ -2505,8 +2507,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 5,
-                                        urlified: '401-virtual-camera-api-calls:-how-to-import-files-to-camera-archive-via-the-server-api',
-                                        display_name: 'Virtual Camera API Calls: How to Import Files to Camera Archive via the Server API'
+                                        urlified:
+                                            '401-virtual-camera-api-calls:-how-to-import-files-to-camera-archive-via-the-server-api',
+                                        display_name:
+                                            'Virtual Camera API Calls: How to Import Files to Camera Archive via the Server API',
                                     },
                                     {
                                         name: 'Virtual Camera API Protocol: How to Import Files to Camera Archive',
@@ -2522,8 +2526,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 6,
-                                        urlified: '402-virtual-camera-api-protocol:-how-to-import-files-to-camera-archive',
-                                        display_name: 'Virtual Camera API Protocol: How to Import Files to Camera Archive'
+                                        urlified:
+                                            '402-virtual-camera-api-protocol:-how-to-import-files-to-camera-archive',
+                                        display_name:
+                                            'Virtual Camera API Protocol: How to Import Files to Camera Archive',
                                     },
                                     {
                                         name: 'Connecting a System to Xyz Witness Cloud using the API',
@@ -2539,8 +2545,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 7,
-                                        urlified: '403-connecting-a-system-to-nx-witness-cloud-using-the-api',
-                                        display_name: 'Connecting a System to Xyz Witness Cloud using the API'
+                                        urlified:
+                                            '403-connecting-a-system-to-nx-witness-cloud-using-the-api',
+                                        display_name:
+                                            'Connecting a System to Xyz Witness Cloud using the API',
                                     },
                                     {
                                         name: 'HTTP Generic Event',
@@ -2557,7 +2565,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 8,
                                         urlified: '445-http-generic-event',
-                                        display_name: 'HTTP Generic Event'
+                                        display_name: 'HTTP Generic Event',
                                     },
                                     {
                                         name: 'HTTP Request-as-an-Action',
@@ -2574,9 +2582,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 9,
                                         urlified: '447-http-request-as-an-action',
-                                        display_name: 'HTTP Request-as-an-Action'
-                                    }
-                                ]
+                                        display_name: 'HTTP Request-as-an-Action',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Other Articles',
@@ -2610,7 +2618,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '404-how-to-run-nx-witness-server-in-docker',
-                                        display_name: 'How to run Xyz Witness Server in Docker'
+                                        display_name: 'How to run Xyz Witness Server in Docker',
                                     },
                                     {
                                         name: 'How does Xyz Witness Server RTSP Streaming Work?',
@@ -2626,8 +2634,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 1,
-                                        urlified: '405-how-does-nx-witness-server-rtsp-streaming-work?',
-                                        display_name: 'How does Xyz Witness Server RTSP Streaming Work?'
+                                        urlified:
+                                            '405-how-does-nx-witness-server-rtsp-streaming-work?',
+                                        display_name:
+                                            'How does Xyz Witness Server RTSP Streaming Work?',
                                     },
                                     {
                                         name: 'How to Call Client using URL?',
@@ -2644,7 +2654,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 2,
                                         urlified: '406-how-to-call-client-using-url?',
-                                        display_name: 'How to Call Client using URL?'
+                                        display_name: 'How to Call Client using URL?',
                                     },
                                     {
                                         name: 'How to: Embed Video from Xyz Witness / Xyz Witness on a website',
@@ -2660,8 +2670,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 3,
-                                        urlified: '407-how-to:-embed-video-from-nx-witness-/-nx-witness-on-a-website',
-                                        display_name: 'How to: Embed Video from Xyz Witness / Xyz Witness on a website'
+                                        urlified:
+                                            '407-how-to:-embed-video-from-nx-witness-/-nx-witness-on-a-website',
+                                        display_name:
+                                            'How to: Embed Video from Xyz Witness / Xyz Witness on a website',
                                     },
                                     {
                                         name: 'How to start/stop recording using Xyz Witness Generic Event',
@@ -2677,8 +2689,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 4,
-                                        urlified: '408-how-to-start/stop-recording-using-nx-witness-generic-event',
-                                        display_name: 'How to start/stop recording using Xyz Witness Generic Event'
+                                        urlified:
+                                            '408-how-to-start/stop-recording-using-nx-witness-generic-event',
+                                        display_name:
+                                            'How to start/stop recording using Xyz Witness Generic Event',
                                     },
                                     {
                                         name: 'How to start/stop the recording schedule of a specific camera via Xyz Witness Server API',
@@ -2694,8 +2708,10 @@ export function getCloudSettings() {
                                         icon: '',
                                         authentication: 'Both',
                                         order: 5,
-                                        urlified: '409-how-to-start/stop-the-recording-schedule-of-a-specific-camera-via-nx-witness-server-api',
-                                        display_name: 'How to start/stop the recording schedule of a specific camera via Xyz Witness Server API'
+                                        urlified:
+                                            '409-how-to-start/stop-the-recording-schedule-of-a-specific-camera-via-nx-witness-server-api',
+                                        display_name:
+                                            'How to start/stop the recording schedule of a specific camera via Xyz Witness Server API',
                                     },
                                     {
                                         name: 'Server Hive Synchronization',
@@ -2712,18 +2728,18 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 7,
                                         urlified: '470-server-hive-synchronization',
-                                        display_name: 'Server Hive Synchronization'
-                                    }
-                                ]
-                            }
-                        ]
-                    }
+                                        display_name: 'Server Hive Synchronization',
+                                    },
+                                ],
+                            },
+                        ],
+                    },
                 ],
                 type: 2,
                 base_url: 'developers',
                 id: 8,
                 title: '',
-                description: ''
+                description: '',
             },
             'test: developers about page': {
                 nodes: [
@@ -2742,7 +2758,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: null,
-                        display_name: 'What is Possible'
+                        display_name: 'What is Possible',
                     },
                     {
                         name: 'Supported Tech',
@@ -2760,7 +2776,7 @@ export function getCloudSettings() {
                         order: 2,
                         urlified: null,
                         display_name: 'Supported Tech',
-                        nodes: []
+                        nodes: [],
                     },
                     {
                         name: 'Get Started',
@@ -2777,7 +2793,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: null,
-                        display_name: 'Get Started'
+                        display_name: 'Get Started',
                     },
                     {
                         name: 'Developer Tools',
@@ -2794,7 +2810,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 4,
                         urlified: null,
-                        display_name: 'Developer Tools'
+                        display_name: 'Developer Tools',
                     },
                     {
                         name: 'Integrations Store',
@@ -2828,7 +2844,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: null,
-                                display_name: 'Information'
+                                display_name: 'Information',
                             },
                             {
                                 name: 'Examples of Plugins',
@@ -2845,16 +2861,16 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: null,
-                                display_name: 'Examples of Plugins'
-                            }
-                        ]
-                    }
+                                display_name: 'Examples of Plugins',
+                            },
+                        ],
+                    },
                 ],
                 type: 0,
                 base_url: '',
                 id: 9,
                 title: '',
-                description: ''
+                description: '',
             },
             'test-menu-20210212-1': {
                 nodes: [
@@ -2873,7 +2889,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: '432-page-one',
-                        display_name: 'Page One'
+                        display_name: 'Page One',
                     },
                     {
                         name: 'test-doc-page-20210215-1',
@@ -2890,7 +2906,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: '442-test-doc-page-20210215-1',
-                        display_name: 'test-doc-page-20210215-1'
+                        display_name: 'test-doc-page-20210215-1',
                     },
                     {
                         name: 'Page Two',
@@ -2907,7 +2923,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 2,
                         urlified: '433-page-two',
-                        display_name: 'Page Two'
+                        display_name: 'Page Two',
                     },
                     {
                         name: 'Page Three',
@@ -2924,7 +2940,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: '434-page-three',
-                        display_name: 'Page Three'
+                        display_name: 'Page Three',
                     },
                     {
                         name: 'test-doc-page-20210301',
@@ -2941,7 +2957,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 5,
                         urlified: '468-test-doc-page-20210301',
-                        display_name: 'test-doc-page-20210301'
+                        display_name: 'test-doc-page-20210301',
                     },
                     {
                         name: 'test-menu-20210226-1',
@@ -2958,14 +2974,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 6,
                         urlified: null,
-                        display_name: 'test-menu-20210226-1'
-                    }
+                        display_name: 'test-menu-20210226-1',
+                    },
                 ],
                 type: 2,
                 base_url: 'test-base-url',
                 id: 10,
                 title: '',
-                description: ''
+                description: '',
             },
             header: {
                 nodes: [
@@ -3001,7 +3017,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: null,
-                                display_name: 'Platform Overview'
+                                display_name: 'Platform Overview',
                             },
                             {
                                 name: 'Knowledgebase',
@@ -3018,7 +3034,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: null,
-                                display_name: 'Knowledgebase'
+                                display_name: 'Knowledgebase',
                             },
                             {
                                 name: 'Developer Tools',
@@ -3035,7 +3051,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: null,
-                                display_name: 'Developer Tools'
+                                display_name: 'Developer Tools',
                             },
                             {
                                 name: 'API Documentation',
@@ -3052,7 +3068,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 4,
                                 urlified: null,
-                                display_name: 'API Documentation'
+                                display_name: 'API Documentation',
                             },
                             {
                                 name: 'Developers Support',
@@ -3069,9 +3085,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 5,
                                 urlified: null,
-                                display_name: 'Developers Support'
-                            }
-                        ]
+                                display_name: 'Developers Support',
+                            },
+                        ],
                     },
                     {
                         name: 'Services',
@@ -3105,7 +3121,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: null,
-                                display_name: 'Downloads'
+                                display_name: 'Downloads',
                             },
                             {
                                 name: 'Supported Devices',
@@ -3122,7 +3138,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: null,
-                                display_name: 'Supported Devices'
+                                display_name: 'Supported Devices',
                             },
                             {
                                 name: 'Health Report Viewer',
@@ -3139,7 +3155,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: null,
-                                display_name: 'Health Report Viewer'
+                                display_name: 'Health Report Viewer',
                             },
                             {
                                 name: 'Integrations',
@@ -3156,9 +3172,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: null,
-                                display_name: 'Integrations'
-                            }
-                        ]
+                                display_name: 'Integrations',
+                            },
+                        ],
                     },
                     {
                         name: 'External Links',
@@ -3192,7 +3208,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: null,
-                                display_name: 'Hardware Calculator'
+                                display_name: 'Hardware Calculator',
                             },
                             {
                                 name: 'Support',
@@ -3209,7 +3225,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: null,
-                                display_name: 'Support'
+                                display_name: 'Support',
                             },
                             {
                                 name: 'Privacy Policy',
@@ -3226,9 +3242,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: null,
-                                display_name: 'Privacy Policy'
-                            }
-                        ]
+                                display_name: 'Privacy Policy',
+                            },
+                        ],
                     },
                     {
                         name: 'Test Menu',
@@ -3262,7 +3278,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: null,
-                                display_name: 'One'
+                                display_name: 'One',
                             },
                             {
                                 name: 'Two',
@@ -3279,7 +3295,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: null,
-                                display_name: 'Two'
+                                display_name: 'Two',
                             },
                             {
                                 name: 'Three',
@@ -3296,7 +3312,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 2,
                                 urlified: null,
-                                display_name: 'Three'
+                                display_name: 'Three',
                             },
                             {
                                 name: 'Test Menu 20210215',
@@ -3313,7 +3329,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 3,
                                 urlified: null,
-                                display_name: 'Test Menu 20210215'
+                                display_name: 'Test Menu 20210215',
                             },
                             {
                                 name: 'Test Landing',
@@ -3330,16 +3346,16 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 4,
                                 urlified: null,
-                                display_name: 'Test Landing'
-                            }
-                        ]
-                    }
+                                display_name: 'Test Landing',
+                            },
+                        ],
+                    },
                 ],
                 type: 0,
                 base_url: '',
                 id: 11,
                 title: '',
-                description: ''
+                description: '',
             },
             'test2: developers about page': {
                 nodes: [
@@ -3358,7 +3374,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: null,
-                        display_name: 'What is Possible'
+                        display_name: 'What is Possible',
                     },
                     {
                         name: 'Supported Tech',
@@ -3376,7 +3392,7 @@ export function getCloudSettings() {
                         order: 2,
                         urlified: null,
                         display_name: 'Supported Tech',
-                        nodes: []
+                        nodes: [],
                     },
                     {
                         name: 'Get Started',
@@ -3393,7 +3409,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: null,
-                        display_name: 'Get Started'
+                        display_name: 'Get Started',
                     },
                     {
                         name: 'Developer Tools',
@@ -3410,7 +3426,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 4,
                         urlified: null,
-                        display_name: 'Developer Tools'
+                        display_name: 'Developer Tools',
                     },
                     {
                         name: 'Integrations Store',
@@ -3444,7 +3460,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: null,
-                                display_name: 'Information'
+                                display_name: 'Information',
                             },
                             {
                                 name: 'Examples of Plugins',
@@ -3461,16 +3477,16 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: null,
-                                display_name: 'Examples of Plugins'
-                            }
-                        ]
-                    }
+                                display_name: 'Examples of Plugins',
+                            },
+                        ],
+                    },
                 ],
                 type: 0,
                 base_url: '',
                 id: 13,
                 title: '',
-                description: ''
+                description: '',
             },
             'test-menu-20210212-2': {
                 nodes: [
@@ -3489,7 +3505,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: '435-page-four',
-                        display_name: 'Page Four'
+                        display_name: 'Page Four',
                     },
                     {
                         name: 'Page Five',
@@ -3506,14 +3522,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: '436-page-five',
-                        display_name: 'Page Five'
-                    }
+                        display_name: 'Page Five',
+                    },
                 ],
                 type: 2,
                 base_url: 'test-base-url',
                 id: 16,
                 title: '',
-                description: ''
+                description: '',
             },
             'test-menu-20210212-3': {
                 nodes: [
@@ -3532,7 +3548,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-3'
+                        display_name: 'test-doc-page-20210215-3',
                     },
                     {
                         name: 'test-doc-page-20210215-2',
@@ -3549,7 +3565,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-2'
+                        display_name: 'test-doc-page-20210215-2',
                     },
                     {
                         name: 'test-doc-page-20210215-1',
@@ -3566,7 +3582,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 2,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-1'
+                        display_name: 'test-doc-page-20210215-1',
                     },
                     {
                         name: 'Test DocPage 20210218',
@@ -3583,14 +3599,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: null,
-                        display_name: 'Test DocPage 20210218'
-                    }
+                        display_name: 'Test DocPage 20210218',
+                    },
                 ],
                 type: 2,
                 base_url: 'test-base-url',
                 id: 17,
                 title: '',
-                description: ''
+                description: '',
             },
             'test-menu-20210215': {
                 nodes: [
@@ -3602,16 +3618,14 @@ export function getCloudSettings() {
                         pending: false,
                         draft: true,
                         asset_type: 'Documentation Page',
-                        related_asset_ids: [
-                            443
-                        ],
+                        related_asset_ids: [443],
                         next_item: false,
                         new_window: false,
                         icon: '',
                         authentication: 'Both',
                         order: 0,
                         urlified: '442-test-doc-page-20210215-1',
-                        display_name: 'test-doc-page-20210215-1'
+                        display_name: 'test-doc-page-20210215-1',
                     },
                     {
                         name: 'test-doc-page-20210215-2',
@@ -3628,7 +3642,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: '443-test-doc-page-20210215-2',
-                        display_name: 'test-doc-page-20210215-2'
+                        display_name: 'test-doc-page-20210215-2',
                     },
                     {
                         name: 'test-doc-page-20210215-3',
@@ -3645,7 +3659,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 2,
                         urlified: '444-test-doc-page-20210215-3',
-                        display_name: 'test-doc-page-20210215-3'
+                        display_name: 'test-doc-page-20210215-3',
                     },
                     {
                         name: 'Test DocPage 20210218',
@@ -3662,14 +3676,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: '448-test-docpage-20210218',
-                        display_name: 'Test DocPage 20210218'
-                    }
+                        display_name: 'Test DocPage 20210218',
+                    },
                 ],
                 type: 2,
                 base_url: 'test-base-url',
                 id: 18,
                 title: '',
-                description: ''
+                description: '',
             },
             'test knowledgebase': {
                 nodes: [],
@@ -3677,7 +3691,7 @@ export function getCloudSettings() {
                 base_url: 'test',
                 id: 19,
                 title: '',
-                description: ''
+                description: '',
             },
             'test-landing-menu': {
                 nodes: [
@@ -3696,7 +3710,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: '461-test-intro',
-                        display_name: 'Test Intro'
+                        display_name: 'Test Intro',
                     },
                     {
                         name: 'Test Get Started',
@@ -3730,7 +3744,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '444-test-for-any-platform',
-                                display_name: 'Test For any Platform'
+                                display_name: 'Test For any Platform',
                             },
                             {
                                 name: 'Test Only for Developers',
@@ -3747,9 +3761,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: '442-test-only-for-developers',
-                                display_name: 'Test Only for Developers'
-                            }
-                        ]
+                                display_name: 'Test Only for Developers',
+                            },
+                        ],
                     },
                     {
                         name: 'Test Supported Tech',
@@ -3800,7 +3814,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '432-test-apple',
-                                        display_name: 'Test Apple'
+                                        display_name: 'Test Apple',
                                     },
                                     {
                                         name: 'Test Android',
@@ -3817,9 +3831,9 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '443-test-android',
-                                        display_name: 'Test Android'
-                                    }
-                                ]
+                                        display_name: 'Test Android',
+                                    },
+                                ],
                             },
                             {
                                 name: 'Test Text Links',
@@ -3853,7 +3867,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '433-test-c++',
-                                        display_name: 'Test C++'
+                                        display_name: 'Test C++',
                                     },
                                     {
                                         name: 'Test Python',
@@ -3870,11 +3884,11 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '444-test-python',
-                                        display_name: 'Test Python'
-                                    }
-                                ]
-                            }
-                        ]
+                                        display_name: 'Test Python',
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         name: 'Test Capabilities',
@@ -3908,7 +3922,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '462-first-capability',
-                                display_name: 'First Capability'
+                                display_name: 'First Capability',
                             },
                             {
                                 name: 'Second Capability',
@@ -3925,9 +3939,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: '463-second-capability',
-                                display_name: 'Second Capability'
-                            }
-                        ]
+                                display_name: 'Second Capability',
+                            },
+                        ],
                     },
                     {
                         name: 'Test Integrations Marketplace',
@@ -3961,7 +3975,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '442-test-about-marketplace',
-                                display_name: 'Test About Marketplace'
+                                display_name: 'Test About Marketplace',
                             },
                             {
                                 name: 'Test2 Examples of Plugins',
@@ -3995,7 +4009,7 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 0,
                                         urlified: '204-test-integration-1',
-                                        display_name: 'Test Integration 1'
+                                        display_name: 'Test Integration 1',
                                     },
                                     {
                                         name: 'Test Integration 2',
@@ -4012,11 +4026,11 @@ export function getCloudSettings() {
                                         authentication: 'Both',
                                         order: 1,
                                         urlified: '185-test-integration-2',
-                                        display_name: 'Test Integration 2'
-                                    }
-                                ]
-                            }
-                        ]
+                                        display_name: 'Test Integration 2',
+                                    },
+                                ],
+                            },
+                        ],
                     },
                     {
                         name: 'Test Developer Tools',
@@ -4050,7 +4064,7 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 0,
                                 urlified: '435-test-server-http-rest-api',
-                                display_name: 'Test Server HTTP Rest API'
+                                display_name: 'Test Server HTTP Rest API',
                             },
                             {
                                 name: 'Test Server Plugin SDK (C++)',
@@ -4067,9 +4081,9 @@ export function getCloudSettings() {
                                 authentication: 'Both',
                                 order: 1,
                                 urlified: '468-test-server-plugin-sdk-(c++)',
-                                display_name: 'Test Server Plugin SDK (C++)'
-                            }
-                        ]
+                                display_name: 'Test Server Plugin SDK (C++)',
+                            },
+                        ],
                     },
                     {
                         name: 'Test Developer Support',
@@ -4086,14 +4100,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 6,
                         urlified: '442-test-developer-support',
-                        display_name: 'Test Developer Support'
-                    }
+                        display_name: 'Test Developer Support',
+                    },
                 ],
                 type: 1,
                 base_url: 'test-base-url',
                 id: 20,
                 title: '',
-                description: ''
+                description: '',
             },
             'test-menu-20210226-1': {
                 nodes: [
@@ -4105,16 +4119,14 @@ export function getCloudSettings() {
                         pending: null,
                         draft: null,
                         asset_type: null,
-                        related_asset_ids: [
-                            443
-                        ],
+                        related_asset_ids: [443],
                         next_item: false,
                         new_window: false,
                         icon: '',
                         authentication: 'Both',
                         order: 0,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-1'
+                        display_name: 'test-doc-page-20210215-1',
                     },
                     {
                         name: 'test-doc-page-20210215-2',
@@ -4131,7 +4143,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 1,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-2'
+                        display_name: 'test-doc-page-20210215-2',
                     },
                     {
                         name: 'test-doc-page-20210215-3',
@@ -4148,7 +4160,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 2,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-3'
+                        display_name: 'test-doc-page-20210215-3',
                     },
                     {
                         name: 'Test DocPage 20210218',
@@ -4165,7 +4177,7 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 3,
                         urlified: null,
-                        display_name: 'Test DocPage 20210218'
+                        display_name: 'Test DocPage 20210218',
                     },
                     {
                         name: 'test-doc-page-20210302',
@@ -4182,14 +4194,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 4,
                         urlified: null,
-                        display_name: 'test-doc-page-20210302'
-                    }
+                        display_name: 'test-doc-page-20210302',
+                    },
                 ],
                 type: 2,
                 base_url: 'test-base-url',
                 id: 21,
                 title: '',
-                description: ''
+                description: '',
             },
             'test import': {
                 nodes: [
@@ -4208,14 +4220,14 @@ export function getCloudSettings() {
                         authentication: 'Both',
                         order: 0,
                         urlified: null,
-                        display_name: 'test-doc-page-20210215-3'
-                    }
+                        display_name: 'test-doc-page-20210215-3',
+                    },
                 ],
                 type: 2,
                 base_url: 'import',
                 id: 22,
                 title: '',
-                description: ''
+                description: '',
             },
             'test import 2': {
                 nodes: [],
@@ -4223,17 +4235,17 @@ export function getCloudSettings() {
                 base_url: 'test',
                 id: 23,
                 title: '',
-                description: ''
-            }
+                description: '',
+            },
         },
         docMenuMap: {
             developers: {
                 '': 'Platform overview (For developers landing)',
                 'dev-tools': 'test - Developer Tools',
-                knowledgebase: 'For Developers Knowledge Base'
+                knowledgebase: 'For Developers Knowledge Base',
             },
             zdsandbox: {
-                knowledgebase: 'test - Knowledgebase ZD Sandbox'
+                knowledgebase: 'test - Knowledgebase ZD Sandbox',
             },
             'test-base-url': {
                 'test-url1': 'test-menu-20210212-1',
@@ -4241,76 +4253,76 @@ export function getCloudSettings() {
                 'test-url3': 'test-menu-20210212-3',
                 'test-url': 'test-menu-20210215',
                 '': 'test-landing-menu',
-                'test-url4': 'test-menu-20210226-1'
+                'test-url4': 'test-menu-20210226-1',
             },
             import: {
-                test: 'test import'
+                test: 'test import',
             },
             test: {
-                import: 'test import 2'
-            }
+                import: 'test import 2',
+            },
         },
         licenseTypes: [
             {
                 name: 'time',
                 title: 'Time',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'trial',
                 title: 'Trial',
-                deactivationsAllowed: 0
+                deactivationsAllowed: 0,
             },
             {
                 name: 'digital',
                 title: 'Professional',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'analog',
                 title: 'Analog',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'edge',
                 title: 'Edge',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'vmax',
                 title: 'VMAX',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'videowall',
                 title: 'Video Wall',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'analogencoder',
                 title: 'Analog Encoder',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'starter',
                 title: 'Starter',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'iomodule',
                 title: 'IO Module',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'bridge',
                 title: 'Bridge',
-                deactivationsAllowed: 3
+                deactivationsAllowed: 3,
             },
             {
                 name: 'nvr',
                 title: 'NVR',
-                deactivationsAllowed: 0
-            }
-        ]
+                deactivationsAllowed: 0,
+            },
+        ],
     };
 }

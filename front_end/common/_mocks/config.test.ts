@@ -1,7 +1,7 @@
 import {
     ConfigType,
     ConsoleSection,
-    ModalType
+    ModalType,
 } from '@components/console-table/console-table.component.types';
 import { environment } from '@environments/environment';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
@@ -19,94 +19,104 @@ export function setupConfig(): IConfig {
         animations: {
             carouselImage: {
                 enter: '0.25s ease-in',
-                leave: '0.25s ease-out'
-            }
+                leave: '0.25s ease-out',
+            },
         },
         apiBase: '/api',
         apiDocURL: {
             main: '/swagger-ui/openapi_v1.json',
             legacy: '/swagger-ui/openapi_legacy.json',
-            deprecated: '/swagger-ui/openapi_deprecated.json'
+            deprecated: '/swagger-ui/openapi_deprecated.json',
         },
         browserNotSupported: false,
         cameraCredentialUpdateTimeout: 1500,
         cameraSettings: {
             sensitivityColors: [
-                '#FFFFFF', '#627CD6', '#23A4CB', '#31BAA2', '#79BC66', '#B8BC37', '#FBA405', '#E97119', '#D24729', '#C22626'
-            ]
+                '#FFFFFF',
+                '#627CD6',
+                '#23A4CB',
+                '#31BAA2',
+                '#79BC66',
+                '#B8BC37',
+                '#FBA405',
+                '#E97119',
+                '#D24729',
+                '#C22626',
+            ],
         },
         clientMode: {
             beta: false,
-            debug: false
+            debug: false,
         },
         credentialsValidation: {
-            emailRegex: '^[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&\'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$',
+            emailRegex:
+                "^[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$",
             passwordRequirements: {
                 maxLength: 255,
                 minClassesCount: 2,
                 minLength: 8,
                 requiredRegex: '^[\x21-\x7E]$|^[\x21-\x7E][\x20-\x7E]*[\x21-\x7E]$',
-                strongClassesCount: 3
-            }
+                strongClassesCount: 3,
+            },
         },
         defaultLanguage: 'en_US',
         developers: {
             landing: {
-                adminLink: '/admin/cms/menu/%ID%/change/'
-            }
+                adminLink: '/admin/cms/menu/%ID%/change/',
+            },
         },
         dialogs: {
             message: {
                 subjects: {
                     integration: ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
                     ipvd_feedback_page: ['ipvd_feedback_page'],
-                    ipvd_feedback_device: ['ipvd_feedback_device']
+                    ipvd_feedback_device: ['ipvd_feedback_device'],
                 },
                 type: {
                     ipvd_page: 'ipvd_feedback_page',
                     ipvd_device: 'ipvd_feedback_device',
                     integration: 'integration',
-                    unknown: 'unknown'
-                }
-            }
+                    unknown: 'unknown',
+                },
+            },
         },
         downloads: {
             mobile: [
                 {
                     name: 'ios',
-                    os: 'iOS'
+                    os: 'iOS',
                 },
                 {
                     name: 'android',
-                    os: 'Android'
-                }
+                    os: 'Android',
+                },
             ],
             groups: {
                 windows: {
                     name: 'windows',
                     os: 'windows',
-                    appTypes: ['bundle', 'client', 'server']
+                    appTypes: ['bundle', 'client', 'server'],
                 },
                 linux: {
                     name: 'linux',
                     os: 'linux',
-                    appTypes: ['bundle', 'client', 'server']
+                    appTypes: ['bundle', 'client', 'server'],
                 },
                 macos: {
                     name: 'macos',
                     os: 'MacOS',
-                    appTypes: ['client']
+                    appTypes: ['client'],
                 },
                 arm: {
                     name: 'arm',
                     os: '',
-                    appTypes: ['client', 'server']
+                    appTypes: ['client', 'server'],
                 },
                 sdk: {
                     name: 'sdk',
                     os: '',
-                    appTypes: ['universal']
-                }
+                    appTypes: ['universal'],
+                },
             },
             platformMatch: {
                 unix: 'Linux',
@@ -114,8 +124,8 @@ export function setupConfig(): IConfig {
                 mac: 'MacOS',
                 windows: 'Windows',
                 arm: 'ARM',
-                skd: 'SDK'
-            }
+                skd: 'SDK',
+            },
         },
 
         healthMonitoring: {
@@ -160,7 +170,7 @@ export function setupConfig(): IConfig {
                 'GPix/s': { multiplier: 1 / 1000 ** 3 },
                 'MPix/s': { multiplier: 1 / 1000 ** 2 },
                 'KPix/s': { multiplier: 1 / 1000 },
-                'Tr/s': { multiplier: 1 }
+                'Tr/s': { multiplier: 1 },
             },
             classFormats: {
                 resource: 'long-text',
@@ -179,8 +189,8 @@ export function setupConfig(): IConfig {
                 'KB/s': '',
                 'Kbit/s': '',
                 'Tr/s': '',
-                unset: 'no-max-width'
-            }
+                unset: 'no-max-width',
+            },
         },
         icons: {
             default: '/static/images/integration/integration_tile_preview_plugin.svg',
@@ -189,7 +199,7 @@ export function setupConfig(): IConfig {
                 { name: 'android', src: '/static/images/icons/platforms/android.svg' },
                 { name: 'arm', src: '/static/images/icons/platforms/arm.svg' },
                 { name: 'linux', src: '/static/images/icons/platforms/linux.svg' },
-                { name: 'windows', src: '/static/images/icons/platforms/windows.svg' }
+                { name: 'windows', src: '/static/images/icons/platforms/windows.svg' },
             ],
             backgrounds: '/static/images/developers/backgrounds/',
             dir: '/static/images/icons/standard/',
@@ -203,14 +213,14 @@ export function setupConfig(): IConfig {
             dirSectionPlaceholder: '/static/images/placeholders/section/',
             dirDevCapabilities: '/static/images/icons/dev_capabilities/',
             dirLandingIcons: '/static/images/landing/block_icons/',
-            dirConfirmations: '/static/images/confirmations/'
+            dirConfirmations: '/static/images/confirmations/',
         },
         images: {
             dir: '/static/images/',
             dirDevelopers: '/static/images/developers/',
             dirDevelopersDevtools: '/static/images/developers/dev_tools/',
             dirLanding: '/static/images/landing/',
-            dirLandingGraphic: '/static/images/landing/main_screen/'
+            dirLandingGraphic: '/static/images/landing/main_screen/',
         },
         integration: {
             adminLink: '/admin/cms/asset/%ID%/pages/',
@@ -220,30 +230,30 @@ export function setupConfig(): IConfig {
                 'macos-file': 'Mac OS',
                 'arm-32-file': 'ARM 32bit',
                 'windows-x64-file': 'Windows x64',
-                downloadableInstructions: 'Instructions / Manual'
+                downloadableInstructions: 'Instructions / Manual',
             },
             embedInfo: {
                 vimeo: {
                     link: 'https://player.vimeo.com/video/',
-                    regex: '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$'
+                    regex: '^https?:\\/\\/vimeo\\.com\\/([\\d]+)$',
                 },
                 youtube: {
                     link: 'https://www.youtube.com/embed/',
                     // eslint-disable-next-line no-useless-escape
-                    regex: '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w\-]+)$'
-                }
+                    regex: '^https?:\\/\\/(?:www\\.youtube\\.com\\/(?:embed\\/|watch\\?v=)|youtu\\.be\\/)([\\w-]+)$',
+                },
             },
             filter: {
                 items: '',
-                limitation: ''
+                limitation: '',
             },
-            myTagId: 'mine'
+            myTagId: 'mine',
         },
         interceptor: {
             cloudUnavailable: {
                 error: 'cloudInvalidResponse',
-                timeout: 5 * 1000
-            }
+                timeout: 5 * 1000,
+            },
         },
         ipvd: {
             pagerMaxSizeMedium: 3,
@@ -254,20 +264,20 @@ export function setupConfig(): IConfig {
             supportedResolutions: '',
             supportedHardwareTypes: [''],
             searchTags: '',
-            vendorsShown: 0
+            vendorsShown: 0,
         },
         isInIframe: false,
         isLocal: environment.isLocal,
         layout: {
             table: {
-                rows: 10
+                rows: 10,
             },
             tableLarge: {
-                rows: 20
-            }
+                rows: 20,
+            },
         },
         landing: {
-            description: ''
+            description: '',
         },
         maintenanceTimeout: 60 * 1000,
         manifest: {
@@ -284,15 +294,15 @@ export function setupConfig(): IConfig {
                     {
                         type: ConfigType.TEXT,
                         name: 'name',
-                        label: 'Internal Name'
+                        label: 'Internal Name',
                     },
                     {
                         type: ConfigType.DATE,
                         name: 'last_modified',
                         label: 'Last Modified',
                         meta: {
-                            styles: 'expanded-width'
-                        }
+                            styles: 'expanded-width',
+                        },
                     },
                     {
                         type: ConfigType.ICON_LINK,
@@ -300,8 +310,8 @@ export function setupConfig(): IConfig {
                         label: '',
                         meta: {
                             icon: 'eye.svg',
-                            tooltip: 'Download'
-                        }
+                            tooltip: 'Download',
+                        },
                     },
                     {
                         type: ConfigType.ICON_MODAL,
@@ -309,9 +319,9 @@ export function setupConfig(): IConfig {
                         label: '',
                         meta: {
                             icon: 'lock.svg',
-                            tooltip: 'Settings'
-                        }
-                    }
+                            tooltip: 'Settings',
+                        },
+                    },
                 ],
                 editManifest: {
                     label: 'Edit',
@@ -321,14 +331,14 @@ export function setupConfig(): IConfig {
                             name: 'name',
                             label: 'Internal Name',
                             placeholder: 'Custom VMS Client Name',
-                            description: 'Name is hidden from external users'
+                            description: 'Name is hidden from external users',
                         },
                         {
                             type: ConfigType.DROPDOWN,
                             name: 'base_vms',
-                            label: 'Based on'
-                        }
-                    ]
+                            label: 'Based on',
+                        },
+                    ],
                 },
                 downloadManifest: {
                     label: 'Download Package',
@@ -339,7 +349,7 @@ export function setupConfig(): IConfig {
                             type: ConfigType.TEXT,
                             name: 'preparing',
                             label: 'Preparing to Build',
-                            description: 'Starting Custom Client build.'
+                            description: 'Starting Custom Client build.',
                         },
                         {
                             // Waiting on spec. Fields could potentially be used for configurations per modal view.
@@ -347,7 +357,7 @@ export function setupConfig(): IConfig {
                             type: ConfigType.TEXT,
                             name: 'generating',
                             label: 'Generating Custom Client',
-                            description: 'Custom Client is being built'
+                            description: 'Custom Client is being built',
                         },
                         {
                             // Waiting on spec. Fields could potentially be used for configurations per modal view.
@@ -355,28 +365,29 @@ export function setupConfig(): IConfig {
                             type: ConfigType.TEXT,
                             name: 'ready',
                             label: 'Custom Client Ready',
-                            description: 'Custom Client is ready to download'
-                        }
-                    ]
+                            description: 'Custom Client is ready to download',
+                        },
+                    ],
                 },
                 actions: [
                     {
                         title: 'Create',
-                        modal: ModalType.CLIENT_CREATE
-                    }
+                        modal: ModalType.CLIENT_CREATE,
+                    },
                 ],
                 searchSubheading: '',
                 noResultsMessage: '',
                 minItemsAdvanced: 0,
-                perPageOptions: []
-            }
+                perPageOptions: [],
+            },
         },
         maxServers: 100, // The maximum amount of server that can be in a system
         meta: {
             viewport: {
-                default: 'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
-                desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no'
-            }
+                default:
+                    'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
+                desktopLayout: 'width=768, maximum-scale=1, user-scalable=yes, shrink-to-fit=no',
+            },
         },
         menus: {
             account: {
@@ -384,38 +395,38 @@ export function setupConfig(): IConfig {
                 icon: 'glyphicon-user',
                 settings: {
                     id: 'settings',
-                    path: ''
+                    path: '',
                 },
                 password: {
                     id: 'password',
-                    path: '/password'
+                    path: '/password',
                 },
                 security: {
                     id: 'security',
-                    path: '/security'
-                }
+                    path: '/security',
+                },
             },
             systemHealth: {
-                baseUrl: '/health/'
+                baseUrl: '/health/',
             },
             systemMonitoring: {
-                baseUrl: '/monitoring/'
+                baseUrl: '/monitoring/',
             },
             systemSettings: {
                 baseUrl: environment.isLocal ? '/settings/' : '/systems/',
                 admin: {
                     id: 'admin',
                     icon: 'systems',
-                    path: ''
+                    path: '',
                 },
                 cloudStorage: {
                     id: 'cloudStorage',
-                    path: 'cloud-storage'
+                    path: 'cloud-storage',
                 },
                 users: {
                     id: 'users',
                     icon: 'users',
-                    path: 'users'
+                    path: 'users',
                 },
                 servers: {
                     id: 'servers',
@@ -423,8 +434,8 @@ export function setupConfig(): IConfig {
                     path: 'servers',
                     statusIcons: {
                         offline: 'device_offline',
-                        online: ''
-                    }
+                        online: '',
+                    },
                 },
                 cameras: {
                     id: 'cameras',
@@ -436,31 +447,31 @@ export function setupConfig(): IConfig {
                         recording: 'camera_recording',
                         scheduled: 'camera_scheduled',
                         unauthorized: 'camera_unauthorized',
-                        online: ''
-                    }
+                        online: '',
+                    },
                 },
                 general: {
                     id: 'general',
-                    path: '/'
+                    path: '/',
                 },
                 licenses: {
                     id: 'licenses',
-                    path: 'licenses'
+                    path: 'licenses',
                 },
                 buttons: {
-                    id: 'buttons'
-                }
-            }
+                    id: 'buttons',
+                },
+            },
         },
         newSystem: false,
         permissions: {
-            canViewRelease: 'can_view_release'
+            canViewRelease: 'can_view_release',
         },
         redirect: {
             authorised: environment.isLocal ? '/settings' : '/systems', // Page for redirecting all authorised users
             unauthorised: '/', // Page for redirecting all unauthorised users by default
             page404: '/404',
-            paths: ['/', '/restore_password', '/activate', '/404']
+            paths: ['/', '/restore_password', '/activate', '/404'],
         },
         showHeaderAndFooter: true,
         headerHeight: 48,
@@ -469,7 +480,7 @@ export function setupConfig(): IConfig {
             debounceShortTime: 100, // ms
             debounceTime: 500, // ms
             maxLength: 200,
-            minSystems: 9 // We need at least 9 system to enable search
+            minSystems: 9, // We need at least 9 system to enable search
         },
         servers: {
             checkStatusTimeout: 3400,
@@ -477,7 +488,7 @@ export function setupConfig(): IConfig {
             port: {
                 max: 65535,
                 min: 1,
-                restrictedMax: 1024
+                restrictedMax: 1024,
             },
             status: {
                 online: 'online',
@@ -485,39 +496,39 @@ export function setupConfig(): IConfig {
                 restarting: 'restarting',
                 resetting: 'resetting',
                 checking: 'checking',
-                mismatchedcertificate: 'mismatchedcertificate'
+                mismatchedcertificate: 'mismatchedcertificate',
             },
             errors: {
-                oldSessionErrorId: 'sessionExpired'
-            }
+                oldSessionErrorId: 'sessionExpired',
+            },
         },
         supportedLanguages: [],
         system: {
             flags: {
-                newSystem: 'SF_NewSystem'
+                newSystem: 'SF_NewSystem',
             },
             name: '',
             status: {
                 online: 'online',
                 default: {
-                    style: 'default'
+                    style: 'default',
                 },
                 offline: {
-                    style: 'default'
+                    style: 'default',
                 },
                 unavailable: {
-                    style: 'default'
+                    style: 'default',
                 },
                 master: 'master',
-                slave: 'slave'
+                slave: 'slave',
             },
-            auditTime: 500
+            auditTime: 500,
         },
         toast: {
             success: 'success',
             warning: 'warning',
             danger: 'danger',
-            info: 'info'
+            info: 'info',
         },
 
         // Dynamic from cloud_portal
@@ -533,7 +544,7 @@ export function setupConfig(): IConfig {
             cloudStorageEnabled: false,
             cloudStorageSize: 0,
             customClientsEnabled: false,
-            healthMonitorCacheTimeout: 60
+            healthMonitorCacheTimeout: 60,
         },
         cloudName: '',
         cloudHost: '',
@@ -547,9 +558,9 @@ export function setupConfig(): IConfig {
             links: {
                 privacy: '',
                 support: '',
-                website: ''
+                website: '',
             },
-            name: ''
+            name: '',
         },
         dynamicMenus: {},
         docMenuMap: {},
@@ -576,34 +587,38 @@ export function setupConfig(): IConfig {
             viewArchivesPermissionFlag: 'GlobalViewArchivePermission',
             customPermission: {
                 name: 'Custom',
-                permissions: 'NoPermission'
+                permissions: 'NoPermission',
             },
             predefinedRoles: [
                 {
                     isOwner: true,
                     name: 'Owner',
-                    permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                    permissions:
+                        'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
                 },
                 {
                     name: 'Administrator',
-                    permissions: 'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                    permissions:
+                        'GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
                 },
                 {
                     name: 'Advanced Viewer',
-                    permissions: 'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission'
+                    permissions:
+                        'GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission',
                 },
                 {
                     name: 'Viewer',
-                    permissions: 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
+                    permissions:
+                        'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission',
                 },
                 {
                     name: 'Live Viewer',
-                    permissions: 'GlobalAccessAllMediaPermission'
+                    permissions: 'GlobalAccessAllMediaPermission',
                 },
                 {
                     name: 'Custom',
-                    permissions: 'NoPermission'
-                }
+                    permissions: 'NoPermission',
+                },
             ],
             order: [
                 'Live Viewer',
@@ -617,13 +632,13 @@ export function setupConfig(): IConfig {
                 'Administrator',
                 'admin',
                 'Owner',
-                'owner'
-            ]
+                'owner',
+            ],
         },
         allowBetaMode: false,
         allowDebugMode: false,
         debug: {
-            chunksOnTimeline: false // timeline.js - draw debug events
+            chunksOnTimeline: false, // timeline.js - draw debug events
         },
         globalViewArchivePermission: 'GlobalViewArchivePermission',
         openClientTimeout: 20 * 1000, // 20 seconds we wait for client to open
@@ -655,17 +670,21 @@ export function setupConfig(): IConfig {
             updateArchiveStateTimeout: 60 * 1000,
             updateArchiveRecordsTimeout: 2 * 1000,
             useServerTime: true,
-            useSystemTime: true
+            useSystemTime: true,
         },
         settingsConfig: {
             auditTrailEnabled: { type: 'checkbox', hiddenInAdvanced: true },
-            cameraSettingsOptimization: { type: 'checkbox', setupWizard: true, hiddenInAdvanced: true },
+            cameraSettingsOptimization: {
+                type: 'checkbox',
+                setupWizard: true,
+                hiddenInAdvanced: true,
+            },
             cloudConnectUdpHolePunchingEnabled: { type: 'checkbox' },
             defaultMotionMask: '5,0,0,44,32',
             disabledVendors: { type: 'text' },
             ec2AliveUpdateIntervalSec: {
                 type: 'number',
-                alert: 'Warning! It is highly recommended to keep this value at least 10% greater than "Connection keep alive timeout" x "Connection keep probes"'
+                alert: 'Warning! It is highly recommended to keep this value at least 10% greater than "Connection keep alive timeout" x "Connection keep probes"',
             },
             ec2ConnectionKeepAliveTimeoutSec: { type: 'number' },
             ec2KeepAliveProbeCount: { type: 'number' },
@@ -703,7 +722,10 @@ export function setupConfig(): IConfig {
             newSystem: { type: 'static' },
             proxyConnectTimeoutSec: { type: 'number' },
             crossdomainEnabled: { type: 'checkbox' },
-            maxRtspConnectDurationSec: { label: 'Maximum duration for RTSP connection (seconds)', type: 'number' },
+            maxRtspConnectDurationSec: {
+                label: 'Maximum duration for RTSP connection (seconds)',
+                type: 'number',
+            },
 
             statisticsReportLastNumber: { type: 'static' },
             statisticsReportLastTime: { type: 'static' },
@@ -730,22 +752,22 @@ export function setupConfig(): IConfig {
             maxVirtualCameraArchiveSynchronizationThreads: { type: 'number' },
             maxEventLogRecords: { type: 'number' },
 
-            forceLiveCacheForPrimaryStream: { type: 'text' }
+            forceLiveCacheForPrimaryStream: { type: 'text' },
         },
         metaDefaults: {
             default: {
                 image: '/static/images/logo.png',
-                type: 'website'
+                type: 'website',
             },
             '/integrations/': {
-                type: 'article'
+                type: 'article',
             },
             '/docs/': {
-                type: 'article'
+                type: 'article',
             },
             '/content/': {
-                type: 'article'
-            }
-        }
+                type: 'article',
+            },
+        },
     };
 }

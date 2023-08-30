@@ -21,23 +21,23 @@ export function setupTest41System(): Partial<NxSystem> {
             accessRole: 'owner',
             sharingPermissions: [
                 {
-                    accessRole: 'maintenance'
+                    accessRole: 'maintenance',
                 },
                 {
-                    accessRole: 'liveViewer'
+                    accessRole: 'liveViewer',
                 },
                 {
-                    accessRole: 'viewer'
+                    accessRole: 'viewer',
                 },
                 {
-                    accessRole: 'advancedViewer'
+                    accessRole: 'advancedViewer',
                 },
                 {
-                    accessRole: 'localAdmin'
+                    accessRole: 'localAdmin',
                 },
                 {
-                    accessRole: 'cloudAdmin'
-                }
+                    accessRole: 'cloudAdmin',
+                },
             ],
             stateOfHealth: 'online',
             usageFrequency: 64,
@@ -54,17 +54,17 @@ export function setupTest41System(): Partial<NxSystem> {
                 primaryTimeServerDefinesInternetTimeSync: 1,
                 restartMethodVersion: 2,
                 set_camera_param_post: 1,
-                vms_metrics: 1
+                vms_metrics: 1,
             },
             isMine: true,
-            canMerge: 1
+            canMerge: 1,
         },
         isAvailable: true,
         isOnline: true,
         stateMessage: '',
         subscriberCount: 2,
         show404: false,
-        currentUserEmail: 'noptixautoqa+owner@gmail.com'
+        currentUserEmail: 'noptixautoqa+owner@gmail.com',
     };
 }
 
@@ -90,23 +90,23 @@ export function setupTest50System(): Partial<NxSystem> {
             accessRole: 'owner',
             sharingPermissions: [
                 {
-                    accessRole: 'maintenance'
+                    accessRole: 'maintenance',
                 },
                 {
-                    accessRole: 'liveViewer'
+                    accessRole: 'liveViewer',
                 },
                 {
-                    accessRole: 'viewer'
+                    accessRole: 'viewer',
                 },
                 {
-                    accessRole: 'advancedViewer'
+                    accessRole: 'advancedViewer',
                 },
                 {
-                    accessRole: 'localAdmin'
+                    accessRole: 'localAdmin',
                 },
                 {
-                    accessRole: 'cloudAdmin'
-                }
+                    accessRole: 'cloudAdmin',
+                },
             ],
             stateOfHealth: 'online',
             usageFrequency: 64,
@@ -123,16 +123,16 @@ export function setupTest50System(): Partial<NxSystem> {
                 primaryTimeServerDefinesInternetTimeSync: 1,
                 restartMethodVersion: 2,
                 set_camera_param_post: 1,
-                vms_metrics: 1
+                vms_metrics: 1,
             },
             isMine: true,
-            canMerge: 1
+            canMerge: 1,
         },
         isAvailable: true,
         isOnline: true,
         stateMessage: '',
         subscriberCount: 2,
         show404: false,
-        currentUserEmail: 'noptixautoqa+owner@gmail.com'
+        currentUserEmail: 'noptixautoqa+owner@gmail.com',
     };
 }

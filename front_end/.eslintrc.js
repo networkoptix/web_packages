@@ -393,28 +393,8 @@ module.exports = {
             },
         },
         {
-            files: [
-                '*.?(m)js',
-                // '*.ts'
-                '*.module.ts',
-                '*types.ts',
-                '[0-k]*/**/*.ts',
-                'libs/[0-d]*/**/*.ts',
-                'libs/features/*.ts',
-                'libs/features/[0-r]*/**/*.ts',
-                'libs/features/sandbox/**/*.ts',
-                'libs/features/server-documentation/**/*.ts',
-                'libs/features/systems/bookmarks/**/*.ts',
-                'libs/features/systems/settings/**/*.ts',
-                'libs/features/systems/view/**/*.ts',
-                'libs/features/[t-z]*/**/*.ts',
-                'libs/[g-z]*/**/*.ts',
-                '[m-z]*/**/*.ts',
-            ],
-            excludedFiles: [
-                // Probably very out of date and of questionable worth at this point
-                'common/_mocks/**/*.ts',
-            ],
+            files: ['*.?(m)js', '*.ts'],
+            excludedFiles: [],
             extends: ['plugin:prettier/recommended'],
             plugins: ['prettier'],
             rules: {

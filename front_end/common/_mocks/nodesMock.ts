@@ -41,7 +41,7 @@ export const headerNodes: Partial<MenuNode[]> = [
                 breadcrumbs: [],
                 queryParamsHandling: '',
                 urlified: '',
-                invisible: false
+                invisible: false,
             },
             {
                 subtitle: '',
@@ -64,7 +64,7 @@ export const headerNodes: Partial<MenuNode[]> = [
                 breadcrumbs: [],
                 queryParamsHandling: '',
                 urlified: '',
-                invisible: false
+                invisible: false,
             },
             {
                 subtitle: '',
@@ -87,11 +87,11 @@ export const headerNodes: Partial<MenuNode[]> = [
                 breadcrumbs: [],
                 queryParamsHandling: '',
                 urlified: '',
-                invisible: false
-            }
+                invisible: false,
+            },
         ],
         breadcrumbs: [],
         queryParamsHandling: '',
-        urlified: ''
-    }
+        urlified: '',
+    },
 ];

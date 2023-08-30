@@ -10,8 +10,7 @@ export const kbMenu = {
             pending: false,
             draft: false,
             asset_type: 'Documentation Page',
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -20,11 +19,9 @@ export const kbMenu = {
             urlified: '518-overview',
             name: 'Overview',
             display_name: 'Overview',
-            nodes: [
-            ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            nodes: [],
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -34,8 +31,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -52,8 +48,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -62,13 +57,11 @@ export const kbMenu = {
                     urlified: '351-get-a-vms-build',
                     name: 'Get a VMS Build',
                     display_name: 'Get a VMS Build',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Getting Started'
-                    }
+                        name: 'Getting Started',
+                    },
                 },
                 {
                     subtitle: '',
@@ -78,8 +71,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -88,13 +80,11 @@ export const kbMenu = {
                     urlified: '352-get-a-license-for-developers',
                     name: 'Get a License for Developers',
                     display_name: 'Get a License for Developers',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Getting Started'
-                    }
+                        name: 'Getting Started',
+                    },
                 },
                 {
                     subtitle: '',
@@ -104,8 +94,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -114,13 +103,11 @@ export const kbMenu = {
                     urlified: '220-explore-platform-architecture',
                     name: 'Explore Platform Architecture',
                     display_name: 'Explore Platform Architecture',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Getting Started'
-                    }
+                        name: 'Getting Started',
+                    },
                 },
                 {
                     subtitle: '',
@@ -130,8 +117,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -140,18 +126,15 @@ export const kbMenu = {
                     urlified: '354-submit-an-integration-to-the-marketplace',
                     name: 'Submit an Integration to the Cloud Marketplace',
                     display_name: 'Submit an Integration to the Cloud Marketplace',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Getting Started'
-                    }
-                }
+                        name: 'Getting Started',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -161,8 +144,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -179,8 +161,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -189,13 +170,11 @@ export const kbMenu = {
                     urlified: '241-custom-solutions',
                     name: 'Build Custom Solutions',
                     display_name: 'Build Custom Solutions',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'What is Possible?'
-                    }
+                        name: 'What is Possible?',
+                    },
                 },
                 {
                     subtitle: '',
@@ -205,8 +184,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -215,13 +193,11 @@ export const kbMenu = {
                     urlified: '225-reusable-integrations',
                     name: 'Develop Reusable Integrations',
                     display_name: 'Develop Reusable Integrations',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'What is Possible?'
-                    }
+                        name: 'What is Possible?',
+                    },
                 },
                 {
                     subtitle: '',
@@ -231,8 +207,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -241,18 +216,15 @@ export const kbMenu = {
                     urlified: '366-create-new-powered-by-brand-products',
                     name: 'Create new Powered-by-brand Products',
                     display_name: 'Create new Powered-by-brand Products',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'What is Possible?'
-                    }
-                }
+                        name: 'What is Possible?',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -262,8 +234,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -280,8 +251,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -290,13 +260,11 @@ export const kbMenu = {
                     urlified: '418-http-rest-api',
                     name: 'Server HTTP REST API',
                     display_name: 'Server HTTP REST API',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Developer Tools'
-                    }
+                        name: 'Developer Tools',
+                    },
                 },
                 {
                     subtitle: '',
@@ -306,8 +274,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -316,13 +283,11 @@ export const kbMenu = {
                     urlified: '357-brand-witness-server-plugin-sdk-c',
                     name: 'Server Plugin SDK (C++)',
                     display_name: 'Server Plugin SDK (C++)',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Developer Tools'
-                    }
+                        name: 'Developer Tools',
+                    },
                 },
                 {
                     subtitle: '',
@@ -332,8 +297,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -342,13 +306,11 @@ export const kbMenu = {
                     urlified: '358-cloud-api-route-api-calls-via-brand-cloud',
                     name: 'Cloud API: Route API Calls via Cloud',
                     display_name: 'Cloud API: Route API Calls via Cloud',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Developer Tools'
-                    }
+                        name: 'Developer Tools',
+                    },
                 },
                 {
                     subtitle: '',
@@ -358,8 +320,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -368,13 +329,11 @@ export const kbMenu = {
                     urlified: '359-testcamera-ip-camera-emulator',
                     name: 'TestCamera: IP Camera Emulator',
                     display_name: 'TestCamera: IP Camera Emulator',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Developer Tools'
-                    }
+                        name: 'Developer Tools',
+                    },
                 },
                 {
                     subtitle: '',
@@ -384,8 +343,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -394,13 +352,11 @@ export const kbMenu = {
                     urlified: '360-nodejs-integration-library',
                     name: 'Node.js Integration Library',
                     display_name: 'Node.js Integration Library',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Developer Tools'
-                    }
+                        name: 'Developer Tools',
+                    },
                 },
                 {
                     subtitle: '',
@@ -410,8 +366,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -420,18 +375,15 @@ export const kbMenu = {
                     urlified: '355-open-source-openvino-analytics-plugin',
                     name: 'Open-Source OpenVINO Analytics Plugin',
                     display_name: 'Open-Source OpenVINO Analytics Plugin',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Developer Tools'
-                    }
-                }
+                        name: 'Developer Tools',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -441,8 +393,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -459,8 +410,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -478,8 +428,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -488,13 +437,11 @@ export const kbMenu = {
                             urlified: '454-windows-os-installation-guide',
                             name: 'Windows OS Installation Guide',
                             display_name: 'Windows OS Installation Guide',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Supported Operating Systems'
-                            }
+                                name: 'Supported Operating Systems',
+                            },
                         },
                         {
                             subtitle: '',
@@ -504,8 +451,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -514,13 +460,11 @@ export const kbMenu = {
                             urlified: '455-ubuntu-linux-os-installation-guide',
                             name: 'Ubuntu Linux OS Installation Guide',
                             display_name: 'Ubuntu Linux OS Installation Guide',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Supported Operating Systems'
-                            }
+                                name: 'Supported Operating Systems',
+                            },
                         },
                         {
                             subtitle: '',
@@ -530,8 +474,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -540,20 +483,17 @@ export const kbMenu = {
                             urlified: '456-macos-installation-guide',
                             name: 'macOS Installation Guide',
                             display_name: 'macOS Installation Guide',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Supported Operating Systems'
-                            }
-                        }
+                                name: 'Supported Operating Systems',
+                            },
+                        },
                     ],
-                    breadcrumbs: [
-                    ],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Supported Technology'
-                    }
+                        name: 'Supported Technology',
+                    },
                 },
                 {
                     subtitle: '',
@@ -563,8 +503,7 @@ export const kbMenu = {
                     pending: false,
                     draft: null,
                     asset_type: null,
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -581,8 +520,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -600,8 +538,7 @@ export const kbMenu = {
                                     pending: false,
                                     draft: false,
                                     asset_type: 'Documentation Page',
-                                    related_asset_ids: [
-                                    ],
+                                    related_asset_ids: [],
                                     next_item: false,
                                     new_window: false,
                                     icon: '',
@@ -610,13 +547,11 @@ export const kbMenu = {
                                     urlified: '485-arm-support-policy',
                                     name: 'ARM Support Policy',
                                     display_name: 'ARM Support Policy',
-                                    nodes: [
-                                    ],
-                                    breadcrumbs: [
-                                    ],
+                                    nodes: [],
+                                    breadcrumbs: [],
                                     parentNode: {
-                                        name: 'ARM'
-                                    }
+                                        name: 'ARM',
+                                    },
                                 },
                                 {
                                     subtitle: '',
@@ -626,8 +561,7 @@ export const kbMenu = {
                                     pending: false,
                                     draft: false,
                                     asset_type: 'Documentation Page',
-                                    related_asset_ids: [
-                                    ],
+                                    related_asset_ids: [],
                                     next_item: false,
                                     new_window: false,
                                     icon: '',
@@ -636,20 +570,17 @@ export const kbMenu = {
                                     urlified: '362-building-linux-based-nvrs',
                                     name: 'Building Linux-based NVRs',
                                     display_name: 'Building Linux-based NVRs',
-                                    nodes: [
-                                    ],
-                                    breadcrumbs: [
-                                    ],
+                                    nodes: [],
+                                    breadcrumbs: [],
                                     parentNode: {
-                                        name: 'ARM'
-                                    }
-                                }
+                                        name: 'ARM',
+                                    },
+                                },
                             ],
-                            breadcrumbs: [
-                            ],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Supported Platforms'
-                            }
+                                name: 'Supported Platforms',
+                            },
                         },
                         {
                             subtitle: '',
@@ -659,8 +590,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -669,13 +599,11 @@ export const kbMenu = {
                             urlified: '404-docker',
                             name: 'Docker',
                             display_name: 'Docker',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Supported Platforms'
-                            }
+                                name: 'Supported Platforms',
+                            },
                         },
                         {
                             subtitle: '',
@@ -685,8 +613,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -695,20 +622,17 @@ export const kbMenu = {
                             urlified: '453-virtual-machines',
                             name: 'Virtual Machines',
                             display_name: 'Virtual Machines',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Supported Platforms'
-                            }
-                        }
+                                name: 'Supported Platforms',
+                            },
+                        },
                     ],
-                    breadcrumbs: [
-                    ],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Supported Technology'
-                    }
+                        name: 'Supported Technology',
+                    },
                 },
                 {
                     subtitle: '',
@@ -718,8 +642,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -728,18 +651,15 @@ export const kbMenu = {
                     urlified: '361-supported-programming-languages',
                     name: 'Supported Programming Languages',
                     display_name: 'Supported Programming Languages',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Supported Technology'
-                    }
-                }
+                        name: 'Supported Technology',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -749,8 +669,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -767,8 +686,7 @@ export const kbMenu = {
                     pending: false,
                     draft: null,
                     asset_type: null,
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -785,8 +703,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -795,13 +712,11 @@ export const kbMenu = {
                             urlified: '368-1-integration-capabilities--what-to-expect',
                             name: '1. Integration Capabilities – What to Expect',
                             display_name: '1. Integration Capabilities – What to Expect',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -811,8 +726,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -821,13 +735,11 @@ export const kbMenu = {
                             urlified: '369-2-integration-architecture---understanding-plugins',
                             name: '2. Integration Architecture - Understanding Plugins',
                             display_name: '2. Integration Architecture - Understanding Plugins',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -837,8 +749,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -847,13 +758,11 @@ export const kbMenu = {
                             urlified: '370-3-exploring-plugin-code-examples',
                             name: '3. Exploring Plugin Code Examples',
                             display_name: '3. Exploring Plugin Code Examples',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -863,8 +772,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -873,13 +781,11 @@ export const kbMenu = {
                             urlified: '371-4-implementation-best-practices',
                             name: '4. Implementation Best Practices',
                             display_name: '4. Implementation Best Practices',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -889,8 +795,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -898,14 +803,13 @@ export const kbMenu = {
                             order: 4,
                             urlified: '372-5-configuring-regions-of-interests-for-event-generation',
                             name: '5. Configuring Regions of Interests for Event Generation',
-                            display_name: '5. Configuring Regions of Interests for Event Generation',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            display_name:
+                                '5. Configuring Regions of Interests for Event Generation',
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -915,8 +819,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -925,13 +828,11 @@ export const kbMenu = {
                             urlified: '373-6-example-integrating-with-face-recognition',
                             name: '6. Example: Integrating with Face Recognition',
                             display_name: '6. Example: Integrating with Face Recognition',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -941,8 +842,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -951,13 +851,11 @@ export const kbMenu = {
                             urlified: '374-7-example-create-an-lpr-plugin',
                             name: '7. Example: Create an LPR Plugin',
                             display_name: '7. Example: Create an LPR Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -967,8 +865,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -977,13 +874,11 @@ export const kbMenu = {
                             urlified: '375-8-create-a-smart-ip-camera-plugin',
                             name: '8. Create a Smart IP Camera Plugin',
                             display_name: '8. Create a Smart IP Camera Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -993,8 +888,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -1003,13 +897,11 @@ export const kbMenu = {
                             urlified: '376-9-important-technical-considerations-w-brand-witness',
                             name: '9. Important Technical Considerations w/ brand Witness',
                             display_name: '9. Important Technical Considerations w/ brand Witness',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1019,8 +911,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -1029,20 +920,17 @@ export const kbMenu = {
                             urlified: '377-10-development-tools--tips',
                             name: '10. Development Tools & Tips',
                             display_name: '10. Development Tools & Tips',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Integrating Video Analytics - Overview'
-                            }
-                        }
+                                name: 'Integrating Video Analytics - Overview',
+                            },
+                        },
                     ],
-                    breadcrumbs: [
-                    ],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Integrating Video Analytics and Metadata'
-                    }
+                        name: 'Integrating Video Analytics and Metadata',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1052,8 +940,7 @@ export const kbMenu = {
                     pending: false,
                     draft: null,
                     asset_type: null,
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1070,8 +957,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1080,13 +966,11 @@ export const kbMenu = {
                             urlified: '378-introduction-to-creating-a-video-analytics-plugin',
                             name: 'Introduction to Creating a Video Analytics Plugin',
                             display_name: 'Introduction to Creating a Video Analytics Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1096,8 +980,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1106,13 +989,11 @@ export const kbMenu = {
                             urlified: '379-plugin-control-flow',
                             name: 'Plugin Control Flow',
                             display_name: 'Plugin Control Flow',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1122,8 +1003,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1132,13 +1012,11 @@ export const kbMenu = {
                             urlified: '380-plugin-subsystem-architecture',
                             name: 'Plugin Subsystem Architecture',
                             display_name: 'Plugin Subsystem Architecture',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1148,8 +1026,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1158,13 +1035,11 @@ export const kbMenu = {
                             urlified: '505-step-0-getting-the-source-code',
                             name: 'Step 0. Getting the Source Code',
                             display_name: 'Step 0. Getting the Source Code',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1174,8 +1049,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1184,13 +1058,11 @@ export const kbMenu = {
                             urlified: '381-step-1-preparing-a-workspace',
                             name: 'Step 1. Preparing a Workspace',
                             display_name: 'Step 1. Preparing a Workspace',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1200,8 +1072,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1210,13 +1081,11 @@ export const kbMenu = {
                             urlified: '382-step-2-adjusting-the-names',
                             name: 'Step 2. Adjusting the Names',
                             display_name: 'Step 2. Adjusting the Names',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1226,8 +1095,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1236,13 +1104,11 @@ export const kbMenu = {
                             urlified: '383-step-3-introducing-new-detectable-object-types',
                             name: 'Step 3. Introducing New Detectable Object Types',
                             display_name: 'Step 3. Introducing New Detectable Object Types',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1252,8 +1118,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1262,13 +1127,11 @@ export const kbMenu = {
                             urlified: '384-step-4-adding-object-detection',
                             name: 'Step 4. Adding Object Detection',
                             display_name: 'Step 4. Adding Object Detection',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1278,8 +1141,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -1288,20 +1150,17 @@ export const kbMenu = {
                             urlified: '385-step-5-adding-object-tracking',
                             name: 'Step 5. Adding Object Tracking',
                             display_name: 'Step 5. Adding Object Tracking',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'How to Create a Video Analytics Plugin'
-                            }
-                        }
+                                name: 'How to Create a Video Analytics Plugin',
+                            },
+                        },
                     ],
-                    breadcrumbs: [
-                    ],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Integrating Video Analytics and Metadata'
-                    }
+                        name: 'Integrating Video Analytics and Metadata',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1311,8 +1170,7 @@ export const kbMenu = {
                     pending: false,
                     draft: null,
                     asset_type: null,
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1329,8 +1187,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1339,13 +1196,11 @@ export const kbMenu = {
                             urlified: '386-introduction-to-plugin-debugging',
                             name: 'Introduction to Plugin Debugging',
                             display_name: 'Introduction to Plugin Debugging',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1355,8 +1210,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1365,13 +1219,11 @@ export const kbMenu = {
                             urlified: '387-logging-from-the-plugin',
                             name: 'Logging from the Plugin',
                             display_name: 'Logging from the Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1381,8 +1233,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1391,13 +1242,11 @@ export const kbMenu = {
                             urlified: '388-configuring-via-ini-files--iniconfig',
                             name: 'Configuring via .ini files – IniConfig',
                             display_name: 'Configuring via .ini files – IniConfig',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1407,8 +1256,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1417,13 +1265,11 @@ export const kbMenu = {
                             urlified: '389-loading-plugins',
                             name: 'Loading Plugins',
                             display_name: 'Loading Plugins',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1433,8 +1279,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1443,13 +1288,11 @@ export const kbMenu = {
                             urlified: '390-debugging-reference-counting--refcountableregistry',
                             name: 'Debugging Reference Counting – RefCountableRegistry',
                             display_name: 'Debugging Reference Counting – RefCountableRegistry',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1459,8 +1302,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1469,13 +1311,11 @@ export const kbMenu = {
                             urlified: '391-using-stub-analytics-plugin-and-sample-analytics-plugin',
                             name: 'Using Stub Analytics Plugin and Sample Analytics Plugin',
                             display_name: 'Using Stub Analytics Plugin and Sample Analytics Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1485,8 +1325,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1495,13 +1334,11 @@ export const kbMenu = {
                             urlified: '392-capturing-and-substituting-manifests-and-settings',
                             name: 'Capturing and Substituting Manifests and Settings',
                             display_name: 'Capturing and Substituting Manifests and Settings',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1511,8 +1348,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
@@ -1521,13 +1357,11 @@ export const kbMenu = {
                             urlified: '393-analytics-logs-monitoring-metadata-flow',
                             name: 'Analytics Logs: Monitoring Metadata Flow',
                             display_name: 'Analytics Logs: Monitoring Metadata Flow',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1537,23 +1371,22 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: true,
                             new_window: false,
                             icon: '',
                             authentication: 'Both',
                             order: 8,
-                            urlified: '394-supplying-test-video-streams-testcamera-and-image-library-plugin',
+                            urlified:
+                                '394-supplying-test-video-streams-testcamera-and-image-library-plugin',
                             name: 'Supplying test video streams: Testcamera and Image Library Plugin',
-                            display_name: 'Supplying test video streams: Testcamera and Image Library Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            display_name:
+                                'Supplying test video streams: Testcamera and Image Library Plugin',
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
+                                name: 'Plugin Debugging',
+                            },
                         },
                         {
                             subtitle: '',
@@ -1563,8 +1396,7 @@ export const kbMenu = {
                             pending: false,
                             draft: false,
                             asset_type: 'Documentation Page',
-                            related_asset_ids: [
-                            ],
+                            related_asset_ids: [],
                             next_item: false,
                             new_window: false,
                             icon: '',
@@ -1573,25 +1405,21 @@ export const kbMenu = {
                             urlified: '395-error-handling-in-the-plugin',
                             name: 'Error Handling in the Plugin',
                             display_name: 'Error Handling in the Plugin',
-                            nodes: [
-                            ],
-                            breadcrumbs: [
-                            ],
+                            nodes: [],
+                            breadcrumbs: [],
                             parentNode: {
-                                name: 'Plugin Debugging'
-                            }
-                        }
+                                name: 'Plugin Debugging',
+                            },
+                        },
                     ],
-                    breadcrumbs: [
-                    ],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Integrating Video Analytics and Metadata'
-                    }
-                }
+                        name: 'Integrating Video Analytics and Metadata',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -1601,8 +1429,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -1619,8 +1446,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1629,13 +1455,11 @@ export const kbMenu = {
                     urlified: '396-how-to-add-a-camera-or-a-rtsp-stream-using-api',
                     name: 'How to Add a Camera or a RTSP Stream Using API?',
                     display_name: 'How to Add a Camera or a RTSP Stream Using API?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1645,8 +1469,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1655,13 +1478,11 @@ export const kbMenu = {
                     urlified: '397-how-to-create-or-modify-event-rule',
                     name: 'How to Create or Modify Event Rule?',
                     display_name: 'How to Create or Modify Event Rule?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1671,8 +1492,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1681,13 +1501,11 @@ export const kbMenu = {
                     urlified: '398-how-to-export-video-using-api',
                     name: 'How to Export Video Using API?',
                     display_name: 'How to Export Video Using API?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1697,8 +1515,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1707,13 +1524,11 @@ export const kbMenu = {
                     urlified: '399-how-to-change-resource-attributes-using-api',
                     name: 'How to Change Resource Attributes Using API?',
                     display_name: 'How to Change Resource Attributes Using API?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1723,8 +1538,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1733,13 +1547,11 @@ export const kbMenu = {
                     urlified: '400-what-are-camera-identifiers',
                     name: 'What Are Camera Identifiers?',
                     display_name: 'What Are Camera Identifiers?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1749,8 +1561,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1759,13 +1570,11 @@ export const kbMenu = {
                     urlified: '403-how-to-connect-a-system-to-cloud-using-the-api',
                     name: 'How to Connect a System to Cloud Using the API?',
                     display_name: 'How to Connect a System to Cloud Using the API?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1775,23 +1584,22 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
                     authentication: 'Both',
                     order: 6,
-                    urlified: '409-how-to-startstop-the-recording-schedule-of-a-specific-camera-via-server-api',
+                    urlified:
+                        '409-how-to-startstop-the-recording-schedule-of-a-specific-camera-via-server-api',
                     name: 'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
-                    display_name: 'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    display_name:
+                        'How to Start/Stop the Recording Schedule of a Specific Camera via Server API?',
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1801,8 +1609,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1811,13 +1618,11 @@ export const kbMenu = {
                     urlified: '445-how-to-use-http-generic-events',
                     name: 'How to Use HTTP Generic Events?',
                     display_name: 'How to Use HTTP Generic Events?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1827,8 +1632,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1837,13 +1641,11 @@ export const kbMenu = {
                     urlified: '447-how-to-use-do-http-requests',
                     name: 'How to Use Do HTTP Requests?',
                     display_name: 'How to Use Do HTTP Requests?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
+                        name: 'API Examples',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1853,8 +1655,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1863,18 +1664,15 @@ export const kbMenu = {
                     urlified: '402-how-to-import-files-to-camera-archive-using-api',
                     name: 'How to Import Files to Camera Archive using API?',
                     display_name: 'How to Import Files to Camera Archive using API?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'API Examples'
-                    }
-                }
+                        name: 'API Examples',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -1884,8 +1682,7 @@ export const kbMenu = {
             pending: false,
             draft: null,
             asset_type: null,
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -1902,8 +1699,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1912,13 +1708,11 @@ export const kbMenu = {
                     urlified: '405-how-does-server-rtsp-streaming-work',
                     name: 'How Does Server RTSP Streaming Work?',
                     display_name: 'How Does Server RTSP Streaming Work?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1928,8 +1722,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1938,13 +1731,11 @@ export const kbMenu = {
                     urlified: '406-how-to-call-client-using-url',
                     name: 'How to Call Client Using URL?',
                     display_name: 'How to Call Client Using URL?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1954,8 +1745,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1964,13 +1754,11 @@ export const kbMenu = {
                     urlified: '477-how-to-launch-desktop-client-with-cli',
                     name: 'How to Launch Desktop Client with CLI?',
                     display_name: 'How to Launch Desktop Client with CLI?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -1980,8 +1768,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -1990,13 +1777,11 @@ export const kbMenu = {
                     urlified: '407-how-to-embed-video-from-the-vms-on-a-website',
                     name: 'How to Embed Video from the VMS on a Website?',
                     display_name: 'How to Embed Video from the VMS on a Website?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -2006,8 +1791,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -2016,13 +1800,11 @@ export const kbMenu = {
                     urlified: '408-how-to-startstop-recording-using-generic-event',
                     name: 'How to Start/Stop Recording using Generic Event?',
                     display_name: 'How to Start/Stop Recording using Generic Event?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -2032,8 +1814,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -2042,13 +1823,11 @@ export const kbMenu = {
                     urlified: '449-how-to-change-software-logging-level-and-get-logs',
                     name: 'How to Change Software Logging Level and Get Logs?',
                     display_name: 'How to Change Software Logging Level and Get Logs?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -2058,8 +1837,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -2068,13 +1846,11 @@ export const kbMenu = {
                     urlified: '471-which-browser-is-built-into-the-vms',
                     name: 'Which Browser Is Built Into the VMS?',
                     display_name: 'Which Browser Is Built Into the VMS?',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -2084,8 +1860,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -2094,13 +1869,11 @@ export const kbMenu = {
                     urlified: '470-server-hive-synchronization-',
                     name: 'Server Hive Synchronization',
                     display_name: 'Server Hive Synchronization',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
+                        name: 'Other Articles',
+                    },
                 },
                 {
                     subtitle: '',
@@ -2110,8 +1883,7 @@ export const kbMenu = {
                     pending: false,
                     draft: false,
                     asset_type: 'Documentation Page',
-                    related_asset_ids: [
-                    ],
+                    related_asset_ids: [],
                     next_item: false,
                     new_window: false,
                     icon: '',
@@ -2120,18 +1892,15 @@ export const kbMenu = {
                     urlified: '367-meta-release-process',
                     name: 'Meta Release Process',
                     display_name: 'Meta Release Process',
-                    nodes: [
-                    ],
-                    breadcrumbs: [
-                    ],
+                    nodes: [],
+                    breadcrumbs: [],
                     parentNode: {
-                        name: 'Other Articles'
-                    }
-                }
+                        name: 'Other Articles',
+                    },
+                },
             ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
+            breadcrumbs: [],
+            parentNode: undefined,
         },
         {
             subtitle: '',
@@ -2141,8 +1910,7 @@ export const kbMenu = {
             pending: false,
             draft: false,
             asset_type: 'Documentation Page',
-            related_asset_ids: [
-            ],
+            related_asset_ids: [],
             next_item: false,
             new_window: false,
             icon: '',
@@ -2151,11 +1919,9 @@ export const kbMenu = {
             urlified: '211-developer-support',
             name: 'Developer Support',
             display_name: 'Developer Support',
-            nodes: [
-            ],
-            breadcrumbs: [
-            ],
-            parentNode: undefined
-        }
-    ]
+            nodes: [],
+            breadcrumbs: [],
+            parentNode: undefined,
+        },
+    ],
 };
