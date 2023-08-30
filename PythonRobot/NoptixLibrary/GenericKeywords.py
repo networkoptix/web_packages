@@ -829,12 +829,16 @@ class GenericKeywords:
             # Connect systems to cloud
             for server in serversJson:
                 if 'cloudOwnerId' in server:
-                    serverId = self.server_api.api_connect_to_cloud(
-                        [server["cloudOwner"], self.password],
+                    bind_info = self.cloud_api.connect(
+                        server['name'], server['cloudOwner'], self.password)
+                    self.server_api.api_connect_to_cloud(
                         f"https://{self.docker_host_ip}:{server['port'][0]}",
-                        self.cloud_host,
-                        name=server["name"])
-                    server.update({"id": serverId})
+                        bind_info,
+                    )
+                    server.update({"id": bind_info['systemId']})
+                    logger.info(
+                        f"{server['name']} has been connected to {self.cloud_host} "
+                        f"with {bind_info['owner']}'s account")
 
             # add cloud and local auth lists
             for server in serversJson:

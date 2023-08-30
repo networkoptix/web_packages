@@ -10,6 +10,7 @@ import uuid
 from contextlib import contextmanager
 from pathlib import Path
 from typing import ContextManager
+from typing import Mapping
 
 import certifi
 import requests
@@ -194,7 +195,23 @@ class CloudPortalAPI(object):
             set_name_response.raise_for_status()
             return set_name_response.json()
 
-    
+    def connect(self, system_name: str, email: str, password: str) -> Mapping[str, str]:
+        credentials = {'name': system_name, 'email': email, 'password': password}
+        logger.trace(f"cloud credentials {credentials}")
+        with requests.Session() as session:
+            response = session.post(
+                f'{self.env}/api/systems/connect',
+                json=credentials,
+                verify=False,
+            )
+            data = response.json()
+        logger.trace(data)
+        return {
+            'systemId': data['id'],
+            'authKey': data['authKey'],
+            'owner': data['ownerAccountEmail']
+        }
+
     def disconnect(self, email, password, system_id):
         with self._session(email, password) as s:
             s.headers.update({"referer": f"{self.env}"})

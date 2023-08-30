@@ -1,4 +1,5 @@
 import time
+from typing import Mapping
 
 import requests
 import urllib3
@@ -37,41 +38,18 @@ class ServerAPI5(ServerAPI):
                     'password': new_password
                 }
             }
-            r = s.post(
-                f'{server_url}/rest/v1/system/setup',
-                auth=HTTPDigestAuth('admin', 'admin'),
-                json=data,
-                verify=False
-            )
+            r = s.post(f'{server_url}/rest/v1/system/setup', json=data, verify=False)
             r.raise_for_status()
-            credentials = {'username': 'admin', 'password': new_password, 'setCookie': True}
-            login_response = s.post(f'{server_url}/rest/v1/login/sessions', json=credentials, verify=False)
-            login_response.raise_for_status()
-            self.set_system_settings(server_url, {'statisticsAllowed': False}, login_response.json()['token'])
 
     @staticmethod
-    def api_connect_to_cloud(auth, server_url, cloud_host, name='API Made System'):
+    def api_connect_to_cloud(server_url, bind_info: Mapping[str, str]):
         with requests.Session() as s:
-            logger.trace(auth[1])
             credentials = {'username': 'admin', 'password': 'qweasd 123', 'setCookie': True}
-            login_response = s.post(f'{server_url}/rest/v1/login/sessions', json=credentials, verify=False)
-            cloud_credentials = {'name': name, 'email': auth[0], 'password': auth[1]}
-            logger.trace(f"cloud credentials {cloud_credentials}")
-            connect_response = s.post(f'{cloud_host}/api/systems/connect', json=cloud_credentials, verify=False)
-            data = connect_response.json()
-            logger.trace(connect_response.json())
-            cloud_info = {
-                'systemId': data['id'],
-                'authKey': data['authKey'],
-                'owner': data['ownerAccountEmail']
-            }
-            cloud_bind_response = s.post(f'{server_url}/rest/v1/system/cloudBind', json=cloud_info)
+            s.post(f'{server_url}/rest/v1/login/sessions', json=credentials, verify=False)
+            cloud_bind_response = s.post(f'{server_url}/rest/v1/system/cloudBind', json=bind_info)
             logger.trace(cloud_bind_response.content)
-            s.delete(f'{server_url}/rest/v1/login/sessions/{login_response.json()["token"]}')
             cloud_bind_response.raise_for_status()
-            logger.info(f"{name} has been connected to {cloud_host} with {cloud_info['owner']}'s account.")
             logger.trace(cloud_bind_response)
-            return cloud_info['systemId']
 
     def save_user(
             self,
