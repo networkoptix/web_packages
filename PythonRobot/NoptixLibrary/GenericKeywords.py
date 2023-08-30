@@ -713,10 +713,10 @@ class GenericKeywords:
                 if user['email'] == email:
                     ServerAPI.remove_user(self, auth, serverUrl, user['id'])
         else:
-            users = ServerAPI5.get_users(self, auth, serverUrl)
+            users = ServerAPI5(serverUrl).get_users(auth)
             for user in users:
                 if user['email'] == email:
-                    ServerAPI5.remove_user(self, auth, serverUrl, user['id'])
+                    ServerAPI5(serverUrl).remove_user(auth, user['id'])
 
     
     def detect_language(self, text):
@@ -793,11 +793,13 @@ class GenericKeywords:
                 server["name"] = f"test_{idx}_"
                 server.update(self.create_docker_server(server, runName))
 
+            for server in serversJson:
+                server['api'] = ServerAPI5(f"https://{self.docker_host_ip}:{server['port'][0]}")
+
             # Set up systems
             time.sleep(5)
             for server in serversJson:
-                self.server_api.setup_local_system(
-                    f"https://{self.docker_host_ip}:{server['port'][0]}", "qweasd 123", server["name"])
+                server['api'].setup_local_system("qweasd 123", server["name"])
 
             # Register and activate owner user(s)
             ownerRequired = False
@@ -831,10 +833,7 @@ class GenericKeywords:
                 if 'cloudOwnerId' in server:
                     bind_info = self.cloud_api.connect(
                         server['name'], server['cloudOwner'], self.password)
-                    self.server_api.api_connect_to_cloud(
-                        f"https://{self.docker_host_ip}:{server['port'][0]}",
-                        bind_info,
-                    )
+                    server['api'].api_connect_to_cloud(bind_info)
                     server.update({"id": bind_info['systemId']})
                     logger.info(
                         f"{server['name']} has been connected to {self.cloud_host} "
@@ -848,8 +847,7 @@ class GenericKeywords:
 
             # get server token for authentication
             for server in serversJson:
-                server["token"] = self.server_api.get_server_token(
-                    server["localAuth"], f"https://{self.docker_host_ip}:{server['port'][0]}")
+                server["token"] = server['api'].get_server_token(server["localAuth"])
 
             # Add local users if required
             for server in serversJson:
@@ -857,9 +855,8 @@ class GenericKeywords:
                     localUsersNames = ["cloudAdmin", "viewer", "liveViewer", "advancedViewer", "custom"]
                     localUsers = {}
                     for user in localUsersNames:
-                        self.server_api.save_user(
+                        server['api'].save_user(
                             server["token"],
-                            f"https://{self.docker_host_ip}:{server['port'][0]}",
                             "Local+" + user,
                             self.permissions[user],
                             f"noptixautoqa+local_{user}@gmail.com",
@@ -969,7 +966,7 @@ class GenericKeywords:
 
     
     def evaluate_system_settings_via_API(self, auth, server_url, key, expected_value):
-        settings = self.server_api.get_system_settings_from_server(auth, server_url)
+        settings = ServerAPI5(server_url).get_system_settings_from_server(auth)
         expected_value_str = str(expected_value)
         expected_value_str = expected_value_str.replace("empty", "").replace("true", "True").replace("false",
                                                                                                      "False").replace(
@@ -990,7 +987,7 @@ class GenericKeywords:
             return json.load(langDict)
 
     def evaluate_log_level_via_API(self, auth, server_url, key, value):
-        logLevel = self.server_api.get_log_level(auth, server_url)
+        logLevel = ServerAPI5(server_url).get_log_level(auth)
         if logLevel.get(key) and logLevel[key] == value.lower():
             pass
         else:
@@ -999,7 +996,7 @@ class GenericKeywords:
     
     def verify_changed_info_via_API(self, new_locals, ip, local_user="ocal+"):
         locals = []
-        users = self.server_api.get_users(BuiltIn().get_variable_value('${servers}[0][token]'), ip)
+        users = ServerAPI5(ip).get_users(BuiltIn().get_variable_value('${servers}[0][token]'))
         local_state = True
         for user in users:
             if user.get("isCloud") is False:
@@ -1026,7 +1023,7 @@ class GenericKeywords:
         clean_locals = []
         locals_list = []
         local_users = list(BuiltIn().get_variable_value("${role_names}").keys())
-        users = self.server_api.get_users(token, server)
+        users = ServerAPI5(server).get_users(token)
         logger.trace(users)
         for user in users:
             local_state = True
@@ -1090,7 +1087,7 @@ class GenericKeywords:
     
     def delete_all_local_users_via_API(self, token, server, locals_list):
         for user in locals_list:
-            self.server_api.remove_user(token, server, user['id'])
+            ServerAPI5(server).remove_user(token, user['id'])
 
     
     def check_user_full_name_is_none(self, name, check_info):
@@ -1177,7 +1174,7 @@ class GenericKeywords:
     
     def get_local_users(self, token, server_url):
         locals_list = []
-        users = self.server_api.get_users(token, server_url)
+        users = ServerAPI5(server_url).get_users(token)
         for user in users:
             local_state = True
             if user.get("isCloud"):
@@ -1190,7 +1187,7 @@ class GenericKeywords:
 
     
     def set_default_storage_config(self, server_url, disabled, backups):
-        storages = self.server_api.get_storages_via_api(server_url)
+        storages = ServerAPI5(server_url).get_storages_via_api()
         if storages == []:
             raise RuntimeError("Storages returned an empty list.")
         for disk in storages:
@@ -1216,5 +1213,5 @@ class GenericKeywords:
                     "isUsedForWriting": True,
                     "isBackup": False
                 }
-        r = self.server_api.save_storages_via_api(storages, server_url)
+        r = ServerAPI5(server_url).save_storages_via_api(storages)
         logger.trace(r)
