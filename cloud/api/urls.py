@@ -77,6 +77,7 @@ urlpatterns = [
 
     re_path(r'^ping$',                                   common.ping),
     re_path(r'^maintenance/health$',                     common.maintenance_health),
+    re_path(r'^maintenance/redis_connections$',            common.redis_connections),
 
     re_path(r'feedback/?$',                              send.send_event),
     re_path(r'^custom-properties/(?P<endpoint>.+?)/(?P<username>.+?)$',
