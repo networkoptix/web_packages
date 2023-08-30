@@ -10,6 +10,7 @@ from RobotVariables import RobotVariables
 from login import LoginDialog
 from header import HeaderNav
 from security_form import SecurityForm
+from system_admin import SystemAdmin
 
 from system_admin import SystemAdmin
 
@@ -108,9 +109,37 @@ def disabling_2fa():
     security_form.twofa_disabled_badge()
     driver.close()
 
+def system_2fa_required():
+    """6.1 2fa is required when accessing only system with 2fa required"""
+    close = False
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)    
+    twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
+    security_form.twofa_enabled_badge()
+    robot_keywords.sleep(5)
+    robot_keywords.go_to_url(driver, f"{ENV}systems/{SERVERS[0]['id']}")
+    system_admin_page = SystemAdmin(driver)
+    system_admin_page.mandatory_2fa_chechbox().select()
+    system_admin_page.twofa_verification_code_input().input_text(twofa_codes['totp'])
+    system_admin_page.twofa_enable_button().click()
+    header.log_out()
+    robot_keywords.sleep(3)
+    header.log_in_button().click()
+    LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
+    header.account_dropdown().click()
+    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    driver.close()
+
 if __name__ == "__main__":
     enable_and_login_with_2fa()
     login_with_backup_code()
     login_with_qr_code()
     disabling_2fa()
+    system_2fa_required()
     keywords.teardown_servers(SERVERS)
