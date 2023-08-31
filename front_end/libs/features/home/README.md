@@ -22,8 +22,8 @@ Home is broken down into **3** categories;
 ## Todo
 
 ### Features:
-- [ ] Search for Organizations/Groups/Systems in their respective components
-  - [ ] Change behavior for `systems.component.ts` by removing the  double for loop before wiring the search
+- [x] Search for Organizations/Groups/Systems in their respective components
+  - [x] Change behavior for `systems.component.ts` by removing the  double for loop before wiring the search
 - [ ] Update entirety with new Angular 16 features
 - [ ] Placeholder for no systems in organization
 - [ ] Placeholder for no subchannel partners

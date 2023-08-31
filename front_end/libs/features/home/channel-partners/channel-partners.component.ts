@@ -20,7 +20,7 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { caseInsenstiveSearch } from '@utils/general';
-import { search } from '@variables/static-variables';
+import { search as searchConfig } from '@variables/static-variables';
 
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
@@ -84,6 +84,7 @@ export class NxChannelPartnersComponent implements OnInit {
         },
     ];
     defaultImage = 'https://picsum.photos/100/50';
+    searchConfig = searchConfig;
 
     search = { value: '' };
     searchChanged = new Subject<void>();
@@ -139,7 +140,7 @@ export class NxChannelPartnersComponent implements OnInit {
             });
 
         this.searchChanged
-            .pipe(debounceTime(search.debounceTime), takeUntilDestroyed(this.destroyRef))
+            .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.searchSystems();
             });

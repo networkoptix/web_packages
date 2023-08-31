@@ -497,6 +497,10 @@ export const search: configTypes.Search = {
     debounceTime: 500,
     maxLength: 200,
     minSystems: 9, // We need at least 9 system to enable search
+    channelPartners: {
+        searchMinimumCards: 8,
+        searchWidth: 336,
+    }
 };
 
 export const servers: configTypes.Servers = {

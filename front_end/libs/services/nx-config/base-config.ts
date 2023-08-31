@@ -683,6 +683,10 @@ export interface Search {
     debounceTime: number;
     maxLength: number;
     minSystems: number;
+    channelPartners: {
+        searchMinimumCards: number;
+        searchWidth: number;
+    };
 }
 
 export interface Servers {

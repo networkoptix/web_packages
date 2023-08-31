@@ -24,7 +24,7 @@ import {
 import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
-import { search } from '@variables/static-variables';
+import { search as searchConfig } from '@variables/static-variables';
 
 import * as CPActions from '../../store/channel-partners/channel-partners.actions';
 
@@ -65,6 +65,7 @@ export class NxSubchannelsComponent {
     destroyRef = inject(DestroyRef);
     search = { value: '' };
     searchChanged = new Subject<void>();
+    searchConfig = searchConfig;
 
     constructor(
         private store: Store,
@@ -80,7 +81,7 @@ export class NxSubchannelsComponent {
         });
 
         this.searchChanged
-            .pipe(debounceTime(search.debounceTime), takeUntilDestroyed(this.destroyRef))
+            .pipe(debounceTime(searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 this.searchSystems();
             });
