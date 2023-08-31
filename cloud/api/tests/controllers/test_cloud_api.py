@@ -106,7 +106,7 @@ class TestAPIWrappers:
 
 class TestSystemAPI:
     @pytest.fixture(autouse=True)
-    def setup(self, mocker, default_portal, default_customization):
+    def setup(self, mocker, default_portal, default_customization, default_customization_ctx):
         user, password, d1_key, d1_val, d2_key, d2_val, system_id, slave_system_id, system_name, headers = generate_args(
             10)
         self.request = mocker.MagicMock(spec=Request, POST={}, META={}, data={},

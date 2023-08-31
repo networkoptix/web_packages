@@ -18,7 +18,7 @@ from uuid import uuid4
 from asgiref.sync import async_to_sync, sync_to_async
 from django.core.validators import RegexValidator
 
-from cloud.customization_context import customization_ctx, ContextExecutor
+from cloud.customization_context import customization_ctx, ContextExecutor, hostname_ctx
 from cloud.helpers.exceptions import ErrorCodes, APIInternalException
 from util.base_cache import ReadOnlyAPICache, BaseCacheV2
 
@@ -47,7 +47,7 @@ from cms.feature_flags.feature_flags import FLAGS, SWITCHES
 from django.contrib.auth.models import Group, Permission
 from django.template.defaultfilters import truncatechars
 from cloud.storage_backend import MediaStorage
-from .helpers.cached_asset import PortalAssetCache
+from .helpers.cached_asset import PortalAssetCache, CustomizationCache
 
 logger = getLogger(__name__)
 
@@ -299,14 +299,31 @@ def global_version_key(customization):
     return f'global_version_{customization}_{settings.VERSION}'
 
 
+def cloud_portal_cust_cache_generic_key(customization, hostname):
+    return f'customization_{customization}_{hostname}_{settings.VERSION}'
+
+
 def cloud_portal_customization_cache_key(customization):
-    return f'customization_{customization}_{settings.VERSION}'
+    from util.config import get_customization_config
+    host = get_customization_config(customization)['host']
+    return cloud_portal_cust_cache_generic_key(customization, host)
+
+
+async def cloud_portal_customization_cache_key_async(customization):
+    from util.config import get_customization_config
+    conf = await sync_to_async(get_customization_config)(customization)
+    return cloud_portal_cust_cache_generic_key(customization, conf['host'])
+
+
+def clear_portal_customization_cache(customization):
+    customization_cache = caches['customization']
+    customization_cache.scan_unlink(cloud_portal_cust_cache_generic_key(customization, '*'))
 
 
 async def cloud_portal_customization_cache_async(customization_name, value=None, force=False):
     from cms.controllers.special_structures import SpecialStructures
     customization_cache = caches['customization']
-    cache_key = cloud_portal_customization_cache_key(customization_name)
+    cache_key = await cloud_portal_customization_cache_key_async(customization_name)
 
     async def release_lock(key, val):
         if (await customization_cache.aget(key)) == val:
@@ -321,7 +338,7 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
         # check data one more time, it can be recently updated
 
     if not data or force:
-        lock_key = f'lock_{cloud_portal_customization_cache_key(customization_name)}'
+        lock_key = f'lock_{cache_key}'
         lock_val = str(uuid4())
         locked = not await customization_cache.aadd(lock_key, lock_val, timeout=60)
         if locked:
@@ -368,7 +385,7 @@ async def cloud_portal_customization_cache_async(customization_name, value=None,
                     context__name='Landing page', name='%SUBTITLE%').afirst()
                 if landing_description_ds:
                     landing_description = await sync_to_async(landing_description_ds.find_actual_value)(
-                        asset)
+                        asset, customization_name=customization)
                 data = {
                     'version_id': await sync_to_async(asset.version_id)(),
                     'languages': customization.languages_list,
@@ -647,6 +664,7 @@ class Customization(models.Model):
     languages = models.ManyToManyField(Language)
     filter_horizontal = ('languages',)
     host = models.CharField(blank=True, max_length=255)
+    additional_hosts = models.JSONField(blank=True, default=list)
     parent = models.ForeignKey('Customization', default=None, null=True, blank=True,
                                related_name='children_customizations',
                                help_text="""Parent is the customization that the current customization depends on.<br>
@@ -669,6 +687,13 @@ class Customization(models.Model):
     def languages_list(self):
         return self.languages.values_list('code', flat=True)
 
+    @property
+    def hosts(self):
+        hosts = self.additional_hosts[:]
+        if self.host:
+            hosts.insert(0, self.host)
+        return hosts
+
     def get_children_ids(self, customization):
         children_list = []
         for child in customization.children_customizations.all():
@@ -679,6 +704,11 @@ class Customization(models.Model):
 
     def save(self, *args, **kwargs):
         create_cloud_portal_asset = self.pk is None
+        # clear cached values
+        caches['assets_values'].delete('cloud_host_map')
+        CustomizationCache(self.name).clear_value()
+        clear_portal_customization_cache(self.name)
+
         super(Customization, self).save(*args, **kwargs)
         if create_cloud_portal_asset:
             # Default cloud portal asset type
@@ -700,7 +730,6 @@ class Customization(models.Model):
                     asset.customizations.add(new_customization)
                 for menu_node in menu_nodes_with_all_enabled:
                     menu_node.enabled.add(new_customization)
-
 
 class AssetType(models.Model):
     class Meta:

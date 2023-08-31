@@ -118,7 +118,7 @@ def context_processor(context_setup):
 
 class ContextSetup:
     @pytest.fixture(autouse=True)
-    def context_setup(self, context_processor, english_language):
+    def context_setup(self, context_processor, english_language, default_customization_ctx):
         self.context_processor = context_processor
         self.asset = context_processor.asset
         self.version_id = context_processor.version_id

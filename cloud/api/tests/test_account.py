@@ -56,7 +56,9 @@ class TestCloudInvite:
         self.existing_user = Account.objects.get_or_create(email='exists@exists.com')[0]
         self.customization = default_customization
 
-    def test_get(self):
+    def test_get(self, superuser):
+        client = NxTestClient()
+        client.force_login(superuser)
         response = self.client.get(self.invite_path)
         assert response.status_code == 200
         assertContains(response, '<h1>Invite User</h1>', html=True)

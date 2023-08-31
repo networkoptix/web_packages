@@ -1,3 +1,4 @@
+import traceback
 from concurrent.futures import ThreadPoolExecutor
 from contextvars import ContextVar, copy_context
 from functools import wraps
@@ -9,11 +10,16 @@ from django.utils.deprecation import MiddlewareMixin
 from cloud.helpers.exceptions import APIInternalException, ErrorCodes
 
 customization_ctx = ContextVar('customization_ctx', default=None)
+hostname_ctx = ContextVar('hostname_ctx', default=None)
 
 
 class CustomizationCtxMiddleware(MiddlewareMixin):
     def process_request(self, request):
-        customization_ctx.set(getattr(request, 'CUSTOMIZATION', None))
+        customization = getattr(request, 'CUSTOMIZATION', None)
+        customization_ctx.set(customization)
+        if customization:
+            # ensure that the customization is found by the hostname
+            hostname_ctx.set(request.get_host().split(':')[0].lower())
 
 
 class ContextExecutor(ThreadPoolExecutor):

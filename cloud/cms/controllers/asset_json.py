@@ -16,8 +16,7 @@ PENDING = AssetCustomizationReview.REVIEW_STATES.pending
 
 
 def replace_s3_link(url: str, customization_name: str) -> str:
-    host = get_cloud_host_by_customization(customization_name)
-    return url.replace(S3_LINK, f'{host}/static/media')
+    return url.replace(S3_LINK, '/static/media')
 
 def get_contexts_and_datastructures_of_asset_type(asset_type):
     contexts = Context.objects.filter(asset_type__type=asset_type)

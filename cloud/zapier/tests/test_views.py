@@ -407,7 +407,7 @@ class TestZapierViews:
         assert response.data['status'] == 'ok'
         self.mock_authenticate.assert_called_once()
 
-    def test_subscribe_webhook(self, generate_mock_authenticate, db, mocker, arf):
+    def test_subscribe_webhook(self, generate_mock_authenticate, db, mocker, arf, default_customization_ctx):
         self.user.save()
         if settings.CI:
             pytest.skip(

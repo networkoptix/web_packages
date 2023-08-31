@@ -74,10 +74,10 @@ class CustomizationMiddleware(MiddlewareMixin):
     ]
 
     def process_request(self, request):
-        host = request.get_host()
-        # If local set customization name from setting
-        if host.startswith('localhost') and settings.LOCAL_CUSTOMIZATION or settings.LOCAL_ENVIRONMENT:
-            customization_name = settings.LOCAL_CUSTOMIZATION
+        host = request.get_host().split(':')[0].lower()
+        # If testing or ci set customization name from setting otherwise discover by hostname.
+        if settings.TESTING or settings.CI:
+            customization_name = settings.TEST_CUSTOMIZATION
         else:
             customization_name = get_customization_name_from_cloud_host(host)
         if not customization_name and request.path not in self.health_checks:

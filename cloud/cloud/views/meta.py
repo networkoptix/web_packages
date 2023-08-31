@@ -15,7 +15,7 @@ import waffle
 
 from cms.models import cloud_portal_customization_cache
 from cms.controllers.static_files import get_template
-from util.config import get_cloud_portal_url, get_config
+from util.config import get_cloud_portal_url, get_cloud_db_url
 from util.helpers import detect_language_by_request
 from cms.models import Menu, Asset, Language
 from cms.controllers import documentation
@@ -272,7 +272,7 @@ def app_view(request):
 
     if settings.LOCAL_ENVIRONMENT and not settings.TESTING and request.get_full_path().startswith('/cdb'):
         from proxy.views import proxy_view
-        remoteurl = f'{get_config()["cloud_portal"]["url"]}{request.get_full_path()}'
+        remoteurl = f'{get_cloud_db_url()}{re.sub(r"^/cdb", "", request.get_full_path())}'
         return proxy_view(request, remoteurl)
 
     return response

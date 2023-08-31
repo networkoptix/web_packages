@@ -235,7 +235,7 @@ def test_get_meta(arf, mocker, db):
     assert meta == expected_meta
 
 
-def test_check_redirect(account_factory, asset_factory, mocker, db):
+def test_check_redirect(account_factory, asset_factory, mocker, db, default_customization_ctx):
     expected_url, expected_base_url = [str(uuid4()) for _ in range(2)]
     customization = Customization.objects.filter(
         name=settings.TEST_CUSTOMIZATION).first()

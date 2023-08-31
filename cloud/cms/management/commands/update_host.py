@@ -1,4 +1,5 @@
 import logging
+import sys
 
 from django.conf import settings
 from django.core.management.base import BaseCommand
@@ -20,9 +21,11 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         customization = options['customization']
-        conf = config.get_config()
-        host = conf["cloud_portal"]["url"]
-        host = options.get('host', host)
+        if not (host := options.get('host')):
+            self.stdout.write(
+                self.style.ERROR(
+                    f'Host is required.'))
+            sys.exit(1)
         current_customization = Customization.objects.filter(
             name=customization).first()
 

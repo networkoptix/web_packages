@@ -9,7 +9,8 @@ from notifications.engines.email_engine import *
 
 
 class TestEmailEngine:
-    def test_email_templates_cache(self):
+    def test_email_templates_cache(self, db, default_customization,
+                                   default_customization_host, default_customization_ctx):
         customization_name = settings.TEST_CUSTOMIZATION
         version_id = randint(1000, 2000)
         skin = 'blue'
@@ -18,7 +19,7 @@ class TestEmailEngine:
         cache = TemplatesCache(customization_name, filename, language_code, skin, version_id)
         assert cache.cache_name == 'templates'
         assert cache.hash_key == f'templates-{customization_name}-{settings.VERSION}'
-        assert cache.field_key == f'{filename}-{language_code}-{skin}-{version_id}'
+        assert cache.field_key == f'{default_customization.host}-{filename}-{language_code}-{skin}-{version_id}'
 
     def test_send(self, mocker, default_portal):
         address, domain, msg_type, subject, body, language_code, customization_name, *attachments = [
@@ -119,11 +120,13 @@ class TestEmailEngine:
         mock_read_file.assert_called_once_with(
             default_portal, customization_name, NOTIFICATION_TEMPLATE_FILENAME, language_code, skin, version_id)
 
-    def test_read_cached_template(self, mocker, default_portal):
+    def test_read_cached_template(self, mocker, default_portal,
+                                  default_customization_host, default_customization_ctx):
         def get_path(filename):
             return f'templates/lang_{{{{language}}}}/{filename}.mustache'
-        customization_name, name, language_code, mock_file = [
-            str(uuid4()) for _ in range(4)]
+        name, language_code, mock_file = [
+            str(uuid4()) for _ in range(3)]
+        customization_name = default_portal.customizations.first().name
         version_id = randint(1000, 2000)
         skin = 'blue'
         mock_read_file = mocker.patch(

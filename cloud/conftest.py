@@ -557,3 +557,21 @@ def review_factory():
 
     return make_review
 
+
+@pytest.fixture(autouse=True, scope='function')
+def check_hostname_ctx():
+    # Todo. fix tests where customization_ctx required
+    ctx_vars = [
+        customization_ctx,
+        hostname_ctx
+    ]
+    assert not hostname_ctx.get()
+    yield
+    for var in ctx_vars:
+        var.set(None)
+
+
+@pytest.fixture()
+def default_customization_host(default_customization):
+    default_customization.host = 'cloud-test.hdw.mx'
+    default_customization.save()

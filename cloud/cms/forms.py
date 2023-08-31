@@ -416,6 +416,15 @@ class AssetSettingsForm(forms.Form):
                                                         '<span class="radio-hint">Upload a structure.json to import new assets or update the data records for existing assets. Also submits and accepts reviews</span>')),
 
 
+def is_valid_hostname(hostname):
+    if len(hostname) > 255:
+        return False
+    if hostname[-1] == ".":
+        hostname = hostname[:-1]
+    allowed = re.compile("(?!-)[A-Z\d-]{1,63}(?<!-)$", re.IGNORECASE)
+    return all(allowed.match(x) for x in hostname.split("."))
+
+
 class AssetForm(forms.ModelForm):
     publish_all_customizations = forms.BooleanField(required=False, label='Publish to all Customizations', initial=True)
     menu = forms.ModelChoiceField(queryset=Menu.objects.all(), label='Parent Menu', required=False)
@@ -510,6 +519,20 @@ class CustomizationForm(forms.ModelForm):
                 exclude(id=self.instance.id).filter(id=data.id).exists():
             raise ValueError('Invalid customization was selected')
         return data
+
+    def clean_additional_hosts(self):
+        data = self.cleaned_data['additional_hosts']
+        if not data:
+            return data
+        if not isinstance(data, list):
+            raise ValidationError(f"Value must be a valid json array. Got {type(data): {data}.}")
+        cleaned = [host.strip().lower() for host in data]
+        if len(cleaned) != len(data):
+            raise ValidationError(f"Not a valid array of strings: '{data}'.")
+        invalid = [host for host in cleaned if not is_valid_hostname(host)]
+        if invalid:
+            raise ValidationError(f"Some hosts are invalid: {', '.join(invalid)}.")
+        return cleaned
 
 
 class LanguageForm(forms.ModelForm):

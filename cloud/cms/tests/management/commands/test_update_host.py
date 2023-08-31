@@ -7,7 +7,7 @@ from cms.management.commands.update_host import *
 
 
 class TestUpdateHost:
-    def test_handle(self, mocker, db):
+    def test_handle(self, mocker, db, default_customization):
         options = {'customization': settings.TEST_CUSTOMIZATION}
         instance = Command()
         current_customization = Customization.objects.filter(

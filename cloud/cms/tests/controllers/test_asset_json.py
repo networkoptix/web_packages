@@ -199,7 +199,8 @@ class TestGenerateContextDictsWithActualValues:
             for key in context_dict:
                 assert S3_LINK not in context_dict[key]
                 if key in [external_image.name, external_file.name]:
-                    assert 'https://cloud-test.hdw.mx/static/media' in context_dict[key]
+                    assert 'https://cloud-test.hdw.mx/static/media' not in context_dict[key]
+                    assert '/static/media' in context_dict[key]
 
     def test_private_datastructures_are_skipped(self):
         private_ds = self.datastructures[0]

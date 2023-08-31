@@ -506,7 +506,7 @@ class TestSystemEmail(BaseModelTest):
         instance.message_text = expected['text_body']
         assert instance.message == expected
 
-    def test_send(self, instance, mocker):
+    def test_send(self, instance, mocker, default_customization_ctx):
         mock_send_email = mocker.patch('notifications.tasks.send_email')
         session = {'access_token': str(uuid4()), 'refresh_token': str(uuid4())}
         instance.send(session)

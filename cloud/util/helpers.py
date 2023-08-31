@@ -1,36 +1,28 @@
 import re
+from typing import Type
 
 from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
 
 from cloud.customization_context import customization_ctx
+from cms.helpers.cached_asset import CustomizationCache
 from cms.models import cloud_portal_customization_cache, Language, Customization
 from django.urls import reverse
 from meilisearch import Client
 
 
-def get_customization(request=None, /):
-    """
-    TODO: Remove this function after settings.CUSTOMIZATION has been removed.
-    We can just rely on middleware to make request.CUSTOMIZATION available
-    """
-    if not request or settings.TESTING:
-        return settings.CUSTOMIZATION
-
-    if customization := getattr(request, 'data', request.POST).get('customization'):
-        return customization
-
-    return request.META.get('CUSTOMIZATION') or settings.CUSTOMIZATION
-
-
 def get_cloud_host_map():
-    local_cache = caches['local']
-    cloud_host_map = local_cache.get('cloud_host_map')
+    assets_cache = caches['assets_values']
+    cloud_host_map = assets_cache.get('cloud_host_map')
     if not cloud_host_map:
-        customizations = Customization.objects.all().values('host', 'name')
-        cloud_host_map = {cust['host']: cust['name'] for cust in customizations}
-        local_cache.set('cloud_host_map', cloud_host_map, timeout=3600)  # 1 hour timeout
+        customizations = Customization.objects.all().values('host', 'additional_hosts', 'name')
+        cloud_host_map = {}
+        for cust in customizations:
+            if cust['host']:
+                cloud_host_map[cust['host']] = cust['name']
+            cloud_host_map.update({host: cust['name'] for host in cust['additional_hosts'] if host})
+        assets_cache.set('cloud_host_map', cloud_host_map, timeout=3600)  # 1 hour timeout
     return cloud_host_map
 
 
@@ -40,11 +32,16 @@ def get_customization_name_from_cloud_host(hostname):
 
 
 def get_cloud_host_by_customization(customization: str):
-    # TODO. add tests
-    cloud_host_map = get_cloud_host_map()
-    for host, cust in cloud_host_map.items():
-        if cust == customization:
-            return host
+    return get_cached_customization(customization).host
+
+
+def get_cached_customization(customization: str) -> Customization:
+    cache = CustomizationCache(customization_name=customization)
+    if customization_object := cache.get_value():
+        return customization_object
+    customization_object = Customization.objects.get(name=customization)
+    cache.save_value(customization_object)
+    return customization_object
 
 
 def get_meilisearch_client():

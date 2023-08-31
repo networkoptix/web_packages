@@ -22,6 +22,7 @@ from cms.models import Asset, AssetType, Language, Context, DataStructure, Conte
     Customization, DataRecord, ExternalFile, AssetCustomizationReview, \
     get_cloud_portal_asset
 from util.base_cache import HashCache
+from util.config import get_customization_config
 
 logger = getLogger(__name__)
 
@@ -35,7 +36,8 @@ class TemplatesCache(HashCache):
     _timeout = 86400 * 10
 
     def __init__(self, customization_name, template_name, language_code, skin, version_id):
-        field_key = f'{template_name}-{language_code}-{skin}-{version_id}'
+        host = get_customization_config(customization_name)['host']
+        field_key = f'{host}-{template_name}-{language_code}-{skin}-{version_id}'
         hash_key = f'templates-{customization_name}-{settings.VERSION}'
         super().__init__(hash_key=hash_key, field_key=field_key)
 

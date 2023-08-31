@@ -1491,7 +1491,7 @@ def test_update_zd_section(mocker, get_exporter_instance, db):
     assert not delete
 
 
-def test_update_zd_article(mocker, get_exporter_instance, asset_type_factory, db):
+def test_update_zd_article(mocker, get_exporter_instance, asset_type_factory, db, default_customization_ctx):
     exporter = get_exporter_instance()
     position = randint(1, 1000)
     customization = Customization.objects.filter(

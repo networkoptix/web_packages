@@ -200,6 +200,9 @@ class AssetCacheLoaderBase:
 
 
 class PortalAssetCache:
+    """
+    Used for storing cloud portal assets objects.
+    """
     cache = caches["assets_values"]
     timeout = 3600
 
@@ -239,3 +242,13 @@ class AccountObjectCache:
 
     def clear_value(self):
         return self.cache.delete(self.key)
+
+
+class CustomizationCache(PortalAssetCache):
+    """
+    Used for storing customization objects.
+    """
+
+    @property
+    def key(self):
+        return f'stored-customization-{settings.VERSION}-{self.customization_name}'

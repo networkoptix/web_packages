@@ -92,8 +92,9 @@ function setup_cms(){
     printf "Setting up cms structure\n\n"
     python manage.py readstructure
 
-#    printf "Filling in content\n\n"
-#    python manage.py filldata --customization default
+    printf "Filling in local hostname\n\n"
+    python manage.py local_hosts --customization default
+    python manage.py local_hosts --customization hanwha
 
     popd
 }

@@ -189,8 +189,8 @@ class TestModelFunctions:
         customization = self.customization.name
         test_key = 'test_value'
         test_value = str(uuid.uuid4())
-        caches['customization'].set(
-            f'customization_{customization}_{settings.VERSION}', {test_key: test_value})
+        cache_key = cloud_portal_customization_cache_key(customization)
+        caches['customization'].set(cache_key, {test_key: test_value})
 
         data = cloud_portal_customization_cache(customization)
 
@@ -424,6 +424,10 @@ class TestMenuFields:
 
 
 class TestMenuMethods:
+    @pytest.fixture(autouse=True)
+    def setup(self, default_customization_ctx):
+        pass
+
     @pytest.fixture()
     def kb_menu(self):
         return baker.prepare(
@@ -928,7 +932,7 @@ class TestAssetFields:
 
 class TestAssetMethods:
     @pytest.fixture(autouse=True)
-    def asset(self):
+    def asset(self, default_customization_ctx):
         self.asset = baker.prepare('Asset', name='Great Asset', asset_type=None)
 
     @pytest.fixture()
