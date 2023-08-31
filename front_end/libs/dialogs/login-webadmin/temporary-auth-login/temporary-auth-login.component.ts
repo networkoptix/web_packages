@@ -2,13 +2,13 @@ import { Component, Input, OnInit, inject } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { environment } from '@environments/environment';
-import { images } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import { WINDOW } from '@services/window-provider';
+import { images } from '@static-variables';
 
 @Component({
     selector: 'nx-temporary-auth-login',

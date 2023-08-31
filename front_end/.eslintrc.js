@@ -136,9 +136,8 @@ module.exports = {
                             // We're patching ngx-translate core
                             .filter(path => path !== '@ngx-translate/core')
                             .map(path => ({
-                                /* Assuming that tsconfig paths end with single asterisk so
-                                that the pattern here will end with double asterisk */
-                                pattern: `${path}*`,
+                                /* Turn single asterisk into double asterisk */
+                                pattern: path.endsWith('*') ? `${path}*` : path,
                                 group: 'internal',
                             })),
                         pathGroupsExcludedImportTypes: ['internal'],

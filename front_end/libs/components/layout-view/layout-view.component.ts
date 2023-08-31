@@ -18,7 +18,6 @@ import {
     tap,
 } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
 import {
@@ -28,6 +27,7 @@ import {
     SharableResourceLeafNode,
 } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';

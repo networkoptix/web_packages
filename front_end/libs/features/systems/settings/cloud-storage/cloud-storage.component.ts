@@ -11,12 +11,11 @@ import {
     switchMap,
 } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { icons, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
@@ -30,6 +29,7 @@ import {
     ProcessedLicenseKey,
 } from '@services/system.service/license-manager/license-manager.types';
 import { NxSystem } from '@services/system.service/system';
+import { icons, menus } from '@static-variables';
 
 @UntilDestroy()
 @Component({

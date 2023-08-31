@@ -3,15 +3,15 @@ import { Component, Inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
-import { longAlertTimeout } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import type { RouteCheckTuple } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { longAlertTimeout } from '@static-variables';
 
 @Component({
     selector: 'nx-404',

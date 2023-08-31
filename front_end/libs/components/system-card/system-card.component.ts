@@ -3,18 +3,18 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { SystemItem } from '@pages/home/home.types';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({

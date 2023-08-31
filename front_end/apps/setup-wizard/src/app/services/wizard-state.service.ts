@@ -6,16 +6,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { BehaviorSubject, from, Observable, Subject, timer } from 'rxjs';
 import { switchMap, takeUntil } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
-import {
-    alertTimeout,
-    apiBase,
-    icons,
-    settingsConfig,
-    simpleURLRegex,
-} from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Setting } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
@@ -27,6 +20,7 @@ import {
 } from '@services/system-api.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { WINDOW } from '@services/window-provider';
+import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
 import { FORM_STATE, iState, WIZARD_STATE, SECURITY_LEVEL } from '../types/wizard-state.types';

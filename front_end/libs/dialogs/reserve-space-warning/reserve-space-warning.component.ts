@@ -4,14 +4,14 @@ import { Component } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import type { ReserveSpaceWarning as DT } from '@dialogs/dialogs.types';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 
 import { ModalBase } from '../modal-base';
 

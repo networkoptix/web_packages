@@ -18,14 +18,13 @@ import { Subject } from 'rxjs';
 import { startWith, switchMap, debounceTime } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { FirstPartyWidget, WidgetCard, WidgetSize } from '@components/widgets/helper-classes';
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
@@ -34,6 +33,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 
 import { DashboardConfiguration } from './dashboard-configuration';
 

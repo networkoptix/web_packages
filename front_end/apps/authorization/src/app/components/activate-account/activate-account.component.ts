@@ -3,10 +3,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { combineLatest, Observable, interval } from 'rxjs';
 import { filter, map, takeUntil } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
 

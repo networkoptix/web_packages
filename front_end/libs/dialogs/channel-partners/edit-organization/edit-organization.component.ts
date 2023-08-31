@@ -5,7 +5,6 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { firstValueFrom } from 'rxjs';
 
-import LANG from '@common/language/language_i18n_static.json';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
@@ -14,6 +13,7 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { ToastType } from '@components/toast-container/toast.types';
 import type { EditOrganization as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import LANG from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { State } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';

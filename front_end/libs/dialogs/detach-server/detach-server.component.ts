@@ -4,20 +4,20 @@ import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angula
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { DetachServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { servers } from '@static-variables';
 
 @Component({
     selector: 'nx-modal-detach-server-content',

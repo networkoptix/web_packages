@@ -8,13 +8,12 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { DeviceInfo } from 'ngx-device-detector';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { images, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
 import { NxMenuService } from '@menu/menu.service';
 import { Content } from '@menu/menu.types';
@@ -27,6 +26,7 @@ import type { DownloadReleases } from '@services/nx-cloud-api/nx-cloud-api.types
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { images, menus } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 @UntilDestroy()

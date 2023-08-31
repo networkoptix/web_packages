@@ -5,15 +5,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, Observable, Subject, Subscription, timer } from 'rxjs';
 import { delay, map, retryWhen, switchMap, tap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import { icons, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, menus } from '@static-variables';
 import { cleanId } from '@utils/general';
 
 @UntilDestroy()

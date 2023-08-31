@@ -4,12 +4,12 @@ import { Component, Inject, TemplateRef } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { NewFeature as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
+import { icons } from '@static-variables';
 
 import { NewFeatureTemplate } from './new-feature.component.types';
 

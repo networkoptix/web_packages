@@ -2,7 +2,7 @@ import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({

@@ -12,8 +12,8 @@ import type { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { environment } from '@environments/environment';
-import { credentialsValidation, icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
+import { credentialsValidation, icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

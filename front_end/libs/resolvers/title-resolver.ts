@@ -2,7 +2,7 @@ import { Injectable } from '@angular/core';
 import { RouterStateSnapshot, TitleStrategy } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageMetaService } from '@services/page-meta.service';

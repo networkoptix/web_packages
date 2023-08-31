@@ -6,9 +6,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
-import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { icons } from '@static-variables';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -1,7 +1,7 @@
 import { Component, Input, Output, EventEmitter, OnChanges, Inject } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { WINDOW } from '@services/window-provider';
 
 import { ICamera, MediaStreamInfo } from '../../vms-client/submodules/vms/datatypes/ICamera';

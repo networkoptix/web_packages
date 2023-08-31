@@ -10,12 +10,11 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Observable, Subscription } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
-import { apiBase, oauthStore } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import * as t from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -24,6 +23,7 @@ import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
+import { apiBase, oauthStore } from '@static-variables';
 
 import type { ConnectLocalToCloud as DT } from '../dialogs.types';
 

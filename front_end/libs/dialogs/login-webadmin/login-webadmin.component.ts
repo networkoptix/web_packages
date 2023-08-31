@@ -8,14 +8,13 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons, redirect } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -26,6 +25,7 @@ import type { Process } from '@services/process.service/process';
 import { NxStorageService } from '@services/storage.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, redirect } from '@static-variables';
 
 import { TemporaryAuthLoginComponent } from './temporary-auth-login/temporary-auth-login.component';
 

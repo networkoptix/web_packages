@@ -6,8 +6,8 @@ import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash';
 import { combineLatest, distinctUntilChanged, map } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';

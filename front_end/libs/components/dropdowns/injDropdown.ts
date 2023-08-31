@@ -2,7 +2,7 @@ import { Injectable, OnChanges, OnInit } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

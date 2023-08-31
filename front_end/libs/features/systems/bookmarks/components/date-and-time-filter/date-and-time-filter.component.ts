@@ -13,8 +13,8 @@ import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, timer } from 'rxjs';
 
-import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { MS, offsetDate } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 

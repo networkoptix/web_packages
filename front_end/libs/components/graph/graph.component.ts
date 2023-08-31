@@ -14,11 +14,11 @@ import { curveBasis } from 'd3-shape';
 import { of, Subject } from 'rxjs';
 import { catchError, delay, mergeMap, repeat, retry, takeUntil, tap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';

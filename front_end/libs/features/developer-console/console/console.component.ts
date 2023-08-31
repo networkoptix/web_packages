@@ -5,11 +5,11 @@ import { Observable } from 'rxjs';
 import { map, tap } from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
-import { manifest } from '@lib/variables/static-variables';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { manifest } from '@static-variables';
 
 import type { ConsoleMenuNode } from './menu/console-menu.component.types';
 

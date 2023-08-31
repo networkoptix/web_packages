@@ -19,13 +19,13 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { cloneDeep, escape } from 'lodash-es';
 import { lastValueFrom } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { MergeRefactored as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';

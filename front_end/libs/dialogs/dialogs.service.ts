@@ -3,11 +3,11 @@ import { ComponentType } from '@angular/cdk/overlay';
 import { Injectable } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import {
     GenericEditModalContent,
     ModalContent,
 } from '@components/console-table/console-table.component.types';
+import staticLang from '@language_static';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 
 import { DIALOG_SIZE } from './dialog-config-v2';

@@ -8,7 +8,7 @@ import { NxSystemCamera } from '@services/system.service/camera-manager/camera-m
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager, StreamOrUrl } from '@openLibs/webrtc-stream-manager';
 import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError } from 'rxjs';
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAppStateService } from '@services/nx-app-state.service';

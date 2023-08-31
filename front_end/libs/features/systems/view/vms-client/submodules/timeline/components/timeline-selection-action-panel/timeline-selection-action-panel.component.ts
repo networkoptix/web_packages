@@ -13,10 +13,10 @@ import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { icons } from '@static-variables';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { TimeRange } from '../../services/TimeRange';

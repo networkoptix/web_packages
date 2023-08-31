@@ -21,8 +21,8 @@ import { escapeRegExp } from 'lodash-es';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

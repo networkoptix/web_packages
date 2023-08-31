@@ -17,19 +17,19 @@ import { cloneDeep, isEqual } from 'lodash-es';
 import { SubscriptionLike } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { Size } from '@directives/resize/nx-resize.directive.types';
-import { dialogs, icons, search } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { dialogs, icons, search } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
 import { IpvdSearchService } from './ipvd-search.service';

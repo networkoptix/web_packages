@@ -3,7 +3,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { SubscriptionLike } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxPageService } from '@services/page.service';

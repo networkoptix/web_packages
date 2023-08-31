@@ -15,13 +15,13 @@ import { filter } from 'rxjs';
 
 import { NxMainActionComponent } from '@components/header/new-header/header-level-two/main-action/main-action.component';
 import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
-import { icons, images } from '@lib/variables/static-variables';
 import { NxApplyService } from '@services/apply.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { logoAreaState, logoClickType } from '../new-header-types';

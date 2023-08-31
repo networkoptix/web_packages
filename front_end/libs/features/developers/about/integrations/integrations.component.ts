@@ -3,7 +3,7 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { WINDOW } from '@services/window-provider';
 

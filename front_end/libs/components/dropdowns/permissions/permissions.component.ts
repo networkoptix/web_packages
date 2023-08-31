@@ -5,10 +5,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { Role } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 import type { NgChanges } from '@utils/ng-changes';
 import { isAdmin } from '@utils/nx';
 

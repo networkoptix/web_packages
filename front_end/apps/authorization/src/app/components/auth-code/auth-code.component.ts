@@ -15,9 +15,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { fromEvent } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

@@ -5,11 +5,11 @@ import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { icons } from '@static-variables';
 import { COLLAPSE_SECOND_WIDTH } from '@styles/theme-variables-common';
 import { NgChanges } from '@utils/ng-changes';
 

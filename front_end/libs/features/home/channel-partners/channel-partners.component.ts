@@ -8,13 +8,13 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { Observable, Subject, catchError, combineLatestWith, debounceTime, map, of } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import {
     ChannelPartner,
     Organization,

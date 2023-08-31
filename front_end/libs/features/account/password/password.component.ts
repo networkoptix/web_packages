@@ -1,9 +1,9 @@
 import { Component, OnDestroy, OnInit, ViewChild, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';

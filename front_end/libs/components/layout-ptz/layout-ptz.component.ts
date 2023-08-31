@@ -5,8 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { clamp } from 'lodash-es';
 import { BehaviorSubject, map, NEVER, switchMap } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DirectivesModule } from '@directives/directives.module';
+import staticLang from '@language_static';
 import { PtzCommands } from '@services/system-api.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';

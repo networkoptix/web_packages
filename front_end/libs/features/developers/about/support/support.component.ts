@@ -3,9 +3,9 @@ import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { windowFactory } from '@services/window-provider';
+import { images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AboutNode } from '../about.component.types';

@@ -1,8 +1,8 @@
 import { Component, Input, OnDestroy, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
+import { icons } from '@static-variables';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

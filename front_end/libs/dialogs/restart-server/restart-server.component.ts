@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { timer } from 'rxjs';
 import { delayWhen, retryWhen, map, tap, mergeMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -15,13 +14,14 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { RestartServer as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
-import { servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { servers } from '@static-variables';
 
 @Component({
     selector: 'nx-modal-restart-server-content',

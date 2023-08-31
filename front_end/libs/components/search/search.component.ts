@@ -20,17 +20,17 @@ import { isEqual, cloneDeep } from 'lodash-es';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { icons, search } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, search } from '@static-variables';
 
 import type { SearchFilter } from './search.component.types';
 

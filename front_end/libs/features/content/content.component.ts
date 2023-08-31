@@ -3,8 +3,7 @@ import { Component, Inject, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { apiBase } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -14,6 +13,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
+import { apiBase } from '@static-variables';
 
 @Component({
     selector: 'nx-content-component',

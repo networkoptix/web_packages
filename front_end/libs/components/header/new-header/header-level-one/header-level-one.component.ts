@@ -2,9 +2,9 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, Output, EventEmitter } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxAccountSettingsDropdown } from '@components/dropdowns/account-settings/account-settings.component';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
+import staticLang from '@language_static';
 import { NxMenusService } from '@services/menus.service';
 import type { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';

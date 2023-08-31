@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 
 @Component({
     selector: 'nx-alert-counter',

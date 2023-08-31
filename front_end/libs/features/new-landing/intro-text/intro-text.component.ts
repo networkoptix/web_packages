@@ -12,15 +12,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
 import { environment } from '@environments/environment';
-import { images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { WINDOW } from '@services/window-provider';
+import { images } from '@static-variables';
 
 @UntilDestroy()
 @Component({

@@ -5,8 +5,8 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { Subject, BehaviorSubject, interval, empty } from 'rxjs';
 import { distinctUntilChanged, switchMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';

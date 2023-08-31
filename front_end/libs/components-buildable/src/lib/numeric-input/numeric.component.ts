@@ -21,7 +21,7 @@ import {
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 
 /* Usage
  <nx-numeric

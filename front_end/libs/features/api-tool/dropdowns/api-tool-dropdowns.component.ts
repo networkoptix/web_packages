@@ -4,8 +4,8 @@ import { filter } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
 import { NxSystemInfo } from '@services/systems.service.types';
+import { icons } from '@static-variables';
 import { isUUID } from '@utils/general';
 
 import { NxAPIToolSystemService } from '../services/api-tool-system.service';

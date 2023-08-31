@@ -1,8 +1,8 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
-import * as staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import * as staticLang from '@language_static';
+import { icons } from '@static-variables';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
 

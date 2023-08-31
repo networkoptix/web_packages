@@ -15,7 +15,6 @@ import { isEqual } from 'lodash-es';
 import { BehaviorSubject, combineLatest, from, Observable, of } from 'rxjs';
 import { switchMap, tap, map, filter, startWith, catchError } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type {
     ClickEvent,
     MenuNodeWithParent,
@@ -25,7 +24,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import type { SearchFilter } from '@components/search/search.component.types';
 import { IntersectionStatus } from '@directives/nx-intersection.directive.types';
-import { icons, search } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -38,6 +37,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, search } from '@static-variables';
 import { highlight } from '@utils/general';
 
 import { NxKnowledgebaseService } from './knowledge-base.service';

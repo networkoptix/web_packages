@@ -6,9 +6,9 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escape, escapeRegExp } from 'lodash-es';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
+import { icons } from '@static-variables';
 import { spaceSplitSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

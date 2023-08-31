@@ -10,14 +10,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, Subject, timer } from 'rxjs';
 import { debounceTime, map, shareReplay, switchMap, tap, retry, scan } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
-import { icons, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -25,6 +24,7 @@ import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { icons, menus } from '@static-variables';
 
 import { FirstPartyWidget } from '../helper-classes';
 

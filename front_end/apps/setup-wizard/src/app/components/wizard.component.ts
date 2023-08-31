@@ -2,8 +2,8 @@ import { Component, HostListener, Inject, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 
 import { WizardStateService } from '../services/wizard-state.service';
 import { iState, WIZARD_STATE } from '../types/wizard-state.types';

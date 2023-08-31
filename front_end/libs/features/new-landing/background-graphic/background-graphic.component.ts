@@ -1,7 +1,7 @@
 import { Platform } from '@angular/cdk/platform';
 import { AfterViewInit, Component, Input, OnChanges } from '@angular/core';
 
-import { images } from '@lib/variables/static-variables';
+import { images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { NxLandingService } from '../landing.service';

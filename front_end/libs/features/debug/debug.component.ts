@@ -3,8 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Component, Inject } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';

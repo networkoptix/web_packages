@@ -12,9 +12,9 @@ import {
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { pick } from 'lodash-es';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
+import staticLang from '@language_static';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';

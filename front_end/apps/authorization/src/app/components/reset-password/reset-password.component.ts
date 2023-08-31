@@ -17,8 +17,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

@@ -24,9 +24,9 @@ import { NxPasswordComponent } from '@components/password-input/password.compone
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

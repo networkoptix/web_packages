@@ -1,9 +1,9 @@
 import { Component, OnInit, ViewEncapsulation } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import { icons } from '@lib/variables/static-variables';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { icons } from '@static-variables';
 
 import { NxRibbonService } from './ribbon.service';
 import type { RibbonAction } from './ribbon.types';

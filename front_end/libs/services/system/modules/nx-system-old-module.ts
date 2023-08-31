@@ -5,10 +5,9 @@ import { auditTime, catchError, map, shareReplay, switchMap } from 'rxjs/operato
 import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
-import { updateInterval } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import { nxConfig } from '@services/nx-config/config';
@@ -22,6 +21,7 @@ import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CloudUserCompat, CurrentUser, SystemUser } from '@services/system-user.types';
 import { PermissionManager } from '@services/system.service/permission-manager/permission-manager';
+import { updateInterval } from '@static-variables';
 import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 import { setServerIpAndPort } from '@utils/nx';

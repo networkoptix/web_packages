@@ -5,8 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Observable, take, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { LayoutItem, Layout } from '@services/system-api.types';
 

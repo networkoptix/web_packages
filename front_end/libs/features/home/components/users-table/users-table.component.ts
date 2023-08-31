@@ -6,8 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import staticLang from '@language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { icons } from '@static-variables';
 
 import type { ChannelPartnerUserExt } from '../users/channel-partner-users/channel-partner-users.types';
 

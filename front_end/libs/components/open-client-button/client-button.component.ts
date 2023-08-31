@@ -5,10 +5,10 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { accountSelectors } from '@common/store/account';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

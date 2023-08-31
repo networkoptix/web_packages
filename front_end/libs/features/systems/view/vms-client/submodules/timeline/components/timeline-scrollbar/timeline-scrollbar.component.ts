@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval } from 'rxjs';
 
-import { images } from '@lib/variables/static-variables';
+import { images } from '@static-variables';
 import {
     PlaybackState,
     PLAYBACK_MODE,

@@ -3,7 +3,7 @@ import { Component, Input } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
-import * as staticLang from '@common/language/language_i18n_static.json';
+import * as staticLang from '@language_static';
 
 @Component({
     selector: 'nx-additional-systems-tile',

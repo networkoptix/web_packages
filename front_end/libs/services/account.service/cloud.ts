@@ -9,12 +9,12 @@ import { catchError, debounceTime, filter, map, shareReplay, switchMap } from 'r
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { redirect, responseOk, updateInterval } from '@lib/variables/static-variables';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { nxConfig } from '@services/nx-config/config';
 import { OauthService } from '@services/oauth.service';
 import { NxToastService } from '@services/toast.service';
+import { redirect, responseOk, updateInterval } from '@static-variables';
 
 import { NxAppStateService } from '../nx-app-state.service';
 import { NxCloudApiService } from '../nx-cloud-api';

@@ -3,8 +3,8 @@ import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import {
     CameraStatus,

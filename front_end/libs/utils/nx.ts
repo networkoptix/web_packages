@@ -6,7 +6,7 @@ import type { TranslateService } from '@ngx-translate/core';
 import { zip } from 'lodash-es';
 import type { IStepOption } from 'ngx-ui-tour-md-menu';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import type {
     TranslateObject,
     Translatable,

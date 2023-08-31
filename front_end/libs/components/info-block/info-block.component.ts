@@ -3,8 +3,8 @@ import { Component, Input, OnInit } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
+import { icons } from '@static-variables';
 
 import {
     InfoBlockStyle,

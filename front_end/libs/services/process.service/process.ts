@@ -1,10 +1,10 @@
 import { Observable, Subject, firstValueFrom, race, timer } from 'rxjs';
 import { map, takeUntil } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
-import { responseOk } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxToastService } from '@services/toast.service';
+import { responseOk } from '@static-variables';
 
 import { NxSessionService } from '../session.service';
 

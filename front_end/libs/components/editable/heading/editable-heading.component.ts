@@ -10,7 +10,7 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({

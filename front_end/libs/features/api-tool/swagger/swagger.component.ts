@@ -21,14 +21,14 @@ import type SwaggerUI from 'swagger-ui';
 import type { SupportedHTTPMethods, SwaggerUIOptions, SwaggerUIPlugin } from 'swagger-ui';
 import { v4 as uuid } from 'uuid';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
-import { servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxLoginService } from '@services/login.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxToastService } from '@services/toast.service';
+import { servers } from '@static-variables';
 import { highlightAll, isUUID } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

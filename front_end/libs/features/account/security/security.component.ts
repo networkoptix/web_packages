@@ -8,15 +8,15 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxPopoverService } from '@components/popover/popover.service';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
+import { icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({

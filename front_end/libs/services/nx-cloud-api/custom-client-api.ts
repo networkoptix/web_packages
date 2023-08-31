@@ -1,8 +1,8 @@
 import type { HttpClient } from '@angular/common/http';
 import { v4 as uuid } from 'uuid';
 
-import { apiBase } from '@lib/variables/static-variables';
 import type { NxConsoleService } from '@pages/developer-console/console/console.service';
+import { apiBase } from '@static-variables';
 
 import type * as t from './nx-cloud-api.types';
 

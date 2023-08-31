@@ -3,13 +3,13 @@ import { Injectable } from '@angular/core';
 import { from, Observable, switchMap, throwError } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { SessionState } from '@dialogs/update-session/update-session.component.types';
-import { servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { servers } from '@static-variables';
 
 @Injectable()
 export class SessionExpiredInterceptor implements HttpInterceptor {

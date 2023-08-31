@@ -2,8 +2,8 @@ import { Component, Input, Inject } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { images } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { images } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';

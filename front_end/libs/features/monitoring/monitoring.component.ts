@@ -4,15 +4,15 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { Subject, filter, takeUntil } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { icons, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { Content } from '@menu/menu.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxAppSourceService } from '@services/nx-app-source.service';
 import { NxSystem } from '@services/system.service/system';
+import { icons, menus } from '@static-variables';
 
 type MonitoringDropdownItem = DropdownItem<string> & {
     serverOffline: boolean;

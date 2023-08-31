@@ -6,12 +6,11 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { OsResolver } from '@pages/download-updated/download/os-resolver';
 import { DownloadMobileComponent } from '@pages/download-updated/download-mobile/download-mobile.component';
 import { PipesModule } from '@pipes/pipes.module';
@@ -19,6 +18,7 @@ import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-c
 import type { Groups } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { images } from '@static-variables';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

@@ -2,7 +2,7 @@ import { NgFor, NgIf } from '@angular/common';
 import { Component } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 // import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 
 const mockData = {

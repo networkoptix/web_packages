@@ -2,8 +2,8 @@ import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
 import type { SearchFilter } from '@components/search/search.component.types';
-import { healthMonitoring } from '@lib/variables/static-variables';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { healthMonitoring } from '@static-variables';
 import {
     GridBreakpoints,
     GRID_PANEL_WIDTH,

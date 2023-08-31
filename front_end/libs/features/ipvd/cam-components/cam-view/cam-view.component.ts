@@ -9,7 +9,7 @@ import {
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import type { Cameras, Firmwares } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';

@@ -8,7 +8,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
@@ -16,7 +15,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxSearchComponent } from '@components/search/search.component';
 import { SystemCardComponent } from '@components/system-card/system-card.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { search } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxMenusService } from '@services/menus.service';
@@ -26,6 +25,7 @@ import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
+import { search } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 
 type Endpoint = Partial<{

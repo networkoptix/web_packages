@@ -4,11 +4,11 @@ import { Subject } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
-import { icons, manifest } from '@lib/variables/static-variables';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxMenusService } from '@services/menus.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, manifest } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { ConsoleMenuNode } from './console-menu.component.types';

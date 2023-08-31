@@ -1,7 +1,7 @@
 import { Component, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 
 @Component({
     selector: 'nx-no-systems-cards',

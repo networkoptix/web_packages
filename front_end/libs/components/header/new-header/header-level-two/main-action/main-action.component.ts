@@ -12,10 +12,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject } from 'rxjs';
 
-import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({

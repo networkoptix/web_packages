@@ -4,10 +4,10 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRadioComponent } from '@components/radio/radio.component';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 
 import { MergeState, MergeSystem } from '../merge.refactor.component.types';
 

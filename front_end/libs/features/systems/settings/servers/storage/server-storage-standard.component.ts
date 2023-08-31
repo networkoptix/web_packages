@@ -26,11 +26,10 @@ import {
     startWith,
 } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
@@ -49,6 +48,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
+import { icons } from '@static-variables';
 import { cleanId, cleanSmbUrl } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

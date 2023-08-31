@@ -16,19 +16,19 @@ import { last } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { AddStorage as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { responseOk } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import { NxToastService } from '@services/toast.service';
+import { responseOk } from '@static-variables';
 import { cleanId, assignFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })

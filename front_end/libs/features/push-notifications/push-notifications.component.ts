@@ -5,12 +5,12 @@ import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 
-import { redirect } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
+import { redirect } from '@static-variables';
 
 @UntilDestroy({ checkProperties: true })
 @Component({

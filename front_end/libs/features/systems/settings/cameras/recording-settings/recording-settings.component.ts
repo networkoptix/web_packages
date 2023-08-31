@@ -1,6 +1,6 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { Watcher } from '@services/apply.service/watcher';
 import {
     MotionType,

@@ -11,13 +11,13 @@ import { takeUntil } from 'rxjs/operators';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxSearchComponent } from '@components/search/search.component';
-import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { highlight } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

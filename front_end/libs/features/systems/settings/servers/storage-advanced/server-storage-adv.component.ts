@@ -3,9 +3,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -15,6 +14,7 @@ import {
     STORAGE_STATUS,
 } from '@services/system.service/storage-manager/storage';
 import type { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
 

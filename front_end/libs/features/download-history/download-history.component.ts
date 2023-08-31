@@ -6,7 +6,7 @@ import { startCase } from 'lodash-es';
 import { Subscription } from 'rxjs';
 import { filter, take } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { permissions } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';

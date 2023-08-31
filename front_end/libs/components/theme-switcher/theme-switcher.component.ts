@@ -3,13 +3,13 @@ import { Component, Input, OnInit } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
-import { images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
 import { NxThemeService } from '@services/theme.service';
+import { images } from '@static-variables';
 
 @Component({
     selector: 'nx-theme-switcher-component',

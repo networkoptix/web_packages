@@ -2,7 +2,7 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import type { Content } from '@menu/menu.types';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';

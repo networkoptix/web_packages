@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, computed, Signal } from '@angular/core';
 
-import { icons } from '@lib/variables/static-variables';
 import { NxMenuService } from '@menu/menu.service';
+import { icons } from '@static-variables';
 import type { NgChanges } from '@utils/ng-changes';
 
 import type { Level3Item } from '../menu.types';

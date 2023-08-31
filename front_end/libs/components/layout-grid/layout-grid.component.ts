@@ -50,7 +50,6 @@ import {
 } from 'rxjs/operators';
 import { v4 as uuid } from 'uuid';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -59,7 +58,7 @@ import { VideoPlayerModule } from '@components/video-player/video-player.module'
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
 import { ResizeModule } from '@directives/resize/resize.module';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -78,6 +77,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';

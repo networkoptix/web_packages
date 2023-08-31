@@ -4,11 +4,11 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import {
     ConfigType,
     ConsoleSection,
 } from '@components/console-table/console-table.component.types';
+import staticLang from '@language_static';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';

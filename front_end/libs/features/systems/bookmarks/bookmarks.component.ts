@@ -5,9 +5,8 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
 import { distinctUntilChanged, map, take } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -17,6 +16,7 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import {
     alphabeticalSort,
     caseInsenstiveSearch,

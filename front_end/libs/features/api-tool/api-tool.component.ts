@@ -2,13 +2,13 @@ import { Component, ElementRef, ViewChild, ViewEncapsulation } from '@angular/co
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { debounceTime, filter } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { ribbonHeight } from '@pages/static-variables-features';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxAPIToolSystemService } from './services/api-tool-system.service';

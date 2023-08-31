@@ -2,10 +2,10 @@ import { Component, ElementRef, ViewChild } from '@angular/core';
 
 import { Size } from '@directives/resize/nx-resize.directive.types';
 import staticLang from '@language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
 import { NxMenuService } from '@menu/menu.service';
 import { ChannelPartnerUserExt } from '@pages/home/components/users/channel-partner-users/channel-partner-users.types';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { icons } from '@static-variables';
 
 @Component({
     selector: 'sandbox-table',

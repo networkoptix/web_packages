@@ -2,10 +2,10 @@ import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxToastService } from '@services/toast.service';
+import { icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({

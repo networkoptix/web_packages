@@ -2,8 +2,8 @@ import { Component, Input, Inject, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
-import { images } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AboutNode } from '../about.component.types';

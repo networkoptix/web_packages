@@ -8,12 +8,12 @@ import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { LocalStorageService } from 'ngx-webstorage';
 import { first } from 'rxjs/operators';
 
-import * as staticLang from '@common/language/language_i18n_static.json';
 import { accountActions, accountSelectors } from '@common/store/account';
-import { icons, apiBase } from '@lib/variables/static-variables';
+import * as staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons, apiBase } from '@static-variables';
 
 @UntilDestroy()
 @Component({

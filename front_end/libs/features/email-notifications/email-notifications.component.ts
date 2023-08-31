@@ -5,7 +5,6 @@ import { BehaviorSubject, from, Observable } from 'rxjs';
 import { filter, finalize, map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import { apiBase } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -14,6 +13,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
+import { apiBase } from '@static-variables';
 
 interface SystemDropdownItem extends DropdownItem<string> {
     state: string;

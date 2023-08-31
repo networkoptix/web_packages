@@ -1,7 +1,7 @@
 import { Component, Inject, Input, OnInit } from '@angular/core';
 
-import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';

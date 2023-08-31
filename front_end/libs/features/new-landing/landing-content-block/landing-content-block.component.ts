@@ -1,6 +1,6 @@
 import { Component, Input } from '@angular/core';
 
-import { icons, images } from '@lib/variables/static-variables';
+import { icons, images } from '@static-variables';
 
 type InputType = 'small' | 'wide' | 'adaptive';
 @Component({

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit, Inject, ViewEncapsulation } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@lib/variables/static-variables';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { msToParts } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 

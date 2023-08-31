@@ -2,10 +2,10 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { oauthStore } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { OauthService } from '@services/oauth.service';
 import { WINDOW } from '@services/window-provider';
+import { oauthStore } from '@static-variables';
 
 @Component({
     selector: 'nx-cloud-owner-authorization',

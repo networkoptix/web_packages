@@ -4,8 +4,8 @@ import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
+import staticLang from '@language_static';
 
 import type { MoreTags as DT } from '../../dialogs.types';
 import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters-base.component';

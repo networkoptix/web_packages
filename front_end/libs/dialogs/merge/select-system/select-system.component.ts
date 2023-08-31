@@ -11,10 +11,10 @@ import {
 import { FormsModule, NgModel } from '@angular/forms';
 import { TranslateService } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { DirectivesModule } from '@directives/directives.module';
+import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';

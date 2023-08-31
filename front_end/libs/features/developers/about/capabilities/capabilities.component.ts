@@ -1,7 +1,7 @@
 import { Component, Input } from '@angular/core';
 
-import { icons, images } from '@lib/variables/static-variables';
 import { windowFactory } from '@services/window-provider';
+import { icons, images } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';

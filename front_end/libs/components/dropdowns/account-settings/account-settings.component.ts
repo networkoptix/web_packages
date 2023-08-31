@@ -11,12 +11,12 @@ import { accountSelectors } from '@common/store/account';
 import { accountDropdown } from '@components/static-variables-components';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { icons } from '@static-variables';
 
 import { BaseDropdown } from '../injDropdown';
 

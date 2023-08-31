@@ -3,9 +3,9 @@ import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import * as staticLang from '@common/language/language_i18n_static.json';
 import type { Client2faWarning as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import * as staticLang from '@language_static';
 
 @Component({
     selector: 'nx-client-2fa-warning',

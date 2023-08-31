@@ -16,10 +16,9 @@ import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, Subscription, throwError } from 'rxjs';
 import { flatMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
-import { healthMonitoring, icons, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import type { Content } from '@menu/menu.types';
 import { NxAccountService } from '@services/account.service';
@@ -36,6 +35,7 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { healthMonitoring, icons, menus } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxHealthService } from '../health.service';

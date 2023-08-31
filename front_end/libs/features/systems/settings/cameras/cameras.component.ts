@@ -14,7 +14,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, from, throwError, of, Observable, combineLatest } from 'rxjs';
 import { filter, map, delay, retry, catchError, switchMap, share } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import {
     InfoBlockColumns,
     InfoBlockLine,
@@ -23,7 +22,7 @@ import {
 } from '@components/info-block/info-block.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { icons, menus, settingsConfig } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxHealthService } from '@pages/health/health.service';
 import { NxApplyService } from '@services/apply.service';
@@ -47,6 +46,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { WINDOW } from '@services/window-provider';
+import { icons, menus, settingsConfig } from '@static-variables';
 
 import type {
     AspectRatioDropdownItem,

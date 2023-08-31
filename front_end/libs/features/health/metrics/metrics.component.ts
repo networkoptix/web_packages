@@ -13,13 +13,13 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { of, SubscriptionLike } from 'rxjs';
 import { delay } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { SearchFilter } from '@components/search/search.component.types';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxPageService } from '@services/page.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxUriService } from '@services/uri.service';
+import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxHealthLayoutService } from '../health-layout.service';

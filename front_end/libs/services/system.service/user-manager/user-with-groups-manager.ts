@@ -1,7 +1,7 @@
 import { LOCALE_ID } from '@angular/core';
 import { lastValueFrom } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';

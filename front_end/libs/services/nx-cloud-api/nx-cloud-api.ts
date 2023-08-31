@@ -11,12 +11,12 @@ import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
 import { UnstructuredTable } from '@db/models/unstructured';
 import { environment } from '@environments/environment';
-import { apiBase, redirect, responseOk, staticBase } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { NxDbService } from '@services/db.service';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { WINDOW } from '@services/window-provider';
+import { apiBase, redirect, responseOk, staticBase } from '@static-variables';
 import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 import { startWithCache } from '@utils/start-with-cached';

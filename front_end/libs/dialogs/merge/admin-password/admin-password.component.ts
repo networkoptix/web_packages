@@ -4,10 +4,10 @@ import { FormsModule, type NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { MergeState, MergeSystem } from '../merge.refactor.component.types';

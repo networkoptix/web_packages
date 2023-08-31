@@ -4,9 +4,9 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { switchMap } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
+import staticLang from '@language_static';
 import { selectSubchannelPartner } from '@pages/home/store/channel-partners/channel-partners.selectors';
 
 @Component({

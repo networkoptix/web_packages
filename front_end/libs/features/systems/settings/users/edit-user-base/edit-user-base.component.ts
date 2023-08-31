@@ -13,11 +13,10 @@ import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { credentialsValidation, icons, menus } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
@@ -26,6 +25,7 @@ import { NxUser, UserType } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
+import { credentialsValidation, icons, menus } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

@@ -1,8 +1,8 @@
 import { Component, OnDestroy, Input, OnChanges } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
+import staticLang from '@language_static';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';

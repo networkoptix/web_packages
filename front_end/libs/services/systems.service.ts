@@ -16,11 +16,11 @@ import {
 } from 'rxjs';
 import { distinctUntilChanged, first, map, shareReplay, switchMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxToastService } from '@services/toast.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';

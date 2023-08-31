@@ -5,19 +5,19 @@ import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateService, TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import type { UpdateSession as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
-import { alertTimeout } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { alertTimeout } from '@static-variables';
 import { htmlStrConstructor } from '@utils/nx';
 
 @Component({

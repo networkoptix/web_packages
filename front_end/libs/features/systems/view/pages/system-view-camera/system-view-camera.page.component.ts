@@ -16,9 +16,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, BehaviorSubject, interval, Subject, timer } from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -27,6 +26,7 @@ import { DeviceType } from '@services/system.service/camera-manager/camera-manag
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import {
     PLAYBACK_MODE,

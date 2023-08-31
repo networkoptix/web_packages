@@ -6,8 +6,8 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, from, combineLatest, Observable } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { Auth, MenuNode } from '@services/menus.service.types';
 import { CurrentUser } from '@services/system-user.types';
 

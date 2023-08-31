@@ -13,13 +13,13 @@ import {
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { environment } from '@environments/environment';
-import { icons, images } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, images } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
 import { BaseDropdown } from '../injDropdown';

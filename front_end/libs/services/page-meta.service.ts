@@ -5,8 +5,8 @@ import { TranslateService } from '@ngx-translate/core';
 import { Subject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 
 import type { BaseConfig } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';

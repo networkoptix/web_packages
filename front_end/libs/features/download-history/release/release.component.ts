@@ -1,6 +1,6 @@
 import { Component, OnInit, Input } from '@angular/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 import type { Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
 
 @Component({

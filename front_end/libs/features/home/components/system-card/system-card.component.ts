@@ -4,16 +4,16 @@ import { Component, Input, OnInit, booleanAttribute } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons, openClientError } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { icons, openClientError } from '@static-variables';
 
 import type { SystemItem } from '../../home.types';
 

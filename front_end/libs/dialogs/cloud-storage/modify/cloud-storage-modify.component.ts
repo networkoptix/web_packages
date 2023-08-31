@@ -3,9 +3,9 @@ import { Component, Renderer2, Inject } from '@angular/core';
 import { defer } from 'rxjs';
 
 import type { CloudStorage as DT } from '@dialogs/dialogs.types';
-import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
+import { icons } from '@static-variables';
 
 import {
     BaseCloudStorageActionModalContent,

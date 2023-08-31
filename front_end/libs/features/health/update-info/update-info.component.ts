@@ -3,9 +3,9 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription, timer } from 'rxjs';
 import { startWith } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
-import { healthMonitoring, icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
+import { healthMonitoring, icons } from '@static-variables';
 
 import { NxHealthService } from '../health.service';
 

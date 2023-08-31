@@ -6,10 +6,10 @@ import { BehaviorSubject } from 'rxjs';
 
 import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
 import { NxMobileHeaderMenuComponent } from '@components/header/new-header/mobile/mobile-menu/mobile-menu.component';
-import { icons } from '@lib/variables/static-variables';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 import { NgChanges } from '@utils/ng-changes';
 

@@ -15,9 +15,8 @@ import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
@@ -31,6 +30,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 class CombinedWidths {

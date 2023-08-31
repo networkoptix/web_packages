@@ -9,16 +9,16 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject, Observable } from 'rxjs';
 import { map, shareReplay, switchMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ExplorerNode } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { icons } from '@static-variables';
 
 import { FirstPartyWidget } from '../helper-classes';
 

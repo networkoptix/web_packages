@@ -1,7 +1,7 @@
 /**
  * A helper function to setup text within the OAuth app
  */
-import staticLang from '@common/language/language_i18n_static.json';
+import staticLang from '@language_static';
 
 export interface TemplateText {
     [clientType: string]: {

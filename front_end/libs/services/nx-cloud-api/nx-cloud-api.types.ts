@@ -1,8 +1,8 @@
 import { Observable, ObservableInput } from 'rxjs';
 
-import type staticLang from '@common/language/language_i18n_static.json';
 import { ConfigType } from '@components/console-table/console-table.component.types';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import type staticLang from '@language_static';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 
 /* eslint-disable camelcase */

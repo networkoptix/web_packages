@@ -13,7 +13,6 @@ import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
 import { distinctUntilChanged, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { EditableModule } from '@components/editable/editable.module';
 import { assertResourceParentNode } from '@components/layout-grid/layout-grid.type-guards';
 import {
@@ -29,7 +28,7 @@ import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-lik
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
@@ -38,6 +37,7 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { Layout } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 import { cleanId, dirtyId } from '@utils/general';
 
 @Component({

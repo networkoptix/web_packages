@@ -4,8 +4,8 @@ import { Component, Inject } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
+import { icons } from '@static-variables';
 
 import { BookmarkDownload as DT } from '../../dialogs.types';
 

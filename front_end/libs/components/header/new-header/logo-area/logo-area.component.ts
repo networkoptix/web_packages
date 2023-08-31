@@ -7,16 +7,16 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatest, map } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { accountSelectors } from '@common/store/account';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
-import { icons, images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
+import { icons, images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { logoAreaState, logoClickType } from '../new-header-types';

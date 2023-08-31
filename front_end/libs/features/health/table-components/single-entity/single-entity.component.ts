@@ -1,7 +1,7 @@
 import { Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { InfoBlockLine, InfoBlockSection } from '@components/info-block/info-block.component.types';
+import staticLang from '@language_static';
 
 import { NxHealthService } from '../../health.service';
 

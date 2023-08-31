@@ -3,8 +3,8 @@ import { Injectable } from '@angular/core';
 import { throwError, timer, Observable } from 'rxjs';
 import { catchError, flatMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
+import staticLang from '@language_static';
 import { NxToastService } from '@services/toast.service';
 
 @Injectable()

@@ -6,8 +6,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { permissions } from '@pages/static-variables-features';
 import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
@@ -16,6 +15,7 @@ import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-c
 import type { Arm, Groups } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { images } from '@static-variables';
 // import { NxPageService } from '@services/page.service';
 
 @UntilDestroy({ checkProperties: true })

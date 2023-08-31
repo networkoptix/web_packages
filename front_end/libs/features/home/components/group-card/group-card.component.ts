@@ -5,10 +5,10 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
+import { icons } from '@static-variables';
 
 import type { GroupItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';

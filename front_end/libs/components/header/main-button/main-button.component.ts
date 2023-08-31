@@ -3,13 +3,13 @@ import { Component, Input, OnChanges, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { mainButtonState } from './main-button.types';

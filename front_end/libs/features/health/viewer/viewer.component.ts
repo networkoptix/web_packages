@@ -15,8 +15,7 @@ import { cloneDeep } from 'lodash-es';
 import { FileSystemFileEntry, NgxFileDropEntry } from 'ngx-file-drop';
 import { of, throwError } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons, healthMonitoring } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import type { Content } from '@menu/menu.types';
 import { Account } from '@services/account.service/account';
@@ -29,6 +28,7 @@ import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, healthMonitoring } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
 import { NxHealthService } from '../health.service';

@@ -1,8 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angular/core';
 
-import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
+import { icons } from '@static-variables';
 import { VmsClientPlaybackModule } from '@vms-client/submodules/playback/playback.module';
 
 @Component({

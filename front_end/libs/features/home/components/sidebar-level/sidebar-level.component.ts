@@ -8,7 +8,7 @@ import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 
 import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';

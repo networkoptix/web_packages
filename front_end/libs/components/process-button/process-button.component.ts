@@ -4,8 +4,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 
 interface SvgData {
     src: string;

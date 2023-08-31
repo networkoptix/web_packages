@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { concat, interval, zip } from 'rxjs';
 import { first, tap, filter, take } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxProcessService } from '@services/process.service';
 import { WINDOW } from '@services/window-provider';
 

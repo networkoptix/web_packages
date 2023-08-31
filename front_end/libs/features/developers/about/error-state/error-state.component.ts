@@ -2,8 +2,8 @@ import { Component, Input } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
+import staticLang from '@language_static';
 import type { Account } from '@services/account.service/account';
 
 import { ErrorStateStructure } from '../error-state/error-state-manager';

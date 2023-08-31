@@ -1,7 +1,7 @@
 import { last } from 'lodash-es';
 import { v4 as uuid } from 'uuid';
 
-import { manifest } from '@lib/variables/static-variables';
+import { manifest } from '@static-variables';
 
 import { setupComponent } from '../src/setup';
 

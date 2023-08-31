@@ -13,13 +13,12 @@ import {
     timeout,
 } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { InfoBlockSection, InfoBlockLine } from '@components/info-block/info-block.component.types';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { icons, clientMode, menus, servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
@@ -33,6 +32,7 @@ import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
+import { icons, clientMode, menus, servers } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

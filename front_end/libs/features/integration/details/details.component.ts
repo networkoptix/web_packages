@@ -7,11 +7,10 @@ import { TranslateService } from '@ngx-translate/core';
 import { combineLatest } from 'rxjs';
 import { map } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import type { RibbonAction } from '@components/ribbon/ribbon.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { icons, dialogs } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import type { Content } from '@menu/menu.types';
 import { NxAccountService } from '@services/account.service';
@@ -24,6 +23,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, dialogs } from '@static-variables';
 
 import { IntegrationService } from '../integration.service';
 

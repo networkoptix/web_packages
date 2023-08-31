@@ -17,7 +17,6 @@ import {
 } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { apiTool } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -30,6 +29,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
+import { apiTool } from '@static-variables';
 import { processLanguageFactory } from '@utils/nx';
 
 import type { APIDoc } from '../api-tool-types';

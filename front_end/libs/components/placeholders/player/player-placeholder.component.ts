@@ -4,8 +4,8 @@ import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
 import type { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
 
 /* Usage

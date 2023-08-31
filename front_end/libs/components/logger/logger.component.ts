@@ -8,13 +8,13 @@ import { CookieService } from 'ngx-cookie-service';
 import { Subject, firstValueFrom, timer } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';

@@ -2,13 +2,13 @@ import { Injectable, OnDestroy } from '@angular/core';
 import { escape } from 'lodash-es';
 import { BehaviorSubject, Observable, Subscription } from 'rxjs';
 
-import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { Integration } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@static-variables';
 import { paramSortFunc } from '@utils/general';
 
 interface Platform {

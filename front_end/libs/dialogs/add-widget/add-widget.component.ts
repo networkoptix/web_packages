@@ -9,7 +9,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, last } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxDynamicWidgetComponent } from '@components/dynamic-widget/dynamic-widget.component';
@@ -18,12 +17,13 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { WidgetCard } from '@components/widgets/helper-classes';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { icons } from '@static-variables';
 import { assignFrom, delayInitial, alphabeticalSort } from '@utils/general';
 
 type WidgetDropdownItem = DropdownItem<WidgetCard>;

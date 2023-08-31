@@ -5,8 +5,8 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import staticLang from '@language_static';
 import { icons } from '@variables/static-variables';
 
 import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';

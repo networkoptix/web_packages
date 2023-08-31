@@ -1,4 +1,4 @@
-import type staticLang from '@common/language/language_i18n_static.json';
+import type staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 import {
     CloudStorageSize,

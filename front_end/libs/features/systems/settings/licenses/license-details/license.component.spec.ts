@@ -3,10 +3,10 @@ import { DatePipe } from '@angular/common';
 import { DebugElement } from '@angular/core';
 import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
+import staticLang from '@language_static';
 import { setupComponent } from '@pages/src/setup';
 import { nxConfig } from '@services/nx-config/config';
 

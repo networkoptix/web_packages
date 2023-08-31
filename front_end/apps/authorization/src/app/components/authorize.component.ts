@@ -19,10 +19,9 @@ import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs'
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
 import { AuthService } from '@authorization/src/app/auth.service';
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
-import { oauthStore } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
     ClientType,
@@ -37,6 +36,7 @@ import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { oauthStore } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 
 import { AuthorizeState } from './authorize.component.types';

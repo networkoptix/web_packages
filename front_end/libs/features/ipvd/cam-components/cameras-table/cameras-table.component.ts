@@ -1,11 +1,11 @@
 import { Component, EventEmitter, Input, OnChanges, Output } from '@angular/core';
 
 import staticLang from '@language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
 import { csvData, Disclaimer, FilteredCamera, IpvdParams } from '@pages/ipvd/ipvd.types';
 import { Cameras } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 interface Header {

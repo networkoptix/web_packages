@@ -3,13 +3,13 @@ import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { takeWhile } from 'rxjs/operators';
 
-import { images } from '@lib/variables/static-variables';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
+import { images } from '@static-variables';
 
 import type { AboutNode } from '../about/about.component.types';
 import { ErrorStateManager } from '../about/error-state/error-state-manager';

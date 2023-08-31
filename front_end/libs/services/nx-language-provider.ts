@@ -4,9 +4,9 @@ import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { NxToastService } from '@services/toast.service';

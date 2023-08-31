@@ -5,10 +5,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 
 import { BaseDropdown } from '../../dropdowns/injDropdown';
 

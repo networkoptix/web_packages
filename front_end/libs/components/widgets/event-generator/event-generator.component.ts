@@ -14,7 +14,6 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -22,6 +21,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
+import { icons } from '@static-variables';
 import { cleanId } from '@utils/general';
 
 import { FirstPartyWidget } from '../helper-classes';

@@ -4,7 +4,7 @@ import { toSignal } from '@angular/core/rxjs-interop';
 import { BehaviorSubject, firstValueFrom, Observable, Subject } from 'rxjs';
 import { catchError, debounceTime, shareReplay, switchMap, take } from 'rxjs/operators';
 
-import { apiBase } from '@lib/variables/static-variables';
+import { apiBase } from '@static-variables';
 
 interface MappingCallbackFn<T> {
     (current: T): T | Promise<T> | Observable<T>;

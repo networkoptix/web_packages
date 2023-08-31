@@ -12,8 +12,8 @@ import {
     take,
 } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
+import staticLang from '@language_static';
 import { Translatable, TranslateObject } from '@pipes/nx-translate.types';
 import {
     CloudLicenseUpdate,

@@ -6,9 +6,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep } from 'lodash-es';
 import { filter } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { accountDropdown } from '@components/static-variables-components';
-import { icons, images } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
@@ -17,6 +16,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
+import { icons, images } from '@static-variables';
 
 @UntilDestroy()
 @Component({

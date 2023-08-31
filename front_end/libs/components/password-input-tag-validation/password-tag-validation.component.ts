@@ -2,10 +2,10 @@ import { CommonModule } from '@angular/common';
 import { Component, Input, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { DirectivesModule } from '@directives/directives.module';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 
 @Component({

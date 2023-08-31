@@ -16,13 +16,13 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons } from '@lib/variables/static-variables';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
     selectCurrentPartnerId,
     selectCurrentSubchannelPartners,
 } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search } from '@variables/static-variables';
 

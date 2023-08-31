@@ -5,9 +5,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import dateFormat from 'dateformat';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { SelectTimeRange as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { assignFrom } from '@utils/general';

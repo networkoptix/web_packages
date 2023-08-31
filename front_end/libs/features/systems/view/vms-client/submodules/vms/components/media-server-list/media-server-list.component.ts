@@ -1,9 +1,9 @@
 import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
-import { icons } from '@lib/variables/static-variables';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { icons } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 

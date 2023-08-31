@@ -16,7 +16,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep, escape } from 'lodash-es';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -26,7 +25,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
-import { icons, servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import type { Account } from '@services/account.service/account';
@@ -41,6 +40,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, servers } from '@static-variables';
 import { cleanIp, strSplice, assignFrom, alphabeticalSort } from '@utils/general';
 
 import { State } from './stateForMergeDialog';

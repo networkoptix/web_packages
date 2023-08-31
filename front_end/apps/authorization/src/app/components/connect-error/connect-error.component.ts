@@ -1,7 +1,7 @@
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import * as staticLang from '@common/language/language_i18n_static.json';
+import * as staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
 
 import type { AuthorizeStateType } from '../authorize.component.types';

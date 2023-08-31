@@ -6,7 +6,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { NgxFileDropModule } from 'ngx-file-drop';
 
 import { ToastType } from '@components/toast-container/toast.types';
-import { SharedWidgetState } from '@lib/dashboard-widget-state';
+import { SharedWidgetState } from '@packages/dashboard-widget-state';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';

@@ -1,5 +1,5 @@
-import staticLang from '@common/language/language_i18n_static.json';
 import { ToastOptions } from '@components/toast-container/toast.types';
+import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 
 import { setupTestBed } from '../src/setup';

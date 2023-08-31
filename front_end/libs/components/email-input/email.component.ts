@@ -10,9 +10,9 @@ import {
     FormsModule,
 } from '@angular/forms';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DirectivesModule } from '@directives/directives.module';
-import { credentialsValidation } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
+import { credentialsValidation } from '@static-variables';
 
 @Component({
     selector: 'nx-email-input',

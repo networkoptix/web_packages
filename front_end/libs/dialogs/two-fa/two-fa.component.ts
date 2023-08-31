@@ -21,7 +21,6 @@ import { QrCodeModule } from 'ng-qrcode';
 import { ClipboardService, IClipboardResponse } from 'ngx-clipboard';
 import { CookieService } from 'ngx-cookie-service';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { accountActions } from '@common/store/account';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import {
@@ -33,7 +32,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { icons, apiBase, credentialsValidation } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -43,6 +42,7 @@ import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, apiBase, credentialsValidation } from '@static-variables';
 
 import type { Account2faData, Account2faReturn } from '../dialogs.types';
 

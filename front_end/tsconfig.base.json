@@ -26,6 +26,7 @@
             "@environments/*": ["common/environments/*"],
             "@guards/*": ["libs/routeGuards/*"],
             "@interceptors/*": ["libs/interceptors/*"],
+            "@language_static": ["common/language/language_i18n_static.json"],
             "@language/*": ["common/language/*"],
             "@menu/*": ["libs/menu/*"],
             "@mocks/*": ["common/_mocks/*"],
@@ -43,14 +44,14 @@
             "@store/*": ["common/store/*"],
             "@styles/*": ["common/styles/*"],
             "@utils/*": ["libs/utils/*"],
+            "@static-variables": ["libs/variables/static-variables.ts"],
             "@variables/*": ["libs/variables/*"],
             "@view/*": ["libs/features/systems/view/*"],
             "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
             "components-buildable-build": ["libs/components-buildable-build/src/index.ts"],
             "@common/*": ["common/*"],
             "@libs/*": ["libs/*"],
-            "@packages/*": ["packages/*"],
-            "@lib/*": ["common/*", "libs/*", "packages/*"]
+            "@packages/*": ["packages/*"]
         },
         "typeRoots": ["node_modules/@types"]
     },

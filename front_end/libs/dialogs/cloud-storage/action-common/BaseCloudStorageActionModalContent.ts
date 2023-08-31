@@ -1,9 +1,9 @@
 import { map, Observable } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { CloudStorage as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import staticLang from '@language_static';
 import { Translatable } from '@pipes/nx-translate.types';
 import { LicenseState } from '@services/nx-cloud-api/cloud-services/license-server/license-server-api.types';
 import { IConfig } from '@services/nx-config/config-types';

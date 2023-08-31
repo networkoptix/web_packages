@@ -3,7 +3,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { distinctUntilChanged } from 'rxjs/operators';
 
-import { icons } from '@lib/variables/static-variables';
+import { icons } from '@static-variables';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
 import { PLAYBACK_MODE, PlaybackState } from '../../datatypes/PlaybackState';

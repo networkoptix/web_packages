@@ -33,7 +33,6 @@ import { NxSearchHighlightComponent } from '@components/search-highlight/search-
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { DirectivesModule } from '@directives/directives.module';
-import { icons, manifest } from '@lib/variables/static-variables';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { PipesModule } from '@pipes/pipes.module';
@@ -48,6 +47,7 @@ import {
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { icons, manifest } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { PackageHandler, PackageProgress } from './package-handler';

@@ -1,8 +1,8 @@
 import { Component, Input, OnInit } from '@angular/core';
 
-import staticLang from '@common/language/language_i18n_static.json';
-import { icons } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxSystem } from '@services/system.service/system';
+import { icons } from '@static-variables';
 
 /* Usage
  <nx-section-placeholder

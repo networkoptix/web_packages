@@ -10,13 +10,13 @@ import { BehaviorSubject, filter, take } from 'rxjs';
 import { accountSelectors } from '@common/store/account';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { environment } from '@environments/environment';
-import { icons } from '@lib/variables/static-variables';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { icons } from '@static-variables';
 
 @UntilDestroy()
 @Component({

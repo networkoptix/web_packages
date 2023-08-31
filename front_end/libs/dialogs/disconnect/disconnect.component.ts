@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 import { Observable, Subject, takeUntil, timer } from 'rxjs';
 import { switchMap } from 'rxjs/operators';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -14,7 +13,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import type { IEnvironment } from '@environments/environment-config';
-import { servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
@@ -24,6 +23,7 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
+import { servers } from '@static-variables';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import type { Disconnect as DT } from '../dialogs.types';

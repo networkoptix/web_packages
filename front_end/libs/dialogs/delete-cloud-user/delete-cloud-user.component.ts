@@ -4,10 +4,10 @@ import { Component, ViewChild } from '@angular/core';
 import type { NgForm, NgModel } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ModalBase } from '@dialogs/modal-base';
+import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';

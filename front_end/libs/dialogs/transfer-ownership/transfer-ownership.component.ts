@@ -10,7 +10,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom, map } from 'rxjs';
 
-import staticLang from '@common/language/language_i18n_static.json';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
@@ -21,7 +20,7 @@ import { NxRadioComponent } from '@components/radio/radio.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
-import { icons, servers } from '@lib/variables/static-variables';
+import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -29,6 +28,7 @@ import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.typ
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
+import { icons, servers } from '@static-variables';
 
 import type { TransferOwnership as DT } from '../dialogs.types';
 
