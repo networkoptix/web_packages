@@ -23,10 +23,10 @@ class SecurityForm:
         return Button(self.driver, f"//button[contains(text(),'{self.rb.DISABLE_TWOFA_TEXT}')]")
     
     def twofa_enabled_badge(self):
-        return Button(self.driver, f"//a[@id='tag-tag' and contains(text(),'{self.rb.ENABLED_TEXT}')]")
+        return Button(self.driver, f"//a[@name='tag-tag' and contains(text(),'{self.rb.ENABLED_TEXT}')]")
     
     def twofa_disabled_badge(self):
-        return Button(self.driver, f"//a[@id='tag-tag' and contains(text(),'{self.rb.DISABLED_TEXT}')]")
+        return Button(self.driver, f"//a[@name='tag-tag' and contains(text(),'{self.rb.DISABLED_TEXT}')]")
     
     def twofa_password_modal_input(self):
         return TextField(self.driver, f"{self.twofa_modal}//input[@id='login_password']")
@@ -61,8 +61,26 @@ class SecurityForm:
     def twofa_verification_checkbox(self):
         return Checkbox(self.driver, "//nx-account-security-component//nx-section//nx-checkbox", "//input[@id='skip-tfauth']" )
     
+    def twofa_settings_modal_uncheck(self):
+        return PageText(self.driver, f"{self.twofa_modal}//p[text()='{self.rb.TWOFA_SETTINGS_MODAL_DESCRIPTION_TEXT2}']")
+    
+    def twofa_settings_modal_check(self):
+        return PageText(self.driver, f"{self.twofa_modal}//p[text()='{self.rb.TWOFA_SETTINGS_MODAL_DESCRIPTION_TEXT1}']")
+    
     def twofa_disable_modal_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[@type='submit']")
+    
+    def twofa_settings_modal_on_instructions(self):
+        return PageText(self.driver, f"{self.twofa_modal}//label[text()='{self.rb.TWOFA_SETTINGS_MODAL_INST_ON_TEXT}']")
+    
+    def twofa_settings_modal_off_instructions(self):
+        return PageText(self.driver, f"{self.twofa_modal}//label[text()='{self.rb.TWOFA_SETTINGS_MODAL_INST_OFF_TEXT}']")
+    
+    def twofa_settings_modal_apply(self):
+        return Button(self.driver, f"{self.twofa_modal}//nx-process-button//button[@type='submit']/..")
+    
+    def twofa_settings_modal_cancel(self):
+        return Button(self.driver, f"{self.twofa_modal}//button[(@type='reset') or contains(text(),'{self.rb.CANCEL_BUTTON_TEXT}')]")
     
     def turn_on_2fa(self, password, qr_code=False):
         self.twofa_enable_button().click()

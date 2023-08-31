@@ -808,7 +808,7 @@ class GenericKeywords:
                     ownerRequired = True
                     break
             if ownerRequired:
-                owners_ids = set([server["cloudOwnerId"] for server in serversJson])
+                owners_ids = set([server.get("cloudOwnerId") for server in serversJson])
                 # Todo: reimplement owner-transfer check
                 #if "owner-transfer" in BuiltIn().get_variable_value('${SUITE NAME}').lower():
                 #    logger.info("owner-transfer detected")

@@ -42,3 +42,5 @@ PythonRobot/chromedriver
 
 # Local Netlify folder
 .netlify
+PythonRobot/qr_code.png
+PythonRobot/NoptixLibrary/letsencrypt-stg.crt
