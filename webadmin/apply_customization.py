@@ -67,7 +67,7 @@ def clean_static_info(customization_package, output_dir):
 
     preserve_keys = [
         'vmsName', 'cloudName', 'copyrightYear', 'companyName', 'contact', 'desktop.trialLicenseKey',
-        'defaultLanguage']
+        'defaultLanguage', 'uriProtocol']
 
     cleaned_description = {}
     for key in preserve_keys:
