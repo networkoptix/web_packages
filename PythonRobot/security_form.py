@@ -82,6 +82,12 @@ class SecurityForm:
     def twofa_settings_modal_cancel(self):
         return Button(self.driver, f"{self.twofa_modal}//button[(@type='reset') or contains(text(),'{self.rb.CANCEL_BUTTON_TEXT}')]")
     
+    def twofa_page_save(self):
+        return Button(self.driver, '//nx-account-security-component//nx-apply//button[@type="submit"]')
+    
+    def twofa_page_cancel(self):
+        return Button(self.driver, '//nx-account-security-component//nx-apply//button[@type="submit"]')
+    
     def turn_on_2fa(self, password, qr_code=False):
         self.twofa_enable_button().click()
         self.twofa_password_modal_input().input_text(password)

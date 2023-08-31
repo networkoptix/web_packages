@@ -912,13 +912,15 @@ class GenericKeywords:
         # Disconnect each server from cloud
         # Stop and remove docker container
         for server in serversJson:
-            self.cloud_api.disconnect(server["cloudOwner"], self.password, server["id"])
+            if server.get("cloudOwner"):
+                self.cloud_api.disconnect(server["cloudOwner"], self.password, server["id"])
             self.docker_api.delete_container(server["container"])
             # Delete each user's account if they were added
             for user in server["cloudUsers"]:
                 self.cloud_api.delete_account(server["cloudUsers"][user], self.password)
         # Delete the owner account
-        self.cloud_api.delete_account(server["cloudOwner"], self.password)
+        if server.get("cloudOwner"):
+            self.cloud_api.delete_account(server["cloudOwner"], self.password)
 
     
     def get_features_json(self, path):

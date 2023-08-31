@@ -139,8 +139,8 @@ def system_2fa_required():
 def twofa_not_required_when_more_than_one_system():
     """6.2 2fa is not required when accessing systems page with more than one system"""
     bind_info = CLOUD_API.connect(SERVERS[1]['name'], SERVERS[0]['cloudOwner'], password)
-    id = ServerApi(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
-    SERVERS[1]['id'] = id
+    ServerAPI5(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
+    SERVERS[1]['id'] = bind_info['systemId']
     SERVERS[1]['cloudOwner'] = SERVERS[0]['cloudOwner']
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
@@ -148,7 +148,7 @@ def twofa_not_required_when_more_than_one_system():
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
     robot_keywords.sleep(2)
-    robot_keywords.go_to_url(driver, f"{ENV}systems/{id}")
+    robot_keywords.go_to_url(driver, f"{ENV}/systems/{SERVERS[1]['id']}")
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)    
@@ -168,8 +168,66 @@ def twofa_not_required_when_more_than_one_system():
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
     robot_keywords.sleep(2)
-    robot_keywords.go_to_url(driver, f"{ENV}systems/{id}")
+    robot_keywords.go_to_url(driver, f"{ENV}/systems/{SERVERS[1]['id']}")
     SystemAdmin(driver)
+    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    driver.close()
+
+def change_2fa_for_user_to_specific_systems():
+    """7. Successfully changing 2FA mode for user to specific systems"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    robot_keywords.sleep(2)
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)    
+    twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
+    security_form.twofa_enabled_badge()
+    security_form.twofa_verification_checkbox().checked()
+    try:
+        security_form.twofa_page_save()
+    except:
+        pass
+    else:
+        raise RuntimeError("Page Save Button present")
+    try:
+        security_form.twofa_page_cancel()
+    except:
+        pass
+    else:
+        raise RuntimeError("Page Cancel Button present")
+    security_form.twofa_verification_checkbox().unselect()
+    security_form.twofa_settings_modal_check()
+    security_form.twofa_settings_modal_off_instructions()
+    security_form.twofa_settings_modal_apply()
+    security_form.twofa_settings_modal_cancel()
+    security_form.twofa_totp_input().input_text(twofa_codes['totp'])
+    security_form.twofa_settings_modal_apply().click()
+    security_form.twofa_verification_checkbox().unchecked()
+    robot_keywords.sleep(3)
+    try:
+        security_form.twofa_settings_modal_apply()
+    except:
+        pass
+    else:
+        raise RuntimeError("Page Save Button present")
+    try:
+        security_form.twofa_settings_modal_cancel()
+    except:
+        pass
+    else:
+        raise RuntimeError("Page Cancel Button present")
+    security_form.twofa_verification_checkbox().select()
+    security_form.twofa_settings_modal_uncheck()
+    security_form.twofa_settings_modal_on_instructions()
+    security_form.twofa_settings_modal_apply()
+    security_form.twofa_settings_modal_cancel()
+    security_form.twofa_totp_input().input_text(twofa_codes['totp'])
+    security_form.twofa_settings_modal_apply().click()
+    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
 if __name__ == "__main__":
@@ -179,4 +237,5 @@ if __name__ == "__main__":
     disabling_2fa()
     system_2fa_required()
     twofa_not_required_when_more_than_one_system()
+    change_2fa_for_user_to_specific_systems()
     keywords.teardown_servers(SERVERS)
