@@ -27,6 +27,10 @@ class LoginDialog:
 
     def login_button(self):
         return Button(self.driver, "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']")
+
+    def activation_success_login_button(self):
+        translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{LOG_IN_BUTTON_TEXT}')]")
+        return Button(self.driver, translated_xpath)
     
     def twofa_auth_code_input(self):
         return TextField(self.driver, "//nx-authorize-component//nx-authorize-auth-code-component//input[@id='authCode']")

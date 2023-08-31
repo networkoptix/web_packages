@@ -14,6 +14,8 @@ from header import HeaderNav
 from change_pass_form import ChangePassForm
 from landing_page import LandingPage
 from selenium.webdriver.common.keys import Keys
+from NoptixLibrary.GenericKeywords import GenericKeywords
+from email_access import Email
 
 password = "qweasd 123"
 # login = ""
@@ -22,7 +24,7 @@ rb = RobotVariables("en_US")
 
 def sets_new_password_and_successfully_logs_in():
     driver = get_headless_chrome()
-    email = resource_import.get_random_email()
+    email = resource_import.get_random_email(sendemail=True)
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -35,12 +37,47 @@ def sets_new_password_and_successfully_logs_in():
     time.sleep(3)
     assert login.reset_password_email_input().get_text() == email, "Email was not autofilled in the field"
     login.reset_password_button().click()
-    # Todo: get code from email and confirm password
+    email_con = Email()
+    link = email_con.get_email_link(email, "restore_password")
+    robot_keywords.go_to_url(driver, link)
+    login.activation_success_login_button().click()
+    login.password_input().input_text(password)
+    login.login_button().click()
+    header.account_dropdown()
+
+    robot_keywords.close_browser(driver)
+    print("pass")
+
 
 def check_restore_password_email():
-    # Todo: check email
-    pass
+    driver = get_headless_chrome()
+    email = resource_import.get_random_email(sendemail=True)
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    robot_keywords.go_to_url(driver, ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
 
+    login = LoginDialog(driver)
+    login.email_input().input_text(email)
+    login.next_button().click()
+    login.forgot_password_button().click()
+    login.reset_password_button().click()
+
+    email_con = Email()
+    email_id = email_con.wait_for_email(email)
+    body = email_con.get_body(email_id)
+    email_con.check_email_button(body, ENV, rb.THEME_COLOR)
+    email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
+    email_con.check_email_subject(email_id, rb.RESET_PASSWORD_EMAIL_SUBJECT)
+
+    links = email_con.get_nx_links_from_email(body)
+    expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, ENV, f'{ENV}/restore_password']
+    GenericKeywords().check_in_list(expected_links, links)
+    email_con.delete_email(email_id)
+
+    robot_keywords.close_browser(driver)
+    print("pass")
 
 if __name__ == "__main__":
     sets_new_password_and_successfully_logs_in()
+    check_restore_password_email()

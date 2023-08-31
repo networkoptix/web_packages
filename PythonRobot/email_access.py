@@ -1,7 +1,7 @@
 import quopri
 from imaplib import IMAP4_SSL
 import email
-from re import findall
+from re import findall, search
 from RobotVariables import RobotVariables
 import time
 from random import randint
@@ -60,23 +60,25 @@ class Email:
         return False
     
     def get_body(self, email_id):
-        self.login()  
+        self.login()
         email_id_str = email_id.decode('utf-8')
         status, msg_data = self.mailbox.uid('fetch', email_id_str, "(RFC822)")
         if status == "OK":
-            self.email_body = quopri.decodestring(msg_data[0][1])
-            self.logout()  
-            return self.email_body
+            email_body = quopri.decodestring(msg_data[0][1]).decode("UTF-8", errors="ignore")
+            self.logout()
+            return email_body
         self.logout()  
         return False
 
-    def get_email_link(self, recipient, link_type, timeout=10):
+    def get_email_link(self, recipient, link_type, timeout=30):
         email_uid = self.wait_for_email(recipient, timeout, status="UNREAD")
         if email_uid is None:
             print("Email not received within timeout!")
             return
-        if link_type=='activate':
+        if link_type == 'activate':
             self.check_email_subject(email_uid, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
+        elif link_type == 'restore_password':
+            self.check_email_subject(email_uid, rb.RESET_PASSWORD_EMAIL_SUBJECT)
         body = self.get_body(email_uid)
         links = self.get_nx_links_from_email(body)
         return links
@@ -133,3 +135,25 @@ class Email:
                 time.sleep(1)
         finally:
             self.logout()
+
+    def check_email_button(self, body, env, color):
+        pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(
+            env, color)
+        if not search(pat, body):
+            raise Exception("Button background-color was not found.")
+
+    def check_email_user_names(self, body, fName, lName):
+        pat = '(<h1.*>).*({} {}.*</h1>)'.format(fName, lName)
+        if not search(pat, body):
+            raise Exception("User name was not in the email.")
+
+    def check_email_cloud_name(self, body, cloudName):
+        pat = '(<p).*({}).*(</p>)'.format(cloudName)
+        if not search(pat, body):
+            raise Exception("Cloud name was not in the email.")
+
+    def check_for_blank_target(self, body, url):
+        pat = '(<a class="btn" href="{})(.[^>]*)(target=_blank)'.format(url)
+        if not search(pat, body):
+            raise Exception("Button target was not 'blank'.")
+
