@@ -51,16 +51,6 @@ module.exports = {
             ],
             rules: {
                 'accessor-pairs': 'off',
-                'array-bracket-newline': ['error', 'consistent'],
-                'array-element-newline': ['error', 'consistent'],
-                'arrow-parens': ['error', 'as-needed'],
-                'brace-style': [
-                    'error',
-                    '1tbs',
-                    {
-                        allowSingleLine: false,
-                    },
-                ],
                 camelcase: [
                     'error',
                     {
@@ -68,29 +58,12 @@ module.exports = {
                         ignoreDestructuring: true,
                     },
                 ],
-                'comma-dangle': ['error', 'only-multiline'],
-                // 'comma-dangle': ['error', 'always-multiline'],
                 curly: ['error', 'all'],
                 eqeqeq: ['error', 'always'],
-                indent: [
-                    'error',
-                    4,
-                    {
-                        SwitchCase: 1,
-                        ignoredNodes: [
-                            'TemplateLiteral *',
-                            /* Don't enforce indent inside template literals */
-                            'PropertyDefinition[decorators] Identifier',
-                            /* Incorrectly indents class property with decorator on
-                        preceding line */
-                        ],
-                    },
-                ],
                 'multiline-ternary': 'off',
                 'no-case-declarations': 'off',
                 'no-console': ['error', { allow: ['error', 'warn', 'info'] }],
                 'no-dupe-else-if': 'error',
-                'no-extra-semi': 'error',
                 'no-mixed-operators': 'off',
                 'no-multi-assign': 'error',
                 'no-return-await': 'error',
@@ -115,15 +88,6 @@ module.exports = {
                 'object-shorthand': 'error',
                 'prefer-promise-reject-errors': 'off',
                 'prefer-regex-literals': 'off',
-                semi: ['error', 'always'],
-                'space-before-function-paren': [
-                    'error',
-                    {
-                        anonymous: 'always',
-                        named: 'never',
-                        asyncArrow: 'always',
-                    },
-                ],
 
                 'import/no-default-export': 'error',
                 'import/order': [
@@ -184,23 +148,15 @@ module.exports = {
                         },
                     },
                 ],
-                ...tsExtension('brace-style', ['error', '1tbs', { allowSingleLine: false }]),
-                ...tsExtension('comma-dangle', ['error', 'only-multiline']),
-                ...tsExtension('comma-spacing'),
                 ...tsExtension('dot-notation', ['error', { allowKeywords: true }]),
-                ...tsExtension('func-call-spacing'),
-                ...tsExtension('keyword-spacing'),
                 ...tsExtension('lines-between-class-members', [
                     'error',
                     {
                         exceptAfterSingleLine: true,
                     },
                 ]),
-                '@typescript-eslint/member-delimiter-style': 'error',
                 ...tsExtension('no-array-constructor'),
                 ...tsExtension('no-dupe-class-members'),
-                ...tsExtension('no-extra-parens', ['error', 'functions']),
-                ...tsExtension('no-extra-semi'),
                 ...tsExtension('no-implied-eval'),
                 ...tsExtension('no-redeclare', [
                     'error',
@@ -238,22 +194,10 @@ module.exports = {
                         // argsIgnorePattern: '^_',
                     },
                 ]),
-                ...tsExtension('object-curly-spacing', ['error', 'always']),
                 '@typescript-eslint/prefer-includes': 'error',
                 // Note: @ts-ignore should still be used for false
                 // positives on TS warnings
                 '@typescript-eslint/prefer-ts-expect-error': 'error',
-                ...tsExtension('semi'),
-                ...tsExtension('space-before-blocks', ['error', 'always']),
-                ...tsExtension('space-before-function-paren', [
-                    'error',
-                    {
-                        anonymous: 'always',
-                        named: 'never',
-                        asyncArrow: 'always',
-                    },
-                ]),
-                ...tsExtension('space-infix-ops'),
             },
         },
         {
