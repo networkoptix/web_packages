@@ -1,8 +1,5 @@
-import { Injectable } from '@angular/core';
+import { ResolveFn } from '@angular/router';
 
-@Injectable()
-export class TypeResolver {
-    resolve(): string {
-        return 'password';
-    }
-}
+export const TabResolver: ResolveFn<string> = (): string => {
+    return 'password';
+};

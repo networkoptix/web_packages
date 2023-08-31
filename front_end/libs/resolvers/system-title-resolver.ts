@@ -1,26 +1,19 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot } from '@angular/router';
+import { inject } from '@angular/core';
+import { ActivatedRouteSnapshot, ResolveFn } from '@angular/router';
 
 import { environment } from '@environments/environment';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 
-@Injectable({ providedIn: 'root' })
-export class SystemTitleResolver {
-    systems: NxSystemInfo[];
-    systemId: string;
+export const SystemTitleResolver: ResolveFn<string> = (route: ActivatedRouteSnapshot) => {
+    const systemsService = inject(NxSystemsService);
+    if (!environment.isLocal) {
+        const systemName =
+            systemsService.systems.find(
+                (system: NxSystemInfo) => system.id === route.params.systemId,
+            )?.name || '';
 
-    constructor(private systemsService: NxSystemsService) {}
-
-    resolve(route: ActivatedRouteSnapshot): string {
-        if (!environment.isLocal) {
-            const id = route.params.systemId || this.systemId;
-            const systemName =
-                this.systemsService.systems.find((system: NxSystemInfo) => system.id === id)
-                    ?.name || '';
-
-            return `{"baseTitle" : "${systemName}", "type": "system"}`;
-        }
-        return '';
+        return `{"baseTitle" : "${systemName}", "type": "system"}`;
     }
-}
+    return '';
+};

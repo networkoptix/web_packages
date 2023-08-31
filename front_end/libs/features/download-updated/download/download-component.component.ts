@@ -11,7 +11,6 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { DirectivesModule } from '@directives/directives.module';
 import staticLang from '@language_static';
-import { OsResolver } from '@pages/download-updated/download/os-resolver';
 import { DownloadMobileComponent } from '@pages/download-updated/download-mobile/download-mobile.component';
 import { PipesModule } from '@pipes/pipes.module';
 import type { Downloads, Installer, Platform } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -40,7 +39,6 @@ import { images } from '@static-variables';
         TranslateModule,
         DownloadMobileComponent,
     ],
-    providers: [OsResolver],
 })
 export class DownloadComponent implements OnChanges {
     @Input() releaseType: string;

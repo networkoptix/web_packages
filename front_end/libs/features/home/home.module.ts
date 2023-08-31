@@ -26,12 +26,8 @@ import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.com
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxHomeComponent } from './home.component';
 import { NxOrganizationsComponent } from './organizations/organization.component';
-import { CPResovler } from './resolvers/CP-resolver';
-import { WithParentDataResolver } from './resolvers/data-resolver';
 import { OrgResolver } from './resolvers/org-resolver';
-import { RoleResolver } from './resolvers/role-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
-import { TabResolver } from './resolvers/tab-resolver';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
 import { NxGroupsSystemsComponent } from './systems/systems.component';
@@ -81,16 +77,6 @@ const homeRoutes: Routes = [
 ];
 
 @NgModule({
-    declarations: [],
-    providers: [
-        TabResolver,
-        OrgResolver,
-        SubChannelResolver,
-        WithParentDataResolver,
-        RoleResolver,
-        CPResovler,
-    ],
-    exports: [],
     imports: [
         NxHomeComponent,
         CommonModule,

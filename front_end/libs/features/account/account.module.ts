@@ -20,8 +20,6 @@ import { NxAccountSettingsComponent } from '@pages/account/settings/settings.com
 import { NxAccountSettingsModule } from '@pages/account/settings/settings.module';
 import { PipesModule } from '@pipes/pipes.module';
 
-import { TypeResolver } from './type-resolver';
-
 const appRoutes: Routes = [
     {
         path: '',
@@ -66,9 +64,6 @@ const appRoutes: Routes = [
         PipesModule,
         NxPreLoaderComponent,
     ],
-    providers: [TypeResolver],
     declarations: [NxAccountComponent],
-    bootstrap: [],
-    exports: [],
 })
 export class NxAccountModule {}

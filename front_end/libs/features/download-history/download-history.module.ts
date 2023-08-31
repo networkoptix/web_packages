@@ -51,9 +51,7 @@ const appRoutes: Routes = [
         PipesModule,
         NxPreLoaderComponent,
     ],
-    providers: [TypeResolver],
     declarations: [DownloadHistoryComponent, ReleaseComponent],
-    bootstrap: [],
     exports: [DownloadHistoryComponent],
 })
 export class DownloadHistoryModule {}

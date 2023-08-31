@@ -1,25 +1,18 @@
-import { Injectable } from '@angular/core';
-import { ActivatedRouteSnapshot, RouterStateSnapshot } from '@angular/router';
+import { ActivatedRouteSnapshot, ResolveFn, RouterStateSnapshot } from '@angular/router';
 
 type routeData = {
     inOrganization: boolean;
     inSubchannel: boolean;
 };
 
-@Injectable()
-export class WithParentDataResolver {
-    resolve(route: ActivatedRouteSnapshot, state: RouterStateSnapshot): Promise<routeData> {
-        return new Promise(resolve => {
-            setTimeout(() => {
-                let data = Object.keys(route.parent.data).includes('inOrganization')
-                    ? route.parent.data
-                    : route.parent.parent.data;
-                data = data.parentData ?? data;
-                resolve({
-                    inOrganization: data.inOrganization,
-                    inSubchannel: data.inSubchannel,
-                });
-            });
-        });
-    }
-}
+export const WithParentDataResolver: ResolveFn<routeData> = (
+    route: ActivatedRouteSnapshot,
+    state: RouterStateSnapshot,
+): routeData => {
+    let data = Object.keys(route.parent.data).includes('inOrganization')
+        ? route.parent.data
+        : route.parent.parent.data;
+    data = data.parentData ?? data;
+
+    return { inOrganization: data.inOrganization, inSubchannel: data.inSubchannel };
+};

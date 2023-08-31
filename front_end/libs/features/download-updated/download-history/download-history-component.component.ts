@@ -9,7 +9,6 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { DirectivesModule } from '@directives/directives.module';
 import staticLang from '@language_static';
 import { ReleaseComponent } from '@pages/download-updated/download-history/release/release.component';
-import { TypeResolver } from '@pages/download-updated/download-history/type-resolver';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { BuildHistory, Downloads } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -30,7 +29,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
         NxPreLoaderComponent,
         ReleaseComponent,
     ],
-    providers: [TypeResolver],
 })
 export class DownloadHistoryComponent implements OnInit {
     readonly releases = 'releases';

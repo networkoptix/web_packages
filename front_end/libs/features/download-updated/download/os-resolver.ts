@@ -1,34 +1,21 @@
-import { Injectable } from '@angular/core';
-import { Router } from '@angular/router';
+import { inject } from '@angular/core';
+import { ResolveFn, Router } from '@angular/router';
 import { DeviceDetectorService, DeviceInfo } from 'ngx-device-detector';
 import { EMPTY as empty } from 'rxjs';
 
 import type { PlatformMatch } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 
-@Injectable()
-export class OsResolver {
-    deviceInfo: DeviceInfo;
-    platform: string;
-    platformMatch: PlatformMatch;
-    windows: string;
-
-    constructor(
-        configService: NxConfigService,
-        private router: Router,
-        private deviceService: DeviceDetectorService,
-    ) {
-        this.deviceInfo = this.deviceService.getDeviceInfo();
-        const configDownloads = configService.getConfig().downloads;
-        this.windows = configDownloads.groups.windows.name;
-        this.platformMatch = configDownloads.platformMatch;
-    }
-
-    resolve(): typeof empty {
-        this.platform = this.platformMatch[this.deviceInfo.os.toLowerCase()] || this.windows;
-        this.router.navigate(['/download/' + this.platform.toLowerCase()]).catch(error => {
-            console.error(error);
-        });
-        return empty;
-    }
-}
+export const OsResolver: ResolveFn<typeof empty> = (): typeof empty => {
+    const configService: NxConfigService = inject(NxConfigService);
+    const router: Router = inject(Router);
+    const deviceInfo: DeviceInfo = inject(DeviceDetectorService).getDeviceInfo();
+    const configDownloads = configService.getConfig().downloads;
+    const windows: string = configDownloads.groups.windows.name;
+    const platformMatch: PlatformMatch = configDownloads.platformMatch;
+    const platform: string = platformMatch[deviceInfo.os.toLowerCase()] || windows;
+    router.navigate(['/download/' + platform.toLowerCase()]).catch(error => {
+        console.error(error);
+    });
+    return empty;
+};

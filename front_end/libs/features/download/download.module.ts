@@ -59,9 +59,6 @@ const appRoutes: Routes = [
         NxPreLoaderComponent,
         NxSectionPlaceholderComponent,
     ],
-    providers: [OsResolver],
     declarations: [DownloadComponent],
-    bootstrap: [],
-    exports: [],
 })
 export class DownloadModule {}
