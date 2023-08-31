@@ -1,5 +1,5 @@
-<div [ngClass]="{ 'subchannels-placeholder': (subchannels$ | async).length === 0 }">
-    <div *ngIf="(subchannels$ | async).length > 0; else subchannelsEmpty">
+<div [ngClass]="{ 'subchannels-placeholder': subchannels$$().length === 0 }">
+    <div *ngIf="subchannels$$().length > 0; else subchannelsEmpty">
         <div *ngIf="!(inSubchannels$ | async); else outlet">
             <div class="actions p-3">
                 <button
@@ -12,10 +12,7 @@
                 </button>
 
                 <nx-search
-                    *ngIf="
-                        (subchannels$ | async).length >
-                        searchConfig.channelPartners.searchMinimumCards
-                    "
+                    *ngIf="subchannels$$().length > searchConfig.channelPartners.searchMinimumCards"
                     class="input-overlay"
                     [style.width.px]="searchConfig.channelPartners.searchWidth"
                     [ngModel]="search"
@@ -26,7 +23,7 @@
                 ></nx-search>
             </div>
             <div class="px-3 cards-container">
-                <ng-container *ngFor="let channel of filteredSubchannels$ | async">
+                <ng-container *ngFor="let channel of filteredSubchannels$$()">
                     <div
                         class="system-button card-condensed system-card"
                         (click)="handleChannelClick(channel.id)"
@@ -65,7 +62,10 @@
         </ng-template>
     </div>
     <ng-template #subchannelsEmpty>
-        <div class="placeholder-container">
+        <div
+            *ngIf="subchannelsStoresLoaded"
+            class="placeholder-container"
+        >
             <div>
                 <!-- TEMPORARY SVG - replace Aria label -->
                 <svg-icon

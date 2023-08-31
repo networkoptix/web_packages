@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { AsyncPipe, CommonModule, NgFor, NgIf } from '@angular/common';
-import { Component, DestroyRef, inject } from '@angular/core';
+import { Component, DestroyRef, signal, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -8,7 +8,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, Subject, debounceTime, map } from 'rxjs';
+import { Subject, debounceTime, map } from 'rxjs';
 
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
@@ -59,12 +59,13 @@ export class NxSubchannelsComponent {
     icons = icons;
     isAdmin = true;
     currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
-    subchannels$ = this.store.select(selectCurrentSubchannelPartners);
-    filteredSubchannels$: Observable<ChannelPartner[]>;
+    subchannels$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
+    filteredSubchannels$$ = signal<ChannelPartner[]>([]);
     inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));
     destroyRef = inject(DestroyRef);
     search = { value: '' };
     searchChanged = new Subject<void>();
+    subchannelsStoresLoaded = false;
     searchConfig = searchConfig;
 
     constructor(
@@ -78,35 +79,48 @@ export class NxSubchannelsComponent {
             this.store.dispatch(
                 CPActions.setCurrentSubchannelPartners({ currentSubchannels: partners }),
             );
+            this.subchannelsStoresLoaded = true;
+            this.displayPartners();
         });
 
         this.searchChanged
             .pipe(debounceTime(searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
-                this.searchSystems();
+                this.displayPartners();
             });
 
         this.search.value = this.route.snapshot.queryParams.search;
-        this.searchSystems();
+        this.displayPartners();
     }
 
     newPartnerDialog(): void {
-        this.dialogsService.createChannelPartner(this.currentPartnerId());
+        this.dialogsService.createChannelPartner(this.currentPartnerId()).then(newSubchannel => {
+            if (!newSubchannel) {
+                return;
+            }
+            const updatedSubchannels = [...this.subchannels$$(), newSubchannel];
+            this.store.dispatch(
+                CPActions.setCurrentSubchannelPartners({ currentSubchannels: updatedSubchannels }),
+            );
+            this.displayPartners();
+        });
     }
 
     handleChannelClick(id: string): void {
         this.router.navigate([id], { relativeTo: this.route });
     }
 
-    searchSystems(): void {
+    displayPartners(): void {
         const search = this.search.value;
+        const currentSubchannels = this.subchannels$$();
 
         if (search) {
-            this.filteredSubchannels$ = this.subchannels$.pipe(
-                map(res => res.filter(org => caseInsenstiveSearch(org.name, search))),
-            );
+            const subchannelsWithSearch = currentSubchannels.filter(subchannels => {
+                return caseInsenstiveSearch(subchannels.name, search);
+            });
+            this.filteredSubchannels$$.set(subchannelsWithSearch);
         } else {
-            this.filteredSubchannels$ = this.subchannels$;
+            this.filteredSubchannels$$.set(currentSubchannels);
         }
     }
 
