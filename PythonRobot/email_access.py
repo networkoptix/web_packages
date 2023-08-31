@@ -111,7 +111,7 @@ class Email:
             email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
             return email
     
-    def wait_for_email(self, recipient, timeout=30, status='UNSEEN'):
+    def wait_for_email(self, recipient, timeout=90, status='UNSEEN'):
         self.login()
         start_time = time.time()
         try:
@@ -135,6 +135,10 @@ class Email:
                 time.sleep(1)
         finally:
             self.logout()
+
+    def get_links_from_email(self, body):
+        res = findall(r'href=[\'"]?([^\'" >]+)', body)
+        return res
 
     def check_email_button(self, body, env, color):
         pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(

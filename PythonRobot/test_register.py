@@ -1,19 +1,24 @@
 from selenium import webdriver
-from resource_import import get_headless_chrome, get_random_email, activate, register_account, register_and_activate_account
+from resource_import import get_headless_chrome, get_random_email, activate, register_and_activate_account
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from test_account import cloud_login
+import time
 import robot_keywords
 from RobotVariables import RobotVariables
+from NoptixLibrary.GenericKeywords import GenericKeywords
 import robot_lists as rl
 from colorama import Fore, Back, Style
 from button import Button
 from header import HeaderNav
 from register_form import RegisterForm
+from email_access import Email
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.common.action_chains import ActionChains
 
 rb = RobotVariables("en_US")
+
+
 # driver = get_headless_chrome()
 # robot_keywords.go_to_url(driver, rb.ENV)
 
@@ -25,6 +30,7 @@ def page_in_anonymous_state_register_header():
     RegisterForm(driver)
     driver.close()
 
+
 def open_from_success_page():
     """2. Should open register page from register success page by clicking Register button on top right corner"""
     email = get_random_email(sendemail=True)
@@ -33,12 +39,13 @@ def open_from_success_page():
     HeaderNav(driver).create_account().click()
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
-    #Todo activate still needs email to work
+    # Todo activate still needs email to work
     # activate(driver, email, from_email=True)
     # robot_keywords.go_to_url(driver, rb.ENV)
     # HeaderNav(driver).create_account().click()
     # RegisterForm(driver)
     driver.close()
+
 
 def page_in_anonymous_state_redister_home():
     """3. Should open register page in anonymous state by clicking Register button on homepage"""
@@ -48,12 +55,14 @@ def page_in_anonymous_state_redister_home():
     RegisterForm(driver)
     driver.close()
 
+
 def page_in_anonymouse_state_navigation():
     """4. Should open register page in anonymous state"""
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver)
     driver.close()
+
 
 def register_user_with_correct_credentials():
     """5. Should register user with correct credentials"""
@@ -65,6 +74,7 @@ def register_user_with_correct_credentials():
     register_form.account_creation_success()
     driver.close()
 
+
 def valid_inputs_no_errors():
     """7. With valid inputs no errors are displayed"""
     email = get_random_email()
@@ -73,10 +83,10 @@ def valid_inputs_no_errors():
     HeaderNav(driver).create_account().click()
     register_form = RegisterForm(driver)
     register_form.first_name_input().input_text("mark")
-    register_form.last_name_input().input_text( "hamill")
+    register_form.last_name_input().input_text("hamill")
     register_form.email_input().input_text(email)
     register_form.password_input().input_text(rb.BASE_PASSWORD)
-    register_form.terms_and_conditions_checkbox().select() 
+    register_form.terms_and_conditions_checkbox().select()
     if register_form.first_name_is_required_error().in_dom:
         raise RuntimeError("Fist name required error was visible")
     if register_form.last_name_is_required_error().in_dom:
@@ -93,8 +103,9 @@ def valid_inputs_no_errors():
         raise RuntimeError("password weak error was visible")
     driver.close()
 
+
 def password_masking_and_eye_icon():
-    """8. Displays password masked, shows password and changes eye icon when clicked"""   
+    """8. Displays password masked, shows password and changes eye icon when clicked"""
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
@@ -105,8 +116,9 @@ def password_masking_and_eye_icon():
     assert register_form.password_input().field_type() == "text", "Input type should be 'text'"
     register_form.password_eye_open().click()
     assert register_form.password_eye_closed().is_visible, "Eye icon not closed"
-    assert register_form.password_input().field_type() == "password", "Input type should be 'password'"    
+    assert register_form.password_input().field_type() == "password", "Input type should be 'password'"
     driver.close()
+
 
 def should_respond_to_enter_key():
     """9. Should respond to Enter key and save data"""
@@ -115,13 +127,14 @@ def should_respond_to_enter_key():
     robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
     register_form.first_name_input().input_text("mark")
-    register_form.last_name_input().input_text( "hamill")
+    register_form.last_name_input().input_text("hamill")
     register_form.email_input().input_text(email)
     register_form.password_input().input_text(rb.BASE_PASSWORD)
     register_form.terms_and_conditions_checkbox().select()
     register_form.password_input().input_text(Keys.ENTER)
     register_form.account_creation_success()
     driver.close()
+
 
 def should_respond_to_tab_key():
     """10. Should respond to Tab key"""
@@ -171,12 +184,13 @@ def should_respond_to_tab_key():
     assert register_form.login_button().is_focused, "Login Button not focused after TAB"
     ActionChains(driver).send_keys(Keys.TAB).perform()
     robot_keywords.sleep(1)
-    assert register_form.create_account_button().is_focused, "Create Account Button not focused after TAB" 
+    assert register_form.create_account_button().is_focused, "Create Account Button not focused after TAB"
     register_form.first_name_is_required_error()
     register_form.last_name_is_required_error()
     register_form.email_is_required_error()
     register_form.password_is_required_error()
     driver.close()
+
 
 def terms_and_conditions_in_new_page():
     """11. Should open Terms and conditions in a new page"""
@@ -188,6 +202,7 @@ def terms_and_conditions_in_new_page():
     robot_keywords.location_should_be(driver, f"{rb.ENV}content/eula")
     driver.close()
 
+
 def privacy_policy_in_new_page():
     """12. Should open Privacy Policy in a new page"""
     driver = get_headless_chrome()
@@ -197,6 +212,7 @@ def privacy_policy_in_new_page():
     driver.switch_to.window(driver.window_handles[1])
     robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
     driver.close()
+
 
 def cant_register_email_already_registered():
     """19. Cannot register email that is already registered"""
@@ -209,6 +225,7 @@ def cant_register_email_already_registered():
     register_form.account_already_exists_error()
     driver.close()
 
+
 def cant_register_email_already_activated():
     """20. Cannot register email that is already activated"""
     email = get_random_email()
@@ -219,6 +236,31 @@ def cant_register_email_already_activated():
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
     register_form.account_already_exists_error()
     driver.close()
+
+
+def check_register_email():
+    driver = get_headless_chrome()
+    email = get_random_email(sendemail=True)
+    robot_keywords.go_to_url(driver, rb.ENV)
+    HeaderNav(driver).create_account().click()
+    register_form = RegisterForm(driver)
+    register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+    time.sleep(10)
+
+    email_con = Email()
+    email_id = email_con.wait_for_email(email)
+    body = email_con.get_body(email_id)
+    email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
+    email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
+    email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
+
+    links = email_con.get_links_from_email(body)
+    expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, rb.ENV, f'{rb.ENV}/authorize/activate']
+    GenericKeywords().check_in_list(expected_links, links)
+    email_con.delete_email(email_id)
+
+    robot_keywords.close_browser(driver)
+
 
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
@@ -259,3 +301,6 @@ if __name__ == "__main__":
 
     cant_register_email_already_activated()
     print(f'{Fore.WHITE}{cant_register_email_already_activated.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+
+    check_register_email()
+    print(f'{Fore.WHITE}{check_register_email.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')

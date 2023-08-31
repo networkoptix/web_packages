@@ -70,7 +70,7 @@ def check_restore_password_email():
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
     email_con.check_email_subject(email_id, rb.RESET_PASSWORD_EMAIL_SUBJECT)
 
-    links = email_con.get_nx_links_from_email(body)
+    links = email_con.get_links_from_email(body)
     expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, ENV, f'{ENV}/restore_password']
     GenericKeywords().check_in_list(expected_links, links)
     email_con.delete_email(email_id)

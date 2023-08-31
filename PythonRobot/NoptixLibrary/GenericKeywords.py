@@ -444,12 +444,14 @@ class GenericKeywords:
 
     
     def check_in_list(self, expected, found):
-        for url in expected:
-            if found in url:
-                return
-            elif re.search(url, found):
-                return
-        raise Exception(found + " was not in the expected list.")
+        for url in found:
+            if url not in expected:
+                for expected_url in expected:
+                    if expected_url in url:
+                        break
+                else:
+                    raise RuntimeError("Expected url wasn't in the list.")
+
 
     
     def get_os(self):
