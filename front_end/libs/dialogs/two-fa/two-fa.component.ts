@@ -269,10 +269,6 @@ export class TwoFAModalContent<A extends TfaAction>
                         new InfoBlockLine(this.LANG.account.key, this.code),
                     ]);
                 }
-                this.unlock();
-            },
-            () => {
-                this.unlock();
             },
         );
 
@@ -364,16 +360,12 @@ export class TwoFAModalContent<A extends TfaAction>
                     this.listenFor2faActivation = false;
                     this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
                     this.setTemplate(T_FA_STEPS.WizardFinish);
-                    this.unlock();
                 }
 
                 if (response.account2faEnabled === false) {
                     this.resetDefaults();
                     this.close('disabled');
                 }
-            },
-            () => {
-                this.unlock();
             },
         );
 
@@ -429,9 +421,6 @@ export class TwoFAModalContent<A extends TfaAction>
                     this.close('disabled');
                 }
             },
-            () => {
-                this.unlock();
-            },
         );
 
         const invalidCredentialHandler = (): void => {
@@ -470,9 +459,6 @@ export class TwoFAModalContent<A extends TfaAction>
             },
             res => {
                 this.close(res);
-            },
-            () => {
-                this.unlock();
             },
         );
     }

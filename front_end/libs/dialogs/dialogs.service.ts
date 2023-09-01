@@ -216,6 +216,7 @@ export class NxDialogsService {
             width: DIALOG_SIZE.SMALL,
             ...config,
             data,
+            disableClose: true,
         };
         return this.openV2(component, configWithData);
     }
