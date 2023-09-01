@@ -35,6 +35,7 @@ import { NxToastService } from '@services/toast.service';
 export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> implements OnInit {
     roles: DropdownItem<number>[] = [];
     role: DropdownItem<number>;
+    title: string;
 
     editPartnerUserProcess: Process;
 
@@ -46,6 +47,7 @@ export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> imple
             user: {
                 email,
                 roles: [role],
+                title,
             },
         }: DT['data'],
         processService: NxProcessService,
@@ -60,6 +62,7 @@ export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> imple
             }));
             this.role = this.roles.find(r => r.name === role);
         });
+        this.title = title;
         this.editPartnerUserProcess = processService.createProcess(
             () => {
                 this.lock();
@@ -67,6 +70,7 @@ export class NxEditPartnerUserModalContent extends ModalBase<DT['return']> imple
                     cpService.updateChannelPartnerUser(channelPartner, {
                         email,
                         role: this.role.name,
+                        title: this.title,
                     }),
                 );
             },

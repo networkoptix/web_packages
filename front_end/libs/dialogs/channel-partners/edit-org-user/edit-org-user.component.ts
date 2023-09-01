@@ -37,6 +37,7 @@ import { NxToastService } from '@services/toast.service';
 export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implements OnInit {
     roles: DropdownItem<number>[] = [];
     role: DropdownItem<number>;
+    title: string;
     editOrgUserProcess: Process;
 
     constructor(
@@ -47,6 +48,7 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
             user: {
                 email,
                 roles: [role],
+                title,
             },
         }: DT['data'],
         processService: NxProcessService,
@@ -61,6 +63,7 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
             }));
             this.role = this.roles.find(r => r.name === role);
         });
+        this.title = title;
         this.editOrgUserProcess = processService.createProcess(
             () => {
                 this.lock();
@@ -68,6 +71,7 @@ export class NxEditOrgUserModalContent extends ModalBase<DT['return']> implement
                     cpService.updateOrganizationUser(orgId, {
                         email,
                         role: this.role.name,
+                        title: this.title,
                     }),
                 );
             },

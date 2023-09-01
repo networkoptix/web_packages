@@ -51,6 +51,8 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
     roles: DropdownItem<number>[] = [];
     selectedRole: DropdownItem<number>;
 
+    title: string;
+
     addUserProcess: Process;
 
     constructor(
@@ -76,6 +78,7 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
                     cpService.createOrganizationUser(orgId, {
                         email: this.email,
                         role: this.selectedRole.name,
+                        title: this.title,
                     }),
                 );
             },

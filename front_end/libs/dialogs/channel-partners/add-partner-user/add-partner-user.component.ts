@@ -39,6 +39,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
 
     public email: string;
+    title: string;
 
     roles: DropdownItem<number>[] = [];
     selectedRole: DropdownItem<number>;
@@ -70,6 +71,7 @@ export class AddPartnerUserModalContent extends ModalBase<DT['return']> {
                     cpService.createChannelPartnerUser(partnerId, {
                         email: this.email,
                         role: this.selectedRole.name,
+                        title: this.title,
                     }),
                 );
             },

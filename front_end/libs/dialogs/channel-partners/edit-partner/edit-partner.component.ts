@@ -8,6 +8,7 @@ import { firstValueFrom } from 'rxjs';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -32,6 +33,7 @@ import { NxToastService } from '@services/toast.service';
 
         NxGenericDropdownModule,
         NxCheckboxComponent,
+        NxNumericComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
     ],
@@ -43,13 +45,24 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
     selectedParent: DropdownItem<string>;
     name: string;
     canCreateSubChannels: boolean;
+    hasMonthlyLimit: boolean;
+    monthlyAdditionalServiceLimit: number = 0;
 
     editPartnerProcess: Process;
+
+    readonly POSITIVE_INFINITY = Number.POSITIVE_INFINITY;
 
     constructor(
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA)
-        { state, parentChannelPartner, name, id, canCreateSubChannels }: DT['data'],
+        {
+            state,
+            parentChannelPartner,
+            name,
+            id,
+            canCreateSubChannels,
+            monthlyAdditionalServiceLimit,
+        }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
@@ -70,6 +83,12 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
         });
         this.name = name;
         this.canCreateSubChannels = canCreateSubChannels;
+        if (monthlyAdditionalServiceLimit === null) {
+            this.hasMonthlyLimit = false;
+        } else {
+            this.hasMonthlyLimit = true;
+            this.monthlyAdditionalServiceLimit = monthlyAdditionalServiceLimit;
+        }
 
         this.editPartnerProcess = processService.createProcess(
             () => {
@@ -80,6 +99,10 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
                         // parentChannelPartner: this.selectedParent.value,
                         name: this.name,
                         canCreateSubChannels: this.canCreateSubChannels,
+                        // monthlyAdditionalServiceLimit: this.hasMonthlyLimit
+                        //     ? this.monthlyAdditionalServiceLimit
+                        //     : null,
+                        /* Can't unset monthly limit to null once set to a numbe atm */
                     }),
                 );
             },

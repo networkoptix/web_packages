@@ -32,6 +32,34 @@
                 required
             />
         </div>
+        <div>
+            <label>
+                <nx-checkbox
+                    name="canCreateSubChannels"
+                    componentId="canCreateSubChannels"
+                    [(ngModel)]="canCreateSubChannels"
+                ></nx-checkbox>
+                <span translate>Can create subchannels</span>
+            </label>
+        </div>
+        <div class="monthly-limit-container">
+            <label translate>Monthly additional service limit</label>
+            <div>
+                <nx-checkbox
+                    name="hasMonthlyLimit"
+                    componentId="hasMonthlyLimit"
+                    [(ngModel)]="hasMonthlyLimit"
+                    [ngModelOptions]="{ standalone: true }"
+                ></nx-checkbox>
+                <nx-numeric
+                    [min]="0"
+                    [max]="POSITIVE_INFINITY"
+                    [disabled]="!hasMonthlyLimit"
+                    [(ngModel)]="monthlyAdditionalServiceLimit"
+                    [ngModelOptions]="{ standalone: true }"
+                ></nx-numeric>
+            </div>
+        </div>
     </div>
     <div class="modal-footer">
         <nx-process-button
