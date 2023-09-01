@@ -95,6 +95,7 @@ class CloudSession:
         return self.session
 
     def logout_session(self):
+        self.session.headers.update({'Referer': self.instance})
         self._request_wrapper("/api/account/logout", method='post')
 
 #  Below is an example of use of the CloudSession class above.

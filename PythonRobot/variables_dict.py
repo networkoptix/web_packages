@@ -11,7 +11,7 @@ variables_dict = {
     "ACCOUNT_CREATION_EMAIL_SUCCESS": "//nx-authorize-component//nx-authorize-activate-account-component//main//h3",
     "MODAL_DIALOG": "//nx-modal-generic-content",
     "LOGGED_IN_CLOSE_BUTTON": "//nx-modal-generic-content//button//span[@class='close-icon']/../..",
-    "ENV": "https://cloud-test.hdw.mx",
+    "ENV": "https://cloud-test.hdw.mx/",
     "LOG_IN_MODAL": "//nx-authorize-component/div[@class='authorize-main main-w']",
     "LOG_IN_NEXT_BUTTON": "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']",
     "EMAIL_INPUT": "//nx-authorize-component//input[@id='authorizeEmail']",
@@ -120,7 +120,9 @@ variables = {
     'TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE': '{REGISTER_FORM}//nx-checkbox[@name="termsAndConditions"]',
     'TERMS_AND_CONDITIONS_CHECKBOX_REAL': '{TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE}//input[@id="termsAndConditions"]',
     'TERMS_AND_CONDITIONS_LINK': '{REGISTER_FORM}//a[@href=/content/eula]',
-    'TERMS_AND_CONDITIONS_ERROR': '{REGISTER_FORM}//nx-checkbox/../following-sibling::p[contains(@class,error-label) and contains(text(),"{REQUIRED_TEXT}")]'
+    'TERMS_AND_CONDITIONS_ERROR': '{REGISTER_FORM}//nx-checkbox/../following-sibling::p[contains(@class,error-label) and contains(text(),"{REQUIRED_TEXT}")]',
+    'ACCOUNT_SUCCESSFULLY_ACTIVATED_TEXT' : "Account Activated!",
+    'ACTIVATION_SUCCESS' : '//h3[contains(@class,authorize-header) and contains(text(),"{ACCOUNT_SUCCESSFULLY_ACTIVATED_TEXT}")]'
 }
 
 

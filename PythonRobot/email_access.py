@@ -5,13 +5,16 @@ from re import findall, search
 from RobotVariables import RobotVariables
 import time
 from random import randint
+from time import sleep
+
 
 rb = RobotVariables("en_US")
-
 
 class Email:
 
     def __init__(self, user_email=rb.BASE_EMAIL, email_alias=None):
+        # this is a load bearing sleep. Don't remove it.
+        sleep(5)
         self.user_email = user_email
         self.email_alias = email_alias
         self.mailbox = IMAP4_SSL("imap.gmail.com", 993)
@@ -60,25 +63,23 @@ class Email:
         return False
     
     def get_body(self, email_id):
-        self.login()
+        self.login()  
         email_id_str = email_id.decode('utf-8')
         status, msg_data = self.mailbox.uid('fetch', email_id_str, "(RFC822)")
         if status == "OK":
-            email_body = quopri.decodestring(msg_data[0][1]).decode("UTF-8", errors="ignore")
-            self.logout()
-            return email_body
+            self.email_body = quopri.decodestring(msg_data[0][1])
+            self.logout()  
+            return self.email_body
         self.logout()  
         return False
 
-    def get_email_link(self, recipient, link_type, timeout=30):
-        email_uid = self.wait_for_email(recipient, timeout, status="UNREAD")
+    def get_email_link(self, recipient, link_type, timeout=120):
+        email_uid = self.wait_for_email(recipient, timeout=timeout)
         if email_uid is None:
             print("Email not received within timeout!")
             return
-        if link_type == 'activate':
+        if link_type=='activate':
             self.check_email_subject(email_uid, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
-        elif link_type == 'restore_password':
-            self.check_email_subject(email_uid, rb.RESET_PASSWORD_EMAIL_SUBJECT)
         body = self.get_body(email_uid)
         links = self.get_nx_links_from_email(body)
         return links
@@ -111,7 +112,11 @@ class Email:
             email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
             return email
     
-    def wait_for_email(self, recipient, timeout=90, status='UNSEEN'):
+    def wait_for_email(self, recipient, timeout=30):
+        """
+        This function waits for a new email to be received by the specified recipient.
+        """
+
         self.login()
         start_time = time.time()
         try:
@@ -120,7 +125,6 @@ class Email:
                 if time.time() - start_time > timeout:
                     return None
 
-                # Search the inbox for emails with specific "To" header
                 result, data = self.mailbox.uid('search', None, f'(HEADER "To" "{recipient}")')
                 email_ids = data[0].split()
                 
@@ -128,11 +132,9 @@ class Email:
                     result, email_data = self.mailbox.uid('fetch', email_id, '(FLAGS)')
                     email_flags = email_data[0].decode()  # decode the entire byte string
                     if result == 'OK' and '\\Seen' not in email_flags:
-                        result, email_data = self.mailbox.uid('fetch', email_id, '(BODY.PEEK[HEADER])')
-                        raw_email = email_data[0][1].decode('utf-8')
-                        email_message = email.message_from_string(raw_email)
-                        return email_id
-                time.sleep(1)
+                        self.mailbox.uid('store', email_id, '+FLAGS', '\\Seen')
+                    return email_id
+                time.sleep(5)
         finally:
             self.logout()
 
