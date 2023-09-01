@@ -1,13 +1,17 @@
 import time
+from typing import Any
 from typing import Mapping
 from typing import Optional
+from typing import Union
 
 import requests
 import urllib3
-from requests.auth import HTTPBasicAuth
 from robot.api import logger
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+_DEFAULT_USERNAME = 'admin'
+_INITIAL_PASSWORD = 'admin'
 
 
 class APIError(Exception):
@@ -20,40 +24,35 @@ class APIError(Exception):
 
 class ServerAPI5:
 
-    def __init__(self, url: Optional[str] = None):
+    def __init__(
+            self,
+            url: Optional[str] = None,
+            username: str = _DEFAULT_USERNAME,
+            password: str = _INITIAL_PASSWORD,
+    ):
         self._url = url
+        self._username = username
+        self._password = password
+        self._token: Optional[str] = None
 
     def setup_local_system(self, new_password, system_name):
-        with requests.Session() as s:
-            credentials = {'username': 'admin', 'password': 'admin', 'setCookie': True}
-            logger.trace(f"{self._url}/rest/v1/login/sessions")
-            login_response = s.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-            login_response.raise_for_status()
-            data = {
-                'name': system_name,
-                'settings': {
-                    'statisticsAllowed': False,
-                    'trafficEncryptionForced': False
-                },
-                'local': {
-                    'password': new_password
-                }
+        self._request('POST', 'rest/v1/system/setup', {
+            'name': system_name,
+            'settings': {
+                'statisticsAllowed': False,
+                'trafficEncryptionForced': False
+            },
+            'local': {
+                'password': new_password
             }
-            r = s.post(f'{self._url}/rest/v1/system/setup', json=data, verify=False)
-            r.raise_for_status()
+        })
+        self._set_password(new_password)
 
     def api_connect_to_cloud(self, bind_info: Mapping[str, str]):
-        with requests.Session() as s:
-            credentials = {'username': 'admin', 'password': 'qweasd 123', 'setCookie': True}
-            s.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-            cloud_bind_response = s.post(f'{self._url}/rest/v1/system/cloudBind', json=bind_info)
-            logger.trace(cloud_bind_response.content)
-            cloud_bind_response.raise_for_status()
-            logger.trace(cloud_bind_response)
+        self._request('POST', 'rest/v1/system/cloudBind', bind_info)
 
     def save_user(
             self,
-            token,
             name,
             permissions,
             email,
@@ -61,7 +60,6 @@ class ServerAPI5:
             password,
             user_id=None,
             user_role_id=None,
-            is_enabled=True,
             is_cloud=True,
             patch=False,
     ):
@@ -84,99 +82,68 @@ class ServerAPI5:
             body['id'] = user_role_id
         logger.trace(f"patch={patch}, name={name}")
         if patch:
-            users_response = requests.patch(
-                f'{self._url}/rest/v1/users/{user_id}',
-                headers={'x-runtime-guid': token},
-                json=body,
-                verify=False,
-            )
-        else:
-            users_response = requests.post(
-                f'{self._url}/rest/v1/users',
-                headers={'x-runtime-guid': token},
-                json=body,
-                verify=False,
-            )
-        logger.trace(users_response.json())
-        users_response.raise_for_status()
-        return users_response.json()
+            return self._request('PATCH', f'rest/v1/users/{user_id}', body)
+        return self._request('POST', 'rest/v1/users', body)
 
-    def remove_user(self, token, user_id):
-        users_response = requests.delete(
-            f'{self._url}/rest/v1/users/{user_id}',
-            headers={'x-runtime-guid': token},
-            verify=False,
-        )
-        users_response.raise_for_status()
+    def remove_user(self, user_id):
+        self._request('DELETE', f'rest/v1/users/{user_id}')
 
-    def get_system_settings_from_server(self, auth):
-        with requests.Session() as s:
-            credentials = {'username': auth[0], 'password': auth[1], 'setCookie': True}
-            login_response = s.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-            settings_response = s.get(
-                f'{self._url}/rest/v1/system/settings?_keepDefault=true',
-                auth=HTTPBasicAuth(auth[0], auth[1]),
-                verify=False,
-            )
-            s.delete(f'{self._url}/rest/v1/login/sessions/{login_response.json()["token"]}')
-            settings_response.raise_for_status()
-            return settings_response.json()
+    def get_system_settings_from_server(self):
+        return self._request('GET', 'rest/v1/system/settings?_keepDefault=true')
 
-    def get_users(self, token):
-        users_response = requests.get(
-            f'{self._url}/rest/v1/users?_format=JSON&_keepDefault=true',
-            headers={'x-runtime-guid': token},
-            verify=False,
-        )
-        users_response.raise_for_status()
-        return users_response.json()
+    def get_users(self):
+        return self._request('GET', 'rest/v1/users?_format=JSON&_keepDefault=true')
 
     def get_storages_via_api(self):
-        with requests.Session() as s:
-            credentials = {'username': 'admin', 'password': 'qweasd 123', 'setCookie': True}
-            login_response = s.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-            token = login_response.json().get('token')
-            s.headers.update({'Authorization': 'Bearer ' + token})
-            time.sleep(1)
-            storages_response = s.get(f'{self._url}/rest/v1/servers/this/storages?_format=JSON', verify=False)
-            storages_response.raise_for_status()
-            logger.trace(storages_response.text)
-            return storages_response.json()
+        return self._request('GET', 'rest/v1/servers/this/storages?_format=JSON')
 
     def save_storages_via_api(self, data):
-        with requests.Session() as s:
-            credentials = {'username': 'admin', 'password': 'qweasd 123', 'setCookie': True}
-            login_response = s.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-            token = login_response.json().get('token')
-            list_of_responses = []
-            for storage in data:
-                s.headers.update({'Authorization': 'Bearer ' + token})
-                time.sleep(1)
-                logger.trace(storage)
-                storages_response = s.patch(
-                    f'{self._url}/rest/v1/servers/this/storages/{storage["id"]}',
-                    json=storage,
-                    verify=False,
-                )
-                logger.info(storages_response.json())
-                list_of_responses.append(storages_response.json())
-                storages_response.raise_for_status()
-            return list_of_responses
+        list_of_responses = []
+        for storage in data:
+            time.sleep(1)
+            response = self._request(
+                'PATCH', f'rest/v1/servers/this/storages/{storage["id"]}', storage)
+            list_of_responses.append(response)
+        return list_of_responses
 
-    def get_server_token(self, auth):
-        credentials = {'username': auth[0], 'password': auth[1], 'setCookie': False}
-        login_response = requests.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-        login_response.raise_for_status()
-        return login_response.json()['token']
+    def get_log_level(self):
+        return self._request('GET', 'api/logLevel')
 
-    def get_log_level(self, auth):
-        with requests.session() as s:
-            credentials = {'username': auth[0], 'password': auth[1], 'setCookie': True}
-            login_response = s.post(f'{self._url}/rest/v1/login/sessions', json=credentials, verify=False)
-            login_response.raise_for_status()
-            token = login_response.json().get('token')
-            s.headers.update({'Authorization': 'Bearer ' + token})
-            log_level_response = s.get(f'{self._url}/api/logLevel', verify=False)
-            log_level_response.raise_for_status()
-            logger.trace(log_level_response.json())
-            return log_level_response.json()['reply']
+    def _request(
+            self,
+            method: str,
+            path: str,
+            data: Optional[Mapping[str, Any]] = None,
+    ) -> Union[Mapping[str, Any], Optional[bytes]]:
+        response = requests.request(
+            method,
+            f'{self._url}/{path.rstrip("/")}',
+            json=data,
+            headers={'Authorization': self._auth_header()},
+            verify=False,
+        )
+        response.raise_for_status()
+        try:
+            return response.json()
+        except requests.exceptions.JSONDecodeError:
+            return response.content
+
+    def _auth_header(self) -> str:
+        if self._token is None:
+            self._token = self._obtain_token(self._username, self._password)
+        return f'Bearer {self._token}'
+
+    def _obtain_token(self, username: str, password: str) -> str:
+        data = {
+            'username': username,
+            'password': password,
+            'setCookie': False,
+        }
+        response = requests.post(f'{self._url}/rest/v1/login/sessions', json=data, verify=False)
+        response.raise_for_status()
+        json_response = response.json()
+        return json_response['token']
+
+    def _set_password(self, new_password: str):
+        self._password = new_password
+        self._token = None

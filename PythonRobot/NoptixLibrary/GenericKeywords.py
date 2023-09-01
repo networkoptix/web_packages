@@ -847,10 +847,6 @@ class GenericKeywords:
                 if 'cloudOwnerId' in server:
                     server.update({"cloudAuth": [server["cloudOwner"], self.password]})
 
-            # get server token for authentication
-            for server in serversJson:
-                server["token"] = server['api'].get_server_token(server["localAuth"])
-
             # Add local users if required
             for server in serversJson:
                 if server["addUsers"] == True:
@@ -858,7 +854,6 @@ class GenericKeywords:
                     localUsers = {}
                     for user in localUsersNames:
                         server['api'].save_user(
-                            server["token"],
                             "Local+" + user,
                             self.permissions[user],
                             f"noptixautoqa+local_{user}@gmail.com",
@@ -968,7 +963,8 @@ class GenericKeywords:
 
     
     def evaluate_system_settings_via_API(self, auth, server_url, key, expected_value):
-        settings = ServerAPI5(server_url).get_system_settings_from_server(auth)
+        username, password = auth
+        settings = ServerAPI5(server_url, username, password).get_system_settings_from_server()
         expected_value_str = str(expected_value)
         expected_value_str = expected_value_str.replace("empty", "").replace("true", "True").replace("false",
                                                                                                      "False").replace(
@@ -989,7 +985,8 @@ class GenericKeywords:
             return json.load(langDict)
 
     def evaluate_log_level_via_API(self, auth, server_url, key, value):
-        logLevel = ServerAPI5(server_url).get_log_level(auth)
+        username, password = auth
+        logLevel = ServerAPI5(server_url, username, password).get_log_level()
         if logLevel.get(key) and logLevel[key] == value.lower():
             pass
         else:
@@ -1189,7 +1186,7 @@ class GenericKeywords:
 
     
     def set_default_storage_config(self, server_url, disabled, backups):
-        storages = ServerAPI5(server_url).get_storages_via_api()
+        storages = ServerAPI5(server_url, 'admin', self.password).get_storages_via_api()
         if storages == []:
             raise RuntimeError("Storages returned an empty list.")
         for disk in storages:
@@ -1215,5 +1212,5 @@ class GenericKeywords:
                     "isUsedForWriting": True,
                     "isBackup": False
                 }
-        r = ServerAPI5(server_url).save_storages_via_api(storages)
+        r = ServerAPI5(server_url, 'admin', self.password).save_storages_via_api(storages)
         logger.trace(r)
