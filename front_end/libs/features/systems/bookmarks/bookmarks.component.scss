@@ -2,7 +2,7 @@
 
 :host {
     .page {
-        padding: 1rem;
+        padding-left: 1rem;
         display: flex;
         gap: 1.25rem;
         background-color: var(--bookmarks-background-color);
@@ -10,6 +10,10 @@
         height: 100%;
         /* Important: There cannot be scroll on the page itself since every
         url update resets scroll to the top */
+
+        & > * {
+            padding: 1rem 0;
+        }
 
         .sidebar {
             flex-shrink: 0;
@@ -29,6 +33,7 @@
         .body {
             flex-grow: 1;
             overflow-y: auto;
+            padding-right: 1rem;
 
             nx-simple-search {
                 margin-bottom: 1rem;

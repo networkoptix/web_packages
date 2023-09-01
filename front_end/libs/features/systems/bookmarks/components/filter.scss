@@ -7,19 +7,19 @@
     height: 2.5rem;
     padding: 0.75rem 1rem;
 
-    background-color: var(--bookmarks-filter-header-bg);
+    background-color: var(--card-header-bg);
 
     span {
         font-size: 1rem;
         font-family: typography.$font-family-medium;
-        color: var(--bookmarks-filter-header-color);
+        color: var(--card-header-text);
     }
 
     button {
         padding: 0 !important;
         width: 1.25rem;
         height: 1.25rem !important;
-        background-color: var(--bookmarks-filter-clear-btn-bg);
+        background-color: var(--btn-default-bg);
 
         svg-icon {
             display: flex;
@@ -33,5 +33,5 @@
 
 @mixin body {
     padding: 1rem;
-    background-color: var(--bookmarks-filter-body-bg);
+    background-color: var(--card-body-bg);
 }

@@ -17,13 +17,13 @@ $label-height: 1.75rem;
             height: $label-height;
             line-height: $label-height;
             margin-bottom: 0;
-            color: var(--body-text-color) !important;
+            color: var(--btn-default-color) !important;
 
             cursor: pointer;
 
             &.selected,
             &:hover {
-                background-color: var(--bookmarks-text-highlight-bg);
+                background-color: var(--btn-default-hover-bg);
             }
 
             span {

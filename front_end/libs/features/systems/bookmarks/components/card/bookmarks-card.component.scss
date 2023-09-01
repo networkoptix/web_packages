@@ -101,10 +101,10 @@ nx-bookmarks-card {
             height: 140px;
             border: 1px solid var(--border-color);
             border-top: none;
-            background-color: var(--bookmarks-card-background-color);
+            background-color: var(--card-body-bg);
 
             &:hover {
-                background-color: var(--bookmarks-card-background-color-hover);
+                background-color: var(--card-hover-bg);
             }
 
             &-timestamp {

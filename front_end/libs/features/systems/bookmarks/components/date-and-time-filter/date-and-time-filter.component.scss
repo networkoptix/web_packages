@@ -22,17 +22,17 @@
             height: 1.25rem !important;
             font-size: 0.8rem !important;
             max-width: none !important;
-            background-color: var(--bookmarks-filter-button-bg);
-            color: var(--body-text-color);
+            background-color: var(--btn-default-bg);
+            color: var(--btn-default-color);
             font-family: typography.$font-family-regular;
 
             &:hover {
-                background-color: var(--bookmarks-text-highlight-bg);
+                background-color: var(--btn-default-hover-bg);
             }
 
             &.selected {
                 background-color: var(--brand-core);
-                color: var(--bookmarks-filter-filled-text);
+                color: var(--btn-default-active-color);
             }
         }
     }
