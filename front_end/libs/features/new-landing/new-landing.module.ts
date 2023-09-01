@@ -5,7 +5,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
+import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
 
 import { NxBackgroundGraphicComponent } from './background-graphic/background-graphic.component';
 import { NxContentContainerComponent } from './content-container/content-container';
@@ -37,8 +39,10 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxFooterComponent,
+        NxAddSvgSrcDirective,
+        NxIntersectionObserver,
+        NxMatchHeightDirective,
     ],
     exports: [],
 })

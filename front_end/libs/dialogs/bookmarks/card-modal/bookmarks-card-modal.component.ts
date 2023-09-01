@@ -8,6 +8,7 @@ import { ClipComponent } from '@components/clip/clip.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { icons } from '@variables/static-variables';
 
@@ -25,6 +26,7 @@ import { BookmarkDetails as DT } from '../../dialogs.types';
         NxProcessButtonComponent,
         TranslateModule,
         NxPlayerPlaceholderComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxBookmarksCardModalComponent {

@@ -13,7 +13,8 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -42,11 +43,12 @@ interface AssetTypeInterface {
         CdkStepperModule,
         CdkTreeModule,
         NxCheckboxComponent,
-        DirectivesModule,
         NxNumericComponent,
         PipesModule,
         NxPreLoaderComponent,
         NxStepperComponent,
+        NxAddSvgSrcDirective,
+        NxTooltipDirective,
     ],
 })
 export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<

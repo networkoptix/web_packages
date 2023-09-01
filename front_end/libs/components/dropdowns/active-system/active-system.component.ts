@@ -2,7 +2,8 @@ import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { Router, RouterModule } from '@angular/router';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -12,7 +13,7 @@ import { BaseDropdown } from '../injDropdown';
     selector: 'nx-active-system',
     templateUrl: 'active-system.component.html',
     styleUrls: ['active-system.component.scss'],
-    imports: [CommonModule, RouterModule, DirectivesModule],
+    imports: [CommonModule, RouterModule, NxArrowNavDirective, NxClickElsewhereDirective],
     standalone: true,
 })
 export class NxActiveSystemDropdown extends BaseDropdown {

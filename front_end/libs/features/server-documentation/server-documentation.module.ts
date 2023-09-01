@@ -3,7 +3,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxServerDocumentationComponent } from './server-documentation.component';
@@ -13,13 +12,7 @@ const appRoutes: Routes = [
 ];
 
 @NgModule({
-    imports: [
-        CommonModule,
-        RouterModule.forChild(appRoutes),
-        TranslateModule,
-        DirectivesModule,
-        PipesModule,
-    ],
+    imports: [CommonModule, RouterModule.forChild(appRoutes), TranslateModule, PipesModule],
     providers: [],
     declarations: [NxServerDocumentationComponent],
     bootstrap: [],

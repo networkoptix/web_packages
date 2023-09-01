@@ -9,7 +9,7 @@ import {
 
 import { NgChanges } from '@utils/ng-changes';
 
-@Directive({ selector: '[nxFocusMe]' })
+@Directive({ selector: '[nxFocusMe]', standalone: true })
 // directives do support AfterViewInit
 // ... this hook is fired by the parent component
 export class NxFocusMeDirective implements AfterViewInit, OnChanges {

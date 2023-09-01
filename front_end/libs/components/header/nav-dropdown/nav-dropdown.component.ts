@@ -3,7 +3,9 @@ import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
@@ -21,7 +23,14 @@ import { BaseDropdown } from '../../dropdowns/injDropdown';
             : 'nav-dropdown.component.scss',
     ],
     standalone: true,
-    imports: [CommonModule, RouterModule, AngularSvgIconModule, DirectivesModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+        NxArrowNavDirective,
+        NxClickElsewhereDirective,
+    ],
 })
 export class NxNavDropdownComponent extends BaseDropdown {
     @ViewChild('dropDownButton') dropDownButton: ElementRef<HTMLButtonElement>;

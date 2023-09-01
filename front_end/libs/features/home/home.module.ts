@@ -15,7 +15,6 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTabsComponent } from '@components/tabs/tabs.component';
-import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemsDisplayMode } from '@pages/home/home.types';
 
@@ -89,7 +88,6 @@ const homeRoutes: Routes = [
         StoreModule.forFeature('account', accountReducer),
         StoreModule.forFeature('channelPartners', channelPartnersReducer),
         NxCheckboxComponent,
-        DirectivesModule,
         NxBaseTableComponent,
         NxSearchHighlightComponent,
         NxPreLoaderComponent,

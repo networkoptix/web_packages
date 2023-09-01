@@ -11,7 +11,7 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { ToastType } from '@components/toast-container/toast.types';
 import type { Mandatory2fa as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -32,9 +32,9 @@ import { assignFrom } from '@utils/general';
         TranslateModule,
         RouterModule,
 
-        DirectivesModule,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxFocusMeDirective,
     ],
 })
 export class Mandatory2faModalContent extends ModalBase<DT['return']> {

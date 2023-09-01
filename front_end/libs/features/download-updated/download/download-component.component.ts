@@ -9,7 +9,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { DownloadMobileComponent } from '@pages/download-updated/download-mobile/download-mobile.component';
 import { PipesModule } from '@pipes/pipes.module';
@@ -31,13 +31,13 @@ import { images } from '@static-variables';
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxFooterComponent,
         PipesModule,
         NxPreLoaderComponent,
         NxSectionPlaceholderComponent,
         TranslateModule,
         DownloadMobileComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class DownloadComponent implements OnChanges {

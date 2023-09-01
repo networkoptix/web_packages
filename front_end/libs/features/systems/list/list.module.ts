@@ -11,7 +11,6 @@ import { NxClientButtonComponent } from '@components/open-client-button/client-b
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
-import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -36,7 +35,6 @@ const appRoutes: Routes = [
         AngularSvgIconModule,
         DragDropModule,
         NxClientButtonComponent,
-        DirectivesModule,
         NxNoSystemsComponent,
         NxPagePlaceholderComponent,
         PipesModule,

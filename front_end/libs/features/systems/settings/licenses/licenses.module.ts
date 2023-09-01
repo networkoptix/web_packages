@@ -15,7 +15,6 @@ import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-p
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxLicenseDetailComponent } from './license-details/license.component';
@@ -34,7 +33,6 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         OverlayModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         NxInfoBlockComponent,
         NxLicenseSummaryComponent,
         NxGenericDropdownModule,

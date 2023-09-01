@@ -1,6 +1,7 @@
 import { Component, Input, OnInit } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { icons } from '@static-variables';
 
@@ -18,7 +19,7 @@ import { icons } from '@static-variables';
     templateUrl: 'section-placeholder.component.html',
     styleUrls: ['section-placeholder.component.scss'],
     standalone: true,
-    imports: [AngularSvgIconModule],
+    imports: [AngularSvgIconModule, NxAddSvgSrcDirective],
 })
 export class NxSectionPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

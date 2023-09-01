@@ -13,7 +13,7 @@ import { TranslateService } from '@ngx-translate/core';
 
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxUrlValidatorDirective } from '@directives/nx-url-validator';
 import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
@@ -30,9 +30,9 @@ import type { MergeSystem, MergeDropdownItem, MergeState } from '../merge.refact
     imports: [
         CommonModule,
         FormsModule,
-        DirectivesModule,
         NxGenericDropdownModule,
         NxProcessButtonComponent,
+        NxUrlValidatorDirective,
     ],
 })
 export class NxMergeSelectSystemComponent implements OnInit, OnChanges {

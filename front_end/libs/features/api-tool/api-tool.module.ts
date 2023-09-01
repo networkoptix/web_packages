@@ -12,6 +12,7 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxAPIToolComponent } from './api-tool.component';
@@ -69,6 +70,7 @@ const dbConfig: DBConfig = {
         NxPagePlaceholderComponent,
         PipesModule,
         NxPreLoaderComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [

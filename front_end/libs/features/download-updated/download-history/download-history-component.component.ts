@@ -6,7 +6,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
 import staticLang from '@language_static';
 import { ReleaseComponent } from '@pages/download-updated/download-history/release/release.component';
 import { PipesModule } from '@pipes/pipes.module';
@@ -23,7 +22,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
     imports: [
         CommonModule,
         TranslateModule,
-        DirectivesModule,
         NxFooterComponent,
         PipesModule,
         NxPreLoaderComponent,

@@ -13,7 +13,7 @@ import { NxPaginatorComponent } from '@components/paginator/paginator.component'
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -95,7 +95,6 @@ const appRoutes: Routes = [
         NgxFileDropModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         NxInfoBlockComponent,
         MenuModule,
         NxImageComponent,
@@ -104,6 +103,7 @@ const appRoutes: Routes = [
         PipesModule,
         NxPreLoaderComponent,
         NxSearchComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [NxHealthLayoutService],
     declarations: [

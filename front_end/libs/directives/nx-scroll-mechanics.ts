@@ -2,7 +2,7 @@ import { Directive, ElementRef, OnInit, Renderer2 } from '@angular/core';
 
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 
-@Directive({ selector: '[nxScrollMechanics]' })
+@Directive({ selector: '[nxScrollMechanics]', standalone: true })
 export class NxScrollMechanicsDirective implements OnInit {
     constructor(
         private element: ElementRef,

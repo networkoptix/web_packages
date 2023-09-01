@@ -11,6 +11,7 @@ import { WINDOW } from '@services/window-provider';
 @UntilDestroy()
 @Directive({
     selector: '[nxMatchHeight]',
+    standalone: true,
 })
 export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
     @Input()

@@ -14,7 +14,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxAccountSecurityComponent } from './security.component';
@@ -32,11 +32,11 @@ import { NxAccountSecurityComponent } from './security.component';
         NxCheckboxComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         PipesModule,
         NxPreLoaderComponent,
         NxTagComponent,
         PrimaryButtonModule,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [NxAccountSecurityComponent],

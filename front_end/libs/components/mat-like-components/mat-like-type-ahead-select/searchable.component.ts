@@ -20,7 +20,10 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { escapeRegExp } from 'lodash-es';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
@@ -48,7 +51,15 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
     templateUrl: 'searchable.component.html',
     styleUrls: ['searchable.component.scss'],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, DirectivesModule, NxSearchHighlightComponent],
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        NxSearchHighlightComponent,
+        NxAddSvgSrcDirective,
+        NxArrowNavDirective,
+        NxClickElsewhereDirective,
+        NxFocusMeDirective,
+    ],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

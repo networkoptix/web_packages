@@ -4,7 +4,9 @@ import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxGenericDropdown } from './dropdown.component';
@@ -16,8 +18,10 @@ import { NxGenericDropdownItemSVG } from './item-icon/item-icon.component';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
+        NxAddSvgSrcDirective,
         PipesModule,
+        NxArrowNavDirective,
+        NxClickElsewhereDirective,
     ],
     declarations: [NxGenericDropdown, NxGenericDropdownItemSVG],
     exports: [NxGenericDropdown],

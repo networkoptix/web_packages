@@ -19,7 +19,8 @@ import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-p
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -41,7 +42,6 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxCheckboxComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         EditableModule,
         NxInfoBlockComponent,
         NxGenericDropdownModule,
@@ -55,6 +55,8 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxSwitchComponent,
         NxThreeDotDropdown,
         NxCheckboxComponent,
+        NxResizeObserver,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [

@@ -6,7 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { ResizeModule } from '@directives/resize/resize.module';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
@@ -25,12 +25,12 @@ import type { ChannelPartnerUserExt } from './channel-partner-users.types';
     standalone: true,
     imports: [
         AsyncPipe,
-        ResizeModule,
         NxUsersTableComponent,
         TranslateModule,
         AngularSvgIconModule,
         NgClass,
         NgIf,
+        NxResizeObserver,
     ],
 })
 export class NxChannelPartnerUsersComponent implements OnInit {

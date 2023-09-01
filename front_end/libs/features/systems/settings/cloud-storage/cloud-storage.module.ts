@@ -11,7 +11,7 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxCloudStorageComponent } from './cloud-storage.component';
@@ -28,9 +28,9 @@ import { NxCloudStorageComponent } from './cloud-storage.component';
         NxAlertBlockComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         PipesModule,
         NxPreLoaderComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [NxCloudStorageComponent],

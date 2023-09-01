@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { icons } from '@variables/static-variables';
 
@@ -26,6 +27,7 @@ import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.co
         NgIf,
         AngularSvgIconModule,
         TranslateModule,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxSystemGroupsSidebarComponent implements OnInit {

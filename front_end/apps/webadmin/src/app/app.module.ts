@@ -26,7 +26,8 @@ import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.componen
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { PopoverModule } from '@components/popover/popover.module';
 import { NxTourStepComponent } from '@components/tour-step/tour-step.component';
-import { ResizeModule } from '@directives/resize/resize.module';
+import { NxScrollHelperDirective } from '@directives/nx-scroll-helper';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
@@ -77,10 +78,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         // HoverPreloadModule,
         NxPreLoaderComponent,
         NxNavFooterComponent,
-        ResizeModule,
         NxTourStepComponent,
         TourMatMenuModule.forRoot(),
         NgxMaskModule.forRoot(),
+        NxResizeObserver,
+        NxScrollHelperDirective,
     ],
     providers: [
         NxApplyComponent,

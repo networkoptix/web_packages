@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { SubscriptionLike } from 'rxjs';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -32,7 +33,14 @@ import { NgChanges } from '@utils/ng-changes';
     styleUrls: ['page-placeholder.component.scss'],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [CommonModule, TranslateModule, AngularSvgIconModule, NxFooterComponent, PipesModule],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxFooterComponent,
+        PipesModule,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxPagePlaceholderComponent implements OnInit {
     @Input() type: string;

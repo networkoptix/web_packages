@@ -5,7 +5,6 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { DownloadHistoryComponent } from './download-history.component';
@@ -46,7 +45,6 @@ const appRoutes: Routes = [
         CommonModule,
         RouterModule.forChild(appRoutes),
         TranslateModule,
-        DirectivesModule,
         NxFooterComponent,
         PipesModule,
         NxPreLoaderComponent,

@@ -18,7 +18,7 @@ import { HtmlInputModule } from '@components/html-input/html-input.module';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ContentSettings, ContextManifest } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -46,12 +46,12 @@ import { assignFrom } from '@utils/general';
         FormsModule,
         TranslateModule,
 
-        DirectivesModule,
         NxGenericDropdownModule,
         HtmlInputModule,
         NxCheckboxComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxTooltipDirective,
     ],
 })
 export class EditModalContent {

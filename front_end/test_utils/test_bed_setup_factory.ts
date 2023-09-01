@@ -20,7 +20,6 @@ import {
 } from 'ngx-webstorage';
 import * as patchWindow from 'test_utils/patch_window';
 
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -119,7 +118,6 @@ export const testBedSetupFactory =
             await TestBed.configureTestingModule({
                 imports: [
                     ...commonImports,
-                    DirectivesModule,
                     PipesModule,
                     ServiceModule,
                     FormsModule,

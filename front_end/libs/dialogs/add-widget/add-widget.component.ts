@@ -16,6 +16,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { WidgetCard } from '@components/widgets/helper-classes';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
@@ -44,6 +45,7 @@ type DashboardDropdownItem = DropdownItem<string>;
         NxDynamicWidgetComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class AddWidgetModalContent {

@@ -6,7 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { SystemItem } from '@pages/home/home.types';
 import type { Account } from '@services/account.service/account';
@@ -27,9 +27,9 @@ import { NgChanges } from '@utils/ng-changes';
         TranslateModule,
         AngularSvgIconModule,
         NxClientButtonComponent,
-        DirectivesModule,
         NxSearchHighlightComponent,
         NxTagComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class SystemCardComponent implements OnChanges {

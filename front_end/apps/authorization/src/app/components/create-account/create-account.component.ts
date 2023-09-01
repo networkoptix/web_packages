@@ -23,7 +23,7 @@ import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { Process } from '@services/process.service/process';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
@@ -40,12 +40,12 @@ import type { AuthorizeStateType } from '../authorize.component.types';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxPasswordComponent,
         NxPasswordValidationComponent,
         NxProcessButtonComponent,
         NxCheckboxComponent,
         NxEmailComponent,
+        NxFocusMeDirective,
     ],
     templateUrl: 'create-account.component.html',
     styleUrls: ['create-account.component.scss'],

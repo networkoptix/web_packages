@@ -7,7 +7,9 @@ import { LazyLoadImageModule } from 'ng-lazyload-image';
 import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxBookmarksCardComponent } from './bookmarks-card.component';
@@ -21,8 +23,10 @@ import { NxBookmarksCardComponent } from './bookmarks-card.component';
         PipesModule,
         NxPreLoaderComponent,
         NxPlayerPlaceholderComponent,
-        DirectivesModule,
         TranslateModule,
+        NxAddSvgSrcDirective,
+        NxIntersectionObserver,
+        NxTooltipDirective,
     ],
     declarations: [NxBookmarksCardComponent],
     providers: [],

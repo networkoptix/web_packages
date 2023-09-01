@@ -10,7 +10,7 @@ import {
     FormsModule,
 } from '@angular/forms';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { credentialsValidation } from '@static-variables';
 
@@ -33,7 +33,7 @@ import { credentialsValidation } from '@static-variables';
         },
     ],
     encapsulation: ViewEncapsulation.None,
-    imports: [CommonModule, FormsModule, DirectivesModule],
+    imports: [CommonModule, FormsModule, NxFocusMeDirective],
     standalone: true,
 })
 export class NxEmailComponent implements ControlValueAccessor, Validator {

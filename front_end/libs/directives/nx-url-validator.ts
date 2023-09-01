@@ -3,6 +3,7 @@ import { AbstractControl, Validator, NG_VALIDATORS } from '@angular/forms';
 
 @Directive({
     selector: '[nxUrlValidator]',
+    standalone: true,
     providers: [
         {
             provide: NG_VALIDATORS,

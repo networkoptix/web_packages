@@ -6,7 +6,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { AdvancedComponent } from './advanced/advanced.component';
@@ -87,9 +88,10 @@ export const setupWizardRoutes: Routes = [
         TranslateModule,
         RouterModule.forChild(setupWizardRoutes),
         AngularSvgIconModule,
-        DirectivesModule,
+        NxAddSvgSrcDirective,
         PipesModule,
         NxPreLoaderComponent,
+        NxFocusMeDirective,
     ],
     providers: [],
     declarations: [

@@ -6,6 +6,7 @@ function isHtmlAnchor(el: HTMLAnchorElement | SVGAElement): el is HTMLAnchorElem
 
 @Directive({
     selector: '[NxProjectedLinkHandler]',
+    standalone: true,
 })
 export class NxProjectedLinkHandler implements AfterViewInit {
     @Output('NxProjectedLinkHandler')

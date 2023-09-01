@@ -9,6 +9,7 @@ import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.t
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
 import { NxTagComponent } from '@components/tag/tag.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -51,6 +52,7 @@ interface SystemDropdownItem extends DropdownItem<string> {
         NxStepperComponent,
         NxTagComponent,
         OverlayModule,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxBookmarksWidgetComponent extends FirstPartyWidget<

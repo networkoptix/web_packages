@@ -20,7 +20,9 @@ import { NxServerMonitorWidgetComponent } from '@components/widgets/server-monit
 import { NxSystemLicenseSummaryWidget } from '@components/widgets/system-license-summary/system-license-summary-widget.component';
 import { NxSystemsListWidgetComponent } from '@components/widgets/systems-list/systems-list-widget.component';
 import { NxThirdPartyWidgetComponent } from '@components/widgets/third-party/third-party-widget.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxDashboardComponent } from './dashboard.component';
@@ -35,7 +37,6 @@ const appRoutes: Routes = [{ path: '', component: NxDashboardComponent }];
         TranslateModule,
         AngularSvgIconModule,
         DragDropModule,
-        DirectivesModule,
         EditableModule,
         NxGenericDropdownModule,
         PipesModule,
@@ -52,6 +53,9 @@ const appRoutes: Routes = [{ path: '', component: NxDashboardComponent }];
         NxSystemsListWidgetComponent,
         NxThirdPartyWidgetComponent,
         NxEventGeneratorWidgetComponent,
+        NxAddSvgSrcDirective,
+        NxClickElsewhereDirective,
+        NxTooltipDirective,
     ],
     providers: [],
     declarations: [NxDashboardComponent],

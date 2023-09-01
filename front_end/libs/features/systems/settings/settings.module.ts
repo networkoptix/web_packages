@@ -15,6 +15,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
@@ -183,6 +184,7 @@ export const cloudSettingsRoutes: Routes = [
         NxPagePlaceholderComponent,
         PipesModule,
         NxPreLoaderComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [NxSystemSettingsComponent],

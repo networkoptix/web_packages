@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
@@ -23,6 +24,7 @@ import type { MergeState, MergeSystem } from '../merge.refactor.component.types'
         TranslateModule,
         AngularSvgIconModule,
         NxProcessButtonComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxMergeAdminPasswordComponent implements OnChanges {

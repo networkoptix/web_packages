@@ -10,6 +10,7 @@ import { debounceTime } from 'rxjs/operators';
 @UntilDestroy()
 @Directive({
     selector: '[nxClick], [nxDblClick], [nxHoldStart], [nxHoldStop]',
+    standalone: true,
 })
 export class NxClickDoubleDirective implements OnInit {
     @Input('debounceTime') debounceTime: number = 350;

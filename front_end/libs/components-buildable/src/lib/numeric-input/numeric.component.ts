@@ -21,6 +21,7 @@ import {
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { icons } from '@static-variables';
 
 /* Usage
@@ -42,7 +43,7 @@ import { icons } from '@static-variables';
     templateUrl: 'numeric.component.html',
     styleUrls: ['numeric.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, AngularSvgIconModule],
+    imports: [CommonModule, FormsModule, AngularSvgIconModule, NxAddSvgSrcDirective],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

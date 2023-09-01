@@ -30,8 +30,8 @@ import { NxPaginatorComponent } from '@components/paginator/paginator.component'
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { SortParams } from '@components/table/table.types';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { Size } from '@directives/resize/nx-resize.directive.types';
-import { ResizeModule } from '@directives/resize/resize.module';
 import staticLang from '@language/language_i18n_static.json';
 import { NxUriService } from '@services/uri.service';
 import { paramSortFunc } from '@utils/general';
@@ -75,8 +75,8 @@ const ROW_HEIGHT = 40; // if needed a change - do it in theme_variable_common to
         NxGenericDropdownModule,
         NxPaginatorComponent,
         NxPreLoaderComponent,
-        ResizeModule,
         NxSectionPlaceholderComponent,
+        NxResizeObserver,
     ],
 })
 export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {

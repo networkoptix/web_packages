@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxRadioComponent } from '@components/radio/radio.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
@@ -16,7 +17,14 @@ import { MergeState, MergeSystem } from '../merge.refactor.component.types';
     templateUrl: 'choose-primary.component.html',
     styleUrls: ['choose-primary.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, TranslateModule, AngularSvgIconModule, NxRadioComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxRadioComponent,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxMergeChoosePrimaryComponent implements OnInit {
     LANG = staticLang;

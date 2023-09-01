@@ -3,7 +3,7 @@ import { Component, OnInit, Input, ViewEncapsulation } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { Process } from '@services/process.service/process';
 import { icons } from '@static-variables';
 
@@ -20,7 +20,7 @@ interface SvgData {
     styleUrls: ['process-button.component.scss'],
     encapsulation: ViewEncapsulation.None,
     standalone: true,
-    imports: [CommonModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    imports: [CommonModule, TranslateModule, AngularSvgIconModule, NxAddSvgSrcDirective],
 })
 export class NxProcessButtonComponent implements OnInit {
     @Input() process: Process;

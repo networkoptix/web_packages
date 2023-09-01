@@ -17,7 +17,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin.component';
@@ -37,7 +37,6 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         NxClientButtonComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         EditableModule,
         NxNumericComponent,
         NxGenericDropdownModule,
@@ -46,6 +45,7 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         NxProcessButtonComponent,
         NxSectionPlaceholderComponent,
         NxTagComponent,
+        NxForceVisibilityDirective,
     ],
     providers: [],
     declarations: [

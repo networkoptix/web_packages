@@ -27,7 +27,8 @@ import {
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
@@ -51,7 +52,6 @@ import { cleanId, dirtyId } from '@utils/general';
         CdkMenuTrigger,
         CdkTreeModule,
         CommonModule,
-        DirectivesModule,
         NxImageComponent,
         NxPreLoaderComponent,
         PipesModule,
@@ -64,6 +64,8 @@ import { cleanId, dirtyId } from '@utils/general';
         EditableModule,
         NxTagComponent,
         MatDividerModule,
+        NxAddSvgSrcDirective,
+        NxTooltipDirective,
     ],
     templateUrl: './layout-grid-tree.component.html',
     styleUrls: ['./layout-grid-tree.component.scss'],

@@ -9,7 +9,7 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
@@ -33,7 +33,6 @@ const appRoutes: Routes = [
         FormsModule,
         TranslateModule,
         RouterModule.forChild(appRoutes),
-        DirectivesModule,
         NxDateAndTimeFilterModule,
         NxDeviceFilterModule,
         NxTagFilterModule,
@@ -42,6 +41,7 @@ const appRoutes: Routes = [
         NxAlertBlockComponent,
         NxPreLoaderComponent,
         NxPagePlaceholderComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [NxBookmarksComponent],

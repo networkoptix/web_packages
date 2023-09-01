@@ -11,7 +11,7 @@ import { NxExternalVideoComponent } from '@components/external-video/external-vi
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { MenuModule } from '@menu/menu.module';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -41,13 +41,13 @@ const appRoutes: Routes = [
         NxCarouselComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         NxExternalVideoComponent,
         NxFooterComponent,
         MenuModule,
         PipesModule,
         NxPreLoaderComponent,
         NxTagComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [NxIntegrationDetailsComponent, NxSetupComponent, NxOverviewComponent],

@@ -2,7 +2,6 @@ import { NgModule } from '@angular/core';
 import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
-import { DirectivesModule } from '@directives/directives.module';
 import { AuthGuard } from '@guards/authGuard';
 import { FeatureGuardMatch } from '@guards/feature.guard';
 import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
@@ -269,7 +268,6 @@ const lazyRoutes: Routes = [
 
 @NgModule({
     imports: [
-        DirectivesModule,
         PipesModule,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation: 'enabledNonBlocking',

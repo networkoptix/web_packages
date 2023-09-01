@@ -4,6 +4,8 @@ import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+
 import { NxTimeSelectorComponent } from './time-selector.component';
 
 @NgModule({
@@ -13,6 +15,7 @@ import { NxTimeSelectorComponent } from './time-selector.component';
         AngularSvgIconModule,
         // TranslateModule,
         CdkMenuModule,
+        NxAddSvgSrcDirective,
     ],
     declarations: [NxTimeSelectorComponent],
     providers: [],

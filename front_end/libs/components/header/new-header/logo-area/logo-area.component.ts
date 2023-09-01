@@ -8,7 +8,8 @@ import { CookieService } from 'ngx-cookie-service';
 import { combineLatest, map } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
@@ -27,7 +28,13 @@ import { logoAreaState, logoClickType } from '../new-header-types';
     templateUrl: './logo-area.component.html',
     styleUrls: ['./logo-area.component.scss'],
     standalone: true,
-    imports: [CommonModule, RouterModule, AngularSvgIconModule, DirectivesModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+        NxTooltipDirective,
+    ],
 })
 export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isMobile = false;

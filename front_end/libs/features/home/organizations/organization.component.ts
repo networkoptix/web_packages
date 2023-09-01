@@ -10,6 +10,7 @@ import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -60,6 +61,7 @@ interface SidebarSettings {
         NxGroupsCardsComponent,
         NxTabsComponent,
         NxTabsDirective,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {

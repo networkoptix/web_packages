@@ -9,7 +9,11 @@ import { BehaviorSubject, combineLatest } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
 import { accountDropdown } from '@components/static-variables-components';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -29,7 +33,17 @@ import { BaseDropdown } from '../injDropdown';
             ? 'account-settings-webadmin.component.scss'
             : 'account-settings.component.scss',
     ],
-    imports: [CommonModule, RouterModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxResizeObserver,
+        NxAddSvgSrcDirective,
+        NxArrowNavDirective,
+        NxClickElsewhereDirective,
+        NxTooltipDirective,
+    ],
     standalone: true,
 })
 export class NxAccountSettingsDropdown extends BaseDropdown {

@@ -12,7 +12,6 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { DirectivesModule } from '@directives/directives.module';
 import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
 import { NxMenuService } from '@menu/menu.service';
@@ -41,7 +40,6 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxFooterComponent,
         PipesModule,
         NxPreLoaderComponent,

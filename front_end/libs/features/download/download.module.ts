@@ -8,7 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { DownloadComponent } from './download.component';
@@ -53,11 +53,11 @@ const appRoutes: Routes = [
         RouterModule.forChild(appRoutes),
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxFooterComponent,
         PipesModule,
         NxPreLoaderComponent,
         NxSectionPlaceholderComponent,
+        NxAddSvgSrcDirective,
     ],
     declarations: [DownloadComponent],
 })

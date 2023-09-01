@@ -23,6 +23,7 @@ import { debounceTime } from 'rxjs/operators';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxTagComponent } from '@components/tag/tag.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -83,6 +84,7 @@ import type { SearchFilter } from './search.component.types';
         NxGenericDropdownModule,
         PipesModule,
         NxTagComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxSearchComponent implements OnInit, ControlValueAccessor {

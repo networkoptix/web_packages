@@ -22,7 +22,7 @@ import { IntersectionStatus } from './nx-intersection.directive.types';
     ],
     standalone: true,
 })
-export class NxForceVisibility {
+export class NxForceVisibilityDirective {
     @Input() nxForceVisibility: boolean;
 
     constructor(

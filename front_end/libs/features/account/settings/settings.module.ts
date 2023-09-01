@@ -10,7 +10,9 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxAccountSettingsComponent } from '@pages/account/settings/settings.component';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -23,11 +25,13 @@ import { PipesModule } from '@pipes/pipes.module';
         AngularSvgIconModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         LanguageModule,
         PipesModule,
         NxPreLoaderComponent,
         NxThemeSwitcherComponent,
+        NxAddSvgSrcDirective,
+        NxFocusMeDirective,
+        NxTooltipDirective,
     ],
     providers: [],
     declarations: [NxAccountSettingsComponent],

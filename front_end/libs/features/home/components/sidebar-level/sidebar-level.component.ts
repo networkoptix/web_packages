@@ -7,7 +7,8 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { icons } from '@static-variables';
 
 import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
@@ -23,13 +24,14 @@ import { selectCurrentGroupId } from '../../store/groups/groups.selectors';
     standalone: true,
     imports: [
         CdkMenuModule,
-        DirectivesModule,
         NgFor,
         NgIf,
         NgClass,
         AsyncPipe,
         AngularSvgIconModule,
         DragDropModule,
+        NxAddSvgSrcDirective,
+        NxTooltipDirective,
     ],
 })
 export class NxGroupsSidebarLevelComponent {

@@ -23,7 +23,9 @@ import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
+import { NxUrlValidatorDirective } from '@directives/nx-url-validator';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
@@ -66,11 +68,13 @@ interface NxSystemModuleInfo extends NxSystemInfo {
         TranslateModule,
         NgxTranslateCutModule,
         AngularSvgIconModule,
-        DirectivesModule,
         PipesModule,
         NxGenericDropdownModule,
         NxRadioComponent,
         NxProcessButtonComponent,
+        NxAddSvgSrcDirective,
+        NxFocusMeDirective,
+        NxUrlValidatorDirective,
     ],
 })
 export class MergeModalContent {

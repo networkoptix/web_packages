@@ -14,7 +14,10 @@ const observer = new ResizeObserver(entries => {
     }
 });
 
-@Directive({ selector: '[resize]' })
+@Directive({
+    selector: '[resize]',
+    standalone: true,
+})
 export class NxResizeObserver implements OnDestroy {
     @Output() resize = new EventEmitter<Size>();
 

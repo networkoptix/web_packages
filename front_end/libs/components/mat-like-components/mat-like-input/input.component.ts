@@ -19,7 +19,7 @@ import {
 } from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 
 /* Usage
  <nx-mat-like-input
@@ -41,7 +41,7 @@ import { DirectivesModule } from '@directives/directives.module';
     templateUrl: 'input.component.html',
     styleUrls: ['input.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, AngularSvgIconModule, DirectivesModule],
+    imports: [CommonModule, FormsModule, AngularSvgIconModule, NxFocusMeDirective],
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,

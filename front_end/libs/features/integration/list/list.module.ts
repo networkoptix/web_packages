@@ -8,7 +8,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxIntegrationsListComponent } from './list.component';
@@ -20,11 +20,11 @@ import { NxIntegrationsListComponent } from './list.component';
         TranslateModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         NxFooterComponent,
         PipesModule,
         NxPreLoaderComponent,
         NxTagComponent,
+        NxResizeObserver,
     ],
     providers: [],
     declarations: [NxIntegrationsListComponent],

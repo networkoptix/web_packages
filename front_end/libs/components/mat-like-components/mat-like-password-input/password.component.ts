@@ -27,7 +27,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -45,8 +46,9 @@ import { credentialsValidation, icons } from '@static-variables';
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxMatLikeInputComponent,
+        NxAddSvgSrcDirective,
+        NxFocusMeDirective,
     ],
     providers: [
         {

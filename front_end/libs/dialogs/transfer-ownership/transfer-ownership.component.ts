@@ -20,6 +20,7 @@ import { NxRadioComponent } from '@components/radio/radio.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { ModalBase } from '@dialogs/modal-base';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { NxAccountService } from '@services/account.service';
@@ -60,6 +61,7 @@ type OrgItem = SearchableDropdownItem;
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class TransferOwnershipModalContent extends ModalBase<DT['return']> implements OnInit {

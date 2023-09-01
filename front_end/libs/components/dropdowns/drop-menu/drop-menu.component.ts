@@ -9,7 +9,8 @@ import { filter } from 'rxjs/operators';
 import { NxAdditionalSystemsTileComponent } from '@components/dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
 import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { environment } from '@environments/environment';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
@@ -28,9 +29,10 @@ import { BaseDropdown } from '../injDropdown';
     imports: [
         CommonModule,
         NxAdditionalSystemsTileComponent,
-        DirectivesModule,
         NxNavigationTileComponent,
         NxSystemTileComponent,
+        NxResizeObserver,
+        NxArrowNavDirective,
     ],
     standalone: true,
 })

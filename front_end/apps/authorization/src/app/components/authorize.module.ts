@@ -11,7 +11,8 @@ import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { ToastContainerModule } from '@components/toast-container/toast-container.module';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxAuthorizeActivateAccountComponent } from './activate-account/activate-account.component';
@@ -72,7 +73,7 @@ export const authorizedRoutes: Routes = [
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule,
         StoreModule.forRoot({}),
-        DirectivesModule,
+        NxAddSvgSrcDirective,
         PipesModule,
         NxFooterComponent,
         NxNavFooterComponent,
@@ -80,6 +81,7 @@ export const authorizedRoutes: Routes = [
         ToastContainerModule,
         NxAuthorizeCreateAccountComponent,
         NxAuthorizeResetPasswordComponent,
+        NxFocusMeDirective,
     ],
     providers: [],
     declarations: [

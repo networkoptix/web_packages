@@ -4,6 +4,8 @@ import { MatNativeDateModule } from '@angular/material/core';
 import { MatDatepickerModule } from '@angular/material/datepicker';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+
 import { NxTimeSelectorModule } from '../time-selector/time-selector.module';
 
 import { NxDateAndTimeFilterComponent } from './date-and-time-filter.component';
@@ -16,6 +18,7 @@ import { NxDateAndTimeFilterComponent } from './date-and-time-filter.component';
         AngularSvgIconModule,
 
         NxTimeSelectorModule,
+        NxAddSvgSrcDirective,
     ],
     declarations: [NxDateAndTimeFilterComponent],
     providers: [],

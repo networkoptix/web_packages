@@ -1,7 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnChanges, Output, booleanAttribute } from '@angular/core';
 
-import { ResizeModule } from '@directives/resize/resize.module';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NgChanges } from '@utils/ng-changes';
 
 /* Usage
@@ -18,7 +18,7 @@ import { NgChanges } from '@utils/ng-changes';
     templateUrl: 'mle.component.html',
     styleUrls: ['mle.component.scss'],
     standalone: true,
-    imports: [CommonModule, ResizeModule],
+    imports: [CommonModule, NxResizeObserver],
 })
 export class NxMultiLineEllipsisComponent implements OnChanges {
     @Input({ transform: booleanAttribute }) gradientOnly: boolean = false;

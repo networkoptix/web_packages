@@ -56,8 +56,8 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { ToastType } from '@components/toast-container/toast.types';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { DirectivesModule } from '@directives/directives.module';
-import { ResizeModule } from '@directives/resize/resize.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
@@ -179,18 +179,18 @@ interface Collisions {
     imports: [
         AngularSvgIconModule,
         CommonModule,
-        DirectivesModule,
         DragDropModule,
         NxImageComponent,
         NxLayoutGridTreeComponent,
         NxMonitoringGraphComponent,
         NxPreLoaderComponent,
         PipesModule,
-        ResizeModule,
         TourMatMenuModule,
         TranslateModule,
         VideoPlayerModule,
         WebGLTimelineModule,
+        NxResizeObserver,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxLayoutGridComponent {

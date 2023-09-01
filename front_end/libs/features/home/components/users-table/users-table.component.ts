@@ -5,6 +5,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { icons } from '@static-variables';
@@ -24,6 +25,7 @@ import type { ChannelPartnerUserExt } from '../users/channel-partner-users/chann
         TranslateModule,
         NxCheckboxComponent,
         NxBaseTableComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxUsersTableComponent {

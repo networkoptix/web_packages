@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 
 import { NxDeviceFilterComponent } from './device-filter.component';
 
@@ -17,6 +18,7 @@ import { NxDeviceFilterComponent } from './device-filter.component';
         // TranslateModule,
         NxCheckboxComponent,
         NxSimpleSearchComponent,
+        NxAddSvgSrcDirective,
     ],
     declarations: [NxDeviceFilterComponent],
     providers: [],

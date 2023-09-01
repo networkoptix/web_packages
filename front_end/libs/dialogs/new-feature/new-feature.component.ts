@@ -7,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { NewFeature as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import { icons } from '@static-variables';
@@ -18,7 +19,7 @@ import { NewFeatureTemplate } from './new-feature.component.types';
     templateUrl: 'new-feature.component.html',
     styleUrls: ['new-feature.component.scss'],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
+    imports: [CommonModule, AngularSvgIconModule, TranslateModule, NxAddSvgSrcDirective],
 })
 export class NewFeatureInformationModalContent extends ModalBase<DT['return']> {
     NewFeatureTemplate = NewFeatureTemplate;

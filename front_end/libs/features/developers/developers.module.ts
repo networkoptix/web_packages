@@ -10,7 +10,10 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxDevelopersMenuComponent } from '@components/developers-menu/developers-menu.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
+import { NxMatchHeightDirective } from '@directives/nx-match-height.directive';
+import { NxProjectedLinkHandler } from '@directives/nx-projected-link-handler.directive';
 import { DevelopersGuard } from '@guards/developersGuard';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -80,11 +83,14 @@ const appRoutes: Routes = [
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxDevelopersMenuComponent,
-        DirectivesModule,
         NxAboutModule,
         PipesModule,
         NxPreLoaderComponent,
         NxSearchComponent,
+        NxAddSvgSrcDirective,
+        NxIntersectionObserver,
+        NxMatchHeightDirective,
+        NxProjectedLinkHandler,
     ],
     providers: [],
     declarations: [NxKnowledgeBaseComponent],

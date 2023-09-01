@@ -32,6 +32,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
@@ -65,6 +66,7 @@ import { TfaAction, T_FA_STEPS } from './two-fa.component.types';
         NxInfoBlockComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class TwoFAModalContent<A extends TfaAction>

@@ -1,6 +1,6 @@
 import { Directive, ElementRef, HostListener, Input } from '@angular/core';
 
-@Directive({ selector: '[nxArrowNav]' })
+@Directive({ selector: '[nxArrowNav]', standalone: true })
 export class NxArrowNavDirective {
     @Input() nxArrowNav: boolean;
 

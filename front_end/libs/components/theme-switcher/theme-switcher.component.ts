@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
 import { NxThemeService } from '@services/theme.service';
@@ -23,6 +24,7 @@ import { images } from '@static-variables';
         NxContentBlockSectionComponent,
         NxContentBlockComponent,
         NxRadioComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxThemeSwitcherComponent implements OnInit {

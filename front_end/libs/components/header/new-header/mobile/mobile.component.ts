@@ -6,6 +6,7 @@ import { BehaviorSubject } from 'rxjs';
 
 import { NxHeaderLogoAreaComponent } from '@components/header/new-header/logo-area/logo-area.component';
 import { NxMobileHeaderMenuComponent } from '@components/header/new-header/mobile/mobile-menu/mobile-menu.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
@@ -26,6 +27,7 @@ import { mobileIconState } from '../new-header-types';
         AngularSvgIconModule,
         NxHeaderLogoAreaComponent,
         NxMobileHeaderMenuComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxHeaderMobileComponent {

@@ -26,7 +26,7 @@ import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
-@Directive({ selector: '[nxTooltip]' })
+@Directive({ selector: '[nxTooltip]', standalone: true })
 export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     private overlayRef: OverlayRef;
     private destroy$ = new Subject<boolean>();

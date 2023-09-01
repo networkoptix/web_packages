@@ -9,6 +9,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { first } from 'rxjs/operators';
 
 import { accountActions, accountSelectors } from '@common/store/account';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import * as staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
@@ -21,7 +22,13 @@ import { icons, apiBase } from '@static-variables';
     templateUrl: './cookie-banner.component.html',
     styleUrls: ['./cookie-banner.component.scss'],
     standalone: true,
-    imports: [CommonModule, TranslateModule, NgxTranslateCutModule, AngularSvgIconModule],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        NgxTranslateCutModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxCookieBannerComponent implements OnInit {
     CONFIG: IConfig;

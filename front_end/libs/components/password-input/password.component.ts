@@ -22,7 +22,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPasswordTagValidationComponent } from '@components/password-input-tag-validation/password-tag-validation.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
@@ -38,9 +39,10 @@ import { credentialsValidation, icons } from '@static-variables';
     imports: [
         CommonModule,
         FormsModule,
-        DirectivesModule,
         AngularSvgIconModule,
         NxPasswordTagValidationComponent,
+        NxAddSvgSrcDirective,
+        NxFocusMeDirective,
     ],
     providers: [
         {

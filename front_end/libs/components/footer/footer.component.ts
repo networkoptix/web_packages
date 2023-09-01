@@ -5,7 +5,6 @@ import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 
-import { DirectivesModule } from '@directives/directives.module';
 import { environment } from '@environments/environment';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxMenusService } from '@services/menus.service';
@@ -20,14 +19,7 @@ import type { IConfig } from '@services/nx-config/config-types';
     templateUrl: 'footer.component.html',
     styleUrls: ['footer.component.scss'],
     standalone: true,
-    imports: [
-        CommonModule,
-        FormsModule,
-        RouterModule,
-        TranslateModule,
-        PipesModule,
-        DirectivesModule,
-    ],
+    imports: [CommonModule, FormsModule, RouterModule, TranslateModule, PipesModule],
 })
 export class NxFooterComponent implements OnInit {
     CONFIG: IConfig = nxConfig;

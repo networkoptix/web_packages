@@ -24,7 +24,7 @@ import { NxSliderComponent } from '@components/slider/slider.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { MenuModule } from '@menu/menu.module';
@@ -186,7 +186,6 @@ const appRoutes: Routes = [
         NxAlertBlockComponent,
         NxCheckboxComponent,
         NxContentBlockComponent,
-        DirectivesModule,
         MenuModule,
         NxAccountSettingsModule,
         NxBaseTableComponent,
@@ -212,6 +211,7 @@ const appRoutes: Routes = [
         NxMatLikeInputComponent,
         NxMatLikePasswordComponent,
         NxUsersTableComponent,
+        NxResizeObserver,
     ],
     providers: [],
 

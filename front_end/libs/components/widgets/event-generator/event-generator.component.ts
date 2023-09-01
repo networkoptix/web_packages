@@ -13,7 +13,9 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
@@ -41,11 +43,13 @@ interface SystemDropdownItem extends DropdownItem<string> {
         TranslateModule,
         AngularSvgIconModule,
         CdkStepperModule,
-        DirectivesModule,
         NxGenericDropdownModule,
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxStepperComponent,
+        NxAddSvgSrcDirective,
+        NxFocusMeDirective,
+        NxTooltipDirective,
     ],
 })
 export class NxEventGeneratorWidgetComponent

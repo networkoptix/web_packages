@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { AdditionalFilter } from '@components/console-table/console-table.component.types';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import {
     DataStructureFilter,
     GroupingOptions,
@@ -19,7 +20,13 @@ import { FilterSort, FilterState, FilterUpdatePayload } from './advanced-filter.
     templateUrl: 'advanced-filter.component.html',
     styleUrls: ['advanced-filter.component.scss'],
     standalone: true,
-    imports: [CommonModule, FormsModule, PipesModule, NxCheckboxComponent],
+    imports: [
+        CommonModule,
+        FormsModule,
+        PipesModule,
+        NxCheckboxComponent,
+        NxClickElsewhereDirective,
+    ],
 })
 export class NxAdvancedFilterComponent {
     @Output() onClose = new EventEmitter();

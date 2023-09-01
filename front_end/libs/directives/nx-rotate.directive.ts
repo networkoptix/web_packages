@@ -1,7 +1,10 @@
 import { Directive, ElementRef, Input } from '@angular/core';
 
-@Directive({ selector: '[nxRotate]' })
-export class NxRotate {
+@Directive({
+    selector: '[nxRotate]',
+    standalone: true,
+})
+export class NxRotateDirective {
     @Input() set nxRotate(rotation: number) {
         this.#rotation = Math.round(rotation / this.#clampTo) * this.#clampTo;
         this.#updateRotation();

@@ -5,7 +5,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -48,8 +51,11 @@ import type { MultiSelectItem } from './multi-select.component.types';
         TranslateModule,
         AngularSvgIconModule,
         NxCheckboxComponent,
-        DirectivesModule,
         PipesModule,
+        NxAddSvgSrcDirective,
+        NxArrowNavDirective,
+        NxClickElsewhereDirective,
+        NxTooltipDirective,
     ],
     standalone: true,
 })

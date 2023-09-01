@@ -4,13 +4,14 @@ import { NgChanges } from '@utils/ng-changes';
 
 @Directive({
     selector: '[nx-add-svg-src]',
+    standalone: true,
 })
-export class NxAddSvgSrc implements OnChanges {
+export class NxAddSvgSrcDirective implements OnChanges {
     @Input() src: string;
 
     constructor(private elementRef: ElementRef) {}
 
-    ngOnChanges({ src: { currentValue, previousValue } }: NgChanges<NxAddSvgSrc>): void {
+    ngOnChanges({ src: { currentValue, previousValue } }: NgChanges<NxAddSvgSrcDirective>): void {
         if (currentValue !== previousValue) {
             this.elementRef.nativeElement.dataset.src = this.src;
         }

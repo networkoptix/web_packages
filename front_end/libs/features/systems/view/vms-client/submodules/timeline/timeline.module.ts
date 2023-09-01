@@ -3,6 +3,8 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+
 import { TimeUnderMouseComponent } from './components/time-under-mouse/time-under-mouse.component';
 import { TimelineComponent } from './components/timeline/timeline.component';
 import { TimelinePlaybackIndicatorComponent } from './components/timeline-playback-indicator/timeline-playback-indicator.component';
@@ -27,7 +29,7 @@ import { ZoomControlsComponent } from './components/zoom-controls/zoom-controls.
         TimelineSelectionActionPanelComponent,
         TimelineScrollbarComponent,
     ],
-    imports: [CommonModule, AngularSvgIconModule, TranslateModule],
+    imports: [CommonModule, AngularSvgIconModule, TranslateModule, NxAddSvgSrcDirective],
     providers: [],
 })
 export class VmsClientTimelineModule {}

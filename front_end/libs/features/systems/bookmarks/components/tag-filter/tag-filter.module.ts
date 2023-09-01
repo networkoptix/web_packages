@@ -5,6 +5,7 @@ import { NgModule } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxTagComponent } from '@components/tag/tag.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 
 import { NxTagFilterComponent } from './tag-filter.component';
 
@@ -16,6 +17,7 @@ import { NxTagFilterComponent } from './tag-filter.component';
         // TranslateModule,
 
         NxTagComponent,
+        NxAddSvgSrcDirective,
     ],
     declarations: [NxTagFilterComponent],
     providers: [],

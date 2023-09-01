@@ -7,6 +7,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { icons } from '@static-variables';
 
@@ -25,6 +26,7 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
         TranslateModule,
         CommonModule,
         NgFor,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxGroupCardComponent {

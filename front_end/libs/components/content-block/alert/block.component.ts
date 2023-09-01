@@ -11,6 +11,7 @@ import {
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 
 /* Usage
  <nx-alert-block
@@ -28,7 +29,12 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
     templateUrl: 'block.component.html',
     styleUrls: ['block.component.scss'],
     encapsulation: ViewEncapsulation.None,
-    imports: [CommonModule, AngularSvgIconModule, NxContentBlockSectionComponent],
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        NxContentBlockSectionComponent,
+        NxAddSvgSrcDirective,
+    ],
     standalone: true,
 })
 export class NxAlertBlockComponent implements OnInit {

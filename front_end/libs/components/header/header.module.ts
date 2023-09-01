@@ -12,8 +12,9 @@ import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxHeaderMainButtonComponent } from '@components/header/main-button/main-button.component';
 import { NxNavDropdownComponent } from '@components/header/nav-dropdown/nav-dropdown.component';
 import { NxTabsComponent } from '@components/header/tabs/tabs.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
-import { ResizeModule } from '@directives/resize/resize.module';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 
 import { NxHeaderComponent } from './header.component';
 
@@ -23,7 +24,6 @@ import { NxHeaderComponent } from './header.component';
         RouterModule,
         AngularSvgIconModule,
         NxAccountSettingsDropdown,
-        ResizeModule,
         LanguageModule,
         NxHeaderMainButtonComponent,
         NxNavDropdownComponent,
@@ -32,7 +32,9 @@ import { NxHeaderComponent } from './header.component';
         NxAdditionalSystemsTileComponent,
         NxNavigationTileComponent,
         NxSystemTileComponent,
+        NxResizeObserver,
         NxClickElsewhereDirective,
+        NxAddSvgSrcDirective,
     ],
     declarations: [NxHeaderComponent],
     providers: [NxHeaderComponent],

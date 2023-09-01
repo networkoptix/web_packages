@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -22,7 +23,14 @@ import type { SystemItem } from '../../home.types';
     templateUrl: 'system-card.component.html',
     styleUrls: ['system-card.component.scss'],
     standalone: true,
-    imports: [CdkMenuModule, AngularSvgIconModule, NxSearchHighlightComponent, NgClass, NgIf],
+    imports: [
+        CdkMenuModule,
+        AngularSvgIconModule,
+        NxSearchHighlightComponent,
+        NgClass,
+        NgIf,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxSystemCardComponent implements OnInit {
     @Input() system: SystemItem;

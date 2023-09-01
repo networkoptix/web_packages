@@ -11,6 +11,7 @@ import { takeUntil } from 'rxjs/operators';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { NxSearchComponent } from '@components/search/search.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -36,6 +37,7 @@ import type { MenuNodeWithParent, ClickEvent, RelatedLinks } from './developers-
         AngularSvgIconModule,
         NxPreLoaderComponent,
         NxSearchComponent,
+        NxAddSvgSrcDirective,
     ],
     standalone: true,
 })

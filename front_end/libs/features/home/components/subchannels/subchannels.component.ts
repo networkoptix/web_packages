@@ -15,7 +15,7 @@ import { ButtonType } from '@components/button/button.component.types';
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
     selectCurrentPartnerId,
@@ -41,7 +41,6 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
     imports: [
         RouterOutlet,
         CdkMenuModule,
-        DirectivesModule,
         AngularSvgIconModule,
         NgFor,
         NgIf,
@@ -52,6 +51,7 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
         NxButtonComponent,
         TranslateModule,
         NxTabsDirective,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxSubchannelsComponent {

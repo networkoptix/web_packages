@@ -4,7 +4,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxTooltipComponent } from '@components/tooltip/tooltip.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -16,11 +16,11 @@ import { PipesModule } from '@pipes/pipes.module';
     standalone: true,
     imports: [
         CommonModule,
-        DirectivesModule,
         TranslateModule,
         PipesModule,
         NxTooltipComponent,
         NxTagComponent,
+        NxTooltipDirective,
     ],
 })
 export class NxPasswordTagValidationComponent {

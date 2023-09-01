@@ -10,6 +10,7 @@ import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 
 import { NxSystemUsersWithGroupsComponent } from './users-with-groups/users-with-groups.component';
 import { NxSystemUsersWithRolesComponent } from './users-with-roles/users-with-roles.component';
@@ -27,6 +28,7 @@ import { NxSystemUsersComponent } from './users.component';
         NxPreLoaderComponent,
         NxPermissionsDropdown,
         NxSwitchComponent,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
     declarations: [

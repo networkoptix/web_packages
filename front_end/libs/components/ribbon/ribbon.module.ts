@@ -4,6 +4,7 @@ import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxRibbonComponent } from './ribbon.component';
@@ -15,6 +16,7 @@ import { NxRibbonComponent } from './ribbon.component';
         AngularSvgIconModule,
         PipesModule,
         NxProcessButtonComponent,
+        NxAddSvgSrcDirective,
     ],
     declarations: [NxRibbonComponent],
     providers: [NxRibbonComponent],

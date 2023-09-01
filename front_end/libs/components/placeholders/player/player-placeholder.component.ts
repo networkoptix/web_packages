@@ -3,6 +3,7 @@ import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { environment } from '@environments/environment';
 import type { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
@@ -22,7 +23,7 @@ import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
     templateUrl: 'player-placeholder.component.html',
     styleUrls: ['player-placeholder.component.scss'],
     standalone: true,
-    imports: [CommonModule, RouterModule, AngularSvgIconModule],
+    imports: [CommonModule, RouterModule, AngularSvgIconModule, NxAddSvgSrcDirective],
 })
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;

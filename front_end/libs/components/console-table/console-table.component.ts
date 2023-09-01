@@ -32,7 +32,9 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { ConsoleMode } from '@pages/developer-console/console/console.types';
 import { PipesModule } from '@pipes/pipes.module';
@@ -61,7 +63,7 @@ import { TableDataSource } from './table-data-source';
     imports: [
         CommonModule,
         FormsModule,
-        DirectivesModule,
+        NxAddSvgSrcDirective,
         PipesModule,
         RouterModule,
         TranslateModule,
@@ -75,6 +77,8 @@ import { TableDataSource } from './table-data-source';
         NxPreLoaderComponent,
         NxSearchComponent,
         NxSearchHighlightComponent,
+        NxResizeObserver,
+        NxTooltipDirective,
     ],
     standalone: true,
 })

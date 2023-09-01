@@ -4,6 +4,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxDropMenu } from '@components/dropdowns/drop-menu/drop-menu.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
@@ -22,7 +23,13 @@ import { mainButtonState } from './main-button.types';
         environment.isLocal ? 'main-button-webadmin.component.scss' : 'main-button.component.scss',
     ],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule, NxDropMenu, NxClickElsewhereDirective],
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        NxDropMenu,
+        NxClickElsewhereDirective,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxHeaderMainButtonComponent implements OnInit, OnChanges {
     @Input() endpoint: any;

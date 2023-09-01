@@ -6,6 +6,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { Process } from '@services/process.service/process';
@@ -26,6 +27,7 @@ import { MergeState } from '../merge.refactor.component.types';
         AngularSvgIconModule,
         PipesModule,
         NxProcessButtonComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxMergeGenericMergeComponent {

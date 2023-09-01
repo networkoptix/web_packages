@@ -13,7 +13,8 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { ToastType } from '@components/toast-container/toast.types';
 import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
@@ -73,8 +74,9 @@ function getRelativeLocation(href: string): string {
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        DirectivesModule,
         TemporaryAuthLoginComponent,
+        NxAddSvgSrcDirective,
+        NxFocusMeDirective,
     ],
 })
 export class LoginWebadminModalContent extends ModalBase<DT['return']> implements OnInit {

@@ -9,7 +9,7 @@ import { NxClientButtonComponent } from '@components/open-client-button/client-b
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
@@ -31,7 +31,6 @@ import { VmsClientModule } from './vms-client/vms-client.module';
         TranslateModule,
         AngularSvgIconModule,
         NxClientButtonComponent,
-        DirectivesModule,
         NxPagePlaceholderComponent,
         NxPlayerPlaceholderComponent,
         PipesModule,
@@ -40,6 +39,7 @@ import { VmsClientModule } from './vms-client/vms-client.module';
         VmsClientTimelineModule,
         VmsClientVmsModule,
         VmsClientModule,
+        NxAddSvgSrcDirective,
     ],
     providers: [CookieService, CameraQualityStorageService, CameraTransportStorageService],
     declarations: [

@@ -4,7 +4,9 @@ import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { Role } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
@@ -29,7 +31,14 @@ type AccessLevelItem = Role & { optionLabel: string };
             multi: true,
         },
     ],
-    imports: [CommonModule, TranslateModule, AngularSvgIconModule, DirectivesModule],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+        NxArrowNavDirective,
+        NxClickElsewhereDirective,
+    ],
     standalone: true,
 })
 export class NxPermissionsDropdown extends BaseDropdown {

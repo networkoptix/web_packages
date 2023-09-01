@@ -15,7 +15,8 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxSearchComponent } from '@components/search/search.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTagComponent } from '@components/tag/tag.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxCamerasTableComponent } from '@pages/ipvd/cam-components/cameras-table/cameras-table.component';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -45,7 +46,6 @@ const appRoutes: Routes = [
         NgxTranslateCutModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         NxFooterComponent,
         LayoutModule,
         NxBaseTableComponent,
@@ -54,6 +54,8 @@ const appRoutes: Routes = [
         NxPreLoaderComponent,
         NxSearchComponent,
         NxTagComponent,
+        NxResizeObserver,
+        NxAddSvgSrcDirective,
     ],
     providers: [IpvdSearchService],
     declarations: [

@@ -11,7 +11,8 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -58,11 +59,12 @@ const appRoutes: Routes = [
         NxConsoleTableComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
-        DirectivesModule,
         PipesModule,
         NxPreLoaderComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxAddSvgSrcDirective,
+        NxTooltipDirective,
     ],
     providers: [],
     declarations: [NxDevConsoleComponent, NxDevConsoleMenuComponent, NxDevConsoleEditComponent],

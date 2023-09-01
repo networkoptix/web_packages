@@ -5,7 +5,6 @@ import { RouterModule, Routes } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 
 import { NxSearchComponent } from '@components/search/search.component';
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxIntegrationsComponent } from './integrations.component';
@@ -25,7 +24,6 @@ const appRoutes: Routes = [
         FormsModule,
         RouterModule.forChild(appRoutes),
         TranslateModule,
-        DirectivesModule,
         IntegrationsListModule,
         PipesModule,
         NxSearchComponent,

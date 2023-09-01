@@ -7,7 +7,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { components } from './components';
@@ -23,10 +24,11 @@ import { IpInfoPipe } from './pipes/ip_info.pipe';
         RouterModule,
         TranslateModule,
         AngularSvgIconModule,
-        DirectivesModule,
         NxSearchHighlightComponent,
         PipesModule,
         NxPreLoaderComponent,
+        NxAddSvgSrcDirective,
+        NxIntersectionObserver,
     ],
     exports: [MediaServerListComponent],
     providers: [

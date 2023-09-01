@@ -1,3 +1,6 @@
+import { testBedSetupFactory } from 'test_utils/test_bed_setup_factory';
+
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { supportNode } from '@mocks/knowledge_base_landing.mock';
 import { setupComponent } from '@pages/src/setup';
 import { images } from '@variables/static-variables';
@@ -5,7 +8,7 @@ import { images } from '@variables/static-variables';
 import { NxSupportComponent } from './support.component';
 
 const setupSupportComponent = (): ReturnType<typeof setupComponent<NxSupportComponent>> =>
-    setupComponent(NxSupportComponent, { supportNode });
+    testBedSetupFactory([NxAddSvgSrcDirective])(NxSupportComponent, { supportNode });
 
 const [_, expectedLeftBackground, expectedRightBackground] = supportNode.icon.split(' ');
 

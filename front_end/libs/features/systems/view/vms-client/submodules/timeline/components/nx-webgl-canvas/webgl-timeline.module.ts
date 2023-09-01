@@ -5,7 +5,8 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { DirectivesModule } from '@directives/directives.module';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxClickDoubleDirective } from '@directives/nx-single-double-click.directive';
 import { WebGlTimelinePlaybackIndicatorComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/playback-indicator/timeline-playback-indicator.component';
 import { TimelineScrollComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
 import { WebGlTimelineSelectionComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/timeline-selection.component';
@@ -31,8 +32,9 @@ import { WebGlTimelineZoomComponent } from '@vms-client/submodules/timeline/comp
         AngularSvgIconModule,
         TranslateModule,
         DragDropModule,
-        DirectivesModule,
         NxPreLoaderComponent,
+        NxAddSvgSrcDirective,
+        NxClickDoubleDirective,
     ],
     providers: [],
 })

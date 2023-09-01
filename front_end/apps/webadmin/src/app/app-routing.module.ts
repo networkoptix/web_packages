@@ -3,7 +3,6 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
-import { DirectivesModule } from '@directives/directives.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 
@@ -91,7 +90,6 @@ const lazyRoutes: Routes = [
 
 @NgModule({
     imports: [
-        DirectivesModule,
         PipesModule,
         RouterModule.forRoot(lazyRoutes, {
             initialNavigation: 'enabledNonBlocking',

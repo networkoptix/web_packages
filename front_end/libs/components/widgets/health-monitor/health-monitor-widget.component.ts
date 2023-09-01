@@ -16,6 +16,7 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxStepperComponent } from '@components/stepper/stepper.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxAccountService } from '@services/account.service';
@@ -79,6 +80,7 @@ const summarizeByLevel = (summary, cur) => {
         PipesModule,
         NxPreLoaderComponent,
         NxStepperComponent,
+        NxAddSvgSrcDirective,
     ],
 })
 export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
