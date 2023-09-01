@@ -104,7 +104,6 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
     }
 
     switch2FA(targetState: boolean): void {
-        this.totpExistsForAccount = targetState;
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
             this.dialogs.account2faEnable().then(action => {
