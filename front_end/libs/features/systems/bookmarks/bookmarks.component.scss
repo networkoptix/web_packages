@@ -37,8 +37,8 @@
 
         .bookmarks {
             display: grid;
-            grid-template-columns: repeat(auto-fit, 272px);
-            grid-gap: 15px;
+            grid-template-columns: repeat(auto-fit, var(--bookmark-card-width));
+            grid-gap: var(--grid-padding);
             padding: 5px;
 
             &-preloader {

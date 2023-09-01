@@ -10,6 +10,7 @@ import { PagePlaceHolderModule } from '@components/placeholders/page/page-placeh
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { NxSimpleSearchModule } from '@components/simple-search/simple-search.module';
 import { DirectivesModule } from '@directives/directives.module';
+import { DummyBookmarkComponent } from '@pages/systems/bookmarks/components/dummy-bookmark/dummy-bookmark.component';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
@@ -43,6 +44,7 @@ const appRoutes: Routes = [
         AlertBlockModule,
         PreLoaderModule,
         PagePlaceHolderModule,
+        DummyBookmarkComponent
     ],
     providers: [],
     declarations: [
