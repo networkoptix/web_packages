@@ -17,7 +17,7 @@ from system_admin import SystemAdmin
 from PythonRobot.NoptixLibrary.GenericKeywords import GenericKeywords
 from RobotVariables import RobotVariables
 from PythonRobot.NoptixLibrary.Cloud2fa import Cloud2fa
-from PythonRobot.NoptixLibrary.ServerAPI5 import ServerAPI5
+from PythonRobot.NoptixLibrary.server_api import ServerApi
 from page_text import PageText
 
 password = "qweasd 123"
@@ -139,7 +139,7 @@ def system_2fa_required():
 def twofa_not_required_when_more_than_one_system():
     """6.2 2fa is not required when accessing systems page with more than one system"""
     bind_info = CLOUD_API.connect(SERVERS[1]['name'], SERVERS[0]['cloudOwner'], password)
-    id = ServerAPI5(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
+    id = ServerApi(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
     SERVERS[1]['id'] = id
     SERVERS[1]['cloudOwner'] = SERVERS[0]['cloudOwner']
     driver = get_headless_chrome()

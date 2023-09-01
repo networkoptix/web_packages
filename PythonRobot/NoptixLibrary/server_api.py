@@ -11,24 +11,17 @@ from robot.api import logger
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 _DEFAULT_USERNAME = 'admin'
-_INITIAL_PASSWORD = 'admin'
+INITIAL_PASSWORD = 'admin'
+_DEFAULT_PASSWORD = 'qweasd 123'  # noqa
 
 
-class APIError(Exception):
-    def __init__(self, msg):
-        self.msg = msg
-
-    def __str__(self):
-        return str(self.msg)
-
-
-class ServerAPI5:
+class ServerApi:
 
     def __init__(
             self,
             url: Optional[str] = None,
             username: str = _DEFAULT_USERNAME,
-            password: str = _INITIAL_PASSWORD,
+            password: str = _DEFAULT_PASSWORD,
     ):
         self._url = url
         self._username = username
@@ -36,7 +29,7 @@ class ServerAPI5:
         self._token: Optional[str] = None
 
     def setup_local_system(self, new_password, system_name):
-        self._request('POST', 'rest/v1/system/setup', {
+        self._post('rest/v1/system/setup', {
             'name': system_name,
             'settings': {
                 'statisticsAllowed': False,
@@ -49,7 +42,7 @@ class ServerAPI5:
         self._set_password(new_password)
 
     def api_connect_to_cloud(self, bind_info: Mapping[str, str]):
-        self._request('POST', 'rest/v1/system/cloudBind', bind_info)
+        self._post('rest/v1/system/cloudBind', bind_info)
 
     def save_user(
             self,
@@ -82,32 +75,44 @@ class ServerAPI5:
             body['id'] = user_role_id
         logger.trace(f"patch={patch}, name={name}")
         if patch:
-            return self._request('PATCH', f'rest/v1/users/{user_id}', body)
-        return self._request('POST', 'rest/v1/users', body)
+            return self._patch(f'rest/v1/users/{user_id}', body)
+        return self._post('rest/v1/users', body)
 
     def remove_user(self, user_id):
-        self._request('DELETE', f'rest/v1/users/{user_id}')
+        self._delete(f'rest/v1/users/{user_id}')
 
     def get_system_settings_from_server(self):
-        return self._request('GET', 'rest/v1/system/settings?_keepDefault=true')
+        return self._get('rest/v1/system/settings?_keepDefault=true')
 
     def get_users(self):
-        return self._request('GET', 'rest/v1/users?_format=JSON&_keepDefault=true')
+        return self._get('rest/v1/users?_format=JSON&_keepDefault=true')
 
     def get_storages_via_api(self):
-        return self._request('GET', 'rest/v1/servers/this/storages?_format=JSON')
+        return self._get('rest/v1/servers/this/storages?_format=JSON')
 
     def save_storages_via_api(self, data):
         list_of_responses = []
         for storage in data:
             time.sleep(1)
-            response = self._request(
-                'PATCH', f'rest/v1/servers/this/storages/{storage["id"]}', storage)
+            response = self._patch(
+                f'rest/v1/servers/this/storages/{storage["id"]}', storage)
             list_of_responses.append(response)
         return list_of_responses
 
     def get_log_level(self):
-        return self._request('GET', 'api/logLevel')
+        return self._get('api/logLevel')
+
+    def _get(self, path: str):
+        return self._request('GET', path)
+
+    def _post(self, path: str, data: Mapping[str, Any]):
+        return self._request('POST', path, data)
+
+    def _patch(self, path: str, data: Mapping[str, Any]):
+        return self._request('PATCH', path, data)
+
+    def _delete(self, path: str):
+        return self._request('DELETE', path)
 
     def _request(
             self,

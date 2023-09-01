@@ -23,7 +23,8 @@ from requests import head
 from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
 from robot.api.deco import keyword, library
-from NoptixLibrary.ServerAPI5 import ServerAPI5
+from NoptixLibrary.server_api import INITIAL_PASSWORD
+from NoptixLibrary.server_api import ServerApi
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 from NoptixLibrary.DockerApi import DockerApi
 
@@ -56,7 +57,7 @@ class GenericKeywords:
             "custom": "NoGlobalPermissions"
         }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
-        self.server_api = ServerAPI5()
+        self.server_api = ServerApi()
         self.docker_api = DockerApi()
     
     def go_forward(self):
@@ -708,17 +709,11 @@ class GenericKeywords:
                 return
 
     
-    def remove_user_by_email(self, auth, serverUrl, email, image):
-        if image == '4.2':
-            users = ServerAPI.get_users(self, auth, serverUrl)
-            for user in users:
-                if user['email'] == email:
-                    ServerAPI.remove_user(self, auth, serverUrl, user['id'])
-        else:
-            users = ServerAPI5(serverUrl).get_users(auth)
-            for user in users:
-                if user['email'] == email:
-                    ServerAPI5(serverUrl).remove_user(auth, user['id'])
+    def remove_user_by_email(self, serverUrl, email):
+        users = ServerApi(serverUrl).get_users()
+        for user in users:
+            if user['email'] == email:
+                ServerApi(serverUrl).remove_user(user['id'])
 
     
     def detect_language(self, text):
@@ -796,7 +791,10 @@ class GenericKeywords:
                 server.update(self.create_docker_server(server, runName))
 
             for server in serversJson:
-                server['api'] = ServerAPI5(f"https://{self.docker_host_ip}:{server['port'][0]}")
+                server['api'] = ServerApi(
+                    f"https://{self.docker_host_ip}:{server['port'][0]}",
+                    password=INITIAL_PASSWORD,
+                )
 
             # Set up systems
             time.sleep(5)
@@ -964,7 +962,7 @@ class GenericKeywords:
     
     def evaluate_system_settings_via_API(self, auth, server_url, key, expected_value):
         username, password = auth
-        settings = ServerAPI5(server_url, username, password).get_system_settings_from_server()
+        settings = ServerApi(server_url, username, password).get_system_settings_from_server()
         expected_value_str = str(expected_value)
         expected_value_str = expected_value_str.replace("empty", "").replace("true", "True").replace("false",
                                                                                                      "False").replace(
@@ -986,7 +984,7 @@ class GenericKeywords:
 
     def evaluate_log_level_via_API(self, auth, server_url, key, value):
         username, password = auth
-        logLevel = ServerAPI5(server_url, username, password).get_log_level()
+        logLevel = ServerApi(server_url, username, password).get_log_level()
         if logLevel.get(key) and logLevel[key] == value.lower():
             pass
         else:
@@ -995,7 +993,7 @@ class GenericKeywords:
     
     def verify_changed_info_via_API(self, new_locals, ip, local_user="ocal+"):
         locals = []
-        users = ServerAPI5(ip).get_users(BuiltIn().get_variable_value('${servers}[0][token]'))
+        users = ServerApi(ip).get_users()
         local_state = True
         for user in users:
             if user.get("isCloud") is False:
@@ -1022,7 +1020,7 @@ class GenericKeywords:
         clean_locals = []
         locals_list = []
         local_users = list(BuiltIn().get_variable_value("${role_names}").keys())
-        users = ServerAPI5(server).get_users(token)
+        users = ServerApi(server).get_users()
         logger.trace(users)
         for user in users:
             local_state = True
@@ -1086,7 +1084,7 @@ class GenericKeywords:
     
     def delete_all_local_users_via_API(self, token, server, locals_list):
         for user in locals_list:
-            ServerAPI5(server).remove_user(token, user['id'])
+            ServerApi(server).remove_user(user['id'])
 
     
     def check_user_full_name_is_none(self, name, check_info):
@@ -1173,7 +1171,7 @@ class GenericKeywords:
     
     def get_local_users(self, token, server_url):
         locals_list = []
-        users = ServerAPI5(server_url).get_users(token)
+        users = ServerApi(server_url).get_users()
         for user in users:
             local_state = True
             if user.get("isCloud"):
@@ -1186,7 +1184,7 @@ class GenericKeywords:
 
     
     def set_default_storage_config(self, server_url, disabled, backups):
-        storages = ServerAPI5(server_url, 'admin', self.password).get_storages_via_api()
+        storages = ServerApi(server_url, password=self.password).get_storages_via_api()
         if storages == []:
             raise RuntimeError("Storages returned an empty list.")
         for disk in storages:
@@ -1212,5 +1210,5 @@ class GenericKeywords:
                     "isUsedForWriting": True,
                     "isBackup": False
                 }
-        r = ServerAPI5(server_url, 'admin', self.password).save_storages_via_api(storages)
+        r = ServerApi(server_url, password=self.password).save_storages_via_api(storages)
         logger.trace(r)
