@@ -746,8 +746,6 @@ export class WizardStateService {
             .catch(this.offlineErrorHandler)
             .then(() => {
                 this.server
-                    // @ts-expect-error FIXME: We're supposed to add security level but security
-                    // level arg is missing in v2 method
                     .setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
                     .toPromise()
                     .then(() => {

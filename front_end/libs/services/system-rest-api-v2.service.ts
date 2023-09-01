@@ -10,6 +10,7 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
+import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { memoizeAsyncLong } from '@utils/memoize';
 import type { NxRecursiveKeyMap, NxRecursivePick } from '@utils/nx';
 
@@ -202,6 +203,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         systemName: string,
         password: string,
         systemSettings: Partial<t.SystemConfigSettings>,
+        securityLevel: string = SECURITY_LEVEL.STANDARD,
     ): Observable<any> {
         return this.setupSystem(
             systemName,
@@ -210,6 +212,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             undefined,
             undefined,
             password,
+            securityLevel,
         );
     }
 
@@ -220,10 +223,12 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         cloudAuthKey = '',
         owner = '',
         password = '',
+        securityLevel: string = SECURITY_LEVEL.STANDARD,
     ): Observable<any> {
         const config = {
             name: systemName,
             settings: systemSettings,
+            settingsPreset: 'security',
             local: {
                 password,
             },
@@ -233,6 +238,10 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 owner,
             },
         };
+        if (securityLevel === SECURITY_LEVEL.STANDARD) {
+            delete config.settingsPreset;
+        }
+
         !cloudSystemID ? delete config.cloud : delete config.local;
         return this.post('/rest/v2/system/setup', config);
     }
