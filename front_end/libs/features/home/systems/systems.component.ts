@@ -1,15 +1,16 @@
 import { NgIf } from '@angular/common';
 import { Component, computed, inject, Input, OnChanges, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSystemsListComponent } from '@components/systems-list/list.component';
 import { Account } from '@services/account.service/account';
+import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
 
 import { SystemsDisplayMode } from '../home.types';
-import { selectCurrentSystemItems } from '../store/groups/groups.selectors';
 
 @Component({
     selector: 'nx-groups-systems',
@@ -21,11 +22,12 @@ import { selectCurrentSystemItems } from '../store/groups/groups.selectors';
 export class NxGroupsSystemsComponent implements OnChanges {
     @Input() displayMode: SystemsDisplayMode;
     store = inject(Store);
+    systemsService = inject(NxSystemsService);
     showPersonal$$ = signal<boolean>(false);
     currentUser$$ = this.store.selectSignal<Account>(selectCurrentUser);
-    systemsFromStore$$ = this.store.selectSignal(selectCurrentSystemItems);
+    systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
     systems$$ = computed<string[]>(() => {
-        const systems = this.systemsFromStore$$();
+        const systems = this.systemsFromSubject$$();
         const { email } = this.currentUser$$();
         const showPersonal = this.showPersonal$$();
         return systems

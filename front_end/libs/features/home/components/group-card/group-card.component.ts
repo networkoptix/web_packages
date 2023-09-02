@@ -28,19 +28,21 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
         NgFor,
         NxAddSvgSrcDirective,
     ],
+    providers: [NxSystemGroupsService],
 })
 export class NxGroupCardComponent {
     @Input() group: GroupItem;
     @Input() search: string = '';
+    @Input() currentOrgId: string;
 
     LANG = staticLang;
     icons = icons;
 
     constructor(
         private router: Router,
-        private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
+        private groupsService: NxSystemGroupsService,
     ) {}
 
     openGroup(): void {
@@ -56,6 +58,7 @@ export class NxGroupCardComponent {
     addGroup(): void {
         this.dialogsService.createSystemGroup({
             targetId: this.group.id,
+            orgId: this.currentOrgId,
             hasGroups: true,
             parentGroup: this.group.name,
         });

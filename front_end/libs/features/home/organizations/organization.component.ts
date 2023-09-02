@@ -63,6 +63,7 @@ interface SidebarSettings {
         NxTabsDirective,
         NxAddSvgSrcDirective,
     ],
+    providers: [NxSystemGroupsService],
 })
 export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
@@ -83,8 +84,9 @@ export class NxOrganizationsComponent implements OnInit {
     @Input() currentTabRoute: string;
 
     account = this.store.selectSignal<Account>(selectCurrentUser);
-    organizations = this.store.selectSignal<Organization[]>(selectRootOrganizations);
-    currentPartnerOrganizations = this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
+    organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
+    currentPartnerOrganizations$$ =
+        this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
     currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
 
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
@@ -97,13 +99,22 @@ export class NxOrganizationsComponent implements OnInit {
 
     constructor(
         private store: Store,
-        private groupsService: NxSystemGroupsService,
         private route: ActivatedRoute,
         private router: Router,
         private cloudApi: NxCloudApiService,
-    ) {}
+        private groupsService: NxSystemGroupsService,
+    ) {
+        const { email } = this.account();
+        this.userEmail = email;
+        this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
+            'showSidebarState',
+            email,
+            { showSidebarState: true },
+        );
+    }
 
     ngOnInit(): void {
+        this.groupsService.connect();
         if (!this.inChannelPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }
@@ -132,21 +143,13 @@ export class NxOrganizationsComponent implements OnInit {
         this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
             this.groupsService.getGroups(id);
             this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: id }));
-            const orgs = this.organizations();
-            const partnerOrgs = this.currentPartnerOrganizations();
+            const orgs = this.organizations$$();
+            const partnerOrgs = this.currentPartnerOrganizations$$();
             if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
                 this.router.navigate(['404']);
             }
             this.isLoading = false;
         });
-
-        const { email } = this.account();
-        this.userEmail = email;
-        this.sidebarSettings = this.cloudApi.customAccountPropertyFactory(
-            'showSidebarState',
-            email,
-            { showSidebarState: true },
-        );
     }
 
     public handleSidebarTogglingEarClick(): void {

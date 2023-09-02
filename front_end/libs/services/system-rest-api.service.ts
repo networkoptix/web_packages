@@ -1302,7 +1302,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             map(([predefinedRoles, customRoles]) =>
                 [...predefinedRoles, ...customRoles].map(role => ({
                     ...role,
-                    permissions: role.permissions.split('|').sort().join('|'),
+                    permissions: role.permissions?.split('|').sort().join('|'),
                 })),
             ),
         );

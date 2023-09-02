@@ -8,6 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
+import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { icons } from '@variables/static-variables';
 
 import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';
@@ -29,6 +30,7 @@ import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.co
         TranslateModule,
         NxAddSvgSrcDirective,
     ],
+    providers: [NxSystemGroupsService],
 })
 export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentGroupId: string;
@@ -38,14 +40,13 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentPath: GroupPath[];
     @Output() dismiss = new EventEmitter<void>();
     rootGroupItems$ = this.store.select<GroupItem[]>(selectCurrentOrganizationRootGroupItems);
-
+    currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     icons = icons;
     LANG = staticLang;
-
     constructor(
-        private groupsService: NxSystemGroupsService,
         private dialogsService: NxDialogsService,
         private store: Store,
+        private groupsService: NxSystemGroupsService,
     ) {}
 
     ngOnInit(): void {
@@ -66,6 +67,7 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     newGroupDialog(): void {
         this.dialogsService.createSystemGroup({
             targetId: this.currentGroupId,
+            orgId: this.currentOrgId$$(),
             parentGroup: null,
             hasGroups: false,
         });

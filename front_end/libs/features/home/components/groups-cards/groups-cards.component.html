@@ -1,7 +1,24 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
+<div class="actions p-3">
+    <button
+        [disabled]="!isAdmin"
+        class="btn btn-default"
+        translate
+        (click)="newGroupDialog()"
+    >
+        New Group
+    </button>
+    <div class="input px-2">
+        <span class="glyphicon web-icon-search icon-search"></span>
+        <input
+            class="pl-2"
+            [placeholder]="'Search' | translate"
+        />
+    </div>
+</div>
 <div
-    *ngIf="!(currentGroups$ | async)?.length && !(currentSystems$ | async)?.length; else showGroups"
+    *ngIf="!currentGroups$$()?.length && !currentSystems$$()?.length; else showGroups"
     class="no-systems"
 >
     <nx-no-systems-cards></nx-no-systems-cards>
@@ -12,27 +29,9 @@
     let-groups="groups"
     let-systems="systems"
 >
-    <div class="actions p-3">
-        <button
-            [disabled]="!isAdmin"
-            class="btn btn-default"
-            translate
-            (click)="newGroupDialog()"
-        >
-            New Group
-        </button>
-        <div class="input px-2">
-            <span class="glyphicon web-icon-search icon-search"></span>
-            <input
-                class="pl-2"
-                [placeholder]="'Search' | translate"
-            />
-        </div>
-    </div>
-
     <div class="px-3 cards-container">
         <div
-            *ngFor="let group of currentGroups$ | async; trackBy: trackItem"
+            *ngFor="let group of currentGroups$$(); trackBy: trackItem"
             class="group-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -45,12 +44,15 @@
                 [cdkDragData]="group"
             >
                 <div *cdkDragPlaceholder></div>
-                <nx-group-card [group]="group"></nx-group-card>
+                <nx-group-card
+                    [group]="group"
+                    [currentOrgId]="currentOrgId$$()"
+                ></nx-group-card>
             </div>
             <div class="placeholder-shadow"></div>
         </div>
         <div
-            *ngFor="let system of inRoot ? [] : (currentSystems$ | async); trackBy: trackItem"
+            *ngFor="let system of inRoot ? [] : currentSystems$$(); trackBy: trackItem"
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -64,7 +66,7 @@
                 <nx-system-card
                     [system]="system"
                     [search]="''"
-                    [account]="account$ | async"
+                    [account]="account$$()"
                 ></nx-system-card>
             </div>
             <div class="placeholder-shadow"></div>

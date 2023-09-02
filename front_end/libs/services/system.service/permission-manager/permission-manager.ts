@@ -237,7 +237,7 @@ export class PermissionManager {
         this.mediaserver.getAllRoles().subscribe(roles => {
             this.roles.set(
                 roles.map(role => {
-                    role.permissions = role.permissions.split('|').sort().join('|');
+                    role.permissions = role.permissions?.split('|').sort().join('|');
                     return role;
                 }),
             );

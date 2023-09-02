@@ -1,5 +1,5 @@
 import { NgIf } from '@angular/common';
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -13,7 +13,6 @@ import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystemsService } from '@services/systems.service';
 
 import { NxChannelPartnersService } from './services/channel-partners.service';
-import { NxSystemGroupsService } from './services/system-groups.service';
 import * as CPActions from './store/channel-partners/channel-partners.actions';
 import {
     selectChannelPartners,
@@ -27,7 +26,7 @@ import {
     imports: [NxPreLoaderComponent, RouterModule, NgIf],
     standalone: true,
 })
-export class NxHomeComponent implements OnInit, OnDestroy {
+export class NxHomeComponent implements OnInit {
     readonly LANG = staticLang;
     isLoading: boolean = true;
 
@@ -35,12 +34,10 @@ export class NxHomeComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private store: Store,
-        private groupsService: NxSystemGroupsService,
         private systemsService: NxSystemsService,
         private headerService: NxHeaderService,
         private CPService: NxChannelPartnersService,
     ) {
-        this.groupsService.connect();
         this.initChannelPartners();
     }
 
@@ -110,10 +107,6 @@ export class NxHomeComponent implements OnInit, OnDestroy {
                 }
                 this.isLoading = false;
             });
-    }
-
-    ngOnDestroy(): void {
-        this.groupsService.disconnect();
     }
 
     initChannelPartners(): void {

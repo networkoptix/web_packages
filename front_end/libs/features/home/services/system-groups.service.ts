@@ -27,9 +27,7 @@ import {
     WebSocketOutgoing,
 } from './system-groups.service.types';
 
-@Injectable({
-    providedIn: 'root',
-})
+@Injectable()
 export class NxSystemGroupsService {
     LANG = staticLang;
     private WEBSOCKET_URL: string;
@@ -214,7 +212,7 @@ export class NxSystemGroupsService {
         this.send({ action: WebSocketAction.LIST_GROUPS, org_id: orgId });
     }
 
-    createGroup(name: string, org_id?: string, target_id?: string): void {
+    createGroup(name: string, org_id: string, target_id?: string): void {
         this.send({ action: WebSocketAction.CREATE_GROUP, name, org_id, target_id });
     }
 

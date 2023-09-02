@@ -9,6 +9,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
+import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import type { Account } from '@services/account.service/account';
 import { icons } from '@variables/static-variables';
 
@@ -39,26 +40,24 @@ import { NxSystemCardComponent } from '../system-card/system-card.component';
         NxGroupCardComponent,
         NxNoSystemsCardsComponent,
     ],
+    providers: [NxSystemGroupsService],
 })
 export class NxGroupsCardsComponent {
     LANG = staticLang;
     icons = icons;
-
     @Input({ transform: booleanAttribute }) inRoot: boolean;
-    hasGroups$ = this.store.select<boolean>(selectHasGroups);
-    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
-    currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroupItems);
-    currentSystems$ = this.store.select<SystemItem[]>(selectCurrentSystemItems);
-    currentGroupId = this.store.selectSignal<string>(selectCurrentGroupId);
-    hasGroups = this.store.selectSignal<boolean>(selectHasGroups);
-    account$ = this.store.select<Account>(selectCurrentUser);
+    hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
+    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
+    currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
+    currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroupItems);
+    currentSystems$$ = this.store.selectSignal<SystemItem[]>(selectCurrentSystemItems);
+    account$$ = this.store.selectSignal<Account>(selectCurrentUser);
     isAdmin = true;
-
     constructor(
-        private groupsService: NxSystemGroupsService,
         private store: Store,
         private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
+        private groupsService: NxSystemGroupsService,
     ) {
         this.route.params.subscribe(({ groupId }) => {
             this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
@@ -85,8 +84,9 @@ export class NxGroupsCardsComponent {
 
     newGroupDialog(): void {
         this.dialogsService.createSystemGroup({
-            targetId: this.currentGroupId(),
-            hasGroups: this.hasGroups(),
+            targetId: this.currentGroupId$$(),
+            orgId: this.currentOrgId$$(),
+            hasGroups: this.hasGroups$$(),
             parentGroup: null,
         });
     }
