@@ -323,15 +323,23 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         },
                     },
                     errorPrefix: this.LANG.errorCodes.cantGetSystemInfoPrefix,
+                    ignoreError: true,
                 },
             )
-            .then(() => {
-                if (this.system.userManager.permissions.editUsers) {
-                    this.gettingSystemUsers.run();
-                } else {
-                    this.updateArchivesPresent();
-                }
-            });
+            .then(
+                () => {
+                    if (this.system.userManager.permissions.editUsers) {
+                        this.gettingSystemUsers.run();
+                    } else {
+                        this.updateArchivesPresent();
+                    }
+                },
+                e => {
+                    this.system.getInfoAndPermissions().then(() => {
+                        this.system.stopPoll();
+                    });
+                },
+            );
 
         // var cancelSubscription = this.$on("unauthorized_" + $routeParams.systemId, connectionLost);
 

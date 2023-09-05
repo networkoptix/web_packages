@@ -14,17 +14,8 @@ import {
     implementsCloudServiceApi,
 } from '../base-cloud-service-api';
 
-enum NonSystemIdEndpoint {
-    getCloudUsers = 'getCloudUsers',
-    share = 'share',
-    rename = 'rename',
-    getAccessRoleList = 'getAccessRoleList',
-    bind = 'bind',
-    get = 'get',
-}
-
 enum SystemIdEndpoint {
-    merge = 'merged_systems',
+    users = 'users',
 }
 
 interface ShareBody {
@@ -82,24 +73,24 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
 
     /** CloudDB System Endpoints */
 
-    private systemEndpoint(): string;
-    private systemEndpoint(endpoint: NonSystemIdEndpoint): string;
-    private systemEndpoint(endpoint: SystemIdEndpoint, systemId: string): string;
-    private systemEndpoint(endpoint = 'get', systemId = ''): string {
-        return ['/system', systemId, endpoint].filter(segment => !!segment).join('/');
+    private systemEndpoint(systemId = '', endpoint = ''): string {
+        return ['/systems', systemId, endpoint].filter(segment => !!segment).join('/');
     }
 
     public systems(systemId = ''): Observable<System[]> {
-        return this.get(this.systemEndpoint(NonSystemIdEndpoint.get), {
-            params: systemId ? { systemId } : { customization: this.hostOrCustomization() },
+        const params: Record<string, string> = {
+            customization: this.hostOrCustomization(),
+        };
+        if (systemId) {
+            params.systemId = systemId;
+        }
+        return this.get(this.systemEndpoint(systemId), {
+            params,
         }).pipe(map(({ systems }) => systems));
     }
 
     public getCloudUsers(systemId = ''): Observable<CloudUser[]> {
-        return this.get<{ sharing: CloudUser[] }>(
-            this.systemEndpoint(NonSystemIdEndpoint.getCloudUsers),
-            { params: { systemId } },
-        ).pipe(map(({ sharing }) => sharing));
+        return this.get<CloudUser[]>(this.systemEndpoint(systemId, SystemIdEndpoint.users));
     }
 
     public sharing(systemId: string): Observable<CloudUser[]>;
@@ -107,14 +98,20 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     public sharing(systemId: string, body?: ShareBody): Observable<unknown> {
         if (body) {
             body.systemId = systemId;
-            return this.post(this.systemEndpoint(NonSystemIdEndpoint.share), { body });
+            return this.post(this.systemEndpoint(body.systemId, SystemIdEndpoint.users), {
+                body,
+            });
         }
         return this.getCloudUsers(systemId);
     }
 
+    public removeUser(systemId: string, email: string): Observable<CloudResponse> {
+        return this.delete(`${this.systemEndpoint(systemId, SystemIdEndpoint.users)}/${email}`);
+    }
+
     public rename(systemId: string, name: string): Observable<CloudResponse> {
-        return this.post(this.systemEndpoint(NonSystemIdEndpoint.rename), {
-            body: { systemId, name },
+        return this.put(this.systemEndpoint(systemId), {
+            body: { name },
         });
     }
 

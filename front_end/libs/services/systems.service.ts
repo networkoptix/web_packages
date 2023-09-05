@@ -24,7 +24,7 @@ import { NxToastService } from '@dialogs/toast.service';
 import { environment } from '@environments/environment';
 import { nxConfig } from '@services/nx-config/config';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
-import { memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
+import { memoizeAsyncPersistent } from '@utils/memoize';
 
 // import * as SystemsActions from '../store/systems/systems.actions';
 
@@ -178,8 +178,7 @@ export class NxSystemsService {
             this.finishedMerged = true;
         }
     }
-
-    @memoizeAsyncShort
+    // Dropped the decorator because it caused a memory leak.
     private _getSystems(systemId?: string): Observable<System[]> {
         return combineLatest([timer(0, updateInterval), this.currentUser$]).pipe(
             switchMap(() => {

@@ -166,7 +166,7 @@ export class SystemGuard implements CanActivate {
                                 name = name.charAt(0).toLowerCase() + name.slice(1);
                                 // Live Viewer => liveViewer
                                 return accessRole === name;
-                            }).permissions;
+                            })?.permissions;
 
                             currSystem.userManager.currentUser = { permissions } as NxUser;
                             // We only care about permissions here
