@@ -776,7 +776,7 @@ async def check_auth_code(request):
     require_params(request, ('code',))
     (email, temp_password) = Account.extract_temp_credentials(
         request.data['code'])
-    user = django.contrib.auth.authenticate(
+    user = await sync_to_async(django.contrib.auth.authenticate)(
         request=request, username=email, password=temp_password)
     if user is None:
         raise APINotAuthorisedException(
