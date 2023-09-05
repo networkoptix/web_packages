@@ -19,23 +19,25 @@ from email_access import Email
 from register_form import RegisterForm
 
 from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 
 password = "qweasd 123"
 
 keywords = GenericKeywords()
-SERVERS = keywords.create_systems(os.path.basename(__file__))
 CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 
 
-def owner_can_remove_user():
+def owner_can_remove_user(server: CloudServer):
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{SERVERS[0]['id']}")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     header = HeaderNav(driver)
     header.account_dropdown()
     SystemAdmin(driver)
@@ -62,15 +64,15 @@ def owner_can_remove_user():
     print("pass")
 
 
-def share_with_registered_user_sends_notification():
+def share_with_registered_user_sends_notification(server: CloudServer):
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     time.sleep(30)
     rb = RobotVariables("en_US")
-    email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}",
-                                                                              SERVERS[0]['name'])
+    email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
     mail_box = Email()
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
 
@@ -79,9 +81,10 @@ def share_with_registered_user_sends_notification():
     print("pass")
 
 
-def share_with_unregistered_user_sends_notification():
+def share_with_unregistered_user_sends_notification(server: CloudServer):
     email = get_random_email(sendemail=True)
-    CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     rb = RobotVariables("en_US")
 
     email_con = Email()
@@ -97,18 +100,25 @@ def share_with_unregistered_user_sends_notification():
     assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
 
     links = email_con.get_links_from_email(body)
-    expected_links = [f"mailto:{SERVERS[0]['cloudOwner']}", rb.SUPPORT_URL, rb.WEBSITE_URL, rb.ENV, f'{rb.ENV}/authorize/activate']
+    expected_links = [
+        f'mailto:{server.cloud_owner.email}',
+        rb.SUPPORT_URL,
+        rb.WEBSITE_URL,
+        rb.ENV,
+        f'{rb.ENV}/authorize/activate',
+    ]
     GenericKeywords().check_in_list(expected_links, links)
     email_con.delete_email(email_id)
 
     print("pass")
 
 
-def email_is_locked_when_unregistered_user_is_invited():
+def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
     driver = get_headless_chrome()
     email_con = Email()
     email = email_con.get_random_email(sendemail=True)
-    CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     time.sleep(30)
     email_id = email_con.wait_for_email(email)
     body = email_con.get_body(email_id)
@@ -119,13 +129,14 @@ def email_is_locked_when_unregistered_user_is_invited():
     print("pass")
 
 
-def share_with_registered_user_works():
+def share_with_registered_user_works(server: CloudServer):
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{SERVERS[0]['id']}")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
+    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     header = HeaderNav(driver)
     header.account_dropdown()
     SystemAdmin(driver)
@@ -145,9 +156,12 @@ def share_with_registered_user_works():
 
 
 if __name__ == "__main__":
-    owner_can_remove_user()
-    share_with_registered_user_works()
-    share_with_registered_user_sends_notification()
-    # share_with_unregistered_user_sends_notification()
-    email_is_locked_when_unregistered_user_is_invited()
-    keywords.teardown_servers(SERVERS)
+    with Suite() as suite:
+        cloud_owner = suite.create_cloud_account()
+        cloud_server = suite.create_cloud_server(cloud_owner)
+
+        owner_can_remove_user(cloud_server)
+        share_with_registered_user_works(cloud_server)
+        share_with_registered_user_sends_notification(cloud_server)
+        # share_with_unregistered_user_sends_notification()
+        email_is_locked_when_unregistered_user_is_invited(cloud_server)

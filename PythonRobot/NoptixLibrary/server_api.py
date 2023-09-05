@@ -12,7 +12,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 _DEFAULT_USERNAME = 'admin'
 INITIAL_PASSWORD = 'admin'
-_DEFAULT_PASSWORD = 'qweasd 123'  # noqa
+DEFAULT_PASSWORD = 'qweasd 123'  # noqa
 
 
 class ServerApi:
@@ -21,7 +21,7 @@ class ServerApi:
             self,
             url: Optional[str] = None,
             username: str = _DEFAULT_USERNAME,
-            password: str = _DEFAULT_PASSWORD,
+            password: str = DEFAULT_PASSWORD,
     ):
         self._url = url
         self._username = username
