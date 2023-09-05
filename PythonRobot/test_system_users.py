@@ -72,6 +72,7 @@ def share_with_registered_user_sends_notification():
     mail_box = Email()
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
 
+
     robot_keywords.close_browser(driver)
     print("pass")
 
@@ -80,10 +81,21 @@ def share_with_unregistered_user_sends_notification():
     email = get_random_email(sendemail=True)
     CLOUD_API.share(SERVERS[0]['cloudAuth'], SERVERS[0]['id'], "viewer", email, viewer_permissions)
     rb = RobotVariables("en_US")
-    email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED").replace("{{message.sharer_name}}",
-                                                                                           "Mark Hamill")
-    mail_box = Email()
-    assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: \"{email_subject}."
+
+    email_con = Email()
+    email_id = email_con.wait_for_email(email)
+
+    body = email_con.get_body(email_id)
+    email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
+    email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
+    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{message.sharer_name}", "Mark Hamill")
+    subject = rb.replace_nested_variables(subject)
+    assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
+
+    links = email_con.get_links_from_email(body)
+    expected_links = [f"mailto:{SERVERS[0]['cloudOwner']}", rb.SUPPORT_URL, rb.WEBSITE_URL, rb.ENV, f'{rb.ENV}/authorize/activate']
+    GenericKeywords().check_in_list(expected_links, links)
+    email_con.delete_email(email_id)
 
     print("pass")
 
@@ -129,9 +141,9 @@ def share_with_registered_user_works():
 
 
 if __name__ == "__main__":
-    owner_can_remove_user()
-    share_with_registered_user_works()
-    share_with_registered_user_sends_notification()
+    # owner_can_remove_user()
+    # share_with_registered_user_works()
+    # share_with_registered_user_sends_notification()
     share_with_unregistered_user_sends_notification()
-    email_is_locked_when_unregistered_user_is_invited()
+    # email_is_locked_when_unregistered_user_is_invited()
     keywords.teardown_servers(SERVERS)

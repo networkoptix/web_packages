@@ -124,7 +124,8 @@ class Email:
                 # Check if the timeout has been reached
                 if time.time() - start_time > timeout:
                     return None
-
+                # Search the inbox for emails with specific "To" header
+                self.mailbox.NOOP()
                 result, data = self.mailbox.uid('search', None, f'(HEADER "To" "{recipient}")')
                 email_ids = data[0].split()
                 
