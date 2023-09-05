@@ -2,6 +2,7 @@ import robot_keywords
 from text_field import TextField
 from button import Button
 from RobotVariables import RobotVariables
+from page_text import PageText
 
 
 class LoginDialog:
@@ -43,6 +44,9 @@ class LoginDialog:
     
     def twofa_backup_code_input(self):
         return TextField(self.driver, "//nx-authorize-backup-code-component//input[@id='backupCode']")
+    
+    def twofa_error_login_code(self):
+        return PageText(self.driver, f'//nx-authorize-component//nx-authorize-auth-code-component//p[contains(text(),"{self.rb.TWOFA_INVALID_CODE_TEXT}")]')
 
     def forgot_password_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button//span[contains(text(),'{FORGOT_PASSWORD_TEXT}')]")

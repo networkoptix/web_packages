@@ -108,7 +108,7 @@ class SecurityForm:
         randomOneTimeBackupCode = PageText(self.driver, f"//nx-two-fa-modal-content//span[text()='{randInt}']/..").text
         randomOneTimeBackupCode = randomOneTimeBackupCode[1:12]
         self.twofa_ok_button().click()
-        twofa_codes = {"totp" : totp, "backup": randomOneTimeBackupCode}
+        twofa_codes = {"totp" : totp, "backup": randomOneTimeBackupCode, "key": key}
         return twofa_codes
     
     def turn_off_2fa(self, totp):

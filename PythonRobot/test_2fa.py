@@ -42,7 +42,7 @@ def enable_and_login_with_2fa():
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
     header.account_dropdown().click()
-    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
 def login_with_backup_code():
@@ -71,7 +71,7 @@ def login_with_backup_code():
     header.log_in_button().click()
     LoginDialog(driver).twofa_backup_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['backup'])
     security_form.twofa_backup_code_error()
-    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
 def login_with_qr_code():
@@ -90,7 +90,7 @@ def login_with_qr_code():
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
     header.account_dropdown().click()
-    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
 def disabling_2fa():
@@ -103,7 +103,7 @@ def disabling_2fa():
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)    
-    twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
+    twofa_codes = security_form.turn_on_2fa(password)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
     security_form.turn_off_2fa(twofa_codes["totp"])
@@ -120,7 +120,7 @@ def system_2fa_required():
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)    
-    twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
+    twofa_codes = security_form.turn_on_2fa(password)
     security_form.twofa_enabled_badge()
     robot_keywords.sleep(5)
     robot_keywords.go_to_url(driver, f"{ENV}systems/{SERVERS[0]['id']}")
@@ -133,7 +133,7 @@ def system_2fa_required():
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
     header.account_dropdown().click()
-    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
 def twofa_not_required_when_more_than_one_system():
@@ -152,7 +152,7 @@ def twofa_not_required_when_more_than_one_system():
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)    
-    twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
+    twofa_codes = security_form.turn_on_2fa(password)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
     security_form.twofa_verification_checkbox().unselect()
@@ -170,11 +170,12 @@ def twofa_not_required_when_more_than_one_system():
     robot_keywords.sleep(2)
     robot_keywords.go_to_url(driver, f"{ENV}/systems/{SERVERS[1]['id']}")
     SystemAdmin(driver)
-    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
-def change_2fa_for_user_to_specific_systems():
-    """7. Successfully changing 2FA mode for user to specific systems"""
+def change_2fa_for_user_to_specific_systems_and_whole_account():
+    """7. Successfully changing 2FA mode for user to specific systems \n 
+    8. Successfully changing 2FA mode for user to the whole account"""
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -184,7 +185,7 @@ def change_2fa_for_user_to_specific_systems():
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)    
-    twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
+    twofa_codes = security_form.turn_on_2fa(password)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
     try:
@@ -227,8 +228,60 @@ def change_2fa_for_user_to_specific_systems():
     security_form.twofa_settings_modal_cancel()
     security_form.twofa_totp_input().input_text(twofa_codes['totp'])
     security_form.twofa_settings_modal_apply().click()
-    CloudPortalAPI().toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    security_form.twofa_verification_checkbox().checked()
+    try:
+        security_form.twofa_page_save()
+    except:
+        pass
+    else:
+        raise RuntimeError("Page Save Button present")
+    try:
+        security_form.twofa_page_cancel()
+    except:
+        pass
+    else:
+        raise RuntimeError("Page Cancel Button present")
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
+
+def fail_to_login_with_expired_code():
+    """9. Unsuccessful cloud authorization with 2FA using expired code from app"""
+    driver = get_headless_chrome()
+    robot_keywords.go_to_url(driver, ENV)
+    header = HeaderNav(driver)
+    header.log_in_button().click()
+    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    robot_keywords.sleep(2)
+    header.account_dropdown().click()
+    header.security_option().click()
+    security_form = SecurityForm(driver)    
+    twofa_codes = security_form.turn_on_2fa(password)
+    security_form.twofa_enabled_badge()
+    robot_keywords.sleep(1)
+    header.log_out()
+    robot_keywords.sleep(60)
+    header.log_in_button().click()
+    login_form = LoginDialog(driver)
+    login_form.twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
+    login_form.twofa_error_login_code()
+    twofa_codes['totp'] = Cloud2fa().get_2fa_verification_code(twofa_codes['key'])
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
+    driver.close()
+
+def twofa_login_via_api():
+    """10. 2fa api call login with totp token"""
+    key = CLOUD_API.toggle_2fa_on_api(SERVERS[0]['cloudOwner'], password)
+    totp = Cloud2fa().get_2fa_verification_code(key)
+    CLOUD_API.api_log_in(SERVERS[0]['cloudOwner'], password, verification_code=totp)
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=totp)
+
+def twofa_login_via_api_backup():
+    """11. 2fa api call login with backout code"""
+    key = CLOUD_API.toggle_2fa_on_api(SERVERS[0]['cloudOwner'], password)
+    totp = Cloud2fa().get_2fa_verification_code(key)
+    backup = CLOUD_API.generate_2fa_backup_codes_api(SERVERS[0]['cloudOwner'], password, verification_code=totp)
+    CLOUD_API.api_log_in(SERVERS[0]['cloudOwner'], password, backup_code=backup)
+    CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=totp)
 
 if __name__ == "__main__":
     enable_and_login_with_2fa()
@@ -237,5 +290,8 @@ if __name__ == "__main__":
     disabling_2fa()
     system_2fa_required()
     twofa_not_required_when_more_than_one_system()
-    change_2fa_for_user_to_specific_systems()
+    change_2fa_for_user_to_specific_systems_and_whole_account()
+    fail_to_login_with_expired_code()
+    twofa_login_via_api()
+    twofa_login_via_api_backup()
     keywords.teardown_servers(SERVERS)
