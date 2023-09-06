@@ -79,6 +79,10 @@ export class NxLoginService {
         return this.dialogs.loginWebAdmin(keepPage);
     }
 
+    temporaryUserLogin(): Promise<void> {
+        return this.dialogs.temporaryUserLogin();
+    }
+
     cancelCodeSubscription(): void {
         this.done$.next(true);
     }

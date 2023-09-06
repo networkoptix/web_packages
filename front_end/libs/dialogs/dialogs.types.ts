@@ -97,6 +97,7 @@ export type Message = DialogType<MessageData, true>;
 /* WebAdmin */
 export type Wizard = DialogType<void, void>;
 export type LoginWebAdmin = DialogType<boolean, void>;
+export type TemporaryUserLogin = DialogType<void, void>;
 
 /* Auth */
 interface UpdateSessionData {

@@ -28,8 +28,6 @@ import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons, redirect } from '@static-variables';
 
-import { TemporaryAuthLoginComponent } from './temporary-auth-login/temporary-auth-login.component';
-
 /**
  * Parse url string to:
  *
@@ -74,7 +72,6 @@ function getRelativeLocation(href: string): string {
         CommonModule,
         FormsModule,
         ReactiveFormsModule,
-        TemporaryAuthLoginComponent,
         NxAddSvgSrcDirective,
         NxFocusMeDirective,
     ],
@@ -176,7 +173,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         const auth = params.get('auth');
         const code = params.get('code');
         const token = params.get('token');
-        const temporaryUserToken = params.get('temporaryUserToken');
         if (code) {
             this.removeParamFromUrl(url, hash, params, 'code');
             this.oauthLogin(code);
@@ -191,14 +187,9 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             this.tokenLogin(token || auth);
 
             return;
-        } else if (temporaryUserToken) {
-            this.removeParamFromUrl(url, hash, params, 'temporaryUserToken');
-            this.oauthService.temporaryAuthToken.set(temporaryUserToken);
-            return;
         } else {
             this.loading = false;
         }
-
         // remove any leftovers  *****************************
         this.cookieService.delete('x-runtime-guid');
         this.storageService.clear('refreshToken');

@@ -1,6 +1,9 @@
-import { Component, Input, OnInit, inject } from '@angular/core';
+import { DialogRef } from '@angular/cdk/dialog';
+import { Component, OnInit, inject } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
+import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -17,14 +20,14 @@ import { images } from '@static-variables';
     standalone: true,
     imports: [AngularSvgIconModule],
 })
-export class TemporaryAuthLoginComponent implements OnInit {
-    @Input() temporaryUserToken: string;
-    @Input() urlUpdateTimeout: number = 150;
+export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> implements OnInit {
+    readonly urlUpdateTimeout: number = 150;
 
     private urlProtocol = inject(NxUrlProtocolService);
     private nxSystemAPIService = inject(NxSystemAPIService);
     private account = inject(NxAccountService);
     private window = inject(WINDOW);
+    private temporaryUserToken: string;
 
     protected mediaServerApi: NxSystemRestAPI3;
 
@@ -32,10 +35,19 @@ export class TemporaryAuthLoginComponent implements OnInit {
     readonly environment = environment;
     images = images;
 
+    constructor(dialogRef: DialogRef<DT['return']>) {
+        super(dialogRef);
+    }
+
     ngOnInit(): void {
         this.mediaServerApi = this.nxSystemAPIService.createConnection({
             version: this.CONFIG.system.version.major,
         }) as NxSystemRestAPI3;
+
+        this.temporaryUserToken = new URLSearchParams(this.window.location.href.split('?')[1]).get(
+            'temporaryUserToken',
+        );
+
         this.openDesktopApp();
     }
 

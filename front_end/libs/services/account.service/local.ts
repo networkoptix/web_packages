@@ -139,15 +139,26 @@ export class LocalAccount extends BaseAccount {
 
     private showLoginDialog(): Promise<Account | undefined> {
         this.loginDialogActive = true;
-        return this.loginService.login(true).then(result => {
-            this.loginDialogActive = false;
-            if (result === 'newSystem') {
-                return;
-            }
-            this.storageService.loginRegister = true;
-            return this.get();
-        });
+        const temporaryUserToken = new URLSearchParams(this.window.location.href.split('?')[1]).get(
+            'temporaryUserToken',
+        );
+        if (temporaryUserToken) {
+            return this.loginService.temporaryUserLogin().then(() => {
+                this.loginDialogActive = false;
+                return undefined;
+            });
+        } else {
+            return this.loginService.login(true).then(result => {
+                this.loginDialogActive = false;
+                if (result === 'newSystem') {
+                    return;
+                }
+                this.storageService.loginRegister = true;
+                return this.get();
+            });
+        }
     }
+
     redirectAuthorised(): void {
         this.get().catch(err => console.error(err));
     }

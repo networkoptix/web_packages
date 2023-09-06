@@ -182,6 +182,18 @@ export class NxDialogsService {
         },
     );
 
+    temporaryUserLogin = this.dialogV2Factory<Dt.TemporaryUserLogin>(
+        () =>
+            import('./temporary-auth-login/temporary-auth-login.component').then(
+                m => m.TemporaryAuthLoginComponent,
+            ),
+        {
+            width: DIALOG_SIZE.SMALL,
+            disableClose: true,
+            hasBackdrop: false,
+        },
+    );
+
     /* Auth */
     async expiredSession(): Promise<Dt.Confirm['return']> {
         return this.confirm({
