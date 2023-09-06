@@ -146,8 +146,10 @@ export class SystemGuard implements CanActivate {
                 ): mediaserver is NxSystemRestAPI =>
                     mediaserver instanceof NxSystemRestAPI && nxConfig.featureFlags.restCookieLogin;
 
-                if (cookieLoginEnabledSystem(currSystem.mediaserver)) {
-                    await firstValueFrom(currSystem.mediaserver.setAccessTokenAsCookie());
+                if (currSystem.isOnline && cookieLoginEnabledSystem(currSystem.mediaserver)) {
+                    try {
+                        await firstValueFrom(currSystem.mediaserver.setAccessTokenAsCookie());
+                    } catch (e) {}
                 }
                 await currSystem.update();
                 this.settingsService.system = currSystem;
