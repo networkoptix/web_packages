@@ -1,40 +1,39 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 import codecs
-import string
-import docker
 import email.header
 import imaplib
 import json
 import os
-import paramiko
 import re
 import socket
 import subprocess
 import sys
 import time
 import uuid
-
 from contextlib import contextmanager
 from datetime import date
 from platform import system
 from random import *
+
+import docker
+import paramiko
+from googletrans import Translator
 from requests import head
-from robot.libraries.BuiltIn import BuiltIn
 from robot.api import logger
-from robot.api.deco import keyword, library
-from NoptixLibrary.server_api import INITIAL_PASSWORD
-from NoptixLibrary.server_api import ServerApi
+from robot.libraries.BuiltIn import BuiltIn
+from selenium import webdriver
+from selenium.common.exceptions import InvalidArgumentException
+from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
+from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webelement import WebElement
+from selenium.webdriver.support.color import Color
+
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 from NoptixLibrary.DockerApi import DockerApi
-
-from selenium import webdriver
-from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException, InvalidArgumentException, StaleElementReferenceException
-from selenium.webdriver.support.color import Color
-from selenium.webdriver.remote.webelement import WebElement
-from googletrans import Translator
-from resource_import import activate
+from NoptixLibrary.server_api import INITIAL_PASSWORD
+from NoptixLibrary.server_api import ServerApi
 
 
 class GenericKeywords:
@@ -57,7 +56,6 @@ class GenericKeywords:
             "custom": "NoGlobalPermissions"
         }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
-        self.server_api = ServerApi()
         self.docker_api = DockerApi()
     
     def go_forward(self):
@@ -934,34 +932,6 @@ class GenericKeywords:
             if run_name in container["Names"][0]:
                 self.docker_api.delete_container(container["Id"])
 
-    
-    def create_local_users_via_api(self, token, server, locals, password):
-        local_users = {
-            "advancedViewer": {},
-            "cloudAdmin": {},
-            "custom": {},
-            "liveViewer": {},
-            "viewer": {}
-        }
-        logger.trace(f'create_local_users_via_api')
-        for user in locals:
-            self.server_api.save_user(
-                token,
-                server,
-                f'Local+{user}',
-                self.permissions[user],
-                f'noptixautoqa+local_{user}@gmail.com',
-                'Local User',
-                password,
-                is_cloud=False
-            )
-            local_users[user].update(
-                login=f'Local+{user}',
-                email=f'noptixautoqa+local_{user}@gmail.com'
-            )
-        return local_users
-
-    
     def evaluate_system_settings_via_API(self, auth, server_url, key, expected_value):
         username, password = auth
         settings = ServerApi(server_url, username, password).get_system_settings_from_server()
@@ -1017,73 +987,6 @@ class GenericKeywords:
             if user["name"] not in new_locals:
                 raise RuntimeError("All info was not changed")
 
-    
-    def reset_local_users(self, auth, token, server, local_user='ocal+', password='BASE PASSWORD'):
-        clean_locals = []
-        locals_list = []
-        local_users = list(BuiltIn().get_variable_value("${role_names}").keys())
-        users = ServerApi(server).get_users()
-        logger.trace(users)
-        for user in users:
-            local_state = True
-            if user.get("isCloud"):
-                local_state = False
-                logger.trace(f"isCloud for {user['name']} is {local_state}")
-            elif user.get("type") == "cloud":
-                local_state = False
-                logger.trace(f"local type for {user['name']} is {local_state}")
-            if local_state and local_user in user['name']:
-                locals_list.append(user)
-                logger.trace(f"{user['name']} added to locals_list")
-        logger.trace(f"locals_list: {locals_list}")
-        if len(locals_list) == 5:
-            self.reset_local_users_API(locals_list, token, server)
-        elif len(clean_locals) < 5:
-            self.create_new_local_users(
-                len(locals_list),
-                auth,
-                server,
-                token,
-                local_users,
-                locals_list,
-                password
-            )
-        return local_users
-
-    
-    def reset_local_users_API(self, locals, token, server):
-        for user in locals:
-            name = user['name'].replace("_changed", "")
-            user_type = name[6:]
-            if user_type == 'cloudadmin':
-                user_type = 'cloudAdmin'
-            elif user_type == 'liveviewer':
-                user_type = 'liveViewer'
-            elif user_type == 'advancedviewer':
-                user_type = 'advancedViewer'
-            logger.trace(f'user_type={user_type}')
-            self.server_api.save_user(
-                token,
-                server,
-                f"Local+{user_type}",
-                BuiltIn().get_variable_value("${permissions}")[user_type],
-                f"noptixautoqa+local_{user_type}@gmail.com",
-                "Local User",
-                BuiltIn().get_variable_value("${BASE_PASSWORD}"),
-                user_id=user['id'],
-                is_cloud=False,
-                patch=True
-            )
-
-    
-    def create_new_local_users(self, count, auth, server, token, local_users, locals_list, password):
-        if count == 0:
-            self.create_local_users_via_api(token, server, local_users, password)
-        else:
-            self.delete_all_local_users_via_API(token, server, locals_list)
-            self.create_local_users_via_api(token, server, local_users, password)
-
-    
     def delete_all_local_users_via_API(self, token, server, locals_list):
         for user in locals_list:
             ServerApi(server).remove_user(user['id'])
