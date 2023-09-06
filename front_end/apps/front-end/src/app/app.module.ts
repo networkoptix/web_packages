@@ -28,6 +28,7 @@ import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import { NgxWebstorageModule } from 'ngx-webstorage';
 
 import { accountReducer, AccountSync } from '@common/store/account';
+import { SystemResourcesSync } from '@common/store/system-resources/system-resources.sync';
 import { SystemsSync } from '@common/store/systems/systems.sync';
 import { NxApplyComponent } from '@components/apply/apply.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
@@ -51,6 +52,8 @@ import { ServiceModule } from '@services/services.module';
 import { NxSwPromptUpdateService } from '@services/sw-prompt-update.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
+import { SystemResourcesReducer } from '@store/system-resources';
+import { SystemResourcesEffects } from '@store/system-resources/system-resources.effects';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -69,8 +72,16 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
                 !('animate' in document.documentElement) ||
                 (navigator && /iPhone OS (8|9|10|11|12|13)_/.test(navigator.userAgent)),
         }),
-        StoreModule.forRoot({ account: accountReducer }),
-        EffectsModule.forRoot([AccountSync, SystemsSync]),
+        StoreModule.forRoot({
+            account: accountReducer,
+        }),
+        StoreModule.forFeature('systemResources', SystemResourcesReducer.reducer),
+        EffectsModule.forRoot([
+            AccountSync,
+            SystemsSync,
+            SystemResourcesSync,
+            SystemResourcesEffects,
+        ]),
         ...(!environment.production ? [StoreDevtoolsModule.instrument()] : []),
         HttpClientModule,
         HttpClientXsrfModule.withOptions({

@@ -36,7 +36,7 @@ const syncUnsavedLayoutState = (
             }
         });
     });
-    return layouts;
+    return [...layouts];
 };
 
 export const reducer = createReducer(
@@ -86,13 +86,19 @@ export const reducer = createReducer(
             return remainingLayouts;
         },
     ),
-    on(UnsavedLayoutActions.update, (state, { layouts }): UnsavedLayoutState[] => [
-        ...layouts.filter(({ id }) => !state.find(layout => layout.id === id)),
-        ...syncUnsavedLayoutState(
-            state.map(layout => layouts.find(({ id }) => id === layout.id) || layout),
-            'save',
-        ),
-    ]),
+    on(UnsavedLayoutActions.update, (state, { layouts }): UnsavedLayoutState[] => {
+        const updatedLayouts = syncUnsavedLayoutState(layouts, 'save');
+        return [
+            ...state.map(layout => {
+                const updatedLayout = updatedLayouts.findIndex(({ id }) => id === layout.id);
+                if (updatedLayout !== -1) {
+                    return updatedLayouts.splice(updatedLayout).pop();
+                }
+                return layout;
+            }),
+            ...updatedLayouts,
+        ];
+    }),
     on(SharedLayoutsActions.saveLayout, (state, { layoutIds }): UnsavedLayoutState[] =>
         state.map(layout =>
             layoutIds.includes(layout.id) ? { ...layout, unsaved: UnsavedState.PENDING } : layout,

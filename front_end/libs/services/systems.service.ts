@@ -83,7 +83,7 @@ export class NxSystemsService {
     systemsInPool: number;
 
     private _userDisconnectSystem: boolean = false;
-    private userEmail: string;
+    public userEmail: string;
 
     #systems: NxSystemInfo[] = [];
 

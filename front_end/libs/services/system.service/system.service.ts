@@ -1,7 +1,20 @@
 import { Injectable, Injector } from '@angular/core';
+import { Router, ActivationEnd } from '@angular/router';
+import { Store } from '@ngrx/store';
+import {
+    Observable,
+    catchError,
+    distinctUntilChanged,
+    filter,
+    forkJoin,
+    from,
+    map,
+    shareReplay,
+    switchMap,
+} from 'rxjs';
 
+import { SystemResourcesActions, SystemResourcesTypes } from '@common/store/system-resources';
 import { environment } from '@environments/environment';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { nxSystemFactory } from '@services/system/factories/initial-system-factory';
 import { NxSystemBase } from '@services/system/system-base';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -9,6 +22,7 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
+import { RecordingStatus } from './camera-manager/camera-manager-types';
 import { NxSystem } from './system';
 
 @Injectable({
@@ -19,15 +33,75 @@ export class NxSystemService {
     private systemsCache: { [systemId: string]: NxSystem } = {};
 
     constructor(
-        configService: NxConfigService,
         injector: Injector,
         private systemsService: NxSystemsService,
+        private router: Router,
+        private store: Store,
     ) {
         NxSystemBase.INJECTOR ||= injector;
     }
 
+    currentSystem$ = this.router.events.pipe(
+        filter(event => event instanceof ActivationEnd),
+        map((event: ActivationEnd): string => event?.snapshot?.params?.systemId),
+        filter(Boolean),
+        distinctUntilChanged(),
+        switchMap(async systemId => {
+            let system = this.systemsCache[systemId];
+
+            if (!system) {
+                system = this.createSystem(this.systemsService.userEmail, systemId, null, true);
+                await system.update();
+            }
+
+            this.store.dispatch(
+                SystemResourcesActions.refreshSystemResources({
+                    systems: { [system.id]: { all: true } },
+                }),
+            );
+            return system;
+        }),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
     getCurrentSystem(): NxSystem {
         return this.system;
+    }
+
+    getSystemResources(
+        systemId: string,
+        refreshConfig: SystemResourcesTypes.LoadPartialSystemResources,
+    ): Observable<Partial<SystemResourcesTypes.SystemResourcesTypeMap>> {
+        const system = this.createSystem(this.systemsService.userEmail, systemId, null, true, true);
+
+        return forkJoin({
+            [SystemResourcesTypes.SystemResourceTypeEnums.CAMERAS]: refreshConfig.cameras
+                ? from(system.cameraManager.getCameras()).pipe(
+                      switchMap(cameras =>
+                          system.cameraManager.hasArchives().pipe(
+                              catchError(async () => [] as string[]),
+                              map(camerasWithArchives =>
+                                  cameras.map(({ recordingStatus, ...camera }) => ({
+                                      ...camera,
+                                      recordingStatus: camerasWithArchives.includes(camera.id)
+                                          ? RecordingStatus.Archive
+                                          : recordingStatus,
+                                  })),
+                              ),
+                          ),
+                      ),
+                  )
+                : null,
+            [SystemResourcesTypes.SystemResourceTypeEnums.SERVERS]: refreshConfig.servers
+                ? system.serverManager.getServers()
+                : null,
+            [SystemResourcesTypes.SystemResourceTypeEnums.LAYOUTS]: refreshConfig.layouts
+                ? (system.mediaserver as NxSystemRestAPI).getLayouts()
+                : null,
+            [SystemResourcesTypes.SystemResourceTypeEnums.WEB_PAGES]: refreshConfig.webPages
+                ? (system.mediaserver as NxSystemRestAPI).getWebPages()
+                : null,
+        });
     }
 
     createSystem(

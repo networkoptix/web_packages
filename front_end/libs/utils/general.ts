@@ -361,6 +361,13 @@ export type KeyFilter<T, F> = {
 /** Get element type of array. */
 export type ArrayType<T> = T extends (infer Item)[] ? Item : never;
 
+/** Get type from observable */
+export type ObservableValueType<T> = T extends Observable<infer Item> ? Item : never;
+
+/** Get type from returned observable */
+export type ReturnedObservableValueType<T extends (...args: unknown[]) => unknown> =
+    ObservableValueType<ReturnType<T>>;
+
 /*
 for key of keyof targetType
     if key extends keyof keys

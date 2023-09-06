@@ -4,9 +4,9 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { uniq } from 'lodash-es';
+import { cloneDeep, uniq } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
-import { combineLatest, defer, firstValueFrom, merge, Observable, Subject } from 'rxjs';
+import { combineLatest, firstValueFrom, merge, Observable, Subject } from 'rxjs';
 import {
     catchError,
     distinctUntilChanged,
@@ -44,7 +44,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
-import { Layout, LayoutItem, Layouts, WebPage, WebPages } from '@services/system-api.types';
+import { Layout, LayoutItem, Layouts, WebPage } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CurrentUser } from '@services/system-user.types';
 import {
@@ -52,9 +52,9 @@ import {
     NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
-import { NxSystem } from '@services/system.service/system';
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { selectResourcesValuesBySystemId } from '@store/system-resources/system-resources.selectors';
 import { alphabeticalSort, alphaNumericSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
@@ -98,20 +98,7 @@ export class NxLayoutViewComponent {
     CONFIG: IConfig;
     ptzControlTarget: NxSystemCamera;
 
-    selectedSystem$: Observable<NxSystem> = this.activatedRoute.params.pipe(
-        map(async ({ systemId }) => systemId),
-        distinctUntilChanged(),
-        switchMap(async () => {
-            const current = this.systemService.getCurrentSystem();
-            await current.update();
-            return current;
-        }),
-        shareReplay({
-            bufferSize: 1,
-            refCount: false,
-        }),
-        untilDestroyed(this),
-    );
+    selectedSystem$ = this.systemService.currentSystem$;
 
     // Temporary version refrence. To prevent conflicts with Parti's open MR.
     useV2api = false;
@@ -134,37 +121,18 @@ export class NxLayoutViewComponent {
         switchMap(system =>
             this.layoutStateService.loadUnsavedLayouts(system.id).pipe(map(() => system)),
         ),
-        switchMap(({ mediaserver, serverManager, cameraManager, permissionManager }) =>
-            combineLatest([
-                defer(() => cameraManager.getCameras()).pipe(
-                    switchMap(cameras =>
-                        cameraManager.hasArchives().pipe(
-                            catchError(async () => [] as string[]),
-                            map(camerasWithArchives =>
-                                cameras.map(({ recordingStatus, ...camera }) => ({
-                                    ...camera,
-                                    recordingStatus: !camerasWithArchives.includes(camera.id)
-                                        ? recordingStatus
-                                        : RecordingStatus.Archive,
-                                })),
-                            ),
-                        ),
-                    ),
-                ),
-                serverManager.getServers().pipe(catchError(async () => [] as NxSystemServer[])),
-                mediaserver instanceof NxSystemRestAPI
-                    ? mediaserver.getWebPages().pipe(catchError(async () => [] as WebPages))
-                    : Promise.resolve([] as WebPages),
+        switchMap(({ permissionManager, id }) => {
+            return combineLatest([
+                this.store.select(selectResourcesValuesBySystemId(id)),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.availableLayouts$.pipe(startWith([])),
                 new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser())),
-            ]),
-        ),
+            ]);
+        }),
+        map(cloneDeep),
         map(
             ([
-                cameras,
-                servers,
-                webPages,
+                { cameras, servers, webPages },
                 currentLayout,
                 layouts,
                 currentUser,
@@ -175,7 +143,7 @@ export class NxLayoutViewComponent {
                     !(!!camera.parameters.mediaStreams || !camera.parameters.ioSettings?.length);
                 const parsedCameras = cameras.reduce((cameras, camera) => {
                     const parentServerOnline =
-                        servers.find(({ id }) => id === camera.parentId).status === 'Online';
+                        servers.find(({ id }) => id === camera.parentId)?.status === 'Online';
                     const online =
                         isIoOnly(camera) ||
                         (camera.status === CameraStatus.Online && parentServerOnline);
@@ -445,6 +413,7 @@ export class NxLayoutViewComponent {
     selectedLayout$: Observable<Layout> = merge(this.#selectedLayout$, this.#fetchingLayout$).pipe(
         map(current => (current === 'fetching' ? null : current)),
         filter(layout => !!layout),
+        map(cloneDeep),
         shareReplay({
             bufferSize: 1,
             refCount: false,

@@ -16,7 +16,7 @@ import {
 const assertResourceTypeFactory =
     <T extends ResourceType>(resourceType: T) =>
     (node: BaseResourceNode): node is ResourceNodeMap[typeof resourceType] =>
-        node.type === resourceType;
+        node?.type === resourceType;
 /**
  *  Assert the type of a resource node based on the ResourceNodeMap.
  *
