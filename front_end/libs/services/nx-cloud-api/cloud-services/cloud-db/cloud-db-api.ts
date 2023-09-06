@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { inject } from '@angular/core';
 import md5 from 'md5';
-import { Observable, zip } from 'rxjs';
+import { iif, Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { WINDOW } from '@services/window-provider';
@@ -81,12 +81,15 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         const params: Record<string, string> = {
             customization: this.hostOrCustomization(),
         };
-        if (systemId) {
-            params.systemId = systemId;
-        }
-        return this.get(this.systemEndpoint(systemId), {
-            params,
-        }).pipe(map(({ systems }) => systems));
+        const fetchSystems = this.get(this.systemEndpoint(systemId), { params });
+        // If we get a singular system cdb returns a system object.
+        // Otherwise, cdb returns an object { systems: System[] }.
+        // Either way both need to be converted to a System[].
+        return iif(
+            () => !!systemId,
+            fetchSystems.pipe(map(systems => [systems])),
+            fetchSystems.pipe(map(({ systems }) => systems)),
+        );
     }
 
     public getCloudUsers(systemId = ''): Observable<CloudUser[]> {
