@@ -176,6 +176,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         const auth = params.get('auth');
         const code = params.get('code');
         const token = params.get('token');
+        const temporaryUserToken = params.get('temporaryUserToken');
         if (code) {
             this.removeParamFromUrl(url, hash, params, 'code');
             this.oauthLogin(code);
@@ -187,11 +188,12 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             if (auth) {
                 this.removeParamFromUrl(url, hash, params, 'auth');
             }
-            if (token.startsWith('vmsTmp-')) {
-                this.oauthService.temporaryAuthToken.set(token);
-            } else {
-                this.tokenLogin(token || auth);
-            }
+            this.tokenLogin(token || auth);
+
+            return;
+        } else if (temporaryUserToken) {
+            this.removeParamFromUrl(url, hash, params, 'temporaryUserToken');
+            this.oauthService.temporaryAuthToken.set(temporaryUserToken);
             return;
         } else {
             this.loading = false;

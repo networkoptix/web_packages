@@ -82,8 +82,8 @@ export class NxUrlProtocolService {
         });
     }
 
-    openBasic(token: string): void {
-        const uri = `${this.baseUri}${this.window.location.host}?token=${token}`;
+    openDesktopAsTemporaryUser(temporaryUserToken: string): void {
+        const uri = `${this.baseUri}${this.window.location.host}?temporaryUserToken=${temporaryUserToken}`;
         this.window.location.href = uri;
     }
 }

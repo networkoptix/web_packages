@@ -18,7 +18,7 @@ import { images } from '@static-variables';
     imports: [AngularSvgIconModule],
 })
 export class TemporaryAuthLoginComponent implements OnInit {
-    @Input() token: string;
+    @Input() temporaryUserToken: string;
     @Input() urlUpdateTimeout: number = 150;
 
     private urlProtocol = inject(NxUrlProtocolService);
@@ -40,11 +40,11 @@ export class TemporaryAuthLoginComponent implements OnInit {
     }
 
     openDesktopApp(): void {
-        this.urlProtocol.openBasic(this.token);
+        this.urlProtocol.openDesktopAsTemporaryUser(this.temporaryUserToken);
     }
 
     handleLoginToWeb(): void {
-        this.mediaServerApi.temporaryUserTokenExchange(this.token).subscribe(res => {
+        this.mediaServerApi.temporaryUserTokenExchange(this.temporaryUserToken).subscribe(res => {
             this.mediaServerApi.loginTokenUrl(res.token).subscribe(loggedInAccount => {
                 this.account.loginState =
                     loggedInAccount.email || loggedInAccount.name || loggedInAccount.username;
