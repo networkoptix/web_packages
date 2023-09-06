@@ -65,6 +65,8 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     @Input({ transform: booleanAttribute }) canSelectAll: boolean;
     @Input({ transform: booleanAttribute }) canSearch: boolean;
     @Input({ transform: booleanAttribute }) moreLeftPadding: boolean;
+    @Input() tooltipAlternateSecondary: boolean;
+    @Input() tooltipHorizontal: boolean;
 
     icons = icons;
     public items: MultiSelectItem[] = [];

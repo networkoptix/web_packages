@@ -61,7 +61,7 @@
         &::before {
             left: 0;
             border-width: 16px 4px px 0;
-            border-right-color: var(--tooltip-bg);
+            border-right-color: var(--tooltip-color);
         }
 
         &.alternate {
@@ -99,7 +99,7 @@
 
 :host-context(.right.center) .tooltip-arrow {
     top: 50%;
-    left: -4px;
+    left: -6px;
     transform: rotate(0deg) translateY(-4px);
 }
 

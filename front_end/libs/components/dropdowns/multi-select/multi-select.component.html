@@ -72,6 +72,8 @@
                 <div
                     class="dropdown-item inset"
                     [nxTooltip]="item.tooltip"
+                    [alternateSecondary]="tooltipAlternateSecondary"
+                    [horizontal]="tooltipHorizontal"
                     [ngClass]="{
                         'default-cursor': ['horizontal', 'title'].includes(item.id),
                         'mb-1': isLast
