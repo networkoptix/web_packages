@@ -12,6 +12,7 @@ import {
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxPasswordComponent } from '@components/password-input/password.component';
 import { NxPasswordValidationComponent } from '@components/password-input-validation/password-validation.component';
@@ -20,12 +21,14 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { ToastType } from '@components/toast-container/toast.types';
 import type { ChangePassword as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUser } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
+import { icons } from '@static-variables';
 import { assignFrom } from '@utils/general';
 
 @Component({
@@ -42,6 +45,8 @@ import { assignFrom } from '@utils/general';
         NxPasswordValidationComponent,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxAddSvgSrcDirective,
+        AngularSvgIconModule,
     ],
 })
 export class ChangePasswordModalContent
@@ -156,4 +161,5 @@ export class ChangePasswordModalContent
     override close = (msg: DT['return'] = false): void => {
         this.dialogRef.close(msg);
     };
+    protected readonly icons = icons;
 }

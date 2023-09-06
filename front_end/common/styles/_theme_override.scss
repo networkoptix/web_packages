@@ -245,6 +245,20 @@ select {
         .glyphicon {
             margin : 0;
         }
+
+        svg-icon svg .fill-color-main {
+            fill: var(--card-header-text);
+            stroke: none;
+        }
+
+        svg-icon svg .stroke-color-main {
+            stroke: var(--light-text-color);
+            fill: none;
+        }
+
+         &.confirm {
+             margin-right: -1px;
+        }
     }
 }
 
