@@ -69,12 +69,13 @@ import type {
 import { AggregatedRoles } from './system-api.aggregated-types';
 import type { GetEndpoints } from './system-api.endpoint-types';
 import * as t from './system-api.types';
+import type { MediaStreams } from './system.service/camera-manager/add-params.types';
 import type {
     PreprocessCamera,
     SaveCameraUserAttributes,
 } from './system.service/camera-manager/camera-manager-types';
 import type { SaveStoragePayload } from './system.service/storage-manager/storage';
-import type { PreprocessServer } from './system.service/system-types';
+import type { PreprocessServer, ViewBaseCamera } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 import { WINDOW } from './window-provider';
 
@@ -940,7 +941,66 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     @memoizeAsyncMedium
     getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
         const routes = ['/ec2/getMediaServersEx', '/ec2/getCamerasEx'] as const;
-        return this.getRequestAggregator(routes);
+        return this.getRequestAggregator(routes).pipe(
+            map(res => {
+                const mediaServers = res.reply['/ec2/getMediaServersEx'].map(
+                    ({ networkAddresses, id, name, status }) => ({
+                        id,
+                        name,
+                        status,
+                        endpoints: networkAddresses.split(';'),
+                    }),
+                );
+                const cameras = res.reply['/ec2/getCamerasEx'].map(({ addParams, ...cam_ }) => {
+                    const {
+                        id,
+                        disableDualStreaming,
+                        model,
+                        name,
+                        parentId,
+                        preferredServerId,
+                        scheduleEnabled,
+                        status,
+                        url,
+                    } = cam_;
+                    const cam: Omit<ViewBaseCamera, 'mediaStreams' | 'rotation'> = {
+                        id,
+                        disableDualStreaming,
+                        model,
+                        name,
+                        parentId,
+                        preferredServerId,
+                        scheduleEnabled,
+                        status,
+                        url,
+                    };
+
+                    const mediaStreamsRawValue = addParams.find(
+                        p => p.name === 'mediaStreams',
+                    )?.value;
+                    const mediaStreams = mediaStreamsRawValue
+                        ? (JSON.parse(mediaStreamsRawValue) as MediaStreams).streams
+                        : [];
+
+                    const rotationRawValue = addParams.find(p => p.name === 'rotation')?.value;
+                    const rotation = rotationRawValue ? Number(rotationRawValue) : 0;
+
+                    return {
+                        ...cam,
+                        mediaStreams,
+                        rotation,
+                    };
+                });
+
+                return {
+                    ...res,
+                    reply: {
+                        '/ec2/getMediaServersEx': mediaServers,
+                        '/ec2/getCamerasEx': cameras,
+                    },
+                };
+            }),
+        );
     }
 
     // @memoizeAsyncPersistent

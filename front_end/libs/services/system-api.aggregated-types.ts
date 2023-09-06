@@ -2,6 +2,7 @@ import type { GetEndpoints } from './system-api.endpoint-types';
 import type * as t from './system-api.types';
 import type { LegacyRole, PredefinedLegacyRole, SystemUser } from './system-user.types';
 import type { PreprocessCamera } from './system.service/camera-manager/camera-manager-types';
+import { ViewBaseCamera, ViewPreprocessServer } from './system.service/system-server-types';
 
 export type AggregatedResp<K extends readonly (keyof GetEndpoints)[]> = t.NormalResponse<{
     [E in K[number]]: GetEndpoints[E];
@@ -34,8 +35,8 @@ export interface AggregatedUsers {
 }
 
 export type ViewMediaServersAndCameras = t.NormalResponse<{
-    '/ec2/getMediaServersEx': t.ec2MediaServerEx[];
-    '/ec2/getCamerasEx': t.ec2CameraEx[];
+    '/ec2/getMediaServersEx': ViewPreprocessServer[];
+    '/ec2/getCamerasEx': ViewBaseCamera[];
 }>;
 
 export interface CamerasAndServerTimes {

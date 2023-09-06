@@ -1,23 +1,22 @@
 import { Observable } from 'rxjs';
 
+import type { MediaStream } from '@services/system.service/camera-manager/add-params.types';
 import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
 import { BirdViewTree } from './BirdViewTree';
-import {
-    ICamera,
-    ISimpleTimeRange,
-    CAMERA_STATUS,
-    CameraArchive,
-    MediaStreamInfo,
-} from './ICamera';
+import { ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
 
-interface NameValue {
-    name: string;
-    value: string;
+interface Resolutions {
+    high?: string;
+    low?: string;
+    '1080p'?: string;
+    '720p'?: string;
+    '480p'?: string;
+    '360p'?: string;
 }
 
-export class Camera implements ICamera {
+export class ViewCamera {
     protected _birdViewTree: BirdViewTree;
 
     public get archiveRange() {
@@ -28,26 +27,26 @@ export class Camera implements ICamera {
         return this._archive;
     }
 
-    protected _mediaStreams: Array<MediaStreamInfo> = [];
+    protected _mediaStreams: MediaStream[] = [];
 
     protected _rotation: int = 0;
 
     constructor(
-        public readonly id: string,
-        public readonly parentServerId: string,
-        public readonly preferredServerId: string,
-        public readonly name: string,
-        public readonly model: string,
-        public readonly url: string,
-        public readonly status: CAMERA_STATUS,
-        public readonly isScheduleEnabled: boolean,
-        public readonly disableDualStreaming: boolean,
+        public id: string,
+        public parentServerId: string,
+        public preferredServerId: string,
+        public name: string,
+        public model: string,
+        public url: string,
+        public status: CAMERA_STATUS,
+        public isScheduleEnabled: boolean,
+        public disableDualStreaming: boolean,
         protected _archiveRange: ISimpleTimeRange,
         protected _archive: CameraArchive = [],
-        public readonly thumbnailUrl: Observable<string> | undefined = undefined,
-        public readonly getVideoUrl: (transport: string, quality: string, t?: ms) => string,
-        public readonly getPosterUrl: (t?: ms) => Observable<string>,
-        public readonly require2fa: boolean = false,
+        public thumbnailUrl: Observable<string> | undefined = undefined,
+        public getVideoUrl: (transport: string, quality: string, t?: ms) => string,
+        public getPosterUrl: (t?: ms, width?: number, height?: number) => Observable<string>,
+        public require2fa: boolean = false,
     ) {
         this._initBirdView();
     }
@@ -60,22 +59,27 @@ export class Camera implements ICamera {
         }
     }
 
-    public parseAdditionalParams(ps: Array<NameValue>): void {
-        const ms = ps.find(p => p.name === 'mediaStreams');
-        if (ms) {
-            try {
-                this._mediaStreams = JSON.parse(ms.value).streams;
-                // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
-            } catch (e) {
-                this._mediaStreams = [];
-                console.error('error parsing media streams', this.id, e);
-            }
-        }
-        const rotation = ps.find(p => p.name === 'rotation');
-        if (rotation) {
-            this._rotation = parseInt(rotation.value) || 0;
-            // console.log('got camera rotation', this._rotation)
-        }
+    // public parseAdditionalParams(ps: ec2CameraEx['addParams']): void {
+    //     const ms = ps.find(p => p.name === 'mediaStreams');
+    //     if (ms) {
+    //         try {
+    //             this._mediaStreams = JSON.parse(ms.value).streams;
+    //             // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
+    //         } catch (e) {
+    //             this._mediaStreams = [];
+    //             console.error('error parsing media streams', this.id, e);
+    //         }
+    //     }
+    //     const rotation = ps.find(p => p.name === 'rotation');
+    //     if (rotation) {
+    //         this._rotation = parseInt(rotation.value) || 0;
+    //         // console.log('got camera rotation', this._rotation)
+    //     }
+    // }
+
+    addAdditionalParams(mediaStreams: MediaStream[], rotation: number): void {
+        this._mediaStreams = mediaStreams;
+        this._rotation = rotation;
     }
 
     public get rotation() {
@@ -84,13 +88,13 @@ export class Camera implements ICamera {
     }
 
     public get availableTransportsAndResolutions() {
-        return this.availableTransports.reduce((acc, t) => {
+        return this.availableTransports.reduce<Record<string, Resolutions>>((acc, t) => {
             acc[t] = this._getAvailableResolutions(t);
             return acc;
         }, {});
     }
 
-    public get availableTransports() {
+    public get availableTransports(): PlaybackTransport[] {
         const isTransportSupported = t => {
             if (this.require2fa) {
                 return t === 'hls';
@@ -118,7 +122,7 @@ export class Camera implements ICamera {
         return this._mediaStreams;
     }
 
-    protected _getAvailableResolutions(transport) {
+    protected _getAvailableResolutions(transport: PlaybackTransport): Resolutions {
         const result: any = {};
         const resolutions = [];
         const isHls = transport === 'hls';

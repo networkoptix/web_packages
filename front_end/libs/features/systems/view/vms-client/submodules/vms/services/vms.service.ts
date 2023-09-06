@@ -1,10 +1,11 @@
-import { computed, Injectable, Signal, signal } from '@angular/core';
+import { computed, Injectable, signal } from '@angular/core';
 
 import type { ServerTimeInfo } from '@services/system.service/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
-import { CameraArchive, ICamera } from '../datatypes/ICamera';
-import { IMediaServer } from '../datatypes/IMediaServer';
+import { ViewCamera } from '../datatypes/Camera';
+import { CameraArchive } from '../datatypes/ICamera';
+import { ViewMediaServer } from '../datatypes/IMediaServer';
 import { initializeVmsState, VMS_MODE, VmsState } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
 
@@ -19,10 +20,12 @@ type tweakedMs = ms;
 })
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
-    private _selectedCamera: Signal<ICamera> = computed(() => this.state().selectedCamera);
+    private _selectedCamera = computed<VmsState['selectedCamera']>(
+        () => this.state().selectedCamera,
+    );
     state = signal<VmsState>(initializeVmsState());
     serverTimes = signal<Array<ServerTimeInfo>>([]);
-    systemId: Signal<string> = computed(() => this.state().systemId);
+    systemId = computed<string>(() => this.state().systemId);
 
     constructor() {
         this.reset();
@@ -104,13 +107,13 @@ export class VideoManagementSystemService {
         return t - this.timeZoneOffset;
     }
 
-    public setMediaServers(systemId: string, mediaServers: Array<IMediaServer>): void {
+    public setMediaServers(systemId: string, mediaServers: ViewMediaServer[]): void {
         // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this.state.mutate(state => {
             state.systemId = systemId;
             state.mediaServers = mediaServers;
             state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
-            state.cameras = (mediaServers || []).reduce((acc, ms) => {
+            state.cameras = mediaServers.reduce<Record<string, ViewCamera>>((acc, ms) => {
                 ms.cameras.forEach(c => {
                     acc[c.id] = c;
                 });

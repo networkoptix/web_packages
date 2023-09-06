@@ -2,9 +2,10 @@ import { Component, Input, Output, EventEmitter, OnChanges, Inject } from '@angu
 import { ClipboardService } from 'ngx-clipboard';
 
 import staticLang from '@language_static';
+import type { MediaStream } from '@services/system.service/camera-manager/add-params.types';
 import { WINDOW } from '@services/window-provider';
 
-import { ICamera, MediaStreamInfo } from '../../vms-client/submodules/vms/datatypes/ICamera';
+import type { ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
 
 interface ITransport {
     name: string;
@@ -22,7 +23,7 @@ interface ICameraDetails {
     styleUrls: ['camera-details.component.scss'],
 })
 export class NxCameraDetailsComponent implements OnChanges {
-    @Input() camera: ICamera;
+    @Input() camera: ViewCamera;
     @Output() close = new EventEmitter<void>();
 
     LANG = staticLang;
@@ -43,14 +44,14 @@ export class NxCameraDetailsComponent implements OnChanges {
             }
             this.currentUrl = this.window.location.href;
             const mediaStreams = this.camera.mediaStreams;
-            const findIndexTransports = (index: number): MediaStreamInfo | undefined =>
+            const findIndexTransports = (index: number): MediaStream | undefined =>
                 mediaStreams.find(({ encoderIndex }) => index === encoderIndex);
 
-            const calcTransportUrls = (stream: MediaStreamInfo): Array<ITransport> => {
+            const calcTransportUrls = (stream: MediaStream): Array<ITransport> => {
                 // TODO: convert reduce to map
                 return (
                     stream?.transports.reduce((urls: ITransport[], transport) => {
-                        const resolutions: { [key: string]: string } =
+                        const resolutions =
                             this.camera.availableTransportsAndResolutions[transport];
                         let resolution = '';
                         switch (transport) {

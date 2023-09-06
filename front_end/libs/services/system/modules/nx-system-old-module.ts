@@ -33,11 +33,9 @@ import {
     PtzCommand,
     RawRule,
     SystemConfigSettings,
-    ec2CameraEx,
     MergeInfo,
     ActionParams,
     EventCondition,
-    ec2MediaServerEx,
 } from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { CameraManager } from '../../system.service/camera-manager/camera-manager';
@@ -45,7 +43,12 @@ import { CloudStorageManager } from '../../system.service/cloud-storage-manager/
 import { LicenseManager } from '../../system.service/license-manager/licence-manager';
 import { ServerManager } from '../../system.service/server-manager/server-manager';
 import { NxSystem } from '../../system.service/system';
-import { NxViewMediaServer, ServerTimeInfo } from '../../system.service/system-types';
+import {
+    ViewBaseServer,
+    ServerTimeInfo,
+    ViewBaseCamera,
+    ViewPreprocessServer,
+} from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
 import { NxSystemsService } from '../../systems.service';
 import { NxSystemBase } from '../system-base';
@@ -96,7 +99,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     mergeInfo: MergeInfo;
     cloudStorageSystemEnabled: boolean = false;
     cloudStorageCapable: boolean = false;
-    mediaservers: NxViewMediaServer[] = null;
+    viewBaseServers: ViewBaseServer[] = null;
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -605,9 +608,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    public getViewMediaServersAndCameras(force: boolean = false): Promise<NxViewMediaServer[]> {
-        if (this.mediaservers && !force) {
-            return Promise.resolve(this.mediaservers);
+    public getViewMediaServersAndCameras(force: boolean = false): Promise<ViewBaseServer[]> {
+        if (this.viewBaseServers && !force) {
+            return Promise.resolve(this.viewBaseServers);
         }
 
         return this.mediaserver
@@ -630,15 +633,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     protected processMediaServersAndCameras(
         apiReply: ViewMediaServersAndCameras,
-    ): NxViewMediaServer[] {
-        const msIds = [
-            // 'authKey',
-            'id',
-            // 'metadataStorageId',
-            // 'typeId',
-        ] satisfies KeyFilter<ec2MediaServerEx, string>[];
-        const camIds = ['id', 'parentId', 'preferredServerId', 'typeId'] satisfies KeyFilter<
-            ec2CameraEx,
+    ): ViewBaseServer[] {
+        const msIds = ['id'] satisfies KeyFilter<ViewPreprocessServer, string>[];
+        const camIds = ['id', 'parentId', 'preferredServerId'] satisfies KeyFilter<
+            ViewBaseCamera,
             string
         >[];
         // ID properties with enclosing brackets {} that we want to trim
@@ -648,7 +646,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 msIds.forEach(id => {
                     ms[id] = cleanId(ms[id]);
                 });
-                return { ...ms, endpoints: ms.networkAddresses.split(';') };
+                return ms;
             }) || [];
         const cameras =
             apiReply.reply['/ec2/getCamerasEx']?.map(cam => {
@@ -658,11 +656,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 return cam;
             }) || [];
 
-        this.mediaservers = mediaServers.map(ms => ({
+        this.viewBaseServers = mediaServers.map(ms => ({
             ...setServerIpAndPort(ms),
             cameras: cameras.filter(c => c.parentId === ms.id),
         }));
-        return this.mediaservers;
+        return this.viewBaseServers;
     }
 
     public getBookmarks() {

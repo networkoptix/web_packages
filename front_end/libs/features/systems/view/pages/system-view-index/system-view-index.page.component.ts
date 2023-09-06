@@ -22,9 +22,8 @@ import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { ec2CameraEx } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxViewMediaServer } from '@services/system.service/system-types';
+import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
@@ -33,14 +32,9 @@ import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { Camera } from '@vms-client/submodules/vms/datatypes/Camera';
-import {
-    CAMERA_STATUS,
-    ICamera,
-    SimpleTimeRange,
-} from '@vms-client/submodules/vms/datatypes/ICamera';
-import type { IMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
-import { MediaServer } from '@vms-client/submodules/vms/datatypes/MediaServer';
+import { ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
+import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import type { ViewMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
 import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
@@ -65,7 +59,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     public system: NxSystem;
     public systems: NxSystemInfo[];
     public selectedCameraId: string;
-    public mediaservers: MediaServer[];
+    public mediaservers: ViewMediaServer[];
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -282,8 +276,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private mediaServerChanged(
-        mediaServers: NxViewMediaServer[],
-        cachedServers: NxViewMediaServer[],
+        mediaServers: ViewBaseServer[],
+        cachedServers: ViewBaseServer[],
     ): boolean {
         if (mediaServers.length !== cachedServers.length) {
             return true;
@@ -313,12 +307,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private processCameras(
-        c: ec2CameraEx,
-        ms: NxViewMediaServer,
+        c: ViewBaseCamera,
+        ms: ViewBaseServer,
         archiveRanges: Record<string, SimpleTimeRange>,
-    ): Camera {
+    ): ViewCamera {
         this.hasCameras = true;
-        const result = new Camera(
+        const result = new ViewCamera(
             c.id,
             c.parentId,
             c.preferredServerId,
@@ -343,12 +337,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     : of(),
             this.system.info?.system2faEnabled,
         );
-        result.parseAdditionalParams(c.addParams);
+        // result.parseAdditionalParams(c.addParams);
+        result.addAdditionalParams(c.mediaStreams, c.rotation);
         return result;
     }
 
     private async findCamerasWithArchive(
-        mediaServers: NxViewMediaServer[],
+        mediaServers: ViewBaseServer[],
         archiveRanges: Record<string, SimpleTimeRange>,
     ): Promise<void> {
         return this.system.mediaserver
@@ -370,7 +365,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private _initSystem() {
         let processingMediaServers = false;
-        let cachedMediaServers: NxViewMediaServer[] = [];
+        let cachedMediaServers: ViewBaseServer[] = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
@@ -426,7 +421,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 await this.findCamerasWithArchive(mediaServers, archiveRanges);
 
-                const processedMediaServers: IMediaServer[] = mediaServers.map(ms => ({
+                const processedMediaServers = mediaServers.map(ms => ({
                     ...ms,
                     cameras: ms.cameras.map(c => this.processCameras(c, ms, archiveRanges)),
                 }));
@@ -454,13 +449,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private findOnlineCamera(): string {
-        const cameraChecker = (c: ICamera) => c.isOnline;
+        const isOnline = (c: ViewCamera) => c.isOnline;
         const firstMediaServerWithAnOnlineCamera = this.mediaservers.find(ms =>
-            ms.cameras.find(cameraChecker),
+            ms.cameras.find(isOnline),
         );
         let id = '';
         if (firstMediaServerWithAnOnlineCamera) {
-            id = firstMediaServerWithAnOnlineCamera.cameras.find(cameraChecker)?.id || '';
+            id = firstMediaServerWithAnOnlineCamera.cameras.find(isOnline)?.id || '';
         }
         return id;
     }

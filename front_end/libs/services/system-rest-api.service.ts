@@ -43,6 +43,8 @@ import { SystemUser, RestV1User, NxUser, Role, UserType } from '@services/system
 import {
     serverKeyMapV1,
     type RestV1ServerCompat,
+    ViewBaseCamera,
+    ViewPreprocessServer,
 } from '@services/system.service/system-server-types';
 import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { buildTopLevelKeyMap } from '@utils/general';
@@ -55,7 +57,7 @@ import {
     memoizeAsyncPersistent,
     memoizeAsyncShort,
 } from '@utils/memoize';
-import { withKeyMap, NxRecursiveKeyMap, NxRecursivePick } from '@utils/nx';
+import { withKeyMap, NxRecursiveKeyMap, NxRecursivePick, ZERO_ID } from '@utils/nx';
 import { startWithCache } from '@utils/start-with-cached';
 
 import { apiTool, servers } from '../variables/static-variables';
@@ -931,17 +933,55 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }).pipe(map(cameras => cameras[0].credentials));
     }
 
-    getViewMediaServers() {
-        return this.get('/ec2/getMediaServersEx', {
-            headers: this.cacheHeader(false),
-        });
+    protected getViewMediaServers(): Observable<ViewPreprocessServer[]> {
+        return this.getWith('/rest/v1/servers', ['id', 'name', 'status', 'endpoints']);
+    }
+
+    protected getViewCameras(): Observable<ViewBaseCamera[]> {
+        const viewCamKeyMap = {
+            ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
+            options: {
+                isDualStreamingEnabled: true,
+                preferredServerId: true,
+            },
+            schedule: {
+                isEnabled: true,
+            },
+            parameters: {
+                mediaStreams: true,
+                rotation: true,
+            },
+        } as const;
+
+        return this.getWith('/rest/v1/devices', viewCamKeyMap).pipe(
+            map(cameras =>
+                cameras.map(
+                    ({
+                        options: { isDualStreamingEnabled, preferredServerId },
+                        schedule: { isEnabled: scheduleEnabled },
+                        serverId,
+                        parameters = {},
+                        ...camera
+                    }) => {
+                        return {
+                            ...camera,
+                            scheduleEnabled,
+                            parentId: serverId,
+                            disableDualStreaming: !isDualStreamingEnabled,
+                            preferredServerId:
+                                preferredServerId !== ZERO_ID ? preferredServerId : serverId,
+                            rotation: parameters.rotation || 0,
+                            mediaStreams: parameters.mediaStreams?.streams ?? [],
+                        };
+                    },
+                ),
+            ),
+        );
     }
 
     @memoizeAsyncMedium
     getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
-        const servers = this.getViewMediaServers();
-        const cameras = this.get('/ec2/getCamerasEx');
-        return combineLatest([servers, cameras]).pipe(
+        return combineLatest([this.getViewMediaServers(), this.getViewCameras()]).pipe(
             map(([mediaServers, cameras]) => ({
                 error: '0',
                 errorId: 'ok',

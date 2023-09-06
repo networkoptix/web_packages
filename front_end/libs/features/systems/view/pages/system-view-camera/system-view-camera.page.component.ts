@@ -36,11 +36,7 @@ import { PlaybackService } from '@vms-client/submodules/playback/services/playba
 import { TimelineExtendToNowService } from '@vms-client/submodules/timeline/services/timeline.extend-to-now.service';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import {
-    AvailableTransportsAndResolutions,
-    ICamera,
-    SimpleTimeRange,
-} from '@vms-client/submodules/vms/datatypes/ICamera';
+import { SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
 import { VMS_MODE, VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
@@ -48,12 +44,15 @@ import { CameraQualityStorageService } from '../../services/cameraQualityStorage
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
 import { WebClientUxService } from '../../services/webclient-ux.service';
 import type { WebClientUxState } from '../../view.types';
+import { ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
 import { fullscreen } from './fullscreen';
 
 const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
+
+type AvailableTransportsAndResolutions = ViewCamera['availableTransportsAndResolutions'];
 
 @UntilDestroy()
 @Component({
@@ -66,7 +65,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private readonly isChrome: boolean;
     public readonly isMobileSafari: boolean;
     public id: string;
-    public camera: ICamera;
+    public camera: ViewCamera;
     public system: NxSystem;
 
     CONFIG: IConfig;
@@ -194,7 +193,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 filter(TaR => TaR !== undefined),
                 untilDestroyed(this),
             )
-            .subscribe((transportsAndResolutions: AvailableTransportsAndResolutions) => {
+            .subscribe(transportsAndResolutions => {
                 const videoTypes = {
                     ogg: 'video/ogg',
                     mp4: 'video/mp4',

@@ -1,12 +1,7 @@
-import { ICamera } from './ICamera';
+import { ViewBaseServer } from '@services/system.service/system-server-types';
 
-export interface IMediaServer {
-    id: string;
-    name: string;
-    status?: string;
-    networkAddresses: string;
-    ip?: string;
-    port?: string;
-    url?: string;
-    cameras: Array<ICamera>;
+import { ViewCamera } from './Camera';
+
+export interface ViewMediaServer extends Omit<ViewBaseServer, 'cameras'> {
+    cameras: ViewCamera[];
 }

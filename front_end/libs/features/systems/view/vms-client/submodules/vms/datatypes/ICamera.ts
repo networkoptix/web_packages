@@ -1,7 +1,4 @@
-import { Observable } from 'rxjs';
-
-import { PlaybackTransport } from '@view/view.types';
-import { ms, int } from '@vms-client/utils/type-aliases';
+import { ms } from '@vms-client/utils/type-aliases';
 
 export type CAMERA_STATUS =
     | 'Live'
@@ -63,61 +60,4 @@ export class SimpleTimeRange {
     }
 }
 
-export interface MediaStreamInfo {
-    codec: number;
-    customStreamParams: { [key: string]: string };
-    encoderIndex: number;
-    resolution: string;
-    transports: string[];
-    transcodingRequired: boolean;
-}
-
 export type CameraArchive = Array<IRecord>;
-
-export interface AvailableTransportsAndResolutions {
-    [s: string]: { [key: string]: string }; // means: [s: PlaybackTransport]
-}
-
-export interface ICamera {
-    id: string;
-    name: string;
-    url: string;
-    ip: string;
-    status: CAMERA_STATUS;
-    isVirtual: boolean;
-    isOnline: boolean;
-    isRecording: boolean;
-    isLive: boolean;
-    isAuthorized: boolean;
-    isOffline: boolean;
-    isUnauthorized: boolean;
-
-    isScheduleEnabled: boolean;
-    disableDualStreaming: boolean;
-
-    hasArchive: boolean;
-    archiveRange: ISimpleTimeRange;
-    archive: CameraArchive;
-    readonly archiveEnd: ms;
-
-    thumbnailUrl: Observable<string>;
-
-    getVideoUrl: (transport: string, quality: string, t?: ms) => string;
-    getPosterUrl(t?: ms, width?: number, height?: number);
-    getRecords(startMs: ms, endMs: ms, minGapMs: ms): Array<IRecord>;
-    setRecords(range: ISimpleTimeRange, records: CameraArchive);
-
-    mediaStreams: Array<MediaStreamInfo>;
-    rotation: int;
-
-    availableTransports: Array<PlaybackTransport>;
-    availableTransportsAndResolutions: AvailableTransportsAndResolutions;
-
-    pushRecordedChunks(rs: CameraArchive);
-
-    isThereRecord(t: ms);
-    getNextRecord(t: ms): ISimpleTimeRange;
-
-    preferredServerId: string;
-    parentServerId: string;
-}

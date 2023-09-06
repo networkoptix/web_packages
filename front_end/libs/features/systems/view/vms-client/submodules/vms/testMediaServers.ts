@@ -1,5 +1,5 @@
 import { SimpleTimeRange } from './datatypes/ICamera';
-import { MediaServer } from './datatypes/MediaServer';
+import type { IMediaServer } from './datatypes/IMediaServer';
 import { TestCamera } from './datatypes/TestCamera';
 
 const TEST_THUMBNAIL_URL = 'https://upload.wikimedia.org/wikipedia/commons/5/54/Europa-moon.jpg';
@@ -27,7 +27,7 @@ const TEST_GAPPED_ARCHIVE = generateGappedArchive(
     20,
 );
 
-export const fakeMediaServerData: Array<MediaServer> = [
+export const fakeMediaServerData: Array<IMediaServer> = [
     {
         id: 'fake-media-server',
         name: 'No Gaps Media Server',

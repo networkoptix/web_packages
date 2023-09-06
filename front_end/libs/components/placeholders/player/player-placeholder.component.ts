@@ -7,7 +7,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { environment } from '@environments/environment';
 import type { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
-import { ICamera } from '@vms-client/submodules/vms/datatypes/ICamera';
+import type { ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
 
 /* Usage
  <nx-player-placeholder
@@ -33,7 +33,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
 
     @Input() showSettingsLink?: boolean;
     @Input() system?: NxSystem;
-    @Input() camera?: ICamera;
+    @Input() camera?: ViewCamera;
 
     isUrl: boolean;
     icons = icons;

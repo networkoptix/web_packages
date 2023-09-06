@@ -1,6 +1,8 @@
 import type { WithIpAndPort } from '@utils/nx';
 
-import type { OsInfo, RestV1ServerFull, ec2CameraEx, ec2MediaServerEx } from '../system-api.types';
+import type { OsInfo, RestV1ServerFull, ec2MediaServerEx } from '../system-api.types';
+
+import type { MediaStream } from './camera-manager/add-params.types';
 
 export type ec2MediaServerExCompat = Omit<ec2MediaServerEx, 'osInfo' | 'networkAddresses'> & {
     osInfo: OsInfo;
@@ -38,6 +40,29 @@ export interface NxSystemServer {
     port: string;
 }
 
-export interface NxViewMediaServer extends WithIpAndPort<ec2MediaServerEx> {
-    cameras: ec2CameraEx[];
+export interface ViewBaseCamera {
+    disableDualStreaming: boolean;
+    id: string;
+    model: string;
+    name: string;
+    parentId: string;
+    preferredServerId: string;
+    scheduleEnabled: boolean;
+    status: string;
+    url: string;
+
+    /* From params */
+    mediaStreams: MediaStream[];
+    rotation: number;
+}
+
+export interface ViewPreprocessServer {
+    id: string;
+    name: string;
+    endpoints: string[];
+    status: string;
+}
+
+export interface ViewBaseServer extends WithIpAndPort<ViewPreprocessServer> {
+    cameras: ViewBaseCamera[];
 }

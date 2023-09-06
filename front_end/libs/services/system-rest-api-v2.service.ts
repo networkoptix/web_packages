@@ -11,18 +11,28 @@ import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
-import { memoizeAsyncLong } from '@utils/memoize';
-import type { NxRecursiveKeyMap, NxRecursivePick } from '@utils/nx';
+import { buildTopLevelKeyMap } from '@utils/general';
+import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
+import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
 import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
-import type { HealthReport, StorageAnalytics } from './system-api.aggregated-types';
+import type {
+    HealthReport,
+    StorageAnalytics,
+    ViewMediaServersAndCameras,
+} from './system-api.aggregated-types';
 import * as t from './system-api.types';
 import { cameraKeyMapV2 } from './system-api.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { type RestV2CameraCompat } from './system.service/camera-manager/camera-manager-types';
-import { RestV2ServerCompat, serverKeyMapV2 } from './system.service/system-server-types';
+import {
+    RestV2ServerCompat,
+    serverKeyMapV2,
+    ViewBaseCamera,
+    ViewPreprocessServer,
+} from './system.service/system-server-types';
 import { NxUriCacheService } from './uri-cache.service';
 
 interface CustomFilter {
@@ -454,6 +464,67 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                         !!c.parameters.compatibleAnalyticsEngines?.length,
                 ),
                 metadataStorageId: server.parameters.metadataStorageId,
+            })),
+        );
+    }
+
+    protected getViewMediaServers(): Observable<ViewPreprocessServer[]> {
+        return this.getWith('/rest/v2/servers', ['id', 'name', 'status', 'endpoints']);
+    }
+
+    protected getViewCameras(): Observable<ViewBaseCamera[]> {
+        const viewCamKeyMap = {
+            ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
+            options: {
+                isDualStreamingEnabled: true,
+                preferredServerId: true,
+            },
+            schedule: {
+                isEnabled: true,
+            },
+            parameters: {
+                mediaStreams: true,
+                rotation: true,
+            },
+        } as const;
+
+        return this.getWith('/rest/v2/devices', viewCamKeyMap).pipe(
+            map(cameras =>
+                cameras.map(
+                    ({
+                        options: { isDualStreamingEnabled, preferredServerId },
+                        schedule: { isEnabled: scheduleEnabled },
+                        serverId,
+                        parameters = {},
+                        ...camera
+                    }) => {
+                        return {
+                            ...camera,
+                            scheduleEnabled,
+                            parentId: serverId,
+                            disableDualStreaming: !isDualStreamingEnabled,
+                            preferredServerId:
+                                preferredServerId !== ZERO_ID ? preferredServerId : serverId,
+                            rotation: parameters.rotation || 0,
+                            mediaStreams: parameters.mediaStreams?.streams ?? [],
+                        };
+                    },
+                ),
+            ),
+        );
+    }
+
+    @memoizeAsyncMedium
+    getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
+        return combineLatest([this.getViewMediaServers(), this.getViewCameras()]).pipe(
+            map(([mediaServers, cameras]) => ({
+                error: '0',
+                errorId: 'ok',
+                errorString: '',
+                reply: {
+                    '/ec2/getMediaServersEx': mediaServers,
+                    '/ec2/getCamerasEx': cameras,
+                },
             })),
         );
     }

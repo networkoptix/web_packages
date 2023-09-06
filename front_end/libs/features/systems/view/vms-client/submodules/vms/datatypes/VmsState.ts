@@ -1,7 +1,7 @@
 import { GUID } from '@vms-client/utils/type-aliases';
 
-import { ICamera } from './ICamera';
-import { IMediaServer } from './IMediaServer';
+import { ViewCamera } from './Camera';
+import { ViewMediaServer } from './IMediaServer';
 
 export enum VMS_MODE {
     NOT_INITIALIZED = -1,
@@ -9,19 +9,13 @@ export enum VMS_MODE {
     CAMERA_SELECTED = 1,
 }
 
-export type CameraDict = {
-    // [id: GUID]: ICamera
-    // keys can't be a type aliases, sadly, due to TypeScript limitations
-    [id: string]: ICamera;
-};
-
 export interface VmsState {
     mode: VMS_MODE;
     systemId: string;
-    mediaServers: Array<IMediaServer>;
-    cameras: CameraDict;
+    mediaServers: Array<ViewMediaServer>;
+    cameras: Record<string, ViewCamera>;
     selectedCameraId: GUID;
-    selectedCamera: ICamera;
+    selectedCamera: ViewCamera;
 }
 
 export const initializeVmsState = (): VmsState => ({

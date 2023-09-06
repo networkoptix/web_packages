@@ -65,7 +65,7 @@ interface StreamCapability {
 export interface MediaStreams {
     streams: MediaStream[];
 }
-interface MediaStream {
+export interface MediaStream {
     codec: number;
     customStreamParams: Record<string, unknown>;
     encoderIndex: number;

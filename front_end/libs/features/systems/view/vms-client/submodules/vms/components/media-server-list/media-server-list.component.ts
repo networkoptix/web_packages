@@ -7,7 +7,7 @@ import { icons } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
-import { MediaServer } from '../../datatypes/MediaServer';
+import type { ViewMediaServer } from '../../datatypes/IMediaServer';
 
 @Component({
     selector: 'nx-media-server-list',
@@ -15,7 +15,7 @@ import { MediaServer } from '../../datatypes/MediaServer';
     styleUrls: ['media-server-list.component.scss'],
 })
 export class MediaServerListComponent implements OnChanges {
-    @Input('mediaservers') _mediaservers: Array<MediaServer> = [];
+    @Input('mediaservers') _mediaservers: Array<ViewMediaServer> = [];
     @Input() selectedCameraId: string;
     @Input() systemId: string;
 
@@ -25,8 +25,8 @@ export class MediaServerListComponent implements OnChanges {
     public showIP: boolean = false;
     public token: string = '';
 
-    public mediaservers: Array<MediaServer>;
-    public processedMediaservers: Array<MediaServer>;
+    public mediaservers: Array<ViewMediaServer>;
+    public processedMediaservers: Array<ViewMediaServer>;
 
     public previewLoaded = {};
     public isCameraVisible: { [key: string]: boolean } = {};

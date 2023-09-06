@@ -104,7 +104,7 @@ export interface DeviceV1Full {
     /** `_keepDefault` doesn't appear to work on `parameters`. `_with` will filter out
      * params not on the list, but won't force all the listed params to appear.
      */
-    parameters: Partial<{
+    parameters?: Partial<{
         DeviceUrl: string;
         VideoLayout: string;
         bitrateInfos: BitrateInfos;
@@ -229,7 +229,7 @@ export const cameraKeyMapV1 = {
 
 export interface DeviceV2Full extends DeviceV1Full {
     deviceType: DeviceType; // Moved from parameters to top level property
-    parameters: Omit<DeviceV1Full['parameters'], 'deviceType'>;
+    parameters?: Omit<DeviceV1Full['parameters'], 'deviceType'>;
 }
 
 export const cameraKeyMapV2 = {
