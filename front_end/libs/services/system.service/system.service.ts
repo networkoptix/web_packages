@@ -1,4 +1,4 @@
-import { Injectable, Injector } from '@angular/core';
+import { Injectable, Injector, signal } from '@angular/core';
 import { Router, ActivationEnd } from '@angular/router';
 import { Store } from '@ngrx/store';
 import {
@@ -65,8 +65,10 @@ export class NxSystemService {
     );
 
     getCurrentSystem(): NxSystem {
-        return this.system;
+        return this.currentSystem$$();
     }
+
+    currentSystem$$ = signal<NxSystem>(undefined);
 
     getSystemResources(
         systemId: string,
@@ -147,7 +149,7 @@ export class NxSystemService {
             (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().subscribe(() => {});
         }
 
-        this.system = system;
+        this.currentSystem$$.set(system);
         this.system.lostConnection = false;
         if (!skipPoll) {
             this.system.startPoll(systemId);
@@ -165,6 +167,7 @@ export class NxSystemService {
             this.system = nxSystemFactory(userEmail, '', '', userId, mediaServer.version);
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
+            this.currentSystem$$.set(this.system);
         }
 
         if (this.system.subscriberCount === 0) {

@@ -343,17 +343,13 @@ export class NxMenusService {
                 this.LANG?.serverTabTitles.Information,
                 this.endpoint.information || false,
             );
-            nodes.push(informationNode);
-        }
-
-        if (permissions.viewLogs) {
             const monitoringNode = new MenuNode(
                 'Monitoring',
                 this.getUrl(activeSystem.id, { monitoring: true }),
                 this.LANG?.serverTabTitles.Monitoring,
                 this.endpoint.monitoring || false,
             );
-            nodes.push(monitoringNode);
+            nodes.push(informationNode, monitoringNode);
         }
 
         if (

@@ -1,17 +1,17 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivationEnd, NavigationCancel, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
-import { BehaviorSubject, Subscription } from 'rxjs';
-import { filter } from 'rxjs/operators';
+import { BehaviorSubject, combineLatest, Observable } from 'rxjs';
+import { filter, map } from 'rxjs/operators';
 
 import { NxAdditionalSystemsTileComponent } from '@components/dropdowns/drop-menu/additional-systems-tile/additional-systems-tile.component';
 import { NxNavigationTileComponent } from '@components/dropdowns/drop-menu/navigation-tile/navigation-tile.component';
 import { NxSystemTileComponent } from '@components/dropdowns/drop-menu/system-tile/system-tile.component';
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
-import { environment } from '@environments/environment';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -39,12 +39,10 @@ import { BaseDropdown } from '../injDropdown';
 export class NxDropMenu extends BaseDropdown {
     @Input() endpoint: any = {};
     @Input() systems: any[] = [];
-    menuNodes$ = new BehaviorSubject<MenuNode[]>([]);
-    activeSystemMenu: MenuNode;
+    menuNodes$: Observable<MenuNode[]>;
     columns$ = new BehaviorSubject(4);
     systems$ = new BehaviorSubject([]);
     additionalSystems$ = new BehaviorSubject(0);
-    getMenuSubscription: Subscription;
     columnWidth = 236;
 
     systemCounter: number;
@@ -66,9 +64,20 @@ export class NxDropMenu extends BaseDropdown {
         private menusService: NxMenusService,
     ) {
         super(configService);
-        this.menusService.currentSystemNode$.pipe(untilDestroyed(this)).subscribe(_ => {
-            this.getMenu();
-        });
+        this.menuNodes$ = combineLatest([
+            this.menusService.currentSystemNode$,
+            this.headerService.nodes$,
+        ]).pipe(
+            map(([systemNode, menuNodes]) => {
+                const nodes = [...menuNodes];
+                if (systemNode) {
+                    nodes.unshift(systemNode);
+                }
+                this.replaceCloudHost(nodes);
+                return nodes;
+            }),
+            takeUntilDestroyed(),
+        );
 
         this.router.events
             .pipe(
@@ -79,21 +88,6 @@ export class NxDropMenu extends BaseDropdown {
             )
             .subscribe(() => {
                 this.headerService.show$ = false;
-            });
-    }
-
-    private getMenu(): void {
-        this.getMenuSubscription && this.getMenuSubscription.unsubscribe();
-        this.getMenuSubscription = this.menusService
-            .getMenu('header', this.systems$.value.length >= 1)
-            .pipe(untilDestroyed(this))
-            .subscribe(header => {
-                const nodes = this.menusService.cleanEmptyNodes(header.nodes);
-                if (environment.isLocal) {
-                    // TODO: Come back here to fix CLOUD-10906
-                    this.replaceCloudHost(nodes);
-                }
-                this.menuNodes$.next(nodes);
             });
     }
 

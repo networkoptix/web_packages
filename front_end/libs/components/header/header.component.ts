@@ -1,5 +1,13 @@
 import { DOCUMENT } from '@angular/common';
-import { Component, OnInit, Renderer2, Inject, ViewChild, ViewContainerRef } from '@angular/core';
+import {
+    Component,
+    OnInit,
+    Renderer2,
+    Inject,
+    ViewChild,
+    ViewContainerRef,
+    effect,
+} from '@angular/core';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -140,6 +148,18 @@ export class NxHeaderComponent implements OnInit {
         setTimeout(() => {
             this.getMenu();
         });
+
+        if (environment.isLocal) {
+            // Polls for the system and currentUser. Once its ready the header is updated and the poll is killed off.
+            const eff = effect(() => {
+                const system = this.systemService.currentSystem$$();
+                if (system?.permissionManager?.currentUser()) {
+                    this.getMenu();
+                    this.menusService.updateActiveSystemMenu(system);
+                    eff.destroy();
+                }
+            });
+        }
         // Updates windowWidth$ behavior subject on window resize
         fromEvent<Event>(this.window, 'resize')
             .pipe(
@@ -262,6 +282,24 @@ export class NxHeaderComponent implements OnInit {
             .pipe(untilDestroyed(this))
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
+                if (environment.isLocal) {
+                    const sendEvents = this.systemService
+                        .currentSystem$$()
+                        ?.permissionManager.currentUser();
+                    if (!sendEvents) {
+                        const forDevsIndex = nodes?.findIndex(
+                            ({ name }) => name === 'For Developers',
+                        );
+                        if (forDevsIndex !== -1) {
+                            const eventGeneratorIndex = nodes[forDevsIndex].nodes.findIndex(
+                                ({ name }) => name === 'Generic Events Generator',
+                            );
+                            if (eventGeneratorIndex !== -1) {
+                                nodes[forDevsIndex].nodes.splice(eventGeneratorIndex, 1);
+                            }
+                        }
+                    }
+                }
                 this.headerService.setLocation(this.window.location.pathname);
                 if (this.newHeader) {
                     if (!this.loginState) {

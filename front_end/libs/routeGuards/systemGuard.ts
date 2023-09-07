@@ -64,7 +64,7 @@ export const SystemGuard: CanActivateFn = (
             licenses: isAdmin,
             advanced: isAdmin,
             servers: isAdmin,
-            monitoring: permissions.viewLogs,
+            monitoring: permissions.systemHealth,
             layouts: system.canViewLayouts(),
             bookmarks: system.canViewBookmarks(
                 deviceService.isMobile() || deviceService.isTablet(),

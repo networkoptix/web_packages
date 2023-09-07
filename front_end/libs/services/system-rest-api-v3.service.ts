@@ -148,6 +148,14 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
         return this.get('/rest/v3/userGroups');
     }
 
+    getCurrentUserPermissions(): Observable<{
+        groupIds: string[];
+        permissions: string;
+        resourceAccessRights: { [key: string]: string };
+    }> {
+        return this.get('/rest/v3/users/-/permissions');
+    }
+
     // getUserGroup
     // getUserGroup(id: string) {
     //     return this.get<.t.NormalResponse<t.UserGroup>>(`/rest/v3/userGroups/${id}`).toPromise();

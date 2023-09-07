@@ -77,50 +77,40 @@ const ResourceGroups = {
 export class PermissionManager {
     private readonly LANG = staticLang;
     private user = signal<SystemUser>(undefined);
+    private currentUserPermissions = signal<string>('');
+    private currentUserResourceRights = signal<string>('');
     private type = computed<string>(() => coerceUserType(this.user()));
     private permissionsFromGroups = computed<Permissions>(() => {
-        const groups = this.groups();
         const user = this.user();
+        const aggregatedPermissions = this.currentUserPermissions(); // New permissions for groups
+        const aggregatedDeviceAccessRights = this.currentUserResourceRights();
 
         if (!user) {
             return initializePermissions();
         }
-        const aggregatedDeviceAccessRights = new Set<string>(); // Effectively camera related permissions
-        const aggregatedPermissions = new Set<string>(); // New permissions for groups
 
-        for (const groupId of (user as RestV3User).groupIds) {
-            const group = groups.find(({ id }) => id === groupId);
-            if (!group) {
-                continue;
-            }
-            group.permissions
-                ?.split('|')
-                .forEach(permission => aggregatedPermissions.add(permission));
-            group.resourceAccessRights?.[ResourceGroups.devices]
-                ?.split('|')
-                .forEach(permission => aggregatedDeviceAccessRights.add(permission));
-        }
         const isOwner =
-            this.isOwner() || aggregatedPermissions.has(PermissionStringsV3.administrator);
+            this.isOwner() || aggregatedPermissions.includes(PermissionStringsV3.administrator);
         const isAdmin =
-            isOwner || this.isAdmin() || aggregatedPermissions.has(PermissionStringsV3.powerUser);
-
-        (
-            (user as RestV3User)?.resourceAccessRights?.[ResourceGroups.devices]?.split('|') || []
-        ).forEach(permission => aggregatedDeviceAccessRights.add(permission));
-
+            isOwner ||
+            this.isAdmin() ||
+            aggregatedPermissions.includes(PermissionStringsV3.powerUser);
         return Object.assign(initializePermissions(isOwner, isAdmin), {
-            editCameras: isAdmin || aggregatedDeviceAccessRights.has(ResourceFlags.edit),
-            exportArchive: isAdmin || aggregatedDeviceAccessRights.has(ResourceFlags.exportArchive),
+            editCameras: isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.edit),
+            exportArchive:
+                isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.exportArchive),
             generateEvents:
-                isAdmin || aggregatedPermissions.has(PermissionStringsV3.generateEvents),
+                isAdmin || aggregatedPermissions.includes(PermissionStringsV3.generateEvents),
             manageBookmarks:
-                isAdmin || aggregatedDeviceAccessRights.has(ResourceFlags.manageBookmarks),
-            systemHealth: isAdmin || aggregatedPermissions.has(PermissionStringsV3.systemHealth),
-            view: isAdmin || aggregatedDeviceAccessRights.has(ResourceFlags.view),
-            viewArchives: isAdmin || aggregatedDeviceAccessRights.has(ResourceFlags.viewArchive),
-            viewBookmarks: isAdmin || aggregatedDeviceAccessRights.has(ResourceFlags.viewArchive),
-            viewLogs: isAdmin || aggregatedPermissions.has(PermissionStringsV3.viewLogs),
+                isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.manageBookmarks),
+            systemHealth:
+                isAdmin || aggregatedPermissions.includes(PermissionStringsV3.systemHealth),
+            view: isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.view),
+            viewArchives:
+                isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.viewArchive),
+            viewBookmarks:
+                isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.viewArchive),
+            viewLogs: isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewLogs),
         });
     });
     groups = signal<UserGroup[]>([]);
@@ -233,6 +223,12 @@ export class PermissionManager {
         this.user.set(user);
         if (this.mediaserver instanceof NxSystemRestAPI3) {
             this.mediaserver.getUserGroups().subscribe(userGroups => this.groups.set(userGroups));
+            this.mediaserver.getCurrentUserPermissions().subscribe(data => {
+                this.currentUserPermissions.set(data?.permissions || '');
+                this.currentUserResourceRights.set(
+                    data?.resourceAccessRights?.[ResourceGroups.devices] || '',
+                );
+            });
         }
         this.mediaserver.getAllRoles().subscribe(roles => {
             this.roles.set(
