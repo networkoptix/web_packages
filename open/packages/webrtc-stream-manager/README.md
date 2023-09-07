@@ -25,12 +25,13 @@ is no longer on the DOM.
 ### Example webRtcUrlFactory function:
 
 The `WebRTCStreamManager.connect` method takes as a first argument a function that returns the
-webrtc-tracker endpoint with auth.
+webrtc-tracker endpoint.
 
 The camera_id query parameters are required, pos is optional.
 
 Authentication is handled either by cookie authentication before calling `WebRTCStreamManager.connect`
-or by providing an digest auth key using the auth query param.
+or calling the `WebRTCStreamManager.connectWithAccessToken` with the system scoped access token as the
+second argument or by providing an digest auth key using the auth query param.
 
 Cookie authentication is recommended because digest auth is disabled for 2fa enabled systems.
 
@@ -47,7 +48,7 @@ const webRtcUrlFactory = () =>
 
 ### Example usage
 
-The `connect` static method returns an observable emits streams and errors.
+The `connect` and `connectWithAccessToken` static methods returns an observable emits streams and errors.
 
 To update a video element to use that stream we set the `srcObject` to the stream if it exist.
 
@@ -67,7 +68,32 @@ const videoElement = document.querySelector('video#someTargetId')
 #### Initializing connection and setting video source
 
 ```typescript
+/**
+ * Assumes that user is already authenticated using cookie authentication or an auth query param
+ * is included as part of the url from webRtcUrlFactory.
+ */
+
 WebRTCStreamManager.connect(webRtcUrlFactory, videoElement).subscribe(([stream, error]) => {
+  if (stream) {
+    targetVideoElement.srcObject = stream;
+    targetVideoElement.muted = true;
+    targetVideoElement.autoplay = true;
+  }
+
+  if (error) {
+    handleError(error)
+  }
+});
+```
+#### Initializing connection using access token and setting video source
+
+```typescript
+/**
+ * The access token should be a system scoped access token.
+ *
+ * The connectWithAccessToken static method authenticates using cookie authentication automatically.
+ */
+WebRTCStreamManager.connectWithAccessToken(webRtcUrlFactory, accessToken, videoElement).subscribe(([stream, error]) => {
   if (stream) {
     targetVideoElement.srcObject = stream;
     targetVideoElement.muted = true;
