@@ -149,11 +149,12 @@ export class NxSystemService {
             (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().subscribe(() => {});
         }
 
-        this.currentSystem$$.set(system);
+        this.system = system;
         this.system.lostConnection = false;
         if (!skipPoll) {
             this.system.startPoll(systemId);
         }
+        this.currentSystem$$.set(system);
         return this.system;
     }
 
