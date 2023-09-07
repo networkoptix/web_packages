@@ -45,7 +45,6 @@ import type {
     RequestOpts,
     WithResponseType,
 } from './mediaserver-apis/connections/adapters/adapter-target-types';
-import type { addUserRestV1 } from './mediaserver-apis/endpoints/add-user';
 import { createEventLegacyV1 } from './mediaserver-apis/endpoints/create-event';
 import { getNonceLegacyV1 } from './mediaserver-apis/endpoints/get-nonce';
 import { getSystemSettingsLegacyV1 } from './mediaserver-apis/endpoints/get-system-settings';
@@ -1370,7 +1369,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         'should only be using rest v2 version',
     ) as typeof wizardGetSystemSettingsRestV2;
 
-    addUser = notImplementedCustomMessage(
-        'should only be using rest v2 version',
-    ) as typeof addUserRestV1;
+    addUser(user: unknown): Observable<unknown> {
+        throw new Error('should only be using rest v2 version');
+    }
 }

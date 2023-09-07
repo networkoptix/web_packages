@@ -1,11 +1,13 @@
 import { LOCALE_ID } from '@angular/core';
-import { lastValueFrom } from 'rxjs';
+import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemBase } from '@services/system/system-base';
+import { ChangedIdReturned } from '@services/system-api.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import {
+    AddUser,
     NxUser,
     RestV3User,
     UserGroup,
@@ -95,8 +97,8 @@ export class UserWithGroupsManager extends UserManager {
 
     override async deleteUser(removedUser: NxUser): Promise<void> {
         try {
-            const deletedUser = await lastValueFrom(this.mediaserver.deleteUser(removedUser.id));
-            this.users = this.users.filter(user => user.id !== deletedUser.id);
+            await lastValueFrom(this.mediaserver.deleteUser(removedUser.id));
+            this.users = this.users.filter(user => user.id !== removedUser.id);
         } catch (err) {
             console.info('failed to removed from system directly');
             console.error(err);
@@ -247,6 +249,17 @@ export class UserWithGroupsManager extends UserManager {
         );
     }
 
+    addUser(user: AddUser): Promise<ChangedIdReturned> {
+        const userData = {
+            ...user,
+            isEnabled: true,
+            role: undefined,
+            name: user.email,
+        };
+
+        return firstValueFrom(this.mediaserver.addUser(userData));
+    }
+
     modifyUser(user: NxUser): Promise<NxUser> {
         let userCreated = false;
         const isSelf = user.id === this.currentUser?.id;
@@ -278,6 +291,7 @@ export class UserWithGroupsManager extends UserManager {
 
         // v3 doesn't like user permissions and groupIds for modifyUser
         delete user.permissions;
+        delete user.fullName;
 
         return lastValueFrom(
             this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),

@@ -71,25 +71,53 @@
             </div>
         </div>
         <div class="form-group">
-            <label
-                for="permissionsSelect"
-                translate
-                >Access Level</label
-            >
-            <nx-permissions-select
-                id="permissionsSelect"
-                name="permissionsSelect"
-                [system]="system"
-                [roles]="system.userManager.accessRoles"
-                [ngModel]="user.role"
-                (ngModelChange)="setPermission($event)"
-            >
-            </nx-permissions-select>
-            <span
-                class="help-block"
-                data-testid="addUserHelpBlock"
-                [innerText]="accessDescription | translate"
-            ></span>
+            <ng-template #groupsDropdown>
+                <label
+                    for="user-groups"
+                    class="font-weight-bold"
+                    translate
+                    >Permission Groups</label
+                >
+                <nx-multi-select
+                    id="user-groups"
+                    name="userGroupsSelect"
+                    [canSelectAll]="false"
+                    [canSearch]="false"
+                    description="User Groups"
+                    [items]="system.userManager.groups"
+                    [ngModel]="user.groupIds"
+                    (ngModelChange)="setGroupDescription($event)"
+                    [moreLeftPadding]="true"
+                >
+                </nx-multi-select>
+                <span
+                    *ngIf="user.groupIds.length === 1"
+                    class="help-block"
+                    data-testid="addUserHelpBlock"
+                    [innerText]="accessDescription | translate"
+                ></span>
+            </ng-template>
+            <ng-container *ngIf="!useGroups$$(); else groupsDropdown">
+                <label
+                    for="permissionsSelect"
+                    translate
+                    >Access Level</label
+                >
+                <nx-permissions-select
+                    id="permissionsSelect"
+                    name="permissionsSelect"
+                    [system]="system"
+                    [roles]="system.userManager.accessRoles"
+                    [ngModel]="user.role"
+                    (ngModelChange)="setPermission($event)"
+                >
+                </nx-permissions-select>
+                <span
+                    class="help-block"
+                    data-testid="addUserHelpBlock"
+                    [innerText]="accessDescription | translate"
+                ></span>
+            </ng-container>
         </div>
     </div>
     <div class="modal-footer">

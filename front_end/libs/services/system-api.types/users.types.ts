@@ -98,3 +98,11 @@ export type RestV1SaveUser = ec2SaveUser &
         accessibleResources: unknown;
         isHttpDigestEnabled: boolean;
     }>;
+
+export type RestV3SaveUser = ec2SaveUser &
+    Partial<{
+        type: string;
+        isOwner: boolean;
+        isHttpDigestEnabled: boolean;
+        groupIds?: string[];
+    }>;

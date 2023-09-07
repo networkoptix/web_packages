@@ -186,6 +186,7 @@ export interface BaseNewUser {
 
 export interface AddUser extends Omit<BaseNewUser, 'name' | 'permissions'> {
     role: Role;
+    groupIds: string[];
 }
 
 export interface LegacyNewUser extends BaseNewUser {

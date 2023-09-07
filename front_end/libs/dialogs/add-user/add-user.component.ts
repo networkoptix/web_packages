@@ -1,11 +1,12 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, Inject, signal, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -37,6 +38,7 @@ import type { AddUser as DT } from '../dialogs.types';
         NxPermissionsDropdown,
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
+        NxMultiSelectDropdown,
     ],
 })
 export class AddUserModalContent extends ModalBase<DT['return']> {
@@ -56,6 +58,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         permissions: '',
     });
     accessDescription: string;
+    useGroups$$ = signal<boolean>(false);
 
     constructor(
         configService: NxConfigService,
@@ -89,6 +92,17 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         this.hideErrors = false;
     };
 
+    setGroupDescription(gids: string[]): void {
+        if (gids.length === 1) {
+            const gid = gids[0];
+            this.accessDescription = this.system.userManager.groups.find(
+                ({ id }) => id === gid,
+            )?.tooltip;
+        } else {
+            this.accessDescription = '';
+        }
+    }
+
     setPermission(role: Role): void {
         this.selectedPermission = role;
         this.accessDescription = this.getAccessDescription();
@@ -104,6 +118,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
 
     ngOnInit(): void {
         this.systemName = this.system.info.systemName || this.system.info.name;
+        this.useGroups$$.set(this.system.version > 5.1);
 
         const defaultRole = this.system.userManager.accessRoles.find(
             role => role.name === this.CONFIG.accessRoles.default,
@@ -113,9 +128,10 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             email: '',
             isEnabled: true,
             isCloud: true,
-            role: defaultRole,
+            role: this.useGroups$$() ? undefined : defaultRole,
+            groupIds: [],
         };
-        this.setPermission(defaultRole);
+        this.setPermission(this.user.role);
 
         this.addUser = this.processService.createProcess(
             () => {

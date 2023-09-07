@@ -6,9 +6,16 @@ import { Observable, combineLatest, map } from 'rxjs';
 
 import { NxHealthService } from '@pages/health/health.service';
 import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';
+import { addUserRestV3 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
 import { UserSession } from '@services/system-api.types';
-import { RestV3User, SystemUser, UserGroup } from '@services/system-user.types';
+import {
+    AddUser,
+    BaseNewUser,
+    RestV3User,
+    SystemUser,
+    UserGroup,
+} from '@services/system-user.types';
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
@@ -125,11 +132,11 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     // getUser(id: string) {
     //     return this.get<t.NormalResponse<t.UserWithGroups>>('/rest/v3/user', { id }).toPromise();
     // }
+    private _addUserV3 = addUserRestV3;
 
-    // createUser
-    // createUser(user: User) {
-    //     return this.post<t.NormalResponse<t.UserWithGroups>>('/rest/v3/user', user).toPromise();
-    // }
+    addUser(user: BaseNewUser | AddUser): Observable<ChangedIdReturned> {
+        return this._addUserV3(user as AddUser);
+    }
 
     // saveUser
     modifyUser(user: RestV3User, id: string): Observable<RestV3User | ChangedIdReturned> {

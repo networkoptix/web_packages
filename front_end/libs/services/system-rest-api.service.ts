@@ -1368,7 +1368,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    addUser = addUserRestV1;
+    private _addUser = addUserRestV1;
+    addUser(user): Observable<ChangedIdReturned> {
+        return this._addUser(user);
+    }
 
     override saveUser(user: NxUser): Observable<ChangedIdReturned> {
         const isCloud = user.type === UserType.cloud;
