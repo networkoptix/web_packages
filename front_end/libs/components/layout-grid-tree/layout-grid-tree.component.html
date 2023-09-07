@@ -188,13 +188,9 @@
             let-expanded="expanded"
             let-preview="preview"
         >
-            <ng-container
-                *ngIf="!preview && node.type !== 'camera'; then expandStateIcon"
-            ></ng-container>
-            <ng-container
-                *ngIf="preview || node.type === 'camera'; then recordingIcon"
-            ></ng-container>
-            <ng-container *ngTemplateOutlet="nodeTypeIcon"></ng-container>
+            <ng-container *ngIf="!preview && node.type !== 'camera'; then expandStateIcon" />
+            <ng-container *ngIf="preview || node.type === 'camera'; then recordingIcon" />
+            <ng-container *ngTemplateOutlet="nodeTypeIcon" />
             <ng-container
                 *ngIf="
                     !(CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) ||
@@ -210,7 +206,7 @@
             >
                 <ng-container
                     *ngIf="node.type === RESOURCE_TYPE.LAYOUTS; then layoutsMenu; else layoutMenu"
-                ></ng-container>
+                />
 
                 <ng-template #layoutsMenu>
                     <ng-container [ngTemplateOutlet]="simpleNodeText" />
@@ -218,9 +214,7 @@
                         *ngFor="let action of nodeActions"
                         class="action-button"
                         [nxTooltip]="action.tooltip | translate : node.details"
-                        (click)="
-                            $event.preventDefault(); action.handler(); treeControl.expand(node)
-                        "
+                        (click)="action.action($event, node)"
                         [tourAnchor]="'cloud-layouts_add_layout'"
                     >
                         <svg-icon
@@ -234,6 +228,7 @@
                         </svg-icon>
                     </button>
                 </ng-template>
+
                 <ng-template #layoutMenu>
                     <div
                         class="node-editable"
@@ -250,7 +245,9 @@
                         </nx-text-editable>
                         <nx-tag
                             *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved"
-                            (click)="layoutStateService.saveLayout(node.id)"
+                            (click)="
+                                layoutStateService.saveLayout(node.id); $event.stopPropagation()
+                            "
                             locked
                             >{{ unsaved | translate }}</nx-tag
                         >
@@ -272,24 +269,10 @@
                         </svg-icon>
                     </button>
                     <ng-template #nodeActionMenu>
-                        <div
-                            cdkMenu
-                            class="node-action-menu"
-                        >
-                            <ng-container *ngFor="let action of nodeActions">
-                                <button
-                                    *ngIf="action.action !== 'divider'"
-                                    [nxTooltip]="action.tooltip | translate : node.details"
-                                    (click)="
-                                        action.handler(node.type, node); $event.stopPropagation()
-                                    "
-                                    cdkMenuItem
-                                >
-                                    {{ action.name | translate }}
-                                </button>
-                                <mat-divider *ngIf="action.action === 'divider'" />
-                            </ng-container>
-                        </div>
+                        <nx-context-menu
+                            [context]="node"
+                            [menuItems]="hasActions[node.type]"
+                        />
                     </ng-template>
                 </ng-template>
             </ng-container>

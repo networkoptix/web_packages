@@ -1,0 +1,53 @@
+:host {
+    border: 0;
+    border-radius: 6px;
+    box-shadow: 0 4px 16px 0 var(--context-menu-shadow);
+    background-color: var(--context-menu-bg);
+    &:has(.sub-menu) {
+        // works only if submenu is on the right 🤞
+        margin: -6px 0 0 -1px;
+        border-radius: 0 6px 6px 0;
+        clip-path: inset(-16px -16px -16px 1px);
+    }
+
+    [cdkmenu] {
+        display: flex;
+        flex-direction: column;
+        padding: 6px 0;
+
+        button {
+            font-size: 14px !important;
+            line-height: 14px !important;
+            margin: 0;
+            padding: 6px 16px !important;
+            &:not(:has(svg)) {
+                // placeholder for an icon on the right if any
+                // base padding + icon width + gap
+                padding: 6px calc(16px + 16px + 8px) 6px 16px !important;
+            }
+            height: 28px !important;
+            justify-content: space-between;
+
+            border: none !important;
+            width: 100%;
+            color: var(--context-menu-item-text) !important;
+            background-color: transparent;
+            &[aria-expanded="true"] {
+                background-color: var(--context-menu-item-expanded-bg);
+            }
+            &:hover {
+                svg-icon svg path {
+                    stroke: var(--context-menu-item-icon-hover);
+                }
+                color: var(--context-menu-item-text-hover) !important;
+                background-color: var(--context-menu-item-bg-hover);
+            }
+        }
+
+        mat-divider {
+            padding: 0 0 6px 0;
+            margin: 6px 16px 0 16px;
+            color: var(--context-menu-hr);
+        }
+    }
+}

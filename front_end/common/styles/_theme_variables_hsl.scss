@@ -893,4 +893,15 @@ html[data-theme="hsl"] {
     --system-admin-info-text: var(--new-light4);
 
     --no-systems-description-color: var(--dark17);
+
+    /* Layouts */
+    --context-menu-bg: var(--drop-menu-navigation-bg);
+    --context-menu-shadow: rgba(var(--tooltip-shadow-color), 0.2);
+    --context-menu-hr: var(--btn-text-hover-color);
+    --context-menu-item-text: var(--btn-text-color);
+    --context-menu-item-icon: var(--svg-path-dark-color);
+    --context-menu-item-text-hover: var(--light1);
+    --context-menu-item-icon-hover: var(--light1);
+    --context-menu-item-bg-hover: var(--brand-core);
+    --context-menu-item-expanded-bg: var(--new-dark9);
 }

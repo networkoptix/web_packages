@@ -295,35 +295,3 @@ cdk-tree {
     display: flex;
     flex-direction: row;
 }
-
-// quick and raw styling for now. will be improved in upcoming story
-::ng-deep .node-action-menu {
-    width: 195px;
-    background-color: var(--dropdown-menu-bg);
-    border: var(--dropdown-menu-border);
-    border-radius: 2px;
-    box-shadow: var(--dropdown-menu-shadow-upper);
-    font-size: 14px;
-    font-weight: 400;
-    padding: 6px;
-
-    button {
-        border: none;
-        height: 24px !important;
-        margin: 6px 0;
-        width: 100%;
-        font-weight: 500 !important;
-        font-size: 0.8125rem !important;
-        color: var(--dropdown-item-color) !important;
-        background-color: transparent;
-        justify-content: left;
-        &:hover {
-            background-color: var(--dropdown-item-hover-bg);
-            color: var(--dropdown-item-hover-color) !important;
-        }
-    }
-
-    mat-divider {
-     margin: 6px 0 4px 0;
-    }
-}

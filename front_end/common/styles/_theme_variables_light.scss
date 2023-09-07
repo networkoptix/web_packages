@@ -747,5 +747,15 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --sidebar-tab-hover: var(--light6);
     --sidebar-tab-closed: var(--light8);
 
+    --context-menu-bg: var(--drop-menu-navigation-bg);
+    --context-menu-shadow: rgba(var(--tooltip-shadow-color), 0.2);
+    --context-menu-hr: var(--btn-text-hover-color);
+    --context-menu-item-text: var(--btn-text-color);
+    --context-menu-item-icon: var(--svg-path-dark-color);
+    --context-menu-item-text-hover: var(--dark17);
+    --context-menu-item-icon-hover: var(--dark17);
+    --context-menu-item-bg-hover: var(--brand-core);
+    --context-menu-item-expanded-bg: var(--light3);
+
     --no-systems-description-color: var(--dark17);
 }

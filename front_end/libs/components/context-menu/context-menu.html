@@ -1,0 +1,42 @@
+<div
+    cdkMenu
+    [ngClass]="subMenu ? 'sub-menu' : ''"
+>
+    <ng-container *ngFor="let item of menuItems">
+        <mat-divider *ngIf="item.name === 'divider'" />
+
+        <ng-container *ngIf="!!item.subMenu">
+            <button
+                cdkMenuItem
+                [cdkMenuTriggerFor]="subMenu"
+            >
+                {{ item.name | translate }}
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                                'width.px': '16',
+                                'height.px': '16',
+                            }"
+                    [src]="icons.dirTextButtons + 'arrow_right.svg'"
+                >
+                </svg-icon>
+            </button>
+            <ng-template #subMenu>
+                <nx-context-menu
+                    [menuItems]="item.subMenu"
+                    [context]="context"
+                    [subMenu]="true"
+                />
+            </ng-template>
+        </ng-container>
+
+        <ng-container *ngIf="!item.subMenu && !!item.action">
+            <button
+                cdkMenuItem
+                (click)="item.action($event, context); $event.stopPropagation()"
+            >
+                {{ item.name | translate }}
+            </button>
+        </ng-container>
+    </ng-container>
+</div>
