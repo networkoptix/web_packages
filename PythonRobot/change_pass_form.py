@@ -55,4 +55,4 @@ class ChangePassForm:
         robot_keywords.wait_until_element_is_visible(self.driver, "//nx-account-password-component")
 
     def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{ENV}account/password")
+        robot_keywords.location_should_be(self.driver, f"{ENV}/account/password")

@@ -1,5 +1,6 @@
 import time
 from selenium import webdriver
+import os
 
 from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
@@ -19,7 +20,7 @@ from NoptixLibrary.GenericKeywords import GenericKeywords
 password = "qweasd 123"
 
 keywords = GenericKeywords()
-SERVERS = keywords.create_systems()
+SERVERS = keywords.create_systems(os.path.basename(__file__))
 CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 CLOUD_API.share([SERVERS[1]['cloudOwner'], password],

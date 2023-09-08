@@ -59,8 +59,10 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
 def test_can_access_account_page_from_dropdown():
     """1 Can access the account page from dropdown"""
     driver = get_headless_chrome()
+    email = resource_import.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, rb.ENV)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password)
+    cloud_login(driver, email, password)
     robot_keywords.sleep(3)
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
     robot_keywords.click_button(driver, rb.ACCOUNT_DROPDOWN)
@@ -95,8 +97,10 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
 def test_changing_first_name_and_saving_maintains_that_setting():
     """5 Changing first name and saving maintains that setting"""
     driver = get_headless_chrome()
+    email = resource_import.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     robot_keywords.clear_element_text(driver, rb.ACCOUNT_FIRST_NAME)
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
@@ -108,7 +112,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
 
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     robot_keywords.sleep(2)
     robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
@@ -122,8 +126,10 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     """6 Changing last name and saving maintains that setting"""
     #TODO: 
     driver = get_headless_chrome()
+    email = resource_import.get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, "nameChanged")
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
@@ -133,7 +139,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
 
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_LAST_NAME, "nameChanged")
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, rb.TEST_LAST_NAME)

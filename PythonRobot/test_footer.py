@@ -1,5 +1,5 @@
 from selenium import webdriver
-from resource_import import get_headless_chrome, get_random_email, activate, register_account, register_and_activate_account
+from resource_import import get_headless_chrome, get_random_email, activate, register_and_activate_account
 from selenium.webdriver.common.by import By
 from selenium.webdriver.chrome.options import Options
 from test_account import cloud_login

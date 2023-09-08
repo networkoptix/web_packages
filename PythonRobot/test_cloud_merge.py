@@ -1,3 +1,5 @@
+import os
+
 from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 from variables import ENV
@@ -25,7 +27,7 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 
 
 def merge_from_primary_system():
-    servers = keywords.create_systems()
+    servers = keywords.create_systems(os.path.basename(__file__))
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV + f"/systems/{servers[0]['id']}")
     LoginDialog(driver).basic_cloud_login(servers[0]['cloudOwner'], password)

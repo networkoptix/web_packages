@@ -91,7 +91,7 @@ def go_to_url(driver: webdriver, url: str) -> None:
     driver.get(url)
 
 def location_should_be(driver: webdriver, url: str) -> None:
-    WebDriverWait(driver, 10).until(EC.url_to_be(url))
+    WebDriverWait(driver, 1).until(EC.url_to_be(url))
 
 def location_should_contain(driver: webdriver, url: str) -> None:
     WebDriverWait(driver, 10).until(EC.url_contains(url))

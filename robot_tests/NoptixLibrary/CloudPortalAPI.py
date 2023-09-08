@@ -150,7 +150,7 @@ class CloudPortalAPI(object):
 
     @keyword
     def get_account_data(self, email, password):
-        with self._session(email, password) as s:
+        with self._session(email, password, logout=False) as s:
             account_response = s.get(f'{self.env}/api/account/')
             account_response.raise_for_status()
             return account_response.json()

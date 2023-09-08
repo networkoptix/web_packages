@@ -768,8 +768,8 @@ class GenericKeywords:
             yield ssh_client
 
     
-    def create_systems(self):
-        json_file = sys.argv[0].replace('.py', '' )
+    def create_systems(self, suite_name):
+        json_file = suite_name.replace('.py', '' )
         jsonPath = os.path.join(
             "server_json",
             f"{json_file}.json"

@@ -1,4 +1,6 @@
+import sys
 import time
+import os
 from selenium import webdriver
 
 from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
@@ -22,7 +24,7 @@ from RobotVariables import RobotVariables
 password = "qweasd 123"
 
 keywords = GenericKeywords()
-SERVERS = keywords.create_systems()
+SERVERS = keywords.create_systems(os.path.basename(__file__))
 CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 
@@ -88,8 +90,10 @@ def share_with_unregistered_user_sends_notification():
     body = email_con.get_body(email_id)
     email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
-    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{message.sharer_name}", "Mark Hamill")
+    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
     subject = rb.replace_nested_variables(subject)
+    print(subject)
+    print()
     assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
 
     links = email_con.get_links_from_email(body)
@@ -141,9 +145,9 @@ def share_with_registered_user_works():
 
 
 if __name__ == "__main__":
-    # owner_can_remove_user()
-    # share_with_registered_user_works()
-    # share_with_registered_user_sends_notification()
-    share_with_unregistered_user_sends_notification()
-    # email_is_locked_when_unregistered_user_is_invited()
+    owner_can_remove_user()
+    share_with_registered_user_works()
+    share_with_registered_user_sends_notification()
+    # share_with_unregistered_user_sends_notification()
+    email_is_locked_when_unregistered_user_is_invited()
     keywords.teardown_servers(SERVERS)

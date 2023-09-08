@@ -13,7 +13,7 @@ ${IPVD FILTERS}                       //nx-ipvd//nx-search/div/div
 ${IPVD FILTER BUTTON}                 //nx-search//span[@class="filter-label"]
 ${IPVD FILTER BUTTON X CLOSE}         ${IPVD FILTER BUTTON}/following-sibling::span[contains(@class, "close-icon"])]
 ${IPVD FILTERS BASIC}                 ${IPVD FILTERS}/div[1]/div
-${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}/div[1]/input[@name="query"]
+${IPVD SEARCH BAR}                    ${IPVD FILTERS BASIC}//div[1]/input[@name="query"]
 ${IPVD CLEAR TEXT SEARCH BUTTON}      ${IPVD FILTERS}//button[contains(@class, "search-clear")]
 ${IPVD FILTERS APPLIED BUTTON}        ${IPVD FILTERS BASIC}/div[2]${IPVD ADV FEATURES CLOSE BUTTON}/..
 ${IPVD ADV SEARCH BUTTON}             ${IPVD FILTERS BASIC}/div/span[contains(text(),'${IPVD ADV SEARCH BUTTON TEXT}')]/..

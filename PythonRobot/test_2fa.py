@@ -1,29 +1,31 @@
+import os
 import time
 from selenium import webdriver
 import random
 
 from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
-from PythonRobot.NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 from variables import ENV
 import robot_keywords
 from RobotVariables import RobotVariables
 from login import LoginDialog
 from header import HeaderNav
 from security_form import SecurityForm
+from NoptixLibrary.server_api import ServerApi
 from system_admin import SystemAdmin
 
 from system_admin import SystemAdmin
 
-from PythonRobot.NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.GenericKeywords import GenericKeywords
 from RobotVariables import RobotVariables
-from PythonRobot.NoptixLibrary.Cloud2fa import Cloud2fa
-from PythonRobot.NoptixLibrary.server_api import ServerApi
+from NoptixLibrary.Cloud2fa import Cloud2fa
+from NoptixLibrary.server_api import ServerApi
 from page_text import PageText
 
 password = "qweasd 123"
 
 keywords = GenericKeywords()
-SERVERS = keywords.create_systems()
+SERVERS = keywords.create_systems(os.path.basename(__file__))
 CLOUD_API = CloudPortalAPI()
 
 def enable_and_login_with_2fa():
@@ -38,6 +40,7 @@ def enable_and_login_with_2fa():
     security_form = SecurityForm(driver)    
     twofa_codes = security_form.turn_on_2fa(password)
     security_form.twofa_enabled_badge()
+    time.sleep(2)
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
@@ -86,6 +89,7 @@ def login_with_qr_code():
     security_form = SecurityForm(driver)    
     twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
     security_form.twofa_enabled_badge()
+    time.sleep(2)
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
@@ -123,7 +127,7 @@ def system_2fa_required():
     twofa_codes = security_form.turn_on_2fa(password)
     security_form.twofa_enabled_badge()
     robot_keywords.sleep(5)
-    robot_keywords.go_to_url(driver, f"{ENV}systems/{SERVERS[0]['id']}")
+    robot_keywords.go_to_url(driver, f"{ENV}/systems/{SERVERS[0]['id']}")
     system_admin_page = SystemAdmin(driver)
     system_admin_page.mandatory_2fa_chechbox().select()
     system_admin_page.twofa_verification_code_input().input_text(twofa_codes['totp'])
@@ -139,7 +143,7 @@ def system_2fa_required():
 def twofa_not_required_when_more_than_one_system():
     """6.2 2fa is not required when accessing systems page with more than one system"""
     bind_info = CLOUD_API.connect(SERVERS[1]['name'], SERVERS[0]['cloudOwner'], password)
-    ServerAPI5(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
+    ServerApi(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
     SERVERS[1]['id'] = bind_info['systemId']
     SERVERS[1]['cloudOwner'] = SERVERS[0]['cloudOwner']
     driver = get_headless_chrome()

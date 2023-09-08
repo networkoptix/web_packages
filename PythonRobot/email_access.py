@@ -56,7 +56,7 @@ class Email:
             for email_id in id_list:
                 status, msg_data = self.mailbox.fetch(str(email_id), "(RFC822)")
                 if status == "OK":
-                    self.email_body = quopri.decodestring(msg_data[0][1])
+                    self.email_body = quopri.decodestring(msg_data[0][1]).decode("utf-8", errors="ignore")
                     self.logout()
                     return True
         self.logout()  
@@ -67,8 +67,8 @@ class Email:
         email_id_str = email_id.decode('utf-8')
         status, msg_data = self.mailbox.uid('fetch', email_id_str, "(RFC822)")
         if status == "OK":
-            self.email_body = quopri.decodestring(msg_data[0][1])
-            self.logout()  
+            self.email_body = quopri.decodestring(msg_data[0][1]).decode("utf-8", errors="ignore")
+            self.logout()
             return self.email_body
         self.logout()  
         return False

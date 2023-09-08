@@ -1,4 +1,6 @@
+import sys
 import time
+import os
 from selenium import webdriver
 
 from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
@@ -19,7 +21,7 @@ from RobotVariables import RobotVariables
 password = "qweasd 123"
 
 keywords = GenericKeywords()
-SERVERS = keywords.create_systems()
+SERVERS = keywords.create_systems(os.path.basename(__file__))
 CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 

@@ -43,4 +43,4 @@ class SystemsPage:
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-systems-list-component")
 
     def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{ENV}systems")
+        robot_keywords.location_should_be(self.driver, f"{ENV}/systems")

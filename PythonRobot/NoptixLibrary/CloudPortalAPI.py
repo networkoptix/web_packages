@@ -19,10 +19,10 @@ from requests.auth import HTTPDigestAuth, HTTPBasicAuth
 from robot.api import logger
 from robot.api.deco import keyword, library
 
-from PythonRobot.NoptixLibrary import *
-from PythonRobot.NoptixLibrary.CloudSession import CloudSession
+from NoptixLibrary import *
+from NoptixLibrary.CloudSession import CloudSession
 
-from PythonRobot.NoptixLibrary.Cloud2fa import Cloud2fa
+from NoptixLibrary.Cloud2fa import Cloud2fa
 #from CloudSession import CloudSession
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
