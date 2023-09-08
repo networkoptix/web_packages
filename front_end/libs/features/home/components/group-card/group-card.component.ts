@@ -1,5 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { CommonModule, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -25,7 +25,6 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
         AngularSvgIconModule,
         TranslateModule,
         CommonModule,
-        NgFor,
         NxAddSvgSrcDirective,
     ],
     providers: [NxSystemGroupsService],

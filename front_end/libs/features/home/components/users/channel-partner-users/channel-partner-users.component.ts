@@ -1,4 +1,4 @@
-import { AsyncPipe, NgClass, NgIf } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -24,12 +24,11 @@ import type { ChannelPartnerUserExt } from './channel-partner-users.types';
     ],
     standalone: true,
     imports: [
+        CommonModule,
         AsyncPipe,
         NxUsersTableComponent,
         TranslateModule,
         AngularSvgIconModule,
-        NgClass,
-        NgIf,
         NxResizeObserver,
     ],
 })

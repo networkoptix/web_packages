@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { CommonModule, NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -55,8 +55,6 @@ interface SidebarSettings {
         NxPreLoaderComponent,
         CommonModule,
         AngularSvgIconModule,
-        NgClass,
-        NgIf,
         NxSystemGroupsSidebarComponent,
         NxGroupsCardsComponent,
         NxTabsComponent,

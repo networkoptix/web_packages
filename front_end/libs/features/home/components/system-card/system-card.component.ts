@@ -1,5 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { NgClass, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, booleanAttribute } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -24,11 +24,10 @@ import type { SystemItem } from '../../home.types';
     styleUrls: ['system-card.component.scss'],
     standalone: true,
     imports: [
+        CommonModule,
         CdkMenuModule,
         AngularSvgIconModule,
         NxSearchHighlightComponent,
-        NgClass,
-        NgIf,
         NxAddSvgSrcDirective,
     ],
 })

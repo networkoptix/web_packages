@@ -1,6 +1,6 @@
 import { DragDropModule, type CdkDragDrop } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { AsyncPipe, NgClass, NgFor, NgIf } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, Input } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -23,10 +23,8 @@ import { selectCurrentGroupId } from '../../store/groups/groups.selectors';
     styleUrls: ['sidebar-level.component.scss'],
     standalone: true,
     imports: [
+        CommonModule,
         CdkMenuModule,
-        NgFor,
-        NgIf,
-        NgClass,
         AsyncPipe,
         AngularSvgIconModule,
         DragDropModule,

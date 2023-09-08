@@ -1,5 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { AsyncPipe, CommonModule, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, DestroyRef, signal, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -42,9 +42,6 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
         RouterOutlet,
         CdkMenuModule,
         AngularSvgIconModule,
-        NgFor,
-        NgIf,
-        AsyncPipe,
         NxSearchComponent,
         FormsModule,
         CommonModule,

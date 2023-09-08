@@ -1,4 +1,4 @@
-import { NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -19,9 +19,7 @@ import type { ChannelPartnerUserExt } from '../users/channel-partner-users/chann
     standalone: true,
     imports: [
         AngularSvgIconModule,
-        NgFor,
-        NgIf,
-        NgClass,
+        CommonModule,
         TranslateModule,
         NxCheckboxComponent,
         NxBaseTableComponent,

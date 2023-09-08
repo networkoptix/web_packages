@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, computed, inject, Input, OnChanges, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
@@ -17,7 +17,7 @@ import { SystemsDisplayMode } from '../home.types';
     templateUrl: 'systems.component.html',
     styleUrls: ['systems.component.scss'],
     standalone: true,
-    imports: [NgIf, NxPreLoaderComponent, NxSystemsListComponent],
+    imports: [CommonModule, NxPreLoaderComponent, NxSystemsListComponent],
 })
 export class NxGroupsSystemsComponent implements OnChanges {
     @Input() displayMode: SystemsDisplayMode;

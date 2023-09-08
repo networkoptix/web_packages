@@ -1,4 +1,4 @@
-import { NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -23,7 +23,7 @@ import {
 @Component({
     selector: 'nx-home',
     templateUrl: 'home.component.html',
-    imports: [NxPreLoaderComponent, RouterModule, NgIf],
+    imports: [NxPreLoaderComponent, RouterModule, CommonModule],
     standalone: true,
 })
 export class NxHomeComponent implements OnInit {

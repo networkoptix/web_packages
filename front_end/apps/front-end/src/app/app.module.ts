@@ -1,6 +1,6 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { Location, PathLocationStrategy, DatePipe, LocationStrategy } from '@angular/common';
+import { Location, PathLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { AngularFireModule, FIREBASE_OPTIONS } from '@angular/fire/compat';
@@ -168,7 +168,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
             deps: [NxConfigService],
             useFactory: initializeApp,
         },
-        DatePipe,
+        CommonModule,
         NxSwPromptUpdateService,
         {
             provide: APP_INITIALIZER,

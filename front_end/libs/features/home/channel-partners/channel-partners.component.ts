@@ -1,5 +1,5 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
-import { CommonModule, NgClass, NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, DestroyRef, inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
@@ -48,9 +48,6 @@ import {
         TranslateModule,
         RouterModule,
         CdkMenuModule,
-        NgIf,
-        NgClass,
-        NgFor,
         NxTabsDirective,
     ],
 })

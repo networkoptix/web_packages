@@ -1,5 +1,5 @@
 import { CdkDragDrop } from '@angular/cdk/drag-drop';
-import { AsyncPipe, NgIf } from '@angular/common';
+import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -23,9 +23,9 @@ import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.co
     styleUrls: ['sidebar.component.scss'],
     standalone: true,
     imports: [
+        CommonModule,
         NxGroupsSidebarLevelComponent,
         AsyncPipe,
-        NgIf,
         AngularSvgIconModule,
         TranslateModule,
         NxAddSvgSrcDirective,

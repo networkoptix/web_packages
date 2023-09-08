@@ -1,4 +1,4 @@
-import { NgFor, NgIf } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -31,7 +31,7 @@ const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
     templateUrl: 'information.component.html',
     styleUrls: ['information.component.scss'],
     standalone: true,
-    imports: [NgIf, NgFor, AngularSvgIconModule],
+    imports: [CommonModule, AngularSvgIconModule],
 })
 export class NxChannelPartnerInformationComponent {
     systems = mockSystems;

@@ -1,6 +1,6 @@
 import { DialogModule } from '@angular/cdk/dialog';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
-import { Location, HashLocationStrategy, DatePipe, LocationStrategy } from '@angular/common';
+import { Location, HashLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule } from '@angular/core';
 import { BrowserModule, Title } from '@angular/platform-browser';
@@ -118,7 +118,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         NxConfigService,
         WINDOWS_PROVIDERS,
         { provide: LocationStrategy, useClass: HashLocationStrategy },
-        DatePipe,
+        CommonModule,
         {
             provide: APP_INITIALIZER,
             useFactory: NxBootstrapProviderFactory,

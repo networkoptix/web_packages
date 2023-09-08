@@ -1,4 +1,4 @@
-import { AsyncPipe } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,7 +21,7 @@ import type { OrgUserExt } from './org-users.types';
         '../../../components/groups-cards/groups-cards.component.scss',
     ],
     standalone: true,
-    imports: [AsyncPipe, NxUsersTableComponent, TranslateModule],
+    imports: [CommonModule, NxUsersTableComponent, TranslateModule],
 })
 export class NxOrganizationUsersComponent implements OnInit {
     LANG = staticLang;

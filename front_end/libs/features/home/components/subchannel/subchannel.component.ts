@@ -1,4 +1,4 @@
-import { AsyncPipe, NgFor } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -14,7 +14,7 @@ import { selectSubchannelPartner } from '@pages/home/store/channel-partners/chan
     templateUrl: 'subchannel.component.html',
     styleUrls: ['subchannel.component.scss'],
     standalone: true,
-    imports: [RouterOutlet, AsyncPipe, NgFor, NxTabsComponent],
+    imports: [RouterOutlet, CommonModule, NxTabsComponent],
 })
 export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
