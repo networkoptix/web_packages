@@ -254,7 +254,7 @@ export function alphaNumericSort<P>(
                 const someStrings = !bothStrings && numericSegments.some(isNaN);
 
                 if (bothStrings) {
-                    const [aSegment, bSegment] = firstVariance;
+                    const [aSegment = '', bSegment = ''] = firstVariance;
                     return aSegment.localeCompare(bSegment, locale);
                 }
 
