@@ -1,11 +1,13 @@
 from uuid import uuid4
 import uuid
+
+from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
 from api.views import utils
 from uuid import uuid4
 
-from asgiref.sync import async_to_sync
+from asgiref.sync import async_to_sync, sync_to_async
 from django.contrib.auth.models import AnonymousUser, Group, Permission
 from django.core.cache import caches, cache
 
@@ -23,23 +25,23 @@ def cloud_capabilities(request):
         capabilities['integration_store_enabled'] = request.param
     return capabilities
 
-
-def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings):
-    cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache')
+@pytest.mark.asyncio
+async def test_get_cloud_capabilities_from_cache(mocker, cloud_capabilities, settings):
+    cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache_async')
     cache_mock.return_value = cloud_capabilities
     expected = {'integrationStoreEnabled': cloud_capabilities.get(
         'integration_store_enabled', False)}
 
-    cache_capabilities = utils.get_cloud_capabilities_from_cache(customization=settings.TEST_CUSTOMIZATION)
+    cache_capabilities = await utils.get_cloud_capabilities_from_cache(customization=settings.TEST_CUSTOMIZATION)
     cache_mock.assert_called_with(settings.TEST_CUSTOMIZATION, 'cloud_capabilities')
     assert cache_capabilities == expected
 
-
-def test_get_settings_from_cache(mocker, customization_config, settings_from_cache, settings, db):
+@pytest.mark.asyncio
+async def test_get_settings_from_cache(mocker, customization_config, settings_from_cache, settings, db):
     cache_mock = mocker.patch.object(utils, 'cloud_portal_customization_cache_async')
     cache_mock.return_value = settings_from_cache
 
-    settings_dict = utils.get_settings_from_cache(customization=settings.TEST_CUSTOMIZATION)
+    settings_dict = await utils.get_settings_from_cache(customization=settings.TEST_CUSTOMIZATION)
     cache_mock.assert_called_with(settings.TEST_CUSTOMIZATION, 'config')
     assert settings_dict == settings_from_cache
 
@@ -177,7 +179,7 @@ class TestDownloadHistory:
         request = self.arf.get('/api/utils/downloads/history')
         request.user = self.user
         request.session = {}
-        return utils.downloads_history(request)
+        return async_to_sync(utils.downloads_history)(request)
 
     def test_no_permission_not_public(self, django_user_model):
         self.settings_mock.return_value['publicReleases'] = False
@@ -187,7 +189,7 @@ class TestDownloadHistory:
         assert response.status_code == status.HTTP_403_FORBIDDEN
 
     def test_json_not_found(self, mocker):
-        downloads_json = mocker.patch.object(utils.requests, 'get')
+        downloads_json = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
         downloads_json.return_value.status_code = status.HTTP_404_NOT_FOUND
 
         response = self.make_request()
@@ -196,8 +198,8 @@ class TestDownloadHistory:
 
     def test_show_betas(self, mocker):
         self.settings_mock.return_value['showAllBetas'] = True
-        downloads_request = mocker.patch.object(utils.requests, 'get')
-        downloads_request.return_value.json.return_value = self.downloads_json_data
+        downloads_request = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
+        downloads_request.return_value.json = mocker.MagicMock(return_value=self.downloads_json_data)
         downloads_request.return_value.status_code = status.HTTP_200_OK
 
         response = self.make_request()
@@ -206,11 +208,11 @@ class TestDownloadHistory:
         assert 'betas' not in response.data
 
     def test_not_show_betas(self, mocker):
-        downloads_request = mocker.patch.object(utils.requests, 'get')
+        downloads_request = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
         filtered_data = self.downloads_json_data.copy()
         filtered_data['betas'] = 'betasHere'
         downloads_request.return_value.status_code = status.HTTP_200_OK
-        downloads_request.return_value.json.return_value = filtered_data
+        downloads_request.return_value.json = mocker.MagicMock(return_value=filtered_data)
 
         response = self.make_request()
         assert response.status_code == status.HTTP_200_OK
@@ -235,7 +237,7 @@ class DownloadsBase:
         self.settings_mock = mocker.patch.object(
             utils, 'get_settings_from_cache')
         self.settings_mock.return_value = settings_from_cache
-        self.downloads_request = mocker.patch.object(utils.requests, 'get')
+        self.downloads_request = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
         self.downloads_request.side_effect = mock_requests
         caches['global'].clear()
 
@@ -245,7 +247,7 @@ class TestDownloadBuild(DownloadsBase):
         request = self.arf.get('/api/utils/downloads/12345')
         request.user = self.user
         request.session = {}
-        return utils.download_build(request, build_number)
+        return async_to_sync(utils.download_build)(request, build_number)
 
     def test_no_permission_not_public(self, django_user_model):
         self.settings_mock.return_value['publicReleases'] = False
@@ -296,7 +298,7 @@ class TestDownloads(DownloadsBase):
         request = self.arf.get('/api/utils/downloads')
         request.user = self.user
         request.session = {}
-        return utils.downloads(request)
+        return async_to_sync(utils.downloads)(request)
 
     def test_success(self):
         assert not caches['global'].get('downloads_default')
@@ -323,19 +325,19 @@ class TestDownloads(DownloadsBase):
         assert caches['global'].get('downloads_default')
 
         cache_mock = mocker.patch.object(utils, 'caches')
-        cache_mock['global'].set = mocker.MagicMock()
+        cache_mock['global'].aset = mocker.MagicMock()
         request = self.arf.post('/api/utils/downloads')
         request.user = self.user
         request.session = {}
-        utils.downloads(request)
-        cache_mock['global'].set.assert_called_with('downloads_default', False)
+        async_to_sync(utils.downloads)(request)
+        cache_mock['global'].aset.assert_called_with('downloads_default', False)
 
 class TestDownloadsReleases(DownloadsBase):
     def make_request(self):
         request = self.arf.get('/api/utils/downloads-releases')
         request.user = self.user
         request.session = {}
-        return utils.downloads_releases(request)
+        return async_to_sync(utils.downloads_releases)(request)
 
     def test_success(self):
         assert not caches['global'].get('downloads_releases_default')
@@ -360,16 +362,15 @@ class TestDownloadsReleases(DownloadsBase):
         response = self.make_request()
         assert response.status_code == status.HTTP_200_OK
         assert caches['global'].get('downloads_releases_default')
-
         cache_mock = mocker.patch.object(utils, 'caches')
-        cache_mock['global'].set = mocker.MagicMock()
+        cache_mock['global'].aset = mocker.MagicMock()
 
         request = self.arf.post('/api/utils/downloads-releases')
         self.user.is_superuser = True
         request.user = self.user
         request.session = {}
-        utils.downloads_releases(request)
-        cache_mock['global'].set.assert_called_with('downloads_releases_default', False)
+        async_to_sync(utils.downloads_releases)(request)
+        cache_mock['global'].aset.assert_called_with('downloads_releases_default', False)
 
 
 class TestGetSettings:
@@ -385,12 +386,12 @@ class TestGetSettings:
         request = self.arf.get('/api/utils/settings')
         request.user = self.user
         request.session = {}
-        redirect_res = utils.get_settings(request)
+        redirect_res = async_to_sync(utils.get_settings)(request)
         assert redirect_res.status_code == status.HTTP_302_FOUND
         request = self.arf.get(redirect_res.url)
         request.user = self.user
         request.session = {}
-        return utils.get_settings(request)
+        return async_to_sync(utils.get_settings)(request)
 
     def test_user_no_perms(self):
         response = self.make_request()
@@ -474,29 +475,29 @@ class TestIPVD:
     def test_post(self, arf, mocker):
         version = str(uuid4())
         delete_cache_mock = mocker.patch.object(
-            utils.cache, 'delete', return_value=True)
-        mocker.patch.object(utils.cache, 'get', return_value=version)
+            utils.cache, 'adelete', return_value=True)
+        mocker.patch.object(utils.cache, 'aget', return_value=version)
         request = arf.post('/api/ipvd')
 
         # Test cache cleared
-        response = utils.get_ipvd(request)
+        response = async_to_sync(utils.get_ipvd)(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == {utils.IPVD_CACHE_CLEARED}
         delete_cache_mock.assert_called_with(version)
 
         # Test no cached IPVD
         delete_cache_mock.return_value = False
-        response = utils.get_ipvd(request)
+        response = async_to_sync(utils.get_ipvd)(request)
         assert response.status_code == status.HTTP_202_ACCEPTED
         assert response.data == {utils.IPVD_CACHE_NOT_CLEARED}
 
     def test_get(self, arf, mocker, ipvd_data, ipvd_data_processed):
-        ipvd_mock = mocker.patch.object(utils.requests, 'get')
+        ipvd_mock = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
         ipvd_mock.return_value = MockResponse(json=ipvd_data)
 
         # Should redirect if not versioned request
         request = arf.get('/api/ipvd')
-        response = utils.get_ipvd(request)
+        response = async_to_sync(utils.get_ipvd)(request)
 
         versioned_url = response.url
 
@@ -504,24 +505,25 @@ class TestIPVD:
 
         # Versioned request should return data
         request = arf.get(versioned_url)
-        response = utils.get_ipvd(request)
+        response = async_to_sync(utils.get_ipvd)(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ipvd_data_processed
 
         # Test cached
         request = arf.get(versioned_url)
-        response = utils.get_ipvd(request)
+        response = async_to_sync(utils.get_ipvd)(request)
         ipvd_data_processed['cached'] = True
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ipvd_data_processed
 
 
-def test_cloud_capabilities_view(arf, mocker):
+@pytest.mark.asyncio
+async def test_cloud_capabilities_view(arf, mocker):
     capabilities_mock = mocker.patch.object(
         utils, 'get_cloud_capabilities_from_cache')
     capabilities_mock.return_value = mocker.sentinel.capabilities
     request = arf.get('/api/utils/cloudCapabilities/')
-    response = utils.cloud_capabilities(request)
+    response = await utils.cloud_capabilities(request)
 
     assert response.status_code == status.HTTP_200_OK
     assert response.data == mocker.sentinel.capabilities

@@ -1,6 +1,7 @@
 import re
 from typing import Type
 
+import httpx
 from django.conf import settings
 from django.core.cache import caches
 from django.core.exceptions import ObjectDoesNotExist
@@ -127,3 +128,36 @@ def substitute_branding(repl_dict, text):
     # Searches for any the keys from replacement dict
     # When one is found, the lambda function returns the value for that key and it is used as the replacement
     return re.sub("|".join(repl_dict.keys()), lambda match: repl_dict[re.escape(match.group(0))], text)
+
+
+
+class HttpxAsyncRequest:
+    @staticmethod
+    async def get(*args, **kwargs):
+        async with httpx.AsyncClient() as client:
+            response = await client.get(*args, **kwargs)
+        return response
+
+    @staticmethod
+    async def patch(*args, **kwargs):
+        async with httpx.AsyncClient() as client:
+            response = await client.patch(*args, **kwargs)
+        return response
+
+    @staticmethod
+    async def put(*args, **kwargs):
+        async with httpx.AsyncClient() as client:
+            response = await client.put(*args, **kwargs)
+        return response
+
+    @staticmethod
+    async def post(*args, **kwargs):
+        async with httpx.AsyncClient() as client:
+            response = await client.post(*args, **kwargs)
+        return response
+
+    @staticmethod
+    async def delete(*args, **kwargs):
+        async with httpx.AsyncClient() as client:
+            response = await client.delete(*args, **kwargs)
+        return response

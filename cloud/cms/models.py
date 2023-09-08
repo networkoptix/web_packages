@@ -1745,6 +1745,12 @@ class UserGroupsToAssetPermissions(models.Model):
             check_permission(user, cloud_portal, permission)
 
     @staticmethod
+    async def check_customization_permission_async(user, customization, permission=None, no_create=True):
+        return await sync_to_async(UserGroupsToAssetPermissions.check_customization_permission)(
+            user, customization, permission=permission, no_create=no_create
+        )
+
+    @staticmethod
     def get_customizations_with_permission(user, permission):
         codename = UserGroupsToAssetPermissions.convert_permission_to_codename(
             permission)

@@ -1,3 +1,4 @@
+import httpx
 from math import log2
 import datetime
 import json
@@ -5,11 +6,10 @@ import logging
 import re
 import os
 from django.urls import reverse
-from py import process
 from uuid import uuid4
 
-from asgiref.sync import sync_to_async, async_to_sync
-import requests
+from asgiref.sync import sync_to_async
+from util.helpers import HttpxAsyncRequest
 from django.core.cache import cache, caches
 from django.conf import settings
 from django.shortcuts import redirect
@@ -27,8 +27,8 @@ from cloud.helpers.exceptions import api_success, handle_exceptions, require_par
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
-from cms.models import Customization, cloud_portal_customization_cache, get_cached_menu, UserGroupsToAssetPermissions, \
-    cached_doc_menu_map, LicenseType, cloud_portal_customization_cache_async, global_version_key, get_cloud_portal_asset
+from cms.models import Customization, UserGroupsToAssetPermissions, \
+    cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
 from cms.permissions import IsSuperuser
 
@@ -46,12 +46,12 @@ language__body = openapi.Schema(type=openapi.TYPE_STRING)
 visited_key__body = openapi.Schema(type=openapi.TYPE_STRING)
 
 
-def get_cloud_capabilities_from_cache(*, customization=None, request=None):
+async def get_cloud_capabilities_from_cache(*, customization=None, request=None):
     if not customization and not request and not customization_ctx.get():
         raise APIInternalException('Customization must be given.',
                                   error_code=ErrorCodes.no_customization_given)
     customization = customization or getattr(request, 'CUSTOMIZATION', customization_ctx.get())
-    customization_cache = cloud_portal_customization_cache(
+    customization_cache = await cloud_portal_customization_cache_async(
         customization, 'cloud_capabilities')
     capabilities = {
         'integrationStoreEnabled': customization_cache.get('integration_store_enabled', False)
@@ -63,11 +63,7 @@ def get_cloud_capabilities_from_cache(*, customization=None, request=None):
     return capabilities
 
 
-def get_settings_from_cache(*, customization=None, request=None):
-    return async_to_sync(get_settings_from_cache_async)(customization=customization, request=request)
-
-
-async def get_settings_from_cache_async(*, customization=None, request=None):
+async def get_settings_from_cache(*, customization=None, request=None):
     if not customization and not request and not customization_ctx.get():
         raise APIInternalException('Customization must be given.',
                                    error_code=ErrorCodes.no_customization_given)
@@ -204,20 +200,21 @@ def languages(request):
                      operation_description="Returns a list of builds and patch notes for the current cloud portal.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def downloads_history(request):
+async def downloads_history(request):
     # TODO: later we can check specific permissions
     customization = request.CUSTOMIZATION
-    can_view_releases = UserGroupsToAssetPermissions.\
-        check_customization_permission(
+    can_view_releases = await UserGroupsToAssetPermissions.\
+        check_customization_permission_async(
             request.user, customization, 'api.can_view_release')
-    public_release_history = get_settings_from_cache(
-        customization=customization)['publicReleases']
+    settings_cache = await get_settings_from_cache(
+        customization=customization)
+    public_release_history = settings_cache['publicReleases']
     if not public_release_history and not can_view_releases:
         raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
 
     downloads_url = settings.DOWNLOADS_JSON.replace(
         '{{customization}}', customization)
-    downloads_json = requests.get(downloads_url)
+    downloads_json = await HttpxAsyncRequest.get(downloads_url)
 
     if downloads_json.status_code == 404:
         logger.warning(
@@ -229,7 +226,7 @@ def downloads_history(request):
     downloads_json.raise_for_status()
     downloads_json = downloads_json.json()
 
-    if not get_settings_from_cache(customization=customization)["showAllBetas"]:
+    if not settings_cache["showAllBetas"]:
         filter_type = "betas"
         downloads_json[filter_type] = filter_releases(
             downloads_json.get(filter_type, []))
@@ -243,19 +240,19 @@ def downloads_history(request):
                      manual_parameters=[build__route_param])
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def download_build(request, build):
+async def download_build(request, build):
     # TODO: later we can check specific permissions
     customization = request.CUSTOMIZATION
-    public_release_history = get_settings_from_cache(
-        customization=customization)['publicReleases']
+    cached_settings = await get_settings_from_cache(customization=customization)
+    public_release_history = cached_settings['publicReleases']
     can_view_releases = False
     if request.user.is_authenticated:
-        can_view_releases = UserGroupsToAssetPermissions.\
-            check_customization_permission(
+        can_view_releases = await UserGroupsToAssetPermissions.\
+            check_customization_permission_async(
                 request.user, customization, 'api.can_view_release')
 
     if not public_release_history and not can_view_releases:
-        customization_downloads = json.loads(caches['global'].get(f"downloads_{customization}", "{}"))
+        customization_downloads = json.loads(await caches['global'].aget(f"downloads_{customization}", "{}"))
         if customization_downloads.get('version') != build:
             raise APIForbiddenException("Not authorized", ErrorCodes.forbidden)
     """
@@ -275,7 +272,7 @@ def download_build(request, build):
 
     downloads_url = settings.DOWNLOADS_VERSION_JSON.replace('{{customization}}', customization).\
         replace('{{build}}', build)
-    downloads_json = requests.get(downloads_url)
+    downloads_json = await HttpxAsyncRequest.get(downloads_url)
 
     if downloads_json.status_code != 200:
         raise APINotFoundException(
@@ -288,7 +285,7 @@ def download_build(request, build):
                                    ErrorCodes.not_found,
                                    error_data=request.query_params)
 
-    updates_json = requests.get(settings.UPDATE_JSON)
+    updates_json = await HttpxAsyncRequest.get(settings.UPDATE_JSON)
     updates_json.raise_for_status()
     updates_json = updates_json.json()
 
@@ -304,8 +301,8 @@ def download_build(request, build):
     return Response(downloads_json)
 
 
-def get_updates_json():
-    updates_json = requests.get(settings.UPDATE_JSON)
+async def get_updates_json():
+    updates_json = await HttpxAsyncRequest.get(settings.UPDATE_JSON)
     updates_json.raise_for_status()
     return updates_json.json()
 
@@ -315,24 +312,23 @@ def get_updates_json():
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Forces the downloads cache to clear and returns the "
                                            "new download information.")
-@api_view(['GET', 'POST'])
+@async_api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-def downloads(request):
+async def downloads(request):
     global_cache = caches['global']
     customization = request.CUSTOMIZATION
-    settings_cache = get_settings_from_cache(customization=customization)
-
+    settings_cache = await get_settings_from_cache(customization=customization)
     public_downloads = settings_cache['publicDownloads']
     if not public_downloads and not request.user.is_authenticated:
         raise APIForbiddenException(
             "Not authorized", ErrorCodes.not_authorized)
     cache_key = f"downloads_{customization}"
     if request.method == 'POST':  # clear cache on POST request - only for this customization
-        global_cache.set(cache_key, False)
-    downloads_json = global_cache.get(cache_key, False)
+        await global_cache.aset(cache_key, False)
+    downloads_json = await global_cache.aget(cache_key, False)
     if not downloads_json:
         # get updates.json
-        updates_json = get_updates_json()
+        updates_json = await get_updates_json()
 
         # find settings for customizations
         if customization not in updates_json:
@@ -374,7 +370,7 @@ def downloads(request):
 
         # get downloads.json for specific version. If get there - version is at least 3.0, so downloads.json is present
         downloads_path = updates_path + '/' + build_number + '/downloads.json'
-        downloads_result = requests.get(downloads_path)
+        downloads_result = await HttpxAsyncRequest.get(downloads_path)
         downloads_result.raise_for_status()
         downloads_json = downloads_result.json()
         downloads_json['releaseNotes'] = ''
@@ -419,14 +415,14 @@ def get_latest_vms_build_by_release_type(downloads_data, release_type, release_n
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      operation_description="Forces the downloads cache to clear and returns the "
                                            "new download information.")
-@api_view(['GET', 'POST'])
+@async_api_view(['GET', 'POST'])
 @permission_classes((AllowAny, ))
-def downloads_releases(request):
+async def downloads_releases(request):
     global_cache = caches['global']
     customization = request.CUSTOMIZATION
 
     cache_key = f"downloads_releases_{customization}"
-    settings_cache = get_settings_from_cache(customization=customization)
+    settings_cache = await get_settings_from_cache(customization=customization)
 
     public_downloads = settings_cache['publicDownloads']
     if not public_downloads and not request.user.is_authenticated:
@@ -434,21 +430,22 @@ def downloads_releases(request):
             "Not authorized", ErrorCodes.not_authorized)
 
     if request.user.is_superuser and request.method == 'POST':  # clear cache on POST request - only for this customization
-        global_cache.set(cache_key, False)
+        await global_cache.aset(cache_key, False)
 
-    downloads_releases_json = global_cache.get(cache_key, False)
+    downloads_releases_json = await global_cache.aget(cache_key, False)
 
     if not downloads_releases_json:
-        release_notes_url = get_updates_json().get(customization, {}).get('release_notes', '')
+        release_notes_url = await get_updates_json()
+        release_notes_url = release_notes_url.get(customization, {}).get('release_notes', '')
         if release_notes_url == 'https://updates.hdwitness.com/release_notes.html':
             release_notes_url = ''
 
         try:
             customization_downloads_url = settings.DOWNLOADS_JSON.replace('{{customization}}', customization)
-            res = requests.get(customization_downloads_url)
+            res = await HttpxAsyncRequest.get(customization_downloads_url)
             res.raise_for_status()
             downloads_data = res.json()
-        except requests.exceptions.HTTPError:
+        except httpx.HTTPError:
             logger.warning(
                 f"Customization does not have a downloads.json: {customization}. {settings.CONFIG_ERROR}")
             return Response(None)
@@ -456,7 +453,7 @@ def downloads_releases(request):
         release_types = ['betas', 'patches', 'releases']
         data = { release_type: get_latest_vms_build_by_release_type(downloads_data, release_type, release_notes_url)
                  for release_type in release_types }
-        global_cache.set(cache_key, json.dumps(data))
+        await global_cache.aset(cache_key, json.dumps(data))
     else:
         data = json.loads(downloads_releases_json)
 
@@ -481,41 +478,41 @@ def get_feature_flags(request):
                      responses={200: openapi.Schema(type=openapi.TYPE_OBJECT, additional_properties=openapi.Schema(type=openapi.TYPE_BOOLEAN))})
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def webadmin_feature_flags(request):
+async def webadmin_feature_flags(request):
     request.META['webadmin'] = True
-    return api_success(get_feature_flags(request), additional_headers={'access-control-allow-origin': request.META.get('HTTP_ORIGIN', request.META.get('HTTP_HOST', ''))})
+    flags = await sync_to_async(get_feature_flags)(request)
+    return api_success(flags, additional_headers={'access-control-allow-origin': request.META.get('HTTP_ORIGIN', request.META.get('HTTP_HOST', ''))})
 
 
 @swagger_auto_schema(method="GET",  # auto_schema=None,
                      operation_description="Returns cloud config information to the web client.",
                      responses={200: SettingsSerializer()})
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes((AllowAny, ))
-def get_settings(request):
+async def get_settings(request):
     customization = request.CUSTOMIZATION
     global_cache = caches['customization']
     user = request.query_params.get('cached')
     user_key = getattr(request.user, 'email', 'anonymous_user')
-    current_user = cache.get(user_key)
+    current_user = await cache.aget(user_key)
     user_changed = not user or not current_user or user != current_user
     version = request.query_params.get('version')
-    current_version = global_cache.get(global_version_key(customization))
+    current_version = await global_cache.aget(global_version_key(customization))
     version_changed = version != str(current_version)
     features = request.query_params.get('features')
     current_features = str(uuid4())
-    added = global_cache.add('features_cache_key', current_features)
+    added = await global_cache.aadd('features_cache_key', current_features)
     if not added:
-        current_features = global_cache.get('features_cache_key')
+        current_features = await global_cache.aget('features_cache_key')
     features_changed = features != current_features
     if user_changed or version_changed or features_changed:
         if not current_user:
             current_user = str(uuid4())
-            cache.set(user_key, current_user)
+            await cache.aset(user_key, current_user)
         return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}&features={current_features}')
 
-    data = get_settings_from_cache(customization=customization)
-    serializer = SettingsSerializer(
-        data=data, request=request)
+    data = await get_settings_from_cache(customization=customization)
+    serializer = await sync_to_async(lambda: SettingsSerializer(data=data, request=request))()
     serializer.is_valid()
     return Response(serializer.data, headers={'Cache-Control': f'max-age={60**2 * 24}'})
 
@@ -526,11 +523,11 @@ IPVD_EXPIRES = 60**2 * 24
 IPVD_CACHE_HEADER = {'Cache-Control': f'max-age={IPVD_EXPIRES}'}
 
 
-def check_ipvd_cache_response(version):
-    if all(
-            k in (ipvd := cache.get(version, {}))
+async def check_ipvd_cache_response(version):
+    if all([
+            k in (ipvd := await cache.aget(version, {}))
             for k in ("cameras", "vendors", "analytics", "num_cameras")
-    ):
+    ]):
         return Response({
             **ipvd,
             "cached": True
@@ -547,9 +544,9 @@ def check_ipvd_cache_response(version):
                          '202': IPVD_CACHE_NOT_CLEARED})
 @api_view(['GET', 'POST'])
 @permission_classes((AllowAny,))
-def get_ipvd(request):
+async def get_ipvd(request):
     url = settings.IPVD_CONNECT
-    current_version = cache.get('ipvd', None)
+    current_version = await cache.aget('ipvd', None)
 
     if request.method == 'GET':
         version = request.GET.get('version')
@@ -557,30 +554,31 @@ def get_ipvd(request):
         if not current_version:
             # Update current version and redirect to cacheable url
             current_version = str(uuid4())
-            cache.set('ipvd', current_version)
+            await cache.aset('ipvd', current_version)
             return redirect(f'{reverse("get-ipvd")}?version={current_version}')
 
         elif version != current_version:
             # Redirect to new version if changed. Only really happens if IPVD cache was cleared
             return redirect(f'{reverse("get-ipvd")}?version={current_version}')
 
-        if response := check_ipvd_cache_response(version):
+        if response := await check_ipvd_cache_response(version):
             return response
 
-        cameras = requests.get(url, "[]").json()
+        cameras = await HttpxAsyncRequest.get(url, "[]")
+        cameras = cameras.json()
         serializer = IpvdSerializer(data=cameras)
         serializer.is_valid()
         ipvd = serializer.data
 
         # Save the IPVD data as the current version
-        cache.set(current_version, ipvd, IPVD_EXPIRES)
+        await cache.aset(current_version, ipvd, IPVD_EXPIRES)
 
         # The IPVD cache header max-age could outlive the data ttl in the cache but that's ok since we already checked the version
         return Response(ipvd, headers=IPVD_CACHE_HEADER)
 
     elif request.method == 'POST':
         # Really only care about deleting the ipvd cache so might not even have to check if current_version cache was deleted
-        cleared = cache.delete("ipvd") and cache.delete(current_version)
+        cleared = await cache.adelete("ipvd") and await cache.adelete(current_version)
 
         return Response({IPVD_CACHE_CLEARED}) if cleared else Response({IPVD_CACHE_NOT_CLEARED}, status.HTTP_202_ACCEPTED)
 
@@ -590,8 +588,8 @@ def get_ipvd(request):
                                            "mainly for vms.")
 @api_view(['GET'])
 @permission_classes((AllowAny, ))
-def cloud_capabilities(request):
-    capabilities = get_cloud_capabilities_from_cache(request=request)
+async def cloud_capabilities(request):
+    capabilities = await get_cloud_capabilities_from_cache(request=request)
 
     return Response(capabilities)
 
@@ -613,11 +611,11 @@ CUSTOMIZATIONS_STAFF_ONLY = f'Customizations list only available to users on the
 @api_view(['GET'])
 @permission_classes((IsAuthenticated,))
 @handle_exceptions
-def get_customizations(request):
+async def get_customizations(request):
     if not request.user.email.endswith(settings.SUPERUSER_DOMAIN):
         raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
-
-    return Response(Customization.objects.filter(enabled=True).values_list('name', flat=True))
+    customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
+    return Response(customizations)
 
 
 PY_LICENSES = 'requirements-license.json'
@@ -634,17 +632,17 @@ def load_licences(rel_path):
     return licences
 
 
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes([IsSuperuser])
 @handle_exceptions
-def python_licenses(request):
+async def python_licenses(request):
     licenses = load_licences(PY_LICENSES)
     return Response(licenses)
 
 
-@api_view(['GET'])
+@async_api_view(['GET'])
 @permission_classes([IsSuperuser])
 @handle_exceptions
-def package_licenses(request):
+async def package_licenses(request):
     licenses = load_licences(PKG_LICENSES)
     return Response(licenses)
