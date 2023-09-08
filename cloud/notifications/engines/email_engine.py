@@ -4,11 +4,8 @@ import os
 
 import pystache
 from django.conf import settings
-from django.core.cache import cache
 from django.core.mail.backends.smtp import EmailBackend
-
-from cms.controllers import filldata
-from cms.controllers.static_files import read_cached_file, read_db_context_template, TemplatesCache
+from cms.controllers.static_files import read_cached_file, TemplatesCache, read_customized_db_file
 from cms.models import Asset
 
 logger = logging.getLogger(__name__)
@@ -145,8 +142,8 @@ def read_cached_email_title(asset: Asset, customization_name: str,
                                      language_code, skin, version_id)
     if data := templates_cache.get_value():
         return data[event][EMAIL_SUBJECT]
-    data = read_db_context_template(asset, customization_name, NOTIFICATION_TEMPLATE_FILENAME,
-                                    language_code, skin, version_id)
+    data = read_customized_db_file(asset, customization_name, NOTIFICATION_TEMPLATE_FILENAME,
+                                   language_code, skin, version_id)
     data = json.loads(data)
     templates_cache.set_value(data)
     return data[event][EMAIL_SUBJECT]

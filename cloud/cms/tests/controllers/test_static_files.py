@@ -20,7 +20,7 @@ from cloud.storage_backend import MediaStorage
 from cms.management.commands.readstructure import read_languages, read_structure
 from cms.models import ContextTemplate, AssetType, Language, ContentVersion, AssetCustomizationReview, Context, \
     DataStructure, DataRecord, ExternalFile
-from cms.controllers.static_files import get_template, read_db_file, StaticFileNotFound, load_structure, \
+from cms.controllers.static_files import get_template, read_customized_db_file, StaticFileNotFound, load_structure, \
     convert_structures_in_customization, get_new_name, get_old_name
 from cms.controllers import filldata, structure
 from conftest import get_asset_type, get_asset_context_by_name, get_context_datastructure_by_name, \
@@ -109,7 +109,7 @@ class TestTemplate:
             assert filldata_file == file_from_cache
 
 
-def test_read_db_file(mocker, default_portal):
+def test_read_customized_db_file(mocker, default_portal):
     mock_file = f'{uuid4()}'
     filename = f'templates/lang_{{{{language}}}}/{uuid4()}.mustache'
     customization_name = settings.TEST_CUSTOMIZATION
@@ -118,7 +118,7 @@ def test_read_db_file(mocker, default_portal):
     skin = 'blue'
 
     def read_file():
-        return read_db_file(default_portal, customization_name, filename, language_code, skin, version_id)
+        return read_customized_db_file(default_portal, customization_name, filename, language_code, skin, version_id)
 
     # test exception on non existing file
     err = None

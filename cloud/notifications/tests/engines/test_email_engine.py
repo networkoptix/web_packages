@@ -102,7 +102,7 @@ class TestEmailEngine:
         mock_email_cache = mocker.patch(
             'notifications.engines.email_engine.TemplatesCache.get_value', return_value=cache_value)
         mock_read_file = mocker.patch(
-            'notifications.engines.email_engine.read_db_context_template', return_value=json.dumps(data))
+            'notifications.engines.email_engine.read_customized_db_file', return_value=json.dumps(data))
 
         # Test cached title
         assert read_cached_email_title(
@@ -114,11 +114,12 @@ class TestEmailEngine:
         mock_email_cache = mocker.patch(
             'notifications.engines.email_engine.TemplatesCache.get_value', return_value=None)
         mock_read_file = mocker.patch(
-            'notifications.engines.email_engine.read_db_context_template', return_value=json.dumps(data))
+            'notifications.engines.email_engine.read_customized_db_file', return_value=json.dumps(data))
         assert read_cached_email_title(
             default_portal, customization_name, language_code, event, skin, version_id) == subject
         mock_read_file.assert_called_once_with(
             default_portal, customization_name, NOTIFICATION_TEMPLATE_FILENAME, language_code, skin, version_id)
+
 
     def test_read_cached_template(self, mocker, default_portal,
                                   default_customization_host, default_customization_ctx):

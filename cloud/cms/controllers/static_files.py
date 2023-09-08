@@ -62,10 +62,11 @@ def get_contexts(asset):
     return global_contexts, global_contexts_dict
 
 
-def read_db_file(asset: Asset, customization_name: str, filename: str,
-                 language_code: str, skin: str, version_id: int) -> typing.Any:
+def read_customized_db_file(asset: Asset, customization_name: str, filename: str,
+                            language_code: str, skin: str, version_id: int) -> typing.Any:
     """
-    Reads template or file value from DB. Value must be saved by `readstructure` or by user in GUI.
+    Reads customized template or file value from DB. Value must be saved by
+    `readstructure` or by user in GUI.
     Args:
         asset (Asset, required): cloud portal asset
         customization_name (str, required): customization name
@@ -178,7 +179,7 @@ def read_cached_file(asset: Asset, customization_name: str, filename: str, langu
         logger.info(f"Got email file {filename} from db.")
     else:
         # read view template
-        data = read_db_file(asset, customization_name, filename, language_code, skin, version_id)
+        data = read_customized_db_file(asset, customization_name, filename, language_code, skin, version_id)
         logger.info(f"Got file {filename} from db.")
     templates_cache.set_value(data)
     return data
