@@ -1,30 +1,30 @@
 import { ms } from '@vms-client/utils/type-aliases';
 
-import { CameraArchive, ISimpleTimeRange } from './ICamera';
+import { SimpleTimeRange } from './ICamera';
 
-export function _isThereRecord(archive: CameraArchive, t: ms): boolean {
-    // binary search approach:
-    let l = 0;
-    let r = archive.length - 1;
-    while (l < r) {
-        const m = l + Math.floor((r - l) / 2);
-        const rec = archive[m];
-        if (rec.start <= t && rec.end >= t) {
-            return true;
-        }
-        if (rec.start > t) {
-            r = m < r ? m : r - 1;
-        } else {
-            l = m > l ? m : l + 1;
-        }
-    }
-    return false;
+// export function _isThereRecord(archive: CameraArchive, t: ms): boolean {
+//     // binary search approach:
+//     let l = 0;
+//     let r = archive.length - 1;
+//     while (l < r) {
+//         const m = l + Math.floor((r - l) / 2);
+//         const rec = archive[m];
+//         if (rec.start <= t && rec.end >= t) {
+//             return true;
+//         }
+//         if (rec.start > t) {
+//             r = m < r ? m : r - 1;
+//         } else {
+//             l = m > l ? m : l + 1;
+//         }
+//     }
+//     return false;
 
-    // naive linear search approach:
-    // return !!archive.find(r => r.start <= t && r.end >= t)
-}
+//     // naive linear search approach:
+//     // return !!archive.find(r => r.start <= t && r.end >= t)
+// }
 
-export function _getNextRecord(archive: CameraArchive, t: ms): ISimpleTimeRange {
+export function _getNextRecord(archive: SimpleTimeRange[], t: ms): SimpleTimeRange | null {
     // binary search approach:
     let l = 0;
     let r = archive.length - 1;

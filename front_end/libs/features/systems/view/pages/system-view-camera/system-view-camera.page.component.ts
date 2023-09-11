@@ -10,7 +10,7 @@ import {
     OnInit,
     Renderer2,
 } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Params } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, BehaviorSubject, interval, Subject, timer } from 'rxjs';
@@ -22,6 +22,7 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import type { Ec2RecordedTimePeriodsResp } from '@services/system-api.types';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -44,11 +45,13 @@ import { CameraQualityStorageService } from '../../services/cameraQualityStorage
 import { CameraTransportStorageService } from '../../services/cameraTransportStorage.service';
 import { WebClientUxService } from '../../services/webclient-ux.service';
 import type { WebClientUxState } from '../../view.types';
-import { ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
+import { Resolutions, ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
 import { fullscreen } from './fullscreen';
+
+type Period = Ec2RecordedTimePeriodsResp['reply'][number]['periods'][number];
 
 const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
 
@@ -72,8 +75,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     LANG = staticLang;
     fullscreenMode: boolean;
     showElementsInFSM: boolean;
-    onShowElements: any;
-    onMoveShowElements: any;
+    onShowElements: number;
+    onMoveShowElements: number;
     icons = icons;
 
     public settingsShown: boolean = false;
@@ -81,7 +84,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     public availableTransportsAndResolutions$ =
         new BehaviorSubject<AvailableTransportsAndResolutions>({});
     public transports$ = new BehaviorSubject<PlaybackTransport[]>([]);
-    public qualities$ = new BehaviorSubject<any>({});
+    public qualities$ = new BehaviorSubject<Resolutions>({});
     public visibleQualities$ = new BehaviorSubject<PlaybackQuality[]>([]);
     public selectedTransport$ = new BehaviorSubject<PlaybackTransport>(undefined);
     public selectedQuality$ = new BehaviorSubject<PlaybackQuality>(undefined);
@@ -150,7 +153,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.$self.classList.add('controls-shown');
 
         // this.fpsMeter.install()
-        // @ts-expect-error
+        // @ts-expect-error: Old debugging thing? Should probably remove
         this.document.fpsMeter = this.fpsMeter;
         // allows calling document.fpsMeter.install() from the developer console, if needed
 
@@ -165,7 +168,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.unListenMozFSChange();
     }
 
-    private startAnimation() {
+    private startAnimation(): void {
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
@@ -173,7 +176,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             });
     }
 
-    private initSubscriptions() {
+    private initSubscriptions(): void {
         this.playback._subject
             .pipe(throttleTime(TIMESTAMP_UPDATE_THROTTLE_MS), untilDestroyed(this))
             .subscribe(s => {
@@ -232,7 +235,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
     }
 
-    private initEvents() {
+    private initEvents(): void {
         this.unListenFullScreenChange = this.renderer.listen(
             'document',
             'fullscreenchange',
@@ -308,11 +311,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unListenTouch: () => void;
     private unListenTouchMove: () => void;
 
-    private onFullScreenChange = (e): void => {
+    private onFullScreenChange = (e: MouseEvent): void => {
         const fse = fullscreen.getElement();
         this.fullscreenMode = !!fse;
         if (this.fullscreenMode) {
-            this.onShowElements = setTimeout(() => {
+            this.onShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
 
@@ -356,7 +359,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);
-            this.onMoveShowElements = setTimeout(() => {
+            this.onMoveShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
         }
@@ -374,7 +377,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unListenWebkitFSChange: () => void;
     private unListenMozFSChange: () => void;
 
-    public get availableTransportsAndResolutions() {
+    public get availableTransportsAndResolutions(): AvailableTransportsAndResolutions {
         return this.availableTransportsAndResolutions$.getValue();
     }
 
@@ -384,11 +387,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.availableTransportsAndResolutions$.next(transportsAndResolutions);
     }
 
-    private get transports() {
+    private get transports(): PlaybackTransport[] {
         return this.transports$.getValue();
     }
 
-    private set transports(transports) {
+    private set transports(transports: PlaybackTransport[]) {
         this.transports$.next(
             transports.filter(transport => ['hls', 'webm'].includes(transport)) || [],
         );
@@ -407,11 +410,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedTransport$.next(transport);
     }
 
-    private get qualities() {
+    private get qualities(): Resolutions {
         return this.qualities$.getValue();
     }
 
-    private set qualities(qualities) {
+    private set qualities(qualities: Resolutions) {
         qualities = qualities || {};
         const qualityKeys = Object.keys(qualities);
         this.visibleQualities$.next(
@@ -462,13 +465,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedQuality$.next(quality);
     }
 
-    public currentQuality(quality) {
+    public currentQuality(quality: string): string {
         return quality
             ? this.LANG.common.resolution[quality] || quality
             : this.LANG.common.resolution.auto;
     }
 
-    public qualityToVerbose(q: PlaybackQuality) {
+    public qualityToVerbose(q: PlaybackQuality): string {
         switch (q) {
             case 'hi':
             case 'high':
@@ -481,7 +484,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public qualityFromVerbose(q: PlaybackQuality) {
+    public qualityFromVerbose(q: PlaybackQuality): string {
         q = q?.toLowerCase();
         switch (q) {
             case 'high':
@@ -501,12 +504,12 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             : {};
     }
 
-    private getQueryParam(q) {
+    private getQueryParam(q: string): string {
         // return (this.location.path().match(new RegExp('[?&]' + q + '=([^&]+)')) || [, null])[1];
         return new URLSearchParams(this.location.path().split('?')[1] || '').get(q);
     }
 
-    private _restorePlayback(archiveAvailable: boolean = false) {
+    private _restorePlayback(archiveAvailable: boolean = false): void {
         if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.playback.restore(archiveAvailable);
             return;
@@ -553,6 +556,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                         const records = this._extractPeriodsFromServerResponse(ar);
                         if (!ar.error || ar.error !== '0' || !records.length) {
                             this._restorePlayback();
+                            // @ts-expect-error FIXME: Probably 0 being used as falsy value instead of null
                             this.vms.setCameraRecords(this.id, 0, []);
                         } else {
                             try {
@@ -628,6 +632,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                                 const duration = parseInt(r.durationMs);
                                 return new SimpleTimeRange(
                                     start,
+                                    // @ts-expect-error FIXME: Value comparison with number string
                                     r.durationMs < 0 ? now : start + duration,
                                 );
                             })
@@ -640,11 +645,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             });
     }
 
-    private _extractPeriodsFromServerResponse(response) {
+    private _extractPeriodsFromServerResponse(response: Ec2RecordedTimePeriodsResp): Period[] {
         if (!response?.reply.length) {
             return [];
         }
-        const records = [];
+        const records: Period[] = [];
         response.reply.forEach(({ periods }) => {
             const chunks = periods.length;
             const batchSize = 10000; // Arbitrary size
@@ -656,6 +661,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 records.push(...periods.slice(start, end));
             }
         });
+        // @ts-expect-error FIXME: Value comparison with number strings
         return records.sort((a, b) => a.startTimeMs - b.startTimeMs);
     }
 
@@ -675,7 +681,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    private _onRouteChange(params): void {
+    private _onRouteChange(params: Params): void {
         this.id = params.cameraId;
         this.playback.save();
         this.vms.clearCameraSelection();
@@ -780,7 +786,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         }
     }
 
-    public toggleFullScreen($event?): void {
+    public toggleFullScreen($event?: MouseEvent): void {
         $event?.stopPropagation();
 
         if (!fullscreen.getElement()) {
@@ -798,11 +804,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         // isFullScreen is updated by onFullScreenChange on document events
     }
 
-    public stopSettingsClickPropagation($event): void {
+    public stopSettingsClickPropagation($event: MouseEvent): void {
         $event?.stopPropagation();
     }
 
-    public toggleSettings($event?): void {
+    public toggleSettings($event?: MouseEvent): void {
         $event?.stopPropagation();
         this.settingsShown = !this.settingsShown;
     }
@@ -820,7 +826,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     public resetTransport(): void {
-        let transport;
+        let transport: PlaybackTransport;
 
         if (this.isChrome && this.isMobile) {
             transport = 'webm'; /// force mobile chrome to webm as it's more reliable
@@ -849,7 +855,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     @HostListener('document:click', ['$event'])
-    public clickOutside($event): void {
+    public clickOutside(): void {
         this.hideSettings();
     }
 }

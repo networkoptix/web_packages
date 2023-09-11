@@ -8,21 +8,6 @@ export type CAMERA_STATUS =
     | 'Offline'
     | 'Unauthorized';
 
-export interface ISimpleTimeRange {
-    start: ms;
-    end: ms;
-    duration: ms;
-    /* eslint-disable @typescript-eslint/no-use-before-define */
-    clone(): SimpleTimeRange;
-    contains(r: SimpleTimeRange): boolean;
-    isContained(r: SimpleTimeRange): boolean;
-    isDisjointWith(r: SimpleTimeRange): boolean;
-    overlapsWith(r: SimpleTimeRange): boolean;
-    /* eslint-enable @typescript-eslint/no-use-before-define */
-}
-
-export type IRecord = ISimpleTimeRange;
-
 export class SimpleTimeRange {
     constructor(
         // public start: ms,
@@ -39,9 +24,9 @@ export class SimpleTimeRange {
         return new SimpleTimeRange(this.start, this.end);
     }
 
-    public static fromISTR(tr: ISimpleTimeRange): SimpleTimeRange {
-        return new SimpleTimeRange(tr.start, tr.end);
-    }
+    // public static fromISTR(tr: ISimpleTimeRange): SimpleTimeRange {
+    //     return new SimpleTimeRange(tr.start, tr.end);
+    // }
 
     public contains(r: SimpleTimeRange): boolean {
         return this.start <= r.start && this.end >= r.end;
@@ -60,4 +45,5 @@ export class SimpleTimeRange {
     }
 }
 
-export type CameraArchive = Array<IRecord>;
+/* It looks like shallow copy was used to pick and/or make writable */
+export type sTimeRangeCopy = { start: ms; end: ms };

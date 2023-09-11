@@ -500,7 +500,7 @@ export const search: configTypes.Search = {
     channelPartners: {
         searchMinimumCards: 8,
         searchWidth: 336,
-    }
+    },
 };
 
 export const servers: configTypes.Servers = {

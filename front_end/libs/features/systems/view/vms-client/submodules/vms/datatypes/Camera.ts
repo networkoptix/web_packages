@@ -5,9 +5,9 @@ import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
 import { BirdViewTree } from './BirdViewTree';
-import { ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';
+import { CAMERA_STATUS, SimpleTimeRange, sTimeRangeCopy } from './ICamera';
 
-interface Resolutions {
+export interface Resolutions {
     high?: string;
     low?: string;
     '1080p'?: string;
@@ -19,11 +19,11 @@ interface Resolutions {
 export class ViewCamera {
     protected _birdViewTree: BirdViewTree;
 
-    public get archiveRange() {
+    public get archiveRange(): SimpleTimeRange {
         return this._archiveRange;
     }
 
-    public get archive() {
+    public get archive(): SimpleTimeRange[] {
         return this._archive;
     }
 
@@ -41,8 +41,8 @@ export class ViewCamera {
         public status: CAMERA_STATUS,
         public isScheduleEnabled: boolean,
         public disableDualStreaming: boolean,
-        protected _archiveRange: ISimpleTimeRange,
-        protected _archive: CameraArchive = [],
+        protected _archiveRange: SimpleTimeRange,
+        protected _archive: SimpleTimeRange[] = [],
         public thumbnailUrl: Observable<string> | undefined = undefined,
         public getVideoUrl: (transport: string, quality: string, t?: ms) => string,
         public getPosterUrl: (t?: ms, width?: number, height?: number) => Observable<string>,
@@ -51,7 +51,7 @@ export class ViewCamera {
         this._initBirdView();
     }
 
-    public get ip() {
+    public get ip(): string {
         try {
             return this.url.split('/')[2].split(':')[0];
         } catch {
@@ -82,12 +82,12 @@ export class ViewCamera {
         this._rotation = rotation;
     }
 
-    public get rotation() {
+    public get rotation(): number {
         // console.log('CAMERA ROTATION GET', this._rotation)
         return this._rotation;
     }
 
-    public get availableTransportsAndResolutions() {
+    public get availableTransportsAndResolutions(): Record<string, Resolutions> {
         return this.availableTransports.reduce<Record<string, Resolutions>>((acc, t) => {
             acc[t] = this._getAvailableResolutions(t);
             return acc;
@@ -95,7 +95,7 @@ export class ViewCamera {
     }
 
     public get availableTransports(): PlaybackTransport[] {
-        const isTransportSupported = t => {
+        const isTransportSupported = (t: string): boolean => {
             if (this.require2fa) {
                 return t === 'hls';
             }
@@ -118,13 +118,13 @@ export class ViewCamera {
         return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>;
     }
 
-    public get mediaStreams() {
+    public get mediaStreams(): MediaStream[] {
         return this._mediaStreams;
     }
 
     protected _getAvailableResolutions(transport: PlaybackTransport): Resolutions {
-        const result: any = {};
-        const resolutions = [];
+        const result: Resolutions = {};
+        const resolutions: string[] = [];
         const isHls = transport === 'hls';
         this._mediaStreams
             .filter(s => s.resolution !== '*')
@@ -184,47 +184,47 @@ export class ViewCamera {
         );
     }
 
-    public get isVirtual() {
+    public get isVirtual(): boolean {
         return !this.model;
     }
 
-    public get isLive() {
+    public get isLive(): boolean {
         return (
             !this.isVirtual &&
             (this.status === 'Online' || this.status === 'Live' || this.status === 'Recording')
         );
     }
 
-    public get isOnline() {
+    public get isOnline(): boolean {
         return this.status !== 'Offline';
     }
 
-    public get isOffline() {
+    public get isOffline(): boolean {
         return this.status === 'Offline';
     }
 
-    public get isRecording() {
+    public get isRecording(): boolean {
         return !this.isVirtual && this.status === 'Recording';
     }
 
-    public get isAuthorized() {
+    public get isAuthorized(): boolean {
         return this.status !== 'Unauthorized';
     }
 
-    public get isUnauthorized() {
+    public get isUnauthorized(): boolean {
         return this.status === 'Unauthorized';
     }
 
-    public get hasArchive() {
+    public get hasArchive(): boolean {
         return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
     }
 
-    public getRecords(startMs: ms, endMs: ms, minGapMs: ms) {
+    public getRecords(startMs: ms, endMs: ms, minGapMs: ms): sTimeRangeCopy[] {
         // console.log('========', new Date(startMs), new Date(endMs))
         return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
     }
 
-    public setRecords(range: ISimpleTimeRange, archive: CameraArchive): void {
+    public setRecords(range: SimpleTimeRange, archive: SimpleTimeRange[]): void {
         this._archiveRange = range;
         this._archive = archive;
         this._initBirdView();
@@ -234,17 +234,17 @@ export class ViewCamera {
         this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
     }
 
-    public pushRecordedChunks(rs: CameraArchive): void {
+    public pushRecordedChunks(rs: SimpleTimeRange[]): void {
         // console.log('SNR', rs, this)
         this._birdViewTree.setNewlyRecorded(rs);
         // this._archiveRange.end = rs[rs.length - 1].end;
     }
 
-    public isThereRecord(t: ms) {
+    public isThereRecord(t: ms): boolean {
         return this._birdViewTree.isThereRecord(t);
     }
 
-    public getNextRecord(t: ms): ISimpleTimeRange {
+    public getNextRecord(t: ms): SimpleTimeRange {
         return this._birdViewTree.getNextRecord(t);
     }
 

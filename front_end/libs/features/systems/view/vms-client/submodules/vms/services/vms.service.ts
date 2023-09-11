@@ -4,7 +4,7 @@ import type { ServerTimeInfo } from '@services/system.service/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
 import { ViewCamera } from '../datatypes/Camera';
-import { CameraArchive } from '../datatypes/ICamera';
+import { SimpleTimeRange } from '../datatypes/ICamera';
 import { ViewMediaServer } from '../datatypes/IMediaServer';
 import { initializeVmsState, VMS_MODE, VmsState } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
@@ -37,7 +37,7 @@ export class VideoManagementSystemService {
         this.serverTimes.set([]);
     }
 
-    public get selectedCamera() {
+    public get selectedCamera(): ViewCamera {
         return this._selectedCamera();
     }
 
@@ -127,11 +127,15 @@ export class VideoManagementSystemService {
         });
     }
 
-    public setCameraRecords(cameraId: string, range, records): void {
+    public setCameraRecords(
+        cameraId: string,
+        range: SimpleTimeRange,
+        records: SimpleTimeRange[],
+    ): void {
         this._selectedCamera()?.setRecords(range, records);
     }
 
-    public addRecordsToSelectedCamera(cameraId: string, records: CameraArchive): void {
+    public addRecordsToSelectedCamera(cameraId: string, records: SimpleTimeRange[]): void {
         if (this.state().mode !== VMS_MODE.NOT_INITIALIZED) {
             this._selectedCamera().pushRecordedChunks(records);
         } else {

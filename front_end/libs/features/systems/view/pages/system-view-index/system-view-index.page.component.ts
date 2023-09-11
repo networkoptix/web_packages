@@ -9,7 +9,7 @@ import {
     Inject,
     effect,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -66,8 +66,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     fullscreenMode: boolean;
     fullscreenToggle: boolean;
     showElementsInFSM: boolean;
-    onShowElements: any;
-    onMoveShowElements: any;
+    onShowElements: number;
+    onMoveShowElements: number;
     icons = icons;
 
     public initialized: boolean = false;
@@ -90,7 +90,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     private _windowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
-    public onResize(event): void {
+    public onResize(event: { target: { innerWidth: number } }): void {
         const widthThreshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
         const newWidth = event.target.innerWidth;
         if (newWidth <= widthThreshold && this._windowWidth > widthThreshold) {
@@ -144,7 +144,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this._onRouteChange(s);
         });
 
-        this.ux.subject.pipe(untilDestroyed(this)).subscribe((s: WebClientUxState) => {
+        this.ux.subject.pipe(untilDestroyed(this)).subscribe(s => {
             this._onUxStateChange(s);
         });
 
@@ -183,7 +183,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         if (s.isFullScreen) {
             this.fullscreenMode = true;
             this.fullscreenToggle = true;
-            this.onShowElements = setTimeout(() => {
+            this.onShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
 
@@ -228,7 +228,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);
-            this.onMoveShowElements = setTimeout(() => {
+            this.onMoveShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
         }
@@ -244,7 +244,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _setInitializationState(initialized, initializedWithError): void {
+    private _setInitializationState(initialized: boolean, initializedWithError: boolean): void {
         this.initialized = initialized;
         this.$self.classList[initialized ? 'add' : 'remove']('initialized');
         this.initializedWithError = initializedWithError;
@@ -254,7 +254,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         }
     }
 
-    private _onRouteChange(params): void {
+    private _onRouteChange(params: Params): void {
         // cancel pool for the previous system
         this.cancelPoll$.next('cancel');
         this.systemId = params.systemId || null;
@@ -363,7 +363,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             });
     }
 
-    private _initSystem() {
+    private _initSystem(): void {
         let processingMediaServers = false;
         let cachedMediaServers: ViewBaseServer[] = [];
         const firstLoad = new Subject();
@@ -449,7 +449,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     private findOnlineCamera(): string {
-        const isOnline = (c: ViewCamera) => c.isOnline;
+        const isOnline = (c: ViewCamera): boolean => c.isOnline;
         const firstMediaServerWithAnOnlineCamera = this.mediaservers.find(ms =>
             ms.cameras.find(isOnline),
         );
