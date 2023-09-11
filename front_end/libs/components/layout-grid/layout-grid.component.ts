@@ -1,4 +1,3 @@
-import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDrag, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
@@ -85,7 +84,6 @@ import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/
 
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
-    BaseResourceNode,
     LayoutRenderConfig,
     LayoutResourceTree,
     ParsedLayout,
@@ -241,7 +239,6 @@ export class NxLayoutGridComponent {
             trackBy: node => node.details?.id,
         },
     );
-    dataSource: ArrayDataSource<BaseResourceNode>;
 
     previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
@@ -536,22 +533,12 @@ export class NxLayoutGridComponent {
         // TODO - end -
     }
 
-    async ngOnChanges({
-        layout,
-        layoutItemLookup,
-    }: NgChanges<NxLayoutGridComponent>): Promise<void> {
+    async ngOnChanges({ layout }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
             // this.openMenu = false;
             this.initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
             this.updateLayout();
-        }
-
-        if (
-            layoutItemLookup?.currentValue &&
-            !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)
-        ) {
-            this.dataSource = new ArrayDataSource(layoutItemLookup.currentValue.tree);
         }
     }
 

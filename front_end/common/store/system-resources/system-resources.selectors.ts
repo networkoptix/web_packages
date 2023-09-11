@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/explicit-function-return-type */
 import { MemoizedSelector, createSelector } from '@ngrx/store';
+import { memoize } from 'lodash-es';
 
 import { systemResourcesFeature } from './system-resources.feature';
 import {
@@ -10,13 +11,14 @@ import {
 
 export const { selectSystemResourcesState } = systemResourcesFeature;
 
-export const selectResourcesStateBySystemId = (systemId: string) =>
+export const selectResourcesStateBySystemId = memoize((systemId: string) =>
     createSelector(
         selectSystemResourcesState,
         (state): SystemResources => state[systemId] || new SystemResources(),
-    );
+    ),
+);
 
-export const selectResourcesValuesBySystemId = (systemId: string) =>
+export const selectResourcesValuesBySystemId = memoize((systemId: string) =>
     createSelector(
         selectResourcesStateBySystemId(systemId),
         (state): SystemResourcesTypeMap =>
@@ -24,36 +26,45 @@ export const selectResourcesValuesBySystemId = (systemId: string) =>
                 (acc, [key, { value }]) => ({ ...acc, [key]: value }),
                 {} as SystemResourcesTypeMap,
             ),
-    );
+    ),
+);
 
-const selectByResourceType =
+const selectByResourceType = memoize(
     <T extends SystemResourceState<unknown>['value'] | SystemResourceState<unknown>>(
         extractResourceCallback: (resources: SystemResources) => T,
     ) =>
-    (systemId: string) =>
-        createSelector(selectResourcesStateBySystemId(systemId), systemResources =>
-            extractResourceCallback(systemResources),
-        );
+        memoize((systemId: string) =>
+            createSelector(selectResourcesStateBySystemId(systemId), systemResources =>
+                extractResourceCallback(systemResources),
+            ),
+        ),
+);
 
-export const selectValue =
+export const selectValue = memoize(
     <U, T extends { value: U }>(
         selector: (
             systemId: string,
         ) => MemoizedSelector<Record<string, unknown>, T, (s1: unknown) => T>,
     ) =>
-    (systemId: string) =>
-        createSelector(selector(systemId), (resourceState): T['value'] => resourceState.value);
+        memoize((systemId: string) =>
+            createSelector(selector(systemId), (resourceState): T['value'] => resourceState.value),
+        ),
+);
 
-export const selectByResourceId =
+export const selectByResourceId = memoize(
     <T extends { id: string }[]>(
         selector: (
             systemId: string,
         ) => MemoizedSelector<Record<string, unknown>, T, (s1: unknown) => T>,
     ) =>
-    (systemId: string, resourceId: string) =>
-        createSelector(selector(systemId), (resources): T[number] =>
-            resources.find(r => r.id === resourceId),
-        );
+        memoize(
+            (systemId: string, resourceId: string) =>
+                createSelector(selector(systemId), (resources): T[number] =>
+                    resources.find(r => r.id === resourceId),
+                ),
+            (...args) => args.join('-'),
+        ),
+);
 
 export const selectCamerasStateBySystemId = selectByResourceType(({ cameras }) => cameras);
 

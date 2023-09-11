@@ -26,16 +26,16 @@ export interface SystemResourcesTypeMap {
 export class SystemResources {
     [SystemResourceTypeEnums.CAMERAS]: SystemResourceState<
         SystemResourcesTypeMap[SystemResourceTypeEnums.CAMERAS]
-    > = new SystemResourceState([]);
+    > = new SystemResourceState(null);
     [SystemResourceTypeEnums.SERVERS]: SystemResourceState<
         SystemResourcesTypeMap[SystemResourceTypeEnums.SERVERS]
-    > = new SystemResourceState([]);
+    > = new SystemResourceState(null);
     [SystemResourceTypeEnums.LAYOUTS]: SystemResourceState<
         SystemResourcesTypeMap[SystemResourceTypeEnums.LAYOUTS]
-    > = new SystemResourceState([]);
+    > = new SystemResourceState(null);
     [SystemResourceTypeEnums.WEB_PAGES]: SystemResourceState<
         SystemResourcesTypeMap[SystemResourceTypeEnums.WEB_PAGES]
-    > = new SystemResourceState([]);
+    > = new SystemResourceState(null);
 }
 
 export type LoadSystemResources = {

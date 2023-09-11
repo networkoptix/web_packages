@@ -16,7 +16,7 @@ const appRoutes: Routes = [
     {
         path: '',
         pathMatch: 'full',
-        redirectTo: 'new',
+        redirectTo: 'default',
     },
     {
         path: ':layoutId',

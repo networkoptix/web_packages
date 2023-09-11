@@ -1,5 +1,5 @@
 // import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, Inject, LOCALE_ID } from '@angular/core';
+import { ChangeDetectorRef, Component, LOCALE_ID, inject } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -33,18 +33,13 @@ import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
-import {
-    ActiveLayoutActions,
-    ActiveLayoutSelectors,
-} from '@services/layout-state/store/active-layout';
-import { LocalLayoutsActions } from '@services/layout-state/store/local-layouts';
+import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layout';
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
-import { LayoutTypes } from '@services/layout-state/store/shared/types/layout-state.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
-import { Layout, LayoutItem, Layouts, WebPage } from '@services/system-api.types';
+import { Layout, LayoutItem, WebPage } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CurrentUser } from '@services/system-user.types';
 import {
@@ -55,7 +50,7 @@ import {
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { selectResourcesValuesBySystemId } from '@store/system-resources/system-resources.selectors';
-import { alphabeticalSort, alphaNumericSort, cleanId, dirtyId } from '@utils/general';
+import { alphaNumericSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
@@ -117,7 +112,7 @@ export class NxLayoutViewComponent {
         shareReplay({ bufferSize: 1, refCount: true }),
     );
 
-    layoutItemLookup$ = this.selectedSystem$.pipe(
+    layoutItemLookup$ = this.systemService.currentSystem$.pipe(
         switchMap(system =>
             this.layoutStateService.loadUnsavedLayouts(system.id).pipe(map(() => system)),
         ),
@@ -125,10 +120,11 @@ export class NxLayoutViewComponent {
             return combineLatest([
                 this.store.select(selectResourcesValuesBySystemId(id)),
                 this.#selectedLayout$.pipe(startWith(null)),
-                this.availableLayouts$.pipe(startWith([])),
+                this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
                 new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser())),
             ]);
         }),
+        filter(([resources]) => Object.values(resources).every(Boolean)),
         map(cloneDeep),
         map(
             ([
@@ -214,7 +210,7 @@ export class NxLayoutViewComponent {
                     {} as ResourceLookup<(typeof webPages)[0]>,
                 );
                 const byName = alphaNumericSort<Pick<Resource, 'name'>>(
-                    this.locale,
+                    LayoutStateService.runInInjectionContext(() => inject(LOCALE_ID)),
                     r => r.name || '',
                 );
 
@@ -308,27 +304,6 @@ export class NxLayoutViewComponent {
         untilDestroyed(this),
     );
 
-    availableLayouts$: Observable<Layouts> = this.store
-        .select(SharedLayoutsSelectors.selectLayouts)
-        .pipe(
-            map(layouts =>
-                layouts
-                    .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
-                    .map(({ layout }) => layout as Layout)
-                    .sort(alphabeticalSort(this.locale, layout => layout.name)),
-            ),
-            shareReplay({
-                bufferSize: 1,
-                refCount: false,
-            }),
-            untilDestroyed(this),
-        );
-
-    availableLayoutsDropdown$ = this.availableLayouts$.pipe(
-        map(layouts => layouts.map(this.layoutToDropdown)),
-        untilDestroyed(this),
-    );
-
     #defaultLayout$: Observable<string> = this.layoutItemLookup$.pipe(
         switchMap(async ({ tree }) => {
             const layout = tree
@@ -355,9 +330,7 @@ export class NxLayoutViewComponent {
     #layoutId$ = this.store.select(ActiveLayoutSelectors.selectActiveLayoutState).pipe(
         filter(layoutId => !!layoutId),
         switchMap(layoutId =>
-            this.CONFIG.featureFlags.layoutsEditable || layoutId !== 'new'
-                ? Promise.resolve(layoutId.replace('new', ''))
-                : this.#defaultLayout$,
+            layoutId === 'default' ? this.#defaultLayout$ : Promise.resolve(layoutId),
         ),
         switchMap(async layoutId => {
             const queryParams = { ...this.activatedRoute.snapshot.queryParams };
@@ -386,7 +359,7 @@ export class NxLayoutViewComponent {
     #selectedLayout$ = combineLatest([
         this.selectedSystem$,
         this.#layoutId$,
-        this.availableLayouts$,
+        this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
     ]).pipe(
         switchMap(async ([system, layoutId, layouts]): Promise<Layout> => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
@@ -450,7 +423,6 @@ export class NxLayoutViewComponent {
         private dialogsService: NxDialogsService,
         layoutGridService: NxLayoutGridService,
         // private location: Location,
-        @Inject(LOCALE_ID) private locale: string,
         private pageService: NxPageService,
         private router: Router,
         private systemService: NxSystemService,
@@ -460,41 +432,7 @@ export class NxLayoutViewComponent {
         public layoutStateService: LayoutStateService,
     ) {
         this.CONFIG = configService.config;
-
-        /**
-         * TODO: Need to find a better way to sync state from routes.
-         */
-        this.startSync();
     }
-
-    /** Store Sync Actions: We'll need to find a better way to handle updating the active layout */
-    updateActiveLayout$ = this.observeParam('layoutId').pipe(
-        map(layoutId => ActiveLayoutActions.set({ id: layoutId })),
-    );
-
-    updateLayouts$ = this.selectedSystem$.pipe(
-        switchMap(async system => {
-            const layouts = await firstValueFrom(
-                (system.mediaserver as NxSystemRestAPI).getLayouts(),
-            );
-            return LocalLayoutsActions.set({ layouts });
-        }),
-    );
-
-    private observeParam(param: string): Observable<string> {
-        return this.activatedRoute.params.pipe(
-            map(params => params[param]),
-            distinctUntilChanged(),
-        );
-    }
-
-    startSync(): void {
-        merge(this.updateActiveLayout$, this.updateLayouts$)
-            .pipe(untilDestroyed(this))
-            .subscribe(action => this.store.dispatch(action));
-    }
-
-    /** End Store Sync Actions */
 
     ngOnInit(): void {
         this.selectedSystem$

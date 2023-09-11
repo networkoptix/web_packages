@@ -1,8 +1,7 @@
-import { ArrayDataSource } from '@angular/cdk/collections';
 import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
-import { CdkTreeModule, NestedTreeControl } from '@angular/cdk/tree';
+import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -22,6 +21,7 @@ import { assertResourceParentNode } from '@components/layout-grid/layout-grid.ty
 import {
     BaseResourceNode,
     LayoutRenderConfig,
+    MergedResourceNode,
     ParsedLayoutItems,
     ResourceNode,
     ResourceType,
@@ -32,6 +32,7 @@ import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-lik
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
@@ -56,7 +57,6 @@ import { cleanId, dirtyId } from '@utils/general';
         CdkDropList,
         CdkMenu,
         CdkMenuTrigger,
-        CdkTreeModule,
         CommonModule,
         NxImageComponent,
         NxPreLoaderComponent,
@@ -74,6 +74,7 @@ import { cleanId, dirtyId } from '@utils/general';
         NxContextMenu,
         NxAddSvgSrcDirective,
         NxTooltipDirective,
+        NxForceVisibilityDirective,
     ],
     templateUrl: './layout-grid-tree.component.html',
     styleUrls: ['./layout-grid-tree.component.scss'],
@@ -86,7 +87,7 @@ export class NxLayoutGridTreeComponent {
         id?: string;
     };
     @Input() system: NxSystem;
-    @Input() dataSource: ArrayDataSource<BaseResourceNode>;
+    @Input() dataSource: BaseResourceNode[];
     @Input() treeControl: NestedTreeControl<ResourceNode, string>;
     @Input() errorIcons: Record<string, string>;
     @Input() dragging: boolean;
@@ -119,6 +120,41 @@ export class NxLayoutGridTreeComponent {
             this.playable.push('archive');
         }
     }
+
+    ngOnInit(): void {
+        this.expandNodesFromParams();
+    }
+
+    expandNodesFromParams = (): void => {
+        const findNode = (
+            items: ResourceNode[],
+            id: string,
+            parent: ReturnType<typeof findNode> = null,
+        ): ResourceNode & { parent: ResourceNode } => {
+            if (!items) {
+                return;
+            }
+
+            for (const item of items) {
+                if (cleanId(item.details.id) === cleanId(id)) {
+                    return { ...item, parent };
+                }
+
+                if ('children' in item) {
+                    const child = findNode(item.children as MergedResourceNode[], id, item);
+                    if (child) {
+                        return child;
+                    }
+                }
+            }
+        };
+        let foundNode = findNode(this.dataSource, this.layout.id);
+
+        while (foundNode) {
+            this.treeControl.expand(foundNode);
+            foundNode = foundNode.parent;
+        }
+    };
 
     cleanId = cleanId;
 
@@ -212,6 +248,8 @@ export class NxLayoutGridTreeComponent {
             name: node.name,
         });
     };
+
+    nodeId = (_: number, node: ResourceNode): string => node.details.id;
 
     hasChild = (_: number, node: ResourceNode): boolean => assertResourceParentNode(node);
 

@@ -141,6 +141,8 @@ export class NxSystemService {
             system.updateSystemAuth(true).catch(() => {});
         }
 
+        system.lostConnection = false;
+
         if (environment.isLocal || skipSettingSystem) {
             return system;
         }
@@ -149,13 +151,11 @@ export class NxSystemService {
             (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().subscribe(() => {});
         }
 
-        this.system = system;
-        this.system.lostConnection = false;
-        if (!skipPoll) {
-            this.system.startPoll(systemId);
-        }
         this.currentSystem$$.set(system);
-        return this.system;
+        if (!skipPoll) {
+            this.currentSystem$$().startPoll(systemId);
+        }
+        return this.currentSystem$$();
     }
 
     @memoizeAsyncPersistent

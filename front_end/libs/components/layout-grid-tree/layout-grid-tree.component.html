@@ -1,185 +1,215 @@
 <div class="resource-tree-wrapper">
-    <cdk-tree
+    <div
         *ngIf="layoutGridService.isLeftMenuOpen$$()"
         cdkDropList
         tourAnchor="cloud-layouts_left-menu"
         [cdkDropListDisabled]="layout.locked"
-        [dataSource]="dataSource"
-        [treeControl]="treeControl"
+        class="cdk-tree"
     >
-        <!-- This is the tree node template for leaf nodes -->
-        <cdk-nested-tree-node
-            *cdkTreeNodeDef="let node"
-            #currentItem
-            cdkDropList
-            class="tree-node"
+        <ng-template
+            #expandableNode
+            let-node="node"
         >
+            <!-- This is the tree node template for expandable nodes -->
             <div
-                cdkDrag
-                [cdkDragDisabled]="
-                    !node.details || layout.locked || node.type === RESOURCE_TYPE.LAYOUT
-                "
-                (click)="layoutGridService.changeView.next(node)"
-                (cdkDragStarted)="dragging = true"
-                (cdkDragMoved)="
-                    layoutGridService.moveAddedItem.next({
-                        event: $event,
-                        itemParent: currentItem
-                    })
-                "
-                (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
-                [alternativeTargetRef]="tooltipOffsetTarget"
-                [nxTooltip]="
-                    (showTooltip$ | async) &&
-                    (node.type === RESOURCE_TYPE.CAMERA
-                        ? cameraTooltip
-                        : node.type === RESOURCE_TYPE.SERVER
-                        ? serverTooltip
-                        : '')
-                "
-                (mouseenter)="updateTooltipTarget(node.details.id)"
-                (mouseleave)="unsubTooltips()"
-                horizontal
-                alternateStyle
-                [tourAnchor]="
-                    layout?.id &&
-                    cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
-                        ? 'cloud-layouts_selected-' +
-                          (node.type === RESOURCE_TYPE.LAYOUT ? RESOURCE_TYPE.LAYOUT : 'focus')
-                        : ''
-                "
-                [ngClass]="{
-                    selected:
-                        layout?.id &&
-                        cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id),
-                    offline:
-                        node.type !== RESOURCE_TYPE.LAYOUT &&
-                        !node.details.unauthorized &&
-                        !node.details.online
-                }"
-                class="tooltip-offset-parent"
+                class="tree-node cdk-tree-node"
+                [tourAnchor]="'cloud-layouts_' + node.type"
             >
                 <div
-                    #tooltipOffsetTarget
-                    class="tooltip-offset-target"
-                ></div>
-                <div *cdkDragPreview>
-                    <div class="add-preview">
-                        <ng-container
-                            *ngTemplateOutlet="nodeInfo; context: { node: node, preview: true }"
-                        ></ng-container>
-                    </div>
-                </div>
-
-                <ng-container
-                    *ngTemplateOutlet="
-                        nodeInfo;
-                        context: {
-                            node: node,
-                            expandable: false,
-                            expanded: !treeControl.isExpanded(node) && !tourService.currentStep
-                        }
+                    cdkDrag
+                    (click)="treeControl.toggle(node)"
+                    [cdkDragDisabled]="!node.details || layout.locked"
+                    (cdkDragStarted)="dragging = true"
+                    (cdkDragMoved)="
+                        layoutGridService.moveAddedItem.next({
+                            event: $event
+                        })
                     "
-                ></ng-container>
-            </div>
-
-            <ng-template #cameraTooltip>
-                <div class="camera-tooltip-wrapper">
-                    <nx-health-image
-                        [isPrimary]="true"
-                        aspect="override"
-                        [preloader]="true"
-                        [state]="node.details.status"
-                        [unavailableMessage]="'Cannot load preview' | translate"
-                        [url]="
-                            node?.details?.requiresTranscoding
-                                ? ''
-                                : (node?.details?.previewUrl | async)
+                    (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
+                    class="root-node"
+                >
+                    <ng-container
+                        *ngTemplateOutlet="
+                            nodeInfo;
+                            context: {
+                                node: node,
+                                expandable: node.children.length,
+                                expanded: !treeControl.isExpanded(node) && !tourService.currentStep
+                            }
                         "
-                        class="generic"
-                    ></nx-health-image>
+                    ></ng-container>
                 </div>
-            </ng-template>
-
-            <ng-template #serverTooltip>
-                <ng-template #tooltipLoading>
-                    <nx-pre-loader [minHeight]="108"></nx-pre-loader>
-                </ng-template>
-                <div class="server-tooltip-wrapper">
-                    <h4>
-                        {{ { value: LANG.layouts.statistics, params: node.details } | nxTranslate }}
-                    </h4>
-                    <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
-                        <div
-                            *ngIf="res.statistics | as : ServerStats as stats"
-                            class="stats-grid"
-                        >
-                            <div translate>Description</div>
-                            <div translate>Usage</div>
-                            <ng-container *ngFor="let type of stats">
-                                <div>
-                                    {{ type.description }}
-                                </div>
-                                <div>
-                                    {{ type.value }}
-                                </div>
-                            </ng-container>
-                        </div>
-                        <div
-                            *ngIf="res.error as error"
-                            class="error-label"
-                        >
-                            {{ error | translate }}
-                        </div>
-                    </ng-container>
-                </div>
-            </ng-template>
-        </cdk-nested-tree-node>
-
-        <!-- This is the tree node template for expandable nodes -->
-        <cdk-nested-tree-node
-            *cdkTreeNodeDef="let node; when: hasChild"
-            class="tree-node"
-            [tourAnchor]="'cloud-layouts_' + node.type"
-        >
-            <div
-                cdkTreeNodeToggle
-                cdkDrag
-                (click)="layoutStateService.changeLayout(node)"
-                [cdkDragDisabled]="!node.details || layout.locked"
-                (cdkDragStarted)="dragging = true"
-                (cdkDragMoved)="
-                    layoutGridService.moveAddedItem.next({
-                        event: $event
-                    })
-                "
-                (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
-                class="root-node"
-            >
-                <ng-container
-                    *ngTemplateOutlet="
-                        nodeInfo;
-                        context: {
-                            node: node,
-                            expandable: node.children.length,
-                            expanded: !treeControl.isExpanded(node) && !tourService.currentStep
-                        }
+                <div
+                    [class.tree-invisible]="
+                        !treeControl.isExpanded(node) && !tourService.currentStep
                     "
-                ></ng-container>
-            </div>
-            <div
-                [class.tree-invisible]="!treeControl.isExpanded(node) && !tourService.currentStep"
-                class="expanded-tree"
-            >
-                <!-- <span
+                    class="expanded-tree"
+                >
+                    <!-- <span
                     *ngIf="!node.children.length"
                     class="no-children"
                     translate
                     >No Items</span
                 > -->
-                <ng-container cdkTreeNodeOutlet></ng-container>
+                    <ng-container
+                        *ngTemplateOutlet="renderChildren; context: { nodes: node.children }"
+                    ></ng-container>
+                </div></div
+        ></ng-template>
+        <ng-template
+            #leafNode
+            let-node="node"
+        >
+            <!-- This is the tree node template for leaf nodes -->
+            <div
+                #currentItem
+                cdkDropList
+                [nxForceVisibility]="node.details.id === this.layout?.id"
+                forceVisibilityOnce
+                scrollBehavior="instant"
+                class="tree-node cdk-tree-node"
+            >
+                <div
+                    cdkDrag
+                    [cdkDragDisabled]="
+                        !node.details || layout.locked || node.type === RESOURCE_TYPE.LAYOUT
+                    "
+                    (click)="layoutGridService.changeView.next(node)"
+                    (cdkDragStarted)="dragging = true"
+                    (cdkDragMoved)="
+                        layoutGridService.moveAddedItem.next({
+                            event: $event,
+                            itemParent: currentItem
+                        })
+                    "
+                    (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
+                    [alternativeTargetRef]="tooltipOffsetTarget"
+                    [nxTooltip]="
+                        (showTooltip$ | async) &&
+                        (node.type === RESOURCE_TYPE.CAMERA
+                            ? cameraTooltip
+                            : node.type === RESOURCE_TYPE.SERVER
+                            ? serverTooltip
+                            : '')
+                    "
+                    (mouseenter)="updateTooltipTarget(node.details.id)"
+                    (mouseleave)="unsubTooltips()"
+                    horizontal
+                    alternateStyle
+                    [tourAnchor]="
+                        layout?.id &&
+                        cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
+                            ? 'cloud-layouts_selected-' +
+                              (node.type === RESOURCE_TYPE.LAYOUT ? RESOURCE_TYPE.LAYOUT : 'focus')
+                            : ''
+                    "
+                    [ngClass]="{
+                        selected:
+                            layout?.id &&
+                            cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id),
+                        offline:
+                            node.type !== RESOURCE_TYPE.LAYOUT &&
+                            !node.details.unauthorized &&
+                            !node.details.online
+                    }"
+                    class="tooltip-offset-parent"
+                >
+                    <div
+                        #tooltipOffsetTarget
+                        class="tooltip-offset-target"
+                    ></div>
+                    <div *cdkDragPreview>
+                        <div class="add-preview">
+                            <ng-container
+                                *ngTemplateOutlet="nodeInfo; context: { node: node, preview: true }"
+                            ></ng-container>
+                        </div>
+                    </div>
+
+                    <ng-container
+                        *ngTemplateOutlet="
+                            nodeInfo;
+                            context: {
+                                node: node,
+                                expandable: false,
+                                expanded: !treeControl.isExpanded(node) && !tourService.currentStep
+                            }
+                        "
+                    ></ng-container>
+                </div>
+
+                <ng-template #cameraTooltip>
+                    <div class="camera-tooltip-wrapper">
+                        <nx-health-image
+                            [isPrimary]="true"
+                            aspect="override"
+                            [preloader]="true"
+                            [state]="node.details.status"
+                            [unavailableMessage]="'Cannot load preview' | translate"
+                            [url]="
+                                node?.details?.requiresTranscoding
+                                    ? ''
+                                    : (node?.details?.previewUrl | async)
+                            "
+                            class="generic"
+                        ></nx-health-image>
+                    </div>
+                </ng-template>
+
+                <ng-template #serverTooltip>
+                    <ng-template #tooltipLoading>
+                        <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+                    </ng-template>
+                    <div class="server-tooltip-wrapper">
+                        <h4>
+                            {{
+                                { value: LANG.layouts.statistics, params: node.details }
+                                    | nxTranslate
+                            }}
+                        </h4>
+                        <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
+                            <div
+                                *ngIf="res.statistics | as : ServerStats as stats"
+                                class="stats-grid"
+                            >
+                                <div translate>Description</div>
+                                <div translate>Usage</div>
+                                <ng-container *ngFor="let type of stats">
+                                    <div>
+                                        {{ type.description }}
+                                    </div>
+                                    <div>
+                                        {{ type.value }}
+                                    </div>
+                                </ng-container>
+                            </div>
+                            <div
+                                *ngIf="res.error as error"
+                                class="error-label"
+                            >
+                                {{ error | translate }}
+                            </div>
+                        </ng-container>
+                    </div>
+                </ng-template>
             </div>
-        </cdk-nested-tree-node>
+        </ng-template>
+        <ng-template
+            #renderChildren
+            let-nodes="nodes"
+        >
+            <ng-container *ngFor="let node of nodes; trackBy: nodeId">
+                <ng-container
+                    *ngTemplateOutlet="
+                        node?.children?.length ? expandableNode : leafNode;
+                        context: { node: node }
+                    "
+                ></ng-container>
+            </ng-container>
+        </ng-template>
+        <ng-container
+            *ngTemplateOutlet="renderChildren; context: { nodes: dataSource }"
+        ></ng-container>
 
         <ng-template
             #nodeInfo
@@ -214,7 +244,7 @@
                         *ngFor="let action of nodeActions"
                         class="action-button"
                         [nxTooltip]="action.tooltip | translate : node.details"
-                        (click)="action.action($event, node)"
+                        (click)="$event.stopPropagation(); action.action($event, node)"
                         [tourAnchor]="'cloud-layouts_add_layout'"
                     >
                         <svg-icon
@@ -352,5 +382,5 @@
                 ></ng-template
             >
         </ng-template>
-    </cdk-tree>
+    </div>
 </div>

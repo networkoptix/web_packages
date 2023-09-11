@@ -12,10 +12,13 @@ import {
     take,
 } from 'rxjs';
 
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
+import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { dirtyId } from '@utils/general';
 
+import { LayoutStateService } from './layout-state.service';
 import { ActiveLayoutActions } from './store/active-layout';
 import { LocalLayoutsActions } from './store/local-layouts';
 import { SharedLayoutsActions } from './store/shared';
@@ -41,6 +44,24 @@ export class LayoutStateEffects {
                     map(id => ActiveLayoutActions.set({ id })),
                     take(1),
                 );
+            }),
+        );
+    });
+
+    updateActiveLayout$ = createEffect(() => {
+        return this.layoutStateService.paramState$.pipe(
+            map(({ layoutId }) => ActiveLayoutActions.set({ id: layoutId })),
+        );
+    });
+
+    updateLayouts$ = createEffect(() => {
+        return this.systemService.currentSystem$.pipe(
+            filter(() => nxConfig.featureFlags.layouts),
+            switchMap(async system => {
+                const layouts = await firstValueFrom(
+                    (system.mediaserver as NxSystemRestAPI).getLayouts(),
+                );
+                return LocalLayoutsActions.set({ layouts });
             }),
         );
     });
@@ -115,5 +136,6 @@ export class LayoutStateEffects {
         private actions: Actions,
         private store: Store,
         private systemService: NxSystemService,
+        private layoutStateService: LayoutStateService,
     ) {}
 }

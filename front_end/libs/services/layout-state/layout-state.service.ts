@@ -8,6 +8,7 @@ import { v4 as uuid } from 'uuid';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types';
 
 import { ActiveLayoutActions } from './store/active-layout';
@@ -155,11 +156,20 @@ export class LayoutStateService {
 
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));
 
+    paramState$ = this.paramStateService.getState(({ params, queryParams }) => ({
+        layoutId: params.layoutId,
+        systemId: params.systemId,
+        openNodes: queryParams.openNodes,
+    }));
+
+    paramState$$ = toSignal(this.paramState$);
+
     constructor(
         private cloudApi: NxCloudApiService,
         private injector: Injector,
         private store: Store,
         private translate: TranslateService,
+        private paramStateService: NxParamStateService,
     ) {
         LayoutStateService.runInInjectionContext = callback =>
             runInInjectionContext(this.injector, callback);

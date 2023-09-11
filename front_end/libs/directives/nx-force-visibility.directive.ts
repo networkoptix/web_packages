@@ -24,6 +24,7 @@ import { IntersectionStatus } from './nx-intersection.directive.types';
 })
 export class NxForceVisibilityDirective {
     @Input() nxForceVisibility: boolean;
+    @Input() scrollBehavior: 'smooth' | 'instant' | 'auto' = 'smooth';
 
     constructor(
         private element: ElementRef,
@@ -40,7 +41,10 @@ export class NxForceVisibilityDirective {
 
     handleVisible(isVisible: boolean): void {
         if (this.nxForceVisibility && !isVisible) {
-            this.element.nativeElement.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            this.element.nativeElement.scrollIntoView({
+                behavior: this.scrollBehavior,
+                block: 'start',
+            });
         }
     }
 }
