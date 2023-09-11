@@ -78,6 +78,14 @@ export interface UserSession {
     expiresInS: number;
 }
 
+export interface UserSessionV3 {
+    id: string;
+    username: string;
+    token: string;
+    ageS: number;
+    expiresInS: number;
+}
+
 export type ec2SaveUser = Partial<{
     id: string;
     email: string;

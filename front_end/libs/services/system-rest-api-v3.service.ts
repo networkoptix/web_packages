@@ -8,7 +8,7 @@ import { NxHealthService } from '@pages/health/health.service';
 import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';
 import { addUserRestV3 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
-import { UserSession } from '@services/system-api.types';
+import { UserSessionV3 } from '@services/system-api.types';
 import {
     AddUser,
     BaseNewUser,
@@ -79,18 +79,18 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
 
         if (!this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
-            this.userRequest = this.get<UserSession>(endpoint, { headers })
+            this.userRequest = this.get<UserSessionV3>(endpoint, { headers })
                 .toPromise()
                 .then(result => {
                     if (!this.accessToken) {
                         this._vmsToken = result.token;
                     }
-                    return this.get<RestV3User[]>('/rest/v3/users', {
-                        params: { name: result.username, _keepDefault: true },
+                    return this.get<RestV3User>(`/rest/v3/users/${result.id}`, {
+                        params: { _keepDefault: true },
                     }).toPromise();
                 })
                 .then(result => {
-                    this.currentUser = result[0];
+                    this.currentUser = result;
                     return this.currentUser;
                 })
                 .catch(err => {
