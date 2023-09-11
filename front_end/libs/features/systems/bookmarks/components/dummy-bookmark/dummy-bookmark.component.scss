@@ -1,0 +1,29 @@
+@use '_theme_variables_common' as *;
+
+@mixin flex-center-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.card {
+    width: 272px;
+    height: 293px;
+}
+
+.card-thumbnail {
+    @include flex-center-content;
+
+    height: 153px;
+    background-color: var(--bookmarks-card-video-background-color);
+}
+
+.card-body {
+    @include flex-center-content;
+
+    padding: 15px;
+    height: 140px;
+    border: 1px solid var(--border-color);
+    border-top: none;
+    background-color: var(--bookmarks-card-background-color);
+}

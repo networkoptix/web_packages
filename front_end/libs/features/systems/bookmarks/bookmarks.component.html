@@ -16,12 +16,12 @@
                 (timeRangeChange)="updateParam('time')"
             ></nx-date-and-time-filter>
             <nx-device-filter
-                [items]="devices"
+                [items]="deviceNames$ | async"
                 [selection]="deviceFilter"
                 (selectionChange)="updateParam('devices')"
             ></nx-device-filter>
             <nx-tag-filter
-                [tags]="tags"
+                [tags]="tagNames$ | async"
                 [selection]="tagFilter"
                 (selectionChange)="updateParam('tags')"
             ></nx-tag-filter>
@@ -41,14 +41,19 @@
             <nx-simple-search
                 [(ngModel)]="search"
                 (ngModelChange)="updateParam('search')"
-                [suggestions]="suggestions"
+                [suggestions]="suggestions$ | async"
             ></nx-simple-search>
             <ng-template #stillLoading>
                 <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>
             </ng-template>
             <div
+                #bookmarksContainer
                 [class]="bookmarks.length ? 'bookmarks' : 'no-bookmarks'"
                 *ngIf="bookmarks$ | async as bookmarks; else stillLoading"
+                [style]="{
+                    '--grid-padding': css.gridPadding + 'px',
+                    '--bookmark-card-width': css.bookmarkWidth + 'px'
+                }"
             >
                 <ng-container *ngIf="!bookmarks.length">
                     <svg-icon
@@ -89,6 +94,17 @@
                     ></div>
                     <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
                 </div>
+                <ng-container *ngIf="loading$ | async">
+                    <div *ngFor="let _ of [].constructor(loadingBuffer$ | async)">
+                        <nx-dummy-bookmark></nx-dummy-bookmark>
+                    </div>
+                </ng-container>
+                <div
+                    *ngIf="!(loading$ | async) && bookmarks.length"
+                    class="bookmarks-container"
+                    (nxOnIntersect)="loadMore$.next($event === 'Visible')"
+                    [intersectionThreshold]="0.1"
+                ></div>
             </div>
         </div>
     </div>

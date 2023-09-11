@@ -22,12 +22,11 @@ from drf_yasg.utils import swagger_auto_schema
 from waffle import flag_is_active, switch_is_active, sample_is_active
 
 from cloud import settings
-from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
-from cms.models import Customization, UserGroupsToAssetPermissions, \
+from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
     cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
 from cms.permissions import IsSuperuser
@@ -646,3 +645,5 @@ async def python_licenses(request):
 async def package_licenses(request):
     licenses = load_licences(PKG_LICENSES)
     return Response(licenses)
+
+

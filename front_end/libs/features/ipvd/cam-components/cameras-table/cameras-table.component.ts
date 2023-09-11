@@ -178,28 +178,24 @@ export class NxCamerasTableComponent implements OnChanges {
 
         if (changes.allowedParameters?.currentValue) {
             let showAnalytics = false;
+            const showHeaders = [...this.cameraHeaders];
+            const headerFlow = [...this.headerFlowBase];
 
             if (this.allowedParameters.find(elm => elm === 'isAnalyticsSupported')) {
                 showAnalytics = true;
                 this.tableClasses.push('analytics');
                 this.csvOptions.headers.push(this.LANG.ipvd.isAnalyticsSupported);
-                this.showHeaders = [...this.cameraHeaders, ...this.cmsHeaders];
-                this.headerFlow = [...this.headerFlowBase, ...this.headerFlowCSM];
+                showHeaders.push(...this.cmsHeaders);
+                headerFlow.push(...this.headerFlowCSM);
             }
 
             if (this.allowedParameters.find(elm => elm === 'resolutionArea')) {
                 this.tableClasses.push('service');
-                this.showHeaders = [
-                    ...this.cameraHeaders,
-                    ...this.cmsHeaders,
-                    ...this.serviceHeaders,
-                ];
-                this.headerFlow = [
-                    ...this.headerFlowBase,
-                    ...this.headerFlowCSM,
-                    ...this.headerFlowService,
-                ];
+                showHeaders.push(...this.cmsHeaders, ...this.serviceHeaders);
+                headerFlow.push(...this.headerFlowCSM, ...this.headerFlowService);
             }
+            this.showHeaders = showHeaders;
+            this.headerFlow = headerFlow;
 
             this.csvFilename = Date.now();
             this.csvCameraData = this.getCsvData(showAnalytics);

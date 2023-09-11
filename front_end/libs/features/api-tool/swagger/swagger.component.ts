@@ -153,7 +153,9 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 filter,
                 docExpansion: expand,
                 showExtensions: true,
-                syntaxHighlight: false,
+                syntaxHighlight: {
+                    activate: false,
+                },
                 supportedSubmitMethods: this.getSupportedMethods(), // determines which methods can: make requests/show try it out button
                 maxDisplayedTags: expand === 'full' ? 1 : undefined,
                 requestInterceptor: request => {

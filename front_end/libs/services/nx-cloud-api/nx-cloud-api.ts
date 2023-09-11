@@ -305,7 +305,7 @@ export class NxCloudApiService {
         return this.http.post<t.TwoFactorBackupCodes[]>(apiBase + '/2fa/backup', {}).toPromise();
     }
 
-    verify2FaKey(code, verificationCode) {
+    verify2FaKey(verificationCode, code) {
         const uri = `${apiBase}/2fa/verification?verification_code=${verificationCode}&code=${code}`;
         return this.http.get(uri).toPromise();
     }
@@ -498,7 +498,7 @@ export class NxCloudApiService {
         return this.cloudDbApi.getCloudUsers(systemId);
     }
 
-    unshare(systemId: string, userEmail: string, password?: string) {
+    removeUser(systemId: string, userEmail: string, password?: string) {
         const body: any = {
             accountEmail: userEmail,
             accessRole: this.CONFIG.accessRoles.unshare,
@@ -511,7 +511,7 @@ export class NxCloudApiService {
             return this.http.post(url, body);
         }
 
-        return this.cloudDbApi.sharing(systemId, body);
+        return this.cloudDbApi.removeUser(systemId, userEmail);
     }
 
     authKey() {

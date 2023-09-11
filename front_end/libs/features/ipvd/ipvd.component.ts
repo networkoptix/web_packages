@@ -251,7 +251,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             ? `auto 0 calc(100vh - ${otherElements + this.searchDiff}px)`
             : `auto calc(100vh - ${otherElements + this.searchDiff}px) 0`;
 
-        const isCamera = this.params.camera || isCameraActive;
+        const isCamera = this.params?.camera || isCameraActive;
         this.templateTableRows = this.isMobile
             ? '1fr'
             : isCamera

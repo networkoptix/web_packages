@@ -1,7 +1,7 @@
 import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom } from 'rxjs';
-import { auditTime, catchError, map, shareReplay, switchMap } from 'rxjs/operators';
+import { auditTime, catchError, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
 
@@ -522,6 +522,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.infoPromise;
     }
 
+    killPoll$ = new BehaviorSubject<boolean>(false);
+
     startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
             if (
@@ -532,9 +534,11 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 this.subscriberCount++;
                 this.activeSubscription =
                     this.systemPoll instanceof Observable &&
-                    this.systemPoll.pipe(auditTime(100)).subscribe(() => {
-                        this.systemInfo = this;
-                    });
+                    this.systemPoll
+                        .pipe(auditTime(100), takeUntil(this.killPoll$))
+                        .subscribe(() => {
+                            this.systemInfo = this;
+                        });
             } else {
                 setTimeout(() => this.startPoll(systemId), 50);
             }
@@ -550,6 +554,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             if (this.activeSubscription instanceof Subscription) {
                 this.activeSubscription.unsubscribe();
             }
+            this.killPoll$.next(true);
 
             this.infoPromise = undefined;
             this.usersPromise = undefined;
@@ -1024,7 +1029,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     deleteFromCurrentAccount(password?: string) {
         const currentUser = this.permissionManager.currentUser();
-        const email = currentUser ? currentUser.email : this.currentUserEmail;
+        const email = currentUser?.email || this.currentUserEmail;
         if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly
             this.userManager.deleteUser(currentUser).catch(err => {
@@ -1034,6 +1039,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         }
         // Anyway - send another request to cloud_db to remove my this
         const id = environment.isLocal ? this.CONFIG.cloudSystemId : this.id;
-        return this.cloudApi.unshare(id, email, password);
+        return this.cloudApi.removeUser(id, email, password);
     }
 }

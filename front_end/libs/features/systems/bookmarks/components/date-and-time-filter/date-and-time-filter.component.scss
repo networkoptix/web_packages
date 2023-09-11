@@ -22,17 +22,17 @@
             height: 1.25rem !important;
             font-size: 0.8rem !important;
             max-width: none !important;
-            background-color: var(--bookmarks-filter-button-bg);
-            color: var(--body-text-color);
+            background-color: var(--btn-default-bg);
+            color: var(--btn-default-color);
             font-family: typography.$font-family-regular;
 
             &:hover {
-                background-color: var(--bookmarks-text-highlight-bg);
+                background-color: var(--btn-default-hover-bg);
             }
 
             &.selected {
                 background-color: var(--brand-core);
-                color: var(--bookmarks-filter-filled-text);
+                color: var(--btn-default-active-color);
             }
         }
     }
@@ -97,7 +97,7 @@
 
         // Triangle icon
         .mat-calendar-period-button svg polygon {
-            fill: var(--dark17);
+            fill: var(--btn-dropdown-toggle-color);
             // Shared between light/dark
         }
 
@@ -140,7 +140,7 @@
         .mat-calendar-body-today {
             // @mixin _unselected-cell
             &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                border-color: var(--bookmarks-calendar-today-border);
+                border-color: var(--input-border-color);
             }
         }
 
@@ -180,7 +180,7 @@
                     color: var(--body-text-color);
                 }
                 &::before {
-                    background-color: var(--bookmarks-text-highlight-bg);
+                    background-color: var(--input-border-color);
                 }
             }
         }
@@ -191,11 +191,11 @@
         .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
             // @mixin _highlighted-cell
             & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                background-color: var(--bookmarks-text-highlight-bg);
+                background-color: var(--input-border-color);
                 color: var(--body-text-color);
             }
             &.mat-calendar-body-in-range > .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-today-border);
+                box-shadow: inset 0 0 0 1px var(--input-border-color);
             }
         }
     }

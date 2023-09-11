@@ -69,6 +69,7 @@ export class NxSystemsListComponent implements OnInit {
     endpoint: Endpoint = {};
     hasOneSystem: boolean;
     searchChanged = new Subject<void>();
+    showList: boolean = false;
 
     static SYSTEMS_BASE = '/systems';
 
@@ -137,6 +138,8 @@ export class NxSystemsListComponent implements OnInit {
                         if (!system.system2faEnabled || account.sessionVerified) {
                             this.openSystem(system);
                         }
+                    } else {
+                        this.showList = true;
                     }
                 }
 

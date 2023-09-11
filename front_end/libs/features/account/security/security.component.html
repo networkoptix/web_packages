@@ -125,11 +125,17 @@
                         class="tfauth-v5-warning"
                         *ngIf="subV5Systems.length && account2faEnabled"
                     >
-                        <h4
-                            class="mt-0"
-                            translate
-                        >
-                            WARNING
+                        <h4 class="mt-0">
+                            <svg-icon
+                                nx-add-svg-src
+                                [src]="icons.dirNonStandard + 'error.svg'"
+                                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            ></svg-icon>
+                            <span
+                                class="ml-2"
+                                translate
+                                >WARNING</span
+                            >
                         </h4>
                         <p
                             class="mb-1"

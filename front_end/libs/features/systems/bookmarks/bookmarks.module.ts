@@ -10,6 +10,7 @@ import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-p
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { DummyBookmarkComponent } from '@pages/systems/bookmarks/components/dummy-bookmark/dummy-bookmark.component';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 
 import { NxBookmarksComponent } from './bookmarks.component';
@@ -42,6 +43,7 @@ const appRoutes: Routes = [
         NxPreLoaderComponent,
         NxPagePlaceholderComponent,
         NxAddSvgSrcDirective,
+        DummyBookmarkComponent,
     ],
     providers: [],
     declarations: [NxBookmarksComponent],

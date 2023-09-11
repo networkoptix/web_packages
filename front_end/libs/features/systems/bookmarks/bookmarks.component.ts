@@ -1,9 +1,20 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Inject, ViewChild } from '@angular/core';
+import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
-import { BehaviorSubject, combineLatest, switchMap, Observable, timer, zip } from 'rxjs';
-import { distinctUntilChanged, map, take } from 'rxjs/operators';
+import {
+    BehaviorSubject,
+    combineLatest,
+    switchMap,
+    Observable,
+    timer,
+    zip,
+    ReplaySubject,
+    merge,
+    of,
+    Subject,
+} from 'rxjs';
+import { distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
 
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
 import staticLang from '@language_static';
@@ -11,7 +22,11 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
-import type { BookmarksParams, BookmarksTags } from '@services/system-api.types';
+import type {
+    BookmarksParams,
+    BookmarksTags,
+    Bookmark as SystemBookmark,
+} from '@services/system-api.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -80,7 +95,17 @@ function cssaToStrArray(cssa: string): string[] {
 })
 export class NxBookmarksComponent implements OnInit {
     @ViewChild('dateAndTimeFilterComp') private dateAndTimeFilter: NxDateAndTimeFilterComponent;
+    @ViewChild('bookmarksContainer') bookmarksContainer: ElementRef<HTMLDivElement>;
+    readonly css = {
+        bookmarkWidth: 272,
+        gridPadding: 15,
+    };
     readonly localOffsetToUTCMs: number = new Date().getTimezoneOffset() * MS.min;
+    readonly bookmarksQuery: BookmarksParams = {
+        order: 'desc',
+        _orderBy: 'startTimeMs',
+        limit: 25,
+    };
     LANG = staticLang;
     CONFIG: IConfig;
     icons = icons;
@@ -88,17 +113,35 @@ export class NxBookmarksComponent implements OnInit {
     system: NxSystem;
 
     _bookmarks: Bookmark[] = [];
+    visibleBookmarksCount: number = 0;
     bookmarks$: Observable<Bookmark[]>;
     creationCutOffTimeMS$ = new BehaviorSubject<number>(0);
     newCreationCutOffTimeMS$ = new BehaviorSubject<number>(0);
-    devices: string[] = [];
-    tags: string[] = [];
 
     search: string = '';
-    suggestions: SuggestionSections = {
-        DEVICE: [],
-        TAGS: [],
-    };
+    loadMore$ = new Subject<boolean>();
+    loading$ = new Subject<boolean>();
+    loadingBuffer$ = new BehaviorSubject<number>(0);
+    devices$ = new ReplaySubject<BookmarksDevice[]>(1);
+    tags$ = new ReplaySubject<BookmarksTags>(1);
+    deviceNames$ = this.devices$.pipe(
+        map(devices => devices.map(d => d.name).sort(alphabeticalSort(this.locale, t => t))),
+        startWith<string[]>([]),
+    );
+    tagNames$ = this.tags$.pipe(
+        map(tags => Object.keys(tags).sort(alphabeticalSort(this.locale, t => t))),
+        startWith<string[]>([]),
+    );
+    suggestions$ = combineLatest([this.deviceNames$, this.tagNames$]).pipe(
+        map(([devices, tags]): SuggestionSections => ({ DEVICE: devices, TAGS: tags })),
+        startWith({
+            DEVICE: [],
+            TAGS: [],
+        }),
+    );
+
+    offsetTimes: Map<string, number>;
+    deviceMap: Map<string, BookmarksDevice>;
 
     dateFilter: DateRange<Date> = null;
     timeFilter: TimeRange = { start: null, end: null };
@@ -171,33 +214,14 @@ export class NxBookmarksComponent implements OnInit {
         });
     }
 
-    updateTags(tags: BookmarksTags): void {
-        this.tags = Object.keys(tags).sort(alphabeticalSort(this.locale, t => t));
-        this.suggestions = {
-            ...this.suggestions,
-            TAGS: this.tags,
-        };
-    }
-
-    updateDevices(devices: BookmarksDevice[]): void {
-        this.devices = devices.map(d => d.name).sort(alphabeticalSort(this.locale, t => t));
-        this.suggestions = {
-            ...this.suggestions,
-            DEVICE: this.devices,
-        };
-    }
-
     bookmarksPoll(): void {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
-        const params: BookmarksParams = {
-            order: 'desc',
-            _orderBy: 'startTimeMs',
-        };
-        const bookmarksPoll$: Observable<Bookmark[]> = timer(0, pollingTimeout).pipe(
+        const pollParams = { ...this.bookmarksQuery };
+        const bookmarksPoll$: Observable<SystemBookmark[]> = timer(0, pollingTimeout).pipe(
             // Promise.all for Observables.
             switchMap(() =>
                 zip([
-                    mediaserver.getBookmarks(params),
+                    mediaserver.getBookmarks(pollParams),
                     mediaserver.getBookmarkTags(),
                     mediaserver.getBookmarksDevices(),
                     mediaserver.getServerTimes(),
@@ -205,71 +229,68 @@ export class NxBookmarksComponent implements OnInit {
             ),
             // Then for Promise.all. In here we convert bookmarks from BookmarkResp -> Bookmark, and update filters.
             map(([bks, tags, devices, serverTimes]) => {
-                this.updateTags(tags);
-                this.updateDevices(devices);
-                const offsetTimes = new Map(
+                this.tags$.next(tags);
+                this.devices$.next(devices);
+                this.offsetTimes = new Map(
                     serverTimes.reply.map(reply => [
                         reply.serverId,
                         Number(reply.timeZoneOffset) ?? 0,
                     ]),
                 );
-                const deviceMap = new Map(devices.map(device => [device.id, device]));
-                return bks
-                    .filter(bk => deviceMap.has(bk.deviceId))
-                    .map<Bookmark>(bk => {
-                        const timeZoneOffset =
-                            this.localOffsetToUTCMs +
-                            (offsetTimes.get(deviceMap.get(bk.deviceId).serverId) || 0);
-                        const deviceName = deviceMap.get(bk.deviceId).name;
-                        const getLink = (transport: string): string => {
-                            return this.system.mediaserver.getExportUrl({
-                                cameraId: bk.deviceId,
-                                duration: Math.floor(bk.durationMs / 1000),
-                                endPos: bk.startTimeMs + bk.durationMs,
-                                pos: bk.startTimeMs,
-                                transport,
-                            });
-                        };
-
-                        return {
-                            ...bk,
-                            tags: bk.tags ?? [],
-                            src: getLink('mp4'),
-                            downloadSrc: getLink('mkv'),
-                            thumbnail: this.system.serverManager.getPreviewUrl(
-                                bk.deviceId,
-                                bk.startTimeMs,
-                                320,
-                                180,
-                                0,
-                            ),
-                            isVisible: false,
-                            deviceName,
-                            deviceId: cleanId(bk.deviceId),
-                            systemId: this.system.id,
-                            timeZoneOffset,
-                        };
-                    });
+                this.deviceMap = new Map(devices.map(device => [device.id, device]));
+                return bks;
             }),
+        );
+        const bookmarksFetch$: Observable<SystemBookmark[]> = this.loadMore$.pipe(
+            distinctUntilChanged(),
+            tap(fetch => {
+                if (fetch) {
+                    const bookmarksPerRow = Math.floor(
+                        this.bookmarksContainer.nativeElement.offsetWidth /
+                            (this.css.bookmarkWidth + this.css.gridPadding),
+                    );
+                    const bookmarkCount = this.visibleBookmarksCount;
+                    const bufferSize = bookmarksPerRow - (bookmarkCount % bookmarksPerRow);
+                    // Always add one row of cards for padding while loading
+                    this.loadingBuffer$.next(
+                        bufferSize !== bookmarksPerRow
+                            ? bufferSize + bookmarksPerRow
+                            : bookmarksPerRow,
+                    );
+                }
+            }),
+            switchMap(fetch => {
+                if (!fetch) {
+                    return of([]);
+                }
+                this.loading$.next(true);
+                const fetchParams = { ...this.bookmarksQuery };
+                fetchParams.endTimeMs = this.findOldestBookmark(this._bookmarks)?.startTimeMs - 1;
+                return mediaserver
+                    .getBookmarks(fetchParams)
+                    .pipe(tap(() => this.loading$.next(false)));
+            }),
+        );
+
+        const fetchedBookmarks$ = merge(bookmarksFetch$, bookmarksPoll$).pipe(
+            map(bks => this.processBookmarks(bks).sort(paramSortFunc(b => b.startTimeMs, false))),
             // Merge recently created and new bookmarks together, and update vars to check if we got new bookmarks
             map(bks => {
-                if (bks.length) {
-                    params.creationStartTimeMs =
-                        this.findNewestBookmark(bks.length ? bks : this._bookmarks)
-                            ?.creationTimeMs + 1;
+                this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
+                if (this._bookmarks.length) {
+                    pollParams.creationStartTimeMs =
+                        this.findNewestBookmark(this._bookmarks)?.creationTimeMs + 1;
                     if (!this.creationCutOffTimeMS$.value) {
-                        this.creationCutOffTimeMS$.next(params.creationStartTimeMs);
+                        this.creationCutOffTimeMS$.next(pollParams.creationStartTimeMs);
                     }
-                    this.newCreationCutOffTimeMS$.next(params.creationStartTimeMs);
-                    bks = bks.sort(paramSortFunc(b => b.startTimeMs, false));
-                    this._bookmarks = this.mergeBookmarks(this._bookmarks, bks);
+                    this.newCreationCutOffTimeMS$.next(pollParams.creationStartTimeMs);
                 }
                 return this._bookmarks;
             }),
         );
         this.bookmarks$ = combineLatest([
             this.creationCutOffTimeMS$,
-            bookmarksPoll$,
+            fetchedBookmarks$,
             this.route.queryParams,
         ]).pipe(
             map(([creationCutOffTimeMS, bks, _]) =>
@@ -316,6 +337,7 @@ export class NxBookmarksComponent implements OnInit {
                         ),
                     );
                 }
+                this.visibleBookmarksCount = bks.length;
 
                 return bks;
             }),
@@ -323,8 +345,50 @@ export class NxBookmarksComponent implements OnInit {
         );
     }
 
+    processBookmarks(bks: SystemBookmark[]): Bookmark[] {
+        return bks
+            .filter(bk => this.deviceMap.has(bk.deviceId))
+            .map<Bookmark>(bk => {
+                const timeZoneOffset =
+                    this.localOffsetToUTCMs +
+                    (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);
+                const deviceName = this.deviceMap.get(bk.deviceId).name;
+                const getLink = (transport: string): string => {
+                    return this.system.mediaserver.getExportUrl({
+                        cameraId: bk.deviceId,
+                        duration: Math.floor(bk.durationMs / 1000),
+                        endPos: bk.startTimeMs + bk.durationMs,
+                        pos: bk.startTimeMs,
+                        transport,
+                    });
+                };
+
+                return {
+                    ...bk,
+                    tags: bk.tags ?? [],
+                    src: getLink('mp4'),
+                    downloadSrc: getLink('mkv'),
+                    thumbnail: this.system.serverManager.getPreviewUrl(
+                        bk.deviceId,
+                        bk.startTimeMs,
+                        320,
+                        180,
+                        0,
+                    ),
+                    isVisible: false,
+                    deviceName,
+                    deviceId: cleanId(bk.deviceId),
+                    systemId: this.system.id,
+                    timeZoneOffset,
+                };
+            });
+    }
+
     findNewestBookmark(bks: Bookmark[]): Bookmark {
         return [...bks].sort(paramSortFunc(b => b.creationTimeMs))[bks.length - 1];
+    }
+    findOldestBookmark(bks: Bookmark[]): Bookmark {
+        return [...bks].sort(paramSortFunc(b => b.creationTimeMs, false))[bks.length - 1];
     }
 
     mergeBookmarks(bookmarks: Bookmark[], newBookmarks: Bookmark[]): Bookmark[] {

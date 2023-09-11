@@ -875,6 +875,7 @@ class GenericKeywords(object):
 
                     for server in serversJson:
                         for user in server["cloudUsers"]:
+                            time.sleep(1)
                             BuiltIn().run_keyword('Activate', server["cloudUsers"][user], self.from_email)
                             self.Add_user_to_cloud_system_if_not_there(server["id"], user, server["cloudUsers"][user], [server["cloudOwner"], self.password])
                 else:
