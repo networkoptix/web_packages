@@ -581,7 +581,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     const accessCodeOrToken =
                         this.initialData.access_code || this.initialData.access_token;
                     return lastValueFrom(
-                        this.cloudService.verifyBackupCode(this.backupCode, accessCodeOrToken)
+                        this.cloudService.verifyBackupCode(this.backupCode, accessCodeOrToken),
                     );
                 }
                 return lastValueFrom(
@@ -592,7 +592,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                               this.backupCode,
                               true,
                           )
-                        : this.authService.verifyBackupCode(this.backupCode, this.loginCode)
+                        : this.authService.verifyBackupCode(this.backupCode, this.loginCode),
                 );
             },
             { ignoreError: true, timeoutMs },
