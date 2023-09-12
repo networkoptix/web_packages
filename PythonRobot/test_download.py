@@ -1,3 +1,6 @@
+from urllib.request import Request
+from urllib.request import urlopen
+
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
@@ -71,6 +74,18 @@ def check_default_download_tab():
     mac_user_agent_driver.close()
 
 
+def validate_the_windows_download_links():
+    driver = get_headless_chrome()
+    driver.get(variables.ENV)
+    Footer(driver, 'cloud').get_downloads_link().click()
+    download_page = DownloadsPage(driver)
+    tab = download_page.get_windows_client_installer_tab()
+    tab.click()
+    tab.check_download_button_link()
+    tab.check_other_packages_links()
+    driver.close()
+
+
 def _get_chromedriver(user_agent):
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
@@ -87,3 +102,4 @@ if __name__ == '__main__':
     check_download_link()
     check_download_tabs()
     check_default_download_tab()
+    validate_the_windows_download_links()

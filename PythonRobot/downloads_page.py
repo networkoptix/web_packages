@@ -1,4 +1,6 @@
 import time
+from urllib.request import Request
+from urllib.request import urlopen
 
 from selenium.webdriver.common.by import By
 
@@ -31,6 +33,7 @@ class DownloadsPage:
 class _Tab:
 
     def __init__(self, driver, locator):
+        self._driver = driver
         self._locator = locator
         self._element = driver.find_element(By.XPATH, locator)
 
@@ -48,6 +51,31 @@ class _Tab:
     def is_active(self):
         return self._get_download_button().is_displayed()
 
+    def check_download_button_link(self):
+        client_link_element = self._driver.find_element(
+            By.XPATH, '//nx-download-component//a[contains(@class, "download-button")]')
+        client_link = client_link_element.get_attribute('href')
+        _check_link(client_link)
+
+    def check_other_packages_links(self):
+        other_links_elements = self._driver.find_elements(
+            By.XPATH, '//nx-download-component//div[contains(@class, "links")]/a')
+        if not other_links_elements:
+            raise RuntimeError("No other packages exists")
+        for link_element in other_links_elements:
+            link = link_element.get_attribute('href')
+            _check_link(link)
+
     def _get_download_button(self):
         return self._driver.find_element(
             By.XPATH, '//nx-download-component//a[contains(@class, "download-button")]')
+
+
+def _check_link(link: str):
+    with urlopen(Request(link, method='HEAD'), timeout=5) as response:
+        if response.code != 200:
+            raise RuntimeError(
+                f"HEAD {link} request returned unexpected HTTP status {response.code}")
+        content_length = int(response.headers.get('Content-Length'))
+        if content_length < 1000:
+            raise RuntimeError(f"File {link} is too small")
