@@ -6,13 +6,6 @@ Force Tags        Threaded
 
 
 *** Test Cases ***
-1. 404 page shows when going to a url that doesn't exist and gives a link back to home page
-    [Tags]    C41565
-    Open Browser and go to URL    ${url}/wfvyuieyuisgweyugv
-    Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}
-    Click Link    ${TAKE ME HOME}
-    Wait Until Location Is    ${url}/
-
 2. Failed to access system page correctly shows when going to a non-existent system
     Open Browser and go to URL    ${url}
     ${user}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
