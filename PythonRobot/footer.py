@@ -1,3 +1,5 @@
+import time
+
 from RobotVariables import RobotVariables
 from button import Button
 
@@ -40,6 +42,21 @@ class Footer:
 
     def terms_link(self):
         return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.TERMS}')]")
+
+    def get_downloads_link(self):
+        return self._get_visible_button(f"//nx-nav-footer//a[contains(text(),'{self.rb.DOWNLOADS_TEXT}')]")
+
+    def _get_visible_button(self, locator):
+        started_at = time.monotonic()
+        timeout_sec = 10
+        while True:
+            button = Button(self.driver, locator)
+            if button.is_visible:
+                break
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(f"{locator!r} is not visible after {timeout_sec} seconds")
+            time.sleep(0.5)
+        return button
 
     def _wait_until_footer_is_visible_webadmin(self):
         self.api_documentation_link()
