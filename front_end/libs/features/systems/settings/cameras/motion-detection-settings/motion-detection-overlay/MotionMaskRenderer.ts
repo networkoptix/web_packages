@@ -7,6 +7,7 @@ import {
     Subject,
     EMPTY,
     animationFrameScheduler,
+    Observable,
 } from 'rxjs';
 import {
     switchMap,
@@ -26,6 +27,13 @@ import {
 
 import { MotionMaskState } from './MotionMaskState';
 import { Mask, Area } from './motion-detection-types';
+
+enum ActionType {
+    Click = 'click',
+    DoubleClick = 'double-click',
+    SelectStart = 'select-start',
+    SelectEnd = 'select-end',
+}
 
 export class MotionMaskRenderer {
     private cellWidth: number;
@@ -102,11 +110,11 @@ export class MotionMaskRenderer {
      * This initialization method could probably be broken down more in the future.
      * @param canvas ref for target canvas
      */
-    private initInteractions(canvas: HTMLCanvasElement) {
+    private initInteractions(canvas: HTMLCanvasElement): void {
         this.brandColor = getComputedStyle(canvas).color;
 
         // Initialize base observables from events ... unless we're on mobile device (CLOUD-6752)
-        const track = (eventName: string) =>
+        const track = (eventName: string): Observable<MouseEvent> =>
             this.isMobile ? EMPTY : fromEvent<MouseEvent>(canvas, eventName);
         const [mouseDown$, mouseUp$, mouseLeave$, mouseMove$] = [
             'mousedown',
@@ -120,7 +128,7 @@ export class MotionMaskRenderer {
         );
 
         // Utility functions
-        const findEventCoords = (event: MouseEvent) => {
+        const findEventCoords = (event: MouseEvent): { x: number; y: number } => {
             const rect = canvas.getBoundingClientRect();
             const cellActualWidth = rect.width / this.columns;
             const cellActualHeight = rect.height / this.rows;
@@ -130,7 +138,7 @@ export class MotionMaskRenderer {
             };
         };
 
-        const getAction = (buffer: any[]) => {
+        const getAction = (buffer: { type: string; x: number; y: number }[]): ActionType => {
             buffer = buffer.filter(({ type }) => type !== null);
             const firstClick =
                 buffer.length >= 2 &&
@@ -144,15 +152,15 @@ export class MotionMaskRenderer {
             const click = firstClick;
             const start = buffer[0] && buffer[0].type === 'mousedown';
             if (doubleClick) {
-                return 'double-click';
+                return ActionType.DoubleClick;
             }
             if (click) {
-                return 'click';
+                return ActionType.Click;
             }
             if (start) {
-                return 'select-start';
+                return ActionType.SelectStart;
             }
-            return 'select-end';
+            return ActionType.SelectEnd;
         };
         // Base observables for managing UI state
         const shiftCtrlSubject$ = new BehaviorSubject({
@@ -214,14 +222,18 @@ export class MotionMaskRenderer {
                 })),
                 pairwise(),
                 filter(
-                    ([prev, cur]) => !(prev.action === 'select-end' && cur.action === 'select-end'),
+                    ([prev, cur]) =>
+                        !(
+                            prev.action === ActionType.SelectEnd &&
+                            cur.action === ActionType.SelectEnd
+                        ),
                 ),
                 map(([prev, { action, x: curX, y: curY, ...keyStates }]) => {
                     let width = 1;
                     let height = 1;
                     const x = Math.max(Math.min(curX, prev.x), 0);
                     const y = Math.max(Math.min(curY, prev.y), 0);
-                    if (action === 'select-end') {
+                    if (action === ActionType.SelectEnd) {
                         width = Math.max(curX, prev.x) - Math.min(Math.max(curX, 0), prev.x) + 1;
                         height = Math.max(curY, prev.y) - Math.min(Math.max(curY, 0), prev.y) + 1;
                     }
@@ -240,7 +252,7 @@ export class MotionMaskRenderer {
                     ({ action, x, y, selectX, selectY, ctrlKey, shiftKey, width, height }) => {
                         const prevSelections = this.selectionZones.value;
                         const newZone = new Area(150, x, y, width, height, true);
-                        if (action === 'select-start') {
+                        if (action === ActionType.SelectStart) {
                             if (!shiftKey && !ctrlKey) {
                                 this.selectionZones.next([]);
                             }
@@ -258,7 +270,7 @@ export class MotionMaskRenderer {
                                     });
                                 }),
                             );
-                        } else if (action === 'select-end') {
+                        } else if (action === ActionType.SelectEnd) {
                             if (shiftKey) {
                                 this.selectionZones.next([...prevSelections, newZone]);
                             } else if (ctrlKey) {
@@ -308,7 +320,7 @@ export class MotionMaskRenderer {
     private fillZones = (maskZones: Area[]): void => {
         const selectedFill = '#33333377';
         maskZones.forEach(({ sensitivity, x, y, width, height }) => {
-            const instruction = () => {
+            const instruction = (): void => {
                 this.ctx.beginPath();
                 this.ctx.fillStyle =
                     sensitivity >= 150 ? selectedFill : this.sensitivityColors[sensitivity] + '55';
@@ -335,7 +347,7 @@ export class MotionMaskRenderer {
         onlySelection = false,
         shadow = false,
     ): void => {
-        const instruction = () => {
+        const instruction = (): void => {
             ctx.lineWidth = 1;
         };
         renderInstructions.push(instruction);
@@ -367,7 +379,15 @@ export class MotionMaskRenderer {
             const drawRight =
                 column !== this.columns - 1 && sensitivity !== maskMatrix[row][column + 1];
             const drawBottom = row !== this.rows - 1 && sensitivity !== maskMatrix[row + 1][column];
-            const draw = (fromY, fromX, toY, toX, solid, sensitivity = 0, shadow = false) => {
+            const draw = (
+                fromY: number,
+                fromX: number,
+                toY: number,
+                toX: number,
+                solid: boolean,
+                sensitivity = 0,
+                shadow = false,
+            ): void => {
                 if (onlySelection && !solid) {
                     return;
                 }
@@ -384,7 +404,7 @@ export class MotionMaskRenderer {
                         : 'black'
                     : white10Percent;
 
-                const instruction = () => {
+                const instruction = (): void => {
                     ctx.strokeStyle = color;
                     ctx.lineWidth = shadow ? 3.5 : selected ? 2 : 1;
                     ctx.beginPath();
@@ -434,7 +454,7 @@ export class MotionMaskRenderer {
     private addNumbers = (maskZones: Area[]): void => {
         const { findStartZones } = this.motionMask;
         const startZones = findStartZones(maskZones);
-        const instruction = () => {
+        const instruction = (): void => {
             const fontSize = 13;
             this.ctx.textAlign = 'center';
             this.ctx.font = `${fontSize}px sans-serif`;
@@ -498,9 +518,11 @@ export class MotionMaskRenderer {
         );
     };
 
-    private renderMask = () => this.maskRenderInstructions.forEach(instruction => instruction());
+    private renderMask = (): void => {
+        this.maskRenderInstructions.forEach(instruction => instruction());
+    };
 
-    private updateSelection = (selectionZones): void => {
+    private updateSelection = (selectionZones: Area[]): void => {
         this.selectionRenderInstructions.push(() =>
             this.selectionCtx.clearRect(0, 0, this.width, this.height),
         );
@@ -521,6 +543,7 @@ export class MotionMaskRenderer {
         );
     };
 
-    private renderSelection = () =>
+    private renderSelection = (): void => {
         this.selectionRenderInstructions.forEach(instruction => instruction());
+    };
 }

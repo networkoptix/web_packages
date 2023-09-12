@@ -107,8 +107,6 @@ module.exports = {
     'libs/features/systems/settings/admin/admin.component.ts': 5,
     'libs/features/systems/settings/admin/advanced/advanced.component.ts': 9,
     'libs/features/systems/settings/admin/standard/standard.component.ts': 12,
-    'libs/features/systems/settings/cameras/motion-detection-settings/motion-detection-overlay/MotionMaskRenderer.ts': 18,
-    'libs/features/systems/settings/cameras/motion-detection-settings/motion-detection-overlay/MotionMaskState.ts': 6,
     'libs/features/systems/settings/cloud-storage/cloud-storage.component.ts': 4,
     'libs/features/systems/settings/licenses/license-details/license.component.spec.ts': 1,
     'libs/features/systems/settings/licenses/license-details/license.component.ts': 6,

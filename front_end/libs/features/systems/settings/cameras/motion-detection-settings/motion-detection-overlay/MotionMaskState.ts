@@ -53,7 +53,7 @@ export class MotionMaskState {
     }
 
     // Init Methods
-    private initialToMaskZones(initial: string, rotate): Area[] {
+    private initialToMaskZones(initial: string, rotate: number): Area[] {
         const zones = initial.split(';').map(area => {
             const areaTuples = <AreaTuple>area.split(',').map(numString => parseInt(numString));
             return new Area(...areaTuples);
@@ -65,7 +65,7 @@ export class MotionMaskState {
         return this.sortedZones(rotatedZones);
     }
 
-    rotateMatrix(matrix: number[][], rotation: number, toLandscape = false) {
+    rotateMatrix(matrix: number[][], rotation: number, toLandscape = false): number[][] {
         if (!(rotation % 360)) {
             return matrix;
         }
@@ -143,7 +143,7 @@ export class MotionMaskState {
     public matrixToZones(maskMatrix: Mask): Area[] {
         const matrix = <(number | false)[][]>[...maskMatrix].map(row => [...row]);
         const zones: Area[] = [];
-        const updateZones = (row: number, column: number, sensitivity) => {
+        const updateZones = (row: number, column: number, sensitivity: number): void => {
             let width = 1;
             let height = 1;
             while (
@@ -222,12 +222,13 @@ export class MotionMaskState {
         return zoneGroups;
     };
 
-    public get zoneGroups() {
+    public get zoneGroups(): Area[][] {
         return this.findZoneGroups(this.maskZones.value);
     }
 
     /**
      * Used for placing sensitivity number indicators.
      */
-    public findStartZones = (zones: Area[]) => this.findZoneGroups(zones).map(group => group[0]);
+    public findStartZones = (zones: Area[]): Area[] =>
+        this.findZoneGroups(zones).map(group => group[0]);
 }
