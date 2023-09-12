@@ -4,16 +4,19 @@ import json
 import os
 import re
 import time
+from contextlib import contextmanager
 from email.header import decode_header
 from random import randint
+from typing import ContextManager
 
 import urllib3
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
+from selenium.webdriver.remote.webdriver import WebDriver
 
 import robot_keywords
 import robot_lists as rl
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from generic_element import Element
 from login import LoginDialog
@@ -233,6 +236,16 @@ def get_headless_chrome():
     driver = webdriver.Chrome(options=chrome_options)
     # driver.execute_script("localStorage.setItem('theme', 'light');")
     return driver
+
+
+@contextmanager
+def get_chrome() -> ContextManager[WebDriver]:
+    driver = get_headless_chrome()
+    try:
+        yield driver
+    finally:
+        driver.quit()
+
 
 def get_lang_list():
     jsonPath = os.path.join("customizations", rb.CUST_LANGUAGE_LIST)
