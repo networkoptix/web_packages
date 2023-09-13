@@ -1,3 +1,4 @@
+from NoptixLibrary.suite import Suite
 from test_2fa import disabling_2fa
 from test_2fa import enable_and_login_with_2fa
 from test_2fa import login_with_backup_code
@@ -33,41 +34,46 @@ from test_system_users import share_with_unregistered_user_sends_notification
 
 if __name__ == "__main__":
     merge_from_primary_system()
+    with Suite() as suite:
+        cloud_owner = suite.create_cloud_account()
+        cloud_server = suite.create_cloud_server(cloud_owner)
+        cloud_owner_second = suite.create_cloud_account()
+        cloud_server_second = suite.create_cloud_server(cloud_owner_second)
 
-    owner_can_remove_user()
-    share_with_registered_user_works()
-    share_with_unregistered_user_sends_notification()
-    share_with_registered_user_sends_notification()
-    email_is_locked_when_unregistered_user_is_invited()
+        owner_can_remove_user(cloud_server)
+        share_with_registered_user_works(cloud_server)
+        share_with_unregistered_user_sends_notification(cloud_server)
+        share_with_registered_user_sends_notification(cloud_server)
+        email_is_locked_when_unregistered_user_is_invited(cloud_server)
 
-    owner_can_disconnect_system_from_cloud()
-    can_log_in_to_system_from_direct_link()
+        owner_can_disconnect_system_from_cloud(cloud_server_second)
+        can_log_in_to_system_from_direct_link(cloud_server)
 
-    enable_and_login_with_2fa()
-    login_with_backup_code()
-    disabling_2fa()
-    system_2fa_required()
-    twofa_not_required_when_more_than_one_system()
+        enable_and_login_with_2fa()
+        login_with_backup_code()
+        disabling_2fa()
+        system_2fa_required()
+        twofa_not_required_when_more_than_one_system()
 
-    test_changing_first_name_and_saving_maintains_that_setting()
-    test_changing_last_name_and_saving_maintains_that_setting()
-    test_can_access_account_page_from_dropdown()
+        test_changing_first_name_and_saving_maintains_that_setting()
+        test_changing_last_name_and_saving_maintains_that_setting()
+        test_can_access_account_page_from_dropdown()
 
-    sets_new_password_and_successfully_logs_in()
-    check_restore_password_email()
+        sets_new_password_and_successfully_logs_in()
+        check_restore_password_email()
 
-    password_is_actually_changed_and_login_works_with_new_password()
+        password_is_actually_changed_and_login_works_with_new_password()
 
-    support_link()
-    copyright_link()
-    privacy_link()
-    terms_link()
+        support_link()
+        copyright_link()
+        privacy_link()
+        terms_link()
 
-    register_and_activate()
+        register_and_activate()
 
-    allows_login_with_correct_credentials_and_log_out()
+        allows_login_with_correct_credentials_and_log_out()
 
-    page_in_anonymous_state_register_header()
-    register_user_with_correct_credentials()
-    check_register_email()
+        page_in_anonymous_state_register_header()
+        register_user_with_correct_credentials()
+        check_register_email()
 
