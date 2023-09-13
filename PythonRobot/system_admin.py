@@ -51,13 +51,13 @@ class SystemAdmin:
 
     def mandatory_2fa_chechbox(self):
         return Checkbox(self.driver, "//nx-checkbox[@name='mandatory2fa']", "//input")
-    
+
     def twofa_verification_code_input(self):
         return TextField(self.driver, '//input[@id="verificationCode"]')
-    
+
     def twofa_enable_button(self):
         return Button(self.driver, "//button[text()='Enable']")
-    
+
     def merge_with_another_system_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[span[text()='{MERGE_SYSTEM_BUTTON_TEXT}']]")
         return Button(self.driver, translated_xpath)
