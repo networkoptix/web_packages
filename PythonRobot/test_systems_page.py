@@ -1,55 +1,43 @@
 import time
-from selenium import webdriver
-import os
 
-from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
-from variables import ENV
 import robot_keywords
+from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from login import LoginDialog
 from header import HeaderNav
-from change_pass_form import ChangePassForm
-from landing_page import LandingPage
-from selenium.webdriver.common.keys import Keys
-from systems_page import SystemsPage
+from login import LoginDialog
+from resource_import import get_headless_chrome
+from resource_import import get_random_email
+from resource_import import register_and_activate_account
 from system_admin import SystemAdmin
 
-from NoptixLibrary.generic_keywords import GenericKeywords
+from systems_page import SystemsPage
+from variables import ENV
 
 password = "qweasd 123"
 
-keywords = GenericKeywords()
-SERVERS = keywords.create_systems(os.path.basename(__file__))
-CLOUD_API = CloudPortalAPI()
-viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
-CLOUD_API.share([SERVERS[1]['cloudOwner'], password],
-                SERVERS[1]['id'],
-                "viewer",
-                SERVERS[0]['cloudOwner'],
-                viewer_permissions)
 
-
-def should_open_systems_page_from_anonymous_state():
+def should_open_systems_page_from_anonymous_state(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     SystemsPage(driver)
 
 
-def system_tiles_represent_actual_information():
+def system_tiles_represent_actual_information(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
     sys_page = SystemsPage(driver)
     rb = RobotVariables("en_US")
     for tile in sys_page.tiles:
-        if tile.owner().text != rb.YOUR_SYSTEM_TEXT and tile.owner().text != "mark hamill":
+        if tile.owner().text not in [rb.YOUR_SYSTEM_TEXT, "Mark Hamill"]:
             raise RuntimeError("Owner was not 'Your System' or 'mark hamill'.")
     if len(sys_page.tiles) < 9:
         raise RuntimeError("Not enough tiles present on page.")
@@ -71,11 +59,11 @@ def no_systems_connected():
     print("pass")
 
 
-def one_system_directs_you_to_system_admin():
+def one_system_directs_you_to_system_admin(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[1]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     SystemAdmin(driver)
@@ -84,11 +72,11 @@ def one_system_directs_you_to_system_admin():
     print("pass")
 
 
-def opens_system_admin_when_tile_is_clicked():
+def opens_system_admin_when_tile_is_clicked(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     systems_page = SystemsPage(driver)
@@ -99,15 +87,15 @@ def opens_system_admin_when_tile_is_clicked():
     print("pass")
 
 
-def search_highlights_system_name():
+def search_highlights_system_name(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
-    sys_page.search_bar().input_text(SERVERS[0]['name'])
+    sys_page.search_bar().input_text(server.name)
     assert sys_page.systems_found(1).in_dom, \
         "System tiles not found or incorrect number of tiles."
 
@@ -118,11 +106,11 @@ def search_highlights_system_name():
     print("pass")
 
 
-def search_highlights_owner_name():
+def search_highlights_owner_name(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -139,15 +127,15 @@ def search_highlights_owner_name():
     print("pass")
 
 
-def search_is_cleared_by_x_button():
+def search_is_cleared_by_x_button(server: CloudServer):
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
-    sys_page.search_bar().input_text(SERVERS[0]['name'])
+    sys_page.search_bar().input_text(server.name)
     assert sys_page.systems_found(1).in_dom, \
         "System tiles not found or incorrect number of tiles."
     sys_page.search_x_button().click()
@@ -160,12 +148,16 @@ def search_is_cleared_by_x_button():
     print("pass")
 
 
-def should_update_owner_name():
-    CLOUD_API.set_account_name(SERVERS[1]['cloudOwner'], password, "carrie", "fisher")
+def should_update_owner_name(
+        server_first: CloudServer,
+        server_second: CloudServer,
+        api: CloudPortalAPI,
+        ):
+    api.set_account_name(server_second.cloud_owner.email, password, "carrie", "fisher")
     driver = get_headless_chrome()
 
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server_first.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -179,12 +171,19 @@ def should_update_owner_name():
     print("pass")
 
 
-def search_only_visible_with_more_than_eight_systems():
-    CLOUD_API.disconnect_server_via_api([SERVERS[1]['cloudOwner'], password], SERVERS[1]['id'], password,
-                                        SERVERS[1]['cloudOwner'])
+def search_only_visible_with_more_than_eight_systems(
+        server_first: CloudServer,
+        server_second: CloudServer,
+        api: CloudPortalAPI,
+        ):
+    api.disconnect_server_via_api(
+        [server_second.cloud_owner.email, password],
+        server_second.id,
+        password,
+        server_second.cloud_owner.email)
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV + "/systems")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    LoginDialog(driver).basic_cloud_login(server_first.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -196,13 +195,36 @@ def search_only_visible_with_more_than_eight_systems():
 
 
 if __name__ == "__main__":
-    system_tiles_represent_actual_information()
-    no_systems_connected()
-    one_system_directs_you_to_system_admin()
-    opens_system_admin_when_tile_is_clicked()
-    search_highlights_system_name()
-    search_highlights_owner_name()
-    search_is_cleared_by_x_button()
-    should_update_owner_name()
-    search_only_visible_with_more_than_eight_systems()
-    keywords.teardown_servers(SERVERS)
+    with Suite() as suite:
+        cloud_owner_first = suite.create_cloud_account()
+        [cloud_server_first, *_] = [suite.create_cloud_server(cloud_owner_first) for _ in range(8)]
+        cloud_owner_second = suite.create_cloud_account()
+        cloud_server_second = suite.create_cloud_server(cloud_owner_second)
+        cloud_api = CloudPortalAPI()
+        permissions = [
+            'GlobalViewArchivePermission',
+            'GlobalExportPermission',
+            'GlobalViewBookmarksPermission',
+            'GlobalAccessAllMediaPermission',
+            ]
+        viewer_permissions = '|'.join(permissions)
+        cloud_api.share(
+            [cloud_server_second.cloud_owner.email, password],
+            cloud_server_second.id,
+            "viewer",
+            cloud_server_first.cloud_owner.email,
+            viewer_permissions,
+            )
+        system_tiles_represent_actual_information(cloud_server_first)
+        no_systems_connected()
+        one_system_directs_you_to_system_admin(cloud_server_second)
+        opens_system_admin_when_tile_is_clicked(cloud_server_first)
+        search_highlights_system_name(cloud_server_first)
+        search_highlights_owner_name(cloud_server_first)
+        search_is_cleared_by_x_button(cloud_server_first)
+        should_update_owner_name(cloud_server_first, cloud_server_second, cloud_api)
+        search_only_visible_with_more_than_eight_systems(
+            cloud_server_first,
+            cloud_server_second,
+            cloud_api,
+            )

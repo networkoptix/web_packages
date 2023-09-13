@@ -69,7 +69,7 @@ class CloudServer:
         self._api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
         # Wait while the cloud owner settings are applied.
-        time.sleep(10)
+        time.sleep(.1)
 
     def _tear_down(self):
         try:
