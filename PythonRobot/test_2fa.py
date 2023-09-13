@@ -245,6 +245,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account():
         pass
     else:
         raise RuntimeError("Page Cancel Button present")
+    twofa_codes['totp'] = Cloud2fa().get_2fa_verification_code(twofa_codes['key'])
     CLOUD_API.toggle_2fa_off_api(SERVERS[0]['cloudOwner'], password, verification_code=twofa_codes['totp'])
     driver.close()
 
