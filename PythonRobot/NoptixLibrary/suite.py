@@ -22,7 +22,7 @@ class Suite:
         self.run_id = randint(10000, 100000)
         self._exit_stack = ExitStack()
 
-    def __enter__(self) -> 'Self':
+    def __enter__(self) -> 'Suite':
         return self
 
     def __exit__(self, exc_type, exc_val, exc_tb):
@@ -46,7 +46,7 @@ class CloudServer:
         self.suite_name = suite_name
         self.run_id = run_id
 
-    def __enter__(self) -> 'Self':
+    def __enter__(self) -> 'CloudServer':
         self._set_up()
         return self
 
@@ -92,7 +92,7 @@ class CloudAccount:
         self._totp = None
         self._backup_codes = None
 
-    def __enter__(self) -> 'Self':
+    def __enter__(self) -> '_CloudAccount':
         self._set_up()
         return self
 
