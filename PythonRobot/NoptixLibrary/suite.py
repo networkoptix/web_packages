@@ -4,7 +4,7 @@ from typing import Self
 
 from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
 from NoptixLibrary.DockerApi import DockerApi
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi

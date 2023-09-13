@@ -1,8 +1,7 @@
-import pyqrcode
-
-from pyotp import *
 from PIL import Image
+from pyotp import *
 from pyzbar.pyzbar import decode
+
 
 class Cloud2fa:
     def get_2fa_verification_code(self, key):

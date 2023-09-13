@@ -16,9 +16,9 @@ from system_admin import SystemAdmin
 
 from system_admin import SystemAdmin
 
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
-from NoptixLibrary.Cloud2fa import Cloud2fa
+from NoptixLibrary.cloud_2fa import Cloud2fa
 from NoptixLibrary.server_api import ServerApi
 from page_text import PageText
 

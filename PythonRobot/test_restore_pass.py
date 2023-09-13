@@ -14,7 +14,7 @@ from header import HeaderNav
 from change_pass_form import ChangePassForm
 from landing_page import LandingPage
 from selenium.webdriver.common.keys import Keys
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from email_access import Email
 
 password = "qweasd 123"

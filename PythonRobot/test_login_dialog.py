@@ -9,7 +9,7 @@ from login import LoginDialog
 from header import HeaderNav
 from landing_page import LandingPage
 
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
 from systems_page import SystemsPage
 import resource_import

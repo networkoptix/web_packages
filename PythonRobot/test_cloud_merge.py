@@ -16,7 +16,7 @@ from email_access import Email
 from toast_notification import ToastNotification
 import time
 
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
 
 password = "qweasd 123"

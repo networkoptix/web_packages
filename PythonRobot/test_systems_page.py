@@ -15,7 +15,7 @@ from selenium.webdriver.common.keys import Keys
 from systems_page import SystemsPage
 from system_admin import SystemAdmin
 
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 
 password = "qweasd 123"
 

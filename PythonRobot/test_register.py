@@ -6,7 +6,7 @@ from test_account import cloud_login
 import time
 import robot_keywords
 from RobotVariables import RobotVariables
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 import robot_lists as rl
 from colorama import Fore, Back, Style
 from button import Button

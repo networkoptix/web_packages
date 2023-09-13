@@ -18,7 +18,7 @@ from resource_import import get_random_email
 from email_access import Email
 from register_form import RegisterForm
 
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from NoptixLibrary.suite import CloudServer
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables

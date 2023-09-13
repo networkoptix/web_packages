@@ -15,7 +15,7 @@ from systems_page import SystemsPage
 from system_admin import SystemAdmin
 from system_left_menu import SystemLeftMenu
 
-from NoptixLibrary.GenericKeywords import GenericKeywords
+from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
 
 password = "qweasd 123"

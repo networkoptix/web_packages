@@ -20,9 +20,9 @@ from robot.api import logger
 from robot.api.deco import keyword, library
 
 from NoptixLibrary import *
-from NoptixLibrary.CloudSession import CloudSession
+from NoptixLibrary.cloud_session import CloudSession
 
-from NoptixLibrary.Cloud2fa import Cloud2fa
+from NoptixLibrary.cloud_2fa import Cloud2fa
 #from CloudSession import CloudSession
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

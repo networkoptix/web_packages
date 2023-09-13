@@ -8,7 +8,6 @@ import os
 import re
 import socket
 import subprocess
-import sys
 import time
 import uuid
 from contextlib import contextmanager
@@ -53,17 +52,16 @@ class GenericKeywords:
             "viewer": "GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
             "liveViewer": "GlobalAccessAllMediaPermission",
             "advancedViewer": "GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
-            "custom": "NoGlobalPermissions"
+            "custom": "NoGlobalPermissions",
         }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
         self.docker_api = DockerApi()
-    
+
     def go_forward(self):
         """Simulates the user clicking the forward button on their browser."""
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         seleniumlib.driver.forward()
 
-    
     def convert_locator_to_webelement(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         logger.debug('Attempting to convert locator to WebElement...')
@@ -79,14 +77,12 @@ class GenericKeywords:
             except:
                 raise AssertionError('Failure to convert locator to WebElement!')
 
-    
     def get_hidden_inner_html(self, locator):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         element = seleniumlib.driver.find_element_by_xpath(locator)
         text = element.get_attribute('innerHTML')
         return text
 
-    
     def copy_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
         if self.get_os() == "MacOS":
@@ -96,7 +92,6 @@ class GenericKeywords:
             locator.send_keys(Keys.CONTROL + 'a')
             locator.send_keys(Keys.CONTROL + 'c')
 
-    
     def paste_text(self, locator):
         locator = self.convert_locator_to_webelement(locator)
         if self.get_os() == "MacOS":
@@ -104,15 +99,6 @@ class GenericKeywords:
         else:
             locator.send_keys(Keys.CONTROL + 'v')
 
-    #     def delete_all_text(self, locator):
-    #         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-    #         element = seleniumlib.find_element(locator)
-    #         text = seleniumlib.get_text(locator)
-    #         logger.debug(text)
-    #         element.send_keys(Keys.END)
-    #         for x in range(len(text)):
-    #             element.send_keys(Keys.BACKSPACE)
-    
     def get_random_email(self, email, sendemail=False, extra="", symbols=False):
         if not sendemail:
             email = email.replace('sendemail', '')
@@ -126,7 +112,6 @@ class GenericKeywords:
             email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
             return email
 
-    
     def get_many_random_emails(self, how_many, email):
         emails = []
         for x in range(0, int(how_many)):
@@ -134,23 +119,19 @@ class GenericKeywords:
             time.sleep(.2)
         return emails
 
-    
     def get_random_symbol_email(self, email):
         index = email.find('@')
         email = email[:index] + \
                 "+!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
         return email
 
-    
     def get_code_from_email_link(self, url):
         url_parts = url.split('/')
         return url_parts[-1]
 
-    
     def get_random_system_name(self):
         return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
 
-    
     def get_element_style(self, locator, styleAttribute):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         not_found = None
@@ -164,7 +145,6 @@ class GenericKeywords:
             not_found = f"No element found with style attribute {styleAttribute}"
         raise AssertionError(not_found)
 
-    
     def element_style_should_be(self, locator, styleAttribute, expectedValue):
         observedValue = self.get_element_style(locator, styleAttribute)
         if observedValue == expectedValue:
@@ -174,7 +154,6 @@ class GenericKeywords:
             seleniumlib.capture_page_screenshot()
             raise AssertionError(f"Expected: {expectedValue}\nObserved: {observedValue}")
 
-    
     def wait_until_textfield_contains(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
@@ -191,7 +170,6 @@ class GenericKeywords:
             time.sleep(.2)
         raise Exception(f"No element found with text {expected}")
 
-    
     def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
         timeout = timeout + time.time()
         not_found = "No element found with style " + expected
@@ -208,7 +186,6 @@ class GenericKeywords:
             time.sleep(.2)
         raise AssertionError(not_found)
 
-    
     def wait_until_element_contains_style(self, locator, styleAttribute, expected, timeout=10):
         timeout = timeout + time.time()
         not_found = "No element found with style " + expected
@@ -225,7 +202,6 @@ class GenericKeywords:
             time.sleep(.2)
         raise AssertionError(not_found)
 
-    
     def wait_until_element_has_class(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
@@ -242,7 +218,6 @@ class GenericKeywords:
             time.sleep(.2)
         raise AssertionError(not_found)
 
-    
     def wait_until_element_does_not_have_class(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
@@ -259,8 +234,14 @@ class GenericKeywords:
             time.sleep(.2)
         raise AssertionError(found)
 
-    
-    def wait_until_table_cell_does_not_contain_text(self, locator, expected, row, column, timeout=10):
+    def wait_until_table_cell_does_not_contain_text(
+            self,
+            locator,
+            expected,
+            row,
+            column,
+            timeout=10,
+            ):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
         found = None
@@ -275,7 +256,6 @@ class GenericKeywords:
             time.sleep(.2)
         raise AssertionError(found)
 
-    
     def wait_until_number_of_tabs_are_open(self, number, timeout=30):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         timeout = timeout + time.time()
@@ -292,11 +272,9 @@ class GenericKeywords:
             time.sleep(.2)
         raise AssertionError(found)
 
-    
     def colors_are_same(self, color1, color2):
         return (Color.from_string(color1).rgba == Color.from_string(color2).rgba)
 
-    
     def verify_button_arrow_direction(self, locator, expected, timeout=10):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         not_found = "No button arrow elements found"
@@ -375,15 +353,15 @@ class GenericKeywords:
             else:
                 raise AssertionError(not_found)
 
-    
     def check_online_or_offline(self, elements, offlineText):
+        offline_text_path = ".//span[contains(text(),'" + offlineText + "')]"
         for element in elements:
             try:
                 if element.find_element_by_xpath(".//button[@ng-click='checkForm()']"):
                     print("online")
             except NoSuchElementException:
                 try:
-                    if element.find_element_by_xpath(".//span[contains(text(),'" + offlineText + "')]"):
+                    if element.find_element_by_xpath(offline_text_path):
                         print("offline")
                 except:
                     raise NoSuchElementException
@@ -405,7 +383,6 @@ class GenericKeywords:
     4.  Decoded UTF-8 and subbed:  Активируйте учетную запись
     '''
 
-    
     def check_email_subject(self, email_id, sub_text, email_address, password, host, port):
         conn = imaplib.IMAP4_SSL(host, int(port))
         conn.login(email_address, password)
@@ -419,19 +396,18 @@ class GenericKeywords:
                     res[1].decode('ascii').strip())
                 # Decoding utf-8
                 header_str = "".join([x[0].decode(
-                    'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in header])
+                    'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in
+                                      header])
                 # Removing the word "Subject:" from the string
                 header_str = re.sub("Subject:", "", header_str)
                 if sub_text != header_str.strip():
                     raise Exception(header_str + ' was not ' + sub_text)
         conn.logout()
 
-    
     def get_browser_log(self):
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
         return seleniumlib.driver.get_log('browser')
 
-    
     def check_file_exists(self, url):
         linkInfo = head(url)
         print(linkInfo)
@@ -441,7 +417,6 @@ class GenericKeywords:
         else:
             raise Exception("File does not appear to be available.")
 
-    
     def check_in_list(self, expected, found):
         for url in found:
             if url not in expected:
@@ -451,8 +426,6 @@ class GenericKeywords:
                 else:
                     raise RuntimeError("Expected url wasn't in the list.")
 
-
-    
     def get_os(self):
         plat = system()
         if plat == "Windows":
@@ -464,26 +437,22 @@ class GenericKeywords:
         else:
             raise Exception("Mismatched platform")
 
-    
     def check_email_button(self, body, env, color):
         pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(
             env, color)
         if re.search(pat, body) == None:
             raise Exception("Button background-color was not found.")
 
-    
     def check_email_user_names(self, body, fName, lName):
         pat = '(<h1.*>).*({} {}.*</h1>)'.format(fName, lName)
         if re.search(pat, body) == None:
             raise Exception("User name was not in the email.")
 
-    
     def check_email_cloud_name(self, body, cloudName):
         pat = '(<p).*({}).*(</p>)'.format(cloudName)
         if re.search(pat, body) == None:
             raise Exception("Cloud name was not in the email.")
 
-    
     def check_for_blank_target(self, body, url):
         pat = '(<a class="btn" href="{})(.[^>]*)(target=_blank)'.format(url)
         if re.search(pat, body) == None:
@@ -513,7 +482,6 @@ class GenericKeywords:
     #     net = client.networks.get(network_id)
     #     net.remove()
 
-    
     def build_image(self, env):
         version = ""
         suffix = "test"
@@ -532,25 +500,21 @@ class GenericKeywords:
                                    buildargs={
                                        "mediaserver_deb": f"nxwitness-server-{version}-linux64-beta-{suffix}.deb"})
 
-    
     def get_image_id(self, image_name):
         client = docker.from_env()
         image = client.images.get(image_name)
         return image.id
 
-    
     def get_random_mac(self):
         prefix = 'AA'
         suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
         random_mac = ':'.join((prefix, suffix)).upper()
         return random_mac
 
-    
     def is_port_in_use(self, port):
         with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as s:
             return s.connect_ex(('localhost', port)) == 0
 
-    
     def get_random_port_from_docker_server(self):
         usedPorts = []
         docker_api = DockerApi()
@@ -562,7 +526,6 @@ class GenericKeywords:
             port = randint(30000, 65535)
         return str(port)
 
-    
     def run_container(self, image_name, port, network='host'):
         prefix = 'AA'
         suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
@@ -582,7 +545,6 @@ class GenericKeywords:
         else:
             return 'Container is not running'
 
-    
     def get_container_id(self, name):
         """ First 12 symbols of the container id """
         client = docker.from_env()
@@ -593,14 +555,12 @@ class GenericKeywords:
         else:
             return 'Container not found'
 
-    
     def remove_images(self):
         client = docker.from_env()
         imgs = client.images.list(name="mergemediaserver")
         for img in imgs:
             client.images.remove(img.id)
 
-    
     def chrome_options_for_push_notifications(self):
         options = webdriver.ChromeOptions()
         options.add_argument("--disable-infobars")
@@ -613,7 +573,6 @@ class GenericKeywords:
         })
         return options
 
-    
     def push_notifications_swarm(self, slaves, users, ramp, seconds):
         txtFile = str(uuid.uuid1())
         f = open(f"{txtFile}.txt", "w+")
@@ -630,7 +589,6 @@ class GenericKeywords:
         print(cmd)
         os.system(cmd)
 
-    
     def push_notification_pabot_command(self, max):
         txtFile = str(uuid.uuid1())
         f = open(f"{txtFile}.txt", "w+")
@@ -641,23 +599,18 @@ class GenericKeywords:
         #       print(cmd)
         os.system(cmd)
 
-    
     def systems_to_check(self, systemsCount):
         return min(4, systemsCount)
 
-    
     def show_additional(self, systemTileCount, systemTilesToShow):
         return systemTileCount > systemTilesToShow
 
-    
     def get_tiles_to_show(self, systemCount, maxSystems):
         return systemCount if systemCount == maxSystems else min(systemCount, maxSystems - 1)
 
-    
     def check_grid_size(self, gridSize, tileSize, columns):
         return gridSize > (tileSize * columns)
 
-    
     def check_if_match_and_criteria(self, locator, criteria):
         queries = set(criteria.lower().split())
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -678,7 +631,6 @@ class GenericKeywords:
 
         return True
 
-    
     def check_if_match_or_criteria(self, locator, criteria):
         queries = criteria.lower().split("|")
         seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
@@ -700,87 +652,91 @@ class GenericKeywords:
 
         return True
 
-    
     def dictionary_should_contain(self, dictionary, expected):
         for item in dictionary:
             if item == expected:
                 return
 
-    
     def remove_user_by_email(self, serverUrl, email):
         users = ServerApi(serverUrl).get_users()
         for user in users:
             if user['email'] == email:
                 ServerApi(serverUrl).remove_user(user['id'])
 
-    
     def detect_language(self, text):
         detected_langs = str(Translator().detect(text))
         return detected_langs
 
-    
     def Get_Cloud_User_Id_By_Email(self, auth, email, systemId):
         users = self.cloud_api.get_cloud_system_users(auth, systemId)
         for user in users:
             if user == email:
                 return user["vmsUserId"]
 
-    
     def Convert_Code(self, code):
         code = re.sub(code, "%3D")
         code = re.sub(code, "%2b")
         return code
 
-    
     def Get_Cloud_User_Role(self, auth, email, systemId):
         users = self.cloud_api.get_cloud_system_users(auth, systemId)
         for user in users:
             if user["accountEmail"] == email:
                 return user["accessRole"]
 
-    
     def User_Is_In_Cloud_System(self, email, systemId, auth):
         users = self.cloud_api.get_cloud_system_users(auth, systemId)
         for user in users:
             if user["accountEmail"] == email:
                 return True
 
-    
     def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth):
         isThere = self.User_Is_In_Cloud_System(email, systemId, auth)
         if isThere:
             logger.info(email + " already in system")
         else:
-            r = self.cloud_api.share(auth, systemId, accessRole, email, self.permissions[accessRole])
+            r = self.cloud_api.share(
+                auth,
+                systemId,
+                accessRole,
+                email,
+                self.permissions[accessRole],
+                )
             logger.info(r)
 
-    
     def Add_Cloud_Users(self, auth, users, systemId):
         for permission in users:
-            self.Add_user_to_cloud_system_if_not_there(systemId, permission, users[permission], auth)
+            self.Add_user_to_cloud_system_if_not_there(
+                systemId,
+                permission,
+                users[permission],
+                auth,
+                )
 
     @contextmanager
     def _ssh_client(self):
         with paramiko.SSHClient() as ssh_client:
             ssh_client.load_system_host_keys()
             ssh_client.connect(
-                self.docker_host_ip, username=self.docker_host_username, password=self.docker_host_password)
+                self.docker_host_ip,
+                username=self.docker_host_username,
+                password=self.docker_host_password,
+                )
             yield ssh_client
 
-    
     def create_systems(self, suite_name):
-        json_file = suite_name.replace('.py', '' )
+        json_file = suite_name.replace('.py', '')
         jsonPath = os.path.join(
             "server_json",
-            f"{json_file}.json"
-        )
+            f"{json_file}.json",
+            )
         with open(jsonPath, encoding="utf-8") as suite_json:
             serversJson = json.load(suite_json)
             runName = randint(10000, 100000)
             # if storage suite, binds will exist
             # Todo: implement storage
-            #binds = BuiltIn().get_variable_value('${binds}')
-            #if binds:
+            # binds = BuiltIn().get_variable_value('${binds}')
+            # if binds:
             #    for idx in range(len(binds)):
             #        serversJson[idx].update({"binds": binds[idx]})
             # Start Docker server for each server in the JSON
@@ -792,7 +748,7 @@ class GenericKeywords:
                 server['api'] = ServerApi(
                     f"https://{self.docker_host_ip}:{server['port'][0]}",
                     password=INITIAL_PASSWORD,
-                )
+                    )
 
             # Set up systems
             time.sleep(5)
@@ -808,14 +764,14 @@ class GenericKeywords:
             if ownerRequired:
                 owners_ids = set([server.get("cloudOwnerId") for server in serversJson])
                 # Todo: reimplement owner-transfer check
-                #if "owner-transfer" in BuiltIn().get_variable_value('${SUITE NAME}').lower():
+                # if "owner-transfer" in BuiltIn().get_variable_value('${SUITE NAME}').lower():
                 #    logger.info("owner-transfer detected")
                 #    owners = [self.get_random_email(self.base_email, sendemail=True) for _ in
                 #              range(len(owners_ids))]
-                #else:
+                # else:
                 #    logger.info("owner-transfer NOT detected")
                 owners = [self.get_random_email(self.base_email, sendemail=self.from_email) for _ in
-                              range(len(owners_ids))]
+                          range(len(owners_ids))]
                 for owner in owners:
                     res = self.cloud_api.register_account("mark", "hamill", owner, self.password)
                     logger.trace(res)
@@ -846,7 +802,13 @@ class GenericKeywords:
             # Add local users if required
             for server in serversJson:
                 if server["addUsers"] == True:
-                    localUsersNames = ["cloudAdmin", "viewer", "liveViewer", "advancedViewer", "custom"]
+                    localUsersNames = [
+                        "cloudAdmin",
+                        "viewer",
+                        "liveViewer",
+                        "advancedViewer",
+                        "custom",
+                        ]
                     localUsers = {}
                     for user in localUsersNames:
                         server['api'].save_user(
@@ -855,27 +817,45 @@ class GenericKeywords:
                             f"noptixautoqa+local_{user}@gmail.com",
                             "Local User",
                             self.password,
-                            is_cloud=False
-                        )
+                            is_cloud=False,
+                            )
                         localUsers.update(
-                            {user: {"login": "Local" + user, "email": f"noptixautoqa+local_{user}@gmail.com"}})
+                            {user: {
+                                "login": "Local" + user,
+                                "email": f"noptixautoqa+local_{user}@gmail.com",
+                                },
+                             })
                     server.update({"localUsers": localUsers})
 
                 # Register, Activate, and Share cloud users if required
                 if server['addUsers'] and 'cloudOwnerId' in server:
                     for server in serversJson:
                         for permission in self.permissions:
-                            email = self.get_random_email(self.base_email, sendemail=self.from_email)
-                            r = self.cloud_api.register_account("Mark", "Hamill", email, self.password)
+                            email = self.get_random_email(
+                                self.base_email,
+                                sendemail=self.from_email,
+                                )
+                            r = self.cloud_api.register_account(
+                                "Mark",
+                                "Hamill",
+                                email,
+                                self.password,
+                                )
                             logger.trace(email, r)
                             server["cloudUsers"].update({permission: email})
-                            self.cloud_api.activate_account_via_api(server["cloudUsers"][permission], "qweasd 123")
+                            self.cloud_api.activate_account_via_api(
+                                server["cloudUsers"][permission], "qweasd 123")
                             time.sleep(.1)
                         logger.trace(server["cloudUsers"])
 
                     for user in server["cloudUsers"]:
-                        self.Add_user_to_cloud_system_if_not_there(server["id"], user, server["cloudUsers"][user],
-                                                                   [server["cloudOwner"], self.password])
+                        self.Add_user_to_cloud_system_if_not_there(
+                            server["id"],
+                            user,
+                            server["cloudUsers"][user],
+                            [server["cloudOwner"],
+                            self.password],
+                            )
                 else:
                     logger.trace("Users not added")
         return serversJson
@@ -893,10 +873,9 @@ class GenericKeywords:
             "name": name,
             "port": ports,
             "mac": mac,
-            "container": container
-        }
+            "container": container,
+            }
 
-    
     def delete_docker_server(self, name):
         command = f'''docker container ls --filter='name={name}' --format='{{{{.Names}}}}' | xargs docker container rm -f'''
         logger.trace(command)
@@ -920,13 +899,11 @@ class GenericKeywords:
         if server.get("cloudOwner"):
             self.cloud_api.delete_account(server["cloudOwner"], self.password)
 
-    
     def get_features_json(self, path):
         with codecs.open(path, encoding="utf-8") as featuresJson:
             featuresDict = json.load(featuresJson)
             return featuresDict
 
-    
     def cleanup_containers(self, run_name):
         for container in self.docker_api.list_containers():
             if run_name in container["Names"][0]:
@@ -936,21 +913,23 @@ class GenericKeywords:
         username, password = auth
         settings = ServerApi(server_url, username, password).get_system_settings_from_server()
         expected_value_str = str(expected_value)
-        expected_value_str = expected_value_str.replace("empty", "").replace("true", "True").replace("false",
-                                                                                                     "False").replace(
-            "\"", "'")
+        expected_value_str = (expected_value_str
+                              .replace("empty", "")
+                              .replace("true", "True")
+                              .replace("false", "False")
+                              .replace("\"", "'"),
+                              )
         value = settings[key]
         if type(value) == str and "{" in value:
             value = value.replace(" ", "")
         if str(value) != expected_value_str:
             raise RuntimeError(f"value({value}) did not match expected({expected_value_str})")
 
-    
     def get_lang_list(self):
         jsonPath = os.path.join(
             "customizations",
-            BuiltIn().get_variable_value('${CUST LANGUAGE LIST}')
-        )
+            BuiltIn().get_variable_value('${CUST LANGUAGE LIST}'),
+            )
         with open(jsonPath, encoding="utf-8") as langDict:
             return json.load(langDict)
 
@@ -962,7 +941,6 @@ class GenericKeywords:
         else:
             raise RuntimeError(f"Value({value}) was not in log level response {logLevel}")
 
-    
     def verify_changed_info_via_API(self, new_locals, ip, local_user="ocal+"):
         locals = []
         users = ServerApi(ip).get_users()
@@ -980,9 +958,8 @@ class GenericKeywords:
                 "name": user["name"],
                 "fullName": user["fullName"],
                 "permissions": user["permissions"],
-                "email": user["email"]
-            }
-            )
+                "email": user["email"],
+                })
         for user in shortened_dict:
             if user["name"] not in new_locals:
                 raise RuntimeError("All info was not changed")
@@ -991,43 +968,39 @@ class GenericKeywords:
         for user in locals_list:
             ServerApi(server).remove_user(user['id'])
 
-    
     def check_user_full_name_is_none(self, name, check_info):
         if not any(name in user["name"] and user["fullName"] == '' for user in check_info):
-            raise RuntimeError(f"User with name {name} does not exist or does not have an empty fullName.")
+            raise RuntimeError(
+                f"User with name {name} does not exist or does not have an empty fullName.")
 
-    
     def check_user_email_is_none(self, name, check_info):
         if not any(name in user["name"] and user["email"] == '' for user in check_info):
-            raise RuntimeError(f"User with name {name} does not exist or does not have an empty email.")
+            raise RuntimeError(
+                f"User with name {name} does not exist or does not have an empty email.")
 
-    
     def restart_docker_servers(self, servers):
         for server in servers:
             self.docker_api.restart_container(server['container'])
             time.sleep(1)
 
-    
     def get_container_port_by_name(self, name):
         r = self.docker_api.get_container_by_name(name)
         return r.json()['Ports'][0]['PublicPort']
 
-    
     def check_language_logged_in(self, email, password):
         current_lang = self.cloud_api.get_account_language(email, password)
         if current_lang == self.language:
             self.cloud_api.set_account_language(email, password, self.language)
         time.sleep(2)
 
-    
     def restore_password_using_api(self, email, new_password):
         assert self.cloud_api.api_restore_password(email, 'None', 'None') == '200'
         code = self.convert_code(self.cloud_api.get_code_from_api(email, 'restore_password'))
         assert self.cloud_api.api_restore_password(email, code, new_password) == '200'
 
-    
     def create_virtual_disk(self, disk_location, disk_name, disk_size, disk_target):
-        self.execute_sudo_command(f'dd if=/dev/zero of={disk_location}/{disk_name}.img bs=1M count={disk_size}')
+        self.execute_sudo_command(
+            f'dd if=/dev/zero of={disk_location}/{disk_name}.img bs=1M count={disk_size}')
         self.execute_sudo_command(f'mkfs -t ext4 {disk_location}/{disk_name}.img')
         self.execute_sudo_command(f'mkdir {disk_name}')
         _, ssh_stdout, _ = self.execute_sudo_command(
@@ -1038,29 +1011,24 @@ class GenericKeywords:
             "folder": disk_name,
             "size": disk_size,
             "target": disk_target,
-            "bind": f"/home/qaburbank/{disk_name}:/{disk_target}"
-        }
+            "bind": f"/home/qaburbank/{disk_name}:/{disk_target}",
+            }
         return disk
 
-    
     def delete_virtual_disk(self, disk):
         self.execute_sudo_command(f"umount {disk['folder']}")
         self.execute_sudo_command(f"rm {disk['img']}")
         self.execute_sudo_command(f"rm -r {disk['folder']}")
 
-    
     def make_directory(self, dir_name):
         self.execute_sudo_command(f"mkdir {dir_name}")
 
-    
     def remove_directory(self, dir_name):
         self.execute_sudo_command(f"rm -r {dir_name}")
 
-    
     def remove_all_files(self, dir_name):
         self.execute_sudo_command(f"rm {dir_name}/* ")
 
-    
     def verify_file_exists(self, folder, file):
         _, ssh_stdout, _ = self.execute_sudo_command(f"find {folder} -name {file}")
         assert file in ssh_stdout
@@ -1073,7 +1041,6 @@ class GenericKeywords:
             logger.trace(stdout.read())
         return stdin, stdout, stderr
 
-    
     def get_local_users(self, token, server_url):
         locals_list = []
         users = ServerApi(server_url).get_users()
@@ -1087,7 +1054,6 @@ class GenericKeywords:
                 locals_list.append(user)
         return locals_list
 
-    
     def set_default_storage_config(self, server_url, disabled, backups):
         storages = ServerApi(server_url, password=self.password).get_storages_via_api()
         if storages == []:
@@ -1101,19 +1067,19 @@ class GenericKeywords:
                 disk = {
                     "usedForWriting": False,
                     "isUsedForWriting": False,
-                    "isBackup": False
-                }
+                    "isBackup": False,
+                    }
             elif BuiltIn().run_keyword_and_return_status("should_contain_any", url, *backups):
                 disk = {
                     "usedForWriting": True,
                     "isUsedForWriting": True,
-                    "isBackup": True
-                }
+                    "isBackup": True,
+                    }
             else:
                 disk = {
                     "usedForWriting": True,
                     "isUsedForWriting": True,
-                    "isBackup": False
-                }
+                    "isBackup": False,
+                    }
         r = ServerApi(server_url, password=self.password).save_storages_via_api(storages)
         logger.trace(r)

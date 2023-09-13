@@ -1,6 +1,4 @@
-import json
 import requests
-from robot.api import logger
 
 USERNAME = ""
 PASSWORD = ""
@@ -17,7 +15,8 @@ class CloudSession:
             backup_code=None,
             verification_code=None,
             logout=True,
-            verify_ssl_cert=True):
+            verify_ssl_cert=True,
+            ):
         session = requests.Session()
         session.verify = verify_ssl_cert
         self.session = session
@@ -59,22 +58,22 @@ class CloudSession:
             "response_type": "code",
             "email": self.username,
             "password": self.password,
-            "redirect_uri": ""
-        }
+            "redirect_uri": "",
+            }
         return self._request_wrapper("/oauth/authenticate", method='post', data=data)
 
     def _verify_with_2fa(self, code):
         query = {
             "code": code,
-            "verification_code": self.verification_code
-        }
+            "verification_code": self.verification_code,
+            }
         return self._request_wrapper("/api/2fa/verification", query=query)
 
     def _verify_with_backup(self, code):
         query = {
             "code": code,
-            "verification_code": self.backup_code
-        }
+            "verification_code": self.backup_code,
+            }
         return self._request_wrapper("/api/2fa/backup", query=query)
 
     def login(self):
@@ -90,7 +89,11 @@ class CloudSession:
                     self._verify_with_backup(code)
             except requests.exceptions.HTTPError as e:
                 print(e)
-        login_response = self._request_wrapper("/api/account/loginCode", method='post', data={"code": code})
+        login_response = self._request_wrapper(
+            "/api/account/loginCode",
+            method='post',
+            data={"code": code},
+            )
         self.session.headers.update({'X-CSRFToken': self.session.cookies['csrftoken']})
         return self.session
 
