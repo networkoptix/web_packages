@@ -1,0 +1,43 @@
+<div class="modal-header">
+    <h1
+        class="modal-title"
+        translate
+    >
+        Backup codes
+    </h1>
+    <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+        *ngIf="closable"
+    >
+        <span class="close-content"></span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <div id="backupText">
+        <p translate>
+            If you don't have access to your mobile authentication app, you can use these codes to
+            verify your identity.
+        </p>
+
+        <p translate>Previously generated codes are no longer valid.</p>
+    </div>
+
+    <nx-backup-codes [codes]="newCodes"></nx-backup-codes>
+</div>
+
+<div class="modal-footer justify-end">
+    <button
+        type="button"
+        class="btn btn-primary"
+        (click)="close()"
+        translate
+        [disabled]="!newCodes"
+    >
+        OK
+    </button>
+</div>

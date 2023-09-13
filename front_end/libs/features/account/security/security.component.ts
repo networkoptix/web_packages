@@ -73,10 +73,10 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
             // or click happened during initialization
             return;
         }
-        this.dialogs.account2faCodeToggle(value).then(action => {
-            if (action !== 'canceled') {
-                this.account2faEnabled = action === 'enabled';
-                this.accountService.get(true).catch(e => {});
+        this.dialogs.account2faCodeToggle(value).then(codeRequired => {
+            if (codeRequired !== undefined) {
+                this.account2faEnabled = codeRequired;
+                this.accountService.get(true);
             }
             this.account2faEnabledCheck = this.account2faEnabled;
         });
@@ -106,21 +106,21 @@ export class NxAccountSecurityComponent implements OnInit, OnDestroy {
     switch2FA(targetState: boolean): void {
         // Combine success handler; Do in releases_21.1_hotfix after 21.1 release
         if (targetState) {
-            this.dialogs.account2faEnable().then(action => {
-                const newState = action === 'enabled';
-                this.account2faEnabled = newState;
-                this.totpExistsForAccount = newState;
-                this.account2faEnabledCheck = this.account2faEnabled;
-                this.accountService.get(true).catch(_ => {});
+            this.dialogs.account2faEnable().then(enabled => {
+                if (enabled) {
+                    this.account2faEnabled = true;
+                    this.totpExistsForAccount = true;
+                    this.account2faEnabledCheck = this.account2faEnabled;
+                    this.accountService.get(true);
+                }
             });
         } else {
-            this.dialogs.account2faDisable(this.twoFaSystems.length).then(action => {
-                if (action !== 'canceled') {
-                    const newState = !(action === 'disabled');
-                    this.account2faEnabled = newState;
-                    this.totpExistsForAccount = newState;
+            this.dialogs.account2faDisable(this.twoFaSystems.length).then(disabled => {
+                if (disabled) {
+                    this.account2faEnabled = false;
+                    this.totpExistsForAccount = false;
                     this.account2faEnabledCheck = this.account2faEnabled;
-                    this.accountService.get(true).catch(_ => {});
+                    this.accountService.get(true);
                 } else {
                     this.totpExistsForAccount = true; // revert value on cancel
                 }

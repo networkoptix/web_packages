@@ -1,0 +1,36 @@
+<div class="nx-backup-codes">
+    <ng-container *ngIf="codes; else dummyCodes">
+        <div
+            class="fs-exclude nx-backup-codes__code"
+            *ngFor="let code of codes; let idx = index"
+        >
+            <span class="nx-backup-codes__code-index">{{ scrambledIndexes[idx] }}</span
+            >{{ code }}
+        </div>
+    </ng-container>
+    <!-- To avoid spacing change from content pop-in -->
+    <ng-template #dummyCodes>
+        <div
+            class="fs-exclude nx-backup-codes__code"
+            *ngFor="let code of [].constructor(8); let idx = index"
+        >
+            <span class="nx-backup-codes__code-index"></span>
+        </div>
+        <nx-pre-loader [minHeight]="0"></nx-pre-loader>
+    </ng-template>
+</div>
+<div class="nx-backup-codes__copy-btn">
+    <button
+        class="btn btn-text"
+        (click)="copyToClipboard()"
+        [disabled]="!codes"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirTextButtons + 'copy.svg'"
+            [svgStyle]="{ 'width.px': '22', 'height.px': '22' }"
+            [applyClass]="true"
+        ></svg-icon>
+        <span translate>Copy all</span>
+    </button>
+</div>

@@ -29,7 +29,6 @@ import type { NxSystemInfo } from '@services/systems.service.types';
 
 import { MergeError } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
-import { TfaAction } from './two-fa/two-fa.component.types';
 import type { SessionState } from './update-session/update-session.component.types';
 
 export interface DialogType<D = unknown, R = unknown> {
@@ -111,23 +110,17 @@ export type UpdateSession = DialogType<UpdateSessionData, boolean>;
 export type Client2faWarning = DialogType<void, void>;
 
 /* Account */
-interface Account2faActionData {
-    [TfaAction.Enable]: void;
-    [TfaAction.Disable]: { num2FaSystems: number };
-    [TfaAction.PasswordChange]: {
+export type EnableAccount2fa = DialogType<void, true>;
+export type DisableAccount2fa = DialogType<number, true>;
+export type Require2faCodeOnLogin = DialogType<boolean, boolean>;
+export type New2faBackupCodes = DialogType<void, void>;
+export type PasswordChange2fa = DialogType<
+    {
         newPassword: string;
         oldPassword: string;
-    };
-    [TfaAction.CodeOnLoginEnable]: void;
-    [TfaAction.CodeOnLoginDisable]: void;
-    [TfaAction.NewBackupCodes]: void;
-}
-export interface Account2faData<Action extends TfaAction> {
-    action: Action;
-    data?: Account2faActionData[Action];
-}
-// Return is not action dependent, so it's separated from the data for convenience
-export type Account2faReturn = string;
+    },
+    true
+>;
 
 /* Systems */
 

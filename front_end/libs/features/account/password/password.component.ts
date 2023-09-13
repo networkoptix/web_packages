@@ -49,24 +49,22 @@ export class NxAccountPasswordComponent implements OnInit, OnDestroy {
 
         this.changePassword = this.processService.createProcess(
             () => {
-                const { password: oldPass, newPassword: newPass } = this.pass;
-                const verifySession = async (): Promise<string> => {
+                const { password: oldPassword, newPassword } = this.pass;
+                const verifySession = async (): Promise<true> => {
                     return this.dialogs
-                        .account2faPasswordChange(oldPass, newPass)
-                        .then(res =>
-                            res === 'canceled' ? Promise.reject({ resultCode: res }) : res,
-                        );
+                        .account2faPasswordChange({ oldPassword, newPassword })
+                        .then(res => res || Promise.reject({ resultCode: 'canceled' }));
                 };
                 if (this.account.account2faEnabled) {
                     return this.cloudApiService
-                        .verify(oldPass)
+                        .verify(oldPassword)
                         .then(verifySession, ({ error }) =>
                             error?.resultCode === 'forbidden'
                                 ? verifySession()
                                 : Promise.reject(error),
                         );
                 } else {
-                    return this.cloudApiService.changePassword(newPass, oldPass);
+                    return this.cloudApiService.changePassword(newPassword, oldPassword);
                 }
             },
             {

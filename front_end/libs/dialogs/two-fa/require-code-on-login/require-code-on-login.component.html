@@ -1,0 +1,78 @@
+<form
+    #codeForm="ngForm"
+    name="codeForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Two-factor authentication settings
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <p>
+            <ng-container *ngIf="newState; else disableText">
+                <span translate
+                    >Verification code from the authentication app will be requested on every login
+                    with %CLOUD_NAME% account.</span
+                >
+            </ng-container>
+            <ng-template #disableText>
+                <span translate
+                    >Verification code from the authentication app will be requested only to log in
+                    to systems that require two-factor authentication.</span
+                >
+            </ng-template>
+        </p>
+
+        <div class="form-group mt-3">
+            <label for="tfaCodeInput">
+                <ng-container *ngIf="newState; else codeOnly">
+                    <span translate
+                        >Enter a verification code from your authentication app or a backup code to
+                        continue</span
+                    >
+                </ng-container>
+                <ng-template #codeOnly>
+                    <span translate
+                        >Enter a verification code from your authentication app to continue</span
+                    >
+                </ng-template>
+            </label>
+            <nx-2fa-code-input
+                #tfaCodeInput
+                name="tfaCodeInput"
+                [(ngModel)]="tfaCode"
+                [codeForm]="codeForm"
+                required
+            ></nx-2fa-code-input>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="codeOnLoginProcess"
+            [form]="codeForm"
+            actionType="primary"
+            [buttonText]="'Apply' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="codeOnLoginProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

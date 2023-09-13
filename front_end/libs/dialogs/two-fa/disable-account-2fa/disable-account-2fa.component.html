@@ -1,0 +1,63 @@
+<form
+    #codeForm="ngForm"
+    name="codeForm"
+    novalidate
+>
+    <div class="modal-header">
+        <h1
+            class="modal-title"
+            translate
+        >
+            Disable two-factor authentication
+        </h1>
+        <button
+            type="button"
+            class="close"
+            data-dismiss="modal"
+            aria-label="Close"
+            (click)="close()"
+            *ngIf="closable"
+        >
+            <span class="close-content"></span>
+        </button>
+    </div>
+
+    <div class="modal-body">
+        <p
+            *ngIf="num2faSystems"
+            class="danger mb-3"
+        >
+            {{ LANG.security.twoFa.disableWarning | translate : { count: num2faSystems } }}
+        </p>
+        <div class="form-group">
+            <label
+                for="tfaCodeInput"
+                translate
+                >Enter a verification code from your authentication app or a backup code to
+                continue</label
+            >
+
+            <nx-2fa-code-input
+                #tfaCodeInput
+                name="tfaCodeInput"
+                [(ngModel)]="tfaCode"
+                [codeForm]="codeForm"
+                required
+            ></nx-2fa-code-input>
+        </div>
+    </div>
+
+    <div class="modal-footer">
+        <nx-process-button
+            [process]="disableProcess"
+            [form]="codeForm"
+            actionType="danger"
+            [buttonText]="'Disable' | translate"
+        ></nx-process-button>
+        <nx-cancel-button
+            [process]="disableProcess"
+            [cancelFn]="unlock"
+            [discardFn]="close"
+        ></nx-cancel-button>
+    </div>
+</form>

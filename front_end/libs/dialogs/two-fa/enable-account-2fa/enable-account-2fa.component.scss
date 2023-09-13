@@ -1,0 +1,43 @@
+@use "theme_variables_common" as *;
+
+.modal-body {
+    position: relative;
+
+    .params-container {
+        position: absolute;
+        left: 1rem;
+        right: 1rem;
+        top: 1rem;
+        bottom: 1rem;
+    }
+}
+
+.modal-footer {
+
+    // normal-layout => buttons left aligned
+    &.justify-end {
+        // hard overwrite
+        justify-content: flex-end !important;
+    }
+
+    &.justify-between {
+        justify-content: space-between !important;
+    }
+
+    .btn {
+        margin: 0 !important;
+        padding: 0 !important;
+
+        &.btn-back {
+            svg-icon {
+                width: 24px;
+                margin-left: 0;
+
+                svg path {
+                    fill: var(--btn-default-color) !important;;
+                    stroke: none !important;
+                }
+            }
+        }
+    }
+}

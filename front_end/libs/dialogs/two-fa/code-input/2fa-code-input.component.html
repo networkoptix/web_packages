@@ -1,0 +1,24 @@
+<input
+    #codeInput
+    type="text"
+    class="fs-exclude form-control"
+    [(ngModel)]="tfaCode"
+    (ngModelChange)="writeValue($event)"
+    #codeInputModel="ngModel"
+    autocomplete="off"
+    maxlength="255"
+/>
+<ng-container *ngIf="codeInputModel.invalid">
+    <div
+        class="input-error"
+        *ngIf="codeInputModel.errors?.unauthorized"
+        translate
+    >
+        Invalid code
+    </div>
+    <div
+        class="input-error"
+        *ngIf="codeInputModel.touched && codeInputModel.errors?.required"
+        [innerText]="LANG.dialogs.message.twoFactor.codeRequired | translate"
+    ></div>
+</ng-container>

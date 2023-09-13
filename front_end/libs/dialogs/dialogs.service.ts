@@ -13,7 +13,6 @@ import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration
 import { DIALOG_SIZE } from './dialog-config-v2';
 import * as Dt from './dialogs.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
-import { TfaAction } from './two-fa/two-fa.component.types';
 
 @Injectable({ providedIn: 'root' })
 export class NxDialogsService {
@@ -219,49 +218,45 @@ export class NxDialogsService {
     );
 
     /* Account */
-    private async account2fa<A extends TfaAction>(
-        data: Dt.Account2faData<A>,
-        config: DialogConfig<never> = {},
-    ): Promise<Dt.Account2faReturn> {
-        const component = await import('./two-fa/two-fa.component').then(m => m.TwoFAModalContent);
-        const configWithData: DialogConfig<Dt.Account2faData<A>> = {
-            width: DIALOG_SIZE.SMALL,
-            ...config,
-            data,
-            disableClose: true,
-        };
-        return this.openV2(component, configWithData);
-    }
+    account2faEnable = this.dialogV2Factory<Dt.EnableAccount2fa>(
+        () =>
+            import('./two-fa/enable-account-2fa/enable-account-2fa.component').then(
+                m => m.NxEnableAccount2faModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL },
+    );
 
-    account2faEnable(): Promise<Dt.Account2faReturn> {
-        return this.account2fa({ action: TfaAction.Enable });
-    }
+    account2faDisable = this.dialogV2Factory<Dt.DisableAccount2fa>(
+        () =>
+            import('./two-fa/disable-account-2fa/disable-account-2fa.component').then(
+                m => m.NxDisableAccount2faModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
+    );
 
-    account2faDisable(num2FaSystems: number): Promise<Dt.Account2faReturn> {
-        return this.account2fa({
-            action: TfaAction.Disable,
-            data: { num2FaSystems },
-        });
-    }
+    account2faCodeToggle = this.dialogV2Factory<Dt.Require2faCodeOnLogin>(
+        () =>
+            import('./two-fa/require-code-on-login/require-code-on-login.component').then(
+                m => m.NxRequire2faCodeOnLoginModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL, restoreFocus: false, autoFocus: 'input' },
+    );
 
-    account2faCodeToggle(state: boolean): Promise<Dt.Account2faReturn> {
-        const action = state ? TfaAction.CodeOnLoginEnable : TfaAction.CodeOnLoginDisable;
-        return this.account2fa({ action }, { restoreFocus: false });
-    }
+    account2faNewBackupCodes = this.dialogV2Factory<Dt.New2faBackupCodes>(
+        () =>
+            import('./two-fa/new-backup-codes/new-backup-codes.component').then(
+                m => m.NxNew2faBackupCodesModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL, disableClose: true },
+    );
 
-    account2faNewBackupCodes(): Promise<Dt.Account2faReturn> {
-        return this.account2fa({ action: TfaAction.NewBackupCodes });
-    }
-
-    account2faPasswordChange(
-        oldPassword: string,
-        newPassword: string,
-    ): Promise<Dt.Account2faReturn> {
-        return this.account2fa({
-            action: TfaAction.PasswordChange,
-            data: { oldPassword, newPassword },
-        });
-    }
+    account2faPasswordChange = this.dialogV2Factory<Dt.PasswordChange2fa>(
+        () =>
+            import('./two-fa/password-change/password-change.component').then(
+                m => m.NxPasswordChange2faModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
+    );
 
     /* Systems */
 

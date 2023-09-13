@@ -1,0 +1,57 @@
+@use "theme_variables_common" as *;
+
+.nx-backup-codes {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    width: 100%;
+    background-color: var(--card-header-bg);
+    border: 1px solid var(--border-color);
+    padding: 1rem;
+    margin-top: 1rem;
+
+    position: relative;
+
+    &__code {
+        font-family: robotomonoregular, monospace;
+        font-size: $h3-font-size;
+        text-align: center;
+        user-select: none;
+
+        &-index {
+            color: var(--light10);
+            margin-right: 0.5rem;
+        }
+    }
+
+    &__copy-btn {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        margin-top: 0.5rem;
+
+        button {
+            svg-icon svg .st7 {
+                fill: var(--btn-text-color) !important
+            }
+
+            &:hover {
+                svg-icon svg .st7 {
+                    fill: var(--btn-text-hover-color) !important
+                }
+            }
+
+            &:active {
+                svg-icon svg .st7 {
+                    fill: var(--btn-text-active-color) !important
+                }
+            }
+        }
+    }
+
+    nx-pre-loader {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+    }
+}
