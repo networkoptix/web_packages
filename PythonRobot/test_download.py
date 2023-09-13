@@ -122,6 +122,18 @@ def check_play_store_link():
     driver.close()
 
 
+def check_itunes_store_link():
+    driver = get_headless_chrome()
+    driver.get(variables.ENV)
+    Footer(driver, 'cloud').get_downloads_link().click()
+    download_page = DownloadsPage(driver)
+    actual_url = download_page.get_itunes_store_link()
+    expected_url = 'https://itunes.apple.com/eg/app/hd-witness/id1050899754'
+    if actual_url != expected_url:
+        raise RuntimeError(f"Actual Play Store URL is {actual_url}, expected {expected_url}")
+    driver.close()
+
+
 def _get_chromedriver(user_agent):
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
@@ -142,3 +154,4 @@ if __name__ == '__main__':
     validate_the_linux_download_links()
     validate_the_mac_download_links()
     check_play_store_link()
+    check_itunes_store_link()

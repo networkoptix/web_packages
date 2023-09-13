@@ -28,6 +28,9 @@ class DownloadsPage:
     def get_play_store_link(self):
         return self._get_link('//nx-download-component//a[contains(@class, "mobile-link Android")]')
 
+    def get_itunes_store_link(self):
+        return self._get_link('//nx-download-component//a[contains(@class, "mobile-link iOS")]')
+
     def _get_tab(self, locator):
         robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
         return _Tab(self._driver, locator)
