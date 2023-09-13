@@ -30,7 +30,7 @@ from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.color import Color
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.DockerApi import DockerApi
+from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
 
