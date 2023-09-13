@@ -2,7 +2,7 @@ import time
 from selenium import webdriver
 
 from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from variables import ENV
 import robot_keywords
 from login import LoginDialog

@@ -3,7 +3,7 @@ from RobotVariables import RobotVariables
 import robot_keywords 
 from register_form import RegisterForm
 from time import sleep
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from email_access import Email
 from login import LoginDialog
 

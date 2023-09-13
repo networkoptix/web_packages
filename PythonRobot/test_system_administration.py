@@ -1,7 +1,7 @@
 import time
 
 import robot_keywords
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudServer
 from NoptixLibrary.suite import Suite
 from header import HeaderNav

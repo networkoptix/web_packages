@@ -21,7 +21,7 @@ import robot_lists as rl
 import requests
 import time
 from random import randint
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI 
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary import *
 from googletrans import Translator
 from login import LoginDialog

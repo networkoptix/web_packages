@@ -11,7 +11,7 @@ from selenium.webdriver.chrome.options import Options
 from RobotVariables import RobotVariables
 from requests import HTTPError
 from urllib3.exceptions import MaxRetryError
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 import robot_keywords
 import resource_import
 
