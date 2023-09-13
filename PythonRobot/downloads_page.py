@@ -25,9 +25,16 @@ class DownloadsPage:
     def get_mac_client_installer_tab(self) -> '_Tab':
         return self._get_tab('//nx-download-component//*[@id="macos"]')
 
+    def get_play_store_link(self):
+        return self._get_link('//nx-download-component//a[contains(@class, "mobile-link Android")]')
+
     def _get_tab(self, locator):
         robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
         return _Tab(self._driver, locator)
+
+    def _get_link(self, locator):
+        robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
+        return self._driver.find_element(By.XPATH, locator).get_attribute('href')
 
 
 class _Tab:
