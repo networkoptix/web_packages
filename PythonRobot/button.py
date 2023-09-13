@@ -17,4 +17,5 @@ class Button:
 
     def click(self):
         robot_keywords.wait_until_element_is_visible(self.driver, self.locator)
+        robot_keywords.wait_until_element_is_enabled(self.driver, self.locator)
         self.selenium_element.click()

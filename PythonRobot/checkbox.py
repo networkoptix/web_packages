@@ -8,7 +8,7 @@ class Checkbox:
     def __init__(self, driver: webdriver, visible_locator, actual_locator):
         self.driver = driver
         robot_keywords.wait_until_element_is_visible(self.driver, visible_locator)
-        self.actual_element = self.driver.find_element(By.XPATH, f"{visible_locator}{actual_locator}")
+        self.selenium_element = self.driver.find_element(By.XPATH, f"{visible_locator}{actual_locator}")
         self.clickable_element = self.driver.find_element(By.XPATH, visible_locator)
         self.checked_xpath = f'{visible_locator}//span[@class="tick checked"]'
         self.unchecked_xpath = f'{visible_locator}//span[contains(@class,"unchecked")]'
@@ -31,4 +31,4 @@ class Checkbox:
          return self.driver.find_element(By.XPATH, self.unchecked_xpath)
     
     def is_focused(self):
-        return self.actual_element == self.driver.switch_to.active_element
+        return self.selenium_element == self.driver.switch_to.active_element()

@@ -134,23 +134,26 @@ def wait_until_element_has_style(driver: webdriver, element_locator: str, expect
 def wait_until_element_is_not_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
-def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
+def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, locator)))
 
-def wait_until_elements_are_visible(driver: webdriver, locators: List[str] , timeout: int = 10) -> None:
+def wait_until_element_is_enabled(driver: webdriver, locator: str, timeout: int = 40) -> None:
+    WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, locator)))
+
+def wait_until_elements_are_visible(driver: webdriver, locators: List[str] , timeout: int = 40) -> None:
     for locator in locators:
         wait_until_element_is_visible(driver, locator, timeout=timeout)
 
-def wait_until_page_contains(driver: webdriver, text: str, timeout: int = 10) -> None:
+def wait_until_page_contains(driver: webdriver, text: str, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element((By.XPATH, "//*"), text))
 
-def wait_until_page_contains_element(driver: webdriver, locator: str, timeout: int = 10) -> None:
+def wait_until_page_contains_element(driver: webdriver, locator: str, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(EC.presence_of_element_located((By.XPATH, locator)))
 
 def wait_until_page_does_not_contain_element(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.presence_of_element_located((By.XPATH, locator)))
 
-def wait_until_textfield_contains(driver, locator, expected_text, timeout: int = 10) -> None:
+def wait_until_textfield_contains(driver, locator, expected_text, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element_value((By.XPATH, locator), expected_text))
 
 def reload_page(driver: webdriver):

@@ -33,22 +33,18 @@ def merge_from_primary_system():
     LoginDialog(driver).basic_cloud_login(servers[0]['cloudOwner'], password)
     sys_admin = SystemAdmin(driver)
     sys_admin.merge_with_another_system_button().click()
-    time.sleep(1)
 
     sys_admin.merge_next_button().click()
     sys_admin.primary_first_system()
     sys_admin.primary_second_system()
-    time.sleep(1)
 
     sys_admin.merge_next_button().click()
 
-    time.sleep(1)
     sys_admin.merge_systems_button().click()
     sys_admin.system_is_being_merged()
     sys_admin.systems_merged_success_toast_notification(servers[0]['name'], servers[1]['name']).message()
 
     driver.refresh()
-    time.sleep(1)
     left_menu = SystemLeftMenu(driver)
     left_menu.servers_button().click()
     left_menu.update_servers_list()

@@ -15,10 +15,10 @@ class Element:
     def element_in_dom(self, timeout=5):
         try:
             robot_keywords.wait_until_page_contains_element(self.driver, self.locator, timeout)
-            self.element = self.driver.find_element(By.XPATH, self.locator)
-            return True
         except selenium.common.exceptions.TimeoutException:
             return False
+        self.element = self.driver.find_element(By.XPATH, self.locator)
+        return True
 
     def get_selenium_element(self):
         return self.element
