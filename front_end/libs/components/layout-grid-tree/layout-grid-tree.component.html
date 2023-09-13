@@ -1,9 +1,16 @@
 <div class="resource-tree-wrapper">
-    <div
+    <nx-search
         *ngIf="layoutGridService.isLeftMenuOpen$$()"
+        [ngModel]="layoutStateService.paramStateHandler.state$$().queryParams.search"
+        layout="search"
+        instant
+    >
+    </nx-search>
+    <div
         cdkDropList
         tourAnchor="cloud-layouts_left-menu"
         [cdkDropListDisabled]="layout.locked"
+        [ngClass]="{ 'tree-invisible': !layoutGridService.isLeftMenuOpen$$() }"
         class="cdk-tree"
     >
         <ng-template
@@ -17,8 +24,8 @@
             >
                 <div
                     cdkDrag
-                    (click)="treeControl.toggle(node)"
-                    [cdkDragDisabled]="!node.details || layout.locked"
+                    (click)="toggleNode(node)"
+                    [cdkDragDisabled]="dragDisabled[node.type] || layout.locked"
                     (cdkDragStarted)="dragging = true"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
@@ -33,7 +40,7 @@
                             nodeInfo;
                             context: {
                                 node: node,
-                                expandable: node.children.length,
+                                expandable: node.children.length && !node.hidden,
                                 expanded: !treeControl.isExpanded(node) && !tourService.currentStep
                             }
                         "
@@ -66,15 +73,20 @@
                 cdkDropList
                 [nxForceVisibility]="node.details.id === this.layout?.id"
                 forceVisibilityOnce
+                visibilityMargin="32px"
                 scrollBehavior="instant"
                 class="tree-node cdk-tree-node"
+                [ngClass]="{ 'hidden-node': node.hidden }"
             >
                 <div
                     cdkDrag
                     [cdkDragDisabled]="
-                        !node.details || layout.locked || node.type === RESOURCE_TYPE.LAYOUT
+                        !node.details ||
+                        layout.locked ||
+                        node.type === RESOURCE_TYPE.LAYOUT ||
+                        !node.type
                     "
-                    (click)="layoutGridService.changeView.next(node)"
+                    (click)="node.type && layoutGridService.changeView.next(node)"
                     (cdkDragStarted)="dragging = true"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
@@ -208,7 +220,7 @@
             </ng-container>
         </ng-template>
         <ng-container
-            *ngTemplateOutlet="renderChildren; context: { nodes: dataSource }"
+            *ngTemplateOutlet="renderChildren; context: { nodes: (dataSource$ | async) }"
         ></ng-container>
 
         <ng-template
@@ -264,11 +276,19 @@
                         class="node-editable"
                         [cdkContextMenuTriggerFor]="nodeActionMenu"
                     >
+                        <ng-template #searchHighlight>
+                            <nx-search-highlight
+                                class="ellipsis node-name"
+                                [text]="node.name"
+                                [search]="query$ | async"
+                            ></nx-search-highlight>
+                        </ng-template>
                         <nx-text-editable
+                            *ngIf="editedLayout$$() === node.id; else searchHighlight"
                             class="node-name ellipsis"
                             [(ngModel)]="node.name"
                             [allowUserFocus]="false"
-                            [editEnabled]="editedLayout$$() === node.id"
+                            [editEnabled]="true"
                             (onFocusChanged)="!$event && handleRename(node)"
                             (onEditModeCancelled)="editedLayout$$.set(null)"
                         >

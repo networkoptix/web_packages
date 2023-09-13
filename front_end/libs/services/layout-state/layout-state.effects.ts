@@ -49,8 +49,8 @@ export class LayoutStateEffects {
     });
 
     updateActiveLayout$ = createEffect(() => {
-        return this.layoutStateService.paramState$.pipe(
-            map(({ layoutId }) => ActiveLayoutActions.set({ id: layoutId })),
+        return this.layoutStateService.paramStateHandler.state$.pipe(
+            map(({ params: { layoutId } }) => ActiveLayoutActions.set({ id: layoutId })),
         );
     });
 

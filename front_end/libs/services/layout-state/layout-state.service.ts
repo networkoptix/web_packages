@@ -156,13 +156,16 @@ export class LayoutStateService {
 
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));
 
-    paramState$ = this.paramStateService.getState(({ params, queryParams }) => ({
-        layoutId: params.layoutId,
-        systemId: params.systemId,
-        openNodes: queryParams.openNodes,
+    paramStateHandler = this.paramStateService.getStateHandler(({ params, queryParams }) => ({
+        params: {
+            layoutId: params.layoutId,
+            systemId: params.systemId,
+        },
+        queryParams: {
+            openNodes: queryParams.openNodes,
+            search: queryParams.search,
+        },
     }));
-
-    paramState$$ = toSignal(this.paramState$);
 
     constructor(
         private cloudApi: NxCloudApiService,

@@ -13,7 +13,6 @@ import {
     Output,
     Signal,
 } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -504,8 +503,6 @@ export class NxLayoutGridComponent {
     constructor(
         configService: NxConfigService,
         private cd: ChangeDetectorRef,
-        private router: Router,
-        private activatedRoute: ActivatedRoute,
         private dialogsService: NxDialogsService,
         private toastService: NxToastService,
         public tourService: TourService,
@@ -652,18 +649,6 @@ export class NxLayoutGridComponent {
             frame.style.zIndex = '100';
         }
     }
-
-    getOpenNodes = (): string[] => {
-        const openNodes = this.activatedRoute.snapshot.queryParams.openNodes || [];
-
-        if (typeof openNodes === 'string') {
-            return [openNodes];
-        }
-
-        return openNodes.filter(nodeId =>
-            Object.keys(this.layoutItemLookup).map(cleanId).includes(nodeId),
-        );
-    };
 
     cleanId = cleanId;
 
@@ -998,24 +983,6 @@ export class NxLayoutGridComponent {
 
         const isLayoutItem = 'id' in node;
         const id = isLayoutItem ? node.id : node.details?.id;
-        if (!isLayoutItem) {
-            const targetIds = (
-                id
-                    ? [id]
-                    : (node?.children || []).map(child => child.details?.id).filter(id => !!id)
-            ).map(cleanId);
-            const open = this.treeControl.isExpanded(node);
-            const openNodes = this.getOpenNodes().filter(id => !targetIds.includes(id));
-            if (open && targetIds) {
-                openNodes.push(...targetIds);
-            }
-            const queryParams = { ...this.activatedRoute.snapshot.queryParams, openNodes };
-            await this.router.navigate([], {
-                relativeTo: this.activatedRoute,
-                replaceUrl: true,
-                queryParams,
-            });
-        }
 
         if (id && cleanId(id) !== cleanId(this.layout.id)) {
             this.changingLayout = cleanId(id);

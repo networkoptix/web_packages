@@ -10,9 +10,19 @@ import { Router } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { cloneDeep } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Observable, Subject, timer } from 'rxjs';
-import { distinctUntilChanged, filter, map, startWith, switchMap, takeUntil } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subject, combineLatest, timer } from 'rxjs';
+import {
+    distinctUntilChanged,
+    filter,
+    map,
+    shareReplay,
+    startWith,
+    switchMap,
+    takeUntil,
+    tap,
+} from 'rxjs/operators';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import { MenuItem } from '@components/context-menu/context-menu.types';
@@ -30,6 +40,8 @@ import {
 } from '@components/layout-grid/layout-grid.types';
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
@@ -42,11 +54,42 @@ import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { MutationType } from '@services/param-state/param-state.types';
 import { Layout } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId, dirtyId } from '@utils/general';
+import { NgChanges } from '@utils/ng-changes';
+
+const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
+    dataSource: DataType[],
+    query: QueryType,
+    valueGetter: (item: DataType) => QueryType,
+    childrenGetter: (item: DataType) => DataType[],
+    showNodeFn: (item: DataType, matched: boolean) => boolean = (_, matched) => matched,
+    compareFn: (query: QueryType, value: QueryType) => boolean = (query, value) =>
+        typeof value === 'string' && value.toLowerCase().includes(query.toString().toLowerCase()),
+): DataType[] => {
+    return query
+        ? cloneDeep(dataSource).map(node => {
+              node.children = node.children.map(node => ({
+                  ...node,
+                  hidden: !node.name.toLowerCase().includes(query.toLowerCase()),
+              }));
+              node.hidden = node.children.every(node => node.hidden);
+              if (node.hidden) {
+                  node.children.push({
+                      name: staticLang.search.noMatches,
+                      details: { id: 'noResults' },
+                      type: null,
+                      aspectRatio: 0,
+                  });
+              }
+              return node;
+          })
+        : dataSource;
+};
 
 @Component({
     selector: 'nx-layout-grid-tree',
@@ -75,6 +118,8 @@ import { cleanId, dirtyId } from '@utils/general';
         NxAddSvgSrcDirective,
         NxTooltipDirective,
         NxForceVisibilityDirective,
+        NxSearchComponent,
+        NxSearchHighlightComponent,
     ],
     templateUrl: './layout-grid-tree.component.html',
     styleUrls: ['./layout-grid-tree.component.scss'],
@@ -94,11 +139,48 @@ export class NxLayoutGridTreeComponent {
     @Input() showTooltip$: Observable<boolean>;
     @Input() changingLayout: string | boolean = true;
 
+    query$ = this.layoutStateService.paramStateHandler.state$.pipe(
+        map(({ queryParams: { search } }) => search?.[0] || ''),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    initialDataSource$ = new BehaviorSubject<BaseResourceNode[]>([]);
+
+    dataSource$ = combineLatest([this.query$, this.initialDataSource$]).pipe(
+        // Filter here
+        tap(([query]) => {
+            if (query) {
+                this.dataSource.forEach(node => this.treeControl.expand(node));
+            } else {
+                this.treeControl.collapseAll();
+                this.expandNodesFromParams();
+            }
+        }),
+        map(([query, dataSource]) =>
+            filterSearch(
+                dataSource as ResourceNode[],
+                query,
+                node => node.name,
+                node => node.children,
+                (node, matched) => matched || !!node.children.length,
+            ),
+        ),
+    );
+
     // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
     editedLayout$$ = signal(null);
 
     icons = icons;
     positions: ConnectedPosition[] = NxContextMenu.POSITIONS.default;
+    forceVisible = '';
+
+    dragDisabled: Record<ResourceType, boolean> = [
+        ResourceType.LAYOUTS,
+        ResourceType.CAMERAS,
+        ResourceType.SERVERS,
+        ResourceType.WEB_PAGES,
+    ].reduce((acc, type) => ({ ...acc, [type]: true }), {} as Record<ResourceType, boolean>);
 
     ServerStats: ServerStats;
     LANG = staticLang;
@@ -118,6 +200,12 @@ export class NxLayoutGridTreeComponent {
         this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
+        }
+    }
+
+    ngOnChanges({ dataSource }: NgChanges<NxLayoutGridTreeComponent>): void {
+        if (dataSource) {
+            this.initialDataSource$.next(dataSource.currentValue);
         }
     }
 
@@ -148,7 +236,19 @@ export class NxLayoutGridTreeComponent {
                 }
             }
         };
+
+        const {
+            queryParams: { openNodes = [] },
+        } = this.layoutStateService.paramStateHandler.state$$();
+
         let foundNode = findNode(this.dataSource, this.layout.id);
+
+        openNodes.forEach(id => {
+            const node = findNode(this.dataSource, id);
+            if (node && !findNode(node.children, foundNode.details.id)) {
+                this.treeControl.expand(node);
+            }
+        });
 
         while (foundNode) {
             this.treeControl.expand(foundNode);
@@ -233,6 +333,22 @@ export class NxLayoutGridTreeComponent {
         }
 
         this.window.open(...params);
+    };
+
+    toggleNode = (node: ResourceNode): void => {
+        const nodeId = node.details.id;
+        this.layoutStateService.paramStateHandler.updater(() => {
+            this.treeControl.toggle(node);
+            const nodeOpened = this.treeControl.isExpanded(node);
+            return {
+                queryParams: {
+                    openNodes: {
+                        value: [nodeId],
+                        mutationType: nodeOpened ? MutationType.APPEND : MutationType.REMOVE,
+                    },
+                },
+            };
+        });
     };
 
     handleRename = (node: ResourceNode): void => {

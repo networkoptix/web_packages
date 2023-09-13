@@ -109,6 +109,7 @@ export interface ResourceParentNode<T = { id: string }> {
     name: string;
     type: ResourceType;
     children: ResourceLeafNode<T>[];
+    hidden?: boolean;
     details: T;
 }
 
@@ -116,6 +117,7 @@ export interface ResourceLeafNode<T = { id: string }> {
     name: string;
     aspectRatio: number;
     type: ResourceType;
+    hidden?: boolean;
     details: T;
 }
 

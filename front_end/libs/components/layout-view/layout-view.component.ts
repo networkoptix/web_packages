@@ -1,6 +1,5 @@
 // import { Location } from '@angular/common';
 import { ChangeDetectorRef, Component, LOCALE_ID, inject } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -315,12 +314,10 @@ export class NxLayoutViewComponent {
                 .find(assertResourceOfType.cameras)
                 .children.shift() as ResourceNode<NxSystemCamera>;
             const layoutId = cleanId((layout || camera)?.details?.id);
-            const queryParams = this.activatedRoute.snapshot.queryParams;
             if (layoutId) {
-                await this.router.navigate(
-                    [`${this.router.url.split('layouts')[0]}layouts/${layoutId}`],
-                    { queryParams },
-                );
+                await this.layoutStateService.paramStateHandler.updater(() => ({
+                    params: { layoutId },
+                }));
             }
             return layoutId || '';
         }),
@@ -333,17 +330,10 @@ export class NxLayoutViewComponent {
             layoutId === 'default' ? this.#defaultLayout$ : Promise.resolve(layoutId),
         ),
         switchMap(async layoutId => {
-            const queryParams = { ...this.activatedRoute.snapshot.queryParams };
-            if (typeof queryParams.openNodes === 'string') {
-                queryParams.openNodes = [queryParams.openNodes];
-            }
-            queryParams.openNodes ||= [];
-            if (layoutId && !queryParams.openNodes.includes(layoutId)) {
-                queryParams.openNodes.push(layoutId);
-                await this.router.navigate(
-                    [`${this.router.url.split('layouts')[0]}layouts/${layoutId}`],
-                    { queryParams },
-                );
+            if (layoutId) {
+                await this.layoutStateService.paramStateHandler.updater(() => ({
+                    params: { layoutId },
+                }));
             }
 
             const systemName = this.systemService.getCurrentSystem().info.name;
@@ -416,7 +406,6 @@ export class NxLayoutViewComponent {
 
     constructor(
         private accountService: NxAccountService,
-        private activatedRoute: ActivatedRoute,
         private cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
         configService: NxConfigService,
@@ -424,7 +413,6 @@ export class NxLayoutViewComponent {
         layoutGridService: NxLayoutGridService,
         // private location: Location,
         private pageService: NxPageService,
-        private router: Router,
         private systemService: NxSystemService,
         private tourService: TourService,
         private translate: TranslateService,
@@ -473,10 +461,7 @@ export class NxLayoutViewComponent {
 
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;
-        const queryParams = this.activatedRoute.snapshot.queryParams;
-        this.router.navigate([`${this.router.url.split('layouts')[0]}layouts/${layoutId}`], {
-            queryParams,
-        });
+        this.layoutStateService.paramStateHandler.updater(() => ({ params: { layoutId } }));
         if (layoutId) {
             this.#fetchingLayout$.next('fetching');
             WebRTCStreamManager.updatePosition();
