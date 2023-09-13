@@ -175,50 +175,6 @@ span.marked {
     cursor: pointer;
 }
 
-/* TODO: Remove with old dialog service */
-.overlay-backdrop {
-    z-index: 1050 !important;
-    background-color: rgba($dark15, 0.2);
-}
-
-.overlay-backdrop + .cdk-global-overlay-wrapper {
-    //position       : fixed !important;
-    display: flex !important;
-    z-index: 1050 !important;
-    pointer-events: auto !important;
-    overflow-y: auto;
-}
-
-.cdk-overlay-pane.modal-holder {
-    position: relative !important;
-    width: 500px;
-    background-color: var(--dialog-bg);
-    border: 1px solid var(--dialog-border-color);
-    max-width: none;
-    max-height: none;
-    box-shadow: var(--dialog-box-shadow);
-
-    >* {
-        width: 100%;
-    }
-}
-
-.cdk-overlay-pane.webadmin-window {
-    position: relative !important;
-    margin: 0;
-    width: 500px;
-    background-color: var(--dialog-bg);
-    border: 1px solid var(--dialog-border-color);
-    max-width: none;
-    max-height: none;
-    overflow: hidden;
-
-    >* {
-        width: 100%;
-    }
-}
-/* END */
-
 // Override default color
 .cdk-overlay-dark-backdrop {
     background-color: var(--dialog-overlay-bg) !important;
