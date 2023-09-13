@@ -59,7 +59,7 @@ export class SimpleWebglComponent {
         this.system = this.systemService.createSystem(this.accountService.account.email, SERVER_ID);
         await this.system.update();
 
-        this.system.getCameraRecords(CAMERA_ID, 0, Date.now()).then(records => {
+        this.system.mediaserver.getRecords(CAMERA_ID, 0, Date.now()).subscribe(records => {
             this.recordsData = records.reply[0].periods;
             this.end = Date.now();
 
@@ -81,10 +81,12 @@ export class SimpleWebglComponent {
             .subscribe(() => {
                 // this.newData = [];
                 // this.newData.push({ durationMs: '-1', startTimeMs: `${this.end}` });
-                this.system.getCameraRecords(CAMERA_ID, this.end, Date.now()).then(records => {
-                    this.newRecordsData = records.reply.length ? records.reply[0].periods : [];
-                    this.end = Date.now();
-                });
+                this.system.mediaserver
+                    .getRecords(CAMERA_ID, this.end, Date.now())
+                    .subscribe(records => {
+                        this.newRecordsData = records.reply.length ? records.reply[0].periods : [];
+                        this.end = Date.now();
+                    });
             });
     }
 

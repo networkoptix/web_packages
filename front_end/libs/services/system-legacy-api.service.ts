@@ -992,11 +992,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 });
 
                 return {
-                    ...res,
-                    reply: {
-                        '/ec2/getMediaServersEx': mediaServers,
-                        '/ec2/getCamerasEx': cameras,
-                    },
+                    mediaServers,
+                    cameras,
                 };
             }),
         );
@@ -1085,12 +1082,12 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     @memoizeAsyncMedium
     getRecords(
         cameraId: string,
-        startTime: number,
-        endTime: number,
-        detail: number,
-        limit: number,
-        label: string,
-        periodsType: number,
+        startTime?: number,
+        endTime?: number,
+        detail?: number,
+        limit?: number,
+        label?: string,
+        periodsType?: number,
     ): Observable<t.Ec2RecordedTimePeriodsResp> {
         const date = new Date();
         if (typeof startTime === 'undefined') {

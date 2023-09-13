@@ -22,11 +22,8 @@ import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CloudUserCompat, CurrentUser, SystemUser } from '@services/system-user.types';
 import { PermissionManager } from '@services/system.service/permission-manager/permission-manager';
 import { updateInterval } from '@static-variables';
-import { cleanId, KeyFilter } from '@utils/general';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
-import { setServerIpAndPort } from '@utils/nx';
 
-import type { ViewMediaServersAndCameras } from '../../system-api.aggregated-types';
 import {
     EventRule,
     EventTypes,
@@ -43,12 +40,6 @@ import { CloudStorageManager } from '../../system.service/cloud-storage-manager/
 import { LicenseManager } from '../../system.service/license-manager/licence-manager';
 import { ServerManager } from '../../system.service/server-manager/server-manager';
 import { NxSystem } from '../../system.service/system';
-import {
-    ViewBaseServer,
-    ServerTimeInfo,
-    ViewBaseCamera,
-    ViewPreprocessServer,
-} from '../../system.service/system-types';
 import { UserManager } from '../../system.service/user-manager/user-manager';
 import { NxSystemsService } from '../../systems.service';
 import { NxSystemBase } from '../system-base';
@@ -99,7 +90,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     mergeInfo: MergeInfo;
     cloudStorageSystemEnabled: boolean = false;
     cloudStorageCapable: boolean = false;
-    viewBaseServers: ViewBaseServer[] = null;
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -134,7 +124,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     version = 0;
 
     private _subscribersCount = new BehaviorSubject<number>(0);
-    private attempts = 0; // used to limit consecutive api call attempts
 
     activeSubscription: Subscription;
     show404 = false;
@@ -613,107 +602,8 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.mediaserver.updateOrGetSettings(updateParams);
     }
 
-    public getViewMediaServersAndCameras(force: boolean = false): Promise<ViewBaseServer[]> {
-        if (this.viewBaseServers && !force) {
-            return Promise.resolve(this.viewBaseServers);
-        }
-
-        return this.mediaserver
-            .getViewMediaServersAndCameras()
-            .toPromise()
-            .then(
-                response => {
-                    if ((response.error && response.error !== '0') || !response.reply) {
-                        console.error('error getting mediaservers and cameras');
-                        return [];
-                    }
-                    return this.processMediaServersAndCameras(response);
-                },
-                err => {
-                    console.error('getMediaServersAndCameras failure', err);
-                    return [];
-                },
-            );
-    }
-
-    protected processMediaServersAndCameras(
-        apiReply: ViewMediaServersAndCameras,
-    ): ViewBaseServer[] {
-        const msIds = ['id'] satisfies KeyFilter<ViewPreprocessServer, string>[];
-        const camIds = ['id', 'parentId', 'preferredServerId'] satisfies KeyFilter<
-            ViewBaseCamera,
-            string
-        >[];
-        // ID properties with enclosing brackets {} that we want to trim
-        // while ignoring JSON strings
-        const mediaServers =
-            apiReply.reply['/ec2/getMediaServersEx']?.map(ms => {
-                msIds.forEach(id => {
-                    ms[id] = cleanId(ms[id]);
-                });
-                return ms;
-            }) || [];
-        const cameras =
-            apiReply.reply['/ec2/getCamerasEx']?.map(cam => {
-                camIds.forEach(id => {
-                    cam[id] = cleanId(cam[id]);
-                });
-                return cam;
-            }) || [];
-
-        this.viewBaseServers = mediaServers.map(ms => ({
-            ...setServerIpAndPort(ms),
-            cameras: cameras.filter(c => c.parentId === ms.id),
-        }));
-        return this.viewBaseServers;
-    }
-
     public getBookmarks() {
         return this.mediaserver.getBookmarks?.();
-    }
-
-    public getPlaybackUrl(cameraId, transport, resolution, position) {
-        return this.mediaserver.getPlaybackUrl(cameraId, transport, resolution, position);
-    }
-
-    public getCameraRecords(cameraId, startTime?, endTime?, detail?, limit?, label?, periodsType?) {
-        return this.mediaserver
-            .getRecords(cameraId, startTime, endTime, detail, limit, label, periodsType)
-            .toPromise();
-    }
-
-    public getServerTimes(): Promise<Array<ServerTimeInfo>> {
-        return this.mediaserver
-            .getServerTimes()
-            .toPromise()
-            .then(
-                r => {
-                    if (!r?.reply) {
-                        this.attempts++;
-                        return this.attempts < this.apiRequestAttempts
-                            ? this.getServerTimes()
-                            : Promise.resolve([]);
-                    }
-                    this.attempts = 0;
-                    const now = Date.now();
-                    return r.reply.map(i => ({
-                        vmsTime: parseInt(i.vmsTime),
-                        vmsTimeOffset: now - parseInt(i.vmsTime),
-                        osTimeOffset: now - parseInt(i.osTime),
-                        serverId: i.serverId.slice(1, i.serverId.length - 1),
-                        timeZoneOffset: parseInt(i.timeZoneOffset),
-                    }));
-                },
-                err => {
-                    if (err.name === 'TimeoutError' && this.attempts < this.apiRequestAttempts) {
-                        this.attempts++;
-                        return this.getServerTimes();
-                    }
-
-                    this.attempts = 0;
-                    return Promise.reject(err);
-                },
-            );
     }
 
     public ptz(ptzCommand: PtzCommand) {
@@ -939,7 +829,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.updateLicenses$.pipe(
             switchMap(() =>
                 forkJoin({
-                    times: this.getServerTimes(),
+                    times: this.mediaserver.getServerTimes(),
                     hardwareIds: this.mediaserver.getHardwareIdsOfServers(),
                     licensesInfo: this.mediaserver.getLicenses(),
                 }),

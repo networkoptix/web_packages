@@ -165,7 +165,7 @@ module.exports = {
     'libs/services/system.service/storage-manager/storage-state.ts': 17,
     'libs/services/system.service/storage-manager/storage.ts': 32,
     'libs/services/system.service/system-types.ts': 5,
-    'libs/services/system/modules/nx-system-old-module.ts': 52,
+    'libs/services/system/modules/nx-system-old-module.ts': 39,
     'libs/utils/logger.ts': 5,
     'packages/dashboard-widget-state/types.ts': 4
 };
@@ -2357,19 +2357,6 @@ libs/services/system/modules/nx-system-old-module.ts
   Untyped argument                          nx/no-untyped-arg
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
   Missing return type on function           @typescript-eslint/explicit-function-return-type
@@ -2394,6 +2381,6 @@ packages/dashboard-widget-state/types.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-✖ 1829 problems (1829 errors, 0 warnings)
+✖ 1816 problems (1816 errors, 0 warnings)
 
 */

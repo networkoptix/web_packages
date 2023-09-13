@@ -34,10 +34,10 @@ export interface AggregatedUsers {
     };
 }
 
-export type ViewMediaServersAndCameras = t.NormalResponse<{
-    '/ec2/getMediaServersEx': ViewPreprocessServer[];
-    '/ec2/getCamerasEx': ViewBaseCamera[];
-}>;
+export type ViewMediaServersAndCameras = {
+    mediaServers: ViewPreprocessServer[];
+    cameras: ViewBaseCamera[];
+};
 
 export interface CamerasAndServerTimes {
     cameras: PreprocessCamera[];

@@ -435,3 +435,14 @@ export function _attachToWindow(arg: object, name?: string): void {
         } attached for debugging`,
     );
 }
+
+export function cleanIds<T>(obj: T): T {
+    const regex = /^{[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}}$/;
+    // e.g. {81adbd2a-2511-69b2-44d6-53ff4d75920e}
+    Object.entries(obj).forEach(([key, value]) => {
+        if (typeof value === 'string' && regex.test(value)) {
+            obj[key] = value.slice(1, -1);
+        }
+    });
+    return obj;
+}

@@ -3,7 +3,6 @@ import type { NxSystem } from '@services/system.service/system';
 export function setupTest41System(): Partial<NxSystem> {
     return {
         cloudStorageSystemEnabled: false,
-        viewBaseServers: null,
         canMerge: true,
         id: 'c27aaff0-0694-469b-a8d6-c43cd8a9648c',
         info: {
@@ -71,7 +70,6 @@ export function setupTest41System(): Partial<NxSystem> {
 export function setupTest50System(): Partial<NxSystem> {
     return {
         cloudStorageSystemEnabled: false,
-        viewBaseServers: null,
         canMerge: true,
         id: 'c27aaff0-0694-469b-a8d6-c43cd8a9648c',
         useRest: true,

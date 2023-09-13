@@ -9,12 +9,12 @@ import {
     Inject,
     effect,
 } from '@angular/core';
-import { ActivatedRoute, NavigationEnd, Params, Router } from '@angular/router';
+import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { of, Subject, timer } from 'rxjs';
-import { filter, take, takeUntil } from 'rxjs/operators';
+import { filter, map, take, takeUntil } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -26,21 +26,20 @@ import type { NxSystem } from '@services/system.service/system';
 import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId } from '@utils/general';
+import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
 import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
 import type { ViewMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
-import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
+import { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
 
 import { WebClientUxService } from '../../services/webclient-ux.service';
-import type { WebClientUxState } from '../../view.types';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
@@ -56,18 +55,17 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
 
     public systemId: string;
-    public system: NxSystem;
-    public systems: NxSystemInfo[];
+    private system: NxSystem;
     public selectedCameraId: string;
     public mediaservers: ViewMediaServer[];
 
     CONFIG: IConfig;
     LANG = staticLang;
-    fullscreenMode: boolean;
-    fullscreenToggle: boolean;
+    private fullscreenMode: boolean;
+    private fullscreenToggle: boolean;
     showElementsInFSM: boolean;
-    onShowElements: number;
-    onMoveShowElements: number;
+    private onShowElements: number;
+    private onMoveShowElements: number;
     icons = icons;
 
     public initialized: boolean = false;
@@ -83,8 +81,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.ux.isSidebarShown = !this.ux.state.isSidebarShown;
     }
 
-    public get $self(): HTMLElement {
-        return this.self.nativeElement as HTMLElement;
+    private get $self(): HTMLElement {
+        return this.self.nativeElement;
     }
 
     private _windowWidth = 1024; // should be larger than the threshold
@@ -94,25 +92,17 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         const widthThreshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
         const newWidth = event.target.innerWidth;
         if (newWidth <= widthThreshold && this._windowWidth > widthThreshold) {
-            this._handleMovingFromWideInterfaceToNarrow();
+            this.ux.isSidebarShown = false; // wide => narrow
         }
         if (newWidth > widthThreshold && this._windowWidth <= widthThreshold) {
-            this._handleMovingFromNarrowInterfaceToWide();
+            this.ux.isSidebarShown = true; // narrow => wide
         }
         this._windowWidth = newWidth;
     }
 
-    private _handleMovingFromWideInterfaceToNarrow(): void {
-        this.ux.isSidebarShown = false;
-    }
-
-    private _handleMovingFromNarrowInterfaceToWide(): void {
-        this.ux.isSidebarShown = true;
-    }
-
     constructor(
         configService: NxConfigService,
-        private self: ElementRef,
+        private self: ElementRef<HTMLElement>,
         private renderer: Renderer2,
         private router: Router,
         private route: ActivatedRoute,
@@ -133,19 +123,87 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.showElementsInFSM = true;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
         effect(() => {
-            this._onVmsSubjectChange(this.vms.state());
+            const state = this.vms.state();
+            if (state.mode === VMS_MODE.CAMERA_SELECTED) {
+                const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
+                this.cookieService.set(cookieName, state.selectedCameraId, 365, '/');
+                this.selectedCameraId = state.selectedCameraId;
+            } else {
+                this.selectedCameraId = '';
+            }
         });
     }
 
     public ngOnInit(): void {
         this.vms.reset();
 
-        this.route.params.pipe(untilDestroyed(this)).subscribe(s => {
-            this._onRouteChange(s);
+        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
+            // cancel pool for the previous system
+            this.cancelPoll$.next('cancel');
+            this.systemId = params.systemId || null;
+            this.system = this.systemService.getCurrentSystem();
+            this.hasCameras = false;
+            if (!environment.isLocal) {
+                const systemInfoFromCDB = this.systemsService.systems.find(
+                    s => s.id === this.systemId,
+                );
+                if (systemInfoFromCDB?.stateOfHealth === this.CONFIG.system.status.online) {
+                    this.setInitializationState(false, false);
+                    this.ribbonService.hide();
+                } else {
+                    this.setInitializationState(true, true);
+                }
+            }
+            this.vms.reset();
+            this.initSystem();
         });
 
-        this.ux.subject.pipe(untilDestroyed(this)).subscribe(s => {
-            this._onUxStateChange(s);
+        this.ux.subject.pipe(untilDestroyed(this)).subscribe(state => {
+            if (state.isSidebarShown) {
+                this.$self.classList.add('sidebarShown');
+            } else {
+                this.$self.classList.remove('sidebarShown');
+            }
+
+            this.isSidebarShown = state.isSidebarShown;
+            setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
+
+            if (state.isFullScreen) {
+                this.fullscreenMode = true;
+                this.fullscreenToggle = true;
+                this.onShowElements = this.window.setTimeout(() => {
+                    this.showElementsInFSM = false;
+                }, fullscreenInactivityCfg.delayMs);
+
+                this.unListenMouseMove = this.renderer.listen(
+                    this.$self,
+                    'mousemove',
+                    this.onEvent,
+                );
+
+                this.unListenTouch = this.renderer.listen(this.$self, 'touch', this.onEvent);
+
+                this.unListenTouchMove = this.renderer.listen(
+                    this.$self,
+                    'touchmove',
+                    this.onEvent,
+                );
+            } else {
+                clearTimeout(this.onShowElements);
+                clearTimeout(this.onMoveShowElements);
+
+                this.unListenMouseMove?.();
+                this.unListenTouch?.();
+                this.unListenTouchMove?.();
+
+                this.fullscreenMode = false;
+                this.showElementsInFSM = true;
+
+                if (this.deviceService.isMobile() && this.fullscreenToggle) {
+                    this.ux.isSidebarShown = false;
+                }
+                this.fullscreenToggle = false;
+            }
         });
 
         this.onResize({ target: { innerWidth: this.window.innerWidth } });
@@ -157,7 +215,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 untilDestroyed(this),
             )
             .subscribe(() => {
-                this._tryToRedirectToCamera();
+                this.tryToRedirectToCamera();
             });
     }
 
@@ -170,61 +228,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     private unListenTouch: () => void;
     private unListenTouchMove: () => void;
 
-    private _onUxStateChange(s: WebClientUxState): void {
-        if (s.isSidebarShown) {
-            this.$self.classList.add('sidebarShown');
-        } else {
-            this.$self.classList.remove('sidebarShown');
-        }
-
-        this.isSidebarShown = s.isSidebarShown;
-        setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
-
-        if (s.isFullScreen) {
-            this.fullscreenMode = true;
-            this.fullscreenToggle = true;
-            this.onShowElements = this.window.setTimeout(() => {
-                this.showElementsInFSM = false;
-            }, fullscreenInactivityCfg.delayMs);
-
-            this.unListenMouseMove = this.renderer.listen(
-                this.$self,
-                'mousemove',
-                (event: MouseEvent) => {
-                    this.onEvent(event);
-                },
-            );
-
-            this.unListenTouch = this.renderer.listen(this.$self, 'touch', (event: MouseEvent) => {
-                this.onEvent(event);
-            });
-
-            this.unListenTouchMove = this.renderer.listen(
-                this.$self,
-                'touchmove',
-                (event: MouseEvent) => {
-                    this.onEvent(event);
-                },
-            );
-        } else {
-            clearTimeout(this.onShowElements);
-            clearTimeout(this.onMoveShowElements);
-
-            this.unListenMouseMove?.();
-            this.unListenTouch?.();
-            this.unListenTouchMove?.();
-
-            this.fullscreenMode = false;
-            this.showElementsInFSM = true;
-
-            if (this.deviceService.isMobile() && this.fullscreenToggle) {
-                this.ux.isSidebarShown = false;
-            }
-            this.fullscreenToggle = false;
-        }
-    }
-
-    private onEvent(event: Event): void {
+    private onEvent = (): void => {
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);
@@ -232,19 +236,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 this.showElementsInFSM = false;
             }, fullscreenInactivityCfg.delayMs);
         }
-    }
+    };
 
-    private _onVmsSubjectChange(s: VmsState): void {
-        if (s.mode === VMS_MODE.CAMERA_SELECTED) {
-            const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
-            this.cookieService.set(cookieName, s.selectedCameraId, 365, '/');
-            this.selectedCameraId = s.selectedCameraId;
-        } else {
-            this.selectedCameraId = '';
-        }
-    }
-
-    private _setInitializationState(initialized: boolean, initializedWithError: boolean): void {
+    private setInitializationState(initialized: boolean, initializedWithError: boolean): void {
         this.initialized = initialized;
         this.$self.classList[initialized ? 'add' : 'remove']('initialized');
         this.initializedWithError = initializedWithError;
@@ -252,27 +246,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         if (!initializedWithError) {
             this.ribbonService.hide();
         }
-    }
-
-    private _onRouteChange(params: Params): void {
-        // cancel pool for the previous system
-        this.cancelPoll$.next('cancel');
-        this.systemId = params.systemId || null;
-        this.system = this.systemService.getCurrentSystem();
-        this.hasCameras = false;
-        if (!environment.isLocal) {
-            const systemInfoFromCDB: NxSystemInfo = this.systemsService.systems.find(
-                s => s.id === this.systemId,
-            );
-            if (systemInfoFromCDB?.stateOfHealth === this.CONFIG.system.status.online) {
-                this._setInitializationState(false, false);
-                this.ribbonService.hide();
-            } else {
-                this._setInitializationState(true, true);
-            }
-        }
-        this.vms.reset();
-        this._initSystem();
     }
 
     private mediaServerChanged(
@@ -330,7 +303,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
                 : of(''),
             (transport: string, quality: string, t?: ms) =>
-                this.system?.getPlaybackUrl(c.id, transport, quality, t),
+                this.system?.mediaserver.getPlaybackUrl(c.id, transport, quality, t),
             (t?: ms, width = 128, height = 128) =>
                 c.status !== 'Offline'
                     ? this.system?.mediaserver.previewUrl(c.id, t, width, height)
@@ -363,15 +336,15 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             });
     }
 
-    private _initSystem(): void {
+    private initSystem(): void {
         let processingMediaServers = false;
         let cachedMediaServers: ViewBaseServer[] = [];
         const firstLoad = new Subject();
 
         firstLoad.pipe(take(1)).subscribe(() => {
-            this._setInitializationState(true, !this.system.isOnline);
+            this.setInitializationState(true, !this.system.isOnline);
             if (!this.route.snapshot.children.length) {
-                this._tryToRedirectToCamera();
+                this.tryToRedirectToCamera();
             }
 
             setTimeout(() => this.timeline.requestCanvasGeometryUpdate(), 220);
@@ -383,19 +356,47 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     return;
                 }
 
-                const mediaServers = await this.system.getViewMediaServersAndCameras(true);
-                // mediaServers length is 0 when getViewMediaServersAndCameras fails. No system can ever have 0 servers.
+                const mediaServers = await this.system.mediaserver
+                    .getViewMediaServersAndCameras()
+                    .pipe(
+                        map(({ mediaServers, cameras }) => {
+                            mediaServers.forEach(cleanIds);
+                            cameras.forEach(cleanIds);
+
+                            return mediaServers.map(ms => ({
+                                ...setServerIpAndPort(ms),
+                                cameras: cameras.filter(c => c.parentId === ms.id),
+                            }));
+                        }),
+                    )
+                    .toPromise();
+
                 if (
-                    (this.initialized &&
-                        !this.mediaServerChanged(mediaServers, cachedMediaServers)) ||
-                    mediaServers.length === 0
+                    this.initialized &&
+                    !this.mediaServerChanged(mediaServers, cachedMediaServers)
                 ) {
                     return;
                 }
                 cachedMediaServers = mediaServers;
 
                 processingMediaServers = true;
-                const serverTimeInfos = await this.system.getServerTimes();
+                const serverTimeInfos = await this.system.mediaserver
+                    .getServerTimes()
+                    .toPromise()
+                    .then(({ reply }) => {
+                        const now = Date.now();
+                        return reply.map(i => {
+                            const vmsTime = parseInt(i.vmsTime);
+                            const osTime = parseInt(i.osTime);
+                            return {
+                                vmsTime,
+                                vmsTimeOffset: now - vmsTime,
+                                osTimeOffset: now - osTime,
+                                serverId: i.serverId.slice(1, -1), // Clean id
+                                timeZoneOffset: parseInt(i.timeZoneOffset),
+                            };
+                        });
+                    });
                 this.vms.serverTimes.set(serverTimeInfos);
                 serverTimeInfos.forEach(sti => {
                     const mediaServer = mediaServers?.find(ms => ms.id === sti.serverId);
@@ -414,7 +415,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 });
 
                 if (this.initializedWithError) {
-                    this._setInitializationState(true, false);
+                    this.setInitializationState(true, false);
                 }
 
                 const archiveRanges: Record<string, SimpleTimeRange> = {};
@@ -468,7 +469,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         return '';
     }
 
-    private _tryToRedirectToCamera(): void {
+    private tryToRedirectToCamera(): void {
         const cid = this.getCameraFromCookies() || this.findOnlineCamera() || this.getFirstCamera();
         if (cid) {
             this.router

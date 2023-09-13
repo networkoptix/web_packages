@@ -549,7 +549,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this._restorePlayback();
             } else {
                 const archivePromise = this.canViewArchives
-                    ? this.system.getCameraRecords(this.id, 0, now, 1)
+                    ? this.system.mediaserver.getRecords(this.id, 0, now, 1).toPromise()
                     : Promise.reject();
                 archivePromise
                     .then(async ar => {
@@ -622,7 +622,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 const since = this.vms.selectedCamera.archiveRange.end;
                 const now = Date.now();
                 const cameraId = this.id;
-                this.system.getCameraRecords(this.id, since, now, 1).then(async ar => {
+                this.system.mediaserver.getRecords(this.id, since, now, 1).subscribe(async ar => {
                     const records = this._extractPeriodsFromServerResponse(ar);
                     if ((!ar.error || ar.error === '0') && records.length) {
                         const prepared = records

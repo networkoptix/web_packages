@@ -518,13 +518,8 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
         return combineLatest([this.getViewMediaServers(), this.getViewCameras()]).pipe(
             map(([mediaServers, cameras]) => ({
-                error: '0',
-                errorId: 'ok',
-                errorString: '',
-                reply: {
-                    '/ec2/getMediaServersEx': mediaServers,
-                    '/ec2/getCamerasEx': cameras,
-                },
+                mediaServers,
+                cameras,
             })),
         );
     }
