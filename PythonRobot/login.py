@@ -1,8 +1,8 @@
 import robot_keywords
-from text_field import TextField
-from button import Button
 from RobotVariables import RobotVariables
+from button import Button
 from page_text import PageText
+from text_field import TextField
 
 
 class LoginDialog:

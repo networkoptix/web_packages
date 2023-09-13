@@ -1,14 +1,9 @@
-from selenium import webdriver
-from resource_import import get_headless_chrome, get_random_email, activate, register_and_activate_account
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from test_account import cloud_login
+from colorama import Fore
+
 import robot_keywords
 from RobotVariables import RobotVariables
-import robot_lists as rl
-from colorama import Fore, Back, Style
-from button import Button
 from footer import Footer
+from resource_import import get_headless_chrome
 
 rb = RobotVariables("en_US")
 

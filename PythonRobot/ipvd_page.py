@@ -1,7 +1,5 @@
-from RobotVariables import RobotVariables
-import resource_import
 import robot_keywords
-from time import sleep
+from RobotVariables import RobotVariables
 from button import Button
 
 rb = RobotVariables("en_US")

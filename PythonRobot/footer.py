@@ -1,9 +1,5 @@
-import robot_keywords
-from text_field import TextField
-from button import Button
-from checkbox import Checkbox
 from RobotVariables import RobotVariables
-from generic_element import Element
+from button import Button
 
 
 class Footer:

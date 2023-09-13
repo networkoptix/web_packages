@@ -1,12 +1,12 @@
 import robot_keywords
-from generic_element import Element
-from page_text import PageText
-from text_field import TextField
-from toast_notification import ToastNotification
+from RobotVariables import RobotVariables
 from button import Button
 from checkbox import Checkbox
-from RobotVariables import RobotVariables
+from generic_element import Element
+from text_field import TextField
+from toast_notification import ToastNotification
 from variables import ENV
+
 
 class SystemAdmin:
     def __init__(self, driver, lang="en_US"):

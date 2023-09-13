@@ -1,10 +1,6 @@
 import robot_keywords
-from generic_element import Element
-from page_text import PageText
-from text_field import TextField
-from toast_notification import ToastNotification
-from button import Button
 from RobotVariables import RobotVariables
+from button import Button
 from variables import ENV
 from selenium.webdriver.common.by import By
 

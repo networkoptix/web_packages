@@ -1,28 +1,21 @@
-
-from time import sleep
 import email
-from email.header import decode_header
-from re import findall
 import imaplib
 import json
 import os
-from pathlib import Path
 import re
-from requests.auth import HTTPBasicAuth
+import time
+from email.header import decode_header
+from random import randint
+from re import findall
+
 import urllib3
-import robot_keywords
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-from selenium.webdriver.chrome.service import Service
-import warnings
-from RobotVariables import RobotVariables
+
+import robot_keywords
 import robot_lists as rl
-import requests
-import time
-from random import randint
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary import *
+from RobotVariables import RobotVariables
 from login import LoginDialog
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)

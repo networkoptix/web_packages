@@ -1,20 +1,19 @@
-from selenium import webdriver
-from resource_import import get_headless_chrome, get_random_email, activate, register_and_activate_account
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from test_account import cloud_login
 import time
+
+from colorama import Fore
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.webdriver.common.keys import Keys
+
 import robot_keywords
-from RobotVariables import RobotVariables
 from NoptixLibrary.generic_keywords import GenericKeywords
-import robot_lists as rl
-from colorama import Fore, Back, Style
+from RobotVariables import RobotVariables
 from button import Button
+from email_access import Email
 from header import HeaderNav
 from register_form import RegisterForm
-from email_access import Email
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.common.action_chains import ActionChains
+from resource_import import get_headless_chrome
+from resource_import import get_random_email
+from resource_import import register_and_activate_account
 
 rb = RobotVariables("en_US")
 

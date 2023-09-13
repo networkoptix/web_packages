@@ -1,23 +1,13 @@
 import os
 
-from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from variables import ENV
 import robot_keywords
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.generic_keywords import GenericKeywords
 from login import LoginDialog
-from header import HeaderNav
-from landing_page import LandingPage
-from systems_page import SystemsPage
+from resource_import import get_headless_chrome
 from system_admin import SystemAdmin
 from system_left_menu import SystemLeftMenu
-from system_users import SystemUsers
-from resource_import import get_random_email
-from email_access import Email
-from toast_notification import ToastNotification
-import time
-
-from NoptixLibrary.generic_keywords import GenericKeywords
-from RobotVariables import RobotVariables
+from variables import ENV
 
 password = "qweasd 123"
 

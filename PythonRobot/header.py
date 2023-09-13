@@ -1,6 +1,6 @@
 import robot_keywords
-from button import Button
 from RobotVariables import RobotVariables
+from button import Button
 
 
 class HeaderNav:

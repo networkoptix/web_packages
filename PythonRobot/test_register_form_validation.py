@@ -1,12 +1,8 @@
-from selenium import webdriver
-from resource_import import get_headless_chrome, check_password_badge, check_new_password_outline_and_error_message
-from selenium.webdriver.common.by import By
-from selenium.webdriver.chrome.options import Options
-from test_account import cloud_login
 import robot_keywords
 from RobotVariables import RobotVariables
-import robot_lists as rl
-from colorama import Fore, Back, Style
+from resource_import import check_new_password_outline_and_error_message
+from resource_import import check_password_badge
+from resource_import import get_headless_chrome
 
 rb = RobotVariables("en_US")
 driver = get_headless_chrome()

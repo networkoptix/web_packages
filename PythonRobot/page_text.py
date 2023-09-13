@@ -1,8 +1,7 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 
-from generic_element import Element
 import robot_keywords
+from generic_element import Element
 
 
 class PageText:

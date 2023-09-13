@@ -1,8 +1,8 @@
 import resource_import
-from ipvd_page import IVPDPage
 import robot_keywords
-from time import sleep
 from RobotVariables import RobotVariables
+from ipvd_page import IVPDPage
+
 rb = RobotVariables("en_US")
 
 

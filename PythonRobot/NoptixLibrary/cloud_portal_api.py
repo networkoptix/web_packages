@@ -14,7 +14,8 @@ from typing import Mapping
 import certifi
 import requests
 import urllib3
-from requests.auth import HTTPDigestAuth, HTTPBasicAuth
+from requests.auth import HTTPBasicAuth
+from requests.auth import HTTPDigestAuth
 
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from NoptixLibrary.cloud_session import CloudSession

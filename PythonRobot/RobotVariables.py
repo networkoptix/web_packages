@@ -1,5 +1,9 @@
-import json, re, os, glob
+import json
+import os
+import re
+
 from variables_dict import variables_dict, variables
+
 
 class RobotVariables():
     def __init__(self, language: str) -> None:

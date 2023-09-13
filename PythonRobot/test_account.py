@@ -1,21 +1,18 @@
-import json
 from time import sleep
-from selenium import webdriver
+
+from urllib3.exceptions import MaxRetryError
+
+import resource_import
+import robot_keywords
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from RobotVariables import RobotVariables
 from resource_import import get_headless_chrome
 from resource_import import get_lang_list
+from resource_import import get_random_email
+from resource_import import register_and_activate_account
+from resource_import import send_restore_password_email
+from resource_import import verify_in_account_page
 from variables import ERROR_COLOR
-from selenium.webdriver.common.by import By
-from resource_import import verify_in_account_page, get_random_email, register_and_activate_account, send_restore_password_email
-from selenium.webdriver.chrome.options import Options
-
-from RobotVariables import RobotVariables
-from requests import HTTPError
-from urllib3.exceptions import MaxRetryError
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-import robot_keywords
-import resource_import
-
-
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"

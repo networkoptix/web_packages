@@ -1,14 +1,13 @@
-import resource_import
-
-
-from RobotVariables import RobotVariables
-import robot_keywords
-from generic_element import Element
-from register_form import RegisterForm
 from time import sleep
+
+import resource_import
+import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from RobotVariables import RobotVariables
 from email_access import Email
+from generic_element import Element
 from login import LoginDialog
+from register_form import RegisterForm
 
 rb = RobotVariables("en_US")
 

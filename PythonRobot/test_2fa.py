@@ -1,25 +1,17 @@
 import os
 import time
-from selenium import webdriver
-import random
 
-from resource_import import get_headless_chrome, register_and_activate_account, get_random_email
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from variables import ENV
 import robot_keywords
-from RobotVariables import RobotVariables
-from login import LoginDialog
-from header import HeaderNav
-from security_form import SecurityForm
-from NoptixLibrary.server_api import ServerApi
-from system_admin import SystemAdmin
-from landing_page import LandingPage
-
-from NoptixLibrary.generic_keywords import GenericKeywords
-from RobotVariables import RobotVariables
 from NoptixLibrary.cloud_2fa import Cloud2fa
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.generic_keywords import GenericKeywords
 from NoptixLibrary.server_api import ServerApi
-from page_text import PageText
+from header import HeaderNav
+from login import LoginDialog
+from resource_import import get_headless_chrome
+from security_form import SecurityForm
+from system_admin import SystemAdmin
+from variables import ENV
 
 password = "qweasd 123"
 

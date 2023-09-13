@@ -1,7 +1,7 @@
-import robot_keywords
-from generic_element import Element
-from RobotVariables import RobotVariables
 import time
+
+from RobotVariables import RobotVariables
+from generic_element import Element
 
 
 class ToastNotification:

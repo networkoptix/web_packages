@@ -1,9 +1,9 @@
 import robot_keywords
 from PythonRobot.generic_element import Element
+from RobotVariables import RobotVariables
+from button import Button
 from page_text import PageText
 from text_field import TextField
-from button import Button
-from RobotVariables import RobotVariables
 from variables import ENV
 
 

@@ -1,13 +1,14 @@
+import random
+
 import robot_keywords
-from page_text import PageText
-from text_field import TextField
+from NoptixLibrary.cloud_2fa import Cloud2fa
+from RobotVariables import RobotVariables
 from button import Button
 from checkbox import Checkbox
-from RobotVariables import RobotVariables
-from variables import ENV
-from NoptixLibrary.cloud_2fa import Cloud2fa
 from generic_element import Element
-import random
+from page_text import PageText
+from text_field import TextField
+
 
 class SecurityForm:
     def __init__(self, driver, lang="en_US"):

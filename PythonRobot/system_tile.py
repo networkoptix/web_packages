@@ -1,14 +1,6 @@
-import time
-
 import selenium.common.exceptions
 
-import robot_keywords
-from page_text import PageText
-from text_field import TextField
-from button import Button
 from RobotVariables import RobotVariables
-from variables import ENV
-from generic_element import Element
 
 
 class SystemTile:

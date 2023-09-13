@@ -1,14 +1,14 @@
 import quopri
-from imaplib import IMAP4_SSL
-import email
-from re import findall, search
-from RobotVariables import RobotVariables
 import time
+from imaplib import IMAP4_SSL
 from random import randint
+from re import findall, search
 from time import sleep
 
+from RobotVariables import RobotVariables
 
 rb = RobotVariables("en_US")
+
 
 class Email:
 
