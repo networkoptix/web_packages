@@ -1,6 +1,8 @@
 from uuid import uuid4
 import uuid
 
+from django.conf import settings
+
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import ErrorCodes
 from api.tests.utils import MockResponse
@@ -508,7 +510,7 @@ class TestIPVD:
         response = async_to_sync(utils.get_ipvd)(request)
         assert response.status_code == status.HTTP_200_OK
         assert response.data == ipvd_data_processed
-
+        ipvd_mock.assert_has_calls([mocker.call(settings.IPVD_CONNECT, params="[]")], any_order=True)
         # Test cached
         request = arf.get(versioned_url)
         response = async_to_sync(utils.get_ipvd)(request)

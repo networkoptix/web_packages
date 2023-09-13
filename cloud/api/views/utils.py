@@ -1,4 +1,5 @@
 import httpx
+import requests
 from math import log2
 import datetime
 import json
@@ -562,8 +563,7 @@ async def get_ipvd(request):
 
         if response := await check_ipvd_cache_response(version):
             return response
-
-        cameras = await HttpxAsyncRequest.get(url, "[]")
+        cameras = await HttpxAsyncRequest.get(url, params="[]")
         cameras = cameras.json()
         serializer = IpvdSerializer(data=cameras)
         serializer.is_valid()
