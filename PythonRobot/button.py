@@ -8,11 +8,12 @@ import robot_keywords
 class Button:
     def __init__(self, driver: webdriver, locator):
         self.driver = driver
-
         element = Element(self.driver, locator)
+        assert element.element_in_dom(), "Button not on the page"
         self.selenium_element = element.get_selenium_element()
         self.is_visible = element.is_visible()
         self.is_focused = element.is_focused()
 
     def click(self):
+        robot_keywords.wait_until_element_is_visible(self.driver, self.selenium_element)
         self.selenium_element.click()

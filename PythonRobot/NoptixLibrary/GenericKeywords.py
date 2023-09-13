@@ -785,7 +785,7 @@ class GenericKeywords:
             #        serversJson[idx].update({"binds": binds[idx]})
             # Start Docker server for each server in the JSON
             for idx, server in enumerate(serversJson):
-                server["name"] = f"test_{idx}_"
+                server["name"] = f"{suite_name}{idx}_"
                 server.update(self.create_docker_server(server, runName))
 
             for server in serversJson:

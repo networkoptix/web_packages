@@ -48,3 +48,6 @@ class HeaderNav:
     
     def create_account(self):
         return Button(self.driver, "//header//a[@href='/authorize?client_type=create']")
+    
+    def language_dropdown(self):
+        return Button(self.driver, "//header//nx-header-language-select")
