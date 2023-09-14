@@ -28,7 +28,10 @@ SERVERS = keywords.create_systems(os.path.basename(__file__))
 CLOUD_API = CloudPortalAPI()
 
 def enable_and_login_with_2fa():
-    """1. Enable and perform login with 2fa"""
+    """
+    1. Enable and perform login with 2fa
+    [tags]    smoke    ci    C107768    C107769
+    """
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -48,7 +51,10 @@ def enable_and_login_with_2fa():
     driver.close()
 
 def login_with_backup_code():
-    """2. 2fa login with random backup code"""
+    """
+    2. 2fa login with random backup code
+    [Tags]    smoke    ci    C107770
+    """
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -98,7 +104,10 @@ def login_with_qr_code():
     driver.close()
 
 def disabling_2fa():
-    """5. Successful disabling 2FA for user with enabled 2FA for the whole account"""
+    """
+    5. Successful disabling 2FA for user with enabled 2FA for the whole account
+    [Tags]    smoke    ci    C107771
+    """
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -115,7 +124,10 @@ def disabling_2fa():
     driver.close()
 
 def system_2fa_required():
-    """6.1 2fa is required when accessing only system with 2fa required"""
+    """
+    6.1 2fa is required when accessing only system with 2fa required
+    [Tags]    smoke    ci    C110067
+    """
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -141,7 +153,10 @@ def system_2fa_required():
     driver.close()
 
 def twofa_not_required_when_more_than_one_system():
-    """6.2 2fa is not required when accessing systems page with more than one system"""
+    """
+    6.2 2fa is not required when accessing systems page with more than one system
+    [Tags]    smoke    ci    C110067
+    """
     bind_info = CLOUD_API.connect(SERVERS[1]['name'], SERVERS[0]['cloudOwner'], password)
     ServerApi(f"https://10.1.5.48:{SERVERS[1]['port'][0]}").api_connect_to_cloud(bind_info)
     SERVERS[1]['id'] = bind_info['systemId']
@@ -178,8 +193,12 @@ def twofa_not_required_when_more_than_one_system():
     driver.close()
 
 def change_2fa_for_user_to_specific_systems_and_whole_account():
-    """7. Successfully changing 2FA mode for user to specific systems \n 
-    8. Successfully changing 2FA mode for user to the whole account"""
+    """
+    7. Successfully changing 2FA mode for user to specific systems 
+    [Tags]    C93780
+    8. Successfully changing 2FA mode for user to the whole account
+    [Tags]    C93781
+    """
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
@@ -250,7 +269,10 @@ def change_2fa_for_user_to_specific_systems_and_whole_account():
     driver.close()
 
 def fail_to_login_with_expired_code():
-    """9. Unsuccessful cloud authorization with 2FA using expired code from app"""
+    """
+    9. Unsuccessful cloud authorization with 2FA using expired code from app
+    [Tags]    C94715
+    """
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, ENV)
     header = HeaderNav(driver)
