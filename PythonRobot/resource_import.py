@@ -15,6 +15,7 @@ import robot_keywords
 import robot_lists as rl
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
+from generic_element import Element
 from login import LoginDialog
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -233,9 +234,10 @@ def logout_japanese(driver:webdriver):
     validate_log_out(driver)
 
 def move_focus_and_check_badge_stays(driver, badge, new_focus):
-    robot_keywords.element_should_be_visible(driver, badge)
-    robot_keywords.click_element(driver, new_focus)
-    robot_keywords.element_should_be_visible(driver, badge)
+    badge = Element(driver, badge)
+    badge.should_be_visible()
+    badge.click()
+    badge.should_be_visible()
 
 def move_focus_and_check_element(driver, element, new_focus):
     robot_keywords.click_element(driver, new_focus)

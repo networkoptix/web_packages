@@ -38,10 +38,6 @@ def close_browser(driver: webdriver) -> None:
     driver.quit()
 
 # deprecated: this functionality has been moved to generic_element
-def element_should_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
-    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, locator)))
-
-# deprecated: this functionality has been moved to generic_element
 def element_should_not_be_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
