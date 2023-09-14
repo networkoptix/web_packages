@@ -6,6 +6,7 @@ import resource_import
 import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
+from generic_element import Element
 from resource_import import get_headless_chrome
 from resource_import import get_lang_list
 from resource_import import get_random_email
@@ -152,7 +153,7 @@ def test_first_name_is_required():
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
 
-    robot_keywords.delete_all_text(driver, rb.ACCOUNT_FIRST_NAME)
+    Element(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
     robot_keywords.click_element(driver, rb.ACCOUNT_LAST_NAME)
 
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {rb.ERROR_COLOR};")
@@ -177,7 +178,7 @@ def test_last_name_is_required():
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.delete_all_text(driver, rb.ACCOUNT_LAST_NAME)
+    Element(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
     robot_keywords.click_element(driver, rb.ACCOUNT_FIRST_NAME)
 
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"border-color: {rb.ERROR_COLOR};")
