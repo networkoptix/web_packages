@@ -33,7 +33,7 @@ def register_and_activate_special_chars():
     random_email = resource_import.get_random_email(rb.BASE_EMAIL, symbols=True)
     resource_import.register_and_activate_account(driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
     driver.get(rb.ENV + "/account")
-    resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False) 
+    resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False)
 
 def register_activate_with_leading_space():
     """4. Allows register, activate, login with with leading space in email"""

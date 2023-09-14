@@ -42,7 +42,7 @@ def system_tiles_represent_actual_information(server: CloudServer):
             raise RuntimeError("Owner was not 'Your System' or 'mark hamill'.")
     if len(sys_page.tiles) < 9:
         raise RuntimeError("Not enough tiles present on page.")
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -56,7 +56,7 @@ def no_systems_connected():
     systems_page = SystemsPage(driver)
     systems_page.no_systems()
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -70,7 +70,7 @@ def one_system_directs_you_to_system_admin(server: CloudServer):
 
     SystemAdmin(driver)
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -86,7 +86,7 @@ def opens_system_admin_when_tile_is_clicked(server: CloudServer):
     systems_page.tiles[0].click()
     SystemAdmin(driver)
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -106,7 +106,7 @@ def search_highlights_system_name(server: CloudServer):
     sys_page.update_system_tiles()
     assert "highlighted" in sys_page.tiles[0].title().find_element_by_xpath("./span").get_attribute("class")
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -128,7 +128,7 @@ def search_highlights_owner_name(server: CloudServer):
     assert "highlighted" in sys_page.tiles[0].owner().find_element_by_xpath(
         ".//nx-search-highlight/span").get_attribute("class")
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -150,7 +150,7 @@ def search_is_cleared_by_x_button(server: CloudServer):
     assert len(sys_page.tiles) == 9, \
         "9 tiles were not present."
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -174,7 +174,7 @@ def should_update_owner_name(
         else:
             raise RuntimeError("carrie fisher was not the owner on any tiles")
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -198,7 +198,7 @@ def search_only_visible_with_more_than_eight_systems(
     assert len(sys_page.tiles) == 8, f"Number of tiles was: {len(sys_page.tiles)}.  Expected 8."
     assert not sys_page.search_bar().in_dom, "Search bar was still visible."
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 

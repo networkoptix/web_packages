@@ -27,10 +27,6 @@ def click_on_link(driver: webdriver, locator: Tuple) -> None:
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, locator))).click()
 
 
-def close_browser(driver: webdriver) -> None:
-    driver.quit()
-
-
 def location_should_be(driver: webdriver, url: str) -> None:
     WebDriverWait(driver, 1).until(EC.url_to_be(url))
 

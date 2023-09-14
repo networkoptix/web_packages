@@ -29,7 +29,7 @@ def can_log_in_to_system_from_direct_link(server: CloudServer):
     HeaderNav(driver).account_dropdown()
     SystemAdmin(driver)
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -47,7 +47,7 @@ def owner_can_disconnect_system_from_cloud(server: CloudServer):
     assert (len(CLOUD_API.get_account_systems(server.cloud_owner.email, password))) == 1, "Number of systems owned " \
                                                                                           "was not 1"
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -81,7 +81,7 @@ def non_owner_can_disconnect_account_from_system(server: CloudServer):
         if user == email:
             raise RuntimeError("User was still in the users list.")
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 

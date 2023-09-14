@@ -58,7 +58,7 @@ def owner_can_remove_user(server: CloudServer):
     header.account_dropdown()
     SystemsPage(driver).no_systems()
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -74,8 +74,7 @@ def share_with_registered_user_sends_notification(server: CloudServer):
     mail_box = Email()
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
 
-
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -123,7 +122,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
     links = email_con.get_nx_links_from_email(body)
     driver.get(links)
     RegisterForm(driver).email_input_locked()
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -150,7 +149,7 @@ def share_with_registered_user_works(server: CloudServer):
             user_there = True
     assert user_there, "User was not in the users list"
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 

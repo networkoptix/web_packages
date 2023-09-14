@@ -35,7 +35,7 @@ def allows_login_with_correct_credentials_and_log_out():
 
     LandingPage(driver)
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 

@@ -39,7 +39,7 @@ def sets_new_password_and_successfully_logs_in():
     login.login_button().click()
     header.account_dropdown()
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -69,7 +69,7 @@ def check_restore_password_email():
     GenericKeywords().check_in_list(expected_links, links)
     email_con.delete_email(email_id)
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 if __name__ == "__main__":

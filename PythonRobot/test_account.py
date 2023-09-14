@@ -71,7 +71,7 @@ def test_can_access_account_page_from_dropdown():
     element(driver, rb.account_settings_button).wait_until_visible()
     robot_keywords.click_on_link(driver, rb.account_settings_button)
     verify_in_account_page(driver)
-    robot_keywords.close_browser(driver)
+    driver.quit()
 
 
 def test_can_access_account_page_from_direct_link():
@@ -82,7 +82,8 @@ def test_can_access_account_page_from_direct_link():
     url = rb.env + "/account"
     driver.get(url)
     verify_in_account_page(driver)
-    robot_keywords.close_browser(driver)  
+    driver.quit()
+
 
 # def test_cannot_access_account_page_from_direct_link_closing_log():
 #     """3 accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page"""
@@ -97,7 +98,8 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
     url1 = rb.env + "/account"
     driver.get(url1)
     verify_in_account_page(driver)
-    robot_keywords.close_browser(driver)
+    driver.quit()
+
 
 def test_changing_first_name_and_saving_maintains_that_setting():
     """5 changing first name and saving maintains that setting"""
@@ -115,7 +117,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
-    robot_keywords.close_browser(driver)
+    driver.quit()
 
     driver = get_headless_chrome()
     url1 = rb.env + "/account"
@@ -145,7 +147,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
-    robot_keywords.close_browser(driver)
+    driver.quit()
 
     driver = get_headless_chrome()
     url1 = rb.env + "/account"
@@ -157,7 +159,8 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
-    robot_keywords.close_browser(driver)
+    driver.quit()
+
 
 def test_first_name_is_required():
     """7 first name is required"""
@@ -187,7 +190,8 @@ def test_first_name_is_required():
     robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {rb.error_color};")
     robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
     robot_keywords.click_button(driver, rb.account_cancel)
-    robot_keywords.close_browser(driver)
+    driver.quit()
+
 
 def test_last_name_is_required():
     """8 last name is required"""
@@ -215,7 +219,8 @@ def test_last_name_is_required():
     robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"border-color: {rb.error_color};")
     robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"color: {rb.error_color_with_opacity};")
     robot_keywords.click_button(driver, rb.account_cancel)
-    robot_keywords.close_browser(driver)
+    driver.quit()
+
 
 def test_space_for_first_name_is_not_valid():
     """9 space for first name is not valid"""
@@ -231,7 +236,8 @@ def test_space_for_first_name_is_not_valid():
     element(driver, rb.account_save).should_be_disabled()
     element(driver, rb.account_cancel).should_be_enabled()
     robot_keywords.click_button(driver, rb.account_cancel)
-    robot_keywords.close_browser(driver)
+    driver.quit()
+
 
 def test_space_for_last_name_is_not_valid():
     """10 space for last name is not valid"""
@@ -250,9 +256,9 @@ def test_space_for_last_name_is_not_valid():
     element(driver, rb.account_cancel).should_be_enabled()
     time.sleep(10)
     robot_keywords.click_button(driver, rb.account_cancel)
-    robot_keywords.close_browser(driver)
-    
-#def test_email_is_uneditable():
+    driver.quit()
+
+    #def test_email_is_uneditable():
     """11 email is uneditable"""
     # the email is uneditable so there is no need to test for it.
     
@@ -291,7 +297,8 @@ def test_language_is_changeable_on_the_account_page():
     time.sleep(1)
     verify_in_account_page(driver)
     Element(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
-    robot_keywords.close_browser(driver)
+    driver.quit()
+
 
 def test_language_change_affects_emails():
     """14 Language change affects emails"""
@@ -314,7 +321,7 @@ def test_language_change_affects_emails():
         button.wait_until_visible()
         Element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
         time.sleep(5)
-        robot_keywords.close_browser(driver)
+        driver.quit()
 
     # if we just closed the browser, we'll get a MaxRetryError
     try:

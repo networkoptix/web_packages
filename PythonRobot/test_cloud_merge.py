@@ -41,7 +41,7 @@ def merge_from_primary_system():
     left_menu.update_servers_list()
 
     assert len(left_menu.servers) == 2, f"Len was {len(left_menu.servers)}"
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 

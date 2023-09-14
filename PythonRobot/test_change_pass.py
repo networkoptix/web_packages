@@ -30,7 +30,7 @@ def can_be_accessed_via_dropdown():
     header.change_password_option().click()
 
     ChangePassForm(driver).verify_form_is_visible()
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -41,7 +41,7 @@ def can_be_accessed_via_direct_url():
     driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
     ChangePassForm(driver).verify_form_is_visible()
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -70,7 +70,7 @@ def password_is_actually_changed_and_login_works_with_new_password():
     login_dialog.login_button().click()
     login_dialog.password_input_error_message()
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -99,7 +99,7 @@ def password_with_symbols_is_valid():
     login_dialog.login_button().click()
     login_dialog.password_input_error_message()
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -128,7 +128,7 @@ def password_with_space_in_the_middle_is_valid():
     login_dialog.login_button().click()
     login_dialog.password_input_error_message()
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -145,7 +145,7 @@ def pressing_enter_key_saves_data():
     change_pass_form.new_password_input().input_text(Keys.ENTER)
 
     change_pass_form.no_unsaved_changes_message()
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 
@@ -168,7 +168,7 @@ def pressing_tab_key_moves_focus_to_the_next_element():
     if not change_pass_form.save_button().is_focused:
         raise RuntimeError("Element was not focused")
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
@@ -192,7 +192,7 @@ def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
     if change_pass_form.new_password_input().field_type() != 'password':
         raise RuntimeError("New password field was not of password type")
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
     print("pass")
 
 if __name__ == "__main__":

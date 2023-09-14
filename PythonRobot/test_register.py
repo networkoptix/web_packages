@@ -258,7 +258,7 @@ def check_register_email():
     GenericKeywords().check_in_list(expected_links, links)
     email_con.delete_email(email_id)
 
-    robot_keywords.close_browser(driver)
+    driver.quit()
 
 
 if __name__ == "__main__":
