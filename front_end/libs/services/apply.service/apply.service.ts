@@ -393,11 +393,15 @@ export class NxApplyService {
                     extNgForm.hasChange = extNgForm.changedFields.size > 0;
 
                     if (this.applyComponentRef) {
-                        this.applyComponentInstance.show = extNgForm.hasChange;
+                        // Prevents multiple forms on the page from clashing with each other to toggle the Apply button
+                        const hasActiveChange = Object.keys(this.applyComponentInstance.forms).some(
+                            key => this.applyComponentInstance.forms[key].hasChange,
+                        );
+                        this.applyComponentInstance.show = hasActiveChange;
+
                         const hasInvalid = Object.keys(this.applyComponentInstance.forms).some(
                             key => this.applyComponentInstance.forms[key].form.invalid,
                         );
-
                         this.setIsInvalid(hasInvalid);
                     }
                 });
