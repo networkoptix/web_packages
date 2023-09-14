@@ -1,7 +1,8 @@
 import time
 from contextlib import ExitStack
 from typing import Optional
-from random import *
+from random import randint
+from pyotp import TOTP
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
@@ -28,9 +29,9 @@ class Suite:
         self._exit_stack.close()
 
     def create_cloud_account(self):
-        return self._exit_stack.enter_context(_CloudAccount())
+        return self._exit_stack.enter_context(CloudAccount())
 
-    def create_cloud_server(self, cloud_owner: '_CloudAccount', suite_name: Optional[str] = None) -> 'CloudServer':
+    def create_cloud_server(self, cloud_owner: 'CloudAccount', suite_name: Optional[str] = None) -> 'CloudServer':
         if suite_name is None:
             suite_name = 'test_cloud_server_'
         return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
@@ -38,7 +39,7 @@ class Suite:
 
 class CloudServer:
 
-    def __init__(self, cloud_owner: '_CloudAccount', suite_name, run_id, ports: int = 1):
+    def __init__(self, cloud_owner: 'CloudAccount', suite_name, run_id, ports: int = 1):
         self.cloud_owner = cloud_owner
         self._exit_stack = ExitStack()
         self.ports = ports
@@ -84,14 +85,31 @@ class CloudServer:
             _DOCKER_API.delete_container(self._container_id)
 
 
-class _CloudAccount:
+class CloudAccount:
 
     def __init__(self):
         self.password = DEFAULT_PASSWORD
+        self._totp = None
+        self._backup_codes = None
 
     def __enter__(self) -> 'Self':
         self._set_up()
         return self
+
+    def setup_2fa(self, totp_secret: str, backup_codes):
+        self._totp = TOTP(totp_secret)
+        self._backup_codes = backup_codes
+
+    def get_otp(self, at_time=None):
+        assert self._totp is not None
+        if at_time is None:
+            return self._totp.now()
+        else:
+            return self._totp.at(at_time)
+
+    def get_backup_code(self):
+        assert self._backup_codes is not None
+        return self._backup_codes[0]
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._tear_down()
@@ -105,4 +123,7 @@ class _CloudAccount:
         _CLOUD_API.activate_account_via_api(self.email, self.password)
 
     def _tear_down(self):
-        _CLOUD_API.delete_account(self.email, self.password)
+        if self._totp:
+            _CLOUD_API.delete_account(self.email, self.password, self.get_otp())
+        else:
+            _CLOUD_API.delete_account(self.email, self.password)

@@ -21,6 +21,9 @@ from requests.auth import HTTPDigestAuth
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from NoptixLibrary.cloud_session import CloudSession
 
+from logging import getLogger
+
+
 #from CloudSession import CloudSession
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -227,8 +230,13 @@ class CloudPortalAPI(object):
             disconnect_system_response.raise_for_status()
             return disconnect_system_response.json()
 
-    def delete_account(self, email, password):
-        with self._session(email, password, logout=False) as s:
+    def delete_account(self, email, password, verification_code=None):
+        with self._session(
+            email,
+            password,
+            verification_code=verification_code,
+            logout=False,
+            ) as s:
             s.headers.update({"referer": f"{self.env}"})
             delete_account_response = s.post(
                 f'{self.env}/api/account/delete', json={'password': password})
@@ -352,7 +360,7 @@ class CloudPortalAPI(object):
             f.write(f"{r.text} {title}\n")
             uid += 1
         f.close()
-    
+
     def create_systems_json(self, env, email, password):
         r = requests.get(
             url=f"{env}cdb/system/get",
@@ -404,7 +412,7 @@ class CloudPortalAPI(object):
         f = open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
         f.close()
-    
+
     def check_connection(self, url, verify=True):
         try:
             r = requests.get(url, verify=verify)
@@ -425,7 +433,7 @@ class CloudPortalAPI(object):
             )
         search_response.raise_for_status()
         return search_response.json()['reply']['processUuid']
-    
+
     def camera_status(self, serverUrl, uuid):
         status_response = requests.get(
             url=f"{serverUrl}/api/manualCamera/status",
@@ -467,7 +475,7 @@ class CloudPortalAPI(object):
             logger.debug(bind_response.json())
             bind_response.raise_for_status()
             return bind_response.json()
-    
+
     def unbind_system(self, auth, cloudUrl, systemId):
         unbind_response = requests.post(
             url=f'{cloudUrl}/cdb/system/unbind',
@@ -477,7 +485,7 @@ class CloudPortalAPI(object):
             )
         unbind_response.raise_for_status()
         return unbind_response.json()
-    
+
     def save_cloud_system_credentials(self, auth, serverUrl, authKey, cloudSystemId, ownerEmail):
         body = {
             "cloudAuthKey": authKey,
@@ -631,9 +639,9 @@ class CloudPortalAPI(object):
 
     def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
         with self._session(
-                email, 
+                email,
                 password,
-                backup_code=backup_code, 
+                backup_code=backup_code,
                 verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
             refresh_response = s.post(f'{self.env}/api/account/refreshAccessToken')
