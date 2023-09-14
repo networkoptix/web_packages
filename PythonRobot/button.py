@@ -8,7 +8,8 @@ class Button:
     def __init__(self, driver: webdriver, locator):
         self.driver = driver
         # TODO: add check to confirm button text is correct?
-
+        element = Element(self.driver, locator)
+        assert element.element_in_dom(), "Button not on the page"
         self.selenium_element = element.get_selenium_element()
         self.locator = locator
         self.is_visible = element.is_visible()
@@ -18,7 +19,3 @@ class Button:
         robot_keywords.wait_until_element_is_visible(self.driver, self.locator)
         robot_keywords.wait_until_element_is_enabled(self.driver, self.locator)
         self.selenium_element.click()
-
-    def contains(self, text):
-        return self.selenium_element
-
