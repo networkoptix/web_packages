@@ -38,10 +38,6 @@ def close_browser(driver: webdriver) -> None:
     driver.quit()
 
 # deprecated: this functionality has been moved to generic_element
-def element_should_be_enabled(driver: webdriver, locator: str, timeout: int = 10) -> None:
-    WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, locator)))
-
-# deprecated: this functionality has been moved to generic_element
 def get_element_attribute(driver: webdriver, locator: str, attribute: str) -> str:
     element_attribute = driver.find_element(By.XPATH, locator).get_attribute(attribute)
     #print("element_attribute: ", element_attribute, attribute, locator)
