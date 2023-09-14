@@ -12,7 +12,7 @@ driver = get_headless_chrome()
 robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
 
 def test_register_invalid(driver, first, last, email, password, checked):
-    robot_keywords.reload_page(driver)
+    driver.refresh()
     # Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL INVALID}
     # ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
     # Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}

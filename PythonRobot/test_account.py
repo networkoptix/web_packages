@@ -250,7 +250,7 @@ def test_language_is_changeable_on_the_account_page():
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    robot_keywords.reload_page(driver)
+    driver.refresh()
     lang_dict = get_lang_list()
     for lang in lang_dict:
         info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
