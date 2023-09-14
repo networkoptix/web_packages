@@ -171,7 +171,7 @@ function setup_robot_env() {
 function setup_or_activate_virtualenv() {
     env_checker
     VENV_DIR="$(pwd)/env"
-    if [[ ! -d $(pwd)/cloud ]]; then
+    if [[ ! -d $(pwd)/cloud/cloud ]]; then
         echo "You are not in project root!"
         exit 1
     fi
@@ -185,6 +185,8 @@ function setup_or_activate_virtualenv() {
 
     # Copy necessary config for virutalenv
     cp etc/virtual_env_template/* $VENV_DIR
+    export $PYTHONPATH:$(pwd)/common/python
+
 }
 
 function start_celery() {

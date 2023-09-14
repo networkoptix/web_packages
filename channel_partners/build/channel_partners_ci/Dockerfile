@@ -10,23 +10,9 @@ WORKDIR /app
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
-        bash netcat jq curl tini pkg-config libpq5 \
-    && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
-
-FROM builder as requirements
-COPY pyproject.toml /app/
-COPY poetry.lock /app/
-WORKDIR /app
-RUN set -ex \
-    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 jsonschema==4.17.3  \
+        bash netcat jq curl tini pkg-config libpq5 g++ libssl-dev \
+    && python -m pip install --prefer-binary --no-cache-dir --upgrade pip==23.2.1 \
+    && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 \
     && poetry config virtualenvs.create false --local \
-    && poetry lock --check \
-    && poetry export --without-hashes --without-urls -o /app/requirements.txt \
-    && pip freeze | xargs pip uninstall -y \
-    && rm -rf /root/.cache/pip
-
-FROM builder AS runtime
-COPY --from=requirements /app/requirements.txt /app/requirements.txt
-RUN set -ex \
-    && pip install --no-cache-dir -r /app/requirements.txt \
-    && apt autoremove -y --purge && apt clean -y && rm -rf /root/.cache/pip && rm -rf /var/lib/apt/lists/*
+    && poetry config installer.no-binary false --local \
+    && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*

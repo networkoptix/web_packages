@@ -6,6 +6,7 @@ include:
   - project: "dev/ci"
     file: "pipelines/secrets.yml"
   - local: "ci/Docker/**/.gitlab-ci.yml"
+  - local: "channel_partners/build/channel_partners_ci/.gitlab-ci.yml"
 
 default:
   tags:
@@ -205,6 +206,28 @@ common-python-unit-test:
         - cloud/poetry.lock
         - cloud/pyproject.toml
         - cloud/allowed_licenses.txt
+
+cp-common-python-unit-test:
+  extends: .cp-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: common/python/fast-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: common/python/fast-coverage.xml
+  variables:
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+  script:
+    - cd /builds/dev/cloud_portal/common/python
+    - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - common/python/**/*
+        - channel_partners/poetry.toml
+        - channel_partners/poetry.lock
+        - channel_partners/pyproject.toml
 
 .frontend-node:
   extends: .frontend-changes
@@ -497,7 +520,7 @@ create-vms-mr:
   allow_failure: true
   script:
     - cd cloud
-    - /usr/local/bin/python -m pip install --upgrade pip
+    - /usr/local/bin/python -m pip install --upgrade pip==23.2.1
     - /usr/local/bin/python -m pip install discord.py
     - cd bots
     - python y_u_no_pipeline_bot.py
@@ -568,7 +591,7 @@ on-django-tests-fast:
   allow_failure: true
   before_script:
     - cd cloud
-    - /usr/local/bin/python -m pip install --upgrade pip
+    - /usr/local/bin/python -m pip install --upgrade pip==23.2.1
     - /usr/local/bin/python -m pip install discord-webhook
     - /usr/local/bin/python -m pip install gql
     - /usr/local/bin/python -m pip install aiohttp
@@ -618,3 +641,77 @@ fail-on-python-license-check:
         - cloud/**/poetry.toml
         - cloud/**/allowed_licenses.txt
       when: on_failure
+
+.cp-backend-changes:
+  extends: .retries
+  needs:
+    - job: docker:build-channel-partners
+      optional: true
+  rules:
+    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+      changes:
+        - channel_partners/src/**/*
+        - channel_partners/build/channel_partners_ci/**/*
+        - channel_partners/poetry.toml
+        - channel_partners/poetry.lock
+        - channel_partners/pyproject.toml
+  before_script:
+    - poetry -C /builds/dev/cloud_portal/channel_partners export --with test --without-hashes --without-urls -o /app/requirements.txt
+    - pip install --upgrade --no-cache-dir -r /app/requirements.txt
+
+cp-checks:
+  extends: .cp-backend-changes
+  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
+  stage: check
+  variables:
+    USE_SQLITE: "true"
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+  script:
+    - cd channel_partners/src
+    - echo "Running safety check in $(pwd)"
+    - python -m pip install safety==2.3.5
+#    - if ! python safety-check.py ; then echo PIP packages need to be updated && exit 1 ; fi
+    - if ! python manage.py makemigrations --dry-run --check ; then echo Missing above migrations && exit 1 ; fi
+    - if ! python manage.py check ; then echo System check failed && exit 1 ; fi
+
+.cp-django-python:
+  extends: .cp-backend-changes
+  image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
+  needs:
+    - job: docker:build-channel-partners
+      optional: true
+  services:
+    - name: postgres:15.3-bullseye
+      alias: postgres-cp
+    - name: redis:5.0.6
+      alias: redis-cp
+      command:
+        - redis-server
+        - --databases 32
+  variables:
+    TESTING: "true"
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
+    POSTGRES_USER: channel
+    POSTGRES_PASSWORD: partners
+    POSTGRES_DB: channel_partners
+    POSTGRES_INITDB_ARGS: '--encoding=UTF-8 --lc-collate=C --lc-ctype=C'
+
+
+.cp-unit-test:
+  extends: .cp-django-python
+  stage: test
+  coverage: /^TOTAL.+?(\d+\%)$/
+
+cp-unit-test-fast:
+  extends: .cp-unit-test
+  artifacts:
+    when: always
+    reports:
+      junit: channel_partners/src/fast-report.xml
+      coverage_report:
+        coverage_format: cobertura
+        path: channel_partners/src/fast-coverage.xml
+  script:
+    - cd channel_partners/src
+    - echo "Running safety check in $(pwd)"
+    - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term

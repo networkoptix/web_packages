@@ -1,0 +1,43 @@
+variables:
+  CP_DJANGO_PYTHON_IMAGE: '${DOCKER_REGISTRY}/nx/channel_partners_django_python'
+  CP_DJANGO_PYTHON_IMAGE_VERSION: '1.4.16'
+  CP_DJANGO_PYTHON_IMAGE_TAG: '${CI_MERGE_REQUEST_TARGET_BRANCH_NAME}_${CP_DJANGO_PYTHON_IMAGE_VERSION}'
+
+
+# Required CI/CD variables, which should be defined on Gitlab instance layer
+# https://docs.gitlab.com/ee/ci/variables/#add-a-cicd-variable-to-an-instance:
+# - PIP_TRUSTED_HOST
+# - PIP_INDEX_URL
+# - ARTIFACTORY_URL
+docker:build-channel-partners:
+  extends: .docker.template
+  interruptible: true
+  variables:
+    BUILD_OPTIONS: |
+      --build-arg PIP_TRUSTED_HOST=${PIP_TRUSTED_HOST}
+      --build-arg PIP_INDEX_URL=${ARTIFACTORY_URL}/api/pypi/pypi-python3.8-alpine3.12/simple
+      --build-arg PIP_EXTRA_INDEX_URL=${PIP_INDEX_URL}
+  before_script:
+  - |
+    DOCKER_DIR="channel_partners/build/channel_partners_ci"
+    touch build-cp-django.env
+    CP_DJANGO_PYTHON_IMAGE_TAG="${CP_DJANGO_PYTHON_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}"
+    if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
+      CP_DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${CP_DJANGO_PYTHON_IMAGE_VERSION}.${CI_MERGE_REQUEST_ID}"
+    fi    
+    echo "CP_DJANGO_PYTHON_IMAGE_TAG=${CP_DJANGO_PYTHON_IMAGE_TAG}" > build-cp-django.env
+    
+    TARGET_IMAGE="${CP_DJANGO_PYTHON_IMAGE}"
+    TARGET_IMAGE_TAG="${CP_DJANGO_PYTHON_IMAGE_TAG}"
+  artifacts:
+    reports:
+      dotenv: build-cp-django.env
+    expire_in: 14 days
+  rules:
+  - if: $CI_PIPELINE_SOURCE == "merge_request_event" ||
+      ($CI_PIPELINE_SOURCE == "push" && $CI_COMMIT_REF_PROTECTED == "true")
+    changes:
+    - channel_partners/build/channel_partners_ci/*
+    - channel_partners/pyproject.toml
+    - channel_partners/poetry.lock
+    - channel_partners/poetry.toml
