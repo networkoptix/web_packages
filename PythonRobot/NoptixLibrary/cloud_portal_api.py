@@ -1,5 +1,6 @@
 import base64
 import json
+import logging
 import os
 import random
 import re
@@ -73,13 +74,12 @@ class CloudPortalAPI(object):
         return cloud_session
 
     def api_log_out(self, session_id, csrftoken):
-        from robot.api import logger
         with requests.session() as s:
             s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
             s.headers.update({'Referer': self.env})
             logout_response = s.post(f'{self.env}/api/account/logout', verify=_ssl_certs_path)
-            logger.trace(logout_response.content)
+            logger.debug(logout_response.content)
             logout_response.raise_for_status()
             return logout_response.status_code
 
@@ -98,17 +98,17 @@ class CloudPortalAPI(object):
                 data=data,
                 verify=_ssl_certs_path,
                 )
-            logger.trace(authenticate_response.content)
+            logger.debug(authenticate_response.content)
             authenticate_response.raise_for_status()
             return authenticate_response.json()
 
     def merge_cloud_systems(self, master_id, slave_id, email, password):
         with self._session(email, password) as s:
-            logger.trace(f'The headers are {s.headers}')
+            logger.debug(f'The headers are {s.headers}')
             data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
             s.headers.update({"referer": f"{self.env}"})
             merge_response = s.post(f'{self.env}/api/systems/merge', data)
-            logger.trace(f'Value of merge_response.content: {merge_response.content}')
+            logger.debug(f'Value of merge_response.content: {merge_response.content}')
             merge_response.raise_for_status()
             return merge_response.json()
 
@@ -197,13 +197,13 @@ class CloudPortalAPI(object):
             set_name_response = s.post(
                 f'{self.env}/api/account/',
                 json={'first_name': first_name, 'last_name': last_name})
-            logger.trace(set_name_response.content)
+            logger.debug(set_name_response.content)
             set_name_response.raise_for_status()
             return set_name_response.json()
 
     def connect(self, system_name: str, email: str, password: str) -> Mapping[str, str]:
         credentials = {'name': system_name, 'email': email, 'password': password}
-        logger.trace(f"cloud credentials {credentials}")
+        logger.debug(f"cloud credentials {credentials}")
         with requests.Session() as session:
             response = session.post(
                 f'{self.env}/api/systems/connect',
@@ -211,7 +211,7 @@ class CloudPortalAPI(object):
                 verify=False,
             )
             data = response.json()
-        logger.trace(data)
+        logger.debug(data)
         return {
             'systemId': data['id'],
             'authKey': data['authKey'],
@@ -232,8 +232,8 @@ class CloudPortalAPI(object):
             s.headers.update({"referer": f"{self.env}"})
             delete_account_response = s.post(
                 f'{self.env}/api/account/delete', json={'password': password})
-            logger.trace(password)
-            logger.trace(delete_account_response.json())
+            logger.debug(password)
+            logger.debug(delete_account_response.json())
             delete_account_response.raise_for_status()
             return delete_account_response.json()
 
@@ -248,11 +248,11 @@ class CloudPortalAPI(object):
         else:
             with self._session(self.baseEmail, self.password) as s:
                 s.headers.update({"referer": f"{self.env}/authorize"})
-                logger.trace(message_type)
+                logger.debug(message_type)
                 get_code_response = s.post(
                     f'{self.env}/api/robot/get_code',
                     json={'email': email, 'type': message_type})
-        logger.trace(get_code_response.content)
+        logger.debug(get_code_response.content)
         get_code_response.raise_for_status()
         return get_code_response.json()['code']
 
@@ -437,10 +437,10 @@ class CloudPortalAPI(object):
         return status_response.json()
 
     def add_fake_camera(self, serverUrl, cameras, user="mark", password="hamill"):
-        logger.trace("cameras value")
-        logger.trace(cameras)
+        logger.debug("cameras value")
+        logger.debug(cameras)
         body = {"cameras": cameras, "user": "mark", "password": "hamill"}
-        logger.trace(body)
+        logger.debug(body)
         add_camera_response = requests.post(
             url=f'{serverUrl}/api/manualCamera/add',
             auth=HTTPDigestAuth('admin', 'qweasd 123'),
@@ -453,7 +453,7 @@ class CloudPortalAPI(object):
 
     def bind_system(self, auth, cloudUrl, name="API made system"):
         with self._session(auth[0], auth[1]) as s:
-            logger.trace(self.customization)
+            logger.debug(self.customization)
             body = {
                 "name": name,
                 "customization": self.customization
@@ -464,7 +464,7 @@ class CloudPortalAPI(object):
                 json=body,
                 verify=False,
                 )
-            logger.trace(bind_response.json())
+            logger.debug(bind_response.json())
             bind_response.raise_for_status()
             return bind_response.json()
     
@@ -490,7 +490,7 @@ class CloudPortalAPI(object):
             json=body,
             verify=False,
             )
-        logger.trace(f'status:{save_credentials_response.status_code}')
+        logger.debug(f'status:{save_credentials_response.status_code}')
         save_credentials_response.raise_for_status()
         return save_credentials_response.json()
 
@@ -576,7 +576,7 @@ class CloudPortalAPI(object):
             json=body,
             verify=False,
             )
-        logger.trace(register_response.status_code)
+        logger.debug(register_response.status_code)
         register_response.raise_for_status()
         return register_response.json()
 
@@ -638,7 +638,7 @@ class CloudPortalAPI(object):
             s.headers.update({'Referer': self.env})
             refresh_response = s.post(f'{self.env}/api/account/refreshAccessToken')
             refresh_response.raise_for_status()
-            logger.trace(f"/api/account json: {refresh_response.json()}")
+            logger.debug(f"/api/account json: {refresh_response.json()}")
             s.headers.update({"Authorization": f"Bearer {refresh_response.json()['access_token']}"})
             security_get_response = s.get(f'{self.env}/cdb/account/self/settings/security')
             security_get_response.raise_for_status()
@@ -652,7 +652,7 @@ class CloudPortalAPI(object):
                     f'{self.env}/api/account/security',
                     data=body,
                     )
-                logger.trace(security_post_response.status_code)
+                logger.debug(security_post_response.status_code)
                 security_post_response.raise_for_status()
 
     def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
@@ -712,3 +712,6 @@ class CloudPortalAPI(object):
 
 class CannotSetFeatureFlags(Exception):
     pass
+
+
+logger = logging.getLogger(__name__)
