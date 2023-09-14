@@ -38,11 +38,6 @@ def close_browser(driver: webdriver) -> None:
     driver.quit()
 
 # deprecated: this functionality has been moved to generic_element
-def get_element_attribute(driver: webdriver, locator: str, attribute: str) -> str:
-    element_attribute = driver.find_element(By.XPATH, locator).get_attribute(attribute)
-    #print("element_attribute: ", element_attribute, attribute, locator)
-    return element_attribute
-# deprecated: this functionality has been moved to generic_element
 def get_text(driver: webdriver, locator: str) -> str:
     return driver.find_element(By.XPATH, locator).text
 

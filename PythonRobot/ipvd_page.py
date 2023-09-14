@@ -73,7 +73,7 @@ class IVPDPage():
         return Button(self.driver, ENCODERS)
 
     def placeholder_text(self):
-        search_palceholder = robot_keywords.get_element_attribute(self.driver, self.SEARCH_BAR, "placeholder")
+        search_palceholder = Element(self.driver, self.SEARCH_BAR).get_attribute("placeholder")
         assert search_palceholder.lower() == self.rb.SEARCH_PLACEHOLDER_TEXT.lower()
 
     def _wait_until_page_loaded(self):
