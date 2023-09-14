@@ -1,3 +1,17 @@
+<ng-template #body>
+    <div class="pb-3">
+        <h2>{{ (currentOrganization$ | async)?.name }}</h2>
+    </div>
+    <nx-tabs
+        [onLoadTab]="currentTab"
+        (tabClick)="onTabClick($event)"
+    >
+        <ng-container *ngFor="let tab of tabs">
+            <div *tab="tab"></div>
+        </ng-container>
+    </nx-tabs>
+</ng-template>
+
 <div
     id="groups"
     cdkDropListGroup
@@ -36,30 +50,18 @@
     >
         <nx-pre-loader *ngIf="isLoading; else cards"></nx-pre-loader>
         <ng-template #cards>
-            <ng-container *ngIf="!inChannelPartner; else organization">
-                <h2 class="pb-3">
-                    {{ (currentOrganization$ | async)?.name }}
-                </h2>
+            <ng-container *ngIf="!inChannelPartner; else channelPartnerView">
+                <ng-template [ngTemplateOutlet]="body"></ng-template>
                 <nx-groups-cards [inRoot]="true"></nx-groups-cards>
             </ng-container>
-            <ng-template #organization>
+            <ng-template #channelPartnerView>
                 <a
                     (click)="toRoot()"
                     translate
                 >
                     All Organizations</a
                 >
-                <div class="pb-3">
-                    <h2>{{ (currentOrganization$ | async)?.name }}</h2>
-                </div>
-                <nx-tabs
-                    [onLoadTab]="currentTab"
-                    (tabClick)="onTabClick($event)"
-                >
-                    <ng-container *ngFor="let tab of tabs">
-                        <div *tab="tab"></div>
-                    </ng-container>
-                </nx-tabs>
+                <ng-template [ngTemplateOutlet]="body"></ng-template>
                 <router-outlet></router-outlet>
             </ng-template>
         </ng-template>

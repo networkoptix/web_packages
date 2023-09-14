@@ -65,8 +65,9 @@ export class NxHomeComponent implements OnInit {
                         return new MenuNode(partner.name, `/home/channelPartners/${partner.id}`);
                     }),
                     ...organizations
-                        .filter(org =>
-                            channelPartners.some(partner => org.channelPartner !== partner.id),
+                        .filter(
+                            org =>
+                                !channelPartners.some(partner => org.channelPartner === partner.id),
                         )
                         .sort((a, b) => a.name.localeCompare(b.name))
                         .map(org => {
@@ -94,8 +95,8 @@ export class NxHomeComponent implements OnInit {
                 }
 
                 if (organizations.length) {
-                    // Does not work at the moment, groupID required
-                    redirectPath = 'organizations/testId';
+                    const orgId = organizations[0].id;
+                    redirectPath = `organization/${orgId}`;
                 }
                 if (channelPartners.length) {
                     const CPid = channelPartners[0].id;
