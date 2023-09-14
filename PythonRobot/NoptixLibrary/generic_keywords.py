@@ -17,7 +17,6 @@ from random import *
 
 import docker
 import paramiko
-from googletrans import Translator
 from requests import head
 from robot.api import logger
 from robot.libraries.BuiltIn import BuiltIn
@@ -664,6 +663,7 @@ class GenericKeywords:
                 ServerApi(serverUrl).remove_user(user['id'])
 
     def detect_language(self, text):
+        from googletrans import Translator
         detected_langs = str(Translator().detect(text))
         return detected_langs
 

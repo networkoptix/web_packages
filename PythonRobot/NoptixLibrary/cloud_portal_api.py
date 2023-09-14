@@ -15,7 +15,6 @@ import certifi
 import requests
 import urllib3
 from requests.auth import HTTPDigestAuth, HTTPBasicAuth
-from robot.api import logger
 
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from NoptixLibrary.cloud_session import CloudSession
@@ -73,6 +72,7 @@ class CloudPortalAPI(object):
         return cloud_session
 
     def api_log_out(self, session_id, csrftoken):
+        from robot.api import logger
         with requests.session() as s:
             s.headers.update({'X-CSRFToken': csrftoken})
             s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})

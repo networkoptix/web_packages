@@ -23,7 +23,6 @@ import time
 from random import randint
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary import *
-from googletrans import Translator
 from login import LoginDialog
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -168,6 +167,7 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
         move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
 
 def detect_language(text):
+    from googletrans import Translator
     detected_langs = str(Translator().detect(text))
     return detected_langs
 
