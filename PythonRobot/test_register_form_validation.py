@@ -50,13 +50,13 @@ def register_form_validation(driver, first_name, last_name, email, password, che
     robot_keywords.input_text(driver, rb.REGISTER_FIRST_NAME_INPUT, first_name)
     robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
     robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
-    robot_keywords.click_element(driver, rb.REGISTER_PASSWORD_INPUT)
+    Element(driver, rb.REGISTER_PASSWORD_INPUT).click()
     time.sleep(.1)
     robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
     if password != "":
         check_password_badge(driver, password, rb.REGISTER_FORM)
     if checked:
-        robot_keywords.click_element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)
+        Element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
     time.sleep(.1)
     robot_keywords.click_button(driver, rb.CREATE_ACCOUNT_BUTTON)
 

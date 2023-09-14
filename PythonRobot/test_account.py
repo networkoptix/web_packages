@@ -22,7 +22,7 @@ rb = RobotVariables("en_US")
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
         robot_keywords.wait_until_element_is_visible(driver, button)
-        robot_keywords.click_element(driver, button)
+        Element(driver, button).click()
 
     if validate and not two_FA:
         # check language variable and set it to default. That is, set language before logging in
@@ -34,14 +34,14 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
-    robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
+    Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
 
     if exists:
         robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INPUT)
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT,password)
         time.sleep(1)
         robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_BUTTON)
-        robot_keywords.click_element(driver, rb.LOG_IN_BUTTON)
+        Element(driver, rb.LOG_IN_BUTTON).click()
 
     else:  
         robot_keywords.wait_until_element_is_visible(driver,rb.ACCOUNT_DOES_NOT_EXIST,rb.YOU_CAN_CREATE_AN_ACCOUNT)
@@ -154,7 +154,7 @@ def test_first_name_is_required():
     verify_in_account_page(driver)
 
     Element(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
-    robot_keywords.click_element(driver, rb.ACCOUNT_LAST_NAME)
+    Element(driver, rb.ACCOUNT_LAST_NAME).click()
 
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {rb.ERROR_COLOR};")
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
@@ -181,7 +181,7 @@ def test_last_name_is_required():
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
     Element(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
-    robot_keywords.click_element(driver, rb.ACCOUNT_FIRST_NAME)
+    Element(driver, rb.ACCOUNT_FIRST_NAME).click()
 
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"border-color: {rb.ERROR_COLOR};")
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
@@ -207,8 +207,8 @@ def test_SPACE_for_first_name_is_not_valid():
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")   
-    robot_keywords.click_element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
+    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")
+    Element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {ERROR_COLOR};")
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
     Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
@@ -225,7 +225,7 @@ def test_SPACE_for_last_name_is_not_valid():
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "Luke")
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, " ")
 
-    robot_keywords.click_element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
+    Element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"border-top-color: {rb.ERROR_COLOR};")
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
     Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
@@ -260,7 +260,7 @@ def test_language_is_changeable_on_the_account_page():
             robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
             # TODO: this is not working
             #robot_keywords.wait_until_element_is_visible(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='${lang}']")
-            robot_keywords.click_element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..")
+            Element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..").click()
             time.sleep(2)
             robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{info_text}')]")
 
@@ -268,7 +268,7 @@ def test_language_is_changeable_on_the_account_page():
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
     # TODO: this is not working
     #robot_keywords.wait_until_element_is_visible(driver, f"//header//nx-header-language-select//span[@lang='{rb.LANGUAGE}']")
-    robot_keywords.click_element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']")
+    Element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
     time.sleep(1)
     verify_in_account_page(driver)
     robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
@@ -288,7 +288,7 @@ def test_language_change_affects_emails():
         verify_in_account_page(driver)
         robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
         robot_keywords.wait_until_element_is_visible(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..")
-        robot_keywords.click_element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']")
+        Element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
         time.sleep(5)
         robot_keywords.close_browser(driver)
 
@@ -324,7 +324,7 @@ def test_language_change_is_new_default():
     lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
     droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
     robot_keywords.wait_until_element_is_visible(driver, droplang1)
-    robot_keywords.click_element(driver, droplang1)
+    Element(driver, droplang1).click()
 
     time.sleep(5)
     driver.refresh()

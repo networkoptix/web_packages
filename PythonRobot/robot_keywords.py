@@ -25,10 +25,6 @@ def check_for_alert(driver: webdriver, alert_text: str, timeout: int = 10) -> No
 def click_button(driver: webdriver, locator: Tuple) -> None:
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, locator))).click()
 
-# deprecated: this functionality has been moved to generic_element
-def click_element(driver: webdriver, locator: str) -> None:
-    driver.find_element(By.XPATH, locator).click()
-
 
 def click_on_link(driver: webdriver, locator: Tuple) -> None:
     WebDriverWait(driver, 10).until(EC.element_to_be_clickable((By.XPATH, locator))).click()

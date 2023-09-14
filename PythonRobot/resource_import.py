@@ -62,7 +62,7 @@ def check_language_logged_in(email, password, language="en_US"):
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
         robot_keywords.wait_until_element_is_visible(driver, button)
-        robot_keywords.click_element(driver, button)
+        Element(driver, button).click()
 
     if validate and not two_FA:
         # check language variable and set it to default. That is, set language before logging in
@@ -74,14 +74,14 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
-    robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
+    Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
 
     if exists:
         robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INPUT)
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT,password)
         time.sleep(1)
         robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_BUTTON)
-        robot_keywords.click_element(driver, rb.LOG_IN_BUTTON)
+        Element(driver, rb.LOG_IN_BUTTON).click()
     else:
         robot_keywords.wait_until_elements_are_visible(driver,[rb.ACCOUNT_DOES_NOT_EXIST,rb.YOU_CAN_CREATE_AN_ACCOUNT])
     # TODO: Check if 2fa is true and there is no backup code
@@ -139,7 +139,7 @@ def check_password_badge(driver: webdriver, password, new_focus):
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
 
 def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
-    robot_keywords.click_element(driver, new_focus)
+    Element(driver, new_focus).click()
     if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
         robot_keywords.element_style_should_be(driver, input, "border-bottom-color",rb.ERROR_COLOR_WITH_OPACITY)
         robot_keywords.element_style_should_be(driver, input, "border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
@@ -228,9 +228,9 @@ def logout_japanese(driver:webdriver):
     robot_keywords.wait_until_page_contains_element(driver, element)
 
     time.sleep(0.5)
-    robot_keywords.click_element(driver, rb.ACCOUNT_DROPDOWN)
+    Element(driver, rb.ACCOUNT_DROPDOWN).click()
     robot_keywords.wait_until_element_is_visible(driver, element)
-    robot_keywords.click_element(driver, element)
+    Element(driver, element).click()
     validate_log_out(driver)
 
 def move_focus_and_check_badge_stays(driver, badge, new_focus):
@@ -240,7 +240,7 @@ def move_focus_and_check_badge_stays(driver, badge, new_focus):
     badge.should_be_visible()
 
 def move_focus_and_check_element(driver, element, new_focus):
-    robot_keywords.click_element(driver, new_focus)
+    Element(driver, new_focus).click()
     robot_keywords.wait_until_element_is_visible(driver, element)
 
 def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMAIL, is_secure=True):
@@ -297,8 +297,8 @@ def register(driver, first_name, last_name, email, password, checked=False, view
     robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
     robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
     if not checked:
-        robot_keywords.click_element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)  
-    robot_keywords.click_element(driver, rb.CREATE_ACCOUNT_BUTTON)
+        Element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
+    Element(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 
 
 
@@ -315,11 +315,11 @@ def send_restore_password_email(driver: webdriver, email: str)->  None:
     time.sleep(1)
     robot_keywords.wait_until_input_succeeds(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
-    robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
+    Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
     robot_keywords.wait_until_element_is_visible(driver, rb.FORGOT_PASSWORD_BUTTON)
-    robot_keywords.click_element(driver, rb.FORGOT_PASSWORD_BUTTON)
+    Element(driver, rb.FORGOT_PASSWORD_BUTTON).click()
     robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
-    robot_keywords.click_element(driver, rb.RESET_PASSWORD_BUTTON)
+    Element(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 def validate_log_in(driver: webdriver, email: str, password: str, timeout: int = 10) -> None:
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
