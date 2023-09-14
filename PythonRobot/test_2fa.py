@@ -10,7 +10,6 @@ from security_form import SecurityForm
 from system_admin import SystemAdmin
 from NoptixLibrary.cloud_portal_api import Cloud2fa
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.server_api import ServerApi
 from NoptixLibrary.suite import CloudServer
 from NoptixLibrary.suite import Suite
 
