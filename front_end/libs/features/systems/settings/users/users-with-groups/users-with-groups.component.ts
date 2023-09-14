@@ -93,8 +93,8 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
 
     private processSelectedGroupsList(newList: string[], localOwner = false): void {
         this.selectedGroupsList = (
-            this.system.userManager as UserWithGroupsManager
-        ).userGroups.reduce((groups, { id, name, description }) => {
+            (this.system.userManager as UserWithGroupsManager)?.userGroups || []
+        ).reduce((groups, { id, name, description }) => {
             if (newList.includes(id)) {
                 groups.push({ name, description });
             }

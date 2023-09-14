@@ -1,11 +1,5 @@
 import { inject } from '@angular/core';
-import {
-    ActivatedRouteSnapshot,
-    createUrlTreeFromSnapshot,
-    ResolveFn,
-    Router,
-    RouterStateSnapshot,
-} from '@angular/router';
+import { ActivatedRouteSnapshot, ResolveFn, Router, RouterStateSnapshot } from '@angular/router';
 
 import { NxUser } from '@services/system-user.types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -17,12 +11,16 @@ export const userResolver: ResolveFn<NxUser> = async (
 ) => {
     const router: Router = inject(Router);
     const currentSystem = inject(NxSystemService).getCurrentSystem();
-    const userId = `{${route.params.userId}}`;
+    const userId = route.params.userId;
     const users = currentSystem.userManager.users;
-    const user = users?.find(({ id }) => id === userId);
+    const user = users?.find(({ id }) => id.includes(userId));
     if (user) {
+        const cleanUserId = cleanId(user.id);
+        if (!state.url.includes(cleanUserId)) {
+            await router.navigate([state.url, cleanUserId]);
+        }
         return user;
     }
-    await router.navigateByUrl(createUrlTreeFromSnapshot(route, ['../', cleanId(users[0]?.id)]));
+    await router.navigate([state.url, cleanId(users[0]?.id)]);
     return users[0];
 };

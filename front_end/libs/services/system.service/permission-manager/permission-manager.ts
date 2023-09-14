@@ -1,6 +1,7 @@
 import { computed, signal } from '@angular/core';
 
 import staticLang from '@language/language_i18n_static.json';
+import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -129,7 +130,7 @@ export class PermissionManager {
         const permissionsString = user.permissions.split('|').sort().join('|');
 
         let accessRole = '';
-        if (this.mediaserver instanceof NxSystemRestAPI3) {
+        if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds) {
             accessRole = (user as RestV3User).groupIds
                 .map(groupId => groups.find(({ id }) => groupId === id)?.name)
                 .filter(role => !!role)
@@ -213,14 +214,40 @@ export class PermissionManager {
     });
 
     constructor(
+        private systemId: string,
+        private currentUserEmail: string,
+        private cloudApi: NxCloudApiService,
         protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3,
     ) {
-        this.checkCurrentUser().catch();
+        this.checkCurrentUser().catch(() => this.getCurrentUserFromCloud());
+    }
+
+    async getCurrentUserFromCloud(): Promise<void> {
+        this.cloudApi.users(this.systemId).subscribe(users => {
+            const user = users.find(({ accountEmail }) => accountEmail === this.currentUserEmail);
+            if (user) {
+                this.user.set({
+                    ...user,
+                    name: user.accountEmail,
+                    email: user.accountEmail,
+                    permissions: user.customPermissions,
+                    isCloud: true,
+                    isLdap: false,
+                    id: user.vmsUserId,
+                    fullName: user.accountFullName,
+                    groupIds: [],
+                });
+            }
+        });
     }
 
     async checkCurrentUser(): Promise<void> {
         const user = await this.mediaserver.getCurrentUser(true);
-        this.user.set(user);
+        if (user) {
+            this.user.set(user);
+        } else {
+            return Promise.reject();
+        }
         if (this.mediaserver instanceof NxSystemRestAPI3) {
             this.mediaserver.getUserGroups().subscribe(userGroups => this.groups.set(userGroups));
             this.mediaserver.getCurrentUserPermissions().subscribe(data => {

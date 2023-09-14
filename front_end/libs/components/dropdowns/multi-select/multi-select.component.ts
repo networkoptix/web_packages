@@ -187,7 +187,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     ngOnChanges({ itemsOrig }: NgChanges<NxMultiSelectDropdown>): void {
-        if (itemsOrig) {
+        if (itemsOrig.currentValue) {
             this.items = itemsOrig.currentValue.map(obj => ({ ...obj }));
             this.updateItems();
         }

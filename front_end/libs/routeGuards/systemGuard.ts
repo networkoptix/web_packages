@@ -122,7 +122,7 @@ export const SystemGuard: CanActivateFn = (
             ): mediaserver is NxSystemRestAPI =>
                 mediaserver instanceof NxSystemRestAPI && nxConfig.featureFlags.restCookieLogin;
 
-            if (cookieLoginEnabledSystem(currSystem.mediaserver)) {
+            if (currSystem.isOnline && cookieLoginEnabledSystem(currSystem.mediaserver)) {
                 await firstValueFrom(currSystem.mediaserver.setAccessTokenAsCookie());
             }
             await currSystem.update();

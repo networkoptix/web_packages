@@ -282,6 +282,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         this.userManager = userManagerModule.userManager;
 
         const permissionManagerModule = new PermissionManagerModule(
+            this.id,
+            currentUserEmail,
+            this.cloudApi,
             this.mediaserver as NxSystemRestAPI3,
         );
         this.permissionManager = permissionManagerModule.permissionManager;
@@ -564,25 +567,36 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 .then(() => (environment.isLocal ? Promise.resolve() : this.getUsers(true, true)))
                 .catch(error => {
                     if (error?.offline) {
-                        firstValueFrom(this.mediaserver.ping()).catch(() => {
-                            this.isOnline = false;
-                            const { url } = this.router;
-                            if (
-                                ['view', 'layouts', 'bookmarks', 'health', 'monitoring'].every(
-                                    route => !url.includes(route),
-                                )
-                            ) {
-                                this.ribbonService.show(
-                                    this.LANG.ribbon.systemOffline,
-                                    [],
-                                    'alert',
-                                    undefined,
-                                    true,
-                                );
-                            }
-                            this.isAvailable = false;
-                            this.systemInfo = this;
-                        });
+                        firstValueFrom(this.mediaserver.ping())
+                            .catch(() => {
+                                this.isOnline = false;
+                                const { url } = this.router;
+                                if (
+                                    ['view', 'layouts', 'bookmarks', 'health', 'monitoring'].every(
+                                        route => !url.includes(route),
+                                    )
+                                ) {
+                                    this.ribbonService.show(
+                                        this.LANG.ribbon.systemOffline,
+                                        [],
+                                        'alert',
+                                        undefined,
+                                        true,
+                                    );
+                                }
+                                this.isAvailable = false;
+                                this.systemInfo = this;
+                            })
+                            .then(() => {
+                                if (!environment.isLocal) {
+                                    this.permissionManager.ownerEmail.set(
+                                        this.info.ownerAccountEmail,
+                                    );
+                                    this.getUsersCachedInCloud().then(users => {
+                                        return this.userManager.processUsers(users);
+                                    });
+                                }
+                            });
                     }
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })

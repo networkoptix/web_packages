@@ -166,7 +166,7 @@ export class UserWithGroupsManager extends UserManager {
             permissions && permissions.includes('|') ? permissions.split('|') : [permissions],
         );
         // cloud owner currently has no userGroupIds, but instead has permissions set on the user object permissions field
-        const calculatedPermissions = groupIds.reduce(
+        const calculatedPermissions = (groupIds || []).reduce(
             (perms, id) => new Set([...perms, ...this.groupsToPermissions[id]]),
             initialPermissionSet,
         );
