@@ -1,4 +1,5 @@
 import robot_keywords
+from PythonRobot.generic_element import Element
 from page_text import PageText
 from text_field import TextField
 from button import Button
@@ -52,7 +53,8 @@ class ChangePassForm:
         save_button.click()
 
     def _wait_until_form_is_visible(self):
-        robot_keywords.wait_until_element_is_visible(self.driver, "//nx-account-password-component")
+        element = Element(self.driver, "//nx-account-password-component")
+        element.wait_until_visible(timeout=10)
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}/account/password")

@@ -9,6 +9,7 @@ from selenium.webdriver.common.keys import Keys
 import platform
 from selenium.webdriver.common.action_chains import ActionChains
 
+from generic_element import Element
 from variables import ALERT
 
 # keep the following functions in alphabetical order
@@ -134,8 +135,8 @@ def wait_until_element_has_style(driver: webdriver, element_locator: str, expect
 def wait_until_element_is_not_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
-def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 40) -> None:
-    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, locator)))
+def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
+    Element(driver, locator).wait_until_visible(timeout=timeout)
 
 def wait_until_element_is_enabled(driver: webdriver, locator: str, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, locator)))

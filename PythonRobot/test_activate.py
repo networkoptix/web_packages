@@ -1,6 +1,9 @@
 import resource_import
+
+
 from RobotVariables import RobotVariables
-import robot_keywords 
+import robot_keywords
+from generic_element import Element
 from register_form import RegisterForm
 from time import sleep
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
@@ -69,10 +72,11 @@ def activate_same_link_twice():
     e = Email()
     link = e.get_email_link(random_email, 'activate')
     robot_keywords.go_to_url(driver, link)
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACTIVATION_SUCCESS)
+    Element(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
     # You go back, Jack,  do it again. Wheel turnin' round and round
     robot_keywords.go_to_url(driver, link)
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACTIVATION_SUCCESS)
+    Element(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+
 
 def save_user_data_correctly():
     """8. Should save user data to user account correctly"""

@@ -1,6 +1,9 @@
 from selenium import webdriver
 from selenium.webdriver.common.by import By
 import selenium.common.exceptions
+from selenium.webdriver.support.ui import WebDriverWait
+from selenium.webdriver.support import expected_conditions as EC
+
 
 import robot_keywords
 
@@ -31,5 +34,8 @@ class Element:
 
     def is_visible(self):
         return self.element.is_displayed()
+
+    def wait_until_visible(self,  timeout: int = 10) -> None:
+        WebDriverWait(self.driver, timeout).until(EC.visibility_of_element_located((By.XPATH, self.locator)))
 
 
