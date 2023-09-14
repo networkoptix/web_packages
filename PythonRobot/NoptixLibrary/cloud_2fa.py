@@ -1,6 +1,19 @@
+import os
+
 from PIL import Image
 from pyotp import *
-from pyzbar.pyzbar import decode
+
+try:
+    from pyzbar.pyzbar import decode
+except FileNotFoundError as e:
+    if os.name == 'nt':
+        raise FileNotFoundError(
+            f"{e} "
+            f"The problem could be caused by missing MSVCR120.dll "
+            f"(Visual C++ Redistributable Packages for Visual Studio 2013). "
+            f"See: https://www.microsoft.com/en-US/download/details.aspx?id=40784")
+    else:
+        raise
 
 
 class Cloud2fa:
