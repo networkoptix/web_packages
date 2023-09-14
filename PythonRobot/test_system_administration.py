@@ -1,3 +1,4 @@
+import os
 import time
 
 import robot_keywords
@@ -81,9 +82,11 @@ def non_owner_can_disconnect_account_from_system(server: CloudServer):
 
 
 if __name__ == "__main__":
+    suite_name = os.path.basename(__file__)
+    suite_name = suite_name.replace("test_","").replace(".py","")
     with Suite() as suite:
         cloud_owner_first = suite.create_cloud_account()
-        cloud_server_first = suite.create_cloud_server(cloud_owner_first)
+        cloud_server_first = suite.create_cloud_server(cloud_owner_first, f"{suite_name}_1_")
         # cloud_owner_second = suite.create_cloud_account()
         # cloud_server_second = suite.create_cloud_server(cloud_owner_second)
         # can_log_in_to_system_from_direct_link(cloud_server_first)

@@ -1,9 +1,10 @@
 import time
 from contextlib import ExitStack
-from typing import Self
+from typing import Optional
+from random import *
 
-from NoptixLibrary.CloudPortalAPI import CloudPortalAPI
-from NoptixLibrary.DockerApi import DockerApi
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.generic_keywords import GenericKeywords
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
@@ -17,6 +18,7 @@ _GENERIC_KEYWORDS = GenericKeywords()
 class Suite:
 
     def __init__(self):
+        self.run_id = randint(10000, 100000)
         self._exit_stack = ExitStack()
 
     def __enter__(self) -> 'Self':
@@ -28,15 +30,20 @@ class Suite:
     def create_cloud_account(self):
         return self._exit_stack.enter_context(_CloudAccount())
 
-    def create_cloud_server(self, cloud_owner: '_CloudAccount') -> 'CloudServer':
-        return self._exit_stack.enter_context(CloudServer(cloud_owner))
+    def create_cloud_server(self, cloud_owner: '_CloudAccount', suite_name: Optional[str] = None) -> 'CloudServer':
+        if suite_name is None:
+            suite_name = 'test_cloud_server_'
+        return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
 
 
 class CloudServer:
 
-    def __init__(self, cloud_owner: '_CloudAccount'):
+    def __init__(self, cloud_owner: '_CloudAccount', suite_name, run_id, ports: int = 1):
         self.cloud_owner = cloud_owner
         self._exit_stack = ExitStack()
+        self.ports = ports
+        self.suite_name = suite_name
+        self.run_id = run_id
 
     def __enter__(self) -> 'Self':
         self._set_up()
@@ -50,11 +57,10 @@ class CloudServer:
         # Create a docker server.
         # Mimic configuration from JSON files.
         data = {
-            'name': 'test_cloud_server_',
-            'ports': 1,
+            'name': self.suite_name,
+            'ports': self.ports
         }
-        unique_id = time.perf_counter_ns()
-        docker_server_data = _GENERIC_KEYWORDS.create_docker_server(data, unique_id)
+        docker_server_data = _GENERIC_KEYWORDS.create_docker_server(data, self.run_id)
         data.update(docker_server_data)
         self.name = data['name']
         self._container_id = data['container']

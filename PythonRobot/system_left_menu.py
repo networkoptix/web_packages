@@ -6,6 +6,7 @@ from toast_notification import ToastNotification
 from button import Button
 from RobotVariables import RobotVariables
 from variables import ENV
+from selenium.webdriver.common.by import By
 
 
 class SystemLeftMenu:
@@ -24,7 +25,7 @@ class SystemLeftMenu:
         return Button(self.driver, translated_xpath)
 
     def update_users_list(self):
-        self.users = self.driver.find_elements_by_xpath("//div[@id='level3users']//nx-level-3-item")
+        self.users = self.driver.find_elements(By.XPATH, "//div[@id='level3users']//nx-level-3-item")
 
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
@@ -32,7 +33,7 @@ class SystemLeftMenu:
         return Button(self.driver, translated_xpath)
 
     def update_servers_list(self):
-        self.servers = self.driver.find_elements_by_xpath("//div[@id='level3servers']//nx-level-3-item")
+        self.servers = self.driver.find_elements(By.XPATH, "//div[@id='level3servers']//nx-level-3-item")
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-menu")

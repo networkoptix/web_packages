@@ -6,6 +6,7 @@ from button import Button
 from RobotVariables import RobotVariables
 from variables import ENV
 from system_tile import SystemTile
+from selenium.webdriver.common.by import By
 
 
 class SystemsPage:
@@ -35,7 +36,7 @@ class SystemsPage:
         return Element(self.driver, f"//span[contains(text(), '{system_count} {system_text}')]")
 
     def update_system_tiles(self):
-        tiles = self.driver.find_elements_by_xpath("//nx-system-card")
+        tiles = self.driver.find_elements(By.XPATH, "//nx-system-card")
         self.tiles = list((SystemTile(self.driver, tile) for tile in tiles))
         return self.tiles
 

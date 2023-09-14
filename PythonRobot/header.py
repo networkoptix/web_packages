@@ -51,3 +51,16 @@ class HeaderNav:
     
     def language_dropdown(self):
         return Button(self.driver, "//header//nx-header-language-select")
+    
+    def systems_link(self):
+        return Button(self.driver, f'//a[contains(text(), "{self.rb.SYSTEMS_LINK_TEXT}")]')
+    
+    def home_link(self):
+        return Button(self.driver, f'//a[contains(text(), "{self.rb.HOME_TEXT}")]')
+
+    def resouces_link(self):
+        return Button(self.driver, f'//a[contains(text(), "{self.rb.RESOURCES_TEXT}")]')
+
+    def for_developers_link(self):
+        return Button(self.driver, f'//a[contains(text(), "{self.rb.FOR_DEVELOPERS_TEXT}")]')
+    

@@ -37,7 +37,7 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
         for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
             robot_keywords.wait_until_element_is_visible(driver, element)
     else:
-        api = CloudPortalAPI.CloudPortalAPI()
+        api = CloudPortalAPI()
         api.activate_account_via_api(email, password)
 
 def check_email_subject(self, email_id, sub_text, email_address, password, host, port):
@@ -196,13 +196,12 @@ def get_headless_chrome():
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--log-level=3")
-    #chrome_options.binary_location = '/Applications/Google Chrome.app/Contents/MacOS/Google Chrome'
-    #chrome_options.add_argument("--headless")
+    # chrome_options.add_argument("--headless")
    
-    capabilities = DesiredCapabilities.CHROME
-    capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}
+    # capabilities = DesiredCapabilities.CHROME
+    # capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}
 
-    driver = webdriver.Chrome(options=chrome_options, desired_capabilities=capabilities)
+    driver = webdriver.Chrome(options=chrome_options)
     # driver.execute_script("localStorage.setItem('theme', 'light');")
     return driver
 
@@ -273,7 +272,7 @@ def open_page_anonymously(driver: webdriver, url: str, title: str):
 
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
-    api = CloudPortalAPI.CloudPortalAPI()
+    api = CloudPortalAPI()
 
     if reg == "api":
         api.register_account(first_name, last_name, email, password)
@@ -283,7 +282,7 @@ def register_and_activate_account(driver, first_name, last_name, email, password
     activate(driver, email, password, from_email=from_email)
 
 def register_and_activate_random_email(driver, first_name, last_name, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
-    random_email = get_random_email(sendemal=from_email)
+    random_email = get_random_email(sendemail=from_email)
     register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg, from_email=from_email)  
     return random_email
 

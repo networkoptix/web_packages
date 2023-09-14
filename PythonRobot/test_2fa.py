@@ -13,8 +13,7 @@ from header import HeaderNav
 from security_form import SecurityForm
 from NoptixLibrary.server_api import ServerApi
 from system_admin import SystemAdmin
-
-from system_admin import SystemAdmin
+from landing_page import LandingPage
 
 from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
@@ -89,8 +88,9 @@ def login_with_qr_code():
     security_form = SecurityForm(driver)    
     twofa_codes = security_form.turn_on_2fa(password, qr_code=True)
     security_form.twofa_enabled_badge()
-    time.sleep(2)
+    robot_keywords.sleep(2)
     header.log_out()
+    robot_keywords.sleep(2)
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(SERVERS[0]['cloudOwner'], password, twofa_codes['totp'])
     header.account_dropdown().click()
