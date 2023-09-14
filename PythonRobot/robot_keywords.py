@@ -121,16 +121,11 @@ def title_should_be(driver, title: str, message: str = None):
 
         ``message`` argument is new in SeleniumLibrary 3.1.
         """
-    actual = get_title(driver)
+    actual = driver.title
     if actual != title:
         if message is None:
             message = f"Title should have been '{title}' but was '{actual}'."
         raise AssertionError(message)
-
-
-def get_title(driver) -> str:
-    """Returns the title of the current page."""
-    return driver.title
 
 
 def wait_until_number_of_tabs_are_open(driver, number, timeout=30):
