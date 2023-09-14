@@ -20,7 +20,8 @@ password = "qweasd 123"
 def should_open_systems_page_from_anonymous_state(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -30,7 +31,8 @@ def should_open_systems_page_from_anonymous_state(server: CloudServer):
 def system_tiles_represent_actual_information(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
     sys_page = SystemsPage(driver)
@@ -48,7 +50,7 @@ def no_systems_connected():
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     HeaderNav(driver).log_in_button().click()
     LoginDialog(driver).basic_cloud_login(email, password)
     systems_page = SystemsPage(driver)
@@ -61,7 +63,8 @@ def no_systems_connected():
 def one_system_directs_you_to_system_admin(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -74,7 +77,8 @@ def one_system_directs_you_to_system_admin(server: CloudServer):
 def opens_system_admin_when_tile_is_clicked(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -89,7 +93,8 @@ def opens_system_admin_when_tile_is_clicked(server: CloudServer):
 def search_highlights_system_name(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -108,7 +113,8 @@ def search_highlights_system_name(server: CloudServer):
 def search_highlights_owner_name(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -129,7 +135,8 @@ def search_highlights_owner_name(server: CloudServer):
 def search_is_cleared_by_x_button(server: CloudServer):
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -155,7 +162,8 @@ def should_update_owner_name(
     api.set_account_name(server_second.cloud_owner.email, password, "carrie", "fisher")
     driver = get_headless_chrome()
 
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server_first.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -181,7 +189,8 @@ def search_only_visible_with_more_than_eight_systems(
         password,
         server_second.cloud_owner.email)
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV + "/systems")
+    url = ENV + "/systems"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server_first.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 

@@ -21,7 +21,7 @@ def can_be_accessed_via_dropdown():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(email, password)
@@ -38,7 +38,7 @@ def can_be_accessed_via_direct_url():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
     ChangePassForm(driver).verify_form_is_visible()
     robot_keywords.close_browser(driver)
@@ -49,7 +49,7 @@ def password_is_actually_changed_and_login_works_with_new_password():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
@@ -78,7 +78,7 @@ def password_with_symbols_is_valid():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
@@ -107,7 +107,7 @@ def password_with_space_in_the_middle_is_valid():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
@@ -136,7 +136,7 @@ def pressing_enter_key_saves_data():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
@@ -153,7 +153,7 @@ def pressing_tab_key_moves_focus_to_the_next_element():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)
@@ -175,7 +175,7 @@ def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, f"{ENV}/account/password")
+    driver.get(f"{ENV}/account/password")
     LoginDialog(driver).basic_cloud_login(email, password)
 
     change_pass_form = ChangePassForm(driver)

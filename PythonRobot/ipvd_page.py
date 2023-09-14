@@ -29,7 +29,8 @@ class IVPDPage():
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
-        robot_keywords.go_to_url(driver, self.rb.ENV + "/ipvd")
+        url = self.rb.ENV + "/ipvd"
+        driver.get(url)
         self.validate_on_ipvd_page()
 
     def assert_table_appears(self):
@@ -53,7 +54,8 @@ class IVPDPage():
         return Button(self.driver, SUBMIT_A_REQUEST)
 
     def go_to_ipvd(self):
-        robot_keywords.go_to_url(self.driver, rb.ENV + "/ipvd")
+        url = rb.ENV + "/ipvd"
+        self.driver.get(url)
 
     def vendor_button(self, vendor="Axis"):
         VENDOR = f"//nx-tag/a[contains(text(), '{vendor}')]"

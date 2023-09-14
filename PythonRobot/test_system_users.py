@@ -33,7 +33,8 @@ def owner_can_remove_user(server: CloudServer):
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     header = HeaderNav(driver)
     header.account_dropdown()
@@ -120,7 +121,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
     email_id = email_con.wait_for_email(email)
     body = email_con.get_body(email_id)
     links = email_con.get_nx_links_from_email(body)
-    robot_keywords.go_to_url(driver, links)
+    driver.get(links)
     RegisterForm(driver).email_input_locked()
     robot_keywords.close_browser(driver)
     print("pass")
@@ -132,7 +133,8 @@ def share_with_registered_user_works(server: CloudServer):
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     header = HeaderNav(driver)
     header.account_dropdown()

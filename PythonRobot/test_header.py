@@ -30,8 +30,8 @@ HEADER_TMP_USERS = [SERVERS[0]['cloudOwner'], SERVERS[1]['cloudOwner']]
 def anon_header_correct():
     """new: Anonymous Header shows correct items"""
     # driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
-    header = HeaderNav(driver) 
+    driver.get(ENV)
+    header = HeaderNav(driver)
     header.create_account()
     header.language_dropdown()
     header.log_in_button()
@@ -49,8 +49,8 @@ def anon_header_correct():
 
 def logged_in_header_correct():
     """new: Logged in Header shows correct items"""
-    robot_keywords.go_to_url(driver, ENV)
-    header = HeaderNav(driver) 
+    driver.get(ENV)
+    header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
     header.systems_link()

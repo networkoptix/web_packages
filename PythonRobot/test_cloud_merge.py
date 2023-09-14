@@ -19,7 +19,8 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 def merge_from_primary_system():
     servers = keywords.create_systems(os.path.basename(__file__))
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{servers[0]['id']}")
+    url = ENV + f"/systems/{servers[0]['id']}"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(servers[0]['cloudOwner'], password)
     sys_admin = SystemAdmin(driver)
     sys_admin.merge_with_another_system_button().click()

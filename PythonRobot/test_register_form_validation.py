@@ -9,7 +9,8 @@ from resource_import import get_headless_chrome
 
 rb = RobotVariables("en_US")
 driver = get_headless_chrome()
-robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+driver.get(f'{rb.ENV}/authorize?client_type=create')
+
 
 def test_register_invalid(driver, first, last, email, password, checked):
     driver.refresh()

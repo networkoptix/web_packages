@@ -16,7 +16,7 @@ def register_and_activate():
     driver = resource_import.get_headless_chrome()
     random_email = Email.get_random_email(sendemail=True)
     resource_import.register_and_activate_account(driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
+    driver.get(rb.ENV + "/account")
     resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False)
 
 def register_and_activate_curly_text():
@@ -32,7 +32,7 @@ def register_and_activate_special_chars():
     driver = resource_import.get_headless_chrome()
     random_email = resource_import.get_random_email(rb.BASE_EMAIL, symbols=True)
     resource_import.register_and_activate_account(driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
+    driver.get(rb.ENV + "/account")
     resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False) 
 
 def register_activate_with_leading_space():
@@ -56,7 +56,7 @@ def register_and_activate_with_special_chars_in_pw():
     driver = resource_import.get_headless_chrome()
     random_email = Email.get_random_email(sendemail=True)
     resource_import.register_and_activate_account(driver, "#@!k", "Hamil", random_email, rb.SYMBOL_PASSWORD, from_email=False)
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
+    driver.get(rb.ENV + "/account")
     resource_import.cloud_login(driver, random_email, rb.SYMBOL_PASSWORD, button=None, api=False)
 
 def activate_same_link_twice():
@@ -64,16 +64,16 @@ def activate_same_link_twice():
     random_email = Email.get_random_email(sendemail=True)
 
     driver = resource_import.get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     rf = RegisterForm(driver)
     rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
 
     e = Email()
     link = e.get_email_link(random_email, 'activate')
-    robot_keywords.go_to_url(driver, link)
+    driver.get(link)
     Element(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
     # You go back, Jack,  do it again. Wheel turnin' round and round
-    robot_keywords.go_to_url(driver, link)
+    driver.get(link)
     Element(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
 
 
@@ -132,7 +132,7 @@ def login_before_activation():
     """14. Should allow to login with email instead of username"""
     driver = resource_import.get_headless_chrome()
     random_email = Email.get_random_email(sendemail=True)
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     rf = RegisterForm(driver)
     rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
 
@@ -140,8 +140,7 @@ def login_before_activation():
     link = e.get_email_link(random_email, 'activate')
     if not link:
         raise Exception("Registration email not found")
- 
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize')
+    driver.get(f'{rb.ENV}/authorize')
     login = LoginDialog(driver)
     login._wait_until_modal_is_visible()
     login.email_input().input_text(random_email)

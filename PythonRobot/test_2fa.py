@@ -22,7 +22,7 @@ def enable_and_login_with_2fa(server: CloudServer):
     [tags]    smoke    ci    C107768    C107769
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
@@ -53,7 +53,7 @@ def login_with_backup_code(server: CloudServer):
     [Tags]    smoke    ci    C107770
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(
@@ -97,7 +97,7 @@ def login_with_backup_code(server: CloudServer):
 def login_with_qr_code(server: CloudServer):
     """3. Enable and perform login with 2fa using QR"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(
@@ -131,7 +131,7 @@ def disabling_2fa(server: CloudServer):
     [Tags]    smoke    ci    C107771
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
@@ -151,7 +151,7 @@ def system_2fa_required(server: CloudServer):
     [Tags]    smoke    ci    C110067
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
@@ -162,7 +162,7 @@ def system_2fa_required(server: CloudServer):
     security_form.turn_on_2fa(server.cloud_owner)
     security_form.twofa_enabled_badge()
     time.sleep(5)
-    robot_keywords.go_to_url(driver, f"{ENV}/systems/{server.id}")
+    driver.get(f"{ENV}/systems/{server.id}")
     system_admin_page = SystemAdmin(driver)
     system_admin_page.mandatory_2fa_chechbox().select()
     system_admin_page.twofa_verification_code_input().input_text(server.cloud_owner.get_otp())
@@ -189,12 +189,12 @@ def twofa_not_required_when_more_than_one_system(server: CloudServer, second_ser
     [Tags]    smoke    ci    C110067
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
     time.sleep(2)
-    robot_keywords.go_to_url(driver, f"{ENV}/systems/{second_server.id}")
+    driver.get(f"{ENV}/systems/{second_server.id}")
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -214,7 +214,7 @@ def twofa_not_required_when_more_than_one_system(server: CloudServer, second_ser
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
     time.sleep(2)
-    robot_keywords.go_to_url(driver, f"{ENV}/systems/{second_server.id}")
+    driver.get(f"{ENV}/systems/{second_server.id}")
     SystemAdmin(driver)
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner.email,
@@ -231,7 +231,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServe
     [Tags]    C93781
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
@@ -302,7 +302,7 @@ def fail_to_login_with_expired_code(server: CloudServer):
     [Tags]    C94715
     """
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)

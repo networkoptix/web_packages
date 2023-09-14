@@ -23,7 +23,8 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 
 def can_log_in_to_system_from_direct_link(server: CloudServer):
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
     SystemAdmin(driver)
@@ -34,7 +35,8 @@ def can_log_in_to_system_from_direct_link(server: CloudServer):
 
 def owner_can_disconnect_system_from_cloud(server: CloudServer):
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     HeaderNav(driver).account_dropdown()
 
@@ -55,7 +57,8 @@ def non_owner_can_disconnect_account_from_system(server: CloudServer):
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
     LoginDialog(driver).basic_cloud_login(email, password)
     sys_admin = SystemAdmin(driver)
     time.sleep(2)
@@ -68,7 +71,8 @@ def non_owner_can_disconnect_account_from_system(server: CloudServer):
     SystemsPage(driver).no_systems()
     header = HeaderNav(driver)
     header.log_out()
-    robot_keywords.go_to_url(driver, ENV + f"/systems/{server.id}")
+    url1 = ENV + f"/systems/{server.id}"
+    driver.get(url1)
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
     left_menu = SystemLeftMenu(driver)
     left_menu.users_button().click()

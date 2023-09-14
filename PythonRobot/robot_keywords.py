@@ -31,10 +31,6 @@ def close_browser(driver: webdriver) -> None:
     driver.quit()
 
 
-def go_to_url(driver: webdriver, url: str) -> None:
-    driver.get(url)
-
-
 def location_should_be(driver: webdriver, url: str) -> None:
     WebDriverWait(driver, 1).until(EC.url_to_be(url))
 

@@ -24,7 +24,7 @@ rb = RobotVariables("en_US")
 def page_in_anonymous_state_register_header():
     """1. Should open register page in anonymous state by clicking Register button on top right corner"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
     RegisterForm(driver)
     driver.close()
@@ -34,7 +34,7 @@ def open_from_success_page():
     """2. Should open register page from register success page by clicking Register button on top right corner"""
     email = get_random_email(sendemail=True)
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
@@ -49,7 +49,7 @@ def open_from_success_page():
 def page_in_anonymous_state_redister_home():
     """3. Should open register page in anonymous state by clicking Register button on homepage"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     Button(driver, rb.CREATE_ACCOUNT_BODY).click()
     RegisterForm(driver)
     driver.close()
@@ -58,7 +58,7 @@ def page_in_anonymous_state_redister_home():
 def page_in_anonymouse_state_navigation():
     """4. Should open register page in anonymous state"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver)
     driver.close()
 
@@ -67,7 +67,7 @@ def register_user_with_correct_credentials():
     """5. Should register user with correct credentials"""
     email = get_random_email(sendemail=True)
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
     register_form.account_creation_success()
@@ -78,7 +78,7 @@ def valid_inputs_no_errors():
     """7. With valid inputs no errors are displayed"""
     email = get_random_email()
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
     register_form = RegisterForm(driver)
     register_form.first_name_input().input_text("mark")
@@ -106,7 +106,7 @@ def valid_inputs_no_errors():
 def password_masking_and_eye_icon():
     """8. Displays password masked, shows password and changes eye icon when clicked"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
     register_form.password_eye_closed()
     assert register_form.password_input().field_type() == "password", "Input type should be 'password'"
@@ -123,7 +123,7 @@ def should_respond_to_enter_key():
     """9. Should respond to Enter key and save data"""
     email = get_random_email()
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
     register_form.first_name_input().input_text("mark")
     register_form.last_name_input().input_text("hamill")
@@ -138,7 +138,7 @@ def should_respond_to_enter_key():
 def should_respond_to_tab_key():
     """10. Should respond to Tab key"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
     register_form = RegisterForm(driver)
     time.sleep(1)
@@ -194,7 +194,7 @@ def should_respond_to_tab_key():
 def terms_and_conditions_in_new_page():
     """11. Should open Terms and conditions in a new page"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver).terms_and_conditions_link().click()
     time.sleep(1)
     driver.switch_to.window(driver.window_handles[1])
@@ -205,7 +205,7 @@ def terms_and_conditions_in_new_page():
 def privacy_policy_in_new_page():
     """12. Should open Privacy Policy in a new page"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver).privacy_policy_link().click()
     time.sleep(1)
     driver.switch_to.window(driver.window_handles[1])
@@ -218,7 +218,7 @@ def cant_register_email_already_registered():
     email = get_random_email()
     register_account("mark", "hamill", email, rb.BASE_PASSWORD)
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
     register_form.account_already_exists_error()
@@ -230,7 +230,7 @@ def cant_register_email_already_activated():
     email = get_random_email()
     driver = get_headless_chrome()
     register_and_activate_account(driver, "mark", "hamill", email, rb.BASE_PASSWORD)
-    robot_keywords.go_to_url(driver, f'{rb.ENV}/authorize?client_type=create')
+    driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
     register_form.account_already_exists_error()
@@ -240,7 +240,7 @@ def cant_register_email_already_activated():
 def check_register_email():
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)

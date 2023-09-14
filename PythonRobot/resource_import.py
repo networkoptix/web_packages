@@ -25,7 +25,7 @@ rb = RobotVariables("en_US")
 def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
         link = get_email_link(email, password, "activate")
-        robot_keywords.go_to_url(link)
+        driver.get(link)
         for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
             Element(driver, element).wait_until_visible()
     else:
@@ -292,7 +292,7 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
         return None
 
 def open_page_anonymously(driver: webdriver, url: str, title: str):
-    robot_keywords.go_to_url(driver, url)
+    driver.get(url)
     robot_keywords.location_should_be(driver, url)
     time.sleep(3)
     assert driver.title == title
@@ -315,9 +315,10 @@ def register_and_activate_random_email(driver, first_name, last_name, password, 
 
 def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
     if view_type:
-        robot_keywords.go_to_url(driver, rb.ENV + "/authorize?client_type=create&view_type=" + view_type)
+        url = rb.ENV + "/authorize?client_type=create&view_type=" + view_type
+        driver.get(url)
     else:
-        robot_keywords.go_to_url(driver, "https://cloud-test.hdw.mx/authorize?client_type=create")
+        driver.get("https://cloud-test.hdw.mx/authorize?client_type=create")
     validate_on_register_page(driver)
 
     robot_keywords.input_text(driver, rb.REGISTER_FIRST_NAME_INPUT, first_name)
@@ -343,7 +344,8 @@ def set_language_anonymous():
 # from robot_tests/Resources/front-end-resources/restore-pass-resource.robot    
 def send_restore_password_email(driver: webdriver, email: str)->  None:
 
-    robot_keywords.go_to_url(driver, rb.ENV + "/authorize")
+    url = rb.ENV + "/authorize"
+    driver.get(url)
     Element(driver, rb.LOG_IN_MODAL).wait_until_visible()
     Element(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
     Element(driver, rb.EMAIL_INPUT).wait_until_visible()

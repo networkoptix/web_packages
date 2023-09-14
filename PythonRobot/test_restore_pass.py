@@ -20,7 +20,7 @@ def sets_new_password_and_successfully_logs_in():
     driver = get_headless_chrome()
     email = resource_import.get_random_email(sendemail=True)
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
 
@@ -33,7 +33,7 @@ def sets_new_password_and_successfully_logs_in():
     login.reset_password_button().click()
     email_con = Email()
     link = email_con.get_email_link(email, "restore_password")
-    robot_keywords.go_to_url(driver, link)
+    driver.get(link)
     login.activation_success_login_button().click()
     login.password_input().input_text(password)
     login.login_button().click()
@@ -47,7 +47,7 @@ def check_restore_password_email():
     driver = get_headless_chrome()
     email = resource_import.get_random_email(sendemail=True)
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
 

@@ -13,7 +13,7 @@ password = "qweasd 123"
 
 def test_failed_to_access_system_page_correctly_shows_when_going_to_a_nonexistent_system():
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     email = get_random_email()
     register_and_activate_account(driver, 'Mark', 'Hamill', email, password)
     nav = HeaderNav(driver)
@@ -21,7 +21,7 @@ def test_failed_to_access_system_page_correctly_shows_when_going_to_a_nonexisten
     LoginDialog(driver).basic_cloud_login(email, password)
     nav.account_dropdown()
     nonexistent_system_url = f'{rb.ENV}systems/nonexistent_system_name'
-    robot_keywords.go_to_url(driver, nonexistent_system_url)
+    driver.get(nonexistent_system_url)
     link_is_broken_xpath = rb.replace_nested_variables('//div[contains(text(), "{THIS_LINK_IS_BROKEN_TEXT}")]')
     wait_until_element_is_visible(driver, link_is_broken_xpath)
     wait_until_element_is_visible(driver, '//button//a[@routerlink="/"]/..')

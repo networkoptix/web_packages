@@ -13,7 +13,7 @@ rb = RobotVariables("en_US")
 def api_documentation_link():
     """1. API documentation link leads to proper page"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     Footer(driver, "webadmin")
     driver.close()
 
@@ -21,14 +21,14 @@ def api_documentation_link():
 def download_sdk_link():
     """2. Download SDK link leads to proper page"""   
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     Footer(driver, "webadmin")
     driver.close()
 
 def support_link():
     """3. Support leads to the proper support site"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     footer = Footer(driver, "cloud")
     footer.support_link().click()
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
@@ -40,7 +40,7 @@ def support_link():
 def copyright_link():
     """4. Copyright leads to the proper site"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     footer = Footer(driver, "cloud")
     time.sleep(1)
     footer.copyright_link().click()
@@ -53,7 +53,7 @@ def copyright_link():
 def terms_link():
     """5. Terms leads to the proper EULA site"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     footer = Footer(driver, "cloud")
     footer.terms_link().click()
     time.sleep(2)
@@ -63,7 +63,7 @@ def terms_link():
 def privacy_link():
     """6. Privacy leads to the proper page"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    driver.get(rb.ENV)
     footer = Footer(driver, "cloud")
     footer.privacy_link().click()
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)

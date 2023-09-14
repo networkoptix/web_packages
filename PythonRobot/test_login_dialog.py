@@ -20,7 +20,7 @@ def allows_login_with_correct_credentials_and_log_out():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, ENV)
+    driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
     login = LoginDialog(driver)
