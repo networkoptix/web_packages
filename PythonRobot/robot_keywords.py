@@ -128,15 +128,12 @@ def title_should_be(driver, title: str, message: str = None):
         raise AssertionError(message)
 
 
-def wait_until_number_of_tabs_are_open(driver, number, timeout=30):
-    timeout = timeout + time.time()
-    found = None
+def wait_until_number_of_tabs_are_open(driver, number: int, timeout=30):
+    start_time = time.monotonic()
     handles = driver.window_handles
-    while time.time() < timeout:
-        try:
-            if str(len(handles)) == str(number):
-                return
-        except:
-            found = f"Looking for {number} tabs, found {len(handles)} tabs."
+    while True:
+        if len(handles) == number:
+            return
+        if time.monotonic() - start_time > timeout:
+            raise AssertionError(f"Looking for {number} tabs, found {len(handles)} tabs.")
         time.sleep(.2)
-    raise AssertionError(found)
