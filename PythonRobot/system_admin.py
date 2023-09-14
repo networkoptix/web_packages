@@ -1,3 +1,6 @@
+from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.common.by import By
+
 import robot_keywords
 from RobotVariables import RobotVariables
 from button import Button
@@ -85,6 +88,14 @@ class SystemAdmin:
         alert_text = alert_text.replace("%PRIMARY%", primary_system_name)
         alert_text = alert_text.replace("%SECONDARY%", secondary_system_name)
         return ToastNotification(self.driver, alert_text)
+
+    def has_no_access_message(self) -> bool:
+        error_message = self.rb.__getattr__('SYSTEM_NO_ACCESS_TEXT')
+        try:
+            self.driver.find_element(By.XPATH, f'//h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(), \'{error_message}\')]')
+        except NoSuchElementException:
+            return False
+        return True
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")

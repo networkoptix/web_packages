@@ -84,6 +84,17 @@ def non_owner_can_disconnect_account_from_system(server: CloudServer):
     print("pass")
 
 
+def user_without_permissions_cannot_see_system_admin_page():
+    driver = get_headless_chrome()
+    email = get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    driver.get(ENV + f"/systems/{SERVERS[0]['id']}")
+    LoginDialog(driver).basic_cloud_login(email, password)
+    sys_admin = SystemAdmin(driver)
+    assert sys_admin.has_no_access_message()
+    driver.close()
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_","").replace(".py","")
@@ -95,3 +106,4 @@ if __name__ == "__main__":
         # can_log_in_to_system_from_direct_link(cloud_server_first)
         # owner_can_disconnect_system_from_cloud(cloud_server_second)
         non_owner_can_disconnect_account_from_system(cloud_server_first)
+        user_without_permissions_cannot_see_system_admin_page()
