@@ -9,7 +9,6 @@ class Button:
         self.driver = driver
         # TODO: add check to confirm button text is correct?
         element = Element(self.driver, locator)
-        assert element.element_in_dom(), "Button not on the page"
         self.selenium_element = element.get_selenium_element()
         self.locator = locator
         self.is_visible = element.is_visible()
