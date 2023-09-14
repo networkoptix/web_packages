@@ -1,3 +1,5 @@
+import time
+
 import robot_keywords
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from RobotVariables import RobotVariables
@@ -102,7 +104,7 @@ class SecurityForm:
             self.twofa_code_button().click()
             key = self.twofa_key().text.strip()
             self.twofa_key_modal_next_button().click()
-        robot_keywords.sleep(1)
+        time.sleep(1)
         totp = Cloud2fa().get_2fa_verification_code(key)
         self.twofa_totp_input().input_text(totp)
         self.twofa_verify_button().click()

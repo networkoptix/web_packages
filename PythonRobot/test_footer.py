@@ -1,3 +1,5 @@
+import time
+
 from colorama import Fore
 
 import robot_keywords
@@ -31,7 +33,7 @@ def support_link():
     footer.support_link().click()
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
     driver.switch_to.window(driver.window_handles[1])
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.location_should_contain(driver, rb.SUPPORT_URL)
     driver.close()
 
@@ -40,11 +42,11 @@ def copyright_link():
     driver = get_headless_chrome()
     robot_keywords.go_to_url(driver, rb.ENV)
     footer = Footer(driver, "cloud")
-    robot_keywords.sleep(1)
+    time.sleep(1)
     footer.copyright_link().click()
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
     driver.switch_to.window(driver.window_handles[1])
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.location_should_be(driver, rb.COPYRIGHT_URL)
     driver.close()
 
@@ -54,7 +56,7 @@ def terms_link():
     robot_keywords.go_to_url(driver, rb.ENV)
     footer = Footer(driver, "cloud")
     footer.terms_link().click()
-    robot_keywords.sleep(2)
+    time.sleep(2)
     robot_keywords.location_should_contain(driver, rb.TERMS_URL)
     driver.close()
 
@@ -66,7 +68,7 @@ def privacy_link():
     footer.privacy_link().click()
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
     driver.switch_to.window(driver.window_handles[1])
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.location_should_be(driver, rb.PRIVACY_POLICY_FULL_URL)
     driver.close()
 

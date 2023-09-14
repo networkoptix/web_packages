@@ -1,3 +1,5 @@
+import time
+
 import robot_keywords
 from RobotVariables import RobotVariables
 from resource_import import check_new_password_outline_and_error_message
@@ -47,17 +49,17 @@ def register_form_validation(driver, first_name, last_name, email, password, che
     robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
     robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
     robot_keywords.click_element(driver, rb.REGISTER_PASSWORD_INPUT)
-    robot_keywords.sleep(.1)
+    time.sleep(.1)
     robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
     if password != "":
         check_password_badge(driver, password, rb.REGISTER_FORM)
     if checked:
         robot_keywords.click_element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE)
-    robot_keywords.sleep(.1)
+    time.sleep(.1)
     robot_keywords.click_button(driver, rb.CREATE_ACCOUNT_BUTTON)
 
 def check_email_outline(driver, email):
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "border-color", rb.ERROR_COLOR)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
     if email == "" or email == " ":

@@ -70,15 +70,15 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         #TODO: set user theme (ie, light or dark mode)
         pass
     robot_keywords.wait_until_elements_are_visible(driver, [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT ])
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
 
     if exists:
         robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INPUT)
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT,password)
-        robot_keywords.sleep(1)
+        time.sleep(1)
         robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_BUTTON)
         robot_keywords.click_element(driver, rb.LOG_IN_BUTTON)
     else:
@@ -86,7 +86,7 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
         robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
-    robot_keywords.sleep(0.5)
+    time.sleep(0.5)
 
 def check_log_in(driver: webdriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
     random_email = get_random_email(rb.BASE_EMAIL)
@@ -270,7 +270,7 @@ def register_and_activate_account(driver, first_name, last_name, email, password
         api.register_account(first_name, last_name, email, password)
     elif reg == "ui":
         api.register(first_name, last_name, email, password)
-    robot_keywords.sleep(1)
+    time.sleep(1)
     activate(driver, email, password, from_email=from_email)
 
 def register_and_activate_random_email(driver, first_name, last_name, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
@@ -340,7 +340,7 @@ def verify_in_account_page(driver: webdriver):
                                                             ])
     for element in [rb.ACCOUNT_SETTINGS_BUTTON, rb.ACCOUNT_CANCEL]:
         robot_keywords.element_should_not_be_visible(driver, element)
-    robot_keywords.sleep(0.5)
+    time.sleep(0.5)
 
 def wait_for_email(mail, recipient, timeout, status='UNSEEN'):
     start_time = time.time()

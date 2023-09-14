@@ -1,4 +1,4 @@
-from time import sleep
+import time
 
 from urllib3.exceptions import MaxRetryError
 
@@ -30,15 +30,15 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         #TODO: set user theme (ie, light or dark mode)
         pass
     robot_keywords.wait_until_elements_are_visible(driver, [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT ])
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
-    robot_keywords.sleep(1)
+    time.sleep(1)
     robot_keywords.click_element(driver, rb.LOG_IN_NEXT_BUTTON)
 
     if exists:
         robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INPUT)
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT,password)
-        robot_keywords.sleep(1)
+        time.sleep(1)
         robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_BUTTON)
         robot_keywords.click_element(driver, rb.LOG_IN_BUTTON)
 
@@ -47,9 +47,9 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
         # todo: remove this
-        sleep(5)
+        time.sleep(5)
         robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
-    robot_keywords.sleep(0.5)
+    time.sleep(0.5)
 
 
 
@@ -60,7 +60,7 @@ def test_can_access_account_page_from_dropdown():
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     robot_keywords.go_to_url(driver, rb.ENV)
     cloud_login(driver, email, password)
-    robot_keywords.sleep(3)
+    time.sleep(3)
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
     robot_keywords.click_button(driver, rb.ACCOUNT_DROPDOWN)
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SETTINGS_BUTTON)
@@ -111,7 +111,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.sleep(2)
+    time.sleep(2)
     robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
     robot_keywords.clear_element_text(driver, rb.ACCOUNT_FIRST_NAME)
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, rb.TEST_FIRST_NAME)
@@ -225,7 +225,7 @@ def test_SPACE_for_last_name_is_not_valid():
     robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
     robot_keywords.element_should_be_disabled(driver, rb.ACCOUNT_SAVE)
     robot_keywords.element_should_be_enabled(driver, rb.ACCOUNT_CANCEL)
-    sleep(10)
+    time.sleep(10)
     robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     robot_keywords.close_browser(driver)
     
@@ -249,14 +249,14 @@ def test_language_is_changeable_on_the_account_page():
     lang_dict = get_lang_list()
     for lang in lang_dict:
         info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
-        sleep(1)
+        time.sleep(1)
         verify_in_account_page(driver)
         if lang != rb.LANGUAGE:
             robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
             # TODO: this is not working
             #robot_keywords.wait_until_element_is_visible(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='${lang}']")
             robot_keywords.click_element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..")
-            sleep(2)
+            time.sleep(2)
             robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{info_text}')]")
 
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
@@ -264,7 +264,7 @@ def test_language_is_changeable_on_the_account_page():
     # TODO: this is not working
     #robot_keywords.wait_until_element_is_visible(driver, f"//header//nx-header-language-select//span[@lang='{rb.LANGUAGE}']")
     robot_keywords.click_element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']")
-    sleep(1)
+    time.sleep(1)
     verify_in_account_page(driver)
     robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
     robot_keywords.close_browser(driver)
@@ -284,7 +284,7 @@ def test_language_change_affects_emails():
         robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
         robot_keywords.wait_until_element_is_visible(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..")
         robot_keywords.click_element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']")
-        sleep(5)
+        time.sleep(5)
         robot_keywords.close_browser(driver)
 
     # if we just closed the browser, we'll get a MaxRetryError
@@ -295,7 +295,7 @@ def test_language_change_affects_emails():
         driver = get_headless_chrome()
 
     send_restore_password_email(driver, random_email)
-    sleep(10)
+    time.sleep(10)
     mbox = resource_import.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
     email_uid = resource_import.wait_for_email(mbox, recipient=random_email, timeout=120, status="UNREAD")
     resource_import.delete_email(mbox, email_uid)
@@ -321,7 +321,7 @@ def test_language_change_is_new_default():
     robot_keywords.wait_until_element_is_visible(driver, droplang1)
     robot_keywords.click_element(driver, droplang1)
 
-    sleep(5)
+    time.sleep(5)
     driver.refresh()
 
     dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
@@ -341,7 +341,7 @@ def test_language_change_is_new_default():
     api = CloudPortalAPI()
     api.set_account_language(email, password, new_language=lang)
 
-    sleep(5)
+    time.sleep(5)
     driver.refresh()
 
     robot_keywords.wait_until_element_is_visible(driver, dropLang2)
@@ -355,7 +355,7 @@ def test_language_change_is_new_default():
         robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
 
     resource_import.check_language_logged_in(email, password)
-    sleep(3)
+    time.sleep(3)
     driver.refresh()
 
 
