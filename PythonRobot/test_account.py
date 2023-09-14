@@ -330,8 +330,9 @@ def test_language_change_is_new_default():
     driver.refresh()
 
     dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
-    robot_keywords.wait_until_element_is_visible(driver, dropLang2)   
-    activeLang = robot_keywords.get_text(driver, dropLang2)
+    robot_keywords.wait_until_element_is_visible(driver, dropLang2)
+    drop_lang_element = Element(driver, dropLang2)
+    activeLang = drop_lang_element.text()
     assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
 
     if lang == 'ja_JP':
@@ -350,7 +351,7 @@ def test_language_change_is_new_default():
     driver.refresh()
 
     robot_keywords.wait_until_element_is_visible(driver, dropLang2)
-    activeLang = robot_keywords.get_text(driver, dropLang2)
+    activeLang = drop_lang_element.text()
 
     if activeLang.lower() not in lang.lower():
         assert False, f"{activeLang.lower()} not found in {lang.lower()}"  

@@ -37,10 +37,6 @@ def click_on_link(driver: webdriver, locator: Tuple) -> None:
 def close_browser(driver: webdriver) -> None:
     driver.quit()
 
-# deprecated: this functionality has been moved to generic_element
-def get_text(driver: webdriver, locator: str) -> str:
-    return driver.find_element(By.XPATH, locator).text
-
 
 def go_to_url(driver: webdriver, url: str) -> None:
     driver.get(url)
