@@ -64,9 +64,6 @@ def regular_open_browser() -> webdriver:
     driver = webdriver.Chrome()
     return driver
 
-def wait_until_element_contains(driver, locator, expected_text, timeout: int = 10) -> None:
-    WebDriverWait(driver, timeout).until(EC.text_to_be_present_in_element((By.XPATH, locator), expected_text))
-
 
 def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
     def check_style(driver):
