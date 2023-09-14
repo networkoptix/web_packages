@@ -1,5 +1,3 @@
-import random
-
 import robot_keywords
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from RobotVariables import RobotVariables
@@ -10,6 +8,8 @@ from NoptixLibrary.cloud_2fa import Cloud2fa
 from generic_element import Element
 from NoptixLibrary.suite import CloudAccount
 from selenium.webdriver.common.by import By
+from text_field import TextField
+from page_text import PageText
 
 
 class SecurityForm:
