@@ -1,12 +1,9 @@
-import platform
 import time
-from typing import List
 from typing import Tuple
 
 from selenium import webdriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
@@ -94,23 +91,13 @@ def mouse_over(driver, locator):
 
 
 def element_style_should_be(driver, locator, style_attribute, expected_value):
-    observed_value = get_element_style(driver, locator, style_attribute)
+    element = driver.find_element(By.XPATH, locator)
+    observed_value = element.value_of_css_property(style_attribute)
     if observed_value == expected_value:
         pass
     else:
         # driver.capture_page_screenshot()
         raise AssertionError(f"Expected: {expected_value}\nObserved: {observed_value}")
-
-
-def get_element_style(driver, locator, style_attribute):
-    not_found = None
-    try:
-        element = driver.find_element(By.XPATH, locator)
-        value = element.value_of_css_property(style_attribute)
-        return value
-    except:
-        not_found = f"No element found with style attribute {style_attribute}"
-    raise AssertionError(not_found)
 
 
 def wait_until_number_of_tabs_are_open(driver, number: int, timeout=30):
