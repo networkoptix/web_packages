@@ -1,6 +1,6 @@
-import robot_keywords
 from RobotVariables import RobotVariables
 from button import Button
+from generic_element import Element
 
 
 class HeaderNav:
@@ -11,7 +11,7 @@ class HeaderNav:
         self._wait_until_header_is_visible()
 
     def _wait_until_header_is_visible(self):
-        Element(self.driver, "//nx-header").wait_until_is_visible()
+        Element(self.driver, "//nx-header").wait_until_visible()
 
     def account_dropdown(self):
         return Button(self.driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")
