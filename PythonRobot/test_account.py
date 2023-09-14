@@ -100,7 +100,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.clear_element_text(driver, rb.ACCOUNT_FIRST_NAME)
+    Element(driver, rb.ACCOUNT_FIRST_NAME).clear_text()
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
     # TODO: the save button doesn't appear.
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
@@ -114,7 +114,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     verify_in_account_page(driver)
     time.sleep(2)
     robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
-    robot_keywords.clear_element_text(driver, rb.ACCOUNT_FIRST_NAME)
+    Element(driver, rb.ACCOUNT_FIRST_NAME).clear_text()
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, rb.TEST_FIRST_NAME)
     robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
     robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
