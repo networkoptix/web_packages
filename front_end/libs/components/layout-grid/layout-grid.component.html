@@ -169,7 +169,8 @@
                         class="layout-item-wrapper"
                         [ngClass]="{
                             'full-screen-wrapper':
-                                layoutItemWrapper === window.document.fullscreenElement
+                                layoutItemWrapper === window.document.fullscreenElement,
+                            'dragging': dragging,
                         }"
                         (resize)="
                             calculateItemSize($event, item, layoutItemLookup[item.resourceId])
@@ -180,8 +181,8 @@
                             #dragContainer
                             [cdkDragDisabled]="layout.locked"
                             [cdkDragData]="item"
-                            (cdkDragReleased)="dragging = false; moveItem(item)"
-                            (cdkDragStarted)="dragging = true"
+                            (cdkDragReleased)="dragging = !dragging; moveItem(item)"
+                            (cdkDragStarted)="dragging = !dragging"
                             (cdkDragMoved)="updateBackground($event, item, 'move')"
                             class="layout-item"
                             [ngClass]="{
@@ -190,7 +191,8 @@
                                 'server-layout-item':
                                     layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.SERVER,
                                 'full-screen-override':
-                                    layoutItemWrapper === window.document.fullscreenElement
+                                    layoutItemWrapper === window.document.fullscreenElement,
+                                'collided': (collisions$ | async)[item.id],
                             }"
                             [ngStyle]="(collisions$ | async)[item.id] || item.renderConfig.child"
                         >
@@ -462,6 +464,7 @@
                                 </div>
                             </ng-container>
                             <div
+                                *ngFor="let alignment of alignments"
                                 cdkDropList
                                 [cdkDropListDisabled]="layout.locked"
                                 [cdkDropListConnectedTo]="[]"
@@ -470,9 +473,12 @@
                                     cdkDrag
                                     [cdkDragDisabled]="layout.locked"
                                     [cdkDragData]="item"
-                                    (cdkDragMoved)="updateBackground($event, item, 'resize')"
+                                    (cdkDragMoved)="
+                                        dragging = !dragging;
+                                        updateBackground($event, item, 'resize', alignment)
+                                    "
                                     (cdkDragReleased)="moveItem(item)"
-                                    class="resize-handle"
+                                    class="resize-handle {{ alignment[0] }} {{ alignment?.[1] }}"
                                 ></div>
                             </div>
                         </div>

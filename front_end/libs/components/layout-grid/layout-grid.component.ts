@@ -167,6 +167,106 @@ interface Collisions {
     background?: string;
 }
 
+enum VerticalAlign {
+    TOP = 'top',
+    BOTTOM = 'bottom',
+}
+
+enum HorizontalAlign {
+    LEFT = 'left',
+    RIGHT = 'right',
+}
+
+const calculateResize = (
+    { x, y }: Point,
+    { width, height }: Size,
+    // eslint-disable-next-line @typescript-eslint/no-use-before-define
+    [horizonalOrVerticalAlign, horizonalAlign]: NxLayoutGridComponent['alignments'][number] = [
+        VerticalAlign.BOTTOM,
+        HorizontalAlign.RIGHT,
+    ],
+    origin: Point,
+): { move?: Point; resize: Point; transformOrigin?: string } => {
+    const verticalAlign = Object.values(VerticalAlign).includes(
+        horizonalOrVerticalAlign as VerticalAlign,
+    )
+        ? (horizonalOrVerticalAlign as VerticalAlign)
+        : null;
+
+    horizonalAlign = verticalAlign ? horizonalAlign : (horizonalOrVerticalAlign as HorizontalAlign);
+
+    const move = { x: 0, y: 0 };
+
+    const moveMinX = Math.abs(x) < width && Math.abs(x) > 16;
+    const moveMinY = Math.abs(y) < height && Math.abs(y) > 16;
+    const calcX = moveMinX ? (x > 0 ? 1 : -1) : 0;
+    const calcY = moveMinY ? (y > 0 ? 1 : -1) : 0;
+    const actualX = Math.round(x / width);
+    const actualY = Math.round(y / height);
+
+    x = Math.abs(actualX) > Math.abs(calcX) ? actualX : calcX;
+    y = Math.abs(actualY) > Math.abs(calcY) ? actualY : calcY;
+
+    const initialState = {
+        resize: {
+            x: 0,
+            y: 0,
+        },
+        transformOrigin: 'top left',
+    };
+
+    if (!x && !y) {
+        return initialState;
+    }
+
+    if (verticalAlign === VerticalAlign.TOP) {
+        y *= -1;
+    }
+
+    if (!verticalAlign) {
+        y = x;
+    }
+
+    if (!horizonalAlign) {
+        x = y;
+    }
+
+    x = [x, y].find(val => Math.abs(val) === Math.min(Math.abs(x), Math.abs(y)));
+    y = x;
+
+    if (verticalAlign === VerticalAlign.TOP) {
+        move.y = -y;
+        initialState.transformOrigin = initialState.transformOrigin.replace(
+            VerticalAlign.TOP,
+            VerticalAlign.BOTTOM,
+        );
+    }
+
+    if (horizonalAlign === HorizontalAlign.LEFT) {
+        x *= -1;
+        move.x = -x;
+        initialState.transformOrigin = initialState.transformOrigin.replace(
+            HorizontalAlign.LEFT,
+            HorizontalAlign.RIGHT,
+        );
+    }
+
+    initialState.resize.x = x;
+    initialState.resize.y = y;
+
+    if (verticalAlign === VerticalAlign.TOP && horizonalAlign === HorizontalAlign.LEFT) {
+        return {
+            ...initialState,
+            move: {
+                x: -initialState.resize.x,
+                y: initialState.resize.y,
+            },
+        };
+    }
+
+    return { ...initialState, move };
+};
+
 @UntilDestroy()
 @Component({
     selector: 'nx-layout-grid',
@@ -204,6 +304,17 @@ export class NxLayoutGridComponent {
     );
 
     #lastWidth: number = Infinity;
+
+    alignments: ([VerticalAlign, HorizontalAlign] | [VerticalAlign] | [HorizontalAlign])[] = [
+        [VerticalAlign.BOTTOM, HorizontalAlign.RIGHT],
+        [VerticalAlign.BOTTOM, HorizontalAlign.LEFT],
+        [VerticalAlign.TOP, HorizontalAlign.RIGHT],
+        [VerticalAlign.TOP, HorizontalAlign.LEFT],
+        [VerticalAlign.BOTTOM],
+        [VerticalAlign.TOP],
+        [HorizontalAlign.RIGHT],
+        [HorizontalAlign.LEFT],
+    ];
 
     mouseMoving$ = fromEvent(this.window.document, 'mousemove').pipe(
         switchMap(() => of(false).pipe(delay(5000), startWith(true))),
@@ -357,6 +468,7 @@ export class NxLayoutGridComponent {
             move?: { x: number; y: number };
             id: string;
             resize?: { x: number; y: number };
+            alignment?: NxLayoutGridComponent['alignments'][number];
             transformOrigin?: string;
         },
     );
@@ -372,6 +484,7 @@ export class NxLayoutGridComponent {
                     resize = this.INITIAL_DRAG_STATE.resize,
                     id,
                     transformOrigin = this.INITIAL_DRAG_STATE.transformOrigin,
+                    alignment,
                 },
                 {
                     cellSize: { width, height },
@@ -391,10 +504,7 @@ export class NxLayoutGridComponent {
                               x: Math.round(move.x / width),
                               y: Math.round(move.y / height),
                           },
-                resize: {
-                    x: Math.round(resize.x / width),
-                    y: Math.round(resize.y / height),
-                },
+                ...calculateResize(resize, { width, height }, alignment, origin),
                 id,
                 width,
                 height,
@@ -487,6 +597,10 @@ export class NxLayoutGridComponent {
                 return {
                     ...collisions,
                     [currentId]: this.getCollisionStyle(current, draggingItem, items),
+                    [draggingItem.id]: {
+                        opacity: 0.25,
+                        background: 'var(--error)',
+                    },
                 };
             }, {}),
         ),
@@ -924,8 +1038,12 @@ export class NxLayoutGridComponent {
         { distance }: { distance: Point },
         { id }: ParsedLayoutItem,
         action = 'move',
+        alignment: NxLayoutGridComponent['alignments'][number] = [
+            VerticalAlign.BOTTOM,
+            HorizontalAlign.RIGHT,
+        ],
     ): void => {
-        this.#draggingPosition$.next({ [action]: distance, id });
+        this.#draggingPosition$.next({ [action]: distance, id, alignment });
     };
 
     moveAddedItem = (
@@ -1224,7 +1342,7 @@ export class NxLayoutGridComponent {
         if (collided) {
             return {
                 moveTo: null,
-                opacity: 0.25,
+                opacity: 0.5,
                 background: 'var(--error)',
             };
         }
