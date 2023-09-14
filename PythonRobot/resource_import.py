@@ -6,7 +6,6 @@ import re
 import time
 from email.header import decode_header
 from random import randint
-from re import findall
 
 import urllib3
 from selenium import webdriver
@@ -205,7 +204,7 @@ def get_lang_list():
     
 def get_nx_links_from_email(self, email_index, body):
         url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
-        res = findall(url, str(body))
+        res = re.findall(url, str(body))
         return str(res[0][0])
     
 def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):

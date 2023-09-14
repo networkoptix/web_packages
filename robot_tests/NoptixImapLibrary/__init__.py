@@ -19,9 +19,9 @@
 IMAP Library - a IMAP email testing library.
 """
 import quopri
+import re
 from email import message_from_string
 from imaplib import IMAP4, IMAP4_SSL
-from re import findall
 from robot.api import logger
 import time
 try:
@@ -148,14 +148,14 @@ class NoptixImapLibrary(object):
         | Get Links From Email | INDEX |
         """
         body = self.get_email_body(email_index).decode('utf-8', 'ignore')
-        res = findall(r'href=[\'"]?([^\'" >]+)', body)
+        res = re.findall(r'href=[\'"]?([^\'" >]+)', body)
         return res
 
     def get_nx_links_from_email(self, email_index, path):
         body = self.get_email_body(email_index)
         # url = r'href=[\'\"]?(https:\/\/\S*(\.mx\/|host\/|\.com\/)({})\/[^\'\" >]+)'.format(path)
         url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
-        res = findall(url, str(body))
+        res = re.findall(url, str(body))
         logger.trace(res)
         return str(res[0][0])
 
@@ -171,7 +171,7 @@ class NoptixImapLibrary(object):
         | Get Matches From Email | INDEX | PATTERN |
         """
         body = self.get_email_body(email_index)
-        return findall(pattern, body)
+        return re.findall(pattern, body)
 
     def get_multipart_content_type(self):
         """Returns the content type of current part of selected multipart email message.

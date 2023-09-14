@@ -1,8 +1,8 @@
 import quopri
 import time
+import re
 from imaplib import IMAP4_SSL
 from random import randint
-from re import findall, search
 from time import sleep
 
 from RobotVariables import RobotVariables
@@ -86,7 +86,7 @@ class Email:
 
     def get_nx_links_from_email(self, email_body):
         url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
-        res = findall(url, str(email_body))
+        res = re.findall(url, str(email_body))
         return str(res[0][0])
     
     def delete_email(self, email_uid):
@@ -140,27 +140,27 @@ class Email:
             self.logout()
 
     def get_links_from_email(self, body):
-        res = findall(r'href=[\'"]?([^\'" >]+)', body)
+        res = re.findall(r'href=[\'"]?([^\'" >]+)', body)
         return res
 
     def check_email_button(self, body, env, color):
         pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(
             env, color)
-        if not search(pat, body):
+        if not re.search(pat, body):
             raise Exception("Button background-color was not found.")
 
     def check_email_user_names(self, body, fName, lName):
         pat = '(<h1.*>).*({} {}.*</h1>)'.format(fName, lName)
-        if not search(pat, body):
+        if not re.search(pat, body):
             raise Exception("User name was not in the email.")
 
     def check_email_cloud_name(self, body, cloudName):
         pat = '(<p).*({}).*(</p>)'.format(cloudName)
-        if not search(pat, body):
+        if not re.search(pat, body):
             raise Exception("Cloud name was not in the email.")
 
     def check_for_blank_target(self, body, url):
         pat = '(<a class="btn" href="{})(.[^>]*)(target=_blank)'.format(url)
-        if not search(pat, body):
+        if not re.search(pat, body):
             raise Exception("Button target was not 'blank'.")
 
