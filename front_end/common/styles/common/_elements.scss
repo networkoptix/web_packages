@@ -189,4 +189,9 @@ span.marked {
     .no-container-shadow & {
         box-shadow: none;
     }
+
+    .no-container-background & {
+        box-shadow: none;
+        background: none;
+    }
 }

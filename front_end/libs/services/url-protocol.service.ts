@@ -83,7 +83,7 @@ export class NxUrlProtocolService {
     }
 
     openDesktopAsTemporaryUser(temporaryUserToken: string): void {
-        const uri = `${this.baseUri}${this.window.location.host}?temporaryUserToken=${temporaryUserToken}`;
+        const uri = `${this.baseUri}${this.window.location.host}?tmp_token=${temporaryUserToken}`;
         this.window.location.href = uri;
     }
 }

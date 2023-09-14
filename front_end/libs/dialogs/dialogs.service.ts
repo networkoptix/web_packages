@@ -190,6 +190,7 @@ export class NxDialogsService {
             width: DIALOG_SIZE.SMALL,
             disableClose: true,
             hasBackdrop: false,
+            panelClass: 'no-container-background',
         },
     );
 

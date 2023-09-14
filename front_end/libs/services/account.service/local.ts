@@ -140,9 +140,10 @@ export class LocalAccount extends BaseAccount {
     private showLoginDialog(): Promise<Account | undefined> {
         this.loginDialogActive = true;
         const temporaryUserToken = new URLSearchParams(this.window.location.href.split('?')[1]).get(
-            'temporaryUserToken',
+            'tmp_token',
         );
         if (temporaryUserToken) {
+            this.loginService.temporaryUserToken$$.set(temporaryUserToken);
             return this.loginService.temporaryUserLogin().then(() => {
                 this.loginDialogActive = false;
                 return undefined;

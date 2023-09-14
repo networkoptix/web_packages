@@ -1,6 +1,6 @@
 import { Dialog } from '@angular/cdk/dialog';
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { Subject } from 'rxjs';
 import { switchMap, take, takeUntil } from 'rxjs/operators';
@@ -30,6 +30,8 @@ export class NxLoginService {
     done$: Subject<boolean> = new Subject<boolean>();
 
     private _currentSystem: NxSystem;
+
+    temporaryUserToken$$ = signal<string>(null);
 
     constructor(
         private http: HttpClient,

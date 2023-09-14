@@ -6,6 +6,7 @@ import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
+import { NxLoginService } from '@services/login.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -26,6 +27,7 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
     private urlProtocol = inject(NxUrlProtocolService);
     private nxSystemAPIService = inject(NxSystemAPIService);
     private account = inject(NxAccountService);
+    private loginService = inject(NxLoginService);
     private window = inject(WINDOW);
     private temporaryUserToken: string;
 
@@ -44,9 +46,7 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
             version: this.CONFIG.system.version.major,
         }) as NxSystemRestAPI3;
 
-        this.temporaryUserToken = new URLSearchParams(this.window.location.href.split('?')[1]).get(
-            'temporaryUserToken',
-        );
+        this.temporaryUserToken = this.loginService.temporaryUserToken$$();
 
         this.openDesktopApp();
     }

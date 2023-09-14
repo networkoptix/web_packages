@@ -26,6 +26,7 @@ import { map, startWith } from 'rxjs/operators';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
+import { NxLoginService } from '@services/login.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
@@ -132,6 +133,7 @@ export class NxHeaderComponent implements OnInit {
         @Inject(WINDOW) private window: Window,
         private cookieService: CookieService,
         @Inject(DOCUMENT) private document: Document,
+        public loginService: NxLoginService,
     ) {
         this.CONFIG = configService.getConfig();
 

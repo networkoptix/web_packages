@@ -185,7 +185,7 @@
 
 <!-- Menu for render -->
 <header
-    *ngIf="viewHeader"
+    *ngIf="viewHeader && !loginService.temporaryUserToken$$()"
     (nxClickElsewhere)="headerService.show$ = false"
 >
     <ng-template #newHeaderRef></ng-template>
