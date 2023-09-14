@@ -60,11 +60,6 @@ def reload_page(driver: webdriver) -> None:
     driver.refresh()
 
 
-def regular_open_browser() -> webdriver:
-    driver = webdriver.Chrome()
-    return driver
-
-
 def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
     def check_style(driver):
         try:
