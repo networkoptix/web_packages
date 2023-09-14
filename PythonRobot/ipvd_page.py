@@ -1,6 +1,7 @@
 import robot_keywords
 from RobotVariables import RobotVariables
 from button import Button
+from generic_element import Element
 
 rb = RobotVariables("en_US")
 
@@ -85,12 +86,12 @@ class IVPDPage():
                                                                      IVPDPage.DEVICES_PANE,
                                                                      IVPDPage.LANDING_PAGE_TEXT], timeout=60)
         robot_keywords.title_should_be(self.driver, rb.IPVD_TITLE_TEXT + ' - ' + rb.PRODUCT_NAME)
-        robot_keywords.elements_should_not_be_visible(self.driver, [self.TABLE, self.DEVICE_DETAILS, self.PAGINATION,
-                                                                    self.EXPORT_TO_CSV_LINK])
+        for element in [self.TABLE, self.DEVICE_DETAILS, self.PAGINATION, self.EXPORT_TO_CSV_LINK]:
+            Element(self.driver, element).should_not_be_visible()
 
     def validate_landing_page_objects_not_visible(self):
-        robot_keywords.elements_should_not_be_visible(self.driver,
-                                                      [self.MANUFACTURERS_PANE, self.AND_MORE, self.DEVICES_PANE])
+        for element in [self.MANUFACTURERS_PANE, self.AND_MORE, self.DEVICES_PANE]:
+            Element(self.driver, element).should_not_be_visible()
 
 
 if __name__ == "__main__":

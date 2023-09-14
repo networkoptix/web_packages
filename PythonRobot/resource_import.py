@@ -341,7 +341,7 @@ def verify_in_account_page(driver: webdriver):
                                                             rb.DELETE_ACCOUNT_BUTTON
                                                             ])
     for element in [rb.ACCOUNT_SETTINGS_BUTTON, rb.ACCOUNT_CANCEL]:
-        robot_keywords.element_should_not_be_visible(driver, element)
+        Element(driver, element).should_not_be_visible()
     time.sleep(0.5)
 
 def wait_for_email(mail, recipient, timeout, status='UNSEEN'):

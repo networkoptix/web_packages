@@ -31,7 +31,8 @@ def test_register_invalid(driver, first, last, email, password, checked):
                          rb.LAST_NAME_IS_REQUIRED, 
                          rb.TERMS_AND_CONDITIONS_ERROR
                          ]
-    robot_keywords.elements_should_not_be_visible(driver, invisible_elements)
+    for element in invisible_elements:
+        Element(driver, element).should_not_be_visible()
     register_form_validation(driver, first, last, email, password, checked)
 
     if password not in rl.GOOD_PASSWORDS and password not in rl.FAIR_PASSWORDS:
