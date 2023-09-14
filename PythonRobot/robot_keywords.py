@@ -52,10 +52,6 @@ def input_text(driver: webdriver, locator: Tuple, text: str) -> None:
     element.send_keys(text)
 
 
-def open_browser_and_go_to_url(driver: webdriver, url: str) -> None:
-    driver.get(url)
-
-
 def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
     def check_style(driver):
         try:
