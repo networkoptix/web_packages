@@ -113,21 +113,6 @@ def get_element_style(driver, locator, style_attribute):
     raise AssertionError(not_found)
 
 
-def title_should_be(driver, title: str, message: str = None):
-    """Verifies that the current page title equals ``title``.
-
-        The ``message`` argument can be used to override the default error
-        message.
-
-        ``message`` argument is new in SeleniumLibrary 3.1.
-        """
-    actual = driver.title
-    if actual != title:
-        if message is None:
-            message = f"Title should have been '{title}' but was '{actual}'."
-        raise AssertionError(message)
-
-
 def wait_until_number_of_tabs_are_open(driver, number: int, timeout=30):
     start_time = time.monotonic()
     handles = driver.window_handles

@@ -295,7 +295,7 @@ def open_page_anonymously(driver: webdriver, url: str, title: str):
     robot_keywords.go_to_url(driver, url)
     robot_keywords.location_should_be(driver, url)
     time.sleep(3)
-    robot_keywords.title_should_be(driver, title)
+    assert driver.title == title
 
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):

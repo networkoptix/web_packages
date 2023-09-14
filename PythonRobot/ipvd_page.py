@@ -85,7 +85,7 @@ class IVPDPage():
         Element(self.driver, IVPDPage.MANUFACTURERS_PANE).wait_until_visible(timeout=60)
         Element(self.driver, IVPDPage.DEVICES_PANE).wait_until_visible(timeout=60)
         Element(self.driver, IVPDPage.LANDING_PAGE_TEXT).wait_until_visible(timeout=60)
-        robot_keywords.title_should_be(self.driver, rb.IPVD_TITLE_TEXT + ' - ' + rb.PRODUCT_NAME)
+        assert self.driver.title == rb.IPVD_TITLE_TEXT, rb.IPVD_TITLE_TEXT + ' - ' + rb.PRODUCT_NAME
         for element in [self.TABLE, self.DEVICE_DETAILS, self.PAGINATION, self.EXPORT_TO_CSV_LINK]:
             Element(self.driver, element).should_not_be_visible()
 
