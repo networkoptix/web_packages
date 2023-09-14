@@ -11,7 +11,7 @@ class HeaderNav:
         self._wait_until_header_is_visible()
 
     def _wait_until_header_is_visible(self):
-        robot_keywords.wait_until_element_is_visible(self.driver, "//nx-header")
+        Element(self.driver, "//nx-header").wait_until_is_visible()
 
     def account_dropdown(self):
         return Button(self.driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")

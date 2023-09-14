@@ -1,6 +1,7 @@
 import robot_keywords
 from RobotVariables import RobotVariables
 from button import Button
+from generic_element import Element
 from page_text import PageText
 from text_field import TextField
 
@@ -83,4 +84,5 @@ class LoginDialog:
         self.twofa_login_button().click()
 
     def _wait_until_modal_is_visible(self):
-        robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-component/div[@class='authorize-main main-w']")
+        modal = Element(self.driver, "//nx-authorize-component/div[@class='authorize-main main-w']")
+        modal.wait_until_visible()

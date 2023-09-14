@@ -1,6 +1,7 @@
 import resource_import
 import robot_keywords
 from RobotVariables import RobotVariables
+from generic_element import Element
 from ipvd_page import IVPDPage
 
 rb = RobotVariables("en_US")
@@ -25,7 +26,7 @@ def ipvd_landing_page_actions():
     robot_keywords.element_should_contain(driver, ipvd_page.LANDING_PAGE_TEXT, rb.IPVD_SUBMIT_A_REQUEST_TEXT)
 
     ipvd_page.vendor_button().click()
-    robot_keywords.wait_until_element_is_visible(driver, ipvd_page.TABLE)
+    Element(driver, ipvd_page.TABLE).wait_until_visible()
     ipvd_page.validate_landing_page_objects_not_visible()
 
     ipvd_page.adv_features_button().click()
@@ -39,7 +40,7 @@ def ipvd_landing_page_actions():
     ipvd_page.validate_on_ipvd_page()
 
     ipvd_page.submit_a_request_button().click()
-    robot_keywords.wait_until_element_is_visible(driver, ipvd_page.FEEDBACK)
+    Element(driver, ipvd_page.FEEDBACK).wait_until_visible()
 
 
 if __name__ == "__main__":

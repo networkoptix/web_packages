@@ -21,8 +21,9 @@ rb = RobotVariables("en_US")
 
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
-        robot_keywords.wait_until_element_is_visible(driver, button)
-        Element(driver, button).click()
+        button_element = Element(driver, button)
+        button_element.wait_until_visible()
+        button_element.click()
 
     if validate and not two_FA:
         # check language variable and set it to default. That is, set language before logging in
@@ -30,26 +31,29 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         pass
         #TODO: set user theme (ie, light or dark mode)
         pass
-    robot_keywords.wait_until_elements_are_visible(driver, [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT ])
+    Element(driver, rb.LOG_IN_MODAL).wait_until_visible()
+    Element(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
+    Element(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
     Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
 
     if exists:
-        robot_keywords.wait_until_element_is_visible(driver, rb.PASSWORD_INPUT)
-        robot_keywords.input_text(driver, rb.PASSWORD_INPUT,password)
+        Element(driver, rb.PASSWORD_INPUT).wait_until_visible()
+        robot_keywords.input_text(driver, rb.PASSWORD_INPUT, password)
         time.sleep(1)
-        robot_keywords.wait_until_element_is_visible(driver, rb.LOG_IN_BUTTON)
+        Element(driver, rb.LOG_IN_BUTTON).wait_until_visible()
         Element(driver, rb.LOG_IN_BUTTON).click()
 
-    else:  
-        robot_keywords.wait_until_element_is_visible(driver,rb.ACCOUNT_DOES_NOT_EXIST,rb.YOU_CAN_CREATE_AN_ACCOUNT)
+    else:
+        Element(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
+        Element(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
         # todo: remove this
         time.sleep(5)
-        robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
+        Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
 
 
@@ -62,216 +66,219 @@ def test_can_access_account_page_from_dropdown():
     robot_keywords.go_to_url(driver, rb.ENV)
     cloud_login(driver, email, password)
     time.sleep(3)
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_DROPDOWN)
-    robot_keywords.click_button(driver, rb.ACCOUNT_DROPDOWN)
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SETTINGS_BUTTON)
-    robot_keywords.click_on_link(driver, rb.ACCOUNT_SETTINGS_BUTTON)
+    element(driver, rb.account_dropdown).wait_until_visible()
+    robot_keywords.click_button(driver, rb.account_dropdown)
+    element(driver, rb.account_settings_button).wait_until_visible()
+    robot_keywords.click_on_link(driver, rb.account_settings_button)
     verify_in_account_page(driver)
     robot_keywords.close_browser(driver)
 
 
 def test_can_access_account_page_from_direct_link():
-    """2 Can access the account page from direct link while logged in"""
+    """2 can access the account page from direct link while logged in"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV)
+    robot_keywords.go_to_url(driver, rb.env)
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password)
-    robot_keywords.go_to_url(driver,rb.ENV + "/account")
+    robot_keywords.go_to_url(driver,rb.env + "/account")
     verify_in_account_page(driver)
     robot_keywords.close_browser(driver)  
 
 # def test_cannot_access_account_page_from_direct_link_closing_log():
-#     """3 Accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page"""
+#     """3 accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page"""
 #    this test is skipped in account.robot
 
 def test_cannot_access_account_page_from_direct_link_on_valid_login():
-    """4 Accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page"""
+    """4 accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver,rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None)
-    robot_keywords.go_to_url(driver,rb.ENV + "/account")
+    robot_keywords.go_to_url(driver,rb.env + "/account")
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none)
+    robot_keywords.go_to_url(driver,rb.env + "/account")
     verify_in_account_page(driver)
     robot_keywords.close_browser(driver)
 
 def test_changing_first_name_and_saving_maintains_that_setting():
-    """5 Changing first name and saving maintains that setting"""
+    """5 changing first name and saving maintains that setting"""
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, email, password, button=None, api=False)
+    register_and_activate_account(driver, "mark", "hamill", email, password)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, email, password, button=none, api=false)
     verify_in_account_page(driver)
-    Element(driver, rb.ACCOUNT_FIRST_NAME).clear_text()
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
-    # TODO: the save button doesn't appear.
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    element(driver, rb.account_first_name).clear_text()
+    robot_keywords.input_text(driver, rb.account_first_name, "namechanged")
+    # todo: the save button doesn't appear.
+    account_save = element(driver, rb.account_save)
+    account_save.wait_until_visible()
+    robot_keywords.click_button(driver, rb.account_save)
+    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
     robot_keywords.close_browser(driver)
 
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, email, password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, email, password, button=none, api=false)
     verify_in_account_page(driver)
     time.sleep(2)
-    robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_FIRST_NAME, "nameChanged")
-    Element(driver, rb.ACCOUNT_FIRST_NAME).clear_text()
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, rb.TEST_FIRST_NAME)
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    robot_keywords.wait_until_textfield_contains(driver, rb.account_first_name, "namechanged")
+    element(driver, rb.account_first_name).clear_text()
+    robot_keywords.input_text(driver, rb.account_first_name, rb.test_first_name)
+    account_save.wait_until_visible()
+    robot_keywords.click_button(driver, rb.account_save)
+    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
 
 def test_changing_last_name_and_saving_maintains_that_setting():
-    """6 Changing last name and saving maintains that setting"""
-    #TODO: 
+    """6 changing last name and saving maintains that setting"""
+    #todo: 
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, email, password, button=None, api=False)
+    register_and_activate_account(driver, "mark", "hamill", email, password)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, email, password, button=none, api=false)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, "nameChanged")
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    robot_keywords.input_text(driver, rb.account_last_name, "namechanged")
+    account_save = element(driver, rb.account_save)
+    account_save.wait_until_visible()
+    robot_keywords.click_button(driver, rb.account_save)
+    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
     robot_keywords.close_browser(driver)
 
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, email, password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, email, password, button=none, api=false)
     verify_in_account_page(driver)
-    robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_LAST_NAME, "nameChanged")
-    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, rb.TEST_LAST_NAME)
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    robot_keywords.wait_until_textfield_contains(driver, rb.account_last_name, "namechanged")
+    robot_keywords.input_text(driver, rb.account_last_name, rb.test_last_name)
+    account_save.wait_until_visible()
+    robot_keywords.click_button(driver, rb.account_save)
+    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
     robot_keywords.close_browser(driver)
 
 def test_first_name_is_required():
-    """7 First name is required"""
+    """7 first name is required"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
     verify_in_account_page(driver)
 
-    Element(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
-    Element(driver, rb.ACCOUNT_LAST_NAME).click()
+    element(driver, rb.account_first_name).delete_all_text()
+    element(driver, rb.account_last_name).click()
 
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    robot_keywords.wait_until_elements_are_visible(driver, [rb.ACCOUNT_SAVE, rb.ACCOUNT_CANCEL])
-    account_save = Element(driver, rb.ACCOUNT_SAVE)
-    account_save.should_be_disabled()
-    account_cancel = Element(driver, rb.ACCOUNT_CANCEL)
-    account_cancel.should_be_enabled()
-
-    #robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
-    for element in [rb.ACCOUNT_SAVE, rb.ACCOUNT_CANCEL]:
-        robot_keywords.wait_until_element_is_visible(driver, element)
+    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {rb.error_color};")
+    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
+    account_save = element(driver, rb.account_save)
+    account_cancel = element(driver, rb.account_cancel)
+    account_save.wait_until_visible()
+    account_cancel.wait_until_visible()
     account_save.should_be_disabled()
     account_cancel.should_be_enabled()
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+
+    #robot_keywords.click_button(driver, rb.account_cancel)
+    for element in [rb.account_save, rb.account_cancel]:
+        element(driver, element).wait_until_visible()
+    account_save.should_be_disabled()
+    account_cancel.should_be_enabled()
+    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {rb.error_color};")
+    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
+    robot_keywords.click_button(driver, rb.account_cancel)
     robot_keywords.close_browser(driver)
 
 def test_last_name_is_required():
-    """8 Last name is required"""
+    """8 last name is required"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
     verify_in_account_page(driver)
-    Element(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
-    Element(driver, rb.ACCOUNT_FIRST_NAME).click()
+    element(driver, rb.account_last_name).delete_all_text()
+    element(driver, rb.account_first_name).click()
 
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"border-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    for element in [rb.ACCOUNT_SAVE, rb.ACCOUNT_CANCEL]:
-        robot_keywords.wait_until_element_is_visible(driver, element)
-    account_save = Element(driver, rb.ACCOUNT_SAVE)
-    account_save.should_be_disabled()
-    cancel_button = Element(driver, rb.ACCOUNT_CANCEL)
-    cancel_button.should_be_enabled()
-
-    for element in [rb.ACCOUNT_SAVE, rb.ACCOUNT_CANCEL]:
-        robot_keywords.wait_until_element_is_visible(driver, element)
+    robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"border-color: {rb.error_color};")
+    robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"color: {rb.error_color_with_opacity};")
+    account_save = element(driver, rb.account_save)
+    cancel_button = element(driver, rb.account_cancel)
+    account_save.wait_until_visible()
+    cancel_button.wait_until_visible()
     account_save.should_be_disabled()
     cancel_button.should_be_enabled()
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"border-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+
+    account_save.wait_until_visible()
+    cancel_button.wait_until_visible()
+    account_save.should_be_disabled()
+    cancel_button.should_be_enabled()
+    robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"border-color: {rb.error_color};")
+    robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"color: {rb.error_color_with_opacity};")
+    robot_keywords.click_button(driver, rb.account_cancel)
     robot_keywords.close_browser(driver)
 
-def test_SPACE_for_first_name_is_not_valid():
-    """9 SPACE for first name is not valid"""
+def test_space_for_first_name_is_not_valid():
+    """9 space for first name is not valid"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")
-    Element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"border-color: {ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_FIRST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
-    Element(driver, rb.ACCOUNT_CANCEL).should_be_enabled()
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+    robot_keywords.input_text(driver, rb.account_first_name, " ")
+    element(driver,   f"//header/h4[contains(text(),'{rb.account_information}')]").click()
+    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {error_color};")
+    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
+    element(driver, rb.account_save).should_be_disabled()
+    element(driver, rb.account_cancel).should_be_enabled()
+    robot_keywords.click_button(driver, rb.account_cancel)
     robot_keywords.close_browser(driver)
 
-def test_SPACE_for_last_name_is_not_valid():
-    """10 SPACE for last name is not valid"""
+def test_space_for_last_name_is_not_valid():
+    """10 space for last name is not valid"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "Luke")
-    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, " ")
+    robot_keywords.input_text(driver, rb.account_first_name, "luke")
+    robot_keywords.input_text(driver, rb.account_last_name, " ")
 
-    Element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"border-top-color: {rb.ERROR_COLOR};")
-    robot_keywords.wait_until_element_has_style(driver, rb.ACCOUNT_LAST_NAME, f"color: {rb.ERROR_COLOR_WITH_OPACITY};")
-    Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
-    Element(driver, rb.ACCOUNT_CANCEL).should_be_enabled()
+    element(driver,   f"//header/h4[contains(text(),'{rb.account_information}')]").click()
+    robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"border-top-color: {rb.error_color};")
+    robot_keywords.wait_until_element_has_style(driver, rb.account_last_name, f"color: {rb.error_color_with_opacity};")
+    element(driver, rb.account_save).should_be_disabled()
+    element(driver, rb.account_cancel).should_be_enabled()
     time.sleep(10)
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+    robot_keywords.click_button(driver, rb.account_cancel)
     robot_keywords.close_browser(driver)
     
 #def test_email_is_uneditable():
-    """11 Email is uneditable"""
-    # The email is uneditable so there is no need to test for it.
+    """11 email is uneditable"""
+    # the email is uneditable so there is no need to test for it.
     
 
 
 # todo: test 12 should be skipped?
 def test_should_respond_tab_and_go():
-    """12 Should respond to tab and go in the correct order"""
+    """12 should respond to tab and go in the correct order"""
     pass
 
 def test_language_is_changeable_on_the_account_page():
-    """13 Language is changeable on the account page"""
+    """13 language is changeable on the account page"""
     driver = get_headless_chrome()
-    robot_keywords.go_to_url(driver, rb.ENV + "/account")
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+    robot_keywords.go_to_url(driver, rb.env + "/account")
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
     driver.refresh()
     lang_dict = get_lang_list()
     for lang in lang_dict:
-        info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
+        info_text = lang_dict[lang]["account information"]
         time.sleep(1)
         verify_in_account_page(driver)
-        if lang != rb.LANGUAGE:
-            robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-            # TODO: this is not working
+        if lang != rb.language:
+            robot_keywords.click_button(driver, rb.account_language_dropdown)
+            # todo: this is not working
             #robot_keywords.wait_until_element_is_visible(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='${lang}']")
-            Element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..").click()
+            element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..").click()
             time.sleep(2)
-            robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{info_text}')]")
+            element(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
 
-    robot_keywords.wait_until_element_is_visible(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+    Element(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
     # TODO: this is not working
     #robot_keywords.wait_until_element_is_visible(driver, f"//header//nx-header-language-select//span[@lang='{rb.LANGUAGE}']")
     Element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
     time.sleep(1)
     verify_in_account_page(driver)
-    robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]")
+    Element(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
     robot_keywords.close_browser(driver)
 
 def test_language_change_affects_emails():
@@ -287,7 +294,11 @@ def test_language_change_affects_emails():
         cloud_login(driver, random_email, password, button=None, api=False)
         verify_in_account_page(driver)
         robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-        robot_keywords.wait_until_element_is_visible(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..")
+        button = Element(
+            driver,
+            "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
+            )
+        button.wait_until_visible()
         Element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
         time.sleep(5)
         robot_keywords.close_browser(driver)
@@ -323,22 +334,24 @@ def test_language_change_is_new_default():
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
     lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
     droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
-    robot_keywords.wait_until_element_is_visible(driver, droplang1)
+    Element(driver, droplang1).wait_until_visible()
     Element(driver, droplang1).click()
 
     time.sleep(5)
     driver.refresh()
 
     dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
-    robot_keywords.wait_until_element_is_visible(driver, dropLang2)
+    Element(driver, dropLang2).wait_until_visible()
     drop_lang_element = Element(driver, dropLang2)
     activeLang = drop_lang_element.text()
     assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
 
     if lang == 'ja_JP':
-        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+        info_element = Element(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+        info_element.wait_until_visible()
     elif lang == 'de_DE':
-        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+        info_element = Element(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+        info_element.wait_until_visible()
 
     resource_import.logout_japanese(driver)
     robot_keywords.go_to_url(driver, rb.ENV + "/account")
@@ -350,15 +363,17 @@ def test_language_change_is_new_default():
     time.sleep(5)
     driver.refresh()
 
-    robot_keywords.wait_until_element_is_visible(driver, dropLang2)
+    Element(driver, dropLang2).wait_until_visible()
     activeLang = drop_lang_element.text()
 
     if activeLang.lower() not in lang.lower():
         assert False, f"{activeLang.lower()} not found in {lang.lower()}"  
     if rb.LANGUAGE == 'ja_JP':
-        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+        info_element = Element(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+        info_element.wait_until_visible()
     elif rb.LANGUAGE == 'de_DE':
-        robot_keywords.wait_until_element_is_visible(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+        info_element = Element(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+        info_element.wait_until_visible()
 
     resource_import.check_language_logged_in(email, password)
     time.sleep(3)

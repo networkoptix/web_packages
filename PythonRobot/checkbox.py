@@ -2,12 +2,13 @@ from selenium import webdriver
 from selenium.webdriver.common.by import By
 
 import robot_keywords
+from generic_element import Element
 
 
 class Checkbox:
     def __init__(self, driver: webdriver, visible_locator, actual_locator):
         self.driver = driver
-        robot_keywords.wait_until_element_is_visible(self.driver, visible_locator)
+        Element(self.driver, visible_locator).wait_until_visible()
         self.selenium_element = self.driver.find_element(By.XPATH, f"{visible_locator}{actual_locator}")
         self.clickable_element = self.driver.find_element(By.XPATH, visible_locator)
         self.checked_xpath = f'{visible_locator}//span[@class="tick checked"]'

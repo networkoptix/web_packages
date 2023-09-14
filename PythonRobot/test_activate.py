@@ -146,7 +146,7 @@ def login_before_activation():
     login._wait_until_modal_is_visible()
     login.email_input().input_text(random_email)
     login.next_button().click()
-    robot_keywords.wait_until_element_is_visible(driver, rb.RESEND_ACTIVATION_LINK_BUTTON)
+    Element(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).wait_until_visible()
 
     robot_keywords.click_button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON)
     sleep(10) # give time for email to arrive

@@ -18,7 +18,7 @@ from generic_element import Element
 def check_for_alert(driver: webdriver, alert_text: str, timeout: int = 10) -> None:
     alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
     xpath = f"{alert}/../span[contains(text(), '{alert_text}')]"
-    wait_until_element_is_visible(driver, xpath, timeout)
+    Element(driver, xpath).wait_until_visible(timeout)
     wait_until_page_does_not_contain_element(driver, xpath, timeout)
 
 
@@ -67,18 +67,8 @@ def wait_until_element_is_not_visible(driver: webdriver, locator: str, timeout: 
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
 
 
-def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
-    Element(driver, locator).wait_until_visible(timeout=timeout)
-
-
 def wait_until_element_is_enabled(driver: webdriver, locator: str, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(EC.element_to_be_clickable((By.XPATH, locator)))
-
-
-# deprecated: this functionality has been moved to generic_element
-def wait_until_elements_are_visible(driver: webdriver, locators: List[str], timeout: int = 40) -> None:
-    for locator in locators:
-        wait_until_element_is_visible(driver, locator, timeout=timeout)
 
 
 def wait_until_page_contains(driver: webdriver, text: str, timeout: int = 40) -> None:

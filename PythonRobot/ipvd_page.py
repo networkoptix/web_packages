@@ -33,7 +33,7 @@ class IVPDPage():
         self.validate_on_ipvd_page()
 
     def assert_table_appears(self):
-        robot_keywords.wait_until_element_is_visible(self.driver, self.IPVD_TABLE_FIRST_ITEM, timeout=20)
+        Element(self.driver, self.IPVD_TABLE_FIRST_ITEM).wait_until_visible(20)
         # we want to make sure that the first row has "Encoder" in the type column.
         robot_keywords.element_text_should_be(self.driver,
                                               self.IPVD_TABLE_FIRST_ITEM + '/../../div[contains(@id, "hardwareType")]',
@@ -80,11 +80,11 @@ class IVPDPage():
         robot_keywords.wait_until_page_contains_element(self.driver, self.LANDING_PAGE_TEXT)
 
     def validate_on_ipvd_page(self):
-        robot_keywords.wait_until_elements_are_visible(self.driver, [IVPDPage.SEARCH_BAR,
-                                                                     IVPDPage.ADV_SEARCH_BUTTON,
-                                                                     IVPDPage.MANUFACTURERS_PANE,
-                                                                     IVPDPage.DEVICES_PANE,
-                                                                     IVPDPage.LANDING_PAGE_TEXT], timeout=60)
+        Element(self.driver, IVPDPage.SEARCH_BAR).wait_until_visible(timeout=60)
+        Element(self.driver, IVPDPage.ADV_SEARCH_BUTTON).wait_until_visible(timeout=60)
+        Element(self.driver, IVPDPage.MANUFACTURERS_PANE).wait_until_visible(timeout=60)
+        Element(self.driver, IVPDPage.DEVICES_PANE).wait_until_visible(timeout=60)
+        Element(self.driver, IVPDPage.LANDING_PAGE_TEXT).wait_until_visible(timeout=60)
         robot_keywords.title_should_be(self.driver, rb.IPVD_TITLE_TEXT + ' - ' + rb.PRODUCT_NAME)
         for element in [self.TABLE, self.DEVICE_DETAILS, self.PAGINATION, self.EXPORT_TO_CSV_LINK]:
             Element(self.driver, element).should_not_be_visible()

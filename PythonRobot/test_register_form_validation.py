@@ -17,8 +17,12 @@ def test_register_invalid(driver, first, last, email, password, checked):
     # ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
     # Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}
     # ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-    visible_elements = [rb.REGISTER_FIRST_NAME_INPUT, rb.REGISTER_LAST_NAME_INPUT, rb.REGISTER_EMAIL_INPUT, rb.REGISTER_PASSWORD_INPUT, rb.CREATE_ACCOUNT_BUTTON]
-    robot_keywords.wait_until_elements_are_visible(driver, visible_elements)
+    Element(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
+    Element(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
+    Element(driver, rb.REGISTER_EMAIL_INPUT).wait_until_visible()
+    Element(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
+    Element(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
+
     invisible_elements = [
                          rb.EMAIL_INVALID, 
                          rb.EMAIL_ALREADY_REGISTERED, 
@@ -85,7 +89,7 @@ def check_last_name_outline(driver):
     Element(driver, rb.LAST_NAME_IS_REQUIRED).should_be_visible()
 
 def check_terms_and_conditions_error(driver):
-    robot_keywords.wait_until_element_is_visible(driver, rb.TERMS_AND_CONDITIONS_ERROR)
+    Element(driver, rb.TERMS_AND_CONDITIONS_ERROR).wait_until_visible()
 
 
 # test-cases

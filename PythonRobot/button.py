@@ -15,6 +15,6 @@ class Button:
         self.is_focused = element.is_focused()
 
     def click(self):
-        robot_keywords.wait_until_element_is_visible(self.driver, self.locator)
+        Element(self.driver, self.locator).wait_until_visible()
         robot_keywords.wait_until_element_is_enabled(self.driver, self.locator)
         self.selenium_element.click()

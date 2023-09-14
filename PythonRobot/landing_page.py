@@ -3,6 +3,7 @@ import time
 import robot_keywords
 from RobotVariables import RobotVariables
 from button import Button
+from generic_element import Element
 from variables import ENV
 
 
@@ -19,8 +20,11 @@ class LandingPage:
         return Button(self.driver, translated_xpath)
 
     def _wait_until_landing_page_is_visible(self):
-        robot_keywords.wait_until_element_is_visible(self.driver,
-                                                     "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']")
+        landing_page = Element(
+            self.driver,
+            "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
+            )
+        landing_page.wait_until_visible()
 
     def _location_is_correct(self, timeout=10):
         start_time = time.monotonic()

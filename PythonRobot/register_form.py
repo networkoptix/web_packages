@@ -81,7 +81,7 @@ class RegisterForm:
         return Button(self.driver, "//span[@data-testid='createAccountLogIn']/parent::button")
                                    
     def _wait_until_form_is_visible(self):
-        robot_keywords.wait_until_element_is_visible(self.driver, "//nx-authorize-create-account-component")
+        Element(self.driver, "//nx-authorize-create-account-component").wait_until_visible()
         self.first_name_input()
         self.last_name_input()
         self.password_input()
