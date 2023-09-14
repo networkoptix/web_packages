@@ -43,10 +43,10 @@ export class TimelinePrimaryRulerCanvasRendererService {
     }
 
     protected _prevIntervals: Array<IrregularLengthInterval> = [];
-    protected _lastIntervalChanges = {};
-    protected _intervalWeightAnimations = {};
+    protected _lastIntervalChanges: Record<string, number> = {};
+    protected _intervalWeightAnimations: Record<string, AnimatedFloat> = {};
 
-    protected _haveIntervalsChanged(newIntervals: Array<IrregularLengthInterval>) {
+    protected _haveIntervalsChanged(newIntervals: Array<IrregularLengthInterval>): boolean {
         if (this._prevIntervals.length !== newIntervals.length) {
             return true;
         }
@@ -76,14 +76,14 @@ export class TimelinePrimaryRulerCanvasRendererService {
         });
     }
 
-    protected _withContext(ctx, actualDrawing: () => void): void {
+    protected _withContext(ctx: CanvasRenderingContext2D, actualDrawing: () => void): void {
         ctx.save();
         actualDrawing();
         ctx.restore();
     }
 
     protected _getIntervals(): Array<IrregularLengthInterval> {
-        const result = [];
+        const result: IrregularLengthInterval[] = [];
         for (const interval of irregularLengthIntervals) {
             const displayWidth = this.timeline.durationToDomWidth(
                 estimateIrregularLengthIntervalPessimistically(interval),
@@ -108,6 +108,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
             const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals);
             Object.keys(intervalDiffDict).forEach(k => {
                 const v = intervalDiffDict[k];
+                // @ts-expect-error TODO: Replace with Array.isArray()
                 if (v.length) {
                     this._lastIntervalChanges[k] = Date.now();
                     // HERE animations happen

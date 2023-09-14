@@ -3,9 +3,12 @@ import { Injectable } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
+import { NxSystem } from '@services/system.service/system';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { ms, px } from '@vms-client/utils/type-aliases';
+
+import type { PlayingState } from '../../playback/datatypes/PlaybackState';
 
 import { TimeRange } from './TimeRange';
 import { TimelineScrollbarRelativeService } from './timeline.scrollbarRelative.service';
@@ -36,7 +39,7 @@ export class TimelineSelectionService {
         protected vms: VideoManagementSystemService,
     ) {}
 
-    public get exportUrlParams(): {} {
+    public get exportUrlParams(): Parameters<NxSystem['mediaserver']['getExportUrl']>[0] {
         return {
             transport: this.playback.state.transport,
             cameraId: this.vms.selectedCamera.id,
@@ -54,24 +57,20 @@ export class TimelineSelectionService {
         hoverMode: false,
     });
 
-    public get cameraId() {
+    public get cameraId(): string {
         return this.vms.selectedCamera.id;
     }
 
-    public get transport() {
+    public get transport(): PlaybackService['state']['transport'] {
         return this.playback.state.transport;
     }
 
-    public get subject() {
+    public get subject(): TimelineSelectionService['_subject'] {
         return this._subject;
     }
 
-    public get isActive() {
+    public get isActive(): TimelineSelectionService['_isActive'] {
         return this._isActive;
-    }
-
-    public get range(): TimeRange {
-        return this._selectedRange.clone();
     }
 
     public get rangeText(): string {
@@ -81,13 +80,17 @@ export class TimelineSelectionService {
         return `(${s.toLocaleString()} - ${e.toLocaleString()})`;
     }
 
+    public get range(): TimeRange {
+        return this._selectedRange.clone();
+    }
+
     public set range(r: TimeRange) {
         this._selectedRange.start = r.start;
         this._selectedRange.end = r.end;
         this._emit();
     }
 
-    public get pixelRange() {
+    public get pixelRange(): PixelRange {
         return this._pixelRange;
     }
 
@@ -153,7 +156,7 @@ export class TimelineSelectionService {
         this._$background = b;
     }
 
-    protected _getOffsetPx(e: MouseEvent) {
+    protected _getOffsetPx(e: MouseEvent): number {
         return e.clientX - this._$background.getBoundingClientRect().left;
     }
 
@@ -166,8 +169,7 @@ export class TimelineSelectionService {
             this._dragMode = SELECTION_DRAG_MODE.DRAGGING_BACKGROUND;
             this._dragAnchorPx = this._getOffsetPx(e);
             const mouseTime = this.timeline.domOffsetXtoTime(this._dragAnchorPx);
-            // @ts-expect-error
-            const playbackTime = this.playback.state?.currentTime || Infinity;
+            const playbackTime = (this.playback.state as PlayingState)?.currentTime || Infinity;
             const diff_ms = Math.abs(mouseTime - playbackTime);
             const diff_px = this.timeline.durationToDomWidth(diff_ms);
             if (diff_px < PLAYBACK_OVERLAY_THRESHOLD_PX) {
@@ -226,7 +228,7 @@ export class TimelineSelectionService {
         }
     }
 
-    public handleMouseMove(e: MouseEvent) {
+    public handleMouseMove(e: MouseEvent): boolean {
         this._lastMouseMove = e;
 
         if (this._isActive && this._dragMode) {
@@ -304,9 +306,8 @@ export class TimelineSelectionService {
         }
     }
 
-    protected _snapToPlaybackTime(t) {
-        // @ts-expect-error
-        const playbackTime = this.playback.state?.currentTime || Infinity;
+    protected _snapToPlaybackTime(t: number): number {
+        const playbackTime = (this.playback.state as PlayingState)?.currentTime || Infinity;
         const diff_ms = Math.abs(t - playbackTime);
         const diff_px = this.timeline.durationToDomWidth(diff_ms);
         if (diff_px < PLAYBACK_OVERLAY_THRESHOLD_PX) {
@@ -316,23 +317,23 @@ export class TimelineSelectionService {
         }
     }
 
-    protected _snapStartToPlayback() {
+    protected _snapStartToPlayback(): boolean {
         const s = this._selectedRange.start;
         this._selectedRange.start = this._snapToPlaybackTime(s);
         return s !== this._selectedRange.start;
     }
 
-    protected _snapEndToPlayback() {
+    protected _snapEndToPlayback(): boolean {
         const e = this._selectedRange.end;
         this._selectedRange.end = this._snapToPlaybackTime(e);
         return e !== this._selectedRange.end;
     }
 
-    protected _snapRangeEdgesToPlayback() {
+    protected _snapRangeEdgesToPlayback(): boolean {
         return this._snapStartToPlayback() || this._snapEndToPlayback();
     }
 
-    public handleMouseUp(e: MouseEvent) {
+    public handleMouseUp(e: MouseEvent): boolean {
         let result = true;
         if (
             this._dragMode === SELECTION_DRAG_MODE.DRAGGING_BACKGROUND &&

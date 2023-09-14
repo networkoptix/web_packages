@@ -118,7 +118,7 @@ export class TimelineScrollbarRelativeService {
         }
     }
 
-    public handleBackgroundDblClick(e: MouseEvent): void {
+    public handleBackgroundDblClick(e: MouseEvent | TouchEvent): void {
         this.isBackgroundMouseDown = false;
         const targetTime = this._targetTimeFromMouseEvent(e);
         this.timeline.jumpScrollTo(targetTime, true);

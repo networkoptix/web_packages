@@ -23,19 +23,19 @@ export class AnimatedFloat implements IAnimated<float> {
         this._lastChange = 0;
     }
 
-    public get value() {
+    public get value(): float {
         return this._value;
     }
 
-    public get target() {
+    public get target(): float {
         return this._target;
     }
 
-    public get lastChange() {
+    public get lastChange(): timeStampMs {
         return this._lastChange;
     }
 
-    public get animationDuration() {
+    public get animationDuration(): durationMs {
         return this._animationDuration;
     }
 
@@ -43,7 +43,7 @@ export class AnimatedFloat implements IAnimated<float> {
         this._animationDuration = newDuration;
     }
 
-    public get easing() {
+    public get easing(): EASING {
         return this._easing;
     }
 
@@ -55,7 +55,7 @@ export class AnimatedFloat implements IAnimated<float> {
     }
 
     public get(): float {
-        let result;
+        let result: number;
         if (this._value === this._target) {
             result = this._value;
         } else {
@@ -93,7 +93,7 @@ export class AnimatedFloat implements IAnimated<float> {
         this._target += dt;
     }
 
-    protected _getCurrentValue(dt: durationMs = Date.now() - this._lastChange) {
+    protected _getCurrentValue(dt: durationMs = Date.now() - this._lastChange): number {
         switch (this._easing) {
             case 'ease-in-out':
             case 'ease-in-out-sine':

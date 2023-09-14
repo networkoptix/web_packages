@@ -5260,6 +5260,12 @@
             "path": "cloud_portal/front_end/node_modules/@types/uuid",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/uuid/LICENSE"
         },
+        "@types/video.js@7.3.52": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/video.js",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/video.js/LICENSE"
+        },
         "@types/ws@7.4.7": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",

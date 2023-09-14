@@ -182,7 +182,7 @@ export class TimelineScrollbarComponent implements AfterViewInit {
     }
 
     @HostListener('touchstart', ['$event'])
-    public touchStartHandler(e: any): void {
+    public touchStartHandler(e: TouchEvent): void {
         if (!this.useTouch) {
             return;
         }
@@ -263,7 +263,7 @@ export class TimelineScrollbarComponent implements AfterViewInit {
         this.scrollbarRelative.handleBackgroundMouseDown(e);
     }
 
-    public backgroundDblClickHandler(e: MouseEvent): void {
+    public backgroundDblClickHandler(e: MouseEvent | TouchEvent): void {
         this.scrollbarRelative.handleBackgroundDblClick(e);
     }
 

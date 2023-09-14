@@ -115,30 +115,7 @@ module.exports = {
     'libs/features/systems/settings/licenses/new/new.component.ts': 11,
     'libs/features/systems/settings/licenses/trial/trial.component.ts': 7,
     'libs/features/systems/settings/settings.component.ts': 11,
-    'libs/features/systems/view/vms-client/submodules/playback/components/playback-controls/playback-controls.component.ts': 6,
-    'libs/features/systems/view/vms-client/submodules/playback/components/playback-state-indicator/playback-state-indicator.component.ts': 3,
-    'libs/features/systems/view/vms-client/submodules/playback/components/player/player-js/player-js.component.ts': 5,
-    'libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts': 3,
-    'libs/features/systems/view/vms-client/submodules/playback/services/playback.service.ts': 6,
-    'libs/features/systems/view/vms-client/submodules/timeline/components/timeline-scrollbar/timeline-scrollbar.component.ts': 1,
-    'libs/features/systems/view/vms-client/submodules/timeline/components/timeline-selection/timeline-selection.component.ts': 12,
-    'libs/features/systems/view/vms-client/submodules/timeline/components/timeline/onPinch.ts': 6,
-    'libs/features/systems/view/vms-client/submodules/timeline/components/timeline/timeline.component.ts': 5,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/TimeRange.ts': 3,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/animationPrimitives/AnimatedFloat.ts': 7,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/intervals/utils/estimateIrregularLengthIntervalPessimistically.ts': 1,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/intervals/utils/isIntervalOdd.ts': 2,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/timeline.primary-ruler-canvas-renderer.service.ts': 5,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/timeline.top-ruler-canvas-renderer.service.ts': 4,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/utils/getIntervalDiffDict.ts': 4,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/stripy-bar/stripy-bar.ts': 5,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/timeline.records-canvas-renderer.service.ts': 7,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/timeline.selection.service.ts': 17,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/timeline.service.ts': 6,
-    'libs/features/systems/view/vms-client/submodules/timeline/services/timeline.time-under-mouse.service.ts': 2,
-    'libs/features/systems/view/vms-client/submodules/vms/components/highlighted-string/highlighted-string.component.ts': 5,
-    'libs/features/systems/view/vms-client/submodules/vms/components/media-server-list/media-server-list.component.ts': 12,
-    'libs/features/systems/view/vms-client/utils/generateClickDubleClickPair.ts': 5,
+    'libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts': 1,
     'libs/services/account.service/base.ts': 35,
     'libs/services/account.service/cloud.ts': 4,
     'libs/services/apply.service/apply.service.ts': 25,
@@ -1404,34 +1381,6 @@ libs/features/systems/settings/admin/standard/standard.component.ts
   Missing return type on function  @typescript-eslint/explicit-function-return-type
   Missing return type on function  @typescript-eslint/explicit-function-return-type
 
-libs/features/systems/settings/cameras/motion-detection-settings/motion-detection-overlay/MotionMaskRenderer.ts
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/settings/cameras/motion-detection-settings/motion-detection-overlay/MotionMaskState.ts
-  Untyped argument                 nx/no-untyped-arg
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped argument                 nx/no-untyped-arg
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
 libs/features/systems/settings/cloud-storage/cloud-storage.component.ts
   Missing return type on function  @typescript-eslint/explicit-function-return-type
   Missing return type on function  @typescript-eslint/explicit-function-return-type
@@ -1497,204 +1446,8 @@ libs/features/systems/settings/settings.component.ts
   Missing return type on function  @typescript-eslint/explicit-function-return-type
   Missing return type on function  @typescript-eslint/explicit-function-return-type
 
-libs/features/systems/view/vms-client/submodules/playback/components/playback-controls/playback-controls.component.ts
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/playback/components/playback-state-indicator/playback-state-indicator.component.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/playback/components/player/player-js/player-js.component.ts
-  Don't use `Function` as a type. The `Function` type accepts any function-like value.
-It provides no type safety when calling the function, which can be a common source of bugs.
-It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
-If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  Don't use `Function` as a type. The `Function` type accepts any function-like value.
-It provides no type safety when calling the function, which can be a common source of bugs.
-It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
-If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  Unexpected any. Specify a different type                                                                                                                                                                                                                                                                                                                                                                            @typescript-eslint/no-explicit-any
-  Untyped declaration                                                                                                                                                                                                                                                                                                                                                                                                 nx/no-untyped-init
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-
 libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-
-libs/features/systems/view/vms-client/submodules/playback/services/playback.service.ts
-  Untyped declaration              nx/no-untyped-init
-  Untyped declaration              nx/no-untyped-init
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped argument                 nx/no-untyped-arg
-
-libs/features/systems/view/vms-client/submodules/timeline/components/timeline-scrollbar/timeline-scrollbar.component.ts
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-
-libs/features/systems/view/vms-client/submodules/timeline/components/timeline-selection/timeline-selection.component.ts
-  Untyped property                                                                                                                                               nx/no-untyped-init
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  Untyped declaration                                                                                                                                            nx/no-untyped-init
-  Untyped declaration                                                                                                                                            nx/no-untyped-init
-  Untyped argument                                                                                                                                               nx/no-untyped-arg
-  Missing return type on function                                                                                                                                @typescript-eslint/explicit-function-return-type
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer  @typescript-eslint/ban-ts-comment
-
-libs/features/systems/view/vms-client/submodules/timeline/components/timeline/onPinch.ts
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Don't use `Function` as a type. The `Function` type accepts any function-like value.
-It provides no type safety when calling the function, which can be a common source of bugs.
-It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
-If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  Untyped declaration                                                                                                                                                                                                                                                                                                                                                                                                 nx/no-untyped-init
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/timeline/components/timeline/timeline.component.ts
-  Untyped subject                                                                                                                                                                                                                                                                                                                                                                                                     nx/no-untyped-subject
-  Untyped property                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-init
-  Untyped property                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-init
-  Don't use `Function` as a type. The `Function` type accepts any function-like value.
-It provides no type safety when calling the function, which can be a common source of bugs.
-It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
-If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-
-libs/features/systems/view/vms-client/submodules/timeline/services/TimeRange.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped declaration              nx/no-untyped-init
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/animationPrimitives/AnimatedFloat.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped declaration              nx/no-untyped-init
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/intervals/utils/estimateIrregularLengthIntervalPessimistically.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/intervals/utils/isIntervalOdd.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped declaration              nx/no-untyped-init
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/timeline.primary-ruler-canvas-renderer.service.ts
-  Untyped property                 nx/no-untyped-init
-  Untyped property                 nx/no-untyped-init
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped argument                 nx/no-untyped-arg
-  Untyped declaration              nx/no-untyped-init
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/timeline.top-ruler-canvas-renderer.service.ts
-  Untyped property                 nx/no-untyped-init
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped argument                 nx/no-untyped-arg
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/ruler/utils/getIntervalDiffDict.ts
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped declaration                       nx/no-untyped-init
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/stripy-bar/stripy-bar.ts
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Don't use `Function` as a type. The `Function` type accepts any function-like value.
-It provides no type safety when calling the function, which can be a common source of bugs.
-It also accepts things like class declarations, which will throw at runtime as they will not be called with `new`.
-If you are expecting the function to accept certain arguments, you should explicitly define the function shape  @typescript-eslint/ban-types
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/timeline/services/canvas-renderer/timeline.records-canvas-renderer.service.ts
-  Untyped argument  nx/no-untyped-arg
-  Untyped argument  nx/no-untyped-arg
-  Untyped argument  nx/no-untyped-arg
-  Untyped argument  nx/no-untyped-arg
-  Untyped argument  nx/no-untyped-arg
-  Untyped argument  nx/no-untyped-arg
-  Untyped argument  nx/no-untyped-arg
-
-libs/features/systems/view/vms-client/submodules/timeline/services/timeline.selection.service.ts
-  Don't use `{}` as a type. `{}` actually means "any non-nullish value".
-- If you want a type meaning "any object", you probably want `object` instead.
-- If you want a type meaning "any value", you probably want `unknown` instead.
-- If you want a type meaning "empty object", you probably want `Record<string, never>` instead.
-- If you really want a type meaning "any non-nullish value", you probably want `NonNullable<unknown>` instead  @typescript-eslint/ban-types
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  All range signatures should be adjacent                                                                                                                                                                                                                                                                                                                                                                                                             @typescript-eslint/adjacent-overload-signatures
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer                                                                                                                                                                                                                                                                                       @typescript-eslint/ban-ts-comment
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Untyped argument                                                                                                                                                                                                                                                                                                                                                                                                                                    nx/no-untyped-arg
-  Include a description after the "@ts-expect-error" directive to explain why the @ts-expect-error is necessary. The description must be 3 characters or longer                                                                                                                                                                                                                                                                                       @typescript-eslint/ban-ts-comment
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-  Missing return type on function                                                                                                                                                                                                                                                                                                                                                                                                                     @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/timeline/services/timeline.service.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/timeline/services/timeline.time-under-mouse.service.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/vms/components/highlighted-string/highlighted-string.component.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/features/systems/view/vms-client/submodules/vms/components/media-server-list/media-server-list.component.ts
-  Untyped property                          nx/no-untyped-init
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-  Missing return type on function           @typescript-eslint/explicit-function-return-type
-  Untyped argument                          nx/no-untyped-arg
-  Untyped argument                          nx/no-untyped-arg
-
-libs/features/systems/view/vms-client/utils/generateClickDubleClickPair.ts
-  Missing return type on function  @typescript-eslint/explicit-function-return-type
-  Untyped argument                 nx/no-untyped-arg
-  Untyped argument                 nx/no-untyped-arg
-  Untyped declaration              nx/no-untyped-init
-  Untyped declaration              nx/no-untyped-init
 
 libs/services/account.service/base.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
@@ -2381,6 +2134,6 @@ packages/dashboard-widget-state/types.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
-✖ 1816 problems (1816 errors, 0 warnings)
+✖ 1661 problems (1661 errors, 0 warnings)
 
 */

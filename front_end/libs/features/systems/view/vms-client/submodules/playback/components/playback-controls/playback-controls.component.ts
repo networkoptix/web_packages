@@ -53,7 +53,9 @@ export class PlaybackControlsComponent implements OnInit {
                     // not using function reference as I need "this" -- TT
                     return (
                         this.state?.mode === curr.mode &&
-                        // @ts-expect-error
+                        // @ts-expect-error: paused property is only on ArchivePlaybackState
+                        // Condition 1: curr is StoppedPlaybackState or LivePlaybackState i.e. not paused
+                        // Condition 2: this.state and curr are already both paused ArchivePlaybackState
                         (curr.paused === undefined || this.state?.paused === curr.paused)
                     );
                 }),
@@ -100,7 +102,7 @@ export class PlaybackControlsComponent implements OnInit {
         return this.playback.canUnpause;
     }
 
-    protected playLive() {
+    protected playLive(): boolean {
         if (!this.canPlayLive && !this.playback.livePaused) {
             return false;
         }
@@ -110,7 +112,7 @@ export class PlaybackControlsComponent implements OnInit {
         return true;
     }
 
-    protected stop() {
+    protected stop(): boolean {
         if (!this.canStop) {
             return false;
         }
@@ -118,7 +120,7 @@ export class PlaybackControlsComponent implements OnInit {
         return true;
     }
 
-    protected pause() {
+    protected pause(): boolean {
         if (!this.canPause) {
             return false;
         }
@@ -127,7 +129,7 @@ export class PlaybackControlsComponent implements OnInit {
         return true;
     }
 
-    protected unpause() {
+    protected unpause(): boolean {
         switch (this.playback.state.mode) {
             case PLAYBACK_MODE.ARCHIVE:
                 if (this.canUnpause) {
@@ -149,7 +151,7 @@ export class PlaybackControlsComponent implements OnInit {
         }
     }
 
-    protected togglePause() {
+    protected togglePause(): boolean {
         const canPauseLive =
             this.playback.canStop && !this.playback.canPlayLive && !this.playback.livePaused;
         if (this.playback.canPause || canPauseLive) {

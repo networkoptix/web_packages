@@ -12,6 +12,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 import { animationFrameScheduler, interval } from 'rxjs';
 
+import { WINDOW } from '@services/window-provider';
 import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { TimelineScrollbarRelativeService } from '@vms-client/submodules/timeline/services/timeline.scrollbarRelative.service';
@@ -85,7 +86,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     offset: number;
     _lastMouseMoveEvent: MouseEvent;
 
-    private clickAndHoldHandler;
+    private clickAndHoldHandler: number;
 
     // Initial values
     tl = ARROW_WIDTH / 2; // top left vertex
@@ -127,6 +128,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         protected wheel: TimelineWheelHandlerService,
         protected timeUnderMouse: TimelineTimeUnderMouseService,
         @Inject(DOCUMENT) private document: Document,
+        @Inject(WINDOW) private window: Window,
     ) {}
 
     public ngOnInit(): void {
@@ -147,7 +149,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             });
     }
 
-    private scrollTimeline(pos, direction) {
+    private scrollTimeline(pos: number, direction: EDGE_SCROLLING_DIRECTION): void {
         const speed = this.edgeScrollingSpeed(pos);
         const offset = this.timeline.domWidthToDuration((1 << speed) * 10);
         let target = this.timeline.visibleRange.start;
@@ -159,7 +161,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         }
     }
 
-    private _onAnimationFrame() {
+    private _onAnimationFrame(): void {
         const direction =
             // @ts-expect-error classname does not exist in EventTarget
             this._lastMouseMoveEvent?.target.className === 'right-draggable'
@@ -214,7 +216,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         return EDGE_SCROLLING_SPEED.FAST;
     }
 
-    private edgeScrollingSpeed(pos): EDGE_SCROLLING_SPEED {
+    private edgeScrollingSpeed(pos: number): EDGE_SCROLLING_SPEED {
         return this.distanceToScrollingSpeed(pos);
     }
 
@@ -269,7 +271,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public get svgLeftArrowPoints(): string {
-        let offset;
+        let offset: number;
 
         if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
             offset = this.left - WNM;
@@ -299,7 +301,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     public get svgRightArrowPoints(): string {
         const wwm = PRIMARY_WIDTH + 2 * MARGIN; // widthWithMargins
 
-        let offset;
+        let offset: number;
 
         if (this.selectionStatus.dragMode || this.selectionStatus.hoverMode) {
             const canvasWidth =
@@ -359,7 +361,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         this._updateCss();
     }
 
-    private play(offsetX): void {
+    private play(offsetX: number): void {
         const time = this.timeline.domOffsetXtoTime(offsetX);
         this.playback.playArchive(time);
 
@@ -378,7 +380,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     @HostListener('mousedown', ['$event'])
     public mouseSelectionDownHandler(e: MouseEvent): void {
-        this.clickAndHoldHandler = setTimeout(() => {
+        this.clickAndHoldHandler = this.window.setTimeout(() => {
             this.selectionMode = true;
             this.selection.handleBackgroundMouseDown(e);
             clearTimeout(this.clickAndHoldHandler);
@@ -430,8 +432,10 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         this.selection.reset();
     }
 
-    private updateMouseMoveEvent(e: MouseEvent) {
-        // @ts-expect-error
+    private updateMouseMoveEvent(e: MouseEvent): void {
+        // @ts-expect-error FIXME: TIL errors inside event listeners will silently crash
+        // without anything displaying in the console. Currently this call always crashes and
+        // blocks the code under from ever executing
         this.timeUnderMouse.handleMouseMove({
             offsetX:
                 (e.target as HTMLElement).getBoundingClientRect().left -
@@ -477,7 +481,10 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         e.preventDefault();
 
         if (e.target !== this.host) {
-            // @ts-expect-error
+            // This branch is triggered when wheeling over a selection and the target
+            // changes from nx-timeline-selection component to selected range div
+            // (host is nx-timeline-selection component)
+            // @ts-expect-error FIXME: Like above, this will always crash
             this.wheel.handleWheel({
                 offsetX:
                     (e.target as HTMLElement).getBoundingClientRect().left -

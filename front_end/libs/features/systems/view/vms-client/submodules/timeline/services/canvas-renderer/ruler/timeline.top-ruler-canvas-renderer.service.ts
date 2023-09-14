@@ -7,6 +7,7 @@ import { ms, px } from '@vms-client/utils/type-aliases';
 import { cfg } from '../../timeline.config';
 import { TimelineService } from '../../timeline.service';
 import { NxDrawingConfigsService } from '../drawingConfigs/drowingConfigs.service';
+import type { TopRuler } from '../drawingConfigs/drowingConfigs.service.types';
 
 import { topRulerDateFormats } from './dateformats/top_ruler_date_formats';
 import { IrregularLengthInterval } from './intervals/IrregularLengthInterval';
@@ -20,7 +21,7 @@ import { percentageToHex } from './utils/percentageToHex';
     providedIn: 'root',
 })
 export class TimelineTopRulerCanvasRendererService {
-    topRulerDrawingConfig;
+    topRulerDrawingConfig: TopRuler;
 
     constructor(
         protected timeline: TimelineService,
@@ -58,7 +59,7 @@ export class TimelineTopRulerCanvasRendererService {
 
     protected _interval: IrregularLengthInterval;
 
-    public getInterval() {
+    public getInterval(): IrregularLengthInterval {
         if (!this._interval) {
             this._interval = this._getInterval();
         }
@@ -81,7 +82,7 @@ export class TimelineTopRulerCanvasRendererService {
 
     protected _serifTimes: Array<ms>;
 
-    public getSerifTimes() {
+    public getSerifTimes(): Array<ms> {
         if (!this._serifTimes) {
             this._serifTimes = this._getSerifTimes(this.getInterval());
         }
@@ -94,7 +95,7 @@ export class TimelineTopRulerCanvasRendererService {
             : [];
     }
 
-    protected _withContext(ctx, actualDrawing: () => void): void {
+    protected _withContext(ctx: CanvasRenderingContext2D, actualDrawing: () => void): void {
         ctx.save();
         actualDrawing();
         ctx.restore();

@@ -1,7 +1,9 @@
 import { IrregularLengthInterval } from '../IrregularLengthInterval';
 import { ROUGH_YEAR, ROUGH_MONTH } from '../regularLengthIntervals';
 
-export const estimateIrregularLengthIntervalPessimistically = (i: IrregularLengthInterval) => {
+export const estimateIrregularLengthIntervalPessimistically = (
+    i: IrregularLengthInterval,
+): number => {
     switch (i) {
         case 'millenia':
             return 1000 * ROUGH_YEAR;

@@ -4,6 +4,7 @@ import { RecordsConfig } from '@vms-client/submodules/timeline/services/canvas-r
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, ms } from '@vms-client/utils/type-aliases';
 
+import type { sTimeRangeCopy } from '../../../vms/datatypes/ICamera';
 import { TimelineService } from '../timeline.service';
 
 import { NxDrawingConfigsService } from './drawingConfigs/drowingConfigs.service';
@@ -67,7 +68,12 @@ export class TimelineRecordsCanvasRendererService {
         }
     }
 
-    protected _drawRecord(ctx, r, startMs, pxPerMs): void {
+    protected _drawRecord(
+        ctx: CanvasRenderingContext2D,
+        r: sTimeRangeCopy,
+        startMs: ms,
+        pxPerMs: ms,
+    ): void {
         const x0 = Math.round((r.start - startMs) * pxPerMs);
         let x1 = Math.round((r.end - startMs) * pxPerMs);
         if (x1 - x0 < this.cfg.MIN_RECORD_WIDTH_PX) {
@@ -80,7 +86,11 @@ export class TimelineRecordsCanvasRendererService {
         ctx.fillRect(x0, y, w, h);
     }
 
-    protected _drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs): void {
+    protected _drawLastMinuteStripes(
+        ctx: CanvasRenderingContext2D,
+        lastMinuteStartMs: ms,
+        pxPerMs: float,
+    ): void {
         const dpr = this.timeline.canvasGeometry.dpr;
         const x = Math.round((lastMinuteStartMs - this.timeline.visibleRange.start) * pxPerMs);
         const w = this.timeline.canvasGeometry.width - x;

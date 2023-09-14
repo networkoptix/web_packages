@@ -25,9 +25,6 @@ import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
     encapsulation: ViewEncapsulation.None,
 })
 export class PlayerJsComponent implements OnDestroy, OnChanges {
-    _log: Function;
-    _warn: Function;
-
     @Input() mode: number;
     @Input() paused: boolean;
     @Input() posterUrl: string;
@@ -38,7 +35,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
     @Output() bufferingChange = new EventEmitter<number>();
     @Output() videoEnded = new EventEmitter<boolean>();
-    @Output() videoError = new EventEmitter<any>();
+    @Output() videoError = new EventEmitter<Event>();
 
     @ViewChild('video', { static: true }) videoView: ElementRef<HTMLVideoElement>;
 
@@ -48,10 +45,10 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     protected transport = '';
     private readonly xRuntimeGuid = 'x-runtime-guid';
 
-    constructor(@Inject(WINDOW) public window: Window) {}
+    constructor(@Inject(WINDOW) private window: Window) {}
 
     // For lazy loading player
-    #videojs: videojs;
+    #videojs: typeof videojs;
 
     private supportsNativeHls(): boolean {
         const video = this.window.document.createElement('video');
@@ -68,7 +65,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
 
         let videoJsAutoRetry = 0;
-        let stallTimer;
+        let stallTimer: number;
         const waitingTime = 8 * 1000;
         const nativeSupport = this.supportsNativeHls();
         const options = {
@@ -84,7 +81,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             },
         };
 
-        const resetTimer = () => {
+        const resetTimer = (): void => {
             stallTimer && clearTimeout(stallTimer);
             stallTimer = undefined;
         };
@@ -113,7 +110,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         this.player.on('waiting', () => {
             if (!stallTimer) {
                 this.hasPlayed = false;
-                stallTimer = setTimeout(() => {
+                stallTimer = this.window.setTimeout(() => {
                     this.bufferingChange.emit(waitingTime);
                 }, waitingTime);
             }

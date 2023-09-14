@@ -7,6 +7,7 @@ import { icons } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
+import { ViewCamera } from '../../datatypes/Camera';
 import type { ViewMediaServer } from '../../datatypes/IMediaServer';
 
 @Component({
@@ -28,14 +29,14 @@ export class MediaServerListComponent implements OnChanges {
     public mediaservers: Array<ViewMediaServer>;
     public processedMediaservers: Array<ViewMediaServer>;
 
-    public previewLoaded = {};
+    public previewLoaded: Record<string, true | -1> = {};
     public isCameraVisible: { [key: string]: boolean } = {};
 
-    public handlePreviewLoaded(cid): void {
+    public handlePreviewLoaded(cid: string): void {
         this.previewLoaded[cid] = true;
     }
 
-    public handlePreviewError(cid): void {
+    public handlePreviewError(cid: string): void {
         this.previewLoaded[cid] = -1;
     }
 
@@ -51,7 +52,7 @@ export class MediaServerListComponent implements OnChanges {
         this.CONFIG = configService.config;
     }
 
-    public ngOnChanges(changes: NgChanges<MediaServerListComponent>) {
+    public ngOnChanges(changes: NgChanges<MediaServerListComponent>): void {
         if (changes._mediaservers?.previousValue !== changes._mediaservers?.currentValue) {
             this.previewLoaded = {};
             this.processedMediaservers = this._mediaservers || [];
@@ -87,14 +88,14 @@ export class MediaServerListComponent implements OnChanges {
         this.showIP = newValue;
     }
 
-    public updateFilteredList(token: string) {
+    public updateFilteredList(token: string): void {
         this.token = token;
         if (!token) {
             this.mediaservers = this.processedMediaservers;
             return;
         }
         token = token.toLocaleLowerCase();
-        this.mediaservers = this.processedMediaservers.reduce((acc: any[], ms) => {
+        this.mediaservers = this.processedMediaservers.reduce<ViewMediaServer[]>((acc, ms) => {
             const cameras = ms.cameras.filter(
                 c =>
                     c.name.toLocaleLowerCase().includes(token) ||
@@ -111,11 +112,11 @@ export class MediaServerListComponent implements OnChanges {
         }, []);
     }
 
-    public cameraId(index, camera) {
+    public cameraId(index: number, camera: ViewCamera): string {
         return camera ? camera.id : undefined;
     }
 
-    public serverID(index, server) {
+    public serverID(index: number, server: ViewMediaServer): string {
         return server ? server.id : undefined;
     }
 }

@@ -43,7 +43,7 @@ export class TimelineService {
             });
     }
 
-    public get canvasGeometryUpdateRequested() {
+    public get canvasGeometryUpdateRequested(): TimelineService['_canvasGeometryUpdateRequested'] {
         return this._canvasGeometryUpdateRequested;
     }
 
@@ -61,7 +61,7 @@ export class TimelineService {
         });
     }
 
-    public get zoomStatus() {
+    public get zoomStatus(): TimelineServiceStatus['zoom'] {
         return {
             canZoomIn:
                 this._visibleRange.duration / this.canvasGeometry.dpr > this.canvasGeometry.width,
@@ -69,7 +69,7 @@ export class TimelineService {
         };
     }
 
-    public get subject() {
+    public get subject(): TimelineService['_subject'] {
         return this._subject;
     }
 
@@ -211,7 +211,7 @@ export class TimelineService {
         return targetT;
     }
 
-    public stepScrollToStartTime(targetT: ms, step = cfg.SCROLL_STEP) {
+    public stepScrollToStartTime(targetT: ms, step: number = cfg.SCROLL_STEP): boolean {
         targetT = this._sanitizeScrollStartTimeAim(targetT);
         const dt = targetT - this._visibleRange.start;
         if (dt) {
@@ -229,11 +229,11 @@ export class TimelineService {
     protected _targetScrollMs: ms;
     protected _animationStep: int = 0;
 
-    public get targetScrollMs() {
+    public get targetScrollMs(): number {
         return this._targetScrollMs || this.visibleRange.start;
     }
 
-    public jumpScrollTo(targetT: ms, animate: boolean = false) {
+    public jumpScrollTo(targetT: ms, animate: boolean = false): boolean {
         if (animate) {
             this._scrollAnimationStartTime = Date.now();
             this._initialScrollMs = this._visibleRange.start;

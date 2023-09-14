@@ -18,15 +18,15 @@ export class PlaybackStateIndicatorComponent implements OnInit {
 
     @Input() enabled: boolean;
 
-    public get isLive() {
+    public get isLive(): boolean {
         return this.vms.selectedCamera.isLive;
     }
 
-    public get isPlaying() {
+    public get isPlaying(): boolean {
         return this.state.mode === PLAYBACK_MODE.LIVE && !this.playback.livePaused;
     }
 
-    public get isRecording() {
+    public get isRecording(): boolean {
         return this.vms.selectedCamera?.isRecording;
     }
 

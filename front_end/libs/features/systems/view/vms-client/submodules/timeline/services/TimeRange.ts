@@ -40,18 +40,18 @@ export class TimeRange {
         this.end = enclosingRange.end;
     }
 
-    public contains(t: ms) {
+    public contains(t: ms): boolean {
         return this.start <= t && t <= this.end;
     }
 
-    public clone() {
+    public clone(): TimeRange {
         return new TimeRange(this.start, this.end);
     }
 
     public iterate(interval: IrregularLengthInterval, tzOffset: ms = 0): Array<ms> {
         const start = alignTimeStamp(this.start + tzOffset, interval, 'left');
         const end = alignTimeStamp(this.end + tzOffset, interval, 'right');
-        const result = [];
+        const result: number[] = [];
         for (let i = start; i <= end; i = alignTimeStamp(i, interval, 'right')) {
             result.push(i - tzOffset);
         }

@@ -75,7 +75,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         });
     }
 
-    fetchRuntime() {
+    fetchRuntime(): string {
         return this.sessionStorage.retrieve(`${this.vms.systemId()}-${this.xRuntimeGuid}`);
     }
 
@@ -84,7 +84,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.playback.subject.pipe(untilDestroyed(this)).subscribe((s: PlaybackState) => {
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe(s => {
             this.onPlaybackSubjectChange(s);
         });
     }
@@ -142,8 +142,10 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         this.playback.playLive();
     }
 
-    public videoErrorEventHandler(event: any): void {
-        const { player } = event.target;
+    public videoErrorEventHandler(event: Event): void {
+        // @ts-expect-error: Strange event.target
+        // looks like a HTMLDivElement (div#nx-vjs-player) but with player property attached
+        const player = event.target.player as videojs.VideoJsPlayer;
         if (player && ['abort', 'error'].includes(event.type)) {
             const headers = { 'Accept-Language': 'en-US' };
             const auth = this.fetchRuntime();
@@ -151,10 +153,10 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                 headers[this.xRuntimeGuid] = auth;
             }
             this.http
-                .get(player.src(), { headers })
+                .get<any>(player.src(), { headers })
                 .pipe(untilDestroyed(this))
                 .subscribe(
-                    (response: any) => {
+                    response => {
                         switch (response?.error) {
                             case '4':
                                 if (response.errorString === this.serverErrors.cannotDecrypt) {
@@ -168,6 +170,13 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                         }
                     },
                     error => {
+                        /* HttpErrorResponse, but code 200 OK?
+                        error.message: "Unexpected token '#', "#EXTM3U #"... is not valid JSON"
+                        error.text: "#EXTM3U
+                        #EXT-X-STREAM-INF:BANDWIDTH=5569848
+                        https://8gpnqn65zm82ycwxzuvvm.relay.regress.cloud.hdw.mx:443/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?authKey=ae689a9c-9ebc-4972-84f0-86b5b0f8845d&hi&chunked&sessionID=307&hi"
+                        message: "Http failure during parsing for https://38b5790a-523a-4124-ac07-a958c4ad13c3.relay.regress.cloud.hdw.mx/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?hi&"
+                         */
                         if (error.name !== 'HttpErrorResponse') {
                             this.playback.setError(error.message);
                         }

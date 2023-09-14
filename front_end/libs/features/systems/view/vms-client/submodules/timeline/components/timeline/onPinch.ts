@@ -1,9 +1,21 @@
-export function onPinch(el: HTMLElement, onPinchMove: Function = () => {}) {
-    let distance;
+// TODO: Move into timeline component
+export function onPinch(
+    el: HTMLElement,
+    onPinchMove: ({
+        newScale,
+        scaleChange,
+        offset,
+    }: {
+        newScale: number;
+        scaleChange: number;
+        offset: number;
+    }) => void,
+): () => void {
+    let distance: number;
     let scale = 1.0;
     let offset = 0.5;
 
-    const onTouchMove = event => {
+    const onTouchMove = (event: TouchEvent): void => {
         if (event.touches.length === 2) {
             const currentDistance = Math.hypot(
                 event.touches[0].pageX - event.touches[1].pageX,
@@ -14,7 +26,7 @@ export function onPinch(el: HTMLElement, onPinchMove: Function = () => {}) {
                 distance = currentDistance;
                 const x1 = event.touches[0].clientX;
                 const x2 = event.touches[1].clientX;
-                const targetRect = event.target.getBoundingClientRect();
+                const targetRect = (event.target as HTMLElement).getBoundingClientRect();
                 offset = ((x1 + x2) * 0.5 - targetRect.left) / targetRect.width;
             }
 
@@ -25,7 +37,7 @@ export function onPinch(el: HTMLElement, onPinchMove: Function = () => {}) {
         }
     };
 
-    const reset = () => {
+    const reset = (): void => {
         distance = undefined;
         scale = 1.0;
         offset = 0.5;

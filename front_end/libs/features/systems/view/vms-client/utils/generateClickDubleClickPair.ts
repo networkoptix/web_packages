@@ -1,6 +1,11 @@
-export function generateClickDubleClickPair(onClick, onDblClick, dblClickDelayMs = 300) {
-    let scheduledHandler = null;
-    let prevClickTime = null;
+// TODO: Move this into player component file
+export function generateClickDubleClickPair(
+    onClick: (e: MouseEvent) => void,
+    onDblClick: (e: MouseEvent) => void,
+    dblClickDelayMs = 300,
+): (e: MouseEvent) => void {
+    let scheduledHandler: number = null;
+    let prevClickTime: number = null;
 
     return function (e) {
         const now = Date.now();
@@ -9,10 +14,10 @@ export function generateClickDubleClickPair(onClick, onDblClick, dblClickDelayMs
             if (timePassed < dblClickDelayMs) {
                 clearTimeout(scheduledHandler);
                 scheduledHandler = null;
-                onDblClick();
+                onDblClick(e);
             }
         } else {
-            scheduledHandler = setTimeout(() => {
+            scheduledHandler = window.setTimeout(() => {
                 scheduledHandler = null;
                 prevClickTime = null;
                 onClick(e);

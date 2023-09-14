@@ -25,8 +25,8 @@ export class PlaybackService {
     protected extractDimensions(): number[] {
         let { quality, transport } = this._state;
 
-        let height = null;
-        let width = null;
+        let height: string = null;
+        let width: string = null;
         if (quality) {
             // If its hls we need to find another transport w/ a similar quality
             if (transport === 'hls') {
@@ -78,8 +78,8 @@ export class PlaybackService {
 
     public livePaused$ = new BehaviorSubject<boolean | 'restartVideo'>(false);
 
-    public get livePaused() {
-        return <boolean | 'restartVideo'>!!this.livePaused$.value;
+    public get livePaused(): boolean | 'restartVideo' {
+        return !!this.livePaused$.value;
     }
 
     public set livePaused(value: boolean | 'restartVideo') {
@@ -112,7 +112,7 @@ export class PlaybackService {
         }
     }
 
-    public canPlayArchive(t: ms) {
+    public canPlayArchive(t: ms): boolean {
         return this.vms.selectedCamera?.hasArchive;
     }
 
@@ -129,7 +129,7 @@ export class PlaybackService {
         this._emit();
     }
 
-    public playArchive(t: ms, paused = false) {
+    public playArchive(t: ms, paused = false): void {
         if (!this.canPlayArchive(t)) {
             this.playLive();
             return;
@@ -175,7 +175,7 @@ export class PlaybackService {
         this._emit();
     }
 
-    public setError(error): void {
+    public setError(error: string): void {
         this._state.error = error;
         this._emit();
     }

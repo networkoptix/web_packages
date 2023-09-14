@@ -58,12 +58,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     protected _mouseDownScreenX: px = 0;
     protected _mouseNotReleasedYet: boolean = false;
 
-    private updateCanvas = new Subject();
-    private _animationTimeout;
+    private updateCanvas = new Subject<true>();
+    private _animationTimeout: number;
 
     public hideTimeUnderMouse: boolean = false;
     public isDragging: boolean = false;
-    clickAndHoldHandler;
+    clickAndHoldHandler: number;
 
     public readonly archiveSelectionEnabled: boolean = false;
 
@@ -100,12 +100,14 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     protected _animationFrameRequestHandler: number;
 
-    protected _pinchDestructor: Function;
+    protected _pinchDestructor: () => void;
+    // Event listener cleanup
 
     public ngOnInit(): void {
         this.timeline.subject
             .pipe(untilDestroyed(this))
             .subscribe(() => this._onTimelineStatusChange);
+        // FIXME: Doesn't do anything, missing call?
     }
 
     public ngAfterViewInit(): void {
@@ -153,7 +155,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 
-        this._animationTimeout = setTimeout(() => {
+        this._animationTimeout = this.window.setTimeout(() => {
             this._animationFrameRequestHandler = requestAnimationFrame(() =>
                 this.onAnimationFrame(),
             );
@@ -260,7 +262,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.timeUnderMouse.handleMouseDown();
         this._mouseNotReleasedYet = true;
-        this.clickAndHoldHandler = setTimeout(() => {
+        this.clickAndHoldHandler = this.window.setTimeout(() => {
             this.isDragging = true;
             clearTimeout(this.clickAndHoldHandler);
         }, CLICK_AND_HOLD_TIMEOUT);
@@ -296,7 +298,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.timeUnderMouse.handleMouseUp();
     }
 
-    protected _play(offsetX): void {
+    protected _play(offsetX: number): void {
         const time = this.timeline.domOffsetXtoTime(offsetX);
         this.playback.playArchive(time);
         this.hideTimeUnderMouse = true;
@@ -326,10 +328,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
             if (!this.selection.handleMouseUp(e)) {
-                this._play(
-                    e.clientX -
-                        (this.canvasView.nativeElement as HTMLElement).getBoundingClientRect().left,
-                );
+                this._play(e.clientX - this.canvasView.nativeElement.getBoundingClientRect().left);
             }
         }
     }

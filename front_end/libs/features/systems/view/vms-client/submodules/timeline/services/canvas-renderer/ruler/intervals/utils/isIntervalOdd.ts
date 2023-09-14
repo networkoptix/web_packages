@@ -2,9 +2,9 @@ import { IrregularLengthInterval } from '../IrregularLengthInterval';
 
 import { timeStampMs, durationMs } from './alignTimeStamp';
 
-export function isIntervalOdd(t: timeStampMs, d: IrregularLengthInterval) {
+export function isIntervalOdd(t: timeStampMs, d: IrregularLengthInterval): boolean {
     const date = new Date(t);
-    let v;
+    let v: number;
     switch (d) {
         case 'month':
             v = date.getMonth() + 1;

@@ -27,7 +27,7 @@ export class TimelineTimeUnderMouseService {
         });
     }
 
-    public get subject() {
+    public get subject(): TimelineTimeUnderMouseService['_subject'] {
         return this._subject;
     }
 
@@ -43,7 +43,7 @@ export class TimelineTimeUnderMouseService {
         return this._offsetX;
     }
 
-    public get pressed() {
+    public get pressed(): boolean {
         return this._pressed;
     }
 

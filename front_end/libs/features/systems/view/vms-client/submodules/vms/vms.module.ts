@@ -11,13 +11,13 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
 import { PipesModule } from '@pipes/pipes.module';
 
-import { components } from './components';
 import { MediaServerListComponent } from './components/media-server-list/media-server-list.component';
+import { NxMediaServerListHeaderComponent } from './components/media-server-list-header/media-server-list-header.component';
 import { IpInfoPipe } from './pipes/ip_info.pipe';
 // import { VideoManagementSystemService } from './services/vms.service'
 
 @NgModule({
-    declarations: [IpInfoPipe, components],
+    declarations: [IpInfoPipe, MediaServerListComponent, NxMediaServerListHeaderComponent],
     imports: [
         CommonModule,
         FormsModule,

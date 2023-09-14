@@ -51,6 +51,8 @@ export interface LivePlaybackState extends AbstractPlaybackState {
 
 export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState;
 
+export type PlayingState = Exclude<PlaybackState, StoppedPlaybackState>;
+
 export function createInitialStoppedState(
     quality: PlaybackQuality = 'auto',
     transport: PlaybackTransport = 'webm',
