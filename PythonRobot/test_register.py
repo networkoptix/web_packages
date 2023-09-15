@@ -52,7 +52,9 @@ def open_from_success_page():
 
 
 def page_in_anonymous_state_redister_home():
-    """3. Should open register page in anonymous state by clicking Register button on homepage"""
+    """
+    3. Should open register page in anonymous state by clicking Register button on homepage
+    """
     driver = get_headless_chrome()
     driver.get(rb.ENV)
     Button(driver, rb.CREATE_ACCOUNT_BODY).click()
@@ -137,7 +139,9 @@ def password_masking_and_eye_icon():
 
 
 def should_respond_to_enter_key():
-    """9. Should respond to Enter key and save data"""
+    """
+    9. Should respond to Enter key and save data
+    """
     email = get_random_email()
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
@@ -299,43 +303,43 @@ def check_register_email():
 
 if __name__ == "__main__":
     page_in_anonymous_state_register_header()
-    print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t{Fore.GREEN}| PASS |')
 
     open_from_success_page()
-    print(f'{Fore.WHITE}{open_from_success_page.__doc__}\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{open_from_success_page.__doc__}\t{Fore.GREEN}| PASS |')
 
     page_in_anonymous_state_redister_home()
-    print(f'{Fore.WHITE}{page_in_anonymous_state_redister_home.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{page_in_anonymous_state_redister_home.__doc__}\t{Fore.GREEN}| PASS |')
 
     page_in_anonymouse_state_navigation()
-    print(f'{Fore.WHITE}{page_in_anonymouse_state_navigation.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{page_in_anonymouse_state_navigation.__doc__}\t{Fore.GREEN}| PASS |')
 
     register_user_with_correct_credentials()
-    print(f'{Fore.WHITE}{register_user_with_correct_credentials.__doc__}\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{register_user_with_correct_credentials.__doc__}\t{Fore.GREEN}| PASS |')
 
     valid_inputs_no_errors()
-    print(f'{Fore.WHITE}{valid_inputs_no_errors.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{valid_inputs_no_errors.__doc__}\t{Fore.GREEN}| PASS |')
 
     password_masking_and_eye_icon()
-    print(f'{Fore.WHITE}{password_masking_and_eye_icon.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{password_masking_and_eye_icon.__doc__}\t{Fore.GREEN}| PASS |')
 
     should_respond_to_enter_key()
-    print(f'{Fore.WHITE}{should_respond_to_enter_key.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{should_respond_to_enter_key.__doc__}\t{Fore.GREEN}| PASS |')
 
     should_respond_to_tab_key()
-    print(f'{Fore.WHITE}{should_respond_to_tab_key.__doc__}\t\t\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{should_respond_to_tab_key.__doc__}\t{Fore.GREEN}| PASS |')
 
     terms_and_conditions_in_new_page()
-    print(f'{Fore.WHITE}{terms_and_conditions_in_new_page.__doc__}\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{terms_and_conditions_in_new_page.__doc__}\t{Fore.GREEN}| PASS |')
 
     privacy_policy_in_new_page()
-    print(f'{Fore.WHITE}{privacy_policy_in_new_page.__doc__}\t\t\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{privacy_policy_in_new_page.__doc__}\t{Fore.GREEN}| PASS |')
 
     cant_register_email_already_registered()
-    print(f'{Fore.WHITE}{cant_register_email_already_registered.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{cant_register_email_already_registered.__doc__}\t{Fore.GREEN}| PASS |')
 
     cant_register_email_already_activated()
-    print(f'{Fore.WHITE}{cant_register_email_already_activated.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{cant_register_email_already_activated.__doc__}\t{Fore.GREEN}| PASS |')
 
     check_register_email()
-    print(f'{Fore.WHITE}{check_register_email.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
+    print(f'{Fore.WHITE}{check_register_email.__doc__}\t{Fore.GREEN}| PASS |')
