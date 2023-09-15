@@ -353,8 +353,7 @@ def register(driver, first_name, last_name, email, password, checked=False, view
 
 
 # from robot_tests/Resources/front-end-resources/restore-pass-resource.robot    
-def send_restore_password_email(driver: webdriver, email: str)->  None:
-
+def send_restore_password_email(driver: webdriver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
     Element(driver, rb.LOG_IN_MODAL).wait_until_visible()
@@ -368,6 +367,7 @@ def send_restore_password_email(driver: webdriver, email: str)->  None:
     Element(driver, rb.FORGOT_PASSWORD_BUTTON).click()
     robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
     Element(driver, rb.RESET_PASSWORD_BUTTON).click()
+
 
 def validate_log_in(driver: webdriver, email: str, password: str, timeout: int = 10) -> None:
     Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
