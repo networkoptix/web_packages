@@ -352,12 +352,6 @@ def register(driver, first_name, last_name, email, password, checked=False, view
     Element(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 
 
-
-
-def set_language_anonymous():
-    # currently disabled
-    pass
-
 # from robot_tests/Resources/front-end-resources/restore-pass-resource.robot    
 def send_restore_password_email(driver: webdriver, email: str)->  None:
 
