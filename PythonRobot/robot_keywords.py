@@ -7,15 +7,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.support.ui import WebDriverWait
 
-from generic_element import Element
-
 
 # keep the following functions in alphabetical order
 
 def check_for_alert(driver: webdriver, alert_text: str, timeout: int = 10) -> None:
     alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
     xpath = f"{alert}/../span[contains(text(), '{alert_text}')]"
-    Element(driver, xpath).wait_until_visible(timeout)
+    wait_until_element_is_visible(driver, xpath, timeout)
     wait_until_page_does_not_contain_element(driver, xpath, timeout)
 
 
@@ -51,6 +49,11 @@ def wait_until_element_has_style(driver, css_selector, style_name, expected_valu
             return False
 
     WebDriverWait(driver, timeout).until(check_style)
+
+
+def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 40) -> None:
+    WebDriverWait(driver, timeout).until(EC.visibility_of_element_located((By.XPATH, locator)))
+
 
 def wait_until_element_is_not_visible(driver: webdriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(EC.visibility_of_element_located((By.XPATH, locator)))
