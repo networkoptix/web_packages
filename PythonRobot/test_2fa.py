@@ -1,5 +1,6 @@
 import datetime
 import time
+import os
 
 import robot_keywords
 from resource_import import get_headless_chrome
@@ -357,16 +358,18 @@ def twofa_login_via_api_backup(server: CloudServer):
         )
 
 if __name__ == "__main__":
+    suite_name = os.path.basename(__file__)
+    suite_name = suite_name.replace("test_","").replace(".py","")
     with Suite() as suite:
         suite: Suite
         cloud_owner = suite.create_cloud_account()
-        cloud_server = suite.create_cloud_server(cloud_owner, 'test_2fa_first_server_')
+        cloud_server = suite.create_cloud_server(cloud_owner, f"{suite_name}_1_")
         enable_and_login_with_2fa(cloud_server)
         login_with_backup_code(cloud_server)
         login_with_qr_code(cloud_server)
         disabling_2fa(cloud_server)
         system_2fa_required(cloud_server)
-        second_cloud_server = suite.create_cloud_server(cloud_owner, 'test_2fa_second_server_')
+        second_cloud_server = suite.create_cloud_server(cloud_owner, f"{suite_name}_2_")
         twofa_not_required_when_more_than_one_system(cloud_server, second_cloud_server)
         change_2fa_for_user_to_specific_systems_and_whole_account(cloud_server)
         fail_to_login_with_expired_code(cloud_server)
