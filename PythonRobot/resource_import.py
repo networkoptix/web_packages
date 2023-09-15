@@ -406,14 +406,6 @@ def wait_for_email(mail, recipient, timeout, status='UNSEEN'):
                 return email_id
         time.sleep(1)
 
-def verify_delete_user_dialog(driver: webdriver):
-    Element(driver, rb.DELETE_ACCOUNT_MODAL_BUTTON).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_CANCEL_BUTTON).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_PASSWORD_INPUT).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_CLOSE_BUTTON).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_PASSWORD_LABEL).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_INFO).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_HEADER).wait_until_visible()
     
 def validate_on_register_page(driver: webdriver):
     Element(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
