@@ -1,4 +1,3 @@
-import robot_keywords
 from RobotVariables import RobotVariables
 from header import HeaderNav
 from login import LoginDialog
