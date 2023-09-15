@@ -19,9 +19,9 @@ from selenium.webdriver.remote.webdriver import WebDriver
 import robot_keywords
 import robot_lists as rl
 from RobotVariables import RobotVariables
+from email_access import Email
 from generic_element import Element
 from login import LoginDialog
-from email_access import Email
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -384,23 +384,21 @@ def verify_in_account_page(driver: webdriver):
         Element(driver, element).should_not_be_visible()
     time.sleep(0.5)
 
+
 def wait_for_email(mail, recipient, timeout_sec):
-    start_time = time.time()
-
+    started_at = time.monotonic()
     while True:
-        # Check if the timeout has been reached
-        if time.time() - start_time > timeout_sec:
-            return None
-
         # Search the inbox for emails with specific "To" header
         result, data = mail.uid('search', None, f'(HEADER "To" "{recipient}")')
         email_ids = data[0].split()
-        
         for email_id in email_ids:
             result, email_data = mail.uid('fetch', email_id, '(FLAGS)')
             email_flags = email_data[0].decode()  # decode the entire byte string
             if result == 'OK' and '\\Seen' not in email_flags:
                 return email_id
+        if time.monotonic() - started_at > timeout_sec:
+            raise RuntimeError(
+                f"No email for {mail} to {recipient} within {timeout_sec} seconds timeout")
         time.sleep(1)
 
     
