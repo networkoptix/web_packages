@@ -25,8 +25,9 @@ class Suite:
     def __enter__(self) -> 'Suite':
         return self
 
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._exit_stack.close()
+    def __exit__(self, *exc_details):
+        # Calling close() from context manager's __exit__ will suppress parent exceptions
+        self._exit_stack.__exit__(*exc_details)
 
     def create_cloud_account(self):
         return self._exit_stack.enter_context(CloudAccount())
@@ -41,7 +42,6 @@ class CloudServer:
 
     def __init__(self, cloud_owner: 'CloudAccount', suite_name, run_id, ports: int = 1):
         self.cloud_owner = cloud_owner
-        self._exit_stack = ExitStack()
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
@@ -52,7 +52,6 @@ class CloudServer:
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._tear_down()
-        self._exit_stack.close()
 
     def _set_up(self):
         # Create a docker server.
