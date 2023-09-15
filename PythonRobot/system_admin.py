@@ -13,6 +13,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 import robot_keywords
 from RobotVariables import RobotVariables
 from generic_element import Element
+from generic_element import ElementNotInDOM
+from generic_element import ElementNotVisible
 from toast_notification import ToastNotification
 from variables import ENV
 from wrappers import Button
@@ -38,12 +40,12 @@ class SystemAdmin:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-modal-generic-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
-        
+
     def disconnect_modal_warning(self):
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-modal-generic-content//p[contains(text(), '{DISCONNECT_MODAL_WARNING_TEXT}')]")
         return PageText(self.driver, translated_xpath)
-    
+
     def disconnect_from_account_button(self):
         translated_xpath = self.rb.replace_nested_variables(
             "//button[contains(text(),'{DISCONNECT_FROM_MY_ACCOUNT_TEXT}')]")
@@ -80,6 +82,27 @@ class SystemAdmin:
     def merge_with_another_system_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[span[text()='{MERGE_SYSTEM_BUTTON_TEXT}']]")
         return Button(self.driver, translated_xpath)
+
+    def ensure_system_online(self, system_name: str, timeout = 10.0):
+        error_message = f"System {system_name} is offline and cannot be merged with the current one"
+        started_at = time.monotonic()
+        clicked_next_button = False
+        while True:
+            error = Element(
+                self.driver,
+                f'//nx-modal-merge-content//p[text()="{error_message}"]',
+                )
+            try:
+                error.wait_until_visible()
+            except (ElementNotVisible, ElementNotInDOM):
+                break
+            if time.monotonic() - started_at > timeout:
+                raise RuntimeError(f"System {system_name} is not ready for merge in {timeout} seconds")
+            Button(self.driver, '//nx-modal-merge-content//button[text()="Check"]').click()
+            clicked_next_button = True
+            time.sleep(0.5)
+        if not clicked_next_button:
+            self.merge_next_button().click()
 
     def merge_next_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(),'{NEXT_TEXT}')]")
