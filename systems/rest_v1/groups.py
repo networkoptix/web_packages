@@ -1,33 +1,11 @@
-from marshmallow import Schema, fields, ValidationError, validates
+from marshmallow import ValidationError
 from quart import Blueprint, request
 
+from schema import CreateGroupSchema, UpdateGroupSchema
 from views import GroupView
 from nx_common import RestConnector, is_org_admin
 
 group_blueprint = Blueprint('group', __name__, url_prefix='/group')
-
-
-class GroupNameSchema(Schema):
-    name = fields.Str()
-
-    @validates("name")
-    def validate_name(self, value):
-        if not value:
-            raise ValidationError("Name cannot be blank")
-
-
-class GroupSchema(Schema):
-    parent_id = fields.Str(required=False)
-    org_id = fields.Str(required=True)
-
-    @validates('org_id')
-    def validate_org_id(self, value):
-        if not value:
-            raise ValidationError("org_id cannot be blank")
-
-
-class CreateGroupSchema(GroupSchema, GroupNameSchema):
-    pass
 
 
 @group_blueprint.route('/', methods=['POST'])
@@ -54,7 +32,7 @@ def get_group(group_id=None):
 async def update_group(group_id):
     try:
         raw_data = await request.get_json()
-        data = GroupNameSchema().load(raw_data)
+        data = UpdateGroupSchema().load(raw_data)
         results = GroupView.update_group(group_id, data['name'])
         if error_code := results.get('error'):
             del results['error']

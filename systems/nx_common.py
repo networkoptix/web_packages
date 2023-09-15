@@ -37,7 +37,7 @@ async def share(api, systems, users):
             except APIException:
                 current_app.logger.error(traceback.format_exc())
                 pass
-    return shared_systems  
+    return shared_systems
 
 
 def is_org_admin(f):
@@ -137,7 +137,7 @@ class LicenseConnector:
     async def is_admin_in_org(self, org_id):
         user = await self._get_user(org_id)
         return self.email == user.get('email') and any(role in ['Administrator', 'Organization Administrator'] for role in user.get('roles', []))
-    
+
     async def is_user_in_org(self, org_id):
         user = await self._get_user(org_id)
         return self.email == user.get('email')
@@ -151,7 +151,7 @@ class CloudConnector:
 
     async def __aenter__(self):
         return self
-    
+
     async def __aexit__(self, *args, **kwargs):
         await self.session.aclose()
 

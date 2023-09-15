@@ -1,88 +1,44 @@
 import json
 import httpx
 import logging
-from enum import Enum
 # from quart import current_app used for logging
+from marshmallow import ValidationError
 
+from schema import ActionEnum, params_to_actions
 from models import Group, System, User, db
 from asyncio import gather
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
+
 def get_role(role):
     admin_roles = ['Organization Administrator', 'Administrator']
     role = 'cloudAdmin' if role in admin_roles else 'advancedViewer'
     return role
-    
-
-class ActionEnum(Enum):
-    AGGREGATE_SYSTEMS_REQUEST = 'aggregate_systems_request'
-    AGGREGATE_REQUEST_BY_GROUP = 'aggregate_request_by_group'
-    CREATE_GROUP = 'create_group'
-    DELETE_GROUP = 'delete_group'
-    LIST_GROUP = 'list_groups'
-    UPDATE_GROUP = 'update_group'
-    MOVE_GROUP = 'move_group'
-    MOVE_SYSTEM = 'move_system'
-    SYSTEMS = 'systems'
-    CREATE_USER = 'create_user'
-    DELETE_USER = 'delete_user'
-    LIST_USERS = 'list_users'
-    UPDATE_USER = 'update_user'
-    CREATE_ORG_USER = 'create_org_user'
-    UPDATE_ORG_USER = 'update_org_user'
-
-    @classmethod
-    def _get_actions(cls):
-        return [item.value for item in cls.__members__.values()]
-
-    @classmethod
-    def has_action(cls, action):
-        return action in cls._get_actions()
-
-    @classmethod
-    def values(cls):
-        return cls._get_actions()
 
 
 class ParamsValidator:
 
     @staticmethod
-    def validate_group(data):
+    def validate_group(raw_data):
         try:
-            data = json.loads(data, strict=False)
+            raw_data = json.loads(raw_data, strict=False)
         except json.decoder.JSONDecodeError:
             return None, {'msg': 'Please send data in a json format', 'error': 400}
 
-        action = data.get('action')
+        action = raw_data.get('action')
         if not action or not ActionEnum.has_action(action):
             return None, {'msg': f'{action} is not in {ActionEnum.values()}', 'error': 400}
 
-        del data['action']
-
-        params_to_actions = {
-            ActionEnum.AGGREGATE_SYSTEMS_REQUEST: ['url', 'method'],
-            ActionEnum.AGGREGATE_REQUEST_BY_GROUP: ['group_id', 'url', 'method'],
-            ActionEnum.CREATE_GROUP: ['name', 'org_id'],
-            ActionEnum.DELETE_GROUP: ['group_id', 'org_id'],
-            ActionEnum.LIST_GROUP: [],
-            ActionEnum.UPDATE_GROUP: ['group_id', 'org_id', 'name'],
-            ActionEnum.MOVE_GROUP: ['group_id', 'org_id'],
-            ActionEnum.MOVE_SYSTEM: ['org_id', 'system_id'],
-            ActionEnum.SYSTEMS: [],
-            ActionEnum.CREATE_USER: ['email', 'group_id', 'role'],
-            ActionEnum.DELETE_USER: ['email', 'group_id'],
-            ActionEnum.LIST_USERS: ['group_id'],
-            ActionEnum.UPDATE_USER: ['email', 'group_id', 'role'],
-            ActionEnum.CREATE_ORG_USER: ['org_id', 'email', 'role'],
-            ActionEnum.UPDATE_ORG_USER: ['org_id', 'email', 'role'],
-        }
+        del raw_data['action']
 
         enum_action = ActionEnum(action)
-        if not all(data.get(key, False) for key in params_to_actions[enum_action]):
+        try:
+            data = params_to_actions[enum_action]().load(data=raw_data)
+        except ValidationError as err:
             return None, {
-                'msg': f'{action} is must have the following params: {params_to_actions[enum_action]}',
+                'msg': f'{action} is missing required params {err}',
                 'error': 400
             }
         return action, data
@@ -249,7 +205,7 @@ class UserView:
             return {'msg': f'Group not found. Failed to update users'}, 404
         await group.update_users_in_group(modify_user, users)
         return {'msg': 'Users have been updated for group'}
-    
+
 class OrganizationView:
     async def _users_post(cloud_api, system_id, authToken, email, accessRole):
         body = {
@@ -277,7 +233,7 @@ class OrganizationView:
             added_groups = []
             added_systems = []
             access_role = get_role(role)
-            
+
             for group in groups:
                 group_id = group['id']
                 res = await UserView.add_user_to_group(cloud_api.share_system, group_id, email, access_role)
@@ -290,7 +246,7 @@ class OrganizationView:
             return {"added_groups": added_groups, "added_systems": added_systems}
         except httpx.HTTPStatusError as e:
             raise(e)
-        
+
     @classmethod
     async def update_org_user(self, cloud_api, license_api, authToken, org_id, email, role, groups=None):
         try:
@@ -299,7 +255,7 @@ class OrganizationView:
                 "role": role,
             }
             updated_org = await license_api._license_post(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/', body)
-            
+
             access_role = get_role(role)
             updated_systems = []
             groups = GroupView.list_groups(org_id) if not groups else groups

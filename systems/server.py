@@ -10,7 +10,8 @@ from debug_tools import PrintDebug
 from models import db
 from nx_common import CloudConnector, LicenseConnector
 from rest_v1 import rest_blueprint
-from views import GroupView, ParamsValidator, UserView, OrganizationView
+from schema import ActionEnum
+from views import GroupView, ParamsValidator, OrganizationView
 
 dictConfig({
     'version': 1,
@@ -80,56 +81,46 @@ async def receiving(cloud_connector):
                 await license_api.update_token(token)
                 try:
                     res = None
-                    if action in ['create_group', 'delete_group', 'move_group', 'move_system', 'update_group']:
+                    if action in [ActionEnum.CREATE_GROUP, ActionEnum.DELETE_GROUP, ActionEnum.MOVE_GROUP, ActionEnum.MOVE_SYSTEM, ActionEnum.UPDATE_GROUP]:
                         if not await license_api.is_admin_in_org(data.get('org_id')):
                             data.update({'msg': 'Unauthorized', 'error': 400})
                     if 'error' in data:
                         res = data
-                    elif action == 'create_group':
+                    elif action == ActionEnum.CREATE_GROUP:
                         # TODO: support assigning parent on creation
                         res = GroupView.create_group(data['name'], data.get('org_id'), data.get('target_id'))
-                    elif action == 'delete_group':
+                    elif action == ActionEnum.DELETE_GROUP:
                         res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'])
-                    elif action == 'move_group':
+                    elif action == ActionEnum.MOVE_GROUP:
                         res = await GroupView.move_group_to_group(
                             cloud_connector.share_system, data['target_id'], data['group_id'])
-                    elif action == 'move_system':
+                    elif action == ActionEnum.MOVE_SYSTEM:
                         system = await cloud_connector.get_systems(system_id=data['system_id'])
                         res = await GroupView.move_system_to_group(
                             cloud_connector.share_system, data['group_id'], system)
-                    elif action == 'update_group':
+                    elif action == ActionEnum.UPDATE_GROUP:
                         res = await GroupView.update_group(data['group_id'], data['name'])
-                    # User management
-                    elif action == 'create_user':
-                        res = await UserView.add_user_to_group(
-                            cloud_connector.share_system, data['group_id'], data['email'], data['role'])
-                    elif action == 'delete_user':
-                        res = await UserView.remove_user_from_group(cloud_connector.share_system, data['group_id'], data['email'])
-                    elif action == 'list_user':
-                        res = UserView.list_users(data['group_id'])
-                    elif action == 'update_user':
-                        user = [{'email': data['email'], 'role': data['role'], 'enabled': data.get('enabled', True)}]
-                        res = await UserView.update_users_in_group(cloud_connector.share_system, data['group_id'], user)
-                    # End of user management
-                    elif action == 'systems':
+                    elif action == ActionEnum.SYSTEMS:
                         res = await cloud_connector.get_systems()
                         # app.logger.debug(res)
-                    elif action == 'create_org_user':
+                    # # User management
+                    elif action == ActionEnum.CREATE_ORG_USER:
                         res = await OrganizationView.add_user_to_org(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
-                    elif action == 'update_org_user':
+                    elif action == ActionEnum.UPDATE_ORG_USER:
                         res = await OrganizationView.update_org_user(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
-                    elif action == 'aggregate_systems_request':
+                    # End of user management
+                    elif action == ActionEnum.AGGREGATE_SYSTEMS_REQUEST:
                         res = await cloud_connector.aggregate_request(
                             data['url'], method=data['method'], post_body=data.get('postBody')
                         )
-                    elif action == 'aggregate_request_by_group':
+                    elif action == ActionEnum.AGGREGATE_REQUEST_BY_GROUP:
                         res = await cloud_connector.aggregate_request_by_group(
                             data['group_id'], data['url'], method=data['method'], post_body=data.get('postBody')
                         )
-                    elif action != 'list_groups':
+                    elif action != ActionEnum.LIST_GROUP:
                         res = {'msg': 'Please send data in a json format', 'error': 400}
 
-                    if action != 'list_groups':
+                    if action != ActionEnum.LIST_GROUP:
                         return_data = {
                             'action': action or 'error',
                             'data': res
@@ -138,7 +129,7 @@ async def receiving(cloud_connector):
                         await websocket.send(json.dumps(return_data))
                     elif (not res or 'error' not in res) and (org_id := data.get('org_id')) and await license_api.is_user_in_org(org_id):
                         await websocket.send(json.dumps({
-                            'action': 'list_groups',
+                            'action': ActionEnum.LIST_GROUP,
                             'data': GroupView.list_groups(org_id)
                         }))
 
