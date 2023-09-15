@@ -7,7 +7,7 @@ import { Component, Inject, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
-import { untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep } from 'lodash-es';
@@ -20,6 +20,7 @@ import {
     shareReplay,
     startWith,
     switchMap,
+    take,
     takeUntil,
     tap,
 } from 'rxjs/operators';
@@ -92,6 +93,30 @@ const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
         : dataSource;
 };
 
+const findNode = (
+    items: ResourceNode[],
+    id: string,
+    parent: ReturnType<typeof findNode> = null,
+): ResourceNode & { parent: ResourceNode } => {
+    if (!items) {
+        return;
+    }
+
+    for (const item of items) {
+        if (cleanId(item.details.id) === cleanId(id)) {
+            return { ...item, parent };
+        }
+
+        if ('children' in item) {
+            const child = findNode(item.children as MergedResourceNode[], id, item);
+            if (child) {
+                return child;
+            }
+        }
+    }
+};
+
+@UntilDestroy()
 @Component({
     selector: 'nx-layout-grid-tree',
     standalone: true,
@@ -215,29 +240,6 @@ export class NxLayoutGridTreeComponent {
     }
 
     expandNodesFromParams = (): void => {
-        const findNode = (
-            items: ResourceNode[],
-            id: string,
-            parent: ReturnType<typeof findNode> = null,
-        ): ResourceNode & { parent: ResourceNode } => {
-            if (!items) {
-                return;
-            }
-
-            for (const item of items) {
-                if (cleanId(item.details.id) === cleanId(id)) {
-                    return { ...item, parent };
-                }
-
-                if ('children' in item) {
-                    const child = findNode(item.children as MergedResourceNode[], id, item);
-                    if (child) {
-                        return child;
-                    }
-                }
-            }
-        };
-
         const {
             queryParams: { openNodes = [] },
         } = this.layoutStateService.paramStateHandler.state$$();
@@ -246,7 +248,7 @@ export class NxLayoutGridTreeComponent {
 
         openNodes.forEach(id => {
             const node = findNode(this.dataSource, id);
-            if (node && !findNode(node.children, foundNode.details.id)) {
+            if (node && !findNode(node.children, foundNode?.details?.id || '')) {
                 this.treeControl.expand(node);
             }
         });
@@ -283,10 +285,23 @@ export class NxLayoutGridTreeComponent {
                 icon: 'plus',
                 action: ($event, node) => {
                     $event.preventDefault();
-                    this.editedLayout$$.set(
-                        dirtyId(this.layoutStateService.createNewLocalLayout()),
-                    );
-                    this.treeControl.expand(node);
+                    const newLayout = this.layoutStateService.createNewLocalLayout();
+                    this.dataSource$
+                        .pipe(
+                            map(dataSource => findNode(dataSource, newLayout)),
+                            filter(Boolean),
+                            take(1),
+                            untilDestroyed(this),
+                        )
+                        .subscribe(node => {
+                            this.treeControl.expand(
+                                this.dataSource.find(
+                                    ({ details: { id } }: ResourceNode) =>
+                                        id === ResourceType.LAYOUTS,
+                                ),
+                            );
+                            this.editedLayout$$.set(dirtyId(newLayout));
+                        });
                 },
             },
         ],
