@@ -165,31 +165,43 @@ def test_changing_last_name_and_saving_maintains_that_setting():
 def test_first_name_is_required():
     """7 first name is required"""
     driver = get_headless_chrome()
-    url = rb.env + "/account"
+    url = rb.ENV + "/account"
     driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-
-    element(driver, rb.account_first_name).delete_all_text()
-    element(driver, rb.account_last_name).click()
-
-    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {rb.error_color};")
-    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
-    account_save = element(driver, rb.account_save)
-    account_cancel = element(driver, rb.account_cancel)
+    Element(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
+    Element(driver, rb.ACCOUNT_LAST_NAME).click()
+    robot_keywords.wait_until_element_has_style(
+        driver,
+        rb.ACCOUNT_FIRST_NAME,
+        "border-color",
+        rb.ERROR_COLOR,
+        )
+    robot_keywords.wait_until_element_has_style(
+        driver,
+        rb.ACCOUNT_FIRST_NAME,
+        "color",
+        rb.ERROR_COLOR_WITH_OPACITY,
+        )
+    account_save = Element(driver, rb.ACCOUNT_SAVE)
+    account_cancel = Element(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
     account_cancel.wait_until_visible()
     account_save.should_be_disabled()
     account_cancel.should_be_enabled()
-
-    #robot_keywords.click_button(driver, rb.account_cancel)
-    for element in [rb.account_save, rb.account_cancel]:
-        element(driver, element).wait_until_visible()
-    account_save.should_be_disabled()
-    account_cancel.should_be_enabled()
-    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {rb.error_color};")
-    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
-    robot_keywords.click_button(driver, rb.account_cancel)
+    robot_keywords.wait_until_element_has_style(
+        driver,
+        rb.ACCOUNT_FIRST_NAME,
+        "border-color",
+        rb.ERROR_COLOR,
+        )
+    robot_keywords.wait_until_element_has_style(
+        driver,
+        rb.ACCOUNT_FIRST_NAME,
+        "color",
+        rb.ERROR_COLOR_WITH_OPACITY,
+        )
+    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     driver.quit()
 
 
@@ -434,7 +446,7 @@ if __name__ == "__main__":
     # test_cannot_access_account_page_from_direct_link_on_valid_login()
     # test_changing_first_name_and_saving_maintains_that_setting()
     # test_changing_last_name_and_saving_maintains_that_setting()
-    # test_first_name_is_required()
+    test_first_name_is_required()
     test_last_name_is_required()
     test_space_for_first_name_is_not_valid()
     test_space_for_last_name_is_not_valid()
