@@ -31,6 +31,9 @@ class DownloadsPage:
     def get_itunes_store_link(self):
         return self._get_link('//nx-download-component//a[contains(@class, "mobile-link iOS")]')
 
+    def get_other_releases_link(self) -> str:
+        return self._get_link('//nx-download-component//a[@data-testid="historyReleaseLink"]')
+
     def _get_tab(self, locator):
         robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
         return _Tab(self._driver, locator)
