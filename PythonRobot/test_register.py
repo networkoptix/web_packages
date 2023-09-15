@@ -14,15 +14,17 @@ from register_form import RegisterForm
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 
 rb = RobotVariables("en_US")
+CLOUD_API = CloudPortalAPI()
 
-
-# driver = get_headless_chrome()
-# robot_keywords.go_to_url(driver, rb.ENV)
 
 def page_in_anonymous_state_register_header():
-    """1. Should open register page in anonymous state by clicking Register button on top right corner"""
+    """
+    1. Should open register page in anonymous state by clicking Register button on top right corner
+    [tags]    smoke    ci
+    """
     driver = get_headless_chrome()
     driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
@@ -31,7 +33,10 @@ def page_in_anonymous_state_register_header():
 
 
 def open_from_success_page():
-    """2. Should open register page from register success page by clicking Register button on top right corner"""
+    """
+    2. Should open register page from register success page by clicking Register button on top right corner
+    [Tags]    email
+    """
     email = get_random_email(sendemail=True)
     driver = get_headless_chrome()
     driver.get(rb.ENV)
@@ -56,7 +61,10 @@ def page_in_anonymous_state_redister_home():
 
 
 def page_in_anonymouse_state_navigation():
-    """4. Should open register page in anonymous state"""
+    """
+    4. Should open register page in anonymous state
+    [tags]    C24211    anonymous
+    """
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver)
@@ -64,7 +72,10 @@ def page_in_anonymouse_state_navigation():
 
 
 def register_user_with_correct_credentials():
-    """5. Should register user with correct credentials"""
+    """
+    5. Should register user with correct credentials
+    [tags]    smoke    ci
+    """
     email = get_random_email(sendemail=True)
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
@@ -75,7 +86,10 @@ def register_user_with_correct_credentials():
 
 
 def valid_inputs_no_errors():
-    """7. With valid inputs no errors are displayed"""
+    """
+    7. With valid inputs no errors are displayed
+    [tags]    C41557
+    """
     email = get_random_email()
     driver = get_headless_chrome()
     driver.get(rb.ENV)
@@ -104,7 +118,10 @@ def valid_inputs_no_errors():
 
 
 def password_masking_and_eye_icon():
-    """8. Displays password masked, shows password and changes eye icon when clicked"""
+    """
+    8. Displays password masked, shows password and changes eye icon when clicked
+    [tags]    C24211
+    """
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
@@ -136,7 +153,10 @@ def should_respond_to_enter_key():
 
 
 def should_respond_to_tab_key():
-    """10. Should respond to Tab key"""
+    """
+    10. Should respond to Tab key
+    [tags]    C41867
+    """
     driver = get_headless_chrome()
     driver.get(rb.ENV)
     HeaderNav(driver).create_account().click()
@@ -192,7 +212,10 @@ def should_respond_to_tab_key():
 
 
 def terms_and_conditions_in_new_page():
-    """11. Should open Terms and conditions in a new page"""
+    """
+    11. Should open Terms and conditions in a new page
+    [tags]    C41558
+    """
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver).terms_and_conditions_link().click()
@@ -203,7 +226,10 @@ def terms_and_conditions_in_new_page():
 
 
 def privacy_policy_in_new_page():
-    """12. Should open Privacy Policy in a new page"""
+    """
+    12. Should open Privacy Policy in a new page
+    [tags]    C41558
+    """
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
     RegisterForm(driver).privacy_policy_link().click()
@@ -214,9 +240,12 @@ def privacy_policy_in_new_page():
 
 
 def cant_register_email_already_registered():
-    """19. Cannot register email that is already registered"""
+    """
+    19. Cannot register email that is already registered
+    [tags]    C41563
+    """
     email = get_random_email()
-    register_account("mark", "hamill", email, rb.BASE_PASSWORD)
+    CLOUD_API.register_account("mark", "hamill", email, rb.BASE_PASSWORD)
     driver = get_headless_chrome()
     driver.get(f'{rb.ENV}/authorize?client_type=create')
     register_form = RegisterForm(driver)
@@ -226,7 +255,10 @@ def cant_register_email_already_registered():
 
 
 def cant_register_email_already_activated():
-    """20. Cannot register email that is already activated"""
+    """
+    20. Cannot register email that is already activated
+    [tags]    C41563
+    """
     email = get_random_email()
     driver = get_headless_chrome()
     register_and_activate_account(driver, "mark", "hamill", email, rb.BASE_PASSWORD)
@@ -238,6 +270,10 @@ def cant_register_email_already_activated():
 
 
 def check_register_email():
+    """
+    21. Check registration email links, colors, cloud name, and user name
+    [tags]    C24211    C43021    Customizations    smoke    ci
+    """
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
     driver.get(rb.ENV)
