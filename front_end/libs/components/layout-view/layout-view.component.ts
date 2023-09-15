@@ -159,6 +159,7 @@ export class NxLayoutViewComponent {
                     return {
                         ...cameras,
                         [camera.id]: {
+                            id: camera.id,
                             type: isIoOnly(camera) ? ResourceType.IO_DEVICE : ResourceType.CAMERA,
                             name: camera.name,
                             details: {
@@ -181,6 +182,7 @@ export class NxLayoutViewComponent {
                     (servers, server) => ({
                         ...servers,
                         [server.id]: {
+                            id: server.id,
                             type: ResourceType.SERVER,
                             name: server.name,
                             details: {
@@ -200,6 +202,7 @@ export class NxLayoutViewComponent {
                     (webPages, webPage) => ({
                         ...webPages,
                         [webPage.id]: {
+                            id: webPage.id,
                             type: ResourceType.WEB_PAGE,
                             name: webPage.name,
                             details: webPage,
@@ -223,11 +226,13 @@ export class NxLayoutViewComponent {
                     .map(
                         details =>
                             ({
-                                name: details.name,
                                 id: details.id,
+                                type: ResourceType.LAYOUT,
+                                name: details.name,
+                                editable:
+                                    currentUser?.id === details.parentId || currentUser?.isAdmin,
                                 shared:
                                     details.parentId === '{00000000-0000-0000-0000-000000000000}',
-                                type: ResourceType.LAYOUT,
                                 details,
                             } as SharableResourceLeafNode<Layout>),
                     )

@@ -236,27 +236,31 @@
             <ng-container
                 *ngIf="
                     !(CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) ||
-                        !hasActions[node.type];
+                        !menuItemsByType[node.type];
                     then simpleNodeText
                 "
             />
             <ng-container
                 *ngIf="
                     (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
-                    hasActions[node.type] as nodeActions
+                    menuItemsByType[node.type] as menuItems
                 "
             >
                 <ng-container
-                    *ngIf="node.type === RESOURCE_TYPE.LAYOUTS; then layoutsMenu; else layoutMenu"
+                    *ngIf="
+                        node.type === RESOURCE_TYPE.LAYOUTS;
+                        then layoutsNode;
+                        else nodeWithContextMenu
+                    "
                 />
 
-                <ng-template #layoutsMenu>
+                <ng-template #layoutsNode>
                     <ng-container [ngTemplateOutlet]="simpleNodeText" />
                     <button
-                        *ngFor="let action of nodeActions"
+                        *ngFor="let menuItem of menuItems"
                         class="action-button"
-                        [nxTooltip]="action.tooltip | translate : node.details"
-                        (click)="$event.stopPropagation(); action.action($event, node)"
+                        [nxTooltip]="menuItem.tooltip | translate : node.details"
+                        (click)="menuItem.action($event, node)"
                         [tourAnchor]="'cloud-layouts_add_layout'"
                     >
                         <svg-icon
@@ -265,13 +269,13 @@
                                 'width.px': '20',
                                 'height.px': '20'
                             }"
-                            [src]="icons.dir + action.icon + '.svg'"
+                            [src]="icons.dir + menuItem.icon + '.svg'"
                         >
                         </svg-icon>
                     </button>
                 </ng-template>
 
-                <ng-template #layoutMenu>
+                <ng-template #nodeWithContextMenu>
                     <div
                         class="node-editable"
                         [cdkContextMenuTriggerFor]="nodeActionMenu"
@@ -321,7 +325,7 @@
                     <ng-template #nodeActionMenu>
                         <nx-context-menu
                             [context]="node"
-                            [menuItems]="hasActions[node.type]"
+                            [menuItems]="menuItems"
                         />
                     </ng-template>
                 </ng-template>

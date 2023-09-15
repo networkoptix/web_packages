@@ -25,7 +25,7 @@ import {
 } from 'rxjs/operators';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
-import { MenuItem } from '@components/context-menu/context-menu.types';
+import { MenuItem, MenuItemsFactoryCallback } from '@components/context-menu/context-menu.types';
 import { EditableModule } from '@components/editable/editable.module';
 import { assertResourceParentNode } from '@components/layout-grid/layout-grid.type-guards';
 import {
@@ -37,6 +37,7 @@ import {
     ResourceType,
     ServerStats,
     ServerStatsObservable,
+    SharableResourceLeafNode,
 } from '@components/layout-grid/layout-grid.types';
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -271,18 +272,8 @@ export class NxLayoutGridTreeComponent {
         },
     ];
 
-    hasActions: Partial<
-        Record<
-            ResourceType,
-            {
-                id: string;
-                name: string;
-                icon?: string;
-                action?: unknown;
-                tooltip?: string;
-                subMenu?: MenuItem<unknown>[];
-            }[]
-        >
+    menuItemsByType: Partial<
+        Record<ResourceType, MenuItem<ResourceNode>[] | MenuItemsFactoryCallback<ResourceNode>>
     > = {
         [ResourceType.LAYOUTS]: [
             {
@@ -299,31 +290,34 @@ export class NxLayoutGridTreeComponent {
                 },
             },
         ],
-        [ResourceType.LAYOUT]: [
-            ...this.OPEN_WINDOW_ACTIONS,
-            {
-                id: 'divider',
-                name: 'divider',
-            },
-            {
-                id: 'startRename',
-                name: this.ACTIONS.rename.name,
-                action: ($event, node) => this.editedLayout$$.set(node.id),
-            },
-            {
-                id: 'duplicate',
-                name: this.ACTIONS.duplicate.name,
-                action: ($event, node) =>
-                    this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
-            },
-            {
-                id: 'delete',
-                name: this.ACTIONS.delete.name,
-                action: ($event, node) => this.layoutStateService.deleteLayout(node.id),
-            },
-        ],
-        [ResourceType.SERVER]: [...this.OPEN_WINDOW_ACTIONS],
+        [ResourceType.LAYOUT]: node =>
+            [
+                ...this.OPEN_WINDOW_ACTIONS,
+                {
+                    id: 'divider',
+                    name: 'divider',
+                },
+                (({ editable }) =>
+                    editable && {
+                        id: 'startRename',
+                        name: this.ACTIONS.rename.name,
+                        action: ($event, node) => this.editedLayout$$.set(node.id),
+                    })(node as SharableResourceLeafNode),
+                {
+                    id: 'duplicate',
+                    name: this.ACTIONS.duplicate.name,
+                    action: ($event, node) =>
+                        this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
+                },
+                (({ editable }) =>
+                    editable && {
+                        id: 'delete',
+                        name: this.ACTIONS.delete.name,
+                        action: ($event, node) => this.layoutStateService.deleteLayout(node.id),
+                    })(node as SharableResourceLeafNode),
+            ].filter(i => i),
         [ResourceType.CAMERA]: [...this.OPEN_WINDOW_ACTIONS],
+        [ResourceType.SERVER]: [...this.OPEN_WINDOW_ACTIONS],
     };
 
     openWindow = (id: string, isNewWindow = false): void => {

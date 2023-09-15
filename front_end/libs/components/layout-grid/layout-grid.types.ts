@@ -105,16 +105,13 @@ export interface BaseResourceNode {
     type: ResourceType;
 }
 
-export interface ResourceParentNode<T = { id: string }> {
-    name: string;
-    type: ResourceType;
+export interface ResourceParentNode<T = { id: string }> extends BaseResourceNode {
     children: ResourceLeafNode<T>[];
     hidden?: boolean;
     details: T;
 }
 
-export interface ResourceLeafNode<T = { id: string }> {
-    name: string;
+export interface ResourceLeafNode<T = { id: string }> extends BaseResourceNode {
     aspectRatio: number;
     type: ResourceType;
     hidden?: boolean;
@@ -123,6 +120,7 @@ export interface ResourceLeafNode<T = { id: string }> {
 
 export interface SharableResourceLeafNode<T = { id: string }>
     extends Omit<ResourceLeafNode<T>, 'aspectRatio'> {
+    editable: boolean;
     shared: boolean;
 }
 

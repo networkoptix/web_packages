@@ -2,12 +2,12 @@ import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, Input } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { MenuItem } from '@components/context-menu/context-menu.types';
+import { MenuItem, MenuItemsFactoryCallback } from '@components/context-menu/context-menu.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { icons } from '@static-variables';
 
@@ -28,13 +28,23 @@ import { icons } from '@static-variables';
         NxAddSvgSrcDirective,
     ],
 })
-export class NxContextMenu<Context> {
+export class NxContextMenu<Context> implements OnInit {
     static POSITIONS: { [key: string]: ConnectedPosition[] } = {
         default: [{ originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top' }],
     };
 
     @Input() subMenu: boolean = false;
     @Input() context: Context;
-    @Input() menuItems: MenuItem<Context>[];
+    @Input() menuItems: MenuItemsFactoryCallback<Context> | MenuItem<Context>[];
+
+    menu: MenuItem<Context>[];
     protected readonly icons = icons;
+
+    ngOnInit(): void {
+        if (typeof this.menuItems === 'function') {
+            this.menu = this.menuItems(this.context);
+        } else {
+            this.menu = this.menuItems;
+        }
+    }
 }

@@ -2,7 +2,7 @@
     cdkMenu
     [ngClass]="subMenu ? 'sub-menu' : ''"
 >
-    <ng-container *ngFor="let item of menuItems">
+    <ng-container *ngFor="let item of menu">
         <mat-divider *ngIf="item.name === 'divider'" />
 
         <ng-container *ngIf="!!item.subMenu">
