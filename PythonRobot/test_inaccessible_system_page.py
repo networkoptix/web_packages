@@ -10,7 +10,7 @@ rb = RobotVariables("en_US")
 password = "qweasd 123"
 
 
-def test_failed_to_access_system_page_correctly_shows_when_going_to_a_nonexistent_system():
+def test_inaccessible_system_page():
     driver = get_headless_chrome()
     driver.get(rb.ENV)
     email = get_random_email()
@@ -27,4 +27,4 @@ def test_failed_to_access_system_page_correctly_shows_when_going_to_a_nonexisten
 
 
 if __name__ == '__main__':
-    test_failed_to_access_system_page_correctly_shows_when_going_to_a_nonexistent_system()
+    test_inaccessible_system_page()
