@@ -357,6 +357,7 @@ export interface Downloads {
     mobile: Mobile[];
     groups: Groups;
     platformMatch: PlatformMatch;
+    downloadsPlatformNameOverride?: { [key: string]: string };
 }
 
 export interface Groups {

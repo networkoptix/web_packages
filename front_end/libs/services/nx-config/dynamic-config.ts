@@ -1,6 +1,7 @@
 import { InjectionToken } from '@angular/core';
 
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { Role } from '@services/system-user.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
 
@@ -257,6 +258,16 @@ export class DynamicConfig {
                     ([platform, appTypes]: [string, unknown]) => {
                         if (platform in nxConfig.downloads.groups && appTypes) {
                             nxConfig.downloads.groups[platform].appTypes = appTypes;
+                        }
+
+                        if (
+                            nxConfig.downloads.downloadsPlatformNameOverride &&
+                            nxConfig.downloads.downloadsPlatformNameOverride[platform]
+                        ) {
+                            staticLang.downloads.groups[platform].label =
+                                nxConfig.downloads.downloadsPlatformNameOverride[platform];
+                            staticLang.downloads.groups[platform].shortLabel =
+                                nxConfig.downloads.downloadsPlatformNameOverride[platform];
                         }
                     },
                 );
