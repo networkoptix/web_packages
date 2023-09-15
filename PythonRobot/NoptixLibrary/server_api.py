@@ -113,6 +113,9 @@ class ServerApi:
     def get_system_name(self):
         return self._get_server_info()['systemName']
 
+    def set_system_name(self, name: str):
+        self._patch('rest/v1/system/settings', {'systemName': name})
+
     @contextmanager
     def _waiting_for_restart(self, timeout_sec: float = 10):
         old_runtime_id = self._get_server_runtime_id()
