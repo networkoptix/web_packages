@@ -269,30 +269,29 @@ def test_should_respond_tab_and_go():
     """12 should respond to tab and go in the correct order"""
     pass
 
+
 def test_language_is_changeable_on_the_account_page():
     """13 language is changeable on the account page"""
     driver = get_headless_chrome()
-    url = rb.env + "/account"
+    url = rb.ENV + "/account"
     driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     driver.refresh()
     lang_dict = get_lang_list()
     for lang in lang_dict:
-        info_text = lang_dict[lang]["account information"]
-        time.sleep(1)
+        info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
         verify_in_account_page(driver)
         if lang != rb.language:
-            robot_keywords.click_button(driver, rb.account_language_dropdown)
-            # todo: this is not working
-            #robot_keywords.wait_until_element_is_visible(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='${lang}']")
-            element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..").click()
-            time.sleep(2)
-            element(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-
+            robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+            language_button = Element(
+                driver,
+                f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
+                )
+            assert language_button.in_dom, f"No button for language {lang}"
+            language_button.click()
+            Element(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
     Element(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-    # TODO: this is not working
-    #robot_keywords.wait_until_element_is_visible(driver, f"//header//nx-header-language-select//span[@lang='{rb.LANGUAGE}']")
     Element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
     time.sleep(1)
     verify_in_account_page(driver)
@@ -414,7 +413,7 @@ if __name__ == "__main__":
     # test_SPACE_for_first_name_is_not_valid()
     # test_SPACE_for_last_name_is_not_valid()
     # test_should_respond_tab_and_go()
-    # test_language_is_changeable_on_the_account_page()
+    test_language_is_changeable_on_the_account_page()
     test_language_change_affects_emails()
     test_language_change_is_new_default()
 
