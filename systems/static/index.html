@@ -39,6 +39,24 @@
             <select id="system-id"></select>
         </div>
     </div>
+    <div>
+        <h3>Org/Group users inputs</h3>
+        <div>
+            <label for="email">Email</label>
+            <input id="email">
+        </div>
+        <div>
+            <label for="role">Role</label>
+            <input id="role">
+        </div>
+        <div>
+            <label>Group ids:</label>
+            <div id="groups">
+                <input>
+            </div>
+            <button onclick="addGroupInput()">+</button>
+        </div>
+    </div>
 </div>
 <hr>
 <div>
@@ -54,6 +72,11 @@
         <h3>Aggregated Calls</h3>
         <button onclick="makeAggregatedRequest()">Make request for all systems</button>
         <button onclick="makeAggregatedGroupRequest()">Make request for all systems in a group</button>
+    </div>
+    <div>
+        <h3>Org Actions</h3>
+        <button onclick="send('create_org_user')">Create org user</button>
+        <button onclick="send('update_org_user')">Update org user</button>
     </div>
 </div>
 <div id="logger-container" style="display: none">
@@ -73,7 +96,10 @@
         name;
         systemId;
         targetId;
-        constructor(orgIdInput, groupIdInput, groupNameInput, systemIdInput, targetIdInput) {
+        email;
+        role;
+        groups = [];
+        constructor(orgIdInput, groupIdInput, groupNameInput, systemIdInput, targetIdInput, emailInput, roleInput) {
             orgIdInput.addEventListener('input', (e) => {
                 this.orgId = e?.target?.value;
             });
@@ -89,6 +115,13 @@
             targetIdInput.addEventListener('input', (e) => {
                 this.targetId = e?.target?.value;
             });
+            emailInput.addEventListener('input', (e) => {
+                this.email = e?.target?.value;
+            });
+            roleInput.addEventListener('input', (e) => {
+                this.role = e?.target?.value;
+            });
+
             this.reset();
         }
 
@@ -99,11 +132,14 @@
             this.orgId = '';
             this.systemId = '';
             this.targetId = '';
+            this.email = '';
+            this.role = '';
+            this.groups = [];
         }
 
         toJson() {
-            const { action, groupId, name, orgId, systemId, targetId } = this;
-            return { action, name, group_id: groupId, org_id: orgId, system_id: systemId, target_id: targetId };
+            const { action, groupId, name, orgId, systemId, targetId, email, role, groups } = this;
+            return { action, name, group_id: groupId, org_id: orgId, system_id: systemId, target_id: targetId, email: email, role: role, groups: groups};
         }
     }
 </script>
@@ -117,9 +153,12 @@
     const orgId = document.getElementById('org-id');
     const systemId = document.getElementById('system-id');
     const targetId = document.getElementById('target-id');
+    const email = document.getElementById('email');
+    const role = document.getElementById('role');
+    const groups = document.getElementById('groups');
     const url = document.getElementById('url');
     const pre = window.document.getElementById('systems-info');
-    const data = new Data(orgId, groupId, groupName, systemId, targetId);
+    const data = new Data(orgId, groupId, groupName, systemId, targetId, email, role, groups);
 
     let ws;
 
@@ -130,8 +169,8 @@
 
         let systems = {};
         // uncomment to target an instance's system groups
-        ws = new WebSocket(`wss://${cloudHost}/system_groups/ws?code=${window.code}`);
-        // ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
+        // ws = new WebSocket(`wss://${cloudHost}/system_groups/ws?code=${window.code}`);
+        ws = new WebSocket(`ws://${document.domain}:${location.port}/ws?code=${window.code}`);
         ws.onmessage = function (event) {
             let { action, data } = JSON.parse(event.data);
             console.log('message received', event, action, data)
@@ -217,16 +256,28 @@
         groupName.value = '';
         systemId.value = '';
         targetId.value = '';
+        role.value = '';
+        email.value = '';
+        groups.value = [];
         url.value = '';
         loggerContainer.style.display = 'none';
     }
 
     const send = (action) => {
+        const groupIds = []
+        groups.querySelectorAll('#groups input').forEach(({value: group_id}) => {
+            if(group_id) {
+                groupIds.push({id: group_id})
+            }
+        })
         data.action = action;
         data.groupId = groupId.value
         data.groupName = groupName.value
         data.targetId = targetId.value
         data.systemId = systemId.value
+        data.role = role.value;
+        data.email = email.value;
+        data.groups = groupIds;
         console.log('sending action', action, ws, data, data.toJson())
         ws?.send(JSON.stringify(data.toJson()));
     }
@@ -259,6 +310,11 @@
             })
             .then(initWebsocket)
             .catch(error => console.log('error', error));
+    }
+
+    const addGroupInput = () => {
+        const input = document.createElement('input');
+        groups.appendChild(input);
     }
 </script>
 </body>

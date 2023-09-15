@@ -2,6 +2,7 @@ import queue
 import uuid
 
 from flask_sqlalchemy import SQLAlchemy
+from sqlalchemy import update
 
 
 db = SQLAlchemy()
@@ -103,7 +104,7 @@ class Group(db.Model):
     # Modifying users in a group
     async def _change_users_in_group(self, modify_users, users, action=None):
         no_update = action != 'update'
-        bulk_user_user = []
+        updated_users = False
         remaining_users = []
         group_users = [user.email for user in self.users]
         systems = [system.id for system in self.systems]
@@ -115,16 +116,16 @@ class Group(db.Model):
                 # if we are not updating roles the user can be skipped for nodes down the tree
                 if no_update:
                     continue
-                user_entry = User.query.filter(User.email == email and User.group_id == self.id)
-                user_entry.role = role
-                bulk_user_user.append(user_entry.as_dict())
+                if(User.query.filter(User.email == email and User.group_id == self.id).update({'role': role})):
+                    updated_users = True
+
+            else:
+                await self.add_users_to_group(modify_users, [user])
             remaining_users.append(user)
-        await modify_users(systems, remaining_users)
-
-        if len(bulk_user_user):
-            db.session.bulk_save_objects(bulk_user_user)
+        if updated_users:
             db.session.commit()
-
+        await modify_users(systems, remaining_users)
+    
         group: Group  # Added type hint so prevent error with private method
         for group in self.groups:
             await group._change_users_in_group(modify_users, remaining_users, action=action)

@@ -76,8 +76,11 @@ class GroupView:
         return {'msg': 'Group was deleted.'}
 
     @staticmethod
-    def list_groups(org_id, group_id=None):
-        groups = Group.query.filter((Group.org_id == org_id) and (Group.id == group_id) if group_id else True)
+    def list_groups(org_id, group_ids=None):
+        if group_ids:
+            groups = Group.query.filter(Group.id.in_(group_ids))
+        else:
+            groups = Group.query.filter(Group.org_id == org_id)
         return [group.data() for group in groups]
 
     @staticmethod
@@ -227,8 +230,16 @@ class OrganizationView:
     @classmethod
     async def add_user_to_org(self, cloud_api, license_api, authToken, org_id, email, role, groups=None):
         try:
-            res = await gather(license_api._license_post(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/', {"email": email, "role": role}),license_api._license_get(f'/nxlicensed/api/v2/partners/organizations/{org_id}/cloud_systems/'))
-            systems = res[1]
+            org_role = role if not groups else 'System Groups'
+            body = {
+                "email": email,
+                "role": org_role,
+            }
+            res = await gather(
+                license_api._license_post(f'/api/v2/partners/organizations/{org_id}/users/', body),
+                license_api._license_get(f'/api/v2/partners/organizations/{org_id}/cloud_systems/')
+            )
+            systems = res[1]['results']
             groups = GroupView.list_groups(org_id) if not groups else groups
             added_groups = []
             added_systems = []
@@ -248,22 +259,35 @@ class OrganizationView:
             raise(e)
 
     @classmethod
-    async def update_org_user(self, cloud_api, license_api, authToken, org_id, email, role, groups=None):
+    async def update_org_user(self, cloud_api, license_api, authToken, org_id, email, role, enabled, groups=None):
         try:
+            org_role = role if not groups else 'System Groups'
             body = {
                 "email": email,
-                "role": role,
+                "role": org_role,
             }
-            updated_org = await license_api._license_post(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/', body)
-
+            updated_org = await license_api._license_post(f'/api/v2/partners/organizations/{org_id}/users/', body)
+            updated_org['org_id'] = org_id
+            
             access_role = get_role(role)
             updated_systems = []
-            groups = GroupView.list_groups(org_id) if not groups else groups
-            for group in groups:
+            updated_groups = []
+            filteredGroups = GroupView.list_groups(org_id, [group['id'] for group in groups] if groups else None)
+
+            updated_user = [{'email': email, 'role': access_role, 'enabled': enabled }]
+            for group in filteredGroups:
                 for system in group['systems']:
                     system_id = system['id']
                     res = await self._users_post(cloud_api, system_id, authToken, email, access_role)
                     updated_systems.append(res)
-            return { "updated_org": updated_org, "updated_systems": updated_systems}
+                if not any(user['email'] == email for user in group['users']):
+                    res = await UserView.add_user_to_group(cloud_api.share_system, group['id'], email, access_role)
+                else: 
+                    res = await UserView.update_users_in_group(cloud_api.share_system, group['id'], updated_user)
+                updated_groups.append({
+                    "group_id": group['id'],
+                    "msg": res['msg']
+                })
+            return { "updated_org": updated_org, "updated_groups": updated_groups,"updated_systems": updated_systems}
         except httpx.HTTPStatusError as e:
             raise(e)

@@ -11,7 +11,7 @@ from functools import wraps
 from quart import current_app, request, websocket
 
 CLOUD_HOST = os.getenv('CLOUD_HOST') or 'cloud-test.hdw.mx'  # or 'localhost:8001'
-LICENSE_PORTAL = os.getenv('LICENSE_PORTAL') or 'nxlicensed.test.hdw.mx'
+LICENSE_PORTAL = os.getenv('LICENSE_PORTAL') or 'partners.test.hdw.mx'
 RELAY = os.getenv('CLOUD_RELAY') or 'https://{systemId}.relay.relay.cloud.hdw.mx'
 
 async def share(api, systems, users):
@@ -132,7 +132,7 @@ class LicenseConnector:
         self.session.headers.update({'Authorization': f'Bearer {token}'})
 
     async def _get_user(self, org_id):
-        return await self._license_get(f'/nxlicensed/api/v2/partners/organizations/{org_id}/users/self/')
+        return await self._license_get(f'/api/v2/partners/organizations/{org_id}/users/self/')
 
     async def is_admin_in_org(self, org_id):
         user = await self._get_user(org_id)

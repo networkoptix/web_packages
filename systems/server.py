@@ -107,7 +107,7 @@ async def receiving(cloud_connector):
                     elif action == ActionEnum.CREATE_ORG_USER:
                         res = await OrganizationView.add_user_to_org(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
                     elif action == ActionEnum.UPDATE_ORG_USER:
-                        res = await OrganizationView.update_org_user(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
+                        res = await OrganizationView.update_org_user(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data.get('enabled', True), data['groups'])
                     # End of user management
                     elif action == ActionEnum.AGGREGATE_SYSTEMS_REQUEST:
                         res = await cloud_connector.aggregate_request(
