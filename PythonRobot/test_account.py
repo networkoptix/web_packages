@@ -261,13 +261,6 @@ def test_space_for_last_name_is_not_valid():
     #def test_email_is_uneditable():
     """11 email is uneditable"""
     # the email is uneditable so there is no need to test for it.
-    
-
-
-# todo: test 12 should be skipped?
-def test_should_respond_tab_and_go():
-    """12 should respond to tab and go in the correct order"""
-    pass
 
 
 def test_language_is_changeable_on_the_account_page():
@@ -412,7 +405,6 @@ if __name__ == "__main__":
     # test_last_name_is_required()
     # test_SPACE_for_first_name_is_not_valid()
     # test_SPACE_for_last_name_is_not_valid()
-    # test_should_respond_tab_and_go()
     test_language_is_changeable_on_the_account_page()
     test_language_change_affects_emails()
     test_language_change_is_new_default()
