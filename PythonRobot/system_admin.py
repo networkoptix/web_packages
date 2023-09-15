@@ -1,5 +1,8 @@
+from typing import Optional
+
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 
 import robot_keywords
 from RobotVariables import RobotVariables
@@ -97,8 +100,72 @@ class SystemAdmin:
             return False
         return True
 
+    def get_system_name_edit_field(self) -> '_SystemName':
+        element = self.driver.find_element(By.XPATH, '//div/nx-editable-heading//nx-text-editable')
+        return _SystemName(element, self.rb)
+
+    def get_cancel_button(self) -> Optional[Button]:
+        button_text = self.rb.__getattr__('CANCEL_BUTTON_TEXT')
+        locator = f'//nx-cancel-button//button[contains(text(), "{button_text}")]'
+        try:
+            self.driver.find_element(By.XPATH, locator)
+        except NoSuchElementException:
+            return None
+        return Button(self.driver, locator)
+
+    def get_save_button(self):
+        button_text = self.rb.__getattr__('SAVE_BUTTON_TEXT')
+        locator = f'//nx-process-button//button[contains(text(), "{button_text}")]'
+        try:
+            self.driver.find_element(By.XPATH, locator)
+        except NoSuchElementException:
+            return None
+        return Button(self.driver, locator)
+
+    def has_no_unsaved_changes_message(self) -> bool:
+        no_unsaved_changes = self.rb.__getattr__('NO_UNSAVED_CHANGES_TEXT')
+        locator = f"//nx-apply//div[contains(text(), '{no_unsaved_changes}')]"
+        try:
+            self.driver.find_element(By.XPATH, locator)
+        except NoSuchElementException:
+            return False
+        return True
+
+    def refresh(self):
+        self.driver.refresh()
+        self._wait_until_page_loaded()
+
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")
+        robot_keywords.wait_until_page_contains_element(
+            self.driver, "//div[contains(@class, 'fixed-sidebar')]//a[@id='servers']")
+        robot_keywords.wait_until_page_contains_element(
+            self.driver, "//div/nx-editable-heading//nx-text-editable")
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}systems/")
+
+
+class _SystemName:
+
+    def __init__(self, element, rb: RobotVariables):
+        self._element = element
+        self._rb = rb
+
+    def set_text(self, new_name: str):
+        self.clear_text()
+        self._element.send_keys(new_name)
+
+    def get_text(self) -> str:
+        return self._element.text
+
+    def clear_text(self):
+        current_text = self.get_text()
+        self._element.click()
+        for _ in range(len(current_text)):
+            self._element.send_keys(Keys.ARROW_RIGHT)
+            self._element.send_keys(Keys.BACKSPACE)
+
+    def has_empty_field_error(self):
+        border_color = self._element.value_of_css_property('border-color')
+        return border_color == self._rb.__getattr__('ERROR_COLOR')

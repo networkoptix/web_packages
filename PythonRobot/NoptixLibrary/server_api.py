@@ -1,8 +1,10 @@
 import time
+from contextlib import contextmanager
 from typing import Any
 from typing import Mapping
 from typing import Optional
 from typing import Union
+from uuid import UUID
 
 import requests
 import urllib3
@@ -103,6 +105,37 @@ class ServerApi:
 
     def get_log_level(self):
         return self._get('api/logLevel')
+
+    def restart_server(self):
+        with self._waiting_for_restart():
+            self._post('rest/v1/servers/this/restart', {})
+
+    def get_system_name(self):
+        return self._get_server_info()['systemName']
+
+    @contextmanager
+    def _waiting_for_restart(self, timeout_sec: float = 10):
+        old_runtime_id = self._get_server_runtime_id()
+        started_at = time.monotonic()
+        yield
+        while True:
+            try:
+                new_runtime_id = self._get_server_runtime_id()
+            except (requests.exceptions.HTTPError, ConnectionError) as e:
+                if time.monotonic() - started_at > timeout_sec:
+                    raise RuntimeError(f"{self._url}: Mediaserver hasn't started, {e}, timed out.")
+            else:
+                if new_runtime_id != old_runtime_id:
+                    break
+                if time.monotonic() - started_at > timeout_sec:
+                    raise RuntimeError(f"{self._url}: Mediaserver restart attempt timed out")
+            time.sleep(1)
+
+    def _get_server_runtime_id(self) -> UUID:
+        return UUID(self._get_server_info()['runtimeId'])
+
+    def _get_server_info(self):
+        return self._get('rest/v1/servers/this/info')
 
     def _get(self, path: str):
         return self._request('GET', path)

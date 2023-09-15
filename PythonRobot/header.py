@@ -1,3 +1,5 @@
+from selenium.webdriver.common.by import By
+
 from RobotVariables import RobotVariables
 from button import Button
 from generic_element import Element
@@ -45,10 +47,10 @@ class HeaderNav:
     def log_out(self):
         self.account_dropdown().click()
         self.log_out_option().click()
-    
+
     def create_account(self):
         return Button(self.driver, "//header//a[@href='/authorize?client_type=create']")
-    
+
     def language_dropdown(self):
         return Button(self.driver, "//header//nx-header-language-select")
     
@@ -64,3 +66,6 @@ class HeaderNav:
     def for_developers_link(self):
         return Button(self.driver, f'//a[contains(text(), "{self.rb.FOR_DEVELOPERS_TEXT}")]')
     
+    def get_system_name(self) -> str:
+        element = self.driver.find_element(By.XPATH, '//nx-header//span[@class="system-name"]')
+        return element.text.strip()
