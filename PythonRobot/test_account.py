@@ -225,17 +225,27 @@ def test_last_name_is_required():
 def test_space_for_first_name_is_not_valid():
     """9 space for first name is not valid"""
     driver = get_headless_chrome()
-    url = rb.env + "/account"
+    url = rb.ENV + "/account"
     driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none, api=false)
+    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.account_first_name, " ")
-    element(driver,   f"//header/h4[contains(text(),'{rb.account_information}')]").click()
-    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"border-color: {error_color};")
-    robot_keywords.wait_until_element_has_style(driver, rb.account_first_name, f"color: {rb.error_color_with_opacity};")
-    element(driver, rb.account_save).should_be_disabled()
-    element(driver, rb.account_cancel).should_be_enabled()
-    robot_keywords.click_button(driver, rb.account_cancel)
+    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")
+    Element(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
+    robot_keywords.wait_until_element_has_style(
+        driver,
+        rb.ACCOUNT_FIRST_NAME,
+        "border-color",
+        rb.ERROR_COLOR,
+        )
+    robot_keywords.wait_until_element_has_style(
+        driver,
+        rb.ACCOUNT_FIRST_NAME,
+        "color",
+        rb.ERROR_COLOR_WITH_OPACITY,
+        )
+    Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
+    Element(driver, rb.ACCOUNT_CANCEL).should_be_enabled()
+    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     driver.quit()
 
 
@@ -407,7 +417,7 @@ if __name__ == "__main__":
     # test_changing_last_name_and_saving_maintains_that_setting()
     # test_first_name_is_required()
     # test_last_name_is_required()
-    # test_SPACE_for_first_name_is_not_valid()
+    test_space_for_first_name_is_not_valid()
     test_space_for_last_name_is_not_valid()
     test_language_is_changeable_on_the_account_page()
     test_language_change_affects_emails()
