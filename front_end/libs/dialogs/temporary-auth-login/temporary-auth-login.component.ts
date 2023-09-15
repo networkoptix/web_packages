@@ -2,9 +2,11 @@ import { DialogRef } from '@angular/cdk/dialog';
 import { Component, OnInit, inject } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import type { LoginWebAdmin as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
+import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -24,10 +26,13 @@ import { images } from '@static-variables';
 export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> implements OnInit {
     readonly urlUpdateTimeout: number = 150;
 
+    LANG = staticLang;
+
     private urlProtocol = inject(NxUrlProtocolService);
     private nxSystemAPIService = inject(NxSystemAPIService);
     private account = inject(NxAccountService);
     private loginService = inject(NxLoginService);
+    private dialogService = inject(NxDialogsService);
     private window = inject(WINDOW);
     private temporaryUserToken: string;
 
@@ -56,12 +61,20 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
     }
 
     handleLoginToWeb(): void {
-        this.mediaServerApi.temporaryUserTokenExchange(this.temporaryUserToken).subscribe(res => {
-            this.mediaServerApi.loginTokenUrl(res.token).subscribe(loggedInAccount => {
-                this.account.loginState =
-                    loggedInAccount.email || loggedInAccount.name || loggedInAccount.username;
-                setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
-            });
+        this.mediaServerApi.temporaryUserTokenExchange(this.temporaryUserToken).subscribe({
+            next: res => {
+                this.mediaServerApi.loginTokenUrl(res.token).subscribe(loggedInAccount => {
+                    this.account.loginState =
+                        loggedInAccount.email || loggedInAccount.name || loggedInAccount.username;
+                    setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
+                });
+            },
+            error: error => {
+                this.dialogService.alert({
+                    title: this.LANG.dialogs.titles.error,
+                    message: error.error.errorString,
+                });
+            },
         });
     }
 }
