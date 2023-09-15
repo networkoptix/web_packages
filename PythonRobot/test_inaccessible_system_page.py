@@ -1,10 +1,10 @@
 from RobotVariables import RobotVariables
+from generic_element import Element
 from header import HeaderNav
 from login import LoginDialog
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from robot_keywords import wait_until_element_is_visible
 
 rb = RobotVariables("en_US")
 password = "qweasd 123"
@@ -22,8 +22,8 @@ def test_failed_to_access_system_page_correctly_shows_when_going_to_a_nonexisten
     nonexistent_system_url = f'{rb.ENV}systems/nonexistent_system_name'
     driver.get(nonexistent_system_url)
     link_is_broken_xpath = rb.replace_nested_variables('//div[contains(text(), "{THIS_LINK_IS_BROKEN_TEXT}")]')
-    wait_until_element_is_visible(driver, link_is_broken_xpath)
-    wait_until_element_is_visible(driver, '//button//a[@routerlink="/"]/..')
+    Element(driver, link_is_broken_xpath).wait_until_visible()
+    Element(driver, '//button//a[@routerlink="/"]/..').wait_until_visible()
 
 
 if __name__ == '__main__':
