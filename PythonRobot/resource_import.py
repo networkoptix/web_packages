@@ -369,13 +369,6 @@ def send_restore_password_email(driver: webdriver, email: str) -> None:
     Element(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 
-def validate_log_in(driver: webdriver, email: str, password: str, timeout: int = 10) -> None:
-    Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    robot_keywords.wait_until_element_is_not_visible(driver, """//div[@class="placeholder"]""")
-    # TODO: get ${mode} and define CLOUD_NAME
-    # if mode == 'webadmin':
-    #     robot_keywords.wait_until_element_is_visible(driver, rb.CLOUD_NAME)
-
 def validate_log_out(driver: webdriver):
     robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
