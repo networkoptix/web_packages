@@ -263,7 +263,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServe
     modal_apply = security_form.twofa_settings_modal_apply()
     modal_apply.click()
     security_form.twofa_verification_checkbox().unchecked()
-    robot_keywords.element_should_not_be_visible(driver, modal_apply.locator)
+    robot_keywords.wait_until_element_is_not_visible(driver, modal_apply.locator)
     try:
         security_form.twofa_settings_modal_cancel()
     except:
