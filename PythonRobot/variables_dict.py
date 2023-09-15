@@ -27,7 +27,6 @@ variables_dict = {
     "ERROR_COLOR_WITH_OPACITY":"rgba(240, 44, 44, 1)",
     "TEST_EMAIL"  : "noptixautoqa",
     "BASE_EMAIL" : "{TEST_EMAIL}+sendemail@gmail.com",
-    'CUST_LANGUAGE_LIST' : "/Users/clandrum/cloud_portal/robot_tests/customizations/default_lang_list.json",
     'FORGOT_PASSWORD_BUTTON' : "//button//span[contains(text(), '{FORGOT_PASSWORD_TEXT}')]",
     'RESTORE_PASSWORD_EMAIL_INPUT' : """//nx-authorize-reset-request-component//input[@type="email" and @id="resetPasswordEmail"]""",
     'RESET_PASSWORD_PAGE_BUTTON': "//nx-authorize-reset-request-component//footer//nx-process-button//button[contains(text(), '{RESET PASSWORD BUTTON TEXT}')]",

@@ -2,6 +2,7 @@ import email
 import imaplib
 import json
 import os
+import pathlib
 import re
 import time
 from contextlib import contextmanager
@@ -248,8 +249,8 @@ def get_chrome() -> ContextManager[WebDriver]:
 
 
 def get_lang_list():
-    jsonPath = os.path.join("customizations", rb.CUST_LANGUAGE_LIST)
-    with open(jsonPath, encoding="utf-8") as langDict:
+    path = pathlib.Path().parent / 'customizations' / 'default_lang_list.json'
+    with open(path, encoding="utf-8") as langDict:
         return json.load(langDict)
     
 def get_nx_links_from_email(self, email_index, body):
