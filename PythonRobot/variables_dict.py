@@ -122,7 +122,9 @@ variables = {
     'TERMS_AND_CONDITIONS_LINK': '{REGISTER_FORM}//a[@href=/content/eula]',
     'TERMS_AND_CONDITIONS_ERROR': '{REGISTER_FORM}//nx-checkbox/../following-sibling::p[contains(@class,error-label) and contains(text(),"{REQUIRED_TEXT}")]',
     'ACCOUNT_SUCCESSFULLY_ACTIVATED_TEXT' : "Account Activated!",
-    'ACTIVATION_SUCCESS' : '//h3[contains(@class,authorize-header) and contains(text(),"{ACCOUNT_SUCCESSFULLY_ACTIVATED_TEXT}")]'
+    'ACTIVATION_SUCCESS' : '//h3[contains(@class,authorize-header) and contains(text(),"{ACCOUNT_SUCCESSFULLY_ACTIVATED_TEXT}")]',
+    'ACTIVATION_SUCCESS_ICON' : '//nx-authorize-activate-account-component//svg-icon',
+    'ACTIVATION_SUCCESS_LOG_IN_BUTTON' : f'//nx-authorize-activate-account-component//button[contains(text(), "Log In")]'
 }
 
 

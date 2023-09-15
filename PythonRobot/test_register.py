@@ -14,6 +14,7 @@ from register_form import RegisterForm
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
+from resource_import import activate
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 
 rb = RobotVariables("en_US")
@@ -44,10 +45,10 @@ def open_from_success_page():
     register_form = RegisterForm(driver)
     register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
     # Todo activate still needs email to work
-    # activate(driver, email, from_email=True)
-    # robot_keywords.go_to_url(driver, rb.ENV)
-    # HeaderNav(driver).create_account().click()
-    # RegisterForm(driver)
+    activate(driver, email, from_email=True)
+    driver.get(rb.ENV)
+    HeaderNav(driver).create_account().click()
+    RegisterForm(driver)
     driver.close()
 
 

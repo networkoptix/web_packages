@@ -17,6 +17,7 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from generic_element import Element
 from login import LoginDialog
+from email_access import Email
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -24,7 +25,7 @@ rb = RobotVariables("en_US")
 
 def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
-        link = get_email_link(email, password, "activate")
+        link = get_email_link(email, password, from_email, "activate")
         driver.get(link)
         for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
             Element(driver, element).wait_until_visible()
@@ -206,13 +207,15 @@ def delete_email(mail, email_uid):
     
 def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeout=300):
     if from_email:
-        mbox = open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=recipient, is_secure=True)
-        email_uid = wait_for_email(mbox, recipient=recipient, timeout=120, status="UNREAD")
+        email_con = Email()
+        email_id = email_con.wait_for_email(recipient)
+        body = email_con.get_body(email_id)
+        # mbox = open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=recipient, is_secure=True)
+        # email_uid = wait_for_email(mbox, recipient=recipient, timeout=120, status="UNREAD")
         if link_type == "activate":
-            check_email_subject(email_uid, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT, rb.BASE_EMAIL, rb.BASE_EMAIL_PASSWORD, rb.BASE_HOST, rb.BASE_PORT)
-        body = mbox.uid('fetch', email_uid, '(BODY.PEEK[TEXT])')
-        links = get_nx_links_from_email(email_uid, link_type, body)   
-        return links
+            email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
+        link = email_con.get_email_link(recipient, link_type)
+        return link
     else:
         print("from email only")
         pass
