@@ -23,24 +23,24 @@ export class MediaServerListComponent implements OnChanges {
     CONFIG: IConfig;
     icons = icons;
 
-    public showIP: boolean = false;
-    public token: string = '';
+    showIP: boolean = false;
+    token: string = '';
 
-    public mediaservers: Array<ViewMediaServer>;
-    public processedMediaservers: Array<ViewMediaServer>;
+    mediaservers: Array<ViewMediaServer>;
+    private processedMediaservers: Array<ViewMediaServer>;
 
-    public previewLoaded: Record<string, true | -1> = {};
-    public isCameraVisible: { [key: string]: boolean } = {};
+    previewLoaded: Record<string, true | -1> = {};
+    isCameraVisible: { [key: string]: boolean } = {};
 
-    public handlePreviewLoaded(cid: string): void {
+    handlePreviewLoaded(cid: string): void {
         this.previewLoaded[cid] = true;
     }
 
-    public handlePreviewError(cid: string): void {
+    handlePreviewError(cid: string): void {
         this.previewLoaded[cid] = -1;
     }
 
-    public isServerExpanded: {
+    isServerExpanded: {
         [serverId: string]: boolean;
     } = {};
 
@@ -52,7 +52,7 @@ export class MediaServerListComponent implements OnChanges {
         this.CONFIG = configService.config;
     }
 
-    public ngOnChanges(changes: NgChanges<MediaServerListComponent>): void {
+    ngOnChanges(changes: NgChanges<MediaServerListComponent>): void {
         if (changes._mediaservers?.previousValue !== changes._mediaservers?.currentValue) {
             this.previewLoaded = {};
             this.processedMediaservers = this._mediaservers || [];
@@ -61,11 +61,8 @@ export class MediaServerListComponent implements OnChanges {
                 ms.cameras.sort(alphabeticalSort(this.locale, cam => cam.name));
             });
         }
-        this._resetServersVisibility();
-        this.updateFilteredList(this.token);
-    }
 
-    protected _resetServersVisibility(): void {
+        // Reset server visibility
         if (this.processedMediaservers) {
             this.isServerExpanded = this.processedMediaservers.reduce((acc, ms) => {
                 const key = `nx_system_${this.systemId}_server_${ms.id}_expansion_status`;
@@ -76,19 +73,21 @@ export class MediaServerListComponent implements OnChanges {
         } else {
             this.isServerExpanded = {};
         }
+
+        this.updateFilteredList(this.token);
     }
 
-    public changeServerVisibility(serverId: string): void {
+    changeServerVisibility(serverId: string): void {
         this.isServerExpanded[serverId] = !this.isServerExpanded[serverId];
         const key = `nx_system_${this.systemId}_server_${serverId}_expansion_status`;
         this.localStorage.store(key, JSON.stringify(this.isServerExpanded[serverId]));
     }
 
-    public updateShowIP(newValue: boolean): void {
+    updateShowIP(newValue: boolean): void {
         this.showIP = newValue;
     }
 
-    public updateFilteredList(token: string): void {
+    updateFilteredList(token: string): void {
         this.token = token;
         if (!token) {
             this.mediaservers = this.processedMediaservers;
@@ -112,11 +111,11 @@ export class MediaServerListComponent implements OnChanges {
         }, []);
     }
 
-    public cameraId(index: number, camera: ViewCamera): string {
+    cameraId(index: number, camera: ViewCamera): string {
         return camera ? camera.id : undefined;
     }
 
-    public serverID(index: number, server: ViewMediaServer): string {
+    serverID(index: number, server: ViewMediaServer): string {
         return server ? server.id : undefined;
     }
 }

@@ -20,9 +20,6 @@ type tweakedMs = ms;
 })
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
-    private _selectedCamera = computed<VmsState['selectedCamera']>(
-        () => this.state().selectedCamera,
-    );
     state = signal<VmsState>(initializeVmsState());
     serverTimes = signal<Array<ServerTimeInfo>>([]);
     systemId = computed<string>(() => this.state().systemId);
@@ -31,14 +28,14 @@ export class VideoManagementSystemService {
         this.reset();
     }
 
-    public reset(): void {
+    reset(): void {
         // console.log('reset');
         this.state.set(initializeVmsState());
         this.serverTimes.set([]);
     }
 
-    public get selectedCamera(): ViewCamera {
-        return this._selectedCamera();
+    get selectedCamera(): ViewCamera {
+        return this.state().selectedCamera;
     }
 
     /*
@@ -76,7 +73,7 @@ export class VideoManagementSystemService {
             dateformat(tweak("14:30 GMT+3", "GMT+4.5"), "HH:mm") -> 16:00
     */
 
-    public get timeZoneOffset(): ms {
+    get timeZoneOffset(): ms {
         const serverTimes = this.serverTimes();
         let result = 0;
         if (serverTimes?.length) {
@@ -84,7 +81,7 @@ export class VideoManagementSystemService {
         } else if (this.state().mode !== VMS_MODE.CAMERA_SELECTED) {
             // console.warn('TZO no camera selected');
         } else {
-            const { parentServerId, preferredServerId } = this._selectedCamera();
+            const { parentServerId, preferredServerId } = this.selectedCamera;
             const targetServerIds = [parentServerId, preferredServerId];
             const preferredServerTime =
                 serverTimes.find(st => targetServerIds.includes(st.serverId)) || serverTimes[0];
@@ -99,15 +96,15 @@ export class VideoManagementSystemService {
         return result;
     }
 
-    public tweakT(t: fairMs): tweakedMs {
+    tweakT(t: fairMs): tweakedMs {
         return t + this.timeZoneOffset;
     }
 
-    public untweakT(t: tweakedMs): fairMs {
+    untweakT(t: tweakedMs): fairMs {
         return t - this.timeZoneOffset;
     }
 
-    public setMediaServers(systemId: string, mediaServers: ViewMediaServer[]): void {
+    setMediaServers(systemId: string, mediaServers: ViewMediaServer[]): void {
         // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
         this.state.mutate(state => {
             state.systemId = systemId;
@@ -127,17 +124,13 @@ export class VideoManagementSystemService {
         });
     }
 
-    public setCameraRecords(
-        cameraId: string,
-        range: SimpleTimeRange,
-        records: SimpleTimeRange[],
-    ): void {
-        this._selectedCamera()?.setRecords(range, records);
+    setCameraRecords(range: SimpleTimeRange, records: SimpleTimeRange[]): void {
+        this.selectedCamera?.setRecords(range, records);
     }
 
-    public addRecordsToSelectedCamera(cameraId: string, records: SimpleTimeRange[]): void {
+    addRecordsToSelectedCamera(records: SimpleTimeRange[]): void {
         if (this.state().mode !== VMS_MODE.NOT_INITIALIZED) {
-            this._selectedCamera().pushRecordedChunks(records);
+            this.selectedCamera.pushRecordedChunks(records);
         } else {
             // console.warn(
             //     'attempt to set camera newly recorded records while in NOT_INITIALIZED state',
@@ -147,12 +140,7 @@ export class VideoManagementSystemService {
         }
     }
 
-    // Test routine
-    // public setTestMediaServers () {
-    //   this.setMediaServers('test', testMediaServers)
-    // }
-
-    public selectCamera(cameraId: GUID): void {
+    selectCamera(cameraId: GUID): void {
         const state = this.state();
         if (
             !state ||
@@ -172,7 +160,7 @@ export class VideoManagementSystemService {
         });
     }
 
-    public clearCameraSelection(): void {
+    clearCameraSelection(): void {
         if (this.state().mode === VMS_MODE.NOT_INITIALIZED) {
             // console.warn('attempt to clear camera selection while VMS is not initialized yet');
             return;

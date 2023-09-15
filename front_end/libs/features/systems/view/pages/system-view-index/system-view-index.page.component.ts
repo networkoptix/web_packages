@@ -54,10 +54,10 @@ const MAX_OUT_OF_SYNC_TIME = 60000; // ms
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
 
-    public systemId: string;
+    systemId: string;
     private system: NxSystem;
-    public selectedCameraId: string;
-    public mediaservers: ViewMediaServer[];
+    selectedCameraId: string;
+    mediaservers: ViewMediaServer[];
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -68,16 +68,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     private onMoveShowElements: number;
     icons = icons;
 
-    public initialized: boolean = false;
-    public initializedWithError: boolean = false;
-    public isSidebarShown: boolean = false;
+    initialized: boolean = false;
+    initializedWithError: boolean = false;
+    isSidebarShown: boolean = false;
 
-    public hasCameras: boolean = true;
+    hasCameras: boolean = true;
     private cancelPoll$ = new Subject<string>();
 
-    // public animated: boolean = false
+    // animated: boolean = false
 
-    public handleSidebarTogglingEarClick(): void {
+    handleSidebarTogglingEarClick(): void {
         this.ux.isSidebarShown = !this.ux.state.isSidebarShown;
     }
 
@@ -88,7 +88,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     private _windowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
-    public onResize(event: { target: { innerWidth: number } }): void {
+    onResize(event: { target: { innerWidth: number } }): void {
         const widthThreshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
         const newWidth = event.target.innerWidth;
         if (newWidth <= widthThreshold && this._windowWidth > widthThreshold) {
@@ -134,7 +134,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         });
     }
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.vms.reset();
 
         this.route.params.pipe(untilDestroyed(this)).subscribe(params => {

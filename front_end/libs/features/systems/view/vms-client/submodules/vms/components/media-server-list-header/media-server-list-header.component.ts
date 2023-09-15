@@ -12,11 +12,10 @@ export class NxMediaServerListHeaderComponent implements OnInit {
     @Output() ipVisibilityStateChange = new EventEmitter<boolean>();
     @Output() filterTokenChange = new EventEmitter<string>();
 
-    constructor(protected cookieService: CookieService) {}
+    constructor(private cookieService: CookieService) {}
 
-    // filterToken: string = ''
-    public ipVisibilityState: boolean = false;
-    public token: string = '';
+    ipVisibilityState: boolean = false;
+    token: string = '';
 
     onFilterTokenChange(): void {
         this.filterTokenChange.emit(this.token);
@@ -28,12 +27,12 @@ export class NxMediaServerListHeaderComponent implements OnInit {
         this.cookieService.set(COOKIE_NAME, newValue ? '1' : '0', 365, '/');
     }
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.ipVisibilityState = !!parseInt(this.cookieService.get(COOKIE_NAME));
         this.ipVisibilityStateChange.emit(this.ipVisibilityState);
     }
 
-    public resetSearch(): void {
+    resetSearch(): void {
         this.token = '';
         this.filterTokenChange.emit(this.token);
     }

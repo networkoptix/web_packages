@@ -91,11 +91,11 @@ export class NxCameraDetailsComponent implements OnChanges {
         }
     }
 
-    public emitClose(): void {
+    emitClose(): void {
         this.close.emit();
     }
 
-    public copyOnClick(data: string): void {
+    copyOnClick(data: string): void {
         this.clipboardService.copy(data);
     }
 }
