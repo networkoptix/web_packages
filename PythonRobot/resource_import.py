@@ -36,7 +36,7 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
         api = CloudPortalAPI()
         api.activate_account_via_api(email, password)
 
-def check_email_subject(self, email_id, sub_text, email_address, password, host, port):
+def check_email_subject(email_id, sub_text, email_address, password, host, port):
         conn = imaplib.IMAP4_SSL(host, int(port))
         conn.login(email_address, password)
         conn.select()
