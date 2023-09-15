@@ -4,6 +4,7 @@ import codecs
 import email.header
 import imaplib
 import json
+import logging
 import os
 import re
 import socket
@@ -18,20 +19,16 @@ from random import *
 import docker
 import paramiko
 from requests import head
-from robot.api import logger
-from robot.libraries.BuiltIn import BuiltIn
 from selenium import webdriver
-from selenium.common.exceptions import InvalidArgumentException
 from selenium.common.exceptions import NoSuchElementException
-from selenium.common.exceptions import StaleElementReferenceException
-from selenium.webdriver.common.keys import Keys
-from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.color import Color
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
+
+logger = logging.getLogger(__name__)
 
 
 class GenericKeywords:
@@ -55,48 +52,6 @@ class GenericKeywords:
         }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
         self.docker_api = DockerApi()
-
-    def go_forward(self):
-        """Simulates the user clicking the forward button on their browser."""
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        seleniumlib.driver.forward()
-
-    def convert_locator_to_webelement(self, locator):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        logger.debug('Attempting to convert locator to WebElement...')
-
-        if type(locator) is WebElement:
-            logger.debug('Already a WebElement.')
-            return locator
-        elif type(locator) is str:
-            try:
-                element = seleniumlib.find_element(locator)
-                logger.debug('Converted to WebElement')
-                return element
-            except:
-                raise AssertionError('Failure to convert locator to WebElement!')
-
-    def get_hidden_inner_html(self, locator):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        element = seleniumlib.driver.find_element_by_xpath(locator)
-        text = element.get_attribute('innerHTML')
-        return text
-
-    def copy_text(self, locator):
-        locator = self.convert_locator_to_webelement(locator)
-        if self.get_os() == "MacOS":
-            locator.send_keys(Keys.SHIFT, Keys.UP)
-            locator.send_keys(Keys.CONTROL, Keys.INSERT)
-        else:
-            locator.send_keys(Keys.CONTROL + 'a')
-            locator.send_keys(Keys.CONTROL + 'c')
-
-    def paste_text(self, locator):
-        locator = self.convert_locator_to_webelement(locator)
-        if self.get_os() == "MacOS":
-            locator.send_keys(Keys.SHIFT, Keys.INSERT)
-        else:
-            locator.send_keys(Keys.CONTROL + 'v')
 
     def get_random_email(self, email, sendemail=False, extra="", symbols=False):
         if not sendemail:
@@ -131,226 +86,8 @@ class GenericKeywords:
     def get_random_system_name(self):
         return "System: " + date.today().strftime("%m-%d-%y") + " " + str(randint(1, 100))
 
-    def get_element_style(self, locator, styleAttribute):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        not_found = None
-
-        try:
-            element = seleniumlib.find_element(locator)
-            value = element.value_of_css_property(styleAttribute)
-            logger.info('style: ' + styleAttribute + ', value: ' + value)
-            return value
-        except:
-            not_found = f"No element found with style attribute {styleAttribute}"
-        raise AssertionError(not_found)
-
-    def element_style_should_be(self, locator, styleAttribute, expectedValue):
-        observedValue = self.get_element_style(locator, styleAttribute)
-        if observedValue == expectedValue:
-            pass
-        else:
-            seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-            seleniumlib.capture_page_screenshot()
-            raise AssertionError(f"Expected: {expectedValue}\nObserved: {observedValue}")
-
-    def wait_until_textfield_contains(self, locator, expected, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        not_found = None
-
-        while time.time() < timeout:
-            try:
-                element = seleniumlib.find_element(locator)
-                value = element.get_attribute('value')
-                if value == expected:
-                    return
-            except:
-                pass
-            time.sleep(.2)
-        raise Exception(f"No element found with text {expected}")
-
-    def wait_until_element_has_style(self, locator, styleAttribute, expected, timeout=10):
-        timeout = timeout + time.time()
-        not_found = "No element found with style " + expected
-        value = ""
-        while time.time() < timeout:
-            try:
-                value = self.get_element_style(locator, styleAttribute)
-                logger.debug(f"value of get element style: {value}")
-                if value == expected:
-                    return
-            except Exception as e:
-                print(e)
-                not_found = f"{value} does not equal the expected {expected}"
-            time.sleep(.2)
-        raise AssertionError(not_found)
-
-    def wait_until_element_contains_style(self, locator, styleAttribute, expected, timeout=10):
-        timeout = timeout + time.time()
-        not_found = "No element found with style " + expected
-        value = ""
-        while time.time() < timeout:
-            try:
-                value = self.get_element_style(locator, styleAttribute)
-                logger.debug(value)
-                if expected in value:
-                    return
-            except Exception as e:
-                print(e)
-                not_found = f"{value} does not contains the expected {expected}"
-            time.sleep(.2)
-        raise AssertionError(not_found)
-
-    def wait_until_element_has_class(self, locator, expected, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        not_found = None
-
-        while time.time() < timeout:
-            try:
-                element = seleniumlib.find_element(locator)
-                classAttribute = element.get_attribute('class')
-                if expected in classAttribute:
-                    return
-            except:
-                not_found = f"No element found with class {expected}"
-            time.sleep(.2)
-        raise AssertionError(not_found)
-
-    def wait_until_element_does_not_have_class(self, locator, expected, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        found = None
-
-        while time.time() < timeout:
-            try:
-                element = seleniumlib.find_element(locator)
-                classAttribute = element.get_attribute('class')
-                if expected not in classAttribute:
-                    return
-            except:
-                found = f"Element found with class '{expected}' when it was not expected"
-            time.sleep(.2)
-        raise AssertionError(found)
-
-    def wait_until_table_cell_does_not_contain_text(
-            self,
-            locator,
-            expected,
-            row,
-            column,
-            timeout=10,
-            ):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        found = None
-
-        while time.time() < timeout:
-            try:
-                text = seleniumlib.get_table_cell(locator, row, column)
-                if text != expected:
-                    return
-            except:
-                found = f"Table cell still had '{expected}' in it."
-            time.sleep(.2)
-        raise AssertionError(found)
-
-    def wait_until_number_of_tabs_are_open(self, number, timeout=30):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        timeout = timeout + time.time()
-        found = None
-        while time.time() < timeout:
-            try:
-                handles = seleniumlib.get_window_handles()
-                logger.debug(len(handles))
-                logger.debug(number)
-                if str(len(handles)) == str(number):
-                    return
-            except:
-                found = f"Looking for {number} tabs, found {len(handles)} tabs."
-            time.sleep(.2)
-        raise AssertionError(found)
-
     def colors_are_same(self, color1, color2):
         return (Color.from_string(color1).rgba == Color.from_string(color2).rgba)
-
-    def verify_button_arrow_direction(self, locator, expected, timeout=10):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        not_found = "No button arrow elements found"
-        # expected is 'Up' or 'Down'
-        expected = expected.strip().lower()
-        logger.debug('expected: ' + expected)
-
-        logger.debug('locator: ' + locator)
-
-        navArrows = "//div[@class='nav-arrow']/span"
-        logger.debug('navArrows: ' + navArrows)
-
-        locators = locator + navArrows
-        logger.debug('locators: ' + locators)
-
-        # 'rotate(45deg)'
-        pos = 'matrix(0.707107, 0.707107, -0.707107, 0.707107, 0, 0)'
-        # 'rotate(-45deg)'
-        neg = 'matrix(0.707107, -0.707107, 0.707107, 0.707107, 0, 0)'
-
-        logger.debug('pos: ' + pos)
-        logger.debug('neg: ' + neg)
-
-        # First, find parent element
-        to = timeout + time.time()
-        element = None
-        while (time.time() < to and element is None):
-            try:
-                element = seleniumlib.find_element(locator)
-                logger.debug('element: ' + str(element))
-            except:
-                pass
-            time.sleep(.2)
-        if (element is None):
-            raise AssertionError(not_found)
-
-        # Next, find child arrow elements
-        to = timeout + time.time()
-        elements = None
-        while (time.time() < to and elements is None):
-            try:
-                elements = seleniumlib.find_elements(locators)
-                logger.debug('elements count: ' + str(len(elements)))
-                logger.debug('elements: ' + str(elements))
-            except:
-                pass
-            time.sleep(.2)
-        if (len(elements) == 0):
-            raise AssertionError(not_found)
-
-        logger.debug('elements[0]: ' + str(elements[0]))
-        logger.debug('elements[1]: ' + str(elements[1]))
-
-        # Then, determine the transform values
-        span1 = elements[0].value_of_css_property('transform')
-        span2 = elements[1].value_of_css_property('transform')
-
-        logger.debug('span1: ' + str(span1))
-        logger.debug('span2: ' + str(span2))
-
-        # Finally, check that the values match expectation
-        if expected == 'up':
-            logger.debug('span1?=' + neg)
-            logger.debug('span2?=' + pos)
-            if span1 == neg and span2 == pos:
-                logger.info('result: ' + expected)
-                return
-            else:
-                raise AssertionError(not_found)
-        elif expected == 'down':
-            logger.debug('span1?=' + pos)
-            logger.debug('span2?=' + neg)
-            if span1 == pos and span2 == neg:
-                logger.info('result: ' + expected)
-                return
-            else:
-                raise AssertionError(not_found)
 
     def check_online_or_offline(self, elements, offlineText):
         offline_text_path = ".//span[contains(text(),'" + offlineText + "')]"
@@ -402,10 +139,6 @@ class GenericKeywords:
                 if sub_text != header_str.strip():
                     raise Exception(header_str + ' was not ' + sub_text)
         conn.logout()
-
-    def get_browser_log(self):
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-        return seleniumlib.driver.get_log('browser')
 
     def check_file_exists(self, url):
         linkInfo = head(url)
@@ -610,47 +343,6 @@ class GenericKeywords:
     def check_grid_size(self, gridSize, tileSize, columns):
         return gridSize > (tileSize * columns)
 
-    def check_if_match_and_criteria(self, locator, criteria):
-        queries = set(criteria.lower().split())
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-
-        elements = seleniumlib.find_elements(locator)
-        for element in elements:
-            try:
-                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
-                matches = set()
-                for highlight in highlights:
-                    matches.add(highlight.get_attribute('innerHTML').lower())
-
-            except NoSuchElementException:
-                raise NoSuchElementException
-
-            if len(queries - matches) > 0 or len(matches - queries) > 0:
-                raise InvalidArgumentException("Matches found don't reflect search")
-
-        return True
-
-    def check_if_match_or_criteria(self, locator, criteria):
-        queries = criteria.lower().split("|")
-        seleniumlib = BuiltIn().get_library_instance('SeleniumLibrary')
-
-        elements = seleniumlib.find_elements(locator)
-        for element in elements:
-            try:
-                seleniumlib.driver.execute_script("arguments[0].scrollIntoView();", element)
-                time.sleep(.2)
-                highlights = element.find_elements_by_xpath(".//span[@class='highlighted']")
-                for highlight in highlights:
-                    if highlight.get_attribute('innerHTML').lower() not in queries:
-                        raise InvalidArgumentException("Matches found don't reflect search")
-
-            except NoSuchElementException:
-                raise NoSuchElementException
-            except StaleElementReferenceException:
-                raise StaleElementReferenceException
-
-        return True
-
     def dictionary_should_contain(self, dictionary, expected):
         for item in dictionary:
             if item == expected:
@@ -774,7 +466,7 @@ class GenericKeywords:
                           range(len(owners_ids))]
                 for owner in owners:
                     res = self.cloud_api.register_account("mark", "hamill", owner, self.password)
-                    logger.trace(res)
+                    logger.debug(res)
                     res = self.cloud_api.activate_account_via_api(owner, "qweasd 123")
 
             # Add owner users to json
@@ -841,12 +533,12 @@ class GenericKeywords:
                                 email,
                                 self.password,
                                 )
-                            logger.trace(email, r)
+                            logger.debug(email, r)
                             server["cloudUsers"].update({permission: email})
                             self.cloud_api.activate_account_via_api(
                                 server["cloudUsers"][permission], "qweasd 123")
                             time.sleep(.1)
-                        logger.trace(server["cloudUsers"])
+                        logger.debug(server["cloudUsers"])
 
                     for user in server["cloudUsers"]:
                         self.Add_user_to_cloud_system_if_not_there(
@@ -857,7 +549,7 @@ class GenericKeywords:
                             self.password],
                             )
                 else:
-                    logger.trace("Users not added")
+                    logger.debug("Users not added")
         return serversJson
 
     def create_docker_server(self, server, runName):
@@ -878,7 +570,7 @@ class GenericKeywords:
 
     def delete_docker_server(self, name):
         command = f'''docker container ls --filter='name={name}' --format='{{{{.Names}}}}' | xargs docker container rm -f'''
-        logger.trace(command)
+        logger.debug(command)
         with self._ssh_client() as ssh_client:
             _, _, ssh_stderr = ssh_client.exec_command(command)
         error = ssh_stderr.read()
@@ -924,14 +616,6 @@ class GenericKeywords:
             value = value.replace(" ", "")
         if str(value) != expected_value_str:
             raise RuntimeError(f"value({value}) did not match expected({expected_value_str})")
-
-    def get_lang_list(self):
-        jsonPath = os.path.join(
-            "customizations",
-            BuiltIn().get_variable_value('${CUST LANGUAGE LIST}'),
-            )
-        with open(jsonPath, encoding="utf-8") as langDict:
-            return json.load(langDict)
 
     def evaluate_log_level_via_API(self, auth, server_url, key, value):
         username, password = auth
@@ -1005,7 +689,7 @@ class GenericKeywords:
         self.execute_sudo_command(f'mkdir {disk_name}')
         _, ssh_stdout, _ = self.execute_sudo_command(
             f'mount -t auto -o loop {disk_location}/{disk_name}.img {disk_name}')
-        logger.trace(ssh_stdout.read)
+        logger.debug(ssh_stdout.read)
         disk = {
             "img": f"${disk_location}/{disk_name}.img",
             "folder": disk_name,
@@ -1038,7 +722,7 @@ class GenericKeywords:
             stdin, stdout, stderr = ssh_client.exec_command(f'sudo {command}', get_pty=True)
             stdin.write(self.docker_host_password + '\n')
             stdin.flush()
-            logger.trace(stdout.read())
+            logger.debug(stdout.read())
         return stdin, stdout, stderr
 
     def get_local_users(self, token, server_url):
@@ -1053,33 +737,3 @@ class GenericKeywords:
             if local_state and user["name"] != "admin":
                 locals_list.append(user)
         return locals_list
-
-    def set_default_storage_config(self, server_url, disabled, backups):
-        storages = ServerApi(server_url, password=self.password).get_storages_via_api()
-        if storages == []:
-            raise RuntimeError("Storages returned an empty list.")
-        for disk in storages:
-            if disk.get("url"):
-                url = disk["url"]
-            else:
-                url = disk["path"]
-            if BuiltIn().run_keyword_and_return_status("should_contain_any", url, *disabled):
-                disk = {
-                    "usedForWriting": False,
-                    "isUsedForWriting": False,
-                    "isBackup": False,
-                    }
-            elif BuiltIn().run_keyword_and_return_status("should_contain_any", url, *backups):
-                disk = {
-                    "usedForWriting": True,
-                    "isUsedForWriting": True,
-                    "isBackup": True,
-                    }
-            else:
-                disk = {
-                    "usedForWriting": True,
-                    "isUsedForWriting": True,
-                    "isBackup": False,
-                    }
-        r = ServerApi(server_url, password=self.password).save_storages_via_api(storages)
-        logger.trace(r)

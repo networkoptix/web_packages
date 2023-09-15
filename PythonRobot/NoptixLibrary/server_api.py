@@ -6,9 +6,11 @@ from typing import Union
 
 import requests
 import urllib3
-from robot.api import logger
+import logging
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
+
+logger = logging.getLogger(__name__)
 
 _DEFAULT_USERNAME = 'admin'
 INITIAL_PASSWORD = 'admin'
@@ -73,7 +75,7 @@ class ServerApi:
             body['type'] = 'local'
         if user_role_id:
             body['id'] = user_role_id
-        logger.trace(f"patch={patch}, name={name}")
+        logger.debug(f"patch={patch}, name={name}")
         if patch:
             return self._patch(f'rest/v1/users/{user_id}', body)
         return self._post('rest/v1/users', body)

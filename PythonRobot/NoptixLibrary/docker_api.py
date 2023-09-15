@@ -1,6 +1,8 @@
+import logging
+
 import requests
 
-from robot.api import logger
+logger = logging.getLogger(__name__)
 
 
 class DockerApi(object):
@@ -38,7 +40,7 @@ class DockerApi(object):
             url=f'http://{self.host_ip}:{self.host_port}/containers/create?name={name}',
             json=payload,
             )
-        logger.trace(r.content)
+        logger.debug(r.content)
         assert r.status_code == 201
         return r.json()['Id']
 

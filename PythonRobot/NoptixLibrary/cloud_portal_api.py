@@ -21,9 +21,6 @@ from requests.auth import HTTPDigestAuth
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from NoptixLibrary.cloud_session import CloudSession
 
-from logging import getLogger
-
-
 #from CloudSession import CloudSession
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
