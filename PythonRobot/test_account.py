@@ -415,10 +415,7 @@ if __name__ == "__main__":
     # test_SPACE_for_last_name_is_not_valid()
     # test_should_respond_tab_and_go()
     # test_language_is_changeable_on_the_account_page()
-    # test_language_change_affects_emails()
-
-
-
+    test_language_change_affects_emails()
     test_language_change_is_new_default()
 
 
