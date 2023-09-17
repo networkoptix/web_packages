@@ -951,6 +951,15 @@
             "fieldset": "Downloads"
           },
           {
+            "label": "Downloads Platform Name Override",
+            "name": "%DOWNLOADS_PLATFORM_NAME_OVERRIDE%",
+            "description": "Overrides platform names for the downloads pages. This can be done by use the key of an existing platform as your key and anything you want as a value. Note: Overrides will not be translated unless added to translations.",
+            "advanced": true,
+            "type": "object",
+            "value": {},
+            "fieldset": "Downloads"
+          },
+          {
             "label": "Enable feedback endpoint",
             "name": "%FEEDBACK_ENABLED%",
             "description": "If feedback is being abused disable this setting to block all feedback",

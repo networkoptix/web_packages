@@ -100,6 +100,7 @@ class CustomizationCacheSerializer(serializers.Serializer):
     appTypesForPlatform = serializers.DictField(default=lambda: {})
     availableDownloadsPlatform = serializers.ListField(
         child=serializers.CharField(), default=lambda: [])
+    downloadsPlatformNameOverride = serializers.DictField(default=lambda: {})
     cloudName = serializers.CharField(default='')
     vmsName = serializers.CharField(default='')
     alexaIntegrationEnabled = serializers.BooleanField(default=False)
