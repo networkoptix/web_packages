@@ -515,10 +515,11 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     this.filterModel,
                 );
                 this.noResult = filteredCameras.length === 0;
+                this.noResult && this.resetActiveCamera();
+                !this.noResult && this.setActiveCamera();
                 this.camerasTable = !this.noResult
                     ? this.preFilterCameraTable(filteredCameras)
                     : [];
-                this.setActiveCamera();
             } else {
                 this.hasNoSearch = true;
                 this.noResult = false;
