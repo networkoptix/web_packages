@@ -26,15 +26,18 @@ class Element:
         return True
 
     def text(self):
+        self.wait_until_visible()
         return self._element.text
 
     def is_focused(self):
+        self.should_be_enabled()
         return self._element == self._driver.switch_to.active_element
 
     def is_visible(self):
         return self._element.is_displayed()
 
     def click(self):
+        self.should_be_enabled()
         self._element.click()
 
     def wait_until_visible(self,  timeout: int = 10) -> None:
@@ -64,6 +67,7 @@ class Element:
         element.send_keys(Keys.BACK_SPACE)
 
     def clear_text(self):
+        self.should_be_enabled()
         self._element.clear()
 
     def wait_until_has_style(self, css_selector, style_name, expected_value):
@@ -78,6 +82,7 @@ class Element:
         WebDriverWait(self._driver, self._timeout).until(check_style)
 
     def send_keys(self, text: str):
+        self.should_be_enabled()
         self._element.send_keys(text)
 
     def value_of_css_property(self, style_property: str):
@@ -85,4 +90,5 @@ class Element:
 
     # Return type is weird. See documentation for more details. Should be reworked.
     def get_screenshot(self, filename: str) -> bool:
+        self.wait_until_visible()
         return self._element.screenshot(filename)
