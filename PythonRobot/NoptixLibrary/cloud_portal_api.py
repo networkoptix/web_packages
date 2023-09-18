@@ -218,8 +218,8 @@ class CloudPortalAPI(object):
             'owner': data['ownerAccountEmail'],
         }
 
-    def disconnect(self, email, password, system_id):
-        with self._session(email, password) as s:
+    def disconnect(self, email, password, system_id, verification_code=None):
+        with self._session(email, password, verification_code=verification_code) as s:
             s.headers.update({"referer": f"{self.env}"})
             disconnect_system_response = s.post(
                 f'{self.env}/api/systems/disconnect',

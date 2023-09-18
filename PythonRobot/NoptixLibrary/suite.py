@@ -70,9 +70,9 @@ class CloudServer:
         server_api_port, *_ = data['port']
         server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
         self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
-        self._api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
+        self._api.setup_local_system(new_password=self.cloud_owner.password, system_name=self.name)
         # Set up a cloud system.
-        bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, DEFAULT_PASSWORD)
+        bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, self.cloud_owner.password)
         self._api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
         # Wait while the cloud owner settings are applied.
@@ -80,7 +80,12 @@ class CloudServer:
 
     def _tear_down(self):
         try:
-            _CLOUD_API.disconnect(self.cloud_owner.email, DEFAULT_PASSWORD, self.id)
+            _CLOUD_API.disconnect(
+                self.cloud_owner.email,
+                self.cloud_owner.password,
+                self.id,
+                self.cloud_owner.get_otp(),
+                )
         finally:
             _DOCKER_API.delete_container(self._container_id)
 
