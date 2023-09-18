@@ -70,17 +70,6 @@ class Element:
         self.should_be_enabled()
         self._element.clear()
 
-    def wait_until_has_style(self, css_selector, style_name, expected_value):
-        def check_style():
-            try:
-                element = self._driver.find_element(By.CSS_SELECTOR, css_selector)
-                style_value = element.value_of_css_property(style_name)
-                return style_value == expected_value
-            except:
-                return False
-
-        WebDriverWait(self._driver, self._timeout).until(check_style)
-
     def send_keys(self, text: str):
         self.should_be_enabled()
         self._element.send_keys(text)
