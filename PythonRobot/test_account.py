@@ -24,7 +24,6 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         button_element = Element(driver, button)
         button_element.wait_until_visible()
         button_element.click()
-
     if validate and not two_FA:
         # check language variable and set it to default. That is, set language before logging in
         # TODO: check language
@@ -38,14 +37,12 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
     Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
-
     if exists:
         Element(driver, rb.PASSWORD_INPUT).wait_until_visible()
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT, password)
         time.sleep(1)
         Element(driver, rb.LOG_IN_BUTTON).wait_until_visible()
         Element(driver, rb.LOG_IN_BUTTON).click()
-
     else:
         Element(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
         Element(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
@@ -55,7 +52,6 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         time.sleep(5)
         Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
-
 
 
 def test_can_access_account_page_from_dropdown():
@@ -118,7 +114,6 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
     driver.quit()
-
     driver = get_headless_chrome()
     url1 = rb.env + "/account"
     driver.get(url1)
@@ -131,6 +126,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
+
 
 def test_changing_last_name_and_saving_maintains_that_setting():
     """6 changing last name and saving maintains that setting"""
@@ -148,7 +144,6 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
     driver.quit()
-
     driver = get_headless_chrome()
     url1 = rb.env + "/account"
     driver.get(url1)
@@ -232,7 +227,6 @@ def test_last_name_is_required():
     cancel_button.wait_until_visible()
     account_save.should_be_disabled()
     cancel_button.should_be_enabled()
-
     account_save.wait_until_visible()
     cancel_button.wait_until_visible()
     account_save.should_be_disabled()
@@ -357,7 +351,6 @@ def test_language_change_affects_emails():
         Element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
         time.sleep(5)
         driver.quit()
-
     # if we just closed the browser, we'll get a MaxRetryError
     try:
         url1 = rb.ENV + "/login"
@@ -365,7 +358,6 @@ def test_language_change_affects_emails():
     except MaxRetryError:
         driver = None
         driver = get_headless_chrome()
-
     send_restore_password_email(driver, random_email)
     time.sleep(10)
     mbox = resource_import.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
@@ -373,12 +365,12 @@ def test_language_change_affects_emails():
     resource_import.delete_email(mbox, email_uid)
     resource_import.check_language_logged_in(random_email, password)
 
+
 def test_language_change_is_new_default():
     """15 Language change is new default"""
     lang_dict = resource_import.get_lang_list()
     ja_JP_account_info = lang_dict['ja_JP']['ACCOUNT INFORMATION']
     de_DE_account_info = lang_dict['de_DE']['ACCOUNT INFORMATION']
-
     driver = resource_import.get_headless_chrome()
     email = resource_import.get_random_email()
     password = "qweasd 123"
@@ -386,44 +378,35 @@ def test_language_change_is_new_default():
     url = rb.ENV + "/account"
     driver.get(url)
     cloud_login(driver, email, password, button=None, api=False)
-
     verify_in_account_page(driver)
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
     lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
     droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
     Element(driver, droplang1).wait_until_visible()
     Element(driver, droplang1).click()
-
     time.sleep(5)
     driver.refresh()
-
     dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
     Element(driver, dropLang2).wait_until_visible()
     drop_lang_element = Element(driver, dropLang2)
     activeLang = drop_lang_element.text()
     assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
-
     if lang == 'ja_JP':
         info_element = Element(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
     elif lang == 'de_DE':
         info_element = Element(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
-
     resource_import.logout_japanese(driver)
     url1 = rb.ENV + "/account"
     driver.get(url1)
     cloud_login(driver, email, password, button=None, api=False)
-
     api = CloudPortalAPI()
     api.set_account_language(email, password, new_language=lang)
-
     time.sleep(5)
     driver.refresh()
-
     Element(driver, dropLang2).wait_until_visible()
     activeLang = drop_lang_element.text()
-
     if activeLang.lower() not in lang.lower():
         assert False, f"{activeLang.lower()} not found in {lang.lower()}"  
     if rb.LANGUAGE == 'ja_JP':
@@ -432,14 +415,12 @@ def test_language_change_is_new_default():
     elif rb.LANGUAGE == 'de_DE':
         info_element = Element(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
-
     resource_import.check_language_logged_in(email, password)
     time.sleep(3)
     driver.refresh()
 
 
 if __name__ == "__main__":
-
     test_can_access_account_page_from_dropdown()
     # test_can_access_account_page_from_direct_link()
     # # #test_cannot_access_account_page_from_direct_link_closing_log()
@@ -453,7 +434,3 @@ if __name__ == "__main__":
     test_language_is_changeable_on_the_account_page()
     test_language_change_affects_emails()
     test_language_change_is_new_default()
-
-
-  
-
