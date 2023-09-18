@@ -7,12 +7,11 @@ from resource_import import register_and_activate_account
 from systems_page import SystemsPage
 from variables import ENV
 
-password = "qweasd 123"
-
 
 def allows_login_with_correct_credentials_and_log_out():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
+    password = "qweasd 123"
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     driver.get(ENV)
     header = HeaderNav(driver)
