@@ -1,5 +1,4 @@
 import resource_import
-import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.generic_keywords import GenericKeywords
 from header import HeaderNav
