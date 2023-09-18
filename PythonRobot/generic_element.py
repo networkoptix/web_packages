@@ -59,12 +59,12 @@ class Element:
         WebDriverWait(self._driver, self._timeout).until(ec.visibility_of_element_located((By.XPATH, self._locator)))
 
     def delete_all_text(self):
-        element = WebDriverWait(self._driver, self._timeout).until(ec.presence_of_element_located((By.XPATH, self._locator)))
+        self.should_be_enabled()
         if platform.system() == 'Darwin':
-            element.send_keys(Keys.COMMAND + 'a')
+            self._element.send_keys(Keys.COMMAND + 'a')
         else:
-            element.send_keys(Keys.CONTROL + 'a')
-        element.send_keys(Keys.BACK_SPACE)
+            self._element.send_keys(Keys.CONTROL + 'a')
+        self._element.send_keys(Keys.BACK_SPACE)
 
     def clear_text(self):
         self.should_be_enabled()
