@@ -7,8 +7,6 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
-import robot_keywords
-
 
 class Element:
     def __init__(self, driver: webdriver, locator, timeout=10):
@@ -22,7 +20,7 @@ class Element:
         if not timeout:
             timeout = self._timeout
         try:
-            robot_keywords.wait_until_page_contains_element(self._driver, self._locator, timeout)
+            WebDriverWait(self._driver, timeout).until(ec.presence_of_element_located((By.XPATH, self._locator)))
         except selenium.common.exceptions.TimeoutException:
             return False
         self._element = self._driver.find_element(By.XPATH, self._locator)
