@@ -82,3 +82,9 @@ class Element:
                 return False
 
         WebDriverWait(self.driver, self.timeout).until(check_style)
+
+    def send_keys(self, text: str):
+        self.element.send_keys(text)
+
+    def value_of_css_property(self, style_property: str):
+        return self.element.value_of_css_property(style_property)

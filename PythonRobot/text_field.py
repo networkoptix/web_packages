@@ -1,41 +1,39 @@
 from selenium import webdriver
-from selenium.webdriver.common.by import By
 
-import robot_keywords
+from generic_element import Element
 
 
 class TextField:
 
-    def __init__(self, driver: webdriver, locator, time_out=10):
-        self.driver = driver
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+        # TODO: Remove locator field.
         self.locator = locator
 
-        robot_keywords.wait_until_page_contains_element(self.driver, self.locator, time_out)
-        self.selenium_element = self.driver.find_element(By.XPATH, locator)
-
     def input_text(self, text: str):
-        self.selenium_element.clear()
-        self.selenium_element.send_keys(text)
+        self._element.clear_text()
+        self._element.send_keys(text)
 
     def clear(self):
-        self.selenium_element.clear()
+        self._element.clear_text()
 
     def get_text(self):
-        if self.selenium_element.text:
-            return self.selenium_element.text
-        elif self.selenium_element.get_attribute("value"):
-            return self.selenium_element.get_attribute("value")
+        if self._element.text:
+            return self._element.text
+        elif self._element.get_attribute("value"):
+            return self._element.get_attribute("value")
         else:
             raise RuntimeError("Element had no text")
 
     def get_outline_color(self) -> str:
-        return self.selenium_element.value_of_css_property("border-color")
+        return self._element.value_of_css_property("border-color")
 
     def get_text_color(self) -> str:
-        return self.selenium_element.value_of_css_property("color")
+        return self._element.value_of_css_property("color")
 
     def field_type(self) -> str:
-        return self.selenium_element.get_attribute("type")
+        return self._element.get_attribute("type")
 
     def is_focused(self) -> bool:
-        return self.selenium_element.equals(self.driver.switchTo().activeElement())
+        return self._element.is_focused()
