@@ -3,6 +3,7 @@ from selenium.webdriver.common.by import By
 from RobotVariables import RobotVariables
 from button import Button
 from generic_element import Element
+from landing_page import LandingPage
 
 
 class HeaderNav:
@@ -47,6 +48,7 @@ class HeaderNav:
     def log_out(self):
         self.account_dropdown().click()
         self.log_out_option().click()
+        LandingPage(self.driver)
 
     def create_account(self):
         return Button(self.driver, "//header//a[@href='/authorize?client_type=create']")
