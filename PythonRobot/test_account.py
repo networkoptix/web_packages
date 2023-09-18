@@ -258,10 +258,6 @@ def test_space_for_last_name_is_not_valid():
     robot_keywords.click_button(driver, rb.account_cancel)
     driver.quit()
 
-    #def test_email_is_uneditable():
-    """11 email is uneditable"""
-    # the email is uneditable so there is no need to test for it.
-
 
 def test_language_is_changeable_on_the_account_page():
     """13 language is changeable on the account page"""
