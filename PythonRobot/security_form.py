@@ -102,7 +102,7 @@ class SecurityForm:
             self.twofa_key_modal_next_button().click()
         else:
             self.twofa_code_button().click()
-            key = self.twofa_key().text.strip()
+            key = self.twofa_key().get_text().strip()
             self.twofa_key_modal_next_button().click()
         time.sleep(1)
         totp = Cloud2fa().get_2fa_verification_code(key)

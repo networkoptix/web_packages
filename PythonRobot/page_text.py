@@ -6,10 +6,9 @@ from generic_element import Element
 class PageText:
 
     def __init__(self, driver: webdriver, locator):
-        self.driver = driver
-        element = Element(self.driver, locator)
-        element.wait_until_visible()
-        self.selenium_element = element.get_selenium_element()
-        self.is_visible = element.is_visible()
-        self.is_focused = element.is_focused()
-        self.text = self.selenium_element.text
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+        self._element.wait_until_visible()
+
+    def get_text(self) -> str:
+        return self._element.text()
