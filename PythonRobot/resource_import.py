@@ -400,9 +400,6 @@ def wait_for_email(mail, recipient, timeout_sec):
             result, email_data = mail.uid('fetch', email_id, '(FLAGS)')
             email_flags = email_data[0].decode()  # decode the entire byte string
             if result == 'OK' and '\\Seen' not in email_flags:
-                result, email_data = mail.uid('fetch', email_id, '(BODY.PEEK[HEADER])')
-                raw_email = email_data[0][1].decode('utf-8')
-                email_message = email.message_from_string(raw_email)
                 return email_id
         time.sleep(1)
 
