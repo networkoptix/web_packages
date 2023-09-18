@@ -22,6 +22,7 @@ from RobotVariables import RobotVariables
 from email_access import Email
 from generic_element import Element
 from login import LoginDialog
+from text_field import TextField
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -360,7 +361,7 @@ def send_restore_password_email(driver: webdriver, email: str) -> None:
     Element(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
     Element(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
-    robot_keywords.wait_until_input_succeeds(driver, rb.EMAIL_INPUT, email)
+    TextField(driver, rb.EMAIL_INPUT).input_text(email)
     time.sleep(1)
     Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
     Element(driver, rb.FORGOT_PASSWORD_BUTTON).wait_until_visible()
