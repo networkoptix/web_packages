@@ -5,13 +5,13 @@ import robot_keywords
 
 
 class TextField:
+
     def __init__(self, driver: webdriver, locator, time_out=10):
         self.driver = driver
         self.locator = locator
 
         robot_keywords.wait_until_page_contains_element(self.driver, self.locator, time_out)
         self.selenium_element = self.driver.find_element(By.XPATH, locator)
-
 
     def input_text(self, text: str):
         self.selenium_element.clear()
