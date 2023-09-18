@@ -39,16 +39,16 @@ def input_text(driver: webdriver, locator: Tuple, text: str) -> None:
     element.send_keys(text)
 
 
-def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
-    def check_style(driver):
-        try:
-            element = driver.find_element(By.CSS_SELECTOR, css_selector)
-            style_value = element.value_of_css_property(style_name)
-            return style_value == expected_value
-        except:
-            return False
-
-    WebDriverWait(driver, timeout).until(check_style)
+def wait_until_element_has_style(driver, locator: str, style_name, expected_value, timeout=30):
+    started_at = time.monotonic()
+    while True:
+        element = driver.find_element(By.XPATH, locator)
+        style_value = element.value_of_css_property(style_name)
+        if style_value == expected_value:
+            return
+        if time.monotonic() - started_at > timeout:
+            raise RuntimeError(
+                f"Element does not have style. Expected: {expected_value}, Current: {style_value}")
 
 
 def wait_until_element_is_visible(driver: webdriver, locator: str, timeout: int = 40) -> None:
