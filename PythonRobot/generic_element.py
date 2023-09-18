@@ -28,9 +28,6 @@ class Element:
         self._element = self._driver.find_element(By.XPATH, self._locator)
         return True
 
-    def get_selenium_element(self):
-        return self._element
-
     def text(self):
         return self._element.text
 
