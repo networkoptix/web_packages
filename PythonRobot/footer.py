@@ -51,7 +51,7 @@ class Footer:
         timeout_sec = 10
         while True:
             button = Button(self.driver, locator)
-            if button.is_visible:
+            if button.is_visible():
                 break
             if time.monotonic() - started_at > timeout_sec:
                 raise RuntimeError(f"{locator!r} is not visible after {timeout_sec} seconds")

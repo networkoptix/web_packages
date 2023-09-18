@@ -105,7 +105,7 @@ def owner_can_rename_system_via_cloud_portal():
     sys_admin.get_system_name_edit_field().set_text("Name Changed via Cloud Portal")
     cancel_button = sys_admin.get_cancel_button()
     assert cancel_button is not None
-    assert cancel_button.is_visible
+    assert cancel_button.is_visible()
     cancel_button.click()
     started_at = time.monotonic()
     timeout_sec = 3

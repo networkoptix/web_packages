@@ -131,10 +131,10 @@ def password_masking_and_eye_icon():
     register_form.password_eye_closed()
     assert register_form.password_input().field_type() == "password", "Input type should be 'password'"
     register_form.password_eye_closed().click()
-    assert register_form.password_eye_open().is_visible, "Eye icon not open"
+    assert register_form.password_eye_open().is_visible(), "Eye icon not open"
     assert register_form.password_input().field_type() == "text", "Input type should be 'text'"
     register_form.password_eye_open().click()
-    assert register_form.password_eye_closed().is_visible, "Eye icon not closed"
+    assert register_form.password_eye_closed().is_visible(), "Eye icon not closed"
     assert register_form.password_input().field_type() == "password", "Input type should be 'password'"
     driver.close()
 
@@ -191,7 +191,7 @@ def should_respond_to_tab_key():
     time.sleep(1)
     ActionChains(driver).send_keys(Keys.ENTER).perform()
     time.sleep(1)
-    assert register_form.terms_and_conditions_link().is_focused, "TaC link not focused after TAB"
+    assert register_form.terms_and_conditions_link().is_focused(), "TaC link not focused after TAB"
     driver.switch_to.window(driver.window_handles[1])
     robot_keywords.location_should_be(driver, f"{rb.ENV}/content/eula")
     driver.switch_to.window(driver.window_handles[0])
@@ -199,16 +199,16 @@ def should_respond_to_tab_key():
     time.sleep(1)
     ActionChains(driver).send_keys(Keys.ENTER).perform()
     time.sleep(1)
-    assert register_form.privacy_policy_link().is_focused, "Privacy link not focused after TAB"
+    assert register_form.privacy_policy_link().is_focused(), "Privacy link not focused after TAB"
     driver.switch_to.window(driver.window_handles[2])
     robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
     driver.switch_to.window(driver.window_handles[0])
     ActionChains(driver).send_keys(Keys.TAB).perform()
     time.sleep(1)
-    assert register_form.login_button().is_focused, "Login Button not focused after TAB"
+    assert register_form.login_button().is_focused(), "Login Button not focused after TAB"
     ActionChains(driver).send_keys(Keys.TAB).perform()
     time.sleep(1)
-    assert register_form.create_account_button().is_focused, "Create Account Button not focused after TAB"
+    assert register_form.create_account_button().is_focused(), "Create Account Button not focused after TAB"
     register_form.first_name_is_required_error()
     register_form.last_name_is_required_error()
     register_form.email_is_required_error()

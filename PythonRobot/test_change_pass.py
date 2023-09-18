@@ -165,7 +165,7 @@ def pressing_tab_key_moves_focus_to_the_next_element():
     change_pass_form.new_password_input().input_text(password)
     change_pass_form.new_password_input().input_text(Keys.TAB)
 
-    if not change_pass_form.save_button().is_focused:
+    if not change_pass_form.save_button().is_focused():
         raise RuntimeError("Element was not focused")
 
     driver.quit()
