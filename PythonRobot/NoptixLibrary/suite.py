@@ -1,6 +1,7 @@
 import time
 from contextlib import ExitStack
 from typing import Optional
+from typing import List
 from random import randint
 from pyotp import TOTP
 
@@ -95,20 +96,26 @@ class CloudAccount:
         self._set_up()
         return self
 
-    def setup_2fa(self, totp_secret: str, backup_codes):
+    def setup_2fa(self, totp_secret: str, backup_codes: Optional[List[str]] = None):
         self._totp = TOTP(totp_secret)
         self._backup_codes = backup_codes
 
-    def get_otp(self, at_time=None):
+    def disable_2fa(self):
         assert self._totp is not None
+        self._totp = None
+        self._backup_codes = None
+
+    def get_otp(self, at_time=None):
+        if self._totp is None:
+            return None
         if at_time is None:
             return self._totp.now()
         else:
             return self._totp.at(at_time)
 
-    def get_backup_code(self):
+    def pop_backup_code(self):
         assert self._backup_codes is not None
-        return self._backup_codes[0]
+        return self._backup_codes.pop(0)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._tear_down()
@@ -122,7 +129,4 @@ class CloudAccount:
         _CLOUD_API.activate_account_via_api(self.email, self.password)
 
     def _tear_down(self):
-        if self._totp:
-            _CLOUD_API.delete_account(self.email, self.password, self.get_otp())
-        else:
-            _CLOUD_API.delete_account(self.email, self.password)
+        _CLOUD_API.delete_account(self.email, self.password, self.get_otp())
