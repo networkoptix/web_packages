@@ -38,4 +38,4 @@ class TextField:
         return self.selenium_element.get_attribute("type")
 
     def is_focused(self) -> bool:
-        return self.selenium_element.equals(self.driver.switchTo().activeElement());
+        return self.selenium_element.equals(self.driver.switchTo().activeElement())
