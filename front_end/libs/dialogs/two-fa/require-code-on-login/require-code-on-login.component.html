@@ -40,15 +40,15 @@
 
         <div class="form-group mt-3">
             <label for="tfaCodeInput">
-                <ng-container *ngIf="newState; else codeOnly">
+                <ng-container *ngIf="newState; else appOrBackup">
+                    <span translate
+                        >Enter a verification code from your authentication app to continue</span
+                    >
+                </ng-container>
+                <ng-template #appOrBackup>
                     <span translate
                         >Enter a verification code from your authentication app or a backup code to
                         continue</span
-                    >
-                </ng-container>
-                <ng-template #codeOnly>
-                    <span translate
-                        >Enter a verification code from your authentication app to continue</span
                     >
                 </ng-template>
             </label>
