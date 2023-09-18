@@ -88,3 +88,7 @@ class Element:
 
     def value_of_css_property(self, style_property: str):
         return self._element.value_of_css_property(style_property)
+
+    # Return type is weird. See documentation for more details. Should be reworked.
+    def get_screenshot(self, filename: str) -> bool:
+        return self._element.screenshot(filename)
