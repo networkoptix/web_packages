@@ -54,7 +54,7 @@ class TestAddCloudAdmin:
         # Test successfully activated
         first, last, *_ = email
         instance.handle(
-            email=email, password=password)
+            email=email, password=password, customization=customization)
         mock_register.assert_called_once_with(
             email, password, first, last,
             customization=customization)
@@ -72,5 +72,5 @@ class TestAddCloudAdmin:
         Account.objects.filter(email=email).delete()
         message.delete()
         mocker.patch.object(cloud_api.Account, 'activate', side_effect=Exception('some failure'))
-        instance.handle(email=email, password=password)
+        instance.handle(email=email, password=password, customization=customization)
         assert Account.objects.filter(email=email).first()

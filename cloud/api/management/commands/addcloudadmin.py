@@ -3,8 +3,10 @@ from django.core.management.base import BaseCommand
 from django.utils import timezone
 
 from cloud.controllers import cloud_api
+from cloud.customization_context import customization_ctx, hostname_ctx
 from cloud.helpers.exceptions import APINotFoundException, APINotAuthorisedException
 from api.models import Account
+from cms.models import Customization
 from notifications.models import Message
 
 
@@ -14,6 +16,8 @@ class Command(BaseCommand):
     def add_arguments(self, parser):
         parser.add_argument("email", type=str)
         parser.add_argument("password", type=str)
+        parser.add_argument(
+            '--customization', nargs='?', type=str)
 
     def activate_account(self, account):
         message = Message.objects.filter(
@@ -63,6 +67,14 @@ class Command(BaseCommand):
 
         if not (password := options.get('password', '')):
             raise ValueError("Missing password!")
+
+        if not (customization := options.get('customization', '')):
+            raise ValueError("Missing customization!")
+
+        customization = Customization.objects.get(name=customization)
+
+        customization_ctx.set(customization.name)
+        hostname_ctx.set(customization.host)
 
         is_not_in_clouddb = False
         has_been_activated = False
