@@ -29,6 +29,7 @@
         .nx-new-table-horizontal-wrapper {
             overflow-x: scroll;
             overflow-y: hidden;
+            border: 1px solid var(--border-color);
 
             .nx-new-table-wrapper {
                 height: 100%;
@@ -37,7 +38,7 @@
                     width: fit-content;
                     display: grid;
                     grid-template-rows: var(--table-header-height);
-                    border: 1px solid var(--border-color);
+                    border-bottom: 1px solid var(--border-color);
                     background-color: var(--card-header-bg);
                 }
 
@@ -46,8 +47,8 @@
                     display: grid;
                     grid-template-columns: 1fr;
                     //overflow: hidden;
-                    border: 1px solid var(--border-color);
-                    border-top: none;
+                    //border: 1px solid var(--border-color);
+                    //border-top: none;
                     height: calc(100% - var(--table-row-height));
                     overflow-x: hidden;
                     overflow-y: scroll;

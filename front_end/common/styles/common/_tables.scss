@@ -196,8 +196,7 @@
         //}
 
         & div {
-            line-height: 1rem;
-
+            display: flex;
             svg-icon.icon-expand {
                 transform: rotate(-90deg);
             }
@@ -270,13 +269,15 @@
                 }
             }
 
-            & > div {
-                padding: 0 8px;
-                white-space: break-spaces;
-                display: flex;
-                flex-wrap: wrap;
-                align-content: center;
-                justify-items: flex-start;
+            & .div-container-wrapper {
+                padding: 0 0 0 8px;
+
+                & div {
+                    display: flex;
+                    flex-wrap: wrap;
+                    align-content: center;
+                    justify-items: flex-start;
+                }
             }
         }
     }
