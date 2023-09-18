@@ -356,7 +356,6 @@ def test_language_change_affects_emails():
         url1 = rb.ENV + "/login"
         driver.get(url1)
     except MaxRetryError:
-        driver = None
         driver = get_headless_chrome()
     send_restore_password_email(driver, random_email)
     time.sleep(10)
