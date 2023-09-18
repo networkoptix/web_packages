@@ -1,10 +1,10 @@
 from selenium import webdriver
 
-import robot_keywords
 from generic_element import Element
 
 
 class PageText:
+
     def __init__(self, driver: webdriver, locator):
         self.driver = driver
         element = Element(self.driver, locator)
