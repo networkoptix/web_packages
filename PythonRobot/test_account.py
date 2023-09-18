@@ -308,9 +308,7 @@ def test_language_change_affects_emails():
     register_and_activate_account(driver, "Darth", "Vader", random_email, password)
     url = rb.ENV + "/account"
     driver.get(url)
-    subject = "Reset your password"
     if rb.LANGUAGE != "ru_Ru":
-        subject = "Восстановление пароля"
         cloud_login(driver, random_email, password, button=None, api=False)
         verify_in_account_page(driver)
         robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
