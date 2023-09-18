@@ -59,7 +59,7 @@ def check_email_subject(email_id, sub_text, email_address, password, host, port)
         conn.logout()
 
 def check_language_logged_in(email, password, language="en_US"): 
-    api = CloudPortalAPI.CloudPortalAPI()
+    api = CloudPortalAPI()
     current_lang = api.get_account_language(email, password)
     if current_lang == language:
         api.set_account_language(email, password, language)
