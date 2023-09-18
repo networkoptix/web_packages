@@ -13,6 +13,7 @@ RUN set -ex \
         bash netcat jq curl tini pkg-config libpq5 \
     # TODO: !! REMOVE AFTER llutil published
     && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
+    && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 FROM builder as requirements

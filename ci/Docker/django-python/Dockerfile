@@ -18,7 +18,7 @@ RUN set -ex \
         gettext-base mariadb-client-core-10.5 pkg-config gcc \
     && curl -sSL https://install.python-poetry.org | python3 - \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/* \
-    && python -m pip install --upgrade --no-cache-dir pip \
+    && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
     #    jsonschema version cannot be solved in correctly
     && python -m pip install --prefer-binary --no-cache-dir jsonschema==4.17.3 \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*

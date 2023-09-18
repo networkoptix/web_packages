@@ -11,6 +11,7 @@ COPY stage/requirements.txt /app/requirements.txt
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  bash netcat jq curl \
+    && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
     && pip install --prefer-binary -r /app/requirements.txt
 
 

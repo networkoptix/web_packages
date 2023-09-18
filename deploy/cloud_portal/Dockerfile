@@ -14,6 +14,7 @@ RUN set -ex \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
         bash netcat jq curl libmariadb-dev libcurl4-openssl-dev tini  \
         gettext-base mariadb-client-core-10.5 pkg-config \
+    && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \
     && apt autoremove -y --purge && apt clean -y && rm -rf /var/lib/apt/lists/*
 
 
