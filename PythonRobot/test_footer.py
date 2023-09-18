@@ -9,6 +9,7 @@ from resource_import import get_headless_chrome
 
 rb = RobotVariables("en_US")
 
+
 # Webadmin only
 def api_documentation_link():
     """1. API documentation link leads to proper page"""
@@ -17,13 +18,15 @@ def api_documentation_link():
     Footer(driver, "webadmin")
     driver.close()
 
+
 # Webadmin only
 def download_sdk_link():
-    """2. Download SDK link leads to proper page"""   
+    """2. Download SDK link leads to proper page"""
     driver = get_headless_chrome()
     driver.get(rb.ENV)
     Footer(driver, "webadmin")
     driver.close()
+
 
 def support_link():
     """3. Support leads to the proper support site"""
@@ -36,6 +39,7 @@ def support_link():
     time.sleep(1)
     robot_keywords.location_should_contain(driver, rb.SUPPORT_URL)
     driver.close()
+
 
 def copyright_link():
     """4. Copyright leads to the proper site"""
@@ -50,6 +54,7 @@ def copyright_link():
     robot_keywords.location_should_be(driver, rb.COPYRIGHT_URL)
     driver.close()
 
+
 def terms_link():
     """5. Terms leads to the proper EULA site"""
     driver = get_headless_chrome()
@@ -59,6 +64,7 @@ def terms_link():
     time.sleep(2)
     robot_keywords.location_should_contain(driver, rb.TERMS_URL)
     driver.close()
+
 
 def privacy_link():
     """6. Privacy leads to the proper page"""
@@ -72,6 +78,7 @@ def privacy_link():
     robot_keywords.location_should_be(driver, rb.PRIVACY_POLICY_FULL_URL)
     driver.close()
 
+
 if __name__ == "__main__":
     support_link()
     print(f'{Fore.WHITE}{support_link.__doc__}\t\t\t{Fore.GREEN}| PASS |')
@@ -84,4 +91,3 @@ if __name__ == "__main__":
 
     privacy_link()
     print(f'{Fore.WHITE}{privacy_link.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-
