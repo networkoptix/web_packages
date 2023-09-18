@@ -38,13 +38,13 @@ class Element:
         return self._element.is_displayed()
 
     def click(self):
-        WebDriverWait(self._driver, self._timeout).until(ec.element_to_be_clickable((By.XPATH, self._locator))).click()
+        self._element.click()
 
     def wait_until_visible(self,  timeout: int = 10) -> None:
         WebDriverWait(self._driver, timeout).until(ec.visibility_of_element_located((By.XPATH, self._locator)))
 
     def get_attribute(self, attribute: str):
-        return self._driver.find_element(By.XPATH, self._locator).get_attribute(attribute)
+        return self._element.get_attribute(attribute)
 
     def should_be_enabled(self):
         WebDriverWait(self._driver, self._timeout).until(ec.element_to_be_clickable((By.XPATH, self._locator)))
@@ -67,7 +67,7 @@ class Element:
         element.send_keys(Keys.BACK_SPACE)
 
     def clear_text(self):
-        self._driver.find_element(By.XPATH, self._locator).clear()
+        self._element.clear()
 
     def wait_until_has_style(self, css_selector, style_name, expected_value):
         def check_style():
