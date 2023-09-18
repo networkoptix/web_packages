@@ -215,7 +215,7 @@ def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeo
         email_id = email_con.wait_for_email(recipient)
         body = email_con.get_body(email_id)
         # mbox = open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=recipient, is_secure=True)
-        # email_uid = wait_for_email(mbox, recipient=recipient, timeout=120, status="UNREAD")
+        # email_uid = wait_for_email(mbox, recipient=recipient, timeout_sec=120, status="UNREAD")
         if link_type == "activate":
             email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
         link = email_con.get_email_link(recipient, link_type)
@@ -384,12 +384,12 @@ def verify_in_account_page(driver: webdriver):
         Element(driver, element).should_not_be_visible()
     time.sleep(0.5)
 
-def wait_for_email(mail, recipient, timeout, status='UNSEEN'):
+def wait_for_email(mail, recipient, timeout_sec, status='UNSEEN'):
     start_time = time.time()
 
     while True:
         # Check if the timeout has been reached
-        if time.time() - start_time > timeout:
+        if time.time() - start_time > timeout_sec:
             return None
 
         # Search the inbox for emails with specific "To" header
