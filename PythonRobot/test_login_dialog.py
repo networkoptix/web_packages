@@ -22,12 +22,9 @@ def allows_login_with_correct_credentials_and_log_out():
     login.password_input().input_text(password)
     login.login_button().click()
     SystemsPage(driver).no_systems()
-
     header.account_dropdown().click()
     header.log_out_option().click()
-
     LandingPage(driver)
-
     driver.quit()
     print("pass")
 
