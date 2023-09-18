@@ -1,6 +1,4 @@
 import resource_import
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.generic_keywords import GenericKeywords
 from header import HeaderNav
 from landing_page import LandingPage
 from login import LoginDialog
@@ -10,9 +8,6 @@ from systems_page import SystemsPage
 from variables import ENV
 
 password = "qweasd 123"
-
-keywords = GenericKeywords()
-CLOUD_API = CloudPortalAPI()
 
 
 def allows_login_with_correct_credentials_and_log_out():
