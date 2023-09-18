@@ -17,18 +17,13 @@ import { animationFrameScheduler, interval } from 'rxjs';
 
 import { NgChanges } from '@utils/ng-changes';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
-
-enum CHUNK {
-    RECORDS,
-    BOOKMARK,
-    ANALYTICS,
-}
+import { CHUNK_TYPE } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 
 interface DATA {
     width: number;
     x: number;
     y: number;
-    type?: CHUNK;
+    type?: CHUNK_TYPE;
 }
 
 const ZOOM_WINDOW_TO_ANIMATE_MS = 30 * 60 * 1000;
@@ -138,10 +133,12 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
                     .data(data)
                     .value(d => {
                         switch (d.type) {
-                            case CHUNK.BOOKMARK:
+                            case CHUNK_TYPE.BOOKMARK:
                                 return [1.0, 0, 0, 0.5];
-                            case CHUNK.ANALYTICS:
+                            case CHUNK_TYPE.ANALYTICS:
                                 return [0, 0, 1.0, 0.5];
+                            case CHUNK_TYPE.IN_PROGRESS:
+                                return [76 / 255, 188 / 255, 40 / 255, 1];
                             default:
                                 // [r / 255, g / 255, b / 255, opacity] .. setting green_l2 here
                                 return [76 / 255, 188 / 255, 40 / 255, 1];
@@ -241,9 +238,9 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
         const displayData = this.data.filter(
             d =>
                 !(
-                    (d.type === CHUNK.BOOKMARK && !this.showData.bookmarks) ||
-                    (d.type === CHUNK.ANALYTICS && !this.showData.analytics) ||
-                    (d.type === CHUNK.RECORDS && !this.showData.records)
+                    (d.type === CHUNK_TYPE.BOOKMARK && !this.showData.bookmarks) ||
+                    (d.type === CHUNK_TYPE.ANALYTICS && !this.showData.analytics) ||
+                    (d.type === CHUNK_TYPE.RECORDS && !this.showData.records)
                 ),
         );
 
@@ -256,10 +253,11 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
         d3.select('#chart').datum(displayData).call(this.chart);
     };
 
-    private addData(dataObj: Record<string, string>[], type?: CHUNK): void {
+    private addData(dataObj: Record<string, string>[], type?: CHUNK_TYPE): void {
         const newData = dataObj.map((chunk: Record<string, string>) => {
             const chunkStart = parseInt(chunk.startTimeMs);
             let chunkEnd = parseInt(chunk.durationMs);
+            type = chunkEnd < 0 ? CHUNK_TYPE.IN_PROGRESS : type;
             chunkEnd = chunkEnd < 0 ? Date.now() - chunkStart : chunkEnd;
 
             return { x: chunkStart, y: 30, width: chunkEnd, type };
@@ -276,7 +274,7 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
                 let chunkEnd = parseInt(chunk.durationMs);
                 chunkEnd = chunkEnd > 0 ? chunkEnd : Date.now() - chunkStart;
 
-                return { x: chunkStart, y: 30, width: chunkEnd, type: CHUNK.RECORDS };
+                return { x: chunkStart, y: 30, width: chunkEnd, type: CHUNK_TYPE.RECORDS };
             });
 
             this.start = parseInt(this.initialData[0].startTimeMs);
@@ -294,15 +292,15 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
         }
 
         if (changes.pushData?.currentValue?.length) {
-            this.addData(this.pushData, CHUNK.RECORDS);
+            this.addData(this.pushData, CHUNK_TYPE.RECORDS);
         }
 
         if (changes.bookmarksData?.currentValue?.length) {
-            this.addData(this.bookmarksData, CHUNK.BOOKMARK);
+            this.addData(this.bookmarksData, CHUNK_TYPE.BOOKMARK);
         }
 
         if (changes.analyticsData?.currentValue?.length) {
-            this.addData(this.analyticsData, CHUNK.ANALYTICS);
+            this.addData(this.analyticsData, CHUNK_TYPE.ANALYTICS);
         }
 
         if (changes.showData?.currentValue) {

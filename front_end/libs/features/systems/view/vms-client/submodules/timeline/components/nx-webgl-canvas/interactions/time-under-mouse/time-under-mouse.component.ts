@@ -5,7 +5,7 @@ import dateFormat from 'dateformat';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
 
-import { NxWebGLService } from '../services/webgl.service';
+import { NxWebGLService } from '../../services/webgl.service';
 
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
@@ -20,7 +20,6 @@ const DATE_FORMAT = 'ddd mmm dd yyyy';
 })
 export class WebGlTimeUnderMouseComponent implements OnChanges {
     @Input() position: number | undefined;
-    @Input() timeUnder: Date;
 
     public date: string = '';
     public time: string = '';
@@ -38,11 +37,9 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
     ngOnChanges(changes: NgChanges<WebGlTimeUnderMouseComponent>): void {
         if (changes.position) {
             this.setMarkerPosition();
-
-            if (this.timeUnder) {
-                this.time = dateFormat(this.timeUnder, TIME_FORMAT);
-                this.date = dateFormat(this.timeUnder, DATE_FORMAT);
-            }
+            const dateUnder = this.webglService.xScale$.value.invert(changes.position.currentValue);
+            this.time = dateFormat(dateUnder, TIME_FORMAT);
+            this.date = dateFormat(dateUnder, DATE_FORMAT);
         }
     }
 

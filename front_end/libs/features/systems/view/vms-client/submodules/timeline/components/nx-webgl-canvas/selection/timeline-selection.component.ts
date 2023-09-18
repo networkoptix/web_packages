@@ -132,8 +132,6 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         if (this.selection.drag && !this.selection.active) {
             const offsetX = event.pageX - this.webglService.canvasRect$.value.left;
             this.selection.active = true;
-            this.selection.start = offsetX;
-            this.selection.end = offsetX;
             this.selection.startDisplay = offsetX;
             this.selection.endDisplay = offsetX;
             this.hideLeftEar = false;
@@ -169,22 +167,21 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
                 return;
             }
 
-            const duration = offsetX - this.selection.start;
-            const newDrag = this.selection.start === this.selection.end;
+            const duration = offsetX - this.selection.startDisplay;
+            const newDrag = this.selection.startDisplay === this.selection.endDisplay;
 
-            if (this.selection.end + duration < this.selection.start) {
+            if (this.selection.endDisplay + duration < this.selection.startDisplay) {
                 this.dragRight = false;
                 this.dragLeft = true;
             }
 
-            if (this.selection.start + duration > this.selection.end) {
+            if (this.selection.startDisplay + duration > this.selection.endDisplay) {
                 this.dragRight = true;
                 this.dragLeft = false;
             }
 
             if (duration > 0 && (this.dragRight || newDrag)) {
                 this.dragRight = true;
-                this.selection.end = offsetX;
                 this.selection.endDisplay = offsetX;
                 this.posChange.emit(offsetX);
 
@@ -193,7 +190,6 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             }
             if ((duration <= 0 && (this.dragLeft || newDrag)) || (duration > 0 && this.dragLeft)) {
                 this.dragLeft = true;
-                this.selection.start = offsetX;
                 this.selection.startDisplay = offsetX;
                 this.posChange.emit(offsetX);
 
@@ -211,10 +207,10 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         if (
             this.webglService.canScroll$.value.right &&
             direction === SCROLL_DIRECTION.right &&
-            this.selection.end > this.canvasWidth - EDGE_SCROLLING_SPEED_POS.FAR
+            this.selection.endDisplay > this.canvasWidth - EDGE_SCROLLING_SPEED_POS.FAR
         ) {
             this.dragStop$.next(true);
-            const diff = this.canvasWidth - this.selection.end;
+            const diff = this.canvasWidth - this.selection.endDisplay;
             const step = this.edgeScrollingSpeed(diff);
 
             interval(0, animationFrameScheduler)
@@ -228,10 +224,10 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         } else if (
             this.webglService.canScroll$.value.left &&
             direction === SCROLL_DIRECTION.left &&
-            this.selection.start < EDGE_SCROLLING_SPEED_POS.FAR
+            this.selection.startDisplay < EDGE_SCROLLING_SPEED_POS.FAR
         ) {
             this.dragStop$.next(true);
-            const step = this.edgeScrollingSpeed(this.selection.start);
+            const step = this.edgeScrollingSpeed(this.selection.startDisplay);
 
             interval(0, animationFrameScheduler)
                 .pipe(untilDestroyed(this), takeUntil(this.dragStop$))

@@ -7,10 +7,11 @@
     left: 0;
     right: 0;
     top: 0;
-    height: 50px;
+    height: 90px;
     z-index: 10;
     display: block;
     cursor: default;
+    //border: 1px solid red;
 
     .left-draggable,
     .right-draggable {
@@ -33,8 +34,8 @@
         pointer-events: none;
         display: block;
         position: absolute;
-        bottom: -38px;
-        height: 89px;
+        bottom: 0;
+        height: 90px;
         background-color: rgba(var(--brand-core--rgb), 0.3);
         transition: opacity 0.1s ease-in-out;
         min-width: 1px;

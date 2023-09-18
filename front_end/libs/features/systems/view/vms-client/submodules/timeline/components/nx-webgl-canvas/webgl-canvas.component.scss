@@ -6,6 +6,7 @@
 
 .timeline-container {
     border: 1px solid var(--border-color);
+    background-color: var(--view-bg);
 }
 
 .nx-timeline-wrapper {
@@ -14,12 +15,25 @@
     position: relative;
     width: 100%;
 
+    .canvas-camera-last-minute {
+        position: absolute;
+        top: 52px;
+        height: 38px;
+        pointer-events: none;
+
+        svg g {
+            display: block;
+            width: 100%;
+        }
+    }
+
     .canvas-camera-name {
         @include medium13nocolor;
         color: var(--timeline-control-color);
         position: absolute;
         top: 60px;
         left: 5px;
+        pointer-events: none;
 
         &.short {
             top: 56px;
@@ -60,6 +74,8 @@
     //border-bottom: none;
     background-color: var(--alt-body-bg);
     height: 32px;
+    pointer-events: none;
+    z-index: 9;
 }
 
 #chartAll {
@@ -89,7 +105,9 @@
 
     d3fc-group.cartesian-chart {
         width: 100%;
-        height: 100%;
+        margin-top: -30px;
+        padding-top: 30px;
+        height: 65px;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -127,7 +145,8 @@
     }
 
     d3fc-canvas.webgl-plot-area {
-        height: 38px;
+        height: 65px;
+        margin-top: -32px;
     }
 
     d3fc-svg.left-axis {

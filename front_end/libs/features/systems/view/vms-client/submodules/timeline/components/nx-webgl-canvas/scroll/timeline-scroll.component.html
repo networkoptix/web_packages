@@ -1,17 +1,17 @@
-<div
-    class="button left"
-    #left
-    [ngClass]="{ enabled: canScrollLeft && !disabled && !onSelectionDrag && !onScrollBarScroll }"
-    (nxClick)="scrollTo(SCROLL_DIRECTION.left)"
-    (nxDblClick)="scrollTo(SCROLL_DIRECTION.beginning)"
-    (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantLeft)"
-    (nxHoldStop)="scrollStop(SCROLL_DIRECTION.left)"
->
-    <svg-icon
-        nx-add-svg-src
-        [src]="images.dir + 'timeline_scroll.svg'"
-    ></svg-icon>
-</div>
+<!--<div-->
+<!--    class="button left"-->
+<!--    #left-->
+<!--    [ngClass]="{ enabled: canScrollLeft && !disabled && !onSelectionDrag && !onScrollBarScroll }"-->
+<!--    (nxClick)="scrollTo(SCROLL_DIRECTION.left)"-->
+<!--    (nxDblClick)="scrollTo(SCROLL_DIRECTION.beginning)"-->
+<!--    (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantLeft)"-->
+<!--    (nxHoldStop)="scrollStop(SCROLL_DIRECTION.left)"-->
+<!--&gt;-->
+<!--    <svg-icon-->
+<!--        nx-add-svg-src-->
+<!--        [src]="images.dir + 'timeline_scroll.svg'"-->
+<!--    ></svg-icon>-->
+<!--</div>-->
 <div
     class="background"
     #background
@@ -48,25 +48,18 @@
         <span class="stripe"></span>
         <span class="stripe"></span>
     </div>
-
-    <!--    <div-->
-    <!--        class="honest-bar"-->
-    <!--        #honestBar-->
-    <!--        [ngClass]="{ visible: showHonestBar }"-->
-    <!--    ></div>-->
 </div>
-
-<div
-    class="button right"
-    #right
-    [ngClass]="{ enabled: canScrollRight && !disabled && !onSelectionDrag && !onScrollBarScroll }"
-    (nxClick)="scrollTo(SCROLL_DIRECTION.right)"
-    (nxDblClick)="scrollTo(SCROLL_DIRECTION.end)"
-    (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantRight)"
-    (nxHoldStop)="scrollStop(SCROLL_DIRECTION.right)"
->
-    <svg-icon
-        nx-add-svg-src
-        [src]="images.dir + 'timeline_scroll.svg'"
-    ></svg-icon>
-</div>
+<!--<div-->
+<!--    class="button right"-->
+<!--    #right-->
+<!--    [ngClass]="{ enabled: canScrollRight && !disabled && !onSelectionDrag && !onScrollBarScroll }"-->
+<!--    (nxClick)="scrollTo(SCROLL_DIRECTION.right)"-->
+<!--    (nxDblClick)="scrollTo(SCROLL_DIRECTION.end)"-->
+<!--    (nxHoldStart)="scrollTo(SCROLL_DIRECTION.constantRight)"-->
+<!--    (nxHoldStop)="scrollStop(SCROLL_DIRECTION.right)"-->
+<!--&gt;-->
+<!--    <svg-icon-->
+<!--        nx-add-svg-src-->
+<!--        [src]="images.dir + 'timeline_scroll.svg'"-->
+<!--    ></svg-icon>-->
+<!--</div>-->

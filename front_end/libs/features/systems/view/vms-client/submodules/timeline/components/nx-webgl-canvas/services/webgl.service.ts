@@ -5,6 +5,7 @@ import dateFormat from 'dateformat';
 import { BehaviorSubject } from 'rxjs';
 
 import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
+import { DATA } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 import { ZOOM_DIRECTIONS } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 import { SCROLL_DIRECTIONS } from './webgl.types';
@@ -30,6 +31,7 @@ export class NxWebGLService {
         in: true,
         out: false,
     });
+    currentPointer$ = new BehaviorSubject<Date>(new Date());
     levelZoom$ = new BehaviorSubject<number>(1);
     selectionDrag$ = new BehaviorSubject<boolean>(false);
     scrollBarScroll$ = new BehaviorSubject<boolean>(false);
@@ -71,15 +73,6 @@ export class NxWebGLService {
 
     updateSelection(): void {
         const selection = this.selection$.value;
-        const xScale = this.xScale$.value;
-
-        selection.start = xScale(selection.startDate);
-        selection.end = xScale(selection.endDate);
-
-        selection.startDisplay = selection.start < 0 ? 0 : selection.start;
-
-        selection.endDisplay =
-            selection.end > this.canvasWidth$.value ? this.canvasWidth$.value : selection.end;
 
         selection.leftDate = dateFormat(selection.startDate, DATE_FORMAT);
         selection.leftTime = dateFormat(selection.startDate, TIME_FORMAT);
@@ -97,5 +90,25 @@ export class NxWebGLService {
         selection.timelineEnd = xScale.domain()[1];
 
         this.selection$.next(selection);
+    }
+
+    chunkSearch(data: DATA[], target: number): boolean | number {
+        let left: number = 0;
+        let right: number = data.length - 1;
+
+        while (left <= right) {
+            const mid: number = Math.floor((left + right) / 2);
+
+            if (data[mid].x <= target && data[mid].x + data[mid].width >= target) {
+                return true;
+            }
+            if (target < data[mid].x) {
+                right = mid - 1;
+            } else {
+                left = mid + 1;
+            }
+        }
+
+        return data[left]?.x;
     }
 }

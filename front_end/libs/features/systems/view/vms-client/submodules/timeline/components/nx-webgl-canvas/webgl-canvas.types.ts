@@ -2,6 +2,7 @@ export enum CHUNK_TYPE {
     RECORDS,
     BOOKMARK,
     ANALYTICS,
+    IN_PROGRESS,
 }
 
 export interface RECORD_DATA {
@@ -13,6 +14,7 @@ export interface DATA {
     width: number;
     x: number;
     y: number;
+    realTimeMs: number;
     type?: CHUNK_TYPE;
 }
 

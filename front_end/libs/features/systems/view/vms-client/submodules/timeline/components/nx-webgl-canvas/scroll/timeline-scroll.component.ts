@@ -169,13 +169,13 @@ export class TimelineScrollComponent {
         this.singleScroll.emit(direction);
     }
 
-    scrollStop(direction: SCROLL_DIRECTION): void {
-        if (this.continuousScroll) {
-            this.constantScroll.emit({
-                direction,
-                action: 'stop',
-            });
-            this.continuousScroll = false;
-        }
-    }
+    // scrollStop(direction: SCROLL_DIRECTION): void {
+    //     if (this.continuousScroll) {
+    //         this.constantScroll.emit({
+    //             direction,
+    //             action: 'stop',
+    //         });
+    //         this.continuousScroll = false;
+    //     }
+    // }
 }

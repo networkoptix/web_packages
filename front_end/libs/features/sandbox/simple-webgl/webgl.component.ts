@@ -1,5 +1,7 @@
 import { Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+// import * as d3 from 'd3';
+// import * as fc from 'd3fc';
 import { timer } from 'rxjs';
 
 import { NxMenuService } from '@menu/menu.service';
@@ -64,15 +66,16 @@ export class SimpleWebglComponent {
             this.end = Date.now();
 
             this.analyticsData = [
-                { startTimeMs: '1676231643552', durationMs: '300000' },
-                { startTimeMs: '1676133984000', durationMs: '300000' },
-                { startTimeMs: '1676017275000', durationMs: '300000' },
+                { startTimeMs: '1690700400000', durationMs: '3000000' },
+                { startTimeMs: '1690706400000', durationMs: '3000000' },
+                { startTimeMs: '1690712400000', durationMs: '300000' },
+                { startTimeMs: '1690718400000', durationMs: '1000' },
             ];
             this.bookmarksData = [
-                { startTimeMs: '1676231653552', durationMs: '300000' },
-                { startTimeMs: '1676221653552', durationMs: '3000' },
-                { startTimeMs: '1676052229000', durationMs: '500000' },
-                { startTimeMs: '1676082443000', durationMs: '500000' },
+                { startTimeMs: '1691800400000', durationMs: '3000000' },
+                { startTimeMs: '1691806400000', durationMs: '3000' },
+                { startTimeMs: '1691812400000', durationMs: '5000000' },
+                { startTimeMs: '1691820400000', durationMs: '5000000' },
             ];
         });
 
@@ -88,9 +91,73 @@ export class SimpleWebglComponent {
                         this.end = Date.now();
                     });
             });
+
+        // this.initAreaChart();
     }
 
     prepShowData(): void {
         this.showData = { records: this.showTL, bookmarks: this.showBM, analytics: this.showAN };
     }
+
+    // initAreaChart(): void {
+    //     debugger;
+    //     const extent = fc.extentLinear();
+    //
+    //     const xScale = d3.scaleLinear().domain([0, this.recordsData.length - 1]);
+    //
+    //     const yScale = d3.scaleLinear().domain(extent(this.recordsData));
+    //
+    //     const container = this.document.querySelector('d3fc-canvas-area');
+    //
+    //     const series = fc
+    //         .seriesWebglArea()
+    //         .xScale(xScale)
+    //         .yScale(yScale)
+    //         .crossValue((_, i) => i)
+    //         .mainValue(d => d)
+    //         .defined(() => true)
+    //         .equals(previousData => previousData.length > 0);
+    //
+    //     let pixels: unknown = null;
+    //     let frame = 0;
+    //     // eslint-disable-next-line nx/no-untyped-init
+    //     let gl = null;
+    //
+    //     d3.select(container)
+    //         .on('click', () => {
+    //             const domain = xScale.domain();
+    //             const max = Math.round(domain[1] / 2);
+    //             xScale.domain([0, max]);
+    //             // container.requestRedraw();
+    //         })
+    //         .on('measure', event => {
+    //             const { width, height } = event.detail;
+    //             xScale.range([0, width]);
+    //             yScale.range([height, 0]);
+    //
+    //             gl = container.querySelector('canvas').getContext('webgl');
+    //             series.context(gl);
+    //         })
+    //         .on('draw', () => {
+    //             if (pixels === null) {
+    //                 pixels = new Uint8Array(gl.drawingBufferWidth * gl.drawingBufferHeight * 4);
+    //             }
+    //             performance.mark(`draw-start-${frame}`);
+    //             series(this.recordsData);
+    //             // Force GPU to complete rendering to allow accurate performance measurements to be taken
+    //             gl.readPixels(
+    //                 0,
+    //                 0,
+    //                 gl.drawingBufferWidth,
+    //                 gl.drawingBufferHeight,
+    //                 gl.RGBA,
+    //                 gl.UNSIGNED_BYTE,
+    //                 pixels,
+    //             );
+    //             performance.measure(`draw-duration-${frame}`, `draw-start-${frame}`);
+    //             frame++;
+    //         });
+    //
+    //     // container.requestRedraw();
+    // }
 }

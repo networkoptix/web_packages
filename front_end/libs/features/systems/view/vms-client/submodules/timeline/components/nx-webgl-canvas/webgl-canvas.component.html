@@ -12,6 +12,7 @@
             (constantZoom)="constantZoom($event)"
         ></nx-timeline-zoom>
     </div>
+
     <div class="nx-timeline-wrapper">
         <div id="nx-x-axis-major"></div>
         <div id="nx-x-axis-minor"></div>
@@ -29,16 +30,68 @@
             id="chartAll"
             use-device-pixel-ratio
         ></div>
-        <nx-timeline-scroll
-            [barWidth]="scrollBarWidth"
-            [barPos]="scrollBarPos"
-            [playbackPos]="scrollPlaybackPosition"
-            (scrollToPos)="scrollToPos($event)"
-            (scrollEnd)="scrollEnd()"
-            (singleScroll)="singleScroll($event)"
-            (constantScroll)="constantScroll($event)"
+
+        <div
+            class="canvas-camera-last-minute"
+            *ngIf="lastMinuteWidth > 2"
+            [style.right.px]="
+                Math.trunc(-(canvasVirtualWidth - webglService.canvasWidth$.value + xPos) || 0)
+            "
+            [style.width.px]="lastMinuteWidth"
+            [style.max-width.px]="webglService.canvasWidth$.value"
         >
-        </nx-timeline-scroll>
+            <svg
+                id="stripes-svg"
+                xmlns="http://www.w3.org/2000/svg"
+                width="100%"
+                height="100%"
+            >
+                <defs>
+                    <pattern
+                        id="svg-stripes-pattern-148"
+                        patternTransform="rotate(135)"
+                        width="100%"
+                        height="20"
+                        x="0"
+                        y="0"
+                        patternUnits="userSpaceOnUse"
+                    >
+                        <animate
+                            attributeName="y"
+                            begin="0s"
+                            dur="400s"
+                            from="0"
+                            to="5000px"
+                            repeatCount="indefinite"
+                            fill="freeze"
+                        ></animate>
+                        <g>
+                            <rect
+                                x="0"
+                                y="0"
+                                [style.width.px]="lastMinuteWidth"
+                                height="20"
+                                fill="rgba(var(--green_l2--rgb), 0.1)"
+                            ></rect>
+                            <rect
+                                x="0"
+                                y="10"
+                                [style.width.px]="lastMinuteWidth"
+                                height="20"
+                                fill="rgba(106, 155, 64, .5)"
+                            ></rect>
+                        </g>
+                    </pattern>
+                </defs>
+                <rect
+                    x="0"
+                    y="0"
+                    width="100%"
+                    height="100%"
+                    fill="url(#svg-stripes-pattern-148)"
+                ></rect>
+            </svg>
+        </div>
 
         <div
             class="canvas-camera-name"
@@ -47,22 +100,80 @@
             {{ selectedCamera?.name || selectedCamera?.model }}
         </div>
 
-        <nx-webgl-time-under-mouse
-            [position]="timeLabelPosition"
-            [timeUnder]="currentPointer"
-        ></nx-webgl-time-under-mouse>
+        <nx-timeline-interactions></nx-timeline-interactions>
 
-        <nx-webgl-timeline-playback-indicator
-            [playbackPosition]="playbackLabelPosition"
-            [playbackTime]="playbackPointer"
-        ></nx-webgl-timeline-playback-indicator>
+        <!--        <nx-timeline-scroll-->
+        <!--            [barWidth]="scrollBarWidth"-->
+        <!--            [barPos]="scrollBarPos"-->
+        <!--            [playbackPos]="scrollPlaybackPosition"-->
+        <!--            (scrollToPos)="scrollToPos($event)"-->
+        <!--            (scrollEnd)="scrollEnd()"-->
+        <!--            (singleScroll)="singleScroll($event)"-->
+        <!--            (constantScroll)="constantScroll($event)"-->
+        <!--        >-->
+        <!--        </nx-timeline-scroll>-->
 
-        <nx-webgl-timeline-selection
-            [cursorTime]="currentPointer"
-            (posChange)="getSelectionDate($event)"
-            (scrollShift)="scrollShift($event)"
-        ></nx-webgl-timeline-selection>
+        <!--        <nx-webgl-time-under-mouse-->
+        <!--            [position]="timeLabelPosition"-->
+        <!--            [timeUnder]="currentPointer"-->
+        <!--        ></nx-webgl-time-under-mouse>-->
 
-        <nx-webgl-timeline-selection-action-panel></nx-webgl-timeline-selection-action-panel>
+        <!--        <nx-webgl-timeline-playback-indicator-->
+        <!--            [playbackPosition]="playbackLabelPosition"-->
+        <!--            [playbackTime]="playbackPointer"-->
+        <!--        ></nx-webgl-timeline-playback-indicator>-->
+
+        <!--        <nx-webgl-timeline-selection-->
+        <!--            [cursorTime]="currentPointer"-->
+        <!--            (posChange)="getSelectionDate($event)"-->
+        <!--            (scrollShift)="scrollShift($event)"-->
+        <!--        ></nx-webgl-timeline-selection>-->
+
+        <!--        <nx-webgl-timeline-selection-action-panel></nx-webgl-timeline-selection-action-panel>-->
+    </div>
+
+    <div><nx-playback-control></nx-playback-control></div>
+</div>
+
+<div
+    *ngIf="data?.length"
+    style="
+        position: absolute;
+        width: 700px;
+        left: 100px;
+        bottom: 300px;
+        background-color: grey;
+        color: white;
+        padding: 1rem;
+    "
+>
+    <div class="row mt-3">
+        <div class="col-3">
+            <span translate>zLevel</span> : {{ webglService.levelZoom$.value }} <br />
+            <span translate>xPos</span> : {{ xPos }} <br />
+            <span translate>canvas</span> : {{ webglService.canvasWidth$.value }} <br />
+            <span translate>width</span> : {{ canvasVirtualWidth }} <br />
+            <span translate>LMPos</span> :
+            {{ Math.trunc(-(canvasVirtualWidth - webglService.canvasWidth$.value + xPos) || 0) }}
+            <br />
+            <span translate>BarPos</span> : {{ scrollBarPos }} <br />
+            <span translate>BarWidth</span> : {{ scrollBarWidth }} <br />
+            <!--    tPos : {{ timeLabelPosition }} <br />-->
+        </div>
+        <div class="col-9">
+            <span translate>px/60s</span> : {{ (canvasVirtualWidth / timeFrameInS) * 60 }} <br />
+            <span translate>lastMinuteWidth</span> : {{ lastMinuteWidth }} <br />
+            <span translate>timeFrameInS</span> : {{ timeFrameInS }} <br />
+            <span translate>CurrPointer</span> : {{ webglService.currentPointer$.value }} /
+            {{ timeLabelPosition }} <br />
+            <span translate>PlaybackPointer</span> : {{ playbackPointer?.getTime() }} /
+            {{ playbackLabelPosition }}<br />
+            <span translate>lastChunkStart</span> : {{ lastDataDateStart }}<br />
+            <span translate>lastChunkEnd</span> : {{ lastDataDateEnd }}<br />
+            <span translate>Selection start</span> : {{ webglService.selection$.value.startDisplay
+            }}<br />
+            <span translate>Selection end</span> : {{ webglService.selection$.value.endDisplay
+            }}<br />
+        </div>
     </div>
 </div>

@@ -118,11 +118,11 @@ export class NxSystemService {
         const cloudSystemInfo = (this.systemsService.systems || []).find(
             system => system.id === id,
         );
-        let system: NxSystem;
+        // let system: NxSystem;
         if (id in this.systemsCache) {
-            system = this.systemsCache[id];
+            this.system = this.systemsCache[id];
         } else {
-            system = nxSystemFactory(
+            this.system = nxSystemFactory(
                 currentUserEmail,
                 systemId,
                 serverId,
@@ -131,27 +131,30 @@ export class NxSystemService {
             );
 
             if (cloudSystemInfo?.version) {
-                this.systemsCache[id] = system;
+                this.systemsCache[id] = this.system;
             }
         }
 
         // This is done to set the auth keys for video. Local doesn't need auth keys
         // because cookies are same site and will be attached to all requests.
         if (!environment.isLocal) {
-            system.updateSystemAuth(true).catch(() => {});
+            this.system.updateSystemAuth(true).catch(() => {});
         }
 
-        system.lostConnection = false;
+        this.system.lostConnection = false;
 
         if (environment.isLocal || skipSettingSystem) {
-            return system;
+            return this.system;
         }
 
         if (cloudSystemInfo?.useRest) {
-            (system.mediaserver as NxSystemRestAPI).setAccessTokenAsCookie().subscribe(() => {});
+            (this.system.mediaserver as NxSystemRestAPI)
+                .setAccessTokenAsCookie()
+                .subscribe(() => {});
         }
 
-        this.currentSystem$$.set(system);
+        this.currentSystem$$.set(this.system);
+        // this.system.lostConnection = false;
         if (!skipPoll) {
             this.currentSystem$$().startPoll(systemId);
         }

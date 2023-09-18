@@ -43,7 +43,7 @@ import {
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 const ZOOM_WINDOW_TO_ANIMATE_MS = 30 * 60 * 1000;
-const LAST_MINUTE_SIZE = 1.5 * 60 * 1000; // 1.5 minutes
+const LAST_MINUTE_LENGTH = 1.5 * 60 * 1000; // 1.5 minutes
 const TEN_SEC_IN_MS = 10 * 1000;
 
 @UntilDestroy()
@@ -64,6 +64,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         bookmarks: true,
         analytics: true,
     };
+
+    protected readonly Math = Math;
 
     destroy$ = new Subject<boolean>();
     selectedCamera: NxSystemCamera;
@@ -98,7 +100,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     timeFrameInS: number;
     start: number;
     nowMs: number;
-    currentPointer: Date;
+
     zoomEvent: D3ZoomEvent<never, never>;
     zoomEventOriginal: D3ZoomEvent<never, never>;
 
@@ -137,40 +139,101 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     // xAxisMinor labels format?
     // Establish the desired formatting options using locale.format():
     // https://github.com/d3/d3-time-format/blob/master/README.md#locale_format
-    formatMinorMillisecond = d3.utcFormat('%Lms');
-    formatMinorSecond = d3.utcFormat('%Ss');
-    formatMinorMinute = d3.utcFormat('%I:%M');
-    formatMinorHour = d3.utcFormat('%I %p');
-    formatMinorDay = d3.utcFormat('%a %d');
-    formatMinorWeek = d3.utcFormat('%b %d');
-    formatMinorMonth = d3.utcFormat('%B');
-    formatMinorYear = d3.utcFormat('%Y');
+    formatMinorMillisecond = d3.timeFormat('%Lms');
+    formatMinorSecond = d3.timeFormat('%Ss');
+    formatMinorMinute = d3.timeFormat('%I:%M');
+    formatMinorHour = d3.timeFormat('%I %p');
+    formatMinorDay = d3.timeFormat('%a %d');
+    formatMinorWeek = d3.timeFormat('%b %d');
+    formatMinorMonth = d3.timeFormat('%b');
+    formatMinorYear = d3.timeFormat('%Y');
 
-    formatYear = d3.utcFormat('%Y');
-    formatMonth = d3.utcFormat('%B %Y');
-    formatDay = d3.utcFormat('%d %B %Y');
-    formatMinute = d3.utcFormat('%d %B %Y %I:%M');
-    formatSecond = d3.utcFormat('%d %B %Y %I:%M:%S');
+    formatYear = d3.timeFormat('%Y');
+    formatMonth = d3.timeFormat('%B %Y');
+    formatDay = d3.timeFormat('%d %B %Y');
+    formatMinute = d3.timeFormat('%d %B %Y %I:%M');
+    formatSecond = d3.timeFormat('%d %B %Y %I:%M:%S');
 
-    // Test data
+    canvasVirtualWidth: number;
+    lastMinuteWidth: number;
+
+    // Test data *********************
     nowDate: Date;
     nowDateDomain: Date;
     nowDateOrigDomain: Date;
+    newDataDateStart: Date;
+    lastDataDateStart: Date;
+    lastDataDateEnd: Date;
+    // *******************************
 
     constructor(public webglService: NxWebGLService, @Inject(DOCUMENT) private document: Document) {
         this.data = [];
         this.dataAllCameras = [];
     }
 
-    private periodToChunk(period: RECORD_DATA): DATA {
-        const startTimeMs = +period.startTimeMs;
-        const durationMs = +period.durationMs > 0 ? +period.durationMs : Date.now() - startTimeMs;
-        return {
+    // check if new chunk starting time is within previous chunk duration
+    private checkChunkInProgress(newChunk: DATA): DATA {
+        if (newChunk.type === CHUNK_TYPE.IN_PROGRESS) {
+            this.newDataDateStart = new Date(newChunk.x);
+
+            const lastData = this.data.pop();
+
+            // test data ***********************
+            if (lastData) {
+                this.lastDataDateStart = new Date(lastData.realTimeMs);
+                this.lastDataDateEnd = new Date(lastData.realTimeMs + lastData.width);
+            } else {
+                this.lastDataDateStart = new Date(newChunk.realTimeMs);
+                this.lastDataDateEnd = new Date(newChunk.realTimeMs + newChunk.width);
+            }
+            // *********************************
+
+            if (lastData && lastData.x + lastData.width > newChunk.x) {
+                return {
+                    x: lastData.x,
+                    y: 30,
+                    width: Date.now() - lastData.realTimeMs,
+                    realTimeMs: lastData.realTimeMs,
+                    type: CHUNK_TYPE.IN_PROGRESS,
+                };
+            } else {
+                // return last record
+                lastData &&
+                    this.data.push({
+                        x: lastData.x,
+                        y: 30,
+                        realTimeMs: lastData.realTimeMs,
+                        width: lastData.width,
+                        type: CHUNK_TYPE.RECORDS,
+                    });
+                // add new chunk in progress
+                return newChunk;
+            }
+        }
+    }
+
+    private periodToChunk(period: RECORD_DATA, skipChunkInProgres = false): DATA {
+        const realTimeMs = +period.startTimeMs;
+        const duration = +period.durationMs;
+        const durationMs = duration > 1 ? duration : Date.now() - realTimeMs;
+        const type = duration > 1 ? CHUNK_TYPE.RECORDS : CHUNK_TYPE.IN_PROGRESS;
+
+        // align bar to start time (otherwise centered)
+        const startTimeMs = realTimeMs + Math.trunc(durationMs / 2);
+
+        const newChunk = {
             x: startTimeMs,
             y: 30,
+            realTimeMs,
             width: durationMs,
-            type: CHUNK_TYPE.RECORDS,
+            type,
         };
+
+        if (!skipChunkInProgres && type === CHUNK_TYPE.IN_PROGRESS) {
+            return this.checkChunkInProgress(newChunk);
+        }
+
+        return newChunk;
     }
 
     private resetChart(): void {
@@ -229,9 +292,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                 if (!this.xScaleOriginal || !this.zoomEvent) {
                     return;
                 }
-                this.nowDate = new Date();
-                this.nowMs = Date.now();
-                this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
 
                 this.xScaleOriginal.domain([this.start, this.nowMs]);
                 const newScale: ScaleTime<number, number> = this.zoomEvent.transform.rescaleX(
@@ -241,17 +301,23 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
 
                 this.webglService.xScaleOriginal$.next(this.xScaleOriginal);
                 this.webglService.xScale$.next(this.xScale);
-                // Test data
+                // Test data ************************
+                this.nowDate = new Date();
+                this.nowMs = Date.now();
+                this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
                 this.nowDateDomain = this.xScale.domain()[1];
                 this.nowDateOrigDomain = this.xScaleOriginal.domain()[1];
+                // **********************************
 
                 const periodMinutes =
                     this.xScale.domain()[1].getTime() - this.xScale.domain()[0].getTime();
                 const last10minutes =
-                    this.xScale?.domain()[1].getTime() >= this.nowMs - LAST_MINUTE_SIZE &&
+                    this.xScale?.domain()[1].getTime() >= this.nowMs - LAST_MINUTE_LENGTH &&
                     periodMinutes < ZOOM_WINDOW_TO_ANIMATE_MS;
 
                 if (this.zoomEvent && (this.zoomInProcess || last10minutes)) {
+                    this.calcHelpers();
+
                     this.removeMissingLabel();
                     this.nxXAxisMajor.call(this.xAxisMajor.scale(newScale));
                     // this.nxXAxisMajor.call(this.xAxisMajor.ticks(this.periodModifier));
@@ -262,6 +328,14 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                     this.redraw();
                 }
             });
+    }
+
+    calcHelpers(): void {
+        this.canvasVirtualWidth = Math.trunc(
+            this.webglService.canvasWidth$.value * this.webglService.levelZoom$.value,
+        );
+
+        this.lastMinuteWidth = Math.trunc((this.canvasVirtualWidth / this.timeFrameInS) * 60);
     }
 
     initChart(): void {
@@ -282,20 +356,20 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     }
 
     mockBookmarksData(): void {
+        // To avoid clash with data last chunk insert these at beginning
         this.analyticsData = [
-            { startTimeMs: '1689008629000', durationMs: '300000' },
-            { startTimeMs: '1690736629000', durationMs: '300000' },
-            { startTimeMs: '1691255029000', durationMs: '300000' },
+            { startTimeMs: '1690700400000', durationMs: '3000000' },
+            { startTimeMs: '1690706400000', durationMs: '3000000' },
+            { startTimeMs: '1690712400000', durationMs: '300000' },
+            { startTimeMs: '1690718400000', durationMs: '1000' },
         ];
-        this.addData(this.analyticsData, CHUNK_TYPE.BOOKMARK);
-
         this.bookmarksData = [
-            { startTimeMs: '1689872629000', durationMs: '300000' },
-            { startTimeMs: '1686848629000', durationMs: '3000' },
-            { startTimeMs: '1687712629000', durationMs: '500000' },
-            { startTimeMs: '1688058229000', durationMs: '500000' },
+            { startTimeMs: '1691800400000', durationMs: '3000000' },
+            { startTimeMs: '1691806400000', durationMs: '3000' },
+            { startTimeMs: '1691812400000', durationMs: '5000000' },
+            { startTimeMs: '1691820400000', durationMs: '5000000' },
         ];
-        this.addData(this.bookmarksData, CHUNK_TYPE.ANALYTICS);
+        // this.addData(this.bookmarksData, CHUNK_TYPE.ANALYTICS);
     }
 
     private getMainCameraRecords(records: TimeDetail[]): void {
@@ -313,7 +387,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     private getAllCamerasRecords(records: TimeDetail[]): boolean {
         this.getMainCameraRecords(records);
 
-        let recordsAllCameras: RECORD_DATA[] = records.flatMap((rec): RECORD_DATA[] => {
+        let recordsAllCameras: RECORD_DATA[] = [];
+        recordsAllCameras = records.flatMap((rec): RECORD_DATA[] => {
             return [...recordsAllCameras, ...rec.periods];
         });
 
@@ -335,7 +410,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
 
         this.dataAllCameras.push(
             ...recordsAllCameras.map((period): DATA => {
-                return this.periodToChunk(period);
+                return this.periodToChunk(period, true);
             }),
         );
 
@@ -391,7 +466,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             .equals((previousData, currentData) => previousData === currentData)
             .xScale(xScale)
             .yScale(yScale)
-            .crossValue(d => d.x)
+            .crossValue(d => d.x + (xScale(d.x + d.width) - xScale(d.x)) / 2)
             .mainValue(d => d.y)
             .bandwidth(d => {
                 return Math.max(1, xScale(d.x + d.width) - xScale(d.x));
@@ -406,6 +481,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                                 return [1.0, 0, 0, 0.5];
                             case CHUNK_TYPE.ANALYTICS:
                                 return [0, 0, 1.0, 0.5];
+                            case CHUNK_TYPE.IN_PROGRESS:
+                                return [76 / 255, 188 / 255, 40 / 255, 1];
                             default:
                                 // [r / 255, g / 255, b / 255, opacity] ... setting green_l2 here
                                 return [76 / 255, 188 / 255, 40 / 255, 1];
@@ -421,6 +498,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             .range([0, this.container.clientWidth]);
 
         this.xScaleOriginal = this.xScale.copy();
+        this.webglService.xScale$.next(this.xScale);
     }
 
     addMissingLabel(): void {
@@ -458,69 +536,69 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     }
 
     initAxisFormat(): void {
-        const periodYears = d3.utcYears(this.xScale.domain()[0], this.xScale.domain()[1]).length;
-        const periodMonths = d3.utcMonths(this.xScale.domain()[0], this.xScale.domain()[1]).length;
-        const periodDays = d3.utcDays(this.xScale.domain()[0], this.xScale.domain()[1]).length;
+        const periodYears = d3.timeYears(this.xScale.domain()[0], this.xScale.domain()[1]).length;
+        const periodMonths = d3.timeMonths(this.xScale.domain()[0], this.xScale.domain()[1]).length;
+        const periodDays = d3.timeDays(this.xScale.domain()[0], this.xScale.domain()[1]).length;
 
         if (periodYears > 0 && periodMonths > 3) {
-            this.periodModifier = d3.utcYear;
+            this.periodModifier = d3.timeYear;
             this.formatTime = this.formatYear;
-            this.periodMinorModifier = d3.utcMonth;
+            this.periodMinorModifier = d3.timeMonth;
             this.formatMinorTime = this.formatMinorMonth;
         } else {
-            if (periodMonths < 5 && periodMonths > 0) {
-                this.periodModifier = d3.utcMonth;
+            if (periodMonths < 7 && periodMonths > 0) {
+                this.periodModifier = d3.timeMonth;
                 this.formatTime = this.formatMonth;
-                this.periodMinorModifier = d3.utcDay.every(6);
+                this.periodMinorModifier = d3.timeDay.every(6);
                 this.formatMinorTime = this.formatMinorDay;
             } else if (periodMonths === 0) {
-                if (periodDays < 4 && periodDays > 0) {
-                    this.periodModifier = d3.utcDay;
+                if (periodDays < 7 && periodDays > 0) {
+                    this.periodModifier = d3.timeDay;
                     this.formatTime = this.formatDay;
-                    this.periodMinorModifier = d3.utcMinute;
+                    this.periodMinorModifier = d3.timeMinute;
                     this.formatMinorTime = this.formatMinorMinute;
                 } else if (periodDays === 0) {
-                    const periodMinutes = d3.utcMinutes(
+                    const periodMinutes = d3.timeMinutes(
                         this.xScale.domain()[0],
                         this.xScale.domain()[1],
                     ).length;
-                    if (periodMinutes < 4 && periodMinutes > 0) {
-                        this.periodModifier = d3.utcMinute;
+                    if (periodMinutes < 7 && periodMinutes > 0) {
+                        this.periodModifier = d3.timeMinute;
                         this.formatTime = this.formatMinute;
-                        this.periodMinorModifier = d3.utcSecond;
+                        this.periodMinorModifier = d3.timeSecond;
                         this.formatMinorTime = this.formatMinorSecond;
                     } else if (periodMinutes === 0) {
-                        const periodSeconds = d3.utcSeconds(
+                        const periodSeconds = d3.timeSeconds(
                             this.xScale.domain()[0],
                             this.xScale.domain()[1],
                         ).length;
-                        if (periodSeconds < 4) {
-                            this.periodModifier = d3.utcSecond;
+                        if (periodSeconds < 7) {
+                            this.periodModifier = d3.timeSecond;
                             this.formatTime = this.formatSecond;
-                            this.periodMinorModifier = d3.utcMillisecond;
+                            this.periodMinorModifier = d3.timeMillisecond;
                             this.formatMinorTime = this.formatMinorMillisecond;
                         } else {
-                            this.periodModifier = d3.utcMinute;
+                            this.periodModifier = d3.timeMinute;
                             this.formatTime = this.formatMinute;
-                            this.periodMinorModifier = d3.utcSecond;
+                            this.periodMinorModifier = d3.timeSecond;
                             this.formatMinorTime = this.formatMinorSecond;
                         }
                     } else {
-                        this.periodModifier = d3.utcDay;
+                        this.periodModifier = d3.timeDay;
                         this.formatTime = this.formatDay;
-                        this.periodMinorModifier = d3.utcMinute;
+                        this.periodMinorModifier = d3.timeMinute;
                         this.formatMinorTime = this.formatMinorMinute;
                     }
                 } else {
-                    this.periodModifier = d3.utcMonth;
+                    this.periodModifier = d3.timeMonth;
                     this.formatTime = this.formatMonth;
-                    this.periodMinorModifier = d3.utcDay;
+                    this.periodMinorModifier = d3.timeDay;
                     this.formatMinorTime = this.formatMinorDay;
                 }
             } else {
-                this.periodModifier = d3.utcYear;
+                this.periodModifier = d3.timeYear;
                 this.formatTime = this.formatYear;
-                this.periodMinorModifier = d3.utcMonth;
+                this.periodMinorModifier = d3.timeMonth;
                 this.formatMinorTime = this.formatMinorMonth;
             }
         }
@@ -530,15 +608,10 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             this.nxXAxisMajor.call(this.xAxisMajor.ticks(this.periodModifier));
             this.addMissingLabel();
         }
-        // this.xAxisMinor?.tickFormat(this.formatMinorTime);
 
-        // this.nxXAxisMajor.call(this.xAxisMajor.scale(1));
         if (this.nxXAxisMinor) {
             this.xAxisCustomTicksFontSize();
         }
-
-        // this.nxXAxisMinor.call(this.xAxisMinor.scale(1));
-        // this.nxXAxisMinor.call(this.xAxisMinor);
     }
 
     initAxisMajor(): void {
@@ -556,27 +629,39 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             .select('svg')
             .append('g')
             .attr('class', 'x axis')
-            .attr('transform', 'translate(0, 0)');
-        // .call(this.xAxisMajor.ticks(this.periodMinorModifier));
+            .attr('transform', 'translate(0, 0)')
+            .call(this.xAxisMajor.ticks(this.periodMinorModifier));
 
         this.initAxisFormat();
         // this.xAxisMajor.tickFormat(this.formatTime);
     }
 
-    // initAxisMinorFormat(date: Date): string {
-    //     // Define filter conditions
-    //     return (d3.utcSecond(date) < date ? this.formatMinorMillisecond
-    //         : d3.utcMinute(date) < date ? this.formatMinorSecond
-    //             : d3.utcHour(date) < date ? this.formatMinorMinute
-    //                 : d3.utcDay(date) < date ? this.formatMinorHour
-    //                     : d3.utcMonth(date) < date ? (d3.utcWeek(date) < date ? this.formatMinorDay : this.formatMinorWeek)
-    //                         : d3.utcYear(date) < date ? this.formatMinorMonth
-    //                             : this.formatMinorYear)(date);
-    // }
+    initAxisMinorFormat(date: Date): string {
+        // Define filter conditions
+        return (
+            d3.timeSecond(date) < date
+                ? this.formatMinorMillisecond
+                : d3.timeMinute(date) < date
+                ? this.formatMinorSecond
+                : d3.timeHour(date) < date
+                ? this.formatMinorMinute
+                : d3.timeDay(date) < date
+                ? this.formatMinorHour
+                : d3.timeMonth(date) < date
+                ? d3.timeWeek(date) < date
+                    ? this.formatMinorDay
+                    : this.formatMinorWeek
+                : d3.timeYear(date) < date
+                ? this.formatMinorMonth
+                : this.formatMinorYear
+        )(date);
+    }
 
     initAxisMinor(): void {
-        this.xAxisMinor = fc.axisBottom(this.xScale).ticks(15);
-        // .tickFormat(d => this.initAxisMinorFormat(d)); // xAxisMinorTicks(d));
+        this.xAxisMinor = fc
+            .axisBottom(this.xScale)
+            .ticks(15)
+            .tickFormat(d => this.initAxisMinorFormat(d)); // xAxisMinorTicks(d));
 
         this.nxXAxisMinor = d3
             .select('#nx-x-axis-minor')
@@ -706,33 +791,13 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             this.barSeriesAll = this.initBars(this.dataAllCameras, this.xScale, d3.scaleLinear());
         }
 
-        const pointer = fc.pointer().on('point', ([coord]) => {
-            if (!coord) {
-                return;
-            }
-
-            this.currentPointer = this.xScale.invert(coord.x);
-        });
-
-        function chunkSearch(data: DATA[], target: number): boolean | number {
-            let left: number = 0;
-            let right: number = data.length - 1;
-
-            while (left <= right) {
-                const mid: number = Math.floor((left + right) / 2);
-
-                if (data[mid].x <= target && data[mid].x + data[mid].width >= target) {
-                    return true;
-                }
-                if (target < data[mid].x) {
-                    right = mid - 1;
-                } else {
-                    left = mid + 1;
-                }
-            }
-
-            return data[left].x;
-        }
+        // const pointer = fc.pointer().on('point', ([coord]) => {
+        //     if (!coord) {
+        //         return;
+        //     }
+        //
+        //     this.webglService.currentPointer$.next(this.xScale.invert(coord.x));
+        // });
 
         this.chartAll = chartCartesian(this.xScale, d3.scaleLinear())
             .webglPlotArea(this.barSeriesAll)
@@ -744,60 +809,67 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         this.chart = chartCartesian(this.xScale, d3.scaleLinear())
             .webglPlotArea(this.barSeries)
             .xDomain(this.xScale.domain())
-            .decorate(context =>
-                context
-                    .enter()
-                    .select('d3fc-canvas.webgl-plot-area')
-                    .on('measure', event => {
-                        if (
-                            this.webglService.canvasWidth$.value ===
-                            event.detail.width / event.detail.pixelRatio
-                        ) {
-                            return;
-                        }
-
-                        this.webglService.canvasWidth$.next(
-                            event.detail.width / event.detail.pixelRatio,
-                        );
-                        this.webglService.canvasHeight$.next(
-                            event.detail.height / event.detail.pixelRatio,
-                        );
-                        this.webglService.canvasRect$.next(event.target.getBoundingClientRect());
-
-                        this.scrollBarWidth = event.detail.width / event.detail.pixelRatio;
-                        this.xScaleOriginal.range([0, this.webglService.canvasWidth$.value]);
-                        this.initXscale();
-                        this.initZoom();
-                    })
-                    .on('click', event => {
-                        if (!this.zoomInProcess) {
-                            const currentTime = this.currentPointer.getTime();
-
-                            const currentChuck = chunkSearch(this.data, currentTime);
-
-                            if (typeof currentChuck === 'boolean') {
-                                // on chunk
-                                this.playbackPointer = this.currentPointer;
-                                this.playbackLabelPosition = event.offsetX;
-                                this.scrollPlaybackPosition = this.xScaleOriginal(
-                                    this.currentPointer,
-                                );
-                                return true;
-                            } else if (typeof currentChuck === 'number') {
-                                // next chunk
-                                this.playbackPointer = new Date(currentChuck);
-                                this.playbackLabelPosition = this.xScale(currentChuck);
-                                this.scrollPlaybackPosition = this.xScaleOriginal(currentChuck);
-                                return true;
-                            } else {
-                                this.playbackLabelPosition = undefined;
-                                this.scrollPlaybackPosition = undefined;
-                                return false;
+            .decorate(
+                context =>
+                    context
+                        .enter()
+                        .select('d3fc-canvas.webgl-plot-area')
+                        .on('measure', event => {
+                            if (
+                                this.webglService.canvasWidth$.value ===
+                                event.detail.width / event.detail.pixelRatio
+                            ) {
+                                return;
                             }
-                        }
-                    })
-                    .call(this.zoom)
-                    .call(pointer),
+
+                            this.webglService.canvasWidth$.next(
+                                event.detail.width / event.detail.pixelRatio,
+                            );
+                            this.webglService.canvasHeight$.next(
+                                event.detail.height / event.detail.pixelRatio,
+                            );
+                            this.webglService.canvasRect$.next(
+                                event.target.getBoundingClientRect(),
+                            );
+
+                            this.scrollBarWidth = event.detail.width / event.detail.pixelRatio;
+                            this.xScaleOriginal.range([0, this.webglService.canvasWidth$.value]);
+                            this.initXscale();
+                            this.initZoom();
+                        })
+                        .on('click', event => {
+                            if (!this.zoomInProcess) {
+                                const currentTime =
+                                    this.webglService.currentPointer$.value.getTime();
+
+                                const currentChuck = this.webglService.chunkSearch(
+                                    this.data,
+                                    currentTime,
+                                );
+
+                                if (typeof currentChuck === 'boolean') {
+                                    // on chunk
+                                    this.playbackPointer = this.webglService.currentPointer$.value;
+                                    this.playbackLabelPosition = event.offsetX;
+                                    this.scrollPlaybackPosition = this.xScaleOriginal(
+                                        this.webglService.currentPointer$.value,
+                                    );
+                                    return true;
+                                } else if (typeof currentChuck === 'number') {
+                                    // next chunk
+                                    this.playbackPointer = new Date(currentChuck);
+                                    this.playbackLabelPosition = this.xScale(currentChuck);
+                                    this.scrollPlaybackPosition = this.xScaleOriginal(currentChuck);
+                                    return true;
+                                } else {
+                                    this.playbackLabelPosition = undefined;
+                                    this.scrollPlaybackPosition = undefined;
+                                    return false;
+                                }
+                            }
+                        })
+                        .call(this.zoom),
+                // .call(pointer),
             );
 
         this.redraw();
@@ -989,18 +1061,18 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         }
     }
 
-    private addData(dataObj: Record<string, string>[], type?: CHUNK_TYPE): void {
-        const newData = dataObj.map((chunk: Record<string, string>) => {
-            const chunkStart = parseInt(chunk.startTimeMs);
-            let chunkEnd = parseInt(chunk.durationMs);
-            chunkEnd = chunkEnd < 0 ? Date.now() - chunkStart : chunkEnd;
-
-            return { x: chunkStart, y: 30, width: chunkEnd, type };
-        });
-
-        this.data.push(...newData);
-        this.redraw();
-    }
+    // private addData(dataObj: Record<string, string>[], type?: CHUNK_TYPE): void {
+    //     const newData = dataObj.map((chunk: Record<string, string>) => {
+    //         const chunkStart = parseInt(chunk.startTimeMs);
+    //         let chunkEnd = parseInt(chunk.durationMs);
+    //         chunkEnd = chunkEnd < 0 ? Date.now() - chunkStart : chunkEnd;
+    //
+    //         return { x: chunkStart, y: 30, width: chunkEnd, type };
+    //     });
+    //
+    //     this.data.push(...newData);
+    //     this.redraw();
+    // }
 
     mouseMoveHandler(event: MouseEvent): void {
         if (event.offsetY > 5) {
@@ -1014,6 +1086,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     }
 
     getSelectionDate(coordX: number): void {
-        this.currentPointer = this.chart.xInvert(coordX);
+        this.webglService.currentPointer$.next(this.chart.xInvert(coordX));
     }
 }
