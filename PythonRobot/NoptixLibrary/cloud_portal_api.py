@@ -634,11 +634,10 @@ class CloudPortalAPI(object):
             security_response.raise_for_status()
             return secretKey
 
-    def toggle_2fa_off_api(self, email, password, backup_code=None, verification_code=None):
+    def toggle_2fa_off_api(self, cloud_account, verification_code=None):
         with self._session(
-                email,
-                password,
-                backup_code=backup_code,
+                cloud_account.email,
+                cloud_account.password,
                 verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
             refresh_response = s.post(f'{self.env}/api/account/refreshAccessToken')
@@ -659,6 +658,7 @@ class CloudPortalAPI(object):
                     )
                 logger.debug(security_post_response.status_code)
                 security_post_response.raise_for_status()
+            cloud_account.disable_2fa()
 
     def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with self._session(
@@ -672,9 +672,7 @@ class CloudPortalAPI(object):
                 )
             backup_post_response.raise_for_status()
             backupList = backup_post_response.json()
-            backupDict = backupList[random.randint(0, 7)]
-            backupCode = backupDict.get("backup_code")
-            return backupCode
+            return [backup['backup_code'] for backup in backupList]
 
     def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with self._session(
