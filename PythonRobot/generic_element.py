@@ -12,9 +12,9 @@ class Element:
     def __init__(self, driver: webdriver, locator, timeout=10):
         self._driver = driver
         self._locator = locator
-        self._element = None
         self._timeout = timeout
         self.in_dom = self.element_in_dom(timeout=timeout)
+        self._element = self._driver.find_element(By.XPATH, self._locator)
 
     def element_in_dom(self, timeout):
         if not timeout:
@@ -23,7 +23,6 @@ class Element:
             WebDriverWait(self._driver, timeout).until(ec.presence_of_element_located((By.XPATH, self._locator)))
         except selenium.common.exceptions.TimeoutException:
             return False
-        self._element = self._driver.find_element(By.XPATH, self._locator)
         return True
 
     def text(self):
