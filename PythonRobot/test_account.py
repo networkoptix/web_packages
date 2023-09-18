@@ -334,7 +334,7 @@ def test_language_change_affects_emails():
     send_restore_password_email(driver, random_email)
     time.sleep(10)
     mbox = resource_import.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
-    email_uid = resource_import.wait_for_email(mbox, recipient=random_email, timeout_sec=120, status="UNREAD")
+    email_uid = resource_import.wait_for_email(mbox, recipient=random_email, timeout_sec=120)
     resource_import.delete_email(mbox, email_uid)
     resource_import.check_language_logged_in(random_email, password)
 
