@@ -90,6 +90,11 @@ class FLAGS(metaclass=_FlagType):
     cross_tab_sync_enabled = ('Cross Tab Sync Enabled', 'crossTabSyncEnabled', '%CROSS_TAB_SYNC_ENABLED%')
     use_authentication_interceptor = ('Use Authentication Interceptor', 'useAuthenticationInterceptor', '%USE_AUTHENTICATION_INTERCEPTOR%')
 
+    # beta features
+    access_integration_store = ('Lets the desktop client know if the integration store is enabled.',
+                                'accessIntegrationStore', '%INTEGRATION_STORE_ENABLED%')
+    access_developers = ('Enable For Developers pages.', 'accessDevelopers', '%DEVELOPERS_ENABLED%')
+
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
     # *************************************************************************************

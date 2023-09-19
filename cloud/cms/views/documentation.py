@@ -17,7 +17,6 @@ from cms.models import Asset, AssetType, get_cached_menu, Context, get_cloud_por
 from cms.permissions import CanViewDevelopers
 from cms.serializers import *
 from util.helpers import get_language_object_from_request, get_meilisearch_client
-import re
 from meilisearch.errors import MeiliSearchApiError
 
 PAGE_NOT_FOUND = 'Page not found'
@@ -195,7 +194,7 @@ def sync_search_for_menu(request, name):
     docs = document_cache[cache_key]
     language = get_language_object_from_request(request)
     knowledgebase_menu = get_cached_menu(
-        customization, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+        customization, name, user=request.user, menu_type=Menu.MENU_TYPES.docs_knowledgebase, request=request)
     if not knowledgebase_menu:
         raise APINotFoundException(f'Knowledgebase {name} not found')
     knowledgebase = knowledgebase_menu['nodes']
@@ -334,7 +333,7 @@ def get_pages(request, name):
     docs = document_cache[cache_key]
     if not docs:
         knowledgebase_menu = get_cached_menu(
-            customization, name, menu_type=Menu.MENU_TYPES.docs_knowledgebase)
+            customization, name, user=request.user, menu_type=Menu.MENU_TYPES.docs_knowledgebase, request=request)
         if not knowledgebase_menu:
             raise APINotFoundException(f'Knowledgebase {name} not found')
         knowledgebase = knowledgebase_menu['nodes']
@@ -443,7 +442,7 @@ def generate_menu_dict(request, name, language=None, cache_id=None, state=None):
         menu_dict = Menu.generate_menu(menu_name=name, customization=customization)
     else:
         menu_dict = get_cached_menu(
-            customization, name, menu_type=Menu.MENU_TYPES.docs_struct)
+            customization, name, user=request.user, menu_type=Menu.MENU_TYPES.docs_struct, request=request)
 
     if not menu_dict:
         raise APINotFoundException(f'Menu {name} not found')

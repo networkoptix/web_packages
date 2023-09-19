@@ -15,6 +15,7 @@ from datetime import datetime, timedelta
 from distutils.util import strtobool
 from uuid import uuid4
 
+import waffle
 from asgiref.sync import async_to_sync, sync_to_async
 from django.core.validators import RegexValidator
 
@@ -484,16 +485,15 @@ def check_user_menu_permissions(nodes, user, overrides=None, *, customization=No
         node = nodes[i]
         condition = node.pop('condition', None)
         condition_met = node.pop('condition_met', False)
-        beta_permission = Customization.BETA_PERMISSION_MAP.get(
-            condition, None)
+        if beta_permission := FLAGS.value_to_key(condition):
+            # if not beta_permission.startswith('access_'):
+            beta_permission = None
         if feature_flag := (FLAGS.value_to_key(condition) or SWITCHES.value_to_key(condition)):
             if not feature_flag_is_active(feature_flag, user, overrides, customization=customization):
                 del nodes[i]
                 continue
         elif not condition_met and condition and \
-                not (user and beta_permission and UserGroupsToAssetPermissions.check_customization_permission(
-                    user, customization, f'cms.{beta_permission}'
-                )):
+                not (user and beta_permission and waffle.flag_is_active(request, beta_permission)):
             del nodes[i]
             continue
         permissions = node.get('permissions', [])
@@ -644,10 +644,6 @@ class Language(models.Model):
 
 
 class Customization(models.Model):
-    BETA_PERMISSION_MAP = {
-        '%INTEGRATION_STORE_ENABLED%': 'access_integration_store',
-        '%DEVELOPERS_ENABLED%': 'access_developers'
-    }
 
     class Meta:
         # Used to allow a user to see the customization in list of customizations

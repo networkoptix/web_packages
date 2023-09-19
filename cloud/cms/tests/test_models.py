@@ -3,6 +3,7 @@ from collections import Counter
 from random import randint, choice
 from uuid import uuid4
 
+from django.contrib.contenttypes.models import ContentType
 from django.db.models import Count
 from django.core.files.base import ContentFile
 from model_bakery import baker, seq
@@ -240,35 +241,43 @@ class TestModelFunctions:
         assert test_if_one_in_menu_map(menu_map)
         assert test_if_two_in_menu_map(menu_map)
 
-    def test_get_cached_menu(self, uses):
+    def test_get_cached_menu(self, uses, arf):
         uses(account=True, customization=True, menu=True)
         customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
-
+        request = arf.get('/')
+        request.user = self.account
+        request.session = request.META = {}
         cached_menus = get_cached_menu(
-            customization, user=self.account, menu_type=menu_type)
+            customization, user=self.account, menu_type=menu_type, request=request)
 
         menu = cached_menus.get(menu_name, {})
         assert menu.get('title', False) == menu_name
         assert menu.get('type', False) == menu_type
         assert len(menu.get('nodes', False)) == nodes_count
 
-    def test_get_cached_menu_different_users_get_different_menus(self, uses, account_factory, mocker):
+    def test_get_cached_menu_different_users_get_different_menus(self, uses, account_factory, mocker, arf):
         uses(account=True, customization=True, menu=True)
         user_one = account_factory(email='user_one@email.com', is_superuser=False)
         user_two = account_factory(email='user_two@email.com', is_superuser=False)
         condition = 'user_one_condition'
         baker.make(MenuNode, name=f'user1 node', enabled=[self.customization], available=[
                        self.customization], condition=condition, parent_menu=self.menu)
-        mocker.patch('cms.feature_flags.feature_flags.FLAGS.value_to_key', lambda node_condition, **kwargs: node_condition == condition)
+        # return flag name starting with 'access_' to test beta permissions
+        mocker.patch('cms.feature_flags.feature_flags.FLAGS.value_to_key',
+                     lambda node_condition, **kwargs: f'access_{condition}' if node_condition == condition else '')
         mocker.patch('cms.models.feature_flag_is_active', lambda flag, user, _, **kwargs: flag and user == user_one)
         customization, menu_name, menu_type, nodes_count = self.cache_menu_with()
 
         # user_one gets an extra node because they have permission
+        request = arf.get('/')
+        request.user = user_one
+        request.session = request.META = {}
         cached_menus = get_cached_menu(
             customization, user=user_one, menu_type=menu_type)
         assert len(cached_menus.get(menu_name).get('nodes', False)) == nodes_count + 1
 
         # user_two does not have access to the extra node
+        request.user = user_two
         cached_menus = get_cached_menu(
             customization, user=user_two, menu_type=menu_type)
         assert len(cached_menus.get(menu_name).get('nodes', False)) == nodes_count
@@ -1457,12 +1466,6 @@ class TestCustomization:
     def setup(self):
         self.cust = baker.prepare('Customization')
 
-    def test_beta_permission_map(self):
-        assert self.cust.BETA_PERMISSION_MAP == {
-            '%INTEGRATION_STORE_ENABLED%': 'access_integration_store',
-            '%DEVELOPERS_ENABLED%': 'access_developers'
-        }
-
     def test_permissions(self):
         assert self.cust._meta.permissions == (
             ('access_customization', 'Can access customization'),
@@ -2290,3 +2293,43 @@ class TestGetTosReviews:
         assert reviews.last().id == review_1.id
         assert reviews.last().version.id == version_1.id
         assert reviews.last().version.asset.id == agreement_1.id
+
+
+class TestBetaPermissions:
+    @pytest.fixture(autouse=True)
+    def setup(self, arf, db, default_portal):
+        self.request = arf.get('/')
+        self.request.META = self.request.session = {}
+        self.access_developers = FLAGS.access_developers
+        self.access_integration_store = FLAGS.access_integration_store
+        access_developers_permission, _ = Permission.objects.get_or_create(codename='access_developers',
+                                                                           name='Name test beta developers',
+                                                                           content_type=ContentType.objects.all().first())
+        self.access_developers_group, _ = Group.objects.get_or_create(name='access_developers')
+        self.access_developers_group.permissions.add(access_developers_permission)
+        self.access_developers_group.save()
+        self.user_group_asset, _ = UserGroupsToAssetPermissions.objects.get_or_create(
+            asset=default_portal, group=self.access_developers_group
+        )
+        self.access_developers_flag = Flag.objects.get(name=self.access_developers)
+        self.access_developers_flag.groups.add(self.access_developers_group)
+        self.access_developers_flag.save()
+        waffle.utils.get_cache().clear()
+
+    def test_superuser_flag_active(self, superuser):
+        self.request.user = superuser
+        assert waffle.flag_is_active(self.request, self.access_developers)
+        assert waffle.flag_is_active(self.request, self.access_integration_store)
+
+    def test_regular_user_flag_inactive(self, active_user):
+        self.request.user = active_user
+        assert waffle.flag_is_active(self.request, self.access_developers) is False
+        assert waffle.flag_is_active(self.request, self.access_integration_store) is False
+
+    def test_regular_user_with_group(self, active_user, default_customization, default_portal):
+        active_user.groups.add(self.access_developers_group)
+        self.request.user = active_user
+        assert waffle.flag_is_active(self.request, self.access_developers) is True
+        assert waffle.flag_is_active(self.request, self.access_integration_store) is False
+        active_user.groups.remove(self.access_developers_group)
+        assert waffle.flag_is_active(self.request, self.access_developers) is False

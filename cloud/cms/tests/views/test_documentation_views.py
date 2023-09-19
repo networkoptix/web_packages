@@ -4,7 +4,11 @@ from rest_framework import status
 
 from cms.controllers.documentation import generate_doc_json
 from cms.models import Menu, AssetType, MenuCache
-from cms.views.documentation import KB_NOT_FOUND, PAGE_NOT_FOUND, find_article, find_asset_knowledgebase, get_page, get_pages, kb_for_article, menu_to_endpoint, populate_docs_from_knowledgebase, simple_filter
+from cms.views.documentation import (
+    KB_NOT_FOUND, PAGE_NOT_FOUND, find_article, find_asset_knowledgebase, get_page,
+    get_pages, kb_for_article, menu_to_endpoint, populate_docs_from_knowledgebase,
+    simple_filter, sync_search
+)
 
 menu_cache = MenuCache(customization_name=settings.TEST_CUSTOMIZATION)
 
@@ -98,9 +102,13 @@ class TestDocumentation:
         assert response.data.get('errorText', '') == PAGE_NOT_FOUND
 
     @pytest.mark.slow
-    def test_get_pages_200(self):
+    def test_get_pages_200(self, mocker):
+        mock_check_user_menu_permissions = mocker.patch('cms.models.check_user_menu_permissions')
         response = self.get_pages_with(self.test_kb_name, self.superuser)
         assert response.status_code == status.HTTP_200_OK
+        mock_check_user_menu_permissions.assert_called()
+        called_args, called_kwargs = mock_check_user_menu_permissions.call_args
+        assert called_args[1] == self.superuser
 
     @pytest.mark.slow
     def test_kb_for_article_200(self):
@@ -126,13 +134,20 @@ class TestDocumentation:
             'errorText', '') == f'Knowledgebase {self.test_kb_non_existing} not found'
 
     @pytest.mark.slow
-    def test_menu_to_endpoint(self):
+    def test_menu_to_endpoint(self, mocker):
         request = self.arf.get(
             f'/api/cms/documentation/struct/{self.test_struct_name}')
         request.session = {}
+        mock_check_user_menu_permissions = mocker.patch('cms.models.check_user_menu_permissions')
         request.user = self.superuser
         response = menu_to_endpoint(request, self.test_struct_name)
+
         assert response.status_code == status.HTTP_200_OK
+
+        mock_check_user_menu_permissions.assert_called()
+        called_args, called_kwargs = mock_check_user_menu_permissions.call_args
+
+        assert called_args[1] == self.superuser
 
     # Testing other documentation view functions
 
@@ -169,3 +184,16 @@ class TestDocumentation:
     @pytest.mark.slow
     def test_find_article(self):
         assert find_article(self.kb_menu_nodes, self.existing_asset_id)
+
+    @pytest.mark.slow
+    def test_sync_search_menu_filtering(self, mocker):
+        request = self.arf.get('/')
+        request.session = {}
+        mock_check_user_menu_permissions = mocker.patch('cms.models.check_user_menu_permissions')
+        request.user = self.superuser
+        response = sync_search(request, self.test_struct_name)
+
+        mock_check_user_menu_permissions.assert_called()
+        called_args, called_kwargs = mock_check_user_menu_permissions.call_args
+
+        assert called_args[1] == self.superuser
