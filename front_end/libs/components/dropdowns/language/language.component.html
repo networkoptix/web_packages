@@ -9,105 +9,121 @@
     }"
     (nxClickElsewhere)="show = false"
 >
-    <ng-template *ngIf="inHeader && newHeader; then newHeaderLangDropdown"></ng-template>
-    <ng-template *ngIf="inFooter && newHeader; then newFooterLangDropdown"></ng-template>
-    <button
-        *ngIf="!newHeader || (!inHeader && !inFooter)"
-        class="btn btn-dropdown-toggle dropdown-toggle"
-        (click)="show = !show"
-        type="button"
-        id="dropdownMenuButton"
-        data-toggle="dropdown"
-    >
-        <span
-            *ngIf="!newHeader"
-            class="lang-sm"
-            data-testid="activeLang"
-            lang="{{ activeLanguage?.language }}"
-        ></span>
-        <span
-            *ngIf="newHeader"
-            id="activeLang"
-            class="lang-code"
-            >{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span
+    <ng-template #loadingButton>
+        <button
+            class="btn btn-dropdown-toggle dropdown-toggle loading"
+            type="button"
+            disabled
         >
-        <span *ngIf="!short">{{ activeLanguage?.name }}</span>
-        <div class="arrow-flip">
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dirTextButtons + 'arrow_expand.svg'"
-            ></svg-icon>
-        </div>
-    </button>
-    <ul
-        class="dropdown-menu"
-        [ngClass]="{ 'new-header': newHeader }"
-        *ngIf="languages?.length <= 12"
-        [nxArrowNav]="show"
-        [style.display]="show ? 'inline-block' : 'none'"
-        aria-labelledby="dropdownMenuButton"
-    >
-        <li
-            class="dropdown-item-container"
-            *ngFor="let lang of languages"
-        >
-            <a
-                class="dropdown-item inset"
-                href
-                (click)="show = false; change(lang.language)"
-                [ngClass]="{ selected: lang.language === activeLanguage.language }"
-            >
-                <span *ngIf="!newHeader">
-                    <span
-                        class="lang-sm"
-                        attr.data-testid="{{ lang.name }}"
-                        lang="{{ lang.language }}"
-                    ></span>
-                    <span>{{ lang.name }}</span>
-                </span>
-                <span *ngIf="newHeader">
-                    <span class="lang-code">{{ lang.name.slice(0, 2) | uppercase }}</span>
-                    <span>{{ lang.name }}</span>
-                </span>
-            </a>
-        </li>
-    </ul>
+            <div>
+                <span class="dot1"></span><span class="dot2"></span><span class="dot3"></span>
+            </div>
+        </button>
+    </ng-template>
 
-    <ul
-        class="dropdown-menu multi-column columns-2"
-        [ngClass]="{ 'new-header': newHeader, 'in-footer': inFooter }"
-        *ngIf="languages?.length > 12"
-        [nxArrowNav]="show"
-        [style.display]="show ? 'inline-block' : 'none'"
-        aria-labelledby="dropdownMenuButton"
-    >
-        <div class="row m-0">
-            <ng-container *ngFor="let col of langColumns">
-                <div
-                    class="p-0"
-                    [ngClass]="!!(inHeader || inFooter) ? 'col-6' : 'col-4'"
+    <div *ngIf="!isLoading$$(); else loadingButton">
+        <ng-template *ngIf="inHeader && newHeader; then newHeaderLangDropdown"></ng-template>
+        <ng-template *ngIf="inFooter && newHeader; then newFooterLangDropdown"></ng-template>
+        <button
+            *ngIf="!newHeader || (!inHeader && !inFooter)"
+            class="btn btn-dropdown-toggle dropdown-toggle"
+            (click)="show = !show"
+            type="button"
+            id="dropdownMenuButton"
+            data-toggle="dropdown"
+        >
+            <span
+                *ngIf="!newHeader"
+                class="lang-sm"
+                data-testid="activeLang"
+                lang="{{ activeLanguage?.language }}"
+            ></span>
+            <span
+                *ngIf="newHeader"
+                id="activeLang"
+                class="lang-code"
+                >{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span
+            >
+            <span *ngIf="!short">{{ activeLanguage?.name }}</span>
+            <div class="arrow-flip">
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+                ></svg-icon>
+            </div>
+        </button>
+        <ul
+            class="dropdown-menu"
+            [ngClass]="{ 'new-header': newHeader }"
+            *ngIf="languages?.length <= 12"
+            [nxArrowNav]="show"
+            [style.display]="show ? 'inline-block' : 'none'"
+            aria-labelledby="dropdownMenuButton"
+        >
+            <li
+                class="dropdown-item-container"
+                *ngFor="let lang of languages"
+            >
+                <a
+                    class="dropdown-item inset"
+                    href
+                    (click)="show = false; change(lang.language)"
+                    [ngClass]="{ selected: lang.language === activeLanguage.language }"
                 >
-                    <ul class="multi-column-dropdown">
-                        <li
-                            class="dropdown-item-container"
-                            *ngFor="let lang of col"
-                        >
-                            <a
-                                class="dropdown-item inset"
-                                href
-                                (click)="show = false; change(lang.language)"
-                                [ngClass]="{ selected: lang.language === activeLanguage?.language }"
+                    <span *ngIf="!newHeader">
+                        <span
+                            class="lang-sm"
+                            attr.data-testid="{{ lang.name }}"
+                            lang="{{ lang.language }}"
+                        ></span>
+                        <span>{{ lang.name }}</span>
+                    </span>
+                    <span *ngIf="newHeader">
+                        <span class="lang-code">{{ lang.name.slice(0, 2) | uppercase }}</span>
+                        <span>{{ lang.name }}</span>
+                    </span>
+                </a>
+            </li>
+        </ul>
+
+        <ul
+            class="dropdown-menu multi-column columns-2"
+            [ngClass]="{ 'new-header': newHeader, 'in-footer': inFooter }"
+            *ngIf="languages?.length > 12"
+            [nxArrowNav]="show"
+            [style.display]="show ? 'inline-block' : 'none'"
+            aria-labelledby="dropdownMenuButton"
+        >
+            <div class="row m-0">
+                <ng-container *ngFor="let col of langColumns">
+                    <div
+                        class="p-0"
+                        [ngClass]="!!(inHeader || inFooter) ? 'col-6' : 'col-4'"
+                    >
+                        <ul class="multi-column-dropdown">
+                            <li
+                                class="dropdown-item-container"
+                                *ngFor="let lang of col"
                             >
-                                <ng-container
-                                    *ngTemplateOutlet="langItem; context: { lang: lang }"
-                                ></ng-container>
-                            </a>
-                        </li>
-                    </ul>
-                </div>
-            </ng-container>
-        </div>
-    </ul>
+                                <a
+                                    class="dropdown-item inset"
+                                    href
+                                    (click)="show = false; change(lang.language)"
+                                    [ngClass]="{
+                                        selected: lang.language === activeLanguage?.language
+                                    }"
+                                >
+                                    <ng-container
+                                        *ngTemplateOutlet="langItem; context: { lang: lang }"
+                                    ></ng-container>
+                                </a>
+                            </li>
+                        </ul>
+                    </div>
+                </ng-container>
+            </div>
+        </ul>
+    </div>
 </div>
 
 <ng-template

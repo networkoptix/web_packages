@@ -9,8 +9,10 @@ import {
     EventEmitter,
     LOCALE_ID,
     booleanAttribute,
+    signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { take } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -48,6 +50,8 @@ class BaseLanguageDropdown extends BaseDropdown {
     languages: ILanguages = [];
     langColumns = [];
 
+    isLoading$$ = signal(false);
+
     constructor(
         configService: NxConfigService,
         private cloudApi: NxCloudApiService,
@@ -79,10 +83,14 @@ class BaseLanguageDropdown extends BaseDropdown {
     }
 
     change(langCode: string) {
+        this.isLoading$$.set(true);
         this.langCode = langCode;
         this.onTouchedCallback();
         this.onChangeCallback(langCode);
         this.setLanguage();
+        this.languageService.translate.onTranslationChange.pipe(take(1)).subscribe(() => {
+            this.isLoading$$.set(false);
+        });
         return false; // return false so event will not bubble to HREF
     }
 
