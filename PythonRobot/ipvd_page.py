@@ -89,11 +89,11 @@ class IVPDPage():
         Element(self.driver, IVPDPage.LANDING_PAGE_TEXT).wait_until_visible(timeout=60)
         assert self.driver.title == rb.IPVD_TITLE_TEXT, rb.IPVD_TITLE_TEXT + ' - ' + rb.PRODUCT_NAME
         for element in [self.TABLE, self.DEVICE_DETAILS, self.PAGINATION, self.EXPORT_TO_CSV_LINK]:
-            Element(self.driver, element).should_not_be_visible()
+            Element(self.driver, element).wait_until_not_visible()
 
     def validate_landing_page_objects_not_visible(self):
         for element in [self.MANUFACTURERS_PANE, self.AND_MORE, self.DEVICES_PANE]:
-            Element(self.driver, element).should_not_be_visible()
+            Element(self.driver, element).wait_until_not_visible()
 
 
 if __name__ == "__main__":

@@ -286,9 +286,9 @@ def logout_japanese(driver:webdriver):
 
 def move_focus_and_check_badge_stays(driver, badge, new_focus):
     badge = Element(driver, badge)
-    badge.should_be_visible()
+    badge.wait_until_visible()
     badge.click()
-    badge.should_be_visible()
+    badge.wait_until_visible()
 
 def move_focus_and_check_element(driver, element, new_focus):
     Element(driver, new_focus).click()
@@ -382,7 +382,7 @@ def verify_in_account_page(driver: webdriver):
     Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     Element(driver, rb.DELETE_ACCOUNT_BUTTON).wait_until_visible()
     for element in [rb.ACCOUNT_SETTINGS_BUTTON, rb.ACCOUNT_CANCEL]:
-        Element(driver, element).should_not_be_visible()
+        Element(driver, element).wait_until_not_visible()
     time.sleep(0.5)
 
 

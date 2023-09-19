@@ -37,7 +37,7 @@ def test_register_invalid(driver, first, last, email, password, checked):
                          rb.TERMS_AND_CONDITIONS_ERROR
                          ]
     for element in invisible_elements:
-        Element(driver, element).should_not_be_visible()
+        Element(driver, element).wait_until_not_visible()
     register_form_validation(driver, first, last, email, password, checked)
 
     if password not in rl.GOOD_PASSWORDS and password not in rl.FAIR_PASSWORDS:
@@ -70,11 +70,11 @@ def check_email_outline(driver, email):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "border-color", rb.ERROR_COLOR)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
     if email == "" or email == " ":
-        Element(driver, rb.EMAIL_IS_REQUIRED).should_be_visible()
+        Element(driver, rb.EMAIL_IS_REQUIRED).wait_until_visible()
     if email == rb.EXISTING_EMAIL:
-        Element(driver, rb.EMAIL_ALREADY_REGISTERED).should_be_visible()
+        Element(driver, rb.EMAIL_ALREADY_REGISTERED).wait_until_visible()
     if email != "" and email != " " and email != rb.EXISTING_EMAIL:
-        Element(driver, rb.EMAIL_INVALID).should_be_visible()
+        Element(driver, rb.EMAIL_INVALID).wait_until_visible()
 
 def check_first_name_outline(driver):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-bottom-color", rb.ERROR_COLOR_WITH_OPACITY)
@@ -82,12 +82,12 @@ def check_first_name_outline(driver):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
-    Element(driver, rb.FIRST_NAME_IS_REQUIRED).should_be_visible()
+    Element(driver, rb.FIRST_NAME_IS_REQUIRED).wait_until_visible()
 
 def check_last_name_outline(driver):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_LAST_NAME_INPUT, "border-color", rb.ERROR_COLOR)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_LAST_NAME_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
-    Element(driver, rb.LAST_NAME_IS_REQUIRED).should_be_visible()
+    Element(driver, rb.LAST_NAME_IS_REQUIRED).wait_until_visible()
 
 def check_terms_and_conditions_error(driver):
     Element(driver, rb.TERMS_AND_CONDITIONS_ERROR).wait_until_visible()

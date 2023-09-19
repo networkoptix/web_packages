@@ -182,8 +182,8 @@ def test_first_name_is_required():
     account_cancel = Element(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
     account_cancel.wait_until_visible()
-    account_save.should_be_disabled()
-    account_cancel.should_be_enabled()
+    account_save.wait_until_not_clickable()
+    account_cancel.wait_until_clickable()
     robot_keywords.wait_until_element_has_style(
         driver,
         rb.ACCOUNT_FIRST_NAME,
@@ -225,12 +225,12 @@ def test_last_name_is_required():
     cancel_button = Element(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
     cancel_button.wait_until_visible()
-    account_save.should_be_disabled()
-    cancel_button.should_be_enabled()
+    account_save.wait_until_not_clickable()
+    cancel_button.wait_until_clickable()
     account_save.wait_until_visible()
     cancel_button.wait_until_visible()
-    account_save.should_be_disabled()
-    cancel_button.should_be_enabled()
+    account_save.wait_until_not_clickable()
+    cancel_button.wait_until_clickable()
     robot_keywords.wait_until_element_has_style(
         driver,
         rb.ACCOUNT_LAST_NAME,
@@ -268,8 +268,8 @@ def test_space_for_first_name_is_not_valid():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
-    Element(driver, rb.ACCOUNT_CANCEL).should_be_enabled()
+    Element(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
+    Element(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
     robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     driver.quit()
 
@@ -296,8 +296,8 @@ def test_space_for_last_name_is_not_valid():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    Element(driver, rb.ACCOUNT_SAVE).should_be_disabled()
-    Element(driver, rb.ACCOUNT_CANCEL).should_be_enabled()
+    Element(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
+    Element(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
     robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     driver.quit()
 
