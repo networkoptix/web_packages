@@ -5,14 +5,17 @@ from generic_element import Element
 
 
 class ToastNotification:
+
     def __init__(self, driver, alert_text, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
         self.alert_text = alert_text
 
     def message(self):
-        message = Element(self.driver,
-                          f"//nx-toast//span[contains(text(),'{self.alert_text}')]")
+        message = Element(
+            self.driver,
+            f"//nx-toast//span[contains(text(),'{self.alert_text}')]",
+            )
         return self._wait_until_notification_disappears(message)
 
     def _wait_until_notification_disappears(self, message, timeout=10):
