@@ -11,8 +11,9 @@ import {
     EventEmitter,
     Inject,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BehaviorSubject, Subject } from 'rxjs';
+import { BehaviorSubject, Subject, take } from 'rxjs';
 
 import { CameraSettings } from '@services/nx-config/base-config';
 import { WINDOW } from '@services/window-provider';
@@ -60,7 +61,13 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     constructor(
         private deviceService: DeviceDetectorService,
         @Inject(WINDOW) private window: Window,
-    ) {}
+    ) {
+        this.firstCanvasSubject.pipe(take(1), takeUntilDestroyed()).subscribe(() => {
+            setTimeout(() => {
+                this.initRenderer();
+            });
+        });
+    }
 
     ngOnInit(): void {
         this.initMask();
@@ -80,11 +87,13 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         }
     }
 
+    // TODO: Investigate how to avoid this first render only call
+    firstCanvasSubject = new Subject<number>();
     ngAfterContentChecked(): void {
         const firstRender =
             !this.motionMaskRenderer && this.motionCanvas && this.motionCanvas.nativeElement;
         if (firstRender) {
-            this.initRenderer();
+            this.firstCanvasSubject.next(1);
         }
     }
 

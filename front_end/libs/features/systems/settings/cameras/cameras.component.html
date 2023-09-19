@@ -248,9 +248,7 @@
                 [selectedRotation]="selectedRotation?.value || 0"
                 [selectedAspectRatio]="selectedAspect.value || ASPECT_RATIOS['16:9']"
                 [imageState]="camera.status"
-                [overlayEnabled]="
-                    !isMobile && showOverlay && camera && !!this.motionMaskWatcher.value
-                "
+                [overlayEnabled]="overlayEnabled()"
             ></nx-motion-detection-settings>
         </ng-container>
     </ng-container>

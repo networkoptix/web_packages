@@ -49,6 +49,7 @@ import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { WINDOW } from '@services/window-provider';
 import { icons, menus, settingsConfig } from '@static-variables';
+import { NgChanges } from '@utils/ng-changes';
 
 import type {
     AspectRatioDropdownItem,
@@ -98,6 +99,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     sensitivityButtons$ = new BehaviorSubject<SensitivityButtonValue>(false);
 
+    overlayEnabled = computed(() => !this.isMobile && !!this.camera && !!this.motionMask);
+
     // TODO: Remove after Forms refactor
     @ViewChild(NxRecordingSettingsComponent)
     private recordingSettingsComponent!: NxRecordingSettingsComponent;
@@ -111,7 +114,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     errors: string[] = [];
     showUnauthorized = false;
     showOffline = false;
-    showOverlay = false;
     showPreloader = true;
     cameraDetailColumns: InfoBlockColumns;
     editMode = false;
@@ -187,11 +189,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     set selectedAspect(item: AspectRatioDropdownItem) {
-        this.showOverlay = false;
         this.selectedAspectWatcher.value = item.value;
-        setTimeout(() => {
-            this.showOverlay = true;
-        });
     }
 
     private get maxHeight(): number {
@@ -267,10 +265,12 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         }
     }
 
-    ngOnChanges(): void {
+    ngOnChanges(changes: NgChanges<NxCamerasComponent>): void {
         // if Camera input changes reset the form
-        this.resetForm();
-        this.setCamera();
+        if (changes.camera && !changes.camera.firstChange) {
+            this.resetForm();
+            this.setCamera();
+        }
     }
 
     resetForm(): void {
@@ -282,8 +282,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.isMobile = this.deviceService.isMobile() || this.deviceService.isTablet();
 
         this.showPreloader = false;
-
-        this.resetForm();
+        this.initializeApplyService();
         this.setCamera();
         // TODO: do we need this?
         this.system.infoSubject
@@ -297,8 +296,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                     this.router.navigate(['../'], { relativeTo: this.activeRoute });
                 }
             });
-
-        this.initializeApplyService();
 
         this.motionGridChangeWatcher.originalValue = false;
 
@@ -487,11 +484,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     toggleMotionGrid(): void {
-        this.showOverlay = false;
         this.sensitivityButtons$.next(false);
-        setTimeout(() => {
-            this.showOverlay = true;
-        });
     }
 
     resetSensitivity(): void {
@@ -564,7 +557,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             });
         }
         this.recordingWatcher.value = recordingSettings.recording;
-        this.motionType = motionType;
         this.updateValues();
 
         this.setWatcherDefaults({
@@ -577,10 +569,9 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             recordingModes: this.recordingModesWatcher.value,
             selectedFps: this.recordingSettingsComponent?.selectedFps,
             selectedQuality: this.recordingSettingsComponent?.selectedQuality?.value,
-            motionEnabled: this.motionType,
+            motionEnabled: motionType,
             motionMask: motionMask || settingsConfig.defaultMotionMask,
         });
-
         this.applyService.reset();
         this.applyService.setVisible();
         this.showPreloader = false;
