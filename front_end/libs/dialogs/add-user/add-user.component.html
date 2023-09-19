@@ -84,6 +84,8 @@
                     [canSelectAll]="false"
                     [canSearch]="false"
                     description="User Groups"
+                    [tooltipAlternateSecondary]="true"
+                    [tooltipHorizontal]="true"
                     [items]="system.userManager.groups"
                     [ngModel]="user.groupIds"
                     (ngModelChange)="setGroupDescription($event)"

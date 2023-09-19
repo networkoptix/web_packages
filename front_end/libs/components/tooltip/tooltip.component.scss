@@ -61,7 +61,7 @@
         &::before {
             left: 0;
             border-width: 16px 4px px 0;
-            border-right-color: var(--tooltip-color);
+            border-right-color: var(--tooltip-bg);
         }
 
         &.alternate {
@@ -80,6 +80,12 @@
 
             &.forceDark::before {
                 border-right-color: var(--popover-dark-bg) !important;
+            }
+        }
+
+        &.alternateSecondary {
+            &::before {
+                border-right-color: var(--tooltip-color);
             }
         }
     }
