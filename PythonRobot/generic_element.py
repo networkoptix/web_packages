@@ -120,6 +120,18 @@ class Element:
                 raise ElementNotInDOM(f'Element locator: {self._locator}')
             time.sleep(.1)
 
+    def wait_until_does_not_exist(self, timeout: float = _DEFAULT_TIMEOUT):
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._driver.find_element(By.XPATH, self._locator)
+            except NoSuchElementException:
+                return
+            if time.monotonic() - started_at > timeout:
+                raise ElementInDOM(f'Element locator: {self._locator}')
+            _logger.debug('Element with locator %s still in DOM', self._locator)
+            time.sleep(.1)
+
 
 class ElementNotInDOM(Exception):
     pass
@@ -138,4 +150,8 @@ class ElementVisible(Exception):
 
 
 class ElementClickable(Exception):
+    pass
+
+
+class ElementInDOM(Exception):
     pass

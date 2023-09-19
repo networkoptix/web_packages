@@ -14,14 +14,5 @@ class ToastNotification:
             self._driver,
             f"//nx-toast//span[contains(text(),'{self._alert_text}')]",
             )
-        self._wait_until_notification_disappears(message)
+        message.wait_until_does_not_exist(10)
         return message
-
-    def _wait_until_notification_disappears(self, message, timeout=10):
-        start = time.monotonic()
-        while True:
-            if not message.in_dom:
-                return
-            if time.monotonic() - start > timeout:
-                raise TimeoutError(f"Notification was still in DOM after {timeout} seconds.")
-            time.sleep(1)
