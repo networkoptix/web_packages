@@ -1,6 +1,8 @@
 import json
 import httpx
 import logging
+
+import marshmallow
 # from quart import current_app used for logging
 from marshmallow import ValidationError
 
@@ -35,7 +37,7 @@ class ParamsValidator:
 
         enum_action = ActionEnum(action)
         try:
-            data = params_to_actions[enum_action]().load(data=raw_data)
+            data = params_to_actions[enum_action]().load(data=raw_data, unknown=marshmallow.EXCLUDE)
         except ValidationError as err:
             return None, {
                 'msg': f'{action} is missing required params {err}',

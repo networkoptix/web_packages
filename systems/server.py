@@ -81,46 +81,46 @@ async def receiving(cloud_connector):
                 await license_api.update_token(token)
                 try:
                     res = None
-                    if action in [ActionEnum.CREATE_GROUP, ActionEnum.DELETE_GROUP, ActionEnum.MOVE_GROUP, ActionEnum.MOVE_SYSTEM, ActionEnum.UPDATE_GROUP]:
+                    if action in [ActionEnum.CREATE_GROUP.value, ActionEnum.DELETE_GROUP.value, ActionEnum.MOVE_GROUP.value, ActionEnum.MOVE_SYSTEM.value, ActionEnum.UPDATE_GROUP.value]:
                         if not await license_api.is_admin_in_org(data.get('org_id')):
                             data.update({'msg': 'Unauthorized', 'error': 400})
                     if 'error' in data:
                         res = data
-                    elif action == ActionEnum.CREATE_GROUP:
+                    elif action == ActionEnum.CREATE_GROUP.value:
                         # TODO: support assigning parent on creation
                         res = GroupView.create_group(data['name'], data.get('org_id'), data.get('target_id'))
-                    elif action == ActionEnum.DELETE_GROUP:
+                    elif action == ActionEnum.DELETE_GROUP.value:
                         res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'])
-                    elif action == ActionEnum.MOVE_GROUP:
+                    elif action == ActionEnum.MOVE_GROUP.value:
                         res = await GroupView.move_group_to_group(
                             cloud_connector.share_system, data['target_id'], data['group_id'])
-                    elif action == ActionEnum.MOVE_SYSTEM:
+                    elif action == ActionEnum.MOVE_SYSTEM.value:
                         system = await cloud_connector.get_systems(system_id=data['system_id'])
                         res = await GroupView.move_system_to_group(
                             cloud_connector.share_system, data['group_id'], system)
-                    elif action == ActionEnum.UPDATE_GROUP:
+                    elif action == ActionEnum.UPDATE_GROUP.value:
                         res = await GroupView.update_group(data['group_id'], data['name'])
-                    elif action == ActionEnum.SYSTEMS:
+                    elif action == ActionEnum.SYSTEMS.value:
                         res = await cloud_connector.get_systems()
                         # app.logger.debug(res)
                     # # User management
-                    elif action == ActionEnum.CREATE_ORG_USER:
+                    elif action == ActionEnum.CREATE_ORG_USER.value:
                         res = await OrganizationView.add_user_to_org(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
-                    elif action == ActionEnum.UPDATE_ORG_USER:
+                    elif action == ActionEnum.UPDATE_ORG_USER.value:
                         res = await OrganizationView.update_org_user(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data.get('enabled', True), data['groups'])
                     # End of user management
-                    elif action == ActionEnum.AGGREGATE_SYSTEMS_REQUEST:
+                    elif action == ActionEnum.AGGREGATE_SYSTEMS_REQUEST.value:
                         res = await cloud_connector.aggregate_request(
                             data['url'], method=data['method'], post_body=data.get('postBody')
                         )
-                    elif action == ActionEnum.AGGREGATE_REQUEST_BY_GROUP:
+                    elif action == ActionEnum.AGGREGATE_REQUEST_BY_GROUP.value:
                         res = await cloud_connector.aggregate_request_by_group(
                             data['group_id'], data['url'], method=data['method'], post_body=data.get('postBody')
                         )
-                    elif action != ActionEnum.LIST_GROUP:
+                    elif action != ActionEnum.LIST_GROUP.value:
                         res = {'msg': 'Please send data in a json format', 'error': 400}
 
-                    if action != ActionEnum.LIST_GROUP:
+                    if action != ActionEnum.LIST_GROUP.value:
                         return_data = {
                             'action': action or 'error',
                             'data': res
