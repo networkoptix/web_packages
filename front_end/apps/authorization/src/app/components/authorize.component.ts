@@ -371,7 +371,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             return;
         }
 
-        if (this.clientType === 'renewSessionWeb') {
+        if (this.clientType === 'renewSessionWeb' && this.initialData.client_id === 'cloud') {
             const key =
                 ClientType[this.initialData.client_type] === ClientType.renewWeb2FA
                     ? oauthStore.code
@@ -385,6 +385,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
 
         if (this.clientType === 'renewSessionWeb2FA') {
+            this.redirectLink = link;
             this.loginCode = code;
             this.currentState = AuthorizeState.auth;
             this.clientType = ClientType.renewWeb;

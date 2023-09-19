@@ -106,4 +106,12 @@ export class NxStorageService {
     set cloudApiRefreshToken(token: string) {
         this.storage.store('cloudApiRefreshToken', token);
     }
+
+    get system2faEnabled(): boolean {
+        return this.storage.retrieve('system2faEnabled') || false;
+    }
+
+    set system2faEnabled(system2faEnabled: boolean) {
+        this.storage.store('system2faEnabled', system2faEnabled);
+    }
 }

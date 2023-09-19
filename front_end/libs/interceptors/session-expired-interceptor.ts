@@ -6,6 +6,7 @@ import { catchError } from 'rxjs/operators';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { SessionState } from '@dialogs/update-session/update-session.component.types';
 import staticLang from '@language_static';
+import { NxStorageService } from '@services/storage.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -17,6 +18,7 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
 
     constructor(
         private dialogService: NxDialogsService,
+        private storageService: NxStorageService,
         private systemService: NxSystemService,
         private systemsService: NxSystemsService,
     ) {}
@@ -36,9 +38,10 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
 
                     return from(
                         this.dialogService.updateSession({
-                            sessionState: cdbSystem?.system2faEnabled
-                                ? SessionState.Renew2FA
-                                : SessionState.RenewWeb,
+                            sessionState:
+                                cdbSystem?.system2faEnabled || this.storageService.system2faEnabled
+                                    ? SessionState.Renew2FA
+                                    : SessionState.RenewWeb,
                             system,
                         }),
                     ).pipe(
