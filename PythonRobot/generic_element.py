@@ -12,6 +12,7 @@ _logger = logging.getLogger(__name__)
 
 
 class Element:
+
     def __init__(self, driver: webdriver, locator):
         self._driver = driver
         self._locator = locator
