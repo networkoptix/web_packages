@@ -12,11 +12,14 @@
     background: var(--body-bg);
     border-top: 1px solid var(--border-color);
     margin-top: -1px;
-    position: sticky;
-    bottom: 0;
-    z-index: 50;
 }
 
 .warning-text {
     color: var(--red_l2);
+}
+
+:host:has(.unsaved-changes) {
+    position: sticky;
+    bottom: 0;
+    z-index: 50;
 }

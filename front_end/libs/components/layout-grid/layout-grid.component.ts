@@ -1,4 +1,5 @@
 import { CdkDrag, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
@@ -16,7 +17,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
+import { cloneDeep, flatten, groupBy, isEqual, mapValues, pick, values } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
 import {
     BehaviorSubject,
@@ -55,6 +56,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { VideoPlayerModule } from '@components/video-player/video-player.module';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
@@ -288,6 +290,8 @@ const calculateResize = (
         WebGLTimelineModule,
         NxResizeObserver,
         NxAddSvgSrcDirective,
+        NxClickElsewhereDirective,
+        PortalModule,
     ],
 })
 export class NxLayoutGridComponent {
@@ -298,6 +302,17 @@ export class NxLayoutGridComponent {
 
     @Output() layoutChanged = new EventEmitter<string>();
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
+
+    @HostListener('document:keydown.escape', ['$event']) onKeydownHandler(
+        event: KeyboardEvent,
+    ): void {
+        this.removeFocus();
+        this.layoutStateService.portal = null;
+    }
+
+    ngOnDestroy(): void {
+        this.layoutStateService.portal = null;
+    }
 
     editCameras: Signal<boolean> = computed(
         () => this.system.permissionManager.permissions().editCameras,
@@ -315,6 +330,8 @@ export class NxLayoutGridComponent {
         [HorizontalAlign.RIGHT],
         [HorizontalAlign.LEFT],
     ];
+
+    assertResourceOfType = assertResourceOfType;
 
     mouseMoving$ = fromEvent(this.window.document, 'mousemove').pipe(
         switchMap(() => of(false).pipe(delay(5000), startWith(true))),
@@ -400,6 +417,20 @@ export class NxLayoutGridComponent {
                 this.#lastWidth >= ViewportBreakpoints.Tablet.width,
         ),
     );
+
+    removeFocus: () => void = () => null;
+
+    focus = (id: string): void => {
+        const originalLayout = cloneDeep(this.layout);
+        this.initialLayout$.next({
+            ...originalLayout,
+            items: [this.layout.items.find(({ id: itemId }) => itemId === id)],
+        });
+        this.removeFocus = () => {
+            this.initialLayout$.next(originalLayout);
+            this.removeFocus = () => null;
+        };
+    };
 
     aspectHandler$ = combineLatest([this.#wrapperSize$, this.layout$]).pipe(
         filter(([wrapper]) => !!wrapper),
@@ -1110,6 +1141,7 @@ export class NxLayoutGridComponent {
                 delete this.additionalErrorMessages.defaultPassword;
                 delete this.additionalErrorMessages.unauthorized;
             }
+            this.layoutStateService.portal = null;
             this.layoutChanged.emit(id);
         }
 

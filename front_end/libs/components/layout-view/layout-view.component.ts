@@ -297,7 +297,7 @@ export class NxLayoutViewComponent {
                         },
                     ].filter(item => !!item),
                     ...parsedResources,
-                };
+                } as unknown as LayoutResourceTree;
             },
         ),
         filter(lookup => !!lookup),
@@ -503,16 +503,24 @@ export class NxLayoutViewComponent {
 
     createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
         const layoutItems = await firstValueFrom(this.layoutItemLookup$);
-        const { details } = layoutItems[`{${id}}`] || {};
+        const node = layoutItems[`{${id}}`];
+        const { details } = node || {};
 
         if (!details) {
             // Redirect to 404 if no layout or device found.
             // await this.pageService.redirect404();
         }
 
-        const rotation = details.parameters?.rotation ?? 0;
-        const rotatedAspect = Boolean(rotation % 180);
-        const aspect = details.parameters?.overrideAr || details.defaultRatio;
+        let rotation = 0;
+        let rotatedAspect = false;
+        let aspect = 0;
+
+        if (assertResourceOfType.camera(node)) {
+            rotation = node.details.parameters?.rotation ?? 0;
+            rotatedAspect = Boolean(rotation % 180);
+            aspect = node.details.parameters?.overrideAr || node.details.defaultRatio;
+        }
+
         const cellAspectRatio = rotatedAspect ? 1 / aspect : aspect;
         return {
             backgroundHeight: -1,

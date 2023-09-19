@@ -75,6 +75,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_demo = ('Layouts Demo', 'layoutsDemo', '%LAYOUTS_DEMO_ENABLED%')
     layouts_io_devices = ('Layouts IO Devices', 'layoutsIoDevices', '%LAYOUTS_IO_DEVICES_ENABLED%')
     layouts_non_chrome = ('Layouts Non-Chromium Browsers', 'layoutsNonChrome', '%LAYOUTS_NON_CHROME%')
+    layouts_device_settings = ('Layouts device settings', 'layoutsDeviceSettings', '%LAYOUTS_DEVICE_SETTINGS%')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

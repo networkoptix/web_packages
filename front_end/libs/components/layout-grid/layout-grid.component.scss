@@ -210,6 +210,26 @@ h2.auto-save-overlay {
     background-image: linear-gradient(to right, transparent 0px, #6662 0.25px, #6662 0.2px, transparent 1px), linear-gradient(to bottom, transparent 0px, #6662 0.25px, #6662 0.5px, transparent 1px);
 }
 
+.portal-wrapper {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 100%;
+    overflow-y: scroll;
+    padding: 0 8px 0 20px;
+    position: relative;
+}
+
+.close-settings {
+    padding: 8px;
+    cursor: pointer;
+    position: sticky;
+    text-align: right;
+    top: 0;
+    z-index: 50;
+    background: var(--body-bg);
+}
+
 .layout-grid {
     width: 100%;
     height: 100%;

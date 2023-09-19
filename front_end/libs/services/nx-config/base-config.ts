@@ -190,6 +190,7 @@ const FeatureFlagKeys = [
     'crossTabSyncEnabled',
     'useAuthenticationInterceptor',
     'layoutsIoDevices',
+    'layoutsDeviceSettings',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

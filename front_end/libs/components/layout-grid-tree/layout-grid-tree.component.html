@@ -298,9 +298,9 @@
                         >
                         </nx-text-editable>
                         <nx-tag
-                            *ngIf="layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved"
-                            (click)="
-                                layoutStateService.saveLayout(node.id); $event.stopPropagation()
+                            *ngIf="
+                                node.type === RESOURCE_TYPE.LAYOUT &&
+                                layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved
                             "
                             locked
                             >{{ unsaved | translate }}</nx-tag
@@ -325,7 +325,7 @@
                     <ng-template #nodeActionMenu>
                         <nx-context-menu
                             [context]="node"
-                            [menuItems]="menuItems"
+                            [menuItems]="menuItemsByType[node.type]"
                         />
                     </ng-template>
                 </ng-template>

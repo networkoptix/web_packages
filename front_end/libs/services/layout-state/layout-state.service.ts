@@ -1,17 +1,23 @@
+import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, take, tap } from 'rxjs';
+import { Observable, switchMap, take, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
+import { createPortalToken } from '@common/tokens';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
+import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types';
+import { NxSystemService } from '@services/system.service/system.service';
+import { dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
+import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import {
     LayoutState,
@@ -57,6 +63,20 @@ export class LayoutStateService {
         return id;
     }
 
+    portal: Portal<unknown>;
+
+    createPortal<T, D>(component: ComponentType<T>, data: D): void {
+        const DATA_TOKEN = createPortalToken(component, data);
+        this.portal = new ComponentPortal(
+            component,
+            null,
+            Injector.create({
+                parent: this.injector,
+                providers: [{ provide: DATA_TOKEN, useValue: data }],
+            }),
+        );
+    }
+
     duplicateLayoutAsNewLocalLayout(layout: Layout): string {
         const id = uuid();
 
@@ -87,22 +107,52 @@ export class LayoutStateService {
 
     deleteLayout(layoutId: string): void;
     deleteLayout(layoutIds: string[]): void;
-    deleteLayout(layoutIds: string[] | string): void {
-        if (typeof layoutIds === 'string') {
-            layoutIds = [layoutIds];
-        }
+    deleteLayout(_layoutIds: string[] | string): void {
+        const layoutIds = typeof _layoutIds === 'string' ? [_layoutIds] : _layoutIds;
+        this.redirectRemovedLayout(
+            layoutIds,
+            () => this.store.dispatch(SharedLayoutsActions.deleteLayout({ layoutIds })),
+            true,
+        );
+    }
 
-        this.store.dispatch(SharedLayoutsActions.deleteLayout({ layoutIds }));
+    private redirectRemovedLayout(
+        layoutIds: string[],
+        callback: () => unknown,
+        deleted = false,
+    ): void {
+        if (deleted) {
+            callback();
+        }
+        this.store
+            .select(selectActiveLayoutState)
+            .pipe(
+                take(1),
+                switchMap(async activeLayoutId => {
+                    const dirtyLayoutId = dirtyId(activeLayoutId);
+                    const unsavedState = this.unsavedLayoutsIds$$()[dirtyLayoutId];
+                    if (
+                        layoutIds.includes(dirtyLayoutId) &&
+                        (deleted || unsavedState === staticLang.layouts.unsavedStates.unsaved)
+                    ) {
+                        await this.paramStateHandler.updater(() => ({
+                            params: {
+                                layoutId: 'default',
+                            },
+                        }));
+                    }
+                }),
+            )
+            .subscribe(() => !deleted && callback());
     }
 
     discardUnsavedLayout(layoutId: string): void;
     discardUnsavedLayout(layoutIds: string[]): void;
-    discardUnsavedLayout(layoutIds: string[] | string): void {
-        if (typeof layoutIds === 'string') {
-            layoutIds = [layoutIds];
-        }
-
-        this.store.dispatch(UnsavedLayoutsActions.remove({ layoutIds }));
+    discardUnsavedLayout(_layoutIds: string[] | string): void {
+        const layoutIds = typeof _layoutIds === 'string' ? [_layoutIds] : _layoutIds;
+        this.redirectRemovedLayout(layoutIds, () =>
+            this.store.dispatch(UnsavedLayoutsActions.remove({ layoutIds })),
+        );
     }
 
     saveLayout(layoutId: string): void;
@@ -113,6 +163,22 @@ export class LayoutStateService {
         }
 
         this.store.dispatch(SharedLayoutsActions.saveLayout({ layoutIds }));
+    }
+
+    shareLayout(layout: Layout): void {
+        this.updateLayout({
+            ...layout,
+            parentId: '{00000000-0000-0000-0000-000000000000}',
+        });
+    }
+
+    unshareLayout(layout: Layout): void {
+        this.updateLayout({
+            ...layout,
+            parentId:
+                this.accountService.account.id ||
+                this.systemService.getCurrentSystem().permissionManager.currentUser().id,
+        });
     }
 
     updateLayout(layout: Layout): void;
@@ -173,6 +239,8 @@ export class LayoutStateService {
         private store: Store,
         private translate: TranslateService,
         private paramStateService: NxParamStateService,
+        private accountService: NxAccountService,
+        private systemService: NxSystemService,
     ) {
         LayoutStateService.runInInjectionContext = callback =>
             runInInjectionContext(this.injector, callback);

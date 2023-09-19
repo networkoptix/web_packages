@@ -1,3 +1,5 @@
+import { memoize } from 'lodash-es';
+
 import {
     ResourceType,
     BaseResourceNode,
@@ -13,10 +15,13 @@ import {
  * @param resourceType - ResourceType
  * @returns - boolean
  */
-const assertResourceTypeFactory =
-    <T extends ResourceType>(resourceType: T) =>
-    (node: BaseResourceNode): node is ResourceNodeMap[typeof resourceType] =>
-        node?.type === resourceType;
+const assertResourceTypeFactory = memoize(<T extends ResourceType>(resourceType: T) =>
+    memoize(
+        (node: BaseResourceNode): node is ResourceNodeMap[typeof resourceType] =>
+            node?.type === resourceType,
+        (node: BaseResourceNode) => node?.type,
+    ),
+);
 /**
  *  Assert the type of a resource node based on the ResourceNodeMap.
  *

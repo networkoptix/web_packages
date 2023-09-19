@@ -130,23 +130,29 @@ export interface MergedResourceNode<T = { id: string }>
 
 export type ResourceNode<T = { id: string }> = Partial<MergedResourceNode<T>> & BaseResourceNode;
 
-export interface CameraWithRecordingStatus extends NxSystemCamera {
+export interface NxSystemCameraWithMappedFields extends NxSystemCamera {
     recordingStatus: RecordingStatus;
+    online: boolean;
+    unauthorized: boolean;
+}
+
+export interface NxSystemServerWithMappedFields extends NxSystemServer {
+    online: boolean;
 }
 
 export interface ResourceParentNodeMap {
     [ResourceType.LAYOUTS]: ResourceParentNode<Layout>;
-    [ResourceType.CAMERAS]: ResourceParentNode<CameraWithRecordingStatus>;
-    [ResourceType.SERVERS]: ResourceParentNode<NxSystemServer>;
+    [ResourceType.CAMERAS]: ResourceParentNode<NxSystemCameraWithMappedFields>;
+    [ResourceType.SERVERS]: ResourceParentNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGES]: ResourceParentNode<WebPage>;
 }
 
 export interface ResourceLeafNodeMap {
     [ResourceType.LAYOUT]: SharableResourceLeafNode<Layout>;
-    [ResourceType.CAMERA]: ResourceLeafNode<CameraWithRecordingStatus>;
-    [ResourceType.SERVER]: ResourceLeafNode<NxSystemServer>;
+    [ResourceType.CAMERA]: ResourceLeafNode<NxSystemCameraWithMappedFields>;
+    [ResourceType.SERVER]: ResourceLeafNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGE]: ResourceLeafNode<WebPage>;
-    [ResourceType.IO_DEVICE]: ResourceLeafNode<CameraWithRecordingStatus>;
+    [ResourceType.IO_DEVICE]: ResourceLeafNode<NxSystemCameraWithMappedFields>;
 }
 
 export interface ResourceNodeMap extends ResourceParentNodeMap, ResourceLeafNodeMap {}
@@ -175,9 +181,17 @@ export type ResourceTypeAssertMap = {
 //     [key in keyof ResourceLeafNodeMap]: isLeafNodeResourceType<key>;
 // };
 
-export interface LayoutResourceTree {
+interface TreeNode {
     tree: BaseResourceNode[];
 }
+
+type allExceptLayouts = Exclude<ResourceType, ResourceType.LAYOUT | ResourceType.LAYOUTS>;
+
+interface OtherNodes {
+    [key: string]: ResourceNodeMap[allExceptLayouts];
+}
+
+export type LayoutResourceTree = Omit<OtherNodes, keyof TreeNode> & TreeNode;
 
 export type ServerStats = { description: string; value: string }[] | undefined | null;
 

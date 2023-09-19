@@ -35,10 +35,10 @@ import {
     MergedResourceNode,
     ParsedLayoutItems,
     ResourceNode,
+    ResourceNodeMap,
     ResourceType,
     ServerStats,
     ServerStatsObservable,
-    SharableResourceLeafNode,
 } from '@components/layout-grid/layout-grid.types';
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -51,11 +51,13 @@ import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language_static';
 import { MenuModule } from '@menu/menu.module';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
+import { NxCamerasComponent } from '@pages/systems/settings/cameras/cameras.component';
+import { NxSystemServersComponent } from '@pages/systems/settings/servers/servers.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { MutationType } from '@services/param-state/param-state.types';
 import { Layout } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
@@ -211,19 +213,17 @@ export class NxLayoutGridTreeComponent {
     ServerStats: ServerStats;
     LANG = staticLang;
     ACTIONS = staticLang.layouts.treeActions;
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
     readonly RESOURCE_TYPE = ResourceType;
 
     constructor(
-        configService: NxConfigService,
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
         private router: Router,
         public tourService: TourService,
         @Inject(WINDOW) public window: Window,
     ) {
-        this.CONFIG = configService.config;
         if (this.CONFIG.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
@@ -274,9 +274,11 @@ export class NxLayoutGridTreeComponent {
         },
     ];
 
-    menuItemsByType: Partial<
-        Record<ResourceType, MenuItem<ResourceNode>[] | MenuItemsFactoryCallback<ResourceNode>>
-    > = {
+    menuItemsByType: Partial<{
+        [key in keyof ResourceNodeMap]:
+            | MenuItem<ResourceNodeMap[key]>[]
+            | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
+    }> = {
         [ResourceType.LAYOUTS]: [
             {
                 id: 'create',
@@ -312,27 +314,99 @@ export class NxLayoutGridTreeComponent {
                     id: 'divider',
                     name: 'divider',
                 },
-                (({ editable }) =>
-                    editable && {
-                        id: 'startRename',
-                        name: this.ACTIONS.rename.name,
-                        action: ($event, node) => this.editedLayout$$.set(node.id),
-                    })(node as SharableResourceLeafNode),
+                node.editable && {
+                    id: 'startRename',
+                    name: this.ACTIONS.rename.name,
+                    action: () => this.editedLayout$$.set(node.details.id),
+                },
                 {
                     id: 'duplicate',
                     name: this.ACTIONS.duplicate.name,
-                    action: ($event, node) =>
+                    action: () =>
                         this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
                 },
-                (({ editable }) =>
-                    editable && {
-                        id: 'delete',
-                        name: this.ACTIONS.delete.name,
-                        action: ($event, node) => this.layoutStateService.deleteLayout(node.id),
-                    })(node as SharableResourceLeafNode),
+                node.editable && {
+                    id: 'delete',
+                    name: this.ACTIONS.delete.name,
+                    action: () => this.layoutStateService.deleteLayout(node.details.id),
+                },
+                ...(this.layoutStateService.unsavedLayoutsIds$$()[node.details.id]
+                    ? [
+                          {
+                              id: 'divider',
+                              name: 'divider',
+                          },
+                          {
+                              id: 'save',
+                              name: node.shared
+                                  ? this.ACTIONS.publishChanges.name
+                                  : this.ACTIONS.saveChanges.name,
+                              action: () => this.layoutStateService.saveLayout(node.details.id),
+                          },
+                          {
+                              id: 'discard',
+                              name: this.ACTIONS.discardChanges.name,
+                              action: () =>
+                                  this.layoutStateService.discardUnsavedLayout(node.details.id),
+                          },
+                      ]
+                    : []),
+                {
+                    id: 'divider',
+                    name: 'divider',
+                },
+                node.shared
+                    ? {
+                          id: 'unshareLayout',
+                          name: this.ACTIONS.unshareLayout.name,
+                          action: () => this.layoutStateService.unshareLayout(node.details),
+                      }
+                    : {
+                          id: 'shareLayout',
+                          name: this.ACTIONS.shareLayout.name,
+                          action: () => this.layoutStateService.shareLayout(node.details),
+                      },
             ].filter(i => i),
-        [ResourceType.CAMERA]: [...this.OPEN_WINDOW_ACTIONS],
-        [ResourceType.SERVER]: [...this.OPEN_WINDOW_ACTIONS],
+        [ResourceType.CAMERA]: [
+            ...this.OPEN_WINDOW_ACTIONS,
+            ...(nxConfig.featureFlags.layoutsDeviceSettings
+                ? [
+                      {
+                          id: 'divider',
+                          name: 'divider',
+                      },
+                      {
+                          id: 'settings',
+                          name: this.ACTIONS.cameraSettings.name,
+                          action: ($event, node) =>
+                              this.layoutStateService.createPortal(NxCamerasComponent, {
+                                  system: this.system,
+                                  camera: node.details,
+                              }),
+                      },
+                  ]
+                : []),
+        ].filter(Boolean),
+        [ResourceType.SERVER]: [
+            ...this.OPEN_WINDOW_ACTIONS,
+            ...(nxConfig.featureFlags.layoutsDeviceSettings
+                ? [
+                      {
+                          id: 'divider',
+                          name: 'divider',
+                      },
+                      {
+                          id: 'settings',
+                          name: this.ACTIONS.serverSettings.name,
+                          action: ($event, node) =>
+                              this.layoutStateService.createPortal(NxSystemServersComponent, {
+                                  system: this.system,
+                                  serverIdFromParams: node.details.id,
+                              }),
+                      },
+                  ]
+                : []),
+        ],
     };
 
     openWindow = (id: string, isNewWindow = false): void => {

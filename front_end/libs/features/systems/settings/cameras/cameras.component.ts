@@ -7,6 +7,7 @@ import {
     computed,
     Input,
     OnChanges,
+    Optional,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -14,6 +15,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, from, throwError, of, Observable, combineLatest } from 'rxjs';
 import { filter, map, delay, retry, catchError, switchMap, share } from 'rxjs/operators';
 
+import { createPortalToken } from '@common/tokens';
 import {
     InfoBlockColumns,
     InfoBlockLine,
@@ -249,10 +251,20 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
         private activeRoute: ActivatedRoute,
+        @Optional()
+        @Inject(
+            createPortalToken<Pick<NxCamerasComponent, 'camera' | 'system'>, NxCamerasComponent>(
+                NxCamerasComponent,
+            ),
+        )
+        data: Pick<NxCamerasComponent, 'camera' | 'system'>,
     ) {
         this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.selectedSection.set('cameras');
+        if (data) {
+            Object.assign(this, data);
+        }
     }
 
     ngOnChanges(): void {
