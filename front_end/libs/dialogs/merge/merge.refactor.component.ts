@@ -805,9 +805,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     checkForChoosePrimary(changePrimary: boolean): void {
         const primary = this.system.serverManager.moduleInfo;
         const secondary = this.targetSystem;
-        changePrimary
-            ? this.currentSystemIsPrimary.set(false)
-            : this.currentSystemIsPrimary.set(true);
+        this.currentSystemIsPrimary.set(!changePrimary);
 
         if (!!primary.cloudSystemId !== !!secondary.cloudSystemId) {
             if (secondary.cloudSystemId) {

@@ -159,9 +159,11 @@ export class NxChannelPartnersComponent implements OnInit {
 
     onTabClick(tab: TabEmit): void {
         this.currentTab = this.tabs[tab.index];
-        tab.route
-            ? this.router.navigate(['home', 'channelPartners', this.currentPartnerId, tab.route])
-            : this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
+        if (tab.route) {
+            this.router.navigate(['home', 'channelPartners', this.currentPartnerId, tab.route]);
+        } else {
+            this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
+        }
     }
 
     handleOrgClick(id: string): void {

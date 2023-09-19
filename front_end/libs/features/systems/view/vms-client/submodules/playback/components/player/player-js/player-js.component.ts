@@ -82,7 +82,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         };
 
         const resetTimer = (): void => {
-            stallTimer && clearTimeout(stallTimer);
+            if (stallTimer) {
+                clearTimeout(stallTimer);
+            }
             stallTimer = undefined;
         };
 
@@ -133,7 +135,9 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
 
         this.player.on('abort', err => {
             this.hasPlayed = false;
-            !this.paused && this.videoError.emit(err);
+            if (!this.paused) {
+                this.videoError.emit(err);
+            }
         });
 
         this.player.tech(true).on('retryplaylist', () => {

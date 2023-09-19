@@ -364,7 +364,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.action === 'restore_password' &&
             [AuthorizeState.auth, AuthorizeState.backup].includes(this.currentState)
         ) {
-            this.errorDialog$.value && this.errorDialog$.next(false);
+            this.hideError();
             this.action = undefined;
             this.confirmReset = true;
             this.currentState = AuthorizeState.reset;
@@ -397,7 +397,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             // match groups the ? + queryParams
             code = params.get('code');
         }
-        this.errorDialog$.value && this.errorDialog$.next(false);
+        this.hideError();
         // @es-ignore undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
         if (link?.includes('redirect-oauth') || (this.window.nativeClient && !link)) {
             const { client_id, client_type, access_code, access_token } = this.initialData;
@@ -458,7 +458,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             { ignoreError: true, timeoutMs },
             ({ emailExists, active }) => {
-                this.errorDialog$.value && this.errorDialog$.next(false);
+                this.hideError();
                 if (this.currentState === AuthorizeState.email) {
                     if (!emailExists) {
                         this.emailErrorCode = 'accountDoesNotExist';
@@ -547,7 +547,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             res => {
                 // no success message if password restored, just returns user object
                 if (this.action === 'restore_password' && res.email) {
-                    this.errorDialog$.value && this.errorDialog$.next(false);
+                    this.hideError();
                     this.confirmReset = true;
                     this.setCurrentState('reset');
                 }
@@ -598,7 +598,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             { ignoreError: true, timeoutMs },
             res => {
                 if (this.action === 'restore_password' && res.email) {
-                    this.errorDialog$.value && this.errorDialog$.next(false);
+                    this.hideError();
                     this.confirmReset = true;
                     this.setCurrentState('reset');
                 }
@@ -634,7 +634,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 ),
             { ignoreError: true, timeoutMs },
             res => {
-                this.errorDialog$.value && this.errorDialog$.next(false);
+                this.hideError();
                 if (res.resultCode === 'alreadyExists') {
                     this.createErrorCode = ['email', 'alreadyExists'];
                 } else if (res.resultCode === 'portalError') {
@@ -666,7 +666,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             },
             { ignoreError: true, timeoutMs },
             () => {
-                this.errorDialog$.value && this.errorDialog$.next(false);
+                this.hideError();
                 this.loginEmail = this.resetPasswordEmail;
                 this.confirmRequest = true;
             },
@@ -684,7 +684,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 lastValueFrom(this.authService.restorePassword(this.loginCode, this.resetPassword)),
             { ignoreError: true, timeoutMs, ignoreUnauthorized: true },
             () => {
-                this.errorDialog$.value && this.errorDialog$.next(false);
+                this.hideError();
                 this.confirmReset = true;
             },
             err => {
@@ -752,6 +752,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     redirect = (route?: string): void => {
         this.window.location.href = route || this.initialData.redirect_uri || '/';
     };
+
+    hideError(): void {
+        if (this.errorDialog$.value) {
+            this.errorDialog$.next(false);
+        }
+    }
 
     ngOnDestroy(): void {}
 }

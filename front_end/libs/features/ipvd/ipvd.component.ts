@@ -171,8 +171,12 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
             .subscribe(params => {
                 const localParams = { ...params };
                 // remove params handled by table
-                localParams.page && delete localParams.page;
-                localParams.sortBy && delete localParams.sortBy;
+                if (localParams.page) {
+                    delete localParams.page;
+                }
+                if (localParams.sortBy) {
+                    delete localParams.sortBy;
+                }
                 if (isEqual(localParams, this.params)) {
                     return;
                 }
@@ -515,8 +519,11 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     this.filterModel,
                 );
                 this.noResult = filteredCameras.length === 0;
-                this.noResult && this.resetActiveCamera();
-                !this.noResult && this.setActiveCamera();
+                if (this.noResult) {
+                    this.resetActiveCamera();
+                } else {
+                    this.setActiveCamera();
+                }
                 this.camerasTable = !this.noResult
                     ? this.preFilterCameraTable(filteredCameras)
                     : [];

@@ -141,9 +141,10 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
     public ngOnDestroy(): void {
         clearTimeout(this._animationTimeout);
-        this._animationFrameRequestHandler &&
+        if (this._animationFrameRequestHandler) {
             cancelAnimationFrame(this._animationFrameRequestHandler);
-        this._pinchDestructor && this._pinchDestructor();
+        }
+        this._pinchDestructor?.();
     }
 
     public onAnimationFrame(): void {
@@ -272,7 +273,9 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         e.stopPropagation();
         e.preventDefault();
 
-        this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
+        if (this.clickAndHoldHandler) {
+            clearTimeout(this.clickAndHoldHandler);
+        }
 
         if (!this.isDragging) {
             if (!mustPlay && this.archiveSelectionEnabled) {

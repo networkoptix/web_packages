@@ -48,8 +48,10 @@ export class NxSubchannelComponent implements OnInit {
 
     onTabClick(tab: TabEmit): void {
         this.currentTab = this.tabs[tab.index];
-        tab.route
-            ? this.router.navigate([tab.route], { relativeTo: this.route })
-            : this.router.navigate(['./'], { relativeTo: this.route });
+        if (tab.route) {
+            this.router.navigate([tab.route], { relativeTo: this.route });
+        } else {
+            this.router.navigate(['./'], { relativeTo: this.route });
+        }
     }
 }

@@ -112,25 +112,29 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
             level1: [],
         };
 
-        this.downloadData.releases &&
+        if (this.downloadData.releases) {
             this.content.level1.push({
                 id: menus.download.releases.id,
                 label: this.LANG.menu.titles.releases,
                 path: `${menus.download.releases.id}/${platform}`,
             });
-        this.downloadData.betas &&
+        }
+
+        if (this.downloadData.betas) {
             this.content.level1.push({
                 id: menus.download.betas.id,
                 label: this.LANG.menu.titles.betas,
                 path: `${menus.download.betas.path}/${platform}`,
             });
+        }
 
-        this.downloadData.patches &&
+        if (this.downloadData.patches) {
             this.content.level1.push({
                 id: menus.download.patches.id,
                 label: this.LANG.menu.titles.patches,
                 path: `${menus.download.patches.path}/${platform}`,
             });
+        }
 
         this.content.level1.push({
             id: menus.download.other.id,

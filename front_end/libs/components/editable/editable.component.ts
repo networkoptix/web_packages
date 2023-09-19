@@ -81,7 +81,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     @HostListener('click', ['$event'])
     callOnClick($event: MouseEvent): void {
-        this.editEnabled && $event.stopPropagation();
+        if (this.editEnabled) {
+            $event.stopPropagation();
+        }
     }
 
     @HostListener('input')
@@ -161,7 +163,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
             this._initialValue = value;
             this.el.nativeElement.textContent = value || '';
             this.el.nativeElement.classList.add(this.initialClass);
-            this.editEnabled && this.el.nativeElement.setAttribute('contenteditable', 'true');
+            if (this.editEnabled) {
+                this.el.nativeElement.setAttribute('contenteditable', 'true');
+            }
             this.checkError();
         }
     }

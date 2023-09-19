@@ -198,7 +198,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                 };
             } else {
                 // return last record
-                lastData &&
+                if (lastData) {
                     this.data.push({
                         x: lastData.x,
                         y: 30,
@@ -206,6 +206,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                         width: lastData.width,
                         type: CHUNK_TYPE.RECORDS,
                     });
+                }
                 // add new chunk in progress
                 return newChunk;
             }
@@ -730,7 +731,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                 this.zoomInProcess = true;
                 this.timeLabelPosition = undefined;
 
-                event.sourceEvent?.type === 'mousedown' && checkVisibleArea(0); // disable during mouse drag
+                if (event.sourceEvent?.type === 'mousedown') {
+                    checkVisibleArea(0); // disable during mouse drag
+                }
             })
             .on('zoom', event => {
                 if (
@@ -962,7 +965,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         const t = d3.zoomIdentity.translate(this.xPos, 0).scale(this.webglService.levelZoom$.value);
 
         this.canvas.call(this.zoom.transform, t);
-        this.canvasAll && this.canvasAll.call(this.zoom.transform, t);
+        this.canvasAll?.call(this.zoom.transform, t);
     }
 
     /*
@@ -990,7 +993,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         }
 
         this.doTransform();
-        this.webglService.selection$.value && this.webglService.updateSelection();
+        if (this.webglService.selection$.value) {
+            this.webglService.updateSelection();
+        }
     }
 
     scrollEnd(): void {

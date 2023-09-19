@@ -597,9 +597,11 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 () => {},
                 () => {
                     if (!this.system.id) {
-                        !this.window.parent
-                            ? this.window.location.reload()
-                            : this.window.parent.location.reload();
+                        if (!this.window.parent) {
+                            this.window.location.reload();
+                        } else {
+                            this.window.parent.location.reload();
+                        }
                     }
                     this.hasServerError = this.system.isOnline;
                 },

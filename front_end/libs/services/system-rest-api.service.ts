@@ -237,7 +237,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             delete config.settingsPreset;
         }
 
-        !cloudSystemID ? delete config.cloud : delete config.local;
+        if (!cloudSystemID) {
+            delete config.cloud;
+        } else {
+            delete config.local;
+        }
+
         return this.post('/rest/v1/system/setup', config);
     }
 
@@ -753,7 +758,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 );
             }),
             tap(systemTokens => {
-                !skipSetting && this.setTokens(systemTokens, true).subscribe(() => {});
+                if (!skipSetting) {
+                    this.setTokens(systemTokens, true).subscribe(() => {});
+                }
             }),
         );
     }
@@ -1373,8 +1380,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         user.isHttpDigestEnabled = !isCloud;
 
         if (!isCloud) {
-            user.name && delete user.name;
-            user.isHttpDigestEnabled && delete user.isHttpDigestEnabled;
+            if (user.name) {
+                delete user.name;
+            }
+            if (user.isHttpDigestEnabled) {
+                delete user.isHttpDigestEnabled;
+            }
         }
 
         return this.patch<t.ChangedIdReturned>(

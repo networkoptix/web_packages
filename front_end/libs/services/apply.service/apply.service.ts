@@ -99,7 +99,11 @@ export class NxApplyService {
     reset(hardReset = false): void {
         if (this.watchers) {
             this.watchers.forEach(watcher => {
-                hardReset ? (watcher.value = undefined) : watcher.reset();
+                if (hardReset) {
+                    watcher.value = undefined;
+                } else {
+                    watcher.reset();
+                }
             });
         }
         this.locked = false;
@@ -288,7 +292,7 @@ export class NxApplyService {
 
                     item.form.form.touched = false;
                     item.form.form.pristine = true;
-                    item.discard && item.discard();
+                    item.discard?.();
                 }
             });
         };

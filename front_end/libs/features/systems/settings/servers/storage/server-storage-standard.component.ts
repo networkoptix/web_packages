@@ -869,7 +869,11 @@ export class NxSystemStorageComponent implements OnInit {
                 map((res: RebuildArchiveResponse) => {
                     const reply = res.reply || res.main || res.backup;
                     if (reply && ['RebuildState_None', 'none'].includes(reply.state)) {
-                        type ? (this.percentMainDone = 1) : (this.percentBackupDone = 1);
+                        if (type) {
+                            this.percentMainDone = 1;
+                        } else {
+                            this.percentBackupDone = 1;
+                        }
                         return res;
                     }
 

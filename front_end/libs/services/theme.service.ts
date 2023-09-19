@@ -224,17 +224,16 @@ export class NxThemeService {
             this.setHSLTheme(true);
         }
 
-        username &&
-            username !== 'setup' &&
-            this.viewType === 'web' &&
-            (await this.themeCustomProperty
+        if (username && username !== 'setup' && this.viewType === 'web') {
+            await this.themeCustomProperty
                 .update(curr => {
                     curr.theme = this.themeSelected as AvailableThemes;
                     return curr;
                 }, true)
                 .catch(err => {
                     console.warn('Cannot save theme: ', err);
-                }));
+                });
+        }
     }
 
     // *********************************************************************
@@ -255,7 +254,9 @@ export class NxThemeService {
                 console.warn('Cannot save theme: ', err);
             });
 
-        setHSL && this.initHslTheme();
+        if (setHSL) {
+            this.initHslTheme();
+        }
     }
 
     isHSLTheme(): boolean {

@@ -201,7 +201,9 @@ export class MergeModalContent {
             this.setPrimarySystem(this.system);
             this.updateShow(this.checkMergeDefault);
             await this.system.serverManager.getModuleInfo().toPromise();
-            environment.isLocal && (await this.getPeerSystems());
+            if (environment.isLocal) {
+                await this.getPeerSystems();
+            }
             this.account = await this.accountService.get();
             this.systemsWithInfo = await Promise.all(
                 this.systems.map(async (system: NxSystemInfo) => {
@@ -597,9 +599,11 @@ export class MergeModalContent {
                             },
                         );
                     }
-                    this.serverUrlInputFocus
-                        ? this.serverUrlInputFocus.nativeElement.focus()
-                        : this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
+                    if (this.serverUrlInputFocus) {
+                        this.serverUrlInputFocus.nativeElement.focus();
+                    } else {
+                        this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
+                    }
                 },
             );
 
@@ -1107,12 +1111,12 @@ export class MergeModalContent {
     }
 
     goBack(): void {
-        this.confirmMergeForm && this.confirmMergeForm.form.markAsUntouched();
-        this.adminPassword && this.adminPassword.form.markAsUntouched();
+        this.confirmMergeForm?.form.markAsUntouched();
+        this.adminPassword?.form.markAsUntouched();
         this.machine.goBack();
         this.cdRef.detectChanges();
-        this.mergeDropdown && this.mergeDropdown.dropdownToggleButton.nativeElement.focus();
-        this.primaryRadio && this.primaryRadio.inputRadio.nativeElement.focus();
+        this.mergeDropdown?.dropdownToggleButton.nativeElement.focus();
+        this.primaryRadio?.inputRadio.nativeElement.focus();
 
         if (this.machine.currentState === this.checkMerge) {
             this.systemsLoaded = false;

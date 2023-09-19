@@ -123,7 +123,9 @@ export class LocalAccount extends BaseAccount {
                     this.cookieService.deleteAll();
                     this.sessionService.invalidateSession(); // Clear session
                     this.account = undefined;
-                    !skipReload && this.window.location.reload();
+                    if (!skipReload) {
+                        this.window.location.reload();
+                    }
                 });
             });
         } else if (!skipReload) {
@@ -167,7 +169,9 @@ export class LocalAccount extends BaseAccount {
     requireLogin(): Promise<Account | undefined> {
         return this.get()
             .then(account => {
-                !account && !this.loginDialogActive && this.showLoginDialog();
+                if (!account && !this.loginDialogActive) {
+                    this.showLoginDialog();
+                }
                 return account;
             })
             .catch(() => {

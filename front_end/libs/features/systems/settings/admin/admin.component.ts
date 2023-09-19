@@ -159,7 +159,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         const systemName = this.system.info.systemName || this.system.info.name;
         if (!this.systemNameFormWatcher || this.systemName !== systemName) {
             this.systemName = systemName;
-            this.systemNameFormWatcher && this.applyService.removeFormWatcher('systemNameForm');
+            if (this.systemNameFormWatcher) {
+                this.applyService.removeFormWatcher('systemNameForm');
+            }
 
             setTimeout(() => {
                 this.systemNameFormWatcher = this.applyService.createFormWatcher(
@@ -574,8 +576,11 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
     hideAdvancedSettings(): void {
         if (this.router.url.includes('/advanced')) {
-            (this.environment.isLocal && this.router.navigate(['settings'])) ||
+            if (this.environment.isLocal) {
+                this.router.navigate(['settings']);
+            } else {
                 this.router.navigate([`systems/${this.system.id}`]);
+            }
         }
     }
 

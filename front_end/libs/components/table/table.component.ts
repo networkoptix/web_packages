@@ -203,7 +203,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     ngAfterContentInit(): void {
-        this.setSorting &&
+        if (this.setSorting) {
             this.sortableItems.changes
                 .pipe(untilDestroyed(this))
                 .subscribe((items: QueryList<HTMLDivElement>) => {
@@ -215,6 +215,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
                         );
                     }
                 });
+        }
     }
 
     private sortElements(keepURI: boolean = false): void {
@@ -234,7 +235,9 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             // this.renderer.addClass(elm, this.sortOrderASC ? 'sort-svg-asc' : 'sort-svg-desc');
             // this.toggleSort(sortBy[0], this.defaultSort.type, keepURI);
         } else {
-            this.defaultSort && this.toggleSort(this.defaultSort.name, this.defaultSort.type, true);
+            if (this.defaultSort) {
+                this.toggleSort(this.defaultSort.name, this.defaultSort.type, true);
+            }
         }
 
         const pageNum = this.params?.page ? Number(this.params.page) : 1;
@@ -243,7 +246,9 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     onResize(event: Size): void {
-        event.height && this.initPageRows();
+        if (event.height) {
+            this.initPageRows();
+        }
     }
 
     private toggleSort(param: string, sortType: string, keepURI?: boolean): void {
@@ -414,12 +419,14 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
             const id = this.getItemId(item);
 
             this.renderer.listen(item.nativeElement, 'mouseover', $event => {
-                $event.target.children[id] &&
+                if ($event.target.children[id]) {
                     this.renderer.addClass($event.target.children[id], 'sort-svg-hover');
+                }
             });
             this.renderer.listen(item.nativeElement, 'mouseout', $event => {
-                $event.target.children[id] &&
+                if ($event.target.children[id]) {
                     this.renderer.removeClass($event.target.children[id], 'sort-svg-hover');
+                }
             });
             this.renderer.listen(
                 item.nativeElement,

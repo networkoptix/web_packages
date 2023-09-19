@@ -38,9 +38,11 @@ export class NxBootstrapProvider {
         new Promise(resolve => {
             // @ts-expect-error
             this.window.vmsApiInit = () => resolve(true);
-            this.window.requestIdleCallback
-                ? requestIdleCallback(() => resolve(false))
-                : setTimeout(() => resolve(false));
+            if (this.window.requestIdleCallback) {
+                requestIdleCallback(() => resolve(false));
+            } else {
+                setTimeout(() => resolve(false));
+            }
         });
 
     #useRefreshTokenFromVms = async () => {

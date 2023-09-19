@@ -392,14 +392,18 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     public mouseSelectionUpHandler(e: MouseEvent): void {
         this.selectedRangeView.nativeElement.classList.remove('range-drag');
         if (!this.selectionMode && e.currentTarget !== this.document) {
-            this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
+            if (this.clickAndHoldHandler) {
+                clearTimeout(this.clickAndHoldHandler);
+            }
             // short click
             this.selection.reset();
             const offsetX = calcOffsetX(e);
             this.play(offsetX);
             return;
         }
-        this.clickAndHoldHandler && clearTimeout(this.clickAndHoldHandler);
+        if (this.clickAndHoldHandler) {
+            clearTimeout(this.clickAndHoldHandler);
+        }
         this.selectionMode = false;
         this.hideLeftEar = this.selectionStatus.isActive;
         this.hideRightEar = this.selectionStatus.isActive;

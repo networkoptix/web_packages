@@ -313,9 +313,11 @@ export class NxAPIToolSystemService {
                                 const { json, markdown } = cachedFiles;
                                 this.setRequestURL(json);
                                 this.currentServerId = server.id;
-                                markdown
-                                    ? this.emitServer(server, json, false, '', markdown)
-                                    : this.emitServer(server, json);
+                                if (markdown) {
+                                    this.emitServer(server, json, false, '', markdown);
+                                } else {
+                                    this.emitServer(server, json);
+                                }
                                 validServerFound = true;
                                 this.serversFinishedLoading();
                             } else {

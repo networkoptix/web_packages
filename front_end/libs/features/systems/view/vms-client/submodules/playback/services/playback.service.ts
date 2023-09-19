@@ -428,7 +428,11 @@ export class PlaybackService {
                         (lastChunk && lastChunk.end < state.currentTime) ||
                         state.currentTime >= lastMinuteStartMs
                     ) {
-                        this.canPlayLive ? this.playLive() : this.stop();
+                        if (this.canPlayLive) {
+                            this.playLive();
+                        } else {
+                            this.stop();
+                        }
                     }
                 }
             }

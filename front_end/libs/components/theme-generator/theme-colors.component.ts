@@ -122,7 +122,9 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
 
     ngAfterViewInit(): void {
         setTimeout(() => {
-            this.isHSLTheme && this.initColors();
+            if (this.isHSLTheme) {
+                this.initColors();
+            }
         });
     }
 
@@ -495,7 +497,9 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         this.scope.setAttribute('data-theme-source', this.isHSLTheme ? 'hsl' : 'default');
         this.themeService.setHSLTheme(value);
         setTimeout(() => {
-            this.isHSLTheme && this.initColors();
+            if (this.isHSLTheme) {
+                this.initColors();
+            }
         });
     }
 

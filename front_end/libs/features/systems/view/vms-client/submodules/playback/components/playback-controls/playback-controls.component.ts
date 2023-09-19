@@ -33,9 +33,12 @@ export class PlaybackControlsComponent implements OnInit {
         }
         switch (this.btnClass) {
             case 'pause':
+                // TODO: Refactor this
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 this.togglePause() || this.stop();
                 break;
             case 'play':
+                // eslint-disable-next-line @typescript-eslint/no-unused-expressions
                 this.unpause() || this.playLive();
                 break;
         }

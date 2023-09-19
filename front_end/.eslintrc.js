@@ -67,6 +67,14 @@ module.exports = {
                 'no-mixed-operators': 'off',
                 'no-multi-assign': 'error',
                 'no-return-await': 'error',
+                'no-unused-expressions': [
+                    'error',
+                    {
+                        allowShortCircuit: false,
+                        allowTernary: false,
+                        allowTaggedTemplates: false,
+                    },
+                ],
                 'no-unused-vars': [
                     'error',
                     {
@@ -181,9 +189,9 @@ module.exports = {
                 ...tsExtension('no-unused-expressions', [
                     'error',
                     {
-                        allowShortCircuit: true,
-                        allowTernary: true,
-                        allowTaggedTemplates: true,
+                        allowShortCircuit: false,
+                        allowTernary: false,
+                        allowTaggedTemplates: false,
                     },
                 ]),
                 ...tsExtension('no-unused-vars', [

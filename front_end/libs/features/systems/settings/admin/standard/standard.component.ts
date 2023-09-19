@@ -211,8 +211,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     }
 
     setValues(settings): void {
-        this.systemAndSecuritySettingsFormWatcher &&
+        if (this.systemAndSecuritySettingsFormWatcher) {
             this.applyService.removeFormWatcher('systemAndSecuritySettingsForm');
+        }
         const sw = this.systemAndSecuritySettings;
         const useRest = this.system.useRest;
         Object.keys(sw).forEach(setting => {

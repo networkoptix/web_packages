@@ -216,7 +216,9 @@ export abstract class BaseAccount {
             this.router.navigate([redirect.unauthorised]).finally(() => {
                 setTimeout(() => {
                     this.account = undefined;
-                    !skipReload && this.window.location.reload();
+                    if (!skipReload) {
+                        this.window.location.reload();
+                    }
                 });
             });
         } else if (!skipReload) {

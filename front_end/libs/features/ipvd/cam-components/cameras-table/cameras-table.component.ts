@@ -162,13 +162,17 @@ export class NxCamerasTableComponent implements OnChanges {
         if (changes.elements?.currentValue) {
             this.showRecords = this.elements;
             this.showRecords.map((element): FilteredCamera => {
-                element.isAptzSupported
-                    ? delete element.isPtzSupported
-                    : delete element.isAptzSupported;
+                if (element.isAptzSupported) {
+                    delete element.isPtzSupported;
+                } else {
+                    delete element.isAptzSupported;
+                }
 
-                element.isTwAudioSupported
-                    ? delete element.isAudioSupported
-                    : delete element.isTwAudioSupported;
+                if (element.isTwAudioSupported) {
+                    delete element.isAudioSupported;
+                } else {
+                    delete element.isTwAudioSupported;
+                }
 
                 // delete element.sortKey;
 
