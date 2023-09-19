@@ -1,3 +1,4 @@
+import json
 import logging
 import os
 import re
@@ -13,7 +14,7 @@ from django.shortcuts import redirect
 from django.views.static import serve
 
 from cloud.helpers.exceptions import APINotFoundException
-from cms.controllers.static_files import get_template, get_customizable_static, TemplatesCache
+from cms.controllers.static_files import get_template, get_customizable_static, TemplatesCache, get_languages_json
 from cms.models import get_cloud_portal_asset, Asset, AssetType
 
 logger = getLogger(__name__)
@@ -132,3 +133,9 @@ async def skin_styles(request):
 
         cache.set_value(style)
     return HttpResponse(content=style, content_type='text/css')
+
+
+async def languages_json(request, *args, **kwargs):
+    cloud_portal = await sync_to_async(get_cloud_portal_asset)(customization=request.CUSTOMIZATION)
+    data = await sync_to_async(get_languages_json)(cloud_portal, request.CUSTOMIZATION)
+    return HttpResponse(content=json.dumps(data, ensure_ascii=False), content_type='application/json', status=200)

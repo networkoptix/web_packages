@@ -395,3 +395,15 @@ async def get_customizable_static(customization_name: str, static_path: str):
                                                  filename=static_path, language_code=None, skin=None,
                                                  version_id=None)
     return data
+
+
+def get_languages_json(asset: Asset, customization_name: str, no_cache=True):
+    template_cache = TemplatesCache(customization_name=customization_name, template_name='static/languages.json',
+                                    language_code=None, skin=None, version_id=None)
+    if not no_cache and (languages_json := template_cache.get_value()):
+        return languages_json
+    languages = Language.objects.filter(code__in=asset.languages_list)
+    languages_json = [{"name": lang.name, "language": lang.code}
+                      for lang in languages]
+    template_cache.set_value(languages_json)
+    return languages_json

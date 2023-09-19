@@ -332,6 +332,7 @@ def read_customized_file(filename, asset, language_code=None,
 
 
 def generate_languages_json(save_location, language_codes, preview):
+    # todo. probably not used anymore
     languages = Language.objects.filter(code__in=language_codes)
     languages_json = [{"name": lang.name, "language": lang.code}
                       for lang in languages]
