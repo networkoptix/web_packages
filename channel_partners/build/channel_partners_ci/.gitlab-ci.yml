@@ -21,9 +21,8 @@ docker:build-channel-partners:
   - |
     DOCKER_DIR="channel_partners/build/channel_partners_ci"
     touch build-cp-django.env
-    CP_DJANGO_PYTHON_IMAGE_TAG="${CP_DJANGO_PYTHON_IMAGE_TAG}.${CI_MERGE_REQUEST_ID}"
     if [[ "${CI_PIPELINE_SOURCE}" == "push" && "${CI_COMMIT_REF_PROTECTED}" == "true" ]]; then
-      CP_DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${CP_DJANGO_PYTHON_IMAGE_VERSION}.${CI_MERGE_REQUEST_ID}"
+      CP_DJANGO_PYTHON_IMAGE_TAG="${CI_COMMIT_REF_NAME}_${CP_DJANGO_PYTHON_IMAGE_VERSION}"
     fi    
     echo "CP_DJANGO_PYTHON_IMAGE_TAG=${CP_DJANGO_PYTHON_IMAGE_TAG}" > build-cp-django.env
     
