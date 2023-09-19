@@ -1,12 +1,11 @@
 import { computed, Injectable, signal } from '@angular/core';
 
-import type { ServerTimeInfo } from '@services/system.service/system-types';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
 import { ViewCamera } from '../datatypes/Camera';
 import { SimpleTimeRange } from '../datatypes/ICamera';
 import { ViewMediaServer } from '../datatypes/IMediaServer';
-import { initializeVmsState, VMS_MODE, VmsState } from '../datatypes/VmsState';
+import { VMS_MODE, VmsState, VmsServerTimeInfo } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
 
 // these two types allow separation of
@@ -15,13 +14,22 @@ import { initializeVmsState, VMS_MODE, VmsState } from '../datatypes/VmsState';
 type fairMs = ms;
 type tweakedMs = ms;
 
+const initializeVmsState = (): VmsState => ({
+    mode: VMS_MODE.NOT_INITIALIZED,
+    systemId: '',
+    mediaServers: [],
+    cameras: {},
+    selectedCameraId: '',
+    selectedCamera: undefined,
+});
+
 @Injectable({
     providedIn: 'root',
 })
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
     state = signal<VmsState>(initializeVmsState());
-    serverTimes = signal<Array<ServerTimeInfo>>([]);
+    serverTimes = signal<Array<VmsServerTimeInfo>>([]);
     systemId = computed<string>(() => this.state().systemId);
 
     constructor() {

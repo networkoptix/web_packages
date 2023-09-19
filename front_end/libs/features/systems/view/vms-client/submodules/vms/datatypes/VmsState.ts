@@ -18,11 +18,10 @@ export interface VmsState {
     selectedCamera: ViewCamera;
 }
 
-export const initializeVmsState = (): VmsState => ({
-    mode: VMS_MODE.NOT_INITIALIZED,
-    systemId: '',
-    mediaServers: [],
-    cameras: {},
-    selectedCameraId: '',
-    selectedCamera: undefined,
-});
+export interface VmsServerTimeInfo {
+    vmsTime: number;
+    vmsTimeOffset: number;
+    osTimeOffset: number;
+    serverId: string; // supposed to be stripped of {} around the UUID
+    timeZoneOffset: number;
+}
