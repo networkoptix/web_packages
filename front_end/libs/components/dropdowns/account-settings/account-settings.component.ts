@@ -1,5 +1,13 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Input, ViewChild, booleanAttribute } from '@angular/core';
+import {
+    Component,
+    ElementRef,
+    Input,
+    ViewChild,
+    booleanAttribute,
+    computed,
+    signal,
+} from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -20,9 +28,15 @@ import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
+import { UserType } from '@services/system-user.types';
 import { icons } from '@static-variables';
 
 import { BaseDropdown } from '../injDropdown';
+
+type SettingsType = Pick<
+    Account,
+    'name' | 'email' | 'is_staff' | 'is_superuser' | 'first_name' | 'last_name' | 'type'
+>;
 
 @UntilDestroy()
 @Component({
@@ -60,17 +74,16 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
 
     readonly environment = environment;
 
-    settings: Pick<
-        Account,
-        'name' | 'email' | 'is_staff' | 'is_superuser' | 'first_name' | 'last_name'
-    > = {
+    settings$$ = signal<SettingsType>({
         name: '',
         email: '',
         first_name: '',
         last_name: '',
         is_staff: false,
         is_superuser: false,
-    };
+        type: undefined,
+    });
+
     readonly _accountDropdownStaff: AccountDropdown[] = [
         {
             name: 'Administration',
@@ -104,30 +117,38 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
         });
     }
 
+    userSvg$$ = computed<string>(() => {
+        const isTempUser = this.settings$$().type === UserType.temporaryLocal;
+        const userSvg = isTempUser ? 'user_temp.svg' : 'user.svg';
+        return icons.dir + userSvg;
+    });
+
     ngOnInit(): void {
         this.store
             .select(accountSelectors.selectCurrentUser)
             .pipe(untilDestroyed(this))
             .subscribe(account => {
                 if (account) {
-                    this.settings = {
+                    this.settings$$.set({
                         name: account.name,
                         first_name: account.first_name,
                         last_name: account.last_name,
                         email: account.email,
                         is_staff: account.is_staff,
                         is_superuser: account.is_superuser,
-                    };
+                        type: account.type,
+                    });
                     this.displayedFullName = this.makeFullName(account);
                 } else {
-                    this.settings = {
+                    this.settings$$.set({
                         name: '',
                         email: '',
                         first_name: '',
                         last_name: '',
                         is_staff: false,
                         is_superuser: false,
-                    };
+                        type: undefined,
+                    });
                     this.displayedFullName = '';
                 }
             });

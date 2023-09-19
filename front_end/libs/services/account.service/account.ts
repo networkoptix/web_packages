@@ -1,8 +1,7 @@
 import { last } from 'lodash-es';
 
 import { environment } from '@environments/environment';
-
-import { CurrentUser, ec2User } from '../system-api.types';
+import { RestV3User, UserType } from '@services/system-user.types';
 
 export interface CloudAccount {
     email: string;
@@ -20,6 +19,7 @@ export interface CloudAccount {
     cookie_reviewed: boolean;
     sessionVerified: boolean;
     accessToken: string;
+    type: UserType;
 }
 
 export interface Account extends CloudAccount {
@@ -27,9 +27,8 @@ export interface Account extends CloudAccount {
     totpExistsForAccount: boolean;
 }
 
-export function newLocalAccount(user: ec2User | CurrentUser): Account {
-    const { email, fullName, id, permissions, name } = user;
-    const { isAdmin, isCloud } = user as ec2User;
+export function newLocalAccount(user: RestV3User): Account {
+    const { email, fullName, id, permissions, name, type } = user;
     const [first, ...rest] = (fullName || name || '').split(' ');
     return {
         email,
@@ -38,9 +37,9 @@ export function newLocalAccount(user: ec2User | CurrentUser): Account {
         first_name: first,
         last_name: last(rest || ['']),
         permissions: permissions?.split('|') || [],
-        is_superuser:
-            !environment.isLocal && (isAdmin || permissions?.includes('GlobalAdminPermission')),
-        isCloud,
+        is_superuser: !environment.isLocal && permissions?.includes('GlobalAdminPermission'),
+        isCloud: type === UserType.cloud,
+        type,
     } as Account;
     // TODO: This should eventually be its own LocalAccount type
 }
@@ -63,6 +62,7 @@ export const DUMMY_ACCOUNT: Account = {
     sessionVerified: false,
     totpExistsForAccount: false,
     accessToken: 'accessToken',
+    type: undefined,
 };
 
 // .requiresLogin() in account service doesn't return an actual Account object

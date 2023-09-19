@@ -16,7 +16,7 @@ import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { OauthService } from '@services/oauth.service';
-import type { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
 import { oauthStore, redirect } from '@static-variables';
 import { memoizeAsyncPersistent } from '@utils/memoize';
@@ -56,7 +56,7 @@ export abstract class BaseAccount {
     protected applyService: NxApplyService;
 
     // Only in LocalAccount but added here for TS convenience
-    mediaServerApi: NxSystemRestAPI;
+    mediaServerApi: NxSystemRestAPI3;
 
     // Abstract methods implemented by cloud and local versions
     abstract logoutHelper(doNotRedirect?: boolean, skipReload?: boolean): void;

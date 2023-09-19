@@ -20,14 +20,14 @@
         ></div>
         <svg-icon
             nx-add-svg-src
-            [src]="icons.dir + 'user.svg'"
+            [src]="userSvg$$()"
             [svgStyle]="{ 'width.px': '24', 'height.px': '24', 'margin.px': small ? '8' : '10' }"
             [applyClass]="true"
         ></svg-icon>
         <span
             *ngIf="!small"
             class="fs-mask username"
-            [innerText]="environment.isLocal ? settings.name : settings.email"
+            [innerText]="environment.isLocal ? settings$$().name : settings$$().email"
         ></span>
     </button>
     <div
@@ -66,7 +66,7 @@
         </ul>
         <ul
             class="dropdown-menu--footer"
-            *ngIf="settings.is_staff"
+            *ngIf="settings$$().is_staff"
         >
             <li
                 class="dropdown-divider"
@@ -128,7 +128,7 @@
                     nx-add-svg-src
                     class="user-svg"
                     [svgStyle]="{ 'width.px': '20' }"
-                    [src]="icons.dir + 'user.svg'"
+                    [src]="userSvg$$()"
                 ></svg-icon>
             </span>
             <span

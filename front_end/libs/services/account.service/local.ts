@@ -10,7 +10,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxDbService } from '@services/db.service';
 import type { UserSession } from '@services/system-api.types';
-import type { NxSystemRestAPI } from '@services/system-rest-api.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
 import { redirect } from '@variables/static-variables';
 
@@ -68,7 +68,7 @@ export class LocalAccount extends BaseAccount {
         );
         this.mediaServerApi = this.nxSystemAPIService.createConnection({
             version: this.CONFIG.system.version.major,
-        }) as NxSystemRestAPI;
+        }) as NxSystemRestAPI3;
     }
 
     async get(forceUpdate = false): Promise<Account | undefined> {
@@ -76,6 +76,8 @@ export class LocalAccount extends BaseAccount {
             const user = await this.mediaServerApi.getCurrentUser(forceUpdate);
             let account: Account;
             if (user) {
+                // @ts-expect-error FIXME: NxSystemRestAPI3.getCurrentUser() returns v3 user
+                // but return type on method is wrong
                 account = newLocalAccount(user);
                 this.account = account;
             }
