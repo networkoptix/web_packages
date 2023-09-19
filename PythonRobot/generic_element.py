@@ -7,13 +7,15 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
+_DEFAULT_TIMEOUT = 10
+
 
 class Element:
-    def __init__(self, driver: webdriver, locator, timeout=10):
+    def __init__(self, driver: webdriver, locator):
         self._driver = driver
         self._locator = locator
-        self._timeout = timeout
-        self.in_dom = self.element_in_dom(timeout=timeout)
+        self._timeout = _DEFAULT_TIMEOUT
+        self.in_dom = self.element_in_dom(timeout=self._timeout)
         self._element = self._driver.find_element(By.XPATH, self._locator)
 
     def element_in_dom(self, timeout):
@@ -40,7 +42,7 @@ class Element:
         self.should_be_enabled()
         self._element.click()
 
-    def wait_until_visible(self,  timeout: int = 10) -> None:
+    def wait_until_visible(self,  timeout: int = _DEFAULT_TIMEOUT) -> None:
         WebDriverWait(self._driver, timeout).until(ec.visibility_of_element_located((By.XPATH, self._locator)))
 
     def get_attribute(self, attribute: str):

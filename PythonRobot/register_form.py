@@ -48,28 +48,28 @@ class RegisterForm:
         return Element(self.driver, "//nx-authorize-activate-account-component")
 
     def first_name_is_required_error(self):
-        return Element(self.driver, f"{self.first_name_input().locator}{self.required_text}", timeout=.5)
+        return Element(self.driver, f"{self.first_name_input().locator}{self.required_text}")
 
     def last_name_is_required_error(self):
-        return Element(self.driver, f"{self.last_name_input().locator}{self.required_text}", timeout=.5)
+        return Element(self.driver, f"{self.last_name_input().locator}{self.required_text}")
 
     def email_is_required_error(self):
-        return Element(self.driver, f"{self.email_input().locator}{self.required_text}", timeout=.5)
+        return Element(self.driver, f"{self.email_input().locator}{self.required_text}")
 
     def password_is_required_error(self):
-        return Element(self.driver, f"{self.password_input().locator}{self.required_text}", timeout=.5)
+        return Element(self.driver, f"{self.password_input().locator}{self.required_text}")
 
     def email_is_invalid_error(self):
-        return Element(self.driver, f"//p[contains(@class,error-label) and contains(text(),'{self.rb.EMAIL_INVALID_TEXT}')]", timeout=.5)
+        return Element(self.driver, f"//p[contains(@class,error-label) and contains(text(),'{self.rb.EMAIL_INVALID_TEXT}')]")
     
     def password_special_chars_error(self):
-        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_SPECIAL_CHARS_TEXT}')]", timeout=.5)
+        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_SPECIAL_CHARS_TEXT}')]")
     
     def account_already_exists_error(self):
-        return Element(self.driver, f"//p[contains(@class,'error-label') and contains(text(),'{self.rb.ACCOUNT_ALREADY_EXISTS}')]", timeout=.5)
+        return Element(self.driver, f"//p[contains(@class,'error-label') and contains(text(),'{self.rb.ACCOUNT_ALREADY_EXISTS}')]")
 
     def password_is_weak_error(self):
-        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]", timeout=.5)
+        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]")
     
     def password_eye_open(self):
         return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye.svg')]/parent::span")
