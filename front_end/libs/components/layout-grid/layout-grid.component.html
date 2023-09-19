@@ -7,7 +7,7 @@
 >
     <div
         *ngIf="
-            !layout || !layoutItemLookup || dragging
+            !layout || !layoutItemLookup
                 ? ''
                 : !layout.items.length
                 ? 'empty'
@@ -75,7 +75,6 @@
         [dataSource]="layoutItemLookup.tree"
         [treeControl]="treeControl"
         [errorIcons]="errorIcons"
-        [dragging]="dragging"
         [showTooltip$]="showTooltip$"
         [changingLayout]="changingLayout"
     ></nx-layout-grid-tree>
@@ -189,12 +188,8 @@
                             class="layout-item-wrapper"
                             [ngClass]="{
                                 'full-screen-wrapper':
-                                    layoutItemWrapper === window.document.fullscreenElement,
-                                'dragging': dragging,
+                                    layoutItemWrapper === window.document.fullscreenElement
                             }"
-                            (resize)="
-                                calculateItemSize($event, item, layoutItemLookup[item.resourceId])
-                            "
                             (dblclick)="focus(item.id)"
                             (nxClickElsewhere)="removeFocus()"
                         >
@@ -203,8 +198,7 @@
                                 #dragContainer
                                 [cdkDragDisabled]="layout.locked"
                                 [cdkDragData]="item"
-                                (cdkDragReleased)="dragging = !dragging; moveItem(item)"
-                                (cdkDragStarted)="dragging = !dragging"
+                                (cdkDragReleased)="moveItem(item)"
                                 (cdkDragMoved)="updateBackground($event, item, 'move')"
                                 class="layout-item"
                                 [ngClass]="{
@@ -296,7 +290,6 @@
                                                       itemDetail.details.status
                                                     : 'offline') as status
                                             "
-                                            (resize)="updatePlaceholderConfig($event, item, status)"
                                             (click)="
                                                 assertResourceOfType.camera(itemDetail) &&
                                                     editCameras() &&
@@ -438,13 +431,6 @@
                                             >
                                                 <nx-video-player
                                                     cdkDragHandle
-                                                    (resize)="
-                                                        updatePlaceholderConfig(
-                                                            $event,
-                                                            item,
-                                                            'offline'
-                                                        )
-                                                    "
                                                     [cdkDragHandleDisabled]="layout.locked"
                                                     [camera]="itemDetail.details"
                                                     [fullScreenTarget]="layoutItemWrapper"
@@ -554,7 +540,6 @@
                                         [cdkDragDisabled]="layout.locked"
                                         [cdkDragData]="item"
                                         (cdkDragMoved)="
-                                            dragging = !dragging;
                                             updateBackground($event, item, 'resize', alignment)
                                         "
                                         (cdkDragReleased)="moveItem(item)"

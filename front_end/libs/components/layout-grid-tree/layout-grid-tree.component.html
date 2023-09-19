@@ -26,13 +26,12 @@
                     cdkDrag
                     (click)="toggleNode(node)"
                     [cdkDragDisabled]="dragDisabled[node.type] || layout.locked"
-                    (cdkDragStarted)="dragging = true"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
                             event: $event
                         })
                     "
-                    (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
+                    (cdkDragReleased)="layoutGridService.addItem.next(node)"
                     class="root-node"
                 >
                     <ng-container
@@ -87,14 +86,13 @@
                         !node.type
                     "
                     (click)="node.type && layoutGridService.changeView.next(node)"
-                    (cdkDragStarted)="dragging = true"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
                             event: $event,
                             itemParent: currentItem
                         })
                     "
-                    (cdkDragReleased)="dragging = false; layoutGridService.addItem.next(node)"
+                    (cdkDragReleased)="layoutGridService.addItem.next(node)"
                     [alternativeTargetRef]="tooltipOffsetTarget"
                     [nxTooltip]="
                         (showTooltip$ | async) &&

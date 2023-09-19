@@ -81,6 +81,7 @@ import { icons } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+import { ExtractObservable } from '@utils/type-helpers';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
@@ -143,6 +144,8 @@ const SETTINGS_CONFIG: Setting[] = [
         max: 99999,
     },
 ];
+
+const DEFAULT_ASPECT_RATIO = 1.7777777910232544 as const;
 
 interface Transform {
     transform: string;
@@ -369,7 +372,6 @@ export class NxLayoutGridComponent {
 
     previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
-    dragging = false;
     addingItem = false;
     addOffset = 0;
     changingLayout: string | boolean = true;
@@ -393,14 +395,22 @@ export class NxLayoutGridComponent {
     unsubTooltip$ = new Subject<string>();
 
     // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
-    layout$ = this.initialLayout$.pipe(
-        filter(layout => !!layout),
-        map(layout => ({ ...layout, items: this.filterRemovedResources(layout.items || []) })),
-        map(initial => this.parseLayout(initial)),
-        map(({ items, renderConfig, ...layout }) => ({
+    layout$ = combineLatest([this.initialLayout$, this.#wrapperSize$]).pipe(
+        filter(([layout]) => !!layout),
+        map(
+            ([layout, wrapperSize]) =>
+                [
+                    this.parseLayout({
+                        ...layout,
+                        items: this.filterRemovedResources(layout.items || []),
+                    }),
+                    wrapperSize,
+                ] as const,
+        ),
+        map(([{ items, renderConfig, ...layout }, size]) => ({
             ...layout,
             renderConfig,
-            items: this.annotateWithRenderConfig({ items, renderConfig }),
+            items: this.annotateWithRenderConfig({ items, renderConfig, ...layout }, size),
         })),
         shareReplay({
             bufferSize: 1,
@@ -432,53 +442,54 @@ export class NxLayoutGridComponent {
         };
     };
 
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    calculateAspect = ([
+        { width: wrapperWidth, height: wrapperHeight },
+        {
+            cellAspectRatio,
+            renderConfig: { gridWrapper, rows, columns, origin },
+        },
+    ]: [Size, ExtractObservable<typeof this.layout$>]) => {
+        cellAspectRatio ||= DEFAULT_ASPECT_RATIO;
+        wrapperWidth = wrapperWidth - this.EDGE_GAP;
+        wrapperHeight = wrapperHeight - this.EDGE_GAP;
+        const aspect = wrapperWidth / columns / (wrapperHeight / rows);
+        const tooWide = aspect > cellAspectRatio;
+        const calcWidth = tooWide
+            ? (wrapperHeight / rows) * columns * cellAspectRatio
+            : wrapperWidth;
+        const calcHeight = tooWide
+            ? wrapperHeight
+            : ((wrapperWidth / columns) * rows) / cellAspectRatio;
+        const width = `${calcWidth}px`;
+        const height = `${calcHeight}px`;
+        const cellSize = {
+            width: calcWidth / columns,
+            height: calcHeight / rows,
+        };
+        const wrapperPosition = {
+            left: (wrapperWidth - calcWidth + this.EDGE_GAP) / 2,
+            top: (wrapperHeight - calcHeight + this.EDGE_GAP) / 2,
+        };
+        const outerWrapper = {
+            'background-position': `${wrapperPosition.left}px ${wrapperPosition.top}px`,
+            'background-size': `${cellSize.width}px ${cellSize.height}px`,
+        };
+        this.addOffset = cellSize.height / 2;
+        return {
+            width,
+            height,
+            outerWrapper,
+            wrapperPosition,
+            cellSize,
+            origin,
+            ...gridWrapper,
+        };
+    };
+
     aspectHandler$ = combineLatest([this.#wrapperSize$, this.layout$]).pipe(
         filter(([wrapper]) => !!wrapper),
-        map(
-            ([
-                { width: wrapperWidth, height: wrapperHeight },
-                {
-                    cellAspectRatio,
-                    renderConfig: { gridWrapper, rows, columns, origin },
-                },
-            ]) => {
-                cellAspectRatio ||= 1.7777777910232544;
-                wrapperWidth = wrapperWidth - this.EDGE_GAP;
-                wrapperHeight = wrapperHeight - this.EDGE_GAP;
-                const aspect = wrapperWidth / columns / (wrapperHeight / rows);
-                const tooWide = aspect > cellAspectRatio;
-                const calcWidth = tooWide
-                    ? (wrapperHeight / rows) * columns * cellAspectRatio
-                    : wrapperWidth;
-                const calcHeight = tooWide
-                    ? wrapperHeight
-                    : ((wrapperWidth / columns) * rows) / cellAspectRatio;
-                const width = `${calcWidth}px`;
-                const height = `${calcHeight}px`;
-                const cellSize = {
-                    width: calcWidth / columns,
-                    height: calcHeight / rows,
-                };
-                const wrapperPosition = {
-                    left: (wrapperWidth - calcWidth + this.EDGE_GAP) / 2,
-                    top: (wrapperHeight - calcHeight + this.EDGE_GAP) / 2,
-                };
-                const outerWrapper = {
-                    'background-position': `${wrapperPosition.left}px ${wrapperPosition.top}px`,
-                    'background-size': `${cellSize.width}px ${cellSize.height}px`,
-                };
-                this.addOffset = cellSize.height / 2;
-                return {
-                    width,
-                    height,
-                    outerWrapper,
-                    wrapperPosition,
-                    cellSize,
-                    origin,
-                    ...gridWrapper,
-                };
-            },
-        ),
+        map(this.calculateAspect),
         shareReplay({
             bufferSize: 1,
             refCount: true,
@@ -934,8 +945,9 @@ export class NxLayoutGridComponent {
     };
 
     generateItemRenderConfig =
-        ({ spacing, aspectRatio, origin }: LayoutRenderConfig) =>
+        (layoutRenderConfig: LayoutRenderConfig, wrapperSize: Size, layout: ParsedLayout) =>
         item => {
+            const { spacing, aspectRatio, origin } = layoutRenderConfig;
             const calcFactory = (origin: number) => (point: number) => point - origin + 1;
 
             const calcX = calcFactory(origin.x);
@@ -949,17 +961,29 @@ export class NxLayoutGridComponent {
                 placeholderState: PlaceholderState.NONE,
                 maxPlaceholderSize: 300,
             };
-            return {
-                ...item,
-                renderConfig,
-            };
+
+            const node = this.layoutItemLookup[item.resourceId];
+
+            const updatedItem = { ...item, renderConfig };
+
+            const itemSize = this.calculateItemSize(
+                wrapperSize,
+                updatedItem,
+                node,
+                layout as ExtractObservable<typeof this.layout$>,
+            );
+
+            if (
+                itemSize &&
+                (assertResourceOfType.camera(node) || assertResourceOfType.server(node))
+            ) {
+                this.updatePlaceholderConfig(itemSize, updatedItem, node?.details.status);
+            }
+            return updatedItem;
         };
 
-    annotateWithRenderConfig = ({
-        items,
-        renderConfig,
-    }: Pick<ParsedLayout, 'items' | 'renderConfig'>): ParsedLayoutItems =>
-        items.map(this.generateItemRenderConfig(renderConfig));
+    annotateWithRenderConfig = (layout: ParsedLayout, wrapperSize: Size): ParsedLayoutItems =>
+        layout.items.map(this.generateItemRenderConfig(layout.renderConfig, wrapperSize, layout));
 
     calculateEdges(
         { top: prevTop, bottom: prevBottom, left: prevLeft, right: prevRight }: Position,
@@ -997,23 +1021,30 @@ export class NxLayoutGridComponent {
     }
 
     calculateItemSize = (
-        { height: cellHeight, width: cellWidth }: Size,
-        { renderConfig, top, bottom, right, left, rotation }: ParsedLayoutItem,
-        item: ResourceNode,
-    ): void => {
+        size: Size,
+        item: ParsedLayoutItem,
+        node: ResourceNode,
+        layout: ExtractObservable<typeof this.layout$>,
+    ): Size => {
+        if (!size || !item) {
+            return;
+        }
+
+        const {
+            cellSize: { height: cellHeight, width: cellWidth },
+        } = this.calculateAspect([size, layout]);
+        const { renderConfig, top, bottom, right, left, rotation } = item;
         const width = cellWidth * (right - left);
         const height = cellHeight * (bottom - top);
         renderConfig.showTooltip = width < 360;
-        if (assertResourceOfType.camera(item)) {
-            if (!item.aspectRatio) {
-                item.aspectRatio = renderConfig.aspect;
-            }
+        if (assertResourceOfType.camera(node) && node.details.online) {
+            const initialAspect = node.aspectRatio || renderConfig.aspect;
 
             const isRotated = Boolean(
-                (Math.round(rotation / 90) * 90 + (item.details.parameters.rotation || 0)) % 180,
+                (Math.round(rotation / 90) * 90 + (node.details.parameters.rotation || 0)) % 180,
             );
 
-            const aspect = isRotated ? 1 / item.aspectRatio : item.aspectRatio;
+            const aspect = isRotated ? 1 / initialAspect : initialAspect;
 
             const tooWide = width > height * aspect;
             const clampTo = tooWide
@@ -1024,8 +1055,12 @@ export class NxLayoutGridComponent {
                 ...renderConfig.child,
                 ...clampTo,
             };
-            this.cd.markForCheck();
         }
+
+        return {
+            width,
+            height,
+        };
     };
 
     generateRenderConfig({
@@ -1035,7 +1070,7 @@ export class NxLayoutGridComponent {
         fixedWidth,
         fixedHeight,
     }: Layout): LayoutRenderConfig {
-        const aspectRatio = cellAspectRatio || 1.7777777910232544;
+        const aspectRatio = cellAspectRatio || DEFAULT_ASPECT_RATIO;
         const spacing = cellSpacing ?? 0.1;
         const { width, height, originX: x, originY: y } = this.calculateSize(items);
         const columns = items.length <= 1 ? 1 : fixedWidth || width;

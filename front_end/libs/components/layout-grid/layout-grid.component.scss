@@ -466,11 +466,6 @@ iframe {
     opacity: 0.5;
 }
 
-.dragging {
-    // This is kind of a hack to trigger resize directive on all layout items.
-    margin: 0.01px;
-}
-
 .layout-grid {
     .cdk-drag-placeholder {
         display: none !important;
