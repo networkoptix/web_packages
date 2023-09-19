@@ -51,7 +51,6 @@ if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
     with Suite() as suite:
-        suite: Suite
         cloud_owner = suite.create_cloud_account()
         cloud_server = suite.create_cloud_server(cloud_owner, f'{suite_name}_1_')
         anon_header_correct()
