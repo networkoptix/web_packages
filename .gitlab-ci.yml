@@ -195,13 +195,15 @@ common-python-unit-test:
       coverage_report:
         coverage_format: cobertura
         path: common/python/fast-coverage.xml
+  variables:
+    PYTHONPATH: "/builds/dev/cloud_portal/common/python"
   script:
     - cd /builds/dev/cloud_portal/common/python
     - pytest -m "not integration and not slow" --create-db --junitxml=fast-report.xml --cov="." --cov-report xml:fast-coverage.xml --cov-report term
   rules:
     - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
       changes:
-        - cloud/common/python/**/*
+        - common/python/**/*
         - cloud/poetry.toml
         - cloud/poetry.lock
         - cloud/pyproject.toml

@@ -1,8 +1,12 @@
+import httpx
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 import requests
+from nx_cloud_api_client.apis import CdbSystemAPIBase
+from nx_cloud_api_client.base_auth import BearerTokenAuth
 from requests.auth import HTTPBasicAuth
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication, get_authorization_header
 from rest_framework import exceptions
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
@@ -46,10 +50,10 @@ def check_system_credentials(system_id, system_auth_key, cloud_host):
 
 def check_user_can_administer_system(system_id, access_token, cloud_host, raise_exception=True):
 
-    response = requests.get(
-        f'https://{cloud_host}/cdb/systems/{system_id}', headers={'Authorization': f'Bearer {access_token}'})
+    with CdbSystemAPIBase(host=f'https://{cloud_host}', client=httpx.Client()) as api:
+        response = api.get_system(system_id=system_id, auth=BearerTokenAuth(token=access_token))
     try:
-        if response.ok:
+        if response.is_success:
             resp = response.json()
             access_role = resp.get('accessRole', '')
             if access_role in ('owner', 'cloudAdmin'):

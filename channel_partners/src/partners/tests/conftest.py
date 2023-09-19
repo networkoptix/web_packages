@@ -205,8 +205,8 @@ def deny_user_administer_system(mocker):
 @pytest.fixture()
 def system_factory(cloud_test_host, default_organization):
 
-    def factory(organization=default_organization, cloud_host=cloud_test_host):
-        return baker.make(CloudSystemId, system_id=f'{uuid4()}',
+    def factory(organization=default_organization, cloud_host=cloud_test_host, system_id=None):
+        return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}',
                           organization=organization, cloud_host=cloud_host)
 
     return factory

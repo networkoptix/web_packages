@@ -1,12 +1,15 @@
 from collections import defaultdict
 import datetime
 import json
+
+import httpx
 import llutil
 from django.conf import settings
 from django.utils import timezone
 from drf_spectacular.openapi import OpenApiTypes
 from drf_spectacular.utils import extend_schema_serializer, extend_schema_field
 from drf_spectacular.utils import OpenApiExample
+from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem, CdbSystemAPIBase
 from rest_framework import serializers, exceptions
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
@@ -14,6 +17,7 @@ from rest_framework.utils.encoders import JSONEncoder
 from partners.models import ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates, LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService, \
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent, CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId, \
     ServiceToSubChannelProperties, ServiceToOrganizationProperties
+from tools.utils import make_batch_request
 
 from .authentication import check_user_can_administer_system
 
@@ -247,17 +251,39 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         organization = validated_data.get('organization')
 
         # In case of some situation with multiple user records for same entity
+        created = False
         try:
-            relation, _ = OrganizationToUser.objects.get_or_create(user=user, organization=organization)
+            relation, created = OrganizationToUser.objects.get_or_create(user=user, organization=organization)
         except OrganizationToUser.MultipleObjectsReturned:
             relations = OrganizationToUser.objects.filter(user=user, organization=organization).order_by('created_ts')
             relation = relations.first()
             relations.exclude(id=relation.id).delete()
+        if not created:
+            return self.update(relation, validated_data=validated_data)
 
-        relation.roles = [role.name]
         relation.title = title
+        relation.roles = [role.system_role] if role and role.system_role else []
         relation.save()
+        if role and role.system_role:
+            data = relation.update_user_systems_data(role)
+            make_batch_request(self.context['request'], data)
         return relation
+
+    def update(self, instance, validated_data):
+        role_changed = False
+        if "role" in validated_data:
+            role = validated_data['role']
+            roles = [role.name] if role else []
+            if roles != instance.roles:
+                role_changed = True
+                instance.roles = roles
+        if 'title' in validated_data:
+            instance.title = validated_data['title']
+        instance.save()
+        if role_changed:
+            data = instance.update_user_systems_data(role)
+            make_batch_request(self.context['request'], data)
+        return instance
 
 
 class SignSerializerMixin:
@@ -460,6 +486,8 @@ class CreateSystemSerializer(serializers.ModelSerializer):
         system = CloudSystemId.objects.get_or_create(system_id=system_id, cloud_host=cloud_host)[0]
         system.organization = organization
         system.save()
+        data = system.add_system_users_data()
+        make_batch_request(self.context['request'], data)
         return system
 
 

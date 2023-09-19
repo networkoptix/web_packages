@@ -848,6 +848,29 @@ url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 reference = "pypi-remote"
 
 [[package]]
+name = "pytest-httpx"
+version = "0.23.1"
+description = "Send responses to httpx."
+optional = false
+python-versions = ">=3.9"
+files = [
+    {file = "pytest_httpx-0.23.1-py3-none-any.whl", hash = "sha256:ba38a9e6c685d3cf6197551a79bf7e41f8bbc57a6d1de65b537f77e87f56ecd3"},
+    {file = "pytest_httpx-0.23.1.tar.gz", hash = "sha256:cfed19eb8b13cbdf464bbb1c4ef88717d88d42334aa9ce516e56e46975c77f74"},
+]
+
+[package.dependencies]
+httpx = "==0.24.*"
+pytest = ">=6.0,<8.0"
+
+[package.extras]
+testing = ["pytest-asyncio (==0.21.*)", "pytest-cov (==4.*)"]
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
 name = "pytest-mock"
 version = "3.11.1"
 description = "Thin-wrapper around the mock package for easier use with pytest"
@@ -1287,4 +1310,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "2607bafd98219a4575aad36dff71966300123700d6e43740e033d0930b5e5f07"
+content-hash = "07212e858f3bab18091a6c3bd6a2bc88adbf96b71f1310a5c2410b2bfd01c5b5"

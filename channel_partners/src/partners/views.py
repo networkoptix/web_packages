@@ -14,6 +14,7 @@ from rest_framework.generics import ListAPIView
 from rest_framework.mixins import RetrieveModelMixin
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from tools.exception import Conflict
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, IsInternalToken
 from .serializers import *
@@ -123,6 +124,12 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         serializer.save(channel_partner=channel_partner)
         return Response(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if self.queryset.filter(channel_partner=instance.channel_partner, roles=["Administrator"])\
+                .exclude(pk=instance.pk).exists():
+            return super().destroy(request, *args, **kwargs)
+        raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
 
 @extend_schema(
     tags=['Channel Partners - Channel Partners'],
@@ -506,6 +513,15 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
         serializer.save(organization=organization)
         return Response(serializer.data)
 
+    def destroy(self, request, *args, **kwargs):
+        instance = self.get_object()
+        if self.queryset.filter(organization=instance.organization, roles=["Organization Administrator"])\
+                .exclude(pk=instance.pk).exists():
+            data = instance.update_user_systems_data(None)
+            make_batch_request(request, data)
+            return super().destroy(request, *args, **kwargs)
+        raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
+
 
 @extend_schema(
     tags=['Channel Partners - Systems'],
@@ -587,6 +603,12 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
         response_serializer = CloudSystemSerializer(system)
         return Response(response_serializer.data)
+
+    def destroy(self, request, *args, **kwargs):
+        data = self.get_object().remove_system_users_data(request.user)
+        response = super().destroy(request, *args, **kwargs)
+        make_batch_request(request, data)
+        return response
 
     @extend_schema(responses=SaaSReportSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['GET'], detail=True)

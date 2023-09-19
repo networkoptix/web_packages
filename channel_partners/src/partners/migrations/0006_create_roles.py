@@ -2,7 +2,9 @@
 
 from django.db import migrations
 from django.contrib.contenttypes.management import create_contenttypes
+from django.contrib.auth.management import create_permissions
 from django.apps.registry import apps as global_apps
+
 
 CHANNEL_PARTNER_ROLES = [
     {
@@ -75,9 +77,15 @@ ORGANIZATION_ROLES = [
 ]
 
 
-def forwards(apps, schema_editor):
+def add_content_types_and_permissions():
     for app_config in global_apps.get_app_configs():
         create_contenttypes(app_config)
+    for app_config in global_apps.get_app_configs():
+        create_permissions(app_config)
+
+
+def forwards(apps, schema_editor):
+    add_content_types_and_permissions()
 
     OrganizationRole = apps.get_model('partners', 'OrganizationRole')
     ChannelPartnerRole = apps.get_model('partners', 'ChannelPartnerRole')
@@ -101,7 +109,8 @@ def forwards(apps, schema_editor):
             role = OrganizationRole.objects.get_or_create(
                 name=name, system_role=ORGANIZATION_SYSTEM_MAP[name]
             )[0]
-            role.permissions.set(permissions)
+            for permission in permissions:
+                role.permissions.add(permission)
 
 
 def backwards(apps, schema_editor):

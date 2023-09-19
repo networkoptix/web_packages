@@ -22,6 +22,7 @@ from django.db.models import Sum, F, QuerySet
 from django.shortcuts import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
+from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
 
@@ -108,6 +109,10 @@ class CloudHost(models.Model):
 
     def __str__(self):
         return self.hostname
+
+    @property
+    def cdb_base_url(self):
+        return f'https://{self.hostname}'
 
 
 class CloudSystemId(ChannelPartnerStates, models.Model):
@@ -197,6 +202,47 @@ class CloudSystemId(ChannelPartnerStates, models.Model):
             return current_services.get('services', [])
         else:
             return {}
+
+    def add_system_users_data(self):
+        roles = OrganizationRole.objects \
+            .exclude(system_role__isnull=True) \
+            .exclude(system_role='') \
+            .values('system_role', 'name')
+        org_to_user_rels = OrganizationToUser.objects \
+            .filter(organization=self.organization, roles__0__in=[r['name'] for r in roles]) \
+            .values('roles__0', 'user__email')
+        roles_users = {r['name']: {"system_role": r["system_role"], "users": []} for r in roles}
+        for rel in org_to_user_rels:
+            roles_users[rel['roles__0']]["users"].append(rel['user__email'])
+
+        data = BatchRequestItems(
+            items=[
+                BatchRequestItem(
+                    systems=[str(self.system_id)],
+                    users=users["users"],
+                    accessRole=users["system_role"],
+                    attributes={}
+                ) for role, users in roles_users.items() if users["users"]
+            ]
+        )
+        return data
+
+    def remove_system_users_data(self, user: CloudUser) -> dict:
+        users = OrganizationToUser.objects\
+            .exclude(user__email=user.email)\
+            .filter(organization=self.organization)\
+            .values_list('user__email', flat=True)
+        data = BatchRequestItems(
+            items=[
+                BatchRequestItem(
+                    systems=[str(self.system_id)],
+                    users=list(users),
+                    accessRole='none',
+                    attributes={}
+                )
+            ]
+        )
+        return data
 
 
 class LocalRecordingUsage(models.Model):
@@ -451,6 +497,9 @@ class OrganizationRole(models.Model):
     system_role = models.CharField(max_length=100, blank=True, default='')
     permissions = models.ManyToManyField(Permission)
 
+    def __str__(self):
+        return self.name
+
 
 class OrganizationPermissions:
     manage_systems = 'manage_systems'
@@ -608,6 +657,23 @@ class OrganizationToUser(models.Model):
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_users(user)
+
+    def update_user_systems_data(self, role: OrganizationRole | None) -> dict:
+        systems = CloudSystemId.objects \
+            .filter(organization=self.organization) \
+            .exclude(state=ChannelPartnerStates.SHUTDOWN)
+        systems = systems.values_list('system_id', flat=True)
+        data = BatchRequestItems(
+            items=[
+                BatchRequestItem(
+                    systems=[str(system) for system in systems],
+                    users=[self.user.email],
+                    accessRole=getattr(role, 'system_role', 'none') or 'none',
+                    attributes={}
+                )
+            ]
+        )
+        return data
 
 
 class ChannelPartnerService(models.Model):

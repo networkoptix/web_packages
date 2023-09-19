@@ -396,6 +396,22 @@ class AccessRole(str, Enum):
     system = "system"
 
 
+class CustomAttribute(typing.TypedDict):
+    name: str
+    value: str
+
+
+class BatchRequestItem(typing.TypedDict):
+    users: typing.List[str]
+    systems: typing.List[str]
+    accessRole: str
+    attributes: dict
+
+
+class BatchRequestItems(typing.TypedDict):
+    items: typing.List[BatchRequestItem]
+
+
 class CdbSystemAPIBase(CdbAPIModuleBase):
     
     base_path = '/cdb/systems'
@@ -723,6 +739,339 @@ class CdbSystemAPIBase(CdbAPIModuleBase):
         }
         return self.post(f'/{system_id}/merged_systems/',
                          json=data, headers=headers, auth=auth, **kwargs)
+
+    def get_system_custom_attrs(
+            self,
+            system_id: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        GET /cdb/systems/{systemId}/attributes
+        Fetch custom attributes of the system.
+        Args:
+            system_id (str, required): System ID
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.get(f'/{system_id}/attributes', headers=headers, auth=auth, **kwargs)
+
+    def add_system_custom_attrs(
+            self,
+            system_id: str,
+            attributes: typing.List[CustomAttribute],
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        POST /cdb/systems/{systemId}/attributes
+        Add attributes list from request to the system attributes.
+        Note: Existing attributes won't be modified by this method. Use PUT method to modify existing attributes.
+        Args:
+            system_id (str, required): System ID
+            attributes (list[dict[str, str]], required): list of system attributes ([{"name": "name", "value": "value"}])
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+            "200 OK" with the list of added attributes
+            "409 Conflict" if the system has already attribute assigned with the same name
+
+        """
+        return self.post(f'/{system_id}/attributes', json=attributes, headers=headers, auth=auth, **kwargs)
+
+    def update_system_custom_attrs(
+            self,
+            system_id: str,
+            attributes: typing.List[CustomAttribute],
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        PUT /cdb/systems/{systemId}/attributes
+        Update custom attributes of the system or create new attributes if not found.
+        Args:
+            system_id (str, required): System ID
+            attributes (list[dict[str, str]], required): list of system attributes
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+            "200 OK" with the list of added attributes
+            "409 Conflict" if the system has already attribute assigned with the same name
+
+        """
+        return self.put(f'/{system_id}/attributes', json=attributes, headers=headers, auth=auth, **kwargs)
+
+    def delete_system_custom_attr(
+            self,
+            system_id: str,
+            attribute_name: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        DELETE /cdb/systems/{systemId}/attributes/{attributeName}
+        Delete specific attribute
+        Args:
+            system_id (str, required): System ID
+            attribute_name (str, required): Attribute name
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.delete(f'/{system_id}/attributes/{attribute_name}', headers=headers, auth=auth, **kwargs)
+
+    def add_system_custom_attr(
+            self,
+            system_id: str,
+            attribute_name: str,
+            attribute: CustomAttribute,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        POST /cdb/systems/{systemId}/attributes/{attributeName}
+        Add custom attribute to the system.
+        Note: Existing attribute won't be modified by this method. Use PUT method to modify existing attribute.
+        Args:
+            system_id (str, required): System ID
+            attribute_name (str, required): Attribute name
+            attribute (dict[str, str], required): system attribute dict ({"name": "name", "value": "value"})
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+            "200 OK" with the list of added attributes
+            "409 Conflict" if the system has already attribute assigned with the same name
+
+        """
+        return self.post(f'/{system_id}/attributes/{attribute_name}',
+                         json=attribute, headers=headers, auth=auth, **kwargs)
+
+    def update_system_custom_attr(
+            self,
+            system_id: str,
+            attribute_name: str,
+            attribute: CustomAttribute,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        PUT /cdb/systems/{systemId}/attributes/{attributeName}
+        Update custom attribute of the system or create new attributes if not found.
+        Args:
+            system_id (str, required): System ID
+            attribute_name (str, required): Attribute name
+            attribute (dict[str, str], required): attribute dict
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.put(f'/{system_id}/attributes/{attribute_name}',
+                         json=attribute, headers=headers, auth=auth, **kwargs)
+
+    def get_system_user_custom_attrs(
+            self,
+            system_id: str,
+            account_email: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        GET /cdb/systems/{systemId}/users/{accountEmail}/attributes
+        Fetch system user attributes.
+        Note: The system systemId should be shared with user accountEmail
+        Args:
+            system_id (str, required): System ID
+            account_email (str, required): User email
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.get(f'/{system_id}/users/{account_email}/attributes',
+                        headers=headers, auth=auth, **kwargs)
+
+    def update_system_user_custom_attrs(
+            self,
+            system_id: str,
+            account_email: str,
+            attributes: typing.List[CustomAttribute],
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        POST /cdb/systems/{systemId}/users/{accountEmail}/attributes
+        Add/update custom attributes of the system user.
+        Note: The system systemId should be shared with user accountEmail
+        Args:
+            system_id (str, required): System ID
+            account_email (str, required): User email
+            attributes (list[dict[str, str]], required): list of system attributes
+                ([{"name": "name", "value": "value"}])
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+            "200 OK" with the list of added attributes
+            "409 Conflict" if the system has already attribute assigned with the same name
+
+        """
+        return self.post(f'/{system_id}/users/{account_email}/attributes',
+                         json=attributes, headers=headers, auth=auth, **kwargs)
+
+    def update_system_user_custom_attr(
+            self,
+            system_id: str,
+            account_email: str,
+            attribute_name: str,
+            attribute: CustomAttribute,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        PUT /cdb/systems/{systemId}/users/{accountEmail}/attributes/{attributeName}
+        Add/update single custom attribute of the system user.
+        Note: The system systemId should be shared with user accountEmail
+        Args:
+            system_id (str, required): System ID
+            account_email (str, required): User email
+            attribute_name (str, required): Attribute name
+            attribute (dict[str, str], required): custom attribute dict {"name": "name", "value": "value"}
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.post(f'/{system_id}/users/{account_email}/attributes/{attribute_name}',
+                         json=attribute, headers=headers, auth=auth, **kwargs)
+
+    def delete_system_user_custom_attr(
+            self,
+            system_id: str,
+            account_email: str,
+            attribute_name: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        DELETE /cdb/systems/{systemId}/users/{accountEmail}/attributes/{attributeName}
+        Delete specific attribute
+        Args:
+            system_id (str, required): System ID
+            account_email (str, required): User email
+            attribute_name (str, required): Attribute name
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.delete(f'/{system_id}/users/{account_email}/attributes/{attribute_name}',
+                           headers=headers, auth=auth, **kwargs)
+
+    def systems_users_batch_request(
+            self,
+            batch_items: BatchRequestItems,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        POST /cdb/systems/users/batch
+        Creates a batch request with multiple items of changes to systems users roles/attributes for
+        asynchonous processing. If cloud account does not exist for some email in the batch it will
+        be created and invited to access systems. If accessRole is set to SystemAccessRole::none then
+        users will be deleted from system and all custom system attributes will be wiped. This function
+        provides limited transactional guarantees. It guarantees transactional atomic commit/rollback
+        semantic for all users of the system in one batch item. But it doesn't guarantee transactional
+        semantic for entire batch.
+        Args:
+            batch_items (dict['items', List[dict]), required): Batch items
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.post(f'/users/batch', json=batch_items,
+                         headers=headers, auth=auth, **kwargs)
+
+    def get_batch_request_state(
+            self,
+            batch_id: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        GET /cdb/systems/users/batch/{batchId}/state
+        Get batch state submitted by POST /cdb/systems/users/batch method.
+        Args:
+            batch_id (str, required): Batch ID
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.get(f'/users/batch/{batch_id}/state',
+                        headers=headers, auth=auth, **kwargs)
+
+    def get_batch_request_error(
+            self,
+            batch_id: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        GET /cdb/systems/users/batch/{batchId}/error
+        Get batch error information with uncommitted changes for batch
+        submitted by POST /cdb/systems/users/batch method.
+        Args:
+            batch_id (str, required): Batch ID
+            headers (dict, optional): request headers dict
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        return self.get(f'/users/batch/{batch_id}/error',
+                        headers=headers, auth=auth, **kwargs)
 
 
 class CdbSystemTransferAPIBase(CdbAPIModuleBase):
