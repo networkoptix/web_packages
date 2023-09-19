@@ -1,5 +1,6 @@
 from datetime import timedelta, datetime
 from time import sleep
+from uuid import uuid4
 
 import pytest
 from django.conf import settings
@@ -21,7 +22,7 @@ class TestAgreement:
     @pytest.fixture
     def uses(self, account_factory, asset_factory, customization_factory, arf, db):
         def helper(customization=False, superuser=False, non_superuser=False, agreement=False,
-                   draft_agreement=False, pending_agreement=False, tos_agreement=False,):
+                   draft_agreement=False, pending_agreement=False, tos_agreement=False, other_user=False):
             self.arf = arf
             if agreement or draft_agreement or pending_agreement or tos_agreement:
                 superuser = non_superuser = True
@@ -36,6 +37,10 @@ class TestAgreement:
             if non_superuser:
                 self.non_superuser = account_factory(
                     email='non@super.com', is_superuser=False)
+
+            if other_user:
+                self.other_user = account_factory(
+                    email=f'{uuid4()}@super.com', is_superuser=False)
 
             # agreements
             if agreement:
@@ -89,6 +94,28 @@ class TestAgreement:
         # Todo. Fix agreement creation to populate it with right data records.
         assert response.data['type'] == 'contributor'
         assert not response.data['accepted']
+
+    def test_accepted_agreement_by_other_user(self, uses):
+        uses(agreement=True, non_superuser=True, other_user=True)
+        response = self.get_agreement_with(self.non_superuser)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == self.agreement.id
+        assert response.data['accepted'] == False
+
+        review = AssetCustomizationReview.objects.filter(
+            version__asset=self.agreement).last()
+        response = self.accept_agreement_with(self.non_superuser, review.id)
+        assert response.status_code == status.HTTP_200_OK
+
+        response = self.get_agreement_with(self.non_superuser)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == self.agreement.id
+        assert response.data['accepted'] == True
+
+        response = self.get_agreement_with(self.other_user)
+        assert response.status_code == status.HTTP_200_OK
+        assert response.data['id'] == self.agreement.id
+        assert response.data['accepted'] == False
 
     def test_tos_agreement_200(self, uses):
         uses(tos_agreement=True)
