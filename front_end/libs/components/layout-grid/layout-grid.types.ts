@@ -60,8 +60,9 @@ export enum PlaceholderClasses {
 
 export interface LayoutItemRenderConfig {
     child?: {
-        'max-height': string;
-        'max-width': string;
+        width: string;
+        height: string;
+        'aspect-ratio': number;
     };
     aspect?: number;
     showTooltip: boolean;

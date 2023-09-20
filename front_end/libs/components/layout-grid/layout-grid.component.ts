@@ -1040,11 +1040,9 @@ export class NxLayoutGridComponent {
         }
 
         const {
-            cellSize: { height: cellHeight, width: cellWidth },
+            cellSize: { height, width },
         } = this.calculateAspect([size, layout]);
-        const { renderConfig, top, bottom, right, left, rotation } = item;
-        const width = cellWidth * (right - left);
-        const height = cellHeight * (bottom - top);
+        const { renderConfig, rotation } = item;
         renderConfig.showTooltip = width < 360;
         if (assertResourceOfType.camera(node) && node.details.online) {
             const initialAspect = node.aspectRatio || renderConfig.aspect;
@@ -1054,13 +1052,12 @@ export class NxLayoutGridComponent {
             const aspect = isRotated ? 1 / initialAspect : initialAspect;
 
             const tooWide = width > height * aspect;
-            const clampTo = tooWide
-                ? { 'max-width': `${height * aspect}px`, 'max-height': 'unset' }
-                : { 'max-height': `${width / aspect}px`, 'max-width': 'unset' };
 
             renderConfig.child = {
-                ...renderConfig.child,
-                ...clampTo,
+                ...(tooWide
+                    ? { width: 'unset', height: '100%' }
+                    : { width: '100%', height: 'unset' }),
+                'aspect-ratio': aspect,
             };
         }
 
