@@ -105,30 +105,30 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "mark", "hamill", email, password)
-    url = rb.env + "/account"
+    url = rb.ENV + "/account"
     driver.get(url)
-    cloud_login(driver, email, password, button=none, api=false)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    TextField(driver, rb.account_first_name).clear()
-    robot_keywords.input_text(driver, rb.account_first_name, "namechanged")
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
+    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "namechanged")
     # todo: the save button doesn't appear.
-    account_save = Button(driver, rb.account_save)
+    account_save = Button(driver, rb.ACCOUNT_SAVE)
     account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.account_save)
-    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
+    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
     driver = get_headless_chrome()
-    url1 = rb.env + "/account"
+    url1 = rb.ENV + "/account"
     driver.get(url1)
-    cloud_login(driver, email, password, button=none, api=false)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     time.sleep(2)
-    robot_keywords.wait_until_textfield_contains(driver, rb.account_first_name, "namechanged")
-    TextField(driver, rb.account_first_name).clear()
-    robot_keywords.input_text(driver, rb.account_first_name, rb.test_first_name)
+    robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_FIRST_NAME, "namechanged")
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
+    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, rb.TEST_FIRST_NAME)
     account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.account_save)
-    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
+    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
 
 
 def test_changing_last_name_and_saving_maintains_that_setting():
@@ -137,26 +137,26 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     register_and_activate_account(driver, "mark", "hamill", email, password)
-    url = rb.env + "/account"
+    url = rb.ENV + "/account"
     driver.get(url)
-    cloud_login(driver, email, password, button=none, api=false)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.account_last_name, "namechanged")
-    account_save = Button(driver, rb.account_save)
+    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, "namechanged")
+    account_save = Button(driver, rb.ACCOUNT_SAVE)
     account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.account_save)
-    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
+    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
     driver = get_headless_chrome()
-    url1 = rb.env + "/account"
+    url1 = rb.ENV + "/account"
     driver.get(url1)
-    cloud_login(driver, email, password, button=none, api=false)
+    cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.wait_until_textfield_contains(driver, rb.account_last_name, "namechanged")
-    robot_keywords.input_text(driver, rb.account_last_name, rb.test_last_name)
+    robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_LAST_NAME, "namechanged")
+    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, rb.TEST_LAST_NAME)
     account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.account_save)
-    robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
+    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
 
 
