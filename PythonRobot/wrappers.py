@@ -103,8 +103,8 @@ class TextField:
         self._element.clear_text()
 
     def get_text(self):
-        if self._element.text:
-            return self._element.text
+        if self._element.text():
+            return self._element.text()
         elif self._element.get_attribute("value"):
             return self._element.get_attribute("value")
         else:
