@@ -2,10 +2,13 @@ import time
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import Element
 from resource_import import check_new_password_outline_and_error_message
 from resource_import import check_password_badge
 from resource_import import get_headless_chrome
+from wrappers import Button
+from wrappers import Checkbox
+from wrappers import PageText
+from wrappers import TextField
 
 rb = RobotVariables("en_US")
 driver = get_headless_chrome()
@@ -18,11 +21,11 @@ def test_register_invalid(driver, first, last, email, password, checked):
     # ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL INVALID TEXT}')]
     # Run Keyword If    "${LANGUAGE}"=="he_IL"    Set Suite Variable    ${EMAIL IS REQUIRED}
     # ...    //span[contains(@class,'input-error') and contains(text(),'${EMAIL IS REQUIRED TEXT}')]
-    Element(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
-    Element(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
-    Element(driver, rb.REGISTER_EMAIL_INPUT).wait_until_visible()
-    Element(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
-    Element(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
+    TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
+    TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
+    TextField(driver, rb.REGISTER_EMAIL_INPUT).wait_until_visible()
+    TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
+    Button(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
 
     invisible_elements = [
                          rb.EMAIL_INVALID, 
@@ -37,7 +40,7 @@ def test_register_invalid(driver, first, last, email, password, checked):
                          rb.TERMS_AND_CONDITIONS_ERROR
                          ]
     for element in invisible_elements:
-        Element(driver, element).wait_until_not_visible()
+        PageText(driver, element).wait_until_not_visible()
     register_form_validation(driver, first, last, email, password, checked)
 
     if password not in rl.GOOD_PASSWORDS and password not in rl.FAIR_PASSWORDS:
@@ -55,13 +58,14 @@ def register_form_validation(driver, first_name, last_name, email, password, che
     robot_keywords.input_text(driver, rb.REGISTER_FIRST_NAME_INPUT, first_name)
     robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
     robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
-    Element(driver, rb.REGISTER_PASSWORD_INPUT).click()
+    TextField(driver, rb.REGISTER_PASSWORD_INPUT).click()
     time.sleep(.1)
     robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
     if password != "":
         check_password_badge(driver, password, rb.REGISTER_FORM)
     if checked:
-        Element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
+        # Workaround. Rework Checkbox wrapper to simplify arguments.
+        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE, '').click()
     time.sleep(.1)
     robot_keywords.click_button(driver, rb.CREATE_ACCOUNT_BUTTON)
 
@@ -70,11 +74,11 @@ def check_email_outline(driver, email):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "border-color", rb.ERROR_COLOR)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
     if email == "" or email == " ":
-        Element(driver, rb.EMAIL_IS_REQUIRED).wait_until_visible()
+        PageText(driver, rb.EMAIL_IS_REQUIRED).wait_until_visible()
     if email == rb.EXISTING_EMAIL:
-        Element(driver, rb.EMAIL_ALREADY_REGISTERED).wait_until_visible()
+        PageText(driver, rb.EMAIL_ALREADY_REGISTERED).wait_until_visible()
     if email != "" and email != " " and email != rb.EXISTING_EMAIL:
-        Element(driver, rb.EMAIL_INVALID).wait_until_visible()
+        PageText(driver, rb.EMAIL_INVALID).wait_until_visible()
 
 def check_first_name_outline(driver):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-bottom-color", rb.ERROR_COLOR_WITH_OPACITY)
@@ -82,15 +86,15 @@ def check_first_name_outline(driver):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
-    Element(driver, rb.FIRST_NAME_IS_REQUIRED).wait_until_visible()
+    PageText(driver, rb.FIRST_NAME_IS_REQUIRED).wait_until_visible()
 
 def check_last_name_outline(driver):
     robot_keywords.element_style_should_be(driver, rb.REGISTER_LAST_NAME_INPUT, "border-color", rb.ERROR_COLOR)
     robot_keywords.element_style_should_be(driver, rb.REGISTER_LAST_NAME_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
-    Element(driver, rb.LAST_NAME_IS_REQUIRED).wait_until_visible()
+    PageText(driver, rb.LAST_NAME_IS_REQUIRED).wait_until_visible()
 
 def check_terms_and_conditions_error(driver):
-    Element(driver, rb.TERMS_AND_CONDITIONS_ERROR).wait_until_visible()
+    PageText(driver, rb.TERMS_AND_CONDITIONS_ERROR).wait_until_visible()
 
 
 # test-cases
