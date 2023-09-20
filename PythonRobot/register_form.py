@@ -1,7 +1,8 @@
 from RobotVariables import RobotVariables
-from generic_element import Element
 from wrappers import Button
 from wrappers import Checkbox
+from wrappers import PageText
+from wrappers import Pane
 from wrappers import TextField
 
 
@@ -44,31 +45,31 @@ class RegisterForm:
         return Button(self.driver, "//a[@href='https://www.networkoptix.com/privacy-policy/']")
 
     def account_creation_success(self):
-        return Element(self.driver, "//nx-authorize-activate-account-component")
+        return PageText(self.driver, "//nx-authorize-activate-account-component")
 
     def first_name_is_required_error(self):
-        return Element(self.driver, f"{self.first_name_input().locator}{self.required_text}")
+        return PageText(self.driver, f"{self.first_name_input().locator}{self.required_text}")
 
     def last_name_is_required_error(self):
-        return Element(self.driver, f"{self.last_name_input().locator}{self.required_text}")
+        return PageText(self.driver, f"{self.last_name_input().locator}{self.required_text}")
 
     def email_is_required_error(self):
-        return Element(self.driver, f"{self.email_input().locator}{self.required_text}")
+        return PageText(self.driver, f"{self.email_input().locator}{self.required_text}")
 
     def password_is_required_error(self):
-        return Element(self.driver, f"{self.password_input().locator}{self.required_text}")
+        return PageText(self.driver, f"{self.password_input().locator}{self.required_text}")
 
     def email_is_invalid_error(self):
-        return Element(self.driver, f"//p[contains(@class,error-label) and contains(text(),'{self.rb.EMAIL_INVALID_TEXT}')]")
+        return PageText(self.driver, f"//p[contains(@class,error-label) and contains(text(),'{self.rb.EMAIL_INVALID_TEXT}')]")
     
     def password_special_chars_error(self):
-        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_SPECIAL_CHARS_TEXT}')]")
+        return PageText(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_SPECIAL_CHARS_TEXT}')]")
     
     def account_already_exists_error(self):
-        return Element(self.driver, f"//p[contains(@class,'error-label') and contains(text(),'{self.rb.ACCOUNT_ALREADY_EXISTS}')]")
+        return PageText(self.driver, f"//p[contains(@class,'error-label') and contains(text(),'{self.rb.ACCOUNT_ALREADY_EXISTS}')]")
 
     def password_is_weak_error(self):
-        return Element(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]")
+        return PageText(self.driver, f"//div[contains(@class,input-error) and contains(text(),'{self.rb.PASSWORD_IS_WEAK_TEXT}')]")
     
     def password_eye_open(self):
         return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye.svg')]/parent::span")
@@ -80,7 +81,7 @@ class RegisterForm:
         return Button(self.driver, "//span[@data-testid='createAccountLogIn']/parent::button")
                                    
     def _wait_until_form_is_visible(self):
-        Element(self.driver, "//nx-authorize-create-account-component").wait_until_visible()
+        Pane(self.driver, "//nx-authorize-create-account-component").wait_until_visible()
         self.first_name_input()
         self.last_name_input()
         self.password_input()

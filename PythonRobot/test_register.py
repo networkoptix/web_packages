@@ -103,20 +103,13 @@ def valid_inputs_no_errors():
     register_form.email_input().input_text(email)
     register_form.password_input().input_text(rb.BASE_PASSWORD)
     register_form.terms_and_conditions_checkbox().select()
-    if register_form.first_name_is_required_error().in_dom:
-        raise RuntimeError("Fist name required error was visible")
-    if register_form.last_name_is_required_error().in_dom:
-        raise RuntimeError("last name required error was visible")
-    if register_form.email_is_required_error().in_dom:
-        raise RuntimeError("email required error was visible")
-    if register_form.password_is_required_error().in_dom:
-        raise RuntimeError("password required error was visible")
-    if register_form.email_is_invalid_error().in_dom:
-        raise RuntimeError("email invalid error was visible")
-    if register_form.password_special_chars_error().in_dom:
-        raise RuntimeError("password special chars error was visible")
-    if register_form.password_is_weak_error().in_dom:
-        raise RuntimeError("password weak error was visible")
+    register_form.first_name_is_required_error().wait_until_does_not_exist(.5)
+    register_form.last_name_is_required_error().wait_until_does_not_exist(.5)
+    register_form.email_is_required_error().wait_until_does_not_exist(.5)
+    register_form.password_is_required_error().wait_until_does_not_exist(.5)
+    register_form.email_is_invalid_error().wait_until_does_not_exist(.5)
+    register_form.password_special_chars_error().wait_until_does_not_exist(.5)
+    register_form.password_is_weak_error().wait_until_does_not_exist(.5)
     driver.close()
 
 
