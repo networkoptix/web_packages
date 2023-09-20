@@ -1,17 +1,15 @@
 import datetime
 from pathlib import Path
 
-from resource_import import get_headless_chrome
-from variables import ENV
-from login import LoginDialog
-from header import HeaderNav
-from security_form import SecurityForm
-from system_admin import SystemAdmin
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudServer
 from NoptixLibrary.suite import Suite
-from generic_element import Element
-
+from header import HeaderNav
+from login import LoginDialog
+from resource_import import get_headless_chrome
+from security_form import SecurityForm
+from system_admin import SystemAdmin
+from variables import ENV
 
 CLOUD_API = CloudPortalAPI()
 
@@ -234,7 +232,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServe
     modal_apply = security_form.twofa_settings_modal_apply()
     modal_apply.click()
     security_form.twofa_verification_checkbox().unchecked()
-    Element(driver, modal_apply.locator).should_not_be_visible()
+    modal_apply.wait_until_visible()
     try:
         security_form.twofa_settings_modal_cancel()
     except:

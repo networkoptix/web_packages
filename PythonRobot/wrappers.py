@@ -23,6 +23,9 @@ class Button:
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
+    def wait_until_not_visible(self, timeout: float = 5):
+        self._element.wait_until_not_visible(timeout)
+
 
 class Checkbox:
 
