@@ -6,7 +6,7 @@ nx-header-language-select {
         display: flex;
         color: var(--tab-link-webadm-color) !important;
         
-        & > button#dropdownMenuButton {
+        button#dropdownMenuButton {
             color: var(--tab-link-webadm-color) !important;
             background : transparent !important;
             border     : 1px solid transparent !important;
