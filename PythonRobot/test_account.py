@@ -113,8 +113,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "namechanged")
     # todo: the save button doesn't appear.
     account_save = Button(driver, rb.ACCOUNT_SAVE)
-    account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    account_save.click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
     driver = get_headless_chrome()
@@ -127,8 +126,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, rb.TEST_FIRST_NAME)
     account_save = Button(driver, rb.ACCOUNT_SAVE)
-    account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    account_save.click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
 
 
@@ -144,8 +142,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, "namechanged")
     account_save = Button(driver, rb.ACCOUNT_SAVE)
-    account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    account_save.click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
     driver = get_headless_chrome()
@@ -156,8 +153,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     robot_keywords.wait_until_textfield_contains(driver, rb.ACCOUNT_LAST_NAME, "namechanged")
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, rb.TEST_LAST_NAME)
     account_save = Button(driver, rb.ACCOUNT_SAVE)
-    account_save.wait_until_visible()
-    robot_keywords.click_button(driver, rb.ACCOUNT_SAVE)
+    account_save.click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
 
