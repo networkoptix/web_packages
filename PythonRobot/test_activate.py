@@ -5,9 +5,10 @@ import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
-from generic_element import Element
 from login import LoginDialog
 from register_form import RegisterForm
+from wrappers import Button
+from wrappers import PageText
 
 rb = RobotVariables("en_US")
 
@@ -71,10 +72,10 @@ def activate_same_link_twice():
     e = Email()
     link = e.get_email_link(random_email, 'activate')
     driver.get(link)
-    Element(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
     # You go back, Jack,  do it again. Wheel turnin' round and round
     driver.get(link)
-    Element(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
 
 
 def save_user_data_correctly():
@@ -145,7 +146,7 @@ def login_before_activation():
     login._wait_until_modal_is_visible()
     login.email_input().input_text(random_email)
     login.next_button().click()
-    Element(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).wait_until_visible()
+    Button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).wait_until_visible()
 
     robot_keywords.click_button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON)
     sleep(10) # give time for email to arrive
