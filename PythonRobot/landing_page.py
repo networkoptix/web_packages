@@ -2,9 +2,9 @@ import time
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import Element
 from variables import ENV
 from wrappers import Button
+from wrappers import Pane
 
 
 class LandingPage:
@@ -20,7 +20,7 @@ class LandingPage:
         return Button(self.driver, translated_xpath)
 
     def _wait_until_landing_page_is_visible(self):
-        landing_page = Element(
+        landing_page = Pane(
             self.driver,
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
             )
