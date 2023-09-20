@@ -355,11 +355,19 @@ export class NxLayoutViewComponent {
         this.selectedSystem$,
         this.#layoutId$,
         this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
+        this.selectedSystem$.pipe(
+            switchMap(({ id }) => this.store.select(selectResourcesValuesBySystemId(id))),
+        ),
     ]).pipe(
-        switchMap(async ([system, layoutId, layouts]): Promise<Layout> => {
+        switchMap(async ([system, layoutId, layouts, layoutItems]): Promise<Layout> => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
-                if (existingLayout) {
+                const isResourceId = Object.values(layoutItems).some(items =>
+                    items.some(({ id }) => id === layoutId),
+                );
+
+                // Prevent showing a layout that was accidentally saved with the same ID as a resource.
+                if (existingLayout && !isResourceId) {
                     return { systemId: system.id, ...existingLayout };
                 }
             }

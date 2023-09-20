@@ -14,6 +14,7 @@ import {
     Output,
     Signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -146,6 +147,7 @@ const SETTINGS_CONFIG: Setting[] = [
 ];
 
 const DEFAULT_ASPECT_RATIO = 1.7777777910232544 as const;
+const DEFAULT_CELL_ASPECT_RATIO = 1 as const;
 
 interface Transform {
     transform: string;
@@ -450,7 +452,7 @@ export class NxLayoutGridComponent {
             renderConfig: { gridWrapper, rows, columns, origin },
         },
     ]: [Size, ExtractObservable<typeof this.layout$>]) => {
-        cellAspectRatio ||= DEFAULT_ASPECT_RATIO;
+        cellAspectRatio ||= DEFAULT_CELL_ASPECT_RATIO;
         wrapperWidth = wrapperWidth - this.EDGE_GAP;
         wrapperHeight = wrapperHeight - this.EDGE_GAP;
         const aspect = wrapperWidth / columns / (wrapperHeight / rows);
@@ -514,6 +516,13 @@ export class NxLayoutGridComponent {
             transformOrigin?: string;
         },
     );
+
+    draggingPosition$$ = toSignal(this.#draggingPosition$);
+
+    dragging$$ = computed(() => {
+        const { move = {}, resize = {} } = this.draggingPosition$$();
+        return [...Object.values(move), ...Object.values(resize)].some(Boolean);
+    });
 
     #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
         this.#draggingPosition$,
@@ -1040,9 +1049,7 @@ export class NxLayoutGridComponent {
         if (assertResourceOfType.camera(node) && node.details.online) {
             const initialAspect = node.aspectRatio || renderConfig.aspect;
 
-            const isRotated = Boolean(
-                (Math.round(rotation / 90) * 90 + (node.details.parameters.rotation || 0)) % 180,
-            );
+            const isRotated = Boolean((Math.round(rotation / 90) * 90) % 180);
 
             const aspect = isRotated ? 1 / initialAspect : initialAspect;
 

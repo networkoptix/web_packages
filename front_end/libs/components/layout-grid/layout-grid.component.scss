@@ -207,7 +207,9 @@ h2.auto-save-overlay {
     height: 100%;
     overflow: hidden;
     position: relative;
-    background-image: linear-gradient(to right, transparent 0px, #6662 0.25px, #6662 0.2px, transparent 1px), linear-gradient(to bottom, transparent 0px, #6662 0.25px, #6662 0.5px, transparent 1px);
+    &.dragging {
+        background-image: linear-gradient(to right, transparent 0px, #6662 0.25px, #6662 0.2px, transparent 1px), linear-gradient(to bottom, transparent 0px, #6662 0.25px, #6662 0.5px, transparent 1px);
+    }
 }
 
 .portal-wrapper {

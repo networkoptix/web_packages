@@ -106,7 +106,7 @@
     <div
         *ngIf="layoutItemLookup && (layout$ | async) as layout; else preloader"
         class="grid-wrapper"
-        [ngClass]="{ locked: layout.locked || changingLayout }"
+        [ngClass]="{ locked: layout.locked || changingLayout, dragging: dragging$$() }"
         (resize)="updateWrapperSize($event)"
         [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
     >
