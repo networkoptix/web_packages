@@ -6,12 +6,12 @@ from selenium.webdriver.common.keys import Keys
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
-from checkbox import Checkbox
 from generic_element import Element
-from text_field import TextField
 from toast_notification import ToastNotification
 from variables import ENV
+from wrappers import Button
+from wrappers import Checkbox
+from wrappers import TextField
 
 
 class SystemAdmin:

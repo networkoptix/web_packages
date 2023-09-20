@@ -1,7 +1,7 @@
 import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
 from variables import ENV
+from wrappers import Button
 
 
 class SystemUsers:

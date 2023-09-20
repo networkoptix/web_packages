@@ -5,17 +5,17 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 import robot_keywords
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
-from button import Button
 from email_access import Email
 from header import HeaderNav
 from register_form import RegisterForm
+from resource_import import activate
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from resource_import import activate
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from wrappers import Button
 
 rb = RobotVariables("en_US")
 CLOUD_API = CloudPortalAPI()

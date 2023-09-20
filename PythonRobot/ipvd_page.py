@@ -1,7 +1,7 @@
 import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
 from generic_element import Element
+from wrappers import Button
 
 rb = RobotVariables("en_US")
 

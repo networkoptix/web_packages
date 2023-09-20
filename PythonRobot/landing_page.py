@@ -2,9 +2,9 @@ import time
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
 from generic_element import Element
 from variables import ENV
+from wrappers import Button
 
 
 class LandingPage:

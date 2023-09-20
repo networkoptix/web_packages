@@ -1,12 +1,12 @@
+from selenium.webdriver.common.by import By
+
 import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
 from generic_element import Element
 from system_tile import SystemTile
-from text_field import TextField
 from variables import ENV
-from system_tile import SystemTile
-from selenium.webdriver.common.by import By
+from wrappers import Button
+from wrappers import TextField
 
 
 class SystemsPage:

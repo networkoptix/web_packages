@@ -1,8 +1,9 @@
+from selenium.webdriver.common.by import By
+
 import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
 from variables import ENV
-from selenium.webdriver.common.by import By
+from wrappers import Button
 
 
 class SystemLeftMenu:

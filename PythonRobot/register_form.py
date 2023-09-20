@@ -1,9 +1,8 @@
-import robot_keywords
 from RobotVariables import RobotVariables
-from button import Button
-from checkbox import Checkbox
 from generic_element import Element
-from text_field import TextField
+from wrappers import Button
+from wrappers import Checkbox
+from wrappers import TextField
 
 
 class RegisterForm:

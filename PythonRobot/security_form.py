@@ -1,17 +1,15 @@
 import time
 
-import robot_keywords
-from NoptixLibrary.cloud_2fa import Cloud2fa
-from RobotVariables import RobotVariables
-from button import Button
-from checkbox import Checkbox
-from RobotVariables import RobotVariables
-from NoptixLibrary.cloud_2fa import Cloud2fa
-from generic_element import Element
-from NoptixLibrary.suite import CloudAccount
 from selenium.webdriver.common.by import By
-from text_field import TextField
-from page_text import PageText
+
+from NoptixLibrary.cloud_2fa import Cloud2fa
+from NoptixLibrary.suite import CloudAccount
+from RobotVariables import RobotVariables
+from generic_element import Element
+from wrappers import Button
+from wrappers import Checkbox
+from wrappers import PageText
+from wrappers import TextField
 
 
 class SecurityForm:

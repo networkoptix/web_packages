@@ -1,7 +1,6 @@
 import email
 import imaplib
 import json
-import os
 import pathlib
 import re
 import time
@@ -11,18 +10,18 @@ from random import randint
 from typing import ContextManager
 
 import urllib3
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.remote.webdriver import WebDriver
 
 import robot_keywords
 import robot_lists as rl
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
 from generic_element import Element
 from login import LoginDialog
-from text_field import TextField
+from wrappers import TextField
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
