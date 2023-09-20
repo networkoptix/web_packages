@@ -2,10 +2,10 @@ from selenium.webdriver.common.by import By
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import Element
 from system_tile import SystemTile
 from variables import ENV
 from wrappers import Button
+from wrappers import PageText
 from wrappers import TextField
 
 
@@ -20,7 +20,7 @@ class SystemsPage:
     def no_systems(self):
         translated_xpath = self.rb.replace_nested_variables(
                            "//span[contains(text(),'{YOU_HAVE_NO_SYSTEMS_TEXT}')]")
-        return Element(self.driver, translated_xpath)
+        return PageText(self.driver, translated_xpath)
 
     def search_bar(self):
         return TextField(self.driver, "//input[@placeholder='Search systems']")
@@ -33,7 +33,7 @@ class SystemsPage:
             system_text = self.rb.replace_nested_variables('{SYSTEMS_FOUND}')
         else:
             system_text = self.rb.replace_nested_variables('{SYSTEM_FOUND}')
-        return Element(self.driver, f"//span[contains(text(), '{system_count} {system_text}')]")
+        return PageText(self.driver, f"//span[contains(text(), '{system_count} {system_text}')]")
 
     def update_system_tiles(self):
         tiles = self.driver.find_elements(By.XPATH, "//nx-system-card")
