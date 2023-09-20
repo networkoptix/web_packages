@@ -103,3 +103,13 @@ class TextField:
 
     def is_focused(self) -> bool:
         return self._element.is_focused()
+
+
+class Table:
+
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
