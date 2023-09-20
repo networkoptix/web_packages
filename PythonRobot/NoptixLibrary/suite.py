@@ -33,19 +33,33 @@ class Suite:
     def create_cloud_account(self):
         return self._exit_stack.enter_context(CloudAccount())
 
-    def create_cloud_server(self, cloud_owner: 'CloudAccount', suite_name: Optional[str] = None) -> 'CloudServer':
+    def create_cloud_server(self, cloud_owner: 'CloudAccount', suite_name: Optional[str] = None, cloud_users: Optional[dict] = None) -> 'CloudServer':
         if suite_name is None:
             suite_name = 'test_cloud_server_'
-        return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
+        if cloud_users is None:
+            return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
+        else:
+            return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id, cloud_users))
+            
+    def create_cloud_users(self):
+        cloud_users = {}
+        permissions = _GENERIC_KEYWORDS.permissions
+        for permission in permissions:
+            account = self._exit_stack.enter_context(CloudAccount())
+            cloud_users.update({permission: {"email": account.email, "permission": permissions[permission]}})
+        return cloud_users
+
+
 
 
 class CloudServer:
 
-    def __init__(self, cloud_owner: 'CloudAccount', suite_name, run_id, ports: int = 1):
+    def __init__(self, cloud_owner: 'CloudAccount', suite_name, run_id, cloud_users: Optional[dict] = None, ports: int = 1):
         self.cloud_owner = cloud_owner
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
+        self.cloud_users = cloud_users
 
     def __enter__(self) -> 'CloudServer':
         self._set_up()
@@ -77,6 +91,16 @@ class CloudServer:
         self.id = bind_info['systemId']
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
+        # if cloud_users are needed
+        if self.cloud_users:
+            for user in self.cloud_users:
+                _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
+                    self.id,
+                    user,
+                    self.cloud_users[user]['email'],
+                    [self.cloud_owner.email,
+                    self.cloud_owner.password]
+                    )
 
     def _tear_down(self):
         try:
