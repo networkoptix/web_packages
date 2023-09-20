@@ -127,6 +127,6 @@ class SecurityForm:
         return Cloud2fa().decode_qr('qr_code.png')
 
     def _wait_until_form_is_visible(self):
-        self.twofa_enable_button()
-        self.twofa_disabled_badge()
+        self.twofa_enable_button().wait_until_visible()
+        self.twofa_disabled_badge().wait_until_visible()
 
