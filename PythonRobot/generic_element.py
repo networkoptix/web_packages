@@ -26,9 +26,28 @@ class Element:
             return False
         return True
 
-    def text(self):
+    def clear_text(self):
+        self.wait_until_clickable()
+        self._element.clear()
+
+    def click(self):
+        self.wait_until_clickable()
+        self._element.click()
+
+    def delete_all_text(self):
+        self.wait_until_clickable()
+        if platform.system() == 'Darwin':
+            self._element.send_keys(Keys.COMMAND + 'a')
+        else:
+            self._element.send_keys(Keys.CONTROL + 'a')
+        self._element.send_keys(Keys.BACK_SPACE)
+
+    def get_attribute(self, attribute: str):
+        return self._element.get_attribute(attribute)
+
+    def get_screenshot(self, filename: str) -> bool:
         self.wait_until_visible()
-        return self._element.text
+        return self._element.screenshot(filename)
 
     def is_focused(self):
         self.wait_until_clickable()
@@ -37,22 +56,16 @@ class Element:
     def is_visible(self):
         return self._element.is_displayed()
 
-    def click(self):
+    def send_keys(self, text: str):
         self.wait_until_clickable()
-        self._element.click()
+        self._element.send_keys(text)
 
-    def wait_until_visible(self, timeout: float = _DEFAULT_TIMEOUT):
-        self.wait_until_exists(timeout)
-        started_at = time.monotonic()
-        while True:
-            if self._element.is_displayed():
-                return
-            if time.monotonic() - started_at > timeout:
-                raise ElementNotVisible(f'Element locator: {self._locator}')
-            time.sleep(.1)
+    def text(self):
+        self.wait_until_visible()
+        return self._element.text
 
-    def get_attribute(self, attribute: str):
-        return self._element.get_attribute(attribute)
+    def value_of_css_property(self, style_property: str):
+        return self._element.value_of_css_property(style_property)
 
     def wait_until_clickable(self, timeout: float = _DEFAULT_TIMEOUT):
         self.wait_until_visible(timeout)
@@ -62,6 +75,30 @@ class Element:
                 return
             if time.monotonic() - started_at > timeout:
                 raise ElementNotClickable(f'Element locator: {self._locator}')
+            time.sleep(.1)
+
+    def wait_until_does_not_exist(self, timeout: float = _DEFAULT_TIMEOUT):
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._driver.find_element(By.XPATH, self._locator)
+            except NoSuchElementException:
+                return
+            if time.monotonic() - started_at > timeout:
+                raise ElementInDOM(f'Element locator: {self._locator}')
+            _logger.debug('Element with locator %s still in DOM', self._locator)
+            time.sleep(.1)
+
+    def wait_until_exists(self, timeout: float = _DEFAULT_TIMEOUT):
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._element = self._driver.find_element(By.XPATH, self._locator)
+                return
+            except NoSuchElementException:
+                _logger.debug('Element with locator %s not in DOM yet', self._locator)
+            if time.monotonic() - started_at > timeout:
+                raise ElementNotInDOM(f'Element locator: {self._locator}')
             time.sleep(.1)
 
     def wait_until_not_clickable(self, timeout: float = _DEFAULT_TIMEOUT):
@@ -84,53 +121,16 @@ class Element:
                 raise ElementVisible(f'Element locator: {self._locator}')
             time.sleep(.1)
 
-    def delete_all_text(self):
-        self.wait_until_clickable()
-        if platform.system() == 'Darwin':
-            self._element.send_keys(Keys.COMMAND + 'a')
-        else:
-            self._element.send_keys(Keys.CONTROL + 'a')
-        self._element.send_keys(Keys.BACK_SPACE)
-
-    def clear_text(self):
-        self.wait_until_clickable()
-        self._element.clear()
-
-    def send_keys(self, text: str):
-        self.wait_until_clickable()
-        self._element.send_keys(text)
-
-    def value_of_css_property(self, style_property: str):
-        return self._element.value_of_css_property(style_property)
-
-    # Return type is weird. See documentation for more details. Should be reworked.
-    def get_screenshot(self, filename: str) -> bool:
-        self.wait_until_visible()
-        return self._element.screenshot(filename)
-
-    def wait_until_exists(self, timeout: float = _DEFAULT_TIMEOUT):
+    def wait_until_visible(self, timeout: float = _DEFAULT_TIMEOUT):
+        self.wait_until_exists(timeout)
         started_at = time.monotonic()
         while True:
-            try:
-                self._element = self._driver.find_element(By.XPATH, self._locator)
+            if self._element.is_displayed():
                 return
-            except NoSuchElementException:
-                _logger.debug('Element with locator %s not in DOM yet', self._locator)
             if time.monotonic() - started_at > timeout:
-                raise ElementNotInDOM(f'Element locator: {self._locator}')
+                raise ElementNotVisible(f'Element locator: {self._locator}')
             time.sleep(.1)
 
-    def wait_until_does_not_exist(self, timeout: float = _DEFAULT_TIMEOUT):
-        started_at = time.monotonic()
-        while True:
-            try:
-                self._driver.find_element(By.XPATH, self._locator)
-            except NoSuchElementException:
-                return
-            if time.monotonic() - started_at > timeout:
-                raise ElementInDOM(f'Element locator: {self._locator}')
-            _logger.debug('Element with locator %s still in DOM', self._locator)
-            time.sleep(.1)
 
 
 class ElementNotInDOM(Exception):
