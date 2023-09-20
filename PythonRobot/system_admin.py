@@ -6,11 +6,11 @@ from selenium.webdriver.common.keys import Keys
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import Element
 from toast_notification import ToastNotification
 from variables import ENV
 from wrappers import Button
 from wrappers import Checkbox
+from wrappers import PageText
 from wrappers import TextField
 
 
@@ -84,7 +84,7 @@ class SystemAdmin:
 
     def system_is_being_merged(self):
         translated_xpath = self.rb.replace_nested_variables("//div[contains(text(), '${SYSTEM_IS_BEING_MERGED_TEXT}')]")
-        return Element(self.driver, translated_xpath)
+        return PageText(self.driver, translated_xpath)
 
     def systems_merged_success_toast_notification(self, primary_system_name, secondary_system_name):
         alert_text = self.rb.__getattr__("SYSTEM_MERGE_COMPLETED_TEXT", get_replacements=False)
