@@ -5,9 +5,9 @@ from selenium.webdriver.common.by import By
 from NoptixLibrary.cloud_2fa import Cloud2fa
 from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
-from generic_element import Element
 from wrappers import Button
 from wrappers import Checkbox
+from wrappers import Image
 from wrappers import PageText
 from wrappers import TextField
 
@@ -59,7 +59,7 @@ class SecurityForm:
         return Button(self.driver, f"{self.twofa_modal}//button[@id='wizardDone']")
 
     def twofa_backup_code_error(self):
-        return Element(self.driver, "//nx-authorize-backup-code-component//p")
+        return PageText(self.driver, "//nx-authorize-backup-code-component//p")
 
     def twofa_verification_checkbox(self):
         return Checkbox(self.driver, "//nx-account-security-component//nx-section//nx-checkbox", "//input[@id='skip-tfauth']" )
@@ -123,7 +123,7 @@ class SecurityForm:
         self.twofa_disable_modal_button().click()
 
     def _get_key_from_qr_code(self):
-        Element(self.driver, f'{self.twofa_modal}//qr-code').get_selenium_element().screenshot('qr_code.png')
+        Image(self.driver, f'{self.twofa_modal}//qr-code').screenshot('qr_code.png')
         return Cloud2fa().decode_qr('qr_code.png')
 
     def _wait_until_form_is_visible(self):
