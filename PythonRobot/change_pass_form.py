@@ -1,9 +1,9 @@
 import robot_keywords
-from PythonRobot.generic_element import Element
 from RobotVariables import RobotVariables
 from variables import ENV
 from wrappers import Button
 from wrappers import PageText
+from wrappers import Pane
 from wrappers import TextField
 
 
@@ -53,7 +53,7 @@ class ChangePassForm:
         save_button.click()
 
     def _wait_until_form_is_visible(self):
-        element = Element(self.driver, "//nx-account-password-component")
+        element = Pane(self.driver, "//nx-account-password-component")
         element.wait_until_visible(timeout=10)
 
     def _location_is_correct(self):
