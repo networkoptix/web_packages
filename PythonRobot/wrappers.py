@@ -157,6 +157,12 @@ class Image:
     def screenshot(self, filename: str):
         return self._element.get_screenshot(filename)
 
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
+    def click(self):
+        self._element.click()
+
 
 class Pane:
 
@@ -195,3 +201,28 @@ class DropDown:
 
     def text(self) -> str:
         return self._element.text()
+
+
+class DropDownOption:
+
+    # TODO: Move functionality to DropDown class.
+
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
+    def click(self):
+        self._element.click()
+
+
+class Tooltip:
+
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)

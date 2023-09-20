@@ -19,9 +19,16 @@ import robot_lists as rl
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
-from generic_element import Element
 from login import LoginDialog
+from wrappers import Button
+from wrappers import Checkbox
+from wrappers import DropDown
+from wrappers import DropDownOption
+from wrappers import Image
+from wrappers import PageText
+from wrappers import Pane
 from wrappers import TextField
+from wrappers import Tooltip
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -31,8 +38,9 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
     if from_email:
         link = get_email_link(email, password, from_email, "activate")
         driver.get(link)
-        for element in [rb.ACTIVATION_SUCCESS, rb.ACTIVATION_SUCCESS_ICON, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON]:
-            Element(driver, element).wait_until_visible()
+        PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible()
+        Image(driver, rb.ACTIVATION_SUCCESS_ICON).wait_until_visible()
+        Button(driver, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON).wait_until_visible()
     else:
         api = CloudPortalAPI()
         api.activate_account_via_api(email, password)
@@ -66,8 +74,8 @@ def check_language_logged_in(email, password, language="en_US"):
 
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
-        Element(driver, button).wait_until_visible()
-        Element(driver, button).click()
+        Button(driver, button).wait_until_visible()
+        Button(driver, button).click()
 
     if validate and not two_FA:
         # check language variable and set it to default. That is, set language before logging in
@@ -75,26 +83,27 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         pass
         #TODO: set user theme (ie, light or dark mode)
         pass
-    for element in [rb.LOG_IN_MODAL, rb.LOG_IN_NEXT_BUTTON, rb.EMAIL_INPUT ]:
-        Element(driver, element).wait_until_visible()
+    Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
+    Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
+    TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
-    Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
+    Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
 
     if exists:
-        Element(driver, rb.PASSWORD_INPUT).wait_until_visible()
+        TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT, password)
         time.sleep(1)
-        log_in_button = Element(driver, rb.LOG_IN_BUTTON)
+        log_in_button = Button(driver, rb.LOG_IN_BUTTON)
         log_in_button.wait_until_visible()
         log_in_button.click()
     else:
-        for element in [rb.ACCOUNT_DOES_NOT_EXIST, rb.YOU_CAN_CREATE_AN_ACCOUNT]:
-            Element(driver, element).wait_until_visible()
+        PageText(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
+        PageText(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
-        Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
+        DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
 
 def check_log_in(driver: webdriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
@@ -104,53 +113,53 @@ def check_log_in(driver: webdriver, user: str, password: str, button=rb.LOG_IN_N
 
 def check_password_badge(driver: webdriver, password, new_focus):
     if password != "":
-        Element(driver, rb.PASSWORD_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_BADGE).wait_until_visible()
     if password == rb.COMMON_PASSWORD:
-        Element(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE).wait_until_visible()
     elif password in rl.WEAK_PASSWORDS:
-        Element(driver, rb.PASSWORD_IS_WEAK_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_WEAK_BADGE).wait_until_visible()
     elif password in rl.INCORRECT_PASSWORDS:
-        Element(driver, rb.PASSWORD_INCORRECT_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_INCORRECT_BADGE).wait_until_visible()
     elif password in rl.FAIR_PASSWORDS:
-        Element(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
     elif password in rl.GOOD_PASSWORDS:
-        Element(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
-        Element(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE).wait_until_visible()
     
     if password != "":
         robot_keywords.mouse_over(driver, rb.PASSWORD_BADGE)
     
     if password == rb.COMMON_PASSWORD:
-        too_common = Element(
+        too_common = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]',
             )
         too_common.wait_until_visible()
     elif password in rl.WEAK_PASSWORDS:
-        weak_password = Element(
+        weak_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
             )
         weak_password.wait_until_visible()
     elif password in rl.INCORRECT_PASSWORDS:
-        incorrect_password = Element(
+        incorrect_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]',
             )
         incorrect_password.wait_until_visible()
     elif password in rl.FAIR_PASSWORDS:
-        fair_password = Element(
+        fair_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
             )
         fair_password.wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
-        seven_char_password = Element(
+        seven_char_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and contains(text(), "{rb.PASSWORD_TOO_SHORT_TEXT}")]',
@@ -165,21 +174,21 @@ def check_password_badge(driver: webdriver, password, new_focus):
     elif password in rl.INCORRECT_PASSWORDS:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_INCORRECT_BADGE, new_focus)
     elif password in rl.FAIR_PASSWORDS:
-        Element(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
     elif password in rl.GOOD_PASSWORDS:
-        Element(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
+        Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
 
 def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
-    Element(driver, new_focus).click()
+    TextField(driver, new_focus).click()
     if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
         robot_keywords.element_style_should_be(driver, input, "border-bottom-color",rb.ERROR_COLOR_WITH_OPACITY)
         robot_keywords.element_style_should_be(driver, input, "border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
         robot_keywords.element_style_should_be(driver, input, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
         robot_keywords.element_style_should_be(driver, input, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
         robot_keywords.element_style_should_be(driver, input, "color", rb.ERROR_COLOR_WITH_OPACITY)
-        password_element = Element(
+        password_element = TextField(
             driver,
             f"//nx-password-input[@name='{input_name}' "
             f"and contains(@class, 'ng-invalid')]//input[@id='{input_name}']",
@@ -278,20 +287,20 @@ def logout_japanese(driver:webdriver):
     robot_keywords.wait_until_page_contains_element(driver, element)
 
     time.sleep(0.5)
-    Element(driver, rb.ACCOUNT_DROPDOWN).click()
-    Element(driver, element).wait_until_visible()
-    Element(driver, element).click()
+    DropDown(driver, rb.ACCOUNT_DROPDOWN).click()
+    DropDownOption(driver, element).wait_until_visible()
+    DropDownOption(driver, element).click()
     validate_log_out(driver)
 
 def move_focus_and_check_badge_stays(driver, badge, new_focus):
-    badge = Element(driver, badge)
+    badge = Image(driver, badge)
     badge.wait_until_visible()
     badge.click()
     badge.wait_until_visible()
 
 def move_focus_and_check_element(driver, element, new_focus):
-    Element(driver, new_focus).click()
-    Element(driver, element).wait_until_visible()
+    TextField(driver, new_focus).click()
+    PageText(driver, element).wait_until_visible()
 
 def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMAIL, is_secure=True):
     try:
@@ -342,46 +351,48 @@ def register(driver, first_name, last_name, email, password, checked=False, view
     robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
     # continue on failure
     try:
-        Element(driver, rb.REGISTER_EMAIL_INPUT_LOCKED).wait_until_visible()
+        PageText(driver, rb.REGISTER_EMAIL_INPUT_LOCKED).wait_until_visible()
     except:
         pass
     robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
     robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
     if not checked:
-        Element(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
-    Element(driver, rb.CREATE_ACCOUNT_BUTTON).click()
+        # Workaround. Rework Checkbox wrapper to simplify arguments.
+        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE, '').click()
+    Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 
 
 # from robot_tests/Resources/front-end-resources/restore-pass-resource.robot    
 def send_restore_password_email(driver: webdriver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
-    Element(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    Element(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
-    Element(driver, rb.EMAIL_INPUT).wait_until_visible()
+    Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
+    Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
+    TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
     TextField(driver, rb.EMAIL_INPUT).input_text(email)
     time.sleep(1)
-    Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
-    Element(driver, rb.FORGOT_PASSWORD_BUTTON).wait_until_visible()
-    Element(driver, rb.FORGOT_PASSWORD_BUTTON).click()
+    Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
+    Button(driver, rb.FORGOT_PASSWORD_BUTTON).wait_until_visible()
+    Button(driver, rb.FORGOT_PASSWORD_BUTTON).click()
     robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
-    Element(driver, rb.RESET_PASSWORD_BUTTON).click()
+    Button(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 
 def validate_log_out(driver: webdriver):
     robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
+
 def verify_in_account_page(driver: webdriver):
-    Element(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
-    Element(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
-    Element(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
-    Element(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
-    Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    Element(driver, rb.DELETE_ACCOUNT_BUTTON).wait_until_visible()
-    for element in [rb.ACCOUNT_SETTINGS_BUTTON, rb.ACCOUNT_CANCEL]:
-        Element(driver, element).wait_until_not_visible()
+    TextField(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
+    DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
+    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
+    Button(driver, rb.DELETE_ACCOUNT_BUTTON).wait_until_visible()
+    Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_not_visible()
+    Button(driver, rb.ACCOUNT_CANCEL).wait_until_not_visible()
     time.sleep(0.5)
 
 
@@ -403,8 +414,8 @@ def wait_for_email(mail, recipient, timeout_sec):
 
     
 def validate_on_register_page(driver: webdriver):
-    Element(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
-    Element(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
-    Element(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
-    Element(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
+    TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
+    TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
+    TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
+    Button(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
 
