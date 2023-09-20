@@ -1,6 +1,4 @@
-import time
-
-from generic_element import Element
+from wrappers import PageText
 
 
 class ToastNotification:
@@ -10,7 +8,7 @@ class ToastNotification:
         self._alert_text = alert_text
 
     def message(self):
-        message = Element(
+        message = PageText(
             self._driver,
             f"//nx-toast//span[contains(text(),'{self._alert_text}')]",
             )

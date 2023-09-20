@@ -83,6 +83,9 @@ class PageText:
     def click(self):
         self._element.click()
 
+    def wait_until_does_not_exist(self, timeout: float = 5):
+        self._element.wait_until_does_not_exist(timeout)
+
 
 class TextField:
 
