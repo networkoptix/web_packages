@@ -1,5 +1,6 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { Component, OnInit, inject } from '@angular/core';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -21,7 +22,7 @@ import { images } from '@static-variables';
     templateUrl: './temporary-auth-login.component.html',
     styleUrls: ['./temporary-auth-login.component.scss'],
     standalone: true,
-    imports: [AngularSvgIconModule],
+    imports: [AngularSvgIconModule, TranslateModule],
 })
 export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> implements OnInit {
     readonly urlUpdateTimeout: number = 150;
