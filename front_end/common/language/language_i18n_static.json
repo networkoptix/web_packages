@@ -807,7 +807,8 @@
             "serversReset": "Reset server&nbsp;<strong>{ title }</strong>&nbsp;to defaults?",
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?",
             "defaultUserGroupText": "Built-In",
-            "customUserGroupText": "Custom"
+            "customUserGroupText": "Custom",
+            "ldapUserGroupText": "LDAP"
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."

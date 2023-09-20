@@ -1,6 +1,7 @@
 import { LOCALE_ID } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
+import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemBase } from '@services/system/system-base';
 import type { ChangedIdReturned } from '@services/system-api.types';
@@ -26,7 +27,7 @@ export class UserManager {
     protected _ownerEmail: string = '';
     private _accessRole: string = '';
     accessRoles: Role[];
-    groups: { id: string; label: string; tooltip?: string }[];
+    groups: MultiSelectItem[];
     currentUser: NxUser;
     users: NxUser[];
 

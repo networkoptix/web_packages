@@ -118,47 +118,61 @@ export class UserWithGroupsManager extends UserManager {
     }
 
     processGroups(userGroups: UserGroup[]): void {
-        const { defaultUserGroupText, customUserGroupText } = this.LANG.dialogs.titles;
+        const { defaultUserGroupText, customUserGroupText, ldapUserGroupText } =
+            this.LANG.dialogs.titles;
         const groupsToPermissions: {
             [id: string]: Set<string>;
         } = {};
-        let groupsForDropdown: UserGroupDropdown[] = [{ id: 'title', label: defaultUserGroupText }];
-        let customTitleNeeded = false;
-        let startOfCustomGroups = -1;
-        userGroups.forEach(({ id, name, description, attributes, permissions }, index) => {
+        const builtInGroup: UserGroupDropdown[] = [{ id: 'title', label: defaultUserGroupText }];
+        const customGroup: UserGroupDropdown[] = [];
+        const ldapGroup: UserGroupDropdown[] = [];
+        userGroups.forEach(({ id, name, description, attributes, permissions, type }) => {
             groupsToPermissions[id] = new Set(permissions?.split('|'));
             if (!description && attributes?.includes('readonly')) {
                 userGroups[id].description = this.LANG.accessRoles[name].description || name;
             }
-
-            if (name !== 'Owner') {
-                // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
-                if (id === this.administratorGroup) {
-                    return;
-                }
-                // Used to insert the horizontal divider for the mult-select dropdown
-                if (!customTitleNeeded && !attributes?.includes('readonly')) {
-                    customTitleNeeded = true;
-                    startOfCustomGroups = index + 2;
-                    groupsForDropdown.push(
-                        { id: 'horizontal', label: 'horizontal' },
-                        { id: 'title', label: customUserGroupText },
-                    );
-                }
-                groupsForDropdown.push({ id, label: name, tooltip: description });
+            // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
+            if (id === this.administratorGroup) {
+                return;
+            }
+            // Organize Built-In, LDAP, and Custom groups into smaller groups to combine later for the mult-select dropdown
+            if (attributes && attributes === 'readonly') {
+                builtInGroup.push({
+                    id,
+                    label: name,
+                    tooltip: description,
+                });
+            } else if (type && type === 'ldap') {
+                ldapGroup.push({
+                    id,
+                    label: name,
+                    tooltip: description,
+                });
+            } else {
+                customGroup.push({
+                    id,
+                    label: name,
+                    tooltip: description,
+                });
             }
         });
-        if (startOfCustomGroups !== -1) {
-            groupsForDropdown = [
-                ...groupsForDropdown.slice(0, startOfCustomGroups),
-                ...groupsForDropdown
-                    .slice(startOfCustomGroups)
-                    .sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase())),
-            ];
+
+        // Used to insert the group title and horizontal divider for the mult-select dropdown
+        if (customGroup.length > 0) {
+            customGroup.sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase()));
+            customGroup.unshift({ id: 'title', label: customUserGroupText });
+            customGroup.unshift({ id: 'horizontal', label: 'horizontal' });
         }
+        if (ldapGroup.length > 0) {
+            ldapGroup.sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase()));
+            ldapGroup.unshift({ id: 'title', label: ldapUserGroupText });
+            ldapGroup.unshift({ id: 'horizontal', label: 'horizontal' });
+        }
+        // Combine Built-In, LDAP, and Custom groups
+        this.groups = builtInGroup.concat(customGroup, ldapGroup);
+
         this.userGroups = userGroups;
         this.groupsToPermissions = groupsToPermissions;
-        this.groups = groupsForDropdown;
     }
 
     getPermissionsFromUserGroups({ groupIds, permissions }: UserPerms): Set<string> {
