@@ -20,6 +20,9 @@ class Button:
     def is_focused(self) -> bool:
         return self._element.is_focused()
 
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
 
 class Checkbox:
 
@@ -61,6 +64,9 @@ class PageText:
 
     def get_text(self) -> str:
         return self._element.text()
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
 
 
 class TextField:
