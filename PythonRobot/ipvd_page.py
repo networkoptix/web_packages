@@ -1,7 +1,11 @@
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import Element
 from wrappers import Button
+from wrappers import Link
+from wrappers import PageText
+from wrappers import Pane
+from wrappers import Table
+from wrappers import TextField
 
 rb = RobotVariables("en_US")
 
@@ -34,7 +38,7 @@ class IVPDPage():
         self.validate_on_ipvd_page()
 
     def assert_table_appears(self):
-        Element(self.driver, self.IPVD_TABLE_FIRST_ITEM).wait_until_visible(20)
+        Table(self.driver, self.IPVD_TABLE_FIRST_ITEM).wait_until_visible(20)
         # we want to make sure that the first row has "Encoder" in the type column.
         robot_keywords.element_text_should_be(self.driver,
                                               self.IPVD_TABLE_FIRST_ITEM + '/../../div[contains(@id, "hardwareType")]',
@@ -75,25 +79,28 @@ class IVPDPage():
         return Button(self.driver, ENCODERS)
 
     def placeholder_text(self):
-        search_palceholder = Element(self.driver, self.SEARCH_BAR).get_attribute("placeholder")
+        search_palceholder = TextField(self.driver, self.SEARCH_BAR).get_attribute("placeholder")
         assert search_palceholder.lower() == self.rb.SEARCH_PLACEHOLDER_TEXT.lower()
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, self.LANDING_PAGE_TEXT)
 
     def validate_on_ipvd_page(self):
-        Element(self.driver, IVPDPage.SEARCH_BAR).wait_until_visible(timeout=60)
-        Element(self.driver, IVPDPage.ADV_SEARCH_BUTTON).wait_until_visible(timeout=60)
-        Element(self.driver, IVPDPage.MANUFACTURERS_PANE).wait_until_visible(timeout=60)
-        Element(self.driver, IVPDPage.DEVICES_PANE).wait_until_visible(timeout=60)
-        Element(self.driver, IVPDPage.LANDING_PAGE_TEXT).wait_until_visible(timeout=60)
+        TextField(self.driver, IVPDPage.SEARCH_BAR).wait_until_visible(timeout=60)
+        Button(self.driver, IVPDPage.ADV_SEARCH_BUTTON).wait_until_visible(timeout=60)
+        Pane(self.driver, IVPDPage.MANUFACTURERS_PANE).wait_until_visible(timeout=60)
+        Pane(self.driver, IVPDPage.DEVICES_PANE).wait_until_visible(timeout=60)
+        PageText(self.driver, IVPDPage.LANDING_PAGE_TEXT).wait_until_visible(timeout=60)
         assert self.driver.title == rb.IPVD_TITLE_TEXT, rb.IPVD_TITLE_TEXT + ' - ' + rb.PRODUCT_NAME
-        for element in [self.TABLE, self.DEVICE_DETAILS, self.PAGINATION, self.EXPORT_TO_CSV_LINK]:
-            Element(self.driver, element).wait_until_not_visible()
+        Table(self.driver, self.TABLE).wait_until_not_visible()
+        Pane(self.driver, self.DEVICE_DETAILS).wait_until_not_visible()
+        Link(self.driver, self.PAGINATION).wait_until_not_visible()
+        Link(self.driver, self.EXPORT_TO_CSV_LINK).wait_until_not_visible()
 
     def validate_landing_page_objects_not_visible(self):
-        for element in [self.MANUFACTURERS_PANE, self.AND_MORE, self.DEVICES_PANE]:
-            Element(self.driver, element).wait_until_not_visible()
+        Pane(self.driver, self.MANUFACTURERS_PANE).wait_until_not_visible()
+        PageText(self.driver, self.AND_MORE).wait_until_not_visible()
+        Pane(self.driver, self.DEVICES_PANE).wait_until_visible()
 
 
 if __name__ == "__main__":

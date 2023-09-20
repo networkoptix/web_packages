@@ -71,6 +71,9 @@ class PageText:
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
+    def wait_until_not_visible(self, timeout: float = 5):
+        self._element.wait_until_not_visible(timeout)
+
 
 class TextField:
 
@@ -107,6 +110,12 @@ class TextField:
     def is_focused(self) -> bool:
         return self._element.is_focused()
 
+    def get_attribute(self, attribute: str):
+        return self._element.get_attribute(attribute)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
 
 class Table:
 
@@ -117,6 +126,9 @@ class Table:
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
+    def wait_until_not_visible(self, timeout: float = 5):
+        self._element.wait_until_not_visible(timeout)
+
 
 class Image:
 
@@ -126,3 +138,26 @@ class Image:
 
     def screenshot(self, filename: str):
         return self._element.get_screenshot(filename)
+
+
+class Pane:
+
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
+    def wait_until_not_visible(self, timeout: float = 5):
+        self._element.wait_until_not_visible(timeout)
+
+
+class Link:
+
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_not_visible(self, timeout: float = 5):
+        self._element.wait_until_not_visible(timeout)
