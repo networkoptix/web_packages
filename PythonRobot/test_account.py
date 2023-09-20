@@ -6,14 +6,17 @@ import resource_import
 import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
-from generic_element import Element
 from resource_import import get_headless_chrome
 from resource_import import get_lang_list
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
 from resource_import import send_restore_password_email
 from resource_import import verify_in_account_page
-from variables import ERROR_COLOR
+from wrappers import Button
+from wrappers import DropDown
+from wrappers import PageText
+from wrappers import Pane
+from wrappers import TextField
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"
@@ -21,7 +24,7 @@ rb = RobotVariables("en_US")
 
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
-        button_element = Element(driver, button)
+        button_element = Button(driver, button)
         button_element.wait_until_visible()
         button_element.click()
     if validate and not two_FA:
@@ -30,27 +33,27 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         pass
         #TODO: set user theme (ie, light or dark mode)
         pass
-    Element(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    Element(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
-    Element(driver, rb.EMAIL_INPUT).wait_until_visible()
+    Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
+    Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
+    TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
     robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
     time.sleep(1)
-    Element(driver, rb.LOG_IN_NEXT_BUTTON).click()
+    Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
     if exists:
-        Element(driver, rb.PASSWORD_INPUT).wait_until_visible()
+        TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
         robot_keywords.input_text(driver, rb.PASSWORD_INPUT, password)
         time.sleep(1)
-        Element(driver, rb.LOG_IN_BUTTON).wait_until_visible()
-        Element(driver, rb.LOG_IN_BUTTON).click()
+        Button(driver, rb.LOG_IN_BUTTON).wait_until_visible()
+        Button(driver, rb.LOG_IN_BUTTON).click()
     else:
-        Element(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
-        Element(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
+        PageText(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
+        PageText(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
     # TODO: Check if 2fa is true and there is no backup code
     if validate:
         # todo: remove this
         time.sleep(5)
-        Element(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
+        DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
 
 
@@ -62,9 +65,9 @@ def test_can_access_account_page_from_dropdown():
     driver.get(rb.ENV)
     cloud_login(driver, email, password)
     time.sleep(3)
-    element(driver, rb.account_dropdown).wait_until_visible()
+    DropDown(driver, rb.account_dropdown).wait_until_visible()
     robot_keywords.click_button(driver, rb.account_dropdown)
-    element(driver, rb.account_settings_button).wait_until_visible()
+    Button(driver, rb.account_settings_button).wait_until_visible()
     robot_keywords.click_on_link(driver, rb.account_settings_button)
     verify_in_account_page(driver)
     driver.quit()
@@ -106,10 +109,10 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     driver.get(url)
     cloud_login(driver, email, password, button=none, api=false)
     verify_in_account_page(driver)
-    element(driver, rb.account_first_name).clear_text()
+    TextField(driver, rb.account_first_name).clear()
     robot_keywords.input_text(driver, rb.account_first_name, "namechanged")
     # todo: the save button doesn't appear.
-    account_save = element(driver, rb.account_save)
+    account_save = Button(driver, rb.account_save)
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
@@ -121,7 +124,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     verify_in_account_page(driver)
     time.sleep(2)
     robot_keywords.wait_until_textfield_contains(driver, rb.account_first_name, "namechanged")
-    element(driver, rb.account_first_name).clear_text()
+    TextField(driver, rb.account_first_name).clear()
     robot_keywords.input_text(driver, rb.account_first_name, rb.test_first_name)
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
@@ -139,7 +142,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     cloud_login(driver, email, password, button=none, api=false)
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.account_last_name, "namechanged")
-    account_save = element(driver, rb.account_save)
+    account_save = Button(driver, rb.account_save)
     account_save.wait_until_visible()
     robot_keywords.click_button(driver, rb.account_save)
     robot_keywords.check_for_alert(driver, rb.your_account_is_successfully_saved)
@@ -164,8 +167,8 @@ def test_first_name_is_required():
     driver.get(url)
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    Element(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
-    Element(driver, rb.ACCOUNT_LAST_NAME).click()
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
+    TextField(driver, rb.ACCOUNT_LAST_NAME).click()
     robot_keywords.wait_until_element_has_style(
         driver,
         rb.ACCOUNT_FIRST_NAME,
@@ -178,8 +181,8 @@ def test_first_name_is_required():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    account_save = Element(driver, rb.ACCOUNT_SAVE)
-    account_cancel = Element(driver, rb.ACCOUNT_CANCEL)
+    account_save = Button(driver, rb.ACCOUNT_SAVE)
+    account_cancel = Button(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
     account_cancel.wait_until_visible()
     account_save.wait_until_not_clickable()
@@ -207,8 +210,8 @@ def test_last_name_is_required():
     driver.get(url)
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    Element(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
-    Element(driver, rb.ACCOUNT_FIRST_NAME).click()
+    TextField(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).click()
     robot_keywords.wait_until_element_has_style(
         driver,
         rb.ACCOUNT_LAST_NAME,
@@ -221,8 +224,8 @@ def test_last_name_is_required():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    account_save = Element(driver, rb.ACCOUNT_SAVE)
-    cancel_button = Element(driver, rb.ACCOUNT_CANCEL)
+    account_save = Button(driver, rb.ACCOUNT_SAVE)
+    cancel_button = Button(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
     cancel_button.wait_until_visible()
     account_save.wait_until_not_clickable()
@@ -255,7 +258,7 @@ def test_space_for_first_name_is_not_valid():
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")
-    Element(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
+    PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
     robot_keywords.wait_until_element_has_style(
         driver,
         rb.ACCOUNT_FIRST_NAME,
@@ -268,8 +271,8 @@ def test_space_for_first_name_is_not_valid():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    Element(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-    Element(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
+    Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
+    Button(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
     robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     driver.quit()
 
@@ -283,7 +286,7 @@ def test_space_for_last_name_is_not_valid():
     verify_in_account_page(driver)
     robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "luke")
     robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, " ")
-    Element(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
+    PageText(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
     robot_keywords.wait_until_element_has_style(
         driver,
         rb.ACCOUNT_LAST_NAME,
@@ -296,8 +299,8 @@ def test_space_for_last_name_is_not_valid():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    Element(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-    Element(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
+    Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
+    Button(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
     robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
     driver.quit()
 
@@ -315,19 +318,19 @@ def test_language_is_changeable_on_the_account_page():
         verify_in_account_page(driver)
         if lang != rb.language:
             robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-            language_button = Element(
+            language_button = Button(
                 driver,
                 f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
                 )
             assert language_button.in_dom, f"No button for language {lang}"
             language_button.click()
-            Element(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-    Element(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
+            PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
+    DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-    Element(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
+    Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
     time.sleep(1)
     verify_in_account_page(driver)
-    Element(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
+    PageText(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
     driver.quit()
 
 
@@ -343,12 +346,12 @@ def test_language_change_affects_emails():
         cloud_login(driver, random_email, password, button=None, api=False)
         verify_in_account_page(driver)
         robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
-        button = Element(
+        button = Button(
             driver,
             "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
             )
         button.wait_until_visible()
-        Element(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
+        Button(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
         time.sleep(5)
         driver.quit()
     # if we just closed the browser, we'll get a MaxRetryError
@@ -381,20 +384,20 @@ def test_language_change_is_new_default():
     robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
     lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
     droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
-    Element(driver, droplang1).wait_until_visible()
-    Element(driver, droplang1).click()
+    DropDown(driver, droplang1).wait_until_visible()
+    DropDown(driver, droplang1).click()
     time.sleep(5)
     driver.refresh()
     dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
-    Element(driver, dropLang2).wait_until_visible()
-    drop_lang_element = Element(driver, dropLang2)
+    DropDown(driver, dropLang2).wait_until_visible()
+    drop_lang_element = DropDown(driver, dropLang2)
     activeLang = drop_lang_element.text()
     assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
     if lang == 'ja_JP':
-        info_element = Element(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
     elif lang == 'de_DE':
-        info_element = Element(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
     resource_import.logout_japanese(driver)
     url1 = rb.ENV + "/account"
@@ -404,15 +407,15 @@ def test_language_change_is_new_default():
     api.set_account_language(email, password, new_language=lang)
     time.sleep(5)
     driver.refresh()
-    Element(driver, dropLang2).wait_until_visible()
+    DropDown(driver, dropLang2).wait_until_visible()
     activeLang = drop_lang_element.text()
     if activeLang.lower() not in lang.lower():
         assert False, f"{activeLang.lower()} not found in {lang.lower()}"  
     if rb.LANGUAGE == 'ja_JP':
-        info_element = Element(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
     elif rb.LANGUAGE == 'de_DE':
-        info_element = Element(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
     resource_import.check_language_logged_in(email, password)
     time.sleep(3)

@@ -26,6 +26,12 @@ class Button:
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
 
+    def wait_until_clickable(self, timeout: float = 5):
+        self._element.wait_until_clickable(timeout)
+
+    def wait_until_not_clickable(self, timeout: float = 5):
+        self._element.wait_until_not_clickable(timeout)
+
 
 class Checkbox:
 
@@ -74,6 +80,9 @@ class PageText:
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
 
+    def click(self):
+        self._element.click()
+
 
 class TextField:
 
@@ -115,6 +124,12 @@ class TextField:
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
+
+    def delete_all_text(self):
+        self._element.delete_all_text()
+
+    def click(self):
+        self._element.click()
 
 
 class Table:
@@ -161,3 +176,19 @@ class Link:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
+
+
+class DropDown:
+
+    def __init__(self, driver: webdriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
+    def click(self):
+        self._element.click()
+
+    def text(self) -> str:
+        return self._element.text()
