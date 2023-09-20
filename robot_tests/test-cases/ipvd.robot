@@ -4,7 +4,7 @@ Suite Setup       Open Browser and go to URL    ${ENV}/ipvd
 Test Setup        Run Keywords    QA Video Recording Start     ipvd-resource.Restart
 Test Teardown     Run Keywords    QA Video Recording Stop
 Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
-Force Tags        Threaded 
+Force Tags        Threaded
 
 *** Test Cases ***
 1. IPVD Page loads without Login
@@ -13,54 +13,6 @@ Force Tags        Threaded
 2. IPVD Page loads while Logged in
     Log In    ${EMAIL OWNER}    ${BASE PASSWORD}
     Go To IPVD Page
-
-3. IPVD landing page actions
-    [Tags]    C48791    CLOUD-7598    ci    smoke    C57509
-    Log    Step 1 - Validate Landing Page Contents
-    Go To IPVD Page
-    Validate on IPVD Page
-    ${search_placeholder}=   Get Element Attribute    ${IPVD SEARCH BAR}    placeholder
-    Should Be Equal as Strings    ${search_placeholder}    ${SEARCH PLACEHOLDER TEXT}    ignore_case=true
-    Element should contain    ${IPVD ADV SEARCH BUTTON}    ${IPVD ADV SEARCH BUTTON TEXT}    ignore_case=true
-    Element should contain    ${IPVD MANUFACTURERS PANE}//header//span    ${IPVD ADV FILTER MFRS}    ignore_case=true
-    ${num vendors}=   Get Element Count    ${IPVD MANUFACTURERS PANE ITEM}
-    Should Not Be Equal As Numbers  ${num vendors}   0
-    Element should contain      ${IPVD DEVICES PANE}//header//span    ${IPVD DEVICES TEXT}    ignore_case=true
-    ${num device types}=   Get Element Count    ${IPVD DEVICES PANE}//nx-tag/a
-    Should Be Equal As Numbers  ${num device types}   10
-    Element should contain    ${IPVD LANDING PAGE TEXT}    ${IPVD SUBMIT A REQUEST TEXT}    ignore_case=true
-
-    Log    Step 2 - Validate filtering by manufacturer
-    ${vendor}=  Set variable    Axis
-    Click Element    ${IPVD MANUFACTURERS PANE}//a[contains(text(), '${vendor}')]
-    Wait Until Element Is Visible    ${IPVD TABLE}
-    Run keyword and continue on failure    Element Text Should Be    ${IPVD FILTER BUTTON}
-    ...    ${IPVD ADV FILTER MFR} – ${vendor}
-    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}
-    
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}    ${vendor}
-    Validate Landing Page Objects are not Visible
-
-    Log    Step 3
-    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
-    Validate on IPVD page
-
-    Log    Step 4 - Validate filtering by device type
-    Click Element    ${IPVD DEVICES PANE}//a[contains(text(), '${IPVD DEV FILTER ENCODERS}')]
-    Sleep    5
-    Run keyword and continue on failure    Element Text Should Be    ${IPVD FILTER BUTTON}
-    ...    ${IPVD ADV FILTER TYPE} – ${IPVD ADV TYPE ENCODER}
-    Wait Until Element is Visible    ${IPVD TABLE FIRST ITEM}
-    Element Text Should Be    ${IPVD TABLE FIRST ITEM}/../../div[contains(@id, "hardwareType")]    Encoder
-    Validate Landing Page Objects are not Visible
-
-    Log    Step 5 - Back to the landing page
-    Click Element    ${IPVD ADV FEATURES CLOSE BUTTON}
-    Validate on IPVD page
-
-    Log    Step 6 - Verify IPVD feedback link opens correct dialog
-    Click Element    ${IPVD SUBMIT A REQUEST}
-    Wait Until Element Is Visible    ${IPVD FEEDBACK}
 
 4. Text search correctly finds Manufacturers
     Go To IPVD Page

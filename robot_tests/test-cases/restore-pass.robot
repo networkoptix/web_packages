@@ -41,17 +41,8 @@ Force Tags
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
 
-5. Should set new password, login with new password
-    [Tags]    email    C26260    smoke    ci    C94722
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-    Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
-    Log In    ${email}    ${password}    validate=${False}    button=${RESET LOGIN BUTTON}    api=${False}
-    Wait Until Element Is Visible    ${WRONG PASSWORD MESSAGE}
-    Log In    ${email}    ${ALT PASSWORD}    validate=${True}    button=${LOG IN BUTTON}    reset=${True}    api=${False}
-
 6. Displays password masked, shows password and changes eye icon when clicked
-    [Tags]    C26260    
+    [Tags]    C26260
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
     Get Restore Code and Open the Link    ${email}
@@ -159,30 +150,3 @@ Force Tags
     Wait Until Elements Are Visible    ${FORGOT PASSWORD BUTTON}
     Click Element    ${FORGOT PASSWORD BUTTON}
     Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
-
-12. Check restore password email links, colors, cloud name, and open link in new tab
-    [Tags]    C26260     deb    smoke    ci
-    # We open the mailbox to first delete the activation email so that the restore password email is easily found and not confused
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
-    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${user}    ${BASE PASSWORD}
-    ${email}    Wait For Email    recipient=${user}    timeout=120
-    Activate   ${user}    ${BASE PASSWORD}    fromEmail=${True}
-    Check Email Subject    ${email}    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    # Now for the actual email we are testing...
-    Send "Restore Password" Email    ${user}
-    ${email}    Wait For Email    recipient=${user}    timeout=120    status=UNSEEN
-    Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
-    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
-    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
-    Check Email Subject    ${email}    ${RESET PASSWORD EMAIL SUBJECT}    ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-    ${links}    Get Links fromEmail    ${email}
-    @{expected links}    Set Variable    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/restore_password
-    FOR    ${link}  IN  @{links}
-        check in list    ${expected links}    ${link}
-    END
-    Delete Email    ${email}
-    Close Mailbox
-

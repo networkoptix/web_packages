@@ -20,12 +20,6 @@ Force Tags        system    cloud
     Click Button    ${DISCONNECT MODAL CANCEL}
     Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
-10. Should open System page by link to not authorized user and show it, after owner logs in
-    [tags]    smoke    ci    C30825
-    Go To    ${ENV}/systems/${system}[id]
-    Log In    ${system}[cloudOwner]   ${base password}    button=None
-    Verify In System    ${system}[name]
-
 11. Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
     Log In    ${email noperm}    ${base password}
@@ -181,7 +175,7 @@ Force Tags        system    cloud
             ...    ${OWNER LABEL}
             ...    //span[contains(text(), "${system}[cloudOwner]")]
             ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
-        Wait Until Elements Are Not Visible    
+        Wait Until Elements Are Not Visible
             ...    ${RENAME SYSTEM}
             ...    ${DISCONNECT FROM NX}
             ...    ${MERGE BUTTON SYSTEM}
@@ -299,7 +293,7 @@ Force Tags        system    cloud
     ...    ${SEARCHABLE MENU}
     ...    ${SEARCH RESULT ARROW}
 
-    
+
     ${viewer info}=   Get Account Info    ${system}[cloudUsers][viewer]    ${password}
     ${viewer id}=   Set Variable    ${viewer info}[id]
     Set Suite Variable    ${viewer id}
@@ -311,7 +305,7 @@ Force Tags        system    cloud
     ELSE
         Should Be Equal As Numbers    ${num users found}    6
     END
-    
+
     Log    Step 4
     ${name} =    Get Text    ${all users found}[0]
     Click Element    ${all users found}[0]
@@ -342,7 +336,7 @@ Force Tags        system    cloud
     [Tags]    C81796    webadmin    search
     Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
     Log in to system new    ${system}    ${system}[cloudOwner]
-    
+
     IF    '${LANGUAGE}'=='en_US'
         Log    Step 1
         Search For    en
@@ -416,42 +410,3 @@ Force Tags        system    cloud
     #Wait Until Element Has Style    ${DISCONNECT PASSWORD INPUT}    border-color    ${ERROR COLOR}
     #Click Button    ${DISCONNECT FORM CANCEL BUTTON}
     #Wait Until Element Is Not Visible    ${DISCONNECT FORM}
-
-26. Cloud Owner can disconnect System from Cloud
-    [Tags]    C41883   C47020    webadmin    smoke    ci    C69845
-    ${local auth}=   Create List    admin    ${base password}
-
-    Log    Step 1
-    Log in to system new    ${system}    ${system}[cloudOwner]
-    Wait Until Element Is Visible    ${DISCONNECT FROM NX}
-    Click Button    ${DISCONNECT FROM NX}
-    Validate Disconnect Form
-
-    Log    Step 2
-    #Slow    Input Text    ${DISCONNECT PASSWORD INPUT}    ${base password}    timeout=0.1
-    Click Element    ${DISCONNECT FORM DISCONNECT CLOUD BUTTON}
-
-    # Finish the test in webadmin mode
-    Run keyword if   '''${mode}''' == '''webadmin'''    Run Keywords
-        ...    Validate Log Out Web Admin    AND
-        ...    Pass Execution    Webadmin tests complete
-
-    Run keyword and continue on failure    Check For Alert    ${SUCCESSFULLY DISCONNECTED}    60
-    Wait Until Location Contains    ${ENV}/systems
-    Wait Until Element Is Not Visible    ${SYSTEMS TILE}//h2[text()="${system}[name]"]
-    Log Out
-
-    Log    Step 3 - Verify cloud API gets correct list of systems
-    ${viewer systems}=   Get Account Systems    ${system}[cloudUsers][viewer]    ${base password}
-    Should Not Contain    ${viewer systems}    ${system}[id]
-
-    Log     C47020: checking that system is disconnected from cloud on the server side
-    Restart Server    ${server url}    ${system}[localAuth]
-    Sleep   95
-    ${cloud system id}=   Get Cloud System Id    ${server url}    ${system}[localAuth]
-    Should Be Equal As Strings    ${cloud system id}    ${EMPTY}
-
-    # Verify the system is removed from others' users accounts
-    Log In    ${system}[cloudUsers][viewer]    ${base password}
-    Wait Until Location Contains    ${ENV}/systems
-    Wait until element is visible    //span[contains(text(), "${YOU HAVE NO SYSTEMS TEXT}")]

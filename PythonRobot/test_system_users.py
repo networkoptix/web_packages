@@ -28,6 +28,7 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 
 
 def owner_can_remove_user(server: CloudServer):
+    """email    C41903    webadmin    cloud    smoke    ci    C30726"""
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
@@ -63,6 +64,7 @@ def owner_can_remove_user(server: CloudServer):
 
 
 def share_with_registered_user_sends_notification(server: CloudServer):
+    """email    C41888    cloud    smoke    ci    C30446"""
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
@@ -79,6 +81,7 @@ def share_with_registered_user_sends_notification(server: CloudServer):
 
 
 def share_with_unregistered_user_sends_notification(server: CloudServer):
+    """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
     email = get_random_email(sendemail=True)
     cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
@@ -111,6 +114,7 @@ def share_with_unregistered_user_sends_notification(server: CloudServer):
 
 
 def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
+    """email    C41889    cloud    CLOUD-8643    smoke    ci"""
     driver = get_headless_chrome()
     email_con = Email()
     email = email_con.get_random_email(sendemail=True)
@@ -127,6 +131,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
 
 
 def share_with_registered_user_works(server: CloudServer):
+    """email    C41888    cloud    smoke    ci    C30446"""
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)

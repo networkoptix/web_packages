@@ -50,22 +50,22 @@ Force Tags        system    Threaded    users
     #${owner email}=   Register and activate account with random email    firstName    lastName    ${password}
     ${user 1}=   Register and activate account with random email    firstName    lastName    ${password}
     ${user 2}=   Register and activate account with random email    firstName    lastName    ${password}
-    Save User    ${server 2[localAuth]}    https://${QA BURBANK IP}:${servers}[1][port][0]    ${user 1}    ${ACCESS ROLES}[viewer]    ${user 1}    Mark Hamil    ${password}    
-    Save User    ${server 2[localAuth]}    https://${QA BURBANK IP}:${servers}[1][port][0]    ${user 2}    ${ACCESS ROLES}[viewer]    ${user 2}    Mark Hamil2    ${password}    
+    Save User    ${server 2[localAuth]}    https://${QA BURBANK IP}:${servers}[1][port][0]    ${user 1}    ${ACCESS ROLES}[viewer]    ${user 1}    Mark Hamil    ${password}
+    Save User    ${server 2[localAuth]}    https://${QA BURBANK IP}:${servers}[1][port][0]    ${user 2}    ${ACCESS ROLES}[viewer]    ${user 2}    Mark Hamil2    ${password}
     #Share    ${auth}    ${server 2['sysId']}    ${ACCESS ROLES}[viewer]    ${user email}
     #Share    ${auth}    ${server 2['sysId']}    ${ACCESS ROLES}[viewer]    ${user 2 email}
     # Make the system offline
     #Sleep    30
     Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    docker container stop ${server 2['name']}
     Close Connection
 
     Log    C41898: Step 1
     Go To    ${url}/systems/${server 2['cloud id']}
-    IF    '''${mode}'''=='''cloud'''    
+    IF    '''${mode}'''=='''cloud'''
         Log In    ${user 1}    ${password}    button=None   api=${False}
-    ELSE    
+    ELSE
         Log In Web Admin    admin    ${password}
     END
     Reload Page
@@ -98,7 +98,7 @@ Force Tags        system    Threaded    users
     Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
 
     Open Connection    ${QA BURBANK IP}
-    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}    
+    SSHLibrary.Login    ${QA BURBANK USER}    ${QA BURBANK PASS}
     ${results}    Execute Command    docker container start ${server 2['name']}
     # ${results}    Execute Command    docker container port ${server 2['name']}
     # ${port info}=   Split String    ${results}    :
@@ -198,7 +198,7 @@ Force Tags        system    Threaded    users
         Click Button    ${ADD USER CANCEL}
         Wait Until Element is Not Visible    ${ADD USER MODAL}
         Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${random user}")]
-    
+
         Log    Check 'X' Button
         Click Button  ${ADD USER BUTTON SYSTEMS}
         Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CLOSE}
@@ -214,7 +214,7 @@ Force Tags        system    Threaded    users
     [Tags]    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    FOR    ${user}  IN  @{list}  
+    FOR    ${user}  IN  @{list}
         Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         Go to Users List
@@ -233,8 +233,8 @@ Force Tags        system    Threaded    users
     [Tags]    C41901    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    FOR    ${user}  IN  @{list}  
-        Log In    ${user}    ${password} 
+    FOR    ${user}  IN  @{list}
+        Log In    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         Wait Until Elements Are Visible    ${USERS LIST LINK}
         Click Link    ${USERS LIST LINK}
@@ -243,8 +243,8 @@ Force Tags        system    Threaded    users
         Wait Until Elements Are Visible    ${ADD USER PERMISSIONS DROPDOWN}    ${ADD USER PERMISSIONS HINT}
         Wait Until Element Contains    ${ADD USER PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
         Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
-        Check Special Hints   
-    
+        Check Special Hints
+
         Click Button    ${ADD USER CANCEL}
         Exit For Loop If    '''${user}'''=='''admin'''
         Log Out
@@ -255,8 +255,8 @@ Force Tags        system    Threaded    users
     log    ${server 1['local users']}
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
     ...    ELSE    Create List    ${server 1['cloudUsers']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin]
-    FOR    ${user}  IN  @{list}  
-        Log In    ${user}    ${password} 
+    FOR    ${user}  IN  @{list}
+        Log In    ${user}    ${password}
         Go to Users List
         Select user in Users List    ${user}
         Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
@@ -285,7 +285,7 @@ Force Tags        system    Threaded    users
         Share To    ${server 1['cloudUsers']}[advancedViewer]       ${CUSTOM TEXT}         fail    system=${servers}[0][name]
         Share To    ${server 1['cloudUsers']}[liveViewer]           ${CUSTOM TEXT}         fail    system=${servers}[0][name]
         Share To    ${server 1['cloudUsers']}[custom]               ${VIEWER TEXT}         fail    system=${servers}[0][name]
-        
+
         #Local users
         #Share To    admin    ${CUSTOM TEXT}          fail    system=${servers}[0][name]
         #Click Button    ${ADD USER CANCEL}
@@ -415,192 +415,25 @@ Force Tags        system    Threaded    users
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
     ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][local users][cloudAdmin]
     Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    ${ACCESS ROLES}[liveViewer]    ${random email}    ${permissions}[liveViewer]
-    
+
     # Check that the user's role is added correctly in vms
     FOR    ${user}    IN    @{list}
         Log in    ${user}    ${password}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         Go to Users List
         ${users}=   Get Users    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}
-    
+
         Edit User Permissions In Systems    ${random email}    ${VIEWER TEXT}
         Check User Permissions    ${random email}    ${VIEWER TEXT}
-    
+
         # Check that the user's role has changed in vms
         ${users}=   Get Users    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}
-    
+
         Edit User Permissions In Systems    ${random email}    ${LIVE VIEWER TEXT}
         Check User Permissions    ${random email}    ${LIVE VIEWER TEXT}
         Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
         Log Out
     END
-
-15. Delete user works
-    [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]
-    FOR    ${user}    IN    @{list}
-        ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-        Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    ${ACCESS ROLES}[liveViewer]    ${random email}     ${permissions}[liveViewer]
-        Sleep    10
-        Log in    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Select user in Users List    ${random email}
-        Wait Until Element Is Visible    ${REMOVE USER BUTTON}
-        Click Button    ${REMOVE USER BUTTON}
-        Wait Until Element is Visible    ${REMOVE CANCEL BUTTON}
-        Click Button    ${REMOVE CANCEL BUTTON}
-        Remove User Permissions    ${random email}
-        Log Out
-        Log In    ${random email}    ${password}
-        go to    ${ENV}
-        IF    '''${mode}'''=='''cloud'''
-            Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}    65
-        ELSE
-            Wait Until Element is Visible    //input[@id="login_email"]
-        END
-        Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
-        Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
-    END
-
-16. Share with registered user works and sends them notification
-    [Tags]    email    C41888    cloud    smoke    ci    C30446
-    ${random email}=    Register and activate account with random email    mark     hamil    ${password}
-    ${user}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
-    Register And Activate Account    users    notification    ${user}    ${BASE PASSWORD}
-    Set Account Language    ${random email}    ${password}    ${LANGUAGE}
-    Append to List    ${TMP USERS}    ${random email}
-    Go To    ${url}
-    Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
-    Verify In System    ${servers}[0][name]
-    sleep    2
-    Share To    ${user}    ${ADMIN TEXT}
-    Sleep    10
-    # Might not be necessary after CLOUD-6113
-    ${role}=   Get Cloud User Role    ${servers}[0][cloudAuth]    ${user}    ${servers}[0][id]
-    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-
-    Open Mailbox
-    ...    host=${BASE HOST}
-    ...    password=${BASE EMAIL PASSWORD}
-    ...    port=${BASE PORT}
-    ...    user=${BASE EMAIL}
-    ...    is_secure=True
-    ${INVITED TO SYSTEM EMAIL SUBJECT}    Replace String
-    ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
-    ...    {{message.system_name}}
-    ...    ${servers}[0][name]
-    ${emailID}    Wait For Email    recipient=${user}    timeout=120
-    ${check email status}=    Run Keyword And Ignore Error    Check Email Subject
-    ...    ${emailID}
-    ...    ${ACTIVATE YOUR ACCOUNT EMAIL SUBJECT}
-    ...    ${BASE EMAIL}
-    ...    ${BASE EMAIL PASSWORD}
-    ...    ${BASE HOST}
-    ...    ${BASE PORT}
-    IF    ${check email status} == "PASS"
-        Delete Email    ${emailID}
-    END
-    ${emailID}    Wait For Email    recipient=${user}    timeout=120
-    Check Email Subject
-    ...    ${emailID}
-    ...    ${INVITED TO SYSTEM EMAIL SUBJECT}
-    ...    ${BASE EMAIL}
-    ...    ${BASE EMAIL PASSWORD}
-    ...    ${BASE HOST}
-    ...    ${BASE PORT}
-    Delete Email    ${emailID}
-    Close Mailbox
-
-    ${role}=   Get Cloud User Role  ${servers}[0][cloudAuth]    ${user}    ${servers}[0][id]
-    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-
-17. Share with registered user gives user access to system
-    [Tags]    email    C41888    cloud    smoke    ci    C30446
-    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}  
-    Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    viewer    ${random email}      ${permissions}[viewer]
-    Log in to user and system    ${random email}    ${servers}[0][id]
-    Go to System Administration
-
-    ${current owner name}    Replace String    ${OWNER NAME}    %OWNER_NAME%    ${TEST FIRST NAME} ${TEST LAST NAME}   
-    Wait Until Elements Are Visible    ${current owner name}    ${OWNER LABEL}    ${OWNER LABEL}/following-sibling::span//span[contains(text(),"${servers}[0][cloudOwner]")]    ${YOUR ACCESS LEVEL}    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${VIEWER TEXT}')]
-    Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
-    Element Should Not Be Visible    ${RENAME SYSTEM}
-    Element Should Not Be Visible    ${ADD USER BUTTON SYSTEMS}
-
-18. Share with unregistered user - Verify email recieved
-    [Tags]    email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445
-    Log    Step 1
-    Log in to user and system    ${servers}[0][cloudOwner]    ${servers}[0][id]
-    ${random email}=   Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
-    Append To List    ${TMP USERS}    ${random email}
-    Go To Users List
-    Sleep    3
-    Share To    ${random email}    ${ADMIN TEXT}
-    sleep    10
-    ${role}=   Get Cloud User Role  ${servers}[0][cloudAuth]    ${random email}    ${servers}[0][id]
-    Should be equal as strings    ${role}    ${ACCESS ROLES}[admin]
-    Wait Until Element Is Visible     //nx-search-highlight[contains(text(),"${random email}")]
-    ${text}=   Get Text    ${LOCAL USER NAME HEADER}
-    Should Be Empty    ${text}
-    Log Out
-    
-    Log    Step 2
-    Open Mailbox    host=${BASE HOST}    password=${BASE EMAIL PASSWORD}    port=${BASE PORT}    user=${BASE EMAIL}    is_secure=True
-    ${email}    Wait For Email    recipient=${random email}    timeout=120
-    ${email text}    Get Email Body    ${email}
-    ${email text}    Decode Bytes To String    ${email text}    UTF-8    errors=ignore
-    ${invite link}=   Get Nx Links From Email    ${email}    system_invite
-    #${link}=   Get Email Link    ${random email}    system_invite
-    Check Email Button    ${email text}    ${ENV}    ${THEME COLOR}
-    Check Email User Names    ${email text}    ${EMPTY}    ${EMPTY}
-    Check Email Cloud Name    ${email text}    ${PRODUCT NAME}
-    Should Contain    ${email text}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    {{message.sharer_name}}    ${TEST FIRST NAME} ${TEST LAST NAME}
-    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    Replace String    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}    %PRODUCT_NAME%    ${PRODUCT_NAME}
-    Check Email Subject    ${email}    ${INVITED TO SYSTEM EMAIL SUBJECT UNREGISTERED}   ${BASE EMAIL}    ${BASE EMAIL PASSWORD}    ${BASE HOST}    ${BASE PORT}
-
-    Log    Step 3-4
-    ${links}    Get Links From Email    ${email}
-    @{expected links}    Set Variable    mailto:${servers}[0][cloudOwner]    ${SUPPORT URL}    ${WEBSITE URL}    ${ENV}    ${ENV}/activate
-    FOR    ${link}  IN  @{links}
-        check in list    ${expected links}    ${link}
-    END
-    Delete Email    ${email}
-    Close Mailbox
-
-18.5 New user brought to registration page with code and with correct email locked after having a system shared
-    [Tags]   email    C41889    cloud    CLOUD-8643    smoke    ci
-    [Setup]    Share System With New User And Grab Email Link
-    Log    Step 5-6
-    Go To    ${invite link}
-    Wait Until Elements Are Visible
-    ...    ${REGISTER FIRST NAME INPUT}
-    ...    ${REGISTER LAST NAME INPUT}
-    ...    ${REGISTER PASSWORD INPUT}
-    ...    ${CREATE ACCOUNT BUTTON}
-    ...    ${REGISTER EMAIL INPUT LOCKED}
-    ${populated email}=   Get Value    ${REGISTER EMAIL INPUT LOCKED} 
-    Should be equal as strings    ${populated email}    ${random email}
-    Input Text    ${REGISTER FIRST NAME INPUT}    ${TEST FIRST NAME}
-    Input Text    ${REGISTER LAST NAME INPUT}    ${TEST LAST NAME}
-    Input Text    ${REGISTER PASSWORD INPUT}    ${password}
-    Click Element    ${TERMS AND CONDITIONS CHECKBOX VISIBLE}
-    Click Button    ${CREATE ACCOUNT BUTTON}
-    Wait Until Element Is Visible    ${ACCOUNT CREATION EMAIL SUCCESS}
-    Capture Page Screenshot
-    ${activate account result}=    Get Text    ${ACCOUNT CREATION EMAIL SUCCESS}
-
-    Sleep    5
-    Should Be Equal As Strings    ${activate account result}    ${ACCOUNT CREATED TEXT}
-    Resource.Log in    user=${random email}    password=${BASE PASSWORD}    button=${ACTIVATE MODAL LOGIN BTN}    reset=${True}
-    Go To    ${ENV}/systems/${servers}[0][id]
-    Go To Users List
-    Wait Until Element Is Visible     //nx-menu//nx-search-highlight[contains(text(),"${random email}")]
-    Click Element    //nx-menu//nx-search-highlight[contains(text(),"${random email}")]
-    ${text}=   Get Text    ${LOCAL USER NAME HEADER}
-    Element Text Should Be    ${LOCAL USER NAME HEADER}    ${TEST FIRST NAME} ${TEST LAST NAME}
 
 19. Share System with the same user twice
     [Tags]    C41892    cloud
@@ -678,7 +511,7 @@ Force Tags        system    Threaded    users
     FOR    ${role}    IN    @{roles}
         ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
         Append To List    ${TMP USERS}    ${random email}
-        #Save User    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}    
+        #Save User    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}
         Share     ${servers}[0][cloudAuth]    ${servers}[0][id]    ${role}    ${random email}    ${permissions}[${role}]
         Sleep    5
         Log In    ${random email}    ${password}
@@ -699,7 +532,7 @@ Force Tags        system    Threaded    users
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         &{client custom permissions}=   Get Custom Permissions    ${custom roles}    Client Custom
 
-    
+
         ${users}    Get Users    ${servers}[0][localAuth]    https://${QA BURBANK IP}:${servers}[0][port][0]
         ${user id}=   Get Cloud User Id By Email    ${servers}[0][cloudAuth]    Client Custom    ${servers}[0][id]
         Save User Existing
@@ -710,7 +543,7 @@ Force Tags        system    Threaded    users
         ...    Client Custom
         ...    ${client custom permissions["id"]}
         ...    ${user id}
-    
+
         Verify In System    ${servers}[0][name]
         Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
         Log Out
@@ -726,7 +559,7 @@ Force Tags        system    Threaded    users
     Log in    ${user}    ${password}
     Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
     Share To    ${random email}    Client Custom
-    
+
     Open Mailbox
     ...    host=${BASE HOST}
     ...    password=${BASE EMAIL PASSWORD}
@@ -795,13 +628,13 @@ Force Tags        system    Threaded    users
         Go to Users List
         Share To    ${random email}   ${VIEWER TEXT}    system=${servers}[0][name]
         Select user in Users List    ${random email}
-    
+
         Log    Step 3
         Log Out
         Log In    ${random email}    ${BASE PASSWORD}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //nx-section//span[contains(text(),'${VIEWER TEXT}')]
-    
+
         Log     Step 4
         Log Out
         Log In    ${user}    ${password}
@@ -813,13 +646,13 @@ Force Tags        system    Threaded    users
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         Check User Permissions    ${random email}    ${VIEWER TEXT}
         Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-    
+
         Log    Step 5
         Log Out
         Log In   ${random email}    ${BASE PASSWORD}
         Run Keyword If    '''${mode}'''=='''cloud'''    Wait Until Element is Visible    ${YOU HAVE NO SYSTEMS}
         # ELSE     WRONG LOGIN OR PASSWORD SHOULD BE DETECTED
-    
+
         Log    Step 6
         Run Keyword If    '''${mode}'''=='''cloud'''    Log Out
         Log In    ${servers}[0][cloudUsers][cloudAdmin]    ${password}
@@ -831,15 +664,15 @@ Force Tags        system    Threaded    users
         Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
         Check User Permissions    ${random email}    ${VIEWER TEXT}
         Page Should Not Contain Element   ${USER DISABLED MSG}
-    
+
         Log    Step 7
         Log Out
-        
+
         Log In    ${random email}    ${BASE PASSWORD}
         Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
         Page Should Not Contain Element    ${YOU HAVE NO SYSTEMS}
         Wait Until Elements Are Visible    ${YOUR ACCESS LEVEL}    //span[@class="name" and contains(text(),'${VIEWER TEXT}')]
-        Exit For Loop If    '''${user}'''=='''${servers}[0][local users][cloudAdmin][login]'''    
+        Exit For Loop If    '''${user}'''=='''${servers}[0][local users][cloudAdmin][login]'''
         Log Out
     END
 
@@ -853,11 +686,11 @@ Force Tags        system    Threaded    users
 #        Log In    ${user}    ${password}
 #        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
 #        Go to Users List
-#        
+#
 #        Verify In Local Users UI    ${local users}    ${servers}[0][cloudOwner]
 #        @{new locals} =    Create List
 #        Change All Local Users Login
 #        Verify Changed Info Via API    ${new locals}    https://${QA BURBANK IP}:${server 1['port']}
-#        Exit For Loop If    '''${user}'''=='''admin'''    
+#        Exit For Loop If    '''${user}'''=='''admin'''
 #        Log Out
 #    END

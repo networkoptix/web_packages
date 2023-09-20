@@ -9,6 +9,7 @@ from variables import ENV
 
 
 def allows_login_with_correct_credentials_and_log_out():
+    """C24212    C24213    smoke    ci    C94717    C94719"""
     driver = get_headless_chrome()
     email = resource_import.get_random_email()
     password = "qweasd 123"

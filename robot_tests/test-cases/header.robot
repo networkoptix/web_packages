@@ -8,26 +8,12 @@ Force Tags        cloud
 
 *** Test Cases ***
 # Anonymous user
-1. Anonymous: Header shows correct items
-    [Tags]        anon    
-    Wait Until Elements Are Visible
-    ...    ${LOG IN NAV BAR}
-    ...    ${CREATE ACCOUNT HEADER}
-    ...    ${HEADER LANGUAGE DROPDOWN}
-    ...    ${SYSTEMS DROPDOWN}
-    ...    ${HEADER ICON LINK}
-    ${logo link url}=   Get Element Attribute    ${HEADER ICON LINK}    href
-    Should Be Equal as Strings    ${logo link url}    ${ENV}/
-    ${logo src}=   Get Element Attribute    ${LOGO ICON}    src
-    Should Be Equal as Strings    ${logo src}    ${LOGO ICON SOURCE}
-    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
-
 2. Anonymous: Header button text is correct
-    [Tags]        anon    
+    [Tags]        anon
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
 
 3. Anonymous: Clicking on the main header button closes the dropdown
-    [Tags]        anon    
+    [Tags]        anon
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Click Element    ${SYSTEMS DROPDOWN}
     Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
@@ -53,14 +39,14 @@ Force Tags        cloud
     Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
 
 4. Anonymous: Different page widths
-    [Tags]        anon    ui    
+    [Tags]        anon    ui
     Go To    ${knowledge base}[url]
     Check Header Items    False
     Go Back
 
 # User has no systems connected to cloud
 5. No systems: Header button text is correct
-    [Tags]        no_sys    
+    [Tags]        no_sys
     IF    '''${mode}''' == '''cloud'''
         go to     ${ENV}
     ELSE
@@ -71,14 +57,14 @@ Force Tags        cloud
     Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
 
 6. No systems: Logo goes to landing page
-    [Tags]        no_sys    
+    [Tags]        no_sys
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Validate Header Button Text    0    systems=True
     Click Element    ${HEADER ICON LINK}
     Wait Until Location is    ${ENV}/systems
 
 7. No systems: Check Dropdown Content
-    [Tags]        no_sys    
+    [Tags]        no_sys
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Validate Header Button Text    0    systems=True
     Click Element    ${SYSTEMS DROPDOWN}
@@ -88,7 +74,7 @@ Force Tags        cloud
     Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
 
 8. No systems: Different page widths
-    [Tags]        no_sys    ui    
+    [Tags]        no_sys    ui
     Log In    ${zero systems owner}    ${BASE PASSWORD}
     Validate Header Button Text    0    systems=True
     Check Header Items    True
@@ -144,7 +130,7 @@ Force Tags        cloud
     END
 
 13. One system: Check header links - For Developers
-    [Tags]        one_sys    
+    [Tags]        one_sys
     Log In    ${one system owner}    ${BASE PASSWORD}
     Go To    ${ENV}/docs/developers
 #    Wait Until Element Is Visible    //h1[contains(text(), "${DEVELOP WITH NX META TEXT}")]
@@ -161,7 +147,7 @@ Force Tags        cloud
     END
 
 14. One system: Check header links - Services
-    [Tags]        one_sys    
+    [Tags]        one_sys
     Log In    ${one system owner}    ${BASE PASSWORD}
     Go To    ${ENV}/download
     Validate Header Button Text    ${SERVICES TEXT}    systems=False
@@ -191,7 +177,7 @@ Force Tags        cloud
     END
 
 16. One system: Check navigation links - For Developers
-    [Tags]        one_sys    
+    [Tags]        one_sys
     Log In    ${one system owner}    ${BASE PASSWORD}
     Validate Header Button Text    ${main system}[name]    systems=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
@@ -207,7 +193,7 @@ Force Tags        cloud
     END
 
 17. One system: Check navigation links - Services
-    [Tags]        one_sys    
+    [Tags]        one_sys
     Log In    ${one system owner}    ${BASE PASSWORD}
     Validate Header Button Text    ${main system}[name]    systems=False
     Wait until element is visible    ${SYSTEMS DROPDOWN}
@@ -223,7 +209,7 @@ Force Tags        cloud
     END
 
 18. One System: Different page widths
-    [Tags]        one_sys    ui    
+    [Tags]        one_sys    ui
     Log in to user and system    ${one system owner}    ${main system}[cloud id]
     Verify In System    ${main system}[name]
     Wait Until Element is Visible    ${VIEW TAB}
@@ -233,7 +219,7 @@ Force Tags        cloud
 
 # User has many systems connected to cloud
 19. Many systems: Logo goes to Systems page
-    [Tags]        many_sys    
+    [Tags]        many_sys
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
     Go to    ${ENV}/systems/${main system}[cloud id]
@@ -242,13 +228,13 @@ Force Tags        cloud
     Wait Until Location is    ${ENV}/systems
 
 20. Many systems: Header button displays number of systems
-    [Tags]        many_sys    
+    [Tags]        many_sys
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
     Validate Header Button Text    16    systems=True
 
 21. Many systems: Check dropdown content if 16 or less systems
-    [Tags]        many_sys    
+    [Tags]        many_sys
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Validate on Systems Page    search=True
     Validate Header Button Text    16    systems=True
@@ -260,7 +246,7 @@ Force Tags        cloud
     END
 
 22. Many systems: Check dropdown content if 17 or more systems
-    [Tags]        many_sys   CLOUD-6778    
+    [Tags]        many_sys   CLOUD-6778
     Share    ${main system}[cloud auth]    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}      ${permissions}[cloudAdmin]
     Log In    ${many systems owner}    ${BASE PASSWORD}
     Reload Page    # User doesn't see the system shared with them without reloading the page
@@ -289,7 +275,7 @@ Force Tags        cloud
     Validate on Systems Page    search=True
 
 23. Many systems: Links in Systems grid lead to proper pages
-    [Tags]        many_sys    
+    [Tags]        many_sys
     Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
 
     Log In    ${many systems owner}    ${BASE PASSWORD}
@@ -308,7 +294,7 @@ Force Tags        cloud
     END
 
 24. Many systems: Different page widths
-    [Tags]        diff_width    ui    
+    [Tags]        diff_width    ui
     Add user to cloud system if not there    ${main system}[cloud id]    ${access roles}[admin]    ${many systems owner}    ${main system}[cloud auth]
     Log in to user and system    ${many systems owner}    ${main system}[cloud id]
     Wait until element is visible    //span[text()="${main system}[name]"]
@@ -324,7 +310,7 @@ Force Tags        cloud
 
 # Other cases
 25. Check header and dropdown content for not admins
-    [Tags]        other    CLOUD-6794    CLOUD-7200    
+    [Tags]        other    CLOUD-6794    CLOUD-7200
     FOR    ${user}    IN
         ...    ${main system}[cloud users][viewer]
         ...    ${main system}[cloud users][liveViewer]
@@ -351,7 +337,7 @@ Force Tags        cloud
     END
 
 26. Check external links - For Developers
-    [Tags]        other    
+    [Tags]        other
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Click Element    ${SYSTEMS DROPDOWN}
     Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}
@@ -365,7 +351,7 @@ Force Tags        cloud
     Click Element    ${SYSTEMS DROPDOWN}
 
 27. Check External links
-    [Tags]        other    
+    [Tags]        other
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
     Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
     sleep    10

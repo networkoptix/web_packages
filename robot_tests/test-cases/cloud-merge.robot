@@ -38,7 +38,7 @@ Force Tags        merge
     [Tags]    C70979    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
     ${rs}=   Generate Random String
-    
+
     ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
     ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
     ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 5.1}    owner=${owner email}    add users=${False}
@@ -108,7 +108,7 @@ Force Tags        merge
     ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 2}[name]")]
     ...    ${MERGE NEXT BUTTON}
     Element should not be visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 1}[name]")]
-    
+
 
 4. Merge Dialog - Dropdown has two sections(no local systems)
     [Tags]    C70981    merge_dialog    should
@@ -250,7 +250,7 @@ Force Tags        merge
     Log    Step 6
     Click Button    ${MERGE X BUTTON}
     Wait Until Element Is Not Visible    ${MERGE DIALOG}
-    
+
     # Removed as there is no confirm dialog anymore
     #Log    Step 7
     #Click Button    ${MERGE BUTTON SYSTEM}
@@ -267,6 +267,7 @@ Force Tags        merge
     #Wait Until Element Is Not Visible    ${MERGE DIALOG}
 
 # Positive scenarios
+# (!) Partially moved to python ?
 8. Positive scenario with selected cloud system (selected system is secondary)
     [Tags]    C70930    pos    must    smoke    ci    C78231
     Log    Test set up
@@ -369,7 +370,7 @@ Force Tags        merge
     Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=1
     Validate Choose Primary Dialog    ${system 1}[name]    ${system 2}[name]
- 
+
     Log    Step 2
     Choose Primary System    from target=True
     Slow    Click Button    ${MERGE NEXT BUTTON}    timeout=0.25
@@ -889,7 +890,7 @@ Force Tags        merge
     Set Variable    ${system 1}[port]    7002
 
     ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    network=host    owner=${owner email}    add users=${False}    customPort=7001
-    
+
     FOR    ${i}    IN RANGE    1    3
         Append To List    ${test systems}    ${system ${i}}
     END

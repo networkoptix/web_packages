@@ -6,22 +6,6 @@ Force Tags        Threaded
 
 
 *** Test Cases ***
-2. Failed to access system page correctly shows when going to a non-existent system
-    Open Browser and go to URL    ${url}
-    ${user}=   Register and activate account with random email    mark    hamill    ${BASE PASSWORD}
-    Log In    ${user}    ${BASE PASSWORD}
-    Go To    ${url}/systems/htgfjtrdtrtyrrtydrydcrtydrtrdrtdrtdrtdrtd
-    ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    <br>    ${EMPTY}
-    ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    \n    ${EMPTY}
-    FOR    ${x}   IN RANGE    4
-        ${THIS LINK IS BROKEN TEXT}    Replace String    ${THIS LINK IS BROKEN TEXT}    ${SPACE}${SPACE}    ${SPACE}
-    END        
-    Wait Until Elements Are Visible      
-    ...    ${SYSTEM NO ACCESS}    
-    ...    //div[normalize-space()\="${THIS LINK IS BROKEN TEXT}"]    
-    ...    //button//a[@href\='/']/..
-    ...    timeout=120 
-
 3. The logo takes you to the systems page when logged in
     [Tags]    C41540
     Open Browser And Go To URL    ${url}/authorize/register

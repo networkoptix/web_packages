@@ -12,6 +12,7 @@ password = "qweasd 123"
 
 
 def test_inaccessible_system_page():
+    """Failed to access system page correctly shows when going to a non-existent system"""
     driver = get_headless_chrome()
     driver.get(rb.ENV)
     email = get_random_email()

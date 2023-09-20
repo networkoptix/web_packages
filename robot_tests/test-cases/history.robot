@@ -19,18 +19,6 @@ Force Tags        Threaded
     # Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${RELEASE HISTORY BUTTON}
     # Register Keyword To Run On Failure    Failure Tasks
 
-1. History link is in the downloads page for user with access and takes you to /downloads/releases
-    [tags]    Passing_19.2
-    Log In If Needed    ${email}    ${password}
-    Wait Until Element Is Visible    ${DOWNLOAD LINK}
-    Click Link    ${DOWNLOAD LINK}
-    Wait Until Elements Are Visible    ${DOWNLOADS HEADER}    ${WINDOWS TAB}
-    Click Link    ${WINDOWS TAB}
-    Wait Until Elements Are Visible    ${DOWNLOAD WINDOWS VMS LINK}    ${RELEASE HISTORY BUTTON}
-    Click Link    ${RELEASE HISTORY BUTTON}
-    Wait Until Location is    ${url}/downloads/releases
-    # Run keyword and continue on failure    Title Should Be    ${RELEASE HISTORY TITLE TEXT} - ${PRODUCT_NAME}
-
 # Going to the history page anonymous asks for login and closing takes you to 404
     # Go To    ${url}/downloads/releases
     # Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
@@ -40,13 +28,13 @@ Force Tags        Threaded
 
 # Going to the history page anonymous asks for login and login shows history page
     # Go To    ${url}/downloads/releases
-    # Log In If Needed    ${email}   ${password} 
+    # Log In If Needed    ${email}   ${password}
     # Wait Until Element Is Visible    ${RELEASES TAB}
     # Wait Until Location is    ${url}/downloads/releases
 
 # Going to the history page anonymous and logging in with someone who doesn't have access takes you to 404
     # Go To    ${url}/downloads/releases
-    # Log In If Needed    ${EMAIL VIEWER}   ${password}  
+    # Log In If Needed    ${EMAIL VIEWER}   ${password}
     # Wait Until Elements Are Visible    ${PAGE NOT FOUND}    ${TAKE ME HOME}    ${404 ICON}
     # Sleep    1
     # Wait Until Location is    ${url}/404
@@ -59,18 +47,6 @@ Force Tags        Threaded
     # Wait Until Location is    ${url}/404
 
 #Make sure each tab changes to a unique release number
-2. Make sure expandable sections show options
-    Log in to downloads/history
-    
-    Wait Until Element Is Visible    ${PATCHES TAB}
-    loop expanders
-    Click Link    ${PATCHES TAB}
-    Wait Until Element Is Visible    ${PATCHES TAB}
-    loop expanders
-    Click Link    ${BETAS TAB}
-    Wait Until Element Is Visible    ${PATCHES TAB}
-    loop expanders
-
 # should open downloads releases page in anonymous state
     # [tags]    anonymous
     # Open page anonymously    ${url}/downloads/releases    ${RELEASES TAB TEXT} - ${PRODUCT_NAME}

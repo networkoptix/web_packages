@@ -21,6 +21,7 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 
 
 def can_log_in_to_system_from_direct_link(server: CloudServer):
+    """smoke    ci    C30825"""
     driver = get_headless_chrome()
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
@@ -33,6 +34,7 @@ def can_log_in_to_system_from_direct_link(server: CloudServer):
 
 
 def owner_can_disconnect_system_from_cloud(server: CloudServer):
+    """C41883   C47020    webadmin    smoke    ci    C69845"""
     driver = get_headless_chrome()
     url = ENV + f"/systems/{server.id}"
     driver.get(url)

@@ -13,7 +13,7 @@ Force Tags        Threaded
     Wait Until Element is Visible    ${LOG IN MODAL}
 
 #2. Can be closed by clicking on the X
-#    [tags]    C24212    
+#    [tags]    C24212
 #    Wait Until Element is Visible    ${LOG IN NAV BAR}
 #    Click Link    ${LOG IN NAV BAR}
 #    Wait Until Elements are Visible
@@ -22,11 +22,6 @@ Force Tags        Threaded
 #    ...    ${EMAIL INPUT}
 #    Click Button    ${LOG IN CLOSE BUTTON}
 #    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
-
-3. Allows to log in with existing credentials and to log out
-    [tags]    C24212    C24213    smoke    ci    C94717    C94719
-    Log In    ${login user}    ${password}    api=${False}
-    Log Out
 
 4. Redirects to systems after log In
     Log In    ${login user}    ${password}    api=${False}
@@ -67,7 +62,7 @@ Force Tags        Threaded
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
 9. Passes email from email input to Restore password page, even without clicking 'Log in' button
-    [tags]    C41872    
+    [tags]    C41872
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
     Wait Until Element is Visible    ${EMAIL INPUT}
@@ -79,7 +74,7 @@ Force Tags        Threaded
     Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
 
 10. Shows non-activated user message when not activated at login; Resend activation button sends email
-    [tags]    email    C41865 
+    [tags]    email    C41865
     Go To    ${url}/register
     ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
     Register    'mark'    'hamill'    ${random email}    ${password}
@@ -162,7 +157,7 @@ Force Tags        Threaded
 17. Should respond to Enter key and log in
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}    
+    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
     Input Text    ${EMAIL INPUT}    ${login user}
     Click Button    ${LOG IN NEXT BUTTON}
     Wait Until Element Is Visible    ${PASSWORD INPUT}
