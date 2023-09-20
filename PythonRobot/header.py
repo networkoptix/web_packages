@@ -1,9 +1,9 @@
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
-from generic_element import Element
 from landing_page import LandingPage
 from wrappers import Button
+from wrappers import Pane
 
 
 class HeaderNav:
@@ -14,7 +14,7 @@ class HeaderNav:
         self._wait_until_header_is_visible()
 
     def _wait_until_header_is_visible(self):
-        Element(self.driver, "//nx-header").wait_until_visible()
+        Pane(self.driver, "//nx-header").wait_until_visible()
 
     def account_dropdown(self):
         return Button(self.driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")
