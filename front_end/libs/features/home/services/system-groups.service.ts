@@ -4,7 +4,7 @@ import { Injectable, Inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { combineLatest } from 'rxjs';
+import { Subscription, combineLatest } from 'rxjs';
 import { distinctUntilChanged, filter, map, mergeMap, switchMap } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
@@ -27,7 +27,7 @@ import {
     WebSocketOutgoing,
 } from './system-groups.service.types';
 
-@Injectable()
+@Injectable({ providedIn: 'root' })
 export class NxSystemGroupsService {
     LANG = staticLang;
     private WEBSOCKET_URL: string;
@@ -80,19 +80,18 @@ export class NxSystemGroupsService {
 
     private connection$: WebSocketSubject<WebSocketIncoming | WebSocketOutgoing>;
 
+    // TODO: This needs to be revisted. The reconnect logic needs to be updated and probably don't need to keep a reference to the connection.
+    connectionSubscription: Subscription;
     connect(): void {
-        this.http
+        if (this.connectionSubscription) {
+            return;
+        }
+        this.connectionSubscription = this.http
             .post<{ code: string }>('/api/systems/*/code', null)
             .pipe(
                 map(response => this.WEBSOCKET_URL + `?code=${response.code}`),
                 switchMap(url => {
-                    if (!this.connection$) {
-                        this.connection$ = webSocket(url);
-                        this.send({ action: WebSocketAction.SYSTEMS });
-                        while (this.queue.length) {
-                            this.send(this.queue.shift());
-                        }
-                    }
+                    this.connection$ = webSocket(url);
                     return this.connection$;
                 }),
             )
@@ -129,16 +128,20 @@ export class NxSystemGroupsService {
     }
 
     disconnect(): void {
+        this.connectionSubscription?.unsubscribe();
         this.connection$?.complete();
         this.connection$ = undefined;
+        this.connectionSubscription = undefined;
     }
 
     private send(data: WebSocketOutgoing): void {
         if (!this.connection$) {
-            console.error('No WebSocket connection');
             this.queue.push(data);
-            this.progressiveDelayReconnect();
-            this.toastService.notify(this.LANG.systemGroups.noConnection, ToastType.Danger);
+            if (!this.connectionSubscription) {
+                console.error('No WebSocket connection');
+                this.progressiveDelayReconnect();
+                this.toastService.notify(this.LANG.systemGroups.noConnection, ToastType.Danger);
+            }
             return;
         }
         this.connection$.next(data);
@@ -146,6 +149,10 @@ export class NxSystemGroupsService {
 
     private receive({ action, data }: WebSocketIncoming): void {
         if (action === 'connected') {
+            this.send({ action: WebSocketAction.SYSTEMS });
+            while (this.queue.length) {
+                this.send(this.queue.shift());
+            }
             if (this.attempt > 0) {
                 this.attempt = 0;
                 this.toastService.remove();

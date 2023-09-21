@@ -45,7 +45,7 @@ def is_org_admin(f):
     async def check_role(*args, **kwargs):
         raw_data = await request.get_json()
         connector = RestConnector(request)
-        license_api = LicenseConnector(connector.email, connector.token)
+        license_api = LicenseConnector(connector.email, await connector.get_token())
         if await license_api.is_admin_in_org(raw_data.get('org_id')):
             return await f(*args, **kwargs)
         return 'Unauthorized', httpx.codes.FORBIDDEN
@@ -105,10 +105,13 @@ class NxSystem:
 class LicenseConnector:
     def __init__(self, email, token=None):
         self.session = httpx.AsyncClient()
-        self.session.headers.update({'Cloud-host': CLOUD_HOST})
+        headers = {'Cloud-host': CLOUD_HOST}
         self.email = email
+
         if token:
-            self.update_token(token)
+            headers['Authorization'] = f'Bearer {token}'
+
+        self.session.headers.update(headers)
 
     async def __aenter__(self):
         return self

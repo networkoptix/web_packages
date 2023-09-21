@@ -27,7 +27,6 @@ import { NxSystemGroupsService } from '../../services/system-groups.service';
         CommonModule,
         NxAddSvgSrcDirective,
     ],
-    providers: [NxSystemGroupsService],
 })
 export class NxGroupCardComponent {
     @Input() group: GroupItem;

@@ -30,7 +30,6 @@ import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.co
         TranslateModule,
         NxAddSvgSrcDirective,
     ],
-    providers: [NxSystemGroupsService],
 })
 export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentGroupId: string;

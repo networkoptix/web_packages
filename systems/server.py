@@ -76,9 +76,8 @@ async def receiving(cloud_connector):
     try:
         while True:
             action, data = ParamsValidator.validate_group(await websocket.receive())
-            async with LicenseConnector(user_email) as license_api:
-                token = await cloud_connector.get_token()
-                await license_api.update_token(token)
+            token = await cloud_connector.get_token()
+            async with LicenseConnector(user_email, token) as license_api:
                 try:
                     res = None
                     if action in [ActionEnum.CREATE_GROUP.value, ActionEnum.DELETE_GROUP.value, ActionEnum.MOVE_GROUP.value, ActionEnum.MOVE_SYSTEM.value, ActionEnum.UPDATE_GROUP.value]:
@@ -129,7 +128,7 @@ async def receiving(cloud_connector):
                         await websocket.send(json.dumps(return_data))
                     elif (not res or 'error' not in res) and (org_id := data.get('org_id')) and await license_api.is_user_in_org(org_id):
                         await websocket.send(json.dumps({
-                            'action': ActionEnum.LIST_GROUP,
+                            'action': ActionEnum.LIST_GROUP.value,
                             'data': GroupView.list_groups(org_id)
                         }))
 

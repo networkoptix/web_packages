@@ -40,7 +40,6 @@ import { NxSystemCardComponent } from '../system-card/system-card.component';
         NxGroupCardComponent,
         NxNoSystemsCardsComponent,
     ],
-    providers: [NxSystemGroupsService],
 })
 export class NxGroupsCardsComponent {
     LANG = staticLang;

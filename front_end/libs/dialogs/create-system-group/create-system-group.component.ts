@@ -29,7 +29,6 @@ import { assignFrom } from '@utils/general';
         NxProcessCancelButtonComponent,
         TranslateModule,
     ],
-    providers: [NxSystemGroupsService],
 })
 export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;

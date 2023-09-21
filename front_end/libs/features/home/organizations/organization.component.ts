@@ -61,7 +61,6 @@ interface SidebarSettings {
         NxTabsDirective,
         NxAddSvgSrcDirective,
     ],
-    providers: [NxSystemGroupsService],
 })
 export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
