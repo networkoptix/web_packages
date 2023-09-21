@@ -49,10 +49,10 @@ if __name__ == "__main__":
         owner_can_disconnect_system_from_cloud(cloud_server_second)
         can_log_in_to_system_from_direct_link(cloud_server)
 
-        enable_and_login_with_2fa()
-        login_with_backup_code()
-        disabling_2fa()
-        system_2fa_required()
+        enable_and_login_with_2fa(cloud_server)
+        login_with_backup_code(cloud_server)
+        disabling_2fa(cloud_server)
+        system_2fa_required(cloud_server)
         twofa_not_required_when_more_than_one_system()
 
         test_changing_first_name_and_saving_maintains_that_setting()
