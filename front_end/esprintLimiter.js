@@ -21,6 +21,6 @@ const threadLimit = Math.floor(threads / 2);
 
 const workers = Math.min(memLimit, threadLimit);
 const limit = memLimit >= threadLimit ? 'CPU' : 'RAM';
-// eslint-disable-next-line no-console
+
 console.log(`Running esprint with ${workers} workers (${limit} limited)`);
 process.exitCode = workers;

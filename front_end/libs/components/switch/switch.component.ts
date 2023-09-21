@@ -25,7 +25,6 @@ import { NgChanges } from '@utils/ng-changes';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxSwitchComponent),
             multi: true,
         },

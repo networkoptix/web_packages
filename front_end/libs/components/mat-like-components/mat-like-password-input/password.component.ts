@@ -53,13 +53,11 @@ import { credentialsValidation, icons } from '@static-variables';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikePasswordComponent),
             multi: true,
         },
         {
             provide: NG_VALIDATORS,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikePasswordComponent),
             multi: true,
         },

@@ -6,7 +6,6 @@ import { Component, Input, TemplateRef } from '@angular/core';
     selector: 'nx-stepper',
     templateUrl: './stepper.component.html',
     styleUrls: ['./stepper.component.scss'],
-    // eslint-disable-next-line @typescript-eslint/no-use-before-define
     providers: [{ provide: CdkStepper, useExisting: NxStepperComponent }],
     standalone: true,
     imports: [CommonModule, CdkStepperModule],

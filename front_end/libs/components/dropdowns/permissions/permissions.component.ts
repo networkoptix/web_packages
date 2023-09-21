@@ -26,7 +26,6 @@ type AccessLevelItem = Role & { optionLabel: string };
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxPermissionsDropdown),
             multi: true,
         },

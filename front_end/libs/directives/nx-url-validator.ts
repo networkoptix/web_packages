@@ -7,7 +7,6 @@ import { AbstractControl, Validator, NG_VALIDATORS } from '@angular/forms';
     providers: [
         {
             provide: NG_VALIDATORS,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxUrlValidatorDirective),
             multi: true,
         },

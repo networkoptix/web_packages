@@ -22,7 +22,6 @@ import type { ActionItems } from './three-dot.component.types';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxThreeDotDropdown),
             multi: true,
         },

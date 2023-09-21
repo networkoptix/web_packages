@@ -12,7 +12,6 @@ import { DEFAULT_EDITOR_CONFIG } from './editor-config';
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxHTMLComponent),
             multi: true,
         },

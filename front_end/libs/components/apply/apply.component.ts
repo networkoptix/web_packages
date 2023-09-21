@@ -15,7 +15,6 @@ import { NxProcessButtonComponent } from '../process-button/process-button.compo
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxApplyComponent),
             multi: true,
         },

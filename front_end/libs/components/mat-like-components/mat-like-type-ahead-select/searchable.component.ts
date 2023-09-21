@@ -63,13 +63,11 @@ import type { SearchableDropdownItem as Item } from './searchable.component.type
     providers: [
         {
             provide: NG_VALUE_ACCESSOR,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikeTypeAheadDropdown),
             multi: true,
         },
         {
             provide: NG_VALIDATORS,
-            // eslint-disable-next-line @typescript-eslint/no-use-before-define
             useExisting: forwardRef(() => NxMatLikeTypeAheadDropdown),
             multi: true,
         },

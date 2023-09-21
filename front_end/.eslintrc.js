@@ -179,7 +179,6 @@ module.exports = {
                     {
                         functions: true,
                         classes: true,
-                        // Will false positive on useExisting: forwardRef
                         variables: true,
                         enums: true,
                         typedefs: true,
@@ -341,6 +340,13 @@ module.exports = {
                         ignoreTypeReferences: true,
                     },
                 ],
+            },
+        },
+        {
+            // Jest configs use default export
+            files: ['jest.config.ts'],
+            rules: {
+                'import/no-default-export': 'off',
             },
         },
         {
