@@ -1,4 +1,4 @@
-from selenium import webdriver
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 from generic_element import Element
@@ -6,7 +6,7 @@ from generic_element import Element
 
 class Button:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self.driver = driver
         # TODO: add check to confirm button text is correct?
         self._element = Element(self.driver, locator)
@@ -35,7 +35,7 @@ class Button:
 
 class Checkbox:
 
-    def __init__(self, driver: webdriver, visible_locator, actual_locator):
+    def __init__(self, driver: WebDriver, visible_locator, actual_locator):
         self._driver = driver
         self._element = Element(self._driver, visible_locator)
         self._element.wait_until_visible()
@@ -66,7 +66,7 @@ class Checkbox:
 
 class PageText:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
         self._element.wait_until_visible()
@@ -89,7 +89,7 @@ class PageText:
 
 class TextField:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
         # TODO: Remove locator field.
@@ -137,7 +137,7 @@ class TextField:
 
 class Table:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -150,7 +150,7 @@ class Table:
 
 class Image:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -166,7 +166,7 @@ class Image:
 
 class Pane:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -179,7 +179,7 @@ class Pane:
 
 class Link:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -189,7 +189,7 @@ class Link:
 
 class DropDown:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -207,7 +207,7 @@ class DropDownOption:
 
     # TODO: Move functionality to DropDown class.
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -220,7 +220,7 @@ class DropDownOption:
 
 class Tooltip:
 
-    def __init__(self, driver: webdriver, locator):
+    def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 

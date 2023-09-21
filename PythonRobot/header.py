@@ -1,3 +1,4 @@
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
@@ -8,7 +9,7 @@ from wrappers import Pane
 
 class HeaderNav:
 
-    def __init__(self, driver, lang="en_US", ):
+    def __init__(self, driver: WebDriver, lang="en_US", ):
         self.driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_header_is_visible()

@@ -65,7 +65,7 @@ def check_email_subject(email_id, sub_text, email_address, password, host, port)
                     raise Exception(header_str + ' was not ' + sub_text)
         conn.logout()
 
-def check_language_logged_in(email, password, language="en_US"): 
+def check_language_logged_in(email, password, language="en_US"):
     api = CloudPortalAPI()
     current_lang = api.get_account_language(email, password)
     if current_lang == language:
@@ -106,12 +106,12 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
 
-def check_log_in(driver: webdriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
+def check_log_in(driver: WebDriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
     random_email = get_random_email(rb.BASE_EMAIL)
     #LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
     LoginDialog(driver).basic_cloud_login(user, password)
 
-def check_password_badge(driver: webdriver, password, new_focus):
+def check_password_badge(driver: WebDriver, password, new_focus):
     if password != "":
         Image(driver, rb.PASSWORD_BADGE).wait_until_visible()
     if password == rb.COMMON_PASSWORD:
@@ -126,10 +126,10 @@ def check_password_badge(driver: webdriver, password, new_focus):
         Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
         Image(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE).wait_until_visible()
-    
+
     if password != "":
         robot_keywords.mouse_over(driver, rb.PASSWORD_BADGE)
-    
+
     if password == rb.COMMON_PASSWORD:
         too_common = Tooltip(
             driver,
@@ -217,7 +217,7 @@ def delete_email(mail, email_uid):
 
     # Permanently remove mails that are marked for deletion
     mail.expunge()
-    
+
 def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeout=300):
     if from_email:
         email_con = Email()
@@ -239,7 +239,7 @@ def get_headless_chrome():
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--log-level=3")
     # chrome_options.add_argument("--headless")
-   
+
     # capabilities = DesiredCapabilities.CHROME
     # capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}
 
@@ -261,12 +261,12 @@ def get_lang_list():
     path = pathlib.Path().parent / 'customizations' / 'default_lang_list.json'
     with open(path, encoding="utf-8") as langDict:
         return json.load(langDict)
-    
+
 def get_nx_links_from_email(self, email_index, body):
         url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
         res = re.findall(url, str(body))
         return str(res[0][0])
-    
+
 def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
     if not sendemail:
         email = email.replace('sendemail', '')
@@ -279,8 +279,8 @@ def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", s
         index = email.find('@')
         email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
         return email
-        
-def logout_japanese(driver:webdriver):
+
+def logout_japanese(driver: WebDriver):
 
     robot_keywords.wait_until_page_does_not_contain_element(driver, rb.BACKDROP)
     element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""
@@ -310,14 +310,14 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
             mail = imaplib.IMAP4(host)
 
         mail.login(email, password)
-        mail.select('inbox')         
+        mail.select('inbox')
         return mail
 
     except Exception as e:
         print(f"An error occurred: {e}")
         return None
 
-def open_page_anonymously(driver: webdriver, url: str, title: str):
+def open_page_anonymously(driver: WebDriver, url: str, title: str):
     driver.get(url)
     robot_keywords.location_should_be(driver, url)
     time.sleep(3)
@@ -336,7 +336,7 @@ def register_and_activate_account(driver, first_name, last_name, email, password
 
 def register_and_activate_random_email(driver, first_name, last_name, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
     random_email = get_random_email(sendemail=from_email)
-    register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg, from_email=from_email)  
+    register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg, from_email=from_email)
     return random_email
 
 def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
@@ -362,8 +362,8 @@ def register(driver, first_name, last_name, email, password, checked=False, view
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 
 
-# from robot_tests/Resources/front-end-resources/restore-pass-resource.robot    
-def send_restore_password_email(driver: webdriver, email: str) -> None:
+# from robot_tests/Resources/front-end-resources/restore-pass-resource.robot
+def send_restore_password_email(driver: WebDriver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
@@ -379,12 +379,12 @@ def send_restore_password_email(driver: webdriver, email: str) -> None:
     Button(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 
-def validate_log_out(driver: webdriver):
+def validate_log_out(driver: WebDriver):
     robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 
-def verify_in_account_page(driver: webdriver):
+def verify_in_account_page(driver: WebDriver):
     TextField(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
     TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
     TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
@@ -412,8 +412,8 @@ def wait_for_email(mail, recipient, timeout_sec):
                 f"No email for {mail} to {recipient} within {timeout_sec} seconds timeout")
         time.sleep(1)
 
-    
-def validate_on_register_page(driver: webdriver):
+
+def validate_on_register_page(driver: WebDriver):
     TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
