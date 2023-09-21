@@ -106,7 +106,7 @@ class SecurityForm:
         totp = Cloud2fa().get_2fa_verification_code(key)
         self.twofa_totp_input().input_text(totp)
         self.twofa_verify_button().click()
-        self.twofa_copy_all_button()
+        self.twofa_copy_all_button().wait_until_visible()
         backup_code_indexes = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//span')
         backup_code_entries = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//div')
         backup_codes = []
