@@ -22,6 +22,7 @@ class Suite:
     def __init__(self):
         self.run_id = randint(10000, 100000)
         self._exit_stack = ExitStack()
+        self._server_count = 0
 
     def __enter__(self) -> 'Suite':
         return self
@@ -36,6 +37,8 @@ class Suite:
     def create_cloud_server(self, cloud_owner: 'CloudAccount', suite_name: Optional[str] = None, cloud_users: Optional[dict] = None) -> 'CloudServer':
         if suite_name is None:
             suite_name = 'test_cloud_server_'
+        self._server_count += 1
+        suite_name = f"{suite_name}_{self._server_count}"
         if cloud_users is None:
             return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
         else:
