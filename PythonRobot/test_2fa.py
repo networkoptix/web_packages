@@ -23,6 +23,7 @@ def enable_and_login_with_2fa(server: CloudServer):
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -55,6 +56,7 @@ def login_with_backup_code(server: CloudServer):
         server.cloud_owner.email,
         server.cloud_owner.password
         )
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -86,6 +88,7 @@ def login_with_qr_code(server: CloudServer):
         server.cloud_owner.email,
         server.cloud_owner.password
         )
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -115,6 +118,7 @@ def disabling_2fa(server: CloudServer):
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -135,6 +139,7 @@ def system_2fa_required(server: CloudServer):
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -169,6 +174,7 @@ def twofa_not_required_when_more_than_one_system(server: CloudServer, second_ser
     header = HeaderNav(driver)
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     driver.get(f"{ENV}/systems/{second_server.id}")
     header.account_dropdown().click()
     header.security_option().click()
