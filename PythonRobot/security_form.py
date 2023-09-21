@@ -115,7 +115,8 @@ class SecurityForm:
                 raise RuntimeError("Backup code does not start with index")
             backup_code_clean = full_entry.text[len(index.text):]
             backup_codes.append(backup_code_clean)
-        assert len(backup_codes) == 8
+        if len(backup_codes) != 8:
+            raise RuntimeError(f"Wrong number of backup codes. Expected 8, got {len(backup_codes)}")
         account.setup_2fa(key, backup_codes)
         self.twofa_ok_button().click()
 
