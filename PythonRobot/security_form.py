@@ -111,7 +111,9 @@ class SecurityForm:
         backup_code_entries = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//div')
         backup_codes = []
         for index, full_entry in zip(backup_code_indexes, backup_code_entries):
-            backup_code_clean = full_entry.text.removeprefix(index.text)
+            if not full_entry.text.startswith(index.text):
+                raise RuntimeError("Backup code does not start with index")
+            backup_code_clean = full_entry.text[len(index.text):]
             backup_codes.append(backup_code_clean)
         assert len(backup_codes) == 8
         account.setup_2fa(key, backup_codes)
