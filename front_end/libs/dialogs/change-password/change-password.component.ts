@@ -80,12 +80,16 @@ export class ChangePasswordModalContent
         this.confirmNewPasswordForUser = '';
     }
 
-    isLocalOwner = computed(() => {
+    isCurrentUser$$ = computed(() => {
         if (!this.system || !this.user) {
             return false;
         }
         const currentUser = this.system.permissionManager.currentUser();
-        return this.user.isLocalOwner && this.user.id === currentUser.id;
+        return this.user.id === currentUser.id;
+    });
+
+    isLocalOwner$$ = computed(() => {
+        return this.user.isLocalOwner && this.isCurrentUser$$();
     });
 
     ngOnInit(): void {
@@ -99,7 +103,7 @@ export class ChangePasswordModalContent
                     password: this.newPasswordForUser,
                 };
 
-                if (this.isLocalOwner()) {
+                if (this.isLocalOwner$$()) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({
                             dontMatch: true,

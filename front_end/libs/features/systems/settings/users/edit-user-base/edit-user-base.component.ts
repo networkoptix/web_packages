@@ -131,7 +131,10 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
     }
 
     public changePassword(): void {
-        this.dialogs.changePassword({ system: this.system, user: this.selectedUser });
+        this.dialogs.changePassword({
+            system: this.system,
+            user: this.selectedUser,
+        });
     }
 
     protected calcNextUserId(): string {
