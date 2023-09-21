@@ -252,7 +252,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             delete config.settingsPreset;
         }
 
-        if (cloudSystemID) {
+        if (!cloudSystemID) {
             delete config.cloud;
         } else {
             delete config.local;
