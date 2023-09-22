@@ -143,7 +143,7 @@ class Element:
 
     def wait_until_not_visible(self, timeout: float = _DEFAULT_TIMEOUT):
         try:
-            self.wait_until_exists(timeout)
+            self.wait_until_exists(0)
         except ElementNotInDOM:
             return
         started_at = time.monotonic()
