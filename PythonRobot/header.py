@@ -1,9 +1,9 @@
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
 from landing_page import LandingPage
 from wrappers import Button
+from wrappers import PageText
 from wrappers import Pane
 
 
@@ -70,5 +70,5 @@ class HeaderNav:
         return Button(self.driver, f'//a[contains(text(), "{self.rb.FOR_DEVELOPERS_TEXT}")]')
 
     def get_system_name(self) -> str:
-        element = self.driver.find_element(By.XPATH, '//nx-header//span[@class="system-name"]')
-        return element.text.strip()
+        element = PageText(self.driver, '//nx-header//span[@class="system-name"]')
+        return element.get_text().strip()
