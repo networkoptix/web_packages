@@ -284,6 +284,18 @@ class _TabInformation:
     def get_alerts_section(self) -> '_AlertsSection':
         return _AlertsSection(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]', 'Alerts')
 
+    def get_servers_section(self) -> '_Section':
+        return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]', 'Servers')
+
+    def get_cameras_section(self) -> '_Section':
+        return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="cameras"]', 'Cameras')
+
+    def get_storages_section(self) -> '_Section':
+        return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="storages"]', 'Storages')
+
+    def get_network_section(self) -> '_Section':
+        return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]', 'Network Interfaces')
+
 
 class _Section:
 
@@ -303,6 +315,12 @@ class _Section:
             if time.monotonic() - started_at > timeout_sec:
                 raise TimeoutError(f"{self._name} section is not visible after {timeout_sec} seconds")
             time.sleep(0.5)
+
+    def get_text_first_card_header(self) -> str:
+        return Element(self._driver, '//nx-single-entity//header').text()
+
+    def has_table(self) -> bool:
+        return len(self._driver.find_elements_by_xpath('//div[@id="nx-table"]')) > 0
 
     def _is_active(self) -> bool:
         return len(self._driver.find_elements_by_xpath('//nx-single-entity')) > 0

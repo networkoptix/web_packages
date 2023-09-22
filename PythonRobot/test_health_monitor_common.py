@@ -53,6 +53,46 @@ def can_close_out_of_json_imported_mode(server: CloudServer, rb: RobotVariables)
         systems.click()
 
 
+def hardware_types_with_only_one_item(server: CloudServer, rb: RobotVariables):
+    """
+    13. Hardware types with only one item should show tiles and not show tables
+    [Tags]    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_info = system.get_information_tab()
+        tab_info.click()
+        tab_info.check_links()
+        json_file = Path(__file__).parent.absolute() / 'test_data/solo-hardware.json'
+        tab_info.upload_json_report(json_file)
+        tab_info.check_links_uploaded()
+        section = tab_info.get_systems_section()
+        section.click()
+        header_text = section.get_text_first_card_header()
+        section = tab_info.get_servers_section()
+        section.click()
+        assert section.get_text_first_card_header() != header_text
+        assert not section.has_table()
+        header_text = section.get_text_first_card_header()
+        section = tab_info.get_cameras_section()
+        section.click()
+        assert section.get_text_first_card_header() != header_text
+        assert not section.has_table()
+        header_text = section.get_text_first_card_header()
+        section = tab_info.get_storages_section()
+        section.click()
+        assert section.get_text_first_card_header() != header_text
+        assert not section.has_table()
+        header_text = section.get_text_first_card_header()
+        section = tab_info.get_network_section()
+        section.click()
+        assert section.get_text_first_card_header() != header_text
+        assert not section.has_table()
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -65,3 +105,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{json_upload_works.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         can_close_out_of_json_imported_mode(cloud_server, variables)
         print(f'{Fore.WHITE}{can_close_out_of_json_imported_mode.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        hardware_types_with_only_one_item(cloud_server, variables)
+        print(f'{Fore.WHITE}{hardware_types_with_only_one_item.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
