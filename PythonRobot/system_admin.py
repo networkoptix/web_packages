@@ -379,6 +379,12 @@ class _AlertsSection(_Section):
             warnings['Interface'],
         )
 
+    def get_pages_count(self):
+        paginator = Element(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
+        if paginator.in_dom:
+            return int(paginator.text())
+        return 1
+
     def _is_active(self) -> bool:
         is_offline = self._driver.find_elements_by_xpath(
             '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]') > 0

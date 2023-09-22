@@ -66,6 +66,33 @@ def errors_and_warnings_are_counted_correctly(server: CloudServer, rb: RobotVari
                                                              f"From table: {alerts_summary_from_table}")
 
 
+def change_page_height(server: CloudServer, rb: RobotVariables):
+    """
+    12. Changing page height and refreshing reduces row count and increases page count
+    [Tags]    C69785    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_info = system.get_information_tab()
+        tab_info.click()
+        tab_info.check_links()
+        json_file = Path(__file__).parent.absolute() / 'test_data/one-page.json'
+        tab_info.upload_json_report(json_file)
+        alerts_section = tab_info.get_alerts_section()
+        assert alerts_section.get_pages_count() == 2
+        driver.set_window_size(1920, 600)
+        time.sleep(1)
+        assert alerts_section.get_pages_count() != 2
+        alerts_summary = alerts_section.get_alerts_summary()
+        alerts_summary_from_table = alerts_section.get_alerts_summary_from_table()
+        assert alerts_summary == alerts_summary_from_table, (f"The number of alerts does not match.\n"
+                                                             f"From cards: {alerts_summary}\n"
+                                                             f"From table: {alerts_summary_from_table}")
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -78,3 +105,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{no_alerts_message_shows_when_no_alerts.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         errors_and_warnings_are_counted_correctly(cloud_server, variables)
         print(f'{Fore.WHITE}{errors_and_warnings_are_counted_correctly.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        change_page_height(cloud_server, variables)
+        print(f'{Fore.WHITE}{change_page_height.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
