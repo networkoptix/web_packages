@@ -42,14 +42,6 @@ Health Monitor Suite Setup
     Run Keyword If    '''${mode}'''=='''cloud'''    Set Suite Variable     ${user in charge}    ${server 1}[cloudOwner]
     ...    ELSE   Set Suite Variable     ${user in charge}    admin
 
-Health Monitor Test Setup
-    [Arguments]    ${server}=${server 1}    ${user}=${user in charge}    ${verify}=${True}
-    IF    '''${mode}'''=='''cloud'''
-        Cloud Test Setup    ${server}    ${user}    ${verify}
-    ELSE
-        Web Admin Test Setup    ${server}    ${user}    ${verify}
-    END
-
 Cloud Test Setup
     [Arguments]    ${server}    ${user}    ${verify}
     Log in to system new    ${server}    ${user}    validate=${True}
@@ -61,13 +53,6 @@ Web Admin Test Setup
     Log in to system    ${server}    ${user}    validate=${True}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
     Sleep    2
-
-Health Monitor Test Teardown
-    ${status}=   Run Keyword If    '''${mode}'''=='''cloud'''    Run Keyword and Return Status    Validate Log Out
-    ...    ELSE    Run Keyword and Return Status    Validate Log Out Web Admin
-    IF    ${status} == ${False}
-        Log Out
-    END
 
 Open New Browser On Failure
     Close Browser
@@ -148,14 +133,6 @@ Count All Alerts and Validate Totals Shown
 #    ...    ${HM DETAILS PANEL}
 #    ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..//div[@title="${hardware} ${name} is broken"]
 #    ...    ${HM DETAILS PANEL}//h4[contains(text(),"${category}")]/..//span[contains(text(), "${metric}")]/../../..${HM ALERT ICON}
-
-Health Monitor Suite Teardown
-    Close All Browsers
-    Run Keyword and Warn on Failure    Teardown Servers    ${servers}
-    Cleanup Containers    ${random}
-#    Delete Base System    ${server 1}
-#    Delete Base System    ${server 2}
-
 
 Health Monitor Details Setup
     Open Browser and Go To URL    ${url}
