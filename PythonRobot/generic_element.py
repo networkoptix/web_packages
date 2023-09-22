@@ -3,12 +3,12 @@ import platform
 import time
 
 from selenium.webdriver import ActionChains
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.support import expected_conditions as ec
+from selenium.webdriver.remote.webdriver import WebDriver
 
 _DEFAULT_TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -65,6 +65,9 @@ class Element:
 
     def get_attribute(self, attribute: str):
         return self._element.get_attribute(attribute)
+
+    def get_property(self, name: str):
+        return self._element.get_property(name)
 
     def get_screenshot(self, filename: str) -> bool:
         self.wait_until_visible()
@@ -162,6 +165,9 @@ class Element:
 
     def send_file(self, text: str):
         self._element.send_keys(text)
+
+    def find_element(self, locator: str, position: int = 1) -> 'Element':
+        return Element(self._driver, f'({self._locator}{locator})[{position}]')
 
 
 class ElementNotInDOM(Exception):

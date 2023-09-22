@@ -1,5 +1,7 @@
 import time
 from pathlib import Path
+from string import Template
+from typing import NamedTuple
 from typing import Optional
 
 from selenium.common.exceptions import NoSuchElementException
@@ -16,6 +18,7 @@ from variables import ENV
 from wrappers import Button
 from wrappers import Checkbox
 from wrappers import PageText
+from wrappers import Table
 from wrappers import TextField
 
 
@@ -278,6 +281,9 @@ class _TabInformation:
     def get_systems_section(self) -> '_Section':
         return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]', 'Systems')
 
+    def get_alerts_section(self) -> '_AlertsSection':
+        return _AlertsSection(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]', 'Alerts')
+
 
 class _Section:
 
@@ -300,3 +306,82 @@ class _Section:
 
     def _is_active(self) -> bool:
         return len(self._driver.find_elements_by_xpath('//nx-single-entity')) > 0
+
+
+class _AlertsSummary(NamedTuple):
+    servers_errors: int
+    servers_warnings: int
+    cameras_errors: int
+    cameras_warnings: int
+    storages_errors: int
+    storages_warnings: int
+    network_errors: int
+    network_warnings: int
+
+
+class _AlertsSection(_Section):
+
+    def get_alerts_summary(self) -> _AlertsSummary:
+        xpath_template = Template(
+            '//div[contains(@class, "card-header") and contains(text(), "$card_name")]'
+            '/following-sibling::div[contains(@class, "card-body")]',
+        )
+        card = Element(self._driver, xpath_template.substitute(card_name='Servers'))
+        servers_errors = card.find_element('//nx-alert-counter/div/span', 1)
+        servers_warnings = card.find_element('//nx-alert-counter/div/span', 2)
+        card = Element(self._driver, xpath_template.substitute(card_name='Cameras'))
+        cameras_errors = card.find_element('//nx-alert-counter/div/span', 1)
+        cameras_warnings = card.find_element('//nx-alert-counter/div/span', 2)
+        card = Element(self._driver, xpath_template.substitute(card_name='Storage Locations'))
+        storages_errors = card.find_element('//nx-alert-counter/div/span', 1)
+        storages_warnings = card.find_element('//nx-alert-counter/div/span', 2)
+        card = Element(self._driver, xpath_template.substitute(card_name='Network Interfaces'))
+        networks_errors = card.find_element('//nx-alert-counter/div/span', 1)
+        networks_warnings = card.find_element('//nx-alert-counter/div/span', 2)
+        return _AlertsSummary(
+            int(servers_errors.text()),
+            int(servers_warnings.text()),
+            int(cameras_errors.text()),
+            int(cameras_warnings.text()),
+            int(storages_errors.text()),
+            int(storages_warnings.text()),
+            int(networks_errors.text()),
+            int(networks_warnings.text()),
+        )
+
+    def get_alerts_summary_from_table(self) -> _AlertsSummary:
+        errors = {'Server': 0, 'Camera': 0, 'Storage': 0, 'Interface': 0}
+        warnings = errors.copy()
+        while True:
+            table = Table(self._driver, '//div[@id="nx-table"]//table')
+            for row in table.get_data():
+                type_ = row[1].get_property('title')
+                element = row[0].find_element('/svg-icon')
+                if 'error.svg' in element.get_attribute('data-src'):
+                    errors[type_] += 1
+                elif 'warning.svg' in element.get_attribute('data-src'):
+                    warnings[type_] += 1
+                else:
+                    TimeoutError(f'Could not recognize alert {type_} with SVG {element.get_attribute("data-src")}')
+            paginator_next = Element(self._driver, '//nx-paginator//a[@id="paginator-next"]')
+            if 'disabled' in paginator_next.get_attribute('class'):
+                break
+            paginator_next.click()
+            time.sleep(3)
+        return _AlertsSummary(
+            errors['Server'],
+            warnings['Server'],
+            errors['Camera'],
+            warnings['Camera'],
+            errors['Storage'],
+            warnings['Storage'],
+            errors['Interface'],
+            warnings['Interface'],
+        )
+
+    def _is_active(self) -> bool:
+        is_offline = self._driver.find_elements_by_xpath(
+            '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]') > 0
+        is_online = self._driver.find_elements_by_xpath(
+            '//nx-system-health-component/g[@class="gridAlertsCards"]') > 0
+        return is_online or is_offline

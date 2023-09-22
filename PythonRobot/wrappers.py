@@ -1,3 +1,5 @@
+from typing import Sequence
+
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
 
@@ -172,6 +174,27 @@ class Table:
 
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
+
+    def get_data(self) -> Sequence[Sequence[Element]]:
+        rows = []
+        row_n = 1
+        while True:
+            row_locator = f'({self.locator}//tr)[{row_n}]'
+            if len(self._driver.find_elements_by_xpath(row_locator)) == 0:
+                break
+            row = []
+            cell_n = 1
+            while True:
+                cell_locator = f'({row_locator}//td)[{cell_n}]'
+                if len(self._driver.find_elements_by_xpath(cell_locator)) == 0:
+                    break
+                cell = Element(self._driver, cell_locator)
+                row.append(cell)
+                cell_n += 1
+            if row:
+                rows.append(row)
+            row_n += 1
+        return rows
 
 
 class Image:

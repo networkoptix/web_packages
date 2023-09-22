@@ -1,0 +1,1978 @@
+﻿{
+    "error": "0",
+    "errorString": "",
+    "reply": {
+        "/ec2/metrics/alarms": {
+            "error": "0",
+            "errorString": "",
+            "reply": {
+                "cameras": {
+                    "1581988253.0525553": {
+                        "info": {
+                            "type": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988254.0585408": {
+                        "info": {
+                            "server": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988255.0648942": {
+                        "info": {
+                            "firmware": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ],
+                            "model": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988256.0697882": {
+                        "info": {
+                            "ip": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ],
+                            "vendor": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988257.0758286": {
+                        "info": {
+                            "recording": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ],
+                            "type": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "networkInterfaces": {
+                    "1581988263.1146722": {
+                        "rates": {
+                            "inBps1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988264.1217177": {
+                        "info": {
+                            "state": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988265.1288826": {
+                        "info": {
+                            "displayAddress": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "rates": {
+                            "inBps1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988266.135776": {
+                        "info": {
+                            "server": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "rates": {
+                            "outBps1m": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988267.1425755": {
+                        "info": {
+                            "state": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "rates": {
+                            "outBps1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "servers": {
+                    "1581988247.0174682": {
+                        "activity": {
+                            "transactionsPerSecond1m": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988248.0230575": {
+                        "load": {
+                            "serverCpuUsageP": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988249.0286028": {
+                        "activity": {
+                            "activePlugins": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ],
+                            "apiCalls1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988250.0341485": {
+                        "load": {
+                            "decodingSpeed3s": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ],
+                            "threads": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988251.0406206": {
+                        "activity": {
+                            "actionsTriggered1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "load": {
+                            "ramUsageP": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    }
+                },
+                "storages": {
+                    "1581988258.0818436": {
+                        "activity": {
+                            "readRateBps1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988259.0877316": {
+                        "space": {
+                            "totalSpaceB": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988260.093724": {
+                        "activity": {
+                            "readRateBps1m": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "info": {
+                            "type": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988261.1001856": {
+                        "activity": {
+                            "writeRateBps1m": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "state": {
+                            "status": [
+                                {
+                                    "level": "warning",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    },
+                    "1581988262.108545": {
+                        "activity": {
+                            "writeRateBps1m": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        },
+                        "space": {
+                            "totalSpaceB": [
+                                {
+                                    "level": "error",
+                                    "text": "is broken"
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/ec2/metrics/manifest": {
+            "error": "0",
+            "errorString": "",
+            "reply": [
+                {
+                    "id": "systems",
+                    "name": "System",
+                    "resource": "",
+                    "values": [
+                        {
+                            "id": "info",
+                            "name": "Info",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "longText",
+                                    "id": "name",
+                                    "name": "Name"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "servers",
+                                    "name": "Servers"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "cameras",
+                                    "name": "Camera channels"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "storages",
+                                    "name": "Storage locations"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "users",
+                                    "name": "Users"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "text",
+                                    "id": "version",
+                                    "name": "System version"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "recommendedMaxCameras",
+                                    "name": "RecommendedMaxCameras"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "recommendedMaxServers",
+                                    "name": "RecommendedMaxServers"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "servers",
+                    "name": "Servers",
+                    "resource": "Server",
+                    "values": [
+                        {
+                            "id": "_",
+                            "name": "",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "longText",
+                                    "id": "name",
+                                    "name": "Name"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "availability",
+                            "name": "Availability",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "shortText",
+                                    "id": "status",
+                                    "name": "Status"
+                                },
+                                {
+                                    "description": "Events count: Server Offline (24h)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "offlineEvents",
+                                    "name": "Events: Server Offline (24h)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "duration",
+                                    "id": "uptimeS",
+                                    "name": "Uptime"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "load",
+                            "name": "Load",
+                            "values": [
+                                {
+                                    "description": "Total CPU Usage (%)",
+                                    "display": "table|panel",
+                                    "format": "%",
+                                    "id": "cpuUsageP",
+                                    "name": "CPU %"
+                                },
+                                {
+                                    "description": "CPU used by VMS Server (%)",
+                                    "display": "table|panel",
+                                    "format": "%",
+                                    "id": "serverCpuUsageP",
+                                    "name": "CPU (VMS Server) %"
+                                },
+                                {
+                                    "description": "Total RAM Usage",
+                                    "display": "panel",
+                                    "format": "GB",
+                                    "id": "ramUsageB",
+                                    "name": "RAM Usage"
+                                },
+                                {
+                                    "description": "Total RAM Usage (%)",
+                                    "display": "table|panel",
+                                    "format": "%",
+                                    "id": "ramUsageP",
+                                    "name": "RAM %"
+                                },
+                                {
+                                    "description": "RAM used by VMS Server",
+                                    "display": "panel",
+                                    "format": "GB",
+                                    "id": "serverRamUsage",
+                                    "name": "RAM (VMS Server)"
+                                },
+                                {
+                                    "description": "RAM used by VMS Server (%)",
+                                    "display": "table|panel",
+                                    "format": "%",
+                                    "id": "serverRamUsageP",
+                                    "name": "RAM (VMS Server) %"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "threads",
+                                    "name": "Server threads"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "cameras",
+                                    "name": "Camera channels"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "decodingThreads",
+                                    "name": "Decoding threads"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "MPix/s",
+                                    "id": "decodingSpeed3s",
+                                    "name": "Decoding speed"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "decodedPixels",
+                                    "name": "DecodedPixels"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "encodingThreads",
+                                    "name": "Encoding threads"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "MPix/s",
+                                    "id": "encodingSpeed3s",
+                                    "name": "Encoding speed"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "encodedPixels",
+                                    "name": "EncodedPixels"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "primaryStreams",
+                                    "name": "Outgoing Primary streams"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "secondaryStreams",
+                                    "name": "Outgoing Secondary streams"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "incomingConnections",
+                                    "name": "Incoming connections"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "outgoingConnections",
+                                    "name": "Outgoing connections"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "shortText",
+                                    "id": "logLevel",
+                                    "name": "Logging level"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "info",
+                            "name": "Info",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "publicIp",
+                                    "name": "Public IP"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "text",
+                                    "id": "os",
+                                    "name": "OS"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "longText",
+                                    "id": "osTime",
+                                    "name": "OS Time"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "longText",
+                                    "id": "vmsTime",
+                                    "name": "VMS Time"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "vmsTimeChanged",
+                                    "name": "VmsTimeChanged"
+                                },
+                                {
+                                    "description": "CPU Name",
+                                    "display": "panel",
+                                    "format": "longText",
+                                    "id": "cpu",
+                                    "name": "CPU"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "cpuCores",
+                                    "name": "Cores"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "GB",
+                                    "id": "ram",
+                                    "name": "RAM"
+                                },
+                                {
+                                    "description": "Events count: Time Changed (24h)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "vmsTimeChanged24h",
+                                    "name": "Events: Time Changed (24h)"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "activity",
+                            "name": "Activity",
+                            "values": [
+                                {
+                                    "description": "Transactions per second",
+                                    "display": "panel",
+                                    "format": "Tr/s",
+                                    "id": "transactionsPerSecond1m",
+                                    "name": "Transactions/s"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "transactionsPerSecond",
+                                    "name": "TransactionsPerSecond"
+                                },
+                                {
+                                    "description": "Event Rules activations per second",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "actionsTriggered1m",
+                                    "name": "Rules Activations/s"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "actionsTriggered",
+                                    "name": "ActionsTriggered"
+                                },
+                                {
+                                    "description": "REST API calls per second",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "apiCalls1m",
+                                    "name": "API Calls/s"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "apiCalls",
+                                    "name": "ApiCalls"
+                                },
+                                {
+                                    "description": "Thumbnails per second",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "thumbnails1m",
+                                    "name": "Thumbnails/s"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "thumbnails",
+                                    "name": "Thumbnails"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "longText",
+                                    "id": "activePlugins",
+                                    "name": "Active plugins list"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "cameras",
+                    "name": "Cameras",
+                    "resource": "Camera",
+                    "values": [
+                        {
+                            "id": "_",
+                            "name": "",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "longText",
+                                    "id": "name",
+                                    "name": "Name"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "thumbnail",
+                                    "id": "thumbnail",
+                                    "name": "Thumbnail"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "info",
+                            "name": "Info",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "resource",
+                                    "id": "server",
+                                    "name": "Server"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "type",
+                                    "name": "Type"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "ip",
+                                    "name": "IP"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "shortText",
+                                    "id": "vendor",
+                                    "name": "Vendor"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "shortText",
+                                    "id": "model",
+                                    "name": "Model"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "shortText",
+                                    "id": "firmware",
+                                    "name": "Firmware"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "recording",
+                                    "name": "Recording"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "availability",
+                            "name": "Availability",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "offlineFromOnlineStatus",
+                                    "name": "OfflineFromOnlineStatus"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "shortText",
+                                    "id": "status",
+                                    "name": "Status"
+                                },
+                                {
+                                    "description": "Events count: Camera Offline (1h)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "offlineEvents",
+                                    "name": "Events: Camera Offline (1h)"
+                                },
+                                {
+                                    "description": "Events count: Stream Issues (1h)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "streamIssues1h",
+                                    "name": "Events: Stream Issues (1h)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "streamIssues",
+                                    "name": "StreamIssues"
+                                },
+                                {
+                                    "description": "Events count: IP Conflicts (3 min)",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "ipConflicts3min",
+                                    "name": "Events: IP Conflicts (3 min)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "ipConflicts",
+                                    "name": "IpConflicts"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "primaryStream",
+                            "name": "Primary Stream",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "resolution",
+                                    "name": "Resolution"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "targetFps",
+                                    "name": "Target FPS"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "actualFps",
+                                    "name": "Actual FPS"
+                                },
+                                {
+                                    "description": "Average FPS drop (10 min)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "fpsDeltaAverage10m",
+                                    "name": "Avg FPS drop (10 min)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "fpsDelta",
+                                    "name": "FpsDelta"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "Mbit/s",
+                                    "id": "actualBitrateBps",
+                                    "name": "Bitrate"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "secondaryStream",
+                            "name": "Secondary Stream",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "resolution",
+                                    "name": "Resolution"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "",
+                                    "id": "targetFps",
+                                    "name": "Target FPS"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "actualFps",
+                                    "name": "Actual FPS"
+                                },
+                                {
+                                    "description": "Average FPS drop (10 min)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "fpsDeltaAverage10m",
+                                    "name": "Avg FPS drop (10 min)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "fpsDelta",
+                                    "name": "FpsDelta"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "Mbit/s",
+                                    "id": "actualBitrateBps",
+                                    "name": "Bitrate"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "recommendedMaxSecondaryResolution",
+                                    "name": "RecommendedMaxSecondaryResolution"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "storage",
+                            "name": "Storage Analytics",
+                            "values": [
+                                {
+                                    "description": "Current Archive length",
+                                    "display": "table|panel",
+                                    "format": "durationDh",
+                                    "id": "archiveLengthS",
+                                    "name": "Archive"
+                                },
+                                {
+                                    "description": "Minimum Archive length",
+                                    "display": "panel",
+                                    "format": "durationDh",
+                                    "id": "minArchiveLengthS",
+                                    "name": "Min Archive length"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "Mbit/s",
+                                    "id": "recordingBitrateBps",
+                                    "name": "Recording Bitrate (5min)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "hasArchiveRotated",
+                                    "name": "HasArchiveRotated"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "isArchiveTooSmall",
+                                    "name": "IsArchiveTooSmall"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "storages",
+                    "name": "Storage Locations",
+                    "resource": "Storage",
+                    "values": [
+                        {
+                            "id": "_",
+                            "name": "",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "longText",
+                                    "id": "name",
+                                    "name": "Name"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "info",
+                            "name": "Info",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "resource",
+                                    "id": "server",
+                                    "name": "Server"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "shortText",
+                                    "id": "type",
+                                    "name": "Type"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "state",
+                            "name": "State",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "systemStatus",
+                                    "name": "SystemStatus"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "shortText",
+                                    "id": "status",
+                                    "name": "Status"
+                                },
+                                {
+                                    "description": "Events count: Storage Issues (24h)",
+                                    "display": "table|panel",
+                                    "format": "",
+                                    "id": "issues24h",
+                                    "name": "Issues (24h)"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "issues",
+                                    "name": "Issues"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "activity",
+                            "name": "Activity",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "KB/s",
+                                    "id": "readRateBps1m",
+                                    "name": "Read Rate"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "readRateBps",
+                                    "name": "ReadRateBps"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "KB/s",
+                                    "id": "writeRateBps1m",
+                                    "name": "Write Rate"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "writeRateBps",
+                                    "name": "WriteRateBps"
+                                },
+                                {
+                                    "description": "Analytics DB transactions per second",
+                                    "display": "panel",
+                                    "format": "Tr/s",
+                                    "id": "transactionsPerSecond",
+                                    "name": "Transactions/s"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "space",
+                            "name": "Space",
+                            "values": [
+                                {
+                                    "description": "Total Space",
+                                    "display": "table|panel",
+                                    "format": "GB",
+                                    "id": "totalSpaceB",
+                                    "name": "Total"
+                                },
+                                {
+                                    "description": "Space Used by VMS media (%)",
+                                    "display": "table|panel",
+                                    "format": "%",
+                                    "id": "mediaSpaceP",
+                                    "name": "VMS Media(%)"
+                                },
+                                {
+                                    "description": "Space Used by VMS media",
+                                    "display": "panel",
+                                    "format": "GB",
+                                    "id": "mediaSpaceB",
+                                    "name": "VMS Media"
+                                }
+                            ]
+                        }
+                    ]
+                },
+                {
+                    "id": "networkInterfaces",
+                    "name": "Network Interfaces",
+                    "resource": "Interface",
+                    "values": [
+                        {
+                            "id": "_",
+                            "name": "",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "longText",
+                                    "id": "name",
+                                    "name": "Name"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "info",
+                            "name": "Info",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "resource",
+                                    "id": "server",
+                                    "name": "Server"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "shortText",
+                                    "id": "state",
+                                    "name": "State"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "text",
+                                    "id": "displayAddress",
+                                    "name": "IP"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "panel",
+                                    "format": "text",
+                                    "id": "otherAddresses",
+                                    "name": "Other IP addresses"
+                                }
+                            ]
+                        },
+                        {
+                            "id": "rates",
+                            "name": "I/O Rates",
+                            "values": [
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "KB/s",
+                                    "id": "inBps1m",
+                                    "name": "IN Rate"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "inBps",
+                                    "name": "InBps"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "table|panel",
+                                    "format": "KB/s",
+                                    "id": "outBps1m",
+                                    "name": "OUT Rate"
+                                },
+                                {
+                                    "description": "",
+                                    "display": "",
+                                    "format": "",
+                                    "id": "outBps",
+                                    "name": "OutBps"
+                                }
+                            ]
+                        }
+                    ]
+                }
+            ]
+        },
+        "/ec2/metrics/values": {
+            "error": "0",
+            "errorString": "",
+            "reply": {
+                "cameras": {
+                    "1581988253.0525553": {
+                        "_": {
+                            "name": "test camera warning",
+                            "thumbnail": "now"
+                        },
+                        "availability": {
+                            "ipConflicts": 0,
+                            "ipConflicts3min": 0,
+                            "offlineEvents": 5,
+                            "status": "Offline",
+                            "streamIssues": 0,
+                            "streamIssues1h": 0
+                        },
+                        "info": {
+                            "firmware": "v2.20_181106220833",
+                            "ip": "192.168.46.2",
+                            "model": "XRN-1610S",
+                            "recording": "Off",
+                            "server": "1581988248.0230575",
+                            "type": "NVR",
+                            "vendor": "Hanwha Techwin"
+                        },
+                        "storage": {
+                            "hasArchiveRotated": false
+                        }
+                    },
+                    "1581988254.0585408": {
+                        "_": {
+                            "name": "test error",
+                            "thumbnail": "now"
+                        },
+                        "availability": {
+                            "ipConflicts": 0,
+                            "ipConflicts3min": 0,
+                            "offlineEvents": 5,
+                            "status": "Offline",
+                            "streamIssues": 0,
+                            "streamIssues1h": 0
+                        },
+                        "info": {
+                            "firmware": "v2.20_181106220833",
+                            "ip": "192.168.46.2",
+                            "model": "XRN-1610S",
+                            "recording": "Off",
+                            "server": "1581988248.0230575",
+                            "type": "NVR",
+                            "vendor": "Hanwha Techwin"
+                        },
+                        "storage": {
+                            "hasArchiveRotated": false
+                        }
+                    },
+                    "1581988255.0648942": {
+                        "_": {
+                            "name": "test both",
+                            "thumbnail": "now"
+                        },
+                        "availability": {
+                            "ipConflicts": 0,
+                            "ipConflicts3min": 0,
+                            "offlineEvents": 5,
+                            "status": "Offline",
+                            "streamIssues": 0,
+                            "streamIssues1h": 0
+                        },
+                        "info": {
+                            "firmware": "v2.20_181106220833",
+                            "ip": "192.168.46.2",
+                            "model": "XRN-1610S",
+                            "recording": "Off",
+                            "server": "1581988249.0286028",
+                            "type": "NVR",
+                            "vendor": "Hanwha Techwin"
+                        },
+                        "storage": {
+                            "hasArchiveRotated": false
+                        }
+                    },
+                    "1581988256.0697882": {
+                        "_": {
+                            "name": "test 2 errors",
+                            "thumbnail": "now"
+                        },
+                        "availability": {
+                            "ipConflicts": 0,
+                            "ipConflicts3min": 0,
+                            "offlineEvents": 5,
+                            "status": "Offline",
+                            "streamIssues": 0,
+                            "streamIssues1h": 0
+                        },
+                        "info": {
+                            "firmware": "v2.20_181106220833",
+                            "ip": "192.168.46.2",
+                            "model": "XRN-1610S",
+                            "recording": "Off",
+                            "server": "1581988247.0174682",
+                            "type": "NVR",
+                            "vendor": "Hanwha Techwin"
+                        },
+                        "storage": {
+                            "hasArchiveRotated": false
+                        }
+                    },
+                    "1581988257.0758286": {
+                        "_": {
+                            "name": "test two warnings",
+                            "thumbnail": "now"
+                        },
+                        "availability": {
+                            "ipConflicts": 0,
+                            "ipConflicts3min": 0,
+                            "offlineEvents": 5,
+                            "status": "Offline",
+                            "streamIssues": 0,
+                            "streamIssues1h": 0
+                        },
+                        "info": {
+                            "firmware": "v2.20_181106220833",
+                            "ip": "192.168.46.2",
+                            "model": "XRN-1610S",
+                            "recording": "Off",
+                            "server": "1581988247.0174682",
+                            "type": "NVR",
+                            "vendor": "Hanwha Techwin"
+                        },
+                        "storage": {
+                            "hasArchiveRotated": false
+                        }
+                    },
+                    "1581988269.1572864": {
+                        "_": {
+                            "name": "test camera none",
+                            "thumbnail": "now"
+                        },
+                        "availability": {
+                            "ipConflicts": 0,
+                            "ipConflicts3min": 0,
+                            "offlineEvents": 5,
+                            "status": "Offline",
+                            "streamIssues": 0,
+                            "streamIssues1h": 0
+                        },
+                        "info": {
+                            "firmware": "v2.20_181106220833",
+                            "ip": "192.168.46.2",
+                            "model": "XRN-1610S",
+                            "recording": "Off",
+                            "server": "1581988247.0174682",
+                            "type": "NVR",
+                            "vendor": "Hanwha Techwin"
+                        },
+                        "storage": {
+                            "hasArchiveRotated": false
+                        }
+                    }
+                },
+                "networkInterfaces": {
+                    "1581988263.1146722": {
+                        "_": {
+                            "name": "test network warning"
+                        },
+                        "info": {
+                            "displayAddress": "172.17.0.2",
+                            "server": "1581988249.0286028",
+                            "state": "Up"
+                        },
+                        "rates": {
+                            "inBps": 973,
+                            "inBps1m": 569.811210373679,
+                            "outBps": 1426,
+                            "outBps1m": 945.11105370179
+                        }
+                    },
+                    "1581988264.1217177": {
+                        "_": {
+                            "name": "test network error"
+                        },
+                        "info": {
+                            "displayAddress": "172.17.0.2",
+                            "server": "1581988251.0406206",
+                            "state": "Up"
+                        },
+                        "rates": {
+                            "inBps": 973,
+                            "inBps1m": 569.811210373679,
+                            "outBps": 1426,
+                            "outBps1m": 945.11105370179
+                        }
+                    },
+                    "1581988265.1288826": {
+                        "_": {
+                            "name": "test network both"
+                        },
+                        "info": {
+                            "displayAddress": "172.17.0.2",
+                            "server": "1581988247.0174682",
+                            "state": "Up"
+                        },
+                        "rates": {
+                            "inBps": 973,
+                            "inBps1m": 569.811210373679,
+                            "outBps": 1426,
+                            "outBps1m": 945.11105370179
+                        }
+                    },
+                    "1581988266.135776": {
+                        "_": {
+                            "name": "test network 2 errors"
+                        },
+                        "info": {
+                            "displayAddress": "172.17.0.2",
+                            "server": "1581988249.0286028",
+                            "state": "Up"
+                        },
+                        "rates": {
+                            "inBps": 973,
+                            "inBps1m": 569.811210373679,
+                            "outBps": 1426,
+                            "outBps1m": 945.11105370179
+                        }
+                    },
+                    "1581988267.1425755": {
+                        "_": {
+                            "name": "test network 2 warnings"
+                        },
+                        "info": {
+                            "displayAddress": "172.17.0.2",
+                            "server": "1581988248.0230575",
+                            "state": "Up"
+                        },
+                        "rates": {
+                            "inBps": 973,
+                            "inBps1m": 569.811210373679,
+                            "outBps": 1426,
+                            "outBps1m": 945.11105370179
+                        }
+                    },
+                    "1581988268.1500347": {
+                        "_": {
+                            "name": "test network none"
+                        },
+                        "info": {
+                            "displayAddress": "172.17.0.2",
+                            "server": "1581988250.0341485",
+                            "state": "Up"
+                        },
+                        "rates": {
+                            "inBps": 973,
+                            "inBps1m": 569.811210373679,
+                            "outBps": 1426,
+                            "outBps1m": 945.11105370179
+                        }
+                    }
+                },
+                "servers": {
+                    "1581988247.0174682": {
+                        "_": {
+                            "name": "testserver error"
+                        },
+                        "activity": {
+                            "actionsTriggered": 4,
+                            "actionsTriggered1m": 0,
+                            "activePlugins": "1. usb_cam ",
+                            "apiCalls": 50583,
+                            "apiCalls1m": 4.75,
+                            "thumbnails": 0,
+                            "thumbnails1m": 0,
+                            "transactionsPerSecond": 9988,
+                            "transactionsPerSecond1m": 0.816653055782404
+                        },
+                        "availability": {
+                            "offlineEvents": 1,
+                            "status": "Online",
+                            "uptimeS": 11902.228
+                        },
+                        "info": {
+                            "cpu": "ARMv7 Processor rev 4 (v7l)",
+                            "cpuCores": 4,
+                            "os": "Raspbian GNU/Linux 9 (stretch)",
+                            "osTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "publicIp": "194.135.10.158",
+                            "ram": 785145856,
+                            "vmsTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "vmsTimeChanged": 1,
+                            "vmsTimeChanged24h": 1
+                        },
+                        "load": {
+                            "cameras": 6,
+                            "cpuUsageP": 0.182397959183674,
+                            "decodedPixels": 0,
+                            "decodingSpeed3s": 0,
+                            "decodingThreads": 0,
+                            "encodedPixels": 0,
+                            "encodingSpeed3s": 0,
+                            "encodingThreads": 0,
+                            "incomingConnections": 87,
+                            "logLevel": "info",
+                            "outgoingConnections": 155,
+                            "primaryStreams": 0,
+                            "ramUsageB": 312242176,
+                            "ramUsageP": 0.397686842022892,
+                            "secondaryStreams": 0,
+                            "serverCpuUsageP": 0.177145708582834,
+                            "serverRamUsage": 221356032,
+                            "serverRamUsageP": 0.281929822730925,
+                            "threads": 48
+                        }
+                    },
+                    "1581988248.0230575": {
+                        "_": {
+                            "name": "testserver warning"
+                        },
+                        "activity": {
+                            "actionsTriggered": 4,
+                            "actionsTriggered1m": 0,
+                            "activePlugins": "1. usb_cam ",
+                            "apiCalls": 50583,
+                            "apiCalls1m": 4.75,
+                            "thumbnails": 0,
+                            "thumbnails1m": 0,
+                            "transactionsPerSecond": 9988,
+                            "transactionsPerSecond1m": 0.816653055782404
+                        },
+                        "availability": {
+                            "offlineEvents": 1,
+                            "status": "Online",
+                            "uptimeS": 11902.228
+                        },
+                        "info": {
+                            "cpu": "ARMv7 Processor rev 4 (v7l)",
+                            "cpuCores": 4,
+                            "os": "Raspbian GNU/Linux 9 (stretch)",
+                            "osTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "publicIp": "194.135.10.158",
+                            "ram": 785145856,
+                            "vmsTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "vmsTimeChanged": 1,
+                            "vmsTimeChanged24h": 1
+                        },
+                        "load": {
+                            "cameras": 6,
+                            "cpuUsageP": 0.182397959183674,
+                            "decodedPixels": 0,
+                            "decodingSpeed3s": 0,
+                            "decodingThreads": 0,
+                            "encodedPixels": 0,
+                            "encodingSpeed3s": 0,
+                            "encodingThreads": 0,
+                            "incomingConnections": 87,
+                            "logLevel": "info",
+                            "outgoingConnections": 155,
+                            "primaryStreams": 0,
+                            "ramUsageB": 312242176,
+                            "ramUsageP": 0.397686842022892,
+                            "secondaryStreams": 0,
+                            "serverCpuUsageP": 0.177145708582834,
+                            "serverRamUsage": 221356032,
+                            "serverRamUsageP": 0.281929822730925,
+                            "threads": 48
+                        }
+                    },
+                    "1581988249.0286028": {
+                        "_": {
+                            "name": "testserver both"
+                        },
+                        "activity": {
+                            "actionsTriggered": 4,
+                            "actionsTriggered1m": 0,
+                            "activePlugins": "1. usb_cam ",
+                            "apiCalls": 50583,
+                            "apiCalls1m": 4.75,
+                            "thumbnails": 0,
+                            "thumbnails1m": 0,
+                            "transactionsPerSecond": 9988,
+                            "transactionsPerSecond1m": 0.816653055782404
+                        },
+                        "availability": {
+                            "offlineEvents": 1,
+                            "status": "Online",
+                            "uptimeS": 11902.228
+                        },
+                        "info": {
+                            "cpu": "ARMv7 Processor rev 4 (v7l)",
+                            "cpuCores": 4,
+                            "os": "Raspbian GNU/Linux 9 (stretch)",
+                            "osTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "publicIp": "194.135.10.158",
+                            "ram": 785145856,
+                            "vmsTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "vmsTimeChanged": 1,
+                            "vmsTimeChanged24h": 1
+                        },
+                        "load": {
+                            "cameras": 6,
+                            "cpuUsageP": 0.182397959183674,
+                            "decodedPixels": 0,
+                            "decodingSpeed3s": 0,
+                            "decodingThreads": 0,
+                            "encodedPixels": 0,
+                            "encodingSpeed3s": 0,
+                            "encodingThreads": 0,
+                            "incomingConnections": 87,
+                            "logLevel": "info",
+                            "outgoingConnections": 155,
+                            "primaryStreams": 0,
+                            "ramUsageB": 312242176,
+                            "ramUsageP": 0.397686842022892,
+                            "secondaryStreams": 0,
+                            "serverCpuUsageP": 0.177145708582834,
+                            "serverRamUsage": 221356032,
+                            "serverRamUsageP": 0.281929822730925,
+                            "threads": 48
+                        }
+                    },
+                    "1581988250.0341485": {
+                        "_": {
+                            "name": "testserver 2 errors"
+                        },
+                        "activity": {
+                            "actionsTriggered": 4,
+                            "actionsTriggered1m": 0,
+                            "activePlugins": "1. usb_cam ",
+                            "apiCalls": 50583,
+                            "apiCalls1m": 4.75,
+                            "thumbnails": 0,
+                            "thumbnails1m": 0,
+                            "transactionsPerSecond": 9988,
+                            "transactionsPerSecond1m": 0.816653055782404
+                        },
+                        "availability": {
+                            "offlineEvents": 1,
+                            "status": "Online",
+                            "uptimeS": 11902.228
+                        },
+                        "info": {
+                            "cpu": "ARMv7 Processor rev 4 (v7l)",
+                            "cpuCores": 4,
+                            "os": "Raspbian GNU/Linux 9 (stretch)",
+                            "osTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "publicIp": "194.135.10.158",
+                            "ram": 785145856,
+                            "vmsTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "vmsTimeChanged": 1,
+                            "vmsTimeChanged24h": 1
+                        },
+                        "load": {
+                            "cameras": 6,
+                            "cpuUsageP": 0.182397959183674,
+                            "decodedPixels": 0,
+                            "decodingSpeed3s": 0,
+                            "decodingThreads": 0,
+                            "encodedPixels": 0,
+                            "encodingSpeed3s": 0,
+                            "encodingThreads": 0,
+                            "incomingConnections": 87,
+                            "logLevel": "info",
+                            "outgoingConnections": 155,
+                            "primaryStreams": 0,
+                            "ramUsageB": 312242176,
+                            "ramUsageP": 0.397686842022892,
+                            "secondaryStreams": 0,
+                            "serverCpuUsageP": 0.177145708582834,
+                            "serverRamUsage": 221356032,
+                            "serverRamUsageP": 0.281929822730925,
+                            "threads": 48
+                        }
+                    },
+                    "1581988251.0406206": {
+                        "_": {
+                            "name": "testserver 2 warnings"
+                        },
+                        "activity": {
+                            "actionsTriggered": 4,
+                            "actionsTriggered1m": 0,
+                            "activePlugins": "1. usb_cam ",
+                            "apiCalls": 50583,
+                            "apiCalls1m": 4.75,
+                            "thumbnails": 0,
+                            "thumbnails1m": 0,
+                            "transactionsPerSecond": 9988,
+                            "transactionsPerSecond1m": 0.816653055782404
+                        },
+                        "availability": {
+                            "offlineEvents": 1,
+                            "status": "Online",
+                            "uptimeS": 11902.228
+                        },
+                        "info": {
+                            "cpu": "ARMv7 Processor rev 4 (v7l)",
+                            "cpuCores": 4,
+                            "os": "Raspbian GNU/Linux 9 (stretch)",
+                            "osTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "publicIp": "194.135.10.158",
+                            "ram": 785145856,
+                            "vmsTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "vmsTimeChanged": 1,
+                            "vmsTimeChanged24h": 1
+                        },
+                        "load": {
+                            "cameras": 6,
+                            "cpuUsageP": 0.182397959183674,
+                            "decodedPixels": 0,
+                            "decodingSpeed3s": 0,
+                            "decodingThreads": 0,
+                            "encodedPixels": 0,
+                            "encodingSpeed3s": 0,
+                            "encodingThreads": 0,
+                            "incomingConnections": 87,
+                            "logLevel": "info",
+                            "outgoingConnections": 155,
+                            "primaryStreams": 0,
+                            "ramUsageB": 312242176,
+                            "ramUsageP": 0.397686842022892,
+                            "secondaryStreams": 0,
+                            "serverCpuUsageP": 0.177145708582834,
+                            "serverRamUsage": 221356032,
+                            "serverRamUsageP": 0.281929822730925,
+                            "threads": 48
+                        }
+                    },
+                    "1581988271.171776": {
+                        "_": {
+                            "name": "test server none"
+                        },
+                        "activity": {
+                            "actionsTriggered": 4,
+                            "actionsTriggered1m": 0,
+                            "activePlugins": "1. usb_cam ",
+                            "apiCalls": 50583,
+                            "apiCalls1m": 4.75,
+                            "thumbnails": 0,
+                            "thumbnails1m": 0,
+                            "transactionsPerSecond": 9988,
+                            "transactionsPerSecond1m": 0.816653055782404
+                        },
+                        "availability": {
+                            "offlineEvents": 1,
+                            "status": "Online",
+                            "uptimeS": 11902.228
+                        },
+                        "info": {
+                            "cpu": "ARMv7 Processor rev 4 (v7l)",
+                            "cpuCores": 4,
+                            "os": "Raspbian GNU/Linux 9 (stretch)",
+                            "osTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "publicIp": "194.135.10.158",
+                            "ram": 785145856,
+                            "vmsTime": "2020-01-29 11:45:09 (UTC -10)",
+                            "vmsTimeChanged": 1,
+                            "vmsTimeChanged24h": 1
+                        },
+                        "load": {
+                            "cameras": 6,
+                            "cpuUsageP": 0.182397959183674,
+                            "decodedPixels": 0,
+                            "decodingSpeed3s": 0,
+                            "decodingThreads": 0,
+                            "encodedPixels": 0,
+                            "encodingSpeed3s": 0,
+                            "encodingThreads": 0,
+                            "incomingConnections": 87,
+                            "logLevel": "info",
+                            "outgoingConnections": 155,
+                            "primaryStreams": 0,
+                            "ramUsageB": 312242176,
+                            "ramUsageP": 0.397686842022892,
+                            "secondaryStreams": 0,
+                            "serverCpuUsageP": 0.177145708582834,
+                            "serverRamUsage": 221356032,
+                            "serverRamUsageP": 0.281929822730925,
+                            "threads": 48
+                        }
+                    }
+                },
+                "storages": {
+                    "1581988258.0818436": {
+                        "_": {
+                            "name": "test storage warning"
+                        },
+                        "activity": {
+                            "readRateBps": 8332732,
+                            "readRateBps1m": 0,
+                            "transactionsPerSecond": 0,
+                            "writeRateBps": 14056386,
+                            "writeRateBps1m": 0
+                        },
+                        "info": {
+                            "server": "1581988249.0286028",
+                            "type": "local"
+                        },
+                        "space": {
+                            "mediaSpaceB": 4243043254,
+                            "mediaSpaceP": 0.0662402048436911,
+                            "totalSpaceB": 64055406592
+                        },
+                        "state": {
+                            "issues": 0,
+                            "issues24h": 0,
+                            "status": "Online",
+                            "systemStatus": "Online"
+                        }
+                    },
+                    "1581988259.0877316": {
+                        "_": {
+                            "name": "test storage error"
+                        },
+                        "activity": {
+                            "readRateBps": 8332732,
+                            "readRateBps1m": 0,
+                            "transactionsPerSecond": 0,
+                            "writeRateBps": 14056386,
+                            "writeRateBps1m": 0
+                        },
+                        "info": {
+                            "server": "1581988248.0230575",
+                            "type": "local"
+                        },
+                        "space": {
+                            "mediaSpaceB": 4243043254,
+                            "mediaSpaceP": 0.0662402048436911,
+                            "totalSpaceB": 64055406592
+                        },
+                        "state": {
+                            "issues": 0,
+                            "issues24h": 0,
+                            "status": "Online",
+                            "systemStatus": "Online"
+                        }
+                    },
+                    "1581988260.093724": {
+                        "_": {
+                            "name": "test storage both"
+                        },
+                        "activity": {
+                            "readRateBps": 8332732,
+                            "readRateBps1m": 0,
+                            "transactionsPerSecond": 0,
+                            "writeRateBps": 14056386,
+                            "writeRateBps1m": 0
+                        },
+                        "info": {
+                            "server": "1581988251.0406206",
+                            "type": "local"
+                        },
+                        "space": {
+                            "mediaSpaceB": 4243043254,
+                            "mediaSpaceP": 0.0662402048436911,
+                            "totalSpaceB": 64055406592
+                        },
+                        "state": {
+                            "issues": 0,
+                            "issues24h": 0,
+                            "status": "Online",
+                            "systemStatus": "Online"
+                        }
+                    },
+                    "1581988261.1001856": {
+                        "_": {
+                            "name": "test storage 2 warnings"
+                        },
+                        "activity": {
+                            "readRateBps": 8332732,
+                            "readRateBps1m": 0,
+                            "transactionsPerSecond": 0,
+                            "writeRateBps": 14056386,
+                            "writeRateBps1m": 0
+                        },
+                        "info": {
+                            "server": "1581988247.0174682",
+                            "type": "local"
+                        },
+                        "space": {
+                            "mediaSpaceB": 4243043254,
+                            "mediaSpaceP": 0.0662402048436911,
+                            "totalSpaceB": 64055406592
+                        },
+                        "state": {
+                            "issues": 0,
+                            "issues24h": 0,
+                            "status": "Online",
+                            "systemStatus": "Online"
+                        }
+                    },
+                    "1581988262.108545": {
+                        "_": {
+                            "name": "test storage 2 errors"
+                        },
+                        "activity": {
+                            "readRateBps": 8332732,
+                            "readRateBps1m": 0,
+                            "transactionsPerSecond": 0,
+                            "writeRateBps": 14056386,
+                            "writeRateBps1m": 0
+                        },
+                        "info": {
+                            "server": "1581988249.0286028",
+                            "type": "local"
+                        },
+                        "space": {
+                            "mediaSpaceB": 4243043254,
+                            "mediaSpaceP": 0.0662402048436911,
+                            "totalSpaceB": 64055406592
+                        },
+                        "state": {
+                            "issues": 0,
+                            "issues24h": 0,
+                            "status": "Online",
+                            "systemStatus": "Online"
+                        }
+                    },
+                    "1581988270.1646726": {
+                        "_": {
+                            "name": "test storage none"
+                        },
+                        "activity": {
+                            "readRateBps": 8332732,
+                            "readRateBps1m": 0,
+                            "transactionsPerSecond": 0,
+                            "writeRateBps": 14056386,
+                            "writeRateBps1m": 0
+                        },
+                        "info": {
+                            "server": "1581988250.0341485",
+                            "type": "local"
+                        },
+                        "space": {
+                            "mediaSpaceB": 4243043254,
+                            "mediaSpaceP": 0.0662402048436911,
+                            "totalSpaceB": 64055406592
+                        },
+                        "state": {
+                            "issues": 0,
+                            "issues24h": 0,
+                            "status": "Online",
+                            "systemStatus": "Online"
+                        }
+                    }
+                },
+                "systems": {
+                    "aaaa74b3-c7d6-4560-9f19-6c98e00b9de3": {
+                        "info": {
+                            "cameras": 316,
+                            "name": "GB-WIN-ULT",
+                            "recommendedMaxCameras": 10000,
+                            "recommendedMaxServers": 100,
+                            "servers": 5,
+                            "storages": 8,
+                            "users": 45,
+                            "version": "4.1.0.30316"
+                        }
+                    }
+                }
+            }
+        }
+    },
+    "system": "GB-WIN-ULT",
+    "time": "2020-01-29T21:45:10.991Z"
+}
