@@ -2,6 +2,7 @@ import logging
 import platform
 import time
 
+from selenium.common import StaleElementReferenceException
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
@@ -147,7 +148,10 @@ class Element:
             return
         started_at = time.monotonic()
         while True:
-            if not self._element.is_displayed():
+            try:
+                if not self._element.is_displayed():
+                    return
+            except StaleElementReferenceException:
                 return
             if time.monotonic() - started_at > timeout:
                 raise ElementVisible(f'Element locator: {self._locator}')
