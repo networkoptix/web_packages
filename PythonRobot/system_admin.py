@@ -258,3 +258,11 @@ class _TabInformation:
 
     def _is_system_online(self) -> bool:
         return len(self._driver.find_elements_by_xpath('//nx-menu//nx-level-1-item')) > 0
+
+    def no_alerts(self) -> bool:
+        return len(self._driver.find_elements_by_xpath(
+            f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]')) > 0
+
+    def system_is_doing_well(self) -> bool:
+        return len(self._driver.find_elements_by_xpath(
+            f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]')) > 0
