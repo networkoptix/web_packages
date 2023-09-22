@@ -1,9 +1,9 @@
 from resource_import import get_headless_chrome
 from resource_import import rb
-from robot_keywords import click_on_link
 from robot_keywords import location_should_be
 from variables import ENV
 from wrappers import Button
+from wrappers import Link
 from wrappers import PageText
 
 
@@ -18,7 +18,7 @@ def test_404_page():
     PageText(driver, message_locator).wait_until_visible()
     button_locator = rb.replace_nested_variables('//button/a[text()="{GO_TO_MAIN_PAGE_TEXT}"]')
     Button(driver, button_locator).wait_until_visible()
-    click_on_link(driver, button_locator)
+    Link(driver, button_locator).click()
     location_should_be(driver, ENV + '/')
 
 

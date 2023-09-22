@@ -14,6 +14,7 @@ from resource_import import send_restore_password_email
 from resource_import import verify_in_account_page
 from wrappers import Button
 from wrappers import DropDown
+from wrappers import Link
 from wrappers import PageText
 from wrappers import Pane
 from wrappers import TextField
@@ -68,7 +69,7 @@ def test_can_access_account_page_from_dropdown():
     DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     Button(driver, rb.ACCOUNT_DROPDOWN).click()
     Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_visible()
-    robot_keywords.click_on_link(driver, rb.ACCOUNT_SETTINGS_BUTTON)
+    Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
     verify_in_account_page(driver)
     driver.quit()
 
