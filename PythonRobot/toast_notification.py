@@ -13,6 +13,6 @@ class ToastNotification:
             f"//nx-toast//span[contains(text(),'{self._alert_text}')]",
             )
         message.wait_until_visible()
-        message.wait_until_does_not_exist(10)
+        message.wait_until_not_visible(10)
         return message
     

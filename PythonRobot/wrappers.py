@@ -89,8 +89,14 @@ class PageText:
     def click(self):
         self._element.click()
 
-    def wait_until_does_not_exist(self, timeout: float = 5):
-        self._element.wait_until_does_not_exist(timeout)
+    def wait_until_contains_text(self, expected_text: str, timeout: float = 10):
+        started_at = time.monotonic()
+        while True:
+            current_text = self._element.text()
+            if current_text == expected_text:
+                return
+            if time.monotonic() - started_at > timeout:
+                raise RuntimeError(f'Expected text: {expected_text}. Actual text {current_text}')
 
 
 class TextField:
