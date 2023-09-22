@@ -181,7 +181,7 @@ def twofa_not_required_when_more_than_one_system(server: CloudServer, second_ser
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-    driver.get(f"{ENV}/systems/{second_server.id}")
+    driver.get(f"{ENV}/systems/{server.id}")
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
