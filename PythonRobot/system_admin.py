@@ -160,7 +160,7 @@ class SystemAdmin:
                         raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
                     self.driver.refresh()
         _wait()  # It is a workaround. To be removed after resolving CLOUD-11437
-        return _TabInformation(self.driver, locator)
+        return _TabInformation(self.driver, locator, self.rb)
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")
@@ -249,7 +249,7 @@ class _TabInformation:
             if self._is_imported_report():
                 break
             if time.monotonic() - started_at > timeout_sec:
-                raise RuntimeError(f"Report did not load after {timeout_sec} seconds")
+                raise TimeoutError(f"Report did not load after {timeout_sec} seconds")
             time.sleep(0.5)
 
     def _is_imported_report(self) -> bool:

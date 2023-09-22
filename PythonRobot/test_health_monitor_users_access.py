@@ -50,6 +50,30 @@ def administrator_has_access_to_health_monitoring(server: CloudServer, rb: Robot
         tab_info.check_links()
 
 
+def user_does_not_have_access_to_health_monitor(server: CloudServer, rb: RobotVariables, role: str, error_message: str):
+    """
+    6, 7, 8. User does not have access to health monitor
+    [Tags]    cloud    webadmin
+    """
+    cloud_api = CloudPortalAPI()
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+
+    with ExitStack() as exit_stack:
+        account = exit_stack.enter_context(CloudAccount())
+        cloud_api.share(cloud_auth, server.id, role,  account.email, '')
+        driver = exit_stack.enter_context(get_chrome())
+        driver.get(rb.ENV)
+        cloud_login(driver, account.email, account.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        try:
+            system.get_information_tab()
+        except TimeoutError:
+            pass
+        else:
+            raise RuntimeError(error_message)
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -62,3 +86,12 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{owner_admin_has_access_to_health_monitoring.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         administrator_has_access_to_health_monitoring(cloud_server, variables)
         print(f'{Fore.WHITE}{administrator_has_access_to_health_monitoring.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        msg_error = "Advanced Viewer should not have access to the Information tab."
+        user_does_not_have_access_to_health_monitor(cloud_server, variables, 'advancedViewer', msg_error)
+        print(f'{Fore.WHITE} {user_does_not_have_access_to_health_monitor.__doc__.strip()}\t\t\t{Fore.GREEN}Advanced viewer | PASS |')
+        msg_error = "Viewer should not have access to the Information tab."
+        user_does_not_have_access_to_health_monitor(cloud_server, variables, 'viewer', msg_error)
+        print(f'{Fore.WHITE} {user_does_not_have_access_to_health_monitor.__doc__.strip()}\t\t\t{Fore.GREEN}Viewer | PASS |')
+        msg_error = "LiveViewer should not have access to the Information tab."
+        user_does_not_have_access_to_health_monitor(cloud_server, variables, 'liveViewer', msg_error)
+        print(f'{Fore.WHITE} {user_does_not_have_access_to_health_monitor.__doc__.strip()}\t\t\t{Fore.GREEN}Live viewer | PASS |')
