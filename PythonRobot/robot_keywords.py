@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 from generic_element import Element
-from wrappers import Button
 from wrappers import Link
 from wrappers import Pane
 from wrappers import TextField
@@ -21,10 +20,6 @@ def check_for_alert(driver: WebDriver, alert_text: str, timeout: int = 10) -> No
     xpath = f"{alert}/../span[contains(text(), '{alert_text}')]"
     Element(driver, xpath).wait_until_visible(timeout)
     wait_until_page_does_not_contain_element(driver, xpath, timeout)
-
-
-def click_button(driver: WebDriver, locator: Tuple) -> None:
-    Button(driver, locator).click()
 
 
 def click_on_link(driver: WebDriver, locator: Tuple) -> None:

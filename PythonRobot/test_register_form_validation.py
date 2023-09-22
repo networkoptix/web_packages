@@ -67,7 +67,8 @@ def register_form_validation(driver, first_name, last_name, email, password, che
         # Workaround. Rework Checkbox wrapper to simplify arguments.
         Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE, '').click()
     time.sleep(.1)
-    robot_keywords.click_button(driver, rb.CREATE_ACCOUNT_BUTTON)
+    Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
+
 
 def check_email_outline(driver, email):
     time.sleep(1)

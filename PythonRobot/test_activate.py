@@ -1,7 +1,6 @@
 from time import sleep
 
 import resource_import
-import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
@@ -148,7 +147,7 @@ def login_before_activation():
     login.next_button().click()
     Button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).wait_until_visible()
 
-    robot_keywords.click_button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON)
+    Button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).click()
     sleep(10) # give time for email to arrive
     link = e.get_email_link(random_email, 'activate')
     if not link:

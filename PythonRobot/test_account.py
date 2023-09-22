@@ -66,7 +66,7 @@ def test_can_access_account_page_from_dropdown():
     cloud_login(driver, email, password)
     time.sleep(3)
     DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    robot_keywords.click_button(driver, rb.ACCOUNT_DROPDOWN)
+    Button(driver, rb.ACCOUNT_DROPDOWN).click()
     Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_visible()
     robot_keywords.click_on_link(driver, rb.ACCOUNT_SETTINGS_BUTTON)
     verify_in_account_page(driver)
@@ -193,7 +193,7 @@ def test_first_name_is_required():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+    Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
 
 
@@ -240,7 +240,7 @@ def test_last_name_is_required():
         "color",
         rb.ERROR_COLOR_WITH_OPACITY,
         )
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+    Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
 
 
@@ -266,8 +266,7 @@ def test_space_for_first_name_is_not_valid():
         rb.ERROR_COLOR_WITH_OPACITY,
         )
     Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-    Button(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+    Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
 
 
@@ -294,8 +293,7 @@ def test_space_for_last_name_is_not_valid():
         rb.ERROR_COLOR_WITH_OPACITY,
         )
     Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-    Button(driver, rb.ACCOUNT_CANCEL).wait_until_clickable()
-    robot_keywords.click_button(driver, rb.ACCOUNT_CANCEL)
+    Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
 
 
@@ -311,7 +309,7 @@ def test_language_is_changeable_on_the_account_page():
         info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
         verify_in_account_page(driver)
         if lang != rb.language:
-            robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+            Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
             language_button = Button(
                 driver,
                 f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
@@ -320,7 +318,7 @@ def test_language_is_changeable_on_the_account_page():
             language_button.click()
             PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
     DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
-    robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+    Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
     Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
     time.sleep(1)
     verify_in_account_page(driver)
@@ -339,7 +337,7 @@ def test_language_change_affects_emails():
     if rb.LANGUAGE != "ru_Ru":
         cloud_login(driver, random_email, password, button=None, api=False)
         verify_in_account_page(driver)
-        robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+        Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
         button = Button(
             driver,
             "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
@@ -375,7 +373,7 @@ def test_language_change_is_new_default():
     driver.get(url)
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.click_button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN)
+    Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
     lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
     droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
     DropDown(driver, droplang1).wait_until_visible()
