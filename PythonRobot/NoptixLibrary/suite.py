@@ -40,7 +40,7 @@ class Suite:
             return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
         else:
             return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id, cloud_users))
-            
+
     def create_cloud_users(self):
         cloud_users = {}
         permissions = _GENERIC_KEYWORDS.permissions
