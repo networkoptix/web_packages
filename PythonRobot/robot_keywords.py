@@ -1,5 +1,4 @@
 import time
-from typing import Tuple
 
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
@@ -8,7 +7,6 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 from generic_element import Element
-from wrappers import TextField
 
 
 # keep the following functions in alphabetical order
@@ -35,10 +33,6 @@ def element_style_should_be(driver, locator, style_attribute, expected_value):
 
 def get_element_count(driver: WebDriver, locator: str) -> int:
     return len(driver.find_elements(By.XPATH, locator))
-
-
-def input_text(driver: WebDriver, locator: Tuple, text: str) -> None:
-    TextField(driver, locator).input_text(text)
 
 
 def location_should_be(driver: WebDriver, url: str) -> None:

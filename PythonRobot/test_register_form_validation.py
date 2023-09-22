@@ -55,12 +55,12 @@ def test_register_invalid(driver, first, last, email, password, checked):
         check_terms_and_conditions_error(driver)
 
 def register_form_validation(driver, first_name, last_name, email, password, checked):
-    robot_keywords.input_text(driver, rb.REGISTER_FIRST_NAME_INPUT, first_name)
-    robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
-    robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
+    TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).input_text(first_name)
+    TextField(driver, rb.REGISTER_LAST_NAME_INPUT).input_text(last_name)
+    TextField(driver, rb.REGISTER_EMAIL_INPUT).input_text(email)
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).click()
     time.sleep(.1)
-    robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
+    TextField(driver, rb.REGISTER_PASSWORD_INPUT).input_text(password)
     if password != "":
         check_password_badge(driver, password, rb.REGISTER_FORM)
     if checked:

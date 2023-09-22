@@ -38,12 +38,12 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
     TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
-    robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
+    TextField(driver, rb.EMAIL_INPUT).input_text(email)
     time.sleep(1)
     Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
     if exists:
         TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
-        robot_keywords.input_text(driver, rb.PASSWORD_INPUT, password)
+        TextField(driver, rb.PASSWORD_INPUT).input_text(password)
         time.sleep(1)
         Button(driver, rb.LOG_IN_BUTTON).wait_until_visible()
         Button(driver, rb.LOG_IN_BUTTON).click()
@@ -111,7 +111,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "namechanged")
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
     # todo: the save button doesn't appear.
     Button(driver, rb.ACCOUNT_SAVE).click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
@@ -124,7 +124,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     time.sleep(2)
     TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_contains_text("namechanged", 40)
     TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, rb.TEST_FIRST_NAME)
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
     Button(driver, rb.ACCOUNT_SAVE).click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
 
@@ -139,7 +139,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     driver.get(url)
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, "namechanged")
+    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
     Button(driver, rb.ACCOUNT_SAVE).click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
@@ -149,7 +149,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_contains_text("namechanged", 40)
-    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, rb.TEST_LAST_NAME)
+    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(rb.TEST_LAST_NAME)
     Button(driver, rb.ACCOUNT_SAVE).click()
     robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
     driver.quit()
@@ -252,7 +252,7 @@ def test_space_for_first_name_is_not_valid():
     driver.get(url)
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, " ")
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(" ")
     PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
     robot_keywords.wait_until_element_has_style(
         driver,
@@ -278,8 +278,8 @@ def test_space_for_last_name_is_not_valid():
     driver.get(url)
     cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
     verify_in_account_page(driver)
-    robot_keywords.input_text(driver, rb.ACCOUNT_FIRST_NAME, "luke")
-    robot_keywords.input_text(driver, rb.ACCOUNT_LAST_NAME, " ")
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("luke")
+    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(" ")
     PageText(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
     robot_keywords.wait_until_element_has_style(
         driver,

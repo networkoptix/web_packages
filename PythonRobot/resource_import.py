@@ -87,13 +87,13 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
     TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
-    robot_keywords.input_text(driver, rb.EMAIL_INPUT, email)
+    TextField(driver, rb.EMAIL_INPUT).input_text(email)
     time.sleep(1)
     Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
 
     if exists:
         TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
-        robot_keywords.input_text(driver, rb.PASSWORD_INPUT, password)
+        TextField(driver, rb.PASSWORD_INPUT).input_text(password)
         time.sleep(1)
         log_in_button = Button(driver, rb.LOG_IN_BUTTON)
         log_in_button.wait_until_visible()
@@ -195,7 +195,7 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
             )
         password_element.wait_until_visible()
     if new_password == "" or new_password == " ":
-        robot_keywords.input_text(driver, input, "")
+        TextField(driver, input).input_text("")
         move_focus_and_check_element(driver, rb.PASSWORD_IS_REQUIRED, new_focus)
     elif new_password == rb.SEVEN_CHAR_PASSWORD:
         move_focus_and_check_element(driver, rb.PASSWORD_TOO_SHORT, new_focus)
@@ -347,15 +347,15 @@ def register(driver, first_name, last_name, email, password, checked=False, view
         driver.get("https://cloud-test.hdw.mx/authorize?client_type=create")
     validate_on_register_page(driver)
 
-    robot_keywords.input_text(driver, rb.REGISTER_FIRST_NAME_INPUT, first_name)
-    robot_keywords.input_text(driver, rb.REGISTER_LAST_NAME_INPUT, last_name)
+    TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).input_text(first_name)
+    TextField(driver, rb.REGISTER_LAST_NAME_INPUT).input_text(last_name)
     # continue on failure
     try:
         PageText(driver, rb.REGISTER_EMAIL_INPUT_LOCKED).wait_until_visible()
     except:
         pass
-    robot_keywords.input_text(driver, rb.REGISTER_EMAIL_INPUT, email)
-    robot_keywords.input_text(driver, rb.REGISTER_PASSWORD_INPUT, password)
+    TextField(driver, rb.REGISTER_EMAIL_INPUT).input_text(email)
+    TextField(driver, rb.REGISTER_PASSWORD_INPUT).input_text(password)
     if not checked:
         # Workaround. Rework Checkbox wrapper to simplify arguments.
         Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE, '').click()
@@ -375,7 +375,7 @@ def send_restore_password_email(driver: WebDriver, email: str) -> None:
     Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
     Button(driver, rb.FORGOT_PASSWORD_BUTTON).wait_until_visible()
     Button(driver, rb.FORGOT_PASSWORD_BUTTON).click()
-    robot_keywords.input_text(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT, email)
+    TextField(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT).input_text(email)
     Button(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 
