@@ -1,4 +1,5 @@
 import time
+from pathlib import Path
 from typing import Optional
 
 from selenium.common.exceptions import NoSuchElementException
@@ -227,9 +228,33 @@ class _TabInformation:
         robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/nx-health-update')
         robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/div')
 
+    def check_links_uploaded(self):
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="storages"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/div')
+
     def is_current_system_inaccessible(self) -> bool:
         return len(self._driver.find_elements_by_xpath(
             f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]')) > 0
+
+    def upload_json_report(self, filename: Path):
+        e = Element(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
+        e.send_keys(str(filename))
+        started_at = time.monotonic()
+        timeout_sec = 10
+        while True:
+            if self._is_imported_report():
+                break
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(f"Report did not load after {timeout_sec} seconds")
+            time.sleep(0.5)
+
+    def _is_imported_report(self) -> bool:
+        return len(self._driver.find_elements_by_xpath(
+            f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]')) > 0
 
     def _is_system_online(self) -> bool:
         return len(self._driver.find_elements_by_xpath('//nx-menu//nx-level-1-item')) > 0
