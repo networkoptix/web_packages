@@ -13,6 +13,7 @@ from variables import ENV
 
 CLOUD_API = CloudPortalAPI()
 
+
 def enable_and_login_with_2fa(server: CloudServer):
     """
     1. Enable and perform login with 2fa
@@ -34,7 +35,7 @@ def enable_and_login_with_2fa(server: CloudServer):
     LoginDialog(driver).twofa_cloud_login(
         server.cloud_owner.email,
         server.cloud_owner.password,
-        server.cloud_owner.get_otp()
+        server.cloud_owner.get_otp(),
         )
     header.account_dropdown().click()
     CLOUD_API.toggle_2fa_off_api(
@@ -42,6 +43,7 @@ def enable_and_login_with_2fa(server: CloudServer):
         verification_code=server.cloud_owner.get_otp()
         )
     driver.close()
+
 
 def login_with_backup_code(server: CloudServer):
     """
@@ -69,7 +71,7 @@ def login_with_backup_code(server: CloudServer):
         LoginDialog(driver).twofa_backup_cloud_login(
             server.cloud_owner.email,
             server.cloud_owner.password,
-            backup_code
+            backup_code,
             )
     security_form.twofa_backup_code_error()
     CLOUD_API.toggle_2fa_off_api(
@@ -77,6 +79,7 @@ def login_with_backup_code(server: CloudServer):
         verification_code=server.cloud_owner.get_otp()
         )
     driver.close()
+
 
 def login_with_qr_code(server: CloudServer):
     """3. Enable and perform login with 2fa using QR"""
@@ -86,7 +89,7 @@ def login_with_qr_code(server: CloudServer):
     header.log_in_button().click()
     LoginDialog(driver).basic_cloud_login(
         server.cloud_owner.email,
-        server.cloud_owner.password
+        server.cloud_owner.password,
         )
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
@@ -99,14 +102,15 @@ def login_with_qr_code(server: CloudServer):
     LoginDialog(driver).twofa_cloud_login(
         server.cloud_owner.email,
         server.cloud_owner.password,
-        server.cloud_owner.get_otp()
+        server.cloud_owner.get_otp(),
         )
     header.account_dropdown().click()
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
         verification_code=server.cloud_owner.get_otp()
-        )
+    )
     driver.close()
+
 
 def disabling_2fa(server: CloudServer):
     """
@@ -128,6 +132,7 @@ def disabling_2fa(server: CloudServer):
     security_form.turn_off_2fa(server.cloud_owner.get_otp())
     security_form.twofa_disabled_badge()
     driver.close()
+
 
 def system_2fa_required(server: CloudServer):
     """
@@ -155,14 +160,15 @@ def system_2fa_required(server: CloudServer):
     LoginDialog(driver).twofa_cloud_login(
         server.cloud_owner.email,
         server.cloud_owner.password,
-        server.cloud_owner.get_otp()
+        server.cloud_owner.get_otp(),
         )
     header.account_dropdown().click()
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
     driver.close()
+
 
 def twofa_not_required_when_more_than_one_system(server: CloudServer, second_server: CloudServer):
     """
@@ -195,9 +201,10 @@ def twofa_not_required_when_more_than_one_system(server: CloudServer, second_ser
     SystemAdmin(driver)
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
     driver.close()
+
 
 def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServer):
     """
@@ -267,9 +274,10 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServe
         raise RuntimeError("Page Cancel Button present")
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
     driver.close()
+
 
 def fail_to_login_with_expired_code(server: CloudServer):
     """
@@ -293,14 +301,15 @@ def fail_to_login_with_expired_code(server: CloudServer):
     login_form.twofa_cloud_login(
         server.cloud_owner.email,
         server.cloud_owner.password,
-        server.cloud_owner.get_otp(at_time=old_time)
+        server.cloud_owner.get_otp(at_time=old_time),
         )
     login_form.twofa_error_login_code()
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
     driver.close()
+
 
 def twofa_login_via_api(server: CloudServer):
     """10. 2fa api call login with totp token"""
@@ -309,12 +318,13 @@ def twofa_login_via_api(server: CloudServer):
     CLOUD_API.api_log_in(
         server.cloud_owner.email,
         server.cloud_owner.password,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
+
 
 def twofa_login_via_api_backup(server: CloudServer):
     """11. 2fa api call login with backout code"""
@@ -323,19 +333,20 @@ def twofa_login_via_api_backup(server: CloudServer):
     backup = CLOUD_API.generate_2fa_backup_codes_api(
         server.cloud_owner.email,
         server.cloud_owner.password,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
     server.cloud_owner.setup_2fa(key, backup)
     for _ in range(2):
         CLOUD_API.api_log_in(
             server.cloud_owner.email,
             server.cloud_owner.password,
-            backup_code=server.cloud_owner.pop_backup_code()
+            backup_code=server.cloud_owner.pop_backup_code(),
             )
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        verification_code=server.cloud_owner.get_otp(),
         )
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
