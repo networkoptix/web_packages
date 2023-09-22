@@ -152,6 +152,9 @@ class TextField:
             if time.monotonic() - started_at > timeout:
                 raise RuntimeError(f'Expected text: {expected_text}. Actual text {current_text}')
 
+    def value_of_css_property(self, style_property: str) -> str:
+        return self._element.value_of_css_property(style_property)
+
 
 class Table:
 

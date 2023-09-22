@@ -2,11 +2,8 @@ import time
 from pathlib import Path
 from string import Template
 from typing import NamedTuple
-from typing import Optional
 
-from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import TimeoutException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -130,40 +127,40 @@ class SystemAdmin:
 
     def has_no_access_message(self) -> bool:
         error_message = self.rb.__getattr__('SYSTEM_NO_ACCESS_TEXT')
+        text_element = PageText(
+            self.driver,
+            f'//h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(), \'{error_message}\')]',
+            )
         try:
-            self.driver.find_element(By.XPATH, f'//h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(), \'{error_message}\')]')
-        except NoSuchElementException:
+            text_element.wait_until_visible()
+        except ElementNotVisible:
             return False
         return True
 
     def get_system_name_edit_field(self) -> '_SystemName':
-        element = self.driver.find_element(By.XPATH, '//div/nx-editable-heading//nx-text-editable')
-        return _SystemName(element, self.rb)
+        text_field = TextField(
+            self.driver,
+            '//div/nx-editable-heading//nx-text-editable',
+            )
+        return _SystemName(text_field, self.rb)
 
-    def get_cancel_button(self) -> Optional[Button]:
+    def get_cancel_button(self) -> Button:
         button_text = self.rb.__getattr__('CANCEL_BUTTON_TEXT')
         locator = f'//nx-cancel-button//button[contains(text(), "{button_text}")]'
-        try:
-            self.driver.find_element(By.XPATH, locator)
-        except NoSuchElementException:
-            return None
         return Button(self.driver, locator)
 
-    def get_save_button(self):
+    def get_save_button(self) -> Button:
         button_text = self.rb.__getattr__('SAVE_BUTTON_TEXT')
         locator = f'//nx-process-button//button[contains(text(), "{button_text}")]'
-        try:
-            self.driver.find_element(By.XPATH, locator)
-        except NoSuchElementException:
-            return None
         return Button(self.driver, locator)
 
     def has_no_unsaved_changes_message(self) -> bool:
         no_unsaved_changes = self.rb.__getattr__('NO_UNSAVED_CHANGES_TEXT')
         locator = f"//nx-apply//div[contains(text(), '{no_unsaved_changes}')]"
+        text_element = PageText(self.driver, locator)
         try:
-            self.driver.find_element(By.XPATH, locator)
-        except NoSuchElementException:
+            text_element.wait_until_visible()
+        except ElementNotVisible:
             return False
         return True
 
@@ -207,7 +204,7 @@ class SystemAdmin:
 
 class _SystemName:
 
-    def __init__(self, element, rb: RobotVariables):
+    def __init__(self, element: TextField, rb: RobotVariables):
         self._element = element
         self._rb = rb
 
@@ -216,7 +213,7 @@ class _SystemName:
         self._element.send_keys(new_name)
 
     def get_text(self) -> str:
-        return self._element.text
+        return self._element.get_text()
 
     def clear_text(self):
         current_text = self.get_text()
