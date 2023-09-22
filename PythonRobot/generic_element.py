@@ -69,9 +69,9 @@ class Element:
     def get_property(self, name: str):
         return self._element.get_property(name)
 
-    def get_screenshot(self, filename: str) -> bool:
+    def get_screenshot(self) -> bytes:
         self.wait_until_visible()
-        return self._element.screenshot(filename)
+        return self._element.screenshot_as_png
 
     def is_focused(self):
         self.wait_until_clickable()

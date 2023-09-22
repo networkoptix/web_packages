@@ -202,8 +202,8 @@ class Image:
         self._driver = driver
         self._element = Element(self._driver, locator)
 
-    def screenshot(self, filename: str):
-        return self._element.get_screenshot(filename)
+    def get_screenshot(self):
+        return self._element.get_screenshot()
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
