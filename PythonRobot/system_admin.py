@@ -1,11 +1,15 @@
+import time
 from typing import Optional
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.remote.webdriver import WebDriver
 
 import robot_keywords
 from RobotVariables import RobotVariables
+from generic_element import Element
 from toast_notification import ToastNotification
 from variables import ENV
 from wrappers import Button
@@ -15,12 +19,12 @@ from wrappers import TextField
 
 
 class SystemAdmin:
-    def __init__(self, driver, lang="en_US"):
+    def __init__(self, driver: WebDriver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_page_loaded()
         # Todo: find way to pass id in
-        #self._location_is_correct()
+        # self._location_is_correct()
 
     def disconnect_from_cloud_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(),'{DISCONNECT_BUTTON_TEXT}')]")
@@ -135,6 +139,28 @@ class SystemAdmin:
         self.driver.refresh()
         self._wait_until_page_loaded()
 
+    def get_information_tab(self) -> '_TabInformation':
+        """
+        Problem: the Information tab couldn't appear without switching to another tab or refreshing the page
+        See: https://networkoptix.atlassian.net/browse/CLOUD-11437
+        """
+        locator = f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
+
+        def _wait():
+            started_at = time.monotonic()
+            timeout_sec = 30
+            while True:
+                if len(self.driver.find_elements_by_xpath(locator)) > 0:
+                    break
+                try:
+                    robot_keywords.wait_until_page_contains_element(self.driver, locator, timeout=10)
+                except TimeoutException:
+                    if time.monotonic() - started_at > timeout_sec:
+                        raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
+                    self.driver.refresh()
+        _wait()  # It is a workaround. To be removed after resolving CLOUD-11437
+        return _TabInformation(self.driver, locator)
+
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")
         robot_keywords.wait_until_page_contains_element(
@@ -169,3 +195,33 @@ class _SystemName:
     def has_empty_field_error(self):
         border_color = self._element.value_of_css_property('border-color')
         return border_color == self._rb.__getattr__('ERROR_COLOR')
+
+
+class _TabInformation:
+
+    def __init__(self, driver: WebDriver, locator: str):
+        self._driver = driver
+        self._locator = locator
+        self._element = Element(driver, locator)
+
+    def click(self):
+        self._element.click()
+        started_at = time.monotonic()
+        timeout_sec = 10
+        while True:
+            if self._is_active():
+                break
+            if time.monotonic() - started_at > timeout_sec:
+                raise TimeoutError(f"{self._locator!r} is not visible after {timeout_sec} seconds")
+            time.sleep(1)
+
+    def _is_active(self) -> bool:
+        return len(self._driver.find_elements_by_xpath('//nx-menu//nx-level-1-item')) > 0
+
+    def check_links(self):
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/nx-health-update')
+        robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/div')
