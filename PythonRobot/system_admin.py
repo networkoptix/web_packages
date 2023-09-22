@@ -322,8 +322,11 @@ class _Section:
     def has_table(self) -> bool:
         return len(self._driver.find_elements_by_xpath('//div[@id="nx-table"]')) > 0
 
-    def _is_active(self) -> bool:
+    def has_card(self) -> bool:
         return len(self._driver.find_elements_by_xpath('//nx-single-entity')) > 0
+
+    def _is_active(self) -> bool:
+        return self.has_table() or self.has_card()
 
 
 class _AlertsSummary(NamedTuple):

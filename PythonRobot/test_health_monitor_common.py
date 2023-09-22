@@ -93,6 +93,30 @@ def hardware_types_with_only_one_item(server: CloudServer, rb: RobotVariables):
         assert not section.has_table()
 
 
+def hardware_types_with_multiple_items(server: CloudServer, rb: RobotVariables):
+    """
+    14. Hardware types with multiple items should show tables and not show tiles
+    [Tags]    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_info = system.get_information_tab()
+        tab_info.click()
+        tab_info.check_links()
+        json_file = Path(__file__).parent.absolute() / 'test_data/one-of-each.json'
+        tab_info.upload_json_report(json_file)
+        tab_info.check_links_uploaded()
+        section = tab_info.get_cameras_section()
+        assert section.has_table() and not section.has_card()
+        section = tab_info.get_storages_section()
+        assert section.has_table() and not section.has_card()
+        section = tab_info.get_network_section()
+        assert section.has_table() and not section.has_card()
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -107,3 +131,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{can_close_out_of_json_imported_mode.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         hardware_types_with_only_one_item(cloud_server, variables)
         print(f'{Fore.WHITE}{hardware_types_with_only_one_item.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        hardware_types_with_multiple_items(cloud_server, variables)
+        print(f'{Fore.WHITE}{hardware_types_with_multiple_items.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
