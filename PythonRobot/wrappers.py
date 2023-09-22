@@ -68,7 +68,7 @@ class Checkbox:
         return self._driver.find_element(By.XPATH, self._unchecked_xpath)
 
     def is_focused(self):
-        return self._selenium_element == self._driver.switch_to.active_element()
+        return self._selenium_element == self._driver.switch_to.active_element
 
 
 class PageText:
