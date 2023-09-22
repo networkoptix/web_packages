@@ -8,7 +8,6 @@ from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 from generic_element import Element
-from wrappers import Pane
 from wrappers import TextField
 
 
@@ -66,10 +65,6 @@ def wait_until_element_has_style(driver, css_selector, style_name, expected_valu
             return False
 
     WebDriverWait(driver, timeout).until(check_style)
-
-
-def wait_until_pane_is_not_visible(driver: WebDriver, locator: str, timeout: int = 10) -> None:
-    Pane(driver, locator).wait_until_not_visible(timeout)
 
 
 def wait_until_number_of_tabs_are_open(driver, number: int, timeout=30):
