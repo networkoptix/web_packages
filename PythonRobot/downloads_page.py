@@ -5,6 +5,9 @@ from urllib.request import urlopen
 from selenium.webdriver.common.by import By
 
 import robot_keywords
+from wrappers import Button
+from wrappers import Link
+from wrappers import TabItem
 
 
 class DownloadsPage:
@@ -39,8 +42,9 @@ class DownloadsPage:
         return _Tab(self._driver, locator)
 
     def _get_link(self, locator):
-        robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
-        return self._driver.find_element(By.XPATH, locator).get_attribute('href')
+        link = Link(self._driver, locator)
+        link.wait_until_visible()
+        return link.get_attribute('href')
 
 
 class _Tab:
@@ -48,7 +52,7 @@ class _Tab:
     def __init__(self, driver, locator):
         self._driver = driver
         self._locator = locator
-        self._element = driver.find_element(By.XPATH, locator)
+        self._element = TabItem(self._driver, self._locator)
 
     def click(self):
         self._element.click()
@@ -62,12 +66,14 @@ class _Tab:
             time.sleep(0.5)
 
     def is_active(self):
-        return self._get_download_button().is_displayed()
+        return self._get_download_button().is_visible()
 
     def check_download_button_link(self):
-        client_link_element = self._driver.find_element(
-            By.XPATH, '//nx-download-component//a[contains(@class, "download-button")]')
-        client_link = client_link_element.get_attribute('href')
+        link = Link(
+            self._driver,
+            '//nx-download-component//a[contains(@class, "download-button")]',
+            )
+        client_link = link.get_attribute('href')
         _check_link(client_link)
 
     def check_other_packages_links(self):
@@ -80,8 +86,11 @@ class _Tab:
             _check_link(link)
 
     def _get_download_button(self):
-        return self._driver.find_element(
-            By.XPATH, '//nx-download-component//a[contains(@class, "download-button")]')
+        button = Button(
+            self._driver,
+            '//nx-download-component//a[contains(@class, "download-button")]',
+            )
+        return button
 
 
 def _check_link(link: str):
