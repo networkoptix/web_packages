@@ -11,7 +11,7 @@ class HeaderNav:
 
     def __init__(self, driver: WebDriver, lang="en_US", ):
         self._driver = driver
-        self.rb = RobotVariables(lang)
+        self._rb = RobotVariables(lang)
         self._wait_until_header_is_visible()
 
     def _wait_until_header_is_visible(self):
@@ -30,7 +30,7 @@ class HeaderNav:
         return Button(self._driver, "//header//li//a[@href = '/account/security']")
 
     def log_out_option(self):
-        translated_xpath = self.rb.replace_nested_variables(
+        translated_xpath = self._rb.replace_nested_variables(
             "//header//li//a/span[contains(text(),'{LOG_OUT_BUTTON_TEXT}')]/..")
         return Button(self._driver, translated_xpath)
 
@@ -38,7 +38,7 @@ class HeaderNav:
         pass
 
     def log_in_button(self):
-        translated_xpath = self.rb.replace_nested_variables(
+        translated_xpath = self._rb.replace_nested_variables(
             "//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
         return Button(self._driver, translated_xpath)
 
@@ -58,16 +58,16 @@ class HeaderNav:
         return Button(self._driver, "//header//nx-header-language-select")
 
     def systems_link(self):
-        return Button(self._driver, f'//a[contains(text(), "{self.rb.SYSTEMS_LINK_TEXT}")]')
+        return Button(self._driver, f'//a[contains(text(), "{self._rb.SYSTEMS_LINK_TEXT}")]')
 
     def home_link(self):
-        return Button(self._driver, f'//a[contains(text(), "{self.rb.HOME_TEXT}")]')
+        return Button(self._driver, f'//a[contains(text(), "{self._rb.HOME_TEXT}")]')
 
     def resouces_link(self):
-        return Button(self._driver, f'//a[contains(text(), "{self.rb.RESOURCES_TEXT}")]')
+        return Button(self._driver, f'//a[contains(text(), "{self._rb.RESOURCES_TEXT}")]')
 
     def for_developers_link(self):
-        return Button(self._driver, f'//a[contains(text(), "{self.rb.FOR_DEVELOPERS_TEXT}")]')
+        return Button(self._driver, f'//a[contains(text(), "{self._rb.FOR_DEVELOPERS_TEXT}")]')
 
     def get_system_name(self) -> str:
         element = PageText(self._driver, '//nx-header//span[@class="system-name"]')
