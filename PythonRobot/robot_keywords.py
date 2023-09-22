@@ -1,13 +1,17 @@
 import time
 from typing import Tuple
 
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
 
 from generic_element import Element
+from wrappers import Button
+from wrappers import Link
+from wrappers import Pane
+from wrappers import TextField
 
 
 # keep the following functions in alphabetical order
@@ -20,11 +24,11 @@ def check_for_alert(driver: WebDriver, alert_text: str, timeout: int = 10) -> No
 
 
 def click_button(driver: WebDriver, locator: Tuple) -> None:
-    WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, locator))).click()
+    Button(driver, locator).click()
 
 
 def click_on_link(driver: WebDriver, locator: Tuple) -> None:
-    WebDriverWait(driver, 10).until(ec.element_to_be_clickable((By.XPATH, locator))).click()
+    Link(driver, locator).click()
 
 
 def element_should_contain(driver: WebDriver, locator: str, text: str, timeout: int = 10) -> None:
@@ -45,9 +49,7 @@ def get_element_count(driver: WebDriver, locator: str) -> int:
 
 
 def input_text(driver: WebDriver, locator: Tuple, text: str) -> None:
-    element = driver.find_element(By.XPATH, locator)
-    element.clear()
-    element.send_keys(text)
+    TextField(driver, locator).input_text(text)
 
 
 def location_should_be(driver: WebDriver, url: str) -> None:
@@ -76,12 +78,8 @@ def wait_until_element_has_style(driver, css_selector, style_name, expected_valu
     WebDriverWait(driver, timeout).until(check_style)
 
 
-def wait_until_element_is_enabled(driver: WebDriver, locator: str, timeout: int = 40) -> None:
-    WebDriverWait(driver, timeout).until(ec.element_to_be_clickable((By.XPATH, locator)))
-
-
 def wait_until_pane_is_not_visible(driver: WebDriver, locator: str, timeout: int = 10) -> None:
-    WebDriverWait(driver, timeout).until_not(ec.visibility_of_element_located((By.XPATH, locator)))
+    Pane(driver, locator).wait_until_not_visible(timeout)
 
 
 def wait_until_number_of_tabs_are_open(driver, number: int, timeout=30):
@@ -95,10 +93,6 @@ def wait_until_number_of_tabs_are_open(driver, number: int, timeout=30):
         time.sleep(.2)
 
 
-def wait_until_page_contains(driver: WebDriver, text: str, timeout: int = 40) -> None:
-    WebDriverWait(driver, timeout).until(ec.text_to_be_present_in_element((By.XPATH, "//*"), text))
-
-
 def wait_until_page_contains_element(driver: WebDriver, locator: str, timeout: int = 40) -> None:
     WebDriverWait(driver, timeout).until(ec.presence_of_element_located((By.XPATH, locator)))
 
@@ -108,4 +102,4 @@ def wait_until_page_does_not_contain_element(driver: WebDriver, locator: str, ti
 
 
 def wait_until_textfield_contains(driver, locator, expected_text, timeout: int = 40) -> None:
-    WebDriverWait(driver, timeout).until(ec.text_to_be_present_in_element_value((By.XPATH, locator), expected_text))
+    TextField(driver, locator).wait_until_contains_text(expected_text, timeout)

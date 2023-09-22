@@ -1,7 +1,8 @@
+import time
 from typing import Sequence
 
-from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from generic_element import Element
 
@@ -90,9 +91,6 @@ class PageText:
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
 
-    def should_contain(self, text: str):
-        self._element.should_contain(text)
-
 
 class TextField:
 
@@ -144,15 +142,22 @@ class TextField:
     def send_keys(self, keys: str):
         self._element.send_keys(keys)
 
-
+    def wait_until_contains_text(self, expected_text: str, timeout: float = 10):
+        started_at = time.monotonic()
+        while True:
+            current_text = self._element.text()
+            if current_text == expected_text:
+                return
+            if time.monotonic() - started_at > timeout:
+                raise RuntimeError(f'Expected text: {expected_text}. Actual text {current_text}')
 
 
 class Table:
 
     def __init__(self, driver: WebDriver,
                  locator,
-                 target_item:str="",
-                 target_contents:str=""):
+                 target_item: str = "",
+                 target_contents: str = ""):
         self._driver = driver
         self._element = Element(self._driver, locator)
         self.locator = locator
@@ -224,7 +229,7 @@ class Pane:
         self.locator = locator
 
     def count_item(self, item_locator: str):
-        xpath = self.locator +  item_locator
+        xpath = self.locator + item_locator
         return Element(self._driver, xpath).count()
 
     def should_contain(self, text: str):
@@ -248,8 +253,10 @@ class Link:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
-    def wait_until_does_not_exist(self, timeout: float = 5):
-        self._element.wait_until_does_not_exist(timeout)
+
+    def click(self):
+        self._element.click()
+
 
 class DropDown:
 
