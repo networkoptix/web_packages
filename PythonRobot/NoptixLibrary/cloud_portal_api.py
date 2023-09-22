@@ -18,7 +18,7 @@ import urllib3
 from requests.auth import HTTPBasicAuth
 from requests.auth import HTTPDigestAuth
 
-from NoptixLibrary.cloud_2fa import Cloud2fa
+from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.cloud_session import CloudSession
 
 #from CloudSession import CloudSession
@@ -612,10 +612,10 @@ class CloudPortalAPI(object):
             )
         disconnect_response.raise_for_status()
 
-    def toggle_2fa_on_api(self, email, password, backup_code=None, verification_code=None):
+    def toggle_2fa_on_api(self, cloud_account, backup_code=None, verification_code=None):
         with self._session(
-                email,
-                password,
+                cloud_account.email,
+                cloud_account.password,
                 backup_code=backup_code,
                 verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
@@ -624,15 +624,16 @@ class CloudPortalAPI(object):
                 data=None,
                 )
             dataString = str(verificationRes.json().get("keyUrl"))
-            splitString = dataString.split("secret=")
-            secretKey = splitString[1]
-            api2fa = Cloud2fa()
-            totp = api2fa.get_2fa_verification_code(secretKey)
-            body = {"action": "toggle", "mfaCode": totp}
+            logger.info(verificationRes)
+            _, secretKey = dataString.split('secret=')
+            totp = TimeBasedOtp(secretKey)
+            totp_code = totp.generate_otp()
+            body = {"action": "toggle", "mfaCode": totp_code}
             security_response = s.post(
                 f'{self.env}/api/account/security', data=body)
+            logger.info(security_response)
             security_response.raise_for_status()
-            return secretKey
+            cloud_account.setup_totp(totp)
 
     def toggle_2fa_off_api(self, cloud_account, verification_code=None):
         with self._session(

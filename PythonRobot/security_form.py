@@ -2,7 +2,7 @@ import time
 
 from selenium.webdriver.common.by import By
 
-from NoptixLibrary.cloud_2fa import Cloud2fa
+from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
 from wrappers import Button
@@ -96,17 +96,19 @@ class SecurityForm:
         self.twofa_password_modal_input().input_text(account.password)
         self.twofa_password_modal_next_button().click()
         if qr_code:
-            key = self._get_key_from_qr_code()
+            screenshot = Image(self.driver, f'{self.twofa_modal}//qr-code').get_screenshot()
+            totp = TimeBasedOtp.from_qr(screenshot)
             self.twofa_key_modal_next_button().click()
         else:
             self.twofa_code_button().click()
             key = self.twofa_key().get_text().strip()
+            totp = TimeBasedOtp(key)
             self.twofa_key_modal_next_button().click()
-        time.sleep(1)
-        totp = Cloud2fa().get_2fa_verification_code(key)
-        self.twofa_totp_input().input_text(totp)
+        totp_code = totp.generate_otp()
+        self.twofa_totp_input().input_text(totp_code)
         self.twofa_verify_button().click()
         self.twofa_copy_all_button().wait_until_visible()
+        account.setup_totp(totp)
         backup_code_indexes = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//span')
         backup_code_entries = self.driver.find_elements(By.XPATH, f'{self.twofa_modal}//div[@class="nx-backup-codes"]//div')
         backup_codes = []
@@ -117,17 +119,13 @@ class SecurityForm:
             backup_codes.append(backup_code_clean)
         if len(backup_codes) != 8:
             raise RuntimeError(f"Wrong number of backup codes. Expected 8, got {len(backup_codes)}")
-        account.setup_2fa(key, backup_codes)
+        account.setup_backup_codes(backup_codes)
         self.twofa_ok_button().click()
 
-    def turn_off_2fa(self, totp):
+    def turn_off_2fa(self, totp_code):
         self.twofa_disable_button().click()
-        self.twofa_totp_input().input_text(totp)
+        self.twofa_totp_input().input_text(totp_code)
         self.twofa_disable_modal_button().click()
-
-    def _get_key_from_qr_code(self):
-        Image(self.driver, f'{self.twofa_modal}//qr-code').screenshot('qr_code.png')
-        return Cloud2fa().decode_qr('qr_code.png')
 
     def _wait_until_form_is_visible(self):
         self.twofa_enable_button().wait_until_visible()

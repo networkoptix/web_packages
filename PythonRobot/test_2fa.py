@@ -11,6 +11,7 @@ from security_form import SecurityForm
 from system_admin import SystemAdmin
 from variables import ENV
 
+
 CLOUD_API = CloudPortalAPI()
 
 
@@ -179,9 +180,9 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
+    driver.get(f"{ENV}/systems/{second_server.id}")
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
-    driver.get(f"{ENV}/systems/{server.id}")
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
@@ -225,34 +226,19 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     security_form.turn_on_2fa(server.cloud_owner)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
-    try:
-        security_form.twofa_page_save()
-    except:
-        pass
-    else:
-        raise RuntimeError("Page Save Button present")
-    try:
-        security_form.twofa_page_cancel()
-    except:
-        pass
-    else:
-        raise RuntimeError("Page Cancel Button present")
+    security_form.twofa_page_save().wait_until_not_visible()
+    security_form.twofa_page_cancel().wait_until_not_visible()
     security_form.twofa_verification_checkbox().unselect()
     security_form.twofa_settings_modal_check()
     security_form.twofa_settings_modal_off_instructions()
-    security_form.twofa_settings_modal_apply()
-    security_form.twofa_settings_modal_cancel()
+    security_form.twofa_settings_modal_apply().wait_until_visible()
+    security_form.twofa_settings_modal_cancel().wait_until_visible()
     security_form.twofa_totp_input().input_text(server.cloud_owner.get_otp())
     modal_apply = security_form.twofa_settings_modal_apply()
     modal_apply.click()
     security_form.twofa_verification_checkbox().unchecked()
     modal_apply.wait_until_visible()
-    try:
-        security_form.twofa_settings_modal_cancel()
-    except:
-        pass
-    else:
-        raise RuntimeError("Page Cancel Button present")
+    security_form.twofa_settings_modal_cancel().wait_until_not_visible()
     security_form.twofa_verification_checkbox().select()
     security_form.twofa_settings_modal_uncheck()
     security_form.twofa_settings_modal_on_instructions()
@@ -261,18 +247,8 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     security_form.twofa_totp_input().input_text(server.cloud_owner.get_otp())
     security_form.twofa_settings_modal_apply().click()
     security_form.twofa_verification_checkbox().checked()
-    try:
-        security_form.twofa_page_save()
-    except:
-        pass
-    else:
-        raise RuntimeError("Page Save Button present")
-    try:
-        security_form.twofa_page_cancel()
-    except:
-        pass
-    else:
-        raise RuntimeError("Page Cancel Button present")
+    security_form.twofa_page_save().wait_until_not_visible()
+    security_form.twofa_page_cancel().wait_until_not_visible()
     CLOUD_API.toggle_2fa_off_api(
         server.cloud_owner,
         verification_code=server.cloud_owner.get_otp(),
@@ -314,8 +290,7 @@ def fail_to_login_with_expired_code(server: Mediaserver):
 
 def twofa_login_via_api(server: Mediaserver):
     """10. 2fa api call login with totp token"""
-    key = CLOUD_API.toggle_2fa_on_api(server.cloud_owner.email, server.cloud_owner.password)
-    server.cloud_owner.setup_2fa(key)
+    CLOUD_API.toggle_2fa_on_api(server.cloud_owner)
     CLOUD_API.api_log_in(
         server.cloud_owner.email,
         server.cloud_owner.password,
@@ -329,14 +304,13 @@ def twofa_login_via_api(server: Mediaserver):
 
 def twofa_login_via_api_backup(server: Mediaserver):
     """11. 2fa api call login with backout code"""
-    key = CLOUD_API.toggle_2fa_on_api(server.cloud_owner.email, server.cloud_owner.password)
-    server.cloud_owner.setup_2fa(key)
-    backup = CLOUD_API.generate_2fa_backup_codes_api(
+    CLOUD_API.toggle_2fa_on_api(server.cloud_owner)
+    backup_codes = CLOUD_API.generate_2fa_backup_codes_api(
         server.cloud_owner.email,
         server.cloud_owner.password,
         verification_code=server.cloud_owner.get_otp(),
         )
-    server.cloud_owner.setup_2fa(key, backup)
+    server.cloud_owner.setup_backup_codes(backup_codes)
     for _ in range(2):
         CLOUD_API.api_log_in(
             server.cloud_owner.email,

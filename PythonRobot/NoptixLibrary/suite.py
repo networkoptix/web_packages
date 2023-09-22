@@ -4,7 +4,7 @@ from types import MappingProxyType
 from typing import Optional, Mapping
 from typing import List
 from random import randint
-from pyotp import TOTP
+from NoptixLibrary.cloud_2fa import TimeBasedOtp
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
@@ -139,8 +139,10 @@ class CloudAccount:
         self._set_up()
         return self
 
-    def setup_2fa(self, totp_secret: str, backup_codes: Optional[List[str]] = None):
-        self._totp = TOTP(totp_secret)
+    def setup_totp(self, totp: TimeBasedOtp):
+        self._totp = totp
+
+    def setup_backup_codes(self, backup_codes: List[str]):
         self._backup_codes = backup_codes
 
     def disable_2fa(self):
@@ -152,10 +154,7 @@ class CloudAccount:
     def get_otp(self, at_time=None):
         if self._totp is None:
             return None
-        if at_time is None:
-            return self._totp.now()
-        else:
-            return self._totp.at(at_time)
+        return self._totp.generate_otp(at_time=at_time)
 
     def pop_backup_code(self):
         if self._backup_codes is None:
