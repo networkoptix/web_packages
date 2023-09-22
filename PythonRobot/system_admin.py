@@ -199,24 +199,25 @@ class _SystemName:
 
 class _TabInformation:
 
-    def __init__(self, driver: WebDriver, locator: str):
+    def __init__(self, driver: WebDriver, locator: str, variables: RobotVariables):
         self._driver = driver
         self._locator = locator
         self._element = Element(driver, locator)
+        self._variables = variables
 
     def click(self):
         self._element.click()
+        # The page always renders in online status and then changes to offline if needed.
+        # Without a sleep, the following code does not have time to detect the offline status.
+        time.sleep(2)
         started_at = time.monotonic()
         timeout_sec = 10
         while True:
-            if self._is_active():
+            if self._is_system_online() or self.is_current_system_inaccessible():
                 break
             if time.monotonic() - started_at > timeout_sec:
                 raise TimeoutError(f"{self._locator!r} is not visible after {timeout_sec} seconds")
             time.sleep(1)
-
-    def _is_active(self) -> bool:
-        return len(self._driver.find_elements_by_xpath('//nx-menu//nx-level-1-item')) > 0
 
     def check_links(self):
         robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]')
@@ -225,3 +226,10 @@ class _TabInformation:
         robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]')
         robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/nx-health-update')
         robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/div')
+
+    def is_current_system_inaccessible(self) -> bool:
+        return len(self._driver.find_elements_by_xpath(
+            f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]')) > 0
+
+    def _is_system_online(self) -> bool:
+        return len(self._driver.find_elements_by_xpath('//nx-menu//nx-level-1-item')) > 0

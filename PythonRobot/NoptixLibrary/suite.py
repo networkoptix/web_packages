@@ -71,6 +71,9 @@ class CloudServer:
             self.advanced_viewer = cloud_users['advancedViewer']
             self.custom_user = cloud_users['custom']
 
+    def stop(self):
+        _DOCKER_API.stop_container(self._container_id)
+
     def __enter__(self) -> 'CloudServer':
         self._set_up()
         return self
