@@ -26,6 +26,23 @@ def going_to_health_monitor_when_system_is_offline(server: CloudServer, rb: Robo
         assert tab_info.is_current_system_inaccessible()
 
 
+def json_upload_works_on_offline_system(server: CloudServer, rb: RobotVariables):
+    """
+    5. Json upload works on offline system
+    [Tags]    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_info = system.get_information_tab()
+        tab_info.click()
+        json_file = Path(__file__).parent.absolute() / 'test_data/one-page.json'
+        tab_info.upload_json_report(json_file)
+        tab_info.check_links_uploaded()
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -37,3 +54,5 @@ if __name__ == '__main__':
         cloud_server_offline.stop()
         going_to_health_monitor_when_system_is_offline(cloud_server_offline, variables)
         print(f'{Fore.WHITE}{going_to_health_monitor_when_system_is_offline.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        json_upload_works_on_offline_system(cloud_server_offline, variables)
+        print(f'{Fore.WHITE}{json_upload_works_on_offline_system.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
