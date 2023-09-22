@@ -141,6 +141,9 @@ class TextField:
     def click(self):
         self._element.click()
 
+    def send_keys(self, keys: str):
+        self._element.send_keys(keys)
+
 
 
 

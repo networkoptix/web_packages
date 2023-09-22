@@ -1,11 +1,8 @@
-import time
-from typing import Optional
-
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
-from selenium.common.exceptions import NoSuchElementException
 
 import robot_keywords
+from wrappers import PageText
+from wrappers import TextField
 
 
 class ResetPasswordDialog:
@@ -16,19 +13,23 @@ class ResetPasswordDialog:
             driver, "//nx-authorize-reset-request-component")
 
     def input_email(self, email: str):
-        element = self._driver.find_element(
-            By.XPATH, '//nx-authorize-reset-request-component//input[@id="resetPasswordEmail"]')
-        element.clear()
-        element.send_keys(email)
+        text_field = TextField(
+            self._driver,
+            '//nx-authorize-reset-request-component//input[@id="resetPasswordEmail"]',
+            )
+        text_field.clear()
+        text_field.send_keys(email)
 
     def clear_email(self):
-        element = self._driver.find_element(
-            By.XPATH, '//nx-authorize-reset-request-component//input[@id="resetPasswordEmail"]')
-        element.clear()
+        text_filed = TextField(
+            self._driver,
+            '//nx-authorize-reset-request-component//input[@id="resetPasswordEmail"]',
+            )
+        text_filed.clear()
         # clear() does not trigger error message. To trigger empty email error send_keys()
         # must be used.
-        element.send_keys('a')
-        element.send_keys(Keys.BACKSPACE)
+        text_filed.send_keys('a')
+        text_filed.send_keys(Keys.BACKSPACE)
 
     def clear_email_validation_error_message(self):
         self.input_email('proper.email@gmail.com')
@@ -39,31 +40,15 @@ class ResetPasswordDialog:
         self.wait_until_error()
 
     def wait_until_error(self) -> str:
-        started_at = time.monotonic()
-        while True:
-            actual_error = self._get_error_message()
-            if actual_error is not None:
-                break
-            if time.monotonic() - started_at > 3:
-                raise RuntimeError("Failed to get email validation error message")
-            time.sleep(0.1)
-        return actual_error
+        actual_error = self._get_error_message()
+        actual_error .wait_until_visible(3)
+        return actual_error .get_text().strip()
 
     def wait_until_no_error(self):
-        started_at = time.monotonic()
-        while True:
-            actual_error = self._get_error_message()
-            if actual_error is None:
-                break
-            if time.monotonic() - started_at > 3:
-                raise RuntimeError(f"Email validation error message present: {actual_error!r}")
-            time.sleep(0.1)
+        self._get_error_message().wait_until_not_visible(3)
 
-    def _get_error_message(self) -> Optional[str]:
-        try:
-            element = self._driver.find_element(
-                By.XPATH,
-                '//nx-authorize-reset-request-component//p[contains(@class, "error-label")]')
-        except NoSuchElementException:
-            return None
-        return element.text.strip()
+    def _get_error_message(self) -> PageText:
+        return PageText(
+            self._driver,
+            '//nx-authorize-reset-request-component//p[contains(@class, "error-label")]',
+            )
