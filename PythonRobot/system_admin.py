@@ -211,6 +211,9 @@ class _TabInformation:
         # The page always renders in online status and then changes to offline if needed.
         # Without a sleep, the following code does not have time to detect the offline status.
         time.sleep(2)
+        self.wait_until_ready()
+
+    def wait_until_ready(self):
         started_at = time.monotonic()
         timeout_sec = 10
         while True:
@@ -241,18 +244,18 @@ class _TabInformation:
             f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]')) > 0
 
     def upload_json_report(self, filename: Path):
-        e = Element(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
-        e.send_keys(str(filename))
+        element = Element(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
+        element.send_file(str(filename))
         started_at = time.monotonic()
         timeout_sec = 10
         while True:
-            if self._is_imported_report():
+            if self.is_imported_report():
                 break
             if time.monotonic() - started_at > timeout_sec:
                 raise TimeoutError(f"Report did not load after {timeout_sec} seconds")
             time.sleep(0.5)
 
-    def _is_imported_report(self) -> bool:
+    def is_imported_report(self) -> bool:
         return len(self._driver.find_elements_by_xpath(
             f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]')) > 0
 
@@ -266,3 +269,34 @@ class _TabInformation:
     def system_is_doing_well(self) -> bool:
         return len(self._driver.find_elements_by_xpath(
             f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]')) > 0
+
+    def get_alerts_count(self) -> int:
+        e = Element(self._driver, '//div[@id="nx-table"]/div[contains(@class,"table-header")]')
+        (count, _) = e.text().strip().split()
+        return int(count)
+
+    def get_systems_section(self) -> '_Section':
+        return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]', 'Systems')
+
+
+class _Section:
+
+    def __init__(self, driver: WebDriver, locator: str, name: str):
+        robot_keywords.wait_until_page_contains_element(driver, locator, 5)
+        self._driver = driver
+        self._element = Element(driver, locator)
+        self._name = name
+
+    def click(self):
+        self._element.click()
+        started_at = time.monotonic()
+        timeout_sec = 5
+        while True:
+            if self._is_active():
+                break
+            if time.monotonic() - started_at > timeout_sec:
+                raise TimeoutError(f"{self._name} section is not visible after {timeout_sec} seconds")
+            time.sleep(0.5)
+
+    def _is_active(self) -> bool:
+        return len(self._driver.find_elements_by_xpath('//nx-single-entity')) > 0

@@ -29,6 +29,30 @@ def json_upload_works(server: CloudServer, rb: RobotVariables):
         tab_info.check_links_uploaded()
 
 
+def can_close_out_of_json_imported_mode(server: CloudServer, rb: RobotVariables):
+    """
+    10. Can close out of json imported mode
+    [Tags]    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_info = system.get_information_tab()
+        tab_info.click()
+        tab_info.check_links()
+        json_file = Path(__file__).parent.absolute() / 'test_data/one-page.json'
+        tab_info.upload_json_report(json_file)
+        assert tab_info.get_alerts_count() > 0
+        driver.refresh()
+        tab_info.wait_until_ready()
+        tab_info.check_links()
+        assert not tab_info.is_imported_report()
+        systems = tab_info.get_systems_section()
+        systems.click()
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -39,3 +63,5 @@ if __name__ == '__main__':
         cloud_server = suite.create_cloud_server(cloud_owner, f"{suite_name}_")
         json_upload_works(cloud_server, variables)
         print(f'{Fore.WHITE}{json_upload_works.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        can_close_out_of_json_imported_mode(cloud_server, variables)
+        print(f'{Fore.WHITE}{can_close_out_of_json_imported_mode.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')

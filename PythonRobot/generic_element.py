@@ -160,6 +160,8 @@ class Element:
                 raise ElementNotVisible(f'Element locator: {self._locator}')
             time.sleep(.1)
 
+    def send_file(self, text: str):
+        self._element.send_keys(text)
 
 
 class ElementNotInDOM(Exception):
