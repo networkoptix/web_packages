@@ -81,6 +81,13 @@ class CloudServer:
     def __exit__(self, exc_type, exc_val, exc_tb):
         self._tear_down()
 
+    def _connect_to_cloud(self):
+        bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, self.cloud_owner.password)
+        self._api.api_connect_to_cloud(bind_info)
+        self.id = bind_info['systemId']
+        # Wait while the cloud owner settings are applied.
+        time.sleep(.1)
+
     def _set_up(self):
         # Create a docker server.
         # Mimic configuration from JSON files.
@@ -99,12 +106,7 @@ class CloudServer:
         server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
         self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
         self._api.setup_local_system(new_password=self.cloud_owner.password, system_name=self.name)
-        # Set up a cloud system.
-        bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, self.cloud_owner.password)
-        self._api.api_connect_to_cloud(bind_info)
-        self.id = bind_info['systemId']
-        # Wait while the cloud owner settings are applied.
-        time.sleep(.1)
+        self._connect_to_cloud()
         # if cloud_users are needed
         if self.cloud_users:
             for user in self.cloud_users:
