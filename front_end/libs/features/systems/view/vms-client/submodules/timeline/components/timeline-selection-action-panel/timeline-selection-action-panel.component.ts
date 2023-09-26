@@ -19,6 +19,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
+import { PlaybackService } from '../../../playback/services/playback.service';
 import { TimeRange } from '../../services/TimeRange';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
@@ -43,6 +44,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
 
     constructor(
         private self: ElementRef,
+        private playback: PlaybackService,
         protected timeline: TimelineService,
         public selection: TimelineSelectionService,
         protected accountService: NxAccountService,
@@ -75,7 +77,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     }
 
     public ngAfterViewInit(): void {
-        this.selection.$background = this.self.nativeElement;
+        this.selection.background = this.self.nativeElement;
     }
 
     downloadFile(): void {
@@ -83,7 +85,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
     }
 
     private exportUrl(): void {
-        let transport = this.selection.transport;
+        let transport = this.playback.state.transport;
 
         if (!['mp4', 'mkv'].includes(transport)) {
             transport = 'mkv';
@@ -92,7 +94,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             ? this.system.mediaserver.getExportUrl(this.selection.exportUrlParams)
             : '';
 
-        this.exportName = `${this.selection.cameraId}.${transport}`;
+        this.exportName = `${this.vms.selectedCamera.id}.${transport}`;
     }
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
@@ -122,8 +124,8 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         if (s.isActive) {
             this.exportUrl();
             this.exportEnabled = !!this.vms.selectedCamera.getRecords(
-                Math.max(this.status.range.start, this.selection.timeline.fullRange.start),
-                Math.min(this.status.range.end, this.selection.timeline.fullRange.end),
+                Math.max(this.status.range.start, this.timeline.fullRange.start),
+                Math.min(this.status.range.end, this.timeline.fullRange.end),
                 1000,
             ).length;
         } else {

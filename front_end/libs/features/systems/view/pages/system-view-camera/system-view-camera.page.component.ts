@@ -186,7 +186,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
     }
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.initSubscriptions();
         this.initEvents();
         this.startAnimation();
@@ -198,7 +198,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.getRecords();
     }
 
-    public ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
         this.$self.classList.add('controls-shown');
 
         // this.fpsMeter.install()
@@ -209,7 +209,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.ux.isFullScreen = !!fullscreen.getElement();
     }
 
-    public ngOnDestroy(): void {
+    ngOnDestroy(): void {
         this.unsub$.next('done');
 
         this.unListenFullScreenChange();
@@ -229,7 +229,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     private initSubscriptions(): void {
-        this.playback._subject
+        this.playback.subject
             .pipe(throttleTime(TIMESTAMP_UPDATE_THROTTLE_MS), untilDestroyed(this))
             .subscribe(s => {
                 const uriPlaybackMode = this.getQueryParam('time');
@@ -378,11 +378,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return !!isTypeSupported;
     }
 
-    public toggleCameraDetails(newValue: boolean = !this.cameraDetailsShown): void {
+    toggleCameraDetails(newValue: boolean = !this.cameraDetailsShown): void {
         this.cameraDetailsShown = newValue;
     }
 
-    public readonly archiveSelectionEnabled: boolean;
+    readonly archiveSelectionEnabled: boolean;
 
     private unListenMouseMove: () => void;
     private unListenTouch: () => void;
@@ -684,7 +684,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         });
     }
 
-    public startPollingForNewlyRecordedChunks(): void {
+    private startPollingForNewlyRecordedChunks(): void {
         timer(0, 10 * 1000)
             .pipe(takeUntil(this.unsub$))
             .subscribe(() => {

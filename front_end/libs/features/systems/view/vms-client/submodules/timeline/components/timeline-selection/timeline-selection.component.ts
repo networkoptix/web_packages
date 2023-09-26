@@ -221,7 +221,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     }
 
     public ngAfterViewInit(): void {
-        this.selection.$background = this.self.nativeElement;
+        this.selection.background = this.self.nativeElement;
         this.selection.leftEar = this.leftEarView.nativeElement;
         this.selection.rightEar = this.rightEarView.nativeElement;
         this.host = this.selectedRangeView.nativeElement.parentElement;
@@ -407,7 +407,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         this.selectionMode = false;
         this.hideLeftEar = this.selectionStatus.isActive;
         this.hideRightEar = this.selectionStatus.isActive;
-        this.selection.handleMouseUp(e);
+        this.selection.handleMouseUp();
     }
 
     @HostListener('mouseenter', ['$event'])
@@ -421,7 +421,6 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
             this.hideLeftEar = true;
             this.hideRightEar = true;
         }
-        this.selection.handleMouseLeave(e);
         this.timeUnderMouse.handleMouseLeave(e);
     }
 

@@ -279,7 +279,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
         if (!this.isDragging) {
             if (!mustPlay && this.archiveSelectionEnabled) {
-                mustPlay = !this.selection.handleMouseUp(e as MouseEvent);
+                mustPlay = !this.selection.handleMouseUp();
             }
             this.selection.reset();
             this._mouseDownScreenX = calcScreenX(e);
@@ -330,7 +330,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this._mouseNotReleasedYet = false;
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
-            if (!this.selection.handleMouseUp(e)) {
+            if (!this.selection.handleMouseUp()) {
                 this._play(e.clientX - this.canvasView.nativeElement.getBoundingClientRect().left);
             }
         }

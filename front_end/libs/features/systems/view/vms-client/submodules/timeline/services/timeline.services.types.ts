@@ -19,7 +19,7 @@ export interface TimelineScrollbarAbsoluteServiceStatus
     isBarGrabbed: boolean;
 }
 
-export interface PixelRange {
+interface PixelRange {
     left: px;
     right: px;
 }
