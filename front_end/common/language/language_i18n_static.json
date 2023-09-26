@@ -575,7 +575,8 @@
             "wizardWarning": "After you enable two-factor authentication you will not be able to log in to {count, plural, =0{# systems} one{# system} other{# systems}} from %VMS_NAME% client and Web Admin:",
             "wizardWarningDescr": "The older versions of %VMS_NAME% client and Web Admin do not support two-factor authentication.",
             "installAuthApp": "Install an authentication app on your mobile device if you do not already have one. %CLOUD_NAME% supports <strong>Google Authenticator</strong>, <strong>Microsoft Authenticator</strong> or <strong>Duo Mobile</strong>.",
-            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!"
+            "nowEnabled": "Two-factor authentication is now <strong>enabled</strong> for your %CLOUD_NAME% account!",
+            "enableItInSettings": "Enable it in your \u200B | account settings |"
         },
         "addUser": {
             "alreadyExists": "This email has already been registered in the { systemName } system",

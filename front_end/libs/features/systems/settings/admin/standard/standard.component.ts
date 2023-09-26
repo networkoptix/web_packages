@@ -17,6 +17,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
+import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
@@ -151,6 +152,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         private menuService: NxMenuService,
         private processService: NxProcessService,
         private systemsService: NxSystemsService,
+        private accountService: NxAccountService,
     ) {
         this.CONFIG = configService.getConfig();
         if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
@@ -346,16 +348,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             this.is2faDialogActive = true;
         }
 
-        this.dialogService
-            .toggleSystem2fa({ system: this.system, system2faEnabled: this.system2faEnabled })
-            .then(res => {
-                if (res) {
-                    this.system2faEnabled = !this.system2faEnabled;
-                }
-            })
-            .finally(() => {
+        if (this.accountService.account.totpExistsForAccount) {
+            this.dialogService
+                .toggleSystem2fa({ system: this.system, system2faEnabled: this.system2faEnabled })
+                .then(res => {
+                    if (res) {
+                        this.system2faEnabled = !this.system2faEnabled;
+                    }
+                    this.is2faDialogActive = false;
+                });
+        } else {
+            this.dialogService.cantEnableSystem2fa().then(() => {
                 this.is2faDialogActive = false;
             });
+        }
     }
 
     // Alexa Methods

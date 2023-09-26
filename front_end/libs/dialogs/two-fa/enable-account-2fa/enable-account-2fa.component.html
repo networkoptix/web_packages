@@ -45,6 +45,7 @@
                     #loginPassword="ngModel"
                     maxlength="255"
                     [pattern]="credentialsValidation.passwordRequirements.requiredRegex"
+                    [disabled]="disablePwInput"
                     required
                     nxFocusMe
                     setFocus

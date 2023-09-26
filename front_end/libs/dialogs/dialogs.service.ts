@@ -212,10 +212,12 @@ export class NxDialogsService {
         { disableClose: true },
     );
 
-    client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(() =>
-        import('./client-2fa-warning/client-2fa-warning.component').then(
-            m => m.Client2faWarningModalContent,
-        ),
+    client2faWarning = this.dialogV2Factory<Dt.Client2faWarning>(
+        () =>
+            import('./two-fa/client-2fa-warning/client-2fa-warning.component').then(
+                m => m.Client2faWarningModalContent,
+            ),
+        { disableClose: true },
     );
 
     /* Account */
@@ -353,10 +355,20 @@ export class NxDialogsService {
         import('./merge/merge.refactor.component').then(m => m.NxMergeComponent),
     );
 
-    toggleSystem2fa = this.dialogV2Factory<Dt.Mandatory2fa>(
+    toggleSystem2fa = this.dialogV2Factory<Dt.ToggleSystem2fa>(
         () =>
-            import('./mandatory-2fa/mandatory-2fa.component').then(m => m.Mandatory2faModalContent),
-        { width: DIALOG_SIZE.SMALL },
+            import('./two-fa/toggle-system-2fa/toggle-system-2fa.component').then(
+                m => m.ToggleSystem2faModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL, autoFocus: 'input' },
+    );
+
+    cantEnableSystem2fa = this.dialogV2Factory<Dt.CantEnableSystem2fa>(
+        () =>
+            import('./two-fa/cant-enable-system-2fa/cant-enable-system-2fa.component').then(
+                m => m.NxCantEnableSystem2faModalContent,
+            ),
+        { width: DIALOG_SIZE.SMALL, disableClose: true },
     );
 
     transferOwnership = this.dialogV2Factory<Dt.TransferOwnership>(

@@ -1,0 +1,42 @@
+<div class="modal-header">
+    <h1
+        class="modal-title"
+        translate
+    >
+        Cannot enable mandatory two-factor authentication
+    </h1>
+    <button
+        type="button"
+        class="close"
+        data-dismiss="modal"
+        aria-label="Close"
+        (click)="close()"
+    >
+        <span class="close-content"></span>
+    </button>
+</div>
+
+<div class="modal-body">
+    <p translate>
+        You can enable mandatory two-factor authentication for cloud users only if two-factor
+        authentication is enabled for your account.
+    </p>
+
+    <p *ngrxLet="LANG.dialogs.twoFa.enableItInSettings | translate as enableMsg">
+        <span>{{ enableMsg | translateCut : 0 }}</span
+        ><a
+            routerLink="/account/security"
+            (click)="close()"
+            >{{ enableMsg | translateCut : 1 }}</a
+        ><span>{{ enableMsg | translateCut : 2 }}</span>
+    </p>
+</div>
+<div class="modal-footer">
+    <button
+        class="btn btn-primary"
+        (click)="close()"
+        translate
+    >
+        OK
+    </button>
+</div>

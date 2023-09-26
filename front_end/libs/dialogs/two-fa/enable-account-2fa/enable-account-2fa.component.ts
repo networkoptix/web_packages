@@ -69,6 +69,8 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
     /** Whether the user can close the dialog with X button */
     xable: boolean = true;
 
+    disablePwInput = false;
+
     wrongPassword: boolean;
     accountBlocked: boolean;
 
@@ -100,10 +102,8 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
                 this.loginForm.controls.login_password.setErrors(undefined);
                 this.wrongPassword = false;
                 this.accountBlocked = false;
-                if (this.password === '') {
-                    return Promise.reject({ resultCode: 'missingParam' });
-                }
                 dialogRef.disableClose = true;
+                this.disablePwInput = true;
                 this.lock();
                 return cloudApiService.verify(this.password).then(() => {
                     window.addEventListener('beforeunload', this.removeUnverified2faKey);
@@ -151,6 +151,7 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
                 // Don't re-enable quick close once user proceeds past first step
             },
             () => {
+                this.disablePwInput = false;
                 dialogRef.disableClose = false;
                 this.unlock();
             },
@@ -158,6 +159,7 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
 
         this.codeProcess = processService.createProcess(
             () => {
+                this.tfaCodeInput.disable();
                 this.lock();
                 // request backup codes before 2fa toggle (after 2fa is ON user have to re-login)
                 return this.cloudApiService.get2FaBackupCode().then(response => {
@@ -198,6 +200,7 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
                 this.unlock();
             },
             () => {
+                this.tfaCodeInput.enable();
                 this.unlock();
             },
         );

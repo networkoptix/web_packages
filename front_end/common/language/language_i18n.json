@@ -252,7 +252,6 @@
     "Enable audit trail": "Enable audit trail",
     "Enable auto discovery of cameras and servers": "Enable auto discovery of cameras and servers",
     "Enable in %VMS_NAME% to view archive": "Enable in %VMS_NAME% to view archive",
-    "Enable it in your": "Enable it in your",
     "Enable mandatory two-factor authentication": "Enable mandatory two-factor authentication",
     "Enables RTSP traffic encryption.": "Enables RTSP traffic encryption.",
     "Enabling it will allow you to set up \"motion only\" and \"motion + low-res\" recording types, but may increase the CPU usage.": "Enabling it will allow you to set up \"motion only\" and \"motion + low-res\" recording types, but may increase the CPU usage.",
@@ -261,7 +260,6 @@
     "End time is earlier than start time": "End time is earlier than start time",
     "Enter a verification code from your authentication app or a backup code to continue": "Enter a verification code from your authentication app or a backup code to continue",
     "Enter a verification code from your authentication app to continue": "Enter a verification code from your authentication app to continue",
-    "Enter a verification code from your authentication app to continue.": "Enter a verification code from your authentication app to continue.",
     "Enter address of any server in the system you want to merge with this one.": "Enter address of any server in the system you want to merge with this one.",
     "Enter email": "Enter email",
     "Enter license key": "Enter license key",
@@ -772,7 +770,6 @@
     "Your browser is not supported": "Your browser is not supported",
     "Your favorite feature now availabe on cloud portal": "Your favorite feature now availabe on cloud portal",
     "Your recorded data will be saved.": "Your recorded data will be saved.",
-    "account settings": "account settings",
     "and": "and",
     "canvas": "canvas",
     "confirm password": "confirm password",
@@ -792,6 +789,5 @@
     "see organizations": "see organizations",
     "width": "width",
     "you": "you",
-    "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.": "{numUsers} users from this system have accounts with disabled two-factor authentication. They will not be able to log in to the system.",
     "{n} of {m}": "{n} of {m}"
 }

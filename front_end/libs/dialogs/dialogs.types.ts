@@ -164,12 +164,14 @@ interface MergeRefactorData {
 
 export type MergeRefactored = DialogType<MergeRefactorData, MergeInfo | MergeError>;
 
-interface Mandatory2faData {
+interface ToggleSystem2faData {
     system: NxSystem;
     system2faEnabled: boolean;
 }
 
-export type Mandatory2fa = DialogType<Mandatory2faData, boolean>;
+export type ToggleSystem2fa = DialogType<ToggleSystem2faData, boolean>;
+
+export type CantEnableSystem2fa = DialogType<void, void>;
 
 export type TransferOwnership = DialogType<NxSystem, SystemTransferInfo>;
 
