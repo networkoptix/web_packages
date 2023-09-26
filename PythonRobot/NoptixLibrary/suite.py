@@ -1,6 +1,7 @@
 import time
 from contextlib import ExitStack
-from typing import Optional
+from types import MappingProxyType
+from typing import Optional, Mapping
 from typing import List
 from random import randint
 from pyotp import TOTP
@@ -38,27 +39,23 @@ class Suite:
             self,
             cloud_owner: 'CloudAccount',
             suite_name: Optional[str] = None,
-            cloud_users: Optional[dict] = None,
+            cloud_users: Mapping[str, 'CloudAccount'] = MappingProxyType({}),
             ) -> 'CloudServer':
         if suite_name is None:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        if cloud_users is None:
-            server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
-            server.connect_to_cloud()
-        else:
-            server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
-            server.connect_to_cloud()
-            for user in cloud_users:
-                _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
-                    server.id,
-                    user,
-                    cloud_users[user].email,
-                    [cloud_owner.email, cloud_owner.password],
-                )
-                print(f"Added {user}: {cloud_users[user].email}")
-            server.cloud_admin = cloud_users['cloudAdmin']
+        server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
+        server.connect_to_cloud()
+        for user in cloud_users:
+            _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
+                server.id,
+                user,
+                cloud_users[user].email,
+                [cloud_owner.email, cloud_owner.password],
+            )
+            print(f"Added {user}: {cloud_users[user].email}")
+        server.cloud_admin = cloud_users['cloudAdmin'] if cloud_users else None
         self._exit_stack.callback(server.tear_down)
         return server
 
