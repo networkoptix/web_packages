@@ -39,6 +39,7 @@ if __name__ == "__main__":
         cloud_server = suite.create_cloud_server(cloud_owner)
         cloud_owner_second = suite.create_cloud_account()
         cloud_server_second = suite.create_cloud_server(cloud_owner_second)
+        local_server = suite.create_local_server()
 
         owner_can_remove_user(cloud_server)
         share_with_registered_user_works(cloud_server)
@@ -53,7 +54,7 @@ if __name__ == "__main__":
         login_with_backup_code(cloud_server)
         disabling_2fa(cloud_server)
         system_2fa_required(cloud_server)
-        twofa_not_required_when_more_than_one_system()
+        twofa_not_required_when_more_than_one_system(cloud_server, local_server)
 
         test_changing_first_name_and_saving_maintains_that_setting()
         test_changing_last_name_and_saving_maintains_that_setting()

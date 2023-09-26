@@ -35,17 +35,22 @@ class Suite:
     def create_cloud_account(self):
         return self._exit_stack.enter_context(CloudAccount())
 
+    def create_local_server(self, suite_name: Optional[str] = None):
+        if suite_name is None:
+            suite_name = 'test_cloud_server_'
+        self._server_count += 1
+        suite_name = f"{suite_name}_{self._server_count}"
+        server = Mediaserver(suite_name, self.run_id).set_up()
+        self._exit_stack.callback(server.tear_down)
+        return server
+
     def create_cloud_server(
             self,
             cloud_owner: 'CloudAccount',
             suite_name: Optional[str] = None,
             cloud_users: Mapping[str, 'CloudAccount'] = MappingProxyType({}),
             ) -> 'Mediaserver':
-        if suite_name is None:
-            suite_name = 'test_cloud_server_'
-        self._server_count += 1
-        suite_name = f"{suite_name}_{self._server_count}"
-        server = Mediaserver(suite_name, self.run_id).set_up()
+        server = self.create_local_server(suite_name)
         server.connect_to_cloud(cloud_owner)
         for user in cloud_users:
             _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
@@ -56,7 +61,6 @@ class Suite:
             )
             print(f"Added {user}: {cloud_users[user].email}")
         server.cloud_admin = cloud_users['cloudAdmin'] if cloud_users else None
-        self._exit_stack.callback(server.tear_down)
         return server
 
     def create_cloud_users(self):
@@ -114,15 +118,14 @@ class Mediaserver:
         return self
 
     def tear_down(self):
-        try:
+        if self.cloud_owner is not None:
             _CLOUD_API.disconnect(
                 self.cloud_owner.email,
                 self.cloud_owner.password,
                 self.id,
                 self.cloud_owner.get_otp(),
                 )
-        finally:
-            _DOCKER_API.delete_container(self._container_id)
+        _DOCKER_API.delete_container(self._container_id)
 
 
 class CloudAccount:

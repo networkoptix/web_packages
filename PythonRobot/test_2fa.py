@@ -196,6 +196,7 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     security_form.twofa_totp_input().input_text(server.cloud_owner.get_otp())
     security_form.twofa_settings_modal_apply().click()
     header.log_out()
+    second_server.connect_to_cloud(server.cloud_owner)
     driver.get(f"{ENV}/systems/{second_server.id}")
     LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
     SystemAdmin(driver)
