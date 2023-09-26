@@ -206,6 +206,7 @@ if __name__ == "__main__":
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_users()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
+        # TODO: Come up with a better way to detect server online state
         time.sleep(90) # added for now to allow the system to become interactable on cloud portal
         owner_can_remove_user(cloud_server)
         cloud_admin_can_remove_user(cloud_server)
