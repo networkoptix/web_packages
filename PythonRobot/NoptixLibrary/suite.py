@@ -45,8 +45,8 @@ class Suite:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
-        server.connect_to_cloud()
+        server = CloudServer(suite_name, self.run_id).set_up()
+        server.connect_to_cloud(cloud_owner)
         for user in cloud_users:
             _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
                 server.id,
@@ -73,12 +73,11 @@ class CloudServer:
 
     def __init__(
             self,
-            cloud_owner: 'CloudAccount',
             suite_name,
             run_id,
             ports: int = 1,
             ):
-        self.cloud_owner = cloud_owner
+        self.cloud_owner = None
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
@@ -86,10 +85,11 @@ class CloudServer:
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
 
-    def connect_to_cloud(self):
-        bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, self.cloud_owner.password)
+    def connect_to_cloud(self, cloud_owner: 'CloudAccount'):
+        bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
         self._api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
+        self.cloud_owner = cloud_owner
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
 
@@ -110,7 +110,7 @@ class CloudServer:
         server_api_port, *_ = data['port']
         server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
         self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
-        self._api.setup_local_system(new_password=self.cloud_owner.password, system_name=self.name)
+        self._api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         return self
 
     def tear_down(self):
