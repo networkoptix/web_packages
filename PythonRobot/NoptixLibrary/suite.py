@@ -138,7 +138,7 @@ class CloudAccount:
         self._totp = None
         self._backup_codes = None
 
-    def __enter__(self) -> '_CloudAccount':
+    def __enter__(self) -> 'CloudAccount':
         self._set_up()
         return self
 
