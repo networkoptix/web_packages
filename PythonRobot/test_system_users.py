@@ -65,7 +65,7 @@ def owner_can_remove_user(server: CloudServer):
     driver.quit()
     print("pass owner")
 
-def admin_can_remove_user(server: CloudServer):
+def cloud_admin_can_remove_user(server: CloudServer):
     """
     15. Delete user works
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
@@ -208,7 +208,7 @@ if __name__ == "__main__":
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         time.sleep(90) # added for now to allow the system to become interactable on cloud portal
         owner_can_remove_user(cloud_server)
-        admin_can_remove_user(cloud_server)
+        cloud_admin_can_remove_user(cloud_server)
         share_with_registered_user_works(cloud_server)
         share_with_registered_user_sends_notification(cloud_server)
         share_with_unregistered_user_sends_notification(cloud_server)
