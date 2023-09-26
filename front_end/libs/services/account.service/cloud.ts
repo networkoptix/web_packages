@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { combineLatest, distinctUntilChanged, firstValueFrom, of, timer } from 'rxjs';
 import { catchError, debounceTime, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
+import { AppDB } from '@db/index';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import { NxDbService } from '@services/db.service';
@@ -143,6 +144,13 @@ export class CloudAccount extends BaseAccount {
                     // We explicitly check if account is null to determine if session has expired
                     // We should probably refactor account since it's a little unclear that null and undefined have different behavior
                     return null;
+                }
+
+                if (res instanceof AppDB.PrematureCommitError) {
+                    // There's an error being thrown by dexie when it tries to commit a transaction.
+                    // Can't seem to find where it's coming from, so we're catching it here.
+                    // Doesn't seem to affect the behavior of the app.
+                    return;
                 }
 
                 this.router.navigate([redirect.unauthorised]).catch(error => {

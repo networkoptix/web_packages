@@ -1,17 +1,7 @@
-import { Injectable, Injector, signal } from '@angular/core';
-import { Router, ActivationEnd } from '@angular/router';
+import { Injectable, Injector } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import {
-    Observable,
-    catchError,
-    distinctUntilChanged,
-    filter,
-    forkJoin,
-    from,
-    map,
-    shareReplay,
-    switchMap,
-} from 'rxjs';
+import { BehaviorSubject, Observable, catchError, forkJoin, from, map, switchMap } from 'rxjs';
 
 import { SystemResourcesActions, SystemResourcesTypes } from '@common/store/system-resources';
 import { environment } from '@environments/environment';
@@ -35,40 +25,27 @@ export class NxSystemService {
     constructor(
         injector: Injector,
         private systemsService: NxSystemsService,
-        private router: Router,
         private store: Store,
     ) {
         NxSystemBase.INJECTOR ||= injector;
     }
 
-    currentSystem$ = this.router.events.pipe(
-        filter(event => event instanceof ActivationEnd),
-        map((event: ActivationEnd): string => event?.snapshot?.params?.systemId),
-        filter(Boolean),
-        distinctUntilChanged(),
-        switchMap(async systemId => {
-            let system = this.systemsCache[systemId];
-
-            if (!system) {
-                system = this.createSystem(this.systemsService.userEmail, systemId, null, true);
-                await system.update();
-            }
-
-            this.store.dispatch(
-                SystemResourcesActions.refreshSystemResources({
-                    systems: { [system.id]: { all: true } },
-                }),
-            );
-            return system;
-        }),
-        shareReplay({ bufferSize: 1, refCount: false }),
-    );
+    currentSystem$ = new BehaviorSubject<NxSystem>(undefined);
 
     getCurrentSystem(): NxSystem {
         return this.currentSystem$$();
     }
 
-    currentSystem$$ = signal<NxSystem>(undefined);
+    setSystem(system: NxSystem): void {
+        this.currentSystem$.next(system);
+        this.store.dispatch(
+            SystemResourcesActions.refreshSystemResources({
+                systems: { [system.id]: { all: true } },
+            }),
+        );
+    }
+
+    currentSystem$$ = toSignal(this.currentSystem$);
 
     getSystemResources(
         systemId: string,
@@ -153,7 +130,7 @@ export class NxSystemService {
                 .subscribe(() => {});
         }
 
-        this.currentSystem$$.set(this.system);
+        this.setSystem(this.system);
         // this.system.lostConnection = false;
         if (!skipPoll) {
             this.currentSystem$$().startPoll(systemId);
@@ -171,7 +148,7 @@ export class NxSystemService {
             this.system = nxSystemFactory(userEmail, '', '', userId, mediaServer.version);
             this.system.mediaserver = mediaServer;
             this.system.canMerge = true;
-            this.currentSystem$$.set(this.system);
+            this.setSystem(this.system);
         }
 
         if (this.system.subscriberCount === 0) {
