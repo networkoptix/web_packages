@@ -22,7 +22,10 @@ class SystemLeftMenu:
         return Button(self.driver, translated_xpath)
 
     def update_users_list(self):
-        self.users = self.driver.find_elements(By.XPATH, "//div[@id='level3users']//nx-level-3-item")
+        users = self.driver.find_elements(By.XPATH, "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight")
+        self.users = []
+        for user in users:
+            self.users.append(Button(self.driver, f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]"))
 
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(

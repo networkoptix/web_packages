@@ -14,3 +14,4 @@ class ToastNotification:
             )
         message.wait_until_does_not_exist(10)
         return message
+    

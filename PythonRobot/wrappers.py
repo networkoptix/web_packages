@@ -11,6 +11,9 @@ class Button:
         # TODO: add check to confirm button text is correct?
         self._element = Element(self.driver, locator)
 
+    def get_text(self):
+        return self._element.text()
+    
     def click(self):
         self._element.click()
 

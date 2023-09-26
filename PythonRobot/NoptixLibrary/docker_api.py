@@ -41,7 +41,7 @@ class DockerApi(object):
             json=payload,
             )
         logger.debug(r.content)
-        assert r.status_code == 201
+        r.raise_for_status()
         return r.json()['Id']
 
     def start_container(self, id):

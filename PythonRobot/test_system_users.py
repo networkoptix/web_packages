@@ -44,9 +44,8 @@ def owner_can_remove_user(server: CloudServer):
     time.sleep(1)
     left_menu.users_button().click()
     left_menu.update_users_list()
-    left_menu.users[1].click()
     for user in left_menu.users:
-        if user.text == email:
+        if user.get_text() == email:
             user.click()
     users_page = SystemUsers(driver)
     users_page.remove_user_button().click()
@@ -150,7 +149,7 @@ def share_with_registered_user_works(server: CloudServer):
     left_menu.users[1].click()
     user_there = False
     for user in left_menu.users:
-        if user.text == email:
+        if user.get_text() == email:
             user_there = True
     assert user_there, "User was not in the users list"
 
@@ -161,10 +160,10 @@ def share_with_registered_user_works(server: CloudServer):
 if __name__ == "__main__":
     with Suite() as suite:
         cloud_owner = suite.create_cloud_account()
-        cloud_server = suite.create_cloud_server(cloud_owner)
+        cloud_server = suite.create_cloud_server(cloud_owner, "users")
 
         owner_can_remove_user(cloud_server)
         share_with_registered_user_works(cloud_server)
         share_with_registered_user_sends_notification(cloud_server)
-        # share_with_unregistered_user_sends_notification()
+        share_with_unregistered_user_sends_notification(cloud_server)
         email_is_locked_when_unregistered_user_is_invited(cloud_server)
