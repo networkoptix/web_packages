@@ -34,7 +34,12 @@ class Suite:
     def create_cloud_account(self):
         return self._exit_stack.enter_context(CloudAccount())
 
-    def create_cloud_server(self, cloud_owner: 'CloudAccount', suite_name: Optional[str] = None, cloud_users: Optional[dict] = None) -> 'CloudServer':
+    def create_cloud_server(
+            self,
+            cloud_owner: 'CloudAccount',
+            suite_name: Optional[str] = None,
+            cloud_users: Optional[dict] = None,
+            ) -> 'CloudServer':
         if suite_name is None:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
@@ -42,7 +47,8 @@ class Suite:
         if cloud_users is None:
             return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
         else:
-            return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id, cloud_users))
+            return self._exit_stack.enter_context(
+                CloudServer(cloud_owner, suite_name, self.run_id, cloud_users))
 
     def create_cloud_users(self):
         cloud_users = {}
@@ -54,11 +60,16 @@ class Suite:
         return cloud_users
 
 
-
-
 class CloudServer:
 
-    def __init__(self, cloud_owner: 'CloudAccount', suite_name, run_id, cloud_users: Optional[dict] = None, ports: int = 1):
+    def __init__(
+            self,
+            cloud_owner: 'CloudAccount',
+            suite_name,
+            run_id,
+            cloud_users: Optional[dict] = None,
+            ports: int = 1,
+            ):
         self.cloud_owner = cloud_owner
         self.ports = ports
         self.suite_name = suite_name
@@ -93,8 +104,8 @@ class CloudServer:
         # Mimic configuration from JSON files.
         data = {
             'name': self.suite_name,
-            'ports': self.ports
-        }
+            'ports': self.ports,
+            }
         docker_server_data = _GENERIC_KEYWORDS.create_docker_server(data, self.run_id)
         data.update(docker_server_data)
         self.name = data['name']
@@ -114,8 +125,7 @@ class CloudServer:
                     self.id,
                     user,
                     self.cloud_users[user].email,
-                    [self.cloud_owner.email,
-                    self.cloud_owner.password]
+                    [self.cloud_owner.email, self.cloud_owner.password],
                     )
                 print(f"Added {user}: {self.cloud_users[user].email}")
 
@@ -169,8 +179,8 @@ class CloudAccount:
     def _set_up(self):
         self.email = _GENERIC_KEYWORDS.get_random_email(
             _GENERIC_KEYWORDS.base_email,
-            _GENERIC_KEYWORDS.from_email
-        )
+            _GENERIC_KEYWORDS.from_email,
+            )
         _CLOUD_API.register_account('Mark', 'Hamill', self.email, self.password)
         _CLOUD_API.activate_account_via_api(self.email, self.password)
 
