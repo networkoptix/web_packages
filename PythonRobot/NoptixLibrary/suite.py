@@ -49,7 +49,8 @@ class Suite:
         permissions = _GENERIC_KEYWORDS.permissions
         for permission in permissions:
             account = self._exit_stack.enter_context(CloudAccount())
-            cloud_users.update({permission: {"email": account.email, "permission": permissions[permission]}})
+            cloud_users.update({permission: account})
+            time.sleep(2)
         return cloud_users
 
 
@@ -62,7 +63,13 @@ class CloudServer:
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
-        self.cloud_users = cloud_users
+        if cloud_users:
+            self.cloud_users = cloud_users
+            self.cloud_admin = cloud_users['cloudAdmin']
+            self.viewer = cloud_users['viewer']
+            self.live_viewer = cloud_users['liveViewer']
+            self.advanced_viewer = cloud_users['advancedViewer']
+            self.custom_user = cloud_users['custom']
 
     def __enter__(self) -> 'CloudServer':
         self._set_up()
@@ -82,6 +89,7 @@ class CloudServer:
         data.update(docker_server_data)
         self.name = data['name']
         self._container_id = data['container']
+        print(f"Container {self.name} should be up, waiting for 5 secs")
         time.sleep(5)  # Wait for the docker server to be ready
         # Set up a local system.
         server_api_port, *_ = data['port']
@@ -100,10 +108,11 @@ class CloudServer:
                 _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
                     self.id,
                     user,
-                    self.cloud_users[user]['email'],
+                    self.cloud_users[user].email,
                     [self.cloud_owner.email,
                     self.cloud_owner.password]
                     )
+                print(f"Added {user}: {self.cloud_users[user].email}")
 
     def _tear_down(self):
         try:
