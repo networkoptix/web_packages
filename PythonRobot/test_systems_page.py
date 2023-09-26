@@ -2,7 +2,7 @@ import time
 
 import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from header import HeaderNav
@@ -17,7 +17,7 @@ from variables import ENV
 password = "qweasd 123"
 
 
-def should_open_systems_page_from_anonymous_state(server: CloudServer):
+def should_open_systems_page_from_anonymous_state(server: Mediaserver):
     driver = get_headless_chrome()
 
     url = ENV + "/systems"
@@ -28,7 +28,7 @@ def should_open_systems_page_from_anonymous_state(server: CloudServer):
     SystemsPage(driver)
 
 
-def system_tiles_represent_actual_information(server: CloudServer):
+def system_tiles_represent_actual_information(server: Mediaserver):
     driver = get_headless_chrome()
 
     url = ENV + "/systems"
@@ -60,7 +60,7 @@ def no_systems_connected():
     print("pass")
 
 
-def one_system_directs_you_to_system_admin(server: CloudServer):
+def one_system_directs_you_to_system_admin(server: Mediaserver):
     driver = get_headless_chrome()
 
     url = ENV + "/systems"
@@ -74,7 +74,7 @@ def one_system_directs_you_to_system_admin(server: CloudServer):
     print("pass")
 
 
-def opens_system_admin_when_tile_is_clicked(server: CloudServer):
+def opens_system_admin_when_tile_is_clicked(server: Mediaserver):
     driver = get_headless_chrome()
 
     url = ENV + "/systems"
@@ -90,7 +90,7 @@ def opens_system_admin_when_tile_is_clicked(server: CloudServer):
     print("pass")
 
 
-def search_highlights_system_name(server: CloudServer):
+def search_highlights_system_name(server: Mediaserver):
     """C41891"""
     driver = get_headless_chrome()
 
@@ -111,7 +111,7 @@ def search_highlights_system_name(server: CloudServer):
     print("pass")
 
 
-def search_highlights_owner_name(server: CloudServer):
+def search_highlights_owner_name(server: Mediaserver):
     """C41891"""
     driver = get_headless_chrome()
 
@@ -134,7 +134,7 @@ def search_highlights_owner_name(server: CloudServer):
     print("pass")
 
 
-def search_is_cleared_by_x_button(server: CloudServer):
+def search_is_cleared_by_x_button(server: Mediaserver):
     """C41891"""
     driver = get_headless_chrome()
 
@@ -158,8 +158,8 @@ def search_is_cleared_by_x_button(server: CloudServer):
 
 
 def should_update_owner_name(
-        server_first: CloudServer,
-        server_second: CloudServer,
+        server_first: Mediaserver,
+        server_second: Mediaserver,
         api: CloudPortalAPI,
         ):
     api.set_account_name(server_second.cloud_owner.email, password, "carrie", "fisher")
@@ -182,8 +182,8 @@ def should_update_owner_name(
 
 
 def search_only_visible_with_more_than_eight_systems(
-        server_first: CloudServer,
-        server_second: CloudServer,
+        server_first: Mediaserver,
+        server_second: Mediaserver,
         api: CloudPortalAPI,
         ):
     """C41890"""

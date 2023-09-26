@@ -3,7 +3,7 @@ from pathlib import Path
 import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.generic_keywords import GenericKeywords
-from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from email_access import Email
@@ -28,7 +28,7 @@ CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 
 
-def owner_can_remove_user(server: CloudServer):
+def owner_can_remove_user(server: Mediaserver):
     """
     15. Delete user works
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
@@ -66,7 +66,7 @@ def owner_can_remove_user(server: CloudServer):
     driver.quit()
     print("pass owner")
 
-def cloud_admin_can_remove_user(server: CloudServer):
+def cloud_admin_can_remove_user(server: Mediaserver):
     """
     15. Delete user works
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
@@ -105,7 +105,7 @@ def cloud_admin_can_remove_user(server: CloudServer):
     print("pass admin")
 
 
-def share_with_registered_user_sends_notification(server: CloudServer):
+def share_with_registered_user_sends_notification(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
@@ -122,7 +122,7 @@ def share_with_registered_user_sends_notification(server: CloudServer):
     print("pass")
 
 
-def share_with_unregistered_user_sends_notification(server: CloudServer):
+def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
     email = get_random_email(sendemail=True)
     cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
@@ -155,7 +155,7 @@ def share_with_unregistered_user_sends_notification(server: CloudServer):
     print("pass")
 
 
-def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
+def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
     driver = get_headless_chrome()
     email_con = Email()
@@ -172,7 +172,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: CloudServer):
     print("pass")
 
 
-def share_with_registered_user_works(server: CloudServer):
+def share_with_registered_user_works(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
     driver = get_headless_chrome()
     email = get_random_email()

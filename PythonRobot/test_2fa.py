@@ -2,7 +2,7 @@ import datetime
 from pathlib import Path
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from header import HeaderNav
 from login import LoginDialog
@@ -14,7 +14,7 @@ from variables import ENV
 CLOUD_API = CloudPortalAPI()
 
 
-def enable_and_login_with_2fa(server: CloudServer):
+def enable_and_login_with_2fa(server: Mediaserver):
     """
     1. Enable and perform login with 2fa
     [tags]    smoke    ci    C107768    C107769
@@ -45,7 +45,7 @@ def enable_and_login_with_2fa(server: CloudServer):
     driver.close()
 
 
-def login_with_backup_code(server: CloudServer):
+def login_with_backup_code(server: Mediaserver):
     """
     2. 2fa login with random backup code
     [Tags]    smoke    ci    C107770
@@ -81,7 +81,7 @@ def login_with_backup_code(server: CloudServer):
     driver.close()
 
 
-def login_with_qr_code(server: CloudServer):
+def login_with_qr_code(server: Mediaserver):
     """3. Enable and perform login with 2fa using QR"""
     driver = get_headless_chrome()
     driver.get(ENV)
@@ -112,7 +112,7 @@ def login_with_qr_code(server: CloudServer):
     driver.close()
 
 
-def disabling_2fa(server: CloudServer):
+def disabling_2fa(server: Mediaserver):
     """
     5. Successful disabling 2FA for user with enabled 2FA for the whole account
     [Tags]    smoke    ci    C107771
@@ -134,7 +134,7 @@ def disabling_2fa(server: CloudServer):
     driver.close()
 
 
-def system_2fa_required(server: CloudServer):
+def system_2fa_required(server: Mediaserver):
     """
     6.1 2fa is required when accessing only system with 2fa required
     [Tags]    smoke    ci    C110067
@@ -170,7 +170,7 @@ def system_2fa_required(server: CloudServer):
     driver.close()
 
 
-def twofa_not_required_when_more_than_one_system(server: CloudServer, second_server: CloudServer):
+def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_server: Mediaserver):
     """
     6.2 2fa is not required when accessing systems page with more than one system
     [Tags]    smoke    ci    C110067
@@ -206,7 +206,7 @@ def twofa_not_required_when_more_than_one_system(server: CloudServer, second_ser
     driver.close()
 
 
-def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServer):
+def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserver):
     """
     7. Successfully changing 2FA mode for user to specific systems
     [Tags]    C93780
@@ -279,7 +279,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: CloudServe
     driver.close()
 
 
-def fail_to_login_with_expired_code(server: CloudServer):
+def fail_to_login_with_expired_code(server: Mediaserver):
     """
     9. Unsuccessful cloud authorization with 2FA using expired code from app
     [Tags]    C94715
@@ -311,7 +311,7 @@ def fail_to_login_with_expired_code(server: CloudServer):
     driver.close()
 
 
-def twofa_login_via_api(server: CloudServer):
+def twofa_login_via_api(server: Mediaserver):
     """10. 2fa api call login with totp token"""
     key = CLOUD_API.toggle_2fa_on_api(server.cloud_owner.email, server.cloud_owner.password)
     server.cloud_owner.setup_2fa(key)
@@ -326,7 +326,7 @@ def twofa_login_via_api(server: CloudServer):
         )
 
 
-def twofa_login_via_api_backup(server: CloudServer):
+def twofa_login_via_api_backup(server: Mediaserver):
     """11. 2fa api call login with backout code"""
     key = CLOUD_API.toggle_2fa_on_api(server.cloud_owner.email, server.cloud_owner.password)
     server.cloud_owner.setup_2fa(key)

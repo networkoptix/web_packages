@@ -2,7 +2,7 @@ import os
 import time
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from header import HeaderNav
 from login import LoginDialog
@@ -20,7 +20,7 @@ CLOUD_API = CloudPortalAPI()
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
 
 
-def can_log_in_to_system_from_direct_link(server: CloudServer):
+def can_log_in_to_system_from_direct_link(server: Mediaserver):
     """smoke    ci    C30825"""
     driver = get_headless_chrome()
     url = ENV + f"/systems/{server.id}"
@@ -33,7 +33,7 @@ def can_log_in_to_system_from_direct_link(server: CloudServer):
     print("pass")
 
 
-def owner_can_disconnect_system_from_cloud(server: CloudServer):
+def owner_can_disconnect_system_from_cloud(server: Mediaserver):
     """C41883   C47020    webadmin    smoke    ci    C69845"""
     driver = get_headless_chrome()
     url = ENV + f"/systems/{server.id}"
@@ -52,7 +52,7 @@ def owner_can_disconnect_system_from_cloud(server: CloudServer):
     print("pass")
 
 
-def non_owner_can_disconnect_account_from_system(server: CloudServer):
+def non_owner_can_disconnect_account_from_system(server: Mediaserver):
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)

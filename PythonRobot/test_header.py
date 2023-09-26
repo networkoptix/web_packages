@@ -5,7 +5,7 @@ from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.generic_keywords import GenericKeywords
 from header import HeaderNav
 from resource_import import get_chrome
-from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from login import LoginDialog
 from variables import ENV
@@ -36,7 +36,7 @@ def anon_header_correct():
             raise RuntimeError("Systems link is present on Anonymous")
         print("PASS")
 
-def logged_in_header_correct(server: CloudServer):
+def logged_in_header_correct(server: Mediaserver):
     """new: Logged in Header shows correct items"""
     with get_chrome() as driver:
         driver.get(ENV)

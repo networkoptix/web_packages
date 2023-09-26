@@ -40,12 +40,12 @@ class Suite:
             cloud_owner: 'CloudAccount',
             suite_name: Optional[str] = None,
             cloud_users: Mapping[str, 'CloudAccount'] = MappingProxyType({}),
-            ) -> 'CloudServer':
+            ) -> 'Mediaserver':
         if suite_name is None:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        server = CloudServer(suite_name, self.run_id).set_up()
+        server = Mediaserver(suite_name, self.run_id).set_up()
         server.connect_to_cloud(cloud_owner)
         for user in cloud_users:
             _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
@@ -69,7 +69,7 @@ class Suite:
         return cloud_users
 
 
-class CloudServer:
+class Mediaserver:
 
     def __init__(
             self,
