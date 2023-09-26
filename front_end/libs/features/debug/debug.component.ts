@@ -243,21 +243,23 @@ export class NxDebugComponent {
 
     openLink(): void {
         this.parseActionParams();
-        this.urlProtocol.getLink(this.clearEmptyStrings(this.linkSettings)).then((data: any) => {
-            const link = data.link;
-            // @ts-expect-error
-            this.window.protocolCheck(
-                link,
-                openClientTimeout,
-                openMobileClientTimeout,
-                () => {
-                    alert('Protocol not recognized');
-                },
-                () => {
-                    alert('Ok - protocol is working');
-                },
-            );
-        });
+        this.urlProtocol
+            .getLinkLegacy(this.clearEmptyStrings(this.linkSettings))
+            .then((data: any) => {
+                const link = data.link;
+                // @ts-expect-error
+                this.window.protocolCheck(
+                    link,
+                    openClientTimeout,
+                    openMobileClientTimeout,
+                    () => {
+                        alert('Protocol not recognized');
+                    },
+                    () => {
+                        alert('Ok - protocol is working');
+                    },
+                );
+            });
     }
 
     testNotification(): void {

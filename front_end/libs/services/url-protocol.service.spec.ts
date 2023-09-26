@@ -61,17 +61,17 @@ describe('Url Protocol Service', () => {
     it('should use code if useOauth === true', async () => {
         const { urlService, clientProtocol, systemId, code, getCodeSpy } =
             await setupUrlProtocolService();
-        const link = await urlService.getLink(systemId, true);
+        const link = await urlService.getLinkOauth(systemId);
         expect(getCodeSpy).toHaveBeenCalledWith('*');
         expect(link).toBe(
-            `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?code=${code}`,
+            `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${code}`,
         );
     });
 
     it('should use authKey if useOauth is falsy', async () => {
         const { urlService, clientProtocol, systemId, auth, authKeySpy } =
             await setupUrlProtocolService();
-        const link = await urlService.getLink(systemId, false);
+        const link = await urlService.getLinkLegacy(systemId, false);
         expect(authKeySpy).toHaveBeenCalledWith();
         expect(link).toBe(
             `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}`,

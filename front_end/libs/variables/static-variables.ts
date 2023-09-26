@@ -21,7 +21,7 @@ export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
 export const staticBase: string =
     buildSubstituted && !environment.isLocal ? 'static/{{BUILD}}' : 'static';
-export const openClientTimeout: number = 1000;
+export const openClientTimeout: number = 4000;
 export const openClientError: string = 'notVisited';
 export const openMobileClientTimeout: number = 300;
 export const responseOk: string = 'ok';

@@ -50,7 +50,7 @@ export class NxUrlProtocolService {
         return url.toString();
     }
 
-    public getLink(systemId: string, useOauth: boolean): Promise<string> {
+    public getLinkLegacy(systemId: string, useOauth: boolean): Promise<string> {
         return Promise.all([
             useOauth ? Promise.resolve('') : this.accountService.authKey(),
             environment.isLocal || !useOauth
@@ -63,23 +63,64 @@ export class NxUrlProtocolService {
         // Commenting this out for now because nobody remembers what this was for
     }
 
-    open(systemId: string, useOauth: boolean): Promise<void> {
-        return this.getLink(systemId, useOauth).then(link => {
-            /* The browser opens a dialog that we cannot directly detect or get a response from.
-             * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
-             */
-            return new Promise<void>((resolve, reject) => {
-                protocolCheck(
-                    link,
-                    resolve,
-                    () => {
-                        reject({ resultCode: openClientError });
-                    },
-                    openClientTimeout,
-                    openMobileClientTimeout,
-                );
-            });
+    public getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
+        return Promise.resolve(
+            environment.isLocal
+                ? Promise.resolve({ code: '' })
+                : this.cloudApiService.getCode('*').toPromise(),
+        ).then(({ code }) => {
+            const link = this.generateLink(systemId, '', code);
+            return { code, link };
         });
+    }
+
+    open(systemId: string, useOauth: boolean): Promise<void> {
+        if (!useOauth) {
+            return this.getLinkLegacy(systemId, useOauth).then(link => {
+                /* The browser opens a dialog that we cannot directly detect or get a response from.
+                 * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
+                 */
+                return new Promise<void>((resolve, reject) => {
+                    protocolCheck(
+                        link,
+                        resolve,
+                        () => {
+                            reject({ resultCode: openClientError });
+                        },
+                        openClientTimeout,
+                        openMobileClientTimeout,
+                    );
+                });
+            });
+        } else {
+            return this.getLinkOauth(systemId).then(({ code, link }) => {
+                return new Promise<void>((resolve, reject) => {
+                    protocolCheck(
+                        link,
+                        () => {
+                            setTimeout(() => {
+                                this.cloudApiService
+                                    .getTokensFromCloud(code)
+                                    .toPromise()
+                                    .then(res => {
+                                        this.cloudApiService
+                                            .logoutTokens(res.access_token, res.refresh_token)
+                                            .finally(() => {
+                                                reject({ resultCode: openClientError });
+                                            });
+                                    })
+                                    .catch(() => resolve());
+                            }, openClientTimeout);
+                        },
+                        () => {
+                            reject({ resultCode: openClientError });
+                        },
+                        openClientTimeout,
+                        openMobileClientTimeout,
+                    );
+                });
+            });
+        }
     }
 
     openDesktopAsTemporaryUser(temporaryUserToken: string): void {
