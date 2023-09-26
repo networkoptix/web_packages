@@ -1,5 +1,5 @@
 import time
-
+from pathlib import Path
 import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.generic_keywords import GenericKeywords
@@ -28,15 +28,19 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 
 
 def owner_can_remove_user(server: CloudServer):
-    """email    C41903    webadmin    cloud    smoke    ci    C30726"""
+    """
+    15. Delete user works
+    [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
+    """
     driver = get_headless_chrome()
+    # TODO: local admin and owner need to also be tested to match robot test case
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
     header = HeaderNav(driver)
     header.account_dropdown()
     SystemAdmin(driver)
@@ -44,8 +48,9 @@ def owner_can_remove_user(server: CloudServer):
     time.sleep(1)
     left_menu.users_button().click()
     left_menu.update_users_list()
+    left_menu.users[1].click()
     for user in left_menu.users:
-        if user.get_text() == email:
+        if user.text == email:
             user.click()
     users_page = SystemUsers(driver)
     users_page.remove_user_button().click()
@@ -57,9 +62,46 @@ def owner_can_remove_user(server: CloudServer):
     LoginDialog(driver).basic_cloud_login(email, password)
     header.account_dropdown()
     SystemsPage(driver).no_systems()
-
     driver.quit()
-    print("pass")
+    print("pass owner")
+
+def admin_can_remove_user(server: CloudServer):
+    """
+    15. Delete user works
+    [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
+    """
+    driver = get_headless_chrome()
+    # TODO: local admin and owner need to also be tested to match robot test case
+    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    email = get_random_email()
+    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+    url = ENV + f"/systems/{server.id}"
+    driver.get(url)
+    LoginDialog(driver).basic_cloud_login(server.cloud_admin.email, server.cloud_admin.password)
+    header = HeaderNav(driver)
+    header.account_dropdown()
+    SystemAdmin(driver)
+    left_menu = SystemLeftMenu(driver)
+    time.sleep(1)
+    left_menu.users_button().click()
+    left_menu.update_users_list()
+    left_menu.users[1].click()
+    for user in left_menu.users:
+        if user.text == email:
+            user.click()
+    users_page = SystemUsers(driver)
+    users_page.remove_user_button().click()
+    users_page.remove_user_modal_button().click()
+    time.sleep(1)
+    header.log_out()
+    LandingPage(driver)
+    header.log_in_button().click()
+    LoginDialog(driver).basic_cloud_login(email, password)
+    header.account_dropdown()
+    SystemsPage(driver).no_systems()
+    driver.quit()
+    print("pass admin")
 
 
 def share_with_registered_user_sends_notification(server: CloudServer):
@@ -158,11 +200,15 @@ def share_with_registered_user_works(server: CloudServer):
 
 
 if __name__ == "__main__":
+    suite_name = Path(__file__).stem
+    suite_name = suite_name.removeprefix("test_")
     with Suite() as suite:
         cloud_owner = suite.create_cloud_account()
-        cloud_server = suite.create_cloud_server(cloud_owner, "users")
-
+        cloud_users = suite.create_cloud_users()
+        cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
+        time.sleep(90) # added for now to allow the system to become interactable on cloud portal
         owner_can_remove_user(cloud_server)
+        admin_can_remove_user(cloud_server)
         share_with_registered_user_works(cloud_server)
         share_with_registered_user_sends_notification(cloud_server)
         share_with_unregistered_user_sends_notification(cloud_server)
