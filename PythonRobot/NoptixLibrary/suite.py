@@ -46,8 +46,19 @@ class Suite:
         suite_name = f"{suite_name}_{self._server_count}"
         if cloud_users is None:
             server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
+            server.connect_to_cloud()
         else:
-            server = CloudServer(cloud_owner, suite_name, self.run_id, cloud_users).set_up()
+            server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
+            server.connect_to_cloud()
+            for user in cloud_users:
+                _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
+                    server.id,
+                    user,
+                    cloud_users[user].email,
+                    [cloud_owner.email, cloud_owner.password],
+                )
+                print(f"Added {user}: {cloud_users[user].email}")
+            server.cloud_admin = cloud_users['cloudAdmin']
         self._exit_stack.callback(server.tear_down)
         return server
 
@@ -68,21 +79,17 @@ class CloudServer:
             cloud_owner: 'CloudAccount',
             suite_name,
             run_id,
-            cloud_users: Optional[dict] = None,
             ports: int = 1,
             ):
         self.cloud_owner = cloud_owner
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
-        self.cloud_users = cloud_users
-        if cloud_users:
-            self.cloud_admin = cloud_users['cloudAdmin']
 
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
 
-    def _connect_to_cloud(self):
+    def connect_to_cloud(self):
         bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, self.cloud_owner.password)
         self._api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
@@ -107,17 +114,6 @@ class CloudServer:
         server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
         self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
         self._api.setup_local_system(new_password=self.cloud_owner.password, system_name=self.name)
-        self._connect_to_cloud()
-        # if cloud_users are needed
-        if self.cloud_users:
-            for user in self.cloud_users:
-                _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
-                    self.id,
-                    user,
-                    self.cloud_users[user].email,
-                    [self.cloud_owner.email, self.cloud_owner.password],
-                    )
-                print(f"Added {user}: {self.cloud_users[user].email}")
         return self
 
     def tear_down(self):
