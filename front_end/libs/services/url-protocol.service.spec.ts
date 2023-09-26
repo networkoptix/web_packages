@@ -59,9 +59,9 @@ describe('Url Protocol Service', () => {
     });
 
     it('should use code if useOauth === true', async () => {
-        const { urlService, clientProtocol, systemId, code, getCodeSpy } =
+        const { urlService, clientProtocol, systemId, getCodeSpy } =
             await setupUrlProtocolService();
-        const { link } = await urlService.getLinkOauth(systemId);
+        const { code, link } = await urlService.getLinkOauth(systemId);
         expect(getCodeSpy).toHaveBeenCalledWith('*');
         expect(link).toBe(
             `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?code=${code}`,
