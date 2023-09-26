@@ -157,7 +157,8 @@ class CloudAccount:
         self._backup_codes = backup_codes
 
     def disable_2fa(self):
-        assert self._totp is not None
+        if self._totp is None:
+            raise RuntimeError("2FA is not enabled. Time-based One-time Password not found")
         self._totp = None
         self._backup_codes = None
 
@@ -170,7 +171,8 @@ class CloudAccount:
             return self._totp.at(at_time)
 
     def pop_backup_code(self):
-        assert self._backup_codes is not None
+        if self._backup_codes is None:
+            raise RuntimeError("No backup codes found")
         return self._backup_codes.pop(0)
 
     def __exit__(self, exc_type, exc_val, exc_tb):
