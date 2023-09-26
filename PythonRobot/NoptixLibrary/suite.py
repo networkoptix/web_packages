@@ -45,10 +45,11 @@ class Suite:
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
         if cloud_users is None:
-            return self._exit_stack.enter_context(CloudServer(cloud_owner, suite_name, self.run_id))
+            server = CloudServer(cloud_owner, suite_name, self.run_id).set_up()
         else:
-            return self._exit_stack.enter_context(
-                CloudServer(cloud_owner, suite_name, self.run_id, cloud_users))
+            server = CloudServer(cloud_owner, suite_name, self.run_id, cloud_users).set_up()
+        self._exit_stack.callback(server.tear_down)
+        return server
 
     def create_cloud_users(self):
         cloud_users = {}
@@ -85,13 +86,6 @@ class CloudServer:
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
 
-    def __enter__(self) -> 'CloudServer':
-        self._set_up()
-        return self
-
-    def __exit__(self, exc_type, exc_val, exc_tb):
-        self._tear_down()
-
     def _connect_to_cloud(self):
         bind_info = _CLOUD_API.connect(self.name, self.cloud_owner.email, self.cloud_owner.password)
         self._api.api_connect_to_cloud(bind_info)
@@ -99,7 +93,7 @@ class CloudServer:
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
 
-    def _set_up(self):
+    def set_up(self):
         # Create a docker server.
         # Mimic configuration from JSON files.
         data = {
@@ -128,8 +122,9 @@ class CloudServer:
                     [self.cloud_owner.email, self.cloud_owner.password],
                     )
                 print(f"Added {user}: {self.cloud_users[user].email}")
+        return self
 
-    def _tear_down(self):
+    def tear_down(self):
         try:
             _CLOUD_API.disconnect(
                 self.cloud_owner.email,
