@@ -1488,6 +1488,7 @@
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",
         "userChangesFail": "Failed to apply changes",
+        "userDisabled": "This user has been disabled by a system administrator.",
         "reviewAccepted": "The review has been accepted",
         "system": {
             "deleted": {
@@ -1512,7 +1513,8 @@
         "twoFaRequired": "Two factor authentication has been enabled for this account. Please enter your verification code in the popup window.",
         "loggingIn": "Logging in. Please wait.",
         "sessionRenewed": "Session has been renewed.",
-        "failedToUpdateSession": "Updating the session failed."
+        "failedToUpdateSession": "Updating the session failed.",
+        "notAuthorized": "Wrong username or password"
     },
     "userGroups": {
         "multiple": "Multiple ({number})"

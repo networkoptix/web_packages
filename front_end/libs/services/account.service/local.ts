@@ -101,12 +101,14 @@ export class LocalAccount extends BaseAccount {
             .pipe(
                 catchError((err: HttpErrorResponse) => {
                     const errorLookup = {
-                        'Wrong password.': 'notAuthorized',
-                        'Wrong username or password.': 'notAuthorized',
+                        'Wrong password': 'notAuthorized',
+                        'Wrong username or password': 'notAuthorized',
                         'This user on your IP is locked out due to many filed attempts. Please, try again later.':
                             'accountBlocked',
                         'The user is locked out due to several failed attempts. Please try again later.':
                             'accountBlocked',
+                        'This user has been disabled by a system administrator.': 'userDisabled',
+                        'User not found.': 'notFound',
                     };
                     const resultCode = errorLookup[err.error.errorString];
                     return Promise.reject({ resultCode });

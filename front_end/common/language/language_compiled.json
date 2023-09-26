@@ -1666,6 +1666,7 @@
     "Wrong Backup Code": "Wrong Backup Code",
     "Wrong login or password": "Wrong login or password",
     "Wrong password": "Wrong password",
+    "Wrong username or password": "Wrong username or password",
     "X": "X",
     "Yes, delete existing VMS archives": "Yes, delete existing VMS archives",
     "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. ": "You already have a total of <volume> cloud storage added to your systems and cannot add more. <br/><br/>You can delete storage from another system instead or move it to this one. ",

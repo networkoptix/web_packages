@@ -225,6 +225,11 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 nx_wrong_credentials: true,
             });
             this.renderer.selectRootElement('#login_password').focus();
+            this.toastService.show(this.LANG.toastMessage.notAuthorized, ToastType.Danger);
+        };
+
+        const showUserDisabled = (): void => {
+            this.toastService.show(this.LANG.toastMessage.userDisabled, ToastType.Danger);
         };
 
         const cloudLogin =
@@ -237,6 +242,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             notAuthorized: showWrongCredentialsError,
             serviceUnavailable: showAccountBlockedError,
             accountBlocked: showAccountBlockedError,
+            userDisabled: showUserDisabled,
         };
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError;
         this.login = this.processService.createProcess(
