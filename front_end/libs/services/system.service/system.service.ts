@@ -43,6 +43,7 @@ export class NxSystemService {
                 systems: { [system.id]: { all: true } },
             }),
         );
+        this.currentSystem$.next(system);
     }
 
     currentSystem$$ = toSignal(this.currentSystem$);

@@ -14,8 +14,8 @@ import {
 
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemService } from '@services/system.service/system.service';
+import { SystemResourcesSelectors } from '@store/system-resources';
 import { dirtyId } from '@utils/general';
 
 import { LayoutStateService } from './layout-state.service';
@@ -56,13 +56,11 @@ export class LayoutStateEffects {
 
     updateLayouts$ = createEffect(() => {
         return this.systemService.currentSystem$.pipe(
-            filter(() => nxConfig.featureFlags.layouts),
-            switchMap(async system => {
-                const layouts = await firstValueFrom(
-                    (system.mediaserver as NxSystemRestAPI).getLayouts(),
-                );
-                return LocalLayoutsActions.set({ layouts });
-            }),
+            filter(system => system && nxConfig.featureFlags.layouts),
+            switchMap(system =>
+                this.store.select(SystemResourcesSelectors.selectLayoutsBySystemId(system.id)),
+            ),
+            map(layouts => LocalLayoutsActions.set({ layouts })),
         );
     });
 
