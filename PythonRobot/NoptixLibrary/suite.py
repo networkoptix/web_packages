@@ -63,8 +63,8 @@ class CloudServer:
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
+        self.cloud_users = cloud_users
         if cloud_users:
-            self.cloud_users = cloud_users
             self.cloud_admin = cloud_users['cloudAdmin']
             self.viewer = cloud_users['viewer']
             self.live_viewer = cloud_users['liveViewer']
