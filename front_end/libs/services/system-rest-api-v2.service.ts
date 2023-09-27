@@ -10,12 +10,10 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { buildTopLevelKeyMap } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
-import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import { IConfig } from './nx-config/config-types';
 import type {
@@ -189,76 +187,6 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             '/rest/v2/servers/this/logSettings',
             parsedLogLevels,
         ).pipe(map(this.parseLogData));
-    }
-    // Setup wizard calls
-    wizardGetSystemSettings = wizardGetSystemSettingsRestV2;
-
-    setupCloudSystem(
-        systemName: string,
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-        systemSettings: Partial<t.SystemConfigSettings>,
-    ): Observable<any> {
-        return this.setupSystem(
-            systemName,
-            systemSettings,
-            cloudSystemID,
-            cloudAuthKey,
-            cloudAccountName,
-        );
-    }
-
-    setupLocalSystem(
-        systemName: string,
-        password: string,
-        systemSettings: Partial<t.SystemConfigSettings>,
-        securityLevel: string = SECURITY_LEVEL.STANDARD,
-    ): Observable<any> {
-        return this.setupSystem(
-            systemName,
-            systemSettings,
-            undefined,
-            undefined,
-            undefined,
-            password,
-            securityLevel,
-        );
-    }
-
-    setupSystem(
-        systemName: string,
-        systemSettings: Record<string, unknown>,
-        cloudSystemID = '',
-        cloudAuthKey = '',
-        owner = '',
-        password = '',
-        securityLevel: string = SECURITY_LEVEL.STANDARD,
-    ): Observable<any> {
-        const config = {
-            name: systemName,
-            settings: systemSettings,
-            settingsPreset: 'security',
-            local: {
-                password,
-            },
-            cloud: {
-                systemId: cloudSystemID,
-                authKey: cloudAuthKey,
-                owner,
-            },
-        };
-        if (securityLevel === SECURITY_LEVEL.STANDARD) {
-            delete config.settingsPreset;
-        }
-
-        if (!cloudSystemID) {
-            delete config.cloud;
-        } else {
-            delete config.local;
-        }
-
-        return this.post('/rest/v2/system/setup', config);
     }
 
     // Servers

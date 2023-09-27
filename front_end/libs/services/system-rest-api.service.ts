@@ -46,7 +46,6 @@ import {
     ViewBaseCamera,
     ViewPreprocessServer,
 } from '@services/system.service/system-server-types';
-import { SECURITY_LEVEL } from '@setup-wizard/src/app/types/wizard-state.types';
 import { buildTopLevelKeyMap } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
@@ -96,7 +95,7 @@ import type {
     GetEndpointsFull,
 } from './system-api.endpoint-types';
 import * as t from './system-api.types';
-import { ChangedIdReturned, SystemConfigSettings, cameraKeyMapV1 } from './system-api.types';
+import { ChangedIdReturned, cameraKeyMapV1 } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import {
     DeviceType,
@@ -208,42 +207,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     public get vmsToken() {
         return this._vmsToken;
-    }
-
-    setupSystem(
-        systemName: string,
-        systemSettings: Partial<SystemConfigSettings>,
-        cloudSystemID = '',
-        cloudAuthKey = '',
-        owner = '',
-        password = '',
-        securityLevel: string = SECURITY_LEVEL.STANDARD,
-    ) {
-        const config = {
-            name: systemName,
-            settingsPreset: 'security',
-            settings: systemSettings,
-            local: {
-                password,
-            },
-            cloud: {
-                systemId: cloudSystemID,
-                authKey: cloudAuthKey,
-                owner,
-            },
-        };
-
-        if (securityLevel === SECURITY_LEVEL.STANDARD) {
-            delete config.settingsPreset;
-        }
-
-        if (!cloudSystemID) {
-            delete config.cloud;
-        } else {
-            delete config.local;
-        }
-
-        return this.post('/rest/v1/system/setup', config);
     }
 
     private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
@@ -1174,39 +1137,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             authKey: cloudAuthKey,
             owner: cloudAccountName,
         });
-    }
-
-    setupCloudSystem(
-        systemName: string,
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-        systemSettings: Partial<t.SystemConfigSettings>,
-    ) {
-        return this.setupSystem(
-            systemName,
-            systemSettings,
-            cloudSystemID,
-            cloudAuthKey,
-            cloudAccountName,
-        );
-    }
-
-    setupLocalSystem(
-        systemName: string,
-        password: string,
-        systemSettings: Partial<SystemConfigSettings>,
-        securityLevel: string = SECURITY_LEVEL.STANDARD,
-    ) {
-        return this.setupSystem(
-            systemName,
-            systemSettings,
-            undefined,
-            undefined,
-            undefined,
-            password,
-            securityLevel,
-        );
     }
 
     getBookmarks(

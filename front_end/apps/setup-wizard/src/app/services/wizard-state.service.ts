@@ -9,7 +9,7 @@ import { switchMap, takeUntil } from 'rxjs/operators';
 import type { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-interceptor';
 import staticLang from '@language_static';
-import { Setting } from '@services/nx-config/base-config';
+import { Setting, SettingsConfig } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import {
@@ -690,6 +690,26 @@ export class WizardStateService {
         );
     }
 
+    private setupCloudSystem(
+        systemName: string,
+        cloudSystemID: string,
+        cloudAuthKey: string,
+        cloudAccountName: string,
+        systemSettings: Partial<SystemConfigSettings>,
+    ): Observable<void> {
+        const config = {
+            name: systemName,
+            settings: systemSettings,
+            cloud: {
+                systemId: cloudSystemID,
+                authKey: cloudAuthKey,
+                owner: cloudAccountName,
+            },
+        };
+
+        return this.http.post<void>('/rest/v2/system/setup', config);
+    }
+
     connectToCloud(): void {
         if (!this.hasNativeClient) {
             return;
@@ -704,14 +724,13 @@ export class WizardStateService {
             .subscribe(
                 data => {
                     // add link to cloud
-                    this.server
-                        .setupCloudSystem(
-                            this.setupConfig.systemName,
-                            data.id,
-                            data.authKey,
-                            email,
-                            this.systemSettings,
-                        )
+                    this.setupCloudSystem(
+                        this.setupConfig.systemName,
+                        data.id,
+                        data.authKey,
+                        email,
+                        this.systemSettings,
+                    )
                         .toPromise()
                         .finally(() => {
                             this.appBusyState = false;
@@ -729,6 +748,27 @@ export class WizardStateService {
         this.currentState = WIZARD_STATE.LocalFailure;
     };
 
+    private setupLocalSystem(
+        systemName: string,
+        password: string,
+        systemSettings: Partial<SystemConfigSettings>,
+        securityLevel: string = SECURITY_LEVEL.STANDARD,
+    ): Observable<void> {
+        const config = {
+            name: systemName,
+            settings: systemSettings,
+            settingsPreset: 'security',
+            local: {
+                password,
+            },
+        };
+        if (securityLevel === SECURITY_LEVEL.STANDARD) {
+            delete config.settingsPreset;
+        }
+
+        return this.http.post<void>('/rest/v2/system/setup', config);
+    }
+
     initSystem(): void {
         this.appBusyState = true;
         const { localPassword, systemName } = this.setupConfig;
@@ -745,8 +785,7 @@ export class WizardStateService {
         this.updateCredentials(this.defaultUser, this.defaultUser, false, true)
             .catch(this.offlineErrorHandler)
             .then(() => {
-                this.server
-                    .setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
+                this.setupLocalSystem(systemName, localPassword, settings, this.securityLevel)
                     .toPromise()
                     .then(() => {
                         this.updateCredentials(this.defaultUser, localPassword, false);
@@ -827,9 +866,12 @@ export class WizardStateService {
             });
     }
 
+    private getSystemSettings(): Observable<SettingsConfig> {
+        return this.http.get<SettingsConfig>('/rest/v2/system/settings?_keepDefault');
+    }
+
     getAdvancedSettings(): Promise<void> {
-        return this.server
-            .wizardGetSystemSettings()
+        return this.getSystemSettings()
             .toPromise()
             .then(systemSettings => {
                 Object.entries(settingsConfig).forEach(

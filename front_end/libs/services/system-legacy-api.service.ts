@@ -48,11 +48,9 @@ import type {
 import { createEventLegacyV1 } from './mediaserver-apis/endpoints/create-event';
 import { getNonceLegacyV1 } from './mediaserver-apis/endpoints/get-nonce';
 import { getSystemSettingsLegacyV1 } from './mediaserver-apis/endpoints/get-system-settings';
-import { notImplementedCustomMessage } from './mediaserver-apis/endpoints/not-implemented';
 import { proxyLegacyV1 } from './mediaserver-apis/endpoints/proxy';
 import { removeStorageLegacyV1 } from './mediaserver-apis/endpoints/remove-storage';
 import { saveStorageLegacyV1 } from './mediaserver-apis/endpoints/save-storage';
-import { wizardGetSystemSettingsRestV2 } from './mediaserver-apis/endpoints/wizard-get-system-settings';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
 import type { IConfig } from './nx-config/config-types';
@@ -1361,10 +1359,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     updateLogLevel(logLevel: unknown): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
     }
-
-    wizardGetSystemSettings = notImplementedCustomMessage(
-        'should only be using rest v2 version',
-    ) as typeof wizardGetSystemSettingsRestV2;
 
     addUser(user: unknown): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
