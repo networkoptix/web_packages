@@ -1,5 +1,5 @@
 import { OverlayModule } from '@angular/cdk/overlay';
-import { CommonModule } from '@angular/common';
+import { CommonModule, DatePipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
@@ -41,7 +41,7 @@ import { NxLicenseTrialComponent } from './trial/trial.component';
         NxPreLoaderComponent,
         NxProcessButtonComponent,
     ],
-    providers: [],
+    providers: [DatePipe],
     declarations: [
         NxLicenseNewComponent,
         NxLicenseTrialComponent,
