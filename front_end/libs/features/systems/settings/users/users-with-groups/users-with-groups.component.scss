@@ -77,6 +77,9 @@
 .group-list-item {
     display: flex;
     align-items: center;
+    .group-name {
+     @include mixins.ellipsis;
+    }
     .help-block {
         display: block;
         background-color: transparent;
