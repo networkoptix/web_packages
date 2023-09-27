@@ -146,7 +146,7 @@ export class PermissionManager {
         }
 
         if (!accessRole) {
-            accessRole = this.LANG.accessRoles.none.label;
+            accessRole = this.LANG.accessRoles.custom.label;
         }
 
         return {
