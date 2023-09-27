@@ -43,7 +43,7 @@ def test_register_invalid(driver, first, last, email, password, checked):
         PageText(driver, element).wait_until_not_visible()
     register_form_validation(driver, first, last, email, password, checked)
 
-    if password not in rl.GOOD_PASSWORDS and password not in rl.FAIR_PASSWORDS:
+    if password not in rb.GOOD_PASSWORDS and password not in rb.FAIR_PASSWORDS:
         check_new_password_outline_and_error_message(driver, password, rb.REGISTER_FORM, rb.REGISTER_PASSWORD_INPUT, "createAccountPassword")
     if email != rb.VALID_EMAIL:
         check_email_outline(driver, email)

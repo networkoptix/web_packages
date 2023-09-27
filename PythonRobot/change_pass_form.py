@@ -39,6 +39,11 @@ class ChangePassForm:
     def current_password_eye_icon_closed(self) -> Button:
         return Button(self.driver, "//svg-icon[contains(@data-src,'/images/icons/text_buttons/eye_closed.svg')]")
 
+    def new_password_badge(self) -> PageText:
+        return PageText(self.driver, "//nx-password-input-tag-validation//nx-tag//a")
+
+    def new_password_badge_tooltip(self) -> PageText:
+        return PageText(self.driver, "//nx-tooltip-component//div[contains(@class, 'tooltip-body')]")
 
     def verify_form_is_visible(self):
         self.new_password_input()

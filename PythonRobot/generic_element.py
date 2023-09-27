@@ -2,6 +2,7 @@ import logging
 import platform
 import time
 
+from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
@@ -33,6 +34,11 @@ class Element:
     def click(self):
         self.wait_until_clickable()
         self._element.click()
+
+    def hover(self):
+        self.wait_until_visible()
+        action = ActionChains(self._driver)
+        action.move_to_element(self._element).perform()
 
     def delete_all_text(self):
         self.wait_until_clickable()

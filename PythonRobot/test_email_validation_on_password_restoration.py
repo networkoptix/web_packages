@@ -1,3 +1,4 @@
+from RobotVariables import RobotVariables
 from header import HeaderNav
 from login import LoginDialog
 from reset_password_dialog import ResetPasswordDialog
@@ -5,6 +6,7 @@ from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
 from variables import ENV
+rb = RobotVariables("en_US")
 
 
 def test_email_validation():
