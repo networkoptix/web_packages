@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { ChannelPartnersApi as CpApi } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api';
+import { NxParamStateService } from '@services/param-state/param-state.service';
 
 @Injectable({
     providedIn: 'root',
@@ -12,7 +13,17 @@ export class NxChannelPartnersService {
         return this.cloudApi.cloudChannelPartnersApi;
     }
 
-    constructor(private cloudApi: NxCloudApiService) {}
+    constructor(
+        private cloudApi: NxCloudApiService,
+        private paramStateService: NxParamStateService,
+    ) {}
+
+    paramStateHandler = this.paramStateService.getStateHandler(({ params }) => ({
+        params: {
+            organizationId: params.organizationId,
+            partnerId: params.partnerId,
+        },
+    }));
 
     /** Convert to promise to fire request without needing to subscribe */
     // private promisify<T, M extends (...args: Parameters<M>) => Observable<T>>(

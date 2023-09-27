@@ -1,6 +1,12 @@
-import { Injectable } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute, ActivationEnd, Params, Router } from '@angular/router';
+import {
+    ActivatedRoute,
+    ActivatedRouteSnapshot,
+    ActivationEnd,
+    Params,
+    Router,
+} from '@angular/router';
 import { Observable, filter, map, shareReplay, startWith } from 'rxjs';
 
 import { MutationType, ParamState, ParamStateHandler, UpdateParams } from './param-state.types';
@@ -12,26 +18,28 @@ export class NxParamStateService {
     private paramState$ = this.router.events.pipe(
         filter(event => event instanceof ActivationEnd),
         startWith(null),
-        map(() => {
-            const extractParams =
-                (params: Params = {}) =>
-                (route: ActivatedRoute): Params => {
-                    route.children.forEach(extractParams(params));
-                    Object.assign(params, route.snapshot.params);
-                    return params;
-                };
-            return {
-                params: extractParams()(this.router.routerState.root),
-                queryParams: Object.entries(
-                    this.router.routerState.root.snapshot.queryParams,
-                ).reduce(
-                    (acc, [key, val]) => ({ ...acc, [key]: typeof val === 'string' ? [val] : val }),
-                    {},
-                ),
-            };
-        }),
+        map(() => this.getParamState()),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
+
+    // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
+    private getParamState = (
+        route: ActivatedRouteSnapshot = this.router.routerState.root.snapshot,
+    ) => ({
+        params: this.extractParams()(route),
+        queryParams: Object.entries(route.queryParams).reduce(
+            (acc, [key, val]) => ({ ...acc, [key]: typeof val === 'string' ? [val] : val }),
+            {},
+        ),
+    });
+
+    private extractParams =
+        (params: Params = {}) =>
+        (route: ActivatedRouteSnapshot): Params => {
+            route.children.forEach(this.extractParams(params));
+            Object.assign(params, route.params);
+            return params;
+        };
 
     private paramState$$ = toSignal(this.paramState$);
 
@@ -43,22 +51,29 @@ export class NxParamStateService {
         mapState?: (state: ParamState) => MappedParamState,
     ): ParamStateHandler<unknown> {
         const state$ = this.paramState$;
+        const injector = this.injector;
 
         class StateHandler<T> implements ParamStateHandler<T> {
             constructor(
                 public state$: Observable<T>,
                 public updater: NxParamStateService['updateParamState'],
+                public getInstantState: (route: ActivatedRouteSnapshot) => T,
             ) {}
-            state$$ = toSignal(this.state$);
+            state$$ = runInInjectionContext(injector, () => toSignal(this.state$));
         }
 
         if (!mapState) {
-            return new StateHandler(state$, this.updateParamState);
+            return new StateHandler(
+                state$,
+                this.updateParamState,
+                (route: ActivatedRouteSnapshot) => this.getParamState(route),
+            );
         }
 
         return new StateHandler(
             this.paramState$.pipe(map(mapState), shareReplay({ bufferSize: 1, refCount: true })),
             this.updateParamState,
+            (route: ActivatedRouteSnapshot) => mapState(this.getParamState(route)),
         );
     }
 
@@ -129,5 +144,9 @@ export class NxParamStateService {
         });
     };
 
-    constructor(private router: Router, private route: ActivatedRoute) {}
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+        private injector: Injector,
+    ) {}
 }

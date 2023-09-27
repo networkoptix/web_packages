@@ -10,6 +10,8 @@ from schema import ActionEnum, params_to_actions
 from models import Group, System, User, db
 from asyncio import gather
 
+from caches import OrgCache
+
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger()
 
@@ -60,6 +62,8 @@ class GroupView:
     @staticmethod
     async def delete_group(modify_users, group_id):
         group = Group.query.get(group_id)
+        if not group:
+            return {'msg': "Couldn't find group", 'error': 404}
         group.users.delete()
         users = list(set(group.get_users_to_root()) | set(group.get_all_users()))
         emails = [user.email for user in users]
@@ -78,12 +82,21 @@ class GroupView:
         return {'msg': 'Group was deleted.'}
 
     @staticmethod
-    def list_groups(org_id, group_ids=None):
+    async def list_groups(org_id, group_ids=None):
+        cached, updater = await OrgCache(org_id).cached_list_groups()
+        if cached and not group_ids:
+            return cached
+
         if group_ids:
             groups = Group.query.filter(Group.id.in_(group_ids))
         else:
             groups = Group.query.filter(Group.org_id == org_id)
-        return [group.data() for group in groups]
+        groups_data = [group.data() for group in groups]
+
+        if not group_ids:
+            await updater(groups_data)
+
+        return groups_data
 
     @staticmethod
     async def move_system_to_group(modify_users, group_id, system):
@@ -128,8 +141,9 @@ class GroupView:
                 return {'msg': "Couldn't find destination group.", 'error': 404}
             if dst.parent_group_id == src_group_id:
                 return {'msg': 'You cannot add a parent group to its child.', 'error': 403}
-            if src.owner_account_email != dst.owner_account_email:
-                return {'msg': 'You can only move groups that you own.', 'error': 403}
+            # TODO: this field doesn't exist on the group mode. Not sure what the behavior is supposed to be.
+            # if src.owner_account_email != dst.owner_account_email:
+            #     return {'msg': 'You can only move groups that you own.', 'error': 403}
             root = dst.find_root()
 
         src_parent_id = src.parent_group_id
@@ -270,7 +284,7 @@ class OrganizationView:
             }
             updated_org = await license_api._license_post(f'/api/v2/partners/organizations/{org_id}/users/', body)
             updated_org['org_id'] = org_id
-            
+
             access_role = get_role(role)
             updated_systems = []
             updated_groups = []
@@ -284,7 +298,7 @@ class OrganizationView:
                     updated_systems.append(res)
                 if not any(user['email'] == email for user in group['users']):
                     res = await UserView.add_user_to_group(cloud_api.share_system, group['id'], email, access_role)
-                else: 
+                else:
                     res = await UserView.update_users_in_group(cloud_api.share_system, group['id'], updated_user)
                 updated_groups.append({
                     "group_id": group['id'],

@@ -5,8 +5,7 @@ import { firstValueFrom, Observable } from 'rxjs';
 import { NxAccountService } from '@services/account.service';
 
 import { NxChannelPartnersService } from '../services/channel-partners.service';
-
-import { OrgResolver } from './org-resolver';
+import { NxSystemGroupsService } from '../services/system-groups.service';
 
 export const RoleResolver: ResolveFn<boolean> = (
     route: ActivatedRouteSnapshot,
@@ -14,8 +13,10 @@ export const RoleResolver: ResolveFn<boolean> = (
 ): boolean | Observable<boolean> | Promise<boolean> => {
     const CPService: NxChannelPartnersService = inject(NxChannelPartnersService);
     const accountService: NxAccountService = inject(NxAccountService);
-    const inOrganization = OrgResolver(route, state);
-    const id = route.params.id;
+    const systemGroupsService = inject(NxSystemGroupsService);
+    const {
+        params: { organizationId, partnerId },
+    } = systemGroupsService.paramStateHandler.getInstantState(route);
     const userEmail = accountService.email;
     const adminRoles = ['Administrator', 'Organization Administrator'];
     const adminCheck = (roles: string[]): boolean => {
@@ -26,9 +27,9 @@ export const RoleResolver: ResolveFn<boolean> = (
     };
 
     return firstValueFrom(
-        inOrganization
-            ? CPService.getOrganizationUser(id, userEmail)
-            : CPService.getChannelPartnerUser(id, userEmail),
+        organizationId
+            ? CPService.getOrganizationUser(organizationId, userEmail)
+            : CPService.getChannelPartnerUser(partnerId, userEmail),
     )
         .then(({ roles }) => {
             return adminCheck(roles);

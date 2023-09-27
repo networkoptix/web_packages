@@ -38,6 +38,7 @@ class SystemsSchema(Schema):
 
 class BaseMoveSchema(Schema):
     org_id = fields.Str()
+    target_id = fields.Str(required=True)
 
 
 class MoveGroupSchema(BaseMoveSchema):
@@ -69,6 +70,8 @@ class GroupSchema(Schema):
 
 class CreateGroupSchema(GroupSchema):
     name = fields.Str(required=True)
+    target_id = fields.Str(required=False)
+
 
     @validates("name")
     def validate_name(self, value):

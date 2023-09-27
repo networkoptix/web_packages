@@ -11,6 +11,7 @@ from models import db
 from nx_common import CloudConnector, LicenseConnector
 from rest_v1 import rest_blueprint
 from schema import ActionEnum
+from caches import OrgCache
 from views import GroupView, ParamsValidator, OrganizationView
 
 dictConfig({
@@ -33,6 +34,7 @@ app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
 app.config['SQLALCHEMY_DATABASE_URI'] = os.getenv('DB_URI') or 'sqlite:///test.sqlite3'
 
 db.init_app(app)
+
 db.create_all(app=app)
 
 app.register_blueprint(rest_blueprint)
@@ -74,20 +76,41 @@ async def receiving(cloud_connector):
     }))
     user_email = cloud_connector.account.get('email')
     try:
+        async def handle_sync(cloud_connector):
+            while not cloud_connector.org_id:
+                await asyncio.sleep(1)
+
+            async for current in OrgCache(cloud_connector.org_id).current_generator:
+                await websocket.send(json.dumps({
+                    'action': ActionEnum.LIST_GROUP.value,
+                    'data': await GroupView.list_groups(cloud_connector.org_id)
+                }))
+                cloud_connector.last_org_version = current
+
+        sync_task = asyncio.create_task(handle_sync(cloud_connector))
+
         while True:
             action, data = ParamsValidator.validate_group(await websocket.receive())
             token = await cloud_connector.get_token()
             async with LicenseConnector(user_email, token) as license_api:
                 try:
                     res = None
+                    org_id = data.get('org_id')
+
+                    if org_id and cloud_connector.org_id != org_id:
+                        cloud_connector.org_id = org_id
+                    elif not org_id:
+                        org_id = cloud_connector.org_id
+
                     if action in [ActionEnum.CREATE_GROUP.value, ActionEnum.DELETE_GROUP.value, ActionEnum.MOVE_GROUP.value, ActionEnum.MOVE_SYSTEM.value, ActionEnum.UPDATE_GROUP.value]:
-                        if not await license_api.is_admin_in_org(data.get('org_id')):
+                        if not await license_api.is_admin_in_org(org_id):
                             data.update({'msg': 'Unauthorized', 'error': 400})
+
                     if 'error' in data:
                         res = data
                     elif action == ActionEnum.CREATE_GROUP.value:
                         # TODO: support assigning parent on creation
-                        res = GroupView.create_group(data['name'], data.get('org_id'), data.get('target_id'))
+                        res = GroupView.create_group(data['name'], org_id, data.get('target_id'))
                     elif action == ActionEnum.DELETE_GROUP.value:
                         res = await GroupView.delete_group(cloud_connector.share_system, data['group_id'])
                     elif action == ActionEnum.MOVE_GROUP.value:
@@ -96,7 +119,7 @@ async def receiving(cloud_connector):
                     elif action == ActionEnum.MOVE_SYSTEM.value:
                         system = await cloud_connector.get_systems(system_id=data['system_id'])
                         res = await GroupView.move_system_to_group(
-                            cloud_connector.share_system, data['group_id'], system)
+                            cloud_connector.share_system, data['target_id'], system)
                     elif action == ActionEnum.UPDATE_GROUP.value:
                         res = await GroupView.update_group(data['group_id'], data['name'])
                     elif action == ActionEnum.SYSTEMS.value:
@@ -104,9 +127,9 @@ async def receiving(cloud_connector):
                         # app.logger.debug(res)
                     # # User management
                     elif action == ActionEnum.CREATE_ORG_USER.value:
-                        res = await OrganizationView.add_user_to_org(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data['groups'])
+                        res = await OrganizationView.add_user_to_org(cloud_connector, license_api, token, org_id, data['email'], data['role'], data['groups'])
                     elif action == ActionEnum.UPDATE_ORG_USER.value:
-                        res = await OrganizationView.update_org_user(cloud_connector, license_api, token, data['org_id'], data['email'], data['role'], data.get('enabled', True), data['groups'])
+                        res = await OrganizationView.update_org_user(cloud_connector, license_api, token, org_id, data['email'], data['role'], data.get('enabled', True), data['groups'])
                     # End of user management
                     elif action == ActionEnum.AGGREGATE_SYSTEMS_REQUEST.value:
                         res = await cloud_connector.aggregate_request(
@@ -126,18 +149,32 @@ async def receiving(cloud_connector):
                         }
                         app.logger.debug(return_data)
                         await websocket.send(json.dumps(return_data))
-                    elif (not res or 'error' not in res) and (org_id := data.get('org_id')) and await license_api.is_user_in_org(org_id):
+                    elif (not res or 'error' not in res) and org_id and await license_api.is_user_in_org(org_id):
                         await websocket.send(json.dumps({
                             'action': ActionEnum.LIST_GROUP.value,
-                            'data': GroupView.list_groups(org_id)
+                            'data': await GroupView.list_groups(org_id)
                         }))
 
-                except httpx.HTTPError as e:
-                    await license_api.session.aclose()
-                    raise(e)
-    except asyncio.CancelledError as e:
+                except Exception as e:
+                    # await license_api.session.aclose()
+                    await websocket.send(json.dumps({
+                        'action': 'error',
+                        'data': {
+                            'msg': json.dumps(e.args),
+                            'error': e.response.status_code if hasattr(e, 'response') else 400
+                        }
+                    }))
+    except Exception as e:
         # Handles disconnections
+        await websocket.send(json.dumps({
+            'action': 'error',
+            'data': {
+                'msg': json.dumps(e.args),
+                'error': 400
+            }
+        }))
         await cloud_connector.session.aclose()
+        sync_task.cancel()
 
 
 # Actual views

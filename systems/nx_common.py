@@ -9,6 +9,7 @@ from debug_tools import PrintDebug
 
 from functools import wraps
 from quart import current_app, request, websocket
+from utils import generate_uuid
 
 CLOUD_HOST = os.getenv('CLOUD_HOST') or 'cloud-test.hdw.mx'  # or 'localhost:8001'
 LICENSE_PORTAL = os.getenv('LICENSE_PORTAL') or 'partners.test.hdw.mx'
@@ -145,12 +146,23 @@ class LicenseConnector:
         user = await self._get_user(org_id)
         return self.email == user.get('email')
 
-
 class CloudConnector:
     def __init__(self):
         self.session = httpx.AsyncClient()
         self.account = {}
         self.systems = {}
+        self. _org_id = None
+        self.last_org_version = generate_uuid()
+
+    @property
+    def org_id(self):
+        return self._org_id
+
+    @org_id.setter
+    def org_id(self, org_id):
+        self._org_id = org_id
+        self.last_org_version = generate_uuid()
+
 
     async def __aenter__(self):
         return self
@@ -309,3 +321,12 @@ class RestConnector:
     async def get_system(self, system_id):
         system = await self._get("/cdb/systems/get", params={'systemId': system_id})
         return system.get('systems')[0]
+
+def require_params(data, required_params):
+    errors = {
+        param: f"Required Param Missing: {param}"
+        for param in required_params
+        if param not in data
+    }
+    if errors:
+        raise httpx.RequestError(errors)

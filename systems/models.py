@@ -1,15 +1,13 @@
 import queue
-import uuid
+import asyncio
 
 from flask_sqlalchemy import SQLAlchemy
-from sqlalchemy import update
+from sqlalchemy import update, event
+from caches import OrgCache
+from utils import generate_uuid
 
 
 db = SQLAlchemy()
-
-
-def generate_uuid():
-    return str(uuid.uuid4())
 
 
 class Group(db.Model):
@@ -18,8 +16,8 @@ class Group(db.Model):
     org_id = db.Column(db.String(64))
     parent_group_id = db.Column(db.String(64), db.ForeignKey(id), nullable=True)
     parent = db.relationship('Group', backref='groups', remote_side=id, lazy=True)
-    systems = db.relationship('System', lazy="dynamic")
-    users = db.relationship('User', lazy="dynamic")
+    systems = db.relationship('System', backref='group', lazy="dynamic")
+    users = db.relationship('User',backref='group', lazy="dynamic")
 
     def __repr__(self):
         return f'<Group {self.name}>'
@@ -125,7 +123,7 @@ class Group(db.Model):
         if updated_users:
             db.session.commit()
         await modify_users(systems, remaining_users)
-    
+
         group: Group  # Added type hint so prevent error with private method
         for group in self.groups:
             await group._change_users_in_group(modify_users, remaining_users, action=action)
@@ -162,6 +160,10 @@ class System(db.Model):
     id = db.Column(db.String(64), primary_key=True, default=generate_uuid)
     group_id = db.Column(db.String(64), db.ForeignKey('group.id'), nullable=True)
 
+    @property
+    def org_id(self):
+        return self.group.org_id if self.group else None
+
     def __repr__(self):
         return f'<System {self.id}>'
 
@@ -178,6 +180,10 @@ class User(db.Model):
     role = db.Column(db.String(64), nullable=False)
     enabled = db.Column(db.Boolean, unique=False, default=True)
 
+    @property
+    def org_id(self):
+        return self.group.org_id if self.group else None
+
     def as_dict(self):
         return {c.name: getattr(self, c.name) for c in self.__table__.columns}
 
@@ -186,3 +192,11 @@ class User(db.Model):
         if self.role == role_from_parent:
             return False
         return role_access_by_index.index(role_from_parent) < role_access_by_index.index(self.role)
+
+for Cls in [Group, System, User]:
+    @event.listens_for(Cls, "after_delete")
+    @event.listens_for(Cls, "after_update")
+    @event.listens_for(Cls, "after_insert")
+    def group_updated(mapper, connection, target, **kwargs):
+        loop = asyncio.get_running_loop()
+        loop.create_task(OrgCache(target.org_id).update_current())

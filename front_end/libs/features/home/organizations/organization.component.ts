@@ -1,8 +1,8 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -60,6 +60,7 @@ interface SidebarSettings {
         NxTabsComponent,
         NxTabsDirective,
         NxAddSvgSrcDirective,
+        DragDropModule,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
@@ -111,7 +112,6 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.groupsService.connect();
         if (!this.inChannelPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }
@@ -137,12 +137,18 @@ export class NxOrganizationsComponent implements OnInit {
             this.tabs.push(...adminTabs);
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
-        this.route.params.pipe(untilDestroyed(this)).subscribe(({ id }) => {
-            this.groupsService.getGroups(id);
-            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: id }));
+        this.groupsService.paramStateHandler.state$.subscribe(({ params: { organizationId } }) => {
+            if (!organizationId) {
+                return;
+            }
+            this.groupsService.getGroups(organizationId);
+            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: organizationId }));
             const orgs = this.organizations$$();
             const partnerOrgs = this.currentPartnerOrganizations$$();
-            if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
+            if (
+                !orgs.find(o => o.id === organizationId) &&
+                !partnerOrgs.find(o => o.id === organizationId)
+            ) {
                 this.router.navigate(['404']);
             }
             this.isLoading = false;

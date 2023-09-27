@@ -110,31 +110,38 @@ export class NxChannelPartnersComponent implements OnInit {
             );
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
-        this.route.params
+        this.CPService.paramStateHandler.state$
             .pipe(takeUntilDestroyed(this.destroyRef), combineLatestWith(this.channelPartners$))
-            .subscribe(([{ id }, partners]) => {
-                this.currentPartnerId = id;
-                if (partners.length && !partners.find(p => p.id === this.currentPartnerId)) {
-                    this.router.navigate(['404']);
-                }
-                this.CPService.getPartnerOrganizations(id)
-                    .pipe(catchError(err => of(err)))
-                    .subscribe({
-                        next: orgs => {
-                            this.isLoading = false;
-                            this.currentPartnerOrgs = orgs;
-                            this.store.dispatch(
-                                CPActions.setCurrentPartner({
-                                    currentPartnerId: this.currentPartnerId,
-                                    currentPartnerOrganizations: orgs,
-                                }),
-                            );
-                        },
-                        error: () => {
-                            this.router.navigate(['404']);
-                        },
-                    });
-            });
+            .subscribe(
+                ([
+                    {
+                        params: { partnerId: id },
+                    },
+                    partners,
+                ]) => {
+                    this.currentPartnerId = id;
+                    if (partners.length && !partners.find(p => p.id === this.currentPartnerId)) {
+                        this.router.navigate(['404']);
+                    }
+                    this.CPService.getPartnerOrganizations(id)
+                        .pipe(catchError(err => of(err)))
+                        .subscribe({
+                            next: orgs => {
+                                this.isLoading = false;
+                                this.currentPartnerOrgs = orgs;
+                                this.store.dispatch(
+                                    CPActions.setCurrentPartner({
+                                        currentPartnerId: this.currentPartnerId,
+                                        currentPartnerOrganizations: orgs,
+                                    }),
+                                );
+                            },
+                            error: () => {
+                                this.router.navigate(['404']);
+                            },
+                        });
+                },
+            );
 
         this.searchChanged
             .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))

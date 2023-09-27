@@ -50,7 +50,7 @@ export class NxGroupCardComponent {
     }
 
     deleteGroup(): void {
-        this.groupsService.deleteGroup(this.group.id);
+        this.groupsService.deleteGroup(this.group.id, this.currentOrgId);
     }
 
     addGroup(): void {

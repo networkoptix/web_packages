@@ -4,20 +4,26 @@ import { Injectable, Inject } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
-import { Subscription, combineLatest } from 'rxjs';
-import { distinctUntilChanged, filter, map, mergeMap, switchMap } from 'rxjs/operators';
+import { BehaviorSubject, Observable, Subscription, of } from 'rxjs';
+import {
+    catchError,
+    delay,
+    distinctUntilChanged,
+    filter,
+    map,
+    switchMap,
+    take,
+    timeout,
+} from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import staticLang from '@language_static';
-import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
 
-import type { GroupsItem, SystemInfo } from '../home.types';
-import { selectCurrentOrgId } from '../store/channel-partners/channel-partners.selectors';
+import type { GroupsItem } from '../home.types';
 import * as GroupActions from '../store/groups/groups.actions';
 
 import { NxChannelPartnersService } from './channel-partners.service';
@@ -33,84 +39,93 @@ export class NxSystemGroupsService {
     private WEBSOCKET_URL: string;
     private readonly MAX_RECONNECT_ATTEMPTS = 8; // Total time is 510 seconds. Which is the sum  of series 2 * 2 ** x from 1 to 8.
     private attempt = 0;
-    private systems$ = this.systemsService.systemsSubject.pipe(
-        takeUntilDestroyed(),
-        distinctUntilChanged(),
-        map(systems => {
-            const converted = systems.map(sys => {
-                return {
-                    ...sys,
-                    version: sys.version.toString(),
-                };
-            });
-            return systems
-                ? new Map<string, SystemInfo>(converted.map(s => [s.id, s]))
-                : (systems as null);
-        }),
-    );
-    private currentOrgId$ = this.store.select(selectCurrentOrgId);
-    private orgSystems$ = this.store.select(selectCurrentOrgId).pipe(
-        filter(id => !!id),
-        mergeMap(id => this.CPService.getOrgSystems(id)),
-    );
+
     queue: WebSocketOutgoing[] = [];
+
+    paramStateHandler = this.CPService.paramStateHandler;
 
     constructor(
         private store: Store,
         private http: HttpClient,
         private router: Router,
         private toastService: NxToastService,
-        private systemsService: NxSystemsService,
         private CPService: NxChannelPartnersService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.WEBSOCKET_URL = `wss://${this.window.location.host}/system_groups/ws`;
-        combineLatest([this.systems$, this.currentOrgId$, this.orgSystems$])
-            .pipe(takeUntilDestroyed())
-            .subscribe(([systems, currentOrgId, orgSystems]) => {
-                const currentSystems: System[] = [];
-                orgSystems.forEach(sys => {
-                    if (sys.organization === currentOrgId) {
-                        currentSystems.push(systems.get(sys.systemId));
-                    }
-                });
-                this.store.dispatch(GroupActions.setSystemInfo({ orgSystems: currentSystems }));
+
+        // Handles managing the connection to the WebSocket
+        this.paramStateHandler.state$
+            .pipe(
+                switchMap(({ params: { organizationId = null, partnerId = null } }) =>
+                    organizationId
+                        ? of(true)
+                        : of(false).pipe(delay(partnerId ? 30 * 1000 : 10 * 1000)),
+                ),
+                distinctUntilChanged(),
+                takeUntilDestroyed(),
+            )
+            .subscribe(connect => {
+                if (connect) {
+                    this.connect();
+                } else {
+                    this.disconnect();
+                }
             });
+
+        // Handles clearing groups on org change
+        this.paramStateHandler.state$
+            .pipe(
+                map(({ params: { organizationId } }) => organizationId),
+                distinctUntilChanged(),
+                takeUntilDestroyed(),
+            )
+            .subscribe(() => this.store.dispatch(GroupActions.setItems({ items: [] })));
     }
 
     private connection$: WebSocketSubject<WebSocketIncoming | WebSocketOutgoing>;
 
     // TODO: This needs to be revisted. The reconnect logic needs to be updated and probably don't need to keep a reference to the connection.
     connectionSubscription: Subscription;
-    connect(): void {
-        if (this.connectionSubscription) {
-            return;
-        }
-        this.connectionSubscription = this.http
-            .post<{ code: string }>('/api/systems/*/code', null)
-            .pipe(
-                map(response => this.WEBSOCKET_URL + `?code=${response.code}`),
-                switchMap(url => {
-                    this.connection$ = webSocket(url);
-                    return this.connection$;
-                }),
-            )
-            .subscribe({
-                next: value => this.receive(value as WebSocketIncoming),
-                error: err => {
-                    console.error('WebSocket error:', err);
-                    this.progressiveDelayReconnect();
-                },
-                complete: () => {
-                    // Assuming that we never want to deliberately close the
-                    // socket while in the component so if it does close we
-                    // try to reconnect
-                    console.info('WebSocket connection closed');
-                    if (this.router.url.startsWith('/home')) {
+    connected = new BehaviorSubject(false);
+    connect(): Observable<boolean> {
+        if (!this.connectionSubscription) {
+            this.connectionSubscription = this.http
+                .post<{ code: string }>('/api/systems/*/code', null)
+                .pipe(
+                    map(response => this.WEBSOCKET_URL + `?code=${response.code}`),
+                    switchMap(url => {
+                        this.connection$ = webSocket(url);
+                        return this.connection$;
+                    }),
+                )
+                .subscribe({
+                    next: value => {
+                        this.receive(value as WebSocketIncoming);
+                        this.connected.next(true);
+                    },
+                    error: err => {
+                        console.error('WebSocket error:', err);
                         this.progressiveDelayReconnect();
-                    }
-                },
-            });
+                    },
+                    complete: () => {
+                        // Assuming that we never want to deliberately close the
+                        // socket while in the component so if it does close we
+                        // try to reconnect
+                        console.info('WebSocket connection closed');
+                        if (this.router.url.startsWith('/home')) {
+                            this.progressiveDelayReconnect();
+                        }
+                    },
+                });
+        }
+
+        return this.connected.pipe(
+            filter(Boolean),
+            timeout(5000),
+            catchError(() => Promise.resolve(false)),
+            take(1),
+        );
     }
 
     private progressiveDelayReconnect(): void {
@@ -128,6 +143,7 @@ export class NxSystemGroupsService {
     }
 
     disconnect(): void {
+        this.connected.next(false);
         this.connectionSubscription?.unsubscribe();
         this.connection$?.complete();
         this.connection$ = undefined;
@@ -223,15 +239,15 @@ export class NxSystemGroupsService {
         this.send({ action: WebSocketAction.CREATE_GROUP, name, org_id, target_id });
     }
 
-    deleteGroup(group_id: string): void {
-        this.send({ action: WebSocketAction.DELETE_GROUP, group_id });
+    deleteGroup(group_id: string, org_id: string): void {
+        this.send({ action: WebSocketAction.DELETE_GROUP, group_id, org_id });
     }
 
     moveGroup(group_id: string, target_id: string | null): void {
         this.send({ action: WebSocketAction.MOVE_GROUP, group_id, target_id });
     }
 
-    moveSystem(system_id: string, group_id: string | null): void {
-        this.send({ action: WebSocketAction.MOVE_SYSTEM, system_id, group_id });
+    moveSystem(system_id: string, target_id: string | null): void {
+        this.send({ action: WebSocketAction.MOVE_SYSTEM, system_id, target_id });
     }
 }

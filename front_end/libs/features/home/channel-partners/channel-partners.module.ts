@@ -15,7 +15,7 @@ import { NxChannelPartnersComponent } from './channel-partners.component';
 
 const CPRoutes: Routes = [
     {
-        path: ':id',
+        path: ':partnerId',
         component: NxChannelPartnersComponent,
         resolve: {
             currentTabRoute: TabResolver,

@@ -74,6 +74,7 @@ export interface OutgoingData {
     delete_group: {
         action: WebSocketAction.DELETE_GROUP;
         group_id: string;
+        org_id: string;
     };
     list_groups: {
         action: WebSocketAction.LIST_GROUPS;
@@ -92,7 +93,7 @@ export interface OutgoingData {
     move_system: {
         action: WebSocketAction.MOVE_SYSTEM;
         system_id: string;
-        group_id: string | null;
+        target_id: string | null;
     };
     systems: { action: WebSocketAction.SYSTEMS };
 }

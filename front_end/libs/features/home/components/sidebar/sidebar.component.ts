@@ -1,4 +1,4 @@
-import { CdkDragDrop } from '@angular/cdk/drag-drop';
+import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { Store } from '@ngrx/store';
@@ -29,6 +29,7 @@ import { NxGroupsSidebarLevelComponent } from '../sidebar-level/sidebar-level.co
         AngularSvgIconModule,
         TranslateModule,
         NxAddSvgSrcDirective,
+        DragDropModule,
     ],
 })
 export class NxSystemGroupsSidebarComponent implements OnInit {

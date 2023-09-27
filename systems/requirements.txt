@@ -25,6 +25,7 @@ PyMySQL==1.0.2
 pyparsing==3.0.9
 pytz==2022.2.1
 quart==0.16.3
+redis==4.4.4
 six==1.16.0
 SQLAlchemy==1.4.31
 toml==0.10.2

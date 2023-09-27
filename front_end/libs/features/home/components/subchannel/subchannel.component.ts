@@ -5,6 +5,7 @@ import { Store } from '@ngrx/store';
 import { switchMap } from 'rxjs';
 
 import { NxTabsComponent } from '@components/tabs/tabs.component';
+import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { Tab, TabEmit } from '@components/tabs/tabs.types';
 import staticLang from '@language_static';
 import { selectSubchannelPartner } from '@pages/home/store/channel-partners/channel-partners.selectors';
@@ -14,7 +15,7 @@ import { selectSubchannelPartner } from '@pages/home/store/channel-partners/chan
     templateUrl: 'subchannel.component.html',
     styleUrls: ['subchannel.component.scss'],
     standalone: true,
-    imports: [RouterOutlet, CommonModule, NxTabsComponent],
+    imports: [RouterOutlet, CommonModule, NxTabsComponent, NxTabsDirective],
 })
 export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
@@ -29,6 +30,10 @@ export class NxSubchannelComponent implements OnInit {
         {
             displayName: this.LANG.channelPartners.tabNames.settings,
             route: 'settings',
+        },
+        {
+            displayName: this.LANG.channelPartners.tabNames.users,
+            route: 'users',
         },
     ];
 

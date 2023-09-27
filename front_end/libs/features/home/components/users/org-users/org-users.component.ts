@@ -1,6 +1,5 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 
@@ -31,14 +30,13 @@ export class NxOrganizationUsersComponent implements OnInit {
     records$: Observable<OrgUserExt[]>;
 
     constructor(
-        private route: ActivatedRoute,
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
     ) {}
 
     ngOnInit(): void {
-        this.currentOrgId$ = this.route.parent.params.pipe(
-            map(({ id }) => id),
+        this.currentOrgId$ = this.CPService.paramStateHandler.state$.pipe(
+            map(({ params: { partnerId } }) => partnerId),
             distinctUntilChanged(),
         );
         this.records$ = this.currentOrgId$.pipe(
