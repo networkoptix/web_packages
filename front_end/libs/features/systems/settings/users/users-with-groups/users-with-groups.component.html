@@ -89,7 +89,10 @@
                         class="group-list-item"
                         *ngFor="let group of selectedGroupsList"
                     >
-                        <span class="font-weight-bold">{{ group.name | translate }}:</span>
+                        <span class="font-weight-bold"
+                            >{{ group.name | translate
+                            }}<span *ngIf="group.description">:</span></span
+                        >
                         <span class="help-block">{{ group.description | translate }}</span>
                     </p>
                 </div>
