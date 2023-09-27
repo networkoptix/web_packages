@@ -283,6 +283,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
 
         this.initProcesses();
         this.applyService.initPageFormsWatcher(this.pageApply);
+        if (!this.systemName) {
+            this.setNameAndTitle();
+        }
     }
 
     ngOnDestroy(): void {
