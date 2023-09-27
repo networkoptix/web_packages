@@ -2,6 +2,7 @@ import { LOCALE_ID } from '@angular/core';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 import staticLang from '@language_static';
+import { AdminGroups } from '@libs/services/system.service/permission-manager/permission-manager';
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemBase } from '@services/system/system-base';
 import { ChangedIdReturned } from '@services/system-api.types';
@@ -24,8 +25,6 @@ interface UserPerms {
 }
 
 export class UserWithGroupsManager extends UserManager {
-    readonly administratorGroup = '{00000000-0000-0000-0000-100000000000}';
-    readonly powerUserGroup = '{00000000-0000-0000-0000-100000000001}';
     LANG = staticLang;
 
     protected mediaserver: NxSystemRestAPI3;
@@ -132,7 +131,7 @@ export class UserWithGroupsManager extends UserManager {
                 userGroups[id].description = this.LANG.accessRoles[name].description || name;
             }
             // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
-            if (id === this.administratorGroup) {
+            if (id === AdminGroups.administratorGroup) {
                 return;
             }
             // Organize Built-In, LDAP, and Custom groups into smaller groups to combine later for the mult-select dropdown
@@ -218,13 +217,13 @@ export class UserWithGroupsManager extends UserManager {
                 // should we add a list of user group names?
                 // user.userGroupNames = [];
                 // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
-                user.isOwner = user.groupIds.includes(this.administratorGroup);
-                user.isAdmin = user.isOwner || user.groupIds.includes(this.powerUserGroup);
+                user.isOwner = user.groupIds.includes(AdminGroups.administratorGroup);
+                user.isAdmin = user.isOwner || user.groupIds.includes(AdminGroups.powerUserGroup);
                 user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
                 user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
 
-                if (this.userId === user.id) {
+                if (this.userId === user.id || this.currentUserEmail === user.email) {
                     this.currentUser = user;
                     // set userGroups for user?
                 }
@@ -242,6 +241,13 @@ export class UserWithGroupsManager extends UserManager {
                 }
                 return userA.type === 'cloud' ? 1 : -1;
             });
+
+        // Power Users should not be able to add other Power Users, so we'll remove it from the dropdown for them
+        if (!this.currentUser.isOwner) {
+            this.groups = this.groups.filter(group => {
+                return group.id !== AdminGroups.powerUserGroup;
+            });
+        }
 
         return this.users;
     }

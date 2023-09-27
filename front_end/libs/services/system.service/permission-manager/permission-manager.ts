@@ -55,11 +55,6 @@ const PermissionStringsV3 = {
     administrator: 'administrator',
 };
 
-const AdminGroups = {
-    administratorGroup: '{00000000-0000-0000-0000-100000000000}',
-    powerUserGroup: '{00000000-0000-0000-0000-100000000001}',
-};
-
 const ResourceFlags = {
     view: 'view',
     viewArchive: 'viewArchive',
@@ -73,6 +68,11 @@ const ResourceFlags = {
 const ResourceGroups = {
     devices: '{00000000-0000-0000-0000-200000000001}',
     servers: '{00000000-0000-0000-0000-200000000002}',
+};
+
+export const AdminGroups = {
+    administratorGroup: '{00000000-0000-0000-0000-100000000000}',
+    powerUserGroup: '{00000000-0000-0000-0000-100000000001}',
 };
 
 export class PermissionManager {
