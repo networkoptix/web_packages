@@ -1,0 +1,275 @@
+from uuid import uuid4
+
+from django.core import validators
+from model_bakery import baker
+from rest_framework import serializers
+
+from partners.models import OrganizationToUser, CloudSystemId, CloudInstance, CloudHost, ChannelPartner, Organization
+from tools.serializers import FieldAccessSerializer, FieldAccessModelSerializer, VALUE_REPLACEMENT
+
+
+class TestFieldAccessSerializer:
+
+    def test_can_write(self):
+
+        class RegularSerializer(serializers.Serializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
+
+        class NoPermCheckSerializer(FieldAccessSerializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
+
+        class CanWriteSerializer(FieldAccessSerializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
+
+            def can_write_uuid_cannot_be_written(self):
+                return True
+
+        class CanNotWriteSerializer(FieldAccessSerializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()],
+                                                         required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
+
+            camelCase = serializers.CharField(source='snake_case', required=False)
+
+            def can_write_uuid_cannot_be_written(self):
+                return False
+
+            def can_write_snake_case(self):
+                return False
+
+        data = {
+            "email_can_be_written": f"{uuid4()}",
+            "uuid_cannot_be_written": f"{uuid4()}",
+        }
+
+        ser = RegularSerializer(data=data)
+        ser.is_valid()
+
+        assert "email" in ser.errors["email_can_be_written"][0]
+        assert ser.errors["email_can_be_written"][0].code == 'invalid'
+        assert "Ensure this field has no more than 12 characters" in ser.errors["uuid_cannot_be_written"][0]
+        assert ser.errors["uuid_cannot_be_written"][0].code == 'max_length'
+
+        ser = NoPermCheckSerializer(data=data)
+        ser.is_valid()
+
+        assert "email" in ser.errors["email_can_be_written"][0]
+        assert ser.errors["email_can_be_written"][0].code == 'invalid'
+        assert "Ensure this field has no more than 12 characters" in ser.errors["uuid_cannot_be_written"][0]
+        assert ser.errors["uuid_cannot_be_written"][0].code == 'max_length'
+
+        ser = CanWriteSerializer(data=data)
+        ser.is_valid()
+
+        assert "email" in ser.errors["email_can_be_written"][0]
+        assert ser.errors["email_can_be_written"][0].code == 'invalid'
+        assert "Ensure this field has no more than 12 characters" in ser.errors["uuid_cannot_be_written"][0]
+        assert ser.errors["uuid_cannot_be_written"][0].code == 'max_length'
+
+        data['camelCase'] = f'{uuid4()}'
+        ser = CanNotWriteSerializer(data=data)
+        ser.is_valid()
+
+        assert "email" in ser.errors["email_can_be_written"][0]
+        assert ser.errors["email_can_be_written"][0].code == 'invalid'
+        assert "User is not allowed to modify this field" in ser.errors["uuid_cannot_be_written"][0]
+        assert ser.errors["uuid_cannot_be_written"][0].code == 'forbidden'
+        assert ser.errors["camelCase"][0].code == 'forbidden'
+
+    def test_can_read(self):
+
+        class RegularSerializer(serializers.Serializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=64, required=True)
+
+        class NoPermCheckSerializer(FieldAccessSerializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=64, required=True)
+
+        class CanWriteSerializer(FieldAccessSerializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=64, required=True)
+
+            def can_read_uuid_cannot_be_written(self):
+                return True
+
+        class CanNotWriteSerializer(FieldAccessSerializer):
+            email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()],
+                                                         required=True)
+            uuid_cannot_be_written = serializers.CharField(max_length=64, required=True)
+
+            camelCase = serializers.CharField(source="snake_case", required=False)
+
+            methodField = serializers.SerializerMethodField(method_name='get_string')
+
+            def get_string(self, instance):
+                return f"{uuid4()}"
+
+            def can_read_uuid_cannot_be_written(self):
+                return False
+
+            def can_read_snake_case(self):
+                return False
+
+            def can_read_methodField(self):
+                return False
+
+
+        data = {
+            "email_can_be_written": f"{uuid4()}@example.com",
+            "uuid_cannot_be_written": f"{uuid4()}",
+        }
+
+        ser = RegularSerializer(instance=data)
+
+        assert ser.data == data
+
+        ser = NoPermCheckSerializer(instance=data)
+
+        assert ser.data == data
+
+        ser = CanWriteSerializer(instance=data)
+
+        assert ser.data == data
+
+        data["snake_case"] = f"{uuid4()}"
+        ser = CanNotWriteSerializer(instance=data)
+
+        assert ser.data != data
+        assert ser.data["uuid_cannot_be_written"] == VALUE_REPLACEMENT
+        assert ser.data["camelCase"] == VALUE_REPLACEMENT
+        assert ser.data["methodField"] == VALUE_REPLACEMENT
+
+
+
+class TestFieldAccessModelSerializer:
+
+    def test_can_write(self, db):
+        class CreateSystemSerializer(serializers.ModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+        class NoPermCheckSerializer(FieldAccessModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+        class CanWriteSerializer(FieldAccessModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+            def can_write_cloudSystemId(self):
+                return True
+
+        class CanNotWriteSerializer(FieldAccessModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+            def can_write_cloudSystemId(self):
+                return False
+
+        data = {
+            "organization": f"{uuid4()}",
+            "cloudSystemId": "sefq4rf3oj97gf3fed",
+        }
+
+        ser = CreateSystemSerializer(data=data)
+        ser.is_valid()
+
+        assert "Invalid pk" in ser.errors["organization"][0]
+        assert ser.errors["organization"][0].code == 'does_not_exist'
+        assert "Must be a valid UUID" in ser.errors["cloudSystemId"][0]
+        assert ser.errors["cloudSystemId"][0].code == 'invalid'
+
+        ser = NoPermCheckSerializer(data=data)
+        ser.is_valid()
+
+        assert "Invalid pk" in ser.errors["organization"][0]
+        assert ser.errors["organization"][0].code == 'does_not_exist'
+        assert "Must be a valid UUID" in ser.errors["cloudSystemId"][0]
+        assert ser.errors["cloudSystemId"][0].code == 'invalid'
+
+        ser = CanWriteSerializer(data=data)
+        ser.is_valid()
+
+        assert "Invalid pk" in ser.errors["organization"][0]
+        assert ser.errors["organization"][0].code == 'does_not_exist'
+        assert "Must be a valid UUID" in ser.errors["cloudSystemId"][0]
+        assert ser.errors["cloudSystemId"][0].code == 'invalid'
+
+        ser = CanNotWriteSerializer(data=data)
+        ser.is_valid()
+
+        assert "Invalid pk" in ser.errors["organization"][0]
+        assert ser.errors["organization"][0].code == 'does_not_exist'
+        assert "User is not allowed to modify this field" in ser.errors["cloudSystemId"][0]
+        assert ser.errors["cloudSystemId"][0].code == 'forbidden'
+
+    def test_can_read(self, db):
+        class CreateSystemSerializer(serializers.ModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+        class NoPermCheckSerializer(FieldAccessModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+        class CanWriteSerializer(FieldAccessModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+            def can_read_cloudSystemId(self):
+                return True
+
+        class CanNotWriteSerializer(FieldAccessModelSerializer):
+            cloudSystemId = serializers.UUIDField(source='system_id')
+            class Meta:
+                model = CloudSystemId
+                fields = ['cloudSystemId', 'organization']
+
+            def can_read_cloudSystemId(self):
+                return False
+
+        cloud_test_instance = CloudInstance.objects.get_or_create(name='cloud-test')[0]
+        cloud_test_host = CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
+        nx_channel_partner_cloud_test = ChannelPartner.objects.get_or_create(name='Network Optix', instance=cloud_test_instance)[0]
+        channel_partner = ChannelPartner.objects.create(name=f'Test CP {uuid4()}',
+                                                        parent_channel_partner=nx_channel_partner_cloud_test,
+                                                        instance=cloud_test_instance)
+        organization = Organization.objects.create(name=f'Test Org {uuid4()}', channel_partner=channel_partner)
+
+        system = baker.make(CloudSystemId, organization=organization, system_id=f"{uuid4()}", cloud_host=cloud_test_host)
+
+        ser = CreateSystemSerializer(instance=system)
+        assert ser.data['cloudSystemId'] == str(system.system_id)
+        assert ser.data['organization'] == organization.id
+
+
+        ser = NoPermCheckSerializer(instance=system)
+        assert ser.data['cloudSystemId'] == str(system.system_id)
+        assert ser.data['organization'] == organization.id
+
+        ser = CanWriteSerializer(instance=system)
+        assert ser.data['cloudSystemId'] == str(system.system_id)
+        assert ser.data['organization'] == organization.id
+
+        ser = CanNotWriteSerializer(instance=system)
+        assert ser.data['cloudSystemId'] == VALUE_REPLACEMENT
+        assert ser.data['organization'] == organization.id
+
