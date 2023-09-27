@@ -510,13 +510,36 @@ class OrganizationPermissions:
     access_systems = 'access_systems'
 
 
-class Organization(ChannelPartnerStates, models.Model):
+class ChannelPartnerAccessLevel:
+    # leave empty spaces for additional levels
+    FULL = 0
+    PRIVACY_MODE = 100
+    NO_ACCESS = 200
+
+    LEVEL_CHOICES = [
+        (FULL, 'Full Access'),
+        (PRIVACY_MODE, 'Full Access + Activated Privacy Mode'),
+        (NO_ACCESS, 'No Access')
+    ]
+
+    LEVEL_CODES = [
+        ('full', FULL),
+        ('privacy_mode', PRIVACY_MODE),
+        ('no_access', NO_ACCESS)
+    ]
+
+
+
+class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model):
+
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE, related_name='organizations')
     name = models.CharField(max_length=150)
-    users = models.ManyToManyField(CloudUser, related_name='organizations', blank=True, through='OrganizationToUser')
-    state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False, default=ChannelPartnerStates.ACTIVE)
-    channel_partner_can_administer = models.BooleanField(default=False)
+    users = models.ManyToManyField(CloudUser, related_name='organizations',
+                                   blank=True, through='OrganizationToUser')
+    state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
+                                blank=False, default=ChannelPartnerStates.ACTIVE)
+    channel_partner_access_level = models.PositiveIntegerField(default=ChannelPartnerAccessLevel.FULL)
     attributes = models.JSONField(default=dict)
 
     objects = ExternalIdTargetManager()
@@ -590,7 +613,7 @@ class Organization(ChannelPartnerStates, models.Model):
             return True
         channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner, roles__has_any_keys=['Administrator', 'Manager']).exists()
         if channel_partner_manager:
-            if self.channel_partner_can_administer:
+            if self.channel_partner_access_level == ChannelPartnerAccessLevel.FULL:
                 role = 'Organization Administrator'
             else:
                 role = 'System Health Viewer'

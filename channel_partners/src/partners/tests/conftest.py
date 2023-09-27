@@ -6,7 +6,7 @@ from model_bakery import baker
 
 from rest_framework.test import APIRequestFactory
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
-    ChannelPartnerToUser, CloudSystemId, OrganizationRole
+    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerAccessLevel
 
 
 @pytest.fixture()
@@ -55,17 +55,18 @@ def default_channel_partner(cloud_test_instance, cloud_test_nx_channel_partner):
 @pytest.fixture()
 def default_organization(default_channel_partner):
     return Organization.objects.create(name="Default Organization", channel_partner=default_channel_partner,
-                                       channel_partner_can_administer=True)
+                                       channel_partner_access_level=ChannelPartnerAccessLevel.FULL)
 
 
 @pytest.fixture()
 def organization_factory(default_channel_partner):
 
-    def factory(name=None, channel_partner=default_channel_partner) -> Organization:
+    def factory(name=None, channel_partner=default_channel_partner,
+                channel_partner_access_level=ChannelPartnerAccessLevel.FULL) -> Organization:
         return Organization.objects.create(
             name=name or f"Organization {uuid4()}",
             channel_partner=channel_partner,
-            channel_partner_can_administer=True
+            channel_partner_access_level=channel_partner_access_level
         )
 
     return factory
@@ -77,7 +78,6 @@ def channel_partner_factory(default_channel_partner, cloud_test_instance):
         return ChannelPartner.objects.create(
             name=name or f"Channel Partner {uuid4()}",
             parent_channel_partner=parent_channel_partner,
-            instance=cloud_test_instance
         )
 
     return factory

@@ -2,7 +2,8 @@ from uuid import uuid4
 
 from model_bakery import baker
 
-from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser
+from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel, \
+    Organization, OrganizationPermissions
 
 
 class TestCloudSystemId:
@@ -77,5 +78,43 @@ class TestOrganizationToUser:
         assert set(batch_data["items"][0]["systems"]) == {str(system.system_id) for system in systems}
         assert batch_data["items"][0]["accessRole"] == 'none'
 
+
+
+class TestOrganization:
+
+    def test_has_perm(self, channel_partner_factory, cp_user_factory, organization_factory):
+        cp = channel_partner_factory()
+        admin = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+
+        # test full access
+
+        assert org.channel_partner_access_level == ChannelPartnerAccessLevel.FULL
+        assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.configure_organization) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
+
+        #  test privacy mode
+        org.channel_partner_access_level = ChannelPartnerAccessLevel.PRIVACY_MODE
+        org.save()
+        assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.configure_organization) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
+
+        #  test no access
+        org.channel_partner_access_level = ChannelPartnerAccessLevel.PRIVACY_MODE
+        org.save()
+        assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.configure_organization) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is False
+        assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
+        assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
 

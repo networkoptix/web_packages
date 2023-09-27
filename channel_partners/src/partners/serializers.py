@@ -14,11 +14,12 @@ from rest_framework import serializers, exceptions
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
 
-from partners.models import ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates, LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService, \
-    ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent, CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId, \
-    ServiceToSubChannelProperties, ServiceToOrganizationProperties
+from partners.models import ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates, \
+    LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService, \
+    ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent, \
+    CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId, \
+    ServiceToSubChannelProperties, ServiceToOrganizationProperties, ChannelPartnerAccessLevel
 from tools.utils import make_batch_request
-
 from .authentication import check_user_can_administer_system
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
@@ -142,13 +143,15 @@ class OrganizationSerializer(serializers.ModelSerializer):
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
-    channelPartnerCanAdminister = serializers.BooleanField(source='channel_partner_can_administer')
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False, help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
+    channelPartnerAccessLevel = CodeChoiceField(source='channel_partner_access_level',
+                                                choices=ChannelPartnerAccessLevel.LEVEL_CODES)
+    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
+                                       help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
 
     class Meta:
         model = Organization
-        exclude = ['channel_partner_can_administer', 'channel_partner']
-        read_only_fields = ['channelPartner', 'users', 'channelPartnerCanAdminister']
+        exclude = ['channel_partner_access_level', 'channel_partner']
+        read_only_fields = ['channelPartner', 'users']
 
     def update(self, instance: Organization, validated_data):
         instance.set_attributes(validated_data.get('attributes', {}), partial=self.partial)
