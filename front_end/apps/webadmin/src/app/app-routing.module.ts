@@ -3,6 +3,7 @@ import { RouterModule, Routes, TitleStrategy } from '@angular/router';
 // import { HoverPreloadStrategy } from 'ngx-hover-preload';
 
 import { LoginWebadminModalContent } from '@dialogs/login-webadmin/login-webadmin.component';
+import { NonProductionEnvironment } from '@guards/environment.guard';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 
@@ -73,6 +74,11 @@ const lazyRoutes: Routes = [
             import('@pages/non-supported-browser/non-supported-browser.module').then(
                 m => m.NonSupportedBrowserModule,
             ),
+    },
+    {
+        path: 'sandbox',
+        loadChildren: () => import('@pages/sandbox/sandbox.module').then(m => m.SandboxModule),
+        canLoad: [NonProductionEnvironment],
     },
     {
         path: '500',
