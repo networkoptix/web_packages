@@ -82,6 +82,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     checkCloudProcess: Process;
     connectToCloudProcess: Process;
     disconnectProcess: Process;
+    showNewText: boolean;
 
     settingsForSystem$: Observable<t.Settings>;
     systemName: string;
@@ -225,6 +226,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         this.settingsForSystem$ = this.system
             .updateOrGetSystemSettings()
             .pipe(map(res => res?.reply?.settings));
+
+        this.showNewText = this.system.version >= 6.0;
     }
 
     ngAfterViewInit(): void {

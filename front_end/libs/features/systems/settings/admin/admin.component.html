@@ -141,12 +141,22 @@
             </header>
             <ng-template #notMine>
                 <nx-section>
-                    <span class="system-owner"
-                        ><span
-                            translate
-                            data-testid="accessLevelText"
-                            >Your access level</span
-                        ><span>&nbsp;– </span>
+                    <span class="system-owner">
+                        <ng-container *ngIf="!showNewText; else newText">
+                            <span
+                                translate
+                                data-testid="accessLevelText"
+                                >Your access level</span
+                            >
+                        </ng-container>
+                        <ng-template #newText>
+                            <span
+                                translate
+                                data-testid="accessLevelText"
+                                >Your permissions</span
+                            >
+                        </ng-template>
+                        <span>&nbsp;– </span>
                         <span
                             class="name"
                             [innerText]="userRole() | translate"
