@@ -44,3 +44,4 @@ PythonRobot/chromedriver
 .netlify
 PythonRobot/qr_code.png
 PythonRobot/NoptixLibrary/letsencrypt-stg.crt
+PythonRobot/error.png
