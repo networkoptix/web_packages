@@ -186,7 +186,6 @@ def share_with_registered_user_works(server: Mediaserver):
     header.account_dropdown()
     SystemAdmin(driver)
     left_menu = SystemLeftMenu(driver)
-    time.sleep(1)
     left_menu.users_button().click()
     left_menu.update_users_list()
     left_menu.users[1].click()
