@@ -27,6 +27,14 @@ class SystemLeftMenu:
         for user in users:
             self.users.append(Button(self.driver, f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]"))
 
+    def get_user_with_email(self, email: str):
+        self.update_users_list()
+        for user in self.users:
+            if user.get_text() == email:
+                return user
+        raise RuntimeError(
+            f"No user with email {email} found in the system. Existing users: {self.users}")
+
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
             "//span[contains(text(), '{SERVERS}')]")
