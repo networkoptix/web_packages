@@ -143,6 +143,9 @@ class SystemAdmin:
         self.driver.refresh()
         self._wait_until_page_loaded()
 
+    def modal(self):
+        return PageText(self.driver, "//div[@modal-render='true']")
+
     def get_information_tab(self) -> '_TabInformation':
         """
         Problem: the Information tab couldn't appear without switching to another tab or refreshing the page
@@ -167,8 +170,6 @@ class SystemAdmin:
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")
-        robot_keywords.wait_until_page_contains_element(
-            self.driver, "//div[contains(@class, 'fixed-sidebar')]//a[@id='servers']")
         robot_keywords.wait_until_page_contains_element(
             self.driver, "//div/nx-editable-heading//nx-text-editable")
 
