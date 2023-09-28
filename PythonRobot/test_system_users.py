@@ -11,6 +11,7 @@ from header import HeaderNav
 from landing_page import LandingPage
 from login import LoginDialog
 from register_form import RegisterForm
+from resource_import import get_chrome
 from resource_import import get_headless_chrome
 from resource_import import register_and_activate_account
 from resource_import import get_random_email
@@ -198,6 +199,31 @@ def share_with_registered_user_works(server: CloudServer):
     driver.quit()
     print("pass")
 
+def cancel_disconnect(server: CloudServer):
+    """
+    1. Cancel should cancel disconnection and disconnect should remove it when not owner
+    [Tags]    C41884    cloud
+    """
+    with get_chrome() as driver:
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+        CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(email, password)
+            system_admin = SystemAdmin(driver)
+            system_admin.disconnect_from_account_button().click()
+            system_admin.disconnect_modal_warning().wait_until_visible()
+            system_admin.disconnect_from_account_cancel_button().click()
+            system_admin.disconnect_modal_warning().wait_until_not_visible()
+            system_admin.modal().wait_until_not_visible()
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -214,3 +240,4 @@ if __name__ == "__main__":
         share_with_registered_user_sends_notification(cloud_server)
         share_with_unregistered_user_sends_notification(cloud_server)
         email_is_locked_when_unregistered_user_is_invited(cloud_server)
+        cancel_disconnect(cloud_server)
