@@ -5,8 +5,10 @@ import time
 from selenium.webdriver import ActionChains
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.common.exceptions import NoSuchElementException
+from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
+from selenium.webdriver.support import expected_conditions as ec
 
 _DEFAULT_TIMEOUT = 10
 _logger = logging.getLogger(__name__)
@@ -34,6 +36,19 @@ class Element:
     def click(self):
         self.wait_until_clickable()
         self._element.click()
+
+    def count(self, timeout: float = 10.0):
+        # Wait for the page to fully load (by waiting for the document.readyState to be 'complete')
+        WebDriverWait(self._driver, timeout).until(
+            lambda driver: driver.execute_script("return document.readyState") == "complete"
+        )
+
+        # Now, wait for the presence of all elements matching the locator.
+        # This ensures that at least one element is present before proceeding.
+        WebDriverWait(self._driver, timeout).until(
+            ec.presence_of_all_elements_located((By.XPATH, self._locator))
+        )
+        return len(self._driver.find_elements(By.XPATH, self._locator))
 
     def hover(self):
         self.wait_until_visible()
@@ -65,6 +80,11 @@ class Element:
     def send_keys(self, text: str):
         self.wait_until_clickable()
         self._element.send_keys(text)
+
+    def should_contain(self, text: str):
+        self.wait_until_visible()
+        if text not in self._element.text:
+            raise ElementTextIncorrect()
 
     def text(self):
         self.wait_until_visible()
@@ -163,4 +183,7 @@ class ElementClickable(Exception):
 
 
 class ElementInDOM(Exception):
+    pass
+
+class ElementTextIncorrect(Exception):
     pass

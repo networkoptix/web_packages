@@ -3,6 +3,23 @@ from RobotVariables import RobotVariables
 from ipvd_page import IVPDPage
 
 rb = RobotVariables("en_US")
+password = "qweasd1234"
+login = "noptixautoqa+owner@gmail.com"
+
+def ipvd_page_loads_without_login():
+    """1. IPVD Page loads without Login"""
+    driver = resource_import.get_headless_chrome()
+    ipvd_page = IVPDPage(driver)
+    ipvd_page.go_to_ipvd()
+
+def ipvd_page_loads_while_logged_in():
+    """2. IPVD Page loads while Logged in"""
+    driver = resource_import.get_headless_chrome()
+    driver.get(rb.ENV)
+    resource_import.cloud_login(driver, login, password)
+    ipvd_page = IVPDPage(driver)
+
+    ipvd_page.go_to_ipvd()
 
 def ipvd_landing_page_actions():
     """3. IPVD landing page actions"""
@@ -46,6 +63,7 @@ def ipvd_landing_page_actions():
 
 if __name__ == "__main__":
     print("Running test_ipvd.py")
+    # ipvd_page_loads_without_login()
+    # ipvd_page_loads_while_logged_in()
     ipvd_landing_page_actions()
-
 
