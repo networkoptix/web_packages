@@ -163,7 +163,9 @@ export class UserWithGroupsManager extends UserManager {
             customGroup.unshift({ id: 'horizontal', label: 'horizontal' });
         }
         if (ldapGroup.length > 0) {
+            const defaultLdapGroup = ldapGroup.shift();
             ldapGroup.sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase()));
+            ldapGroup.unshift(defaultLdapGroup);
             ldapGroup.unshift({ id: 'title', label: ldapUserGroupText });
             ldapGroup.unshift({ id: 'horizontal', label: 'horizontal' });
         }

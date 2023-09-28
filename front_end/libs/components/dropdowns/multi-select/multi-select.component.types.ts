@@ -3,4 +3,5 @@ export interface MultiSelectItem {
     label: string;
     selected?: boolean;
     tooltip?: string;
+    disabled?: boolean;
 }

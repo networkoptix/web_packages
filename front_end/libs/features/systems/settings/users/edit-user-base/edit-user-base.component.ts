@@ -176,7 +176,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
         this.isLdap.set(user.type === UserType.ldap);
         this.isLocal.set(user.type === UserType.local);
         this.isMe.set(currentUser.id === user.id);
-        this.canBeEdited.set(user.canBeEdited && !this.isLdap());
+        this.canBeEdited.set(user.canBeEdited);
 
         this.deleteMessage = this.isCloud()
             ? this.LANG.system.users.cloudDelete

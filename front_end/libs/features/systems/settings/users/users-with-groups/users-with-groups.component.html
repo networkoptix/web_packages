@@ -73,7 +73,7 @@
                             [tooltipAlternateSecondary]="true"
                             [tooltipHorizontal]="true"
                             description="User Groups"
-                            [items]="system.userManager.groups"
+                            [items]="filteredGroups"
                             [ngModel]="selectedGroups"
                             (ngModelChange)="toggleGroup($event)"
                             [moreLeftPadding]="true"

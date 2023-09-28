@@ -2,6 +2,7 @@ import { Component, ViewChild, signal } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
+import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxUser } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 
@@ -25,6 +26,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     roles: string[];
     selectedGroups: string[];
     selectedGroupsList: { name: string; description: string }[];
+    filteredGroups: MultiSelectItem[];
 
     temporaryUser = signal<boolean>(false);
 
@@ -34,6 +36,8 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const isLocalOwner = !this.isCloud() && user.isOwner;
         this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
         this.temporaryUser.set(this.selectedUser.type === this.UserType.temporaryLocal);
+
+        this.filteredGroups = this.processLdapGroups([...this.system.userManager.groups]);
 
         this.applyService.resetFormWatchers();
         setTimeout(() => {
@@ -100,5 +104,32 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
             }
             return groups;
         }, []);
+    }
+
+    private processLdapGroups(groups: MultiSelectItem[]): MultiSelectItem[] {
+        const { ldapUserGroupText } = this.LANG.dialogs.titles;
+        const ldapIndex = groups.findIndex(({ label }) => label === ldapUserGroupText);
+        if (ldapIndex !== -1) {
+            const defaultGroups = groups.slice(0, ldapIndex - 1);
+            if (this.isLdap()) {
+                const ldapGroups = groups
+                    .slice(ldapIndex - 1)
+                    .filter(
+                        ({ id }) =>
+                            ['title', 'horizontal'].includes(id) ||
+                            this.selectedGroups.includes(id),
+                    )
+                    .map(group => ({
+                        ...group,
+                        disabled: !['title', 'horizontal'].includes(group.id),
+                    }));
+
+                if (ldapGroups.length > 2) {
+                    defaultGroups.push(...ldapGroups);
+                }
+            }
+            groups = defaultGroups;
+        }
+        return groups;
     }
 }

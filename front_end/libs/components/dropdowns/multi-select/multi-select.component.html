@@ -89,13 +89,18 @@
                     </h4>
                     <ng-container *ngSwitchDefault>
                         <nx-checkbox
+                            [disabled]="item.disabled"
                             [componentId]="item.id"
                             [checked]="item.selected"
                             (click)="change(item)"
                         ></nx-checkbox>
                         <label
                             class="ellipsis"
-                            [ngClass]="{ 'more-left-padding': moreLeftPadding }"
+                            [ngClass]="{
+                                'more-left-padding': moreLeftPadding,
+                                'text-muted': item.disabled
+                            }"
+                            [style.pointer-events]="item.disabled ? 'none' : ''"
                             [htmlFor]="item.id"
                             >{{ item.label | translate }}</label
                         >
