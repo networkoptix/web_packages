@@ -2,7 +2,20 @@
     (mousemove)="handleMouseMove($event)"
     (mouseleave)="handleMouseLeave()"
     (wheel)="handleMouseWheel($event)"
-    (nxClick)="handleMouseClick($event)"
+    (click)="handleMouseClick($event)"
 >
-    <nx-webgl-time-under-mouse [position]="timeLabelPosition"></nx-webgl-time-under-mouse>
+    <nx-webgl-time-under-mouse [position]="timeUnderPosition"></nx-webgl-time-under-mouse>
+
+    <nx-webgl-timeline-playback-indicator
+        [playbackPosition]="playbackPosition"
+    ></nx-webgl-timeline-playback-indicator>
+
+    <nx-webgl-timeline-selection
+        [position]="cursorPosition"
+        (onHover)="handleSelectionOnHover($event)"
+        (posChange)="getSelectionDate($event)"
+        (scrollShift)="scrollShiftAction($event)"
+    ></nx-webgl-timeline-selection>
 </div>
+
+<nx-webgl-timeline-selection-action-panel></nx-webgl-timeline-selection-action-panel>

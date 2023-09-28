@@ -42,7 +42,10 @@ enum EDGE_SCROLLING_SPEED_POS {
     styleUrls: ['./timeline-selection.component.scss'],
 })
 export class WebGlTimelineSelectionComponent implements OnChanges {
-    @Input() cursorTime: Date;
+    // @Input() cursorTime: Date;
+    @Input() position: number | undefined;
+
+    @Output() onHover = new EventEmitter<boolean>();
     @Output() posChange = new EventEmitter<number>();
     @Output() scrollShift = new EventEmitter<{
         direction: SCROLL_DIRECTION;
@@ -103,14 +106,17 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<WebGlTimelineSelectionComponent>): void {
-        if (changes.cursorTime?.currentValue) {
+        if (changes.position?.currentValue) {
             if (this.selection.drag) {
+                const dateUnder = this.webglService.xScale$.value.invert(
+                    changes.position.currentValue,
+                );
                 if (this.dragLeft || this.selection.leftDate === '') {
-                    this.selection.startDate = this.cursorTime;
+                    this.selection.startDate = dateUnder;
                 }
 
                 if (this.dragRight || this.selection.rightDate === '') {
-                    this.selection.endDate = this.cursorTime;
+                    this.selection.endDate = dateUnder;
                 }
 
                 this.webglService.selection$.next(this.selection);
@@ -337,6 +343,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
     public rightEarMouseInOutHandler(status: boolean): void {
         if (!this.selection.drag) {
+            this.onHover.emit(status);
             this.mouseOverEar = status;
             this.hideRightEar = !status;
         }
@@ -344,6 +351,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
     public leftEarMouseInOutHandler(status: boolean): void {
         if (!this.selection.drag) {
+            this.onHover.emit(status);
             this.mouseOverEar = status;
             this.hideLeftEar = !status;
         }

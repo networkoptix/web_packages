@@ -100,23 +100,24 @@
             {{ selectedCamera?.name || selectedCamera?.model }}
         </div>
 
-        <nx-timeline-interactions></nx-timeline-interactions>
+        <nx-timeline-interactions
+            [chart]="chart"
+            [zoomInProcess]="zoomInProcess"
+            (scrollShift)="scrollShift($event)"
+        ></nx-timeline-interactions>
 
-        <!--        <nx-timeline-scroll-->
-        <!--            [barWidth]="scrollBarWidth"-->
-        <!--            [barPos]="scrollBarPos"-->
-        <!--            [playbackPos]="scrollPlaybackPosition"-->
-        <!--            (scrollToPos)="scrollToPos($event)"-->
-        <!--            (scrollEnd)="scrollEnd()"-->
-        <!--            (singleScroll)="singleScroll($event)"-->
-        <!--            (constantScroll)="constantScroll($event)"-->
-        <!--        >-->
-        <!--        </nx-timeline-scroll>-->
+        <nx-timeline-scroll
+            [barWidth]="scrollBarWidth"
+            [barPos]="scrollBarPos"
+            [playbackPos]="scrollPlaybackPosition"
+            (scrollToPos)="scrollToPos($event)"
+            (scrollEnd)="scrollEnd()"
+            (singleScroll)="singleScroll($event)"
+            (constantScroll)="constantScroll($event)"
+        >
+        </nx-timeline-scroll>
 
-        <!--        <nx-webgl-time-under-mouse-->
-        <!--            [position]="timeLabelPosition"-->
-        <!--            [timeUnder]="currentPointer"-->
-        <!--        ></nx-webgl-time-under-mouse>-->
+        <!--        <nx-webgl-time-under-mouse [position]="timeLabelPosition"></nx-webgl-time-under-mouse>-->
 
         <!--        <nx-webgl-timeline-playback-indicator-->
         <!--            [playbackPosition]="playbackLabelPosition"-->
@@ -124,7 +125,7 @@
         <!--        ></nx-webgl-timeline-playback-indicator>-->
 
         <!--        <nx-webgl-timeline-selection-->
-        <!--            [cursorTime]="currentPointer"-->
+        <!--            [position]="timeLabelPosition"-->
         <!--            (posChange)="getSelectionDate($event)"-->
         <!--            (scrollShift)="scrollShift($event)"-->
         <!--        ></nx-webgl-timeline-selection>-->
@@ -149,31 +150,34 @@
 >
     <div class="row mt-3">
         <div class="col-3">
-            <span translate>zLevel</span> : {{ webglService.levelZoom$.value }} <br />
-            <span translate>xPos</span> : {{ xPos }} <br />
-            <span translate>canvas</span> : {{ webglService.canvasWidth$.value }} <br />
-            <span translate>width</span> : {{ canvasVirtualWidth }} <br />
-            <span translate>LMPos</span> :
+            <span>{{ 'zLevel' | translate }}</span> : {{ webglService.levelZoom$.value }} <br />
+            <span>{{ 'xPos' | translate }}</span> : {{ xPos }} <br />
+            <span>{{ 'canvas' | translate }}</span> : {{ webglService.canvasWidth$.value }} <br />
+            <span>{{ 'width' | translate }}</span> : {{ canvasVirtualWidth }} <br />
+            <span>{{ 'LMPos' | translate }}</span> :
             {{ Math.trunc(-(canvasVirtualWidth - webglService.canvasWidth$.value + xPos) || 0) }}
             <br />
-            <span translate>BarPos</span> : {{ scrollBarPos }} <br />
-            <span translate>BarWidth</span> : {{ scrollBarWidth }} <br />
+            <span>{{ 'BarPos' | translate }}</span> : {{ scrollBarPos }} <br />
+            <span>{{ 'BarWidth' | translate }}</span> : {{ scrollBarWidth }} <br />
+            <span>{{ 'Sel' | translate }}</span> : {{ this.webglService.selectionDrag$.value }} /
+            {{ this.webglService.selection$.value.drag }} <br />
             <!--    tPos : {{ timeLabelPosition }} <br />-->
         </div>
         <div class="col-9">
-            <span translate>px/60s</span> : {{ (canvasVirtualWidth / timeFrameInS) * 60 }} <br />
-            <span translate>lastMinuteWidth</span> : {{ lastMinuteWidth }} <br />
-            <span translate>timeFrameInS</span> : {{ timeFrameInS }} <br />
-            <span translate>CurrPointer</span> : {{ webglService.currentPointer$.value }} /
-            {{ timeLabelPosition }} <br />
-            <span translate>PlaybackPointer</span> : {{ playbackPointer?.getTime() }} /
+            <span>{{ 'px/60s' | translate }}</span> :
+            {{ (canvasVirtualWidth / timeFrameInS) * 60 }} <br />
+            <span>{{ 'lastMinuteWidth' | translate }}</span> : {{ lastMinuteWidth }} <br />
+            <span>{{ 'timeFrameInS' | translate }}</span> : {{ timeFrameInS }} <br />
+            <span>{{ 'CurrPointer' | translate }}</span> :
+            {{ webglService.currentPointer$.value }} / {{ timeLabelPosition }} <br />
+            <span>{{ 'PlaybackPointer' | translate }}</span> : {{ playbackPointer?.getTime() }} /
             {{ playbackLabelPosition }}<br />
-            <span translate>lastChunkStart</span> : {{ lastDataDateStart }}<br />
-            <span translate>lastChunkEnd</span> : {{ lastDataDateEnd }}<br />
-            <span translate>Selection start</span> : {{ webglService.selection$.value.startDisplay
-            }}<br />
-            <span translate>Selection end</span> : {{ webglService.selection$.value.endDisplay
-            }}<br />
+            <span>{{ 'lastChunkStart' | translate }}</span> : {{ lastDataDateStart }}<br />
+            <span>{{ 'lastChunkEnd' | translate }}</span> : {{ lastDataDateEnd }}<br />
+            <span>{{ 'Selection start' | translate }}</span> :
+            {{ webglService.selection$.value.startDisplay }}<br />
+            <span>{{ 'Selection end' | translate }}</span> :
+            {{ webglService.selection$.value.endDisplay }}<br />
         </div>
     </div>
 </div>

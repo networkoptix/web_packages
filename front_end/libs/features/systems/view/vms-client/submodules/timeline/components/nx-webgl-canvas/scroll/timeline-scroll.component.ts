@@ -3,8 +3,8 @@ import { Component, ElementRef, EventEmitter, Output, Input, ViewChild } from '@
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
 import { images } from '@static-variables';
+import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
 import { SCROLL_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
-import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 
 @UntilDestroy()

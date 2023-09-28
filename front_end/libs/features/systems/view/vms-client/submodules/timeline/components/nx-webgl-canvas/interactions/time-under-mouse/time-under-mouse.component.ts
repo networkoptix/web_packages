@@ -35,11 +35,13 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<WebGlTimeUnderMouseComponent>): void {
-        if (changes.position) {
+        if (changes.position?.currentValue) {
             this.setMarkerPosition();
             const dateUnder = this.webglService.xScale$.value.invert(changes.position.currentValue);
             this.time = dateFormat(dateUnder, TIME_FORMAT);
             this.date = dateFormat(dateUnder, DATE_FORMAT);
+        } else {
+            this.timeUnderEar.nativeElement.style.opacity = '0';
         }
     }
 

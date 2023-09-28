@@ -736,13 +736,14 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                 }
             })
             .on('zoom', event => {
-                if (
-                    event.sourceEvent === null &&
-                    this.zoomEvent.transform.k !== event.transform.k
-                ) {
-                    // short circuit first event (weird data)
-                    return;
-                }
+                // if (
+                //     this.zoomEvent &&
+                //     event.sourceEvent === null &&
+                //     this.zoomEvent.transform.k !== event.transform.k
+                // ) {
+                //     // short circuit first event (weird data)
+                //     return;
+                // }
 
                 if (
                     !['mousemove', 'wheel'].includes(event.sourceEvent?.type) &&
@@ -1090,7 +1091,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         this.timeLabelPosition = undefined;
     }
 
-    getSelectionDate(coordX: number): void {
-        this.webglService.currentPointer$.next(this.chart.xInvert(coordX));
-    }
+    // getSelectionDate(coordX: number): void {
+    //     this.webglService.currentPointer$.next(this.chart.xInvert(coordX));
+    // }
 }

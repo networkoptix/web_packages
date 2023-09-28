@@ -4,7 +4,7 @@ import * as d3 from 'd3';
 import dateFormat from 'dateformat';
 import { BehaviorSubject } from 'rxjs';
 
-import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
+import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
 import { DATA } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 import { ZOOM_DIRECTIONS } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 

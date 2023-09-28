@@ -4,7 +4,6 @@ import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { Observable } from 'rxjs';
 
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
-import type { ExportSelection } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
 import type { SELECTION_DATE_RANGE } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
 import type { TimelineSelectionService } from '@pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
 import type { Translatable } from '@pipes/nx-translate.types';
@@ -26,6 +25,7 @@ import type { StorageManager } from '@services/system.service/storage-manager/st
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import type { NxSystemInfo } from '@services/systems.service.types';
+import type { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
 
 import { MergeError } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
