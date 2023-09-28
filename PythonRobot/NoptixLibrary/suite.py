@@ -78,10 +78,6 @@ class CloudServer:
         self.cloud_users = cloud_users
         if cloud_users:
             self.cloud_admin = cloud_users['cloudAdmin']
-            self.viewer = cloud_users['viewer']
-            self.live_viewer = cloud_users['liveViewer']
-            self.advanced_viewer = cloud_users['advancedViewer']
-            self.custom_user = cloud_users['custom']
 
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
