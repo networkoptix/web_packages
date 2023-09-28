@@ -1,12 +1,8 @@
 import resource_import
-import robot_keywords
 from RobotVariables import RobotVariables
 from ipvd_page import IVPDPage
-from wrappers import Button
-from wrappers import Table
 
 rb = RobotVariables("en_US")
-
 
 def ipvd_landing_page_actions():
     """3. IPVD landing page actions"""
@@ -15,19 +11,20 @@ def ipvd_landing_page_actions():
     ipvd_page.validate_on_ipvd_page()
     ipvd_page.placeholder_text()
 
-    robot_keywords.element_should_contain(driver, ipvd_page.ADV_SEARCH_BUTTON, rb.IPVD_ADV_SEARCH_BUTTON_TEXT)
-    robot_keywords.element_should_contain(driver, ipvd_page.MANUFACTURERS_PANE, rb.IPVD_ADV_FILTER_MFRS.lower())
-    manufacturers = robot_keywords.get_element_count(driver, ipvd_page.MANUFACTURERS_PANE_ITEM)
+    ipvd_page.advanced_search_button().should_contain(rb.IPVD_ADV_SEARCH_BUTTON_TEXT)
+
+    manufacturers = ipvd_page.manufactures_pane().count_item('//*[contains(@class,"float-left mr-1 mb-1")]')
     assert manufacturers > 0
 
-    robot_keywords.element_should_contain(driver, ipvd_page.DEVICES_PANE, rb.IPVD_DEVICES_TEXT)    
-    device_types = robot_keywords.get_element_count(driver, ipvd_page.DEVICES_PANE + "//nx-tag/a")
+    ipvd_page.devices_pane().should_contain(ipvd_page.rb.IPVD_DEVICES_TEXT)
+    device_types = ipvd_page.devices_pane().count_item('//nx-tag/a')
     assert device_types == 10
 
-    robot_keywords.element_should_contain(driver, ipvd_page.LANDING_PAGE_TEXT, rb.IPVD_SUBMIT_A_REQUEST_TEXT)
+    ipvd_page.landing_page_text().should_contain(ipvd_page.rb.IPVD_SUBMIT_A_REQUEST_TEXT)
 
     ipvd_page.vendor_button().click()
-    Table(driver, ipvd_page.TABLE).wait_until_visible()
+    ipvd_page.ipvd_table().wait_until_visible()
+
     ipvd_page.validate_landing_page_objects_not_visible()
 
     ipvd_page.adv_features_button().click()
@@ -41,7 +38,10 @@ def ipvd_landing_page_actions():
     ipvd_page.validate_on_ipvd_page()
 
     ipvd_page.submit_a_request_button().click()
-    Button(driver, ipvd_page.FEEDBACK).wait_until_visible()
+
+    ipvd_page.feedback().wait_until_visible()
+
+
 
 
 if __name__ == "__main__":

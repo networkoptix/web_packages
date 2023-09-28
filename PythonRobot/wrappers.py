@@ -11,9 +11,6 @@ class Button:
         # TODO: add check to confirm button text is correct?
         self._element = Element(self.driver, locator)
 
-    def get_text(self):
-        return self._element.text()
-    
     def click(self):
         self._element.click()
 
@@ -22,6 +19,9 @@ class Button:
 
     def is_focused(self) -> bool:
         return self._element.is_focused()
+
+    def should_contain(self, text: str):
+        self._element.should_contain(text)
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
@@ -86,11 +86,11 @@ class PageText:
     def click(self):
         self._element.click()
 
-    def hover(self):
-        self._element.hover()
-
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
+
+    def should_contain(self, text: str):
+        self._element.should_contain(text)
 
 
 class TextField:
@@ -107,9 +107,6 @@ class TextField:
 
     def clear(self):
         self._element.clear_text()
-
-    def hover(self):
-        self._element.hover()
 
     def get_text(self):
         if self._element.text():
@@ -144,17 +141,37 @@ class TextField:
         self._element.click()
 
 
+
+
 class Table:
 
-    def __init__(self, driver: WebDriver, locator):
+    def __init__(self, driver: WebDriver,
+                 locator,
+                 target_item:str="",
+                 target_contents:str=""):
         self._driver = driver
         self._element = Element(self._driver, locator)
+        self.locator = locator
+        self.target_item = target_item
+        self.target_contents = target_contents
+
+    def target_should_contain(self, text: str):
+        locator = self.locator + self.target_item + self.target_contents
+        target = Element(self._driver, locator)
+        target.should_contain(text)
+
+    def wait_until_target_is_visible(self, timeout: float = 5):
+        target = Element(self._driver, self.locator + self.target_item)
+        target.wait_until_visible(timeout)
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
+
+    def wait_until_does_not_exist(self, timeout: float = 5):
+        self._element.wait_until_does_not_exist(timeout)
 
 
 class Image:
@@ -178,12 +195,24 @@ class Pane:
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
+        self.item = None
+        self.locator = locator
+
+    def count_item(self, item_locator: str):
+        xpath = self.locator +  item_locator
+        return Element(self._driver, xpath).count()
+
+    def should_contain(self, text: str):
+        self._element.should_contain(text)
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
+
+    def wait_until_does_not_exist(self, timeout: float = 5):
+        self._element.wait_until_does_not_exist(timeout)
 
 
 class Link:
@@ -194,7 +223,8 @@ class Link:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
-
+    def wait_until_does_not_exist(self, timeout: float = 5):
+        self._element.wait_until_does_not_exist(timeout)
 
 class DropDown:
 
