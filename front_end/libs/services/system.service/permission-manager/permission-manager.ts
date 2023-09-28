@@ -29,7 +29,7 @@ const initializePermissions = (isOwner = false, isAdmin = false): Permissions =>
         generateEvents: isAdmin,
         manageBookmarks: isAdmin,
         systemHealth: isAdmin,
-        view: true,
+        view: isAdmin,
         viewArchives: isAdmin,
         viewBookmarks: isAdmin,
         viewLogs: isAdmin,

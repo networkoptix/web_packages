@@ -45,25 +45,30 @@ export class NxMonitoringComponent implements OnInit {
         private accountService: NxAccountService,
         private translateService: TranslateService,
     ) {
-        this.content = {
-            base: '',
-            selectedSection: 'graphs',
-            selectedSubSection: '',
-            level1: [
-                {
-                    id: menus.systemMonitoring.graphs.id,
-                    svg: menus.systemMonitoring.graphs.icon,
-                    label: this.LANG.menu.titles.graphs,
-                    path: menus.systemMonitoring.graphs.path,
-                },
-                {
+        effect(() => {
+            const permissions = this.system.permissionManager.permissions();
+            this.content = {
+                base: '',
+                selectedSection: 'graphs',
+                selectedSubSection: '',
+                level1: [
+                    {
+                        id: menus.systemMonitoring.graphs.id,
+                        svg: menus.systemMonitoring.graphs.icon,
+                        label: this.LANG.menu.titles.graphs,
+                        path: menus.systemMonitoring.graphs.path,
+                    },
+                ],
+            };
+            if (permissions.isAdmin) {
+                this.content.level1.push({
                     id: menus.systemMonitoring.logs.id,
                     svg: menus.systemMonitoring.logs.icon,
                     label: this.LANG.menu.titles.logs,
                     path: menus.systemMonitoring.logs.path,
-                },
-            ],
-        };
+                });
+            }
+        });
 
         effect(() => {
             const selection = this.menuService.selectedSection();

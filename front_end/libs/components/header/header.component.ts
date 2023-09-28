@@ -153,14 +153,17 @@ export class NxHeaderComponent implements OnInit {
 
         if (environment.isLocal) {
             // Polls for the system and currentUser. Once its ready the header is updated and the poll is killed off.
-            const eff = effect(() => {
-                const system = this.systemService.currentSystem$$();
-                if (system?.permissionManager?.currentUser()) {
-                    this.getMenu();
-                    this.menusService.updateActiveSystemMenu(system);
-                    eff.destroy();
-                }
-            });
+            const eff = effect(
+                () => {
+                    const system = this.systemService.currentSystem$$();
+                    if (system?.permissionManager?.currentUser()) {
+                        this.getMenu();
+                        this.menusService.updateActiveSystemMenu(system);
+                        eff.destroy();
+                    }
+                },
+                { allowSignalWrites: true },
+            );
         }
         // Updates windowWidth$ behavior subject on window resize
         fromEvent<Event>(this.window, 'resize')
@@ -285,10 +288,10 @@ export class NxHeaderComponent implements OnInit {
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 if (environment.isLocal) {
-                    const sendEvents = this.systemService
+                    const permissions = this.systemService
                         .currentSystem$$()
-                        ?.permissionManager.currentUser();
-                    if (!sendEvents) {
+                        ?.permissionManager.permissions();
+                    if (!permissions?.generateEvents) {
                         const forDevsIndex = nodes?.findIndex(
                             ({ name }) => name === 'For Developers',
                         );

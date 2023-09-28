@@ -1,15 +1,17 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable } from '@angular/core';
+import { effect, Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
-import { BehaviorSubject, from, combineLatest, Observable } from 'rxjs';
+import { BehaviorSubject, from, combineLatest, Observable, Subject } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { Auth, MenuNode } from '@services/menus.service.types';
 import { CurrentUser } from '@services/system-user.types';
+import { NxSystem } from '@services/system.service/system';
 
 import { apiBase } from '../variables/static-variables';
 
@@ -33,6 +35,14 @@ export class NxMenusService {
     apiBase: string = apiBase;
 
     currentUser: CurrentUser;
+    activeSystem$ = new Subject<NxSystem>();
+    activeSystem$$ = toSignal(this.activeSystem$);
+    updateMenuByPermissions = effect(() => {
+        const activeSystem = this.activeSystem$$();
+        if (activeSystem?.permissionManager.permissions()) {
+            this.updateSystemMenu(activeSystem);
+        }
+    });
 
     endpoint: Partial<{
         view: boolean;
@@ -101,6 +111,7 @@ export class NxMenusService {
         }
 
         if (
+            !environment.isLocal &&
             withCurrentSystem &&
             this.currentSystemNode$.value &&
             !this.CONFIG.featureFlags.newHeader
@@ -298,9 +309,11 @@ export class NxMenusService {
     }
 
     updateActiveSystemMenu(activeSystem): void {
-        if (!activeSystem) {
-            return;
+        if (activeSystem) {
+            this.activeSystem$.next(activeSystem);
         }
+    }
+    private updateSystemMenu(activeSystem): void {
         let name =
             activeSystem.info?.systemName ||
             activeSystem.info?.name ||
