@@ -32,8 +32,8 @@ module.exports = (0, utils_2.createRule)({
                 if (typeAnnotation) {
                     return;
                 }
-                const isInputOrOutput = decorators?.some((d) => (0, utils_2.decoratorHasCall)(d) && ((0, utils_2.decoratorName)(d) === 'Input' ||
-                    (0, utils_2.decoratorName)(d) === 'Output'));
+                const isInputOrOutput = decorators?.some((d) => (0, utils_2.decoratorHasCall)(d) &&
+                    ((0, utils_2.decoratorName)(d) === 'Input' || (0, utils_2.decoratorName)(d) === 'Output'));
                 if (isInputOrOutput) {
                     return;
                 }
@@ -45,11 +45,10 @@ module.exports = (0, utils_2.createRule)({
                         return;
                     }
                     const { parameter } = param;
-                    if (parameter.type === utils_1.AST_NODE_TYPES.Identifier &&
-                        !parameter.typeAnnotation) {
+                    if (parameter.type === utils_1.AST_NODE_TYPES.Identifier && !parameter.typeAnnotation) {
                         context.report({
                             node: param,
-                            messageId: 'untypedParamProp'
+                            messageId: 'untypedParamProp',
                         });
                     }
                     else if (parameter.type === utils_1.AST_NODE_TYPES.AssignmentPattern &&
@@ -57,7 +56,7 @@ module.exports = (0, utils_2.createRule)({
                         (0, utils_2.isUntypedValue)(parameter.right)) {
                         context.report({
                             node: param,
-                            messageId: 'untypedParamProp'
+                            messageId: 'untypedParamProp',
                         });
                     }
                 });
@@ -68,7 +67,7 @@ module.exports = (0, utils_2.createRule)({
                     return;
                 }
                 declarations.forEach(declarator => {
-                    const { id: { typeAnnotation }, init } = declarator;
+                    const { id: { typeAnnotation }, init, } = declarator;
                     if (typeAnnotation) {
                         return;
                     }
@@ -76,5 +75,5 @@ module.exports = (0, utils_2.createRule)({
                 });
             },
         };
-    }
+    },
 });

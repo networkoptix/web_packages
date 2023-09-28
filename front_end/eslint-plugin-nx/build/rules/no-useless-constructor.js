@@ -24,15 +24,17 @@ module.exports = (0, utils_1.createRule)({
                     context.report({
                         node,
                         messageId: 'useless',
-                        suggest: [{
+                        suggest: [
+                            {
                                 messageId: 'removeUseless',
                                 fix(fixer) {
                                     return fixer.remove(node);
                                 },
-                            }],
+                            },
+                        ],
                     });
                 }
-            }
+            },
         };
-    }
+    },
 });

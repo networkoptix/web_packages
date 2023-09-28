@@ -295,13 +295,29 @@ module.exports = {
             },
         },
         {
-            // Don't need to enforce some rules for internal sandbox
-            files: ['**/sandbox/**/*.ts'],
+            files: ['*.ts'],
+            excludedFiles: [
+                'layout-grid.component.ts',
+                'change-password.component.ts',
+                'merge.refactor.component.ts',
+                'downloads-releases.component.ts',
+                'subchannels.component.ts',
+                'organization.component.ts',
+                'admin.component.ts',
+                'cameras.component.ts',
+                'settings.component.ts',
+                'edit-user-base.component.ts',
+                'users-with-groups.component.ts',
+                'vms.service.ts',
+                'level-3-item.component.ts',
+                'level-4-item.component.ts',
+                'menu.service.ts',
+                'oauth.service.ts',
+                'permission-manager.ts',
+            ],
             rules: {
-                'no-console': 'off',
-                '@angular-eslint/component-class-suffix': 'off',
-                '@angular-eslint/component-selector': 'off',
-                '@angular-eslint/directive-class-suffix': 'off',
+                'nx/signal-naming-convention': 'error',
+                // 'nx/exhaustive-computed-deps': 'warn',
             },
         },
         {
@@ -340,6 +356,16 @@ module.exports = {
                         ignoreTypeReferences: true,
                     },
                 ],
+            },
+        },
+        {
+            // Don't need to enforce some rules for internal sandbox
+            files: ['**/sandbox/**/*.ts'],
+            rules: {
+                'no-console': 'off',
+                '@angular-eslint/component-class-suffix': 'off',
+                '@angular-eslint/component-selector': 'off',
+                '@angular-eslint/directive-class-suffix': 'off',
             },
         },
         {

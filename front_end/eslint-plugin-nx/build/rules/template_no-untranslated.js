@@ -8,7 +8,7 @@ const dataUnits = [
     'bps',
     ...'kMGTPEZY'.split('').reduce((units, prefix) => {
         return [...units, `${prefix}B`, `${prefix}bit`, `${prefix}bps`];
-    }, [])
+    }, []),
 ];
 function shouldBeTranslated(text) {
     return textRegex.test(text) && !dataUnits.includes(text.trim());
@@ -26,7 +26,7 @@ module.exports = (0, utils_1.createRule)({
     defaultOptions: [],
     create(context) {
         return {
-            'Element$1'(node) {
+            Element$1(node) {
                 if (node.children.length === 0) {
                     return;
                 }
@@ -39,8 +39,7 @@ module.exports = (0, utils_1.createRule)({
                 }
                 const loc = (0, template_utils_1.sourceSpanToLoc)(node.sourceSpan);
                 function checkForUntranslatedText(text) {
-                    if (text.type === template_utils_1.TMPL_AST_NODES.Text$3 &&
-                        shouldBeTranslated(text.value)) {
+                    if (text.type === template_utils_1.TMPL_AST_NODES.Text$3 && shouldBeTranslated(text.value)) {
                         context.report({ loc, messageId: 'untranslatedText' });
                         return true;
                     }
@@ -56,7 +55,7 @@ module.exports = (0, utils_1.createRule)({
                     if (!shouldBeTranslated(text.value)) {
                         return;
                     }
-                    const { startSourceSpan: { start, end } } = node;
+                    const { startSourceSpan: { start, end }, } = node;
                     function fix(fixer) {
                         let translateStr;
                         if (start.line === end.line) {
@@ -65,9 +64,10 @@ module.exports = (0, utils_1.createRule)({
                         else {
                             const ltCol = start.col;
                             const gtCol = end.col - 1;
-                            translateStr = ltCol === gtCol
-                                ? `${' '.repeat(4)}translate\n${' '.repeat(ltCol)}`
-                                : `translate\n${' '.repeat(gtCol)}`;
+                            translateStr =
+                                ltCol === gtCol
+                                    ? `${' '.repeat(4)}translate\n${' '.repeat(ltCol)}`
+                                    : `translate\n${' '.repeat(gtCol)}`;
                         }
                         return fixer.insertTextBeforeRange([end.offset - 1, end.offset], translateStr);
                     }
@@ -86,7 +86,7 @@ module.exports = (0, utils_1.createRule)({
                         }
                     }
                 }
-            }
+            },
         };
-    }
+    },
 });

@@ -3,8 +3,8 @@ module.exports = {
         {
             files: ['src/tests/**/*.ts'],
             rules: {
-                '@typescript-eslint/no-var-requires': 'off'
-            }
-        }
-    ]
+                '@typescript-eslint/no-var-requires': 'off',
+            },
+        },
+    ],
 };

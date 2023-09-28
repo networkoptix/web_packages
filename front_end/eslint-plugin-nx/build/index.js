@@ -5,7 +5,8 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 const fs_1 = __importDefault(require("fs"));
 const path_1 = __importDefault(require("path"));
 module.exports = {
-    rules: fs_1.default.readdirSync(path_1.default.join(__dirname, 'rules'))
+    rules: fs_1.default
+        .readdirSync(path_1.default.join(__dirname, 'rules'))
         .reduce((rules, file) => {
         if (file.includes('utils.')) {
             return rules;
@@ -16,5 +17,5 @@ module.exports = {
             : name;
         rules[ruleName] = require(`./rules/${name}`);
         return rules;
-    }, {})
+    }, {}),
 };

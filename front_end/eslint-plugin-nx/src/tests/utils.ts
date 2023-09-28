@@ -7,3 +7,7 @@ export function classWrapper(content: string, className?: string, superClass?: s
 export function joinLines(...lines: string[]): string {
     return lines.join('\n');
 }
+
+export function successfulCodeObjects(successCases: string[]): { code: string }[] {
+    return successCases.map(success => ({ code: success }));
+}

@@ -32,7 +32,7 @@ module.exports = (0, utils_2.createRule)({
                     !param.typeAnnotation) {
                     context.report({
                         node: param,
-                        messageId: 'untypedArg'
+                        messageId: 'untypedArg',
                     });
                 }
                 else if (param.type === utils_1.AST_NODE_TYPES.AssignmentPattern &&
@@ -40,7 +40,7 @@ module.exports = (0, utils_2.createRule)({
                     (0, utils_2.isUntypedValue)(param.right)) {
                     context.report({
                         node: param,
-                        messageId: 'untypedArg'
+                        messageId: 'untypedArg',
                     });
                 }
             });
@@ -56,5 +56,5 @@ module.exports = (0, utils_2.createRule)({
                 checkForUntypedArgs(node);
             },
         };
-    }
+    },
 });

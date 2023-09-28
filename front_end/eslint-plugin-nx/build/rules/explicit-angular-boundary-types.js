@@ -11,7 +11,7 @@ module.exports = (0, utils_2.createRule)({
             missingInput: 'Missing Input type.',
             inferType: 'Infer type from default value',
             missingOutput: 'Missing Output generic.',
-        }
+        },
     },
     defaultOptions: [],
     create(context) {
@@ -26,12 +26,14 @@ module.exports = (0, utils_2.createRule)({
                             context.report({
                                 node,
                                 messageId: 'missingInput',
-                                suggest: [{
+                                suggest: [
+                                    {
                                         messageId: 'inferType',
                                         fix(fixer) {
                                             return fixer.insertTextAfter(node.key, `: ${valueType}`);
                                         },
-                                    }]
+                                    },
+                                ],
                             });
                         }
                         else {
@@ -70,7 +72,7 @@ module.exports = (0, utils_2.createRule)({
                         });
                     }
                 }
-            }
+            },
         };
-    }
+    },
 });
