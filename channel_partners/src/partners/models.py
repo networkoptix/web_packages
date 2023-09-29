@@ -19,9 +19,11 @@ from django.contrib.auth.models import User, PermissionsMixin, BaseUserManager, 
 from django.core.exceptions import ValidationError
 from django.db import models
 from django.db.models import Sum, F, QuerySet
+from django.db.models.functions import Concat
 from django.shortcuts import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
+from django_cte import CTEManager, With
 from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
@@ -316,6 +318,8 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
+    tree = CTEManager()
+
     MAX_DEPTH = 5
 
     class Meta:
@@ -474,6 +478,43 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         ).select_related('cloud_system__organization', 'created_by', f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
         return qs
+
+    @classmethod
+    def get_successors(cls, ancestor_id: str, include_ancestor: bool = True):
+        if include_ancestor:
+            filter_kwargs = {'id': ancestor_id}
+        else:
+            filter_kwargs = {'parent_channel_partner': ancestor_id}
+
+        def make_partners_cte(cte):
+            # non-recursive: get top parent(s) with respect to `include_parent`
+            return cls.tree.filter(
+                **filter_kwargs
+            ).values(
+                # Note. django-cte somehow annotates columns in raw SQL query with "col{col mun}"
+                # alias, and it breaks query. So we need to create alias of ID column for further
+                # using.
+                cte_id=F("id"),
+            ).union(
+                # recursive union: get descendants
+                cte.join(cls.tree.all(), parent_channel_partner_id=cte.col.cte_id).values(
+                    cte_id=F("id"),
+                ),
+                all=True,
+            )
+
+        recursive_query = With.recursive(make_partners_cte)
+
+        partners_tree = (
+            recursive_query.join(cls.tree.all(), id=recursive_query.col.cte_id)
+            .with_cte(recursive_query)
+        )
+        return partners_tree
+
+
+    @cached_property
+    def successors(self):
+        return self.get_successors(ancestor_id=self.id)
 
 
 class ChannelPartnerToUser(models.Model):

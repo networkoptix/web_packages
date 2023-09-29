@@ -1,11 +1,14 @@
 import json
+import random
 from uuid import uuid4
 
 import pytest
 from model_bakery import baker
 
-from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser
-from partners.views import CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet
+from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser, \
+    ChannelPartnerServiceRecord
+from partners.views import CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet, \
+    ChannelPartnerViewSet, OrganizationViewSet
 
 
 class TestCloudSystemViewSet:
@@ -287,3 +290,63 @@ class TestChannelPartnerUserViewSet:
         assert response.status_code == 409
         assert response.data['detail']
         assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
+
+
+class TestChannelPartnerViewSet:
+
+    def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
+                       system_factory, arf, mock_auth_with_user, default_cp_admin):
+        gen_count = 3
+        target_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
+        other_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
+        level_1 = [channel_partner_factory(parent_channel_partner=target_cp) for _ in range(gen_count)]
+        level_2 = [channel_partner_factory(parent_channel_partner=level_1[int(i/gen_count)])
+                   for i in range(gen_count ** 2)]
+        level_3 = [channel_partner_factory(parent_channel_partner=level_2[int(i / gen_count)])
+                   for i in range(int (gen_count ** 3))]
+        target_partners = [target_cp] + level_1 + level_2 + level_3
+        organizations = [organization_factory(channel_partner=target_partners[int(i/gen_count)])
+                         for i in range(len(target_partners) * gen_count)]
+        systems = [system_factory(organization=organizations[int(i/gen_count)])
+                   for i in range(len(organizations) * gen_count)]
+        services = [baker.make(ChannelPartnerServiceRecord, cloud_system=systems[i], quantity=gen_count)
+                    for i in range(len(organizations))]
+
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
+        mock_auth_with_user(default_cp_admin)
+        response = view(arf.get(f'/partners/channel_partners/{target_cp.id}/aggregate/'), pk=target_cp.id)
+        assert response.status_code == 200
+        assert response.data['channelPartners'] == len(target_partners) - 1
+        assert response.data['organizations'] == len(organizations)
+        assert response.data['systems'] == len(systems)
+        assert response.data['serviceUsageQuantity'] == len(organizations) * gen_count
+
+
+class TestOrganizationViewSet:
+
+    def test_aggregate(self, organization_factory, system_factory, arf, default_cp_admin, mock_auth_with_user):
+        org = organization_factory()
+        view = OrganizationViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
+        mock_auth_with_user(default_cp_admin)
+        response = view(arf.get('/'), pk=org.id)
+        assert response.status_code == 200
+        assert response.data['systems'] == 0
+        assert response.data['serviceUsageQuantity'] == 0
+        sys_cnt = random.randint(30, 60)
+        systems = [system_factory(organization=org) for _ in range(sys_cnt)]
+
+        response = view(arf.get('/'), pk=org.id)
+
+        assert response.data['systems'] == sys_cnt
+        assert response.data['serviceUsageQuantity'] == 0
+
+        usage = 0
+        for sys in systems:
+            qty = random.randint(0, 10)
+            baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=qty)
+            usage += qty
+
+        response = view(arf.get('/'), pk=org.id)
+
+        assert response.data['systems'] == sys_cnt
+        assert response.data['serviceUsageQuantity'] == usage

@@ -363,6 +363,15 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         serializer = ChannelPartnerServiceSummarySerializer(service_changes, many=True)
         return Response(serializer.data)
 
+    @extend_schema(summary='Get aggregated usage data.',
+                   methods=['GET'],
+                   responses=ChannelPartnerAggDataSerializer,
+                   extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'})
+    @action(methods=['get'], detail=True)
+    def aggregate(self, request, pk=None):
+        serializer = ChannelPartnerAggDataSerializer(instance=self.get_object())
+        return Response(serializer.data)
+
 
 @extend_schema(
     tags=['Channel Partners - Organizations'],
@@ -460,6 +469,15 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         start_ts = param_serializer.validated_data.get('startTs')
         service_changes = org.service_changes_summary(start_ts)
         serializer = ChannelPartnerServiceSummarySerializer(service_changes, many=True)
+        return Response(serializer.data)
+
+    @extend_schema(summary='Get aggregated usage data.',
+                   methods=['GET'],
+                   responses=OrganizationAggDataSerializer,
+                   extensions={'x-permission': f'{Organization.permissions.view_service_reports} for Organization'})
+    @action(methods=['get'], detail=True)
+    def aggregate(self, request, pk=None):
+        serializer = OrganizationAggDataSerializer(instance=self.get_object())
         return Response(serializer.data)
 
 

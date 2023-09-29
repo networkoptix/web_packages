@@ -15,10 +15,6 @@ many_users = [
     CloudUser.objects.get_or_create(email=f'{uuid.uuid4()}@networkoptix.com')[0] for _ in range(50)
 ]
 
-many_users = [
-    CloudUser.objects.get_or_create(email=f'{uuid.uuid4()}@networkoptix.com')[0] for _ in range(50)
-]
-
 
 def add_users_or_channel_partner(channel_partner: ChannelPartner):
     for user in users:

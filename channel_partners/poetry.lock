@@ -337,6 +337,22 @@ url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 reference = "pypi-remote"
 
 [[package]]
+name = "django-cte"
+version = "1.3.1"
+description = "Common Table Expressions (CTE) for Django"
+optional = false
+python-versions = "*"
+files = [
+    {file = "django-cte-1.3.1.tar.gz", hash = "sha256:411521c7319749ef05b5e172c966a153228dbcad0680b089339c64cde43096fe"},
+    {file = "django_cte-1.3.1-py2.py3-none-any.whl", hash = "sha256:aa89a8cfba14f07ef4147589e3724d571e089da0fb9f0d8ef13bc20eabec9b33"},
+]
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
 name = "django-extensions"
 version = "3.2.3"
 description = "Extensions for Django"
@@ -1310,4 +1326,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "07212e858f3bab18091a6c3bd6a2bc88adbf96b71f1310a5c2410b2bfd01c5b5"
+content-hash = "00e288ee1bd0d98fd0d5b2d16fc4746056e1214d65523229e6187ebd82865f7d"

@@ -5,7 +5,9 @@ import json
 import httpx
 import llutil
 from django.conf import settings
+from django.db.models import Sum
 from django.utils import timezone
+from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
 from drf_spectacular.utils import extend_schema_serializer, extend_schema_field
 from drf_spectacular.utils import OpenApiExample
@@ -705,3 +707,62 @@ class ChannelPartnerServiceSummarySerializer(serializers.Serializer):
     start = serializers.IntegerField()
     end = serializers.IntegerField()
     service = ServiceSerializer()
+
+
+class IntegerMethodField(serializers.SerializerMethodField, serializers.IntegerField):
+    pass
+
+
+class ChannelPartnerAggDataSerializer(serializers.Serializer):
+    channelPartners = IntegerMethodField(method_name='get_channel_partners_count', default=0)
+    organizations = IntegerMethodField(method_name='get_organizations_count', default=0)
+    systems = IntegerMethodField(method_name='get_systems_count', default=0)
+    serviceUsageQuantity = IntegerMethodField(method_name='get_service_usage_quantity', default=0)
+
+    @cached_property
+    def successors(self):
+        return self.instance.get_successors(ancestor_id=self.instance.id)
+
+    @cached_property
+    def children_organizations(self):
+        return Organization.objects.filter(channel_partner_id__in=[cp.id for cp in self.successors])
+
+    @cached_property
+    def children_systems(self):
+        return CloudSystemId.objects.filter(organization__in=self.children_organizations)\
+            .exclude(state=ChannelPartnerStates.SHUTDOWN)
+
+    def get_channel_partners_count(self, instance):
+        """
+        Querying all successors of given channel partner. By default, CP itself is included in result.
+        `successor property is cached at instance of the serializer to allow reuse it in methods below.
+        It is simpler to decrease total count by 1 than call query a few times with different parameters.
+        """
+        return len(self.successors) - 1
+
+    def get_organizations_count(self, instance):
+        count = self.children_organizations.count()
+        return count
+
+    def get_systems_count(self, instance):
+        count = self.children_systems.count()
+        return count
+
+    def get_service_usage_quantity(self, instance):
+        service_records_quantity = ChannelPartnerServiceRecord.objects\
+            .filter(cloud_system__in=self.children_systems).aggregate(Sum('quantity'))
+        return service_records_quantity.get('quantity__sum', 0) or 0
+
+
+class OrganizationAggDataSerializer(serializers.Serializer):
+    systems = IntegerMethodField(method_name='get_systems_count', default=0)
+    serviceUsageQuantity = IntegerMethodField(method_name='get_service_usage_quantity', default=0)
+
+    def get_systems_count(self, instance: Organization):
+        count = instance.cloud_systems.count()
+        return count
+
+    def get_service_usage_quantity(self, instance):
+        service_records_quantity = ChannelPartnerServiceRecord.objects\
+            .filter(cloud_system__organization=instance).aggregate(Sum('quantity'))
+        return service_records_quantity.get('quantity__sum', 0) or 0
