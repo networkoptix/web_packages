@@ -55,18 +55,18 @@ def default_channel_partner(cloud_test_instance, cloud_test_nx_channel_partner):
 @pytest.fixture()
 def default_organization(default_channel_partner):
     return Organization.objects.create(name="Default Organization", channel_partner=default_channel_partner,
-                                       channel_partner_access_level=ChannelPartnerAccessLevel.FULL)
+                                       channel_partner_access_level_id=OrganizationRole.ORGANIZATION_ADMINISTRATOR)
 
 
 @pytest.fixture()
 def organization_factory(default_channel_partner):
 
     def factory(name=None, channel_partner=default_channel_partner,
-                channel_partner_access_level=ChannelPartnerAccessLevel.FULL) -> Organization:
+                channel_partner_access_level_id=OrganizationRole.ORGANIZATION_ADMINISTRATOR) -> Organization:
         return Organization.objects.create(
             name=name or f"Organization {uuid4()}",
             channel_partner=channel_partner,
-            channel_partner_access_level=channel_partner_access_level
+            channel_partner_access_level_id=channel_partner_access_level_id
         )
 
     return factory

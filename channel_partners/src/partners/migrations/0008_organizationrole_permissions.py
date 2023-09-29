@@ -1,0 +1,132 @@
+
+from django.db import migrations
+from django.contrib.contenttypes.management import create_contenttypes
+from django.contrib.auth.management import create_permissions
+from django.apps.registry import apps as global_apps
+
+
+CHANNEL_PARTNER_ROLES = [
+    {
+        'names': ['Administrator'],
+        'permissions': [
+            'configure_channel_partner',
+            'manage_users',
+            'add_remove_sub_channel_partners',
+            'add_remove_organizations',
+            'alter_state_sub_channel_partners',
+            'alter_state_organizations',
+            'administer_organization_systems',
+            'view_service_reports',
+            'add_remove_service_quantities'
+        ]
+    },
+    {
+        'names': ['Manager'],
+        'permissions': [
+            'add_remove_organizations',
+            'alter_state_organizations',
+            'administer_organization_systems',
+            'view_service_reports',
+            'add_remove_service_quantities'
+        ]
+    },
+    {
+        'names': ['Accountant'],
+        'permissions': [
+            'view_service_reports'
+        ]
+    }
+]
+
+ORGANIZATION_SYSTEM_MAP = {
+    'Organization Administrator': 'Administrator',
+    'Administrator': 'Administrator',
+    'Power User': 'Power User',
+    'Advanced Viewer': 'Advanced Viewer',
+    'Viewer': 'Viewer',
+    'Live Viewer': 'Live Viewer',
+    'System Health Viewer': 'System Health Viewer'
+}
+
+ORGANIZATION_ROLES = [
+    {
+        'names': ['Organization Administrator'],
+        'permissions': [
+            'manage_systems',
+            'manage_users',
+            'configure_organization',
+            'view_service_reports',
+            'view_health_monitoring',
+            'access_systems'
+        ]
+    },
+    {
+        'names': ['Administrator', 'Power User', 'System Health Viewer'],
+        'permissions': [
+            'view_health_monitoring',
+            'access_systems'
+        ]
+    },
+    {
+        'names': ['Advanced Viewer', 'Viewer', 'Live Viewer'],
+        'permissions': [
+            'access_systems'
+        ]
+    }
+]
+
+
+def add_content_types_and_permissions():
+    for app_config in global_apps.get_app_configs():
+        create_contenttypes(app_config)
+    for app_config in global_apps.get_app_configs():
+        create_permissions(app_config)
+
+
+def forwards(apps, schema_editor):
+    add_content_types_and_permissions()
+
+    OrganizationRole = apps.get_model('partners', 'OrganizationRole')
+    ChannelPartnerRole = apps.get_model('partners', 'ChannelPartnerRole')
+    ContentType = apps.get_model('contenttypes', 'ContentType')
+    Permission = apps.get_model('auth', 'Permission')
+
+    channel_partner_content_type = ContentType.objects.get(model='channelpartner')
+    for channel_partner_role in CHANNEL_PARTNER_ROLES:
+        permissions = Permission.objects.filter(codename__in=channel_partner_role['permissions'], content_type=channel_partner_content_type)
+        for name in channel_partner_role['names']:
+            role = ChannelPartnerRole.objects.get_or_create(
+                name=name
+            )[0]
+            role.permissions.set(permissions)
+
+    organization_content_type = ContentType.objects.get(model='organization')
+    for organization_role in ORGANIZATION_ROLES:
+        permissions = Permission.objects.filter(codename__in=organization_role['permissions'],
+                                                content_type=organization_content_type)
+        for name in organization_role['names']:
+            role = OrganizationRole.objects.get_or_create(
+                name=name, system_role=ORGANIZATION_SYSTEM_MAP[name]
+            )[0]
+            for permission in permissions:
+                role.permissions.add(permission)
+
+
+def backwards(apps, schema_editor):
+    OrganizationRole = apps.get_model('partners', 'OrganizationRole')
+    ChannelPartnerRole = apps.get_model('partners', 'ChannelPartnerRole')
+
+    OrganizationRole.objects.all().delete()
+    ChannelPartnerRole.objects.all().delete()
+
+
+class Migration(migrations.Migration):
+
+    dependencies = [
+        ('auth', '0012_alter_user_first_name_max_length'),
+        ('partners', '0007_remove_organization_channel_partner_can_administer_and_more'),
+    ]
+
+    operations = [
+        migrations.RunPython(forwards, reverse_code=backwards)
+    ]

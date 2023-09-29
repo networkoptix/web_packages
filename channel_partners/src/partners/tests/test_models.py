@@ -89,7 +89,7 @@ class TestOrganization:
 
         # test full access
 
-        assert org.channel_partner_access_level == ChannelPartnerAccessLevel.FULL
+        assert org.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is True
         assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.configure_organization) is True
@@ -98,7 +98,7 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
         #  test privacy mode
-        org.channel_partner_access_level = ChannelPartnerAccessLevel.PRIVACY_MODE
+        org.channel_partner_access_level_id = OrganizationRole.SYSTEM_HEALTH_VIEWER
         org.save()
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
         assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is False
@@ -107,8 +107,9 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
-        #  test no access
-        org.channel_partner_access_level = ChannelPartnerAccessLevel.PRIVACY_MODE
+        #  test no access.
+        # todo create tests for NO_ACCESS
+        org.channel_partner_access_level_id = OrganizationRole.SYSTEM_HEALTH_VIEWER
         org.save()
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
         assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is False

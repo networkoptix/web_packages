@@ -288,6 +288,7 @@ class LocalRecordingUsage(models.Model):
 
 
 class ChannelPartnerRole(models.Model):
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     permissions = models.ManyToManyField(Permission)
 
@@ -529,13 +530,19 @@ class ChannelPartnerToUser(models.Model):
             models.constraints.UniqueConstraint(fields=['channel_partner', 'user'], name='unique_channel_partner_user')
         ]
 
+
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
 
 
 class OrganizationRole(models.Model):
+    ORGANIZATION_ADMINISTRATOR = uuid.UUID(int=1, version=4)
+    SYSTEM_HEALTH_VIEWER = uuid.UUID(int=4, version=4)
+
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     system_role = models.CharField(max_length=100, blank=True, default='')
+    system_role_uuid = models.CharField(max_length=100, blank=True, default='')
     permissions = models.ManyToManyField(Permission)
 
     def __str__(self):
@@ -580,7 +587,15 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
                                    blank=True, through='OrganizationToUser')
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
                                 blank=False, default=ChannelPartnerStates.ACTIVE)
-    channel_partner_access_level = models.PositiveIntegerField(default=ChannelPartnerAccessLevel.FULL)
+    channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
+                                                     limit_choices_to={
+                                                         "id__in": [
+                                                             OrganizationRole.ORGANIZATION_ADMINISTRATOR,
+                                                             OrganizationRole.SYSTEM_HEALTH_VIEWER
+                                                         ]
+                                                     },
+                                                     default=OrganizationRole.ORGANIZATION_ADMINISTRATOR,
+                                                     on_delete=models.SET_NULL)
     attributes = models.JSONField(default=dict)
 
     objects = ExternalIdTargetManager()
@@ -654,7 +669,7 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
             return True
         channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner, roles__has_any_keys=['Administrator', 'Manager']).exists()
         if channel_partner_manager:
-            if self.channel_partner_access_level == ChannelPartnerAccessLevel.FULL:
+            if self.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR:
                 role = 'Organization Administrator'
             else:
                 role = 'System Health Viewer'
