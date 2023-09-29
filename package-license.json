@@ -6652,6 +6652,14 @@
             "path": "cloud_portal/front_end/node_modules/console-control-strings",
             "licenseFile": "cloud_portal/front_end/node_modules/console-control-strings/LICENSE"
         },
+        "container-query-polyfill@1.0.2": {
+            "licenses": "Apache-2.0",
+            "repository": "https://github.com/GoogleChromeLabs/container-query-polyfill",
+            "publisher": "Google Chrome Developers",
+            "email": "chromium-dev@google.com",
+            "path": "cloud_portal/front_end/node_modules/container-query-polyfill",
+            "licenseFile": "cloud_portal/front_end/node_modules/container-query-polyfill/LICENSE"
+        },
         "content-disposition@0.5.4": {
             "licenses": "MIT",
             "repository": "https://github.com/jshttp/content-disposition",

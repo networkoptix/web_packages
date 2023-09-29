@@ -3,7 +3,7 @@ import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@an
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Inject, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
@@ -149,6 +149,7 @@ const findNode = (
         NxSearchComponent,
         NxSearchHighlightComponent,
     ],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './layout-grid-tree.component.html',
     styleUrls: ['./layout-grid-tree.component.scss'],
 })

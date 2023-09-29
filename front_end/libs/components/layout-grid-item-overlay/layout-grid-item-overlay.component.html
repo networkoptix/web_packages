@@ -1,0 +1,111 @@
+<div
+    class="nx-layout-grid-item-overlay"
+    [ngClass]="{ show: isFullscreen$$() && !hide, hide: hide }"
+>
+    <div class="name">
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirLayoutsCamera + 'camera_rec_off.svg'"
+            [svgStyle]="{ 'width.px': '16', 'height.px': '16' }"
+            [nxTooltip]="('Recording off' | translate) + ': ' + node?.name"
+        ></svg-icon>
+        <div
+            class="resource-name ellipsis"
+            [nxTooltip]="node?.name || ('Not Supported' | translate)"
+        >
+            {{ node?.name || ('Not Supported' | translate) }}
+        </div>
+    </div>
+
+    <div
+        class="quick-actions"
+        (click)="$event.stopPropagation()"
+    >
+        <div class="action-icon">
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirLayouts + 'menu.svg'"
+                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                [nxTooltip]="'Menu' | translate"
+                [cdkMenuTriggerFor]="nodeActionMenu"
+            ></svg-icon>
+            <ng-template #nodeActionMenu>
+                <nx-context-menu
+                    [context]="node"
+                    [menuItems]="menuItemsByType[node.type]"
+                />
+            </ng-template>
+        </div>
+        <ng-container *ngIf="node.type === ResourceType.CAMERA">
+            <div
+                *ngFor="let action of CAMERA_QUICK_ACTIONS"
+                class="action-icon"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [ngClass]="{ active: action.class$$ && action.class$$() }"
+                    [src]="icons.dirLayoutsCamera + action.icon"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    (click)="$event.stopPropagation(); $event.preventDefault(); action?.toggle()"
+                    [nxTooltip]="action.tooltip | translate"
+                ></svg-icon>
+            </div>
+        </ng-container>
+    </div>
+
+    <div class="menu-group">
+        <div class="fullscreen">
+            <svg-icon
+                *ngIf="isFullscreen$$()"
+                nx-add-svg-src
+                (click)="ACTIONS.fullscreenOff()"
+                [src]="icons.dirLayoutsCamera + 'collapse.svg'"
+                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                [nxTooltip]="'Exit Full Screen' | translate"
+            ></svg-icon>
+            <svg-icon
+                *ngIf="!isFullscreen$$()"
+                nx-add-svg-src
+                (click)="ACTIONS.fullscreenOn()"
+                [src]="icons.dirLayoutsCamera + 'full_screen.svg'"
+                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                [nxTooltip]="'Full Screen' | translate"
+            ></svg-icon>
+        </div>
+        <div
+            class="remove"
+            *ngIf="showRemove && !isFullscreen$$()"
+        >
+            <svg-icon
+                nx-add-svg-src
+                (click)="removeItem.emit(item)"
+                [src]="icons.dirLayoutsCamera + 'close.svg'"
+                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                [nxTooltip]="'Remove from layout' | translate"
+            ></svg-icon>
+        </div>
+    </div>
+
+    <div
+        *ngIf="showInfo$$()"
+        class="info"
+    >
+        <div
+            class="info-type"
+            translate
+        >
+            Stream (stub data)
+        </div>
+        <div translate>1920x1080</div>
+        <div translate>29.00 fps</div>
+        <div translate>2.72 Mbps</div>
+        <div translate>Hi-Res</div>
+    </div>
+
+    <div
+        class="status"
+        *ngIf="!!statusText$$()"
+    >
+        {{ statusText$$().toUpperCase() | translate }}
+    </div>
+</div>

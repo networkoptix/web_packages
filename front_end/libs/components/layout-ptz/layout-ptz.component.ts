@@ -1,5 +1,12 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, HostBinding, Input, Output } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    EventEmitter,
+    HostBinding,
+    Input,
+    Output,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { clamp } from 'lodash-es';
@@ -17,6 +24,7 @@ import { NxSystem } from '@services/system.service/system';
     templateUrl: 'layout-ptz.component.html',
     styleUrls: ['layout-ptz.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [CommonModule, TranslateModule, NxTooltipDirective],
 })
 export class NxLayoutPtzComponent {

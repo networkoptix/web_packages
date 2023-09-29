@@ -4,6 +4,7 @@ import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import { HttpErrorResponse } from '@angular/common/http';
 import {
+    ChangeDetectionStrategy,
     ChangeDetectorRef,
     Component,
     computed,
@@ -51,6 +52,7 @@ import {
 import { v4 as uuid } from 'uuid';
 
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
+import { NxLayoutGridItemOverlayComponent } from '@components/layout-grid-item-overlay/layout-grid-item-overlay.component';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -188,19 +190,21 @@ const calculateResize = (
     { x, y }: Point,
     { width, height }: Size,
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    [horizonalOrVerticalAlign, horizonalAlign]: NxLayoutGridComponent['alignments'][number] = [
+    [horizontalOrVerticalAlign, horizontalAlign]: NxLayoutGridComponent['alignments'][number] = [
         VerticalAlign.BOTTOM,
         HorizontalAlign.RIGHT,
     ],
     origin: Point,
 ): { move?: Point; resize: Point; transformOrigin?: string } => {
     const verticalAlign = Object.values(VerticalAlign).includes(
-        horizonalOrVerticalAlign as VerticalAlign,
+        horizontalOrVerticalAlign as VerticalAlign,
     )
-        ? (horizonalOrVerticalAlign as VerticalAlign)
+        ? (horizontalOrVerticalAlign as VerticalAlign)
         : null;
 
-    horizonalAlign = verticalAlign ? horizonalAlign : (horizonalOrVerticalAlign as HorizontalAlign);
+    horizontalAlign = verticalAlign
+        ? horizontalAlign
+        : (horizontalOrVerticalAlign as HorizontalAlign);
 
     const move = { x: 0, y: 0 };
 
@@ -234,7 +238,7 @@ const calculateResize = (
         y = x;
     }
 
-    if (!horizonalAlign) {
+    if (!horizontalAlign) {
         x = y;
     }
 
@@ -249,7 +253,7 @@ const calculateResize = (
         );
     }
 
-    if (horizonalAlign === HorizontalAlign.LEFT) {
+    if (horizontalAlign === HorizontalAlign.LEFT) {
         x *= -1;
         move.x = -x;
         initialState.transformOrigin = initialState.transformOrigin.replace(
@@ -261,7 +265,7 @@ const calculateResize = (
     initialState.resize.x = x;
     initialState.resize.y = y;
 
-    if (verticalAlign === VerticalAlign.TOP && horizonalAlign === HorizontalAlign.LEFT) {
+    if (verticalAlign === VerticalAlign.TOP && horizontalAlign === HorizontalAlign.LEFT) {
         return {
             ...initialState,
             move: {
@@ -280,6 +284,7 @@ const calculateResize = (
     templateUrl: 'layout-grid.component.html',
     styleUrls: ['layout-grid.component.scss'],
     standalone: true,
+    changeDetection: ChangeDetectionStrategy.OnPush,
     imports: [
         AngularSvgIconModule,
         CommonModule,
@@ -297,6 +302,7 @@ const calculateResize = (
         NxAddSvgSrcDirective,
         NxClickElsewhereDirective,
         PortalModule,
+        NxLayoutGridItemOverlayComponent,
     ],
 })
 export class NxLayoutGridComponent {
@@ -442,6 +448,18 @@ export class NxLayoutGridComponent {
             this.initialLayout$.next(originalLayout);
             this.removeFocus = () => null;
         };
+    };
+
+    resizeItem = ($event: Size, dragContainer: HTMLElement): void => {
+        const aspectRatio = parseFloat(dragContainer.style?.aspectRatio.split('/')[0]);
+
+        if (!aspectRatio) {
+            return;
+        }
+
+        const wide = $event.width / $event.height > aspectRatio;
+        dragContainer.classList.toggle('wide', wide);
+        dragContainer.classList.toggle('narrow', !wide);
     };
 
     // eslint-disable-next-line @typescript-eslint/explicit-function-return-type
@@ -956,14 +974,13 @@ export class NxLayoutGridComponent {
     generateItemRenderConfig =
         (layoutRenderConfig: LayoutRenderConfig, wrapperSize: Size, layout: ParsedLayout) =>
         item => {
-            const { spacing, aspectRatio, origin } = layoutRenderConfig;
+            const { aspectRatio, origin } = layoutRenderConfig;
             const calcFactory = (origin: number) => (point: number) => point - origin + 1;
 
             const calcX = calcFactory(origin.x);
             const calcY = calcFactory(origin.y);
             const { top, bottom, left, right } = item;
             const renderConfig = {
-                padding: `${(spacing * 25) / aspectRatio}%`,
                 'grid-column': `${calcX(left)} / ${calcX(right)}`,
                 'grid-row': `${calcY(top)} / ${calcY(bottom)}`,
                 aspect: aspectRatio,
@@ -1039,10 +1056,11 @@ export class NxLayoutGridComponent {
             return;
         }
 
-        const {
-            cellSize: { height, width },
-        } = this.calculateAspect([size, layout]);
+        const { height, width } = this.window.document.fullscreenElement
+            ? size
+            : this.calculateAspect([size, layout]).cellSize;
         const { renderConfig, rotation } = item;
+
         renderConfig.showTooltip = width < 360;
         if (assertResourceOfType.camera(node) && node.details.online) {
             const initialAspect = node.aspectRatio || renderConfig.aspect;
@@ -1051,12 +1069,7 @@ export class NxLayoutGridComponent {
 
             const aspect = isRotated ? 1 / initialAspect : initialAspect;
 
-            const tooWide = width > height * aspect;
-
             renderConfig.child = {
-                ...(tooWide
-                    ? { width: 'unset', height: '100%' }
-                    : { width: '100%', height: 'unset' }),
                 'aspect-ratio': aspect,
             };
         }

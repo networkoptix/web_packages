@@ -207,6 +207,7 @@ export function setupConfig(): IConfig {
             dirTextButtons: '/static/images/icons/text_buttons/',
             dirHeader: '/static/images/icons/header/',
             dirLayouts: '/static/images/icons/layouts/',
+            dirLayoutsCamera: '/static/images/icons/layouts/camera/',
             dirNonStandard: '/static/images/icons/',
             dirNonStandardView: '/static/images/icons/view/',
             dirPagePlaceholder: '/static/images/placeholders/page/',

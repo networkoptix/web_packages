@@ -483,6 +483,7 @@ export interface Icons {
     dirTextButtons: string;
     dirHeader: string;
     dirLayouts: string;
+    dirLayoutsCamera: string;
     dirNonStandard: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;

@@ -14,9 +14,9 @@
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{
-                                'width.px': '16',
-                                'height.px': '16',
-                            }"
+                                    'width.px': '16',
+                                    'height.px': '16',
+                                }"
                     [src]="icons.dirTextButtons + 'arrow_right.svg'"
                 >
                 </svg-icon>
@@ -30,12 +30,23 @@
             </ng-template>
         </ng-container>
 
-        <ng-container *ngIf="!item.subMenu && !!item.action">
+        <ng-container *ngIf="!item.subMenu && !!item.action && !!item.name">
             <button
                 cdkMenuItem
                 (click)="item.action($event, context); $event.stopPropagation()"
+                [ngClass]="{checked: item.checked}"
             >
                 {{ item.name | translate }}
+                <svg-icon
+                    *ngIf="item.checked"
+                    nx-add-svg-src
+                    [svgStyle]="{
+                                    'width.px': '16',
+                                    'height.px': '16',
+                                }"
+                    [src]="icons.dirLayouts + 'yes.svg'"
+                >
+                </svg-icon>
             </button>
         </ng-container>
     </ng-container>

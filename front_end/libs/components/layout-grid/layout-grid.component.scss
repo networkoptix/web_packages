@@ -1,7 +1,7 @@
-@use "typography";
-@use "theme_variables_common" as *;
-@use "bootstrap_utils" as bootstrap;
-@use "mixins";
+@use 'typography';
+@use 'theme_variables_common' as *;
+@use 'bootstrap_utils' as bootstrap;
+@use 'mixins';
 
 @keyframes fadein {
     from {
@@ -14,6 +14,15 @@
 }
 
 :host {
+    --z-index: 1;
+    --z-index-sidebar-wrapper: calc(var(--z-index) + 1);
+    --z-index-highlight-adding: calc(var(--z-index-sidebar-wrapper) + 1);
+    --z-index-video: calc(var(--z-index-highlight-adding) + 1);
+    --z-index-preloader: calc(var(--z-index-video) + 1);
+    --z-index-overlay: calc(var(--z-index-preloader) + 1);
+    --z-index-resize-handle: calc(var(--z-index-overlay) + 1);
+    --z-index-menu-tab: calc(var(--z-index-resize-handle) + 1);
+
     width: 100%;
     height: 100%;
     display: grid;
@@ -21,13 +30,14 @@
     user-select: none;
     grid-template-columns: auto 1fr auto;
     grid-template-rows: minmax(0, 1fr);
-    grid-template-areas: "left middle right";
+    grid-template-areas: 'left middle right';
 
     nx-pre-loader {
         position: absolute;
         top: 50%;
         left: 50%;
         transform: translateY(-50%);
+        z-index: var(--z-index-preloader);
     }
 }
 
@@ -57,7 +67,7 @@ nx-webgl-canvas {
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     background: var(--sidebar-background);
-    z-index: 2;
+    z-index: var(--z-index-sidebar-wrapper);
     --column-width: calc(100vw / 12);
 
     // Responsive menu positioned on the grid
@@ -77,7 +87,6 @@ nx-webgl-canvas {
     @media (max-width: 992px) {
         --columns: 4;
     }
-
 
     // Responsive menu positioned overlaying the grid
     @media (max-width: 768px) {
@@ -104,7 +113,7 @@ nx-webgl-canvas {
 }
 
 div.tab {
-    z-index: 100;
+    z-index: var(--z-index-menu-tab);
     height: 32px;
     width: 14px;
     margin: 0;
@@ -123,7 +132,7 @@ div.tab {
         fill: none;
     }
 
-    &>svg-icon {
+    & > svg-icon {
         transform: rotate(180deg);
         line-height: 0;
         height: 32px;
@@ -137,7 +146,7 @@ div.tab {
         background: var(--sidebar-tab-closed);
     }
 
-    &.active-menu>svg-icon {
+    &.active-menu > svg-icon {
         transform: rotate(0deg);
     }
 
@@ -208,7 +217,14 @@ h2.auto-save-overlay {
     overflow: hidden;
     position: relative;
     &.dragging {
-        background-image: linear-gradient(to right, transparent 0px, #6662 0.25px, #6662 0.2px, transparent 1px), linear-gradient(to bottom, transparent 0px, #6662 0.25px, #6662 0.5px, transparent 1px);
+        background-image: linear-gradient(
+                to right,
+                transparent 0px,
+                #6662 0.25px,
+                #6662 0.2px,
+                transparent 1px
+            ),
+            linear-gradient(to bottom, transparent 0px, #6662 0.25px, #6662 0.5px, transparent 1px);
     }
 }
 
@@ -237,6 +253,7 @@ h2.auto-save-overlay {
     height: 100%;
     display: grid;
     position: absolute;
+    grid-gap: 4px;
     top: 50%;
     left: 50%;
     transform: translate3d(-50%, -50%, 0);
@@ -254,8 +271,7 @@ h2.auto-save-overlay {
     overflow: hidden;
 
     &:active {
-        background: rgba($brand_core, .1);
-        outline: 2px solid var(--brand-core);
+        background: rgba($brand_core, 0.1);
     }
 
     &:hover .item-error.has-secondary-panel {
@@ -297,7 +313,6 @@ h2.auto-save-overlay {
                 margin-bottom: 8px;
             }
         }
-
 
         &.has-action:hover {
             cursor: pointer;
@@ -359,17 +374,15 @@ h2.auto-save-overlay {
 }
 
 .tooltip-error-wrapper {
-
     h3,
     h4 {
         color: unset !important;
     }
 }
 
-.drag-container {
-
+.content-container {
     &,
-    &>nx-pre-loader {
+    & > nx-pre-loader {
         width: 100%;
         height: 100%;
         display: flex;
@@ -389,8 +402,9 @@ h2.auto-save-overlay {
 .layout-item {
     height: 100%;
     width: 100%;
-    max-height: calc(100% - 2px);
-    max-width: calc(100% - 2px);
+    max-height: calc(100% - 8px);
+    max-width: calc(100% - 8px);
+    border-radius: 4px;
     position: relative;
     display: flex;
     justify-content: center;
@@ -399,12 +413,19 @@ h2.auto-save-overlay {
     overflow: hidden;
     background: var(--header-bg);
 
+    &.wide {
+        width: unset;
+    }
+    &.narrow {
+        height: unset;
+    }
+
     &.server-layout-item {
         background: var(--placeholder-background);
     }
 
     &:hover {
-        outline: 2px solid var(--border-color);
+        outline: 4px solid var(--border-color);
     }
 
     &:active,
@@ -419,17 +440,6 @@ h2.auto-save-overlay {
     }
 
     &:hover {
-        header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 200;
-
-            svg-icon {
-                cursor: pointer;
-            }
-        }
-
         ::ng-deep {
             .parent-hover {
                 visibility: visible;
@@ -437,15 +447,13 @@ h2.auto-save-overlay {
         }
     }
 
-    header {
-        display: none;
+    .overlay {
         position: absolute;
-        background: linear-gradient(to bottom, var(--dark3) 10%, transparent);
-        color: var(--light9);
-        padding: 4px 8px;
         top: 0;
         left: 0;
         right: 0;
+        bottom: 0;
+        z-index: var(--z-index-overlay);
     }
 }
 
@@ -458,7 +466,7 @@ nx-monitoring-graph {
 iframe {
     width: 100%;
     height: 100%;
-    z-index: 2;
+    z-index: var(--z-index-video);
     position: relative;
 }
 
@@ -487,6 +495,7 @@ iframe {
         flex-direction: column;
         justify-content: center;
         align-items: center;
+        z-index: var(--z-index-video);
 
         h3 {
             margin-bottom: 8px;
@@ -497,18 +506,21 @@ iframe {
         position: absolute;
         width: 8px;
         height: 8px;
-        z-index: 200;
+        z-index: var(--z-index-resize-handle);
 
-        &.top.left, &.bottom.right {
+        &.top.left,
+        &.bottom.right {
             height: 16px;
             width: 16px;
             cursor: nwse-resize;
         }
-        &.top.right, &.bottom.left {
+        &.top.right,
+        &.bottom.left {
             cursor: nesw-resize;
         }
 
-        &.top, &.bottom {
+        &.top,
+        &.bottom {
             &:not(.left):not(.right) {
                 width: calc(100% - 32px) !important;
                 cursor: ns-resize;
@@ -516,7 +528,8 @@ iframe {
             }
         }
 
-        &.left, &.right {
+        &.left,
+        &.right {
             &:not(.top):not(.bottom) {
                 height: calc(100% - 32px) !important;
                 cursor: ew-resize;
@@ -572,11 +585,10 @@ iframe {
 }
 
 .highlight-adding {
-    z-index: 20;
+    z-index: var(--z-index-highlight-adding);
     grid-area: 1 / 1 / 2 / 2;
     opacity: 1 !important;
-    background: rgba($brand_core, .1);
-    outline: 2px solid var(--brand-core);
+    background: rgba($brand_core, 0.1);
 }
 
 .help-text {
@@ -648,7 +660,6 @@ iframe {
             }
         }
     }
-
 }
 
 .no-camera-placeholder,
@@ -665,7 +676,8 @@ iframe {
     align-items: center;
     text-align: center;
 
-    & > h3, & > p {
+    & > h3,
+    & > p {
         color: var(--no-camera-placeholder-color) !important;
     }
 

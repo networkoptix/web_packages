@@ -257,6 +257,18 @@
             "iodevice": "NOT SUPPORTED",
             "webpage_error": "Error loading webpage",
             "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
+        },
+        "overlay": {
+            "quickActions" : {
+                "ptz": "PTZ",
+                "fisheye": "Fisheye",
+                "motion": "Motion",
+                "object": "Object",
+                "zoomWindow": "Zoom Window",
+                "info": "Info",
+                "rotate": "Rotate",
+                "screenshot": "Screenshot"
+            }
         }
     },
     "deviceTypes": {

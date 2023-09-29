@@ -179,7 +179,9 @@
                             *ngIf="layoutItemLookup"
                             #layoutItemWrapper
                             cdkDropList
-                            [cdkDropListDisabled]="layout.locked"
+                            [cdkDropListDisabled]="
+                                layout.locked || !!window.document.fullscreenElement
+                            "
                             [cdkDropListEnterPredicate]="preventDrop"
                             [cdkDropListData]="item"
                             [ngStyle]="item.renderConfig"
@@ -192,11 +194,14 @@
                             }"
                             (dblclick)="focus(item.id)"
                             (nxClickElsewhere)="removeFocus()"
+                            (resize)="resizeItem($event, dragContainer)"
                         >
                             <div
                                 cdkDrag
                                 #dragContainer
-                                [cdkDragDisabled]="layout.locked"
+                                [cdkDragDisabled]="
+                                    layout.locked || !!window.document.fullscreenElement
+                                "
                                 [cdkDragData]="item"
                                 (cdkDragReleased)="moveItem(item)"
                                 (cdkDragMoved)="updateBackground($event, item, 'move')"
@@ -214,30 +219,6 @@
                                     (collisions$ | async)[item.id] || item.renderConfig.child
                                 "
                             >
-                                <header
-                                    *ngIf="mouseMoving$ | async"
-                                    cdkDragHandle
-                                    [cdkDragHandleDisabled]="layout.locked"
-                                >
-                                    <span
-                                        class="ellipsis"
-                                        #resourceName
-                                        >{{
-                                            layoutItemLookup[item.resourceId]?.name ||
-                                                'Not Supported'
-                                        }}</span
-                                    >
-                                    <div *ngIf="!layout.locked && layout.name !== 'Focus View'">
-                                        <svg-icon
-                                            nx-add-svg-src
-                                            (click)="removeItem(item)"
-                                            [src]="icons.dirTextButtons + 'close.svg'"
-                                            [svgStyle]="{ 'width.px': '18', 'height.px': '18' }"
-                                            class="close-svg"
-                                            [applyClass]="true"
-                                        ></svg-icon>
-                                    </div>
-                                </header>
                                 <ng-template #notSupported>
                                     <div
                                         class="not-supported"
@@ -246,11 +227,6 @@
                                         Not supported
                                     </div>
                                 </ng-template>
-                                <!-- <div
-                                    cdkDragHandle
-                                    [cdkDragHandleDisabled]="layout.locked"
-                                    class="drag-overlay"
-                                ></div> -->
                                 <ng-container
                                     *ngIf="
                                         layoutItemLookup[item.resourceId] as itemDetail;
@@ -315,8 +291,7 @@
                                                 large:
                                                     item.renderConfig.placeholderClass === 'large'
                                             }"
-                                            cdkDragHandle
-                                            class="item-error drag-container"
+                                            class="item-error content-container"
                                         >
                                             <svg-icon
                                                 nx-add-svg-src
@@ -409,8 +384,7 @@
                                                     assertResourceOfType.webpage(itemDetail));
                                             else showError
                                         "
-                                        cdkDragHandle
-                                        class="drag-container"
+                                        class="content-container"
                                         [ngSwitch]="itemDetail.type"
                                     >
                                         <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
@@ -430,12 +404,10 @@
                                                 class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
                                             >
                                                 <nx-video-player
-                                                    cdkDragHandle
-                                                    [cdkDragHandleDisabled]="layout.locked"
                                                     [camera]="itemDetail.details"
                                                     [fullScreenTarget]="layoutItemWrapper"
                                                     [pingServer]="pingServer(itemDetail.details)"
-                                                    [showFullScreenButton]="mouseMoving$ | async"
+                                                    [showFullScreenButton]="false"
                                                     [rotation]="item.rotation"
                                                     (showError)="
                                                         handleVideoError(itemDetail, $event)
@@ -472,7 +444,6 @@
                                                 noFrame
                                                 class="theme-override"
                                                 data-theme="dark"
-                                                showFullscreen
                                             ></nx-monitoring-graph>
                                         </ng-container>
                                         <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
@@ -498,7 +469,6 @@
                                                         itemDetail as itemDetail
                                                     "
                                                     #webpage
-                                                    cdkDragHandle
                                                     (load)="
                                                         checkIframeContent(
                                                             itemDetail.details.id,
@@ -529,25 +499,40 @@
                                         </ng-container>
                                     </div>
                                 </ng-container>
-                                <div
-                                    *ngFor="let alignment of alignments"
-                                    cdkDropList
-                                    [cdkDropListDisabled]="layout.locked"
-                                    [cdkDropListConnectedTo]="[]"
-                                >
+                                <ng-container *ngIf="!window.document.fullscreenElement">
                                     <div
-                                        cdkDrag
-                                        [cdkDragDisabled]="layout.locked"
-                                        [cdkDragData]="item"
-                                        (cdkDragMoved)="
-                                            updateBackground($event, item, 'resize', alignment)
-                                        "
-                                        (cdkDragReleased)="moveItem(item)"
-                                        class="resize-handle {{
-                                            alignment[0]
-                                        }} {{ alignment?.[1] }}"
-                                    ></div>
-                                </div>
+                                        *ngFor="let alignment of alignments"
+                                        cdkDropList
+                                        [cdkDropListDisabled]="layout.locked"
+                                        [cdkDropListConnectedTo]="[]"
+                                    >
+                                        <div
+                                            cdkDrag
+                                            [cdkDragDisabled]="layout.locked"
+                                            [cdkDragData]="item"
+                                            (cdkDragMoved)="
+                                                updateBackground($event, item, 'resize', alignment)
+                                            "
+                                            (cdkDragReleased)="moveItem(item)"
+                                            class="resize-handle {{
+                                                alignment[0]
+                                            }} {{ alignment?.[1] }}"
+                                        ></div>
+                                    </div>
+                                </ng-container>
+                                <nx-layout-grid-item-overlay
+                                    cdkDragHandle
+                                    [cdkDragHandleDisabled]="
+                                        layout.locked || !!window.document.fullscreenElement
+                                    "
+                                    [ngClass]="'overlay'"
+                                    [item]="item"
+                                    [node]="layoutItemLookup[item.resourceId]"
+                                    [fullScreenTarget]="layoutItemWrapper"
+                                    [showRemove]="!layout.locked"
+                                    [hide]="dragging$$()"
+                                    (removeItem)="removeItem($event)"
+                                />
                             </div>
                         </div>
                     </ng-container>

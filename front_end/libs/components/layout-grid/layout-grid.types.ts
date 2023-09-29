@@ -60,8 +60,6 @@ export enum PlaceholderClasses {
 
 export interface LayoutItemRenderConfig {
     child?: {
-        width: string;
-        height: string;
         'aspect-ratio': number;
     };
     aspect?: number;

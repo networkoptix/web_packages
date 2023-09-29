@@ -1,4 +1,5 @@
 import { DialogModule } from '@angular/cdk/dialog';
+import { FullscreenOverlayContainer, OverlayContainer } from '@angular/cdk/overlay';
 import { CdkScrollableModule } from '@angular/cdk/scrolling';
 import { Location, PathLocationStrategy, CommonModule, LocationStrategy } from '@angular/common';
 import { HttpClientModule, HttpClientXsrfModule, HTTP_INTERCEPTORS } from '@angular/common/http';
@@ -178,6 +179,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         },
         { provide: MESSAGE_FORMAT_CONFIG, useValue: { disablePluralKeyChecks: true } },
         { provide: TINYMCE_SCRIPT_SRC, useValue: 'static/tinymce/tinymce.min.js' },
+        { provide: OverlayContainer, useClass: FullscreenOverlayContainer },
     ],
     declarations: [AppComponent],
     exports: [],

@@ -188,6 +188,7 @@ export const icons: configTypes.Icons = {
     dirTextButtons: `/${staticBase}/images/icons/text_buttons/`,
     dirHeader: `/${staticBase}/images/icons/header/`,
     dirLayouts: `/${staticBase}/images/icons/layouts/`,
+    dirLayoutsCamera: `/${staticBase}/images/icons/layouts/camera/`,
     dirNonStandard: `/${staticBase}/images/icons/`,
     dirNonStandardView: `/${staticBase}/images/icons/view/`,
     dirPagePlaceholder: `/${staticBase}/images/placeholders/page/`,

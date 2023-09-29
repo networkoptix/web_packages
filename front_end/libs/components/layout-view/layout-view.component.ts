@@ -1,5 +1,11 @@
 // import { Location } from '@angular/common';
-import { ChangeDetectorRef, Component, LOCALE_ID, inject } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    LOCALE_ID,
+    inject,
+} from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -85,6 +91,7 @@ interface ResourceLookup<T = { id: string }> {
     selector: 'nx-layout-view',
     templateUrl: 'layout-view.component.html',
     styleUrls: ['layout-view.component.scss'],
+    changeDetection: ChangeDetectionStrategy.OnPush,
     providers: [NxLayoutGridService],
 })
 export class NxLayoutViewComponent {

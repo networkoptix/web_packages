@@ -35,6 +35,13 @@
             &[aria-expanded="true"] {
                 background-color: var(--context-menu-item-expanded-bg);
             }
+
+            &.checked {
+                svg-icon svg path {
+                    stroke: var(--context-menu-item-icon);
+                }
+            }
+
             &:hover {
                 svg-icon svg path {
                     stroke: var(--context-menu-item-icon-hover);

@@ -5,6 +5,8 @@ import 'zone.js';
 
 import 'rvfc-polyfill';
 
+import 'container-query-polyfill';
+
 if (!Element.prototype.matches) {
     Element.prototype.matches = Element.prototype.webkitMatchesSelector;
 }

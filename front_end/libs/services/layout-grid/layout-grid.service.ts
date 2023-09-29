@@ -33,7 +33,7 @@ export class NxLayoutGridService {
         });
     }
 
-    isLeftMenuOpen$$ = computed<boolean>(() => this.layoutSettings.signal$$().openMenu === 'left');
+    isLeftMenuOpen$$ = computed<boolean>(() => this.layoutSettings.signal$$()?.openMenu === 'left');
 
     toggleMenu(menu: 'left' | 'right' | 'both' = null, force = false): void {
         this.layoutSettings.update(curr => {
