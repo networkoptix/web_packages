@@ -171,7 +171,7 @@ def async_menu_export(menu_name, customization=None):
 
 @shared_task
 def async_zendesk_sync(menu_id, customization_name, log_id, force_update=True):
-    if not customization_ctx:
+    if not customization_ctx.get():
         customization_ctx.set(customization_name)
     from cms.models import Menu, ZendeskSite, ZendeskSyncLog
     from cms.controllers.zendesk import update_customization_structure

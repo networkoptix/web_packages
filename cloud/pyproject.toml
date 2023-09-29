@@ -66,7 +66,7 @@ requests = "~2.31.0"
 "ruamel.yaml" = "0.17.21"
 "ruamel.yaml.clib" = "0.2.6"
 uvicorn = "0.18.3"
-zenpy = "2.0.24"
+zenpy = "2.0.40"
 
 [tool.poetry.group.test]
 optional = true
