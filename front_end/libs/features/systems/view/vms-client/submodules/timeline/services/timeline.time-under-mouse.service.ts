@@ -11,81 +11,61 @@ import type { TimelineTimeUnderMouseServiceStatus } from './timeline.services.ty
     providedIn: 'root',
 })
 export class TimelineTimeUnderMouseService {
-    protected _isMouseInside: boolean = false;
-    protected _timeUnderMouse: ms = -1;
-    protected _offsetX: px = -1;
-    protected _pressed: boolean = false;
+    private isMouseInside: boolean = false;
+    private timeUnderMouse: ms = -1;
+    private offsetX: px = -1;
+    private pressed: boolean = false;
 
-    protected _subject = new Subject<TimelineTimeUnderMouseServiceStatus>();
+    subject = new Subject<TimelineTimeUnderMouseServiceStatus>();
 
-    protected _emit(): void {
-        this._subject.next({
-            isMouseInside: this._isMouseInside,
-            timeUnderMouse: this._timeUnderMouse,
-            offsetX: this._offsetX,
-            pressed: this._pressed,
+    private emit(): void {
+        this.subject.next({
+            isMouseInside: this.isMouseInside,
+            timeUnderMouse: this.timeUnderMouse,
+            offsetX: this.offsetX,
+            pressed: this.pressed,
         });
     }
 
-    public get subject(): TimelineTimeUnderMouseService['_subject'] {
-        return this._subject;
-    }
+    constructor(private timeline: TimelineService) {}
 
-    public get isMouseInside(): boolean {
-        return this._isMouseInside;
-    }
-
-    public get timeUnderMouse(): ms {
-        return this._timeUnderMouse;
-    }
-
-    public get offsetX(): ms {
-        return this._offsetX;
-    }
-
-    public get pressed(): boolean {
-        return this._pressed;
-    }
-
-    constructor(protected timeline: TimelineService) {}
-
-    public handleMouseDown(): void {
-        if (!this._pressed) {
-            this._pressed = true;
-            this._emit();
+    handleMouseDown(): void {
+        if (!this.pressed) {
+            this.pressed = true;
+            this.emit();
         }
     }
 
-    public handleMouseUp(): void {
-        if (this._pressed) {
-            this._pressed = false;
-            this._emit();
+    handleMouseUp(): void {
+        if (this.pressed) {
+            this.pressed = false;
+            this.emit();
         }
     }
 
-    public handleMouseMove(e: MouseEvent | TouchEvent): void {
-        this._offsetX = calcOffsetX(e);
-        this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
-        this._emit();
+    handleMouseMove(e: MouseEvent | TouchEvent): void {
+        this.offsetX = calcOffsetX(e);
+        this.timeUnderMouse = this.timeline.domOffsetXtoTime(this.offsetX);
+        this.emit();
     }
 
-    public handleMouseEnter(e: MouseEvent): void {
-        this._isMouseInside = true;
+    handleMouseEnter(e: MouseEvent): void {
+        this.isMouseInside = true;
         this.handleMouseMove(e);
     }
 
-    public handleMouseLeave(e: MouseEvent): void {
-        this._isMouseInside = false;
-        this._timeUnderMouse = -1;
-        this._offsetX = -1;
-        this._emit();
+    handleMouseLeave(e: MouseEvent): void {
+        this.isMouseInside = false;
+        this.timeUnderMouse = -1;
+        this.offsetX = -1;
+        this.emit();
     }
 
-    public updateTime(): void {
-        if (!this._isMouseInside) {
+    updateTime(): void {
+        if (!this.isMouseInside) {
             return;
         }
-        this._timeUnderMouse = this.timeline.domOffsetXtoTime(this._offsetX);
-        this._emit();
+        this.timeUnderMouse = this.timeline.domOffsetXtoTime(this.offsetX);
+        this.emit();
     }
 }

@@ -59,14 +59,11 @@ export class TimelineSelectionService {
         return this.selectedRange.clone();
     }
 
-    set range(r: TimeRange) {
+    set range(r: Pick<TimeRange, 'start' | 'end'>) {
         this.selectedRange.start = r.start;
         this.selectedRange.end = r.end;
         this.emit();
     }
-
-    leftEar: HTMLDivElement;
-    rightEar: HTMLDivElement;
 
     fitStart(): void {
         this.selectedRange.fitStart(this.timeline.fullRange);

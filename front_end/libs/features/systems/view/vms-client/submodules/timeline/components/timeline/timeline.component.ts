@@ -51,31 +51,30 @@ const VMS_VERSION_TIMELINE_ENABLED = 4.2;
 })
 export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     @Input() canExport: boolean;
-    @ViewChild('canvas') canvasView: ElementRef<HTMLCanvasElement>;
-    @ViewChild('canvasWrapper') canvasWrapper: ElementRef<HTMLDivElement>;
+    @ViewChild('canvas') private canvasView: ElementRef<HTMLCanvasElement>;
+    @ViewChild('canvasWrapper') private canvasWrapper: ElementRef<HTMLDivElement>;
 
-    protected _state: TimelineServiceStatus;
-    protected _mouseDownScreenX: px = 0;
-    protected _mouseNotReleasedYet: boolean = false;
+    private mouseDownScreenX: px = 0;
+    private mouseNotReleasedYet: boolean = false;
 
     private updateCanvas = new Subject<true>();
-    private _animationTimeout: number;
+    private animationTimeout: number;
 
-    public hideTimeUnderMouse: boolean = false;
-    public isDragging: boolean = false;
-    clickAndHoldHandler: number;
+    hideTimeUnderMouse: boolean = false;
+    isDragging: boolean = false;
+    private clickAndHoldHandler: number;
 
-    public readonly archiveSelectionEnabled: boolean = false;
+    readonly archiveSelectionEnabled: boolean = false;
 
     constructor(
         deviceService: DeviceDetectorService,
         systemService: NxSystemService,
-        protected configService: NxConfigService,
-        public timeline: TimelineService,
-        protected playback: PlaybackService,
-        protected canvasRenderer: TimelineCanvasRendererService,
-        protected wheelHandler: TimelineWheelHandlerService,
-        public timeUnderMouse: TimelineTimeUnderMouseService,
+        private configService: NxConfigService,
+        private timeline: TimelineService,
+        private playback: PlaybackService,
+        private canvasRenderer: TimelineCanvasRendererService,
+        private wheelHandler: TimelineWheelHandlerService,
+        private timeUnderMouse: TimelineTimeUnderMouseService,
         public selection: TimelineSelectionService,
         public ux: WebClientUxService,
         @Inject(WINDOW) private window: Window,
@@ -92,25 +91,25 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         });
     }
 
-    protected _onTimelineStatusChange(s: TimelineServiceStatus): void {
+    private onTimelineStatusChange(s: TimelineServiceStatus): void {
         if (s.canvasGeometryUpdateRequested) {
             this.updateCanvas.next(true);
         }
     }
 
-    protected _animationFrameRequestHandler: number;
+    private animationFrameRequestHandler: number;
 
-    protected _pinchDestructor: () => void;
+    private pinchDestructor: () => void;
     // Event listener cleanup
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.timeline.subject
             .pipe(untilDestroyed(this))
-            .subscribe(() => this._onTimelineStatusChange);
+            .subscribe(() => this.onTimelineStatusChange);
         // FIXME: Doesn't do anything, missing call?
     }
 
-    public ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
         fromEvent<Event>(this.window, 'resize')
             .pipe(untilDestroyed(this))
             .subscribe(() => this.updateCanvas.next(true));
@@ -118,11 +117,17 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         this.updateCanvas
             .pipe(startWith(true), debounceTime(50), untilDestroyed(this))
             .subscribe(() => {
-                this._updateCanvasGeometry();
-                if (!this._animationFrameRequestHandler) {
+                // Update canvas geometry
+                const rect = this.canvasView.nativeElement.getBoundingClientRect();
+                const dpr = this.window.devicePixelRatio;
+                this.canvasView.nativeElement.width = rect.width * dpr;
+                this.canvasView.nativeElement.height = rect.height * dpr;
+                this.timeline.setCanvasGeometry(rect.width * dpr, rect.height * dpr, dpr);
+
+                if (!this.animationFrameRequestHandler) {
                     // allow CanvasGeometry to be updated
                     setTimeout(() => {
-                        this._animationFrameRequestHandler = requestAnimationFrame(() =>
+                        this.animationFrameRequestHandler = requestAnimationFrame(() =>
                             this.onAnimationFrame(),
                         );
                     }, 250);
@@ -130,7 +135,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             });
         this.updateCanvas.next(true);
 
-        this._pinchDestructor = onPinch(
+        this.pinchDestructor = onPinch(
             this.canvasView.nativeElement,
             ({ newScale, scaleChange, offset }) => {
                 const durationDelta = (scaleChange - 1) * this.timeline.fullRange.duration;
@@ -139,15 +144,15 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         );
     }
 
-    public ngOnDestroy(): void {
-        clearTimeout(this._animationTimeout);
-        if (this._animationFrameRequestHandler) {
-            cancelAnimationFrame(this._animationFrameRequestHandler);
+    ngOnDestroy(): void {
+        clearTimeout(this.animationTimeout);
+        if (this.animationFrameRequestHandler) {
+            cancelAnimationFrame(this.animationFrameRequestHandler);
         }
-        this._pinchDestructor?.();
+        this.pinchDestructor?.();
     }
 
-    public onAnimationFrame(): void {
+    private onAnimationFrame(): void {
         // console.time();
         const ctx = this.canvasView.nativeElement.getContext('2d');
         // console.log('render #', times_rendered)
@@ -156,51 +161,46 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 
-        this._animationTimeout = this.window.setTimeout(() => {
-            this._animationFrameRequestHandler = requestAnimationFrame(() =>
+        this.animationTimeout = this.window.setTimeout(() => {
+            this.animationFrameRequestHandler = requestAnimationFrame(() =>
                 this.onAnimationFrame(),
             );
         }, this.timeline.renderFps);
     }
 
-    protected _updateCanvasGeometry(): void {
-        const rect = this.canvasView.nativeElement.getBoundingClientRect();
-        const dpr = this.window.devicePixelRatio;
-        this.canvasView.nativeElement.width = rect.width * dpr;
-        this.canvasView.nativeElement.height = rect.height * dpr;
-        this.timeline.setCanvasGeometry(rect.width * dpr, rect.height * dpr, dpr);
-    }
-
-    public canvasWheelHandler(e: WheelEvent): void {
+    canvasWheelHandler(e: WheelEvent): void {
         e.preventDefault();
         this.wheelHandler.handleWheel(e);
     }
 
-    public canvasMouseMoveHandler(e: MouseEvent | TouchEvent): void {
+    canvasMouseMoveHandler(e: MouseEvent | TouchEvent): void {
         e.stopPropagation();
         e.preventDefault();
 
         this.timeUnderMouse.handleMouseMove(e);
+
+        // FIXME, maybe: Potentially dangerous cast that might crash if event is TouchEvent,
+        // but I expect most customers aren't using touchscreens for this
         if (this.selection.handleMouseMove(e as MouseEvent)) {
             return;
         }
 
         const screenX = calcScreenX(e);
-        const delta = Math.abs(screenX - this._mouseDownScreenX);
+        const delta = Math.abs(screenX - this.mouseDownScreenX);
 
-        if (this._mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
+        if (this.mouseNotReleasedYet && delta > MOUSE_MINIMAL_MOVE_PX) {
             // console.log('dragging started', delta);
             this.isDragging = true;
         }
 
         if (this.isDragging) {
-            const dt = -1 * this.timeline.domWidthToDuration(screenX - this._mouseDownScreenX);
+            const dt = -1 * this.timeline.domWidthToDuration(screenX - this.mouseDownScreenX);
             // short circuit unrealistically big "dt"
             // and prevent timeline jump when dragging
             if (Math.abs(dt) < MOUSE_MOVE_DT_LIMIT) {
                 this.timeline.shiftVisibleRange(dt);
             }
-            this._mouseDownScreenX = screenX;
+            this.mouseDownScreenX = screenX;
         }
 
         if (delta > MOUSE_HIDE_UNTIL_PX && this.hideTimeUnderMouse) {
@@ -208,12 +208,12 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseEnterHandler(e: MouseEvent): void {
+    canvasMouseEnterHandler(e: MouseEvent): void {
         this.timeUnderMouse.handleMouseEnter(e);
     }
 
-    exitEdge(mouse: MouseEvent, elem: HTMLDivElement): string {
-        const elemBounding = elem.getBoundingClientRect();
+    private exitEdge(mouse: MouseEvent, canvasWrapper: HTMLDivElement): string {
+        const elemBounding = canvasWrapper.getBoundingClientRect();
         const elementLeftEdge = elemBounding.left;
         const elementRightEdge = elemBounding.right;
 
@@ -239,11 +239,11 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
     }
 
-    public canvasMouseLeaveHandler(e: MouseEvent): void {
+    canvasMouseLeaveHandler(e: MouseEvent): void {
         this.timeUnderMouse.handleMouseLeave(e);
     }
 
-    public canvasMouseDownHandler(e: MouseEvent | TouchEvent): void {
+    canvasMouseDownHandler(e: MouseEvent | TouchEvent): void {
         e.stopPropagation();
         e.preventDefault();
 
@@ -259,17 +259,17 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 this.selection.handleBackgroundMouseDown(e as MouseEvent);
             }
         } else {
-            this._mouseDownScreenX = calcScreenX(e);
+            this.mouseDownScreenX = calcScreenX(e);
         }
         this.timeUnderMouse.handleMouseDown();
-        this._mouseNotReleasedYet = true;
+        this.mouseNotReleasedYet = true;
         this.clickAndHoldHandler = this.window.setTimeout(() => {
             this.isDragging = true;
             clearTimeout(this.clickAndHoldHandler);
         }, CLICK_AND_HOLD_TIMEOUT);
     }
 
-    public canvasMouseUpHandler(e: MouseEvent | TouchEvent, mustPlay: boolean = false): void {
+    canvasMouseUpHandler(e: MouseEvent | TouchEvent, mustPlay: boolean = false): void {
         e.stopPropagation();
         e.preventDefault();
 
@@ -282,30 +282,30 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
                 mustPlay = !this.selection.handleMouseUp();
             }
             this.selection.reset();
-            this._mouseDownScreenX = calcScreenX(e);
+            this.mouseDownScreenX = calcScreenX(e);
             this.timeUnderMouse.handleMouseDown();
 
             const screenX = calcScreenX(e);
             const offsetX = calcOffsetX(e);
-            const delta = Math.abs(screenX - this._mouseDownScreenX);
+            const delta = Math.abs(screenX - this.mouseDownScreenX);
 
             mustPlay ||= !this.isDragging && delta < MOUSE_MINIMAL_MOVE_PX;
             if (mustPlay) {
-                this._play(offsetX);
+                this.play(offsetX);
             }
         }
 
-        this._mouseDownScreenX = 0;
-        this._mouseNotReleasedYet = false;
+        this.mouseDownScreenX = 0;
+        this.mouseNotReleasedYet = false;
         this.isDragging = false;
         this.timeUnderMouse.handleMouseUp();
     }
 
-    protected _play(offsetX: number): void {
+    private play(offsetX: number): void {
         const time = this.timeline.domOffsetXtoTime(offsetX);
         this.playback.playArchive(time);
         this.hideTimeUnderMouse = true;
-        this._mouseDownScreenX = screenX;
+        this.mouseDownScreenX = screenX;
 
         const edgeWidth: px = 80;
         const edgeFixWidth: px = 160;
@@ -323,15 +323,15 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     @HostListener('document:mouseup', ['$event'])
-    public documentMouseUpHandler(e: MouseEvent): void {
+    documentMouseUpHandler(e: MouseEvent): void {
         e.stopPropagation();
         e.preventDefault();
 
-        this._mouseNotReleasedYet = false;
+        this.mouseNotReleasedYet = false;
         this.isDragging = false;
         if (this.archiveSelectionEnabled) {
             if (!this.selection.handleMouseUp()) {
-                this._play(e.clientX - this.canvasView.nativeElement.getBoundingClientRect().left);
+                this.play(e.clientX - this.canvasView.nativeElement.getBoundingClientRect().left);
             }
         }
     }

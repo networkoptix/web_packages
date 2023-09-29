@@ -10,7 +10,7 @@ import { float, int, ms } from '@vms-client/utils/type-aliases';
 import { TimelineService } from '../../services/timeline.service';
 import type { TimelineServiceStatus } from '../../services/timeline.services.types';
 
-type signType = int; // -1 | 0 | 1
+type signType = -1 | 0 | 1;
 
 @UntilDestroy()
 @Component({
@@ -19,80 +19,68 @@ type signType = int; // -1 | 0 | 1
     styleUrls: ['./zoom-controls.component.scss'],
 })
 export class ZoomControlsComponent implements OnInit {
-    protected state: TimelineServiceStatus;
-    public disabled: boolean = true;
-    public canZoomIn: boolean = false;
-    public canZoomOut: boolean = false;
+    private timelineStatus: TimelineServiceStatus;
+    disabled: boolean = true;
+    canZoomIn: boolean = false;
+    canZoomOut: boolean = false;
 
     constructor(
-        public timeline: TimelineService,
-        public vms: VideoManagementSystemService,
-        public playback: PlaybackService,
+        private timeline: TimelineService,
+        private vms: VideoManagementSystemService,
+        private playback: PlaybackService,
     ) {
         effect(() => {
-            this._updateEnabledDisabled(this.vms.state());
+            this.updateEnabledDisabled(this.vms.state());
         });
     }
 
-    private _onAnimationFrame(): void {
-        this.performZoomingStep();
-    }
-
-    public ngOnInit(): void {
-        this.timeline.subject.pipe(untilDestroyed(this)).subscribe((s: TimelineServiceStatus) => {
-            this.onTimelineSubjectChange(s);
+    ngOnInit(): void {
+        this.timeline.subject.pipe(untilDestroyed(this)).subscribe(timelineStatus => {
+            this.timelineStatus = timelineStatus;
+            this.updateEnabledDisabled(this.vms.state());
         });
 
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => {
-                this._onAnimationFrame();
+                if (this.zoomingSign) {
+                    this.wheelZoom(this.zoomingSign);
+                }
             });
     }
 
-    public onTimelineSubjectChange(state: TimelineServiceStatus): void {
-        this.state = state;
-        this._updateEnabledDisabled(this.vms.state());
-    }
-
-    protected _updateEnabledDisabled(state: VmsState): void {
+    private updateEnabledDisabled(state: VmsState): void {
         this.disabled = state.mode !== VMS_MODE.CAMERA_SELECTED;
-        this.canZoomIn = (!this.disabled && this.state?.zoom?.canZoomIn) || false;
-        this.canZoomOut = (!this.disabled && this.state?.zoom?.canZoomOut) || false;
+        this.canZoomIn = (!this.disabled && this.timelineStatus?.zoom?.canZoomIn) || false;
+        this.canZoomOut = (!this.disabled && this.timelineStatus?.zoom?.canZoomOut) || false;
     }
 
-    protected _zoomingSign: signType = 0;
-    protected _zoomingStartedTimestamp: ms;
+    private zoomingSign: signType = 0;
+    private zoomingStartedTimestamp: ms;
 
-    public startZooming($event: MouseEvent, sign: signType): void {
+    startZooming($event: MouseEvent, sign: signType): void {
         if ($event.button !== 0) {
             return;
         }
-        this._zoomingSign = sign;
-        this._zoomingStartedTimestamp = Date.now();
+        this.zoomingSign = sign;
+        this.zoomingStartedTimestamp = Date.now();
     }
 
-    public stopZooming(): void {
-        const sinceZoomingStarted = Date.now() - this._zoomingStartedTimestamp;
+    stopZooming(): void {
+        const sinceZoomingStarted = Date.now() - this.zoomingStartedTimestamp;
         const fastClickEdge: ms = 200;
         if (sinceZoomingStarted < fastClickEdge) {
-            this.wheelZoom(40 * this._zoomingSign);
+            this.wheelZoom(40 * this.zoomingSign);
         }
-        this._zoomingSign = 0;
+        this.zoomingSign = 0;
     }
 
     @HostListener('mouseleave')
-    public onMouseLeave(): void {
+    onMouseLeave(): void {
         this.stopZooming();
     }
 
-    public performZoomingStep(): void {
-        if (this._zoomingSign) {
-            this.wheelZoom(this._zoomingSign);
-        }
-    }
-
-    public wheelZoom(delta: int, offset: float = 0.5): void {
+    private wheelZoom(delta: int, offset: float = 0.5): void {
         const duration = this.timeline.visibleRange.duration;
         const MIN_DURATION = this.timeline.canvasGeometry.width * this.timeline.canvasGeometry.dpr;
         const step = 0.01;
@@ -106,11 +94,11 @@ export class ZoomControlsComponent implements OnInit {
         this.timeline.zoom(durationDelta, offset);
     }
 
-    public fullZoomOut(): void {
+    fullZoomOut(): void {
         this.timeline.fullZoomOut();
     }
 
-    public strongZoomIn(): void {
+    strongZoomIn(): void {
         this.wheelZoom(80);
     }
 }

@@ -1,19 +1,10 @@
 import { HttpClient } from '@angular/common/http';
-import {
-    Component,
-    OnInit,
-    AfterViewInit,
-    Output,
-    EventEmitter,
-    ElementRef,
-    effect,
-} from '@angular/core';
+import { Component, OnInit, AfterViewInit, Output, EventEmitter, effect } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
 
 import staticLang from '@language_static';
 import { PlaybackTransport } from '@view/view.types';
-import { VmsState } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { generateClickDubleClickPair } from '@vms-client/utils/generateClickDubleClickPair';
 
@@ -21,7 +12,7 @@ import {
     ArchivePlaybackState,
     PlaybackState,
     PLAYBACK_MODE,
-    LivePlaybackState,
+    PlayingState,
 } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
@@ -36,21 +27,21 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     // Coercing playback state to ArchivePlaybackState
     // Was previously being cast as any in template
-    // Currently not type safe for types other than ArchivePlaybackState and should be fixed
+    // FIXME: Currently not type safe for types other than ArchivePlaybackState and should be fixed
     PlaybackStateTemp: ArchivePlaybackState;
 
-    @Output() videoDblClick = new EventEmitter<boolean>();
+    @Output() videoDblClick = new EventEmitter<void>();
 
-    public transport: PlaybackTransport;
+    private transport: PlaybackTransport;
 
-    public showOverlay: boolean = false;
-    public errorEncryption: boolean = false;
-    public errorPlayback: boolean = false;
-    public errorPlaybackDescription: string;
+    showOverlay: boolean = false;
+    errorEncryption: boolean = false;
+    errorPlayback: boolean = false;
+    errorPlaybackDescription: string;
 
-    public rotateDeg: number = 0;
+    rotateDeg: number = 0;
 
-    public handleClick: (e: MouseEvent) => void;
+    handleClick: (e: MouseEvent) => void;
 
     private serverErrors = {
         cannotDecrypt: 'Cannot decrypt media',
@@ -60,18 +51,17 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     constructor(
         private sessionStorage: SessionStorageService,
-        public http: HttpClient,
+        private http: HttpClient,
         public playback: PlaybackService,
-        protected vms: VideoManagementSystemService,
-        protected self: ElementRef,
+        private vms: VideoManagementSystemService,
     ) {
         this.handleClick = generateClickDubleClickPair(
-            e => this.onClick(e),
-            e => this.onDblClick(e),
+            e => this.onClick(),
+            e => this.onDblClick(),
         );
 
         effect(() => {
-            this.onVmsSubjectChange(this.vms.state());
+            this.rotateDeg = this.vms.state().selectedCamera?.rotation || 0;
         });
     }
 
@@ -79,34 +69,30 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         return this.sessionStorage.retrieve(`${this.vms.systemId()}-${this.xRuntimeGuid}`);
     }
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.onPlaybackSubjectChange(this.playback.state);
     }
 
-    public ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
         this.playback.subject.pipe(untilDestroyed(this)).subscribe(s => {
             this.onPlaybackSubjectChange(s);
         });
     }
 
-    public onPlaybackSubjectChange(s: PlaybackState | ArchivePlaybackState): void {
+    private onPlaybackSubjectChange(s: PlaybackState): void {
         if (s.transport !== this.transport) {
             this.transport = s.transport;
         }
 
-        this.errorPlayback = (<ArchivePlaybackState>s).error?.length > 0;
+        this.errorPlayback = s.error?.length > 0;
         // No translation at this time ... we should re-jigger error messages
-        this.errorPlaybackDescription = (<ArchivePlaybackState>s).error;
+        this.errorPlaybackDescription = s.error;
 
         this.errorEncryption = (<ArchivePlaybackState>s).encrypted;
         this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
     }
 
-    public onVmsSubjectChange(s: VmsState): void {
-        this.rotateDeg = this.vms.selectedCamera?.rotation || 0;
-    }
-
-    public onBufferingChange(s: number): void {
+    onBufferingChange(s: number): void {
         /*
         s is the timeout value for when the player waits.
         s === 0 means we loaded and need the overlay.
@@ -119,9 +105,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         if (s > 1 && 'currentTime' in this.playback.state) {
             this.playback.pause();
             setTimeout(() =>
-                this.playback.playArchive(
-                    (<ArchivePlaybackState | LivePlaybackState>this.playback.state).currentTime - s,
-                ),
+                this.playback.playArchive((this.playback.state as PlayingState).currentTime - s),
             );
         } else if (s === 1) {
             switch (this.playback.state.mode) {
@@ -138,11 +122,11 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public videoEnded(event: boolean): void {
+    videoEnded(_: boolean): void {
         this.playback.playLive();
     }
 
-    public videoErrorEventHandler(event: Event): void {
+    videoErrorEventHandler(event: Event): void {
         // @ts-expect-error: Strange event.target
         // looks like a HTMLDivElement (div#nx-vjs-player) but with player property attached
         const player = event.target.player as videojs.VideoJsPlayer;
@@ -185,7 +169,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public onClick(e: MouseEvent): void {
+    private onClick(): void {
         if (this.playback.canPause) {
             this.playback.pause();
         } else if (this.playback.canUnpause) {
@@ -197,7 +181,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         }
     }
 
-    public onDblClick(e: MouseEvent): void {
-        this.videoDblClick.emit(true);
+    onDblClick(): void {
+        this.videoDblClick.emit();
     }
 }

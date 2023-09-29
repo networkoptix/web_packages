@@ -14,46 +14,42 @@ import { PlaybackService } from '../../services/playback.service';
     styleUrls: ['./playback-state-indicator.component.scss'],
 })
 export class PlaybackStateIndicatorComponent implements OnInit {
-    public state: PlaybackState;
+    private state: PlaybackState;
 
     @Input() enabled: boolean;
 
-    public get isLive(): boolean {
-        return this.vms.selectedCamera.isLive;
-    }
+    // get isLive(): boolean {
+    //     return this.vms.selectedCamera.isLive;
+    // }
 
-    public get isPlaying(): boolean {
+    get isPlaying(): boolean {
         return this.state.mode === PLAYBACK_MODE.LIVE && !this.playback.livePaused;
     }
 
-    public get isRecording(): boolean {
+    get isRecording(): boolean {
         return this.vms.selectedCamera?.isRecording;
     }
 
     constructor(
-        public selection: TimelineSelectionService,
-        public playback: PlaybackService,
-        public vms: VideoManagementSystemService,
+        private selection: TimelineSelectionService,
+        private playback: PlaybackService,
+        private vms: VideoManagementSystemService,
     ) {}
 
-    public ngOnInit(): void {
-        this.playback.subject.pipe(untilDestroyed(this)).subscribe((s: PlaybackState) => {
-            this.onSubjectChange(s);
+    ngOnInit(): void {
+        this.playback.subject.pipe(untilDestroyed(this)).subscribe(s => {
+            this.state = s;
         });
     }
 
-    public onSubjectChange(s: PlaybackState): void {
-        this.state = s;
-    }
-
-    public handleLiveClick(): void {
+    handleLiveClick(): void {
         if (this.playback.canPlayLive && this.enabled) {
             this.selection.reset();
             this.playback.playLive();
         }
     }
 
-    public get canPlayLive(): boolean {
+    get canPlayLive(): boolean {
         return this.vms.selectedCamera && this.vms.selectedCamera.isLive;
     }
 }

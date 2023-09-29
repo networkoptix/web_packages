@@ -222,8 +222,6 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     public ngAfterViewInit(): void {
         this.selection.background = this.self.nativeElement;
-        this.selection.leftEar = this.leftEarView.nativeElement;
-        this.selection.rightEar = this.rightEarView.nativeElement;
         this.host = this.selectedRangeView.nativeElement.parentElement;
     }
 

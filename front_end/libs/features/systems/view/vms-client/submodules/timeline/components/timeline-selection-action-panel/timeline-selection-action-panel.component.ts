@@ -20,7 +20,6 @@ import { icons } from '@static-variables';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { PlaybackService } from '../../../playback/services/playback.service';
-import { TimeRange } from '../../services/TimeRange';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
 import type { TimelineSelectionServiceStatus } from '../../services/timeline.services.types';
@@ -32,34 +31,47 @@ import type { TimelineSelectionServiceStatus } from '../../services/timeline.ser
     styleUrls: ['./timeline-selection-action-panel.component.scss'],
 })
 export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewInit {
-    protected status: TimelineSelectionServiceStatus;
-    protected system: NxSystem;
+    private status: TimelineSelectionServiceStatus;
+    private system: NxSystem;
 
     exportEnabled: boolean;
-    exportLink: string;
+    private exportLink: string;
     exportName: string;
     icons = icons;
 
-    @ViewChild('exportBtn', { static: true }) exportBtn: ElementRef<HTMLAnchorElement>;
+    @ViewChild('exportBtn', { static: true }) private exportBtn: ElementRef<HTMLAnchorElement>;
 
     constructor(
         private self: ElementRef,
         private playback: PlaybackService,
-        protected timeline: TimelineService,
-        public selection: TimelineSelectionService,
-        protected accountService: NxAccountService,
-        protected systemService: NxSystemService,
-        protected vms: VideoManagementSystemService,
-        protected dialogs: NxDialogsService,
+        private timeline: TimelineService,
+        private selection: TimelineSelectionService,
+        private accountService: NxAccountService,
+        private systemService: NxSystemService,
+        private vms: VideoManagementSystemService,
+        private dialogs: NxDialogsService,
         private popoverService: NxPopoverService,
-        private _viewContainerRef: ViewContainerRef,
+        private viewContainerRef: ViewContainerRef,
     ) {}
 
-    public ngOnInit(): void {
+    ngOnInit(): void {
         this.selection.subject.pipe(untilDestroyed(this)).subscribe(s => {
-            this.onSubjectChange(s);
+            this.status = s;
+            this.self.nativeElement.classList.toggle('active', s.isActive);
+            if (s.isActive) {
+                this.exportUrl();
+                this.exportEnabled = !!this.vms.selectedCamera.getRecords(
+                    Math.max(this.status.range.start, this.timeline.fullRange.start),
+                    Math.min(this.status.range.end, this.timeline.fullRange.end),
+                    1000,
+                ).length;
+            } else {
+                this.exportLink = '';
+                this.exportBtn.nativeElement.href = '#';
+            }
         });
 
+        // TODO: Remove duplicate system initialize
         this.accountService.get().then(account => {
             if (!account) {
                 return Promise.reject();
@@ -76,7 +88,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         });
     }
 
-    public ngAfterViewInit(): void {
+    ngAfterViewInit(): void {
         this.selection.background = this.self.nativeElement;
     }
 
@@ -106,7 +118,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
                 arrowOffset: 4,
                 positionStrategy: POS_STRATEGY.DEFAULT,
             },
-            this._viewContainerRef,
+            this.viewContainerRef,
         );
     }
 
@@ -114,27 +126,11 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
         this.popoverService.close();
     }
 
-    public clearSelection(): void {
+    clearSelection(): void {
         this.selection.reset();
     }
 
-    public onSubjectChange(s: TimelineSelectionServiceStatus): void {
-        this.status = s;
-        this.self.nativeElement.classList.toggle('active', s.isActive);
-        if (s.isActive) {
-            this.exportUrl();
-            this.exportEnabled = !!this.vms.selectedCamera.getRecords(
-                Math.max(this.status.range.start, this.timeline.fullRange.start),
-                Math.min(this.status.range.end, this.timeline.fullRange.end),
-                1000,
-            ).length;
-        } else {
-            this.exportLink = '';
-            this.exportBtn.nativeElement.href = '#';
-        }
-    }
-
-    public initSetTimeDialog(): void {
+    initSetTimeDialog(): void {
         this.dialogs
             .selectTimeRange({
                 selection: this.selection,
@@ -143,7 +139,7 @@ export class TimelineSelectionActionPanelComponent implements OnInit, AfterViewI
             })
             .then(result => {
                 if (result?.start) {
-                    this.selection.range = result as TimeRange;
+                    this.selection.range = result;
                 }
             });
     }

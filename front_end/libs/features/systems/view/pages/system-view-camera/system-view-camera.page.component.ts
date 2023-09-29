@@ -851,7 +851,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.selectedTransport = transport;
     }
 
-    onVideoDblClick(_: boolean): void {
+    onVideoDblClick(): void {
         this.toggleFullScreen();
     }
 

@@ -155,7 +155,7 @@
         <div class="player-wrapper">
             <nx-player
                 *ngIf="camera && showPlayerSection; else noPlayer"
-                (videoDblClick)="onVideoDblClick($event)"
+                (videoDblClick)="onVideoDblClick()"
                 class="fs-exclude"
             ></nx-player>
             <ng-template #noPlayer>
