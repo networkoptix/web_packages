@@ -47,7 +47,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 this.editUser,
             );
 
-            if (user.canBeEdited && !this.temporaryUser()) {
+            if (user.canBeEdited && !this.temporaryUser() && !this.isMe()) {
                 this.applyService.createFormWatcher(
                     'userGroupsForm',
                     this.userGroupsForm,

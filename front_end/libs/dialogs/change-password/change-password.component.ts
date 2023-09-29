@@ -103,7 +103,7 @@ export class ChangePasswordModalContent
                     password: this.newPasswordForUser,
                 };
 
-                if (this.isLocalOwner$$()) {
+                if (this.isLocalOwner$$() || this.isCurrentUser$$()) {
                     if (this.confirmNewPasswordForUser !== this.newPasswordForUser) {
                         this.changePasswordForm.controls.confirmNewPassword.setErrors({
                             dontMatch: true,
@@ -146,7 +146,10 @@ export class ChangePasswordModalContent
                 ignoreError: true,
             },
             undefined,
-            () => {
+            errorString => {
+                if (['wrongPassword', 'dontMatch'].includes(errorString)) {
+                    return;
+                }
                 this.toastService.notify(
                     this.LANG.dialogs.updateSession.changePassword,
                     ToastType.Warning,

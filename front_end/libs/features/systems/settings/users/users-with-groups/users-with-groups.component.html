@@ -29,7 +29,7 @@
                                 >User disabled</span
                             >
                             <nx-switch
-                                *ngIf="systemAvailable && canBeEdited()"
+                                *ngIf="systemAvailable && canBeEdited() && !isMe()"
                                 [(ngModel)]="selectedUser.isEnabled"
                                 id="user-active-status"
                                 name="user-active-status"
@@ -49,7 +49,7 @@
 
             <nx-section>
                 <div
-                    *ngIf="canBeEdited() && !temporaryUser()"
+                    *ngIf="canBeEdited() && !temporaryUser() && !isMe()"
                     class="mr-2 mt-2 mb-3 pl-2"
                     style="width: 300px"
                 >
@@ -124,7 +124,7 @@
                             [(ngModel)]="fullName"
                             name="fullName"
                             id="fullName"
-                            [disabled]="formDisabled() || temporaryUser()"
+                            [disabled]="formDisabled() || temporaryUser() || isLdap()"
                             maxlength="255"
                         />
                     </div>
@@ -147,7 +147,7 @@
                             #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
                             [readonly]="isLdap()"
-                            [disabled]="formDisabled() || temporaryUser()"
+                            [disabled]="formDisabled() || temporaryUser() || isLdap()"
                             maxlength="255"
                         />
                         <span
@@ -198,7 +198,7 @@
                 </div>
                 <div
                     class="float-right"
-                    *ngIf="canBeEdited()"
+                    *ngIf="canBeEdited() && !isMe()"
                 >
                     <button
                         class="btn btn-default has-icon"

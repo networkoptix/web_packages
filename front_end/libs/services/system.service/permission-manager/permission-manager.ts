@@ -164,13 +164,15 @@ export class PermissionManager {
     isAdmin = computed<boolean>(() => {
         const user = this.user();
         const isOwner = this.isOwner();
+        const permissions = this.currentUserPermissions();
         if (!user) {
             return false;
         }
         return (
             isOwner ||
             user.permissions.includes(PermissionStrings.globalAdminPermissionFlag) ||
-            ('groupIds' in user && user.groupIds.includes(AdminGroups.powerUserGroup))
+            ('groupIds' in user && user.groupIds.includes(AdminGroups.powerUserGroup)) ||
+            permissions.includes(PermissionStringsV3.powerUser)
         );
     });
     isCloud = computed<boolean>(() => this.type() === UserType.cloud);

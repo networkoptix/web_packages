@@ -225,7 +225,7 @@ export class UserWithGroupsManager extends UserManager {
                 user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
 
-                if (this.userId === user.id || this.currentUserEmail === user.email) {
+                if (this.userId === user.id) {
                     this.currentUser = user;
                     // set userGroups for user?
                 }
@@ -246,9 +246,13 @@ export class UserWithGroupsManager extends UserManager {
 
         // Power Users should not be able to add other Power Users, so we'll remove it from the dropdown for them
         if (!this.currentUser.isOwner) {
-            this.groups = this.groups.filter(group => {
-                return group.id !== AdminGroups.powerUserGroup;
-            });
+            this.groups = this.groups.filter(
+                group =>
+                    group.id !== AdminGroups.powerUserGroup &&
+                    !this.userGroups
+                        .find(({ id }) => id === group.id)
+                        ?.parentGroupIds?.includes(AdminGroups.powerUserGroup),
+            );
         }
 
         return this.users;
