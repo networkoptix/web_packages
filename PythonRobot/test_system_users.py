@@ -225,6 +225,41 @@ def cancel_disconnect(server: CloudServer):
         else:
             print("PASS")
 
+def disconnect_should_remove_system(server: CloudServer):
+    """
+    1. Cancel should cancel disconnection and disconnect should remove it when not owner
+    [Tags]    C41884    cloud
+    """
+    with get_chrome() as driver:
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+        CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            login_dialog = LoginDialog(driver)
+            login_dialog.basic_cloud_login(email, password)
+            system_admin = SystemAdmin(driver)
+            system_admin.disconnect_from_account_button().click()
+            system_admin.disconnect_modal_warning().wait_until_visible()
+            system_admin.disconnect_modal_disconnect_button().click()
+            system_admin.disconnect_from_account_toast_notification(server.name).message()
+            SystemsPage(driver).no_systems().wait_until_visible(30)
+            HeaderNav(driver).log_out()
+            driver.get(url)
+            login_dialog.basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().wait_until_visible()
+            system_left_menu.update_users_list()
+            assert email not in system_left_menu.users
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -241,3 +276,4 @@ if __name__ == "__main__":
         share_with_unregistered_user_sends_notification(cloud_server)
         email_is_locked_when_unregistered_user_is_invited(cloud_server)
         cancel_disconnect(cloud_server)
+        disconnect_should_remove_system(cloud_server)

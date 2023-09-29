@@ -35,6 +35,9 @@ class SystemLeftMenu:
     def update_servers_list(self):
         self.servers = self.driver.find_elements(By.XPATH, "//div[@id='level3servers']//nx-level-3-item")
 
+    def add_users_button(self):
+        return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
+
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-menu")
 
