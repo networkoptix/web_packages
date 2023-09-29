@@ -36,7 +36,7 @@ class SystemAdmin:
 
     def disconnect_modal_disconnect_button(self):
         translated_xpath = self.rb.replace_nested_variables(
-            "//nx-modal-disconnect-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
+            "//nx-modal-generic-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
         
     def disconnect_modal_warning(self):
