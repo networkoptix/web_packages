@@ -16,6 +16,7 @@ from rest_framework import serializers, exceptions
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
 
+from channel_partners.utils import NonPartialCharfield
 from partners.models import ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates, \
     LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService, \
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent, \
@@ -50,6 +51,44 @@ class CodeChoiceField(serializers.ChoiceField):
             self.fail('invalid_choice', input=data)
 
 
+
+@extend_schema_serializer(
+    examples=[
+         OpenApiExample(
+            'Support Information Example',
+            value={
+                'sites': ['https://www.example.com'],
+                'phones': [{'phone': '1234', 'description': 'for customer'}],
+                'emails': [{'email': '1234', 'description': 'for customer'}],
+                'custom': [{'label': 'field1', 'value': 'value1'}]
+            },
+        ),
+    ]
+)
+class SupportInformationSerializer(serializers.Serializer):
+    class PhoneSerializer(serializers.Serializer):
+        phone = NonPartialCharfield(required=True)
+        description = NonPartialCharfield(required=True)
+
+    class EmailSerializer(serializers.Serializer):
+        email = NonPartialCharfield(required=True)
+        description = NonPartialCharfield(required=True)
+
+    class CustomSerializer(serializers.Serializer):
+        label = NonPartialCharfield(required=True)
+        value = NonPartialCharfield(required=True)
+
+    sites = serializers.ListField(child=serializers.CharField(), allow_empty=True, required=False)
+    phones = PhoneSerializer(many=True, required=False, default=list)
+    emails = EmailSerializer(many=True, required=False, default=list)
+    custom = CustomSerializer(many=True, required=False, default=list)
+
+    def to_representation(self, instance: dict):
+        for field in self.fields:
+            if field not in instance:
+                instance[field] = []
+        return super().to_representation(instance)
+
 class ChannelPartnerSerializer(serializers.ModelSerializer):
     class UsersField(serializers.HyperlinkedRelatedField):
         view_name = 'channelpartners-user-list'
@@ -77,10 +116,11 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False, help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
     canCreateSubChannels = serializers.BooleanField(source='can_create_sub_channels', default=True, required=False)
+    supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
 
     class Meta:
         model = ChannelPartner
-        exclude = ['instance', 'parent_channel_partner', 'can_create_sub_channels', 'monthly_additional_service_limit']
+        exclude = ['instance', 'parent_channel_partner', 'can_create_sub_channels', 'monthly_additional_service_limit', 'support_information']
         read_only_fields = ['users', 'parentChannelPartner']
 
     def validate_parent_channel_partner(self, value: ChannelPartner):
@@ -310,18 +350,16 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
             return ret_ts.strftime('%Y-%m-%d %H:%M:%S')
 
     class ChannelPartneNestedSerializer(serializers.ModelSerializer):
-        webPage = serializers.CharField(default='https://www.google.com')
+        supportInformation = SupportInformationSerializer(source='support_information')
 
         class Meta:
             model = ChannelPartner
-            fields = ['id', 'name', 'webPage']
+            fields = ['id', 'name', 'supportInformation']
 
     class OrganizationNestedSerializer(serializers.ModelSerializer):
-        webPage = serializers.CharField(default='https://www.google.com')
-
         class Meta:
             model = Organization
-            fields = ['id', 'name', 'webPage']
+            fields = ['id', 'name']
 
     cloudSystemId = serializers.UUIDField(source='system_id')
     channelPartner = ChannelPartneNestedSerializer(source='organization.channel_partner')

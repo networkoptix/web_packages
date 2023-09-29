@@ -315,6 +315,7 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
     can_create_sub_channels = models.BooleanField(default=True)
+    support_information = models.JSONField(blank=True, default=dict)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -362,7 +363,7 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         return self.users.filter(pk=user.pk, channelpartnertouser__roles__has_any_keys=allowed_role_names).exists()
 
     def can_access(self, user: CloudUser):
-        return self.users.filter(pk=user.pk).exists() or (self.parent_channel_partner and self.parent_channel_partner.can_access(user))
+        return self.users.filter(pk=user.pk).exists() or OrganizationToUser.objects.filter(organization__channel_partner=self, user=user).exists() or (self.parent_channel_partner and self.parent_channel_partner.can_access(user))
 
     def can_manage(self, user: CloudUser):
         if self.parent_channel_partner:
@@ -432,13 +433,13 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         """Returns Q object of parent channel partner condtions"""
         if value is None:
             value = self
-        parent_conditions = models.Q(**{base_arg + f'__{suffix_arg}' if suffix_arg else '': value})
+        parent_conditions = models.Q(**{base_arg + (f'__{suffix_arg}' if suffix_arg else ''): value})
         for i in range(self.MAX_DEPTH):
-            parent_conditions |= models.Q(**{base_arg + f'__{secondary_arg}' * (i + 1) + f'__{suffix_arg}' if suffix_arg else '': value})
+            parent_conditions |= models.Q(**{base_arg + f'__{secondary_arg}' * (i + 1) + (f'__{suffix_arg}' if suffix_arg else ''): value})
         return parent_conditions
 
     def service_changes_summary(self, start_ts: datetime.date = None):
-        channel_partner_condition = self.parent_channel_partner_args('service', 'parent_service', models.OuterRef('pk'))
+        channel_partner_condition = self.parent_channel_partner_args('service', 'parent_service', value=models.OuterRef('pk'))
         if start_ts is None:
             start_ts = timezone.now() - relativedelta(months=1)
         start_calc = {
@@ -464,8 +465,8 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         for end_record in end_calc:
             start_record = start_calc.get(str(end_record.id))
             summary.append({
-                'end': end_record.quantity,
-                'start': start_record.quantity if start_record else 0,
+                'end': end_record.quantity if end_record.quantity else 0,
+                'start': start_record.quantity if start_record and start_record.quantity else 0,
                 'service': end_record
             })
         return summary

@@ -102,7 +102,8 @@ DATABASES = {
         "PASSWORD": INSTANCE_CONFIG.postgres.password,
         "HOST": INSTANCE_CONFIG.postgres.host,
         "PORT": INSTANCE_CONFIG.postgres.port,
-        "CHARSET": "utf8"
+        "CHARSET": "utf8",
+        'ATOMIC_REQUESTS': True
     }
 }
 
@@ -195,7 +196,6 @@ SPECTACULAR_SETTINGS = {
 
 CORS_ALLOW_ALL_ORIGINS = True
 CORS_ALLOW_CREDENTIALS = True
-CORS_URLS_REGEX = r'^/nxlicensed/api/v2.*$'
 CORS_ALLOW_HEADERS = list(default_headers) + [
     'cloud-host',
     'requestinterceptorrequest'

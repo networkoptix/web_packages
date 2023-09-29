@@ -2,6 +2,8 @@ import json
 import random
 from uuid import uuid4
 
+from django.db import transaction
+
 import pytest
 from model_bakery import baker
 
@@ -66,14 +68,16 @@ class TestCloudSystemViewSet:
         mock_auth_with_user(default_cp_user)
         request = arf.post('/', data=data, format='json')
         view = CloudSystemViewSet.as_view({'post': 'create'})
-        response = view(request)
+        with transaction.atomic():
+            response = view(request)
         assert response.status_code == 403
         assert response.data['detail']
         # Org admin
         mock_auth_with_user(default_org_user)
         request = arf.post('/', data=data, format='json')
         view = CloudSystemViewSet.as_view({'post': 'create'})
-        response = view(request)
+        with transaction.atomic():
+            response = view(request)
         assert response.status_code == 403
         assert response.data['detail']
 
@@ -109,7 +113,8 @@ class TestCloudSystemViewSet:
         mocked_batch_request_data = mocker.patch('partners.models.CloudSystemId.remove_system_users_data')
         httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
         request = arf.delete(f'/partners/cloud_systems/{sys_id}/')
-        response = view(request, system_id=sys_id)
+        with transaction.atomic():
+            response = view(request, system_id=sys_id)
         batch_request = httpx_mock.get_request(url=self.batch_url)
         assert response.status_code == 404
         mocked_batch_request_data.assert_not_called()
@@ -239,7 +244,6 @@ class TestOrganizationUserViewSet:
         assert batch_data["items"][0]["accessRole"] == 'none'
         assert set(batch_data["items"][0]["systems"]) == {str(s.system_id) for s in systems}
 
-
     def test_destroy_last_admin(self, organization_factory, org_user_factory, system_factory,
                                 mock_auth_with_user, arf, httpx_mock, default_cp_admin):
         gen_count = 10
@@ -252,12 +256,14 @@ class TestOrganizationUserViewSet:
         httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
         mock_auth_with_user(default_cp_admin)
         view = OrganizationUserViewSet.as_view({'delete': 'destroy'})
-        response = view(request, parent_lookup_organization=org.id, email=user.user.email)
+        with transaction.atomic():
+            response = view(request, parent_lookup_organization=org.id, email=user.user.email)
         batch_request = httpx_mock.get_request(url=self.batch_url)
         assert response.status_code == 204
         assert not OrganizationToUser.objects.filter(user__email=user.user.email).exists()
 
-        response = view(request, parent_lookup_organization=org.id, email=user_2.user.email)
+        with transaction.atomic():
+            response = view(request, parent_lookup_organization=org.id, email=user_2.user.email)
         assert OrganizationToUser.objects.filter(user__email=user_2.user.email).exists()
         assert response.status_code == 409
         assert response.data['detail']
@@ -276,16 +282,18 @@ class TestChannelPartnerUserViewSet:
         request = arf.delete('/')
         mock_auth_with_user(default_cp_admin)
         view = ChannelPartnerUserViewSet.as_view({'delete': 'destroy'})
-        response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
         assert response.status_code == 403
 
         mock_auth_with_user(user)
-        response = view(request, parent_lookup_channel_partner=cp.id, email=user_2.user.email)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=cp.id, email=user_2.user.email)
         assert not ChannelPartnerToUser.objects.filter(user__email=user_2.user.email).exists()
         assert response.status_code == 204
 
-
-        response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
+        with transaction.atomic():
+            response = view(request, parent_lookup_channel_partner=cp.id, email=user.user.email)
         assert ChannelPartnerToUser.objects.filter(user__email=user.user.email).exists()
         assert response.status_code == 409
         assert response.data['detail']
