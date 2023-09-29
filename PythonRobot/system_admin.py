@@ -152,7 +152,7 @@ class SystemAdmin:
         locator = f'//nx-process-button//button[contains(text(), "{button_text}")]'
         return Button(self.driver, locator)
 
-    def has_no_unsaved_changes_message(self) -> bool:
+    def _has_no_unsaved_changes_message(self) -> bool:
         no_unsaved_changes = self.rb.__getattr__('NO_UNSAVED_CHANGES_TEXT')
         locator = f"//nx-apply//div[contains(text(), '{no_unsaved_changes}')]"
         text_element = PageText(self.driver, locator)
@@ -161,6 +161,17 @@ class SystemAdmin:
         except ElementNotVisible:
             return False
         return True
+
+    def wait_for_unsaved_changes_messages(self):
+        started_at = time.monotonic()
+        timeout_sec = 3
+        while True:
+            if self._has_no_unsaved_changes_message():
+                break
+            if time.monotonic() - started_at > 3:
+                raise RuntimeError(
+                    f"No unsaved changes message did not appear after {timeout_sec} seconds")
+            time.sleep(0.1)
 
     def refresh(self):
         self.driver.refresh()

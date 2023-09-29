@@ -101,6 +101,9 @@ class Mediaserver:
         server_info = self._api.get_server_info()
         return server_info['name']
 
+    def set_server_name(self, name: str):
+        self._api.set_server_name(name)
+
     def set_up(self):
         # Create a docker server.
         # Mimic configuration from JSON files.

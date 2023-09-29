@@ -1,5 +1,6 @@
 import time
 
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
@@ -86,3 +87,11 @@ class _ServerPage:
 
     def wait_until_visible_owner_elements(self):
         TextField(self._driver, '//nx-standard-server-component//input[@id="server-port-numeric"]').wait_until_visible()
+
+    def set_server_name(self, name: str):
+        element_name = TextField(self._driver, f'//nx-block//nx-editable-heading//nx-text-editable')
+        element_name.click()
+        element_name.input_text(name)
+        element_name.send_keys(Keys.ENTER)
+        button_save = Button(self._driver, f'//nx-process-button//button[contains(text(), "{self._rb.SAVE_BUTTON_TEXT}")]')
+        button_save.click()

@@ -109,16 +109,8 @@ def owner_can_rename_system_via_cloud_portal():
     assert cancel_button is not None
     assert cancel_button.is_visible()
     cancel_button.click()
-    started_at = time.monotonic()
-    timeout_sec = 3
-    while True:
-        if sys_admin.has_no_unsaved_changes_message():
-            break
-        if time.monotonic() - started_at > 3:
-            raise RuntimeError(
-                f"No unsaved changes message did not appear after {timeout_sec} seconds")
-        time.sleep(0.1)
-    sys_admin.get_cancel_button().wait_until_not_visible()
+    sys_admin.wait_for_unsaved_changes_messages()
+    assert sys_admin.get_cancel_button() is None
     assert sys_admin.get_system_name_edit_field().get_text() == SERVERS[0]['name']
     sys_admin.get_system_name_edit_field().clear_text()
     started_at = time.monotonic()
