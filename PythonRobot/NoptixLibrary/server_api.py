@@ -111,7 +111,7 @@ class ServerApi:
             self._post('rest/v1/servers/this/restart', {})
 
     def get_system_name(self):
-        return self._get_server_info()['systemName']
+        return self.get_server_info()['systemName']
 
     def set_system_name(self, name: str):
         self._patch('rest/v1/system/settings', {'systemName': name})
@@ -135,9 +135,9 @@ class ServerApi:
             time.sleep(1)
 
     def _get_server_runtime_id(self) -> UUID:
-        return UUID(self._get_server_info()['runtimeId'])
+        return UUID(self.get_server_info()['runtimeId'])
 
-    def _get_server_info(self):
+    def get_server_info(self):
         return self._get('rest/v1/servers/this/info')
 
     def _get(self, path: str):

@@ -97,6 +97,10 @@ class Mediaserver:
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
 
+    def get_server_name(self) -> str:
+        server_info = self._api.get_server_info()
+        return server_info['name']
+
     def set_up(self):
         # Create a docker server.
         # Mimic configuration from JSON files.

@@ -10,6 +10,7 @@ from generic_element import Element
 from generic_element import ElementNotInDOM
 from generic_element import ElementNotVisible
 from system_admin_tab_information import TabInformation
+from system_admin_tab_settings import TabSettings
 from toast_notification import ToastNotification
 from variables import ENV
 from wrappers import Button
@@ -168,27 +169,40 @@ class SystemAdmin:
     def modal(self):
         return PageText(self.driver, "//div[@modal-render='true']")
 
-    def get_information_tab(self) -> '_TabInformation':
+    def get_information_tab(self) -> 'TabInformation':
         """
         Problem: the Information tab couldn't appear without switching to another tab or refreshing the page
         See: https://networkoptix.atlassian.net/browse/CLOUD-11437
         """
         locator = f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
-
-        def _wait():
-            started_at = time.monotonic()
-            timeout_sec = 30
-            while True:
-                if len(self.driver.find_elements_by_xpath(locator)) > 0:
-                    break
-                try:
-                    robot_keywords.wait_until_page_contains_element(self.driver, locator, timeout=10)
-                except TimeoutException:
-                    if time.monotonic() - started_at > timeout_sec:
-                        raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
-                    self.driver.refresh()
-        _wait()  # It is a workaround. To be removed after resolving CLOUD-11437
+        self._wait_for_tab_loaded(locator)
         return TabInformation(self.driver, locator, self.rb)
+
+    def get_tab_settings(self) -> TabSettings:
+        self._wait_for_tab_loaded(f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]')
+        return TabSettings(
+            self.driver,
+            f'//header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]',
+            self.rb,
+        )
+
+    def _wait_for_tab_loaded(self, locator: str):
+        """
+        Problem: the Information tab and another couldn't appear without switching to another tab or refreshing the page.
+        To be removed after resolving CLOUD-11437.
+        See: https://networkoptix.atlassian.net/browse/CLOUD-11437
+        """
+        started_at = time.monotonic()
+        timeout_sec = 30
+        while True:
+            if len(self.driver.find_elements_by_xpath(locator)) > 0:
+                break
+            try:
+                robot_keywords.wait_until_page_contains_element(self.driver, locator, timeout=10)
+            except TimeoutException:
+                if time.monotonic() - started_at > timeout_sec:
+                    raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
+                self.driver.refresh()
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")
