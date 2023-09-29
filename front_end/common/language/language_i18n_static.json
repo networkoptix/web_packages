@@ -149,7 +149,8 @@
         "unsavedStates": {
             "changed": "Changed",
             "unsaved": "Unsaved",
-            "saving": "Saving"
+            "saving": "Saving",
+            "diverged": "Diverged"
         },
         "additionalErrorMessages": {
             "UNAVAILABLE": "can't connect to the camera",

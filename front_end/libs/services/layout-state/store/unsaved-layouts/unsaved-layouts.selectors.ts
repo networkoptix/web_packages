@@ -5,6 +5,7 @@ import { dirtyId } from '@utils/general';
 
 import { selectLocalLayoutsState } from '../local-layouts/local-layouts.selectors';
 import { UnsavedState } from '../shared/types/layout-state.types';
+import { hashItem } from '../shared/utils';
 
 import { unsavedLayoutsFeature } from './unsaved-layouts.feature';
 
@@ -20,9 +21,12 @@ export const selectUnsavedLayoutsIds = createSelector(
             unsavedLayouts[dirtyId(layout.id)] =
                 layout.unsaved === UnsavedState.PENDING
                     ? unsavedStates.saving
-                    : existingLayouts.find(({ id }) => id === layout.id)
+                    : !existingLayouts.find(({ id }) => id === layout.id)
+                    ? unsavedStates.unsaved
+                    : hashItem(existingLayouts.find(({ id }) => id === layout.id)) ===
+                      layout.baseVersion
                     ? unsavedStates.changed
-                    : unsavedStates.unsaved;
+                    : unsavedStates.diverged;
             return unsavedLayouts;
         }, {} as Record<string, string>),
 );

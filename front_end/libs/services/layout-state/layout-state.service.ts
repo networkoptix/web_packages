@@ -19,6 +19,7 @@ import { dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
+import { LocalLayoutsSelectors } from './store/local-layouts';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import {
     LayoutState,
@@ -26,6 +27,7 @@ import {
     UnsavedLayoutState,
     UnsavedState,
 } from './store/shared/types/layout-state.types';
+import { hashItem } from './store/shared/utils';
 import { UnsavedLayoutsActions } from './store/unsaved-layouts';
 import { selectUnsavedLayoutsIds } from './store/unsaved-layouts/unsaved-layouts.selectors';
 import { incrementUntilUnique } from './store/utils/increment-until-unique';
@@ -196,19 +198,24 @@ export class LayoutStateService {
     updateLayout(layout: Layout): void;
     updateLayout(layouts: Layout[]): void;
     updateLayout(layouts: Layout | Layout[]): void {
-        if (!Array.isArray(layouts)) {
-            layouts = [layouts];
-        }
-        this.store.dispatch(
-            UnsavedLayoutsActions.update({
-                layouts: layouts.map(layout => ({
-                    id: layout.id,
-                    layoutType: LayoutTypes.LOCAL,
-                    unsaved: UnsavedState.UNSAVED,
-                    layout,
-                })),
-            }),
-        );
+        this.store
+            .select(LocalLayoutsSelectors.selectLocalLayoutsBaseVersion)
+            .pipe(take(1))
+            .subscribe(layoutBaseHashes => {
+                const updatedLayouts = Array.isArray(layouts) ? layouts : [layouts];
+
+                this.store.dispatch(
+                    UnsavedLayoutsActions.update({
+                        layouts: updatedLayouts.map(layout => ({
+                            id: layout.id,
+                            layoutType: LayoutTypes.LOCAL,
+                            unsaved: UnsavedState.UNSAVED,
+                            layout,
+                            baseVersion: layoutBaseHashes[layout.id] || hashItem(layout),
+                        })),
+                    }),
+                );
+            });
     }
 
     public changeLayout(node: ResourceNode): void {

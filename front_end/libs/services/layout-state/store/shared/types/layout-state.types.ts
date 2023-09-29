@@ -22,6 +22,7 @@ interface BaseLayoutState<LayoutTypeName, LayoutType, Unsaved> {
     layoutType: LayoutTypeName;
     layout: LayoutType;
     unsaved: Unsaved;
+    baseVersion: string;
 }
 
 export interface LocalLayoutState
