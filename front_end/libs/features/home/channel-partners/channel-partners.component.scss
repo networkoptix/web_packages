@@ -25,10 +25,13 @@
       height: 70%;
     }
 
-    .status {
-      border: 1px solid var(--channel-partner-card-status-background);
-      background-color: var(--channel-partner-card-status-background);
-      border-radius: 8px;
+    .groups{
+      display: flex;
+      gap: .25rem;
+
+      h3 {
+        margin: 0;
+      }
     }
 
     .bottom {

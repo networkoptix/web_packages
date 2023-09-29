@@ -56,12 +56,14 @@
                             (click)="handleOrgClick(organization.id)"
                         >
                             <div class="card-body">
-                                <img [src]="defaultImage" />
-                                <div class="bottom">
-                                    <h3>{{ organization.name }}</h3>
-                                    <div class="status px-2 mt-1">
-                                        {{ organization.effectiveState | translate }}
-                                    </div>
+                                <h3>{{ organization.name }}</h3>
+                                <div class="groups mt-1">
+                                    <h3>12</h3>
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [src]="icons.dir + 'system_local.svg'"
+                                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                                    ></svg-icon>
                                 </div>
                             </div>
                             <div

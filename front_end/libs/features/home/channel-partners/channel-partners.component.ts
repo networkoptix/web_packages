@@ -6,6 +6,7 @@ import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable, Subject, catchError, combineLatestWith, debounceTime, map, of } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -20,7 +21,7 @@ import {
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { caseInsenstiveSearch } from '@utils/general';
-import { search as searchConfig } from '@variables/static-variables';
+import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
@@ -49,9 +50,11 @@ import {
         RouterModule,
         CdkMenuModule,
         NxTabsDirective,
+        AngularSvgIconModule,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
+    icons = icons;
     LANG = staticLang;
 
     isLoading = true;
