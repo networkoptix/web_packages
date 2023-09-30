@@ -18,6 +18,7 @@ class ActionEnum(Enum):
     # UPDATE_USER = 'update_user'
     CREATE_ORG_USER = 'create_org_user'
     UPDATE_ORG_USER = 'update_org_user'
+    DELETE_ORG_USER = 'delete_org_user'
 
     @classmethod
     def _get_actions(cls):
@@ -43,9 +44,11 @@ class BaseMoveSchema(Schema):
 
 class MoveGroupSchema(BaseMoveSchema):
     group_id = fields.Str(required=True)
+    target_id = fields.Str(required=True)
 
 
 class MoveSystemSchema(BaseMoveSchema):
+    group_id = fields.Str(required=True)
     system_id = fields.Str(required=True)
 
 
@@ -89,25 +92,27 @@ class UpdateGroupSchema(CreateGroupSchema, TargetGroupSchema):
 
 class UserSchema(Schema):
     org_id = fields.Str(required=True)
-
-
-class TargetUserSchema(UserSchema):
     email = fields.Str(required=True)
 
 
-class RoleUserSchema(TargetUserSchema):
+class OrgUserSchema(Schema):
+    enabled = fields.Boolean(required=False, default=True)
+    groups = fields.List(fields.Str, required=False, default=[])
+
+
+class RoleUserSchema(UserSchema):
     role = fields.Str(required=True)
 
 
-class CreateUserSchema(RoleUserSchema):
+class CreateUserSchema(RoleUserSchema, OrgUserSchema):
     pass
 
 
-class DeleteUserSchema(TargetUserSchema):
+class UpdateUserSchema(RoleUserSchema, OrgUserSchema):
     pass
 
 
-class UpdateUserSchema(RoleUserSchema):
+class DeleteUserSchema(UserSchema, OrgUserSchema):
     pass
 
 
@@ -127,4 +132,5 @@ params_to_actions = {
     # ActionEnum.UPDATE_USER: UpdateUserSchema,
     ActionEnum.CREATE_ORG_USER: CreateUserSchema,
     ActionEnum.UPDATE_ORG_USER: UpdateUserSchema,
+    ActionEnum.DELETE_ORG_USER: DeleteUserSchema
 }

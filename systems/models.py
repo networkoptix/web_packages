@@ -2,6 +2,7 @@ import queue
 import asyncio
 
 from flask_sqlalchemy import SQLAlchemy
+from quart import current_app
 from sqlalchemy import update, event
 from caches import OrgCache
 from utils import generate_uuid
@@ -21,6 +22,10 @@ class Group(db.Model):
 
     def __repr__(self):
         return f'<Group {self.name}>'
+
+    @property
+    def is_root(self):
+        return not self.parent
 
     def find_root(self):
         if self.parent:
@@ -49,8 +54,10 @@ class Group(db.Model):
 
     def get_all_system_ids_in_group(self):
         systems = [system.id for system in self.systems]
-        systems_in_child_groups = [group.get_all_system_ids_in_group() for group in self.groups]
-        return systems + systems_in_child_groups
+        for group in self.groups:
+            if children_systems := group.get_all_system_ids_in_group():
+                systems.extend(children_systems)
+        return systems
 
     def get_all_groups(self):
         groups = self.groups or []
@@ -74,69 +81,6 @@ class Group(db.Model):
                     # TODO: w/ 5.2 change this to use permission group ids. Using legacy roles for testing!!!
                     users[user.email] = user
         return users.values()
-
-    # Moving groups
-    async def _move_users_in_group(self, modify_users, remove_user=False):
-        users = set()
-        if self.parent:
-            users = set(self.parent.get_users_to_root())
-        users = users - set(self.users)
-        users_to_update = [{'email': '', 'role': '' if remove_user else user.role} for user in users]
-        return await modify_users(self.get_all_system_ids_in_group(), users_to_update)
-
-    async def add_users_from_above_group(self, modify_users):
-        return await self._move_users_in_group(modify_users, remove_user=False)
-
-    async def remove_users_from_above_group(self, modify_users):
-        return await self._move_users_in_group(modify_users, remove_user=True)
-
-    # Modifying users in a system
-    async def add_users_to_system(self, modify_users, system_id):
-        users = [user.as_dict() for user in self.get_users_to_root()]
-        return await modify_users([system_id], users)
-
-    async def remove_users_from_system(self, modify_users, system_id):
-        users = [{'email': user.email, 'role': ''} for user in self.get_users_to_root()]
-        return await modify_users([system_id], users)
-
-    # Modifying users in a group
-    async def _change_users_in_group(self, modify_users, users, action=None):
-        no_update = action != 'update'
-        updated_users = False
-        remaining_users = []
-        group_users = [user.email for user in self.users]
-        systems = [system.id for system in self.systems]
-        for user in users:
-            email = user['email']
-            role = user['role']
-
-            if email in group_users:
-                # if we are not updating roles the user can be skipped for nodes down the tree
-                if no_update:
-                    continue
-                if(User.query.filter(User.email == email and User.group_id == self.id).update({'role': role})):
-                    updated_users = True
-
-            else:
-                await self.add_users_to_group(modify_users, [user])
-            remaining_users.append(user)
-        if updated_users:
-            db.session.commit()
-        await modify_users(systems, remaining_users)
-
-        group: Group  # Added type hint so prevent error with private method
-        for group in self.groups:
-            await group._change_users_in_group(modify_users, remaining_users, action=action)
-
-    async def add_users_to_group(self, add_user_to_system, users):
-        await self._change_users_in_group(add_user_to_system, users, action='add')
-
-    async def update_users_in_group(self, modify_users, users):
-        await self._change_users_in_group(modify_users, users, action='update')
-
-    async def remove_users_from_group(self, remove_user_from_system, users):
-        users = [{'email': user, 'role': ''} for user in users]
-        await self._change_users_in_group(remove_user_from_system, users, action='remove')
 
     # Operates on the assumption that there are no cycles in the tree to begin with
     @staticmethod
@@ -193,10 +137,18 @@ class User(db.Model):
             return False
         return role_access_by_index.index(role_from_parent) < role_access_by_index.index(self.role)
 
-for Cls in [Group, System, User]:
-    @event.listens_for(Cls, "after_delete")
-    @event.listens_for(Cls, "after_update")
-    @event.listens_for(Cls, "after_insert")
-    def group_updated(mapper, connection, target, **kwargs):
-        loop = asyncio.get_running_loop()
-        loop.create_task(OrgCache(target.org_id).update_current())
+
+# Comment out below when running tests
+def group_updated(mapper, connection, target, **kwargs):
+    current_app.add_background_task(OrgCache(target.org_id).update_current)
+
+
+event.listen(Group, "after_delete", group_updated)
+event.listen(Group, "after_update", group_updated)
+event.listen(Group, "after_insert", group_updated)
+event.listen(System, "after_delete", group_updated)
+event.listen(System, "after_update", group_updated)
+event.listen(System, "after_insert", group_updated)
+event.listen(User, "after_delete", group_updated)
+event.listen(User, "after_update", group_updated)
+event.listen(User, "after_insert", group_updated)

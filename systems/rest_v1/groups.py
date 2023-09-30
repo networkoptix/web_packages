@@ -14,7 +14,8 @@ async def create_group():
     try:
         raw_data = await request.get_json()
         data = CreateGroupSchema().load(data=raw_data)
-        return GroupView.create_group(data['name'], data['org_id'], parent_id=data.get('parent_id'))
+        return GroupView()\
+            .create_group(data['name'], data['org_id'], parent_id=data.get('parent_id')).data()
     except ValidationError as err:
         return err.messages, 400
 
@@ -23,7 +24,7 @@ async def create_group():
 @group_blueprint.route('/<group_id>', methods=['GET'])
 def get_group(group_id=None):
     connector = RestConnector(request)
-    groups = GroupView.list_groups(connector.email, group_id=group_id)
+    groups = GroupView().list_groups(connector.email, group_ids=group_id)
     return {"data": groups}
 
 
@@ -33,7 +34,7 @@ async def update_group(group_id):
     try:
         raw_data = await request.get_json()
         data = UpdateGroupSchema().load(raw_data)
-        results = GroupView.update_group(group_id, data['name'])
+        results = GroupView().update_group(group_id, data['name'])
         if error_code := results.get('error'):
             del results['error']
         return results, error_code or 200
@@ -46,4 +47,4 @@ async def update_group(group_id):
 @is_org_admin
 async def delete_group(group_id):
     connector = RestConnector(request)
-    return await GroupView.delete_group(connector.share_system, group_id)
+    return await GroupView().delete_group(connector.send_batch, group_id)

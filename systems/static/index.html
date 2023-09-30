@@ -267,7 +267,7 @@
         const groupIds = []
         groups.querySelectorAll('#groups input').forEach(({value: group_id}) => {
             if(group_id) {
-                groupIds.push({id: group_id})
+                groupIds.push(group_id)
             }
         })
         data.action = action;

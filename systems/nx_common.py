@@ -1,9 +1,8 @@
 import asyncio
 import httpx
 import os
-import traceback
 
-from models import Group
+from models import db, Group
 
 from debug_tools import PrintDebug
 
@@ -14,31 +13,6 @@ from utils import generate_uuid
 CLOUD_HOST = os.getenv('CLOUD_HOST') or 'cloud-test.hdw.mx'  # or 'localhost:8001'
 LICENSE_PORTAL = os.getenv('LICENSE_PORTAL') or 'partners.test.hdw.mx'
 RELAY = os.getenv('CLOUD_RELAY') or 'https://{systemId}.relay.relay.cloud.hdw.mx'
-
-async def share(api, systems, users):
-    shared_systems = []
-
-    for system_id in systems:
-        for user in users:
-            try:
-                email = user.get('email').lower()
-                role = user.get('role', '')
-                isEnabled = user.get('enabled', True)
-                params = {
-                    'systemId': system_id,
-                    'accountEmail': email,
-                    'accessRole': role,
-                    'isEnabled': isEnabled
-                }
-                if not params['accessRole']:
-                    del params['accessRole']
-
-                res = await api.session.post(f'https://{CLOUD_HOST}/cdb/system/share', json=params)
-                shared_systems.append(res)
-            except APIException:
-                current_app.logger.error(traceback.format_exc())
-                pass
-    return shared_systems
 
 
 def is_org_admin(f):
@@ -76,10 +50,10 @@ class NxSystem:
     async def _legacy_login(self, auth):
         return await self.session.post(f'{self.relay}/api/cookieLogin', json={'auth': auth})
 
-    async  def _rest_login(self, auth):
+    async def _rest_login(self, auth):
         return await self.session.get(f'{self.relay}/rest/v1/login/sessions/{auth}?setCookie=true')
 
-    async def get_wrapper(self, route, data=None):
+    async def get_wrapper(self, route):
         return await self.session.get(f'{self.relay}{route}')
 
     async def post_wrapper(self, route, data=None):
@@ -132,25 +106,42 @@ class LicenseConnector:
         res.raise_for_status()
         return res.json()
 
+    async def _license_delete(self, route):
+        url = f"https://{LICENSE_PORTAL}{route}"
+        res = await self.session.delete(url)
+        res.raise_for_status()
+        return res.json()
+
     async def update_token(self, token):
         self.session.headers.update({'Authorization': f'Bearer {token}'})
+
+    async def get_org_systems(self, org_id):
+        return self._license_get(f'/api/v2/partners/organizations/{org_id}/cloud_systems/')
 
     async def _get_user(self, org_id):
         return await self._license_get(f'/api/v2/partners/organizations/{org_id}/users/self/')
 
+    async def add_or_update_user_in_org(self, org_id, body):
+        return await self._license_post(f'/api/v2/partners/organizations/{org_id}/users/', data=body)
+
+    async def remove_user_from_org(self, org_id, email):
+        return await self._license_delete(f'/api/v2/partners/organizations/{org_id}/users/{email}')
+
     async def is_admin_in_org(self, org_id):
         user = await self._get_user(org_id)
-        return self.email == user.get('email') and any(role in ['Administrator', 'Organization Administrator'] for role in user.get('roles', []))
+        return self.email == user.get('email') \
+            and any(role in ['Administrator', 'Organization Administrator'] for role in user.get('roles', []))
 
     async def is_user_in_org(self, org_id):
         user = await self._get_user(org_id)
         return self.email == user.get('email')
 
 class CloudConnector:
-    def __init__(self):
+    def __init__(self, *, override_db=None):
         self.session = httpx.AsyncClient()
         self.account = {}
         self.systems = {}
+        self.db = override_db or db
         self. _org_id = None
         self.last_org_version = generate_uuid()
 
@@ -172,8 +163,11 @@ class CloudConnector:
 
     async def _get_wrapper(self, route, params=None, _websocket=None, auth=None):
         res = None
+        headers = None
+        if auth:
+            headers = {'Authorization': f'Bearer {auth}'}
         try:
-            res = await self.session.get(f'https://{CLOUD_HOST}{route}', params=params, headers=({"Authorization": f'Bearer {auth}'}) if auth else None)
+            res = await self.session.get(f'https://{CLOUD_HOST}{route}', params=params, headers=headers)
             res.raise_for_status()
             if res and res.status_code == 401:
                 await websocket.close(res.status_code, 'Failed auth')
@@ -187,8 +181,11 @@ class CloudConnector:
 
     async def _post_wrapper(self, route, data=None, _websocket=None, auth=None):
         res = None
+        headers = None
+        if auth:
+            headers = {'Authorization': f'Bearer {auth}'}
         try:
-            res = await self.session.post(f'https://{CLOUD_HOST}{route}', json=data, headers=({"Authorization": f'Bearer {auth}'}) if auth else None)  # , verify=False)
+            res = await self.session.post(f'https://{CLOUD_HOST}{route}', json=data, headers=headers)  # , verify=False)
             res.raise_for_status()
             return res.json()
         except httpx.HTTPError as e:
@@ -218,8 +215,9 @@ class CloudConnector:
                 if not system.is_logged_in:
                     continue
 
-    async def _aggregate_caller(self, system, request_url, method, post_body=None):
-        request_method = system.post_wrapper if method == 'post' else system.get_wrapper
+    @staticmethod
+    async def _aggregate_caller(system, request_url, method, post_body=None):
+        request_method = system._post_wrapper if method == 'post' else system._get_wrapper
         res = None
         try:
             res = await request_method(request_url, post_body)
@@ -261,7 +259,7 @@ class CloudConnector:
         return data
 
     async def aggregate_request_by_group(self, group_id, request_url, method=None, post_body=None):
-        group = Group.query.get(group_id)
+        group = self.db.session.query(Group).get(group_id)
         systems = group.get_all_system_ids_in_group()
         return await self.aggregate_request(request_url, method=method, post_body=post_body, allowed_systems=systems)
 
@@ -288,14 +286,14 @@ class CloudConnector:
             return res[0]
         return res
 
-    async def share_system(self, systems, users):
-        return await share(self, systems, users)
+    async def send_batch(self, data):
+        return await self._post_wrapper('/cdb/systems/users/batch', data=data)
 
 
 class RestConnector:
-    def __init__(self, request):
+    def __init__(self, request_data):
         self.session = httpx.AsyncClient()
-        self.token = request.headers.get('Authorization')
+        self.token = request_data.headers.get('Authorization')
         self.session.headers.update({'Authorization': self.token})
         self.email = self._get_username_from_token(self.token.split(" ")[1])
 
@@ -315,9 +313,6 @@ class RestConnector:
         user = await self._get(f'/cdb/oauth2/token/{token}')
         return user.get('username')
 
-    async def share_system(self, systems, users):
-        return await share(self, systems, users)
-
     async def get_system(self, system_id):
         system = await self._get("/cdb/systems/get", params={'systemId': system_id})
         return system.get('systems')[0]
@@ -330,3 +325,5 @@ def require_params(data, required_params):
     }
     if errors:
         raise httpx.RequestError(errors)
+    async def send_batch(self, data):
+        return await self._post('/cdb/systems/users/batch', data=data)
