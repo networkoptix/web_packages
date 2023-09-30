@@ -72,7 +72,7 @@ export class NxSystemAPIService {
 
         if (useRest || environment.isLocal) {
             let restApi: NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
-            if (version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
+            if (version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
                 restApi = new NxSystemRestAPI3(...args);
             } else if (version > 5.0) {
                 restApi = new NxSystemRestAPI2(...args);

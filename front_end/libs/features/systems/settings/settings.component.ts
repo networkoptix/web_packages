@@ -716,7 +716,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.userManager.users.forEach((user: NxUser) => {
                     const id = cleanId(user.id);
                     let additionalLabel: Translatable;
-                    if (this.system.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
+                    if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
                         if (user.groupIds.length === 0 && user.attributes === 'readonly') {
                             additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
                         } else if (user.groupIds.length === 1) {

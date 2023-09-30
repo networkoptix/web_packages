@@ -232,7 +232,7 @@ export class UserWithGroupsManager extends UserManager {
                 return user;
             })
             .sort((userA, userB) => {
-                // seems to error when >= 5.2 system is offline, type field does not exist
+                // seems to error when > 5.1 system is offline, type field does not exist
                 // sorts local before cloud users --> then by email for cloud & name for local
                 if (userA.type === userB.type) {
                     if (userA.type === 'cloud') {

@@ -56,7 +56,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
             appState,
             injector,
         );
-        this.version = 5.2;
+        this.version = 6.0;
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)

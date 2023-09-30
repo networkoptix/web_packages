@@ -227,7 +227,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             .updateOrGetSystemSettings()
             .pipe(map(res => res?.reply?.settings));
 
-        this.showNewText = this.system.version >= 6.0;
+        this.showNewText = this.system.version > 5.1;
     }
 
     ngAfterViewInit(): void {

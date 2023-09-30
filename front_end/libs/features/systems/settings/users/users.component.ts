@@ -26,7 +26,7 @@ export class NxSystemUsersComponent implements OnInit {
 
     public ngOnInit(): void {
         // users with groups
-        if (this.system.version >= 5.2 && this.CONFIG.featureFlags.usersWithGroups) {
+        if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
             this.fiveDot2Plus = true;
         } else {
             // users with roles
