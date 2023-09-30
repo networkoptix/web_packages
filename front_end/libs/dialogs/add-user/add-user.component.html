@@ -86,7 +86,7 @@
                     description="User Groups"
                     [tooltipAlternateSecondary]="true"
                     [tooltipHorizontal]="true"
-                    [items]="system.userManager.groups"
+                    [items]="groups"
                     [ngModel]="user.groupIds"
                     (ngModelChange)="setGroupDescription($event)"
                     [moreLeftPadding]="true"

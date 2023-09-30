@@ -7,6 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
+import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -59,6 +60,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     });
     accessDescription: string;
     useGroups$$ = signal<boolean>(false);
+    groups: MultiSelectItem[];
 
     constructor(
         configService: NxConfigService,
@@ -116,9 +118,24 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             .then(user => this.system.getUsers(true).then(() => user));
     }
 
+    private removeLdapGroups(groups: MultiSelectItem[]): MultiSelectItem[] {
+        const { ldapUserGroupText } = this.LANG.dialogs.titles;
+        const ldapIndex = groups.findIndex(({ label }) => label === ldapUserGroupText);
+        if (ldapIndex === -1) {
+            return groups;
+        }
+
+        return groups.splice(0, ldapIndex - 1);
+    }
+
     ngOnInit(): void {
         this.systemName = this.system.info.systemName || this.system.info.name;
         this.useGroups$$.set(this.system.version > 5.1);
+
+        if (this.useGroups$$()) {
+            const groups = this.system.userManager.groups;
+            this.groups = this.removeLdapGroups([...groups]);
+        }
 
         const defaultRole = this.system.userManager.accessRoles.find(
             role => role.name === this.CONFIG.accessRoles.default,
