@@ -34,6 +34,28 @@ def test_server_name_can_be_changed(server: Mediaserver, rb: RobotVariables):
         servers_section.get_server_page('server 1 name changed')
 
 
+def test_server_name_can_be_changed_via_api(server: Mediaserver, rb: RobotVariables):
+    """
+    1. Server name changed via API
+    [Tags]    C71000    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_settings = system.get_tab_settings()
+        tab_settings.click()
+        servers_section = tab_settings.get_servers_section()
+        servers_section.click()
+        servers_section.get_default_server_page().wait_until_visible_common_elements()
+        server_page = servers_section.get_server_page(server.get_server_name())
+        server_page.click()
+        server.set_server_name('server 1 name changed')
+        driver.refresh()
+        servers_section.get_server_page('server 1 name changed')
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -44,3 +66,5 @@ if __name__ == '__main__':
         cloud_server = suite.create_cloud_server(cloud_owner, f"{suite_name}")
         test_server_name_can_be_changed(cloud_server, variables)
         print(f'{Fore.WHITE}{test_server_name_can_be_changed.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_server_name_can_be_changed_via_api(cloud_server, variables)
+        print(f'{Fore.WHITE}{test_server_name_can_be_changed_via_api.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
