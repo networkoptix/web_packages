@@ -1,6 +1,6 @@
 import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom } from 'rxjs';
+import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom, Subject } from 'rxjs';
 import { auditTime, catchError, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
@@ -514,7 +514,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         return this.infoPromise;
     }
 
-    killPoll$ = new BehaviorSubject<boolean>(false);
+    killPoll$ = new Subject<boolean>();
 
     startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
