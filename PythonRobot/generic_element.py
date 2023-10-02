@@ -79,7 +79,7 @@ class Element:
         return self._element == self._driver.switch_to.active_element
 
     def is_visible(self):
-        return self._element.is_displayed()
+        return False if self._element is None else self._element.is_displayed()
 
     def send_keys(self, text: str):
         self.wait_until_clickable()

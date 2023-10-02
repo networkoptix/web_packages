@@ -98,6 +98,9 @@ class PageText:
             if time.monotonic() - started_at > timeout:
                 raise RuntimeError(f'Expected text: {expected_text}. Actual text {current_text}')
 
+    def is_visible(self) -> bool:
+        return self._element.is_visible()
+
 
 class TextField:
 
@@ -264,6 +267,9 @@ class Link:
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
 
+    def wait_until_does_not_exist(self, timeout: float = 5):
+        self._element.wait_until_does_not_exist(timeout)
+
     def click(self):
         self._element.click()
 
@@ -275,6 +281,9 @@ class Link:
 
     def get_attribute(self, attribute: str) -> Optional[str, None]:
         return self._element.get_attribute(attribute)
+
+    def is_visible(self) -> bool:
+        return self._element.is_visible()
 
 
 class DropDown:

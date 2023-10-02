@@ -8,6 +8,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 import robot_keywords
 from RobotVariables import RobotVariables
 from generic_element import Element
+from wrappers import Link
+from wrappers import PageText
 from wrappers import Table
 
 
@@ -37,24 +39,25 @@ class TabInformation:
             time.sleep(1)
 
     def check_links(self):
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/nx-health-update')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/div')
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]').wait_until_visible()
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]').wait_until_visible()
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]').wait_until_visible()
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]').wait_until_visible()
+        Link(self._driver, '//div[contains(@class,"menuLinks")]/nx-health-update').wait_until_visible()
+        Link(self._driver, '//div[contains(@class,"menuLinks")]/div').wait_until_visible()
 
     def check_links_uploaded(self):
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="storages"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]')
-        robot_keywords.wait_until_page_contains_element(self._driver, '//div[contains(@class,"menuLinks")]/div')
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]').wait_until_visible()
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]').wait_until_visible()
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]').wait_until_visible()
+        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]').wait_until_visible()
+        Link(self._driver, '//div[contains(@class,"menuLinks")]/div').wait_until_visible()
 
     def is_current_system_inaccessible(self) -> bool:
-        return len(self._driver.find_elements_by_xpath(
-            f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]')) > 0
+        return PageText(
+            self._driver,
+            f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]',
+        ).is_visible()
 
     def upload_json_report(self, filename: Path):
         element = Element(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
@@ -69,23 +72,29 @@ class TabInformation:
             time.sleep(0.5)
 
     def is_imported_report(self) -> bool:
-        return len(self._driver.find_elements_by_xpath(
-            f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]')) > 0
+        return PageText(
+            self._driver,
+            f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]',
+        ).is_visible()
 
     def _is_system_online(self) -> bool:
-        return len(self._driver.find_elements_by_xpath('//nx-menu//nx-level-1-item')) > 0
+        return Link(self._driver, '//nx-menu//nx-level-1-item').is_visible()
 
     def no_alerts(self) -> bool:
-        return len(self._driver.find_elements_by_xpath(
-            f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]')) > 0
+        return PageText(
+            self._driver,
+            f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]',
+        ).is_visible()
 
     def system_is_doing_well(self) -> bool:
-        return len(self._driver.find_elements_by_xpath(
-            f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]')) > 0
+        return PageText(
+            self._driver,
+            f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]',
+        ).is_visible()
 
     def get_alerts_count(self) -> int:
-        e = Element(self._driver, '//div[@id="nx-table"]/div[contains(@class,"table-header")]')
-        (count, _) = e.text().strip().split()
+        table_header = PageText(self._driver, '//div[@id="nx-table"]/div[contains(@class,"table-header")]')
+        (count, _) = table_header.get_text().strip().split()
         return int(count)
 
     def get_systems_section(self) -> '_Section':
@@ -127,13 +136,13 @@ class _Section:
             time.sleep(0.5)
 
     def get_text_first_card_header(self) -> str:
-        return Element(self._driver, '//nx-single-entity//header').text()
+        return PageText(self._driver, '//nx-single-entity//header').get_text()
 
     def has_table(self) -> bool:
-        return len(self._driver.find_elements_by_xpath('//div[@id="nx-table"]')) > 0
+        return Link(self._driver, '//div[@id="nx-table"]').is_visible()
 
     def has_card(self) -> bool:
-        return len(self._driver.find_elements_by_xpath('//nx-single-entity')) > 0
+        return Link(self._driver, '//nx-single-entity').is_visible()
 
     def _is_active(self) -> bool:
         return self.has_table() or self.has_card()
@@ -211,14 +220,12 @@ class _AlertsSection(_Section):
         )
 
     def get_pages_count(self):
-        paginator = Element(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
-        if paginator.in_dom:
-            return int(paginator.text())
+        paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
+        if paginator.is_visible():
+            return int(paginator.get_text())
         return 1
 
     def _is_active(self) -> bool:
-        is_offline = self._driver.find_elements_by_xpath(
-            '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]') > 0
-        is_online = self._driver.find_elements_by_xpath(
-            '//nx-system-health-component/g[@class="gridAlertsCards"]') > 0
-        return is_online or is_offline
+        offline = Link(self._driver, '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]')
+        online = Link(self._driver, '//nx-system-health-component/g[@class="gridAlertsCards"]')
+        return online.is_visible() or offline.is_visible()
