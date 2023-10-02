@@ -158,7 +158,6 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     email = email_con.get_random_email(sendemail=True)
     cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    time.sleep(30)
     email_id = email_con.wait_for_email(email)
     body = email_con.get_body(email_id)
     links = email_con.get_nx_links_from_email(body)
