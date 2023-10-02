@@ -1,7 +1,7 @@
 <div class="mb-3">
     <ng-container *ngIf="!environment.isLocal">
         <nx-select
-            [id]="'avail-systems'"
+            [componentId]="'avail-systems'"
             [type]="'api-tool'"
             [stillLoading]="
                 !this.systems.length ||
@@ -18,7 +18,7 @@
             *ngIf="serverDropdownEnabled && !environment.isLocal && servers"
             [type]="'api-tool'"
             class="mt-2"
-            [id]="'avail-systems'"
+            [componentId]="'system-servers'"
             [stillLoading]="APIToolSystemService.loading$ | async"
             [items]="servers"
             [selected]="server"
@@ -27,6 +27,7 @@
         </nx-select>
     </ng-container>
     <nx-select
+        [componentId]="'outdated-systems'"
         *ngIf="!(APIToolSystemService.outDatedSystem$ | async)"
         [type]="'api-tool'"
         [items]="types"

@@ -6,7 +6,7 @@
     <button
         class="btn btn-dropdown-toggle dropdown-toggle"
         (click)="show = !show"
-        [id]="id"
+        [id]="componentId"
         type="button"
         data-toggle="dropdown"
     >
@@ -25,7 +25,7 @@
         class="dropdown-menu"
         [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
-        [attr.aria-labelledby]="id"
+        [attr.aria-labelledby]="componentId"
     >
         <div
             *ngIf="canSearch"
@@ -51,6 +51,7 @@
         >
             <li class="dropdown-item-container">
                 <a
+                    [id]="componentId + '-selectAll'"
                     class="dropdown-item dropdown-item--non-checkbox inset"
                     (click)="clearSelected(); show = false"
                     translate
@@ -90,7 +91,7 @@
                     <ng-container *ngSwitchDefault>
                         <nx-checkbox
                             [disabled]="item.disabled"
-                            [componentId]="item.id"
+                            componentId="{{ componentId + '-' + item.id }}"
                             [checked]="item.selected"
                             (click)="change(item)"
                         ></nx-checkbox>
@@ -101,7 +102,7 @@
                                 'text-muted': item.disabled
                             }"
                             [style.pointer-events]="item.disabled ? 'none' : ''"
-                            [htmlFor]="item.id"
+                            [htmlFor]="componentId + '-' + item.id"
                             >{{ item.label | translate }}</label
                         >
                     </ng-container>

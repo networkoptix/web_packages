@@ -40,6 +40,7 @@
                     >
                         <h4>Select system to test email notification</h4>
                         <nx-select
+                            [componentId]="'notificationsSystemSelect'"
                             [items]="systems$ | async"
                             [selected]="selectedSystem$ | async"
                             [stillLoading]="!(selectedSystem$ | async)"
@@ -94,6 +95,7 @@
                             <div class="send-section h-100">
                                 <h4>Select test notification type</h4>
                                 <nx-select
+                                    [componentId]="'notificationTypeSelect'"
                                     [items]="notificationTypes"
                                     [selected]="selectedNotificationType"
                                     (onSelected)="updateType($event)"

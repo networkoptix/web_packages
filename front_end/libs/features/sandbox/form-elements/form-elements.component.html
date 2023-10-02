@@ -387,6 +387,7 @@
             </div>
             <div class="grid-item mb-2 mb-lg-0">
                 <nx-select
+                    [componentId]="'sandboxAspectRatioSelect'"
                     [selected]="false"
                     [(ngModel)]="selectedAspect"
                     [items]="aspectRatios"
@@ -398,6 +399,7 @@
             </div>
             <div class="grid-item">
                 <nx-select
+                    [componentId]="'sandboxRotationSelect'"
                     [selected]="false"
                     [(ngModel)]="selectedRotation"
                     [items]="rotations"

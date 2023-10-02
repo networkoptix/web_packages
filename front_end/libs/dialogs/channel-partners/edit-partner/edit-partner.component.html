@@ -39,7 +39,7 @@
                 >Parent Channel Partner</label
             >
             <nx-select
-                id="parentPartner"
+                [componentId]="'parentPartner'"
                 name="parentPartner"
                 [stillLoading]="!parentPartners.length"
                 [items]="parentPartners"
@@ -77,12 +77,12 @@
         </div> -->
         <div class="form-group">
             <label
-                for="state"
+                for="partnerEditState"
                 translate
                 >State</label
             >
             <nx-select
-                id="state"
+                [componentId]="'partnerEditState'"
                 name="state"
                 [items]="states"
                 [selected]="state"

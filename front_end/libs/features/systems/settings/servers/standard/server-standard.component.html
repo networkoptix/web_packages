@@ -210,7 +210,7 @@
                             >Analytics DB Storage</span
                         >
                         <nx-select
-                            id="system"
+                            [componentId]="'serverAnalyticsSelect'"
                             class="{{ storagesLoading ? 'storages-loading' : '' }}"
                             [ellipsisMargin]="true"
                             [stillLoading]="checkingForDataAnalytics || storagesLoading"

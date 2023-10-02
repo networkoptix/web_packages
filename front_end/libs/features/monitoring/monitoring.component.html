@@ -7,7 +7,7 @@
             <nx-pre-loader *ngIf="!system; else menu"></nx-pre-loader>
             <ng-template #menu>
                 <nx-select
-                    [id]="'avail-servers'"
+                    [componentId]="'monitorAvailServersSelect'"
                     [type]="'api-tool'"
                     [items]="selectableServers"
                     [selected]="selectedServer"

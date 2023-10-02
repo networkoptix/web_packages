@@ -48,7 +48,7 @@ import type { DropdownItem } from './dropdown.component.types';
 export class NxMatLikeGenericDropdown<
     Item extends DropdownItem<unknown> = DropdownItem<unknown>,
 > extends BaseDropdown {
-    @Input() id: string = 'genericSelect';
+    @Input() componentId: string = 'genericSelect';
     @Input() items: Item[];
     @Input() selected: Item | false;
     @Input({ transform: booleanAttribute }) merge: boolean;

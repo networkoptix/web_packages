@@ -66,7 +66,7 @@
                         >
                         <nx-multi-select
                             *ngIf="canBeEdited()"
-                            id="user-groups"
+                            [componentId]="'userGroupsSelect'"
                             name="userGroupsSelect"
                             [canSelectAll]="false"
                             [canSearch]="false"
@@ -74,7 +74,7 @@
                             [tooltipHorizontal]="true"
                             description="User Groups"
                             [items]="filteredGroups"
-                            [ngModel]="selectedGroups"
+                            [(ngModel)]="selectedGroups"
                             (ngModelChange)="toggleGroup($event)"
                             [moreLeftPadding]="true"
                         >

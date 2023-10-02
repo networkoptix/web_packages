@@ -90,12 +90,12 @@
                 *ngIf="subjects && subjects.length > 1"
             >
                 <label
-                    for="subject"
+                    for="messageSubjectSelect"
                     translate
                     >Subject</label
                 >
                 <nx-select
-                    id="subject"
+                    [componentId]="'messageSubjectSelect'"
                     [selected]="subjects[0]"
                     [items]="subjects"
                     (onSelected)="setSubject($event)"

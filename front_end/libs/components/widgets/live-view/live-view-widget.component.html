@@ -18,6 +18,7 @@
                 <div class="h-100">
                     <h4 translate>Select to system find camera</h4>
                     <nx-select
+                        [componentId]="'systemToFindCameraSelect'"
                         [items]="systemsDropdownItems$ | async"
                         [selected]="selectedSystem"
                         [stillLoading]="!selectedSystem"
@@ -29,6 +30,7 @@
                 <div class="h-100">
                     <h4 translate>Select a camera</h4>
                     <nx-select
+                        [componentId]="'viewCameraSelect'"
                         [items]="camerasDropdownItems$ | async"
                         [selected]="selectedCamera"
                         [stillLoading]="!selectedCamera"

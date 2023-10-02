@@ -23,6 +23,7 @@
     >
         <label translate>Select Dashboard</label>
         <nx-select
+            [componentId]="'widgetDashboardSelect'"
             [items]="dashboardOptions"
             (onSelected)="updateSelectedDashboard($event.value, findDashboard($event.value))"
             [selected]="selectedDashboard"
@@ -31,6 +32,7 @@
     <div>
         <label translate>Select Widget</label>
         <nx-select
+            [componentId]="'widgetWidgetSelect'"
             [items]="widgetDropdownOptions"
             (onSelected)="updateSelected($event)"
             [selected]="selectedWidget"
@@ -49,6 +51,7 @@
             <div class="dashboard-card">
                 <div class="heading">
                     <nx-select
+                        [componentId]="'widgetSizeSelect'"
                         [items]="selectedWidget.value.sizes"
                         (onSelected)="updateSize($event)"
                         [selected]="selectedWidget.value.size"

@@ -11,6 +11,7 @@ import { NxAlertBlockComponent } from '@components/content-block/alert/block.com
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { DangerButtonModule } from '@components/danger-button/danger-button.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
+import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/mat-like-generic-select/dropdown.module';
@@ -212,6 +213,7 @@ const appRoutes: Routes = [
         NxMatLikePasswordComponent,
         NxUsersTableComponent,
         NxResizeObserver,
+        LanguageModule,
     ],
     providers: [],
 

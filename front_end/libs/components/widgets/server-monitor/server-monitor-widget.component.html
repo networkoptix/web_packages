@@ -16,6 +16,7 @@
             <div class="h-100 p-3">
                 <h4 translate>Select system</h4>
                 <nx-select
+                    [componentId]="'monitorSystemSelect'"
                     [items]="systemsDropdownItems$ | async"
                     [selected]="selectedSystem$ | async"
                     [stillLoading]="!(selectedSystem$ | async)"
@@ -27,6 +28,7 @@
             <div class="h-100 p-3">
                 <h4 translate>Select server</h4>
                 <nx-select
+                    [componentId]="'monitorServerSelect'"
                     [items]="serversDropdownItems$ | async"
                     [selected]="selectedServer$ | async"
                     [stillLoading]="!(selectedServer$ | async)"

@@ -11,7 +11,7 @@
         #dropdownButtonFocus
         (click)="show = !show"
         type="button"
-        [id]="id"
+        [id]="componentId"
         data-toggle="dropdown"
     >
         <div
@@ -62,7 +62,7 @@
         }"
         [style.left.px]="forcePosition?.left || 0"
         [style.top.px]="forcePosition?.top || nativeElementTop - (forcePosition?.offsetTop || 0)"
-        [attr.aria-labelledby]="id"
+        [attr.aria-labelledby]="componentId"
     >
         <div
             *ngIf="canSearch"

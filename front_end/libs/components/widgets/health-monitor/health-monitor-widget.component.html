@@ -19,6 +19,7 @@
             <div class="h-100">
                 <h4 translate>Select System to Monitor</h4>
                 <nx-select
+                    [componentId]="'systemToMonitorSelect'"
                     [items]="systemsDropdownItems$ | async"
                     [selected]="selectedSystem"
                     [stillLoading]="!selectedSystem"

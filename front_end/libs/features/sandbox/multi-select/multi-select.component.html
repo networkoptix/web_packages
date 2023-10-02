@@ -4,6 +4,7 @@
 >
     <div class="col-3 p-5">
         <nx-multi-select
+            [componentId]="'sandboxDropdownsDdMultiSelect'"
             name="ddMultiSelect"
             [items]="items"
             [ngModel]="itemsSelected"
@@ -15,10 +16,11 @@
     </div>
     <div class="col-3 p-5">
         <nx-multi-select
+            [componentId]="'sandboxDropdownsOtherDdMultiSelect'"
             name="ddMultiSelect1"
-            [items]="items"
-            [ngModel]="itemsSelected"
-            (ngModelChange)="modelChanged($event)"
+            [items]="itemsOther"
+            [ngModel]="itemsSelectedOther"
+            (ngModelChange)="modelChangedOther($event)"
             canSelectAll
         >
         </nx-multi-select>
@@ -32,6 +34,8 @@
         Selected
         <br />
         {{ itemsSelected }}
+        <br />
+        {{ itemsSelectedOther }}
     </div>
 </div>
 <div
@@ -41,6 +45,7 @@
     <div class="col-4 p-4">
         <h4>Mat like select</h4>
         <nx-mat-like-select
+            [componentId]="'ddSSingle'"
             name="ddSSingle"
             [items]="itemsDDSingle"
             [ngModel]="selectedDDItem"
@@ -52,11 +57,12 @@
     <div class="col-4 p-4">
         <h4>Simple select: canSearch</h4>
         <nx-select
-            name="ddSSingle"
-            [items]="itemsDDSingle"
-            [ngModel]="selectedDDItem"
-            (ngModelChange)="ddSingleModelChanged($event)"
-            [selected]="selectedDDItem ? selectedDDItem : null"
+            [componentId]="'sandboxDdSSingleOther'"
+            name="ddSSingleOther"
+            [items]="itemsDDSingleOther"
+            [ngModel]="selectedDDItemOther"
+            (ngModelChange)="ddSingleModelChangedOther($event)"
+            [selected]="selectedDDItemOther ? selectedDDItemOther : null"
             canSearch
         >
         </nx-select>
@@ -64,6 +70,7 @@
     <div class="col-4 p-4">
         <h4>Simple select: disabled</h4>
         <nx-select
+            [componentId]="'sandboxSSelectDisabledSelect'"
             name="ddSSingle"
             [items]="itemsDDSingle"
             [ngModel]="selectedDDItem"
@@ -111,6 +118,7 @@
         <h4>Configurable Select:</h4>
         <h3>Changing:</h3>
         <nx-select
+            [componentId]="'sandboxSSelectSearchableSelect'"
             name="ddSearchableSingle"
             [items]="itemsDDSingle"
             [ngModel]="selectedDDItem"
@@ -128,6 +136,7 @@
         </nx-select>
         <h3>Static, default:</h3>
         <nx-select
+            [componentId]="'sandboxSSelectStaticSelect'"
             name="ddSearchableSingle"
             [items]="itemsDDSingle"
             [ngModel]="selectedDDItem"
@@ -153,6 +162,7 @@
         style="border: 1px solid gold"
     >
         <nx-select
+            [componentId]="'sandboxSSelectDynamicSelect'"
             [type]="'clear-fit'"
             name="ddGenericSelect"
             [items]="mode"

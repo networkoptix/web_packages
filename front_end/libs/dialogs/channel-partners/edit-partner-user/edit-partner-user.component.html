@@ -20,12 +20,12 @@
     <div class="modal-body">
         <div class="form-group">
             <label
-                for="channelPartner"
+                for="partnerChannelPartner"
                 translate
                 >Role</label
             >
             <nx-select
-                id="channelPartner"
+                [componentId]="'partnerChannelPartner'"
                 name="channelPartner"
                 [stillLoading]="!roles.length"
                 [items]="roles"

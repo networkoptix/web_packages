@@ -1,5 +1,6 @@
 <div [class.is-disabled]="isDisabled">
     <nx-select
+        [componentId]="'swaggerSingleSelect'"
         *ngIf="!isMultiSelect"
         [items]="singleDropdownOptions"
         (onSelected)="onSelect($event)"
@@ -7,6 +8,7 @@
     ></nx-select>
 
     <nx-multi-select
+        [componentId]="'swaggerMultiSelect'"
         *ngIf="isMultiSelect"
         [items]="multiDropdownOptions"
         [ngModel]="selectedOptions"

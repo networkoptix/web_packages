@@ -14,11 +14,15 @@ import { DropdownConfiguration } from '@pages/sandbox/multi-select/multy-select.
 export class MultiSelectComponent {
     items: MultiSelectItem[] = [];
     itemsSelected: string[];
+    itemsOther: MultiSelectItem[] = [];
+    itemsSelectedOther: string[];
     mode: DropdownItem<string>[];
     modeSelected: DropdownItem<string>;
     ddWidth: number;
     itemsDDSingle: DropdownItem<string>[];
     selectedDDItem: DropdownItem<string>;
+    itemsDDSingleOther: DropdownItem<string>[];
+    selectedDDItemOther: DropdownItem<string>;
     itemsSearchableDDSingle: DropdownItem<string>[];
     selectedSearchableDDItem: DropdownItem<string>;
     dropdownConfiguration: DropdownConfiguration;
@@ -64,9 +68,55 @@ export class MultiSelectComponent {
             { label: 'Live Viewer', id: 'qwerty24' },
         ];
 
+        this.itemsOther = [
+            { label: 'Administrator', id: 'qwerty1' },
+            { label: 'Advanced Viewer', id: '2' },
+            { label: 'Pizza Eater', id: '3' },
+            { label: 'Live Viewer', id: '4' },
+            { label: 'Administrator', id: '11' },
+            { label: 'Advanced Viewer', id: '12' },
+            { label: 'Viewer', id: '13' },
+            { label: 'Live Viewer', id: '14' },
+            { label: 'Administrator', id: '21' },
+            { label: 'Advanced Viewer', id: '22' },
+            { label: 'Viewer', id: '23' },
+            { label: 'Live Viewer', id: '24' },
+        ];
+
         this.itemsSelected = ['qwerty2', 'qwerty3'];
+        this.itemsSelectedOther = ['3'];
 
         this.itemsDDSingle = [
+            { value: '0', name: 'All' },
+            {
+                value: '1',
+                name: 'superlonngselectitemtotestmarginifitisthereanditreallygoesoutofboundsofanylongdropdown',
+            },
+            {
+                value: '2',
+                name: 'horizontal',
+            },
+            {
+                value: '3',
+                name: 'seperator',
+            },
+            { value: '84480', name: '1CIF' },
+            { value: '168960', name: '2CIF' },
+            { value: '337920', name: 'D1' },
+            { value: '307200', name: 'VGA' },
+            { value: '786432', name: 'SVGA' },
+            { value: '921600', name: '720p' },
+            { value: '1310720', name: '1mp' },
+            { value: '2073600', name: '1080p' },
+            { value: '1920000', name: '2mp' },
+            { value: '3145728', name: '3mp' },
+            { value: '4915200', name: '5mp' },
+            { value: '8000000', name: '8mp' },
+            { value: '10039296', name: '10mp' },
+            { value: '15824256', name: '16mp' },
+        ];
+
+        this.itemsDDSingleOther = [
             { value: '0', name: 'All' },
             {
                 value: '1',
@@ -147,9 +197,19 @@ export class MultiSelectComponent {
         this.itemsSelected = [...result];
     }
 
+    modelChangedOther(result: string[]): void {
+        // ensure 'change' will be triggered
+        this.itemsSelectedOther = [...result];
+    }
+
     ddSingleModelChanged(result: DropdownItem<string>): void {
         // ensure 'change' will be triggered
         this.selectedDDItem = { ...result };
+    }
+
+    ddSingleModelChangedOther(result: DropdownItem<string>): void {
+        // ensure 'change' will be triggered
+        this.selectedDDItemOther = { ...result };
     }
 
     ddSearchableModelChanged(result: DropdownItem<string>): void {

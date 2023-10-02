@@ -14,6 +14,7 @@
                 <div class="h-100">
                     <h4 translate>Select to system</h4>
                     <nx-select
+                        [componentId]="'selectSystemSelect'"
                         [items]="systemsDropdownItems$ | async"
                         [selected]="selectedSystem"
                         [stillLoading]="!selectedSystem"

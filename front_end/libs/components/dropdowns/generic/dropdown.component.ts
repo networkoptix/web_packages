@@ -20,7 +20,8 @@ import { BaseDropdown } from '../injDropdown';
 import type { DropdownItem } from './dropdown.component.types';
 
 /* Usage
- <nx-select [id]="select.id"
+ <nx-select
+     [componentId]="select.id"
      [name]="permissions"
      [items]="accessRoles"
      label="optionLabel"          <- which property should be shown
@@ -46,7 +47,7 @@ import type { DropdownItem } from './dropdown.component.types';
 export class NxGenericDropdown<
     Item extends DropdownItem<unknown> = DropdownItem<unknown>,
 > extends BaseDropdown {
-    @Input() id: string = 'genericSelect';
+    @Input({ required: true }) componentId: string;
     @Input() items: Item[];
     @Input() selected: Item | false;
     @Input({ transform: booleanAttribute }) merge: boolean;

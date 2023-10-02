@@ -25,6 +25,7 @@
                 </label>
                 <ng-container [ngSwitch]="structure.type">
                     <nx-select
+                        [componentId]="'editStructureSelect'"
                         *ngSwitchCase="STRUCTURE_TYPE.DROPDOWN"
                         [selected]="dropdownLookup[structure.name]?.selected"
                         (onSelected)="updateDropdown(structure.name, $event)"

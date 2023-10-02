@@ -21,7 +21,7 @@ import type { MultiSelectItem } from './multi-select.component.types';
 
 /* Usage
  <nx-multi-select
-     [id]="select.id"
+     [componentId]="select.id"
      [name]="permissions"
      canSelectAll?
      canSearch?
@@ -59,7 +59,7 @@ import type { MultiSelectItem } from './multi-select.component.types';
     standalone: true,
 })
 export class NxMultiSelectDropdown extends BaseDropdown {
-    @Input() id: string = 'multiselect';
+    @Input({ required: true }) componentId: string;
     @Input('items') itemsOrig: MultiSelectItem[];
     @Input({ transform: booleanAttribute }) canSelectAll: boolean;
     @Input({ transform: booleanAttribute }) canSearch: boolean;
@@ -77,8 +77,6 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     constructor(configService: NxConfigService) {
         super(configService);
     }
-
-    ngOnInit(): void {}
 
     clearSelected(): void {
         if (this.filter) {
@@ -143,13 +141,13 @@ export class NxMultiSelectDropdown extends BaseDropdown {
             }
             case 0:
                 this.textSelected =
-                    this.id === 'user-groups'
+                    this.componentId === 'user-groups'
                         ? this.LANG.search.selectOptions
                         : this.LANG.search.Any;
                 break;
             case this.items.length: {
                 this.textSelected =
-                    this.id === 'user-groups'
+                    this.componentId === 'user-groups'
                         ? {
                               value: this.LANG.userGroups.multiple,
                               params: {
@@ -161,7 +159,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
             }
             default: {
                 this.textSelected =
-                    this.id === 'user-groups'
+                    this.componentId === 'user-groups'
                         ? {
                               value: this.LANG.userGroups.multiple,
                               params: {

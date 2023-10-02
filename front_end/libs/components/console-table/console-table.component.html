@@ -414,6 +414,7 @@
         >
             <span translate>Rows per page:</span>
             <nx-select
+                [componentId]="'consoleRowPerPageSelect'"
                 type="transparent-button"
                 [selected]="perPageSelectedOption"
                 [items]="selectedManifest.perPageOptions"

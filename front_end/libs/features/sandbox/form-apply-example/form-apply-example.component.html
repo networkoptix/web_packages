@@ -31,6 +31,7 @@
             <div class="form-group">
                 <div class="col-6 p-0 pb-3">
                     <nx-multi-select
+                        [componentId]="'sandboxApplyDdMultiSelect'"
                         name="ddMultiSelect"
                         [items]="items"
                         [ngModel]="itemsSelected"
@@ -41,6 +42,7 @@
                 </div>
                 <div class="col-6 p-0 pb-3">
                     <nx-select
+                        [componentId]="'ddSSingleSelect'"
                         name="ddSSingle"
                         [items]="itemsDDSingle"
                         [ngModel]="selectedDDItem"

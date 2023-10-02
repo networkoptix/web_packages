@@ -72,10 +72,10 @@
     <div class="modal-body">
         <p>{{ machine.state.template.bodyTitle | nxTranslate }}</p>
         <nx-select
+            [componentId]="'mergeSystemSelect'"
             #checkMergeDropdown
             *ngIf="machine.state.show.systemDropdown"
             class="mb-2"
-            id="system"
             [merge]="true"
             [stillLoading]="!systemsLoaded"
             [items]="processedSystems"

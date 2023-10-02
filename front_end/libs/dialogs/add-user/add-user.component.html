@@ -26,42 +26,42 @@
     <div class="modal-body">
         <div class="form-group">
             <label
-                for="addUserEmail"
+                for="addUserDialogEmail"
                 translate
                 >Email</label
             >
             <nx-email-input
                 class="fs-mask form-component"
-                id="addUserEmail"
-                name="addUserEmail"
-                componentId="addUserEmail"
+                id="addUserDialogEmail"
+                name="addUserDialogEmail"
+                componentId="addUserDialogEmail"
                 [(ngModel)]="user.email"
                 [form]="addUserForm"
                 [setFocus]="true"
-                #addUserEmail="ngModel"
+                #addUserDialogEmail="ngModel"
             >
             </nx-email-input>
             <div class="col-12 ml-n2 d-flex">
-                <ng-container *ngIf="addUserEmail.errors">
+                <ng-container *ngIf="addUserDialogEmail.errors">
                     <span
-                        *ngIf="addUserEmail.errors.alreadyExists"
+                        *ngIf="addUserDialogEmail.errors.alreadyExists"
                         class="input-error"
                         >{{ LANG.dialogs.addUser.alreadyExists | translate : { systemName } }}</span
                     >
                     <span
-                        *ngIf="addUserEmail.errors.cantEditAdmin"
+                        *ngIf="addUserDialogEmail.errors.cantEditAdmin"
                         class="input-error"
                         >{{ LANG.dialogs.addUser.cantEditAdmin }}
                     </span>
-                    <ng-container *ngIf="addUserEmail.touched">
+                    <ng-container *ngIf="addUserDialogEmail.touched">
                         <span
-                            *ngIf="addUserEmail.errors.required"
+                            *ngIf="addUserDialogEmail.errors.required"
                             class="input-error"
                             translate
                             >Email is required</span
                         >
                         <span
-                            *ngIf="addUserEmail.errors.pattern"
+                            *ngIf="addUserDialogEmail.errors.pattern"
                             class="input-error"
                             translate
                             >Please enter a valid Email</span
@@ -73,14 +73,14 @@
         <div class="form-group">
             <ng-template #groupsDropdown>
                 <label
-                    for="user-groups"
+                    for="addUserDialogGroupsSelect"
                     class="font-weight-bold"
                     translate
                     >Permission Groups</label
                 >
                 <nx-multi-select
-                    id="user-groups"
-                    name="userGroupsSelect"
+                    [componentId]="'addUserDialogGroupsSelect'"
+                    name="addUserDialogGroupsSelect"
                     [canSelectAll]="false"
                     [canSearch]="false"
                     description="User Groups"

@@ -249,7 +249,7 @@
                 >Move Cloud Storage to...</label
             >
             <nx-select
-                id="system"
+                [componentId]="'licenseSystemSelect'"
                 name="system"
                 [items]="targetSystems$ | async"
                 [selected]="targetSystem"

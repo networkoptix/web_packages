@@ -261,6 +261,7 @@
                             "
                         >
                             <nx-select
+                                [componentId]="'dashboardCardSizeSelect'"
                                 [items]="card.sizes"
                                 (onSelected)="updateSelectedSize($event, card)"
                                 [selected]="card.size"

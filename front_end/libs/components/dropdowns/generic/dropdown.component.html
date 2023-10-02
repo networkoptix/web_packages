@@ -11,7 +11,7 @@
         #dropdownButtonFocus
         (click)="show = !show"
         type="button"
-        [id]="id"
+        [id]="componentId"
         [disabled]="disabled"
         data-toggle="dropdown"
     >
@@ -69,7 +69,7 @@
             bottom: forcePosition?.bottom === 'auto' ? 'auto' : forcePosition?.bottom + 'px' || 0
         }"
         [style.left.px]="forcePosition?.left || 0"
-        [attr.aria-labelledby]="id"
+        [attr.aria-labelledby]="componentId"
     >
         <div
             *ngIf="canSearch"
@@ -101,20 +101,17 @@
                     "
                     [ngTemplateOutlet]="dropdownRow"
                 ></ng-container>
-                <ng-template
-                    #dropdownRow
-                    [ngSwitch]="item.name"
-                >
+                <ng-template #dropdownRow>
                     <hr
-                        *ngSwitchCase="'horizontal'"
+                        *ngIf="item.name === 'horizontal'"
                         [ngClass]="{ 'narrow-hr': hrMargin }"
                     />
                     <div
-                        *ngSwitchCase="'seperator'"
+                        *ngIf="item.name === 'seperator'"
                         class="seperator"
                     ></div>
                     <ng-container
-                        *ngSwitchDefault
+                        *ngIf="!['horizontal', 'seperator'].includes(item.name)"
                         [ngTemplateOutlet]="!item.disabled ? enabledItem : disabledItem"
                     >
                     </ng-container>
@@ -130,6 +127,8 @@
                 <ng-template #enabledItem>
                     <a
                         class="dropdown-item inset"
+                        [id]="componentId + '-' + item.value"
+                        [name]="componentId + '-' + item.value"
                         (keyup)="handleKeyup($event, item)"
                         tabindex="0"
                         [ngClass]="{

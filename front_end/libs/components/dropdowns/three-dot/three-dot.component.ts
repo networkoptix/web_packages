@@ -11,6 +11,7 @@ import type { ActionItems } from './three-dot.component.types';
 
 /* Usage
  <nx-select
+     [componentId]="'COMP_ID'"
      [items]="ActionItems[]"
  </nx-select>
  */

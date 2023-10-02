@@ -42,12 +42,12 @@
         </div>
         <div class="form-group">
             <label
-                for="userRole"
+                for="orgAddUserRole"
                 translate
                 >Role</label
             >
             <nx-select
-                id="userRole"
+                [componentId]="'orgAddUserRole'"
                 name="userRole"
                 [stillLoading]="!roles.length"
                 [items]="roles"
@@ -75,7 +75,7 @@
                 >Groups</label
             >
             <nx-select
-                id="targetGroup"
+                [componentId]="'targetGroup'"
                 name="targetGroup"
                 [items]="groups"
                 [selected]="selectedGroup"
@@ -90,7 +90,7 @@
                 >Access Level</label
             >
             <nx-multi-select
-                id="permissions"
+                [componentId]="'permissionsAccessLevelSelect'"
                 name="permissions"
                 [items]="permissions"
                 [ngModel]="selectedPermissions"

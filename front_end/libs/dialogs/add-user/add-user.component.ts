@@ -166,10 +166,10 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             {
                 errorCodes: {
                     alreadyExists: () => {
-                        this.form.controls.addUserEmail.setErrors({ alreadyExists: true });
+                        this.form.controls.addUserDialogEmail.setErrors({ alreadyExists: true });
                     },
                     cantEditAdmin: () => {
-                        this.form.controls.addUserEmail.setErrors({ cantEditAdmin: true });
+                        this.form.controls.addUserDialogEmail.setErrors({ cantEditAdmin: true });
                     },
                 },
                 ignoreError: true,

@@ -16,6 +16,7 @@
             <div class="h-100">
                 <h4 translate>Select system to show bookmarks</h4>
                 <nx-select
+                    [componentId]="'bookmarkPerSystemSelect'"
                     [items]="systemsDropdownItems$ | async"
                     [selected]="selectedSystem"
                     [stillLoading]="!selectedSystem"

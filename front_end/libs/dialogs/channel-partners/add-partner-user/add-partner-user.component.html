@@ -50,7 +50,7 @@
                     >Role</label
                 >
                 <nx-select
-                    id="userRole"
+                    [componentId]="'partnerAddUserRole'"
                     name="userRole"
                     [stillLoading]="!roles.length"
                     [items]="roles"

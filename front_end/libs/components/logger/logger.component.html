@@ -8,7 +8,7 @@
         >
         <div class="col-12 col-md-9 col-xl-10">
             <nx-select
-                id="log-levels"
+                [componentId]="'log-levels'"
                 [(ngModel)]="selectedLogLevel"
                 [items]="logLevels"
                 (onSelected)="getLogs($event)"

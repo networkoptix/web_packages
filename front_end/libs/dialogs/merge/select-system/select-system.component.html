@@ -12,9 +12,9 @@
         <ng-template #normalCheckMerge>
             <p translate>Merge current system with</p>
             <nx-select
+                [componentId]="'mergeWithSystemSelect'"
                 #checkMergeDropdown
                 class="mb-2 d-block"
-                id="system"
                 [merge]="true"
                 [stillLoading]="!systemsProcessed"
                 [items]="processedSystems"
