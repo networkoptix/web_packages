@@ -134,7 +134,6 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
     subject = rb.replace_nested_variables(subject)
     print(subject)
-    print()
     assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
 
     links = email_con.get_links_from_email(body)
