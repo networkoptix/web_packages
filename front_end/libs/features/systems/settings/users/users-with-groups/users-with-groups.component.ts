@@ -38,9 +38,9 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         this.temporaryUser.set(this.selectedUser.type === this.UserType.temporaryLocal);
 
         this.filteredGroups = this.processLdapGroups([...this.system.userManager.groups]);
-
-        this.applyService.resetFormWatchers();
         setTimeout(() => {
+            this.applyService.resetFormWatchers();
+
             this.applyService.createFormWatcher(
                 'userEnabledForm',
                 this.userEnabledForm,
