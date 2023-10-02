@@ -380,7 +380,7 @@ def send_restore_password_email(driver: WebDriver, email: str) -> None:
 
 
 def validate_log_out(driver: WebDriver):
-    robot_keywords.wait_until_element_is_not_visible(driver, rb.BACKDROP)
+    robot_keywords.wait_until_pane_is_not_visible(driver, rb.BACKDROP)
     robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
 
 

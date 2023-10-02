@@ -80,7 +80,7 @@ def wait_until_element_is_enabled(driver: WebDriver, locator: str, timeout: int 
     WebDriverWait(driver, timeout).until(ec.element_to_be_clickable((By.XPATH, locator)))
 
 
-def wait_until_element_is_not_visible(driver: WebDriver, locator: str, timeout: int = 10) -> None:
+def wait_until_pane_is_not_visible(driver: WebDriver, locator: str, timeout: int = 10) -> None:
     WebDriverWait(driver, timeout).until_not(ec.visibility_of_element_located((By.XPATH, locator)))
 
 
