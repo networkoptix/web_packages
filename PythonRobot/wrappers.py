@@ -279,7 +279,7 @@ class Link:
     def get_text(self) -> str:
         return self._element.text()
 
-    def get_attribute(self, attribute: str) -> Optional[str, None]:
+    def get_attribute(self, attribute: str) -> Optional[str]:
         return self._element.get_attribute(attribute)
 
     def is_visible(self) -> bool:
