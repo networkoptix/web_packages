@@ -3,7 +3,7 @@ from pathlib import Path
 
 from colorama import Fore
 
-from PythonRobot.NoptixLibrary.suite import CloudServer
+from PythonRobot.NoptixLibrary.suite import Mediaserver
 from PythonRobot.NoptixLibrary.suite import Suite
 from PythonRobot.RobotVariables import RobotVariables
 from PythonRobot.resource_import import cloud_login
@@ -11,7 +11,7 @@ from PythonRobot.resource_import import get_chrome
 from PythonRobot.system_admin import SystemAdmin
 
 
-def going_to_health_monitor_when_system_is_offline(server: CloudServer, rb: RobotVariables):
+def going_to_health_monitor_when_system_is_offline(server: Mediaserver, rb: RobotVariables):
     """
     3. Going to health monitor when system is offline and shows offline message
     [Tags]    cloud
@@ -26,7 +26,7 @@ def going_to_health_monitor_when_system_is_offline(server: CloudServer, rb: Robo
         assert tab_info.is_current_system_inaccessible()
 
 
-def json_upload_works_on_offline_system(server: CloudServer, rb: RobotVariables):
+def json_upload_works_on_offline_system(server: Mediaserver, rb: RobotVariables):
     """
     5. Json upload works on offline system
     [Tags]    cloud    webadmin

@@ -1,6 +1,6 @@
 from pathlib import Path
 
-from NoptixLibrary.suite import CloudServer
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from login import LoginDialog
 from resource_import import get_headless_chrome
@@ -9,7 +9,7 @@ from system_left_menu import SystemLeftMenu
 from variables import ENV
 
 
-def merge_from_primary_system(first_server: CloudServer, second_server: CloudServer):
+def merge_from_primary_system(first_server: Mediaserver, second_server: Mediaserver):
     driver = get_headless_chrome()
     url = ENV + f"/systems/{first_server.id}"
     driver.get(url)

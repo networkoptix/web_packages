@@ -4,7 +4,7 @@ from pathlib import Path
 
 from colorama import Fore
 
-from PythonRobot.NoptixLibrary.suite import CloudServer
+from PythonRobot.NoptixLibrary.suite import Mediaserver
 from PythonRobot.NoptixLibrary.suite import Suite
 from PythonRobot.RobotVariables import RobotVariables
 from PythonRobot.resource_import import cloud_login
@@ -12,7 +12,7 @@ from PythonRobot.resource_import import get_chrome
 from PythonRobot.system_admin import SystemAdmin
 
 
-def no_alerts_message_shows_when_no_alerts(server: CloudServer, rb: RobotVariables):
+def no_alerts_message_shows_when_no_alerts(server: Mediaserver, rb: RobotVariables):
     """
     9. No alerts message shows when there are no alerts
     [Tags]    cloud    webadmin
@@ -31,7 +31,7 @@ def no_alerts_message_shows_when_no_alerts(server: CloudServer, rb: RobotVariabl
         assert tab_info.system_is_doing_well()
 
 
-def errors_and_warnings_are_counted_correctly(server: CloudServer, rb: RobotVariables):
+def errors_and_warnings_are_counted_correctly(server: Mediaserver, rb: RobotVariables):
     """
     11. Errors and warnings are counted and shown correctly in the left pane and header tiles
     [Tags]    cloud    webadmin
@@ -66,7 +66,7 @@ def errors_and_warnings_are_counted_correctly(server: CloudServer, rb: RobotVari
                                                              f"From table: {alerts_summary_from_table}")
 
 
-def change_page_height(server: CloudServer, rb: RobotVariables):
+def change_page_height(server: Mediaserver, rb: RobotVariables):
     """
     12. Changing page height and refreshing reduces row count and increases page count
     [Tags]    C69785    cloud    webadmin

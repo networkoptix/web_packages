@@ -3,7 +3,7 @@ from pathlib import Path
 
 from colorama import Fore
 
-from PythonRobot.NoptixLibrary.suite import CloudServer
+from PythonRobot.NoptixLibrary.suite import Mediaserver
 from PythonRobot.NoptixLibrary.suite import Suite
 from PythonRobot.RobotVariables import RobotVariables
 from PythonRobot.resource_import import cloud_login
@@ -11,7 +11,7 @@ from PythonRobot.resource_import import get_chrome
 from PythonRobot.system_admin import SystemAdmin
 
 
-def json_upload_works(server: CloudServer, rb: RobotVariables):
+def json_upload_works(server: Mediaserver, rb: RobotVariables):
     """
     4. Json upload works
     [Tags]    cloud    webadmin
@@ -29,7 +29,7 @@ def json_upload_works(server: CloudServer, rb: RobotVariables):
         tab_info.check_links_uploaded()
 
 
-def can_close_out_of_json_imported_mode(server: CloudServer, rb: RobotVariables):
+def can_close_out_of_json_imported_mode(server: Mediaserver, rb: RobotVariables):
     """
     10. Can close out of json imported mode
     [Tags]    cloud    webadmin
@@ -53,7 +53,7 @@ def can_close_out_of_json_imported_mode(server: CloudServer, rb: RobotVariables)
         systems.click()
 
 
-def hardware_types_with_only_one_item(server: CloudServer, rb: RobotVariables):
+def hardware_types_with_only_one_item(server: Mediaserver, rb: RobotVariables):
     """
     13. Hardware types with only one item should show tiles and not show tables
     [Tags]    cloud    webadmin
@@ -93,7 +93,7 @@ def hardware_types_with_only_one_item(server: CloudServer, rb: RobotVariables):
         assert not section.has_table()
 
 
-def hardware_types_with_multiple_items(server: CloudServer, rb: RobotVariables):
+def hardware_types_with_multiple_items(server: Mediaserver, rb: RobotVariables):
     """
     14. Hardware types with multiple items should show tables and not show tiles
     [Tags]    cloud    webadmin

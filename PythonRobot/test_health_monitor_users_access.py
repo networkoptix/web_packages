@@ -6,7 +6,7 @@ from colorama import Fore
 
 from PythonRobot.NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from PythonRobot.NoptixLibrary.suite import CloudAccount
-from PythonRobot.NoptixLibrary.suite import CloudServer
+from PythonRobot.NoptixLibrary.suite import Mediaserver
 from PythonRobot.NoptixLibrary.suite import Suite
 from PythonRobot.RobotVariables import RobotVariables
 from PythonRobot.resource_import import cloud_login
@@ -14,7 +14,7 @@ from PythonRobot.resource_import import get_chrome
 from PythonRobot.system_admin import SystemAdmin
 
 
-def owner_admin_has_access_to_health_monitoring(server: CloudServer, rb: RobotVariables):
+def owner_admin_has_access_to_health_monitoring(server: Mediaserver, rb: RobotVariables):
     """
     1. Owner/admin has access to health monitoring
     [Tags]    cloud    webadmin
@@ -29,7 +29,7 @@ def owner_admin_has_access_to_health_monitoring(server: CloudServer, rb: RobotVa
         tab_info.check_links()
 
 
-def administrator_has_access_to_health_monitoring(server: CloudServer, rb: RobotVariables):
+def administrator_has_access_to_health_monitoring(server: Mediaserver, rb: RobotVariables):
     """
     2. Administrator has access to health monitoring
     [Tags]    cloud    webadmin
@@ -50,7 +50,7 @@ def administrator_has_access_to_health_monitoring(server: CloudServer, rb: Robot
         tab_info.check_links()
 
 
-def user_does_not_have_access_to_health_monitor(server: CloudServer, rb: RobotVariables, role: str, error_message: str):
+def user_does_not_have_access_to_health_monitor(server: Mediaserver, rb: RobotVariables, role: str, error_message: str):
     """
     6, 7, 8. User does not have access to health monitor
     [Tags]    cloud    webadmin

@@ -188,7 +188,7 @@ def share_with_registered_user_works(server: Mediaserver):
     driver.quit()
     print("pass")
 
-def cancel_disconnect(server: CloudServer):
+def cancel_disconnect(server: Mediaserver):
     """
     1. Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884    cloud
@@ -214,7 +214,7 @@ def cancel_disconnect(server: CloudServer):
         else:
             print("PASS")
 
-def disconnect_should_remove_system(server: CloudServer):
+def disconnect_should_remove_system(server: Mediaserver):
     """
     1. Cancel should cancel disconnection and disconnect should remove it when not owner
     [Tags]    C41884    cloud
