@@ -22,7 +22,7 @@ def should_open_systems_page_from_anonymous_state(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     SystemsPage(driver)
@@ -33,7 +33,7 @@ def system_tiles_represent_actual_information(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
     sys_page = SystemsPage(driver)
     rb = RobotVariables("en_US")
@@ -65,7 +65,7 @@ def one_system_directs_you_to_system_admin(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     SystemAdmin(driver)
@@ -79,7 +79,7 @@ def opens_system_admin_when_tile_is_clicked(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     systems_page = SystemsPage(driver)
@@ -96,7 +96,7 @@ def search_highlights_system_name(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -117,7 +117,7 @@ def search_highlights_owner_name(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -140,7 +140,7 @@ def search_is_cleared_by_x_button(server: Mediaserver):
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -162,12 +162,12 @@ def should_update_owner_name(
         server_second: Mediaserver,
         api: CloudPortalAPI,
         ):
-    api.set_account_name(server_second.cloud_owner.email, password, "carrie", "fisher")
+    api.set_account_name(server_second.get_cloud_owner().email, password, "carrie", "fisher")
     driver = get_headless_chrome()
 
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server_first.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server_first.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -187,15 +187,16 @@ def search_only_visible_with_more_than_eight_systems(
         api: CloudPortalAPI,
         ):
     """C41890"""
+    owner_second = server_second.get_cloud_owner()
     api.disconnect_server_via_api(
-        [server_second.cloud_owner.email, password],
+        [owner_second.email, password],
         server_second.id,
         password,
-        server_second.cloud_owner.email)
+        owner_second.email)
     driver = get_headless_chrome()
     url = ENV + "/systems"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server_first.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server_first.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_page = SystemsPage(driver)
@@ -221,10 +222,10 @@ if __name__ == "__main__":
             ]
         viewer_permissions = '|'.join(permissions)
         cloud_api.share(
-            [cloud_server_second.cloud_owner.email, password],
+            [cloud_server_second.get_cloud_owner().email, password],
             cloud_server_second.id,
             "viewer",
-            cloud_server_first.cloud_owner.email,
+            cloud_server_first.get_cloud_owner().email,
             viewer_permissions,
             )
         system_tiles_represent_actual_information(cloud_server_first)

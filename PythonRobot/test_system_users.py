@@ -35,13 +35,14 @@ def owner_can_remove_user(server: Mediaserver):
     """
     driver = get_headless_chrome()
     # TODO: local admin and owner need to also be tested to match robot test case
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     header = HeaderNav(driver)
     header.account_dropdown()
     SystemAdmin(driver)
@@ -69,7 +70,8 @@ def cloud_admin_can_remove_user(server: Mediaserver):
     """
     driver = get_headless_chrome()
     # TODO: local admin and owner need to also be tested to match robot test case
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
@@ -103,7 +105,8 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     driver = get_headless_chrome()
     email = get_random_email(sendemail=True)
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     time.sleep(30)
     rb = RobotVariables("en_US")
@@ -118,7 +121,8 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
     email = get_random_email(sendemail=True)
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     rb = RobotVariables("en_US")
 
@@ -135,7 +139,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
 
     links = email_con.get_links_from_email(body)
     expected_links = [
-        f'mailto:{server.cloud_owner.email}',
+        f'mailto:{owner.email}',
         rb.SUPPORT_URL,
         rb.WEBSITE_URL,
         rb.ENV,
@@ -152,7 +156,8 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     driver = get_headless_chrome()
     email_con = Email()
     email = email_con.get_random_email(sendemail=True)
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     email_id = email_con.wait_for_email(email)
     body = email_con.get_body(email_id)
@@ -168,11 +173,12 @@ def share_with_registered_user_works(server: Mediaserver):
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(owner.email, password)
     header = HeaderNav(driver)
     header.account_dropdown()
     SystemAdmin(driver)
@@ -191,7 +197,8 @@ def cancel_disconnect(server: Mediaserver):
     with get_chrome() as driver:
         email = get_random_email()
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
-        cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
         CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
         url = ENV + f"/systems/{server.id}"
         try:
@@ -217,7 +224,8 @@ def disconnect_should_remove_system(server: Mediaserver):
     with get_chrome() as driver:
         email = get_random_email()
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
-        cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
         CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
         url = ENV + f"/systems/{server.id}"
         try:
@@ -232,7 +240,7 @@ def disconnect_should_remove_system(server: Mediaserver):
             SystemsPage(driver).no_systems().wait_until_visible(30)
             HeaderNav(driver).log_out()
             driver.get(url)
-            login_dialog.basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+            login_dialog.basic_cloud_login(owner.email, owner.password)
             system_left_menu = SystemLeftMenu(driver)
             system_left_menu.users_button().click()
             system_left_menu.add_users_button().wait_until_visible()

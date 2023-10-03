@@ -18,7 +18,8 @@ def going_to_health_monitor_when_system_is_offline(server: Mediaserver, rb: Robo
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -33,7 +34,8 @@ def json_upload_works_on_offline_system(server: Mediaserver, rb: RobotVariables)
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()

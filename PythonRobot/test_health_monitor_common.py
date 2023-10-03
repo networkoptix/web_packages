@@ -18,7 +18,8 @@ def json_upload_works(server: Mediaserver, rb: RobotVariables):
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -36,7 +37,8 @@ def can_close_out_of_json_imported_mode(server: Mediaserver, rb: RobotVariables)
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -60,7 +62,8 @@ def hardware_types_with_only_one_item(server: Mediaserver, rb: RobotVariables):
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -100,7 +103,8 @@ def hardware_types_with_multiple_items(server: Mediaserver, rb: RobotVariables):
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()

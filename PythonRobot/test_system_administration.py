@@ -25,7 +25,7 @@ def can_log_in_to_system_from_direct_link(server: Mediaserver):
     driver = get_headless_chrome()
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     HeaderNav(driver).account_dropdown()
     SystemAdmin(driver)
 
@@ -38,14 +38,15 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
     driver = get_headless_chrome()
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, password)
     HeaderNav(driver).account_dropdown()
 
     sys_admin = SystemAdmin(driver)
     sys_admin.disconnect_from_cloud_button().click()
     sys_admin.disconnect_modal_disconnect_button().click()
     assert sys_admin.disconnect_from_cloud_toast_notification().message().in_dom
-    assert (len(CLOUD_API.get_account_systems(server.cloud_owner.email, password))) == 1, "Number of systems owned " \
+    assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 1, "Number of systems owned " \
                                                                                           "was not 1"
 
     driver.quit()
@@ -56,7 +57,8 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
@@ -74,7 +76,7 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
     header.log_out()
     url1 = ENV + f"/systems/{server.id}"
     driver.get(url1)
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, password)
+    LoginDialog(driver).basic_cloud_login(owner.email, password)
     left_menu = SystemLeftMenu(driver)
     left_menu.users_button().click()
     left_menu.update_users_list()

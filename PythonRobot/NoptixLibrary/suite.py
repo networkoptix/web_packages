@@ -81,7 +81,7 @@ class Mediaserver:
             run_id,
             ports: int = 1,
             ):
-        self.cloud_owner = None
+        self._cloud_owner = None
         self._cloud_admin = None
         self.ports = ports
         self.suite_name = suite_name
@@ -94,16 +94,21 @@ class Mediaserver:
         bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
         self._api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
-        self.cloud_owner = cloud_owner
+        self._cloud_owner = cloud_owner
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
 
     def get_cloud_admin(self) -> 'CloudAccount':
         if self._cloud_admin is None:
-            if self.cloud_owner is None:
+            if self._cloud_owner is None:
                 raise RuntimeError("System is not connected to Cloud")
             raise RuntimeError("System does not have cloud admin")
         return self._cloud_admin
+
+    def get_cloud_owner(self) -> 'CloudAccount':
+        if self._cloud_owner is None:
+            raise RuntimeError("System is not connected to Cloud")
+        return self._cloud_owner
 
     def get_server_name(self) -> str:
         server_info = self._api.get_server_info()
@@ -133,12 +138,12 @@ class Mediaserver:
         return self
 
     def tear_down(self):
-        if self.cloud_owner is not None:
+        if self._cloud_owner is not None:
             _CLOUD_API.disconnect(
-                self.cloud_owner.email,
-                self.cloud_owner.password,
+                self._cloud_owner.email,
+                self._cloud_owner.password,
                 self.id,
-                self.cloud_owner.get_otp(),
+                self._cloud_owner.get_otp(),
                 )
         _DOCKER_API.delete_container(self._container_id)
 

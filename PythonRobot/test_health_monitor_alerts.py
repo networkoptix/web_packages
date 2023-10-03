@@ -19,7 +19,8 @@ def no_alerts_message_shows_when_no_alerts(server: Mediaserver, rb: RobotVariabl
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        cloud_owner = server.get_cloud_owner()
+        cloud_login(driver, cloud_owner.email, cloud_owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -38,7 +39,8 @@ def errors_and_warnings_are_counted_correctly(server: Mediaserver, rb: RobotVari
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        cloud_owner = server.get_cloud_owner()
+        cloud_login(driver, cloud_owner.email, cloud_owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -73,7 +75,8 @@ def change_page_height(server: Mediaserver, rb: RobotVariables):
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        cloud_owner = server.get_cloud_owner()
+        cloud_login(driver, cloud_owner.email, cloud_owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()

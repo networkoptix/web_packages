@@ -13,7 +13,8 @@ def merge_from_primary_system(first_server: Mediaserver, second_server: Mediaser
     driver = get_headless_chrome()
     url = ENV + f"/systems/{first_server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(first_server.cloud_owner.email, first_server.cloud_owner.password)
+    first_server_owner = first_server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(first_server_owner.email, first_server_owner.password)
     sys_admin = SystemAdmin(driver)
     sys_admin.merge_with_another_system_button().click()
     sys_admin.ensure_system_online(second_server.name, timeout=20)

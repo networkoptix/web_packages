@@ -24,24 +24,25 @@ def enable_and_login_with_2fa(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
-        server.cloud_owner.get_otp(),
+        owner.email,
+        owner.password,
+        owner.get_otp(),
         )
     header.account_dropdown().click()
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        owner,
+        verification_code=owner.get_otp()
         )
     driver.close()
 
@@ -55,29 +56,30 @@ def login_with_backup_code(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
+    owner = server.get_owner()
     LoginDialog(driver).basic_cloud_login(
-        server.cloud_owner.email,
-        server.cloud_owner.password
+        owner.email,
+        owner.password
         )
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
-    backup_code = server.cloud_owner.pop_backup_code()
+    backup_code = owner.pop_backup_code()
     for _ in range(2):
         header.log_out()
         header.log_in_button().click()
         LoginDialog(driver).twofa_backup_cloud_login(
-            server.cloud_owner.email,
-            server.cloud_owner.password,
+            owner.email,
+            owner.password,
             backup_code,
             )
     security_form.twofa_backup_code_error()
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        owner,
+        verification_code=owner.get_otp()
         )
     driver.close()
 
@@ -88,27 +90,28 @@ def login_with_qr_code(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
+    owner = server.get_owner()
     LoginDialog(driver).basic_cloud_login(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
+        owner.email,
+        owner.password,
         )
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner, qr_code=True)
+    security_form.turn_on_2fa(owner, qr_code=True)
     security_form.twofa_enabled_badge()
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
-        server.cloud_owner.get_otp(),
+        owner.email,
+        owner.password,
+        owner.get_otp(),
         )
     header.account_dropdown().click()
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp()
+        owner,
+        verification_code=owner.get_otp()
     )
     driver.close()
 
@@ -122,15 +125,16 @@ def disabling_2fa(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
-    security_form.turn_off_2fa(server.cloud_owner.get_otp())
+    security_form.turn_off_2fa(owner.get_otp())
     security_form.twofa_disabled_badge()
     driver.close()
 
@@ -144,29 +148,30 @@ def system_2fa_required(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     driver.get(f"{ENV}/systems/{server.id}")
     system_admin_page = SystemAdmin(driver)
     system_admin_page.mandatory_2fa_chechbox().select()
-    system_admin_page.twofa_verification_code_input().input_text(server.cloud_owner.get_otp())
+    system_admin_page.twofa_verification_code_input().input_text(owner.get_otp())
     system_admin_page.twofa_enable_button().click()
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
-        server.cloud_owner.get_otp(),
+        owner.email,
+        owner.password,
+        owner.get_otp(),
         )
     header.account_dropdown().click()
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp(),
+        owner,
+        verification_code=owner.get_otp(),
         )
     driver.close()
 
@@ -181,12 +186,13 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     header = HeaderNav(driver)
     header.log_in_button().click()
     driver.get(f"{ENV}/systems/{second_server.id}")
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
     security_form.twofa_verification_checkbox().unselect()
@@ -194,16 +200,16 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     security_form.twofa_settings_modal_off_instructions()
     security_form.twofa_settings_modal_apply()
     security_form.twofa_settings_modal_cancel()
-    security_form.twofa_totp_input().input_text(server.cloud_owner.get_otp())
+    security_form.twofa_totp_input().input_text(owner.get_otp())
     security_form.twofa_settings_modal_apply().click()
     header.log_out()
-    second_server.connect_to_cloud(server.cloud_owner)
+    second_server.connect_to_cloud(owner)
     driver.get(f"{ENV}/systems/{second_server.id}")
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp(),
+        owner,
+        verification_code=owner.get_otp(),
         )
     driver.close()
 
@@ -219,11 +225,12 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     security_form.twofa_verification_checkbox().checked()
     security_form.twofa_page_save().wait_until_not_visible()
@@ -233,7 +240,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     security_form.twofa_settings_modal_off_instructions()
     security_form.twofa_settings_modal_apply().wait_until_visible()
     security_form.twofa_settings_modal_cancel().wait_until_visible()
-    security_form.twofa_totp_input().input_text(server.cloud_owner.get_otp())
+    security_form.twofa_totp_input().input_text(owner.get_otp())
     modal_apply = security_form.twofa_settings_modal_apply()
     modal_apply.click()
     security_form.twofa_verification_checkbox().unchecked()
@@ -244,14 +251,14 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     security_form.twofa_settings_modal_on_instructions()
     security_form.twofa_settings_modal_apply()
     security_form.twofa_settings_modal_cancel()
-    security_form.twofa_totp_input().input_text(server.cloud_owner.get_otp())
+    security_form.twofa_totp_input().input_text(owner.get_otp())
     security_form.twofa_settings_modal_apply().click()
     security_form.twofa_verification_checkbox().checked()
     security_form.twofa_page_save().wait_until_not_visible()
     security_form.twofa_page_cancel().wait_until_not_visible()
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp(),
+        owner,
+        verification_code=owner.get_otp(),
         )
     driver.close()
 
@@ -265,61 +272,64 @@ def fail_to_login_with_expired_code(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_owner()
+    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     header.account_dropdown().click()
     header.security_option().click()
     security_form = SecurityForm(driver)
-    security_form.turn_on_2fa(server.cloud_owner)
+    security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
     header.log_out()
     header.log_in_button().click()
     login_form = LoginDialog(driver)
     old_time = datetime.datetime.now(tz=datetime.timezone.utc) - datetime.timedelta(minutes=1)
     login_form.twofa_cloud_login(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
-        server.cloud_owner.get_otp(at_time=old_time),
+        owner.email,
+        owner.password,
+        owner.get_otp(at_time=old_time),
         )
     login_form.twofa_error_login_code()
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp(),
+        owner,
+        verification_code=owner.get_otp(),
         )
     driver.close()
 
 
 def twofa_login_via_api(server: Mediaserver):
     """10. 2fa api call login with totp token"""
-    CLOUD_API.toggle_2fa_on_api(server.cloud_owner)
+    owner = server.get_owner()
+    CLOUD_API.toggle_2fa_on_api(owner)
     CLOUD_API.api_log_in(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
-        verification_code=server.cloud_owner.get_otp(),
+        owner.email,
+        owner.password,
+        verification_code=owner.get_otp(),
         )
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp(),
+        owner,
+        verification_code=owner.get_otp(),
         )
 
 
 def twofa_login_via_api_backup(server: Mediaserver):
     """11. 2fa api call login with backout code"""
-    CLOUD_API.toggle_2fa_on_api(server.cloud_owner)
+    owner = server.get_owner()
+    CLOUD_API.toggle_2fa_on_api(owner)
     backup_codes = CLOUD_API.generate_2fa_backup_codes_api(
-        server.cloud_owner.email,
-        server.cloud_owner.password,
-        verification_code=server.cloud_owner.get_otp(),
+        owner.email,
+        owner.password,
+        verification_code=owner.get_otp(),
         )
-    server.cloud_owner.setup_backup_codes(backup_codes)
+    owner.setup_backup_codes(backup_codes)
     for _ in range(2):
         CLOUD_API.api_log_in(
-            server.cloud_owner.email,
-            server.cloud_owner.password,
-            backup_code=server.cloud_owner.pop_backup_code(),
+            owner.email,
+            owner.password,
+            backup_code=owner.pop_backup_code(),
             )
     CLOUD_API.toggle_2fa_off_api(
-        server.cloud_owner,
-        verification_code=server.cloud_owner.get_otp(),
+        owner,
+        verification_code=owner.get_otp(),
         )
 
 

@@ -21,7 +21,8 @@ def owner_admin_has_access_to_health_monitoring(server: Mediaserver, rb: RobotVa
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -35,7 +36,8 @@ def administrator_has_access_to_health_monitoring(server: Mediaserver, rb: Robot
     [Tags]    cloud    webadmin
     """
     cloud_api = CloudPortalAPI()
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
 
     with ExitStack() as exit_stack:
         account = exit_stack.enter_context(CloudAccount())
@@ -56,7 +58,8 @@ def user_does_not_have_access_to_health_monitor(server: Mediaserver, rb: RobotVa
     [Tags]    cloud    webadmin
     """
     cloud_api = CloudPortalAPI()
-    cloud_auth = (server.cloud_owner.email, server.cloud_owner.password)
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
 
     with ExitStack() as exit_stack:
         account = exit_stack.enter_context(CloudAccount())

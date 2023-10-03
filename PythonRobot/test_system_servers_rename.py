@@ -18,7 +18,8 @@ def test_server_name_can_be_changed(server: Mediaserver, rb: RobotVariables):
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()
@@ -41,7 +42,8 @@ def test_server_name_can_be_changed_via_api(server: Mediaserver, rb: RobotVariab
     """
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, server.cloud_owner.email, server.cloud_owner.password)
+        owner = server.get_cloud_owner()
+        cloud_login(driver, owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()
