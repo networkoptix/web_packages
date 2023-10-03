@@ -60,7 +60,7 @@ class Suite:
                 [cloud_owner.email, cloud_owner.password],
             )
             print(f"Added {user}: {cloud_users[user].email}")
-        server.cloud_admin = cloud_users['cloudAdmin'] if cloud_users else None
+        server._cloud_admin = cloud_users['cloudAdmin'] if cloud_users else None
         return server
 
     def create_cloud_users(self):
@@ -82,6 +82,7 @@ class Mediaserver:
             ports: int = 1,
             ):
         self.cloud_owner = None
+        self._cloud_admin = None
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
@@ -96,6 +97,13 @@ class Mediaserver:
         self.cloud_owner = cloud_owner
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
+
+    def get_cloud_admin(self) -> 'CloudAccount':
+        if self._cloud_admin is None:
+            if self.cloud_owner is None:
+                raise RuntimeError("System is not connected to Cloud")
+            raise RuntimeError("System does not have cloud admin")
+        return self._cloud_admin
 
     def get_server_name(self) -> str:
         server_info = self._api.get_server_info()

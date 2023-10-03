@@ -75,7 +75,8 @@ def cloud_admin_can_remove_user(server: Mediaserver):
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     url = ENV + f"/systems/{server.id}"
     driver.get(url)
-    LoginDialog(driver).basic_cloud_login(server.cloud_admin.email, server.cloud_admin.password)
+    cloud_admin = server.get_cloud_admin()
+    LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
     header = HeaderNav(driver)
     header.account_dropdown()
     SystemAdmin(driver)
