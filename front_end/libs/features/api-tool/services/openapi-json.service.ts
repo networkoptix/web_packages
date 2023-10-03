@@ -345,7 +345,7 @@ export class NxOpenAPIJSONService {
         }
     };
 
-    searchAPIDoc() {
+    searchAPIDoc(): void {
         const searchMoreNodes: MenuNodeWithParent[] = [];
         for (const path of Object.keys(this.currentAPIDoc.paths)) {
             const route = this.currentAPIDoc.paths[path];
@@ -363,6 +363,10 @@ export class NxOpenAPIJSONService {
             }
         }
         this.searchMoreNodes$.next(searchMoreNodes);
+    }
+
+    clickSearchMore(): void {
+        this.searchAPIDoc();
         this.searchMoreShowing$.next(false);
     }
 }

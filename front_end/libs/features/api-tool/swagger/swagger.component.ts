@@ -274,6 +274,13 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     private addCustomChanges = (): void => {
         this.customComponentsRendering = true;
 
+        if (
+            this.openAPIJSONService.searchQuery &&
+            !this.openAPIJSONService.searchMoreShowing$.getValue()
+        ) {
+            this.openAPIJSONService.searchAPIDoc();
+        }
+
         setTimeout(() => {
             this.addCustomTextareas();
             this.modifyCodeBlocksAndTextareas();

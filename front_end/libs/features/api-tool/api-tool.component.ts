@@ -4,6 +4,7 @@ import { debounceTime, filter } from 'rxjs/operators';
 
 import staticLang from '@language_static';
 import { ribbonHeight } from '@pages/static-variables-features';
+import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -80,8 +81,11 @@ export class NxAPIToolComponent {
         }
     }
 
-    clickMoreResults(): void {
-        this.APIJSONService.searchAPIDoc();
+    clickNode(node: MenuNode): void {
+        this.APIJSONService.activeNode = node;
+        if (!this.APIJSONService.searchMoreShowing$.value) {
+            this.APIJSONService.searchAPIDoc();
+        }
     }
 
     setHeaderHeight(): void {

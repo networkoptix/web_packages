@@ -26,7 +26,7 @@
                         [additionalSearchNodes]="APIJSONService.searchMoreNodes$ | async"
                         (searchQueryEmitter)="APIJSONService.searchQuery = $event"
                         [queryParamsOnInternalRoute]="'merge'"
-                        (onClick)="APIJSONService.activeNode = $event.node"
+                        (onClick)="clickNode($event.node)"
                         #developersMenu
                     >
                     </nx-developers-menu>
@@ -37,7 +37,7 @@
                         "
                         class="more-results"
                     >
-                        <span (click)="clickMoreResults()">
+                        <span (click)="APIJSONService.clickSearchMore()">
                             <svg-icon
                                 nx-add-svg-src
                                 [src]="icons.dirTextButtons + 'more_results.svg'"

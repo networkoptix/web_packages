@@ -309,13 +309,15 @@ export class NxDevelopersMenuComponent implements OnInit {
     ngOnInit(): void {
         this.service.menuSubject?.pipe(untilDestroyed(this)).subscribe(menu => {
             if (menu?.nodes?.length) {
-                this.displayedMenuNodes = menu.nodes;
-                this.menuNodes = menu.nodes;
-                if (this.searchEnabled && this.uriService.queryParams.search) {
-                    this.searchQuery$.next(this.uriService.queryParams.search);
-                }
-                if (this.service.activeNode) {
-                    this.openNodeAndParents(this.service.activeNode);
+                if (!this.additionalSearchNodes.length) {
+                    this.displayedMenuNodes = menu.nodes;
+                    this.menuNodes = menu.nodes;
+                    if (this.searchEnabled && this.uriService.queryParams.search) {
+                        this.searchQuery$.next(this.uriService.queryParams.search);
+                    }
+                    if (this.service.activeNode) {
+                        this.openNodeAndParents(this.service.activeNode);
+                    }
                 }
                 if (this.additionalSearchNodes.length) {
                     this.filterMenuItems(this.searchQuery$.value);
