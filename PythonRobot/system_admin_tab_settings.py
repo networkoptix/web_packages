@@ -110,6 +110,15 @@ class _ServerPage:
         restart_button.click()
         return _RestartDialog(self._driver, self._rb)
 
+    def wait_until_restarting_banner(self):
+        PageText(self._driver, f"//nx-alert-block//span[contains(text(),{self._rb.RESTARTING})]")
+
+    def wait_until_restarting_alert_visible(self):
+        locator = ('//div[contains(@class,"toast")]//span[contains(@class,"toast-content")]'
+                   f'/../span[contains(text(),"{self._rb.SERVER_RESTARTED_TEXT}")]')
+        PageText(self._driver, locator).wait_until_visible(timeout=30)
+        PageText(self._driver, locator).wait_until_does_not_exist()
+
 
 class _RestartDialog:
     def __init__(self, driver: WebDriver, robot_variables: RobotVariables):
