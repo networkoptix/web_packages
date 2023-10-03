@@ -942,7 +942,7 @@
     "RTP timeout (milliseconds)": "RTPタイムアウト (ミリ秒)",
     "Record always": "常時録画",
     "Record only motion": "モーションのみ録画",
-    "Recording": "録画中",
+    "Recording": "録画",
     "Recording Bitrate": "録画ビットレート",
     "Recording mode will be changed to \"Record always\"": "録画モードは「常時録画」に変更されます",
     "Recording settings are not available.": "録画設定は利用できません。",
