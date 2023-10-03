@@ -1,4 +1,5 @@
 """robot_tests/test-cases/system-servers.robot"""
+import time
 from pathlib import Path
 
 from colorama import Fore
@@ -27,6 +28,8 @@ def test_restart_close_cancel_button(server: Mediaserver, rb: RobotVariables):
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()
         tab_settings.click()
+        time.sleep(5)   # TODO: Remove after fix. See: https://networkoptix.atlassian.net/browse/CLOUD-11509
+        driver.refresh()  #
         servers_section = tab_settings.get_servers_section()
         servers_section.click()
         server_page = servers_section.get_server_page(server.get_server_name())
@@ -56,6 +59,8 @@ def test_restart(server: Mediaserver, rb: RobotVariables, cloud_account: CloudAc
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()
         tab_settings.click()
+        time.sleep(5)   # TODO: Remove after fix. See: https://networkoptix.atlassian.net/browse/CLOUD-11509
+        driver.refresh()  #
         servers_section = tab_settings.get_servers_section()
         servers_section.click()
         server_page = servers_section.get_server_page(server.get_server_name())

@@ -1,4 +1,5 @@
 """robot_tests/test-cases/system-servers.robot"""
+import time
 from pathlib import Path
 
 from colorama import Fore
@@ -24,6 +25,8 @@ def test_verify_server_buttons(server: Mediaserver, rb: RobotVariables):
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()
         tab_settings.click()
+        time.sleep(5)   # TODO: Remove after fix. See: https://networkoptix.atlassian.net/browse/CLOUD-11509
+        driver.refresh()  #
         servers_section = tab_settings.get_servers_section()
         servers_section.click()
         servers_section.get_default_server_page().wait_until_visible_common_elements()
