@@ -3,7 +3,7 @@ import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, switchMap, take, tap } from 'rxjs';
+import { Observable, of, switchMap, take, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { createPortalToken } from '@common/tokens';
@@ -11,6 +11,7 @@ import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types';
 import { NxSystemService } from '@services/system.service/system.service';
@@ -48,7 +49,18 @@ export class LayoutStateService {
             .select(SharedLayoutsSelectors.selectLayouts)
             .pipe(take(1))
             .subscribe(layouts => {
-                const existingNames = layouts.map(layout => layout.layout.name);
+                const currentUser = this.systemService
+                    .currentSystem$$()
+                    .permissionManager.currentUser();
+                const existingNames = layouts
+                    .filter(
+                        ({ layout }) =>
+                            !('parentId' in layout) ||
+                            [currentUser?.id, '{00000000-0000-0000-0000-000000000000}'].includes(
+                                layout.parentId,
+                            ),
+                    )
+                    .map(layout => layout.layout.name);
                 LayoutStateService.runInInjectionContext(() =>
                     this.store.dispatch(
                         UnsavedLayoutsActions.createNewLocalLayout({
@@ -210,14 +222,14 @@ export class LayoutStateService {
     }
 
     public loadUnsavedLayouts(systemId: string): Observable<UnsavedLayoutState[]> {
-        return this.cloudApi.docDbApi.unsavedLayouts
-            .getDocHandler(systemId)
-            .list()
-            .pipe(
-                tap(unsavedLayouts =>
-                    this.store.dispatch(UnsavedLayoutsActions.set({ unsavedLayouts })),
-                ),
-            );
+        const unsavedLayouts$ = nxConfig.featureFlags.layoutsUnsavedSync
+            ? this.cloudApi.docDbApi.unsavedLayouts.getDocHandler(systemId).list()
+            : of([] as UnsavedLayoutState[]);
+        return unsavedLayouts$.pipe(
+            tap(unsavedLayouts =>
+                this.store.dispatch(UnsavedLayoutsActions.set({ unsavedLayouts })),
+            ),
+        );
     }
 
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));

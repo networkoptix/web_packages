@@ -191,6 +191,7 @@ const FeatureFlagKeys = [
     'useAuthenticationInterceptor',
     'layoutsIoDevices',
     'layoutsDeviceSettings',
+    'layoutsUnsavedSync',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

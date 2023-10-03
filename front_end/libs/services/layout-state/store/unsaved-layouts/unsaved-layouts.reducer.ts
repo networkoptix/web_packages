@@ -3,6 +3,7 @@ import { createReducer, on } from '@ngrx/store';
 
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { onSyncState } from '@store/sync.utils';
 
 import { SharedLayoutsActions } from '../shared';
@@ -26,6 +27,9 @@ const syncUnsavedLayoutState = (
     action: keyof UnsavedLayoutsDocHandlerMethods,
 ): UnsavedLayoutState[] => {
     LayoutStateService.runInInjectionContext(() => {
+        if (!nxConfig.featureFlags.layoutsUnsavedSync) {
+            return;
+        }
         const { docDbApi } = inject(NxCloudApiService);
         layouts.forEach(layout => {
             if ('systemId' in layout.layout) {
