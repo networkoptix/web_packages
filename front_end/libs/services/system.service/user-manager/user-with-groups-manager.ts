@@ -225,7 +225,10 @@ export class UserWithGroupsManager extends UserManager {
                 user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
 
-                if (this.userId === user.id) {
+                if (
+                    this.userId === user.id ||
+                    (user.type === UserType.cloud && this.currentUserEmail === user.email)
+                ) {
                     this.currentUser = user;
                     // set userGroups for user?
                 }
