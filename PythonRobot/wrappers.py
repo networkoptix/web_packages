@@ -39,6 +39,9 @@ class Button:
     def wait_until_not_clickable(self, timeout: float = 5):
         self._element.wait_until_not_clickable(timeout)
 
+    def get_text(self) -> str:
+        return self._element.text()
+
 
 class Checkbox:
 
