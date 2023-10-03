@@ -88,11 +88,11 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
     print("pass")
 
 
-def user_without_permissions_cannot_see_system_admin_page():
+def user_without_permissions_cannot_see_system_admin_page(server: Mediaserver):
     driver = get_headless_chrome()
     email = get_random_email()
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    driver.get(ENV + f"/systems/{SERVERS[0]['id']}")
+    driver.get(ENV + f"/systems/{server.id}")
     LoginDialog(driver).basic_cloud_login(email, password)
     sys_admin = SystemAdmin(driver)
     assert sys_admin.has_no_access_message()
@@ -100,11 +100,12 @@ def user_without_permissions_cannot_see_system_admin_page():
 
 
 # User can rename System: change in web -> check server
-def owner_can_rename_system_via_cloud_portal():
+def owner_can_rename_system_via_cloud_portal(server: Mediaserver):
     driver = get_headless_chrome()
-    driver.get(ENV + f"/systems/{SERVERS[0]['id']}")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
-    CLOUD_API.set_user_theme(SERVERS[0]['cloudOwner'], password, 'light')
+    driver.get(ENV + f"/systems/{server.id}")
+    cloud_owner = server.get_cloud_owner()
+    LoginDialog(driver).basic_cloud_login(cloud_owner.email, password)
+    CLOUD_API.set_user_theme(cloud_owner.email, password, 'light')
     sys_admin = SystemAdmin(driver)
     sys_admin.get_system_name_edit_field().set_text("Name Changed via Cloud Portal")
     cancel_button = sys_admin.get_cancel_button()
@@ -113,7 +114,7 @@ def owner_can_rename_system_via_cloud_portal():
     cancel_button.click()
     sys_admin.wait_for_unsaved_changes_messages()
     assert sys_admin.get_cancel_button() is None
-    assert sys_admin.get_system_name_edit_field().get_text() == SERVERS[0]['name']
+    assert sys_admin.get_system_name_edit_field().get_text() == server.name
     sys_admin.get_system_name_edit_field().clear_text()
     started_at = time.monotonic()
     timeout_sec = 3
@@ -126,27 +127,28 @@ def owner_can_rename_system_via_cloud_portal():
     save_button = sys_admin.get_save_button()
     assert save_button is not None
     save_button.click()
-    assert sys_admin.get_system_name_edit_field().get_text() == SERVERS[0]['name']
+    assert sys_admin.get_system_name_edit_field().get_text() == server.name
     sys_admin.get_system_name_edit_field().set_text("Name Changed via Cloud Portal")
     sys_admin.get_save_button().click()
     assert sys_admin.get_system_name_edit_field().get_text() == "Name Changed via Cloud Portal"
     sys_admin.refresh()
     header_system_name = HeaderNav(driver).get_system_name()
     assert header_system_name == "Name Changed via Cloud Portal"
-    SERVERS[0]['api'].restart_server()
-    assert SERVERS[0]['api'].get_system_name() == "Name Changed via Cloud Portal"
+    server._api.restart_server()
+    assert server._api.get_system_name() == "Name Changed via Cloud Portal"
+    cloud_auth = [cloud_owner.email, cloud_owner.password]
     cloud_system_settings = CLOUD_API.get_cloud_system_settings(
-        SERVERS[0]['cloudAuth'], SERVERS[0]['id'])
+        cloud_auth, server.id)
     assert cloud_system_settings['name'] == "Name Changed via Cloud Portal"
     driver.close()
 
 
 # User can rename System: change on server side -> check in web
-def system_name_change_is_shown_in_cloud_portal():
-    SERVERS[0]['api'].set_system_name("Name Changed via API")
+def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
+    server._api.set_system_name("Name Changed via API")
     driver = get_headless_chrome()
-    driver.get(ENV + f"/systems/{SERVERS[0]['id']}")
-    LoginDialog(driver).basic_cloud_login(SERVERS[0]['cloudOwner'], password)
+    driver.get(ENV + f"/systems/{server.id}")
+    LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     sys_admin = SystemAdmin(driver)
     assert sys_admin.get_system_name_edit_field().get_text() == "Name Changed via API"
     assert HeaderNav(driver).get_system_name() == "Name Changed via API"
@@ -163,6 +165,6 @@ if __name__ == "__main__":
         # can_log_in_to_system_from_direct_link(cloud_server_first)
         # owner_can_disconnect_system_from_cloud(cloud_server_second)
         non_owner_can_disconnect_account_from_system(cloud_server_first)
-        user_without_permissions_cannot_see_system_admin_page()
-        owner_can_rename_system_via_cloud_portal()
-        system_name_change_is_shown_in_cloud_portal()
+        user_without_permissions_cannot_see_system_admin_page(cloud_server_first)
+        owner_can_rename_system_via_cloud_portal(cloud_server_first)
+        system_name_change_is_shown_in_cloud_portal(cloud_server_first)
