@@ -48,7 +48,6 @@ def owner_can_remove_user(server: Mediaserver):
     left_menu = SystemLeftMenu(driver)
     time.sleep(1)
     left_menu.users_button().click()
-    left_menu.update_users_list()
     left_menu.get_user_with_email(email).click()
     users_page = SystemUsers(driver)
     users_page.remove_user_button().click()
@@ -83,7 +82,6 @@ def cloud_admin_can_remove_user(server: Mediaserver):
     left_menu = SystemLeftMenu(driver)
     time.sleep(1)
     left_menu.users_button().click()
-    left_menu.update_users_list()
     left_menu.get_user_with_email(email).click()
     users_page = SystemUsers(driver)
     users_page.remove_user_button().click()
@@ -179,7 +177,6 @@ def share_with_registered_user_works(server: Mediaserver):
     SystemAdmin(driver)
     left_menu = SystemLeftMenu(driver)
     left_menu.users_button().click()
-    left_menu.update_users_list()
     assert left_menu.get_user_with_email(email)
 
     driver.quit()
