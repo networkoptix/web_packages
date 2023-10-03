@@ -11,6 +11,7 @@ import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/pl
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { AuthGuard } from '@guards/authGuard';
+import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -30,7 +31,7 @@ import { VmsClientModule } from './vms-client/vms-client.module';
             {
                 path: '',
                 component: NxSystemViewIndexPageComponent,
-                canActivate: [AuthGuard, TwofaGuard],
+                canActivate: [AuthGuard, TwofaGuard, SystemGuard],
                 children: [
                     {
                         path: ':cameraId',
