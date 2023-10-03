@@ -5,7 +5,10 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from generic_element import Element
+from generic_element import ElementNotInDOM
+from generic_element import ElementNotVisible
 from wrappers import Button
+from wrappers import Link
 from wrappers import PageText
 from wrappers import Pane
 from wrappers import TextField
@@ -45,7 +48,7 @@ class _ServersSection:
     def click(self):
         self._element.click()
         started_at = time.monotonic()
-        timeout_sec = 10
+        timeout_sec = 30
         while True:
             if self._is_active():
                 break
@@ -59,15 +62,22 @@ class _ServersSection:
 
     def get_default_server_page(self) -> '_ServerPage':
         locator = '//nx-level-3-item//nx-search-highlight'
+        Link(self._driver, locator).wait_until_visible()
         return _ServerPage(self._driver, locator, self._rb)
 
     def _is_active(self) -> bool:
-        return self.get_default_server_page() is not None
+        try:
+            self.get_default_server_page()
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
 
 class _ServerPage:
     def __init__(self, driver: WebDriver, locator: str, robot_variables: RobotVariables):
-        self._element = Element(driver, locator)
+        self._element = Link(driver, locator)
+        self._element.wait_until_visible(30)
         self._driver = driver
         self._rb = robot_variables
 
@@ -91,7 +101,45 @@ class _ServerPage:
     def set_server_name(self, name: str):
         element_name = TextField(self._driver, f'//nx-block//nx-editable-heading//nx-text-editable')
         element_name.click()
-        element_name.input_text(name)
-        element_name.send_keys(Keys.ENTER)
+        element_name.input_text(name + Keys.ENTER)
         button_save = Button(self._driver, f'//nx-process-button//button[contains(text(), "{self._rb.SAVE_BUTTON_TEXT}")]')
         button_save.click()
+
+    def open_restart_dialog(self) -> '_RestartDialog':
+        restart_button = Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]')
+        restart_button.click()
+        return _RestartDialog(self._driver, self._rb)
+
+
+class _RestartDialog:
+    def __init__(self, driver: WebDriver, robot_variables: RobotVariables):
+        self._driver = driver
+        self._rb = robot_variables
+
+    def wait_until_visible(self):
+        button = self.get_button_close()
+        button.wait_until_visible()
+        button = self.get_button_cancel()
+        button.wait_until_visible()
+        button = self.get_button_restart()
+        button.wait_until_visible()
+
+    def wait_until_not_visible(self):
+        button = self.get_button_close()
+        button.wait_until_not_visible()
+        button = self.get_button_cancel()
+        button.wait_until_not_visible()
+        button = self.get_button_restart()
+        button.wait_until_not_visible()
+
+    def get_button_close(self) -> Button:
+        return Button(self._driver, '//nx-modal-restart-server-content//button[contains(@class,"close")]')
+
+    def get_button_cancel(self) -> Button:
+        return Button(
+            self._driver,
+            f'//nx-modal-restart-server-content//button[contains(text(),"{self._rb.CANCEL_BUTTON_TEXT}")]',
+        )
+
+    def get_button_restart(self) -> Button:
+        return Button(self._driver, '//nx-modal-restart-server-content//button[@type="submit"]')

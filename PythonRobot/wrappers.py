@@ -47,6 +47,9 @@ class Button:
     def wait_until_not_clickable(self, timeout: float = 5):
         self._element.wait_until_not_clickable(timeout)
 
+    def wait_until_does_not_exist(self):
+        self._element.wait_until_does_not_exist()
+
 
 class Checkbox:
 
@@ -295,6 +298,9 @@ class Link:
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
+
+    def click(self):
+        self._element.click()
 
 
 class DropDown:
