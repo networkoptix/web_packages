@@ -104,6 +104,38 @@ def test_change_port_field_validation(server: Mediaserver, rb: RobotVariables):
         assert port_element.get_text() == port_before
 
 
+def test_change_port(server: Mediaserver, rb: RobotVariables):
+    """
+    9. Change port
+    [Tags]    C70975    cloud    webadmin
+    """
+    logger = logging.getLogger('9. Change port')
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        HeaderNav(driver).log_in_button().click()
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system = SystemAdmin(driver, rb.language)
+        tab_settings = system.get_tab_settings()
+        tab_settings.click()
+        servers_section = tab_settings.get_servers_section()
+        servers_section.click()
+        server_page = servers_section.get_server_page(server.get_server_name())
+        server_page.click()
+        server_page.wait_until_visible_common_elements()
+        server_page.wait_until_visible_owner_elements()
+        port_element = server_page.get_port_field()
+        port_element.input_text('7002')
+        logger.info('Port has been changed to 7002')
+        server_page.get_save_button().click()
+        new_api = server.get_copy_api(7002)
+        new_api.get_cameras()
+        new_api.change_port(7001)
+        logger.info('Port has been changed back to 7001')
+        server.api.get_cameras()
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     suite_name = Path(__file__).stem
@@ -118,3 +150,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{test_change_port_only_for_owner.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         test_change_port_field_validation(cloud_server, variables)
         print(f'{Fore.WHITE}{test_change_port_field_validation.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_change_port(cloud_server, variables)
+        print(f'{Fore.WHITE}{test_change_port.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')

@@ -39,7 +39,7 @@ class Suite:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        server = Mediaserver(suite_name, self.run_id).set_up()
+        server = Mediaserver(suite_name, self.run_id, ports=2).set_up()
         self._exit_stack.callback(server.tear_down)
         return server
 
@@ -94,6 +94,7 @@ class Mediaserver:
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
+        self._port_mapping = {}
         self.api: Optional[ServerApi] = None
         self.id: Optional[str] = None
         self.name: Optional[str] = None
@@ -154,6 +155,17 @@ class Mediaserver:
         server_info = self.api.get_server_info()
         return server_info['name']
 
+    def get_copy_api(self, vms_port=7001, username: str = None, password: str = None) -> ServerApi:
+        try:
+            new_url = self._port_mapping[vms_port]
+        except KeyError:
+            raise PortNotMapped(vms_port)
+        else:
+            token = None
+            if username is not None and '@' in username:
+                token = _CLOUD_API.get_oauth2_token(self.id, username, password)
+            return self.api.copy(url=new_url, token=token)
+
     def set_up(self):
         # Create a docker server.
         # Mimic configuration from JSON files.
@@ -167,10 +179,11 @@ class Mediaserver:
         self._container_id = data['container']
         print(f"Container {self.name} should be up, waiting for 5 secs")
         time.sleep(5)  # Wait for the docker server to be ready
+        vms_default_port = 7001
+        for index, docker_port in enumerate(data['port']):
+            self._port_mapping[vms_default_port + index] = f'https://{_DOCKER_API.host_ip}:{docker_port}'
         # Set up a local system.
-        server_api_port, *_ = data['port']
-        server_api_url = f'https://{_DOCKER_API.host_ip}:{server_api_port}'
-        self.api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
+        self.api = ServerApi(self._port_mapping[vms_default_port], password=INITIAL_PASSWORD)
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         return self
 
@@ -238,3 +251,11 @@ class CloudAccount:
 
     def _tear_down(self):
         _CLOUD_API.delete_account(self.email, self.password, self.get_otp())
+
+
+class PortNotMapped(Exception):
+    def __init__(self, port: int):
+        self.msg = f"Port {port} has not been mapped in Docker"
+
+    def __str__(self):
+        return self.msg

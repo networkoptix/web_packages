@@ -4,6 +4,7 @@ from typing import Any
 from typing import Mapping
 from typing import Optional
 from typing import Union
+from urllib.parse import urlparse
 from uuid import UUID
 
 import requests
@@ -119,6 +120,12 @@ class ServerApi:
     def set_server_name(self, name: str):
         self._patch('rest/v1/servers/this', {'name': name})
 
+    def change_port(self, port: int):
+        self._post('api/configure', {'port': port})
+        parts = urlparse(self._url)
+        self._url = f'{parts.scheme}://{parts.hostname}:{port}/{parts.path}'.rstrip('/')
+        self._token = None
+
     @contextmanager
     def _waiting_for_restart(self, timeout_sec: float = 10):
         old_runtime_id = self._get_server_runtime_id()
@@ -142,6 +149,22 @@ class ServerApi:
 
     def get_server_info(self):
         return self._get('rest/v1/servers/this/info')
+
+    def get_cameras(self):
+        return self._get('rest/v1/devices')
+
+    def copy(
+            self,
+            url: Optional[str] = None,
+            token: Optional[str] = None,
+    ) -> 'ServerApi':
+        url = url or self._url
+        username = self._username if token is None else ''
+        password = self._password if token is None else ''
+        token = token or self._token
+        new_api = ServerApi(url, username, password)
+        new_api._token = token
+        return new_api
 
     def _get(self, path: str):
         return self._request('GET', path)
