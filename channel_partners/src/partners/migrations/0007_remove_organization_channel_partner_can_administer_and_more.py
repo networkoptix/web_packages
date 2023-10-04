@@ -50,7 +50,7 @@ def forwards(apps, schema_editor):
     Organization = apps.get_model('partners', 'organization')
     for organization in Organization.objects.all():
         if organization.channel_partner_can_administer:
-            organization.channel_partner_access_level_id = 1
+            organization.channel_partner_access_level_id = UUID(int=1, version=4)
         else:
             organization.channel_partner_access_level_id = None
         organization.save()
