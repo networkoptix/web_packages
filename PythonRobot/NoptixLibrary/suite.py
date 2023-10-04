@@ -61,6 +61,10 @@ class Suite:
             )
             print(f"Added {user}: {cloud_users[user].email}")
         server._cloud_admin = cloud_users['cloudAdmin'] if cloud_users else None
+        server._cloud_viewer = cloud_users['viewer'] if cloud_users else None
+        server._cloud_advanced_viewer = cloud_users['advancedViewer'] if cloud_users else None
+        server._cloud_live_viewer = cloud_users['liveViewer'] if cloud_users else None
+        server._cloud_custom_user = cloud_users['custom'] if cloud_users else None
         return server
 
     def create_cloud_users(self):
@@ -83,6 +87,10 @@ class Mediaserver:
             ):
         self._cloud_owner = None
         self._cloud_admin = None
+        self._cloud_viewer = None
+        self._cloud_advanced_viewer = None
+        self._cloud_live_viewer = None
+        self._cloud_custom_user = None
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
@@ -109,6 +117,34 @@ class Mediaserver:
         if self._cloud_owner is None:
             raise RuntimeError("System is not connected to Cloud")
         return self._cloud_owner
+    
+    def get_cloud_viewer(self) -> 'CloudAccount':
+        if self._cloud_viewer is None:
+            if self._cloud_owner is None:
+                raise RuntimeError("System is not connected to Cloud")
+            raise RuntimeError("System does not have cloud viewer")
+        return self._cloud_viewer
+    
+    def get_cloud_advanced_viewer(self) -> 'CloudAccount':
+        if self._cloud_advanced_viewer is None:
+            if self._cloud_owner is None:
+                raise RuntimeError("System is not connected to Cloud")
+            raise RuntimeError("System does not have cloud advanced viewer")
+        return self._cloud_advanced_viewer
+    
+    def get_cloud_live_viewer(self) -> 'CloudAccount':
+        if self._cloud_live_viewer is None:
+            if self._cloud_owner is None:
+                raise RuntimeError("System is not connected to Cloud")
+            raise RuntimeError("System does not have cloud live viewer")
+        return self._cloud_live_viewer
+
+    def get_cloud_custom_user(self) -> 'CloudAccount':
+        if self._cloud_custom_user is None:
+            if self._cloud_owner is None:
+                raise RuntimeError("System is not connected to Cloud")
+            raise RuntimeError("System does not have cloud custom user")
+        return self._cloud_custom_user
 
     def get_server_name(self) -> str:
         server_info = self._api.get_server_info()
