@@ -1,4 +1,5 @@
 import platform
+import time
 from typing import Optional
 from typing import Sequence
 
@@ -50,6 +51,9 @@ class Button:
 
     def wait_until_does_not_exist(self):
         self._element.wait_until_does_not_exist()
+
+    def is_enabled(self) -> bool:
+        return self._element.is_enabled()
 
 
 class Checkbox:
@@ -175,6 +179,15 @@ class TextField:
 
     def send_keys(self, keys: str):
         self._element.send_keys(keys)
+
+    def wait_until_text_is(self, text: str, timeout=5):
+        started_at = time.monotonic()
+        while True:
+            if self.get_text() == text:
+                return
+            if time.monotonic() - started_at > timeout:
+                raise TextNotFound(f'Text field contains text "{self.get_text()}" instead of "{text}"')
+            time.sleep(.1)
 
 
 class SearchBar:
@@ -387,3 +400,7 @@ class Page:
 
     def wait_until_exists(self, timeout: float = 5):
         self._element.wait_until_exists(timeout)
+
+
+class TextNotFound(Exception):
+    pass

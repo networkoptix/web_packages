@@ -103,8 +103,7 @@ class _ServerPage:
         element_name = TextField(self._driver, f'//nx-block//nx-editable-heading//nx-text-editable')
         element_name.click()
         element_name.input_text(name + Keys.ENTER)
-        button_save = Button(self._driver, f'//nx-process-button//button[contains(text(), "{self._rb.SAVE_BUTTON_TEXT}")]')
-        button_save.click()
+        self.get_save_button().click()
 
     def open_restart_dialog(self) -> '_RestartDialog':
         restart_button = Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]')
@@ -122,6 +121,40 @@ class _ServerPage:
 
     def get_port_field(self) -> TextField:
         return TextField(self._driver, f'//nx-numeric[@name="server-port"]/input[@id="server-port-numeric"]')
+
+    def wait_until_error_server_port_is_required(self):
+        self._get_input_error_element(self._rb.SERVER_PORT_IS_REQUIRED_TEXT).wait_until_visible()
+
+    def has_message_server_port_is_required(self) -> bool:
+        try:
+            self._get_input_error_element(self._rb.SERVER_PORT_IS_REQUIRED_TEXT).wait_until_visible()
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
+
+    def has_message_port_too_low(self) -> bool:
+        try:
+            PageText(
+                self._driver,
+                f'//nx-apply//div[contains(@class,"warning-text") and contains(text(),"{self._rb.PORT_TOO_LOW_TEXT}")]'
+            )
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
+
+    def get_save_button(self) -> Button:
+        return Button(self._driver, f'//nx-process-button[@data-testid="saveSettingsBtn"]//button')
+
+    def get_cancel_button(self) -> Button:
+        return Button(self._driver, f'//nx-cancel-button[@data-testid="cancelSettingsBtn"]//button')
+
+    def _get_input_error_element(self, message_text: str) -> PageText:
+        return PageText(
+            self._driver,
+            f'//div/span[contains(@class,"input-error") and contains(text(),"{message_text}")]',
+        )
 
 
 class _RestartDialog:
