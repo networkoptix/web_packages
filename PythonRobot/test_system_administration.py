@@ -149,7 +149,7 @@ def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
     driver.get(ENV + f"/systems/{server.id}")
     LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
     sys_admin = SystemAdmin(driver)
-    assert sys_admin.get_system_name_edit_field().get_text() == "Name Changed via API"
+    sys_admin.get_system_name_edit_field().wait_until_name_is("Name Changed via API")
     assert HeaderNav(driver).get_system_name() == "Name Changed via API"
 
 

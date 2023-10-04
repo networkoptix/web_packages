@@ -22,6 +22,7 @@ from generic_elements import TextField
 
 _logger = logging.getLogger(__name__)
 
+
 class SystemAdmin:
     def __init__(self, driver: WebDriver, lang="en_US"):
         self.driver = driver
@@ -240,6 +241,7 @@ class _SystemName:
         self._rb = rb
 
     def _wait_for_editable(self):
+        # Is needed until CLOUD-11567 exists.
         timeout_sec = 30
         started_at = time.monotonic()
         while True:
@@ -275,3 +277,18 @@ class _SystemName:
         # As it does not affect users small workaround is added.
         expected_red_colors = [self._rb.__getattr__('ERROR_COLOR'), "rgb(194, 38, 38)"]
         return border_color in expected_red_colors
+
+    def wait_until_name_is(self, expected_name: str):
+        timeout_sec = 30
+        started_at = time.monotonic()
+        while True:
+            actual_name = self.get_text()
+            if actual_name == expected_name:
+                return
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(
+                    f"System name is not changed within 30 seconds timeout. "
+                    f"Expected: {expected_name}, actual: {actual_name}")
+            _logger.info("System name does not match expected yet. Refreshing the page")
+            self._element._driver.refresh()
+            time.sleep(3)
