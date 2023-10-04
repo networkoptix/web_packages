@@ -201,7 +201,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         }
 
 
-def initialize_push_notification_send(notification_id, count):
+def initialize_push_notification_send(notification_id, count) -> PushNotification:
     """Gets notification instance and updates count. If count already exceeded None is returned.
 
     Args:
@@ -211,7 +211,7 @@ def initialize_push_notification_send(notification_id, count):
     Returns:
         PushNotification | None: PushNotification instance
     """
-    notification_object = PushNotification.objects.get(id=notification_id)
+    notification_object = PushNotification.objects.select_related('customization').get(id=notification_id)
     notification_object.state = PushNotification.RESULT_STATES.in_progress
     # Prevent duplicate notification processing
     if notification_object.count >= count:
@@ -326,6 +326,9 @@ def send_push_notification(notification_id, request_data, device_ids=None, count
     if not notification_object:
         # Prevent duplicate notification processing
         return
+
+    if not customization_ctx.get():
+        customization_ctx.set(notification_object.customization.name)
 
     try:
         responses, no_subscriptions = handle_push_notification_send(

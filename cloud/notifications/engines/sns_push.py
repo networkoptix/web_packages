@@ -59,7 +59,7 @@ def generate_provider_specific_messages(title, body, payload, options, data_payl
         PushDevice.PROVIDERS.firebase: json.dumps({'GCM': json.dumps({
             'notification': {'title': None, 'body': None},
             'data': {**data_payload, **options},
-            'android': {'priority': android_priority},
+            'android': {'priority': android_priority, **options},
             'priority': android_priority
         })}),
         PushDevice.PROVIDERS.baidu: json.dumps({'BAIDU': json.dumps({

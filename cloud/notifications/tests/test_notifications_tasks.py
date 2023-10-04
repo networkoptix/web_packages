@@ -299,7 +299,7 @@ def test_handle_push_notification_send_exception(mocker):
     assert mock_push_notification.state == PushNotification.RESULT_STATES.failure
 
 
-def test_send_push_notification(mocker, db):
+def test_send_push_notification(mocker, db, default_customization):
     request_data, raw_system_id, raw_targets, *devices = [
         str(uuid4()) for _ in range(randint(10, 100))]
     request_data = str(uuid4())
@@ -308,7 +308,7 @@ def test_send_push_notification(mocker, db):
     mock_handle_push_notification_send = mocker.patch(
         'notifications.tasks.handle_push_notification_send', return_value=[[mocker.sentinel.fcm_response, []], False])
     push_notification = baker.make(
-        PushNotification, raw_system_id=raw_system_id, raw_targets=raw_targets)
+        PushNotification, raw_system_id=raw_system_id, raw_targets=raw_targets, customization=default_customization)
 
     send_push_notification(push_notification.id, request_data)
     updated_notification = PushNotification.objects.get(

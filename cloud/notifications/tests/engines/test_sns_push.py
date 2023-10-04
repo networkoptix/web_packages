@@ -13,10 +13,19 @@ def test_generate_provider_specific_messages():
     )
 
     expected_messages = {
-        2: '{"APNS": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", \\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, \\"payload_key\\": \\"payload_value\\"}"}',
-        4: '{"APNS_SANDBOX": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", \\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, \\"payload_key\\": \\"payload_value\\"}"}',
-        1: '{"GCM": "{\\"notification\\": {\\"title\\": null, \\"body\\": null}, \\"data\\": {\\"data_key\\": \\"data_value\\", \\"options_key\\": \\"options_value\\"}, \\"android\\": {\\"priority\\": \\"normal\\"}, \\"priority\\": \\"normal\\"}"}',
-        3: '{"BAIDU": "{\\"msg\\": {\\"title\\": null, \\"description\\": null}, \\"custom_content\\": {\\"data_key\\": \\"data_value\\"}, \\"options_key\\": \\"options_value\\"}"}'
+        1: '{"GCM": "{\\"notification\\": {\\"title\\": null, \\"body\\": null}, '
+           '\\"data\\": {\\"data_key\\": \\"data_value\\", \\"options_key\\": '
+           '\\"options_value\\"}, \\"android\\": {\\"priority\\": \\"normal\\", '
+           '\\"options_key\\": \\"options_value\\"}, \\"priority\\": \\"normal\\"}"}',
+        2: '{"APNS": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", '
+           '\\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, '
+           '\\"payload_key\\": \\"payload_value\\"}"}',
+        3: '{"BAIDU": "{\\"msg\\": {\\"title\\": null, \\"description\\": null}, '
+           '\\"custom_content\\": {\\"data_key\\": \\"data_value\\"}, '
+           '\\"options_key\\": \\"options_value\\"}"}',
+        4: '{"APNS_SANDBOX": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", '
+           '\\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, '
+           '\\"payload_key\\": \\"payload_value\\"}"}'
     }
 
     assert messages == expected_messages
