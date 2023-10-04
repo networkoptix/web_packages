@@ -29,6 +29,14 @@ import { credentialsValidation, icons, menus } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
+interface EditActions {
+    enable: boolean;
+    changeInfo: boolean;
+    changePassword: boolean;
+    changePermissions: boolean;
+    delete: boolean;
+}
+
 @Component({
     template: '',
 })
@@ -48,15 +56,35 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
 
     protected editUser: Process;
     protected locked = new Set<string>();
-    protected isCloud = signal(false);
-    protected isLdap = signal(false);
-    protected isLocal = signal(false);
-    protected isMe = signal(false);
-    protected canBeEdited = signal(false);
+    protected isCloud$$ = signal(false);
+    protected isLdap$$ = signal(false);
+    protected isLocal$$ = signal(false);
+    protected isTemporary$$ = signal(false);
+    protected isMe$$ = signal(false);
+    protected canBeEdited$$ = signal(false);
 
-    protected formDisabled = computed(
-        () => !(this.environment.isLocal && this.isMe()) && !this.canBeEdited(),
-    );
+    protected editPermissions$$ = computed<EditActions>(() => {
+        const isLocal = this.isLocal$$();
+        const isMe = this.isMe$$();
+        const isTemporary = this.isTemporary$$();
+        const canEdit = this.canBeEdited$$();
+        if (!canEdit && !isMe) {
+            return {
+                enable: false,
+                changeInfo: false,
+                changePassword: false,
+                changePermissions: false,
+                delete: false,
+            };
+        }
+        return {
+            enable: !isMe,
+            changePassword: isLocal,
+            changePermissions: !isMe,
+            changeInfo: isLocal || (isTemporary && !isMe),
+            delete: !isMe,
+        };
+    });
 
     systemAvailable: boolean;
     deleteMessage: string;
@@ -172,13 +200,14 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
 
     protected setUserHelper(user: NxUser): void {
         const currentUser = this.system.permissionManager.currentUser();
-        this.isCloud.set(user.type === UserType.cloud);
-        this.isLdap.set(user.type === UserType.ldap);
-        this.isLocal.set(user.type === UserType.local);
-        this.isMe.set(currentUser.id === user.id);
-        this.canBeEdited.set(user.canBeEdited || (currentUser.isOwner && !this.isMe()));
+        this.isCloud$$.set(user.type === UserType.cloud);
+        this.isLdap$$.set(user.type === UserType.ldap);
+        this.isLocal$$.set(user.type === UserType.local);
+        this.isTemporary$$.set(user.type === UserType.temporaryLocal);
+        this.isMe$$.set(currentUser.id === user.id);
+        this.canBeEdited$$.set(user.canBeEdited);
 
-        this.deleteMessage = this.isCloud()
+        this.deleteMessage = this.isCloud$$()
             ? this.LANG.system.users.cloudDelete
             : this.LANG.system.users.localDelete;
 
@@ -186,7 +215,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
 
         this.fullName = user.fullName;
         this.email = user.email;
-        this.username = this.isCloud() ? user.email : user.name;
+        this.username = this.isCloud$$() ? user.email : user.name;
     }
 
     protected showUserChangeFailedToast(): void {

@@ -1,4 +1,4 @@
-import { Component, ViewChild, signal } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -28,14 +28,11 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     selectedGroupsList: { name: string; description: string }[];
     filteredGroups: MultiSelectItem[];
 
-    temporaryUser = signal<boolean>(false);
-
     @ViewChild('userGroupsForm', { read: NgForm }) private userGroupsForm: NgForm;
     protected changeUser(user: NxUser): void {
         this.selectedGroups = user.groupIds;
-        const isLocalOwner = !this.isCloud() && user.isOwner;
+        const isLocalOwner = !this.isCloud$$() && user.isOwner;
         this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
-        this.temporaryUser.set(this.selectedUser.type === this.UserType.temporaryLocal);
 
         this.filteredGroups = this.processLdapGroups([...this.system.userManager.groups]);
         setTimeout(() => {
@@ -47,7 +44,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 this.editUser,
             );
 
-            if (user.canBeEdited && !this.temporaryUser() && !this.isMe()) {
+            if (user.canBeEdited && !this.isMe$$()) {
                 this.applyService.createFormWatcher(
                     'userGroupsForm',
                     this.userGroupsForm,
@@ -55,7 +52,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                 );
             }
 
-            if (!this.isCloud()) {
+            if (!this.isCloud$$()) {
                 this.applyService.createFormWatcher(
                     'userSettingsForm',
                     this.userSettingsForm,
@@ -111,7 +108,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const ldapIndex = groups.findIndex(({ label }) => label === ldapUserGroupText);
         if (ldapIndex !== -1) {
             const defaultGroups = groups.slice(0, ldapIndex - 1);
-            if (this.isLdap()) {
+            if (this.isLdap$$()) {
                 const ldapGroups = groups
                     .slice(ldapIndex - 1)
                     .filter(

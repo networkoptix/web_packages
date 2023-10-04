@@ -17,19 +17,19 @@
                 >
                     <div
                         class="header-username"
-                        [ngClass]="{ 'mb-2': isCloud() }"
+                        [ngClass]="{ 'mb-2': isCloud$$() }"
                     >
                         <h2 class="fs-mask heading-style">{{ username }}</h2>
                         <div class="user-status-switch-wrapper">
                             <span
                                 *ngIf="!selectedUser.isEnabled"
                                 class="text-danger"
-                                [ngClass]="{ 'pr-2': canBeEdited() }"
+                                [ngClass]="{ 'pr-2': canBeEdited$$() }"
                                 translate
                                 >User disabled</span
                             >
                             <nx-switch
-                                *ngIf="systemAvailable && canBeEdited() && !isMe()"
+                                *ngIf="systemAvailable && editPermissions$$().enable"
                                 [(ngModel)]="selectedUser.isEnabled"
                                 id="user-active-status"
                                 name="user-active-status"
@@ -40,7 +40,7 @@
                 </form>
                 <div>
                     <span
-                        *ngIf="isCloud()"
+                        *ngIf="isCloud$$()"
                         class="fs-mask user-name"
                         >{{ selectedUser.fullName }}</span
                     >
@@ -49,7 +49,7 @@
 
             <nx-section>
                 <div
-                    *ngIf="canBeEdited() && !temporaryUser() && !isMe()"
+                    *ngIf="editPermissions$$().changePermissions"
                     class="mr-2 mt-2 mb-3 pl-2"
                     style="width: 300px"
                 >
@@ -65,7 +65,7 @@
                             >Permission Groups</label
                         >
                         <nx-multi-select
-                            *ngIf="canBeEdited()"
+                            *ngIf="editPermissions$$().changePermissions"
                             [componentId]="'userGroupsSelect'"
                             name="userGroupsSelect"
                             [canSelectAll]="false"
@@ -83,7 +83,7 @@
                 </div>
                 <div
                     class="pl-2"
-                    [ngClass]="{ 'mt-2': !canBeEdited() }"
+                    [ngClass]="{ 'mt-2': !canBeEdited$$() }"
                 >
                     <p
                         class="group-list-item"
@@ -100,7 +100,7 @@
 
             <nx-section
                 type="no-spacing"
-                *ngIf="!isCloud()"
+                *ngIf="!isCloud$$()"
             >
                 <form
                     #userSettingsForm="ngForm"
@@ -113,7 +113,7 @@
                             for="fullName"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label': formDisabled()
+                                'disabled-input-label': !editPermissions$$().changeInfo
                             }"
                             translate
                             >Name</label
@@ -124,7 +124,8 @@
                             [(ngModel)]="fullName"
                             name="fullName"
                             id="fullName"
-                            [disabled]="formDisabled() || temporaryUser() || isLdap()"
+                            [readonly]="isLdap$$()"
+                            [disabled]="!editPermissions$$().changeInfo"
                             maxlength="255"
                         />
                     </div>
@@ -133,7 +134,7 @@
                             for="email"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label': formDisabled()
+                                'disabled-input-label': !editPermissions$$().changeInfo
                             }"
                             translate
                             >Email</label
@@ -146,8 +147,8 @@
                             id="email"
                             #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
-                            [readonly]="isLdap()"
-                            [disabled]="formDisabled() || temporaryUser() || isLdap()"
+                            [readonly]="isLdap$$()"
+                            [disabled]="!editPermissions$$().changeInfo"
                             maxlength="255"
                         />
                         <span
@@ -160,16 +161,9 @@
                 </form>
             </nx-section>
 
-            <nx-section
-                *ngIf="
-                    (!environment.isLocal && isCloud() && isMe()) ||
-                    (!isCloud() && canBeEdited()) ||
-                    (isLocal() && isMe()) ||
-                    canBeEdited()
-                "
-            >
+            <nx-section *ngIf="canBeEdited$$() || isMe$$()">
                 <div
-                    *ngIf="!environment.isLocal && isCloud() && isMe()"
+                    *ngIf="!environment.isLocal && isCloud$$() && isMe$$()"
                     class="float-left"
                 >
                     <button
@@ -182,15 +176,12 @@
                     </button>
                 </div>
                 <div
-                    *ngIf="
-                        (!isCloud() && canBeEdited() && !temporaryUser()) || (isLocal() && isMe())
-                    "
+                    *ngIf="editPermissions$$().changePassword"
                     class="float-left"
                 >
                     <button
                         class="btn btn-default"
                         (click)="changePassword()"
-                        [disabled]="isLdap()"
                         translate
                     >
                         Change Password
@@ -198,7 +189,7 @@
                 </div>
                 <div
                     class="float-right"
-                    *ngIf="canBeEdited() && !isMe()"
+                    *ngIf="editPermissions$$().delete"
                 >
                     <button
                         class="btn btn-default has-icon"

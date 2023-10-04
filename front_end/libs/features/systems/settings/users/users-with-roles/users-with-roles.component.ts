@@ -18,7 +18,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
     protected changeUser(user: NxUser): void {
         this.applyService.resetFormWatchers();
         this.setPermission(user.role);
-        this.role = !this.isCloud() && user.name === 'admin' ? 'Owner' : user.role.name;
+        this.role = !this.isCloud$$() && user.name === 'admin' ? 'Owner' : user.role.name;
 
         setTimeout(() => {
             this.applyService.createFormWatcher(
