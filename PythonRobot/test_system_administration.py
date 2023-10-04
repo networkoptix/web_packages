@@ -9,6 +9,7 @@ from login import LoginDialog
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
+from system_admin import FailedToAccessSystemPage
 from system_admin import SystemAdmin
 from system_left_menu import SystemLeftMenu
 from systems_page import SystemsPage
@@ -94,8 +95,7 @@ def user_without_permissions_cannot_see_system_admin_page(server: Mediaserver):
     register_and_activate_account(driver, "Mark", "Hamill", email, password)
     driver.get(ENV + f"/systems/{server.id}")
     LoginDialog(driver).basic_cloud_login(email, password)
-    sys_admin = SystemAdmin(driver)
-    assert sys_admin.has_no_access_message()
+    assert FailedToAccessSystemPage(driver).is_shown()
     driver.close()
 
 

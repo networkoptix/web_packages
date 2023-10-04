@@ -123,18 +123,6 @@ class SystemAdmin:
         alert_text = alert_text.replace("%SECONDARY%", secondary_system_name)
         return ToastNotification(self.driver, alert_text)
 
-    def has_no_access_message(self) -> bool:
-        error_message = self.rb.__getattr__('SYSTEM_NO_ACCESS_TEXT')
-        text_element = PageText(
-            self.driver,
-            f'//h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(), \'{error_message}\')]',
-            )
-        try:
-            text_element.wait_until_visible()
-        except ElementNotVisible:
-            return False
-        return True
-
     def get_system_name_edit_field(self) -> '_SystemName':
         text_field = TextField(
             self.driver,
@@ -221,6 +209,25 @@ class SystemAdmin:
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}systems/")
+
+
+class FailedToAccessSystemPage:
+
+    def __init__(self, driver: WebDriver, lang="en_US"):
+        self.driver = driver
+        self.rb = RobotVariables(lang)
+
+    def is_shown(self) -> bool:
+        error_message = self.rb.__getattr__('SYSTEM_NO_ACCESS_TEXT')
+        text_element = PageText(
+            self.driver,
+            f'//h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(), \'{error_message}\')]',
+        )
+        try:
+            text_element.wait_until_visible()
+        except ElementNotVisible:
+            return False
+        return True
 
 
 class _SystemName:
