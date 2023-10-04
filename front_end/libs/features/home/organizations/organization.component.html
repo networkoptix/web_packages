@@ -1,6 +1,25 @@
 <ng-template #body>
-    <div class="pb-3">
+    <div class="name pb-3">
         <h2>{{ (currentOrganization$ | async)?.name }}</h2>
+        <ng-container
+            class="status"
+            [ngSwitch]="(currentOrganization$ | async)?.effectiveState"
+        >
+            <div
+                class="status suspended"
+                *ngSwitchCase="State.Suspended"
+                translate
+            >
+                SUSPEND
+            </div>
+            <div
+                class="status shutdown"
+                *ngSwitchCase="State.ShutDown"
+                translate
+            >
+                SHUT DOWN
+            </div>
+        </ng-container>
     </div>
     <nx-tabs
         [onLoadTab]="currentTab"

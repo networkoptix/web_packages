@@ -646,6 +646,8 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --CP-pane-header-background: var(--light_gray_1);
     --CP-pane-header-border: var(--light_gray_7);
 
+    --organization-suspend-status: var(--yellow_main--rgb);
+
     --change-state-dialog-error-txt-color: var(--red_l1);
     --change-state-dialog-btn-bg: initial;
     --change-state-dialog-color: var(--dark9);

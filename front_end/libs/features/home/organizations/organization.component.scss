@@ -49,6 +49,26 @@
         display: flex;
         flex-direction: column;
 
+        .name {
+            display: flex;
+            gap: .75rem;
+
+            .status {
+                border-radius: 9px;
+                color: black;
+                padding: 0.35rem 0.75rem 0.35rem 0.75rem;
+                
+                &.suspended {
+                    background-color: var(--organization-suspend-status);
+                }
+
+                &.shutdown {
+                    background-color: var(--error);
+                }
+
+            }
+        }
+
         &.back-button {
             a {
                 visibility: unset !important;

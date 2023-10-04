@@ -682,6 +682,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --CP-pane-header-background: var(--light1);
     --CP-pane-header-border: var(--light4);
 
+    --organization-suspend-status: var(--yellow_main--rgb);
+
     --change-state-dialog-error-txt-color: var(--red_l1);
     --change-state-dialog-btn-bg: initial;
     --change-state-dialog-color: var(--dark9);

@@ -14,7 +14,10 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    Organization,
+    State,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
@@ -67,6 +70,7 @@ export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
     CONFIG: IConfig = nxConfig;
     icons = icons;
+    State = State;
     tabs: Tab[] = [
         {
             displayName: this.LANG.channelPartners.tabNames.systems,
