@@ -15,4 +15,3 @@ class ToastNotification:
         message.wait_until_visible()
         message.wait_until_not_visible(10)
         return message
-    
