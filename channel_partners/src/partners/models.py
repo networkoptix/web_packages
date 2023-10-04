@@ -28,6 +28,9 @@ from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
 
+class Empty:
+    pass
+
 
 class AuthToken(Token):
     enabled = models.BooleanField(default=True)
@@ -561,9 +564,9 @@ class OrganizationPermissions:
 
 class ChannelPartnerAccessLevel:
     # leave empty spaces for additional levels
-    FULL = 0
-    PRIVACY_MODE = 100
-    NO_ACCESS = 200
+    FULL = OrganizationRole.ORGANIZATION_ADMINISTRATOR
+    PRIVACY_MODE = OrganizationRole.SYSTEM_HEALTH_VIEWER
+    NO_ACCESS = Empty
 
     LEVEL_CHOICES = [
         (FULL, 'Full Access'),
@@ -616,6 +619,17 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
 
     def __str__(self):
         return self.name
+
+    @property
+    def channel_partner_access_level_code(self):
+        return self.channel_partner_access_level_id or self.NO_ACCESS
+
+    @channel_partner_access_level_code.setter
+    def channel_partner_access_level_code(self, value):
+        if value is Empty:
+            self.channel_partner_access_level = None
+        else:
+            self.channel_partner_access_level_id = value
 
     @django.db.transaction.atomic()
     def set_attributes(self, attributes, partial=False):

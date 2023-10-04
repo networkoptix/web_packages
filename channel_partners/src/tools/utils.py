@@ -4,6 +4,7 @@ Only common utils/helpers without imports apps and models
 from logging import getLogger
 
 import httpx
+from django.conf import settings
 from django.http import HttpRequest
 from nx_cloud_api_client.apis import BatchRequestItems, CdbSystemAPIBase
 
@@ -15,6 +16,9 @@ def get_auth_header(request: HttpRequest) -> dict:
 
 
 def make_batch_request(request: HttpRequest, data: BatchRequestItems) -> dict:
+    # TODO: Remove once we have cloud_db updates
+    if not settings.TESTING:
+        return
     cloud_host = request.cloud_host.hostname
     with CdbSystemAPIBase(host=f'https://{cloud_host}', client=httpx.Client()) as api:
         response = api.systems_users_batch_request(batch_items=data, headers=get_auth_header(request))
