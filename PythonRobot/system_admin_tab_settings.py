@@ -120,6 +120,9 @@ class _ServerPage:
         PageText(self._driver, locator).wait_until_visible(timeout=30)
         PageText(self._driver, locator).wait_until_does_not_exist()
 
+    def get_port_field(self) -> TextField:
+        return TextField(self._driver, f'//nx-numeric[@name="server-port"]/input[@id="server-port-numeric"]')
+
 
 class _RestartDialog:
 

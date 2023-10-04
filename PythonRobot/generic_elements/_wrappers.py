@@ -167,6 +167,9 @@ class TextField:
     def is_visible(self) -> bool:
         return self._element.is_visible()
 
+    def is_enabled(self) -> bool:
+        return self._element.is_enabled()
+
     def value_of_css_property(self, style_property: str):
         return self._element.value_of_css_property(style_property)
 

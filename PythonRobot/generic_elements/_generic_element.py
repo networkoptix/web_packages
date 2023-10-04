@@ -154,6 +154,10 @@ class Element:
     def find_element(self, locator: str, position: int = 1) -> 'Element':
         return Element(self._driver, f'({self._locator}{locator})[{position}]')
 
+    def is_enabled(self, timeout: float = _DEFAULT_TIMEOUT) -> bool:
+        self.wait_until_visible(timeout)
+        return self._element.is_enabled()
+
 
 class ElementNotInDOM(Exception):
     pass
