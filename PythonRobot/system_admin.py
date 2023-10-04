@@ -271,4 +271,7 @@ class _SystemName:
 
     def has_empty_field_error(self):
         border_color = self._element.value_of_css_property('border-color')
-        return border_color == self._rb.__getattr__('ERROR_COLOR')
+        # Sometimes there is another red color provided by CSS.
+        # As it does not affect users small workaround is added.
+        expected_red_colors = [self._rb.__getattr__('ERROR_COLOR'), "rgb(194, 38, 38)"]
+        return border_color in expected_red_colors
