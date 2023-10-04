@@ -34,7 +34,8 @@ def _wrap_close(loop):
             return self.close(*args, **kwargs)
         if pool := pools_ref().get(loop, {}):
             logger.info(f"Loop {id(loop)} is closing. Close pool {id(pool)}")
-            self.run_until_complete(pool.disconnect())
+            if not self.is_closed():
+                self.run_until_complete(pool.disconnect())
         return self.close(*args, **kwargs)
 
     setattr(loop, 'is_wrapped', True)
