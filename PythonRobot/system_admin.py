@@ -1,5 +1,7 @@
+import logging
 import time
 
+from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -18,6 +20,7 @@ from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
 
+_logger = logging.getLogger(__name__)
 
 class SystemAdmin:
     def __init__(self, driver: WebDriver, lang="en_US"):
@@ -236,6 +239,21 @@ class _SystemName:
         self._element = element
         self._rb = rb
 
+    def _wait_for_editable(self):
+        timeout_sec = 30
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._element.click()
+                return
+            except ElementClickInterceptedException:
+                _logger.info("System name is not editable yet")
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError("System name is not editable within 30 seconds timeout")
+            _logger.info("Refreshing the page")
+            self._element._driver.refresh()
+            time.sleep(3)
+
     def set_text(self, new_name: str):
         self.clear_text()
         self._element.send_keys(new_name)
@@ -245,6 +263,7 @@ class _SystemName:
 
     def clear_text(self):
         current_text = self.get_text()
+        self._wait_for_editable()
         self._element.click()
         for _ in range(len(current_text)):
             self._element.send_keys(Keys.ARROW_RIGHT)
