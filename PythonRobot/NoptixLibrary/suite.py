@@ -94,13 +94,17 @@ class Mediaserver:
         self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
+        self.api: Optional[ServerApi] = None
+        self.id: Optional[str] = None
+        self.name: Optional[str] = None
+        self._container_id: Optional[str] = None
 
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
 
     def connect_to_cloud(self, cloud_owner: 'CloudAccount'):
         bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
-        self._api.api_connect_to_cloud(bind_info)
+        self.api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
         self._cloud_owner = cloud_owner
         # Wait while the cloud owner settings are applied.
@@ -147,11 +151,8 @@ class Mediaserver:
         return self._cloud_custom_user
 
     def get_server_name(self) -> str:
-        server_info = self._api.get_server_info()
+        server_info = self.api.get_server_info()
         return server_info['name']
-
-    def set_server_name(self, name: str):
-        self._api.set_server_name(name)
 
     def set_up(self):
         # Create a docker server.
@@ -169,8 +170,8 @@ class Mediaserver:
         # Set up a local system.
         server_api_port, *_ = data['port']
         server_api_url = f'https://{_DOCKER_API.host_ip}:{server_api_port}'
-        self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
-        self._api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
+        self.api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
+        self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         return self
 
     def tear_down(self):

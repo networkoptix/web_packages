@@ -53,7 +53,7 @@ def test_server_name_can_be_changed_via_api(server: Mediaserver, rb: RobotVariab
         servers_section.get_default_server_page().wait_until_visible_common_elements()
         server_page = servers_section.get_server_page(server.get_server_name())
         server_page.click()
-        server.set_server_name('server 1 name changed')
+        server.api.set_server_name('server 1 name changed')
         driver.refresh()
         servers_section.get_server_page('server 1 name changed')
 
