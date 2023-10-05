@@ -93,7 +93,7 @@
                 >
                 </nx-multi-select>
                 <span
-                    *ngIf="user.groupIds.length === 1"
+                    *ngIf="user.groupIds.length === 1 && accessDescription"
                     class="help-block"
                     data-testid="addUserHelpBlock"
                     [innerText]="accessDescription | translate"
@@ -115,6 +115,7 @@
                 >
                 </nx-permissions-select>
                 <span
+                    *ngIf="accessDescription"
                     class="help-block"
                     data-testid="addUserHelpBlock"
                     [innerText]="accessDescription | translate"
