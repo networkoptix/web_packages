@@ -2,6 +2,11 @@ import pytest
 from random import randint
 from uuid import uuid4
 
+import waffle
+from django.core.cache import cache
+from model_bakery import baker
+
+from cloud.customization_context import customization_ctx
 from cms.feature_flags.feature_flags import *
 from cms.feature_flags.helpers import *
 
@@ -52,3 +57,35 @@ class TestFeatureFlagHelpers:
             wrapped_function(mock_request)
         except PermissionError as error:
             assert error
+
+    def test_customization_enabled_flag(self, mocker, default_customization, other_customization):
+        flag_name = f'{uuid4()}'
+        mocker.patch('cms.feature_flags.feature_flags.FLAGS.json_key', return_value=flag_name)
+        flag = baker.make("cms.Flag", name=flag_name)
+        mock_request = mocker.MagicMock(spec=Request, META={})
+        mock_request.user.is_superuser = False
+        mock_request.CUSTOMIZATION = default_customization.name
+        other_request = mocker.MagicMock(spec=Request, META={})
+        other_request.user.is_superuser = False
+        other_request.CUSTOMIZATION = other_customization.name
+
+        is_active = waffle.flag_is_active(mock_request, flag_name=flag.name)
+
+        assert is_active is False
+
+        cache.clear()
+        flag.enable_all_customizations = True
+        flag.save()
+        customization_ctx.set(default_customization.name)
+        assert waffle.flag_is_active(mock_request, flag_name=flag.name)
+        customization_ctx.set(other_customization.name)
+        assert waffle.flag_is_active(other_request, flag_name=flag.name)
+
+        cache.clear()
+        flag.enable_all_customizations = False
+        flag.save()
+        flag.customizations.add(other_customization)
+        customization_ctx.set(default_customization.name)
+        assert waffle.flag_is_active(mock_request, flag_name=flag.name) is False
+        customization_ctx.set(other_customization.name)
+        assert waffle.flag_is_active(other_request, flag_name=flag.name)

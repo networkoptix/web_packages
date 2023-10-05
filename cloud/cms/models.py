@@ -3637,11 +3637,27 @@ class ReadOnlyAPIFile(models.Model):
     def __str__(self):
         return f"{self.readonly_api.name}'s {self.filename}"
 
+
 class Flag(AbstractUserFlag):
     FLAG_DS_VAL_CACHE_KEY = 'flag:%s:ds_val'
 
     data_structure = models.ForeignKey(
-        DataStructure, blank=True, null=True, on_delete=models.SET_NULL)
+        DataStructure, blank=True, null=True, on_delete=models.SET_NULL,
+        help_text='This feature is deprecated. Values are still considered valid. Use '
+                  '"Enable for all customization" and "Enable for selected Customization" '
+                  'to set flag for exact customizations instead.'
+    )
+    enable_all_customizations = models.BooleanField(
+        "Enable for all customization", default=False, blank=False, null=False,
+        help_text="Enable flag for all customization. To select customizations "
+                  "manually disable this field. Note! If flag is enabled "
+                  "previously applied customizations will be wiped.")
+    customizations = models.ManyToManyField(
+        to="cms.Customization", blank=True, limit_choices_to={"enabled": True},
+        verbose_name="Enable for selected Customization",
+        help_text='Select customization flag is enable for only. This setting '
+                  'does not work when "Enable for all customization" is set.'
+    )
 
     @classmethod
     def _ds_cache_key(cls, name, customization_name):
@@ -3682,7 +3698,6 @@ class Flag(AbstractUserFlag):
 
         return super(AbstractUserFlag, self).is_active(request)
 
-
     def is_active_for_user(self, user, overrides=None, *, customization=None, request=None):
         """
         Do not use this method directly. Use waffle.flag_is_active instead.
@@ -3691,6 +3706,9 @@ class Flag(AbstractUserFlag):
         if override := (overrides or {}).get(f'HTTP_FEATURE_{self.get_json_key()}'.upper()):
             with suppress(ValueError):
                 return bool(int(override))
+
+        if self.enable_all_customizations or self.customizations.filter(name=customization).exists():
+            return True
 
         if is_active := super(AbstractUserFlag, self).is_active_for_user(user):
             return is_active

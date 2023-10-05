@@ -1539,7 +1539,7 @@ class CustomClientAdmin(admin.ModelAdmin):
 
 @admin.register(Flag)
 class FlagAdmin(WaffleFlagAdmin):
-    pass
+    change_form_template = "cms/flag_change_form.html"
 
 @admin.register(ReadOnlyAPI)
 class ReadOnlyAPIAdmin(CMSAdmin):

@@ -8,23 +8,9 @@ from cms.feature_flags.feature_flags import FLAGS
 
 
 def setup_flags(apps, schema_editor):
-    Account = apps.get_model('api', model_name='account')
-    user = Account.objects.filter(customization='default').last()
-    request = APIRequestFactory().get('/')
-    request.user = user
-    request.META = request.session = {}
-    request.CUSTOMIZATION = 'default'
-    Group = apps.get_model('auth', model_name='Group')
-    waffle.utils.get_cache().clear()
-    for permission in ['access_developers', 'access_integration_store']:
-        flag = getattr(FLAGS, permission)
-        waffle.flag_is_active(request, flag)
-        flag_object = apps.get_model('cms', model_name='Flag').objects.get(name=flag)
-        groups = Group.objects.filter(permissions__codename=permission)
-        print(groups)
-        flag_object.everyone = None
-        flag_object.groups.add(*list(groups.all()))
-        flag_object.save()
+    # do nothing. in case if this migration was already migrate on instance
+    pass
+
 
 class Migration(migrations.Migration):
 

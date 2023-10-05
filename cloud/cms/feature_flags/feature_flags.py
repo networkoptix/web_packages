@@ -39,6 +39,8 @@ class _FlagType(type):
 
 class FLAGS(metaclass=_FlagType):
     # python_name = ('Human-readable and actual name', 'jsonKey', 'global_data_structure')
+    # Since https://networkoptix.atlassian.net/browse/CLOUD-11189 `global_data_structure` is
+    # no longer required to configure flag on a customization level.
     custom_clients = ('Custom Clients', 'customClients',
                       '%PUBLIC_CUSTOM_CLIENTS%')
     zendesk_sync = ('Zendesk Sync', 'zendeskSync', '%ZENDESK_SYNC%')

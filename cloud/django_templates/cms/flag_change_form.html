@@ -1,0 +1,21 @@
+{% extends "admin/change_form.html" %}
+{% load i18n admin_urls static admin_modify %}
+
+{% block admin_change_form_document_ready %}
+{{ block.super }}
+<script>
+    function set_customization_fields() {
+        if ($("#id_enable_all_customizations").is(':checked')) {
+            $("div.form-row.field-customizations").hide()
+        } else {
+            $("div.form-row.field-customizations").show()
+        }
+    }
+    $(document).ready(function (ev) {
+            set_customization_fields()
+            $("#id_enable_all_customizations").change(function (ev) {
+                set_customization_fields()
+            })
+        })
+</script>
+{% endblock %}
