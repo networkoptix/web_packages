@@ -37,8 +37,15 @@ export class NxApplyComponent {
     @Input() submitFn: () => void = () => null;
     @Input() showSectionWarning = false;
     @Input() showDiscard = false;
+    @Input() show = false;
 
-    show = false;
+    @Input()
+    set standaloneMode(standalone: boolean) {
+        this.ready = standalone;
+        this.isOnline = standalone;
+        this.applyVisible = standalone;
+    }
+
     applyVisible = false;
     isOnline = false;
     isSaveDisabled: boolean = false;

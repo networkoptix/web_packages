@@ -1,4 +1,4 @@
-import { LOCALE_ID } from '@angular/core';
+import { LOCALE_ID, signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
@@ -28,6 +28,7 @@ export class UserManager {
     private _accessRole: string = '';
     accessRoles: Role[];
     groups: MultiSelectItem[];
+    groups$$ = signal<MultiSelectItem[]>([]);
     currentUser: NxUser;
     users: NxUser[];
 

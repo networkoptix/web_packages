@@ -1,9 +1,18 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { debounceTime } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { NxSystemUsersBaseComponent } from '@pages/systems/settings/users/edit-user-base/edit-user-base.component';
-import { NxUser, Role } from '@services/system-user.types';
+import { NxUser } from '@services/system-user.types';
+import { NxFormBuilder, NxFormControl, NxFormGroup } from '@utils/reactive-form-builder';
+
+interface UserRoleFormControls {
+    email: NxFormControl<string>;
+    isEnabled: NxFormControl<boolean>;
+    fullName: NxFormControl<string>;
+    role: NxFormControl<string>;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -13,36 +22,47 @@ import { NxUser, Role } from '@services/system-user.types';
 })
 export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent {
     accessDescription: string;
+    userRoleForm: NxFormGroup<UserRoleFormControls>;
 
-    @ViewChild('userRoleForm', { read: NgForm }) private userRoleForm: NgForm;
+    resetForm = (): void => {
+        if (this.userRoleForm) {
+            this.userRoleForm.reset();
+        }
+    };
+
     protected changeUser(user: NxUser): void {
-        this.applyService.resetFormWatchers();
-        this.setPermission(user.role);
+        this.setPermission();
+        this.removeOldForm$.next(true);
+
+        if (this.userRoleForm) {
+            this.userRoleForm = undefined;
+        }
         this.role = !this.isCloud$$() && user.name === 'admin' ? 'Owner' : user.role.name;
 
-        setTimeout(() => {
-            this.applyService.createFormWatcher(
-                'userEnabledForm',
-                this.userEnabledForm,
-                this.editUser,
-            );
-
-            if (user.canBeEdited) {
-                this.applyService.createFormWatcher(
-                    'userRoleForm',
-                    this.userRoleForm,
-                    this.editUser,
-                );
-            }
-
-            if (user.type !== this.UserType.cloud) {
-                this.applyService.createFormWatcher(
-                    'userSettingsForm',
-                    this.userSettingsForm,
-                    this.editUser,
-                );
-            }
+        this.userRoleForm = NxFormBuilder<UserRoleFormControls>({
+            email: {
+                value: user.email,
+                disabled: !this.editPermissions$$().changeInfo || !this.isLdap$$(),
+            },
+            isEnabled: {
+                value: user.isEnabled,
+                disabled: !this.editPermissions$$().enable,
+            },
+            fullName: {
+                value: user.fullName,
+                disabled: !this.editPermissions$$().changeInfo || !this.isLdap$$(),
+            },
+            role: {
+                value: this.selectedUser.role,
+                disabled: !this.systemAvailable || !this.editPermissions$$().changePermissions,
+            },
         });
+        this.applyServiceV2.setForm(this.userRoleForm);
+        this.userRoleForm.valueChanges
+            .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
+            .subscribe(values => {
+                this.setPermission();
+            });
     }
 
     protected initProcesses(): void {
@@ -50,13 +70,16 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         this.editUser = this.processService.createProcess(
             async () => {
                 await this.checkIfEditable();
-                const user = this.formatUser(this.selectedUser);
+                const user = Object.assign(
+                    this.formatUser(this.selectedUser),
+                    this.userRoleForm.getRawValue(),
+                );
                 this.locked.add(user.email);
                 try {
                     await this.system.userManager.saveUser(user);
-                    await this.system.getUsers(true).catch(err => console.error(err));
+                    return this.system.getUsers(true);
                 } catch (err) {
-                    this.showUserChangeFailedToast();
+                    return Promise.reject(err);
                 } finally {
                     this.locked.delete(user.email);
                 }
@@ -64,13 +87,16 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             {
                 ignoreError: true,
             },
-            undefined,
-            () => {}, // Added to suppress the default logging in processes
+            () => {
+                this.userRoleForm.freeze();
+            },
+            () => {
+                this.showUserChangeFailedToast();
+            },
         );
     }
 
-    public setPermission(role: Role): void {
-        this.selectedUser.role = { ...role };
+    public setPermission(): void {
         const userRole = this.selectedUser.role?.name ?? this.selectedUser.accessRole;
         this.accessDescription = this.LANG.accessRoles[userRole]
             ? this.LANG.accessRoles[userRole].description

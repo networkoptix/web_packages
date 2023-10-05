@@ -136,42 +136,39 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         switch (this.innerValue.length) {
             case 1: {
                 const selectedItem = this.items.find(item => item.id === this.innerValue[0]);
-                this.textSelected = selectedItem.label;
+                this.textSelected = selectedItem?.label;
                 break;
             }
             case 0:
-                this.textSelected =
-                    this.componentId === 'user-groups'
-                        ? this.LANG.search.selectOptions
-                        : this.LANG.search.Any;
+                this.textSelected = this.componentId.includes('user-groups')
+                    ? this.LANG.search.selectOptions
+                    : this.LANG.search.Any;
                 break;
             case this.items.length: {
-                this.textSelected =
-                    this.componentId === 'user-groups'
-                        ? {
-                              value: this.LANG.userGroups.multiple,
-                              params: {
-                                  number: this.innerValue.length.toString(),
-                              },
-                          }
-                        : this.LANG.search.Any;
+                this.textSelected = this.componentId.includes('user-groups')
+                    ? {
+                          value: this.LANG.userGroups.multiple,
+                          params: {
+                              number: this.innerValue.length.toString(),
+                          },
+                      }
+                    : this.LANG.search.Any;
                 break;
             }
             default: {
-                this.textSelected =
-                    this.componentId === 'user-groups'
-                        ? {
-                              value: this.LANG.userGroups.multiple,
-                              params: {
-                                  number: this.innerValue.length.toString(),
-                              },
-                          }
-                        : {
-                              value: this.LANG.search.selected,
-                              params: {
-                                  count: this.innerValue.length.toString(),
-                              },
-                          };
+                this.textSelected = this.componentId.includes('user-groups')
+                    ? {
+                          value: this.LANG.userGroups.multiple,
+                          params: {
+                              number: this.innerValue.length.toString(),
+                          },
+                      }
+                    : {
+                          value: this.LANG.search.selected,
+                          params: {
+                              count: this.innerValue.length.toString(),
+                          },
+                      };
                 break;
             }
         }

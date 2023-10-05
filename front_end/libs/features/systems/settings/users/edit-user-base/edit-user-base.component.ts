@@ -1,9 +1,9 @@
 import {
+    AfterViewInit,
     Component,
     computed,
     Input,
     OnChanges,
-    OnDestroy,
     OnInit,
     signal,
     ViewChild,
@@ -12,13 +12,14 @@ import {
 import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';
+import { Subject } from 'rxjs';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import { NxApplyService } from '@services/apply.service';
+import { NxApplyServiceV2 } from '@services/apply.service/apply-v2.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUser, UserType } from '@services/system-user.types';
@@ -40,9 +41,10 @@ interface EditActions {
 @Component({
     template: '',
 })
-export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, OnChanges {
-    protected abstract initProcesses();
-    protected abstract changeUser(user: NxUser);
+export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, AfterViewInit {
+    protected abstract initProcesses(): void;
+    protected abstract changeUser(user: NxUser): void;
+    protected abstract resetForm(): void;
 
     readonly environment = environment;
     readonly credentialsValidation = credentialsValidation;
@@ -53,6 +55,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
 
     @Input() system: NxSystem;
     @Input() selectedUser: NxUser;
+
+    protected removeOldForm$ = new Subject<boolean>();
 
     protected editUser: Process;
     protected locked = new Set<string>();
@@ -100,7 +104,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
 
     constructor(
         protected route: ActivatedRoute,
-        protected applyService: NxApplyService,
+        protected applyServiceV2: NxApplyServiceV2,
         protected dialogs: NxDialogsService,
         protected menuService: NxMenuService,
         protected processService: NxProcessService,
@@ -121,7 +125,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
     }
 
     public ngOnInit(): void {
-        this.applyService.initPageFormsWatcher(this.pageApply);
         this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(() => {
             this.systemAvailable = this.system.isAvailable && this.system.mergeInfo === undefined;
         });
@@ -129,8 +132,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnDestroy, O
         this.initProcesses();
     }
 
-    ngOnDestroy(): void {
-        this.applyService.resetFormWatchers();
+    ngAfterViewInit(): void {
+        this.applyServiceV2.setGuardFunctions(this.editUser, this.resetForm);
     }
 
     public removeUser(): void {

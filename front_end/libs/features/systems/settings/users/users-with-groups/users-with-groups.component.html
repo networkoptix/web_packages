@@ -1,43 +1,42 @@
-<nx-pre-loader *ngIf="!system || !system.userManager.users || !selectedUser"></nx-pre-loader>
+<ng-template #showPreloader>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
 
 <div
-    *ngIf="system"
+    *ngIf="system && system.userManager.users && selectedUser && userGroupForm; else showPreloader"
     class="row d-flex align-items-start auth-visible"
 >
-    <div class="col-12">
+    <form
+        class="col-12"
+        [formGroup]="userGroupForm"
+    >
         <nx-block
             *ngIf="selectedUser"
             header-style="extended"
         >
             <header class="header-users">
-                <form
-                    #userEnabledForm="ngForm"
-                    name="userEnabledForm"
-                    novalidate
+                <div
+                    class="header-username"
+                    [ngClass]="{ 'mb-2': isCloud$$() }"
                 >
-                    <div
-                        class="header-username"
-                        [ngClass]="{ 'mb-2': isCloud$$() }"
-                    >
-                        <h2 class="fs-mask heading-style">{{ username }}</h2>
-                        <div class="user-status-switch-wrapper">
-                            <span
-                                *ngIf="!selectedUser.isEnabled"
-                                class="text-danger"
-                                [ngClass]="{ 'pr-2': canBeEdited$$() }"
-                                translate
-                                >User disabled</span
-                            >
-                            <nx-switch
-                                *ngIf="systemAvailable && editPermissions$$().enable"
-                                [(ngModel)]="selectedUser.isEnabled"
-                                id="user-active-status"
-                                name="user-active-status"
-                                showWarning
-                            ></nx-switch>
-                        </div>
+                    <h2 class="fs-mask heading-style">{{ username }}</h2>
+                    <div class="user-status-switch-wrapper">
+                        <span
+                            *ngIf="!selectedUser.isEnabled"
+                            class="text-danger"
+                            [ngClass]="{ 'pr-2': canBeEdited$$() }"
+                            translate
+                            >User disabled</span
+                        >
+                        <nx-switch
+                            formControlName="isEnabled"
+                            *ngIf="systemAvailable && editPermissions$$().enable"
+                            id="user-active-status"
+                            name="user-active-status"
+                            showWarning
+                        ></nx-switch>
                     </div>
-                </form>
+                </div>
                 <div>
                     <span
                         *ngIf="isCloud$$()"
@@ -53,33 +52,26 @@
                     class="mr-2 mt-2 mb-3 pl-2"
                     style="width: 300px"
                 >
-                    <form
-                        #userGroupsForm="ngForm"
-                        name="userGroupsForm"
-                        novalidate
+                    <label
+                        for="edit-user-groups"
+                        class="font-weight-bold"
+                        translate
+                        >Permission Groups</label
                     >
-                        <label
-                            for="user-groups"
-                            class="font-weight-bold"
-                            translate
-                            >Permission Groups</label
-                        >
-                        <nx-multi-select
-                            *ngIf="editPermissions$$().changePermissions"
-                            [componentId]="'userGroupsSelect'"
-                            name="userGroupsSelect"
-                            [canSelectAll]="false"
-                            [canSearch]="false"
-                            [tooltipAlternateSecondary]="true"
-                            [tooltipHorizontal]="true"
-                            description="User Groups"
-                            [items]="filteredGroups"
-                            [(ngModel)]="selectedGroups"
-                            (ngModelChange)="toggleGroup($event)"
-                            [moreLeftPadding]="true"
-                        >
-                        </nx-multi-select>
-                    </form>
+                    <nx-multi-select
+                        formControlName="groupIds"
+                        *ngIf="editPermissions$$().changePermissions"
+                        [componentId]="'edit-user-groups'"
+                        name="userGroupsSelect"
+                        [canSelectAll]="false"
+                        [canSearch]="false"
+                        [tooltipAlternateSecondary]="true"
+                        [tooltipHorizontal]="true"
+                        description="User Groups"
+                        [items]="filteredGroups$$()"
+                        [moreLeftPadding]="true"
+                    >
+                    </nx-multi-select>
                 </div>
                 <div
                     class="pl-2"
@@ -102,11 +94,9 @@
                 type="no-spacing"
                 *ngIf="!isCloud$$()"
             >
-                <form
-                    #userSettingsForm="ngForm"
+                <div
                     name="userSettingsForm"
                     class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
-                    novalidate
                 >
                     <div class="form-group d-flex">
                         <label
@@ -119,13 +109,12 @@
                             >Name</label
                         >
                         <input
+                            formControlName="fullName"
                             type="text"
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
-                            [(ngModel)]="fullName"
                             name="fullName"
                             id="fullName"
                             [readonly]="isLdap$$()"
-                            [disabled]="!editPermissions$$().changeInfo"
                             maxlength="255"
                         />
                     </div>
@@ -140,25 +129,26 @@
                             >Email</label
                         >
                         <input
+                            formControlName="email"
                             type="email"
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
-                            [(ngModel)]="email"
                             name="email"
                             id="email"
-                            #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
-                            [readonly]="isLdap$$()"
-                            [disabled]="!editPermissions$$().changeInfo"
                             maxlength="255"
                         />
                         <span
                             class="input-error mt-1 ml-2 d-block"
-                            *ngIf="emailInput.invalid && emailInput.touched"
+                            *ngIf="
+                                userGroupForm?.controls &&
+                                userGroupForm.controls.email.invalid &&
+                                userGroupForm.controls.email.touched
+                            "
                             translate
                             >Email format incorrect</span
                         >
                     </div>
-                </form>
+                </div>
             </nx-section>
 
             <nx-section *ngIf="canBeEdited$$() || isMe$$()">
@@ -211,7 +201,13 @@
                 </div>
             </nx-section>
         </nx-block>
-    </div>
+    </form>
 </div>
 
-<ng-container #pageApply></ng-container>
+<nx-apply
+    [standaloneMode]="true"
+    [save]="editUser"
+    [discard]="resetForm"
+    [show]="userGroupForm?.dirty"
+>
+</nx-apply>

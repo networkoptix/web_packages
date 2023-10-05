@@ -4,40 +4,37 @@
     *ngIf="system"
     class="row d-flex align-items-start auth-visible"
 >
-    <div class="col-12">
+    <form
+        class="col-12"
+        [formGroup]="userRoleForm"
+    >
         <nx-block
             *ngIf="selectedUser"
             header-style="extended"
         >
             <header class="header-users">
-                <form
-                    #userEnabledForm="ngForm"
-                    name="userEnabledForm"
-                    novalidate
+                <div
+                    class="header-username"
+                    [ngClass]="{ 'mb-2': isCloud$$() }"
                 >
-                    <div
-                        class="header-username"
-                        [ngClass]="{ 'mb-2': isCloud$$() }"
-                    >
-                        <h2 class="fs-mask heading-style">{{ username }}</h2>
-                        <div class="user-status-switch-wrapper">
-                            <span
-                                *ngIf="!selectedUser.isEnabled"
-                                class="text-danger"
-                                [ngClass]="{ 'pr-2': canBeEdited$$() }"
-                                translate
-                                >User disabled</span
-                            >
-                            <nx-switch
-                                *ngIf="systemAvailable && canBeEdited$$()"
-                                [(ngModel)]="selectedUser.isEnabled"
-                                id="user-active-status"
-                                name="user-active-status"
-                                showWarning
-                            ></nx-switch>
-                        </div>
+                    <h2 class="fs-mask heading-style">{{ username }}</h2>
+                    <div class="user-status-switch-wrapper">
+                        <span
+                            *ngIf="!selectedUser.isEnabled"
+                            class="text-danger"
+                            [ngClass]="{ 'pr-2': canBeEdited$$() }"
+                            translate
+                            >User disabled</span
+                        >
+                        <nx-switch
+                            *ngIf="systemAvailable && canBeEdited$$()"
+                            formControlName="isEnabled"
+                            id="user-active-status"
+                            name="user-active-status"
+                            showWarning
+                        ></nx-switch>
                     </div>
-                </form>
+                </div>
                 <div>
                     <span
                         *ngIf="isCloud$$()"
@@ -53,27 +50,19 @@
                     class="mr-2 my-2"
                     style="width: 300px"
                 >
-                    <form
-                        #userRoleForm="ngForm"
-                        name="userRoleForm"
-                        novalidate
+                    <label
+                        for="permissionsSelect"
+                        translate
+                        >Access level</label
                     >
-                        <label
-                            for="permissionsSelect"
-                            translate
-                            >Access level</label
-                        >
-                        <nx-permissions-select
-                            id="permissionsSelect"
-                            name="permissionsSelect"
-                            [disabled]="!systemAvailable"
-                            [system]="system"
-                            [roles]="system.userManager.accessRoles"
-                            [ngModel]="selectedUser.role"
-                            (ngModelChange)="setPermission($event)"
-                        >
-                        </nx-permissions-select>
-                    </form>
+                    <nx-permissions-select
+                        id="permissionsSelect"
+                        name="permissionsSelect"
+                        formControlName="role"
+                        [system]="system"
+                        [roles]="system.userManager.accessRoles"
+                    >
+                    </nx-permissions-select>
                 </div>
                 <ng-template #roleName>
                     <h4>{{ role | translate }}</h4>
@@ -90,11 +79,9 @@
                 type="no-spacing"
                 *ngIf="!isCloud$$()"
             >
-                <form
-                    #userSettingsForm="ngForm"
+                <div
                     name="userSettingsForm"
                     class="d-table user-settings-form form inputs w-100 mw-100 col-lg-7 col-m-8"
-                    novalidate
                 >
                     <div class="form-group d-flex">
                         <label
@@ -107,13 +94,11 @@
                             >Name</label
                         >
                         <input
+                            formControlName="fullName"
                             type="text"
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
-                            [(ngModel)]="fullName"
                             name="fullName"
                             id="fullName"
-                            [readonly]="isLdap$$()"
-                            [disabled]="editPermissions$$().changeInfo"
                             maxlength="255"
                         />
                     </div>
@@ -128,25 +113,26 @@
                             >Email</label
                         >
                         <input
+                            formControlName="email"
                             type="email"
                             class="fs-mask form-control mx-0 w-100 mx-md-2 d-md-table-cell col-md-7"
-                            [(ngModel)]="email"
                             name="email"
                             id="email"
-                            #emailInput="ngModel"
                             pattern="{{ credentialsValidation.emailRegex }}"
-                            [readonly]="isLdap$$()"
-                            [disabled]="editPermissions$$().changeInfo"
                             maxlength="255"
                         />
                         <span
                             class="input-error mt-1 ml-2 d-block"
-                            *ngIf="emailInput.invalid && emailInput.touched"
+                            *ngIf="
+                                userRoleForm?.controls &&
+                                userRoleForm.controls.email.invalid &&
+                                userRoleForm.controls.email.touched
+                            "
                             translate
                             >Email format incorrect</span
                         >
                     </div>
-                </form>
+                </div>
             </nx-section>
 
             <nx-section *ngIf="canBeEdited$$() || isMe$$()">
@@ -200,7 +186,12 @@
                 </div>
             </nx-section>
         </nx-block>
-    </div>
+    </form>
 </div>
-
-<ng-container #pageApply></ng-container>
+<nx-apply
+    [standaloneMode]="true"
+    [save]="editUser"
+    [discard]="resetForm"
+    [show]="userRoleForm?.dirty"
+>
+</nx-apply>

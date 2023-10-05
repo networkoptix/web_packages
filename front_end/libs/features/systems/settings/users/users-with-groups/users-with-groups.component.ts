@@ -1,10 +1,12 @@
-import { Component, ViewChild } from '@angular/core';
-import { NgForm } from '@angular/forms';
+import { Component, computed } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { debounceTime } from 'rxjs';
+import { takeUntil } from 'rxjs/operators';
 
 import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxUser } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
+import { NxFormBuilder, NxFormControl, NxFormGroup } from '@utils/reactive-form-builder';
 
 import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.component';
 
@@ -15,6 +17,12 @@ import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.com
  * check other places that might use the user object (search for this.system.users and userManager.users)
  * try to bring more logic into user-with-groups-manager
  */
+interface UserGroupFormControls {
+    email: NxFormControl<string>;
+    isEnabled: NxFormControl<boolean>;
+    fullName: NxFormControl<string>;
+    groupIds: NxFormControl<string[]>;
+}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -26,39 +34,58 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     roles: string[];
     selectedGroups: string[];
     selectedGroupsList: { name: string; description: string }[];
-    filteredGroups: MultiSelectItem[];
+    filteredGroups$$ = computed<MultiSelectItem[]>(() => {
+        const groups = this.system.userManager.groups$$() || [];
+        const isLdap = this.isLdap$$();
+        return this.processLdapGroups([...groups], isLdap);
+    });
 
-    @ViewChild('userGroupsForm', { read: NgForm }) private userGroupsForm: NgForm;
+    userGroupForm: NxFormGroup<UserGroupFormControls>;
+
+    resetForm = (): void => {
+        if (this.userGroupForm) {
+            this.userGroupForm.reset();
+        }
+    };
+
     protected changeUser(user: NxUser): void {
+        this.removeOldForm$.next(true);
+        if (this.userGroupForm) {
+            this.userGroupForm = undefined;
+        }
+
         this.selectedGroups = user.groupIds;
         const isLocalOwner = !this.isCloud$$() && user.isOwner;
         this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
 
-        this.filteredGroups = this.processLdapGroups([...this.system.userManager.groups]);
+        // setTimeout is required for handling items. Without it the defaultLdap group is missing.
         setTimeout(() => {
-            this.applyService.resetFormWatchers();
-
-            this.applyService.createFormWatcher(
-                'userEnabledForm',
-                this.userEnabledForm,
-                this.editUser,
-            );
-
-            if (user.canBeEdited && !this.isMe$$()) {
-                this.applyService.createFormWatcher(
-                    'userGroupsForm',
-                    this.userGroupsForm,
-                    this.editUser,
-                );
-            }
-
-            if (!this.isCloud$$()) {
-                this.applyService.createFormWatcher(
-                    'userSettingsForm',
-                    this.userSettingsForm,
-                    this.editUser,
-                );
-            }
+            this.userGroupForm = NxFormBuilder<UserGroupFormControls>({
+                email: {
+                    value: user.email,
+                    disabled: !this.editPermissions$$().changeInfo || this.isLdap$$(),
+                },
+                fullName: {
+                    value: user.fullName,
+                    disabled: !this.editPermissions$$().changeInfo || this.isLdap$$(),
+                },
+                groupIds: {
+                    value: [...user.groupIds],
+                    disabled: !this.editPermissions$$().changePermissions,
+                },
+                isEnabled: {
+                    value: user.isEnabled,
+                    disabled: !this.editPermissions$$().enable,
+                },
+            });
+            this.applyServiceV2.setForm(this.userGroupForm);
+            this.userGroupForm.valueChanges
+                .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
+                .subscribe(values => {
+                    if (this.editPermissions$$().changePermissions) {
+                        this.processSelectedGroupsList(values.groupIds);
+                    }
+                });
         });
     }
 
@@ -67,14 +94,16 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         this.editUser = this.processService.createProcess(
             async () => {
                 await this.checkIfEditable();
-                const user = this.formatUser(this.selectedUser);
+                const user = Object.assign(
+                    this.formatUser(this.selectedUser),
+                    this.userGroupForm.getRawValue(),
+                );
                 this.locked.add(user.email);
                 try {
-                    user.groupIds = this.selectedGroups;
                     await (this.system.userManager as UserWithGroupsManager).modifyUser(user);
-                    await this.system.getUsers(true).catch(err => console.error(err));
+                    return this.system.getUsers(true);
                 } catch (err) {
-                    this.showUserChangeFailedToast();
+                    return Promise.reject(err);
                 } finally {
                     this.locked.delete(user.email);
                 }
@@ -82,14 +111,14 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
             {
                 ignoreError: true,
             },
-            undefined,
-            () => {}, // Added to suppress the default logging in processes
+            () => {
+                this.userGroupForm.freeze();
+                this.selectedGroups = [...this.userGroupForm.controls.groupIds.value];
+            },
+            () => {
+                this.showUserChangeFailedToast();
+            },
         );
-    }
-
-    toggleGroup(newList: string[]): void {
-        this.selectedGroups = [...newList];
-        this.processSelectedGroupsList(this.selectedGroups);
     }
 
     private processSelectedGroupsList(newList: string[], localOwner = false): void {
@@ -103,12 +132,12 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         }, []);
     }
 
-    private processLdapGroups(groups: MultiSelectItem[]): MultiSelectItem[] {
+    private processLdapGroups(groups: MultiSelectItem[], isLdap: boolean): MultiSelectItem[] {
         const { ldapUserGroupText } = this.LANG.dialogs.titles;
         const ldapIndex = groups.findIndex(({ label }) => label === ldapUserGroupText);
         if (ldapIndex !== -1) {
             const defaultGroups = groups.slice(0, ldapIndex - 1);
-            if (this.isLdap$$()) {
+            if (isLdap) {
                 const ldapGroups = groups
                     .slice(ldapIndex - 1)
                     .filter(

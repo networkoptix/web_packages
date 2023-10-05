@@ -171,6 +171,7 @@ export class UserWithGroupsManager extends UserManager {
         }
         // Combine Built-In, LDAP, and Custom groups
         this.groups = builtInGroup.concat(customGroup, ldapGroup);
+        this.groups$$.set(this.groups);
 
         this.userGroups = userGroups;
         this.groupsToPermissions = groupsToPermissions;
@@ -249,13 +250,16 @@ export class UserWithGroupsManager extends UserManager {
 
         // Power Users should not be able to add other Power Users, so we'll remove it from the dropdown for them
         if (!this.currentUser.isOwner) {
-            this.groups = this.groups.filter(
-                group =>
-                    group.id !== AdminGroups.powerUserGroup &&
-                    !this.userGroups
-                        .find(({ id }) => id === group.id)
-                        ?.parentGroupIds?.includes(AdminGroups.powerUserGroup),
+            this.groups$$.update(groups =>
+                groups.filter(
+                    group =>
+                        group.id !== AdminGroups.powerUserGroup &&
+                        !this.userGroups
+                            .find(({ id }) => id === group.id)
+                            ?.parentGroupIds?.includes(AdminGroups.powerUserGroup),
+                ),
             );
+            this.groups = this.groups$$();
         }
 
         return this.users;
