@@ -1,7 +1,7 @@
 from marshmallow import ValidationError
 from quart import Blueprint, request
 
-from schema import CreateGroupSchema, UpdateGroupSchema
+from schema import CreateGroupSchema, UpdateGroupSchema, GroupSchema
 from views import GroupView
 from nx_common import RestConnector, is_org_admin
 
@@ -22,10 +22,14 @@ async def create_group():
 
 @group_blueprint.route('/', methods=['GET'], defaults={'group_id': ''})
 @group_blueprint.route('/<group_id>', methods=['GET'])
-def get_group(group_id=None):
-    connector = RestConnector(request)
-    groups = GroupView().list_groups(connector.email, group_ids=group_id)
-    return {"data": groups}
+async def get_group(group_id=None):
+    try:
+        raw_data = await request.get_json()
+        data = GroupSchema().load(data=raw_data)
+        groups = GroupView().list_groups(data['org_id'], group_ids=group_id)
+        return {"data": groups}
+    except ValidationError as err:
+        return err.messages, 400
 
 
 @group_blueprint.route('/<group_id>', methods=['PATCH'])
