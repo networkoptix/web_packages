@@ -49,8 +49,6 @@ import { Resolutions, ViewCamera } from '../../vms-client/submodules/vms/datatyp
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
-import { fullscreen } from './fullscreen';
-
 type Period = Ec2RecordedTimePeriodsResp['reply'][number]['periods'][number];
 
 const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
@@ -206,7 +204,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.document.fpsMeter = this.fpsMeter;
         // allows calling document.fpsMeter.install() from the developer console, if needed
 
-        this.ux.isFullScreen = !!fullscreen.getElement();
+        this.ux.isFullScreen = !!this.document.fullscreenElement;
     }
 
     ngOnDestroy(): void {
@@ -214,7 +212,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.unListenFullScreenChange();
         this.unListenWebkitFSChange();
-        this.unListenMozFSChange();
     }
 
     private startAnimation(): void {
@@ -303,7 +300,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     rtsp: 'video/webm',
                 };
                 const video = this.document.createElement('video');
-                const isHlsSupported = this.isSupported();
+                const isHlsSupported = this.window.MediaSource.isTypeSupported(
+                    'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
+                );
                 this.transports = <PlaybackTransport[]>(
                     Object.keys(transportsAndResolutions).filter(transport =>
                         transport === 'hls' && !this.isMobile
@@ -341,6 +340,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             },
         );
 
+        // Required for: Safari MacOS 12-16.3, Safari iOS all
+        // https://caniuse.com/mdn-api_document_fullscreenchange_event
         this.unListenWebkitFSChange = this.renderer.listen(
             'document',
             'webkitfullscreenchange',
@@ -348,34 +349,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.onFullScreenChange(event);
             },
         );
-
-        this.unListenMozFSChange = this.renderer.listen(
-            'document',
-            'mozfullscreenchange',
-            (event: MouseEvent) => {
-                this.onFullScreenChange(event);
-            },
-        );
-    }
-
-    private getMediaSource(): typeof MediaSource | undefined {
-        // https://developer.mozilla.org/en-US/docs/Web/API/MediaSource
-        // @ts-expect-error: https://caniuse.com/mdn-api_mediasource
-        return this.window.MediaSource || this.window.WebKitMediaSource;
-    }
-
-    private isSupported(): boolean {
-        const mediaSource = this.getMediaSource();
-        if (!mediaSource) {
-            return false;
-        }
-
-        const isTypeSupported =
-            mediaSource &&
-            typeof mediaSource.isTypeSupported === 'function' &&
-            mediaSource.isTypeSupported('video/mp4; codecs="avc1.42E01E,mp4a.40.2"');
-
-        return !!isTypeSupported;
     }
 
     toggleCameraDetails(newValue: boolean = !this.cameraDetailsShown): void {
@@ -389,7 +362,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unListenTouchMove: () => void;
 
     private onFullScreenChange = (e: MouseEvent): void => {
-        const fse = fullscreen.getElement();
+        const fse = this.document.fullscreenElement;
         this.fullscreenMode = !!fse;
         if (this.fullscreenMode) {
             this.onShowElements = this.window.setTimeout(() => {
@@ -444,7 +417,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     private unListenFullScreenChange: () => void;
     private unListenWebkitFSChange: () => void;
-    private unListenMozFSChange: () => void;
 
     get availableTransportsAndResolutions(): AvailableTransportsAndResolutions {
         return this.availableTransportsAndResolutions$.getValue();
@@ -790,14 +762,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     toggleFullScreen($event?: MouseEvent): void {
         $event?.stopPropagation();
 
-        if (!fullscreen.getElement()) {
+        if (!this.document.fullscreenElement) {
             // if browser is currently not in full screen
-            fullscreen.request().call(this.$self.parentElement);
+            this.$self.parentElement.requestFullscreen();
             setTimeout(() => {
                 this.$self.classList.add('is-full-screen');
             }, 250);
         } else {
-            fullscreen.exit().call(this.document);
+            this.document.exitFullscreen();
             setTimeout(() => {
                 this.$self.classList.remove('is-full-screen');
             }, 250);

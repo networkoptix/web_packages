@@ -43,12 +43,9 @@ function retrieveImageFromClipboardAsBase64(pasteEvent, callback, imageFormat = 
             }
         };
 
-        // Crossbrowser support for URL
-        const URLObj = window.URL || window.webkitURL;
-
         // Creates a DOMString containing a URL representing the object given in the parameter
         // namely the original Blob
-        img.src = URLObj.createObjectURL(blob);
+        img.src = window.URL.createObjectURL(blob);
     }
 }
 
@@ -84,7 +81,6 @@ function pasteHandleImages(pasteEvent, editor) {
         const tempCanvas = document.createElement('canvas');
         const ctx = tempCanvas.getContext('2d');
         const img = new Image();
-        const url = window.URL || window.webkitURL;
         img.onload = function () {
             tempCanvas.width = img.width;
             tempCanvas.height = img.height;
@@ -92,7 +88,7 @@ function pasteHandleImages(pasteEvent, editor) {
             clipContent = `<meta charset="utf-8"><img src="" alt="${blob.name} (${img.width}×${img.height})"/>`;
             addBase64Image(tempCanvas.toDataURL('image/png'));
         };
-        img.src = url.createObjectURL(blob);
+        img.src = window.URL.createObjectURL(blob);
     }
 }
 

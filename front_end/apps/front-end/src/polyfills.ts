@@ -7,9 +7,17 @@ import 'rvfc-polyfill';
 
 import 'container-query-polyfill';
 
-if (!Element.prototype.matches) {
-    Element.prototype.matches = Element.prototype.webkitMatchesSelector;
-}
+// Required for: Safari MacOS 12-16.3, Safari iOS all
+// @ts-expect-error: https://caniuse.com/mdn-api_element_requestfullscreen
+Element.prototype.requestFullscreen ??= Element.prototype.webkitRequestFullscreen;
+
+// Required for: Safari MacOS 12-16.3, Safari iOS all
+// @ts-expect-error: https://caniuse.com/mdn-api_document_exitfullscreen
+document.exitFullscreen ??= document.webkitExitFullscreen;
+
+// Required for: Safari MacOS 12-16.3, Safari iOS all
+// @ts-expect-error: https://caniuse.com/mdn-api_document_fullscreenelement
+document.fullscreenElement ??= document.webkitFullscreenElement;
 
 if (environment.production) {
     // Production
