@@ -11,6 +11,7 @@ from ._wrappers import DropDown
 from ._wrappers import DropDownOption
 from ._wrappers import Image
 from ._wrappers import Link
+from ._wrappers import MenuNode
 from ._wrappers import Page
 from ._wrappers import PageText
 from ._wrappers import Pane
@@ -35,6 +36,7 @@ __all__ = [
     'ElementVisible',
     'Image',
     'Link',
+    'MenuNode',
     'Page',
     'PageText',
     'Pane',

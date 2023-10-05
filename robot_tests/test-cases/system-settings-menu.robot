@@ -9,13 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-3. Should have LEVEL-3 node (check specs)
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Mouse Over                          ${LEFT MENU LEVEL1 USERS}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 USERS}       background-color    ${COLOR ALIGHT3 RGB}
-    Click Element                       ${LEFT MENU LEVEL1 USERS}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR ALIGHT2 RGB}
-
 4. Should have LEVEL-3 selected node (check specs)
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}

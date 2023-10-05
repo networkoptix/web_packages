@@ -6,6 +6,7 @@ from RobotVariables import RobotVariables
 from login import LoginDialog
 from resource_import import get_chrome
 from system_admin import SystemAdmin
+from system_left_menu import SystemLeftMenu
 from variables import ENV
 
 password = "qweasd 123"
@@ -26,6 +27,21 @@ def should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(ser
         print("Pass")
 
 
+def selected_node_has_different_color(server: Mediaserver):
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver)
+        left_menu = SystemLeftMenu(driver)
+        users_node = left_menu.get_node_by_name("Users")
+        assert users_node.value_of_css_property('background-color') == variables.COLOR_TRANSPARENT_RGB
+        users_node.click()
+        assert users_node.value_of_css_property('background-color') == variables.COLOR_LIGHT5_RGB
+        print("Pass")
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if suite_name.startswith('test_'):
@@ -36,3 +52,4 @@ if __name__ == '__main__':
         cloud_users = suite.create_cloud_users(['viewer'])
         cloud_server = suite.create_cloud_server(cloud_owner, cloud_users=cloud_users)
         should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(cloud_server)
+        selected_node_has_different_color(cloud_server)

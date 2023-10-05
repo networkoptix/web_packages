@@ -158,6 +158,10 @@ class Element:
         self.wait_until_visible(timeout)
         return self._element.is_enabled()
 
+    def find_element_by_link_text(self, text: str):
+        self.wait_until_exists()
+        return self._element.find_element_by_link_text(text)
+
 
 class ElementNotInDOM(Exception):
     pass

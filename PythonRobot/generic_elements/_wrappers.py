@@ -6,6 +6,7 @@ from typing import Sequence
 from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.remote.webelement import WebElement
 
 from ._generic_element import Element
 
@@ -407,3 +408,16 @@ class Page:
 
 class TextNotFound(Exception):
     pass
+
+
+class MenuNode:
+
+    def __init__(self, driver: WebDriver, element: WebElement):
+        self._driver = driver
+        self._element = element
+
+    def value_of_css_property(self, style_property: str):
+        return self._element.value_of_css_property(style_property)
+
+    def click(self):
+        self._element.click()

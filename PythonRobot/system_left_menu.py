@@ -4,6 +4,7 @@ from RobotVariables import RobotVariables
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
+from generic_elements import MenuNode
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TextField
@@ -78,11 +79,18 @@ class SystemLeftMenu:
     def add_user_modal_error(self, text):
         return PageText(self.driver, f"//span[contains(text(),'{text}')]")
 
+    def _get_element(self):
+        return Page(self.driver, self._locator)
+
     def _wait_until_page_loaded(self):
-        Page(self.driver, self._locator).wait_until_exists(40)
+        self._get_element().wait_until_exists(40)
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
 
     def get_search_field(self):
         return TextField(self.driver, f"{self._locator}/nx-search//input")
+
+    def get_node_by_name(self, name: str):
+        element = self._get_element()._element.find_element_by_link_text(name)
+        return MenuNode(self.driver, element)
