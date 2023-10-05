@@ -189,6 +189,9 @@ class TextField:
                 raise TextNotFound(f'Text field contains text "{self.get_text()}" instead of "{text}"')
             time.sleep(.1)
 
+    def wait_until_does_not_exist(self):
+        self._element.wait_until_does_not_exist()
+
 
 class SearchBar:
 

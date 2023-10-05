@@ -12,6 +12,7 @@ from variables import ENV
 
 class SystemLeftMenu:
     def __init__(self, driver, lang="en_US"):
+        self._locator = "//nx-menu"
         self.driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_page_loaded()
@@ -78,7 +79,10 @@ class SystemLeftMenu:
         return PageText(self.driver, f"//span[contains(text(),'{text}')]")
 
     def _wait_until_page_loaded(self):
-        Page(self.driver, "//nx-menu").wait_until_exists(40)
+        Page(self.driver, self._locator).wait_until_exists(40)
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
+
+    def get_search_field(self):
+        return TextField(self.driver, f"{self._locator}/nx-search//input")

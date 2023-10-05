@@ -17,6 +17,7 @@ from generic_elements import TabItem
 from generic_elements import TextField
 from system_admin_tab_information import TabInformation
 from system_admin_tab_settings import TabSettings
+from system_left_menu import SystemLeftMenu
 from toast_notification import ToastNotification
 from variables import ENV
 
@@ -213,6 +214,9 @@ class SystemAdmin:
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
+
+    def get_left_menu(self):
+        return SystemLeftMenu(self.driver)
 
 
 class FailedToAccessSystemPage:

@@ -1,7 +1,9 @@
 import time
 from contextlib import ExitStack
 from types import MappingProxyType
-from typing import Optional, Mapping
+from typing import Collection
+from typing import Mapping
+from typing import Optional
 from typing import List
 from random import randint
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
@@ -78,9 +80,16 @@ class Suite:
             server._cloud_custom_user = cloud_users.get('custom')
         return server
 
-    def create_cloud_users(self):
+    def create_cloud_users(self, permissions: Optional[Collection[str]] = None):
         cloud_users = {}
-        for permission in CloudAccount.PERMISSIONS:
+        if permissions is not None:
+            if not set(permissions).issubset(CloudAccount.PERMISSIONS.keys()):
+                raise RuntimeError("Expected permissions are not among available permissions. "
+                                   f"Expected: {permissions}, "
+                                   f"available: {CloudAccount.PERMISSIONS}")
+        else:
+            permissions = CloudAccount.PERMISSIONS
+        for permission in permissions:
             account = self._exit_stack.enter_context(CloudAccount())
             cloud_users.update({permission: account})
             time.sleep(2)
