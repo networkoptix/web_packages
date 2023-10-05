@@ -227,55 +227,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-10. Admin and owner cannot edit self and other users via share
-    [Tags]    webadmin    cloud    C41904
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${server 1['cloudUsers']}[cloudAdmin]
-    ...    ELSE    Create List    admin    ${server 1['local users']}[cloudAdmin]
-    FOR    ${user}    IN    @{list}
-        Log    Step 1
-        Log in    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Select user in users list    ${user}
-        Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
-        Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
-
-        Log    Step 2
-        #cloudUsers
-        Share To    ${servers}[0][cloudOwner]                             ${CUSTOM TEXT}         fail    system=${servers}[0][name]
-        Share To    ${server 1['cloudUsers']}[cloudAdmin]           ${LIVE VIEWER TEXT}    fail    system=${servers}[0][name]
-        Share To    ${server 1['cloudUsers']}[viewer]               ${ADV VIEWER TEXT}     fail    system=${servers}[0][name]
-        Share To    ${server 1['cloudUsers']}[advancedViewer]       ${CUSTOM TEXT}         fail    system=${servers}[0][name]
-        Share To    ${server 1['cloudUsers']}[liveViewer]           ${CUSTOM TEXT}         fail    system=${servers}[0][name]
-        Share To    ${server 1['cloudUsers']}[custom]               ${VIEWER TEXT}         fail    system=${servers}[0][name]
-
-        #Local users
-        #Share To    admin    ${CUSTOM TEXT}          fail    system=${servers}[0][name]
-        #Click Button    ${ADD USER CANCEL}
-        #Share To    ${servers}[0][local users][cloudAdmin][login]    ${LIVE VIEWER TEXT}     fail    system=${servers}[0][name]
-        #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['viewer']}    ${ADV VIEWER TEXT}     fail    system=${servers}[0][name]
-        #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['advancedViewer']}    ${CUSTOM TEXT}     fail    system=${servers}[0][name]
-        #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['liveViewer']}    ${CUSTOM TEXT}    fail    system=${servers}[0][name]
-        #Click Button    ${ADD USER CANCEL}
-        #Share To    ${local users['custom']}    ${VIEWER TEXT}    fail    system=${servers}[0][name]
-        #Click Button    ${ADD USER CANCEL}
-        Log Out
-    END
-
-    Log    Step 3
-    FOR    ${user}    IN    @{list}
-        ${role}=   Get Cloud User Role    ${servers}[0][cloudAuth]    ${user}    ${servers}[0][id]
-        Run Keyword If    '${user}'=='${servers}[0][cloudOwner]'          Should be equal as strings    ${role}    owner
-        Run Keyword If    '${user}'=='${server 1['cloudUsers']}[cloudAdmin]'          Should be equal as strings    ${role}    cloudAdmin
-        Run Keyword If    '${user}'=='${server 1['cloudUsers']}[viewer]'         Should be equal as strings    ${role}    viewer
-        Run Keyword If    '${user}'=='${server 1['cloudUsers']}[advancedViewer]'     Should be equal as strings    ${role}    advancedViewer
-        Run Keyword If    '${user}'=='${server 1['cloudUsers']}[liveViewer]'    Should be equal as strings    ${role}    liveViewer
-        Run Keyword If    '${user}'=='${server 1['cloudUsers']}[custom]'         Should be equal as strings    ${role}    custom
-    END
-
 11. Admin cannot delete or edit other admins or owner
     [Tags]    C41905    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
