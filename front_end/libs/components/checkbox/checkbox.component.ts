@@ -113,7 +113,7 @@ export class NxCheckboxComponent implements OnInit, OnChanges, ControlValueAcces
      * Write a new (model) value to the element.
      */
     writeValue(value: boolean): void {
-        if ((value !== null && !this.disabled) || (this.disabled && !value)) {
+        if (value !== null) {
             this.value = value;
             this.state = this.cbxStates[String(this.value)];
         }
