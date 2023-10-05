@@ -2,6 +2,7 @@ import json
 import random
 from uuid import uuid4
 
+from django.core.cache import caches
 from django.db import transaction
 
 import pytest
@@ -147,6 +148,57 @@ class TestCloudSystemViewSet:
         batch_request = httpx_mock.get_request(url=self.batch_url)
         assert response.status_code == 403
         mocked_batch_request_data.assert_not_called()
+
+    def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
+                                    service_record_factory, cp_service_factory, system_factory,
+                                    mock_auth_with_user, arf, mocker):
+
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(2)]
+        service_records = [service_record_factory(service=service, cloud_system=system, quantity=10)
+                           for service in services]
+        mock_auth_with_user(cp_user)
+        view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
+        # test successful request
+        request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
+        response = view(request, system_id=str(system.system_id))
+        assert response.status_code == 200
+        assert response.data['services'][str(services[0].id)]['quantity'] == 15
+        assert response.data['services'][str(services[1].id)]['quantity'] == 10
+
+        # test failure request because of busy lock
+        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=False)
+        caches['default'].set(CloudSystemViewSet.get_service_quantity_lock(system), 1)
+        request = arf.patch('/', data={"services": {str(services[1].id): {"quantity": 15}}}, format='json')
+        response = view(request, system_id=str(system.system_id))
+        assert response.status_code == 429
+        assert response.headers['Retry-After'] == '2'
+
+        # test success request with freeing lock during waiting. it cannot be tested properly,
+        # but we can catch side effect
+        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=False)
+        cache_get_mock = mocker.patch('django.core.cache.backends.redis.RedisCache.get', return_value=None)
+        caches['default'].set(CloudSystemViewSet.get_service_quantity_lock(system), 1)
+        request = arf.patch('/', data={"services": {str(services[1].id): {"quantity": 15}}}, format='json')
+        raised_error = None
+        try:
+            response = view(request, system_id=str(system.system_id))
+        except Exception as ex:
+            raised_error = ex.__class__
+        cache_get_mock.assert_called()
+        assert raised_error == RecursionError
+
+        # test successful request and second service value
+        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
+        request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
+        response = view(request, system_id=str(system.system_id))
+        assert response.status_code == 200
+        assert response.data['services'][str(services[0].id)]['quantity'] == 15
+        assert response.data['services'][str(services[1].id)]['quantity'] == 10
+
 
 
 class TestOrganizationUserViewSet:

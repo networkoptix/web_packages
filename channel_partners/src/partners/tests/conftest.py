@@ -6,7 +6,8 @@ from model_bakery import baker
 
 from rest_framework.test import APIRequestFactory
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
-    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerAccessLevel
+    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerAccessLevel, ChannelPartnerService, \
+    ServiceToOrganizationProperties, ChannelPartnerServiceRecord
 
 
 @pytest.fixture()
@@ -210,3 +211,30 @@ def system_factory(cloud_test_host, default_organization):
                           organization=organization, cloud_host=cloud_host)
 
     return factory
+
+@pytest.fixture()
+def cp_service_factory(default_channel_partner):
+    def factory(channel_partner=None):
+        return baker.make(ChannelPartnerService, name=f'{uuid4()}',
+                          created_by_channel_partner=channel_partner or default_channel_partner,
+                          state=ChannelPartnerService.ACTIVE)
+
+    return factory
+
+@pytest.fixture()
+def org_service_factory(cp_service_factory):
+    def factory(organization, service=None, price=10):
+        return baker.make(ServiceToOrganizationProperties, organization=organization,
+                          service=service or cp_service_factory(organization.channel_partner),
+                          price=price)
+
+    return factory
+
+@pytest.fixture()
+def service_record_factory():
+    def factory(service, cloud_system, quantity=1):
+        return baker.make(ChannelPartnerServiceRecord, service=service,
+                          cloud_system=cloud_system, quantity=quantity)
+
+    return factory
+

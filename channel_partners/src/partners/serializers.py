@@ -89,6 +89,11 @@ class SupportInformationSerializer(serializers.Serializer):
                 instance[field] = []
         return super().to_representation(instance)
 
+
+class ErrorMessageSerializer(serializers.Serializer):
+    message = serializers.CharField()
+
+
 class ChannelPartnerSerializer(serializers.ModelSerializer):
     class UsersField(serializers.HyperlinkedRelatedField):
         view_name = 'channelpartners-user-list'

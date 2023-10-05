@@ -1,3 +1,7 @@
+from time import sleep
+from uuid import uuid4
+
+from django.core.cache import caches
 from django.shortcuts import get_object_or_404
 from drf_spectacular.openapi import OpenApiParameter, OpenApiTypes
 from drf_spectacular.utils import extend_schema_view, inline_serializer
@@ -20,6 +24,9 @@ from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPart
 from .serializers import *
 # from channel_partners.utils import nx_extend_schema as extend_schema
 from drf_spectacular.utils import extend_schema
+
+
+VIEW_LOCK_WAIT_TIME = 2
 
 
 class DefaultPagination(PageNumberPagination):
@@ -586,6 +593,10 @@ class CloudSystemViewSet(NestedViewSetMixin,
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
 
+    @staticmethod
+    def get_service_quantity_lock(obj):
+        return f'views-locks-cloud_system-service_quantity-{obj.id}'
+
     def get_queryset(self):
         if self.detail:
             return CloudSystemId.objects.filter(cloud_host=self.request.cloud_host)
@@ -636,7 +647,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
         return Response(serializer.data)
 
     @extend_schema(summary='Get service quantities for a System', methods=['GET'], extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
-    @extend_schema(summary='Set service quantities for a System', methods=['PATCH'], extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_service_quantities} for Organization\'s Channel Partner'})
+    @extend_schema(summary='Set service quantities for a System', methods=['PATCH'], responses={'200': SystemServiceQuantitySerializer, '429': ErrorMessageSerializer},
+                   extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_service_quantities} for Organization\'s Channel Partner'})
     @extend_schema(auth=[{'Cloud Oauth Token': []}], request=SystemServiceQuantitySerializer, responses=SystemServiceQuantitySerializer)
     @action(methods=['get', 'patch'], detail=True)
     def service_quantity(self, request, system_id):
@@ -645,9 +657,26 @@ class CloudSystemViewSet(NestedViewSetMixin,
             serializer = SystemServiceQuantitySerializer(system)
             return Response(serializer.data)
         elif request.method == 'PATCH':
+            return self.update_service_quantity(request, system=system)
+
+    def update_service_quantity(self, request, system):
+            lock_val = f'{uuid4()}'
+            if not caches['default'].add(self.get_service_quantity_lock(system), lock_val, timeout=60):
+                wait = 0
+                while caches['default'].get(self.get_service_quantity_lock(system)):
+                    sleep(0.2)
+                    if (wait := wait + 0.2) >= VIEW_LOCK_WAIT_TIME:
+                        return Response(data={"message": f"System {system.system_id} service "
+                                                         f"quantity was being modified during request."},
+                                        status=429, headers={'Retry-After': 2})
+                return self.update_service_quantity(request, system=system)
             serializer = SystemServiceQuantitySerializer(system, data=request.data)
-            serializer.is_valid(raise_exception=True)
-            serializer.save(user=request.user)
+            if serializer.is_valid(raise_exception=False):
+                serializer.save(user=request.user)
+                caches['default'].delete(self.get_service_quantity_lock(system))
+            else:
+                caches['default'].delete(self.get_service_quantity_lock(system))
+                serializer.is_valid(raise_exception=True)
             return Response(serializer.data)
 
     @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
