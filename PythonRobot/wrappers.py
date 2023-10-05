@@ -289,6 +289,9 @@ class DropDown:
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
+    def wait_until_not_visible(self, timeout: float = 5):
+        self._element.wait_until_not_visible(timeout)
+
     def click(self):
         self._element.click()
 

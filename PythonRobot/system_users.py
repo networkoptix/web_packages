@@ -2,7 +2,8 @@ import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
 from wrappers import Button
-
+from wrappers import PageText
+from wrappers import DropDown
 
 class SystemUsers:
     def __init__(self, driver, lang="en_US"):
@@ -20,7 +21,13 @@ class SystemUsers:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-modal-remove-user-content//button[contains(text(),'{REMOVE_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
-
+    
+    def user_header_text(self):
+        return PageText(self.driver, "//nx-system-settings-component//nx-block/..//header//h2")
+    
+    def access_level_dropdown(self):
+        return DropDown(self.driver, "//nx-system-settings-component//nx-block/..//nx-section//button[@id='componentId']")
+    
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-user-component")
 

@@ -1,9 +1,14 @@
 from selenium.webdriver.common.by import By
+import time
 
 import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
 from wrappers import Button
+from wrappers import TextField
+from wrappers import DropDown
+from wrappers import DropDownOption
+from wrappers import PageText
 
 
 class SystemLeftMenu:
@@ -45,9 +50,37 @@ class SystemLeftMenu:
 
     def add_users_button(self):
         return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
+    
+    def add_user_email_input(self):
+        return TextField(self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
+    
+    def add_user_modal_button(self):
+        return Button(self.driver, "//form[@name='addUserForm']//nx-process-button[@data-testid='addUserBtn']")
+
+    def add_user_permissions_dropdown(self):
+        return DropDown(self.driver, "//form[@name='addUserForm']//nx-permissions-select[@id='permissionsSelect']//button")
+
+    def permissions_dropdown_option(self, permissions):
+        option = DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
+        option.wait_until_visible()
+        return DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']/..")
+
+    def add_user_modal_close_button(self):
+        return Button(self.driver, "//form[@name='addUserForm']//button[@data-testid='closeAddUser']")
+
+    def share_system_with_user(self, email, permissions):
+        self.add_users_button().click()
+        self.add_user_email_input().input_text(email)
+        self.add_user_permissions_dropdown().click()
+        self.permissions_dropdown_option(permissions).click()
+        self.add_user_modal_button().click()
+
+    def add_user_modal_error(self, text):
+        return PageText(self.driver, f"//span[contains(text(),'{text}')]")
 
     def _wait_until_page_loaded(self):
         robot_keywords.wait_until_page_contains_element(self.driver, "//nx-menu")
+        
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}systems/")
