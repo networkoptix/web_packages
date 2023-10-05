@@ -278,8 +278,6 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
             # The sleep and refresh are to bypass bug CLOUD-11525
             time.sleep(5)
             driver.refresh()
-            time.sleep(5)
-            driver.save_screenshot('undefined.png')
             system_user.remove_user_button().wait_until_not_visible(timeout=10)
             system_user.access_level_dropdown().wait_until_not_visible(timeout=10)
             assert system_user.user_header_text().get_text() == owner.email
@@ -311,6 +309,61 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
         else:
             print("PASS")
 
+def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
+    """
+    10. Admin and owner cannot edit self and other users via share
+    [Tags]    webadmin    cloud    C41904
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        admin = server.get_cloud_admin()
+        viewer = server.get_cloud_viewer()
+        advanced_viewer = server.get_cloud_advanced_viewer()
+        live_viewer = server.get_cloud_live_viewer()
+        custom = server.get_cloud_custom_user()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().wait_until_visible()
+            system_left_menu.get_user_with_email(admin.email).click()
+            system_user = SystemUsers(driver)
+            # --- this part tests that the owner can't remove himself or change his permissions
+            # The sleep and refresh are to bypass bug CLOUD-11525
+            time.sleep(5)
+            driver.refresh()
+            system_user.remove_user_button().wait_until_not_visible(timeout=10)
+            system_user.access_level_dropdown().wait_until_not_visible(timeout=10)
+            assert system_user.user_header_text().get_text() == admin.email
+            # ---
+            # Each registered user is tested to make sure you can't share the system with them
+            # hacking the string. Ideally should call rb.EMAIL_IS_ALREADY_REGISTERED_TEXT, but thats broken
+            error_msg = f"This email has already been registered in the {server.name} system"
+            system_left_menu.share_system_with_user(owner.email, rb.CUSTOM_TEXT)
+            system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+            system_left_menu.share_system_with_user(admin.email, rb.LIVE_VIEWER_TEXT)
+            system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+            system_left_menu.share_system_with_user(viewer.email, rb.ADV_VIEWER_TEXT)
+            system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+            system_left_menu.share_system_with_user(advanced_viewer.email, rb.CUSTOM_TEXT)
+            system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+            system_left_menu.share_system_with_user(live_viewer.email, rb.CUSTOM_TEXT)
+            system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+            system_left_menu.share_system_with_user(custom.email, rb.VIEWER_TEXT)
+            system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -321,12 +374,13 @@ if __name__ == "__main__":
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         # TODO: Come up with a better way to detect server online state
         time.sleep(90) # added for now to allow the system to become interactable on cloud portal
-        # owner_can_remove_user(cloud_server)
-        # cloud_admin_can_remove_user(cloud_server)
-        # share_with_registered_user_works(cloud_server)
-        # share_with_registered_user_sends_notification(cloud_server)
-        # share_with_unregistered_user_sends_notification(cloud_server)
-        # email_is_locked_when_unregistered_user_is_invited(cloud_server)
-        # cancel_disconnect(cloud_server)
-        # disconnect_should_remove_system(cloud_server)
+        owner_can_remove_user(cloud_server)
+        cloud_admin_can_remove_user(cloud_server)
+        share_with_registered_user_works(cloud_server)
+        share_with_registered_user_sends_notification(cloud_server)
+        share_with_unregistered_user_sends_notification(cloud_server)
+        email_is_locked_when_unregistered_user_is_invited(cloud_server)
+        cancel_disconnect(cloud_server)
+        disconnect_should_remove_system(cloud_server)
         owner_cannot_edit_users_via_share(cloud_server)
+        cloud_admin_cannot_edit_users_via_share(cloud_server)
