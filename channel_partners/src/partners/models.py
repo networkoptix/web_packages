@@ -417,12 +417,13 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         return services
 
     def save(self, *args, **kwargs):
+        new = self._state.adding
         if self.parent_channel_partner:
             self.instance = self.parent_channel_partner.instance
 
         super().save(*args, **kwargs)
 
-        if self.parent_channel_partner:
+        if self.parent_channel_partner and new:
             for service in self.parent_channel_partner.services.all():
                 copy = ChannelPartnerService.objects.get(id=service.id)
                 copy.pk = None
