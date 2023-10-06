@@ -35,10 +35,25 @@ def selected_node_has_different_color(server: Mediaserver):
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         SystemAdmin(driver)
         left_menu = SystemLeftMenu(driver)
-        users_node = left_menu.get_node_by_name("Users")
+        users_node = left_menu.get_node_by_name_within_timeout("Users")
         assert users_node.value_of_css_property('background-color') == variables.COLOR_TRANSPARENT_RGB
         users_node.click()
         assert users_node.value_of_css_property('background-color') == variables.COLOR_LIGHT5_RGB
+        print("Pass")
+
+
+def users_are_seen_when_main_node_is_selected(server: Mediaserver):
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver)
+        left_menu = SystemLeftMenu(driver)
+        left_menu.get_node_by_name_within_timeout("Users").click()
+        left_menu = SystemLeftMenu(driver)
+        assert left_menu.get_node_by_name_within_timeout(owner.email)
+        assert left_menu.get_node_by_name_within_timeout(server.get_cloud_viewer().email)
         print("Pass")
 
 
@@ -53,3 +68,4 @@ if __name__ == '__main__':
         cloud_server = suite.create_cloud_server(cloud_owner, cloud_users=cloud_users)
         should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(cloud_server)
         selected_node_has_different_color(cloud_server)
+        users_are_seen_when_main_node_is_selected(cloud_server)

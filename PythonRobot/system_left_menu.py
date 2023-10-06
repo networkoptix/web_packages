@@ -1,3 +1,6 @@
+import logging
+import time
+
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
@@ -91,6 +94,17 @@ class SystemLeftMenu:
     def get_search_field(self):
         return TextField(self.driver, f"{self._locator}/nx-search//input")
 
-    def get_node_by_name(self, name: str):
-        element = self._get_element()._element.find_element_by_link_text(name)
-        return MenuNode(self.driver, element)
+    def get_node_by_name_within_timeout(self, name: str, timeout_sec=3):
+        started_at = time.monotonic()
+        while True:
+            try:
+                element = self._get_element()._element.find_element_by_partial_link_text(name)
+                return MenuNode(self.driver, element)
+            except AttributeError as e:
+                if "'NoneType' object has no attribute 'find_element_by_link_text'" in str(e):
+                    _logger.info(f"Node {name} not found yet")
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(f"Node {name} not found within {timeout_sec} seconds")
+
+
+_logger = logging.getLogger(__name__)
