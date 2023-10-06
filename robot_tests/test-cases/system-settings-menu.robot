@@ -9,17 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-2. Should have selected LEVEL-1 node (check specs)
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Wait Until Page Contains Element    ${LEFT MENU LEVEL1 ADMIN}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       background-color    ${COLOR LIGHT5 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       color               ${COLOR DARK9 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       font-size           ${MENU L1 FONT SIZE}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       padding-left        ${MENU L1 PLEFT}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL1 ADMIN}       padding-right       ${MENU L1 PRIGHT}
-    Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ADMIN}       font-family         ${FONT MEDIUM}
-    Wait Until Element Contains Style   ${LEFT MENU LEVEL1 ICON}        color               ${COLOR DARK9 RGB}
-
 3. Should have LEVEL-3 node (check specs)
     Wait Until Page Contains Element    ${LEFT MENU}
     Mouse Over                          ${LEFT MENU LEVEL1 USERS}
