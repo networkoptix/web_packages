@@ -4,7 +4,8 @@ import { Component, Inject } from '@angular/core';
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxMenuService } from '@menu/menu.service';
-import { DropdownConfiguration } from '@pages/sandbox/multi-select/multy-select.component.types';
+
+import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
 
 @Component({
     selector: 'multi-select',
@@ -28,6 +29,159 @@ export class MultiSelectComponent {
     dropdownConfiguration: DropdownConfiguration;
     booleanConfigurationArray: string[];
     stringConfigurationArray: string[];
+
+    selectedState: string = 'California';
+    states = [
+        'Alabama',
+        'Alaska',
+        'American Samoa',
+        'Arizona',
+        'Arkansas',
+        'California',
+        'Colorado',
+        'Connecticut',
+        'Delaware',
+        'District Of Columbia',
+        'Federated States Of Micronesia',
+        'Florida',
+        'Georgia',
+        'Guam',
+        'Hawaii',
+        'Idaho',
+        'Illinois',
+        'Indiana',
+        'Iowa',
+        'Kansas',
+        'Kentucky',
+        'Louisiana',
+        'Maine',
+        'Marshall Islands',
+    ];
+
+    complicatedObjectArray: ComplicatedObject[] = [
+        {
+            userId: 'abc1@networkoptix.com',
+            email: 'abc1@networkoptix.com',
+            fullName: 'Person 1',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc2@networkoptix.com',
+            email: 'abc2@networkoptix.com',
+            fullName: 'Person 2',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc3@networkoptix.com',
+            email: 'abc3@networkoptix.com',
+            fullName: 'Person 3',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc4@networkoptix.com',
+            email: 'abc4@networkoptix.com',
+            fullName: 'Person 4',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc5@networkoptix.com',
+            email: 'abc5@networkoptix.com',
+            fullName: 'Person 5',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc6@networkoptix.com',
+            email: 'abc6@networkoptix.com',
+            fullName: 'Person 6',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc7@networkoptix.com',
+            email: 'abc7@networkoptix.com',
+            fullName: 'Person 7',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc8@networkoptix.com',
+            email: 'abc8@networkoptix.com',
+            fullName: 'Person 8',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc9@networkoptix.com',
+            email: 'abc9@networkoptix.com',
+            fullName: 'Person 9',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc10@networkoptix.com',
+            email: 'abc10@networkoptix.com',
+            fullName: 'Person 10',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc11@networkoptix.com',
+            email: 'abc11@networkoptix.com',
+            fullName: 'Person 11',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc12@networkoptix.com',
+            email: 'abc12@networkoptix.com',
+            fullName: 'Person 12',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+        {
+            userId: 'abc13@networkoptix.com',
+            email: 'abc13@networkoptix.com',
+            fullName: 'Person 13',
+            accessLevel: ['N/A'],
+            roles: ['Administrator', 'Manager'],
+            title: '',
+            created: '2023-08-24T19:14:46.748Z',
+        },
+    ];
+    selectedComplicatedObject: ComplicatedObject = undefined;
+
+    logOnChange(event: unknown): void {
+        console.log('onChange', event);
+    }
 
     constructor(private menuService: NxMenuService, @Inject(DOCUMENT) private document: Document) {}
 

@@ -1,0 +1,67 @@
+@use "typography";
+
+.select-wrapper {
+    height: 2rem;
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--btn-dropdown-toggle-bg);
+    box-shadow: var(--btn-dropdown-toggle-shadow-color);
+    @include typography.medium13nocolor;
+}
+
+.select-wrapper:not(.disabled) {
+    cursor: pointer;
+}
+
+.select-wrapper:hover:not(.disabled) {
+    background-color: var(--btn-dropdown-toggle-hover-bg);
+    box-shadow: var(--btn-dropdown-toggle-hover-shadow);
+}
+
+svg-icon svg g polyline {
+    stroke: var(--btn-dropdown-toggle-color);
+    stroke-width: 2px;
+}
+
+.disabled {
+    svg-icon svg g polyline {
+        stroke: var(--elements-disabled);
+    }
+}
+
+$paddingTop: 5px;
+$paddingBottom: 5px;
+.select-box {
+    padding: $paddingTop 0px $paddingBottom 10px;
+    flex-grow: 1;
+    line-height: calc(2rem - $paddingTop - $paddingBottom);
+}
+
+// TODO: dropdown arrow should flip
+.dropdown-arrow {
+    padding: $paddingTop 10px $paddingBottom 0px;
+
+    svg {
+        height: 18px;
+        width: 18px;
+    }
+}
+
+.disabled {
+    cursor: auto;
+}
+
+.custom-dropdown-menu {
+    background-color: var(--dropdown-menu-bg);
+    box-shadow: var(--dropdown-menu-shadow);
+    flex-grow: 1;
+    max-height: 302px;
+    overflow-y: scroll;
+}
+
+.placeholder {
+    color: var(--dropdown-placeholder-color);
+}
+
+// TODO: Add error styling
+.error {}

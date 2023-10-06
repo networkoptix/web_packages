@@ -2,6 +2,63 @@
     class="mb-3 row m-0 p-3"
     style="border: 1px solid lightgray"
 >
+    <div class="col-4 dropdownPadding">
+        <nx-dropdown
+            placeholder="Placeholder text"
+            [(selected)]="selectedState"
+        >
+            <nx-simple-dropdown-item
+                *ngFor="let state of states; index as i"
+                [value]="state"
+                [selected]="state === selectedState"
+                [disabled]="i % 3 === 0"
+            >
+                {{ state }}
+            </nx-simple-dropdown-item>
+        </nx-dropdown>
+    </div>
+    <div class="col-4 dropdownPadding">
+        <nx-dropdown
+            placeholder="Placeholder text"
+            [(selected)]="selectedState"
+            [disabled]="true"
+        >
+            <nx-simple-dropdown-item
+                *ngFor="let state of states; index as i"
+                [value]="state"
+                [selected]="state === selectedState"
+                [disabled]="i % 3 === 0"
+            >
+                {{ state }}
+            </nx-simple-dropdown-item>
+        </nx-dropdown>
+    </div>
+    <div class="col-4 dropdownPadding">
+        <div>Selected: {{ selectedState }}</div>
+    </div>
+    <div class="col-4 dropdownPadding">
+        <nx-dropdown
+            placeholder="Select a user"
+            [(selected)]="selectedComplicatedObject"
+            (onChange)="logOnChange($event)"
+        >
+            <nx-simple-dropdown-item *ngIf="selectedComplicatedObject !== undefined">
+            </nx-simple-dropdown-item>
+            <nx-simple-dropdown-item
+                *ngFor="let complicatedObject of complicatedObjectArray"
+                [value]="complicatedObject"
+                [selected]="complicatedObject === selectedComplicatedObject"
+                [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
+            >
+                {{ complicatedObject.fullName }}
+            </nx-simple-dropdown-item>
+        </nx-dropdown>
+    </div>
+</div>
+<div
+    class="mb-3 row m-0 p-3"
+    style="border: 1px solid lightgray"
+>
     <div class="col-3 p-5">
         <nx-multi-select
             [componentId]="'sandboxDropdownsDdMultiSelect'"

@@ -10,6 +10,7 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { DangerButtonModule } from '@components/danger-button/danger-button.module';
+import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { LanguageModule } from '@components/dropdowns/language/language.module';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
@@ -214,6 +215,7 @@ const appRoutes: Routes = [
         NxUsersTableComponent,
         NxResizeObserver,
         LanguageModule,
+        NxDropdownModule,
     ],
     providers: [],
 

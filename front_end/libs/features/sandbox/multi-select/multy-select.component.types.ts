@@ -9,3 +9,13 @@ export interface DropdownConfiguration {
     noMatchMsg: string;
     type: string;
 }
+
+export type ComplicatedObject = {
+    userId: string;
+    email: string;
+    fullName: string;
+    accessLevel: string[];
+    roles: string[];
+    title: string;
+    created: string;
+};

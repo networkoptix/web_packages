@@ -1,0 +1,44 @@
+<div
+    #selectWrapper
+    class="select-wrapper"
+    [ngClass]="{ disabled: disabled }"
+>
+    <div
+        #select
+        tabindex="{{ disabled ? -1 : 0 }}"
+        (click)="showDropdown()"
+        (keydown)="onKeyDown($event)"
+        (blur)="onBlur()"
+        [attr.id]="inputId"
+        role="listbox"
+        [attr.aria-label]="ariaLabel || null"
+        [attr.aria-multiselectable]="false"
+        [innerHTML]="displayText"
+        class="select-box"
+        [ngClass]="{
+            error: this.error,
+            disabled: this.disabled,
+            placeholder: this.showPlaceholder,
+        }"
+    ></div>
+    <svg-icon
+        class="dropdown-arrow"
+        nx-add-svg-src
+        [src]="icons.dirTextButtons + 'arrow_expand.svg'"
+        (click)="onDropMenuIconClick($event)"
+    ></svg-icon>
+    <ng-template
+        cdk-portal
+        #overlayTemplate="cdkPortal"
+        class="dropdown"
+    >
+        <div class="custom-dropdown-menu">
+            <div
+                class="dropdown-options-container"
+                (keydown)="onKeyDown($event)"
+            >
+                <ng-content></ng-content>
+            </div>
+        </div>
+    </ng-template>
+</div>
