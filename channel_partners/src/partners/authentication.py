@@ -25,7 +25,7 @@ class NxTokenAuthentication(TokenAuthentication):
     def authenticate_credentials(self, key):
         model = self.get_model()
         try:
-            token = model.objects.prefetch_related('order_allocations').get(key=key, enabled=True)
+            token = model.objects.get(key=key, enabled=True)
         except model.DoesNotExist:
             raise exceptions.AuthenticationFailed('Invalid token.')
 
