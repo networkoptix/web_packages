@@ -61,6 +61,16 @@ class Suite:
             )
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
+            started_at = time.monotonic()
+            timeout_sec = 30
+            requested_users = set([account.email for account in cloud_users.values()])
+            while True:
+                users = [user['email'] for user in server.api.get_users()]
+                if requested_users.issubset(users):
+                    break
+                if time.monotonic() - started_at > timeout_sec:
+                    raise TimeoutError(f"Requested users did not created after {timeout_sec} seconds")
+                time.sleep(0.5)
             server._cloud_admin = cloud_users.get('cloudAdmin')
             server._cloud_viewer = cloud_users.get('viewer')
             server._cloud_advanced_viewer = cloud_users.get('advancedViewer')

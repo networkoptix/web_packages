@@ -166,6 +166,10 @@ class ServerApi:
         new_api._token = token
         return new_api
 
+    def reconnect(self):
+        self._token = None
+        self._auth_header()
+
     def _get(self, path: str):
         return self._request('GET', path)
 

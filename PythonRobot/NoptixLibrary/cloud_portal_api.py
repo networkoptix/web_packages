@@ -725,6 +725,23 @@ class CloudPortalAPI(object):
             )
         return settings_response.json()
 
+    def get_oauth2_token(self, system_id: str, email: str, password: str) -> str:
+        body = {
+            'username': email,
+            'password': password,
+            'grant_type': 'password',
+            'response_type': 'token',
+            'scope': f'cloudSystemId={system_id}',
+        }
+        response = requests.post(
+            url=f'{self.env}/cdb/oauth2/token',
+            json=body,
+            verify=_ssl_certs_path,
+            )
+        response.raise_for_status()
+        json_response = response.json()
+        return json_response['access_token']
+
     def _check_debug_status(self):
         try:
             self.set_feature_flags({})

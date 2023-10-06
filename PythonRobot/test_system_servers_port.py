@@ -4,6 +4,7 @@ import time
 from pathlib import Path
 
 from colorama import Fore
+from requests import HTTPError
 from selenium.webdriver.common.keys import Keys
 
 from NoptixLibrary.suite import CloudAccount
@@ -136,6 +137,22 @@ def test_change_port(server: Mediaserver, rb: RobotVariables):
         server.api.get_cameras()
 
 
+def test_not_owner_cannot_change_port(server: Mediaserver, cloud_account: CloudAccount):
+    """
+    10. Administrator cannot change port via API
+    [Tags]    C70927    cloud    webadmin   WIP
+    """
+    server.api.reconnect()  # Authorization could be broken after previous tests
+    new_api = server.get_copy_api(username=cloud_account.email, password=cloud_account.password)
+    try:
+        new_api.change_port(7002)
+    except HTTPError as exc:
+        if exc.response.status_code != 403:
+            raise
+    else:
+        raise RuntimeError(f"User {cloud_account.email} could change port via API")
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     suite_name = Path(__file__).stem
@@ -152,3 +169,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{test_change_port_field_validation.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         test_change_port(cloud_server, variables)
         print(f'{Fore.WHITE}{test_change_port.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_not_owner_cannot_change_port(cloud_server, cloud_admin)
+        print(f'{Fore.WHITE}{test_not_owner_cannot_change_port.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
