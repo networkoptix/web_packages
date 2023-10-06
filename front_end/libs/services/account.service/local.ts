@@ -73,7 +73,9 @@ export class LocalAccount extends BaseAccount {
 
     async get(forceUpdate = false): Promise<Account | undefined> {
         if (this.sessionService.loginState || this.storageService.cloudAccessToken) {
-            const user = await this.mediaServerApi.getCurrentUser(forceUpdate);
+            const user = await this.mediaServerApi.getCurrentUser(forceUpdate).catch(error => {
+                return Promise.reject(error);
+            });
             let account: Account;
             if (user) {
                 // @ts-expect-error FIXME: NxSystemRestAPI3.getCurrentUser() returns v3 user

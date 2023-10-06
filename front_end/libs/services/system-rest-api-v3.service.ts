@@ -79,9 +79,11 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
 
         if (!this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
+            let userId = '';
             this.userRequest = this.get<UserSessionV3>(endpoint, { headers })
                 .toPromise()
                 .then(result => {
+                    userId = result.id;
                     if (!this.accessToken) {
                         this._vmsToken = result.token;
                     }
@@ -97,6 +99,10 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
                     // Unknown session token
                     if (err.errorId === 'cantProcessRequest') {
                         this.accessToken = '';
+                    } else if (err.error.errorString === `Resource '${userId}' is not found`) {
+                        // Set the error string here to avoid making another API call for userId at Login
+                        err.error.errorString = 'user is disabled';
+                        return Promise.reject(err.error);
                     }
                     return undefined;
                 });

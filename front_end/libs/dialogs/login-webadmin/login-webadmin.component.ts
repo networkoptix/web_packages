@@ -225,7 +225,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 nx_wrong_credentials: true,
             });
             this.renderer.selectRootElement('#login_password').focus();
-            this.toastService.show(this.LANG.toastMessage.notAuthorized, ToastType.Danger);
         };
 
         const showUserDisabled = (): void => {
@@ -337,14 +336,24 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             this.loading = !(this.accountNotOnSystem || this.account2faRequired);
 
             if (!this.accountNotOnSystem && !this.account2faRequired) {
-                this.account.get(true).then(res => {
-                    if (res) {
-                        this.window.location.reload();
-                    } else {
-                        this.loading = false;
-                        this.displayCloudConnectionError();
-                    }
-                });
+                this.account.get(true).then(
+                    res => {
+                        if (res) {
+                            this.window.location.reload();
+                        } else {
+                            this.loading = false;
+                            this.displayCloudConnectionError();
+                        }
+                    },
+                    err => {
+                        if (err.errorString === 'user is disabled') {
+                            this.toastService.show(
+                                this.LANG.toastMessage.userDisabled,
+                                ToastType.Danger,
+                            );
+                        }
+                    },
+                );
             }
         });
     }
