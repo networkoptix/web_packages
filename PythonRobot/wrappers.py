@@ -1,9 +1,7 @@
-import time
-from typing import Optional
 from typing import Sequence
 
-from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 from generic_element import Element
 
@@ -27,6 +25,14 @@ class Button:
     def should_contain(self, text: str):
         self._element.should_contain(text)
 
+    def get_text(self):
+        if self._element.text():
+            return self._element.text()
+        elif self._element.get_attribute("value"):
+            return self._element.get_attribute("value")
+        else:
+            raise RuntimeError("Element had no text")
+
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
@@ -38,9 +44,6 @@ class Button:
 
     def wait_until_not_clickable(self, timeout: float = 5):
         self._element.wait_until_not_clickable(timeout)
-
-    def get_text(self) -> str:
-        return self._element.text()
 
 
 class Checkbox:
@@ -71,7 +74,7 @@ class Checkbox:
         return self._driver.find_element(By.XPATH, self._unchecked_xpath)
 
     def is_focused(self):
-        return self._selenium_element == self._driver.switch_to.active_element
+        return self._selenium_element == self._driver.switch_to.active_element()
 
 
 class PageText:
@@ -79,6 +82,7 @@ class PageText:
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
+        self._element.wait_until_visible()
 
     def get_text(self) -> str:
         return self._element.text()
@@ -92,17 +96,11 @@ class PageText:
     def click(self):
         self._element.click()
 
-    def wait_until_contains_text(self, expected_text: str, timeout: float = 10):
-        started_at = time.monotonic()
-        while True:
-            current_text = self._element.text()
-            if current_text == expected_text:
-                return
-            if time.monotonic() - started_at > timeout:
-                raise RuntimeError(f'Expected text: {expected_text}. Actual text {current_text}')
+    def wait_until_does_not_exist(self, timeout: float = 5):
+        self._element.wait_until_does_not_exist(timeout)
 
-    def is_visible(self) -> bool:
-        return self._element.is_visible()
+    def should_contain(self, text: str):
+        self._element.should_contain(text)
 
 
 class TextField:
@@ -152,28 +150,30 @@ class TextField:
     def click(self):
         self._element.click()
 
-    def send_keys(self, keys: str):
-        self._element.send_keys(keys)
 
-    def wait_until_contains_text(self, expected_text: str, timeout: float = 10):
-        started_at = time.monotonic()
-        while True:
-            current_text = self._element.text()
-            if current_text == expected_text:
-                return
-            if time.monotonic() - started_at > timeout:
-                raise RuntimeError(f'Expected text: {expected_text}. Actual text {current_text}')
+class SearchBar:
 
-    def value_of_css_property(self, style_property: str) -> str:
-        return self._element.value_of_css_property(style_property)
-
+    def __init__(self, driver: WebDriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+    def should_be_focused(self):
+        return self._element.is_focused()
+    def search_text(self, text: str):
+        self._element.send_keys(text)
+        # self._element.submit()
+    def wait_until_visible(self, timeout:0.5):
+        self._element.wait_until_visible(timeout)
+    def click(self):
+        self._element.click()
+    def get_attribute(self, attribute: str):
+        return self._element.get_attribute(attribute)
 
 class Table:
 
     def __init__(self, driver: WebDriver,
                  locator,
-                 target_item: str = "",
-                 target_contents: str = ""):
+                 target_item:str="",
+                 target_contents:str=""):
         self._driver = driver
         self._element = Element(self._driver, locator)
         self.locator = locator
@@ -198,19 +198,23 @@ class Table:
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
 
-    def get_data(self) -> Sequence[Sequence[Element]]:
+    def get_data(self, locator="") -> Sequence[Sequence[Element]]:
+        if not locator:
+            locator=self.locator
         rows = []
         row_n = 1
         while True:
-            row_locator = f'({self.locator}//tr)[{row_n}]'
-            if len(self._driver.find_elements_by_xpath(row_locator)) == 0:
+            row_locator = f'({locator}//tr)[{row_n}]'
+            if len(self._driver.find_elements(By.XPATH, row_locator)) == 0:
                 break
+            print("found at least one  f'({self.locator}//tr)[{row_n}]'")
             row = []
             cell_n = 1
             while True:
                 cell_locator = f'({row_locator}//td)[{cell_n}]'
-                if len(self._driver.find_elements_by_xpath(cell_locator)) == 0:
+                if len(self._driver.find_elements(By.XPATH, cell_locator)) == 0:
                     break
+                print("found cell_locator")
                 cell = Element(self._driver, cell_locator)
                 row.append(cell)
                 cell_n += 1
@@ -220,14 +224,16 @@ class Table:
         return rows
 
 
+
+
 class Image:
 
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
 
-    def get_screenshot(self):
-        return self._element.get_screenshot()
+    def screenshot(self, filename: str):
+        return self._element.get_screenshot(filename)
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
@@ -245,7 +251,7 @@ class Pane:
         self.locator = locator
 
     def count_item(self, item_locator: str):
-        xpath = self.locator + item_locator
+        xpath = self.locator +  item_locator
         return Element(self._driver, xpath).count()
 
     def should_contain(self, text: str):
@@ -269,25 +275,10 @@ class Link:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
-
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
-
-    def click(self):
-        self._element.click()
-
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
-
-    def get_text(self) -> str:
-        return self._element.text()
-
-    def get_attribute(self, attribute: str) -> Optional[str]:
-        return self._element.get_attribute(attribute)
-
-    def is_visible(self) -> bool:
-        return self._element.is_visible()
-
 
 class DropDown:
 
@@ -328,13 +319,3 @@ class Tooltip:
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
-
-
-class TabItem:
-
-    def __init__(self, driver: WebDriver, locator):
-        self._driver = driver
-        self._element = Element(self._driver, locator)
-
-    def click(self):
-        self._element.click()

@@ -58,12 +58,19 @@ def ipvd_landing_page_actions():
 
     ipvd_page.feedback().wait_until_visible()
 
-
+def text_search_manufacturer():
+    """ Text search correctly finds Manufacturers"""
+    driver = resource_import.get_headless_chrome()
+    ipvd_page = IVPDPage(driver)
+    ipvd_page.go_to_ipvd()
+    ipvd_page.search_text("hanwha")
+    row_count = ipvd_page.validate_device_table_contents(1, "Hanwha")
 
 
 if __name__ == "__main__":
     print("Running test_ipvd.py")
-    # ipvd_page_loads_without_login()
-    # ipvd_page_loads_while_logged_in()
+    ipvd_page_loads_without_login()
+    ipvd_page_loads_while_logged_in()
     ipvd_landing_page_actions()
+    text_search_manufacturer()
 
