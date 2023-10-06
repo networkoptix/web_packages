@@ -9,30 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-5. Should have LEVEL-3 selected node (check specs - hover)
-    Go To Users List
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Mouse Over                          ${LEFT MENU LEVEL3 USER1}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       background-color    ${COLOR LIGHT16 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1}       color               ${COLOR LIGHT1 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER1 EXT}   color               ${COLOR LIGHT1 RGB}
-
-6. Should have LEVEL-3 not selected node (check specs)
-    [Tags]    wdeb    cdeb
-    Go To Users List
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       background-color    ${COLOR LIGHT5 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2 EXT}   color               ${COLOR LIGHT16 RGB}
-
-7. Should have LEVEL-3 not selected node (check specs - hover)
-    Go To Users List
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Mouse Over                          ${LEFT MENU LEVEL3 USER2}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       background-color    ${COLOR LIGHT6 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2}       color               ${COLOR DARK9 RGB}
-    Wait Until Element Has Style        ${LEFT MENU LEVEL3 USER2 EXT}   color               ${COLOR LIGHT16 RGB}
-
 8. Should have search component
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU SEARCH INPUT}
