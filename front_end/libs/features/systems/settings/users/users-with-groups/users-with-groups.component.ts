@@ -4,8 +4,9 @@ import { debounceTime } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
-import { NxUser } from '@services/system-user.types';
+import { NxUser, UserPermissionDescription } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
+import { alphabeticalSort } from '@utils/general';
 import { NxFormBuilder, NxFormControl, NxFormGroup } from '@utils/reactive-form-builder';
 
 import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.component';
@@ -122,14 +123,39 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     }
 
     private processSelectedGroupsList(newList: string[], localOwner = false): void {
-        this.selectedGroupsList = (
-            (this.system.userManager as UserWithGroupsManager)?.userGroups || []
-        ).reduce((groups, { id, name, description }) => {
-            if (newList.includes(id)) {
-                groups.push({ name, description });
-            }
-            return groups;
-        }, []);
+        const builtInGroup: UserPermissionDescription[] = [];
+        const customGroup: UserPermissionDescription[] = [];
+        const ldapGroup: UserPermissionDescription[] = [];
+        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
+            ({ id, name, description, attributes, type }) => {
+                if (!newList.includes(id)) {
+                    return;
+                }
+
+                if (attributes === 'readonly') {
+                    builtInGroup.push({
+                        name,
+                        description,
+                    });
+                } else if (type === 'ldap') {
+                    ldapGroup.push({
+                        name,
+                        description,
+                    });
+                } else {
+                    customGroup.push({
+                        name,
+                        description,
+                    });
+                }
+            },
+            [],
+        );
+
+        // Each Permission option needs to be in alphabetical order in their respective category, builtInGroup is an exception
+        customGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
+        ldapGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
+        this.selectedGroupsList = builtInGroup.concat(customGroup, ldapGroup);
     }
 
     private processLdapGroups(groups: MultiSelectItem[], isLdap: boolean): MultiSelectItem[] {

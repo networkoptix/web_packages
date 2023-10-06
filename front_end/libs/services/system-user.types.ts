@@ -69,6 +69,11 @@ export interface UserGroupDropdown {
     tooltip?: string;
 }
 
+export interface UserPermissionDescription {
+    description: string;
+    name: string;
+}
+
 export enum UserType {
     cloud = 'cloud',
     ldap = 'ldap',
