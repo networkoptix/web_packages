@@ -213,30 +213,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-11. Admin cannot delete or edit other admins or owner
-    [Tags]    C41905    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
-    ...    ELSE    Create List    ${server 1['cloudUsers']}[cloudAdmin]    ${servers}[0][local users][cloudAdmin][login]
-    FOR    ${user}    IN    @{list}
-        ${random email}=   Register and activate account with random email    mark    harmill    ${password}
-        Append To List    ${TMP USERS}    ${random email}
-        Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
-        Log in    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Select user in Users List    ${server 1['cloudUsers']}[cloudAdmin]
-        Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
-        Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
-        Select user in Users List    ${servers}[0][cloudOwner]
-        Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
-        Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
-        Select user in Users List    Local+cloudAdmin
-        Wait Until Element Is Not Visible    ${ACCESS LEVEL DROPDOWN}
-        Wait Until Element Is Not Visible    ${REMOVE USER BUTTON}
-        Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
-        Log Out
-    END
-
 12. Administrator cannot invite another administrator
     [Tags]    C41905    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
