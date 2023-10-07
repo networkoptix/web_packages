@@ -14,6 +14,10 @@ from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
+from login import LoginDialog
+from system_admin import SystemAdmin
+from resource_import import get_chrome
+from variables import ENV
 
 _CLOUD_API = CloudPortalAPI()
 _DOCKER_API = DockerApi()
@@ -78,6 +82,11 @@ class Suite:
             server._cloud_advanced_viewer = cloud_users.get('advancedViewer')
             server._cloud_live_viewer = cloud_users.get('liveViewer')
             server._cloud_custom_user = cloud_users.get('custom')
+        with get_chrome() as driver:
+            url = ENV + f"/systems/{server.id}"
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(cloud_owner.email, cloud_owner.password)
+            SystemAdmin(driver).wait_until_system_is_loaded()
         return server
 
     def create_cloud_users(self, permissions: Optional[Collection[str]] = None):

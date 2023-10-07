@@ -208,6 +208,17 @@ class SystemAdmin:
                     raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
                 self.driver.refresh()
 
+    def wait_until_system_is_loaded(self):
+        locator = "//span[contains(text(), 'Not able to load system')]"
+        try:
+            robot_keywords.wait_until_page_contains_element(self.driver, locator, timeout=10)
+        except:
+            pass
+        else:
+            robot_keywords.wait_until_page_does_not_contain_element(self.driver, locator, timeout=90)
+            self.refresh()
+            robot_keywords.wait_until_page_contains_element(self.driver, "//span[contains(text(), 'Enable auto discovery')]")
+        
     def _wait_until_page_loaded(self):
         Page(self.driver, "//nx-system-settings-component").wait_until_exists()
         TextField(self.driver, "//div/nx-editable-heading//nx-text-editable").wait_until_visible()
