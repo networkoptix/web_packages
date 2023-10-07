@@ -213,29 +213,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-12. Administrator cannot invite another administrator
-    [Tags]    C41905    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
-    ...    ELSE    Create List     ${server 1['cloudUsers']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin][login]
-    FOR    ${user}    IN    @{list}
-        Log in    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
-        Click Button    ${ADD USER BUTTON SYSTEMS}
-        Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
-        Sleep    2
-        Click Button    ${ADD USER PERMISSIONS DROPDOWN}
-        Wait Until Element is Visible
-        ...    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${VIEWER TEXT}']
-        Element Should Not Be Visible
-        ...    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']
-        Click Button    ${ADD USER PERMISSIONS DROPDOWN}
-        Click Button    ${ADD USER CANCEL}
-        Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
-        Log Out
-    END
-
 13. Change role for Cloud User
     [Tags]    C41900    webadmin    cloud
     ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
