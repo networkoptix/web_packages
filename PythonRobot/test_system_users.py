@@ -329,14 +329,7 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
             system_left_menu.add_users_button().wait_until_visible()
             system_left_menu.get_user_with_email(admin.email).click()
             system_user = SystemUsers(driver)
-            # --- this part tests that the owner can't remove himself or change his permissions
-            # The sleep and refresh are to bypass bug CLOUD-11525
-            time.sleep(5)
-            driver.refresh()
-            system_user.remove_user_button().wait_until_not_visible(timeout=10)
-            system_user.access_level_dropdown().wait_until_not_visible(timeout=10)
             assert system_user.user_header_text().get_text() == admin.email
-            # ---
             # Each registered user is tested to make sure you can't share the system with them
             # hacking the string. Ideally should call rb.EMAIL_IS_ALREADY_REGISTERED_TEXT, but thats broken
             error_msg = f"This email has already been registered in the {server.name} system"
@@ -364,6 +357,32 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
         else:
             print("PASS")
 
+def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
+    """
+    9. Cloud Admin/administrator cannot delete or edit self
+    [Tags]    C41904    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        admin = server.get_cloud_admin()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().wait_until_visible()
+            system_left_menu.get_user_with_email(admin.email).click()
+            system_user = SystemUsers(driver)
+            system_user.remove_user_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_not_visible()
+            assert system_user.user_header_text().get_text() == admin.email
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -383,3 +402,4 @@ if __name__ == "__main__":
         disconnect_should_remove_system(cloud_server)
         owner_cannot_edit_users_via_share(cloud_server)
         cloud_admin_cannot_edit_users_via_share(cloud_server)
+        cloud_admin_cannot_delete_or_edit_self(cloud_server)
