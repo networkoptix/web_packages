@@ -11,7 +11,6 @@ from landing_page import LandingPage
 from login import LoginDialog
 from register_form import RegisterForm
 from resource_import import get_chrome
-from resource_import import get_headless_chrome
 from resource_import import register_and_activate_account
 from resource_import import get_random_email
 from system_admin import SystemAdmin
@@ -24,86 +23,93 @@ password = "qweasd 123"
 
 CLOUD_API = CloudPortalAPI()
 rb = RobotVariables("en_US")
-viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
-
+permissions = keywords.permissions
+viewer_permissions = permissions['viewer']
+admin_permissions = permissions['cloudAdmin']
 
 def owner_can_remove_user(server: Mediaserver):
     """
     15. Delete user works
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
     """
-    driver = get_headless_chrome()
-    # TODO: local admin and owner need to also be tested to match robot test case
-    owner = server.get_cloud_owner()
-    cloud_auth = (owner.email, owner.password)
-    email = get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    url = ENV + f"/systems/{server.id}"
-    driver.get(url)
-    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-    header = HeaderNav(driver)
-    header.account_dropdown()
-    SystemAdmin(driver)
-    left_menu = SystemLeftMenu(driver)
-    time.sleep(1)
-    left_menu.users_button().click()
-    left_menu.get_user_with_email(email).click()
-    users_page = SystemUsers(driver)
-    users_page.remove_user_button().click()
-    users_page.remove_user_modal_button().click()
-    time.sleep(1)
-    header.log_out()
-    LandingPage(driver)
-    header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(email, password)
-    header.account_dropdown()
-    SystemsPage(driver).no_systems()
-    driver.quit()
-    print("pass owner")
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            header = HeaderNav(driver)
+            header.account_dropdown()
+            SystemAdmin(driver)
+            left_menu = SystemLeftMenu(driver)
+            time.sleep(1)
+            left_menu.users_button().click()
+            left_menu.get_user_with_email(email).click()
+            users_page = SystemUsers(driver)
+            users_page.remove_user_button().click()
+            users_page.remove_user_modal_button().click()
+            time.sleep(1)
+            header.log_out()
+            LandingPage(driver)
+            header.log_in_button().click()
+            LoginDialog(driver).basic_cloud_login(email, password)
+            header.account_dropdown()
+            SystemsPage(driver).no_systems()
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("pass owner")
 
 def cloud_admin_can_remove_user(server: Mediaserver):
     """
     15. Delete user works
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
     """
-    driver = get_headless_chrome()
-    # TODO: local admin and owner need to also be tested to match robot test case
-    owner = server.get_cloud_owner()
-    cloud_auth = (owner.email, owner.password)
-    email = get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    url = ENV + f"/systems/{server.id}"
-    driver.get(url)
-    cloud_admin = server.get_cloud_admin()
-    LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
-    header = HeaderNav(driver)
-    header.account_dropdown()
-    SystemAdmin(driver)
-    left_menu = SystemLeftMenu(driver)
-    time.sleep(1)
-    left_menu.users_button().click()
-    left_menu.get_user_with_email(email).click()
-    users_page = SystemUsers(driver)
-    users_page.remove_user_button().click()
-    users_page.remove_user_modal_button().click()
-    time.sleep(1)
-    header.log_out()
-    LandingPage(driver)
-    header.log_in_button().click()
-    LoginDialog(driver).basic_cloud_login(email, password)
-    header.account_dropdown()
-    SystemsPage(driver).no_systems()
-    driver.quit()
-    print("pass admin")
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            cloud_admin = server.get_cloud_admin()
+            LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
+            header = HeaderNav(driver)
+            header.account_dropdown()
+            SystemAdmin(driver)
+            left_menu = SystemLeftMenu(driver)
+            time.sleep(1)
+            left_menu.users_button().click()
+            left_menu.get_user_with_email(email).click()
+            users_page = SystemUsers(driver)
+            users_page.remove_user_button().click()
+            users_page.remove_user_modal_button().click()
+            time.sleep(1)
+            header.log_out()
+            LandingPage(driver)
+            header.log_in_button().click()
+            LoginDialog(driver).basic_cloud_login(email, password)
+            header.account_dropdown()
+            SystemsPage(driver).no_systems()
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("pass admin")
 
 
 def share_with_registered_user_sends_notification(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
-    driver = get_headless_chrome()
-    email = get_random_email(sendemail=True)
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
+    with get_chrome() as driver:
+        email = get_random_email(sendemail=True)
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
     owner = server.get_cloud_owner()
     cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
@@ -112,8 +118,6 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
     mail_box = Email()
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
-
-    driver.quit()
     print("pass")
 
 
@@ -151,41 +155,48 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
 
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
-    driver = get_headless_chrome()
-    email_con = Email()
-    email = email_con.get_random_email(sendemail=True)
-    owner = server.get_cloud_owner()
-    cloud_auth = (owner.email, owner.password)
-    CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    email_id = email_con.wait_for_email(email)
-    body = email_con.get_body(email_id)
-    links = email_con.get_nx_links_from_email(body)
-    driver.get(links)
-    RegisterForm(driver).email_input_locked()
-    driver.quit()
-    print("pass")
+    with get_chrome() as driver:
+        email_con = Email()
+        email = email_con.get_random_email(sendemail=True)
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+        email_id = email_con.wait_for_email(email)
+        body = email_con.get_body(email_id)
+        links = email_con.get_nx_links_from_email(body)
+        driver.get(links)
+        try:
+            RegisterForm(driver).email_input_locked()
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("pass")
 
 
 def share_with_registered_user_works(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
-    driver = get_headless_chrome()
-    email = get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    owner = server.get_cloud_owner()
-    cloud_auth = (owner.email, owner.password)
-    CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
-    url = ENV + f"/systems/{server.id}"
-    driver.get(url)
-    LoginDialog(driver).basic_cloud_login(owner.email, password)
-    header = HeaderNav(driver)
-    header.account_dropdown()
-    SystemAdmin(driver)
-    left_menu = SystemLeftMenu(driver)
-    left_menu.users_button().click()
-    assert left_menu.get_user_with_email(email)
-
-    driver.quit()
-    print("pass")
+    with get_chrome() as driver:
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, password)
+            header = HeaderNav(driver)
+            header.account_dropdown()
+            SystemAdmin(driver)
+            left_menu = SystemLeftMenu(driver)
+            left_menu.users_button().click()
+            assert left_menu.get_user_with_email(email)
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("pass")
 
 def cancel_disconnect(server: Mediaserver):
     """
