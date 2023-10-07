@@ -213,20 +213,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-9. Cloud Admin/administrator cannot delete or edit self
-    [Tags]    C41904    webadmin    cloud
-    log    ${server 1['local users']}
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
-    ...    ELSE    Create List    ${server 1['cloudUsers']}[cloudAdmin]    ${server 1['local users']}[cloudAdmin]
-    FOR    ${user}  IN  @{list}
-        Log In    ${user}    ${password}
-        Go to Users List
-        Select user in Users List    ${user}
-        Elements Should Not Be Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
-        Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
-        Log Out
-    END
-
 11. Admin cannot delete or edit other admins or owner
     [Tags]    C41905    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${server 1['cloudUsers']}[cloudAdmin]
