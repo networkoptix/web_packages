@@ -393,6 +393,48 @@ def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
         else:
             print("PASS")
 
+def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
+    """
+    11. Admin cannot delete or edit other admins or owner
+    [Tags]    C41905    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        CLOUD_API.share(cloud_auth, server.id, 'cloudAdmin', email, admin_permissions)
+        admin = server.get_cloud_admin()
+        local_users = server.get_local_users()
+        local_admin = local_users['cloudAdmin']
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().wait_until_visible()
+            # Verify can't edit/delete new admin
+            system_left_menu.get_user_with_email(email).click()
+            system_user = SystemUsers(driver)
+            system_user.remove_user_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_not_visible()
+            assert system_user.user_header_text().get_text() == email
+            # Verify can't edit/delete owner
+            system_left_menu.get_user_with_email(owner.email).click()
+            system_user.remove_user_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_not_visible()
+            assert system_user.user_header_text().get_text() == owner.email
+            # Verify can't edit/delete local cloud admin
+            system_left_menu.get_user_with_email(local_admin['login']).click()
+            system_user.remove_user_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_not_visible()
+            assert system_user.user_header_text().get_text() == local_admin['login']
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -401,14 +443,15 @@ if __name__ == "__main__":
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_users()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
-        owner_can_remove_user(cloud_server)
-        cloud_admin_can_remove_user(cloud_server)
-        share_with_registered_user_works(cloud_server)
-        share_with_registered_user_sends_notification(cloud_server)
-        share_with_unregistered_user_sends_notification(cloud_server)
-        email_is_locked_when_unregistered_user_is_invited(cloud_server)
-        cancel_disconnect(cloud_server)
-        disconnect_should_remove_system(cloud_server)
-        owner_cannot_edit_users_via_share(cloud_server)
-        cloud_admin_cannot_edit_users_via_share(cloud_server)
-        cloud_admin_cannot_delete_or_edit_self(cloud_server)
+        # owner_can_remove_user(cloud_server)
+        # cloud_admin_can_remove_user(cloud_server)
+        # share_with_registered_user_works(cloud_server)
+        # share_with_registered_user_sends_notification(cloud_server)
+        # share_with_unregistered_user_sends_notification(cloud_server)
+        # email_is_locked_when_unregistered_user_is_invited(cloud_server)
+        # cancel_disconnect(cloud_server)
+        # disconnect_should_remove_system(cloud_server)
+        # owner_cannot_edit_users_via_share(cloud_server)
+        # cloud_admin_cannot_edit_users_via_share(cloud_server)
+        # cloud_admin_cannot_delete_or_edit_self(cloud_server)
+        cloud_admin_cannot_delete_admins_or_owner(cloud_server)

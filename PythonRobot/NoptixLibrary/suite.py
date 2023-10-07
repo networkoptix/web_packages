@@ -235,7 +235,7 @@ class Mediaserver:
                 )
             local_users.update(
                 {permission: {
-                    "login": "Local" + permission,
+                    "login": f"Local+{permission}",
                     "email": f"noptixautoqa+local_{permission}@gmail.com",
                     },
                 }
