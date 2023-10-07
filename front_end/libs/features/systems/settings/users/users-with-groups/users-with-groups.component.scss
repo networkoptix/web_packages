@@ -75,16 +75,18 @@
 }
 
 .group-list-item {
-    display: flex;
-    align-items: center;
+    margin: 15px 0;
+
     .group-name {
-     @include mixins.ellipsis;
+        @include mixins.ellipsis;
+        font-family: typography.$font-family-medium;
+        font-size: 13px !important;
+        margin-bottom: 11px;
     }
     .help-block {
         display: block;
         background-color: transparent;
         color: var(--light16);
-        padding-left: .5rem;
     }
 }
 
