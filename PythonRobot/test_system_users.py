@@ -104,7 +104,6 @@ def cloud_admin_can_remove_user(server: Mediaserver):
         else:
             print("pass admin")
 
-
 def share_with_registered_user_sends_notification(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
     with get_chrome() as driver:
@@ -120,7 +119,6 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
     print("pass")
 
-
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
     email = get_random_email(sendemail=True)
@@ -128,10 +126,8 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     rb = RobotVariables("en_US")
-
     email_con = Email()
     email_id = email_con.wait_for_email(email)
-
     body = email_con.get_body(email_id)
     email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
@@ -139,7 +135,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     subject = rb.replace_nested_variables(subject)
     print(subject)
     assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
-
+    links = email_con.get_links_from_email(body)
     expected_links = [
         f'mailto:{owner.email}',
         rb.SUPPORT_URL,
@@ -149,9 +145,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     ]
     email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)
-
     print("pass")
-
 
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
@@ -172,7 +166,6 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
             raise RuntimeError("FAIL")
         else:
             print("pass")
-
 
 def share_with_registered_user_works(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
