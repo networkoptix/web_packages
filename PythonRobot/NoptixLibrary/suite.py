@@ -169,6 +169,9 @@ class Mediaserver:
                 raise RuntimeError("System is not connected to Cloud")
             raise RuntimeError("System does not have cloud custom user")
         return self._cloud_custom_user
+    
+    def get_local_users(self):
+        return self._local_users()
 
     def get_server_name(self) -> str:
         server_info = self.api.get_server_info()
@@ -202,9 +205,34 @@ class Mediaserver:
         for index, docker_port in enumerate(data['port']):
             self._port_mapping[vms_default_port + index] = f'https://{_DOCKER_API.host_ip}:{docker_port}'
         # Set up a local system.
-        self.api = ServerApi(self._port_mapping[vms_default_port], password=INITIAL_PASSWORD)
-        self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
+        server_api_port, *_ = data['port']
+        server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
+        self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
+        self._api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
+        self._local_users = self.create_local_users()
         return self
+
+    def create_local_users(self):
+        local_users = {}
+        permissions = _GENERIC_KEYWORDS.permissions
+        for permission in permissions:
+            self._api.save_user(
+                "Local+" + permission,
+                permissions[permission],
+                f"noptixautoqa+local_{permission}@gmail.com",
+                "Local User",
+                DEFAULT_PASSWORD,
+                is_cloud=False,
+                )
+            local_users.update(
+                {permission: {
+                    "login": "Local" + permission,
+                    "email": f"noptixautoqa+local_{permission}@gmail.com",
+                    },
+                }
+            )
+        return local_users
+
 
     def tear_down(self):
         if self._cloud_owner is not None:
