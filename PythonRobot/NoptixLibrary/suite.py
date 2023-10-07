@@ -171,7 +171,7 @@ class Mediaserver:
         return self._cloud_custom_user
     
     def get_local_users(self):
-        return self._local_users()
+        return self._local_users
 
     def get_server_name(self) -> str:
         server_info = self.api.get_server_info()
