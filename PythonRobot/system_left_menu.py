@@ -72,6 +72,10 @@ class SystemLeftMenu:
         option.wait_until_visible()
         return DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']/..")
 
+    def permissions_dropdown_unavailable(self, permissions):
+        option = DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
+        option.wait_until_not_visible()
+        
     def add_user_modal_close_button(self):
         return Button(self.driver, "//form[@name='addUserForm']//button[@data-testid='closeAddUser']")
 

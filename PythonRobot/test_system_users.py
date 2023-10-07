@@ -436,6 +436,30 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
         else:
             print("PASS")
 
+def cloud_admin_cannot_invite_admin(server: Mediaserver):
+    """
+    12. Administrator cannot invite another administrator
+    [Tags]    C41905    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        admin = server.get_cloud_admin()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().click()
+            system_left_menu.add_user_permissions_dropdown().click()
+            system_left_menu.permissions_dropdown_option(rb.VIEWER_TEXT).wait_until_visible()
+            system_left_menu.permissions_dropdown_unavailable(rb.ADMIN_TEXT)
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")   
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -455,3 +479,4 @@ if __name__ == "__main__":
         cloud_admin_cannot_edit_users_via_share(cloud_server)
         cloud_admin_cannot_delete_or_edit_self(cloud_server)
         cloud_admin_cannot_delete_admins_or_owner(cloud_server)
+        cloud_admin_cannot_invite_admin(cloud_server)
