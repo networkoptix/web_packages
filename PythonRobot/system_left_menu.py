@@ -12,6 +12,7 @@ from generic_elements import MenuNode
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TextField
+from generic_elements import Pane
 from variables import ENV
 
 
@@ -55,6 +56,9 @@ class SystemLeftMenu:
     def update_servers_list(self):
         self.servers = self.driver.find_elements(By.XPATH, "//div[@id='level3servers']//nx-level-3-item")
 
+    def add_user_modal(self):
+        return Pane(self.driver, "//form[@name='addUserForm']")
+
     def add_users_button(self):
         return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
     
@@ -75,9 +79,12 @@ class SystemLeftMenu:
     def permissions_dropdown_unavailable(self, permissions):
         option = DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
         option.wait_until_not_visible()
-        
+
     def add_user_modal_close_button(self):
         return Button(self.driver, "//form[@name='addUserForm']//button[@data-testid='closeAddUser']")
+
+    def add_user_modal_cancel_button(self):
+        return Button(self.driver, "//nx-cancel-button[@data-testid='cancelAddUserBtn']/button")
 
     def share_system_with_user(self, email, permissions):
         self.add_users_button().click()

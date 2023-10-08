@@ -576,6 +576,36 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
             server.start()
             CLOUD_API.delete_account(email, password)
 
+def add_user_button_opens_cancellable_modal(server: Mediaserver):
+    """
+    5. Share button - opens dialog
+    [Tags]    C41888    webadmin    cloud
+    6. Check Add User Cancel and 'X' buttons
+    [Tags]    C78228    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().click()
+            system_left_menu.add_user_modal().wait_until_visible()
+            system_left_menu.add_user_modal_close_button().click()
+            system_left_menu.add_user_modal().wait_until_not_visible()
+            system_left_menu.add_users_button().click()
+            system_left_menu.add_user_modal().wait_until_visible()
+            system_left_menu.add_user_modal_cancel_button().click()
+            system_left_menu.add_user_modal().wait_until_not_visible()
+        except:
+            driver.save_screenshot('error.png')
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")   
+
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -602,3 +632,4 @@ if __name__ == "__main__":
         user_data_should_match_registration(cloud_server)
         owner_can_unlink_offline_system_from_cloud(cloud_server_2)
         viewer_can_remove_offline_system_from_account(cloud_server_2)
+        add_user_button_opens_cancellable_modal(cloud_server)
