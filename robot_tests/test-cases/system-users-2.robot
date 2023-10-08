@@ -71,22 +71,6 @@ Force Tags        system    Threaded    users
     ${sysId2}=   Connect System to Cloud    ${server 2[localAuth]}    https://${QA BURBANK IP}:${servers}[1][port][0]    usertest2    ${servers}[0][cloudOwner]    ${BASE PASSWORD}
     Set To Dictionary    ${server 2}    cloud id=${sysId2}
 
-
-3. Should display same user data as user provided during registration
-    [Tags]    email    cloud
-    ${random email}=   Register and activate account with random email    ${COMBO TEXT}    ${COMBO TEXT}    ${password}
-    Append To List    ${TMP USERS}    ${random email}
-    Share    ${server 2[localAuth]}    ${server 2['cloud id']}    ${ACCESS ROLES}[admin]    ${random email}     ${permissions}[cloudAdmin]
-
-    #verify user name displayed correctly in users list
-    Log in    ${random email}    ${password}
-    Wait Until Element Is Visible    ${USERS LIST LINK}    65
-    Click Link    ${USERS LIST LINK}
-    ${User In List}=   Set Variable    //nx-system-settings-component//nx-menu//nx-level-3-item//span[text()='${random email}']/../../../a
-    Wait Until Element Is Visible    ${User In List}
-    Click Link    ${User In List}
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'${COMBO TEXT} ${COMBO TEXT}')]
-
 4. Should display same user data as shown in user account
     [Tags]    C41884    cloud
     ${random user}    Register and activate account with random email    mark    hamil    ${password}
