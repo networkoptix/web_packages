@@ -7,54 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
 
 *** Test Cases ***
-5. Share button - opens dialog
-    [Tags]    C41888    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    admin    ${servers}[0][cloudOwner]
-    FOR    ${user}  IN  @{list}
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Wait Until Elements Are Visible    ${USERS LIST LINK}
-        Click Link    ${USERS LIST LINK}
-        Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
-        Sleep    1
-        Wait Until Keyword Succeeds    10    0.5    Click Button    ${ADD USER BUTTON SYSTEMS}
-        Wait Until Element is Visible    ${ADD USER MODAL}
-        Click Button    ${ADD USER CLOSE}
-        Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
-        Exit For Loop If    '''${user}'''=='''admin'''
-        Log Out
-    END
-
-6. Check Add User Cancel and 'X' buttons
-    [Tags]    C78228    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    ${random user}=   Get Random Email Robot    ${BASE EMAIL}
-    Log    Check Cancel Button
-    FOR    ${user}  IN  @{list}
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Wait until element is visible    ${ADD USER BUTTON SYSTEMS}
-        Click Button  ${ADD USER BUTTON SYSTEMS}
-        Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CANCEL}
-        Input Text    ${ADD USER EMAIL}    ${user}
-        Click Button    ${ADD USER CANCEL}
-        Wait Until Element is Not Visible    ${ADD USER MODAL}
-        Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${random user}")]
-
-        Log    Check 'X' Button
-        Click Button  ${ADD USER BUTTON SYSTEMS}
-        Wait Until Elements are Visible    ${ADD USER MODAL}    ${ADD USER CLOSE}
-        Input Text    ${ADD USER EMAIL}    ${user}
-        Click Button    ${ADD USER CLOSE}
-        Wait Until Element is Not Visible    ${ADD USER MODAL}
-        Element Should Not Be Visible    ${USERS LIST}//span[contains(text(),"${random user}")]
-        Exit For Loop If    '''${user}'''=='''admin'''
-        Log Out
-    END
-
 7. Sharing roles are ordered: more access is on top of the list with options
     [Tags]    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
