@@ -131,6 +131,9 @@ class Mediaserver:
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
 
+    def start(self):
+        _DOCKER_API.start_container(self._container_id)
+
     def connect_to_cloud(self, cloud_owner: 'CloudAccount'):
         bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
         self.api.api_connect_to_cloud(bind_info)
