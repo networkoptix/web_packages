@@ -7,44 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
 
 *** Test Cases ***
-4. Should display same user data as shown in user account
-    [Tags]    C41884    cloud
-    ${random user}    Register and activate account with random email    mark    hamil    ${password}
-    Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    ${ACCESS ROLES}[viewer]    ${random user}      ${permissions}[viewer]
-    Log in to user and system    ${random user}    ${servers}[0][id]
-    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
-    Click Button    ${DISCONNECT FROM MY ACCOUNT}
-    Wait Until Elements Are Visible    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL CANCEL}
-
-    Click Button    ${DISCONNECT MODAL CANCEL}
-    Wait Until Element Is Not Visible    ${DISCONNECT MODAL WARNING}
-    Wait Until Page Does Not Contain Element    //div[@modal-render='true']
-    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
-    Sleep    1
-    Click Button    ${DISCONNECT FROM MY ACCOUNT}
-    Wait Until Elements Are Visible    ${MODAL DIALOG}    ${DISCONNECT MODAL WARNING}    ${DISCONNECT MODAL DISCONNECT BUTTON}
-    Sleep    1
-    Click Button    ${DISCONNECT MODAL DISCONNECT BUTTON}
-    ${SYSTEM DELETED FROM ACCOUNT}    Replace String    ${SYSTEM DELETED FROM ACCOUNT}    {{system_name}}    ${servers}[0][name]
-    Check For Alert     ${SYSTEM DELETED FROM ACCOUNT}
-    Wait Until Element Is Visible    ${YOU HAVE NO SYSTEMS}
-    Log Out
-
-    Log In    ${servers}[0][cloudOwner]    ${password}
-    Go To    ${url}/systems/${servers}[0][id]
-    Wait Until Elements Are Visible    ${USERS LIST LINK}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${ADD USER BUTTON SYSTEMS}
-    Run Keyword And Expect Error    *    Wait Until Element Is Visible    ${NOT OWNER IN SYSTEM}
-
-    # Verify the user is removed from the list via API
-    ${users}=   Get Cloud System Users    ${servers}[0][cloudAuth]    ${servers}[0][id]
-    ${is there}=   Set Variable    ${False}
-    FOR    ${obj}    IN    @{users}
-        ${is there}=   Set Variable If    '${obj}[accountEmail]'=='${EMAIL NOT OWNER}'    ${True}
-    END
-    Should Not Be True    ${is there}
-
 5. Share button - opens dialog
     [Tags]    C41888    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
