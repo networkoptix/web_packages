@@ -35,6 +35,9 @@ class SystemAdmin:
     def disconnect_from_cloud_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(),'{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
+    
+    def disconnect_system_modal_button(self):
+        return Button(self.driver, "//nx-process-button[@data-testid='disconnectSystemBtn']//button")
 
     def disconnect_modal_disconnect_button(self):
         translated_xpath = self.rb.replace_nested_variables(
@@ -82,6 +85,9 @@ class SystemAdmin:
     def merge_with_another_system_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[span[text()='{MERGE_SYSTEM_BUTTON_TEXT}']]")
         return Button(self.driver, translated_xpath)
+    
+    def system_offline_text(self):
+        return Button(self.driver, f"//div[contains(text(),'{self.rb.SYSTEM_IS_OFFLINE_TEXT}')]")
 
     def ensure_system_online(self, system_name: str, timeout = 10.0):
         error_message = f"System {system_name} is offline and cannot be merged with the current one"

@@ -497,6 +497,46 @@ def user_data_should_match_registration(server: Mediaserver):
             print("PASS")
             CLOUD_API.delete_account(email, password)
 
+def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
+    """
+    2. Owner / Admin can unlink offline System from Cloud / Account
+    [Tags]    C41897    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+        server.stop()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_admin = SystemAdmin(driver)
+            system_admin.system_offline_text().wait_until_visible(timeout=65)
+            system_admin.disconnect_from_cloud_button().click()
+            system_admin.disconnect_system_modal_button().click()
+            system_admin.disconnect_from_cloud_toast_notification()
+            HeaderNav(driver).log_out()
+            driver.get(f"{ENV}/systems")
+            LoginDialog(driver).basic_cloud_login(email, password)
+            SystemsPage(driver).no_systems().wait_until_visible()
+        except:
+            driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
+            server.start()
+            time.sleep(10)
+            server.connect_to_cloud(owner)
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
+            server.start()
+            time.sleep(10)
+            server.connect_to_cloud(owner)
+            CLOUD_API.delete_account(email, password)
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -504,6 +544,8 @@ if __name__ == "__main__":
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_users()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
+        cloud_owner_2 = suite.create_cloud_account()
+        cloud_server_2 = suite.create_cloud_server(cloud_owner_2, suite_name)
         owner_can_remove_user(cloud_server)
         cloud_admin_can_remove_user(cloud_server)
         share_with_registered_user_works(cloud_server)
@@ -518,3 +560,4 @@ if __name__ == "__main__":
         cloud_admin_cannot_delete_admins_or_owner(cloud_server)
         cloud_admin_cannot_invite_admin(cloud_server)
         user_data_should_match_registration(cloud_server)
+        owner_can_unlink_offline_system_from_cloud(cloud_server_2)
