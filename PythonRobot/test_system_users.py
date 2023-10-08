@@ -61,9 +61,11 @@ def owner_can_remove_user(server: Mediaserver):
             SystemsPage(driver).no_systems()
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("pass owner")
+            CLOUD_API.delete_account(email, password)
 
 def cloud_admin_can_remove_user(server: Mediaserver):
     """
@@ -100,9 +102,11 @@ def cloud_admin_can_remove_user(server: Mediaserver):
             SystemsPage(driver).no_systems()
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("pass admin")
+            CLOUD_API.delete_account(email, password)
 
 def share_with_registered_user_sends_notification(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
@@ -118,6 +122,7 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     mail_box = Email()
     assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
     print("pass")
+    CLOUD_API.delete_account(email, password)
 
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
@@ -146,6 +151,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)
     print("pass")
+    CLOUD_API.delete_account(email, password)
 
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
@@ -163,9 +169,11 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
             RegisterForm(driver).email_input_locked()
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("pass")
+            CLOUD_API.delete_account(email, password)
 
 def share_with_registered_user_works(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
@@ -187,9 +195,11 @@ def share_with_registered_user_works(server: Mediaserver):
             assert left_menu.get_user_with_email(email)
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("pass")
+            CLOUD_API.delete_account(email, password)
 
 def cancel_disconnect(server: Mediaserver):
     """
@@ -214,9 +224,11 @@ def cancel_disconnect(server: Mediaserver):
             system_admin.modal().wait_until_not_visible()
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("PASS")
+            CLOUD_API.delete_account(email, password)
 
 def disconnect_should_remove_system(server: Mediaserver):
     """
@@ -252,9 +264,11 @@ def disconnect_should_remove_system(server: Mediaserver):
             assert email not in system_left_menu.users
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("PASS")
+            CLOUD_API.delete_account(email, password)
 
 def owner_cannot_edit_users_via_share(server: Mediaserver):
     """
@@ -425,9 +439,11 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
             assert system_user.user_header_text().get_text() == local_admin['login']
         except:
             driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
             raise RuntimeError("FAIL")
         else:
             print("PASS")
+            CLOUD_API.delete_account(email, password)
 
 def cloud_admin_cannot_invite_admin(server: Mediaserver):
     """
