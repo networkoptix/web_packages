@@ -26,6 +26,9 @@ class SystemUsers:
     def user_header_text(self):
         return PageText(self.driver, "//nx-system-settings-component//nx-block/..//header//h2")
     
+    def user_name_text(self):
+        return PageText(self.driver, "//nx-system-settings-component//nx-block/..//header//span[contains(@class, 'user-name')]")
+    
     def access_level_dropdown(self):
         return DropDown(self.driver, "//nx-system-settings-component//nx-block/..//nx-section//button[@id='componentId']")
     

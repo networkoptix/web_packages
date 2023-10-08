@@ -468,6 +468,34 @@ def cloud_admin_cannot_invite_admin(server: Mediaserver):
         else:
             print("PASS")   
 
+def user_data_should_match_registration(server: Mediaserver):
+    """
+    3. Should display same user data as user provided during registration
+    [Tags]    email    cloud
+    """
+    combo_text = "Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이"
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, combo_text, combo_text, email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'cloudAdmin', email, admin_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(email, password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().wait_until_visible()
+            system_left_menu.get_user_with_email(email).click()
+            assert f"{combo_text} {combo_text}" in SystemUsers(driver).user_name_text().get_text()
+        except:
+            driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
+            CLOUD_API.delete_account(email, password)
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -489,3 +517,4 @@ if __name__ == "__main__":
         cloud_admin_cannot_delete_or_edit_self(cloud_server)
         cloud_admin_cannot_delete_admins_or_owner(cloud_server)
         cloud_admin_cannot_invite_admin(cloud_server)
+        user_data_should_match_registration(cloud_server)
