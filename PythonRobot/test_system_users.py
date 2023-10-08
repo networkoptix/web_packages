@@ -536,6 +536,46 @@ def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
             server.connect_to_cloud(owner)
             CLOUD_API.delete_account(email, password)
 
+def viewer_can_remove_offline_system_from_account(server: Mediaserver):
+    """
+    2. Owner / Admin can unlink offline System from Cloud / Account
+    [Tags]    C41898    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+        server.stop()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(email, password)
+            system_admin = SystemAdmin(driver)
+            system_admin.disconnect_from_account_button().click()
+            system_admin.disconnect_modal_warning().wait_until_visible()
+            system_admin.disconnect_modal_disconnect_button().click()
+            system_admin.disconnect_from_account_toast_notification(server.name).message()
+            SystemsPage(driver).no_systems().wait_until_visible(60)
+            HeaderNav(driver).log_out()
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().wait_until_visible()
+            system_left_menu.update_users_list()
+            assert email not in system_left_menu.users
+        except:
+            driver.save_screenshot('error.png')
+            CLOUD_API.delete_account(email, password)
+            server.start()
+            raise RuntimeError("FAIL")
+        else:
+            print("PASS")
+            server.start()
+            CLOUD_API.delete_account(email, password)
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -561,3 +601,4 @@ if __name__ == "__main__":
         cloud_admin_cannot_invite_admin(cloud_server)
         user_data_should_match_registration(cloud_server)
         owner_can_unlink_offline_system_from_cloud(cloud_server_2)
+        viewer_can_remove_offline_system_from_account(cloud_server_2)
