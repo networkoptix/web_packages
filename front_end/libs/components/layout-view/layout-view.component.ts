@@ -523,7 +523,7 @@ export class NxLayoutViewComponent {
 
         if (!details) {
             // Redirect to 404 if no layout or device found.
-            // await this.pageService.redirect404();
+            await this.pageService.redirect404();
         }
 
         let rotation = 0;
