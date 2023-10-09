@@ -9,14 +9,12 @@ from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from email_access import Email
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
-from NoptixLibrary.generic_keywords import GenericKeywords
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
 
 _CLOUD_API = CloudPortalAPI()
 _DOCKER_API = DockerApi()
-_GENERIC_KEYWORDS = GenericKeywords()
 
 
 class Suite:
@@ -54,7 +52,7 @@ class Suite:
         server = self.create_local_server(suite_name)
         server.connect_to_cloud(cloud_owner)
         for user in cloud_users:
-            _GENERIC_KEYWORDS.Add_user_to_cloud_system_if_not_there(
+            _CLOUD_API.add_user_to_cloud(
                 server.id,
                 user,
                 cloud_users[user].email,

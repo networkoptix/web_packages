@@ -321,26 +321,6 @@ class GenericKeywords:
             if user["accountEmail"] == email:
                 return user["accessRole"]
 
-    def User_Is_In_Cloud_System(self, email, systemId, auth):
-        users = self.cloud_api.get_cloud_system_users(auth, systemId)
-        for user in users:
-            if user["accountEmail"] == email:
-                return True
-
-    def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth, customPermissions):
-        isThere = self.User_Is_In_Cloud_System(email, systemId, auth)
-        if isThere:
-            logger.info(email + " already in system")
-        else:
-            r = self.cloud_api.share(
-                auth,
-                systemId,
-                accessRole,
-                email,
-                customPermissions,
-                )
-            logger.info(r)
-
     @contextmanager
     def _ssh_client(self):
         with paramiko.SSHClient() as ssh_client:

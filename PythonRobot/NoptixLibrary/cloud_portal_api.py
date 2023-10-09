@@ -550,6 +550,26 @@ class CloudPortalAPI(object):
         system_users_response.raise_for_status()
         return system_users_response.json()['sharing']
 
+    def _check_user_is_in_cloud(self, email, systemId, auth):
+        users = self.get_cloud_system_users(auth, systemId)
+        for user in users:
+            if user["accountEmail"] == email:
+                return True
+
+    def add_user_to_cloud(self, systemId, accessRole, email, auth, customPermissions):
+        in_cloud = self._check_user_is_in_cloud(email, systemId, auth)
+        if in_cloud:
+            logger.info(email + " already in system")
+        else:
+            r = self.share(
+                auth,
+                systemId,
+                accessRole,
+                email,
+                customPermissions,
+                )
+            logger.debug(r)
+
     def get_account_info(self, email, password):
         account_info_response = requests.get(
             f'{self.env}/cdb/account/get',
