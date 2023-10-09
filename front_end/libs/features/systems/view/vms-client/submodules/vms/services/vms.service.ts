@@ -3,8 +3,8 @@ import { computed, Injectable, signal } from '@angular/core';
 import { GUID, ms } from '@vms-client/utils/type-aliases';
 
 import { ViewCamera } from '../datatypes/Camera';
-import { SimpleTimeRange } from '../datatypes/ICamera';
 import { ViewMediaServer } from '../datatypes/IMediaServer';
+import type { BaseTimeRange } from '../datatypes/TimeRange';
 import { VMS_MODE, VmsState, VmsServerTimeInfo } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
 
@@ -132,11 +132,11 @@ export class VideoManagementSystemService {
         });
     }
 
-    setCameraRecords(range: SimpleTimeRange, records: SimpleTimeRange[]): void {
+    setCameraRecords(range: BaseTimeRange, records: BaseTimeRange[]): void {
         this.selectedCamera?.setRecords(range, records);
     }
 
-    addRecordsToSelectedCamera(records: SimpleTimeRange[]): void {
+    addRecordsToSelectedCamera(records: BaseTimeRange[]): void {
         if (this.state().mode !== VMS_MODE.NOT_INITIALIZED) {
             this.selectedCamera.pushRecordedChunks(records);
         } else {

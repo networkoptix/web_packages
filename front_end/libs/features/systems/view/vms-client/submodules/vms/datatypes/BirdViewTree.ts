@@ -1,7 +1,32 @@
 import { int, ms } from '@vms-client/utils/type-aliases';
 
-import { SimpleTimeRange, sTimeRangeCopy } from './ICamera';
-import { _getNextRecord } from './utils';
+import { TimeRangeUtils, newBaseTimeRange, BaseTimeRange } from './TimeRange';
+
+function getNextRecord(archive: BaseTimeRange[], t: ms): BaseTimeRange | null {
+    // binary search approach:
+    let l = 0;
+    let r = archive.length - 1;
+    while (l < r) {
+        const m = l + Math.floor((r - l) / 2);
+        const rec = archive[m];
+        const prevRec = m > 0 ? archive[m - 1] : null;
+        if (rec.start >= t && (!prevRec || prevRec.end <= t)) {
+            return rec;
+        }
+        if (rec.start > t) {
+            r = m < r ? m : r - 1;
+        } else {
+            l = m > l ? m : l + 1;
+        }
+    }
+    if (l === r && archive[l].start >= t) {
+        return archive[l];
+    }
+    return null;
+
+    // naive linear search approach:
+    // return archive.find(r => r.start >= t)
+}
 
 export interface SubrangeIndicies {
     firstIndex: int;
@@ -48,91 +73,77 @@ function binarySearch<T>(
 }
 
 export class BirdViewTreeNode {
-    protected _intervalCenterMs: ms;
-
-    public get startMs(): ms {
-        return this._startMs;
-    }
-
-    public get endMs(): ms {
-        return this._endMs;
-    }
+    private intervalCenterMs: ms;
 
     public get centerMs(): ms {
-        return this._intervalCenterMs;
-    }
-
-    public get depth(): int {
-        return this._depth;
+        return this.intervalCenterMs;
     }
 
     constructor(
-        protected _startMs: ms,
-        protected _endMs: ms,
-        protected _minGapMs: ms = Infinity,
-        protected _records: sTimeRangeCopy[] = [],
+        public startMs: ms,
+        public endMs: ms,
+        private minGapMs: ms = Infinity,
+        private records: BaseTimeRange[] = [],
         // eslint-disable-next-line @typescript-eslint/no-use-before-define
-        protected _zoomingRequiredCallback: BirdViewTree['_zoomingRequiredCallback'] = null,
-        protected _isPerfect: boolean = false,
-        protected _depth: int = 0,
-        protected _parent: BirdViewTreeNode = null,
-        protected _leftChild: BirdViewTreeNode = null,
-        protected _rightChild: BirdViewTreeNode = null,
+        private zoomingRequiredCallback: BirdViewTree['zoomingRequiredCallback'] = null,
+        private isPerfect: boolean = false,
+        private depth: int = 0,
+        private leftChild: BirdViewTreeNode = null,
+        private rightChild: BirdViewTreeNode = null,
     ) {
-        this._intervalCenterMs = this._startMs + (this._endMs - this._startMs) / 2;
+        this.intervalCenterMs = this.startMs + (this.endMs - this.startMs) / 2;
         // if (this._isPerfect) {
         //     console.log('perfection achieved at depth', this.depth)
         // }
     }
 
-    public setChild(
+    setChild(
         part: 'left' | 'right',
         minGapMs: ms,
-        records: sTimeRangeCopy[],
+        records: BaseTimeRange[],
         perfect: boolean = false,
     ): void {
-        if (part === 'left' && this._leftChild) {
+        if (part === 'left' && this.leftChild) {
             console.warn('attempt to reset left child', this);
             return;
         }
-        if (part === 'right' && this._rightChild) {
+        if (part === 'right' && this.rightChild) {
             console.warn('attempt to reset right child', this);
             return;
         }
 
-        const startMs = part === 'left' ? this._startMs : this._intervalCenterMs;
-        const endMs = part === 'left' ? this._intervalCenterMs : this._endMs;
+        const startMs = part === 'left' ? this.startMs : this.intervalCenterMs;
+        const endMs = part === 'left' ? this.intervalCenterMs : this.endMs;
         const child = new BirdViewTreeNode(
             startMs,
             endMs,
             minGapMs,
             records,
-            this._zoomingRequiredCallback,
+            this.zoomingRequiredCallback,
             perfect,
-            this._depth + 1,
-            this,
+            this.depth + 1,
         );
         if (part === 'left') {
-            this._leftChild = child;
+            this.leftChild = child;
             // console.log('LEFT child SET', this, child)
         } else {
-            this._rightChild = child;
+            this.rightChild = child;
             // console.log('RIGHT child SET', this, child)
         }
     }
 
-    public get archiveEnd(): ms {
-        if (this._rightChild) {
-            return this._rightChild.archiveEnd || this._records[this._records.length - 1]?.end;
+    private get archiveEnd(): ms {
+        if (this.rightChild) {
+            return this.rightChild.archiveEnd || this.records[this.records.length - 1]?.end;
         } else {
-            return this._records[this._records.length - 1]?.end;
+            return this.records[this.records.length - 1]?.end;
         }
     }
 
-    public getRecords(startMs: ms, endMs: ms, minGapMs: ms): sTimeRangeCopy[] {
+    getRecords(startMs: ms, endMs: ms, minGapMs: ms): BaseTimeRange[] {
         // console.log('GR', new Date(startMs), new Date(endMs))
         // console.log('GR', this.depth, this.startMs, this.endMs, '|',  this._minGapMs, '||', startMs, endMs, minGapMs)
-        if (startMs > this._endMs || endMs < this._startMs) {
+        if (startMs > this.endMs || endMs < this.startMs) {
             // console.warn('BirdViewTree::getRecords miss');
             return [];
         }
@@ -146,52 +157,52 @@ export class BirdViewTreeNode {
         //     console.log('narrowed end')
         // }
 
-        if (!this._isPerfect && minGapMs < this._minGapMs) {
+        if (!this.isPerfect && minGapMs < this.minGapMs) {
             // const zoomingRequired = false;
-            let result: sTimeRangeCopy[] = [];
+            let result: BaseTimeRange[] = [];
 
             const nextMinGap =
-                this._minGapMs === Infinity ? minGapMs : Math.floor(this._minGapMs / 2);
+                this.minGapMs === Infinity ? minGapMs : Math.floor(this.minGapMs / 2);
             // console.log('nextMinGap', nextMinGap)
 
-            if (startMs <= this._intervalCenterMs) {
+            if (startMs <= this.intervalCenterMs) {
                 // should look into the left subtree or request building such
-                if (!this._leftChild) {
+                if (!this.leftChild) {
                     // console.log('BirdViewTree::getRecords zooming required (LEFT)', this.depth, nextMinGap)
-                    if (this._zoomingRequiredCallback) {
-                        this._zoomingRequiredCallback(this, 'left', nextMinGap);
+                    if (this.zoomingRequiredCallback) {
+                        this.zoomingRequiredCallback(this, 'left', nextMinGap);
                     }
 
                     result = result.concat(
-                        this._records.filter(r => r.start < endMs && r.end > startMs),
+                        this.records.filter(r => r.start < endMs && r.end > startMs),
                     );
                 } else {
                     result = result.concat(
-                        this._leftChild.getRecords(
-                            Math.max(this._startMs, startMs),
-                            Math.min(endMs, this._intervalCenterMs),
+                        this.leftChild.getRecords(
+                            Math.max(this.startMs, startMs),
+                            Math.min(endMs, this.intervalCenterMs),
                             minGapMs,
                         ),
                     );
                 }
             }
 
-            if (endMs > this._intervalCenterMs) {
+            if (endMs > this.intervalCenterMs) {
                 // should look into the right subtree or request building such
-                if (!this._rightChild) {
+                if (!this.rightChild) {
                     // console.log('BirdViewTree::getRecords zooming required (RIGHT)', this.depth, nextMinGap)
-                    if (this._zoomingRequiredCallback) {
-                        this._zoomingRequiredCallback(this, 'right', nextMinGap);
+                    if (this.zoomingRequiredCallback) {
+                        this.zoomingRequiredCallback(this, 'right', nextMinGap);
                     }
 
                     result = result.concat(
-                        this._records.filter(r => r.start < endMs && r.end > startMs),
+                        this.records.filter(r => r.start < endMs && r.end > startMs),
                     );
                 } else {
                     result = result.concat(
-                        this._rightChild.getRecords(
-                            Math.max(this._intervalCenterMs, startMs),
-                            Math.min(this._endMs, endMs),
+                        this.rightChild.getRecords(
+                            Math.max(this.intervalCenterMs, startMs),
+                            Math.min(this.endMs, endMs),
                             minGapMs,
                         ),
                     );
@@ -200,7 +211,7 @@ export class BirdViewTreeNode {
 
             return result;
         } else {
-            const result = this._records.filter(r => r.start < endMs && r.end > startMs);
+            const result = this.records.filter(r => r.start < endMs && r.end > startMs);
             // if (this._isPerfect) {
             //     console.log('depth', this.depth, this._records.length, 'perfection', result.length, result[0], result[result.length - 1], '|', startMs, endMs)
             // }
@@ -214,68 +225,56 @@ export class BirdViewTreeNode {
 
 export class BirdViewTree {
     constructor(
-        protected _originalArchiveRange: SimpleTimeRange,
-        protected _originalArchive: SimpleTimeRange[] = [],
+        private originalArchiveRange: BaseTimeRange,
+        private originalArchive: BaseTimeRange[] = [],
     ) {
-        if (_originalArchiveRange) {
-            this._initTree();
+        if (originalArchiveRange) {
+            this.initTree();
         }
     }
 
-    protected _treeRoot: BirdViewTreeNode;
-    protected _newlyRecorded: SimpleTimeRange[] = [];
+    private treeRoot: BirdViewTreeNode;
+    private newlyRecorded: BaseTimeRange[] = [];
 
-    protected _initTree(): void {
-        this._treeRoot = new BirdViewTreeNode(
-            this._originalArchiveRange.start,
-            this._originalArchiveRange.end,
+    private initTree(): void {
+        this.treeRoot = new BirdViewTreeNode(
+            this.originalArchiveRange.start,
+            this.originalArchiveRange.end,
             Infinity,
             // the root should contain the single full-range record with no gaps,
-            [{ ...this._originalArchiveRange }],
-            this._zoomingRequiredCallback,
+            [{ ...this.originalArchiveRange }],
+            this.zoomingRequiredCallback,
         );
     }
 
-    public set newlyRecorded(nr: SimpleTimeRange[]) {
-        this._newlyRecorded = nr;
-    }
-
-    public get newlyRecorded(): SimpleTimeRange[] {
-        return this._newlyRecorded;
-    }
-
-    public get archiveEnd(): ms {
-        return this._treeRoot.archiveEnd;
-    }
-
-    public isThereRecord(t: ms): boolean {
+    isThereRecord(t: ms): boolean {
         return this.getRecords(t - 1, t + 1, 0).length > 0;
     }
 
-    public getNextRecord(t: ms): SimpleTimeRange {
-        return _getNextRecord(this._originalArchive, t) || _getNextRecord(this._newlyRecorded, t);
+    getNextRecord(t: ms): BaseTimeRange {
+        return getNextRecord(this.originalArchive, t) || getNextRecord(this.newlyRecorded, t);
     }
 
-    public getRecords(startMs: ms, endMs: ms, minGapMs: ms): sTimeRangeCopy[] {
-        if (startMs < this._originalArchiveRange.start) {
-            if (endMs < this._originalArchiveRange.start) {
+    getRecords(startMs: ms, endMs: ms, minGapMs: ms): BaseTimeRange[] {
+        if (startMs < this.originalArchiveRange.start) {
+            if (endMs < this.originalArchiveRange.start) {
                 console.warn('BirdViewTree::getRecords hard miss in the past');
             } else {
                 // console.warn('BirdViewTree::getRecords soft miss in the past');
             }
             return [];
         }
-        if (startMs < this._originalArchiveRange.start) {
-            startMs = this._originalArchiveRange.start;
+        if (startMs < this.originalArchiveRange.start) {
+            startMs = this.originalArchiveRange.start;
             // console.log('narrowed start')
         }
         const treeRecords =
-            this._treeRoot?.getRecords(
+            this.treeRoot?.getRecords(
                 startMs,
-                endMs > this._originalArchiveRange.end ? this._originalArchiveRange.end : endMs,
+                endMs > this.originalArchiveRange.end ? this.originalArchiveRange.end : endMs,
                 minGapMs,
             ) || [];
-        if (endMs > this._originalArchiveRange.end) {
+        if (endMs > this.originalArchiveRange.end) {
             // console.log('GNRR', this.newlyRecorded, this.newlyRecorded.filter(r => r.start < endMs))
             this.newlyRecorded
                 .filter(r => r.start < endMs)
@@ -286,15 +285,15 @@ export class BirdViewTree {
         return treeRecords;
     }
 
-    public setNewlyRecorded(ar: SimpleTimeRange[]): void {
-        this._newlyRecorded = [...ar];
+    setNewlyRecorded(ar: BaseTimeRange[]): void {
+        this.newlyRecorded = [...ar];
     }
 
     // public appendNewlyRecorded(ar): void {
     //     this._newlyRecorded.push(...ar);
     // }
 
-    protected _zoomingRequiredCallback = (
+    private zoomingRequiredCallback = (
         node: BirdViewTreeNode,
         part: 'left' | 'right',
         minGapMs: ms,
@@ -302,21 +301,21 @@ export class BirdViewTree {
         // console.log('_zoomingRequiredCallback', node.depth, minGapMs, part, node.startMs, node.endMs)
         const { records, perfect } =
             part === 'left'
-                ? this._spareArchiveDetails(node.startMs, node.centerMs, minGapMs)
-                : this._spareArchiveDetails(node.centerMs, node.endMs, minGapMs);
+                ? this.spareArchiveDetails(node.startMs, node.centerMs, minGapMs)
+                : this.spareArchiveDetails(node.centerMs, node.endMs, minGapMs);
         node.setChild(part, minGapMs, records, perfect);
     };
 
-    protected _undetalizeArchiveSubRange(
+    private undetalizeArchiveSubRange(
         firstIndex: int,
         lastIndex: int,
         minGapMs: ms,
-    ): sTimeRangeCopy[] {
-        const records: sTimeRangeCopy[] = [];
-        let lastAdded: sTimeRangeCopy;
+    ): BaseTimeRange[] {
+        const records: BaseTimeRange[] = [];
+        let lastAdded: BaseTimeRange;
 
         for (let i = firstIndex; i <= lastIndex; i++) {
-            const r = this._originalArchive[i];
+            const r = this.originalArchive[i];
             if (!records.length) {
                 lastAdded = { ...r };
                 records.push(lastAdded);
@@ -334,15 +333,15 @@ export class BirdViewTree {
         return records;
     }
 
-    public getSubrangeIndicies(sr: SimpleTimeRange): SubrangeIndicies {
-        if (sr.contains(this._originalArchiveRange)) {
+    private getSubrangeIndicies(sr: BaseTimeRange): SubrangeIndicies {
+        if (TimeRangeUtils.contains(sr, this.originalArchiveRange)) {
             // console.log('contains');
             return {
                 firstIndex: 0,
-                lastIndex: this._originalArchive.length - 1,
+                lastIndex: this.originalArchive.length - 1,
             };
         }
-        if (this._originalArchiveRange.isDisjointWith(sr)) {
+        if (TimeRangeUtils.isDisjointWith(this.originalArchiveRange, sr)) {
             // console.log('no overlap');
             return {
                 firstIndex: -1,
@@ -350,15 +349,15 @@ export class BirdViewTree {
             };
         }
         return {
-            firstIndex: this._binarySearchForTheFirstSubrangeIndex(sr.start),
-            lastIndex: this._binarySearchForTheLastSubrangeIndex(sr.end),
+            firstIndex: this.binarySearchForTheFirstSubrangeIndex(sr.start),
+            lastIndex: this.binarySearchForTheLastSubrangeIndex(sr.end),
         };
     }
 
-    protected _binarySearchForTheFirstSubrangeIndex(subrangeStart: ms): int {
-        return binarySearch(this._originalArchive, subrangeStart, (record, needle, i) => {
+    private binarySearchForTheFirstSubrangeIndex(subrangeStart: ms): int {
+        return binarySearch(this.originalArchive, subrangeStart, (record, needle, i) => {
             // needle ===def=== subrangeStart
-            const prev = i >= 1 ? this._originalArchive[i - 1] : null;
+            const prev = i >= 1 ? this.originalArchive[i - 1] : null;
             // console.log('FIRST comparator', record, needle, i, prev)
             if (prev) {
                 if (record.end > needle) {
@@ -370,18 +369,15 @@ export class BirdViewTree {
                 }
             } else {
                 // console.log('C', (record.end > needle && record.start < this._range.end) ? 0 : -1)
-                return record.end > needle && record.start < this._originalArchiveRange.end
-                    ? 0
-                    : -1;
+                return record.end > needle && record.start < this.originalArchiveRange.end ? 0 : -1;
             }
         });
     }
 
-    protected _binarySearchForTheLastSubrangeIndex(subrangeEnd: ms): int {
-        return binarySearch(this._originalArchive, subrangeEnd, (record, needle, i) => {
+    private binarySearchForTheLastSubrangeIndex(subrangeEnd: ms): int {
+        return binarySearch(this.originalArchive, subrangeEnd, (record, needle, i) => {
             // needle ===def=== subrangeEnd
-            const next =
-                i <= this._originalArchive.length - 2 ? this._originalArchive[i + 1] : null;
+            const next = i <= this.originalArchive.length - 2 ? this.originalArchive[i + 1] : null;
             // console.log('LAST comparator', record, needle, i, next)
             if (next) {
                 if (record.start < needle) {
@@ -393,28 +389,28 @@ export class BirdViewTree {
                 }
             } else {
                 // console.log('C', (record.start < needle && record.end > this._range.start) ? 0 : +1)
-                return record.start < needle && record.end > this._originalArchiveRange.start
+                return record.start < needle && record.end > this.originalArchiveRange.start
                     ? 0
                     : +1;
             }
         });
     }
 
-    protected _spareArchiveDetails(
+    private spareArchiveDetails(
         startMs: ms,
         endMs: ms,
         minGapMs: ms,
-    ): { records: sTimeRangeCopy[]; perfect: boolean } {
+    ): { records: BaseTimeRange[]; perfect: boolean } {
         // TODO: optimize (use binary search insted of linear map; spare detailization same time)
 
         const { firstIndex, lastIndex } = this.getSubrangeIndicies(
-            new SimpleTimeRange(startMs, endMs),
+            newBaseTimeRange(startMs, endMs),
         );
         // this._binarySearchForArchiveSubRange(startMs, endMs)
 
         const maxDetailizedLength = lastIndex - firstIndex + 1;
 
-        const records = this._undetalizeArchiveSubRange(firstIndex, lastIndex, minGapMs);
+        const records = this.undetalizeArchiveSubRange(firstIndex, lastIndex, minGapMs);
 
         const unDetailizedLength = records.length;
         const perfect = maxDetailizedLength === unDetailizedLength;

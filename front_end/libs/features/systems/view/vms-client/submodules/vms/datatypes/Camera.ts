@@ -5,7 +5,15 @@ import { PlaybackTransport } from '@view/view.types';
 import { ms, int } from '@vms-client/utils/type-aliases';
 
 import { BirdViewTree } from './BirdViewTree';
-import { CAMERA_STATUS, SimpleTimeRange, sTimeRangeCopy } from './ICamera';
+import type { BaseTimeRange } from './TimeRange';
+
+export type CAMERA_STATUS =
+    | 'Live'
+    | 'Archive'
+    | 'Recording'
+    | 'Online'
+    | 'Offline'
+    | 'Unauthorized';
 
 export interface Resolutions {
     high?: string;
@@ -17,19 +25,7 @@ export interface Resolutions {
 }
 
 export class ViewCamera {
-    protected _birdViewTree: BirdViewTree;
-
-    public get archiveRange(): SimpleTimeRange {
-        return this._archiveRange;
-    }
-
-    public get archive(): SimpleTimeRange[] {
-        return this._archive;
-    }
-
-    protected _mediaStreams: MediaStream[] = [];
-
-    protected _rotation: int = 0;
+    private birdViewTree: BirdViewTree;
 
     constructor(
         public id: string,
@@ -41,17 +37,19 @@ export class ViewCamera {
         public status: CAMERA_STATUS,
         public isScheduleEnabled: boolean,
         public disableDualStreaming: boolean,
-        protected _archiveRange: SimpleTimeRange,
-        protected _archive: SimpleTimeRange[] = [],
+        public archiveRange: BaseTimeRange,
+        public archive: BaseTimeRange[] = [],
         public thumbnailUrl: Observable<string> | undefined = undefined,
         public getVideoUrl: (transport: string, quality: string, t?: ms) => string,
         public getPosterUrl: (t?: ms, width?: number, height?: number) => Observable<string>,
         public require2fa: boolean = false,
+        public mediaStreams: MediaStream[],
+        public rotation: int,
     ) {
-        this._initBirdView();
+        this.initBirdView();
     }
 
-    public get ip(): string {
+    get ip(): string {
         try {
             return this.url.split('/')[2].split(':')[0];
         } catch {
@@ -59,42 +57,14 @@ export class ViewCamera {
         }
     }
 
-    // public parseAdditionalParams(ps: ec2CameraEx['addParams']): void {
-    //     const ms = ps.find(p => p.name === 'mediaStreams');
-    //     if (ms) {
-    //         try {
-    //             this._mediaStreams = JSON.parse(ms.value).streams;
-    //             // console.log('parsed media streams', this.id, this._mediaStreams, this.hasHlsStream, this.hasLowQualityHlsStream, this.hasHighQualityHlsStream)
-    //         } catch (e) {
-    //             this._mediaStreams = [];
-    //             console.error('error parsing media streams', this.id, e);
-    //         }
-    //     }
-    //     const rotation = ps.find(p => p.name === 'rotation');
-    //     if (rotation) {
-    //         this._rotation = parseInt(rotation.value) || 0;
-    //         // console.log('got camera rotation', this._rotation)
-    //     }
-    // }
-
-    addAdditionalParams(mediaStreams: MediaStream[], rotation: number): void {
-        this._mediaStreams = mediaStreams;
-        this._rotation = rotation;
-    }
-
-    public get rotation(): number {
-        // console.log('CAMERA ROTATION GET', this._rotation)
-        return this._rotation;
-    }
-
-    public get availableTransportsAndResolutions(): Record<string, Resolutions> {
+    get availableTransportsAndResolutions(): Record<string, Resolutions> {
         return this.availableTransports.reduce<Record<string, Resolutions>>((acc, t) => {
-            acc[t] = this._getAvailableResolutions(t);
+            acc[t] = this.getAvailableResolutions(t);
             return acc;
         }, {});
     }
 
-    public get availableTransports(): PlaybackTransport[] {
+    get availableTransports(): PlaybackTransport[] {
         const isTransportSupported = (t: string): boolean => {
             if (this.require2fa) {
                 return t === 'hls';
@@ -112,21 +82,17 @@ export class ViewCamera {
         };
 
         const result = new Set();
-        this._mediaStreams
+        this.mediaStreams
             // .filter(s => s.resolution !== '*')
             .map(s => s.transports.map(t => result.add(t)));
         return Array.from(result).filter(isTransportSupported) as Array<PlaybackTransport>;
     }
 
-    public get mediaStreams(): MediaStream[] {
-        return this._mediaStreams;
-    }
-
-    protected _getAvailableResolutions(transport: PlaybackTransport): Resolutions {
+    private getAvailableResolutions(transport: PlaybackTransport): Resolutions {
         const result: Resolutions = {};
         const resolutions: string[] = [];
         const isHls = transport === 'hls';
-        this._mediaStreams
+        this.mediaStreams
             .filter(s => s.resolution !== '*')
             .map(s => s.transports.filter(t => t === transport) && resolutions.push(s.resolution));
 
@@ -135,13 +101,13 @@ export class ViewCamera {
         } else {
             const high = resolutions
                 .filter(r => {
-                    return !this._resolutionIsLow(r);
+                    return !this.resolutionIsLow(r);
                 })
                 .sort();
             if (high.length) {
                 result.high = isHls ? 'hi' : high[high.length - 1];
             }
-            const low = resolutions.filter(r => this._resolutionIsLow(r)).sort();
+            const low = resolutions.filter(r => this.resolutionIsLow(r)).sort();
             if (!this.disableDualStreaming) {
                 if (isHls) {
                     result.low = 'lo';
@@ -170,7 +136,7 @@ export class ViewCamera {
         return result;
     }
 
-    protected _resolutionIsLow(s: string): boolean {
+    private resolutionIsLow(s: string): boolean {
         return (
             s
                 .split('x')
@@ -184,75 +150,75 @@ export class ViewCamera {
         );
     }
 
-    public get isVirtual(): boolean {
+    get isVirtual(): boolean {
         return !this.model;
     }
 
-    public get isLive(): boolean {
+    get isLive(): boolean {
         return (
             !this.isVirtual &&
             (this.status === 'Online' || this.status === 'Live' || this.status === 'Recording')
         );
     }
 
-    public get isOnline(): boolean {
+    get isOnline(): boolean {
         return this.status !== 'Offline';
     }
 
-    public get isOffline(): boolean {
+    get isOffline(): boolean {
         return this.status === 'Offline';
     }
 
-    public get isRecording(): boolean {
+    get isRecording(): boolean {
         return !this.isVirtual && this.status === 'Recording';
     }
 
-    public get isAuthorized(): boolean {
+    get isAuthorized(): boolean {
         return this.status !== 'Unauthorized';
     }
 
-    public get isUnauthorized(): boolean {
+    get isUnauthorized(): boolean {
         return this.status === 'Unauthorized';
     }
 
-    public get hasArchive(): boolean {
+    get hasArchive(): boolean {
         return !!(this.archiveRange && this.archiveRange.end > this.archiveRange.start);
     }
 
-    public getRecords(startMs: ms, endMs: ms, minGapMs: ms): sTimeRangeCopy[] {
+    getRecords(startMs: ms, endMs: ms, minGapMs: ms): BaseTimeRange[] {
         // console.log('========', new Date(startMs), new Date(endMs))
-        return this._birdViewTree.getRecords(startMs, endMs, minGapMs);
+        return this.birdViewTree.getRecords(startMs, endMs, minGapMs);
     }
 
-    public setRecords(range: SimpleTimeRange, archive: SimpleTimeRange[]): void {
-        this._archiveRange = range;
-        this._archive = archive;
-        this._initBirdView();
+    setRecords(range: BaseTimeRange, archive: BaseTimeRange[]): void {
+        this.archiveRange = range;
+        this.archive = archive;
+        this.initBirdView();
     }
 
-    protected _initBirdView(): void {
-        this._birdViewTree = new BirdViewTree(this._archiveRange, this.archive);
+    private initBirdView(): void {
+        this.birdViewTree = new BirdViewTree(this.archiveRange, this.archive);
     }
 
-    public pushRecordedChunks(rs: SimpleTimeRange[]): void {
+    pushRecordedChunks(rs: BaseTimeRange[]): void {
         // console.log('SNR', rs, this)
-        this._birdViewTree.setNewlyRecorded(rs);
+        this.birdViewTree.setNewlyRecorded(rs);
         // this._archiveRange.end = rs[rs.length - 1].end;
     }
 
-    public isThereRecord(t: ms): boolean {
-        return this._birdViewTree.isThereRecord(t);
+    isThereRecord(t: ms): boolean {
+        return this.birdViewTree.isThereRecord(t);
     }
 
-    public getNextRecord(t: ms): SimpleTimeRange {
-        return this._birdViewTree.getNextRecord(t);
+    getNextRecord(t: ms): BaseTimeRange {
+        return this.birdViewTree.getNextRecord(t);
     }
 
-    public get archiveEnd(): ms {
-        if (this.hasArchive) {
-            return this._birdViewTree.archiveEnd;
-        } else {
-            return -Infinity;
-        }
-    }
+    // get archiveEnd(): ms {
+    //     if (this.hasArchive) {
+    //         return this.birdViewTree.archiveEnd;
+    //     } else {
+    //         return -Infinity;
+    //     }
+    // }
 }

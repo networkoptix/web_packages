@@ -39,13 +39,13 @@ import {
 import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
 import { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { WebClientUxService } from '../../services/webclient-ux.service';
 import { TimelineTimeUnderMouseService } from '../../vms-client/submodules/timeline/services/timeline.time-under-mouse.service';
 import { Resolutions, ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
+import { newBaseTimeRange } from '../../vms-client/submodules/vms/datatypes/TimeRange';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
@@ -614,19 +614,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                                         this.camera.isScheduleEnabled ||
                                         this.camera.hasArchive);
                                 const now = Date.now();
-                                const range = new SimpleTimeRange(
+                                const range = newBaseTimeRange(
                                     firstRecordStartTimeMs,
                                     showToLive ? now : lastRecordStartTimeMs + lastRecordDuration,
                                 );
-                                const archive = records.map(
-                                    r =>
-                                        new SimpleTimeRange(
-                                            parseInt(r.startTimeMs),
-                                            parseInt(r.startTimeMs) + parseInt(r.durationMs),
-                                        ),
+                                const archive = records.map(r =>
+                                    newBaseTimeRange(
+                                        parseInt(r.startTimeMs),
+                                        parseInt(r.startTimeMs) + parseInt(r.durationMs),
+                                    ),
                                 );
                                 if (lastRecordDuration === -1) {
-                                    archive[archive.length - 1] = new SimpleTimeRange(
+                                    archive[archive.length - 1] = newBaseTimeRange(
                                         lastRecordStartTimeMs,
                                         now,
                                     );
@@ -670,13 +669,13 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                                 // the server has a weird habit of sending strings instead of numbers every now and then
                                 const start = Math.max(parseInt(r.startTimeMs), since);
                                 const duration = parseInt(r.durationMs);
-                                return new SimpleTimeRange(
+                                return newBaseTimeRange(
                                     start,
                                     // @ts-expect-error FIXME: Value comparison with number string
                                     r.durationMs < 0 ? now : start + duration,
                                 );
                             })
-                            .filter(tr => tr.duration > 0);
+                            .filter(tr => tr.end - tr.start > 0);
                         if (prepared.length > 0) {
                             this.vms.addRecordsToSelectedCamera(prepared);
                         }

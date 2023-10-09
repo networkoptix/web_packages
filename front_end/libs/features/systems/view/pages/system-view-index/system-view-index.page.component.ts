@@ -32,14 +32,15 @@ import { icons } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
-import { CAMERA_STATUS, SimpleTimeRange } from '@vms-client/submodules/vms/datatypes/ICamera';
+import { ViewCamera, CAMERA_STATUS } from '@vms-client/submodules/vms/datatypes/Camera';
 import type { ViewMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
+import type { BaseTimeRange } from '@vms-client/submodules/vms/datatypes/TimeRange';
 import { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import type { ms } from '@vms-client/utils/type-aliases';
 
 import { WebClientUxService } from '../../services/webclient-ux.service';
+import { newBaseTimeRange } from '../../vms-client/submodules/vms/datatypes/TimeRange';
 import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
 import { sidebarLayout } from '../sidebarLayout.cfg';
 
@@ -282,7 +283,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     private processCameras(
         c: ViewBaseCamera,
         ms: ViewBaseServer,
-        archiveRanges: Record<string, SimpleTimeRange>,
+        archiveRanges: Record<string, BaseTimeRange>,
     ): ViewCamera {
         this.hasCameras = true;
         const result = new ViewCamera(
@@ -297,7 +298,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 : ((c.status === 'Online' ? 'Live' : c.status) as CAMERA_STATUS),
             c.scheduleEnabled,
             c.disableDualStreaming,
-            archiveRanges[c.id] || new SimpleTimeRange(0, 0),
+            archiveRanges[c.id] || newBaseTimeRange(0, 0),
             [],
             c.status !== 'Offline'
                 ? this.system?.mediaserver.previewUrl(c.id, 0, 128, 128)
@@ -309,15 +310,15 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     ? this.system?.mediaserver.previewUrl(c.id, t, width, height)
                     : of(),
             this.system.info?.system2faEnabled,
+            c.mediaStreams,
+            c.rotation,
         );
-        // result.parseAdditionalParams(c.addParams);
-        result.addAdditionalParams(c.mediaStreams, c.rotation);
         return result;
     }
 
     private async findCamerasWithArchive(
         mediaServers: ViewBaseServer[],
-        archiveRanges: Record<string, SimpleTimeRange>,
+        archiveRanges: Record<string, BaseTimeRange>,
     ): Promise<void> {
         return this.system.mediaserver
             .getCameraHistoryItems()
@@ -330,7 +331,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     const rec = result.find(rec => rec.serverGuid === `{${mediaServer.id}}`);
                     rec?.archivedCameras.forEach(cameraId => {
                         // trick camera 'hasArchive' - here we don't need a real info -- TT
-                        archiveRanges[cleanId(cameraId)] = new SimpleTimeRange(1, 2);
+                        archiveRanges[cleanId(cameraId)] = newBaseTimeRange(1, 2);
                     });
                 });
             });
@@ -418,7 +419,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     this.setInitializationState(true, false);
                 }
 
-                const archiveRanges: Record<string, SimpleTimeRange> = {};
+                const archiveRanges: Record<string, BaseTimeRange> = {};
 
                 await this.findCamerasWithArchive(mediaServers, archiveRanges);
 

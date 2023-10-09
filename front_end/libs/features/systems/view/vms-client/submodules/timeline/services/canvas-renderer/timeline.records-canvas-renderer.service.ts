@@ -1,10 +1,10 @@
 import { Injectable } from '@angular/core';
 
 import { RecordsConfig } from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
+import type { BaseTimeRange } from '@vms-client/submodules/vms/datatypes/TimeRange';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 import { float, ms } from '@vms-client/utils/type-aliases';
 
-import type { sTimeRangeCopy } from '../../../vms/datatypes/ICamera';
 import { TimelineService } from '../timeline.service';
 
 import { NxDrawingConfigsService } from './drawingConfigs/drowingConfigs.service';
@@ -70,7 +70,7 @@ export class TimelineRecordsCanvasRendererService {
 
     protected _drawRecord(
         ctx: CanvasRenderingContext2D,
-        r: sTimeRangeCopy,
+        r: BaseTimeRange,
         startMs: ms,
         pxPerMs: ms,
     ): void {
