@@ -1,9 +1,4 @@
-<nx-pre-loader *ngIf="user && !system"></nx-pre-loader>
-
-<div
-    *ngIf="system"
-    class="row d-flex align-items-start"
->
+<div class="row d-flex align-items-start">
     <div class="col-12 system-settings">
         <nx-block
             type="mb-3"
@@ -184,10 +179,7 @@
                         <div class="float-left mr-2">
                             <button
                                 class="btn btn-default"
-                                [disabled]="
-                                    (merging || !system.isOnline || !system.isAvailable) &&
-                                    !(debugMode || betaMode)
-                                "
+                                [disabled]="merging || !system.isOnline || !system.isAvailable"
                                 (click)="mergeSystems()"
                             >
                                 <span
@@ -307,7 +299,7 @@
                 [settings]="settingsForSystem$ | async"
             >
             </nx-system-standard-admin-component>
-            <ng-container *ngIf="advanced$ | async">
+            <ng-container *ngIf="advanced">
                 <nx-alert-block
                     class="d-block mt-3"
                     [iconSrc]="icons.dirNonStandard + 'error.svg'"

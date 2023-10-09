@@ -93,6 +93,9 @@ export const cloudSettingsRoutes: Routes = [
                 component: NxSystemAdminComponent,
                 canDeactivate: [ApplyGuard],
                 resolve: { system: currentSystemResolver },
+                data: {
+                    advanced: true,
+                },
             },
             {
                 path: 'users',

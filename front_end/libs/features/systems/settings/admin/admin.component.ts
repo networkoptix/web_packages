@@ -1,5 +1,6 @@
 import {
     AfterViewInit,
+    booleanAttribute,
     Component,
     computed,
     Inject,
@@ -40,7 +41,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
-import { icons, clientMode, menus, redirect } from '@static-variables';
+import { icons, menus, redirect } from '@static-variables';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -54,6 +55,7 @@ interface Settings {
     styleUrls: ['admin.component.scss'],
 })
 export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit {
+    @Input({ transform: booleanAttribute }) advanced: boolean;
     @Input() system: NxSystem;
     CONFIG: IConfig;
     readonly environment = environment;
@@ -64,15 +66,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     user: Account;
     mergeTargetSystems: NxSystemInfo[];
 
-    emptyName = false;
-
-    advanced$: Observable<boolean>;
-    userDisconnectSystem;
     currentlyMerging = false;
-    debugMode: boolean;
-    betaMode: boolean;
     settings: Settings;
-    settingsServiceSubscription: Subscription;
     systemsSubscription: Subscription;
     systemSubscription: Subscription;
     currentMergeInfo: MergeInfo;
@@ -130,30 +125,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     private setupDefaults(): void {
-        this.debugMode = clientMode.debug;
-        this.betaMode = clientMode.beta;
         this.menuService.selectedSection.set(menus.systemSettings.admin.id);
         this.menuService.selectedDetailsSection.set(menus.systemSettings.general.id);
-
-        this.advanced$ = this.route.queryParams.pipe(
-            map(({ advanced }) => {
-                if (advanced !== undefined) {
-                    if (this.environment.isLocal) {
-                        this.router.navigate(['settings/advanced'], { replaceUrl: true });
-                    } else {
-                        this.router.navigate(
-                            [`systems/${this.route.snapshot.params.systemId}/advanced`],
-                            { replaceUrl: true },
-                        );
-                    }
-                }
-                return (
-                    this.router.url.includes('/advanced') ||
-                    this.route.snapshot.routeConfig.path === 'advanced' ||
-                    advanced !== undefined
-                );
-            }),
-        );
     }
 
     private setNameAndTitle(): void {
@@ -445,7 +418,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     updateAndGoToSystems = (): void => {
-        // this.userDisconnectSystem = true;
         this.systemsService.userDisconnectSystem = true;
         this.systemsService.forceUpdateSystems().subscribe(() => {
             setTimeout(() => {
@@ -580,14 +552,20 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
             });
     }
 
-    hideAdvancedSettings(): void {
-        if (this.router.url.includes('/advanced')) {
-            if (this.environment.isLocal) {
-                this.router.navigate(['settings']);
-            } else {
-                this.router.navigate([`systems/${this.system.id}`]);
-            }
+    async hideAdvancedSettings(): Promise<void> {
+        if (!this.advanced) {
+            return;
         }
+
+        const commands: string[] = [];
+        if (this.router.url.includes('/advanced')) {
+            commands.push(this.router.url.replace('/advanced', ''));
+        }
+
+        await this.router.navigate(commands, {
+            queryParamsHandling: 'merge',
+            queryParams: { advanced: undefined },
+        });
     }
 
     acceptOwnershipTransfer(): void {
