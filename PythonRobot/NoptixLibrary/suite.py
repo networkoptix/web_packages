@@ -170,7 +170,7 @@ class Mediaserver:
         time.sleep(5)  # Wait for the docker server to be ready
         # Set up a local system.
         server_api_port, *_ = data['port']
-        server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
+        server_api_url = f'https://{_DOCKER_API.host_ip}:{server_api_port}'
         self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
         self._api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         return self
