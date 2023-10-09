@@ -59,6 +59,7 @@ class Suite:
                 user,
                 cloud_users[user].email,
                 [cloud_owner.email, cloud_owner.password],
+                CloudAccount.PERMISSIONS[user]
             )
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
@@ -71,8 +72,7 @@ class Suite:
 
     def create_cloud_users(self):
         cloud_users = {}
-        permissions = _GENERIC_KEYWORDS.permissions
-        for permission in permissions:
+        for permission in CloudAccount.PERMISSIONS:
             account = self._exit_stack.enter_context(CloudAccount())
             cloud_users.update({permission: account})
             time.sleep(2)
@@ -187,6 +187,13 @@ class Mediaserver:
 
 
 class CloudAccount:
+    PERMISSIONS = {
+        "cloudAdmin": "GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
+        "viewer": "GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
+        "liveViewer": "GlobalAccessAllMediaPermission",
+        "advancedViewer": "GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
+        "custom": "NoGlobalPermissions",
+        }
 
     def __init__(self):
         self.password = DEFAULT_PASSWORD

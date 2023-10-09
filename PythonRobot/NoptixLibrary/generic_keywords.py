@@ -41,13 +41,6 @@ class GenericKeywords:
         self.password = "qweasd 123"
         self.language = "en_US"
 
-        self.permissions = {
-            "cloudAdmin": "GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
-            "viewer": "GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
-            "liveViewer": "GlobalAccessAllMediaPermission",
-            "advancedViewer": "GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
-            "custom": "NoGlobalPermissions",
-        }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
         self.docker_api = DockerApi()
 
@@ -334,7 +327,7 @@ class GenericKeywords:
             if user["accountEmail"] == email:
                 return True
 
-    def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth):
+    def Add_user_to_cloud_system_if_not_there(self, systemId, accessRole, email, auth, customPermissions):
         isThere = self.User_Is_In_Cloud_System(email, systemId, auth)
         if isThere:
             logger.info(email + " already in system")
@@ -344,7 +337,7 @@ class GenericKeywords:
                 systemId,
                 accessRole,
                 email,
-                self.permissions[accessRole],
+                customPermissions,
                 )
             logger.info(r)
 
