@@ -2,7 +2,6 @@ from pathlib import Path
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
-from NoptixLibrary.generic_keywords import GenericKeywords
 from header import HeaderNav
 from resource_import import get_chrome
 from NoptixLibrary.suite import Mediaserver
@@ -12,7 +11,6 @@ from variables import ENV
 
 password = "qweasd 123"
 
-keywords = GenericKeywords()
 docker_api = DockerApi()
 CLOUD_API = CloudPortalAPI()
 

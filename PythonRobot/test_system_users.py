@@ -23,7 +23,6 @@ from variables import ENV
 
 password = "qweasd 123"
 
-keywords = GenericKeywords()
 CLOUD_API = CloudPortalAPI()
 rb = RobotVariables("en_US")
 viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission'
