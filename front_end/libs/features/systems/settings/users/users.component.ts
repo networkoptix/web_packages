@@ -1,8 +1,7 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, inject, Input, signal } from '@angular/core';
 
-import { environment } from '@environments/environment';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxDialogsService } from '@dialogs/dialogs.service';
+import { FormActions, NxCanNavigate } from '@services/apply.service/apply.service.type';
 import type { NxUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
 
@@ -11,26 +10,31 @@ import { NxSystem } from '@services/system.service/system';
     templateUrl: 'users.component.html',
     styleUrls: ['users.component.scss'],
 })
-export class NxSystemUsersComponent implements OnInit {
+export class NxSystemUsersComponent implements NxCanNavigate {
     @Input() system: NxSystem;
     @Input() user: NxUser;
-    readonly environment = environment;
-    CONFIG: IConfig;
 
-    before5dot2: boolean = false;
-    fiveDot2Plus: boolean = false;
-
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
+    private dialogService = inject(NxDialogsService);
+    canNavigate$$ = signal<boolean>(true);
+    onNavigate = {
+        applyFunc: undefined,
+        discardFunc: () => {},
+    };
+    canNavigate(): Promise<boolean> {
+        const canNavigate = this.canNavigate$$();
+        if (!canNavigate) {
+            return this.showApplyDialog();
+        }
+        return Promise.resolve(true);
     }
 
-    public ngOnInit(): void {
-        // users with groups
-        if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
-            this.fiveDot2Plus = true;
-        } else {
-            // users with roles
-            this.before5dot2 = true;
-        }
+    async showApplyDialog(): Promise<boolean> {
+        const { applyFunc, discardFunc } = this.onNavigate;
+        const status = await this.dialogService.apply({ applyFunc, discardFunc });
+        return status !== 'canceled';
+    }
+
+    setFormActions(actions: FormActions): void {
+        this.onNavigate = actions;
     }
 }

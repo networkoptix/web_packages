@@ -1,12 +1,22 @@
-<nx-pre-loader *ngIf="!before5dot2 && !fiveDot2Plus"></nx-pre-loader>
+<ng-template #loading>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
 
-<nx-system-user-with-roles-component
-    *ngIf="before5dot2"
-    [selectedUser]="user"
-    [system]="system"
-></nx-system-user-with-roles-component>
-<nx-system-user-with-groups-component
-    *ngIf="fiveDot2Plus"
-    [selectedUser]="user"
-    [system]="system"
-></nx-system-user-with-groups-component>
+<ng-template #roleBaseUsers>
+    <nx-system-user-with-roles-component
+        [selectedUser]="user"
+        [system]="system"
+        (formActions)="setFormActions($event)"
+        (formIsNotDirty)="canNavigate$$.set($event)"
+    ></nx-system-user-with-roles-component>
+</ng-template>
+
+<ng-container *ngIf="system?.version; else loading">
+    <nx-system-user-with-groups-component
+        *ngIf="system.version > 5.1; else roleBaseUsers"
+        [selectedUser]="user"
+        [system]="system"
+        (formActions)="setFormActions($event)"
+        (formIsNotDirty)="canNavigate$$.set($event)"
+    ></nx-system-user-with-groups-component>
+</ng-container>

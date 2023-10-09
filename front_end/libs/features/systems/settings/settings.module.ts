@@ -16,7 +16,7 @@ import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { ApplyGuard, ApplyGuardV2 } from '@guards/applyGuard';
+import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
@@ -102,7 +102,7 @@ export const cloudSettingsRoutes: Routes = [
                 path: 'users/:userId',
                 title: SystemTitleResolver,
                 component: NxSystemUsersComponent,
-                canDeactivate: [ApplyGuardV2],
+                canDeactivate: [(component: NxSystemUsersComponent) => component.canNavigate()],
                 resolve: {
                     system: currentSystemResolver,
                     user: userResolver,

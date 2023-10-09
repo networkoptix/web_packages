@@ -2,11 +2,13 @@ import {
     AfterViewInit,
     Component,
     computed,
+    EventEmitter,
     Inject,
     Input,
     LOCALE_ID,
     OnChanges,
     OnInit,
+    Output,
     signal,
     ViewChild,
     ViewContainerRef,
@@ -21,7 +23,7 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import { NxApplyServiceV2 } from '@services/apply.service/apply-v2.service';
+import { FormActions } from '@services/apply.service/apply.service.type';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUser, UserType } from '@services/system-user.types';
@@ -57,7 +59,8 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
 
     @Input() system: NxSystem;
     @Input() selectedUser: NxUser;
-
+    @Output() formIsNotDirty = new EventEmitter<boolean>();
+    @Output() formActions = new EventEmitter<FormActions>();
     protected removeOldForm$ = new Subject<boolean>();
 
     protected editUser: Process;
@@ -106,7 +109,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
 
     constructor(
         protected route: ActivatedRoute,
-        protected applyServiceV2: NxApplyServiceV2,
         protected dialogs: NxDialogsService,
         protected menuService: NxMenuService,
         protected processService: NxProcessService,
@@ -137,7 +139,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     }
 
     ngAfterViewInit(): void {
-        this.applyServiceV2.setGuardFunctions(this.editUser, this.resetForm);
+        this.formActions.emit({ applyFunc: this.editUser, discardFunc: this.resetForm });
     }
 
     public removeUser(): void {

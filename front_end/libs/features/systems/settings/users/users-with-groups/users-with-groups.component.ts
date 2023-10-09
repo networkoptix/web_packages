@@ -53,6 +53,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         this.removeOldForm$.next(true);
         if (this.userGroupForm) {
             this.userGroupForm = undefined;
+            this.formIsNotDirty.emit(true);
         }
 
         this.selectedGroups = user.groupIds;
@@ -79,13 +80,13 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     disabled: !this.editPermissions$$().enable,
                 },
             });
-            this.applyServiceV2.setForm(this.userGroupForm);
             this.userGroupForm.valueChanges
                 .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
                 .subscribe(values => {
                     if (this.editPermissions$$().changePermissions) {
                         this.processSelectedGroupsList(values.groupIds);
                     }
+                    this.formIsNotDirty.emit(!this.userGroupForm.dirty);
                 });
         });
     }

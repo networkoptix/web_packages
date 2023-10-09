@@ -36,6 +36,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
 
         if (this.userRoleForm) {
             this.userRoleForm = undefined;
+            this.formIsNotDirty.emit(true);
         }
         this.role = !this.isCloud$$() && user.name === 'admin' ? 'Owner' : user.role.name;
 
@@ -57,11 +58,11 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
                 disabled: !this.systemAvailable || !this.editPermissions$$().changePermissions,
             },
         });
-        this.applyServiceV2.setForm(this.userRoleForm);
         this.userRoleForm.valueChanges
             .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
             .subscribe(values => {
                 this.setPermission();
+                this.formIsNotDirty.emit(!this.userRoleForm.dirty);
             });
     }
 

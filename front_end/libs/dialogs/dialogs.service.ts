@@ -158,6 +158,14 @@ export class NxDialogsService {
         return this.openV2(component, dialogConfig);
     }
 
+    async apply(data: Dt.Apply['data']): Promise<Dt.Apply['return']> {
+        const component = await import('./apply/apply.component').then(m => m.ApplyModalContent);
+        const dialogConfig: DialogConfig<Dt.Apply['data']> = {
+            data: { ...data },
+        };
+        return this.openV2(component, dialogConfig);
+    }
+
     message = this.dialogV2Factory<Dt.Message>(
         () => import('./message/message.component').then(m => m.MessageModalContent),
         { autoFocus: '#message' },
