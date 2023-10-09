@@ -348,15 +348,6 @@ class GenericKeywords:
                 )
             logger.info(r)
 
-    def Add_Cloud_Users(self, auth, users, systemId):
-        for permission in users:
-            self.Add_user_to_cloud_system_if_not_there(
-                systemId,
-                permission,
-                users[permission],
-                auth,
-                )
-
     @contextmanager
     def _ssh_client(self):
         with paramiko.SSHClient() as ssh_client:
