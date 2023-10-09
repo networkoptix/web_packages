@@ -80,6 +80,7 @@ class AccountManager(models.Manager):
 
     @staticmethod
     async def register_cloud_invite_user(email, password, data, request):
+        email = email.lower()
         ip = data.get("IP", "")
         first_name = data.pop("first_name")
         last_name = data.pop("last_name")

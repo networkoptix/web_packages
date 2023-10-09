@@ -1,3 +1,4 @@
+import copy
 import json
 from smtplib import SMTPDataError, SMTPException, SMTPServerDisconnected
 from ssl import SSLError
@@ -10,6 +11,7 @@ from celery.exceptions import Ignore
 from django.conf import settings
 from django.utils import timezone
 from django.core.cache import caches
+from django.db.models.functions import Lower
 
 from cloud.controllers import cloud_api
 from api.models import Account
@@ -79,7 +81,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
     emails = emails or getattr(message, 'user_email', '') or getattr(message, 'targets')
     template_type = getattr(message, 'type', email_type)
     lang = get_language_for_email(emails, customization)
-    email_content = getattr(message, 'message')
+    initial_email_content = getattr(message, 'message')
     send_individual = not isinstance(message, Message)
     subject = ''
     attachments = []
@@ -104,9 +106,9 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
                 message.save()
                 return
 
-            cloud_users = [email for email in message.targets if email in [user['accountEmail'] for user in users['sharing']]]
-            activated_cloud_users = Account.objects.filter(email__in=cloud_users).exclude(activated_date=None).values_list('email', flat=True)
-            message.targets = [email for email in message.targets if email in activated_cloud_users]
+            activated_cloud_users = Account.objects.annotate(email_lower=Lower('email')).filter(email_lower__in=[email.lower() for email in message.targets]).exclude(activated_date=None).values_list('email_lower', flat=True)
+            valid_recipients = [*activated_cloud_users, *users]
+            message.targets = [email for email in message.targets if email in valid_recipients]
             emails = message.targets
 
 
@@ -118,12 +120,17 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         failed_emails = []
 
         for email in targets:
-            if not isinstance(email_content, dict) or 'userFullName' in email_content:
-                pass
-            else:
+            is_dict_content = isinstance(initial_email_content, dict)
+            email_content = {**initial_email_content} if is_dict_content else initial_email_content
+            if is_dict_content and 'userFullName' not in email_content:
                 email_content['userFullName'] = get_email_full_name(email, send_individual)
             try:
-                email_engine.send(email, template_type, email_content, lang, customization, subject, attachments)
+                args = [email, template_type, email_content, lang, customization, subject, attachments]
+                if settings.TESTING:
+                    # Arguments are being mutated within email_engine.send
+                    # Need to make a copy to prevent magic mock incorrectly thinking that the test failed
+                    args = copy.deepcopy([email, template_type, email_content, lang, customization, subject, attachments])
+                email_engine.send(*args)
             except Exception as e:
                 errors.append(e)
                 failed_emails.append(email)

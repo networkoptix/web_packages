@@ -77,11 +77,12 @@ class TestSendEmail:
         activated_emails = [f'activated_{email}' for email in non_cloud_emails]
 
         # Setup cloud accounts
+        # Setup as uppercase to test case insensitivity
         for email in not_activated_emails:
-            baker.make('Account', email=email, activated_date=None)
+            baker.make('Account', email=email.upper(), activated_date=None)
 
         for email in activated_emails:
-            baker.make('Account', email=email, activated_date=datetime.now())
+            baker.make('Account', email=email.upper(), activated_date=datetime.now())
 
         all_emails = non_cloud_emails + not_activated_emails + activated_emails
         mocker.patch.object(cloud_api.System, 'users', return_value={'sharing': [{'accountEmail': target} for target in all_emails]})
@@ -103,19 +104,16 @@ class TestSendEmail:
         )
         expected_message = {
             'html_body': message_html,
-            'text_body': message_text
+            'text_body': message_text,
         }
         status = send_email(sys_email.id, email_type=SystemEmail.MSG_TYPE, session={'access_token': 'access_token'})
-        updated_sys_email = SystemEmail.objects.get(id=sys_email.id)
-        # assert updated_sys_email.completed_date
-        # assert updated_sys_email.result == RESULT_STATES.success
 
         cached_attachments = caches['emails'].get(cache_key, []) if (cache_key := sys_email.attachments.get('cache_key', '')) else []
         expected_calls = [
             call(
                 email,
                 SystemEmail.MSG_TYPE,
-                expected_message,
+                { **expected_message, 'userFullName': get_email_full_name(email, True) },
                 self.expected_lang,
                 settings.TEST_CUSTOMIZATION,
                 sys_email.subject,
@@ -124,6 +122,7 @@ class TestSendEmail:
             for email in activated_emails
         ]
         assert self.mock_send.call_count == len(activated_emails)
+
         self.mock_send.assert_has_calls(expected_calls)
 
 
