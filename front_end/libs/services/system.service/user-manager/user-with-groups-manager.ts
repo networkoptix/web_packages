@@ -322,9 +322,10 @@ export class UserWithGroupsManager extends UserManager {
             delete user.permissions;
         }
 
-        // v3 doesn't like user permissions and groupIds for modifyUser
+        // v3 doesn't like user permissions for modifyUser
+        // previously v3 also didn't like modifying groupIds + fullName together, but this no longer
+        // seems to be an issue as of 6.0.0.37561
         delete user.permissions;
-        delete user.fullName;
 
         return lastValueFrom(
             this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),
