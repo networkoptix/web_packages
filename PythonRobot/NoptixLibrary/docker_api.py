@@ -1,4 +1,5 @@
 import logging
+from random import randint
 
 import requests
 
@@ -12,7 +13,22 @@ class DockerApi(object):
         self.host_port = 5555
         self.image = "5.1"
 
-    def create_container(self, ports, mac, name, server):
+    def create_docker_server(self, server, runName):
+        name = server['name'] + str(runName)
+        mac = self._get_random_mac()
+        ports = []
+        for _ in range(server["ports"]):
+            ports.append(self._get_random_port_from_docker_server())
+        container = self._create_container(ports, mac, name, server)
+        self.start_container(container)
+        return {
+            "name": name,
+            "port": ports,
+            "mac": mac,
+            "container": container,
+            }
+
+    def _create_container(self, ports, mac, name, server):
         port_count = 7001
         PortBindings = {}
         ExposedPorts = {}
@@ -73,3 +89,20 @@ class DockerApi(object):
         r = requests.get(f'http://{self.host_ip}:{self.host_port}/containers/json?name={name}')
         assert r.status_code == 200
         return r.json()
+
+    def _get_random_port_from_docker_server(self):
+        usedPorts = []
+        docker_api = DockerApi()
+        for container in docker_api.list_containers():
+            for usedPort in container["Ports"]:
+                usedPorts.append(usedPort["PublicPort"])
+        port = randint(30000, 65535)
+        while port in usedPorts:
+            port = randint(30000, 65535)
+        return str(port)
+
+    def _get_random_mac(self):
+        prefix = 'AA'
+        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
+        random_mac = ':'.join((prefix, suffix)).upper()
+        return random_mac

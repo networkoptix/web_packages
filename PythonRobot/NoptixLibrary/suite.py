@@ -161,7 +161,7 @@ class Mediaserver:
             'name': self.suite_name,
             'ports': self.ports,
             }
-        docker_server_data = _GENERIC_KEYWORDS.create_docker_server(data, self.run_id)
+        docker_server_data = _DOCKER_API.create_docker_server(data, self.run_id)
         data.update(docker_server_data)
         self.name = data['name']
         self._container_id = data['container']
