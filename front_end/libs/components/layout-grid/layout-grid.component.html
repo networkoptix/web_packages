@@ -216,7 +216,8 @@
                                     'collided': (collisions$ | async)[item.id],
                                 }"
                                 [ngStyle]="
-                                    (collisions$ | async)[item.id] || item.renderConfig.child
+                                    (collisions$ | async)[item.id]
+                                        | mergeObjects : item.renderConfig.child
                                 "
                             >
                                 <ng-template #notSupported>
