@@ -699,7 +699,7 @@ class ChannelPartnerServiceRecordSerializer(serializers.ModelSerializer):
     changeQuantity = serializers.IntegerField(source='quantity')
 
     def __init__(self, *args, **kwargs):
-        self.channel_partner = kwargs.pop('channel_partner', None)
+        self.channel_partner = kwargs.get('context', {}).get('channel_partner', None)
         super().__init__(*args, **kwargs)
 
     def calculate_service_and_direct_consumer(self, obj: ChannelPartnerServiceRecord) -> None:

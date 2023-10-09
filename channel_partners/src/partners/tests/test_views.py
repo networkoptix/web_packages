@@ -381,6 +381,47 @@ class TestChannelPartnerViewSet:
         assert response.data['systems'] == len(systems)
         assert response.data['serviceUsageQuantity'] == len(organizations) * gen_count
 
+    def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
+                                     cp_service_factory, system_factory, service_record_factory,
+                                     mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
+        records = [service_record_factory(service, system) for service in services]
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
+        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=cp.id)
+        assert response.status_code == 200
+        assert isinstance(response.data, dict)
+        assert 'count' in response.data
+        assert 'next' in response.data
+        assert 'previous' in response.data
+        assert len(response.data['results']) == len(services)
+        assert 'channelPartnerId' in response.data['results'][0]
+
+    def test_service_changes_summary(self, channel_partner_factory, organization_factory, cp_user_factory,
+                                     cp_service_factory, system_factory, service_record_factory,
+                                     mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
+        records = [service_record_factory(service, system) for service in services]
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
+        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_summary/')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=cp.id)
+        assert response.status_code == 200
+        assert isinstance(response.data, dict)
+        assert 'count' in response.data
+        assert 'next' in response.data
+        assert 'previous' in response.data
+        assert len(response.data['results']) == len(services)
+
 
 class TestOrganizationViewSet:
 
@@ -410,3 +451,43 @@ class TestOrganizationViewSet:
 
         assert response.data['systems'] == sys_cnt
         assert response.data['serviceUsageQuantity'] == usage
+
+    def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
+                                     cp_service_factory, system_factory, service_record_factory,
+                                     mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
+        records = [service_record_factory(service, system) for service in services]
+        view = OrganizationViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
+        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_history/')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=org.id)
+        assert response.status_code == 200
+        assert isinstance(response.data, dict)
+        assert 'count' in response.data
+        assert 'next' in response.data
+        assert 'previous' in response.data
+        assert len(response.data['results']) == len(services)
+
+    def test_service_changes_summary(self, channel_partner_factory, organization_factory, cp_user_factory,
+                                     cp_service_factory, system_factory, service_record_factory,
+                                     mock_auth_with_user, arf):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
+        records = [service_record_factory(service, system) for service in services]
+        view = OrganizationViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
+        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=org.id)
+        assert response.status_code == 200
+        assert isinstance(response.data, dict)
+        assert 'count' in response.data
+        assert 'next' in response.data
+        assert 'previous' in response.data
+        assert len(response.data['results']) == len(services)

@@ -7,6 +7,7 @@ import httpx
 from django.conf import settings
 from django.http import HttpRequest
 from nx_cloud_api_client.apis import BatchRequestItems, CdbSystemAPIBase
+from rest_framework.response import Response
 
 logger = getLogger(__name__)
 
@@ -26,3 +27,13 @@ def make_batch_request(request: HttpRequest, data: BatchRequestItems) -> dict:
     batch_data = response.json()
     logger.info(f"Batch request has been sent: {batch_data}")
     return batch_data
+
+
+def paginated_response(viewset, queryset, serializer_class, serializer_context=None) -> Response:
+    page = viewset.paginate_queryset(queryset)
+    if page is not None:
+        serializer = serializer_class(page, many=True, context=serializer_context)
+        return viewset.get_paginated_response(serializer.data)
+
+    serializer = serializer_class(queryset, many=True, context=serializer_context)
+    return Response(serializer.data)

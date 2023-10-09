@@ -19,6 +19,7 @@ from rest_framework.mixins import RetrieveModelMixin
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from tools.exception import Conflict
+from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, IsInternalToken
 from .serializers import *
@@ -347,28 +348,29 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
                    responses=ChannelPartnerServiceRecordSerializer(many=True),
                    extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'})
-    @action(methods=['GET'], detail=True)
+    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
     def service_changes_history(self, request, pk=None):
         channel_partner: ChannelPartner = self.get_object()
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         service_changes = channel_partner.service_changes(start_ts)
-        serializer = ChannelPartnerServiceRecordSerializer(service_changes, many=True, channel_partner=channel_partner)
-        return Response(serializer.data)
+        context = self.get_serializer_context()
+        context['channel_partner'] = channel_partner
+        return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceRecordSerializer,
+                                  serializer_context=context)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
                    responses=ChannelPartnerServiceSummarySerializer(many=True),
                    extensions={'x-permission': f'{ChannelPartner.permissions.view_service_reports} for Organization'})
-    @action(methods=['GET'], detail=True)
+    @action(methods=['GET'], detail=True, pagination_class=DefaultPagination)
     def service_changes_summary(self, request, pk=None):
         channel_partner: ChannelPartner = self.get_object()
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         service_changes = channel_partner.service_changes_summary(start_ts)
-        serializer = ChannelPartnerServiceSummarySerializer(service_changes, many=True)
-        return Response(serializer.data)
+        return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceSummarySerializer)
 
     @extend_schema(summary='Get aggregated usage data.',
                    methods=['GET'],
@@ -462,8 +464,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         service_changes = org.service_changes(start_ts).select_related('service', 'created_by')
-        serializer = OrganizationServiceRecordSerializer(service_changes, many=True)
-        return Response(serializer.data)
+        return paginated_response(self, service_changes, serializer_class=OrganizationServiceRecordSerializer)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
                    responses=ChannelPartnerServiceSummarySerializer(many=True),
@@ -475,8 +476,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
         service_changes = org.service_changes_summary(start_ts)
-        serializer = ChannelPartnerServiceSummarySerializer(service_changes, many=True)
-        return Response(serializer.data)
+        return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceSummarySerializer)
 
     @extend_schema(summary='Get aggregated usage data.',
                    methods=['GET'],
