@@ -228,8 +228,28 @@
             let-expanded="expanded"
             let-preview="preview"
         >
-            <ng-container *ngIf="!preview && node.type !== 'camera'; then expandStateIcon" />
-            <ng-container *ngIf="preview || node.type === 'camera'; then recordingIcon" />
+            <ng-container
+                *ngIf="
+                    !preview && ![RESOURCE_TYPE.CAMERA, RESOURCE_TYPE.LAYOUT].includes(node.type);
+                    then expandStateIcon
+                "
+            />
+            <ng-container
+                *ngIf="preview || node.type === RESOURCE_TYPE.CAMERA; then recordingIcon"
+            />
+            <svg-icon
+                *ngIf="node.type === RESOURCE_TYPE.LAYOUT"
+                nx-add-svg-src
+                [svgStyle]="{
+                    'width.px': '20',
+                    'height.px': '24',
+                    opacity: layoutStateService.unsavedLayoutsIds$$()[node.id] ? '1' : '0'
+                }"
+                [nxTooltip]="layoutStateService.unsavedLayoutsIds$$()[node.id] | translate"
+                svgClass="recording-icon"
+                [src]="icons.dirLayouts + 'unsaved.svg'"
+            >
+            </svg-icon>
             <ng-container *ngTemplateOutlet="nodeTypeIcon" />
             <ng-container
                 *ngIf="
@@ -295,14 +315,6 @@
                             (onEditModeCancelled)="editedLayout$$.set(null)"
                         >
                         </nx-text-editable>
-                        <nx-tag
-                            *ngIf="
-                                node.type === RESOURCE_TYPE.LAYOUT &&
-                                layoutStateService.unsavedLayoutsIds$$()[node.id] as unsaved
-                            "
-                            locked
-                            >{{ unsaved | translate }}</nx-tag
-                        >
                     </div>
                     <button
                         [cdkMenuTriggerFor]="nodeActionMenu"
