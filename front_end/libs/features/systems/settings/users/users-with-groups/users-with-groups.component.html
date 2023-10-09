@@ -77,11 +77,16 @@
                     class="pl-2"
                     [ngClass]="{ 'mt-2': !canBeEdited$$() }"
                 >
-                    <div
-                        class="group-list-item"
-                        *ngFor="let group of selectedGroupsList"
-                    >
-                        <h3 class="group-name">{{ group.name | translate }}</h3>
+                    <div *ngFor="let group of selectedGroupsList">
+                        <div class="group-list-item">
+                            <nx-ml-ellipsis
+                                [viewHeight]="25"
+                                [viewLineHeight]="23"
+                                [viewLines]="1"
+                            >
+                                {{ group.name | translate }}
+                            </nx-ml-ellipsis>
+                        </div>
                         <p class="help-block">{{ group.description | translate }}</p>
                     </div>
                 </div>

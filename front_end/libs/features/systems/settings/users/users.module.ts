@@ -9,6 +9,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
+import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -31,6 +32,7 @@ import { NxSystemUsersComponent } from './users.component';
         NxPermissionsDropdown,
         NxSwitchComponent,
         NxAddSvgSrcDirective,
+        NxMultiLineEllipsisComponent,
         NxApplyComponent,
     ],
     providers: [],
