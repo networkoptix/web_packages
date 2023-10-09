@@ -39,7 +39,6 @@ export class NxSystemGroupsService {
     private WEBSOCKET_URL: string;
     private readonly MAX_RECONNECT_ATTEMPTS = 8; // Total time is 510 seconds. Which is the sum  of series 2 * 2 ** x from 1 to 8.
     private attempt = 0;
-
     queue: WebSocketOutgoing[] = [];
 
     paramStateHandler = this.CPService.paramStateHandler;

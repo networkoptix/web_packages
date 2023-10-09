@@ -1,2 +1,41 @@
-<!-- eslint-disable-next-line nx/template/no-untranslated -->
-<div>Placeholder for settings</div>
+<ng-template #channelPartnersView>
+    <nx-settings-general
+        [view]="settingsViews.CHANNEL_PARTNERS"
+        [item]="currentItem"
+        (updateName)="handleUpdate(updatedName, $event)"
+    ></nx-settings-general>
+</ng-template>
+
+<ng-template #extendedView>
+    <nx-settings-general
+        [view]="currentView"
+        [item]="currentItem"
+        (updateName)="handleUpdate(updatedName, $event)"
+        (updateChangeService)="handleUpdate(updatedChangeService, $event)"
+        (updateExtId)="handleUpdate(updatedExtId, $event)"
+        (updateAccess)="handleUpdate(updatedPartnerAccess, $event)"
+    ></nx-settings-general>
+    <nx-settings-state
+        (updateState)="handleUpdate(updatedState, $event)"
+        [currState]="State.Active"
+        [canChange]="canUpdateStatus"
+    ></nx-settings-state>
+</ng-template>
+
+<div class="settings">
+    <ng-container
+        *ngIf="currentView === settingsViews.CHANNEL_PARTNERS; else extendedView"
+        [ngTemplateOutlet]="channelPartnersView"
+    ></ng-container>
+    <div
+        class="footer"
+        *ngIf="hasUpdate"
+    >
+        <nx-process-button
+            [process]="updateStateProcess"
+            [buttonText]="'Save' | translate"
+        >
+        </nx-process-button>
+        <nx-cancel-button [process]="updateStateProcess"> </nx-cancel-button>
+    </div>
+</div>

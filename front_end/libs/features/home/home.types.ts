@@ -71,3 +71,9 @@ export enum SystemsDisplayMode {
     Personal = 1,
     Shared = 2,
 }
+
+export const settingsViews = {
+    CHANNEL_PARTNERS: 'channelPartners',
+    ORGANIZATIONS: 'organizations',
+    SUBCHANNELS: 'subchannels',
+};

@@ -1,0 +1,57 @@
+<div class="pane">
+    <h4 translate>General</h4>
+    <div class="body">
+        <div class="input">
+            <label
+                for="name"
+                translate
+                >Name</label
+            >
+            <input
+                id="name"
+                [placeholder]="item.name"
+                [(ngModel)]="name"
+                (change)="updateName.emit(name)"
+            />
+        </div>
+        <div
+            class="input"
+            *ngIf="view === settingsViews.ORGANIZATIONS"
+        >
+            <label
+                for="role"
+                translate
+                >Channel Partner Access</label
+            >
+            <nx-select
+                [componentId]="'channelPartnerAccessSelect'"
+                [items]="partnerAccess"
+                [selected]="currAccess"
+                (onSelected)="updateAccess.emit($event.value)"
+            ></nx-select>
+        </div>
+        <div class="input">
+            <label
+                for="id"
+                translate
+                >External Id</label
+            >
+            <input
+                id="id"
+                [placeholder]="item.id"
+                [(ngModel)]="extId"
+                (change)="updateExtId.emit(extId)"
+            />
+        </div>
+        <div
+            class="box-input"
+            *ngIf="view === settingsViews.SUBCHANNELS"
+        >
+            <nx-checkbox
+                [checked]="canChangeService"
+                (onClick)="updateChangeService.emit($event)"
+            ></nx-checkbox>
+            <div translate>Allow changing services</div>
+        </div>
+    </div>
+</div>

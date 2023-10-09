@@ -46,6 +46,9 @@ const orgRoutes: Routes = [
             {
                 path: 'settings',
                 canActivate: [TabGuard],
+                data: {
+                    orgSettings: true,
+                },
                 component: NxOrganizationSettingsComponent,
             },
             {

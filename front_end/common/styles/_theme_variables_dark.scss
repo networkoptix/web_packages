@@ -682,6 +682,10 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --CP-pane-border: var(--dark5);
     --CP-pane-header-background: var(--dark4);
     --CP-pane-header-border: var(--dark7);
+    --CP-pane-input: var(--dark11);
+    --CP-state-button: var(--dark5);
+    --CP-state-button-selected: var(--dark10);
+    --CP-state-color: var(--light16);
 
     --organization-suspend-status: rgba(var(--yellow_main--rgb));
 

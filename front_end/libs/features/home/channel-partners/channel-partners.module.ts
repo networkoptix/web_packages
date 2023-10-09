@@ -38,6 +38,9 @@ const CPRoutes: Routes = [
             {
                 path: 'settings',
                 canActivate: [TabGuard],
+                data: {
+                    cpSettings: true,
+                },
                 component: NxOrganizationSettingsComponent,
             },
             {
@@ -55,6 +58,9 @@ const CPRoutes: Routes = [
                             },
                             {
                                 path: 'settings',
+                                data: {
+                                    subchannelSettings: true,
+                                },
                                 component: NxOrganizationSettingsComponent,
                             },
                         ],
