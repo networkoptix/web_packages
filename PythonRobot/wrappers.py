@@ -1,8 +1,8 @@
 import platform
 from typing import Sequence
 
-from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from generic_element import Element
