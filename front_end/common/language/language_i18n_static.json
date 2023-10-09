@@ -260,15 +260,79 @@
             "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         },
         "overlay": {
-            "quickActions" : {
-                "ptz": "PTZ",
-                "fisheye": "Fisheye",
-                "motion": "Motion",
-                "object": "Object",
-                "zoomWindow": "Zoom Window",
-                "info": "Info",
-                "rotate": "Rotate",
-                "screenshot": "Screenshot"
+            "menuActions": {
+                "menu": {
+                    "name": "Menu",
+                    "tooltip": "Menu"
+                },
+                "ptz": {
+                    "name": "PTZ",
+                    "tooltip": "PTZ"
+                },
+                "fisheye": {
+                    "name": "Fisheye",
+                    "tooltip": "Fisheye"
+                },
+                "motion": {
+                    "name": "Motion",
+                    "tooltip": "Motion"
+                },
+                "object": {
+                    "name": "Object",
+                    "tooltip": "Object"
+                },
+                "zoomWindow": {
+                    "name": "Zoom Window",
+                    "tooltip": "Zoom Window"
+                },
+                "screenshot": {
+                    "name": "Screenshot",
+                    "tooltip": "Screenshot"
+                },
+                "fullscreenOn": {
+                    "name": "Maximize Item",
+                    "tooltip": "Full Screen"
+                },
+                "fullscreenOff": {
+                    "name": "Minimize Item",
+                    "tooltip": "Exit Full Screen"
+                },
+                "rotate": {
+                    "name": "Rotate to",
+                    "tooltip": "Rotate"
+                },
+                "resolution": {
+                    "name": "Resolution",
+                    "tooltip": "Resolution"
+                },
+                "resolutionAuto": {
+                    "name": "Auto"
+                },
+                "resolutionHigh": {
+                    "name": "High"
+                },
+                "resolutionLow": {
+                    "name": "Low"
+                },
+                "showOnItem": {
+                    "name": "Show on Item"
+                },
+                "info": {
+                    "name": "Info",
+                    "tooltip": "Info"
+                },
+                "remove": {
+                    "name": "Remove from Layout",
+                    "tooltip": "Remove from Layout"
+                },
+                "recordingOn": {
+                    "name": "Recording",
+                    "tooltip": "Recording"
+                },
+                "recordingOff": {
+                    "name": "Recording off",
+                    "tooltip": "Recording off"
+                }
             }
         }
     },

@@ -1,10 +1,19 @@
 :host {
     &:hover {
         .nx-layout-grid-item-overlay {
-            display: grid;
+            visibility: visible;
             &.hide {
-                display: none;
+                visibility: hidden;
             }
+        }
+    }
+    .nx-layout-grid-item-overlay {
+        visibility: hidden;
+        &.show {
+            visibility: visible;
+        }
+        & > .content {
+            visibility: visible;
         }
     }
     container: overlay / inline-size;
@@ -15,10 +24,7 @@
     height: 100%;
     position: relative;
     z-index: 200;
-    display: none;
-    &.show {
-        display: grid;
-    }
+    display: grid;
     grid-gap: 12px;
     padding: 12px;
     grid-template-rows: 36px 1fr;
@@ -72,6 +78,7 @@ svg-icon {
     .resource-name {
         color: var(--light1);
         line-height: 24px;
+        margin: 0 4px;
         font-size: 14px;
         overflow: hidden;
         text-overflow: ellipsis;
@@ -121,6 +128,10 @@ svg-icon {
             border-radius: 0 6px 6px 0;
         }
 
+        &:first-child:last-child {
+            border-radius: 6px;
+        }
+
         &:has(.active) {
             background-color: var(--brand-core);
         }
@@ -165,4 +176,13 @@ svg-icon {
     line-height: 12px;
     font-size: 12px;
     color: var(--light1);
+}
+
+.content {
+    position: absolute;
+    left: 0;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
 }

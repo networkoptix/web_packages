@@ -1,93 +1,90 @@
 <div
     class="nx-layout-grid-item-overlay"
-    [ngClass]="{ show: isFullscreen$$() && !hide, hide: hide }"
+    [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide, hide: hide }"
 >
-    <div class="name">
+    <ng-template
+        #svgIcon
+        let-menuItem="menuItem"
+        let-size="size"
+        let-tooltipExtra="tooltipExtra"
+    >
         <svg-icon
+            *ngIf="menuItem"
             nx-add-svg-src
-            [src]="icons.dirLayoutsCamera + 'camera_rec_off.svg'"
-            [svgStyle]="{ 'width.px': '16', 'height.px': '16' }"
-            [nxTooltip]="('Recording off' | translate) + ': ' + node?.name"
+            [ngClass]="{
+                active: menuItem.checked$$?.()
+            }"
+            [src]="menuItem.icon"
+            [svgStyle]="{
+                'width.px': '{{size || 24}}',
+                'height.px': '{{size || 24}}'
+            }"
+            [nxTooltip]="(menuItem.tooltip | translate) + (tooltipExtra || '')"
+            (click)="handleIconClick(menuItem.action, $event)"
         ></svg-icon>
+    </ng-template>
+
+    <div class="name">
+        <ng-container
+            *ngTemplateOutlet="
+                svgIcon;
+                context: {
+                    menuItem: recordingIcon$$(),
+                    size: 16,
+                    tooltipExtra: extraCameraTooltip$$()
+                }
+            "
+        />
         <div
             class="resource-name ellipsis"
-            [nxTooltip]="node?.name || ('Not Supported' | translate)"
+            [nxTooltip]="node$$()?.name || ('Not Supported' | translate)"
         >
-            {{ node?.name || ('Not Supported' | translate) }}
+            {{ node$$()?.name || ('Not Supported' | translate) }}
         </div>
     </div>
 
-    <div
-        class="quick-actions"
-        (click)="$event.stopPropagation()"
-    >
-        <div class="action-icon">
-            <svg-icon
-                nx-add-svg-src
-                [src]="icons.dirLayouts + 'menu.svg'"
-                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                [nxTooltip]="'Menu' | translate"
-                [cdkMenuTriggerFor]="nodeActionMenu"
-            ></svg-icon>
+    <div class="quick-actions">
+        <div
+            class="action-icon"
+            *ngIf="menu$$()"
+            [cdkMenuTriggerFor]="nodeActionMenu"
+            (cdkMenuOpened)="isMenuOpened$$.set(true)"
+            (cdkMenuClosed)="isMenuOpened$$.set(false)"
+        >
+            <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: menu$$() }" />
             <ng-template #nodeActionMenu>
                 <nx-context-menu
-                    [context]="node"
-                    [menuItems]="menuItemsByType[node.type]"
+                    [context]="node$$()"
+                    [menuItems]="menuItemsByType[node$$().type]"
                 />
             </ng-template>
         </div>
-        <ng-container *ngIf="node.type === ResourceType.CAMERA">
+        <ng-container *ngIf="quickActions$$()">
             <div
-                *ngFor="let action of CAMERA_QUICK_ACTIONS"
+                *ngFor="let quickActionItem of quickActions$$()"
                 class="action-icon"
             >
-                <svg-icon
-                    nx-add-svg-src
-                    [ngClass]="{ active: action.class$$ && action.class$$() }"
-                    [src]="icons.dirLayoutsCamera + action.icon"
-                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                    (click)="$event.stopPropagation(); $event.preventDefault(); action?.toggle()"
-                    [nxTooltip]="action.tooltip | translate"
-                ></svg-icon>
+                <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: quickActionItem }" />
             </div>
         </ng-container>
     </div>
 
     <div class="menu-group">
         <div class="fullscreen">
-            <svg-icon
-                *ngIf="isFullscreen$$()"
-                nx-add-svg-src
-                (click)="ACTIONS.fullscreenOff()"
-                [src]="icons.dirLayoutsCamera + 'collapse.svg'"
-                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                [nxTooltip]="'Exit Full Screen' | translate"
-            ></svg-icon>
-            <svg-icon
-                *ngIf="!isFullscreen$$()"
-                nx-add-svg-src
-                (click)="ACTIONS.fullscreenOn()"
-                [src]="icons.dirLayoutsCamera + 'full_screen.svg'"
-                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                [nxTooltip]="'Full Screen' | translate"
-            ></svg-icon>
+            <ng-container
+                *ngTemplateOutlet="svgIcon; context: { menuItem: fullscreenAction$$() }"
+            />
         </div>
         <div
             class="remove"
-            *ngIf="showRemove && !isFullscreen$$()"
+            *ngIf="removeAction$$()"
         >
-            <svg-icon
-                nx-add-svg-src
-                (click)="removeItem.emit(item)"
-                [src]="icons.dirLayoutsCamera + 'close.svg'"
-                [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
-                [nxTooltip]="'Remove from layout' | translate"
-            ></svg-icon>
+            <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: removeAction$$() }" />
         </div>
     </div>
 
     <div
-        *ngIf="showInfo$$()"
+        *ngIf="displayInfo$$()"
         class="info"
     >
         <div
@@ -107,5 +104,9 @@
         *ngIf="!!statusText$$()"
     >
         {{ statusText$$().toUpperCase() | translate }}
+    </div>
+
+    <div class="content">
+        <ng-content />
     </div>
 </div>

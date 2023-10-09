@@ -37,6 +37,9 @@
             }
 
             &.checked {
+                svg-icon {
+                    margin-left: 6px;
+                }
                 svg-icon svg path {
                     stroke: var(--context-menu-item-icon);
                 }

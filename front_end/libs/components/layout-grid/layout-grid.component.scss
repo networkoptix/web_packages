@@ -294,7 +294,6 @@ h2.auto-save-overlay {
         justify-content: center;
         align-items: center;
         background: var(--placeholder-background);
-        height: 100%;
 
         &.has-secondary-panel > {
             :not(.main-panel) {
@@ -430,7 +429,7 @@ h2.auto-save-overlay {
 
     &:active,
     :focus {
-        outline: 2px solid var(--brand-core);
+        outline: 4px solid var(--brand-core);
     }
 
     ::ng-deep {

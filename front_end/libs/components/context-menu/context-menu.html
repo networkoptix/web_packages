@@ -34,11 +34,11 @@
             <button
                 cdkMenuItem
                 (click)="item.action($event, context); $event.stopPropagation()"
-                [ngClass]="{checked: item.checked}"
+                [ngClass]="{checked: item.checked$$?.()}"
             >
                 {{ item.name | translate }}
                 <svg-icon
-                    *ngIf="item.checked"
+                    *ngIf="item.checked$$?.()"
                     nx-add-svg-src
                     [svgStyle]="{
                                     'width.px': '16',

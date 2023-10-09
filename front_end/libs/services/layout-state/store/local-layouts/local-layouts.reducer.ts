@@ -9,7 +9,7 @@ export const initialState: Layouts = [];
 
 export const reducer = createReducer(
     initialState,
-    on(LocalLayoutActions.set, (_state, { layouts }): Layouts => layouts),
+    on(LocalLayoutActions.set, (_state, { layouts }): Layouts => layouts || []),
     on(LocalLayoutActions.clear, (_state): Layouts => []),
     on(LocalLayoutActions.add, (state, { layouts }): Layouts => [...state, ...layouts]),
     on(

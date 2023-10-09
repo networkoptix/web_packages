@@ -325,7 +325,7 @@ export class NxLayoutGridComponent {
         this.layoutStateService.portal = null;
     }
 
-    editCameras: Signal<boolean> = computed(
+    editCameras$$: Signal<boolean> = computed(
         () => this.system.permissionManager.permissions().editCameras,
     );
 
@@ -436,9 +436,15 @@ export class NxLayoutGridComponent {
         ),
     );
 
-    removeFocus: () => void = () => null;
+    removeFocusDefault: () => void = () => null;
+    removeFocus: () => void = this.removeFocusDefault;
 
-    focus = (id: string): void => {
+    focusToggle = (id: string): void => {
+        if (this.removeFocus !== this.removeFocusDefault) {
+            this.removeFocus();
+            return;
+        }
+
         const originalLayout = cloneDeep(this.layout);
         this.initialLayout$.next({
             ...originalLayout,
@@ -446,7 +452,7 @@ export class NxLayoutGridComponent {
         });
         this.removeFocus = () => {
             this.initialLayout$.next(originalLayout);
-            this.removeFocus = () => null;
+            this.removeFocus = this.removeFocusDefault;
         };
     };
 

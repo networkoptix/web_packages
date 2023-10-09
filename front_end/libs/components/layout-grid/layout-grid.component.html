@@ -192,8 +192,6 @@
                                 'full-screen-wrapper':
                                     layoutItemWrapper === window.document.fullscreenElement
                             }"
-                            (dblclick)="focus(item.id)"
-                            (nxClickElsewhere)="removeFocus()"
                             (resize)="resizeItem($event, dragContainer)"
                         >
                             <div
@@ -219,6 +217,8 @@
                                     (collisions$ | async)[item.id]
                                         | mergeObjects : item.renderConfig.child
                                 "
+                                (dblclick)="focusToggle(item.id)"
+                                (nxClickElsewhere)="removeFocus()"
                             >
                                 <ng-template #notSupported>
                                     <div
@@ -228,278 +228,301 @@
                                         Not supported
                                     </div>
                                 </ng-template>
-                                <ng-container
-                                    *ngIf="
-                                        layoutItemLookup[item.resourceId] as itemDetail;
-                                        else notSupported
-                                    "
-                                >
-                                    <ng-template
-                                        #showError
-                                        let-status="status"
+                                <ng-template #tileContent>
+                                    <ng-container
+                                        *ngIf="
+                                            layoutItemLookup[item.resourceId] as itemDetail;
+                                            else notSupported
+                                        "
                                     >
-                                        <div
-                                            *ngIf="
-                                                status ||
-                                                errors[itemDetail.details.id] ||
-                                                (assertResourceOfType.camera(itemDetail) &&
-                                                itemDetail.details.unauthorized
-                                                    ? 'unauthorized'
-                                                    : !(
-                                                          (assertResourceOfType.camera(
+                                        <ng-template
+                                            #showError
+                                            let-status="status"
+                                        >
+                                            <div
+                                                *ngIf="
+                                                    status ||
+                                                    errors[itemDetail.details.id] ||
+                                                    (assertResourceOfType.camera(itemDetail) &&
+                                                    itemDetail.details.unauthorized
+                                                        ? 'unauthorized'
+                                                        : !(
+                                                              (assertResourceOfType.camera(
+                                                                  itemDetail
+                                                              ) ||
+                                                                  assertResourceOfType.server(
+                                                                      itemDetail
+                                                                  )) &&
+                                                              itemDetail.details.online
+                                                          )
+                                                        ? 'offline'
+                                                        : (assertResourceOfType.camera(
                                                               itemDetail
                                                           ) ||
                                                               assertResourceOfType.server(
                                                                   itemDetail
                                                               )) &&
-                                                          itemDetail.details.online
-                                                      )
-                                                    ? 'offline'
-                                                    : (assertResourceOfType.camera(itemDetail) ||
-                                                          assertResourceOfType.server(
+                                                          itemDetail.details.status !== 'archive'
+                                                        ? (assertResourceOfType.camera(
                                                               itemDetail
-                                                          )) &&
-                                                      itemDetail.details.status !== 'archive'
-                                                    ? (assertResourceOfType.camera(itemDetail) ||
-                                                          assertResourceOfType.server(
-                                                              itemDetail
-                                                          )) &&
-                                                      itemDetail.details.status
-                                                    : 'offline') as status
-                                            "
-                                            (click)="
-                                                assertResourceOfType.camera(itemDetail) &&
-                                                    editCameras() &&
-                                                    (status === 'defaultPassword' ||
-                                                        itemDetail.details.unauthorized) &&
-                                                    updateCameraCredentials(
-                                                        system,
-                                                        itemDetail.details
-                                                    )
-                                            "
-                                            [ngClass]="{
-                                                'has-action':
-                                                    assertResourceOfType.camera(itemDetail) &&
-                                                    editCameras() &&
-                                                    (status === 'defaultPassword' ||
-                                                        itemDetail.details.unauthorized),
-                                                'has-secondary-panel':
-                                                    item.renderConfig.hasSecondaryPanel,
-                                                small:
-                                                    item.renderConfig.placeholderClass === 'small',
-                                                medium:
-                                                    item.renderConfig.placeholderClass === 'medium',
-                                                large:
-                                                    item.renderConfig.placeholderClass === 'large'
-                                            }"
-                                            class="item-error content-container"
-                                        >
-                                            <svg-icon
-                                                nx-add-svg-src
-                                                [ngClass]="{
-                                                    'main-panel':
-                                                        item.renderConfig.placeholderState >=
-                                                        PLACEHOLDER_STATE.ICON_ONLY
-                                                }"
-                                                [src]="
-                                                    icons.dirLayouts +
-                                                    'placeholders/' +
-                                                    ([
-                                                        'online',
-                                                        'unauthorized',
-                                                        'defaultPassword',
-                                                        'transcodingDisabled',
-                                                        'mjpegDisabled'
-                                                    ].includes(status)
-                                                        ? status
-                                                              .replace('defaultPassword', 'alert')
-                                                              .replace(
-                                                                  'transcodingDisabled',
-                                                                  'disabled'
-                                                              )
-                                                              .replace('mjpegDisabled', 'disabled')
-                                                        : [
-                                                              RESOURCE_TYPE.WEB_PAGE,
-                                                              RESOURCE_TYPE.IO_DEVICE
-                                                          ].includes(itemDetail.type)
-                                                        ? status
-                                                        : itemDetail.type === RESOURCE_TYPE.SERVER
-                                                        ? 'unavailable'
-                                                        : 'offline') +
-                                                    '.svg'
+                                                          ) ||
+                                                              assertResourceOfType.server(
+                                                                  itemDetail
+                                                              )) &&
+                                                          itemDetail.details.status
+                                                        : 'offline') as status
                                                 "
-                                                [svgStyle]="{
-                                                    'width.%': '100%',
-                                                    'height.%': '100%',
-                                                    'width.px':
-                                                        item.renderConfig.maxPlaceholderSize,
-                                                    'height.px':
-                                                        item.renderConfig.maxPlaceholderSize
-                                                }"
-                                            >
-                                            </svg-icon>
-                                            <h3
-                                                [ngClass]="{
-                                                    'main-panel':
-                                                        item.renderConfig.placeholderState >=
-                                                        PLACEHOLDER_STATE.WITH_TITLE
-                                                }"
-                                            >
-                                                {{
-                                                    (itemDetail.type === RESOURCE_TYPE.CAMERA
-                                                        ? LANG.common.cameraStates
-                                                        : LANG.common.serverStates)[status] ||
-                                                        LANG.layouts.errors[status] ||
-                                                        status | translate
-                                                }}
-                                            </h3>
-                                            <h4
-                                                *ngIf="
-                                                    additionalErrorMessages[
-                                                        itemDetail.details.id
-                                                    ] ||
-                                                    additionalErrorMessages[
-                                                        status
-                                                    ] as additionalMessage
+                                                (click)="
+                                                    assertResourceOfType.camera(itemDetail) &&
+                                                        editCameras$$() &&
+                                                        (status === 'defaultPassword' ||
+                                                            itemDetail.details.unauthorized) &&
+                                                        updateCameraCredentials(
+                                                            system,
+                                                            itemDetail.details
+                                                        )
                                                 "
                                                 [ngClass]="{
-                                                    'main-panel':
-                                                        item.renderConfig.placeholderState ===
-                                                        PLACEHOLDER_STATE.FULL
+                                                    'has-action':
+                                                        assertResourceOfType.camera(itemDetail) &&
+                                                        editCameras$$() &&
+                                                        (status === 'defaultPassword' ||
+                                                            itemDetail.details.unauthorized),
+                                                    'has-secondary-panel':
+                                                        item.renderConfig.hasSecondaryPanel,
+                                                    small:
+                                                        item.renderConfig.placeholderClass ===
+                                                        'small',
+                                                    medium:
+                                                        item.renderConfig.placeholderClass ===
+                                                        'medium',
+                                                    large:
+                                                        item.renderConfig.placeholderClass ===
+                                                        'large'
                                                 }"
+                                                class="item-error content-container"
                                             >
-                                                {{ additionalMessage | nxTranslate }}
-                                            </h4>
-                                        </div>
-                                    </ng-template>
-                                    <div
-                                        *ngIf="
-                                            !errors[itemDetail.details.id] &&
-                                                !(
-                                                    assertResourceOfType.camera(itemDetail) &&
-                                                    itemDetail.details.unauthorized
-                                                ) &&
-                                                (((assertResourceOfType.camera(itemDetail) ||
-                                                    assertResourceOfType.server(itemDetail)) &&
-                                                    itemDetail.details.online) ||
-                                                    assertResourceOfType.webpage(itemDetail));
-                                            else showError
-                                        "
-                                        class="content-container"
-                                        [ngSwitch]="itemDetail.type"
-                                    >
-                                        <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
-                                            <ng-template #offlinePlaceholder>
-                                                <ng-container
-                                                    *ngTemplateOutlet="
-                                                        showError;
-                                                        context: { status: 'offline' }
+                                                <svg-icon
+                                                    nx-add-svg-src
+                                                    [ngClass]="{
+                                                        'main-panel':
+                                                            item.renderConfig.placeholderState >=
+                                                            PLACEHOLDER_STATE.ICON_ONLY
+                                                    }"
+                                                    [src]="
+                                                        icons.dirLayouts +
+                                                        'placeholders/' +
+                                                        ([
+                                                            'online',
+                                                            'unauthorized',
+                                                            'defaultPassword',
+                                                            'transcodingDisabled',
+                                                            'mjpegDisabled'
+                                                        ].includes(status)
+                                                            ? status
+                                                                  .replace(
+                                                                      'defaultPassword',
+                                                                      'alert'
+                                                                  )
+                                                                  .replace(
+                                                                      'transcodingDisabled',
+                                                                      'disabled'
+                                                                  )
+                                                                  .replace(
+                                                                      'mjpegDisabled',
+                                                                      'disabled'
+                                                                  )
+                                                            : [
+                                                                  RESOURCE_TYPE.WEB_PAGE,
+                                                                  RESOURCE_TYPE.IO_DEVICE
+                                                              ].includes(itemDetail.type)
+                                                            ? status
+                                                            : itemDetail.type ===
+                                                              RESOURCE_TYPE.SERVER
+                                                            ? 'unavailable'
+                                                            : 'offline') +
+                                                        '.svg'
                                                     "
-                                                ></ng-container>
-                                            </ng-template>
-                                            <div
-                                                *ngIf="
-                                                    assertResourceOfType.camera(itemDetail) &&
-                                                    itemDetail as itemDetail
-                                                "
-                                                class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
-                                            >
-                                                <nx-video-player
-                                                    [camera]="itemDetail.details"
-                                                    [fullScreenTarget]="layoutItemWrapper"
-                                                    [pingServer]="pingServer(itemDetail.details)"
-                                                    [showFullScreenButton]="false"
-                                                    [rotation]="item.rotation"
-                                                    (showError)="
-                                                        handleVideoError(itemDetail, $event)
-                                                    "
-                                                    (showPtz)="showPtz.emit($event)"
-                                                    [zoom]="item"
-                                                    [lostConnectionPlaceholder]="offlinePlaceholder"
-                                                    [skipCredentialsCheck]="
-                                                        skipDefaultCredentialsCheck[
-                                                            itemDetail.details.id
-                                                        ]
-                                                    "
+                                                    [svgStyle]="{
+                                                        'width.%': '100%',
+                                                        'height.%': '100%',
+                                                        'width.px':
+                                                            item.renderConfig.maxPlaceholderSize,
+                                                        'height.px':
+                                                            item.renderConfig.maxPlaceholderSize
+                                                    }"
                                                 >
-                                                </nx-video-player>
-                                            </div>
-                                        </ng-container>
-                                        <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
-                                            <ng-template #offlinePlaceholder>
-                                                <ng-container
-                                                    *ngTemplateOutlet="
-                                                        showError;
-                                                        context: { status: 'offline' }
-                                                    "
-                                                ></ng-container>
-                                            </ng-template>
-                                            <nx-monitoring-graph
-                                                *ngIf="
-                                                    assertResourceOfType.server(itemDetail) &&
-                                                    itemDetail as itemDetail
-                                                "
-                                                [systemId]="layout.systemId"
-                                                [selectedServerId]="itemDetail.details.id"
-                                                [lostConnectionPlaceholder]="offlinePlaceholder"
-                                                noFrame
-                                                class="theme-override"
-                                                data-theme="dark"
-                                            ></nx-monitoring-graph>
-                                        </ng-container>
-                                        <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
-                                            <ng-template #webPageDisabled>
-                                                <ng-container
-                                                    *ngTemplateOutlet="
-                                                        showError;
-                                                        context: { status: RESOURCE_TYPE.WEB_PAGE }
-                                                    "
-                                                ></ng-container>
-                                            </ng-template>
-                                            <ng-container
-                                                *ngIf="
-                                                    CONFIG.featureFlags.layoutsWebpages ||
-                                                        CONFIG.featureFlags.layoutsDemo;
-                                                    else webPageDisabled
-                                                "
-                                            >
-                                                <nx-pre-loader></nx-pre-loader>
-                                                <iframe
+                                                </svg-icon>
+                                                <h3
+                                                    [ngClass]="{
+                                                        'main-panel':
+                                                            item.renderConfig.placeholderState >=
+                                                            PLACEHOLDER_STATE.WITH_TITLE
+                                                    }"
+                                                >
+                                                    {{
+                                                        (itemDetail.type === RESOURCE_TYPE.CAMERA
+                                                            ? LANG.common.cameraStates
+                                                            : LANG.common.serverStates)[status] ||
+                                                            LANG.layouts.errors[status] ||
+                                                            status | translate
+                                                    }}
+                                                </h3>
+                                                <h4
                                                     *ngIf="
-                                                        assertResourceOfType.webpage(itemDetail) &&
+                                                        additionalErrorMessages[
+                                                            itemDetail.details.id
+                                                        ] ||
+                                                        additionalErrorMessages[
+                                                            status
+                                                        ] as additionalMessage
+                                                    "
+                                                    [ngClass]="{
+                                                        'main-panel':
+                                                            item.renderConfig.placeholderState ===
+                                                            PLACEHOLDER_STATE.FULL
+                                                    }"
+                                                >
+                                                    {{ additionalMessage | nxTranslate }}
+                                                </h4>
+                                            </div>
+                                        </ng-template>
+                                        <div
+                                            *ngIf="
+                                                !errors[itemDetail.details.id] &&
+                                                    !(
+                                                        assertResourceOfType.camera(itemDetail) &&
+                                                        itemDetail.details.unauthorized
+                                                    ) &&
+                                                    (((assertResourceOfType.camera(itemDetail) ||
+                                                        assertResourceOfType.server(itemDetail)) &&
+                                                        itemDetail.details.online) ||
+                                                        assertResourceOfType.webpage(itemDetail));
+                                                else showError
+                                            "
+                                            class="content-container"
+                                            [ngSwitch]="itemDetail.type"
+                                        >
+                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
+                                                <ng-template #offlinePlaceholder>
+                                                    <ng-container
+                                                        *ngTemplateOutlet="
+                                                            showError;
+                                                            context: { status: 'offline' }
+                                                        "
+                                                    ></ng-container>
+                                                </ng-template>
+                                                <div
+                                                    *ngIf="
+                                                        assertResourceOfType.camera(itemDetail) &&
                                                         itemDetail as itemDetail
                                                     "
-                                                    #webpage
-                                                    (load)="
-                                                        checkIframeContent(
-                                                            itemDetail.details.id,
-                                                            webpage
-                                                        )
-                                                    "
-                                                    [src]="
-                                                        itemDetail.details.url
-                                                            | safe : 'resourceUrl'
-                                                    "
-                                                    frameBorder="0"
-                                                ></iframe>
+                                                    class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
+                                                >
+                                                    <nx-video-player
+                                                        [camera]="itemDetail.details"
+                                                        [fullScreenTarget]="layoutItemWrapper"
+                                                        [pingServer]="
+                                                            pingServer(itemDetail.details)
+                                                        "
+                                                        [showFullScreenButton]="false"
+                                                        [rotation]="item.rotation"
+                                                        (showError)="
+                                                            handleVideoError(itemDetail, $event)
+                                                        "
+                                                        (showPtz)="showPtz.emit($event)"
+                                                        [zoom]="item"
+                                                        [lostConnectionPlaceholder]="
+                                                            offlinePlaceholder
+                                                        "
+                                                        [skipCredentialsCheck]="
+                                                            skipDefaultCredentialsCheck[
+                                                                itemDetail.details.id
+                                                            ]
+                                                        "
+                                                    >
+                                                    </nx-video-player>
+                                                </div>
                                             </ng-container>
-                                        </ng-container>
-                                        <ng-container *ngSwitchCase="RESOURCE_TYPE.IO_DEVICE">
-                                            <ng-container
-                                                *ngTemplateOutlet="
-                                                    showError;
-                                                    context: { status: RESOURCE_TYPE.IO_DEVICE }
-                                                "
-                                            ></ng-container>
-                                        </ng-container>
-                                        <ng-container *ngSwitchCaseDefault>
-                                            <ng-container
-                                                *ngTemplateOutlet="notSupported"
-                                            ></ng-container
-                                            >>
-                                        </ng-container>
-                                    </div>
-                                </ng-container>
+                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
+                                                <ng-template #offlinePlaceholder>
+                                                    <ng-container
+                                                        *ngTemplateOutlet="
+                                                            showError;
+                                                            context: { status: 'offline' }
+                                                        "
+                                                    ></ng-container>
+                                                </ng-template>
+                                                <nx-monitoring-graph
+                                                    *ngIf="
+                                                        assertResourceOfType.server(itemDetail) &&
+                                                        itemDetail as itemDetail
+                                                    "
+                                                    [systemId]="layout.systemId"
+                                                    [selectedServerId]="itemDetail.details.id"
+                                                    [lostConnectionPlaceholder]="offlinePlaceholder"
+                                                    noFrame
+                                                    class="theme-override"
+                                                    data-theme="dark"
+                                                ></nx-monitoring-graph>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
+                                                <ng-template #webPageDisabled>
+                                                    <ng-container
+                                                        *ngTemplateOutlet="
+                                                            showError;
+                                                            context: {
+                                                                status: RESOURCE_TYPE.WEB_PAGE
+                                                            }
+                                                        "
+                                                    ></ng-container>
+                                                </ng-template>
+                                                <ng-container
+                                                    *ngIf="
+                                                        CONFIG.featureFlags.layoutsWebpages ||
+                                                            CONFIG.featureFlags.layoutsDemo;
+                                                        else webPageDisabled
+                                                    "
+                                                >
+                                                    <nx-pre-loader></nx-pre-loader>
+                                                    <iframe
+                                                        *ngIf="
+                                                            assertResourceOfType.webpage(
+                                                                itemDetail
+                                                            ) && itemDetail as itemDetail
+                                                        "
+                                                        #webpage
+                                                        (load)="
+                                                            checkIframeContent(
+                                                                itemDetail.details.id,
+                                                                webpage
+                                                            )
+                                                        "
+                                                        [src]="
+                                                            itemDetail.details.url
+                                                                | safe : 'resourceUrl'
+                                                        "
+                                                        frameBorder="0"
+                                                    ></iframe>
+                                                </ng-container>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.IO_DEVICE">
+                                                <ng-container
+                                                    *ngTemplateOutlet="
+                                                        showError;
+                                                        context: { status: RESOURCE_TYPE.IO_DEVICE }
+                                                    "
+                                                ></ng-container>
+                                            </ng-container>
+                                            <ng-container *ngSwitchCaseDefault>
+                                                <ng-container
+                                                    *ngTemplateOutlet="notSupported"
+                                                ></ng-container
+                                                >>
+                                            </ng-container>
+                                        </div>
+                                    </ng-container>
+                                </ng-template>
                                 <ng-container *ngIf="!window.document.fullscreenElement">
                                     <div
                                         *ngFor="let alignment of alignments"
@@ -530,10 +553,13 @@
                                     [item]="item"
                                     [node]="layoutItemLookup[item.resourceId]"
                                     [fullScreenTarget]="layoutItemWrapper"
-                                    [showRemove]="!layout.locked"
+                                    [showRemove]="!layout.locked && editCameras$$()"
                                     [hide]="dragging$$()"
+                                    [canEdit]="editCameras$$()"
                                     (removeItem)="removeItem($event)"
-                                />
+                                >
+                                    <ng-container *ngTemplateOutlet="tileContent" />
+                                </nx-layout-grid-item-overlay>
                             </div>
                         </div>
                     </ng-container>
