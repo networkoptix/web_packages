@@ -97,12 +97,67 @@
     </div>
 </ng-template>
 
-<ng-container
+<div
     *ngIf="
         !(layoutStateService.portal && CONFIG.featureFlags.layoutsDeviceSettings);
         else showPortal
     "
+    class="grid-section"
 >
+    <div
+        *ngIf="layout?.id && layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved"
+        class="unsaved-ribbon"
+    >
+        <ng-container [ngSwitch]="unsaved">
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [src]="icons.dirNonStandard + 'info.svg'"
+            ></svg-icon>
+            <span
+                *ngSwitchCase="unsavedStates.unsaved"
+                class="ribbon-message"
+                translate
+            >
+                This layout hasn't been saved yet
+            </span>
+            <span
+                *ngSwitchCase="unsavedStates.saving"
+                class="ribbon-message"
+                translate
+            >
+                Saving layout...
+            </span>
+            <span
+                *ngSwitchDefault
+                class="ribbon-message"
+                translate
+            >
+                There are unsaved changes on the layout
+            </span>
+            <button
+                class="ribbon-button"
+                (click)="layoutStateService.saveLayout(layout.id)"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '20',
+                        'height.px': '20'
+                    }"
+                    [src]="icons.dirLayouts + 'save.svg'"
+                ></svg-icon>
+                <span translate>Save</span>
+            </button>
+            <button
+                class="ribbon-button"
+                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                translate
+            >
+                Discard
+            </button>
+        </ng-container>
+    </div>
     <div
         *ngIf="layoutItemLookup && (layout$ | async) as layout; else preloader"
         class="grid-wrapper"
@@ -574,4 +629,4 @@
             [selectedLayout]="layout"
         ></nx-webgl-canvas>
     </div>
-</ng-container>
+</div>

@@ -343,6 +343,7 @@ export class NxLayoutGridComponent {
     ];
 
     assertResourceOfType = assertResourceOfType;
+    unsavedStates = staticLang.layouts.unsavedStates;
 
     mouseMoving$ = fromEvent(this.window.document, 'mousemove').pipe(
         switchMap(() => of(false).pipe(delay(5000), startWith(true))),
