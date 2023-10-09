@@ -101,7 +101,7 @@ def search_highlights_system_name(server: Mediaserver):
 
     sys_page = SystemsPage(driver)
     sys_page.search_bar().input_text(server.name)
-    assert sys_page.systems_found(1).in_dom, \
+    assert sys_page.systems_found(1).is_visible(), \
         "System tiles not found or incorrect number of tiles."
 
     sys_page.update_system_tiles()
@@ -123,7 +123,7 @@ def search_highlights_owner_name(server: Mediaserver):
     sys_page = SystemsPage(driver)
     sys_page.search_bar().input_text("mark hamill")
     time.sleep(1)
-    assert sys_page.systems_found(1).in_dom, \
+    assert sys_page.systems_found(1).is_visible(), \
         "System tiles not found or incorrect number of tiles."
 
     sys_page.update_system_tiles()
@@ -145,7 +145,7 @@ def search_is_cleared_by_x_button(server: Mediaserver):
 
     sys_page = SystemsPage(driver)
     sys_page.search_bar().input_text(server.name)
-    assert sys_page.systems_found(1).in_dom, \
+    assert sys_page.systems_found(1).is_visible(), \
         "System tiles not found or incorrect number of tiles."
     sys_page.search_x_button().click()
     time.sleep(1)
@@ -201,7 +201,7 @@ def search_only_visible_with_more_than_eight_systems(
 
     sys_page = SystemsPage(driver)
     assert len(sys_page.tiles) == 8, f"Number of tiles was: {len(sys_page.tiles)}.  Expected 8."
-    assert not sys_page.search_bar().in_dom, "Search bar was still visible."
+    assert not sys_page.search_bar().is_visible(), "Search bar was still visible."
 
     driver.quit()
     print("pass")

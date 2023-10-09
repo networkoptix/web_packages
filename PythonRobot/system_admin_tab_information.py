@@ -11,6 +11,7 @@ from generic_element import Element
 from wrappers import Link
 from wrappers import PageText
 from wrappers import Table
+from wrappers import TextField
 
 
 class TabInformation:
@@ -60,8 +61,8 @@ class TabInformation:
         ).is_visible()
 
     def upload_json_report(self, filename: Path):
-        element = Element(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
-        element.send_file(str(filename))
+        element = TextField(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
+        element.send_keys(str(filename))
         started_at = time.monotonic()
         timeout_sec = 10
         while True:

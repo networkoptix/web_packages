@@ -1,7 +1,9 @@
+import platform
 from typing import Sequence
 
-from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver import Keys
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from generic_element import Element
 
@@ -145,10 +147,18 @@ class TextField:
         self._element.wait_until_visible(timeout)
 
     def delete_all_text(self):
-        self._element.delete_all_text()
+        self._element.wait_until_clickable()
+        if platform.system() == 'Darwin':
+            self._element.send_keys(Keys.COMMAND + 'a')
+        else:
+            self._element.send_keys(Keys.CONTROL + 'a')
+        self._element.send_keys(Keys.BACK_SPACE)
 
     def click(self):
         self._element.click()
+
+    def is_visible(self) -> bool:
+        return self._element.is_visible()
 
 
 class SearchBar:
@@ -156,24 +166,30 @@ class SearchBar:
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
+
     def should_be_focused(self):
         return self._element.is_focused()
+
     def search_text(self, text: str):
         self._element.send_keys(text)
         # self._element.submit()
-    def wait_until_visible(self, timeout:0.5):
+
+    def wait_until_visible(self, timeout: 0.5):
         self._element.wait_until_visible(timeout)
+
     def click(self):
         self._element.click()
+
     def get_attribute(self, attribute: str):
         return self._element.get_attribute(attribute)
+
 
 class Table:
 
     def __init__(self, driver: WebDriver,
                  locator,
-                 target_item:str="",
-                 target_contents:str=""):
+                 target_item: str = "",
+                 target_contents: str = ""):
         self._driver = driver
         self._element = Element(self._driver, locator)
         self.locator = locator
@@ -200,7 +216,7 @@ class Table:
 
     def get_data(self, locator="") -> Sequence[Sequence[Element]]:
         if not locator:
-            locator=self.locator
+            locator = self.locator
         rows = []
         row_n = 1
         while True:
@@ -222,8 +238,6 @@ class Table:
                 rows.append(row)
             row_n += 1
         return rows
-
-
 
 
 class Image:
@@ -251,7 +265,7 @@ class Pane:
         self.locator = locator
 
     def count_item(self, item_locator: str):
-        xpath = self.locator +  item_locator
+        xpath = self.locator + item_locator
         return Element(self._driver, xpath).count()
 
     def should_contain(self, text: str):
@@ -275,10 +289,13 @@ class Link:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
+
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
+
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
+
 
 class DropDown:
 

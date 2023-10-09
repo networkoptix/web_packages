@@ -1,12 +1,10 @@
 import logging
-import platform
 import time
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver import ActionChains
 from selenium.webdriver.common.by import By
-from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.support import expected_conditions as ec
 from selenium.webdriver.support.ui import WebDriverWait
@@ -21,14 +19,6 @@ class Element:
         self._driver = driver
         self._locator = locator
         self._element = None
-        self.in_dom = self._in_dom_within_timeout()
-
-    def _in_dom_within_timeout(self, timeout: float = .5):
-        try:
-            self.wait_until_exists(timeout)
-        except ElementNotInDOM:
-            return False
-        return True
 
     def clear_text(self):
         self.wait_until_clickable()
@@ -42,13 +32,13 @@ class Element:
         # Wait for the page to fully load (by waiting for the document.readyState to be 'complete')
         WebDriverWait(self._driver, timeout).until(
             lambda driver: driver.execute_script("return document.readyState") == "complete"
-        )
+            )
 
         # Now, wait for the presence of all elements matching the locator.
         # This ensures that at least one element is present before proceeding.
         WebDriverWait(self._driver, timeout).until(
             ec.presence_of_all_elements_located((By.XPATH, self._locator))
-        )
+            )
         return len(self._driver.find_elements(By.XPATH, self._locator))
 
     def hover(self):
@@ -56,18 +46,12 @@ class Element:
         action = ActionChains(self._driver)
         action.move_to_element(self._element).perform()
 
-    def delete_all_text(self):
-        self.wait_until_clickable()
-        if platform.system() == 'Darwin':
-            self._element.send_keys(Keys.COMMAND + 'a')
-        else:
-            self._element.send_keys(Keys.CONTROL + 'a')
-        self._element.send_keys(Keys.BACK_SPACE)
-
     def get_attribute(self, attribute: str):
+        self.wait_until_exists()
         return self._element.get_attribute(attribute)
 
     def get_property(self, name: str):
+        self.wait_until_exists()
         return self._element.get_property(name)
 
     def get_screenshot(self) -> bytes:
@@ -86,8 +70,7 @@ class Element:
         self._element.send_keys(text)
 
     def should_contain(self, text: str):
-        self.wait_until_visible()
-        if text not in self._element.text:
+        if text not in self.text():
             raise ElementTextIncorrect()
 
     def text(self):
@@ -95,6 +78,7 @@ class Element:
         return self._element.text
 
     def value_of_css_property(self, style_property: str):
+        self.wait_until_exists()
         return self._element.value_of_css_property(style_property)
 
     def wait_until_clickable(self, timeout: float = _DEFAULT_TIMEOUT):
@@ -167,11 +151,9 @@ class Element:
                 raise ElementNotVisible(f'Element locator: {self._locator}')
             time.sleep(.1)
 
-    def send_file(self, text: str):
-        self._element.send_keys(text)
-
     def find_element(self, locator: str, position: int = 1) -> 'Element':
         return Element(self._driver, f'({self._locator}{locator})[{position}]')
+
 
 class ElementNotInDOM(Exception):
     pass
@@ -195,6 +177,7 @@ class ElementClickable(Exception):
 
 class ElementInDOM(Exception):
     pass
+
 
 class ElementTextIncorrect(Exception):
     pass
