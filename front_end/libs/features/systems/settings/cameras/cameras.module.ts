@@ -9,6 +9,7 @@ import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxDropdownModule } from '@components/dropdownV2/dropdown.module';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.component';
 import { EditableModule } from '@components/editable/editable.module';
@@ -57,6 +58,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxCheckboxComponent,
         NxResizeObserver,
         NxAddSvgSrcDirective,
+        NxDropdownModule,
     ],
     providers: [],
     declarations: [

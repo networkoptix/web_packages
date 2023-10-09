@@ -11,8 +11,6 @@ import {
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 
-import { QualityDropdownItem } from '../cameras.component.types';
-
 @Component({
     selector: 'nx-recording-settings',
     templateUrl: 'recording-settings.component.html',
@@ -28,20 +26,19 @@ export class NxRecordingSettingsComponent implements OnInit {
     @Input() selectedQualityWatcher: Watcher<StreamQuality>;
 
     LANG = staticLang;
-    streamQualities: QualityDropdownItem[];
-    various: QualityDropdownItem;
+    STREAM_QUALITY = StreamQuality;
+    streamQualities: { name: string; value: StreamQuality }[];
 
     availableLicenses = 0;
     shakeHint = false;
 
     ngOnInit(): void {
         this.streamQualities = [
-            { name: this.LANG.common.resolution.best, value: 'highest' },
-            { name: this.LANG.common.resolution.high, value: 'high' },
-            { name: this.LANG.common.resolution.medium, value: 'normal' },
-            { name: this.LANG.common.resolution.low, value: 'low' },
+            { name: this.LANG.common.resolution.best, value: StreamQuality.BEST },
+            { name: this.LANG.common.resolution.high, value: StreamQuality.HIGH },
+            { name: this.LANG.common.resolution.medium, value: StreamQuality.MEDIUM },
+            { name: this.LANG.common.resolution.low, value: StreamQuality.LOW },
         ];
-        this.various = { name: this.LANG.common.resolution.various, value: 'various' };
 
         this.system.serverManager.getLicenseChannels(this.system.cameraManager.cameras).subscribe(
             ({ available }) => {
@@ -109,8 +106,8 @@ export class NxRecordingSettingsComponent implements OnInit {
             this.selectedFps = this.selectedCamera.maxFps;
         }
 
-        if (this.selectedQuality.value === 'various') {
-            this.selectedQuality = this.streamQualities[1]; // High
+        if (this.selectedQualityWatcher.value === StreamQuality.VARIOUS) {
+            this.selectedQualityWatcher.value = StreamQuality.HIGH;
         }
         this.recordingModesWatcher.value = value;
     }
@@ -127,18 +124,6 @@ export class NxRecordingSettingsComponent implements OnInit {
         } else {
             this.selectedFpsWatcher.value = Math.min(value, this.selectedCamera.maxFps);
         }
-    }
-
-    get selectedQuality(): QualityDropdownItem {
-        return this.selectedQualityWatcher.value === 'various'
-            ? this.various
-            : this.streamQualities.find(
-                  ({ value: id }) => this.selectedQualityWatcher.value === id,
-              );
-    }
-
-    set selectedQuality(item: QualityDropdownItem) {
-        this.selectedQualityWatcher.value = item.value;
     }
 
     enableMotion = (updateModes = false): void => {
@@ -194,7 +179,7 @@ export class NxRecordingSettingsComponent implements OnInit {
             this.selectedCamera.scheduleTasks.every(
                 ({ recordingType }) => recordingType === RecordingType.NEVER,
             ) ||
-            (!this.variousQualities && !this.variousFps && !this.existingModesSelected)
+            (!this.selectedQualityIsVarious() && !this.variousFps && !this.existingModesSelected)
         );
     }
 
@@ -232,8 +217,8 @@ export class NxRecordingSettingsComponent implements OnInit {
         );
     }
 
-    get variousQualities(): boolean {
-        return this.selectedQuality.value === this.various.value;
+    selectedQualityIsVarious(): boolean {
+        return this.selectedQualityWatcher.value === StreamQuality.VARIOUS;
     }
 
     get variousFps(): boolean {

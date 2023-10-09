@@ -149,13 +149,26 @@
                                 >
                             </div>
                             <div class="grid-item mb-2 mb-md-0">
-                                <nx-select
-                                    [componentId]="'settingsCameraAspectSelect'"
-                                    [selected]="false"
-                                    [(ngModel)]="selectedAspect"
-                                    [items]="aspectRatios"
-                                    id="aspect-ratios"
-                                ></nx-select>
+                                <nx-dropdown [(selected)]="selectedAspectWatcher.value">
+                                    <nx-simple-dropdown-item
+                                        *ngIf="defaultAspectRatio"
+                                        [value]="defaultAspectRatio"
+                                        [selected]="
+                                            selectedAspectWatcher.value === defaultAspectRatio
+                                        "
+                                    >
+                                        {{ LANG.common.resolution.auto }}
+                                    </nx-simple-dropdown-item>
+                                    <nx-simple-dropdown-item
+                                        *ngFor="let aspectRatio of aspectRatioOptions | keyvalue"
+                                        [value]="aspectRatio.value"
+                                        [selected]="
+                                            aspectRatio.value === selectedAspectWatcher.value
+                                        "
+                                    >
+                                        {{ aspectRatio.key }}
+                                    </nx-simple-dropdown-item>
+                                </nx-dropdown>
                             </div>
                             <div class="grid-item">
                                 <span
@@ -165,13 +178,15 @@
                                 >
                             </div>
                             <div class="grid-item">
-                                <nx-select
-                                    [componentId]="'settingsCameraRotationSelect'"
-                                    [selected]="false"
-                                    [(ngModel)]="selectedRotation"
-                                    [items]="rotations"
-                                    id="rotations"
-                                ></nx-select>
+                                <nx-dropdown [(selected)]="selectedRotationWatcher.value">
+                                    <nx-simple-dropdown-item
+                                        *ngFor="let rotation of rotationOptions"
+                                        [value]="rotation"
+                                        [selected]="rotation === selectedRotationWatcher.value"
+                                    >
+                                        {{ rotation }}˚
+                                    </nx-simple-dropdown-item>
+                                </nx-dropdown>
                             </div>
                         </div>
                     </nx-section>
@@ -247,8 +262,8 @@
                 [motionGridChangeWatcher]="motionGridChangeWatcher"
                 [motionMaskWatcher]="motionMaskWatcher"
                 [healthImageUrl]="preview$"
-                [selectedRotation]="selectedRotation?.value || 0"
-                [selectedAspectRatio]="selectedAspect.value || ASPECT_RATIOS['16:9']"
+                [selectedRotation]="selectedRotationWatcher.value || 0"
+                [selectedAspectRatio]="selectedAspectWatcher.value || aspectRatioOptions['16:9']"
                 [imageState]="camera.status"
                 [overlayEnabled]="overlayEnabled()"
             ></nx-motion-detection-settings>

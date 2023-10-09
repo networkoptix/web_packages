@@ -33,7 +33,7 @@ export class NxDropdownComponent<T> implements AfterContentInit, OnChanges {
     @Input('id') inputId: string = '';
     @Input() selected: T;
     @Output() selectedChange = new EventEmitter<T>();
-    @Input() placeholder: string;
+    @Input() placeholder: string = '';
     @Input() disabled: boolean = false;
     @Input() error: boolean = false;
     // TODO: Multiple and search are not implemented yet

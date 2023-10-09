@@ -125,17 +125,26 @@
                         >
                     </div>
                     <div class="grid-item">
-                        <nx-select
-                            [componentId]="'settingsCameraQualitySelect'"
-                            [selected]="selectedQuality"
-                            [(ngModel)]="selectedQuality"
-                            [items]="streamQualities"
-                            id="recording-quality"
-                        ></nx-select>
+                        <nx-dropdown [(selected)]="selectedQualityWatcher.value">
+                            <nx-simple-dropdown-item
+                                *ngIf="selectedQualityIsVarious()"
+                                [value]="STREAM_QUALITY.VARIOUS"
+                                [selected]="selectedQualityWatcher.value === STREAM_QUALITY.VARIOUS"
+                            >
+                                {{ LANG.common.resolution.various }}
+                            </nx-simple-dropdown-item>
+                            <nx-simple-dropdown-item
+                                *ngFor="let quality of streamQualities"
+                                [value]="quality.value"
+                                [selected]="selectedQualityWatcher.value === quality.value"
+                            >
+                                {{ quality.name }}
+                            </nx-simple-dropdown-item>
+                        </nx-dropdown>
                     </div>
                     <div class="grid-item">
                         <span
-                            *ngIf="!existingRecordingsScheduled && variousQualities"
+                            *ngIf="!existingRecordingsScheduled && selectedQualityIsVarious()"
                             class="input-error error-span col-8"
                             translate
                             >Please select recording quality</span

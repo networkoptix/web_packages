@@ -8,9 +8,9 @@ import { NxMenuService } from '@menu/menu.service';
 import { WINDOW } from '@services/window-provider';
 import { simpleURLRegex } from '@static-variables';
 
-import type {
-    AspectRatioDropdownItem,
-    RotationDropdownItem,
+import {
+    ASPECT_RATIOS,
+    ROTATION_OPTIONS,
 } from '../../systems/settings/cameras/cameras.component.types';
 
 @Component({
@@ -29,10 +29,10 @@ export class FormElementsComponent {
     agree: boolean;
     edit: boolean;
     wholeText: string;
-    selectedAspect: AspectRatioDropdownItem;
-    aspectRatios: AspectRatioDropdownItem[];
-    selectedRotation: RotationDropdownItem;
-    rotations: RotationDropdownItem[];
+    selectedAspect: number = ASPECT_RATIOS['4:3'];
+    aspectRatioOptions = ASPECT_RATIOS;
+    selectedRotation: number = 0;
+    rotations = ROTATION_OPTIONS;
     itemsSearchableDDSingle: DropdownItem<string>[];
     selectedSearchableDDItem: DropdownItem<string>;
 
@@ -64,21 +64,6 @@ export class FormElementsComponent {
         this.edit = false;
 
         this.wholeText = 'Lorem ipsum dolor sit amet, consectetur adipiscing elit.';
-
-        this.aspectRatios = [
-            { name: '4:3', value: 1.33333 },
-            { name: '16:9', value: 1.77778 },
-            { name: '1:1', value: 1 },
-        ];
-        this.selectedAspect = this.aspectRatios[0];
-
-        this.rotations = [
-            { name: '0˚', value: 0 },
-            { name: '90˚', value: 90 },
-            { name: '180˚', value: 180 },
-            { name: '270˚', value: 270 },
-        ];
-        this.selectedRotation = this.rotations[0];
 
         this.itemsSearchableDDSingle = [
             { value: 'test@test.com', name: 'test@test.com', help: 'Johnny Test' },

@@ -51,10 +51,11 @@ import { WINDOW } from '@services/window-provider';
 import { icons, menus, settingsConfig } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
-import type {
-    AspectRatioDropdownItem,
-    RotationDropdownItem,
-    SensitivityButtonValue,
+import {
+    ROTATION_OPTIONS,
+    type SensitivityButtonValue,
+    DEFAULT_ROTATION,
+    ASPECT_RATIOS,
 } from './cameras.component.types';
 import { NxRecordingSettingsComponent } from './recording-settings/recording-settings.component';
 
@@ -87,11 +88,9 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     @Input() camera: NxSystemCamera;
 
     LANG = staticLang;
-    ASPECT_RATIOS = {
-        '4:3': 1.33333,
-        '16:9': 1.77778,
-        '1:1': 1,
-    };
+    defaultAspectRatio: number = null;
+    aspectRatioOptions = ASPECT_RATIOS;
+    rotationOptions = ROTATION_OPTIONS;
     isMobile: boolean;
     infoBlockSizeEnum = InfoBlockSize;
     public reload$ = new BehaviorSubject(0);
@@ -108,8 +107,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     private viewContainerRef: ViewContainerRef;
     enableEdit: boolean;
     private alerts: Alert[] = [];
-    aspectRatios: AspectRatioDropdownItem[];
-    rotations: RotationDropdownItem[];
     warnings: string[] = [];
     errors: string[] = [];
     showUnauthorized = false;
@@ -128,8 +125,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     motionGridChangeWatcher = new Watcher<boolean>();
     cameraNameWatcher = new Watcher<string>();
-    private selectedAspectWatcher = new Watcher<number | null>();
-    private selectedRotationWatcher = new Watcher<number>();
+    selectedAspectWatcher = new Watcher<number | null>();
+    selectedRotationWatcher = new Watcher<number>();
     private audioEnabledWatcher = new Watcher<boolean>();
     recordingWatcher = new Watcher<boolean>();
     recordingModesWatcher = new Watcher<RecordingModes[]>();
@@ -179,21 +176,13 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     get previewWidth(): number {
         const height = 120;
-        const aspect = this.selectedAspect?.value || this.ASPECT_RATIOS['16:9'];
-        const rotated = (this.selectedRotation?.value ?? 0) % 180;
+        const aspect = this.selectedAspectWatcher?.value || ASPECT_RATIOS['16:9'];
+        const rotated = (this.selectedRotationWatcher?.value ?? 0) % 180;
         return rotated ? height / aspect : aspect * height;
     }
 
-    get selectedAspect(): AspectRatioDropdownItem {
-        return this.aspectRatios.find(({ value: id }) => this.selectedAspectWatcher.value === id);
-    }
-
-    set selectedAspect(item: AspectRatioDropdownItem) {
-        this.selectedAspectWatcher.value = item.value;
-    }
-
     private get maxHeight(): number {
-        const aspect = this.selectedAspect.value || this.ASPECT_RATIOS['4:3'];
+        const aspect = this.selectedAspectWatcher?.value || ASPECT_RATIOS['4:3'];
         const normalHeight = 480;
         const narrowHeight = 384;
         return aspect > 1.5 ? narrowHeight : normalHeight;
@@ -201,14 +190,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     get sensitivityButtons(): SensitivityButtonValue {
         return this.sensitivityButtons$.value;
-    }
-
-    get selectedRotation(): RotationDropdownItem {
-        return this.rotations.find(({ value: id }) => this.selectedRotationWatcher.value === id);
-    }
-
-    set selectedRotation(item: RotationDropdownItem) {
-        this.selectedRotationWatcher.value = item.value;
     }
 
     get audioEnabled(): boolean {
@@ -257,7 +238,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         )
         data: Pick<NxCamerasComponent, 'camera' | 'system'>,
     ) {
-        this.updateSelects();
         this.viewContainerRef = viewContainerRef;
         this.menuService.selectedSection.set('cameras');
         if (data) {
@@ -346,29 +326,15 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 return this.system.serverManager.getPreviewUrl(
                     cameraId,
                     null,
-                    (this.selectedAspect?.value || this.ASPECT_RATIOS['4:3']) * this.maxHeight * 2,
+                    (this.selectedAspectWatcher?.value || ASPECT_RATIOS['4:3']) *
+                        this.maxHeight *
+                        2,
                     this.maxHeight * 2,
-                    this.selectedRotation?.value || 0,
+                    this.selectedRotationWatcher?.value || 0,
                 );
             }),
             share({ resetOnRefCountZero: true }),
         );
-    }
-
-    // Update menu options after language is loaded
-    private updateSelects(): void {
-        this.aspectRatios = [
-            { name: this.LANG.common.resolution.auto, value: null },
-            { name: '4:3', value: 1.33333 },
-            { name: '16:9', value: 1.77778 },
-            { name: '1:1', value: 1 },
-        ];
-        this.rotations = [
-            { name: '0˚', value: 0 },
-            { name: '90˚', value: 90 },
-            { name: '180˚', value: 180 },
-            { name: '270˚', value: 270 },
-        ];
     }
 
     private get saveSettingsProcess(): Process {
@@ -534,41 +500,33 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.cameraName = this.camera.name;
         // Setup the automatic value based on the camera's dimensions
         if (defaultRatio) {
-            this.aspectRatios[0].value = defaultRatio;
+            this.defaultAspectRatio = defaultRatio;
         }
-        this.selectedAspect =
-            this.aspectRatios.find(({ value }) => value === parameters.overrideAr) ||
-            this.aspectRatios[0];
-        this.selectedRotation =
-            this.rotations.find(({ value }) => value === parameters.rotation) || this.rotations[0];
+        this.selectedAspectWatcher.value = parameters.overrideAr ?? this.defaultAspectRatio;
+        this.selectedRotationWatcher.value = parameters.rotation ?? DEFAULT_ROTATION;
         this.audioEnabled = audioEnabled;
         this.recordingModesWatcher.value = recordingSettings.modes;
         if (this.recordingSettingsComponent) {
             setTimeout(() => {
                 if (this.recordingSettingsComponent) {
-                    this.recordingSettingsComponent.selectedQuality =
-                        recordingSettings.quality === 'various'
-                            ? this.recordingSettingsComponent.various
-                            : this.recordingSettingsComponent?.streamQualities?.find(
-                                  ({ value }) => recordingSettings.quality === value,
-                              );
                     this.recordingSettingsComponent.selectedFps = recordingSettings.fps;
                 }
             });
         }
+        this.selectedQualityWatcher.value = recordingSettings.quality;
         this.recordingWatcher.value = recordingSettings.recording;
         this.updateValues();
 
         this.setWatcherDefaults({
             motionGridChange: false,
             cameraName: this.cameraName,
-            selectedAspect: this.selectedAspect.value,
-            selectedRotation: this.selectedRotation.value,
+            selectedAspect: this.selectedAspectWatcher.value,
+            selectedRotation: this.selectedRotationWatcher.value,
             audioEnabled: this.audioEnabled,
             recording: this.recordingWatcher.value,
             recordingModes: this.recordingModesWatcher.value,
             selectedFps: this.recordingSettingsComponent?.selectedFps,
-            selectedQuality: this.recordingSettingsComponent?.selectedQuality?.value,
+            selectedQuality: recordingSettings.quality,
             motionEnabled: motionType,
             motionMask: motionMask || settingsConfig.defaultMotionMask,
         });

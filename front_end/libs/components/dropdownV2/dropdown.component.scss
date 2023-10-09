@@ -65,3 +65,7 @@ $paddingBottom: 5px;
 
 // TODO: Add error styling
 .error {}
+
+:host {
+    width: 100%;
+}

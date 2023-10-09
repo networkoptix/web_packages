@@ -148,7 +148,13 @@ export enum RecordingType {
     META_LOW = 'metadataAndLowQuality',
 }
 
-export type StreamQuality = 'low' | 'normal' | 'high' | 'highest' | 'various';
+export enum StreamQuality {
+    LOW = 'low',
+    MEDIUM = 'normal',
+    HIGH = 'high',
+    BEST = 'highest',
+    VARIOUS = 'various',
+}
 
 export interface TimeDetail {
     guid: string;
