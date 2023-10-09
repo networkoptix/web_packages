@@ -41,6 +41,7 @@ import { LayoutStateService } from '@services/layout-state/layout-state.service'
 import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layout';
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
@@ -120,7 +121,9 @@ export class NxLayoutViewComponent {
 
     layoutItemLookup$ = this.systemService.currentSystem$.pipe(
         switchMap(system =>
-            this.layoutStateService.loadUnsavedLayouts(system.id).pipe(map(() => system)),
+            nxConfig.featureFlags.layoutsUnsavedSync
+                ? this.layoutStateService.loadUnsavedLayouts(system.id).pipe(map(() => system))
+                : Promise.resolve(system),
         ),
         switchMap(({ permissionManager, id }) => {
             return combineLatest([
