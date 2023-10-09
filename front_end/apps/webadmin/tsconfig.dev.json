@@ -1,0 +1,2 @@
+{
+    "extends": ["./tsconfig.prod.json", "../../tsconfig.dev.json"]

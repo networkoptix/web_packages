@@ -1,0 +1,12 @@
+{
+    "//": "These are future compilerOptions that we eventually want to enabled for prod builds. You can override when developing to show or hide errors from editor",
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "alwaysStrict": false,
+        "strictBindCallApply": false,
+        "strictNullChecks": true,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false
+    }
+}

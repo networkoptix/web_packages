@@ -104,7 +104,7 @@
             },
             "configurations": {
                 "dev": {
-                    "tsConfig": "apps/front-end/tsconfig.serve.json",
+                    "tsConfig": "apps/front-end/tsconfig.dev.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",
@@ -113,7 +113,7 @@
                     ]
                 },
                 "local": {
-                    "tsConfig": "apps/front-end/tsconfig.serve.json",
+                    "tsConfig": "apps/front-end/tsconfig.dev.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",
@@ -122,6 +122,7 @@
                     ]
                 },
                 "production": {
+                    "tsConfig": "apps/front-end/tsconfig.prod.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

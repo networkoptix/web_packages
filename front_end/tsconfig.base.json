@@ -1,18 +1,23 @@
 {
+    "extends": "./tsconfig.editor-overrides.json",
     "compilerOptions": {
         "target": "es2020",
         "module": "es2020",
         "lib": ["es2020", "dom", "DOM.Iterable"],
+        "useDefineForClassFields": false,
         "moduleResolution": "node",
         "resolveJsonModule": true,
+        "forceConsistentCasingInFileNames": true,
+        "noPropertyAccessFromIndexSignature": false,
+        "noFallthroughCasesInSwitch": true,
         "esModuleInterop": true,
         "sourceMap": true,
         "experimentalDecorators": true,
         "removeComments": true,
-        "noImplicitAny": false,
         "noUnusedLocals": true,
         "baseUrl": "",
         "paths": {
+            "//": ["NOTE: The path order is important. Paths should be ordered from specific to general for autocomplete"],
             "@authorization/*": ["apps/authorization/*"],
             "@components/*": [
                 "libs/components/*",
@@ -57,6 +62,10 @@
     },
     "angularCompilerOptions": {
         "enableIvy": true,
+        "fullTemplateTypeCheck": true,
+        "strictInjectionParameters": true,
+        "enableI18nLegacyMessageIdFormat": false,
+        "strictInputAccessModifiers": true,
         "strictTemplates": true
     },
     "exclude": ["node_modules", ".eslintrc.js"]

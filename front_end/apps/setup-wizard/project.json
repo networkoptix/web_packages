@@ -74,6 +74,7 @@
             },
             "configurations": {
                 "production": {
+                    "tsConfig": "apps/setup-wizard/tsconfig.prod.json",
                     "deployUrl": "static/",
                     "fileReplacements": [
                         {
@@ -113,7 +114,7 @@
                     ]
                 },
                 "development": {
-                    "tsConfig": "apps/setup-wizard/tsconfig.serve.json",
+                    "tsConfig": "apps/setup-wizard/tsconfig.dev.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

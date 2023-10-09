@@ -1,0 +1,6 @@
+{
+    "//": "Local Development overrides that loosen some compiler options to make local development easier",
+    "compilerOptions": {
+        "noUnusedLocals": false
+    }
+}

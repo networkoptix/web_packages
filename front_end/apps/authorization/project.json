@@ -44,6 +44,7 @@
             },
             "configurations": {
                 "production": {
+                    "tsConfig": "apps/authorization/tsconfig.prod.json",
                     "deployUrl": "static/authorization/",
                     "fileReplacements": [
                         {
@@ -84,7 +85,7 @@
                     ]
                 },
                 "development": {
-                    "tsConfig": "apps/authorization/tsconfig.serve.json",
+                    "tsConfig": "apps/authorization/tsconfig.dev.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",

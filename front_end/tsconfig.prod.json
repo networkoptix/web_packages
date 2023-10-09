@@ -1,0 +1,12 @@
+{
+    "//": "Overrides for prod builds. These are compiler options that still break theb build",
+    "compilerOptions": {
+        "noImplicitAny": false,
+        "noImplicitThis": false,
+        "alwaysStrict": false,
+        "strictBindCallApply": false,
+        "strictNullChecks": false,
+        "strictFunctionTypes": false,
+        "strictPropertyInitialization": false
+    }
+}

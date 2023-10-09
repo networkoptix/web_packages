@@ -1,6 +1,10 @@
 const typeLintErrorCount = require('./type-lint-error-count');
 
+const { showOptionalWarnings } = require('./eslintrc-options.json');
+
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
+
+const onlyEditor = value => (lintTaskRunner || !showOptionalWarnings ? 'off' : value);
 
 /**
  * https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/eslint-plugin#extension-rules
@@ -325,11 +329,14 @@ module.exports = {
             plugins: ['rxjs'],
             extends: ['plugin:rxjs/recommended'],
             rules: {
-                'rxjs/no-nested-subscribe': 'off', // TODO: re-factor
-                'rxjs/no-async-subscribe': 'off', // not sure if this should be implemented - TT
-                'rxjs/no-ignored-takewhile-value': 'off', // not sure if this should be implemented (only one place) - TT
-                'rxjs/no-implicit-any-catch': 'off', // not sure if this should be implemented - TT
-                'rxjs/no-unbound-methods': 'off', // we'll not fix this
+                'rxjs/no-nested-subscribe': onlyEditor('warn'), // TODO: re-factor
+                'rxjs/no-async-subscribe': onlyEditor('warn'), // not sure if this should be implemented - TT
+                'rxjs/no-ignored-takewhile-value': onlyEditor('warn'), // not sure if this should be implemented (only one place) - TT
+                'rxjs/no-implicit-any-catch': onlyEditor('warn'), // not sure if this should be implemented - TT
+                'rxjs/no-unbound-methods': onlyEditor('error'),
+                'rxjs/no-unsafe-takeuntil': onlyEditor('error'),
+                'rxjs/no-unsafe-subject-next': onlyEditor('error'),
+                'rxjs/no-ignored-replay-buffer': 'warn',
             },
         },
         {
@@ -436,7 +443,7 @@ module.exports = {
                     // Only show warnings within editor for now
                     // We have a lot of circular dependencies to fix
                     // There are also issues where we import from non-lib modules
-                    lintTaskRunner ? 'off' : 'warn',
+                    onlyEditor('warn'),
                     {
                         allow: [],
                         depConstraints: [

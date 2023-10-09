@@ -99,7 +99,7 @@
             },
             "configurations": {
                 "development": {
-                    "tsConfig": "apps/webadmin/tsconfig.serve.json",
+                    "tsConfig": "apps/webadmin/tsconfig.dev.json",
                     "fileReplacements": [
                         {
                             "replace": "common/environments/environment.ts",
@@ -112,6 +112,7 @@
                     ]
                 },
                 "production": {
+                    "tsConfig": "apps/webadmin/tsconfig.prod.json",
                     "deployUrl": "static/",
                     "fileReplacements": [
                         {

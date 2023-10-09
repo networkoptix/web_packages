@@ -22,7 +22,7 @@ const selectOrgSystems = createSelector(selectGroupState, state => state.orgSyst
 export const selectOpenGroups = createSelector(selectGroupState, state => state.openGroups);
 
 const selectOrgSystemsMap = createSelector(selectOrgSystems, systems => {
-    return systems ? new Map<string, SystemInfo>(systems.map(s => [s.id, s])) : (systems as null);
+    return new Map<string, SystemInfo>((systems || []).map(s => [s.id, s]));
 });
 
 const hasAccessToSystem = (system: SystemItem): boolean => {
