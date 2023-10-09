@@ -8,6 +8,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 import robot_keywords
 from RobotVariables import RobotVariables
 from generic_element import Element
+from generic_element import ElementNotInDOM
+from generic_element import ElementNotVisible
 from wrappers import Link
 from wrappers import PageText
 from wrappers import Table
@@ -55,14 +57,16 @@ class TabInformation:
         Link(self._driver, '//div[contains(@class,"menuLinks")]/div').wait_until_visible()
 
     def is_current_system_inaccessible(self) -> bool:
-        return PageText(
-            self._driver,
-            f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]',
-        ).is_visible()
+        try:
+            PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]')
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def upload_json_report(self, filename: Path):
         element = TextField(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
-        element.send_keys(str(filename))
+        element.input_text(str(filename))
         started_at = time.monotonic()
         timeout_sec = 10
         while True:
@@ -73,25 +77,39 @@ class TabInformation:
             time.sleep(0.5)
 
     def is_imported_report(self) -> bool:
-        return PageText(
-            self._driver,
-            f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]',
-        ).is_visible()
+        try:
+            PageText(
+                self._driver,
+                f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]',
+            )
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def _is_system_online(self) -> bool:
-        return Link(self._driver, '//nx-menu//nx-level-1-item').is_visible()
+        try:
+            Link(self._driver, '//nx-menu//nx-level-1-item')
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def no_alerts(self) -> bool:
-        return PageText(
-            self._driver,
-            f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]',
-        ).is_visible()
+        try:
+            PageText(self._driver, f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]')
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def system_is_doing_well(self) -> bool:
-        return PageText(
-            self._driver,
-            f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]',
-        ).is_visible()
+        try:
+            PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]')
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def get_alerts_count(self) -> int:
         table_header = PageText(self._driver, '//div[@id="nx-table"]/div[contains(@class,"table-header")]')
@@ -140,10 +158,20 @@ class _Section:
         return PageText(self._driver, '//nx-single-entity//header').get_text()
 
     def has_table(self) -> bool:
-        return Link(self._driver, '//div[@id="nx-table"]').is_visible()
+        try:
+            Link(self._driver, '//div[@id="nx-table"]')
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def has_card(self) -> bool:
-        return Link(self._driver, '//nx-single-entity').is_visible()
+        try:
+            Link(self._driver, '//nx-single-entity')
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        else:
+            return True
 
     def _is_active(self) -> bool:
         return self.has_table() or self.has_card()
@@ -221,12 +249,21 @@ class _AlertsSection(_Section):
         )
 
     def get_pages_count(self):
-        paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
-        if paginator.is_visible():
+        try:
+            paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
+        except (ElementNotVisible, ElementNotInDOM):
+            return 1
+        else:
             return int(paginator.get_text())
-        return 1
 
     def _is_active(self) -> bool:
-        offline = Link(self._driver, '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]')
-        online = Link(self._driver, '//nx-system-health-component/g[@class="gridAlertsCards"]')
-        return online.is_visible() or offline.is_visible()
+        offline = online = True
+        try:
+            Link(self._driver, '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]')
+        except (ElementNotVisible, ElementNotInDOM):
+            offline = False
+        try:
+            Link(self._driver, '//nx-system-health-component/g[@class="gridAlertsCards"]')
+        except (ElementNotVisible, ElementNotInDOM):
+            online = False
+        return online or offline
