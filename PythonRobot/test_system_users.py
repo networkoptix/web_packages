@@ -2,7 +2,6 @@ import time
 from pathlib import Path
 import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.generic_keywords import GenericKeywords
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
@@ -137,7 +136,6 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     print(subject)
     assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
 
-    links = email_con.get_links_from_email(body)
     expected_links = [
         f'mailto:{owner.email}',
         rb.SUPPORT_URL,
@@ -145,7 +143,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
         rb.ENV,
         f'{rb.ENV}/authorize/activate',
     ]
-    GenericKeywords().check_in_list(expected_links, links)
+    email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)
 
     print("pass")

@@ -139,9 +139,17 @@ class Email:
         finally:
             self.logout()
 
-    def get_links_from_email(self, body):
+    def _get_links_from_email(self, body):
         res = re.findall(r'href=[\'"]?([^\'" >]+)', body)
         return res
+
+    def find_links_in_email(self, body, expected_links):
+        for expected_link in expected_links:
+            for link in self._get_links_from_email(body):
+                if expected_link in link:
+                    break
+            else:
+                raise RuntimeError(f"Expected link not found in email: {expected_link}")
 
     def check_email_button(self, body, env, color):
         pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(

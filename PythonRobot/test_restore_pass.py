@@ -2,7 +2,6 @@ import time
 
 import resource_import
 import robot_keywords
-from NoptixLibrary.generic_keywords import GenericKeywords
 from RobotVariables import RobotVariables
 from email_access import Email
 from header import HeaderNav
@@ -64,9 +63,8 @@ def check_restore_password_email():
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
     email_con.check_email_subject(email_id, rb.RESET_PASSWORD_EMAIL_SUBJECT)
 
-    links = email_con.get_links_from_email(body)
     expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, ENV, f'{ENV}/restore_password']
-    GenericKeywords().check_in_list(expected_links, links)
+    email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)
 
     driver.quit()

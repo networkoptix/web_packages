@@ -149,15 +149,6 @@ class GenericKeywords:
         else:
             raise Exception("File does not appear to be available.")
 
-    def check_in_list(self, expected, found):
-        for url in found:
-            if url not in expected:
-                for expected_url in expected:
-                    if expected_url in url:
-                        break
-                else:
-                    raise RuntimeError("Expected url wasn't in the list.")
-
     def get_os(self):
         plat = system()
         if plat == "Windows":
