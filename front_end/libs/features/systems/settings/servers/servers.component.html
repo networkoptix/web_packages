@@ -1,5 +1,5 @@
 <nx-alert-block
-    *ngIf="serverLoaded && storagesOutdated && !isOffline && !isServerOffline"
+    *ngIf="serverLoaded$$() && storagesOutdated$$() && !isOffline$$() && !isServerOffline$$()"
     type="warning"
     id="storages-outdated"
     [line1]="'Storages outdated. Reload page to update.' | translate"
@@ -9,61 +9,59 @@
 >
 </nx-alert-block>
 
-<nx-page-placeholder
-    class="placeholder-section"
-    type="NO_SETTINGS"
-    *ngIf="isOffline; else showServer"
-></nx-page-placeholder>
-
 <ng-template #showServer>
     <ng-template #preload>
         <nx-pre-loader></nx-pre-loader>
     </ng-template>
-    <nx-standard-server-component
-        *ngIf="selectedServer$ | async as selectedServer; else preload"
-        (loaded)="serverLoaded = $event"
-        [isOffline]="isOffline"
-        [system]="system"
-        [selectedServer]="selectedServer"
-    >
-    </nx-standard-server-component>
+    <ng-container *ngIf="server; else preload">
+        <nx-standard-server-component
+            (loaded)="serverLoaded$$.set($event)"
+            [isOffline]="isOffline$$()"
+            [system]="system"
+            [selectedServer]="server"
+        >
+        </nx-standard-server-component>
 
-    <nx-server-storage-component
-        *ngIf="serverLoaded && (serverId$ | async) as serverId"
-        [system]="system"
-        [serverId]="serverId"
-    >
-    </nx-server-storage-component>
+        <ng-container *ngIf="serverLoaded$$() && serverId$$() as serverId">
+            <nx-server-storage-component
+                [system]="system"
+                [serverId]="serverId"
+            >
+            </nx-server-storage-component>
+            <nx-cloud-storage
+                *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
+                layout="simple"
+                type="servers"
+            ></nx-cloud-storage>
+            <ng-container *ngIf="!isOffline$$() && advanced">
+                <nx-alert-block
+                    class="d-block mt-3"
+                    [iconSrc]="icons.dirNonStandard + 'error.svg'"
+                    [line1]="'Settings displayed below are advanced.' | translate"
+                    [line2]="'Changing them may cause server to work incorrectly.' | translate"
+                    [btnIconSrc]="icons.dir + 'eye_closed.svg'"
+                    [btnCaption]="'Hide Advanced Settings' | translate"
+                    (onAction)="hideAdvancedSettings()"
+                ></nx-alert-block>
+
+                <nx-server-advanced-storage-component
+                    [system]="system"
+                    [serverId]="serverId"
+                >
+                </nx-server-advanced-storage-component>
+
+                <nx-server-logger-component
+                    [system]="system"
+                    [serverId]="serverId"
+                >
+                </nx-server-logger-component>
+            </ng-container>
+        </ng-container>
+    </ng-container>
 </ng-template>
 
-<ng-container *ngIf="serverLoaded && (serverId$ | async) as serverId">
-    <nx-cloud-storage
-        *ngIf="!environment.isLocal && system?.canUserViewCloudStorage()"
-        layout="simple"
-        type="servers"
-    ></nx-cloud-storage>
-
-    <ng-container *ngIf="!isOffline && advanced">
-        <nx-alert-block
-            class="d-block mt-3"
-            [iconSrc]="icons.dirNonStandard + 'error.svg'"
-            [line1]="'Settings displayed below are advanced.' | translate"
-            [line2]="'Changing them may cause server to work incorrectly.' | translate"
-            [btnIconSrc]="icons.dir + 'eye_closed.svg'"
-            [btnCaption]="'Hide Advanced Settings' | translate"
-            (onAction)="hideAdvancedSettings()"
-        ></nx-alert-block>
-
-        <nx-server-advanced-storage-component
-            [system]="system"
-            [serverId]="serverId"
-        >
-        </nx-server-advanced-storage-component>
-
-        <nx-server-logger-component
-            [system]="system"
-            [serverId]="serverId"
-        >
-        </nx-server-logger-component>
-    </ng-container>
-</ng-container>
+<nx-page-placeholder
+    class="placeholder-section"
+    type="NO_SETTINGS"
+    *ngIf="isOffline$$(); else showServer"
+></nx-page-placeholder>

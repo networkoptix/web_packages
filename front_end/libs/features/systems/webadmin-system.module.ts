@@ -59,10 +59,7 @@ export const localSettingsRoutes: Routes = [
             },
             {
                 path: 'servers',
-                component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
-                runGuardsAndResolvers: 'always',
-                resolve: { system: currentSystemResolver },
+                redirectTo: 'servers/',
             },
             {
                 path: 'servers/:serverId',
@@ -76,6 +73,9 @@ export const localSettingsRoutes: Routes = [
                 component: NxSystemServersComponent,
                 canDeactivate: [ApplyGuard],
                 resolve: { system: currentSystemResolver },
+                data: {
+                    advanced: true,
+                },
             },
             {
                 path: 'cameras',

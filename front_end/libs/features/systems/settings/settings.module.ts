@@ -23,6 +23,7 @@ import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@menu/menu.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { currentSystemResolver } from '@resolvers/current-system-resolver';
+import { serverResolver } from '@resolvers/server-resolver';
 import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 import { userResolver } from '@resolvers/user-resolver';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
@@ -113,24 +114,26 @@ export const cloudSettingsRoutes: Routes = [
             },
             {
                 path: 'servers',
-                title: SystemTitleResolver,
-                component: NxSystemServersComponent,
-                canDeactivate: [ApplyGuard],
-                resolve: { system: currentSystemResolver },
+                redirectTo: 'servers/',
             },
             {
                 path: 'servers/:serverId',
                 title: SystemTitleResolver,
                 component: NxSystemServersComponent,
+                canActivate: [SystemGuard],
                 canDeactivate: [ApplyGuard],
-                resolve: { system: currentSystemResolver },
+                resolve: { system: currentSystemResolver, server: serverResolver },
             },
             {
                 path: 'servers/:serverId/advanced',
                 title: SystemTitleResolver,
                 component: NxSystemServersComponent,
+                canActivate: [SystemGuard],
                 canDeactivate: [ApplyGuard],
-                resolve: { system: currentSystemResolver },
+                resolve: { system: currentSystemResolver, server: serverResolver },
+                data: {
+                    advanced: true,
+                },
             },
             {
                 path: 'cameras',

@@ -402,7 +402,9 @@ export class NxLayoutGridTreeComponent {
                           action: ($event, node) =>
                               this.layoutStateService.createPortal(NxSystemServersComponent, {
                                   system: this.system,
-                                  serverIdFromParams: node.details.id,
+                                  server: this.system.serverManager.servers.find(({ id }) =>
+                                      id.includes(node.details.id),
+                                  ),
                               }),
                       },
                   ]
