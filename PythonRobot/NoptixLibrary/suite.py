@@ -6,6 +6,7 @@ from typing import List
 from random import randint
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 
+from email_access import Email
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.generic_keywords import GenericKeywords
@@ -222,9 +223,9 @@ class CloudAccount:
         self._tear_down()
 
     def _set_up(self):
-        self.email = _GENERIC_KEYWORDS.get_random_email(
-            _GENERIC_KEYWORDS.base_email,
-            _GENERIC_KEYWORDS.from_email,
+        self.email = Email.get_random_email(
+            'noptixautoqa+sendemail@gmail.com',
+            False,
             )
         _CLOUD_API.register_account('Mark', 'Hamill', self.email, self.password)
         _CLOUD_API.activate_account_via_api(self.email, self.password)

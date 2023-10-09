@@ -39,8 +39,6 @@ class GenericKeywords:
         self.docker_host_password = "QABurbank777$"
         self.image = "5.1"
         self.password = "qweasd 123"
-        self.from_email = False
-        self.base_email = "noptixautoqa+sendemail@gmail.com"
         self.language = "en_US"
 
         self.permissions = {
@@ -52,26 +50,6 @@ class GenericKeywords:
         }
         self.cloud_api = CloudPortalAPI(env=self.cloud_host)
         self.docker_api = DockerApi()
-
-    def get_random_email(self, email, sendemail=False, extra="", symbols=False):
-        if not sendemail:
-            email = email.replace('sendemail', '')
-        if symbols:
-            index = email.find('@')
-            email = email[:index] + \
-                    "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
-            return email
-        else:
-            index = email.find('@')
-            email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
-            return email
-
-    def get_many_random_emails(self, how_many, email):
-        emails = []
-        for x in range(0, int(how_many)):
-            emails.append(self.get_random_email(email))
-            time.sleep(.2)
-        return emails
 
     def get_random_symbol_email(self, email):
         index = email.find('@')
