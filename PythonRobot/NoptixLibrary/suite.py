@@ -61,11 +61,11 @@ class Suite:
             )
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
-            server._cloud_admin = cloud_users['cloudAdmin']
-            server._cloud_viewer = cloud_users['viewer']
-            server._cloud_advanced_viewer = cloud_users['advancedViewer']
-            server._cloud_live_viewer = cloud_users['liveViewer']
-            server._cloud_custom_user = cloud_users['custom']
+            server._cloud_admin = cloud_users.get('cloudAdmin')
+            server._cloud_viewer = cloud_users.get('viewer')
+            server._cloud_advanced_viewer = cloud_users.get('advancedViewer')
+            server._cloud_live_viewer = cloud_users.get('liveViewer')
+            server._cloud_custom_user = cloud_users.get('custom')
         return server
 
     def create_cloud_users(self):
