@@ -280,136 +280,147 @@ export class NxLayoutGridTreeComponent {
             | MenuItem<ResourceNodeMap[key]>[]
             | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
     }> = {
-        [ResourceType.LAYOUTS]: [
-            {
-                id: 'create',
-                name: this.ACTIONS.create.name,
-                tooltip: this.ACTIONS.create.tooltip,
-                icon: 'plus',
-                action: ($event, node) => {
-                    $event.preventDefault();
-                    const newLayout = this.layoutStateService.createNewLocalLayout();
-                    this.dataSource$
-                        .pipe(
-                            map(dataSource => findNode(dataSource, newLayout)),
-                            filter(Boolean),
-                            take(1),
-                            untilDestroyed(this),
-                        )
-                        .subscribe(node => {
-                            this.treeControl.expand(
-                                this.dataSource.find(
-                                    ({ details: { id } }: ResourceNode) =>
-                                        id === ResourceType.LAYOUTS,
-                                ),
-                            );
-                            this.editedLayout$$.set(dirtyId(newLayout));
-                        });
-                },
-            },
-        ],
+        [ResourceType.LAYOUTS]: !this.CONFIG.featureFlags.layoutsEditable
+            ? []
+            : [
+                  {
+                      id: 'create',
+                      name: this.ACTIONS.create.name,
+                      tooltip: this.ACTIONS.create.tooltip,
+                      icon: 'plus',
+                      action: ($event, node) => {
+                          $event.preventDefault();
+                          const newLayout = this.layoutStateService.createNewLocalLayout();
+                          this.dataSource$
+                              .pipe(
+                                  map(dataSource => findNode(dataSource, newLayout)),
+                                  filter(Boolean),
+                                  take(1),
+                                  untilDestroyed(this),
+                              )
+                              .subscribe(node => {
+                                  this.treeControl.expand(
+                                      this.dataSource.find(
+                                          ({ details: { id } }: ResourceNode) =>
+                                              id === ResourceType.LAYOUTS,
+                                      ),
+                                  );
+                                  this.editedLayout$$.set(dirtyId(newLayout));
+                              });
+                      },
+                  },
+              ],
         [ResourceType.LAYOUT]: node =>
-            [
-                ...this.OPEN_WINDOW_ACTIONS,
-                {
-                    id: 'divider',
-                    name: 'divider',
-                },
-                node.editable && {
-                    id: 'startRename',
-                    name: this.ACTIONS.rename.name,
-                    action: () => this.editedLayout$$.set(node.details.id),
-                },
-                {
-                    id: 'duplicate',
-                    name: this.ACTIONS.duplicate.name,
-                    action: () =>
-                        this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
-                },
-                node.editable && {
-                    id: 'delete',
-                    name: this.ACTIONS.delete.name,
-                    action: () => this.layoutStateService.deleteLayout(node.details.id),
-                },
-                ...(this.layoutStateService.unsavedLayoutsIds$$()[node.details.id]
-                    ? [
-                          {
-                              id: 'divider',
-                              name: 'divider',
-                          },
-                          {
-                              id: 'save',
-                              name: node.shared
-                                  ? this.ACTIONS.publishChanges.name
-                                  : this.ACTIONS.saveChanges.name,
-                              action: () => this.layoutStateService.saveLayout(node.details.id),
-                          },
-                          {
-                              id: 'discard',
-                              name: this.ACTIONS.discardChanges.name,
-                              action: () =>
-                                  this.layoutStateService.discardUnsavedLayout(node.details.id),
-                          },
-                      ]
-                    : []),
-                {
-                    id: 'divider',
-                    name: 'divider',
-                },
-                node.shared
-                    ? {
-                          id: 'unshareLayout',
-                          name: this.ACTIONS.unshareLayout.name,
-                          action: () => this.layoutStateService.unshareLayout(node.details),
-                      }
-                    : {
-                          id: 'shareLayout',
-                          name: this.ACTIONS.shareLayout.name,
-                          action: () => this.layoutStateService.shareLayout(node.details),
-                      },
-            ].filter(i => i),
-        [ResourceType.CAMERA]: [
-            ...this.OPEN_WINDOW_ACTIONS,
-            ...(nxConfig.featureFlags.layoutsDeviceSettings
-                ? [
+            !this.CONFIG.featureFlags.layoutsEditable
+                ? this.OPEN_WINDOW_ACTIONS
+                : [
+                      ...this.OPEN_WINDOW_ACTIONS,
                       {
                           id: 'divider',
                           name: 'divider',
                       },
-                      {
-                          id: 'settings',
-                          name: this.ACTIONS.cameraSettings.name,
-                          action: ($event, node) =>
-                              this.layoutStateService.createPortal(NxCamerasComponent, {
-                                  system: this.system,
-                                  camera: node.details,
-                              }),
+                      node.editable && {
+                          id: 'startRename',
+                          name: this.ACTIONS.rename.name,
+                          action: () => this.editedLayout$$.set(node.details.id),
                       },
-                  ]
-                : []),
-        ].filter(Boolean),
-        [ResourceType.SERVER]: [
-            ...this.OPEN_WINDOW_ACTIONS,
-            ...(nxConfig.featureFlags.layoutsDeviceSettings
-                ? [
+                      {
+                          id: 'duplicate',
+                          name: this.ACTIONS.duplicate.name,
+                          action: () =>
+                              this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
+                      },
+                      node.editable && {
+                          id: 'delete',
+                          name: this.ACTIONS.delete.name,
+                          action: () => this.layoutStateService.deleteLayout(node.details.id),
+                      },
+                      ...(this.layoutStateService.unsavedLayoutsIds$$()[node.details.id]
+                          ? [
+                                {
+                                    id: 'divider',
+                                    name: 'divider',
+                                },
+                                {
+                                    id: 'save',
+                                    name: node.shared
+                                        ? this.ACTIONS.publishChanges.name
+                                        : this.ACTIONS.saveChanges.name,
+                                    action: () =>
+                                        this.layoutStateService.saveLayout(node.details.id),
+                                },
+                                {
+                                    id: 'discard',
+                                    name: this.ACTIONS.discardChanges.name,
+                                    action: () =>
+                                        this.layoutStateService.discardUnsavedLayout(
+                                            node.details.id,
+                                        ),
+                                },
+                            ]
+                          : []),
                       {
                           id: 'divider',
                           name: 'divider',
                       },
-                      {
-                          id: 'settings',
-                          name: this.ACTIONS.serverSettings.name,
-                          action: ($event, node) =>
-                              this.layoutStateService.createPortal(NxSystemServersComponent, {
-                                  system: this.system,
-                                  server: this.system.serverManager.servers.find(({ id }) =>
-                                      id.includes(node.details.id),
-                                  ),
-                              }),
-                      },
-                  ]
-                : []),
-        ],
+                      node.shared
+                          ? {
+                                id: 'unshareLayout',
+                                name: this.ACTIONS.unshareLayout.name,
+                                action: () => this.layoutStateService.unshareLayout(node.details),
+                            }
+                          : {
+                                id: 'shareLayout',
+                                name: this.ACTIONS.shareLayout.name,
+                                action: () => this.layoutStateService.shareLayout(node.details),
+                            },
+                  ].filter(i => i),
+        [ResourceType.CAMERA]: !this.CONFIG.featureFlags.layoutsEditable
+            ? this.OPEN_WINDOW_ACTIONS
+            : [
+                  ...this.OPEN_WINDOW_ACTIONS,
+                  ...(nxConfig.featureFlags.layoutsDeviceSettings
+                      ? [
+                            {
+                                id: 'divider',
+                                name: 'divider',
+                            },
+                            {
+                                id: 'settings',
+                                name: this.ACTIONS.cameraSettings.name,
+                                action: ($event, node) =>
+                                    this.layoutStateService.createPortal(NxCamerasComponent, {
+                                        system: this.system,
+                                        camera: node.details,
+                                    }),
+                            },
+                        ]
+                      : []),
+              ].filter(Boolean),
+        [ResourceType.SERVER]: !this.CONFIG.featureFlags.layoutsEditable
+            ? this.OPEN_WINDOW_ACTIONS
+            : [
+                  ...this.OPEN_WINDOW_ACTIONS,
+                  ...(nxConfig.featureFlags.layoutsDeviceSettings
+                      ? [
+                            {
+                                id: 'divider',
+                                name: 'divider',
+                            },
+                            {
+                                id: 'settings',
+                                name: this.ACTIONS.serverSettings.name,
+                                action: ($event, node) =>
+                                    this.layoutStateService.createPortal(NxSystemServersComponent, {
+                                        system: this.system,
+                                        server: this.system.serverManager.servers.find(({ id }) =>
+                                            id.includes(node.details.id),
+                                        ),
+                                    }),
+                            },
+                        ]
+                      : []),
+              ],
     };
 
     openWindow = (id: string, isNewWindow = false): void => {

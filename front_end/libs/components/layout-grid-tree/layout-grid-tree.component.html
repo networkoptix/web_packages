@@ -253,16 +253,12 @@
             <ng-container *ngTemplateOutlet="nodeTypeIcon" />
             <ng-container
                 *ngIf="
-                    !(CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) ||
-                        !menuItemsByType[node.type];
+                    !CONFIG.featureFlags.layoutsDemo || !menuItemsByType[node.type];
                     then simpleNodeText
                 "
             />
             <ng-container
-                *ngIf="
-                    (CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo) &&
-                    menuItemsByType[node.type] as menuItems
-                "
+                *ngIf="CONFIG.featureFlags.layoutsDemo && menuItemsByType[node.type] as menuItems"
             >
                 <ng-container
                     *ngIf="

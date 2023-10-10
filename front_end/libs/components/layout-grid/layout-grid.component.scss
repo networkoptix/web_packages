@@ -485,6 +485,9 @@ h2.auto-save-overlay {
             .parent-hover {
                 visibility: visible;
             }
+            .ptz.parent-hover {
+                visibility: hidden;
+            }
         }
     }
 
