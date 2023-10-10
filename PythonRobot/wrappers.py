@@ -166,6 +166,9 @@ class TextField:
     def value_of_css_property(self, style_property: str):
         return self._element.value_of_css_property(style_property)
 
+    def send_keys(self, keys: str):
+        self._element.send_keys(keys)
+
 
 class SearchBar:
 
