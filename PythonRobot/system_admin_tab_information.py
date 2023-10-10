@@ -11,6 +11,8 @@ from generic_element import ElementNotInDOM
 from generic_element import ElementNotVisible
 from wrappers import Link
 from wrappers import PageText
+from wrappers import Pane
+from wrappers import TabItem
 from wrappers import Table
 from wrappers import TextField
 
@@ -20,7 +22,7 @@ class TabInformation:
     def __init__(self, driver: WebDriver, locator: str, variables: RobotVariables):
         self._driver = driver
         self._locator = locator
-        self._element = Element(driver, locator)
+        self._element = TabItem(driver, locator)
         self._variables = variables
 
     def click(self):
@@ -138,8 +140,8 @@ class _Section:
 
     def __init__(self, driver: WebDriver, locator: str, name: str):
         self._driver = driver
-        self._element = Element(driver, locator)
-        self._element.wait_until_exists(5)
+        self._element = TabItem(driver, locator)
+        self._element.wait_until_visible(5)
         self._name = name
 
     def click(self):
@@ -194,16 +196,16 @@ class _AlertsSection(_Section):
             '//div[contains(@class, "card-header") and contains(text(), "$card_name")]'
             '/following-sibling::div[contains(@class, "card-body")]',
         )
-        card = Element(self._driver, xpath_template.substitute(card_name='Servers'))
+        card = Pane(self._driver, xpath_template.substitute(card_name='Servers'))
         servers_errors = card.find_element('//nx-alert-counter/div/span', 1)
         servers_warnings = card.find_element('//nx-alert-counter/div/span', 2)
-        card = Element(self._driver, xpath_template.substitute(card_name='Cameras'))
+        card = Pane(self._driver, xpath_template.substitute(card_name='Cameras'))
         cameras_errors = card.find_element('//nx-alert-counter/div/span', 1)
         cameras_warnings = card.find_element('//nx-alert-counter/div/span', 2)
-        card = Element(self._driver, xpath_template.substitute(card_name='Storage Locations'))
+        card = Pane(self._driver, xpath_template.substitute(card_name='Storage Locations'))
         storages_errors = card.find_element('//nx-alert-counter/div/span', 1)
         storages_warnings = card.find_element('//nx-alert-counter/div/span', 2)
-        card = Element(self._driver, xpath_template.substitute(card_name='Network Interfaces'))
+        card = Pane(self._driver, xpath_template.substitute(card_name='Network Interfaces'))
         networks_errors = card.find_element('//nx-alert-counter/div/span', 1)
         networks_warnings = card.find_element('//nx-alert-counter/div/span', 2)
         return _AlertsSummary(
@@ -231,7 +233,7 @@ class _AlertsSection(_Section):
                     warnings[type_] += 1
                 else:
                     TimeoutError(f'Could not recognize alert {type_} with SVG {element.get_attribute("data-src")}')
-            paginator_next = Element(self._driver, '//nx-paginator//a[@id="paginator-next"]')
+            paginator_next = PageText(self._driver, '//nx-paginator//a[@id="paginator-next"]')
             if 'disabled' in paginator_next.get_attribute('class'):
                 break
             paginator_next.click()

@@ -1,4 +1,5 @@
 import platform
+from typing import Optional
 from typing import Sequence
 
 from selenium.webdriver.common.by import By
@@ -106,6 +107,9 @@ class PageText:
 
     def should_contain(self, text: str):
         self._element.should_contain(text)
+
+    def get_attribute(self, attribute: str) -> Optional[str]:
+        return self._element.get_attribute(attribute)
 
 
 class TextField:
@@ -288,6 +292,9 @@ class Pane:
 
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
+
+    def find_element(self, locator, position) -> Element:
+        return self._element.find_element(locator, position)
 
 
 class Link:
