@@ -24,7 +24,7 @@ def enable_and_login_with_2fa(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
@@ -56,7 +56,7 @@ def login_with_backup_code(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(
         owner.email,
         owner.password
@@ -90,7 +90,7 @@ def login_with_qr_code(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(
         owner.email,
         owner.password,
@@ -125,7 +125,7 @@ def disabling_2fa(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
@@ -148,7 +148,7 @@ def system_2fa_required(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
@@ -186,7 +186,7 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     header = HeaderNav(driver)
     header.log_in_button().click()
     driver.get(f"{ENV}/systems/{second_server.id}")
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
@@ -225,7 +225,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     header.account_dropdown().click()
     header.security_option().click()
@@ -272,7 +272,7 @@ def fail_to_login_with_expired_code(server: Mediaserver):
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
     header.account_dropdown().click()
     header.security_option().click()
@@ -298,7 +298,7 @@ def fail_to_login_with_expired_code(server: Mediaserver):
 
 def twofa_login_via_api(server: Mediaserver):
     """10. 2fa api call login with totp token"""
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     CLOUD_API.toggle_2fa_on_api(owner)
     CLOUD_API.api_log_in(
         owner.email,
@@ -313,7 +313,7 @@ def twofa_login_via_api(server: Mediaserver):
 
 def twofa_login_via_api_backup(server: Mediaserver):
     """11. 2fa api call login with backout code"""
-    owner = server.get_owner()
+    owner = server.get_cloud_owner()
     CLOUD_API.toggle_2fa_on_api(owner)
     backup_codes = CLOUD_API.generate_2fa_backup_codes_api(
         owner.email,
