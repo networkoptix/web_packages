@@ -75,6 +75,7 @@ class _ServersSection:
 
 
 class _ServerPage:
+
     def __init__(self, driver: WebDriver, locator: str, robot_variables: RobotVariables):
         self._element = Link(driver, locator)
         self._element.wait_until_visible(30)
@@ -90,7 +91,7 @@ class _ServerPage:
             self._driver,
             ('//div[contains(@class, "server-info")]//header//button/'
              f'span[contains(text(),"{self._rb.DETAILED_INFO_TEXT}")]/..'),
-        ).wait_until_visible()
+            ).wait_until_visible()
         PageText(self._driver, f'//header//p[contains(text(),"{self._rb.IP_TEXT}")]').wait_until_visible()
         PageText(self._driver, f'//header//p[contains(text(),"{self._rb.OS_TEXT}")]').wait_until_visible()
         PageText(self._driver, f'//header//p[contains(text(),"{self._rb.VERSION_TEXT}")]').wait_until_visible()
@@ -121,6 +122,7 @@ class _ServerPage:
 
 
 class _RestartDialog:
+
     def __init__(self, driver: WebDriver, robot_variables: RobotVariables):
         self._driver = driver
         self._rb = robot_variables
@@ -148,7 +150,7 @@ class _RestartDialog:
         return Button(
             self._driver,
             f'//nx-modal-restart-server-content//button[contains(text(),"{self._rb.CANCEL_BUTTON_TEXT}")]',
-        )
+            )
 
     def get_button_restart(self) -> Button:
         return Button(self._driver, '//nx-modal-restart-server-content//button[@type="submit"]')
