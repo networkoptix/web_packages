@@ -1,15 +1,15 @@
 from selenium.webdriver.common.by import By
+from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from wrappers import Button
 from wrappers import Link
 from wrappers import PageText
 from wrappers import Pane
+from wrappers import SearchBar
 from wrappers import Table
 from wrappers import TextField
-from wrappers import SearchBar
-from generic_element import Element
-from selenium.webdriver.remote.webdriver import WebDriver
+
 
 class ColumnDataNotVerified(Exception):
     pass
@@ -91,12 +91,12 @@ class IVPDPage:
 
     def device_details(self):
         device_details = "//nx-ipvd//nx-cam-view"
-        return Element(self.driver, device_details)
+        return Pane(self.driver, device_details)
 
     def devices_pane(self):
         dp_path = "//nx-ipvd//nx-vendor-list/nx-block[@id='cameras-block']"
         devices_pane = Pane(self.driver, dp_path)
-        devices_pane.item = Element(self.driver, dp_path + "//nx-tag/a")
+        devices_pane.item = Pane(self.driver, dp_path + "//nx-tag/a")
         return devices_pane
 
     def encoders_button(self):
@@ -152,7 +152,7 @@ class IVPDPage:
 
     def pagination(self):
         pagination = '//*[@id="pagination"]'
-        return Element(self.driver, pagination)
+        return PageText(self.driver, pagination)
 
     def placeholder_text(self):
         search_placeholder = self.search_bar().get_attribute("placeholder")
