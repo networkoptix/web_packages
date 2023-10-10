@@ -43,7 +43,10 @@
         </div>
     </div>
 
-    <div class="quick-actions">
+    <div
+        class="quick-actions"
+        *ngIf="layoutsEditable"
+    >
         <div
             class="action-icon"
             *ngIf="menu$$()"
@@ -84,7 +87,7 @@
     </div>
 
     <div
-        *ngIf="displayInfo$$()"
+        *ngIf="displayInfo$$() && layoutsEditable"
         class="info"
     >
         <div

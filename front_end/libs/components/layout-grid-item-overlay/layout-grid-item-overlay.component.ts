@@ -43,6 +43,7 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
+import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LayoutItem } from '@services/system-api.types';
 import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import { icons } from '@static-variables';
@@ -106,6 +107,8 @@ export class NxLayoutGridItemOverlayComponent {
     // TODO remove when Action Dispatcher for displayInfo is implemented
     // the name is long and stupid intentionally
     temporaryManualDisplayInfoToggle$$ = signal(null);
+    allowDebugMode: boolean;
+    layoutsEditable: boolean;
 
     displayInfo$$ = computed(() => {
         if (this.temporaryManualDisplayInfoToggle$$() !== null) {
@@ -165,7 +168,6 @@ export class NxLayoutGridItemOverlayComponent {
         zoomWindow: {
             id: 'zoomWindow',
             icon: icons.dirLayoutsCamera + 'zoom_window.svg',
-            checked$$: signal(true),
             ...LANG.zoomWindow,
             ...EMPTY_MENU_ACTION,
         },
@@ -282,14 +284,14 @@ export class NxLayoutGridItemOverlayComponent {
             return null;
         }
         return [
-            this.MENU_ITEMS.ptz,
-            this.MENU_ITEMS.fisheye,
-            this.MENU_ITEMS.motion,
-            this.MENU_ITEMS.object,
-            this.MENU_ITEMS.zoomWindow,
+            this.allowDebugMode ? this.MENU_ITEMS.ptz : null,
+            this.allowDebugMode ? this.MENU_ITEMS.fisheye : null,
+            this.allowDebugMode ? this.MENU_ITEMS.motion : null,
+            this.allowDebugMode ? this.MENU_ITEMS.object : null,
+            this.allowDebugMode ? this.MENU_ITEMS.zoomWindow : null,
             this.MENU_ITEMS.info,
-            this.canEdit$$() ? this.MENU_ITEMS.rotate : null,
-            this.MENU_ITEMS.screenshot,
+            this.allowDebugMode && this.canEdit$$() ? this.MENU_ITEMS.rotate : null,
+            this.allowDebugMode ? this.MENU_ITEMS.screenshot : null,
         ].filter(i => !!i);
     });
 
@@ -320,12 +322,12 @@ export class NxLayoutGridItemOverlayComponent {
         [ResourceType.CAMERA]: item =>
             [
                 this.fullscreenAction$$(),
-                this.canEdit$$() && this.MENU_ITEMS.rotate,
-                this.MENU_ITEMS.resolution,
-                this.MENU_ITEMS.zoomWindow,
-                this.MENU_ITEMS.screenshot,
-                this.MENU_ITEMS.divider,
-                this.MENU_ITEMS.showOnItem,
+                this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
+                this.allowDebugMode ? this.MENU_ITEMS.resolution : null,
+                this.allowDebugMode ? this.MENU_ITEMS.zoomWindow : null,
+                this.allowDebugMode ? this.MENU_ITEMS.screenshot : null,
+                this.allowDebugMode ? this.MENU_ITEMS.divider : null,
+                this.allowDebugMode ? this.MENU_ITEMS.showOnItem : null,
                 this.removeAction$$() && this.MENU_ITEMS.divider,
                 this.removeAction$$(),
             ].filter(i => !!i),
@@ -337,7 +339,14 @@ export class NxLayoutGridItemOverlayComponent {
             ].filter(i => !!i),
     };
 
-    constructor(@Inject(DOCUMENT) public document: Document, public ref: ElementRef<HTMLElement>) {}
+    constructor(
+        @Inject(DOCUMENT) public document: Document,
+        public ref: ElementRef<HTMLElement>,
+        configService: NxConfigService,
+    ) {
+        this.allowDebugMode = configService.getConfig().allowDebugMode;
+        this.layoutsEditable = configService.getConfig().featureFlags.layoutsEditable || true;
+    }
 
     handleIconClick(action: MenuItemAction<LayoutItem> | undefined, $event: MouseEvent): void {
         if (!action) {
@@ -348,7 +357,7 @@ export class NxLayoutGridItemOverlayComponent {
         action($event, this.item$$());
     }
 
-    checkGetCameraNode(): ResourceLeafNode<NxSystemCameraWithMappedFields> {
+    checkGetCameraNode(): ResourceLeafNode<NxSystemCameraWithMappedFields> | null {
         const node = this.node$$();
         if (!assertResourceOfType.camera(node)) {
             return null;
