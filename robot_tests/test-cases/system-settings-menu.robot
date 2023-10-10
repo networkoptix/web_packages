@@ -9,10 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-8. Should have search component
-    Go To Users List
-    Wait Until Page Contains Element    ${LEFT MENU SEARCH INPUT}
-
 9. Should have search component (check specs)
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}

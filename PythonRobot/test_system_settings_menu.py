@@ -57,6 +57,18 @@ def users_are_seen_when_main_node_is_selected(server: Mediaserver):
         print("Pass")
 
 
+def check_search_input(server: Mediaserver):
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver)
+        left_menu = SystemLeftMenu(driver)
+        assert left_menu.get_search_field().exists()
+        print("Pass")
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if suite_name.startswith('test_'):
@@ -69,3 +81,4 @@ if __name__ == '__main__':
         should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(cloud_server)
         selected_node_has_different_color(cloud_server)
         users_are_seen_when_main_node_is_selected(cloud_server)
+        check_search_input(cloud_server)
