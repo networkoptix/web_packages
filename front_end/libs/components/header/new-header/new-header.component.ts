@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { Router } from '@angular/router';
+import { NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { cloneDeep } from 'lodash-es';
@@ -62,6 +62,18 @@ export class NxNewHeaderComponent {
                 this.headerService.currentLocation?.path || router.url,
             );
         });
+
+        router.events
+            .pipe(
+                filter(event => event instanceof NavigationEnd),
+                untilDestroyed(this),
+            )
+            .subscribe(e => {
+                this.selectedNode = this.findNodeBasedOnURL(
+                    this.displayedNodes,
+                    this.headerService.currentLocation?.path,
+                );
+            });
 
         this.scrollMechanicsService.windowSizeSubject
             .pipe(untilDestroyed(this))
