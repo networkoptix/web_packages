@@ -543,7 +543,7 @@
     "Encoding speed": "Encoding speed",
     "Encoding threads": "Encoding threads",
     "Encrypt video traffic to desktop and mobile clients": "Encrypt video traffic to desktop and mobile clients",
-    "Encrypting video traffic will significantly increase CPU usage.": "Encrypting video traffic will significantly increase CPU usage.",
+    "Encrypting video traffic may significantly increase CPU usage.": "Encrypting video traffic may significantly increase CPU usage.",
     "End": "End",
     "End Tour": "End Tour",
     "End time is earlier than start time": "End time is earlier than start time",
