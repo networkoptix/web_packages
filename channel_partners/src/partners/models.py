@@ -101,6 +101,12 @@ def get_cloud_test_instance():
     return CloudInstance.objects.get_or_create(name='cloud-test')[0].id
 
 
+def get_default_cloud_host():
+    # Todo. Instance must be defined in config somehow!
+    return CloudHost.objects.get_or_create(hostname=settings.INSTANCE_CONFIG.default_host,
+                                           defaults={'instance': get_cloud_test_instance()})[0].id
+
+
 class CloudInstance(models.Model):
     name = models.CharField(max_length=50)
 
@@ -124,7 +130,8 @@ class CloudSystemId(ChannelPartnerStates, models.Model):
     system_id = models.UUIDField()
     usage_issue_detected = models.BooleanField(default=False)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
-    organization = models.ForeignKey('Organization', null=True, blank=True, on_delete=models.CASCADE, related_name='cloud_systems')
+    organization = models.ForeignKey('Organization', null=True, blank=True,
+                                     on_delete=models.CASCADE, related_name='cloud_systems')
     name = models.CharField(max_length=150, blank=True)
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False,
                                 default=ChannelPartnerStates.ACTIVE)
@@ -314,7 +321,8 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     name = models.CharField(max_length=150)
     parent_channel_partner = models.ForeignKey('ChannelPartner', null=True, blank=True, on_delete=models.CASCADE, related_name='channel_partners')
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False, default=ChannelPartnerStates.ACTIVE)
-    instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
+    # instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
+    cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE, default=get_default_cloud_host)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
     can_create_sub_channels = models.BooleanField(default=True)
@@ -343,7 +351,7 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     permissions = ChannelPartnerPermissions
 
     def __str__(self):
-        return f'{self.name} - {self.instance.name}'
+        return f'{self.name} - {self.cloud_host.hostname}'
 
     @django.db.transaction.atomic()
     def set_attributes(self, attributes, partial=False):
@@ -367,7 +375,10 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         return self.users.filter(pk=user.pk, channelpartnertouser__roles__has_any_keys=allowed_role_names).exists()
 
     def can_access(self, user: CloudUser):
-        return self.users.filter(pk=user.pk).exists() or OrganizationToUser.objects.filter(organization__channel_partner=self, user=user).exists() or (self.parent_channel_partner and self.parent_channel_partner.can_access(user))
+        return ((self.users.filter(pk=user.pk).exists()
+                or OrganizationToUser.objects.filter(organization__channel_partner=self, user=user).exists()
+                or (self.parent_channel_partner and self.parent_channel_partner.can_access(user)))
+                or self.organizations.filter(users=user))
 
     def can_manage(self, user: CloudUser):
         if self.parent_channel_partner:
@@ -421,8 +432,10 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
 
     def save(self, *args, **kwargs):
         new = self._state.adding
-        if self.parent_channel_partner:
-            self.instance = self.parent_channel_partner.instance
+        # creation of channel partner with a different host is available through django admin site
+        # and for second level of channel partners (direct children of Nx Channel Partner) only
+        if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
+            self.cloud_host = self.parent_channel_partner.cloud_host
 
         super().save(*args, **kwargs)
 
@@ -981,7 +994,8 @@ class ChannelPartnerEvent(models.Model):
     event_type = models.IntegerField(choices=EVENT_TYPES)
     service = models.ForeignKey(ChannelPartnerService, null=True, blank=True, on_delete=models.CASCADE)
     cloud_system = models.ForeignKey(CloudSystemId, null=True, blank=True, on_delete=models.CASCADE)
-    cloud_instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE)
+    # cloud_instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE)
+    cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
 
     @classmethod
     def new_event(cls, event_type: int, system: CloudSystemId = None, service: ChannelPartnerService = None):
@@ -989,11 +1003,11 @@ class ChannelPartnerEvent(models.Model):
             if not service:
                 raise Exception('service is required')
             new_obj = cls.objects.create(event_type=event_type, service=service,
-                               cloud_instance=service.created_by_channel_partner.instance)
+                                         cloud_host=service.created_by_channel_partner.cloud_host)
         else:
             if not system:
                 raise Exception('system is required')
-            new_obj = cls.objects.create(event_type=event_type, cloud_system=system, cloud_instance=system.cloud_host.instance)
+            new_obj = cls.objects.create(event_type=event_type, cloud_system=system, cloud_host=system.cloud_host)
 
         # Delete any old events for the same service or system
         cls.objects.filter(cloud_system=new_obj.cloud_system, service=new_obj.service).exclude(id=new_obj.id).delete()

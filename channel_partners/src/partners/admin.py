@@ -42,7 +42,7 @@ class ChannelPartnerOrganizationInline(admin.TabularInline):
 
 @admin.register(ChannelPartner)
 class ChannelPartnerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'instance', 'parent_channel_partner')
+    list_display = ('name', 'cloud_host', 'parent_channel_partner')
 
     inlines = [
         ChannelPartnerUserInline,

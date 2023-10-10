@@ -6,3 +6,5 @@ postgres:
     username: 'channel'
     password: 'partners'
     database: 'channel_partners'
+
+default_host: 'cloud-test.hdw.mx'

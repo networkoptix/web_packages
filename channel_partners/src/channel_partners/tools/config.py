@@ -15,6 +15,7 @@ class PostgresConfig:
 @dataclass
 class InstanceConfig:
     postgres: PostgresConfig
+    default_host: str
     debug: bool = False
 
     def __post_init__(self):

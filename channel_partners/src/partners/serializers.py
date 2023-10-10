@@ -127,7 +127,7 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelPartner
-        exclude = ['instance', 'parent_channel_partner', 'can_create_sub_channels', 'monthly_additional_service_limit', 'support_information']
+        exclude = ['cloud_host', 'parent_channel_partner', 'can_create_sub_channels', 'monthly_additional_service_limit', 'support_information']
         read_only_fields = ['users', 'parentChannelPartner']
 
     def validate_parent_channel_partner(self, value: ChannelPartner):

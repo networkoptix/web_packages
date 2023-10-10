@@ -7,11 +7,13 @@ from django.db import transaction
 
 import pytest
 from model_bakery import baker
+from mock.mock import MagicMock
+
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser, \
     ChannelPartnerServiceRecord, ChannelPartnerRole
 from partners.views import CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet, \
-    ChannelPartnerViewSet, OrganizationViewSet
+    ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet
 
 
 class TestCloudSystemViewSet:
@@ -390,7 +392,98 @@ class TestChannelPartnerUserViewSet:
         assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
 
 
+class TestChannelPartnerNestedViewSet:
+
+    def test_get_queryset(self, default_channel_partner, channel_partner_factory,
+                          cloud_test_host, cloud_host_factory, mock_auth_with_user,
+                          default_cp_admin, cp_user_factory, arf):
+        gen_count = 3
+        host = cloud_host_factory(hostname=f'{uuid4()}')
+        other_host = cloud_host_factory(hostname=f'{uuid4()}')
+        root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
+                                          cloud_host=host)
+        root_cp_user = cp_user_factory(channel_partner=root_cp)
+        other_root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
+                                                cloud_host=other_host)
+        default_subs = [channel_partner_factory(parent_channel_partner=root_cp, cloud_host=host) for _ in range(gen_count)]
+        default_subs += [channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}')) for _ in range(gen_count)]
+        other_subs = [channel_partner_factory(parent_channel_partner=other_root_cp) for _ in range(gen_count)]
+        for sub in default_subs + other_subs:
+            channel_partner_factory(parent_channel_partner=sub, cloud_host=host)
+            # this will be replaced with parent `cloud_host` in `ChannelPartner.save()`
+            # Todo. needs to be discussed how to save channel partner's cloud host
+            channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host)
+        # Test root channel partner's subs
+        view = ChannelPartnerNestedViewSet(kwargs={'parent_lookup_parent_channel_partner': str(root_cp.id)})
+        view.request = MagicMock()
+        view.request.cloud_host = host
+        view.request.user = root_cp_user.user
+        qs = view.get_queryset()
+        assert qs.count() == len(default_subs)
+
+        # test second level partner's subs (has two children with different hosts)
+        view = ChannelPartnerNestedViewSet(kwargs={'parent_lookup_parent_channel_partner': str(default_subs[0].id)})
+        view.request = MagicMock()
+        view.request.cloud_host = host
+        view.request.user = root_cp_user.user
+        qs = view.get_queryset()
+        assert qs.count() == 2
+
+
 class TestChannelPartnerViewSet:
+
+    def test_get_queryset(self, default_channel_partner, channel_partner_factory,
+                          cloud_test_host, cloud_host_factory, mock_auth_with_user,
+                          default_cp_admin, arf, cp_user_factory, organization_factory,
+                          org_user_factory):
+        gen_count = 3
+        host = cloud_host_factory(hostname=f'{uuid4()}')
+        other_host = cloud_host_factory(hostname=f'{uuid4()}')
+        root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
+                                          cloud_host=host)
+        root_cp_user = cp_user_factory(channel_partner=root_cp)
+        other_root_cp = channel_partner_factory(name=f'{uuid4()}', parent_channel_partner=None,
+                                                cloud_host=other_host)
+        default_host_subs = [channel_partner_factory(parent_channel_partner=root_cp,
+                                                     cloud_host=host) for _ in range(gen_count)]
+        other_host_subs = [
+            channel_partner_factory(parent_channel_partner=root_cp, cloud_host=cloud_host_factory(f'{uuid4()}')) for _
+            in range(gen_count)]
+        other_subs = [channel_partner_factory(parent_channel_partner=other_root_cp) for _ in range(gen_count)]
+
+        # Test root channel partner's users request for a different host sub channel partner
+        mock_auth_with_user(root_cp_user)
+        sub_cp = other_host_subs[-1]
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
+        request = arf.get('/')
+        request.user = root_cp_user.user
+        request.cloud_host = host
+        response = view(request, pk=str(sub_cp.id))
+        assert response.status_code == 200
+        assert response.data['id'] == str(sub_cp.id)
+        assert response.data['parentChannelPartner'] == root_cp.id
+
+        # Test root channel partner's users request for a list
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'list'})
+        request = arf.get('/')
+        request.user = root_cp_user.user
+        request.cloud_host = host
+        response = view(request)
+        assert response.status_code == 200
+        # must contain 'default_host_subs + root_cp'
+        assert set([cp['id'] for cp in response.data['results']]) == set([str(cp.id) for cp in [root_cp] + default_host_subs])
+
+        # Test organization user retrieve parent channel partner
+        org = organization_factory(channel_partner=sub_cp)
+        org_user = org_user_factory(organization=org)
+        mock_auth_with_user(org_user)
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
+        request.user = org_user.user
+        request.cloud_host = host
+        response = view(request, pk=str(sub_cp.id))
+        assert response.status_code == 200
+        assert response.data['id'] == str(sub_cp.id)
+        assert response.data['parentChannelPartner'] == root_cp.id
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
                        system_factory, arf, mock_auth_with_user, default_cp_admin):

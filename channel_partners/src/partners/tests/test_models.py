@@ -77,6 +77,23 @@ class TestOrganizationToUser:
         assert batch_data["items"][0]["systems"].__len__() == gen_count
         assert set(batch_data["items"][0]["systems"]) == {str(system.system_id) for system in systems}
         assert batch_data["items"][0]["accessRole"] == 'none'
+from partners.models import ChannelPartner, ChannelPartnerEvent
+
+
+class TestChannelPartner:
+
+    def test_creat(self, cloud_test_host):
+        partner = ChannelPartner.objects.create(name=f'{uuid4()}')
+
+        assert partner.id
+        assert partner.cloud_host == cloud_test_host
+
+
+class TestChannelPartnerEvent:
+
+    def test_creat(self, cloud_test_host, default_channel_partner):
+        # Todo. Make with services fixtures
+        pass
 
 
 class TestChannelPartner:

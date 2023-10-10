@@ -34,24 +34,24 @@ def cloud_test_host(db):
     return CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
 
 @pytest.fixture()
-def cloud_host_factory(db):
+def cloud_host_factory(db, cloud_test_instance):
     def factory(hostname=None) -> CloudHost:
         if not hostname:
             hostname = f'{uuid4()}.ut.test.hdw.mx'
-        return CloudHost.objects.get_or_create(hostname=hostname)[0]
+        return CloudHost.objects.get_or_create(hostname=hostname, instance=cloud_test_instance)[0]
 
     return factory
 
 
 @pytest.fixture()
-def cloud_test_nx_channel_partner(cloud_test_instance):
-    return ChannelPartner.objects.get_or_create(name='Network Optix', instance=cloud_test_instance)[0]
+def cloud_test_nx_channel_partner(cloud_test_host):
+    return ChannelPartner.objects.get_or_create(name='Network Optix', cloud_host=cloud_test_host)[0]
 
 
 @pytest.fixture()
-def default_channel_partner(cloud_test_instance, cloud_test_nx_channel_partner):
+def default_channel_partner(cloud_test_host, cloud_test_nx_channel_partner):
     return ChannelPartner.objects.get_or_create(
-        name='Default CP', instance=cloud_test_instance, parent_channel_partner=cloud_test_nx_channel_partner)[0]
+        name='Default CP', cloud_host=cloud_test_host, parent_channel_partner=cloud_test_nx_channel_partner)[0]
 
 
 @pytest.fixture()
@@ -75,12 +75,13 @@ def organization_factory(default_channel_partner):
 
 
 @pytest.fixture()
-def channel_partner_factory(default_channel_partner, cloud_test_instance):
-    def factory(name=None, parent_channel_partner=default_channel_partner, acs=False) -> ChannelPartner:
+def channel_partner_factory(default_channel_partner, cloud_test_host):
+    def factory(name=None, parent_channel_partner=default_channel_partner, cloud_host=cloud_test_host, acs=False) -> ChannelPartner:
         return ChannelPartner.objects.create(
             name=name or f"Channel Partner {uuid4()}",
             parent_channel_partner=parent_channel_partner,
-            allow_changing_services=acs
+            cloud_host=cloud_host,
+            allow_changing_services=acs,
         )
 
     return factory

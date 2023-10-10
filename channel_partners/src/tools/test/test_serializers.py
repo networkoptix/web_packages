@@ -215,7 +215,7 @@ class TestFieldAccessModelSerializer:
         assert "User is not allowed to modify this field" in ser.errors["cloudSystemId"][0]
         assert ser.errors["cloudSystemId"][0].code == 'forbidden'
 
-    def test_can_read(self, db):
+    def test_can_read(self, channel_partner_factory, organization_factory, system_factory):
         class CreateSystemSerializer(serializers.ModelSerializer):
             cloudSystemId = serializers.UUIDField(source='system_id')
             class Meta:
@@ -246,15 +246,11 @@ class TestFieldAccessModelSerializer:
             def can_read_cloudSystemId(self):
                 return False
 
-        cloud_test_instance = CloudInstance.objects.get_or_create(name='cloud-test')[0]
-        cloud_test_host = CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
-        nx_channel_partner_cloud_test = ChannelPartner.objects.get_or_create(name='Network Optix', instance=cloud_test_instance)[0]
-        channel_partner = ChannelPartner.objects.create(name=f'Test CP {uuid4()}',
-                                                        parent_channel_partner=nx_channel_partner_cloud_test,
-                                                        instance=cloud_test_instance)
-        organization = Organization.objects.create(name=f'Test Org {uuid4()}', channel_partner=channel_partner)
 
-        system = baker.make(CloudSystemId, organization=organization, system_id=f"{uuid4()}", cloud_host=cloud_test_host)
+        channel_partner = channel_partner_factory()
+        organization = organization_factory(channel_partner=channel_partner)
+
+        system = system_factory(organization=organization)
 
         ser = CreateSystemSerializer(instance=system)
         assert ser.data['cloudSystemId'] == str(system.system_id)

@@ -1,3 +1,4 @@
+from django.db.models import Q
 from time import sleep
 from uuid import uuid4
 
@@ -153,7 +154,15 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return super().get_queryset().filter(instance=self.request.cloud_host.instance)
+        query = Q(
+            Q(cloud_host=self.request.cloud_host) |
+            Q(
+                parent_channel_partner__users=self.request.user,
+                parent_channel_partner__parent_channel_partner__isnull=True
+            )
+        )
+        qs = super().get_queryset()
+        return qs.filter(query)
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
@@ -173,7 +182,8 @@ class ExternalIdBase:
 
     def get_channel_partner(self):
         channel_partner_id = self.kwargs.get('channel_partner_id')
-        return get_object_or_404(ChannelPartner, id=channel_partner_id, instance=self.request.cloud_host.instance, users=self.request.user)
+        return get_object_or_404(ChannelPartner, id=channel_partner_id,
+                                 cloud_host=self.request.cloud_host, users=self.request.user)
 
     def get_queryset(self):
         channel_partner = self.get_channel_partner()
@@ -267,7 +277,8 @@ class ChannelPartnerAvailableServiceViewset(ParentLookUpMixin, NestedViewSetMixi
 
 @extend_schema(
     tags=['Channel Partners - Service Management'],
-    summary='These are services that are available to this organization from its Channel Partner including properties that are specific to the organization'
+    summary='These are services that are available to this organization from its '
+            'Channel Partner including properties that are specific to the organization'
 )
 class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
@@ -326,21 +337,33 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             return ChannelPartnerSerializer
 
     def get_queryset(self):
+        # common case with filtering by cloud_host
+        query = Q(cloud_host=self.request.cloud_host)
+        if self.action == 'retrieve':
+            # LIC-278
+            # If user is member of an organization, they should have read access to parent
+            query |= Q(organizations__users=self.request.user)
         if self.detail:
-            return ChannelPartner.objects.filter(
-                instance=self.request.cloud_host.instance
+            # LIC-277 Map channel partners to cloud host instead of cloud instance
+            # If channel partner’s parent has no parent (so it is the direct child of root channel partner)
+            #   and current user is member of root channel partner:
+            # /channel_partners/{id} should work even if the request is coming from a different cloud host
+            query |= Q(
+                Q(parent_channel_partner__users=self.request.user),
+                Q(parent_channel_partner__parent_channel_partner__isnull=True)
             )
-        else:
-            return ChannelPartner.objects.filter(
-                instance=self.request.cloud_host.instance, users=self.request.user
-            )
+            return ChannelPartner.objects.filter(query)
+
+        return ChannelPartner.objects.filter(query)
+
 
     @extend_schema(request=CreateChannelPartnerSerializer, responses=ChannelPartnerSerializer)
     def create(self, request, *args, **kwargs):
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         parent_channel_partner = serializer.validated_data.get('parent_channel_partner')
-        channeL_partner = serializer.save(instance=parent_channel_partner.instance)
+        # Todo. That is replaced in ChannelPartner.save()
+        channeL_partner = serializer.save(cloud_host=parent_channel_partner.cloud_host)
 
         response_serializer = ChannelPartnerSerializer(channeL_partner, context={'request': request})
         return Response(response_serializer.data)
@@ -403,7 +426,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
         self.check_object_permissions(request, channel_partner)
 
     def get_queryset(self):
-        return super().get_queryset().filter(channel_partner__instance=self.request.cloud_host.instance)
+        return super().get_queryset().filter(channel_partner__cloud_host=self.request.cloud_host)
 
 
 @extend_schema(
@@ -441,9 +464,9 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
 
     def get_queryset(self):
         if self.detail:
-            return Organization.objects.filter(channel_partner__instance=self.request.cloud_host.instance)
+            return Organization.objects.filter(channel_partner__cloud_host=self.request.cloud_host)
         else:
-            return Organization.objects.filter(channel_partner__instance=self.request.cloud_host.instance, users=self.request.user)
+            return Organization.objects.filter(channel_partner__cloud_host=self.request.cloud_host, users=self.request.user)
 
     @extend_schema(request=CreateOrganizationSerializer, responses=OrganizationSerializer)
     def create(self, request, *args, **kwargs):
@@ -561,7 +584,7 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return super().get_queryset().filter(organization__channel_partner__instance=self.request.cloud_host.instance)
+        return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host)
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_systems)
