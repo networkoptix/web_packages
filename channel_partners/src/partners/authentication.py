@@ -1,4 +1,8 @@
+from hashlib import sha256
+
 import httpx
+from django.core.cache import caches
+
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 import requests
 from nx_cloud_api_client.apis import CdbSystemAPIBase
@@ -11,6 +15,33 @@ from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
 from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken
+
+
+class TokenCache:
+    timeout: int = 600
+
+    @staticmethod
+    def cache():
+        return caches['default']
+
+    @staticmethod
+    def cache_key(token: str):
+        mdsum = sha256((settings.CACHE_SALT + token).encode()).hexdigest()
+        return f'user-oauth-token-{mdsum}'
+
+    @classmethod
+    def get_token(cls, token):
+        if not token:
+            return None
+        return cls.cache().get(cls.cache_key(token))
+
+    @classmethod
+    def set_token(cls, token, email, expires_in=None):
+        if expires_in:
+            timeout = min(cls.timeout, expires_in)
+        else:
+            timeout = cls.timeout
+        cls.cache().set(cls.cache_key(token), email, timeout=timeout)
 
 
 class NxTokenAuthentication(TokenAuthentication):
@@ -104,12 +135,16 @@ class NxCloudSystemBasicAuthenticationExtension(OpenApiAuthenticationExtension):
 
 
 def get_cloud_user_from_token(token, cloud_host):
-    response = requests.get(
+    if email := TokenCache.get_token(token):
+        return email
+    response = httpx.get(
         f'https://{cloud_host}/cdb/oauth2/token/{token}',
         headers={"Authorization": f"Bearer {token}"})
-    if response.ok:
+    if response.is_success:
         resp = response.json()
         email = resp.get('username')
+        expires_in = resp.get('expires_in')
+        TokenCache.set_token(token, email, expires_in=expires_in)
         return email
     elif response.status_code == 401:
         return None
