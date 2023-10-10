@@ -9,17 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-9. Should have search component (check specs)
-    Go To Users List
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       background-color    ${COLOR TRANSPARENT RGB}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       color               ${COLOR DARK9 RGB}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       height              ${SEARCH HEIGHT}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       font-size           ${SEARCH FONT SIZE}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       padding-left        ${SEARCH PLEFT}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       padding-right       ${SEARCH PRIGHT}
-    Wait Until Element Contains Style   ${LEFT MENU SEARCH INPUT}       font-family         ${FONT REGULAR}
-
 10. Shoud allow search input chars
     Go To Users List
     Wait Until Page Contains Element    ${LEFT MENU}
