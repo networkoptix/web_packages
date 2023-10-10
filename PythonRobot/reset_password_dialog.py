@@ -1,6 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 
-import robot_keywords
+from wrappers import Page
 from wrappers import PageText
 from wrappers import TextField
 
@@ -9,8 +9,7 @@ class ResetPasswordDialog:
 
     def __init__(self, driver):
         self._driver = driver
-        robot_keywords.wait_until_page_contains_element(
-            driver, "//nx-authorize-reset-request-component")
+        Page(self._driver, "//nx-authorize-reset-request-component").wait_until_exists(40)
 
     def input_email(self, email: str):
         text_field = TextField(

@@ -2,8 +2,10 @@ import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
 from wrappers import Button
-from wrappers import PageText
 from wrappers import DropDown
+from wrappers import Page
+from wrappers import PageText
+
 
 class SystemUsers:
     def __init__(self, driver, lang="en_US"):
@@ -29,7 +31,7 @@ class SystemUsers:
         return DropDown(self.driver, "//nx-system-settings-component//nx-block/..//nx-section//button[@id='componentId']")
     
     def _wait_until_page_loaded(self):
-        robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-user-component")
+        Page(self.driver, "//nx-system-user-component").wait_until_exists(40)
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}systems/")

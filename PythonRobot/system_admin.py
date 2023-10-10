@@ -1,6 +1,5 @@
 import time
 
-from selenium.common.exceptions import TimeoutException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -15,7 +14,9 @@ from toast_notification import ToastNotification
 from variables import ENV
 from wrappers import Button
 from wrappers import Checkbox
+from wrappers import Page
 from wrappers import PageText
+from wrappers import TabItem
 from wrappers import TextField
 
 
@@ -209,16 +210,15 @@ class SystemAdmin:
             if len(self.driver.find_elements_by_xpath(locator)) > 0:
                 break
             try:
-                robot_keywords.wait_until_page_contains_element(self.driver, locator, timeout=10)
-            except TimeoutException:
+                TabItem(self.driver, locator).wait_until_visible(timeout=10)
+            except ElementNotVisible:
                 if time.monotonic() - started_at > timeout_sec:
                     raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
                 self.driver.refresh()
 
     def _wait_until_page_loaded(self):
-        robot_keywords.wait_until_page_contains_element(self.driver, "//nx-system-settings-component")
-        robot_keywords.wait_until_page_contains_element(
-            self.driver, "//div/nx-editable-heading//nx-text-editable")
+        Page(self.driver, "//nx-system-settings-component").wait_until_exists()
+        TextField(self.driver, "//div/nx-editable-heading//nx-text-editable").wait_until_visible()
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}systems/")

@@ -114,7 +114,11 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
     # todo: the save button doesn't appear.
     Button(driver, rb.ACCOUNT_SAVE).click()
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+    xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+    alert = PageText(driver, xpath)
+    alert.wait_until_visible(10)
+    alert.wait_until_not_visible(10)
     driver.quit()
     driver = get_headless_chrome()
     url1 = rb.ENV + "/account"
@@ -126,7 +130,11 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
     TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
     Button(driver, rb.ACCOUNT_SAVE).click()
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+    xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+    alert1 = PageText(driver, xpath1)
+    alert1.wait_until_visible(10)
+    alert1.wait_until_not_visible(10)
 
 
 def test_changing_last_name_and_saving_maintains_that_setting():
@@ -141,7 +149,11 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     verify_in_account_page(driver)
     TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
     Button(driver, rb.ACCOUNT_SAVE).click()
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+    xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+    alert = PageText(driver, xpath)
+    alert.wait_until_visible(10)
+    alert.wait_until_not_visible(10)
     driver.quit()
     driver = get_headless_chrome()
     url1 = rb.ENV + "/account"
@@ -151,7 +163,11 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_contains_text("namechanged", 40)
     TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(rb.TEST_LAST_NAME)
     Button(driver, rb.ACCOUNT_SAVE).click()
-    robot_keywords.check_for_alert(driver, rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED)
+    alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+    xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+    alert1 = PageText(driver, xpath1)
+    alert1.wait_until_visible(10)
+    alert1.wait_until_not_visible(10)
     driver.quit()
 
 

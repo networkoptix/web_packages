@@ -163,6 +163,9 @@ class TextField:
     def is_visible(self) -> bool:
         return self._element.is_visible()
 
+    def value_of_css_property(self, style_property: str):
+        return self._element.value_of_css_property(style_property)
+
 
 class SearchBar:
 
@@ -177,7 +180,7 @@ class SearchBar:
         self._element.send_keys(text)
         # self._element.submit()
 
-    def wait_until_visible(self, timeout: 0.5):
+    def wait_until_visible(self, timeout: float = 0.5):
         self._element.wait_until_visible(timeout)
 
     def click(self):
@@ -255,6 +258,9 @@ class Image:
     def click(self):
         self._element.click()
 
+    def hover(self):
+        self._element.hover()
+
 
 class Pane:
 
@@ -299,6 +305,9 @@ class Link:
     def click(self):
         self._element.click()
 
+    def get_attribute(self, attribute: str):
+        return self._element.get_attribute(attribute)
+
 
 class DropDown:
 
@@ -342,3 +351,26 @@ class Tooltip:
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
+
+
+class TabItem:
+
+    def __init__(self, driver: WebDriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def click(self):
+        self._element.click()
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
+
+
+class Page:
+
+    def __init__(self, driver: WebDriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+
+    def wait_until_exists(self, timeout: float = 5):
+        self._element.wait_until_exists(timeout)

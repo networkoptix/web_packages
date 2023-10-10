@@ -6,6 +6,7 @@ from system_tile import SystemTile
 from variables import ENV
 from wrappers import Button
 from wrappers import PageText
+from wrappers import Pane
 from wrappers import TextField
 
 
@@ -41,7 +42,7 @@ class SystemsPage:
         return self.tiles
 
     def _wait_until_page_contains_systems_list(self):
-        robot_keywords.wait_until_page_contains_element(self.driver, "//nx-systems-list-component")
+        Pane(self.driver, "//nx-systems-list-component").wait_until_visible(40)
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}/systems")

@@ -1,14 +1,14 @@
 from selenium.webdriver.common.by import By
-import time
 
 import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
 from wrappers import Button
-from wrappers import TextField
 from wrappers import DropDown
 from wrappers import DropDownOption
+from wrappers import Page
 from wrappers import PageText
+from wrappers import TextField
 
 
 class SystemLeftMenu:
@@ -79,8 +79,7 @@ class SystemLeftMenu:
         return PageText(self.driver, f"//span[contains(text(),'{text}')]")
 
     def _wait_until_page_loaded(self):
-        robot_keywords.wait_until_page_contains_element(self.driver, "//nx-menu")
-        
+        Page(self.driver, "//nx-menu").wait_until_exists(40)
 
     def _location_is_correct(self):
         robot_keywords.location_should_be(self.driver, f"{ENV}systems/")

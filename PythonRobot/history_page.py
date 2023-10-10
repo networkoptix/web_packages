@@ -5,7 +5,9 @@ import requests
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
-from PythonRobot import robot_keywords, RobotVariables
+from PythonRobot import RobotVariables
+from wrappers import Page
+from wrappers import TabItem
 
 
 class HistoryPage:
@@ -16,7 +18,7 @@ class HistoryPage:
         self._variables = variables
 
     def _wait_until_loaded(self):
-        robot_keywords.wait_until_page_contains_element(self._driver, "//nx-download-history")
+        Page(self._driver, "//nx-download-history").wait_until_exists(40)
 
     def get_download_links_for_last_version(self) -> Collection[str]:
         release_block = self._driver.find_element_by_xpath('//nx-release')
@@ -45,7 +47,7 @@ class HistoryPage:
                              f' and text()="{self._variables.BETAS_TAB_TEXT}"]')
 
     def _get_tab(self, locator):
-        robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
+        TabItem(self._driver, locator).wait_until_visible()
         return _Tab(self._driver, locator)
 
 

@@ -4,7 +4,7 @@ from urllib.request import urlopen
 
 from selenium.webdriver.common.by import By
 
-import robot_keywords
+from wrappers import Page
 from wrappers import Button
 from wrappers import Link
 from wrappers import TabItem
@@ -17,7 +17,7 @@ class DownloadsPage:
         self._wait_until_loaded()
 
     def _wait_until_loaded(self):
-        robot_keywords.wait_until_page_contains_element(self._driver, "//nx-download-component")
+        Page(self._driver, "//nx-download-component").wait_until_exists(40)
 
     def get_windows_client_installer_tab(self) -> '_Tab':
         return self._get_tab('//nx-download-component//*[@id="windows"]')
@@ -38,7 +38,7 @@ class DownloadsPage:
         return self._get_link('//nx-download-component//a[@data-testid="historyReleaseLink"]')
 
     def _get_tab(self, locator):
-        robot_keywords.wait_until_page_contains_element(self._driver, locator, timeout=5)
+        TabItem(self._driver, locator).wait_until_visible()
         return _Tab(self._driver, locator)
 
     def _get_link(self, locator):

@@ -5,7 +5,6 @@ from typing import NamedTuple
 
 from selenium.webdriver.remote.webdriver import WebDriver
 
-import robot_keywords
 from RobotVariables import RobotVariables
 from generic_element import Element
 from generic_element import ElementNotInDOM
@@ -138,9 +137,9 @@ class TabInformation:
 class _Section:
 
     def __init__(self, driver: WebDriver, locator: str, name: str):
-        robot_keywords.wait_until_page_contains_element(driver, locator, 5)
         self._driver = driver
         self._element = Element(driver, locator)
+        self._element.wait_until_exists(5)
         self._name = name
 
     def click(self):

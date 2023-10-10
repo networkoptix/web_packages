@@ -128,7 +128,7 @@ def check_password_badge(driver: WebDriver, password, new_focus):
         Image(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE).wait_until_visible()
 
     if password != "":
-        robot_keywords.mouse_over(driver, rb.PASSWORD_BADGE)
+        Image(driver, rb.PASSWORD_BADGE).hover()
 
     if password == rb.COMMON_PASSWORD:
         too_common = Tooltip(
@@ -183,11 +183,12 @@ def check_password_badge(driver: WebDriver, password, new_focus):
 def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
     TextField(driver, new_focus).click()
     if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
-        robot_keywords.element_style_should_be(driver, input, "border-bottom-color",rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
-        robot_keywords.element_style_should_be(driver, input, "color", rb.ERROR_COLOR_WITH_OPACITY)
+        field = TextField(driver, input)
+        assert field.value_of_css_property("border-bottom-color") == rb.ERROR_COLOR_WITH_OPACITY
+        assert field.value_of_css_property("border-top-color") == rb.ERROR_COLOR_WITH_OPACITY
+        assert field.value_of_css_property("border-right-color") == rb.ERROR_COLOR_WITH_OPACITY
+        assert field.value_of_css_property("border-left-color") == rb.ERROR_COLOR_WITH_OPACITY
+        assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
         password_element = TextField(
             driver,
             f"//nx-password-input[@name='{input_name}' "
@@ -282,9 +283,9 @@ def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", s
 
 def logout_japanese(driver: WebDriver):
 
-    robot_keywords.wait_until_page_does_not_contain_element(driver, rb.BACKDROP)
+    Pane(driver, rb.BACKDROP).wait_until_does_not_exist()
     element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""
-    robot_keywords.wait_until_page_contains_element(driver, element)
+    DropDownOption(driver, element).wait_until_visible()
 
     time.sleep(0.5)
     DropDown(driver, rb.ACCOUNT_DROPDOWN).click()
@@ -381,7 +382,7 @@ def send_restore_password_email(driver: WebDriver, email: str) -> None:
 
 def validate_log_out(driver: WebDriver):
     Pane(driver, rb.BACKDROP).wait_until_not_visible(10)
-    robot_keywords.wait_until_page_contains_element(driver, rb.ANONYMOUS_BODY)
+    PageText(driver, rb.ANONYMOUS_BODY).wait_until_visible()
 
 
 def verify_in_account_page(driver: WebDriver):

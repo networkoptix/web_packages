@@ -1,6 +1,5 @@
 import time
 
-import robot_keywords
 from RobotVariables import RobotVariables
 from resource_import import check_new_password_outline_and_error_message
 from resource_import import check_password_badge
@@ -72,8 +71,9 @@ def register_form_validation(driver, first_name, last_name, email, password, che
 
 def check_email_outline(driver, email):
     time.sleep(1)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "border-color", rb.ERROR_COLOR)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_EMAIL_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
+    field = TextField(driver, rb.REGISTER_EMAIL_INPUT)
+    assert field.value_of_css_property("border-color") == rb.ERROR_COLOR
+    assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
     if email == "" or email == " ":
         PageText(driver, rb.EMAIL_IS_REQUIRED).wait_until_visible()
     if email == rb.EXISTING_EMAIL:
@@ -82,16 +82,18 @@ def check_email_outline(driver, email):
         PageText(driver, rb.EMAIL_INVALID).wait_until_visible()
 
 def check_first_name_outline(driver):
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-bottom-color", rb.ERROR_COLOR_WITH_OPACITY)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-right-color", rb.ERROR_COLOR_WITH_OPACITY)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "border-left-color", rb.ERROR_COLOR_WITH_OPACITY)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_FIRST_NAME_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
+    field = TextField(driver, rb.REGISTER_FIRST_NAME_INPUT)
+    assert field.value_of_css_property("border-bottom-color") == rb.ERROR_COLOR_WITH_OPACITY
+    assert field.value_of_css_property("border-top-color") == rb.ERROR_COLOR_WITH_OPACITY
+    assert field.value_of_css_property("border-right-color") == rb.ERROR_COLOR_WITH_OPACITY
+    assert field.value_of_css_property("border-left-color") == rb.ERROR_COLOR_WITH_OPACITY
+    assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
     PageText(driver, rb.FIRST_NAME_IS_REQUIRED).wait_until_visible()
 
 def check_last_name_outline(driver):
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_LAST_NAME_INPUT, "border-color", rb.ERROR_COLOR)
-    robot_keywords.element_style_should_be(driver, rb.REGISTER_LAST_NAME_INPUT, "color", rb.ERROR_COLOR_WITH_OPACITY)
+    field = TextField(driver, rb.REGISTER_LAST_NAME_INPUT)
+    assert field.value_of_css_property("border-color") == rb.ERROR_COLOR
+    assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
     PageText(driver, rb.LAST_NAME_IS_REQUIRED).wait_until_visible()
 
 def check_terms_and_conditions_error(driver):
