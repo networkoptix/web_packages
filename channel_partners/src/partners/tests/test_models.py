@@ -3,7 +3,7 @@ from uuid import uuid4
 from model_bakery import baker
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel, \
-    Organization, OrganizationPermissions
+    Organization, OrganizationPermissions, ChannelPartner
 
 
 class TestCloudSystemId:
@@ -77,6 +77,39 @@ class TestOrganizationToUser:
         assert batch_data["items"][0]["systems"].__len__() == gen_count
         assert set(batch_data["items"][0]["systems"]) == {str(system.system_id) for system in systems}
         assert batch_data["items"][0]["accessRole"] == 'none'
+
+
+class TestChannelPartner:
+
+    def test_can_modify_organization_service_quantities(self, channel_partner_factory, cp_user_factory):
+        root = channel_partner_factory(parent_channel_partner=None)
+        child = channel_partner_factory(parent_channel_partner=root)
+        root_user = cp_user_factory(channel_partner=root)
+        child_user = cp_user_factory(channel_partner=child)
+        assert root.can_modify_organization_service_quantities(root_user.user) is False
+        assert child.can_modify_organization_service_quantities(child_user.user) is False
+
+        root.allow_changing_services = True
+        root.save()
+        assert root.can_modify_organization_service_quantities(root_user.user) is True
+        assert child.can_modify_organization_service_quantities(child_user.user) is False
+
+        child.allow_changing_services = True
+        child.save()
+        assert root.can_modify_organization_service_quantities(root_user.user) is True
+        assert child.can_modify_organization_service_quantities(child_user.user) is True
+
+    def test_disable_successors_acs_on_save(self, channel_partner_factory):
+        partners = []
+        for _ in range(5):
+            partners.append(channel_partner_factory(parent_channel_partner=partners[-1] if partners else None, acs=True))
+
+        partners[2].allow_changing_services = False
+        partners[2].save()
+
+        for i in range(5):
+            partners[i].refresh_from_db()
+            assert partners[i].allow_changing_services == (i < 2)
 
 
 

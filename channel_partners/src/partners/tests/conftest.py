@@ -1,4 +1,5 @@
 import random
+import typing
 from uuid import uuid4
 
 import pytest
@@ -75,10 +76,11 @@ def organization_factory(default_channel_partner):
 
 @pytest.fixture()
 def channel_partner_factory(default_channel_partner, cloud_test_instance):
-    def factory(name=None, parent_channel_partner=default_channel_partner) -> ChannelPartner:
+    def factory(name=None, parent_channel_partner=default_channel_partner, acs=False) -> ChannelPartner:
         return ChannelPartner.objects.create(
             name=name or f"Channel Partner {uuid4()}",
             parent_channel_partner=parent_channel_partner,
+            allow_changing_services=acs
         )
 
     return factory
@@ -165,7 +167,7 @@ def default_org_system_generator(default_organization, cloud_test_host):
 
 @pytest.fixture()
 def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker):
-    def mock(user=default_cp_admin, token=uuid4()):
+    def mock(user: typing.Union[ChannelPartnerToUser, OrganizationToUser] = default_cp_admin, token=uuid4()):
         mock_authenticate = mocker.patch(
             'partners.authentication.NxCloudOauthTokenAuthentication.authenticate',
             return_value=(user.user, token)
@@ -185,9 +187,17 @@ class RequestFactory(APIRequestFactory):
 @pytest.fixture()
 def arf(cloud_test_host):
     api_factory = RequestFactory(cloud_host=cloud_test_host, headers={"Authorization": "Bearer HERE_MIGHT_BE_TOKEN"})
-
     return api_factory
 
+
+@pytest.fixture()
+def arf_host_factory(cloud_test_host):
+    def factory(cloud_host=cloud_test_host):
+        api_factory = RequestFactory(cloud_host=cloud_host,
+                                     headers={"Authorization": "Bearer HERE_MIGHT_BE_TOKEN"})
+        return api_factory
+
+    return factory
 
 def mock_check_user_can_administer_system(mocker, ret=True):
     return mocker.patch('partners.authentication.check_user_can_administer_system', return_value=ret)

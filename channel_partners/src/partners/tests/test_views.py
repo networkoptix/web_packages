@@ -9,7 +9,7 @@ import pytest
 from model_bakery import baker
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser, \
-    ChannelPartnerServiceRecord
+    ChannelPartnerServiceRecord, ChannelPartnerRole
 from partners.views import CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet, \
     ChannelPartnerViewSet, OrganizationViewSet
 
@@ -149,11 +149,51 @@ class TestCloudSystemViewSet:
         assert response.status_code == 403
         mocked_batch_request_data.assert_not_called()
 
+    def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory,
+                              org_user_factory, arf, system_factory, mock_auth_with_user, transactional_db):
+        root = channel_partner_factory(parent_channel_partner=None)
+        child = channel_partner_factory(parent_channel_partner=root)
+        root_user = cp_user_factory(channel_partner=root)
+        child_user = cp_user_factory(channel_partner=child)
+        root_org = organization_factory(channel_partner=root)
+        root_org_user = org_user_factory(organization=root_org)
+        system = system_factory(organization=root_org)
+        service_data = {
+          "services": {
+            "3fa85f64-5717-4562-b3fc-2c963f66a567": {
+              "quantity": 10.5
+            }
+          }
+        }
+        req = arf.patch(f'/partners/cloud_systems/{system.system_id}/service_quantity/',
+                        data=service_data, format='json')
+        CloudSystemViewSet.detail = True
+        view = CloudSystemViewSet.as_view({'patch': 'service_quantity'}, detail=True)
+
+        mock_auth_with_user(root_org_user)
+        req.user = root_org_user.user
+        response = view(req, system_id=str(system.system_id))
+
+        assert response.status_code == 403
+
+        mock_auth_with_user(root_user)
+        req.user = root_user.user
+        response = view(req, system_id=str(system.system_id))
+        assert response.status_code == 403
+
+        root.allow_changing_services = True
+        root.save()
+        req.user = root_user.user
+        response = view(req, system_id=str(system.system_id))
+        assert response.status_code != 403
+
+
     def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
                                     mock_auth_with_user, arf, mocker):
+        assert ChannelPartnerRole.objects.all().count() > 0
 
-        cp = channel_partner_factory()
+        cp = channel_partner_factory(acs=True)
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
@@ -198,8 +238,6 @@ class TestCloudSystemViewSet:
         assert response.status_code == 200
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
-
-
 
 class TestOrganizationUserViewSet:
 

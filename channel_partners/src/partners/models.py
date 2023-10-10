@@ -318,6 +318,7 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
     can_create_sub_channels = models.BooleanField(default=True)
+    allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
 
     objects = ExternalIdTargetManager()
@@ -405,7 +406,9 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         return self.has_perm(user, ChannelPartnerPermissions.view_service_reports)
 
     def can_modify_organization_service_quantities(self, user: CloudUser):
-        return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)
+        return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)\
+            and self.allow_changing_services
+
 
     @property
     def effective_state(self):
@@ -432,6 +435,15 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
                 copy.created_by_channel_partner = self
                 copy.parent_service = service
                 copy.save()
+
+        if not self.allow_changing_services and not new:
+            self.disable_successors_acs()
+
+    def disable_successors_acs(self):
+        successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
+        for successor in successors:
+            successor.allow_changing_services = False
+        ChannelPartner.objects.bulk_update(successors, fields=['allow_changing_services'])
 
     def parent_channel_partner_args(self, base_arg='service', secondary_arg='parent_service', suffix_arg='', value=None) -> models.Q:
         """Returns Q object of parent channel partner condtions"""

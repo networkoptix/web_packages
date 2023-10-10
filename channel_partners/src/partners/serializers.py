@@ -13,6 +13,7 @@ from drf_spectacular.utils import extend_schema_serializer, extend_schema_field
 from drf_spectacular.utils import OpenApiExample
 from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem, CdbSystemAPIBase
 from rest_framework import serializers, exceptions
+from rest_framework.fields import empty
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
 
@@ -121,6 +122,7 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False, help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
     canCreateSubChannels = serializers.BooleanField(source='can_create_sub_channels', default=True, required=False)
+    allowChangingServices = serializers.BooleanField(source='allow_changing_services', default=False, required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
 
     class Meta:
@@ -132,6 +134,12 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
         req = self.context.get('request')
         if not value.can_add_or_remove_sub_chanel_partners(req.user):
             raise exceptions.PermissionDenied(detail=f'User does not have {ChannelPartner.permissions.add_remove_sub_channel_partners} permission for {value.id}.')
+        return value
+
+    def validate_allowChangingServices(self, value):
+        if self.instance and self.instance.parent_channel_partner is not None \
+                and not getattr(self.instance.parent_channel_partner, 'allow_changing_services'):
+            raise exceptions.ValidationError(detail='Parent Channel Partner does not allow changing services.')
         return value
 
     def update(self, instance: ChannelPartner, validated_data):
@@ -451,6 +459,26 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
     class Meta:
         model = CloudSystemId
         fields = ['services']
+
+    class ServiceQuantitySerializer(serializers.Serializer):
+        quantity = serializers.IntegerField(required=True)
+
+    def validate_services(self, value: dict):
+        errors = []
+        for service_id, service_qty in value.items():
+            err = ''
+            if not ChannelPartnerService.objects.filter(id=service_id).exists():
+                err += f'Service {service_id} does not exist'
+            ser = self.ServiceQuantitySerializer(data=service_qty)
+            if not ser.is_valid():
+                err += ', Quantity is invalid:' + ' '.join(ser.errors['quantity'])
+                err += '.'
+            if err := err.strip():
+                errors.append(err)
+        if errors:
+            raise exceptions.ValidationError(detail=' '.join(errors))
+        return value
+
 
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
