@@ -4,14 +4,14 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
-from generic_element import ElementNotInDOM
-from generic_element import ElementNotVisible
-from wrappers import Button
-from wrappers import Link
-from wrappers import PageText
-from wrappers import Pane
-from wrappers import TabItem
-from wrappers import TextField
+from generic_elements import ElementNotInDOM
+from generic_elements import ElementNotVisible
+from generic_elements import Button
+from generic_elements import Link
+from generic_elements import PageText
+from generic_elements import Pane
+from generic_elements import TabItem
+from generic_elements import TextField
 
 
 class TabSettings:

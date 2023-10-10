@@ -3,14 +3,10 @@ from RobotVariables import RobotVariables
 from change_pass_form import ChangePassForm
 from header import HeaderNav
 from login import LoginDialog
-from resource_import import check_new_password_outline_and_error_message, get_chrome
-from resource_import import register_and_activate_account
-from resource_import import get_random_email
-from resource_import import get_headless_chrome
+from resource_import import get_chrome
 from NoptixLibrary.suite import Suite
 from toast_notification import ToastNotification
 from variables import ENV
-from wrappers import TextField
 
 rb = RobotVariables("en_US")
 

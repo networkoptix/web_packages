@@ -1,10 +1,10 @@
 import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
-from wrappers import Button
-from wrappers import DropDown
-from wrappers import Page
-from wrappers import PageText
+from generic_elements import Button
+from generic_elements import DropDown
+from generic_elements import Page
+from generic_elements import PageText
 
 
 class SystemUsers:

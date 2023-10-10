@@ -4,10 +4,10 @@ from RobotVariables import RobotVariables
 from resource_import import check_new_password_outline_and_error_message
 from resource_import import check_password_badge
 from resource_import import get_headless_chrome
-from wrappers import Button
-from wrappers import Checkbox
-from wrappers import PageText
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import Checkbox
+from generic_elements import PageText
+from generic_elements import TextField
 
 rb = RobotVariables("en_US")
 driver = get_headless_chrome()

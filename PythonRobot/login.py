@@ -1,8 +1,8 @@
 from RobotVariables import RobotVariables
-from wrappers import Button
-from wrappers import PageText
-from wrappers import Pane
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import PageText
+from generic_elements import Pane
+from generic_elements import TextField
 
 
 class LoginDialog:

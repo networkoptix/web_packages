@@ -2,13 +2,13 @@ from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
-from wrappers import Button
-from wrappers import Link
-from wrappers import PageText
-from wrappers import Pane
-from wrappers import SearchBar
-from wrappers import Table
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import Link
+from generic_elements import PageText
+from generic_elements import Pane
+from generic_elements import SearchBar
+from generic_elements import Table
+from generic_elements import TextField
 
 
 class ColumnDataNotVerified(Exception):

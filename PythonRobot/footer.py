@@ -1,7 +1,7 @@
 import time
 
 from RobotVariables import RobotVariables
-from wrappers import Button
+from generic_elements import Button
 
 
 class Footer:

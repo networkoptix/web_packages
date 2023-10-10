@@ -6,8 +6,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 from PythonRobot import RobotVariables
-from wrappers import Page
-from wrappers import TabItem
+from generic_elements import Page
+from generic_elements import TabItem
 
 
 class HistoryPage:

@@ -12,12 +12,12 @@ from resource_import import get_random_email
 from resource_import import register_and_activate_account
 from resource_import import send_restore_password_email
 from resource_import import verify_in_account_page
-from wrappers import Button
-from wrappers import DropDown
-from wrappers import Link
-from wrappers import PageText
-from wrappers import Pane
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import DropDown
+from generic_elements import Link
+from generic_elements import PageText
+from generic_elements import Pane
+from generic_elements import TextField
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"

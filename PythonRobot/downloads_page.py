@@ -4,10 +4,10 @@ from urllib.request import urlopen
 
 from selenium.webdriver.common.by import By
 
-from wrappers import Page
-from wrappers import Button
-from wrappers import Link
-from wrappers import TabItem
+from generic_elements import Page
+from generic_elements import Button
+from generic_elements import Link
+from generic_elements import TabItem
 
 
 class DownloadsPage:

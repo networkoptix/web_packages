@@ -14,7 +14,7 @@ from resource_import import activate
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from wrappers import Button
+from generic_elements import Button
 
 rb = RobotVariables("en_US")
 CLOUD_API = CloudPortalAPI()

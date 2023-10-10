@@ -6,8 +6,8 @@ from RobotVariables import RobotVariables
 from email_access import Email
 from login import LoginDialog
 from register_form import RegisterForm
-from wrappers import Button
-from wrappers import PageText
+from generic_elements import Button
+from generic_elements import PageText
 
 rb = RobotVariables("en_US")
 

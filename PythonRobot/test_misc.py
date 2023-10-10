@@ -2,9 +2,9 @@ from resource_import import get_headless_chrome
 from resource_import import rb
 from robot_keywords import location_should_be
 from variables import ENV
-from wrappers import Button
-from wrappers import Link
-from wrappers import PageText
+from generic_elements import Button
+from generic_elements import Link
+from generic_elements import PageText
 
 
 def test_404_page():

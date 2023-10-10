@@ -3,8 +3,8 @@ import time
 import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
-from wrappers import Button
-from wrappers import Pane
+from generic_elements import Button
+from generic_elements import Pane
 
 
 class LandingPage:

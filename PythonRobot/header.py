@@ -2,9 +2,9 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from landing_page import LandingPage
-from wrappers import Button
-from wrappers import PageText
-from wrappers import Pane
+from generic_elements import Button
+from generic_elements import PageText
+from generic_elements import Pane
 
 
 class HeaderNav:

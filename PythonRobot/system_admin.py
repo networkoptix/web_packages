@@ -5,18 +5,18 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import ElementNotInDOM
-from generic_element import ElementNotVisible
+from generic_elements import ElementNotInDOM
+from generic_elements import ElementNotVisible
 from system_admin_tab_information import TabInformation
 from system_admin_tab_settings import TabSettings
 from toast_notification import ToastNotification
 from variables import ENV
-from wrappers import Button
-from wrappers import Checkbox
-from wrappers import Page
-from wrappers import PageText
-from wrappers import TabItem
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import Checkbox
+from generic_elements import Page
+from generic_elements import PageText
+from generic_elements import TabItem
+from generic_elements import TextField
 
 
 class SystemAdmin:

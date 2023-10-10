@@ -4,8 +4,8 @@ from login import LoginDialog
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from wrappers import Button
-from wrappers import PageText
+from generic_elements import Button
+from generic_elements import PageText
 
 rb = RobotVariables("en_US")
 password = "qweasd 123"

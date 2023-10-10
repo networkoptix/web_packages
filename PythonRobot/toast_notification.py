@@ -1,4 +1,4 @@
-from wrappers import PageText
+from generic_elements import PageText
 
 
 class ToastNotification:

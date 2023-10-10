@@ -3,12 +3,12 @@ from selenium.webdriver.common.by import By
 import robot_keywords
 from RobotVariables import RobotVariables
 from variables import ENV
-from wrappers import Button
-from wrappers import DropDown
-from wrappers import DropDownOption
-from wrappers import Page
-from wrappers import PageText
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import DropDown
+from generic_elements import DropDownOption
+from generic_elements import Page
+from generic_elements import PageText
+from generic_elements import TextField
 
 
 class SystemLeftMenu:

@@ -20,15 +20,15 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
 from login import LoginDialog
-from wrappers import Button
-from wrappers import Checkbox
-from wrappers import DropDown
-from wrappers import DropDownOption
-from wrappers import Image
-from wrappers import PageText
-from wrappers import Pane
-from wrappers import TextField
-from wrappers import Tooltip
+from generic_elements import Button
+from generic_elements import Checkbox
+from generic_elements import DropDown
+from generic_elements import DropDownOption
+from generic_elements import Image
+from generic_elements import PageText
+from generic_elements import Pane
+from generic_elements import TextField
+from generic_elements import Tooltip
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 

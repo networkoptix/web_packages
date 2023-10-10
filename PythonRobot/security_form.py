@@ -1,15 +1,13 @@
-import time
-
 from selenium.webdriver.common.by import By
 
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
-from wrappers import Button
-from wrappers import Checkbox
-from wrappers import Image
-from wrappers import PageText
-from wrappers import TextField
+from generic_elements import Button
+from generic_elements import Checkbox
+from generic_elements import Image
+from generic_elements import PageText
+from generic_elements import TextField
 
 
 class SecurityForm:

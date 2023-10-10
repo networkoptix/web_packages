@@ -1,8 +1,8 @@
 from selenium.webdriver.common.keys import Keys
 
-from wrappers import Page
-from wrappers import PageText
-from wrappers import TextField
+from generic_elements import Page
+from generic_elements import PageText
+from generic_elements import TextField
 
 
 class ResetPasswordDialog:
