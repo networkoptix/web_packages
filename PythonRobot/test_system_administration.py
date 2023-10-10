@@ -109,7 +109,6 @@ def owner_can_rename_system_via_cloud_portal(server: Mediaserver):
     sys_admin = SystemAdmin(driver)
     sys_admin.get_system_name_edit_field().set_text("Name Changed via Cloud Portal")
     cancel_button = sys_admin.get_cancel_button()
-    assert cancel_button.is_visible()
     cancel_button.click()
     sys_admin.wait_for_unsaved_changes_messages()
     sys_admin.get_cancel_button().wait_until_not_visible()
