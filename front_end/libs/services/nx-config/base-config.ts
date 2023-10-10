@@ -192,6 +192,7 @@ const FeatureFlagKeys = [
     'layoutsIoDevices',
     'layoutsDeviceSettings',
     'layoutsUnsavedSync',
+    'layoutsRemoveItemDialog',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

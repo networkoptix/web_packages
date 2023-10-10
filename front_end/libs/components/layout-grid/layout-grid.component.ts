@@ -1452,14 +1452,16 @@ export class NxLayoutGridComponent {
         let update = true;
         if (item) {
             const { title, message, footer } = this.LANG.layouts.removeItem;
-            update = await this.dialogsService.confirm({
-                title,
-                message: {
-                    value: message,
-                    params: { name: item.name, layoutName: this.layout.name },
-                },
-                footer,
-            });
+            update =
+                !this.CONFIG.featureFlags.layoutsRemoveItemDialog ||
+                (await this.dialogsService.confirm({
+                    title,
+                    message: {
+                        value: message,
+                        params: { name: item.name, layoutName: this.layout.name },
+                    },
+                    footer,
+                }));
         }
 
         if (update) {

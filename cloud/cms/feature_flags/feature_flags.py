@@ -79,6 +79,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_non_chrome = ('Layouts Non-Chromium Browsers', 'layoutsNonChrome', '%LAYOUTS_NON_CHROME%')
     layouts_device_settings = ('Layouts device settings', 'layoutsDeviceSettings', '%LAYOUTS_DEVICE_SETTINGS%')
     layouts_unsaved_sync = ('Sync Unsaved Layouts across sessions', 'layoutsUnsavedSync', '%LAYOUTS_UNSAVED_SYNC%')
+    layouts_remove_item_dialog = ('Show dialog on removing item from layout', 'layoutsRemoveItemDialog', '%LAYOUTS_REMOVE_ITEM_DIALOG%')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 
