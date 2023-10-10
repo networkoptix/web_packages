@@ -175,7 +175,7 @@
             </ng-template>
             <nx-section *ngIf="system.permissionManager.isOwner(); else notMine">
                 <div class="row m-0">
-                    <div class="col-xl-6 pl-0">
+                    <div class="col-lg-6 pl-0">
                         <div class="float-left mr-2">
                             <button
                                 class="btn btn-default"
@@ -191,10 +191,10 @@
                         </div>
                     </div>
                     <div
-                        class="col-xl-6 p-0 mt-2 mt-xl-0"
+                        class="col-lg-6 p-0 mt-2 mt-lg-0"
                         *ngIf="!environment.isLocal && !CONFIG.cloudSystemId"
                     >
-                        <div class="float-xl-right">
+                        <div class="float-lg-right">
                             <nx-process-button
                                 data-testid="disconnectFromCloud"
                                 actionType="default"
