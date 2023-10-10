@@ -293,10 +293,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
             this.addResetButtonEventListener();
-            if (
-                this.openAPIJSONService.searchQuery &&
-                !this.openAPIJSONService.searchMoreShowing$.getValue()
-            ) {
+            if (this.openAPIJSONService.searchQuery) {
                 this.highlightSearchMoreQuery(this.openAPIJSONService.searchQuery);
             }
             this.customComponentsRendering = false;
