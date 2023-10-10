@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -24,7 +25,7 @@ import { icons, images } from '@static-variables';
     templateUrl: './mobile-menu.component.html',
     styleUrls: ['./mobile-menu.component.scss'],
     standalone: true,
-    imports: [CommonModule, TranslateModule, AngularSvgIconModule],
+    imports: [CommonModule, RouterModule, TranslateModule, AngularSvgIconModule],
 })
 export class NxMobileHeaderMenuComponent {
     @Input() menuNodes: MenuNode[] = [];

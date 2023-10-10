@@ -49,9 +49,10 @@
             *ngFor="let node of profileMenu"
             class="level-two-item"
         >
-            <div
+            <a
                 class="subnode"
                 (click)="nodeClick(node, $event)"
+                [routerLink]="node.url"
                 [ngClass]="{
                     active:
                         headerService.currentLocation?.path === node.url ||
@@ -63,7 +64,7 @@
                     *ngIf="node.new_window"
                     [src]="images.dirHeader + 'external_link.svg'"
                 ></svg-icon>
-            </div>
+            </a>
         </div>
     </div>
     <div
@@ -89,23 +90,49 @@
             *ngFor="let subnode of subnodes"
             class="level-two-item"
         >
-            <div
-                class="subnode"
-                (click)="nodeClick(subnode, $event)"
-                [ngClass]="{
-                    active:
-                        headerService.currentLocation?.path === subnode.url ||
-                        (!headerService.currentLocation?.path && subnode.url === 'content/about')
-                }"
-            >
-                {{ subnode.display_name | translate }}
-                <svg-icon
-                    *ngIf="subnode.new_window"
-                    [src]="images.dirHeader + 'external_link.svg'"
-                ></svg-icon>
-            </div>
+            <ng-container
+                *ngTemplateOutlet="
+                    subnode.new_window ? externalLink : internalLink;
+                    context: { subnode: subnode }
+                "
+            ></ng-container>
         </div>
     </div>
+</ng-template>
+
+<ng-template
+    #internalLink
+    let-subnode="subnode"
+>
+    <a
+        [routerLink]="subnode.url"
+        class="subnode"
+        (click)="nodeClick(subnode, $event)"
+        [ngClass]="{
+            active:
+                headerService.currentLocation?.path === subnode.url ||
+                (!headerService.currentLocation?.path && subnode.url === 'content/about')
+        }"
+    >
+        {{ subnode.display_name | translate }}
+    </a>
+</ng-template>
+
+<ng-template
+    #externalLink
+    let-subnode="subnode"
+>
+    <a
+        [href]="subnode.url"
+        target="_blank"
+        class="subnode"
+    >
+        {{ subnode.display_name | translate }}
+        <svg-icon
+            *ngIf="subnode.new_window"
+            [src]="images.dirHeader + 'external_link.svg'"
+        ></svg-icon>
+    </a>
 </ng-template>
 
 <ng-template #currentSystem>
