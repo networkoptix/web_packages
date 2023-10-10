@@ -4,13 +4,13 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
-from generic_element import Element
 from generic_element import ElementNotInDOM
 from generic_element import ElementNotVisible
 from wrappers import Button
 from wrappers import Link
 from wrappers import PageText
 from wrappers import Pane
+from wrappers import TabItem
 from wrappers import TextField
 
 
@@ -18,7 +18,7 @@ class TabSettings:
 
     def __init__(self, driver: WebDriver, locator: str, robot_variables: RobotVariables):
         self._driver = driver
-        self._element = Element(driver, locator)
+        self._element = TabItem(driver, locator)
         self._rb = robot_variables
 
     def click(self):
@@ -41,7 +41,7 @@ class _ServersSection:
 
     def __init__(self, driver: WebDriver, locator: str, name: str, robot_variables: RobotVariables):
         self._driver = driver
-        self._element = Element(driver, locator)
+        self._element = TabItem(driver, locator)
         self._name = name
         self._rb = robot_variables
 
