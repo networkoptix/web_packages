@@ -5,7 +5,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 import robot_keywords
 from RobotVariables import RobotVariables
-from generic_element import Element
 from generic_element import ElementNotInDOM
 from generic_element import ElementNotVisible
 from system_admin_tab_information import TabInformation
@@ -84,7 +83,7 @@ class SystemAdmin:
         started_at = time.monotonic()
         clicked_next_button = False
         while True:
-            error = Element(
+            error = PageText(
                 self.driver,
                 f'//nx-modal-merge-content//p[text()="{error_message}"]',
                 )
