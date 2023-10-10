@@ -9,13 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-10. Shoud allow search input chars
-    Go To Users List
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       background-color    ${COLOR LIGHT1 RGB}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH INPUT}       color               ${COLOR DARK9 RGB}
-
 11. Should have button CLEAR for search
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}

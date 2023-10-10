@@ -65,7 +65,15 @@ def check_search_input(server: Mediaserver):
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         SystemAdmin(driver)
         left_menu = SystemLeftMenu(driver)
-        assert left_menu.get_search_field().exists()
+        search_field = left_menu.get_search_field()
+        search_field.wait_until_visible()
+        search_field.input_text('noptix')
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name(owner.email)
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        assert not left_menu.has_node_with_name('Servers')
         print("Pass")
 
 

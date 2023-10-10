@@ -1,6 +1,7 @@
 import logging
 import time
 
+from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
@@ -103,8 +104,17 @@ class SystemLeftMenu:
             except AttributeError as e:
                 if "'NoneType' object has no attribute 'find_element_by_link_text'" in str(e):
                     _logger.info(f"Node {name} not found yet")
+            except NoSuchElementException:
+                _logger.info(f"Node {name} not found yet")
             if time.monotonic() - started_at > timeout_sec:
-                raise RuntimeError(f"Node {name} not found within {timeout_sec} seconds")
+                raise NoSuchElementException(f"Node {name} not found within {timeout_sec} seconds")
+
+    def has_node_with_name(self, name):
+        try:
+            self.get_node_by_name_within_timeout(name, 0)
+        except NoSuchElementException:
+            return False
+        return True
 
 
 _logger = logging.getLogger(__name__)
