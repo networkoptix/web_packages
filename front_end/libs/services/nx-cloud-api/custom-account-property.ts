@@ -71,7 +71,7 @@ export class CustomAccountProperty<T> {
             shareReplay({ bufferSize: 1, refCount: false }),
         );
 
-        this.signal$$ = toSignal(this.value$);
+        this.signal$$ = toSignal(this.value$, { initialValue });
     }
 
     get(forceUpdate?: boolean): Observable<T>;
