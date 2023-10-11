@@ -224,7 +224,7 @@ class Mediaserver:
         self._local_users = self.create_local_users()
         return self
 
-    def create_local_users(self):
+    def create_local_users(self) -> dict:
         local_users = {}
         permissions = _GENERIC_KEYWORDS.permissions
         for permission in permissions:
