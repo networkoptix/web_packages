@@ -46,7 +46,9 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
     sys_admin = SystemAdmin(driver)
     sys_admin.disconnect_from_cloud_button().click()
     sys_admin.disconnect_modal_disconnect_button().click()
-    sys_admin.disconnect_from_cloud_toast_notification().message()
+    message = sys_admin.disconnect_from_cloud_toast_notification().get_message()
+    message.wait_until_visible()
+    message.wait_until_not_visible(10)
     assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 1, "Number of systems owned " \
                                                                                           "was not 1"
 
@@ -71,7 +73,9 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
     sys_admin.disconnect_from_account_cancel_button().click()
     sys_admin.disconnect_from_account_button().click()
     sys_admin.disconnect_from_account_confirm_button().click()
-    assert sys_admin.disconnect_from_account_toast_notification(server.name).message()
+    message = sys_admin.disconnect_from_account_toast_notification(server.name).get_message()
+    message.wait_until_visible()
+    message.wait_until_not_visible(10)
     SystemsPage(driver).no_systems()
     header = HeaderNav(driver)
     header.log_out()
