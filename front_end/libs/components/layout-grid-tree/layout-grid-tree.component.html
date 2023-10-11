@@ -10,6 +10,7 @@
         cdkDropList
         tourAnchor="cloud-layouts_left-menu"
         [cdkDropListDisabled]="layout.locked"
+        [cdkDropListEnterPredicate]="preventDrop"
         [ngClass]="{ 'tree-invisible': !layoutGridService.isLeftMenuOpen$$() }"
         class="cdk-tree"
     >
@@ -70,6 +71,7 @@
             <div
                 #currentItem
                 cdkDropList
+                [cdkDropListEnterPredicate]="preventDrop"
                 [nxForceVisibility]="node.details.id === this.layout?.id"
                 forceVisibilityOnce
                 visibilityMargin="32px"
@@ -251,15 +253,8 @@
             >
             </svg-icon>
             <ng-container *ngTemplateOutlet="nodeTypeIcon" />
-            <ng-container
-                *ngIf="
-                    !CONFIG.featureFlags.layoutsDemo || !menuItemsByType[node.type];
-                    then simpleNodeText
-                "
-            />
-            <ng-container
-                *ngIf="CONFIG.featureFlags.layoutsDemo && menuItemsByType[node.type] as menuItems"
-            >
+            <ng-container *ngIf="!menuItemsByType[node.type]; then simpleNodeText" />
+            <ng-container *ngIf="menuItemsByType[node.type] as menuItems">
                 <ng-container
                     *ngIf="
                         node.type === RESOURCE_TYPE.LAYOUTS;

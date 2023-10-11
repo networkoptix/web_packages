@@ -289,7 +289,7 @@ export class NxLayoutGridItemOverlayComponent {
             this.allowDebugMode ? this.MENU_ITEMS.motion : null,
             this.allowDebugMode ? this.MENU_ITEMS.object : null,
             this.allowDebugMode ? this.MENU_ITEMS.zoomWindow : null,
-            this.MENU_ITEMS.info,
+            this.allowDebugMode ? this.MENU_ITEMS.info : null,
             this.allowDebugMode && this.canEdit$$() ? this.MENU_ITEMS.rotate : null,
             this.allowDebugMode ? this.MENU_ITEMS.screenshot : null,
         ].filter(i => !!i);

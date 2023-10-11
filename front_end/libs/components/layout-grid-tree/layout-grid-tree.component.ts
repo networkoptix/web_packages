@@ -240,6 +240,8 @@ export class NxLayoutGridTreeComponent {
         this.expandNodesFromParams();
     }
 
+    preventDrop = (): boolean => false;
+
     expandNodesFromParams = (): void => {
         const {
             queryParams: { openNodes = [] },

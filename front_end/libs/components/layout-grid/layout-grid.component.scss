@@ -230,7 +230,8 @@ h2.auto-save-overlay {
 
     .ribbon-message {
         @include mixins.ellipsis;
-        @include typography.medium14nocolor;
+        @include typography.regular14nocolor;
+        color: var(--light1);
         flex-basis: 100%;
         flex-shrink: 1;
     }
