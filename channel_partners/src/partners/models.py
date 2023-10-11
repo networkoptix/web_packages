@@ -542,6 +542,33 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         )
         return partners_tree
 
+    @classmethod
+    def get_ancestors(cls, successor_id: str):
+        def make_partners_cte(cte):
+            # non-recursive: get successor which branch will be searched above from
+            return cls.tree.filter(id=successor_id).values(
+                # Note. django-cte somehow annotates columns in raw SQL query with "col{col mun}"
+                # alias, and it breaks query. So we need to create alias of ID column for further
+                # using.
+                cte_id=F("id"),
+                cte_parent_channel_partner_id=F("parent_channel_partner_id")
+            ).union(
+                # recursive union: get descendants
+                cte.join(cls.tree.all(), id=cte.col.cte_parent_channel_partner_id).values(
+                    cte_id=F("id"),
+                    cte_parent_channel_partner_id=F("parent_channel_partner_id")
+                ),
+                all=True,
+            )
+
+        recursive_query = With.recursive(make_partners_cte)
+
+        partners_tree = (
+            recursive_query.join(cls.tree.all(), id=recursive_query.col.cte_id)
+            .with_cte(recursive_query)
+        )
+        return partners_tree
+
 
     @cached_property
     def successors(self):

@@ -80,15 +80,6 @@ class TestOrganizationToUser:
 from partners.models import ChannelPartner, ChannelPartnerEvent
 
 
-class TestChannelPartner:
-
-    def test_creat(self, cloud_test_host):
-        partner = ChannelPartner.objects.create(name=f'{uuid4()}')
-
-        assert partner.id
-        assert partner.cloud_host == cloud_test_host
-
-
 class TestChannelPartnerEvent:
 
     def test_creat(self, cloud_test_host, default_channel_partner):
@@ -97,6 +88,25 @@ class TestChannelPartnerEvent:
 
 
 class TestChannelPartner:
+    def test_creat(self, cloud_test_host):
+        partner = ChannelPartner.objects.create(name=f'{uuid4()}')
+
+        assert partner.id
+        assert partner.cloud_host == cloud_test_host
+
+    def test_get_ancestors(self, channel_partner_factory):
+        count = 10
+        partners = []
+        parent = None
+        for _ in range(count):
+            parent = channel_partner_factory(parent_channel_partner=parent)
+            partners.append(parent)
+
+        ancestors = ChannelPartner.get_ancestors(successor_id=partners[4].id)
+
+        assert ancestors.count() == 5
+        partners_ids = [channel_partner.id for channel_partner in ancestors]
+        assert set(partners_ids) == set([p.id for p in partners[:5]])
 
     def test_can_modify_organization_service_quantities(self, channel_partner_factory, cp_user_factory):
         root = channel_partner_factory(parent_channel_partner=None)
