@@ -13,7 +13,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { BehaviorSubject, combineLatest } from 'rxjs';
+import { BehaviorSubject } from 'rxjs';
 
 import { accountSelectors } from '@common/store/account';
 import { accountDropdown } from '@components/static-variables-components';
@@ -65,7 +65,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
-    rightOffset$ = new BehaviorSubject(0);
     newHeader = false;
     isAccountRoute = false;
     displayedFullName = '';
@@ -150,22 +149,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
                         type: undefined,
                     });
                     this.displayedFullName = '';
-                }
-            });
-        combineLatest(this.dropdownWidth$, this.buttonWidth)
-            .pipe(untilDestroyed(this))
-            .subscribe(([dropdown, button]) => {
-                if (dropdown && button) {
-                    const self = this?.dropdown.nativeElement;
-                    let widthFromRightEdge = 0;
-                    if (this.environment.isLocal && self?.parentNode.nextSibling) {
-                        widthFromRightEdge =
-                            -1 * (self.parentNode.nextSibling as HTMLElement).offsetWidth;
-                    }
-
-                    this.rightOffset$.next(
-                        Math.max(button - dropdown + 18, widthFromRightEdge) | 0,
-                    );
                 }
             });
     }
