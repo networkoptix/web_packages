@@ -128,8 +128,21 @@ class Mediaserver:
     def stop(self):
         _DOCKER_API.stop_container(self._container_id)
 
-    def start(self):
+    def start(self, wait_for_started: bool = False):
         _DOCKER_API.start_container(self._container_id)
+        if not wait_for_started:
+            return
+        timeout_sec = 5
+        started_at = time.monotonic()
+        while True:
+            try:
+                self.api.reconnect()
+            except HTTPError:
+                if time.monotonic() - started_at > timeout_sec:
+                    raise TimeoutError(f"Server {self.name} has not started after {timeout_sec} seconds")
+                time.sleep(1)
+            else:
+                break
 
     def connect_to_cloud(self, cloud_owner: 'CloudAccount'):
         bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
@@ -178,7 +191,7 @@ class Mediaserver:
                 raise RuntimeError("System is not connected to Cloud")
             raise RuntimeError("System does not have cloud custom user")
         return self._cloud_custom_user
-    
+
     def get_local_users(self):
         return self._local_users
 

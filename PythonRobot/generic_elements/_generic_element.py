@@ -163,6 +163,13 @@ class Element:
         self.wait_until_visible(timeout)
         return self._element.is_enabled()
 
+    def _check_and_refresh(self):
+        try:
+            self._element.is_displayed()
+        except StaleElementReferenceException:
+            self.wait_until_exists()
+            _logger.debug(f'Element was stale and refreshed ({self._locator})')
+
     def find_element_by_partial_link_text(self, text: str):
         self.wait_until_exists()
         return self._element.find_element_by_partial_link_text(text)

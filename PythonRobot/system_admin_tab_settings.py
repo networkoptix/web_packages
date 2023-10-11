@@ -42,6 +42,7 @@ class _ServersSection:
     def __init__(self, driver: WebDriver, locator: str, name: str, robot_variables: RobotVariables):
         self._driver = driver
         self._element = TabItem(driver, locator)
+        self._element.wait_until_visible(15)
         self._name = name
         self._rb = robot_variables
 
@@ -106,8 +107,7 @@ class _ServerPage:
         self.get_save_button().click()
 
     def open_restart_dialog(self) -> '_RestartDialog':
-        restart_button = Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]')
-        restart_button.click()
+        self.get_restart_button().click()
         return _RestartDialog(self._driver, self._rb)
 
     def wait_until_restarting_banner(self):
@@ -150,10 +150,70 @@ class _ServerPage:
     def get_cancel_button(self) -> Button:
         return Button(self._driver, f'//nx-cancel-button[@data-testid="cancelSettingsBtn"]//button')
 
+    def get_check_status_button(self) -> Button:
+        return Button(self._driver, f'//nx-alert-block//button/span[contains(text(),"{self._rb.CHECK_STATUS_TEXT}")]')
+
+    def get_restart_button(self) -> Button:
+        return Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]')
+
+    def wait_until_offline_status(self, timeout=10):
+        started_at = time.monotonic()
+        while True:
+            try:
+                PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]')
+            except (ElementNotVisible, ElementNotInDOM):
+                if time.monotonic() - started_at > timeout:
+                    raise TimeoutError(f"Offline status does not appear after {timeout} seconds")
+                time.sleep(0.5)
+            else:
+                break
+
+    def wait_until_offline_status_not_visible(self, timeout=10):
+        started_at = time.monotonic()
+        while True:
+            try:
+                PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]')
+            except (ElementNotVisible, ElementNotInDOM):
+                break
+            else:
+                if time.monotonic() - started_at > timeout:
+                    raise TimeoutError(f"Offline status does not disappear after {timeout} seconds")
+                time.sleep(0.5)
+
+    def wait_until_checking_banner(self, timeout=5):
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._get_checking_banner()
+            except (ElementNotVisible, ElementNotInDOM):
+                if time.monotonic() - started_at > timeout:
+                    raise TimeoutError(f"Banner 'Checking' does not appear after {timeout} seconds")
+                time.sleep(0.5)
+            else:
+                break
+
+    def wait_until_checking_banner_is_not_visible(self, timeout=5):
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._get_checking_banner().wait_until_visible()
+            except (ElementNotVisible, ElementNotInDOM):
+                break
+            else:
+                if time.monotonic() - started_at > timeout:
+                    raise TimeoutError(f"Banner 'Checking' does not disappear after {timeout} seconds")
+                time.sleep(0.5)
+
     def _get_input_error_element(self, message_text: str) -> PageText:
         return PageText(
             self._driver,
             f'//div/span[contains(@class,"input-error") and contains(text(),"{message_text}")]',
+        )
+
+    def _get_checking_banner(self) -> PageText:
+        return PageText(
+            self._driver,
+            f'//nx-alert-block//div[contains(text(),"{self._rb.CHECKING_TEXT}")]',
         )
 
 

@@ -54,6 +54,9 @@ class Button:
         self._element.wait_until_does_not_exist()
 
     def is_enabled(self) -> bool:
+        self._element.wait_until_visible()
+        if 'disabled' in self._element.get_attribute('class'):
+            return False
         return self._element.is_enabled()
 
 
@@ -420,6 +423,9 @@ class Page:
 
     def wait_until_exists(self, timeout: float = 5):
         self._element.wait_until_exists(timeout)
+
+    def wait_until_visible(self, timeout: float = 5):
+        self._element.wait_until_visible(timeout)
 
 
 class TextNotFound(Exception):
