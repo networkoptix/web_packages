@@ -57,12 +57,13 @@ def owner_can_remove_user(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(email, password)
             header.account_dropdown()
             SystemsPage(driver).no_systems()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
-            print("pass owner")
+            print("PASS")
             CLOUD_API.delete_account(email, password)
 
 def cloud_admin_can_remove_user(server: Mediaserver):
@@ -98,12 +99,13 @@ def cloud_admin_can_remove_user(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(email, password)
             header.account_dropdown()
             SystemsPage(driver).no_systems()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
-            print("pass admin")
+            print("PASS")
             CLOUD_API.delete_account(email, password)
 
 def share_with_registered_user_sends_notification(server: Mediaserver):
@@ -148,7 +150,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     ]
     email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)
-    print("pass")
+    print("PASS")
     CLOUD_API.delete_account(email, password)
 
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
@@ -165,12 +167,13 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
         driver.get(links)
         try:
             RegisterForm(driver).email_input_locked()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
-            print("pass")
+            print("PASS")
             CLOUD_API.delete_account(email, password)
 
 def share_with_registered_user_works(server: Mediaserver):
@@ -191,12 +194,13 @@ def share_with_registered_user_works(server: Mediaserver):
             left_menu = SystemLeftMenu(driver)
             left_menu.users_button().click()
             assert left_menu.get_user_with_email(email)
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
-            print("pass")
+            print("PASS")
             CLOUD_API.delete_account(email, password)
 
 def cancel_disconnect(server: Mediaserver):
@@ -220,10 +224,11 @@ def cancel_disconnect(server: Mediaserver):
             system_admin.disconnect_from_account_cancel_button().click()
             system_admin.disconnect_modal_warning().wait_until_not_visible()
             system_admin.modal().wait_until_not_visible()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
@@ -260,10 +265,11 @@ def disconnect_should_remove_system(server: Mediaserver):
             system_left_menu.add_users_button().wait_until_visible()
             system_left_menu.update_users_list()
             assert email not in system_left_menu.users
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
@@ -318,9 +324,10 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
             system_left_menu.share_system_with_user(custom.email, rb.VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
             system_left_menu.add_user_modal_close_button().click()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
 
@@ -367,9 +374,10 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
             system_left_menu.share_system_with_user(custom.email, rb.VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
             system_left_menu.add_user_modal_close_button().click()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
 
@@ -392,9 +400,10 @@ def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
             system_user.remove_user_button().wait_until_not_visible()
             system_user.access_level_dropdown().wait_until_not_visible()
             assert system_user.user_header_text().get_text() == admin.email
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
 
@@ -435,10 +444,11 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
             system_user.remove_user_button().wait_until_not_visible()
             system_user.access_level_dropdown().wait_until_not_visible()
             assert system_user.user_header_text().get_text() == local_admin['login']
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
@@ -460,9 +470,10 @@ def cloud_admin_cannot_invite_admin(server: Mediaserver):
             system_left_menu.add_user_permissions_dropdown().click()
             system_left_menu.permissions_dropdown_option(rb.VIEWER_TEXT).wait_until_visible()
             system_left_menu.permissions_dropdown_unavailable(rb.ADMIN_TEXT)
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")   
 
@@ -487,10 +498,11 @@ def user_data_should_match_registration(server: Mediaserver):
             system_left_menu.add_users_button().wait_until_visible()
             system_left_menu.get_user_with_email(email).click()
             assert f"{combo_text} {combo_text}" in SystemUsers(driver).user_name_text().get_text()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
@@ -520,13 +532,14 @@ def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
             driver.get(f"{ENV}/systems")
             LoginDialog(driver).basic_cloud_login(email, password)
             SystemsPage(driver).no_systems().wait_until_visible()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
             server.start()
             time.sleep(10)
             server.connect_to_cloud(owner)
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
             server.start()
@@ -564,11 +577,12 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
             system_left_menu.add_users_button().wait_until_visible()
             system_left_menu.update_users_list()
             assert email not in system_left_menu.users
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
             CLOUD_API.delete_account(email, password)
             server.start()
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")
             server.start()
@@ -597,12 +611,12 @@ def add_user_button_opens_cancellable_modal(server: Mediaserver):
             system_left_menu.add_user_modal().wait_until_visible()
             system_left_menu.add_user_modal_cancel_button().click()
             system_left_menu.add_user_modal().wait_until_not_visible()
-        except:
+        except Exception:
+            print("FAIL")
             driver.save_screenshot('error.png')
-            raise RuntimeError("FAIL")
+            raise
         else:
             print("PASS")   
-
 
 
 if __name__ == "__main__":
