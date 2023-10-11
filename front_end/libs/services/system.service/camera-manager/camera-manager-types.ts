@@ -41,7 +41,7 @@ export interface NxSystemCamera {
     parsedAddParams: ParsedAddParams;
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
-    webRtcUrl: ((param: { position: string | null }) => string) | null;
+    webRtcUrl: ((param: { position: string | null }, resolvedRelay?: string) => string) | null;
     online: boolean;
     unauthorized: boolean;
 }

@@ -646,6 +646,7 @@
                                             [cdkDragHandleDisabled]="layout.locked"
                                             [camera]="itemDetail.details"
                                             [fullScreenTarget]="layoutItemWrapper"
+                                            [getRelayHost]="getRelayHost(itemDetail.details)"
                                             [pingServer]="pingServer(itemDetail.details)"
                                             [showFullScreenButton]="mouseMoving$ | async"
                                             [rotation]="item.rotation"

@@ -4,8 +4,8 @@ import { Injector } from '@angular/core';
 import { pick } from 'lodash-es';
 import md5 from 'md5';
 import { CookieService } from 'ngx-cookie-service';
-import { from, of, throwError, Observable, BehaviorSubject, firstValueFrom } from 'rxjs';
-import { catchError, flatMap, map, mergeMap, retryWhen, timeout, tap, share, switchMap } from 'rxjs/operators';
+import { from, of, throwError, Observable, BehaviorSubject, firstValueFrom, Subject } from 'rxjs';
+import { catchError, flatMap, map, mergeMap, retryWhen, timeout, tap, share, switchMap, throttleTime, startWith, shareReplay } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
@@ -552,7 +552,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     @memoizeAsyncMedium
     getSystemSettings() {
-        return getSystemSettingsLegacyV1.apply(this) as ReturnType<typeof getSystemSettingsLegacyV1>;
+        return getSystemSettingsLegacyV1.apply(this);
     }
 
     changeSystemName(systemName: string) {
@@ -568,7 +568,22 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     ping() {
-        return this.get('/api/ping');
+        return this.get('/api/ping', { 'x-server-guid': this.cleanId(this.serverId) });
+    }
+
+    private updateRelayHost$ = new Subject<null>();
+    private relayHost$ = this.updateRelayHost$.pipe(
+        startWith(null),
+        throttleTime(5000),
+        switchMap(() => fetch(
+            `${this.urlBase}/api/ping?x-server-guid=${this.cleanId(this.serverId)}`).then(
+            response => new URL(response.url).host)),
+        shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    public getRelayHost(): Observable<string> {
+        this.updateRelayHost$.next(null);
+        return this.relayHost$;
     }
 
     pingSystem(url: string, remoteLogin: string, remotePassword: string) {
@@ -1286,7 +1301,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         cameraId: string,
         transport = 'webm',
         resolution = 'low',
-        position = undefined
+        position = undefined,
+        resolvedRelay = '',
     ): string {
         let url;
         function hlsResolutionOrEmpty(res) {
@@ -1297,7 +1313,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         }
         switch (transport) {
             case 'webRtc':
-                url = `${this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&x-server-guid=${this.cleanId(this.serverId)}&`;
+                url = `${resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')}/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&x-server-guid=${this.cleanId(this.serverId)}&`;
                 break;
             case 'hls':
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(cameraId)}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;

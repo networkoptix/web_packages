@@ -8,7 +8,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError, Observable } from 'rxjs';
 import staticLang from '@common/language/language_i18n_static.json';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -46,6 +46,7 @@ export class NxVideoPlayerComponent {
      * Pings the server to allow NxCurrentRelayInterceptor to map to resolved relay instance.
      */
     @Input() pingServer: () => Observable<unknown>;
+    @Input() getRelayHost: () => Observable<string>;
     @IBool() @Input() controls: CoercedBoolInput = false;
     @IBool() @Input() autoplay: CoercedBoolInput = false;
     @IBool() @Input() autopause: CoercedBoolInput = false;
@@ -260,8 +261,8 @@ export class NxVideoPlayerComponent {
         }
 
         const stream$ = this.reconnect$.pipe(
-            switchMap(this.pingServer),
-            switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.originalStream.nativeElement, hasSecondary)),
+            switchMap(this.getRelayHost),
+            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params, resolvedRelay), this.originalStream.nativeElement, hasSecondary)),
             tap(async ([stream, error, connection]) => {
                 if (stream) {
                     this.monitorFps(connection);

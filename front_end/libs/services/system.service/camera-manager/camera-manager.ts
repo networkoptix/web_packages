@@ -184,10 +184,10 @@ export class CameraManager {
         );
         const webRtcUrl =
             this.system.version >= 5.1
-                ? ({ position } = { position: null }): string => {
+                ? ({ position } = { position: null }, resolvedRelay = ''): string => {
                       return this.serverManager.mediaserverConnections[
                           camera.parentId
-                      ].getPlaybackUrl(camera.id, 'webRtc', 'low', position);
+                      ].getPlaybackUrl(camera.id, 'webRtc', 'low', position, resolvedRelay);
                   }
                 : null;
         const status = this.parseCameraStatus(camera, this.system.useRest).toLowerCase();

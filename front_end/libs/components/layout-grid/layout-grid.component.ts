@@ -1534,6 +1534,11 @@ export class NxLayoutGridComponent {
                 .ping()
                 .pipe(catchError(() => Promise.resolve()));
 
+    getRelayHost =
+        ({ parentId: serverId }: { parentId: string }) =>
+        (): Observable<string> =>
+            this.system.serverManager.mediaserverConnections[serverId].getRelayHost();
+
     serverStats$ = this.tooltipTarget$.pipe(
         filter(id => !!id),
         distinctUntilChanged(),
