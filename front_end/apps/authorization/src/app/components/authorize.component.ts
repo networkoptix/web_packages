@@ -649,6 +649,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
 
                     this.loginEmail = this.accountInfo.email;
                     this.currentState = AuthorizeState.activate;
+                    if (res.activated || res.statusCode === 'activated') {
+                        this.activated$.next(true);
+                    }
                 }
             },
             err => {

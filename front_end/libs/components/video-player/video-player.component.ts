@@ -45,6 +45,7 @@ export class NxVideoPlayerComponent {
      * Pings the server to allow NxCurrentRelayInterceptor to map to resolved relay instance.
      */
     @Input() pingServer: () => Observable<unknown>;
+    @Input() getRelayHost: () => Observable<string>;
     @Input({ transform: booleanAttribute }) controls: boolean = false;
     @Input({ transform: booleanAttribute }) autoplay: boolean = false;
     @Input({ transform: booleanAttribute }) autopause: boolean = false;
@@ -264,8 +265,8 @@ export class NxVideoPlayerComponent {
         // }
 
         const stream$ = this.reconnect$.pipe(
-            switchMap(this.pingServer),
-            switchMap(() => WebRTCStreamManager.connect(this.camera.webRtcUrl, this.originalStream.nativeElement, hasSecondary)),
+            switchMap(this.getRelayHost),
+            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params, resolvedRelay), this.originalStream.nativeElement, hasSecondary)),
             tap(async ([stream, error, connection]) => {
                 if (stream) {
                     this.monitorFps(connection);

@@ -33,7 +33,7 @@
 >
     <a
         *ngIf="!node.invisible"
-        (click)="handleNavigation(node, $event); onNodeSelect(node)"
+        (click)="node?.name === selectedNode?.name ? onNodeSelect(node, $event) : null"
         [ngClass]="{ active: node?.name === selectedNode?.name }"
         class="menu-item btn btn-menu"
         [href]="node.url"

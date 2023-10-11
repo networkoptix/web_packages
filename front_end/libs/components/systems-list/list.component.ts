@@ -133,11 +133,12 @@ export class NxSystemsListComponent implements OnInit {
                 if (this.enableRedirect && this.location.path().startsWith(this.base)) {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be
                     // established, and we'll get into a loop. It's safer not to open the system.
-                    if (this.hasOneSystem) {
-                        const [system] = this.systems;
-                        if (!system.system2faEnabled || account.sessionVerified) {
-                            this.openSystem(system);
-                        }
+                    const [system] = this.systems;
+                    if (
+                        this.hasOneSystem &&
+                        (!system.system2faEnabled || account.sessionVerified)
+                    ) {
+                        this.openSystem(system);
                     } else {
                         this.showList = true;
                     }

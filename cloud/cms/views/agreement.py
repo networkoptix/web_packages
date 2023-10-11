@@ -46,6 +46,9 @@ def get_agreement(request):
     customization = request.CUSTOMIZATION
     agreement = None
     agreement_review = None
+    version = None
+    agreement_dict = None
+    agreement_cache = None
     if agreement_id:
         # If id is provided, then only search with id
         # Used primarily for showing previews correctly.
@@ -61,23 +64,20 @@ def get_agreement(request):
             agreement_review = AssetCustomizationReview.objects.filter(
                 version__asset__asset_type__type=AssetType.ASSET_TYPES.agreement,
                 state=AssetCustomizationReview.REVIEW_STATES.accepted, customization__name=customization
-            ).exclude(id__in=[r.id for r in tos_reviews])
+            ).exclude(id__in=[r.id for r in tos_reviews]).order_by('id')
         agreement_review = agreement_review.last()
         if not agreement_review:
             return api_success("Agreement not available", status_code=status.HTTP_404_NOT_FOUND)
 
         agreement_id = agreement_review.version.asset.id
-        version = agreement_review.version
-
-    agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
-                                     version=version, request=request)
-    cached_agreement = agreement_cache.get_cached_item()
-
-    if agreement_review and not cached_agreement:
+        agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
+                                         version=agreement_review.version, request=request)
+        agreement_dict = agreement_cache.get_cached_item()
         agreement = agreement_review.version.asset
 
+
     # If agreement is not found, then return a 404
-    if agreement or cached_agreement:
+    if agreement or agreement_dict:
         if (
             ((draft or review))
             and not request.user.is_superuser
@@ -85,8 +85,6 @@ def get_agreement(request):
         ):
             raise APIForbiddenException(
                 error_data={'id': agreement_id}, error_text=PREVIEW_NOT_ALLOWED)
-        if cached_agreement:
-            return api_success(cached_agreement)
 
         # Set version based on draft or pending query params
         version = agreement.version_id()
@@ -100,65 +98,68 @@ def get_agreement(request):
 
         # If version is 0, then agreement has no acceptable version and the request isn't for a draft
         if version != 0:
-            agreement_structures = DataStructure.objects.filter(
-                context__asset_type__type=AssetType.ASSET_TYPES.agreement
-            )
+            if not agreement_dict:
+                agreement_structures = DataStructure.objects.filter(
+                    context__asset_type__type=AssetType.ASSET_TYPES.agreement
+                )
 
-            # Get values for title and body of agreement for this version
-            title = agreement_structures.filter(name='title').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review,
-                customization_name=customization
-            )
-            agreement_type = agreement_structures.filter(name='type').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review,
-                customization_name=customization
-            )
-            grace_period = agreement_structures.filter(name='grace_period').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review,
-                customization_name=customization
-            )
-            body = agreement_structures.filter(name='text').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review,
-                customization_name=customization
-            )
-            short_description = agreement_structures.filter(name='description').first().find_actual_value(
-                asset=agreement, version_id=version, draft=draft or review,
-                customization_name=customization
-            )
-            agreement_dict = {
-                "title": title,
-                "type": agreement_type,
-                "grace_period": grace_period,
-                "shortDescription": short_description,
-                "body": body,
-                'id': agreement.id,
-                'review_id': agreement_review.id if agreement_review else 0,
-                'preview': review or draft,
-                'accepted': ContributorAgreement.objects.filter(
-                    accepted_agreement=agreement_review, user=request.user
-                ).exists() if agreement_review and request.user.is_authenticated else False
-            }
+                # Get values for title and body of agreement for this version
+                title = agreement_structures.filter(name='title').first().find_actual_value(
+                    asset=agreement, version_id=version, draft=draft or review,
+                    customization_name=customization
+                )
+                agreement_type = agreement_structures.filter(name='type').first().find_actual_value(
+                    asset=agreement, version_id=version, draft=draft or review,
+                    customization_name=customization
+                )
+                grace_period = agreement_structures.filter(name='grace_period').first().find_actual_value(
+                    asset=agreement, version_id=version, draft=draft or review,
+                    customization_name=customization
+                )
+                body = agreement_structures.filter(name='text').first().find_actual_value(
+                    asset=agreement, version_id=version, draft=draft or review,
+                    customization_name=customization
+                )
+                short_description = agreement_structures.filter(name='description').first().find_actual_value(
+                    asset=agreement, version_id=version, draft=draft or review,
+                    customization_name=customization
+                )
+                agreement_dict = {
+                    "title": title,
+                    "type": agreement_type,
+                    "grace_period": grace_period,
+                    "shortDescription": short_description,
+                    "body": body,
+                    'id': agreement.id,
+                    'review_id': agreement_review.id if agreement_review else 0,
+                    'preview': review or draft,
+                }
 
-            # Get global contexts and fill any matching variables in datarecords
-            cloud_portal = get_cloud_portal_asset(customization=customization)
-            global_contexts = Context.objects.filter(
-                asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
-            global_contexts_dict = global_contexts_to_dict(
-                global_contexts, cloud_portal)
-            context_processor = ContextProcessor(
-                asset=cloud_portal, preview=False, version_id=cloud_portal.version_id(), global_contexts=global_contexts,
-                global_contexts_dict=global_contexts_dict
-            )
-            context_processor.process_global_contexts(
-                content=agreement_dict, language=language)
+                # Get global contexts and fill any matching variables in datarecords
+                cloud_portal = get_cloud_portal_asset(customization=customization)
+                global_contexts = Context.objects.filter(
+                    asset_type=cloud_portal.asset_type, is_global=True, hidden=False)
+                global_contexts_dict = global_contexts_to_dict(
+                    global_contexts, cloud_portal)
+                context_processor = ContextProcessor(
+                    asset=cloud_portal, preview=False, version_id=cloud_portal.version_id(), global_contexts=global_contexts,
+                    global_contexts_dict=global_contexts_dict
+                )
+                context_processor.process_global_contexts(
+                    content=agreement_dict, language=language)
 
+                # Cache agreement dict
+                if not agreement_cache:
+                    agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
+                                                     version=version, request=request)
+                agreement_cache.set_cached_item(agreement_dict)
+
+            agreement_dict['accepted'] = ContributorAgreement.objects\
+                .filter(accepted_agreement=agreement_review, user=request.user).exists() \
+                if agreement_review and request.user.is_authenticated else False
             serializer = AgreementSerializer(data=agreement_dict)
             serializer.is_valid()
             agreement_dict = serializer.data
-            if not agreement_cache:
-                agreement_cache = AgreementCache(language=language, state=state, identifier=agreement_id,
-                                                 version=version, request=request)
-            agreement_cache.set_cached_item(agreement_dict)
             # Really not sure about this piece of code. Both options (get from cache or db) are resolved on the
             # Agreement retrieving stage L51-L70. Commenting this out.
             # if agreement_id:

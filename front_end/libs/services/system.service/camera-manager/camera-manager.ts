@@ -104,7 +104,7 @@ export class CameraManager {
 
         const webRtcUrl =
             this.system.version >= 5.1
-                ? ({ position } = { position: null }): string => {
+                ? ({ position } = { position: null }, resolvedRelay = ''): string => {
                       return this.serverManager.mediaserverConnections[
                           camera.parentId
                       ].getPlaybackUrl(
@@ -112,6 +112,7 @@ export class CameraManager {
                           this.system.version > 5.1 ? 'webRtc2' : 'webRtc',
                           'low',
                           position,
+                          resolvedRelay,
                           nonWebRtcCodec ? 'mse' : 'srtp',
                       );
                   }

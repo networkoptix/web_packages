@@ -74,6 +74,9 @@ export class AuthService {
         };
 
         if (clientId) {
+            if (['cloud', 'webadmin'].some(client => clientId === client)) {
+                clientId = `${clientId}/${this.customization}`;
+            }
             data.client_id = clientId;
         }
 

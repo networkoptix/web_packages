@@ -345,7 +345,7 @@ class ZendeskBase:
             raise APIInternalException('No customization given.', error_code=ErrorCodes.no_customization_given)
         self.customization_name = customization_name
         self.cloud_portal = cloud_portal or get_cloud_portal_asset(
-            self.customization_name)
+            customization=self.customization_name)
         domain = self.cloud_portal.read_global_value('%ZENDESK_DOMAIN%')
         api_key = self.cloud_portal.read_global_value('%ZENDESK_API_KEY%')
         email = self.cloud_portal.read_global_value('%ZENDESK_API_EMAIL%')
@@ -365,7 +365,7 @@ class ZendeskBase:
 
         if verify_auth:
             try:
-                self.zen_client.tickets.recent()
+                self.zen_client.help_center.categories()
             except APIException as e:
                 raise ZendeskInvalidConfiguration from e
 
@@ -564,17 +564,14 @@ class ZendeskMapper(ZendeskBase):
             'empty': json.dumps(empty_nodes) if json_values else empty_nodes
         }
 
-    @background
     @retry(block_final_exception=True)
     def _clean_category(self, category_id):
         self.zen_client.help_center.categories.delete(Category(id=category_id))
 
-    @background
     @retry(block_final_exception=True)
     def _clean_section(self, section_id):
         self.zen_client.help_center.sections.delete(Section(id=section_id))
 
-    @background
     @retry(block_final_exception=True)
     def _clean_article(self, article_id):
         self.zen_client.help_center.articles.archive(Article(id=article_id))
@@ -707,6 +704,16 @@ class Exporter(ZendeskBase):
                                    f'Ext File ID: {external_file.id}, '
                                    f'File name: {file_info["external_file_name"]}, '
                                    f'Exception: {exception}')
+                    return
+                except Exception as e:
+                    # Exception was being raised here because I didn't have S3 location setup locally. This shouldn't happen in production.
+                    # Catching all exceptions here in case there are any other unhandled exceptions we don't know about.
+                    # We want to ensure that the sync continues even if we can't create an attachment.
+                    logger.error(f'Error creating attachment. Asset: {asset.id}'
+                        f'Zenpy Article ID: {zenpy_article.id}, '
+                        f'Ext File ID: {external_file.id}, '
+                        f'File name: {file_info["external_file_name"]}, '
+                        f'Exception: {e}', exc_info=True)
                     return
 
             # Use zendesk url if attachment was created else link to cloud portal
@@ -849,7 +856,7 @@ class Exporter(ZendeskBase):
                 zd_section.needs_sync = False
                 zd_section.save()
                 return
-        elif general_title := getattr(zd_section.parent_category, 'general_section_title', None):
+        elif (general_title := getattr(zd_section.parent_category, 'general_section_title', None)) and general_title == zd_section.name:
             return next(filter(lambda section: section.category_id == zd_section.parent_category.category_id and section.name == general_title, self.zen_client.help_center.sections()), zenpy_section)
 
         return zenpy_section
@@ -1148,7 +1155,6 @@ def check_if_article_can_sync(zendesk_sync_log, node):
         return zd_article, review
 
 
-@background
 def process_asset(parent_zd, parent_enabled, zendesk_sync_log, force_update, position, node, cloud_portal=None):
     if not (result := check_if_article_can_sync(zendesk_sync_log, node)):
         return
@@ -1180,7 +1186,6 @@ def process_asset(parent_zd, parent_enabled, zendesk_sync_log, force_update, pos
         sync_item.mark_failed(end_state)
 
 
-@background
 def process_nodes(nodes: List[MenuNode], parent_zd, parent_enabled=True, zendesk_sync_log: ZendeskSyncLog = None, force_update=False, verify_auth=False):
     site = zendesk_sync_log.zendesk_category.site if zendesk_sync_log else parent_zd.site
     try:
@@ -1229,6 +1234,8 @@ def process_node(parent_zd, parent_enabled, zendesk_sync_log, force_update, posi
             parent_zd, ZendeskSection) and parent_zd
         if not zd_section:
             zd_section = zendesk_sync_log.zendesk_category.general_section
+            if zd_section.needs_sync:
+                zd_section = exporter.sync_section(zd_section, delete=False, return_zd_section=True)
         process_asset(zd_section, parent_enabled,
                       zendesk_sync_log, force_update, position, node)
     else:

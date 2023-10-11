@@ -82,7 +82,7 @@ export interface NxSystemCamera {
     previewUrl: Observable<string>;
     recordingSettings: RecordingSettings;
     recordingStatus: RecordingStatus;
-    webRtcUrl: ((param: { position: string | null }) => string) | null;
+    webRtcUrl: ((param: { position: string | null }, resolvedRelay?: string) => string) | null;
 }
 
 export enum CameraStatus {
