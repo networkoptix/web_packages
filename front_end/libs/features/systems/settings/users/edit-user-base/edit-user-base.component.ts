@@ -88,9 +88,9 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         }
         return {
             enable: !isMe,
-            changePassword: isLocal,
-            changePermissions: !isMe,
-            changeInfo: isLocal || (isTemporary && !isMe),
+            changePassword: isLocal && !isTemporary,
+            changePermissions: !isMe && !isTemporary,
+            changeInfo: (isLocal || !isMe) && !isTemporary,
             delete: !isMe,
         };
     });
