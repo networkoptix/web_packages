@@ -170,6 +170,9 @@ class ServerApi:
         self._token = None
         self._auth_header()
 
+    def get_current_token(self) -> str:
+        return self._token
+
     def _get(self, path: str):
         return self._request('GET', path)
 

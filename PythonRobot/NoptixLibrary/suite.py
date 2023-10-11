@@ -1,3 +1,4 @@
+import logging
 import time
 from contextlib import ExitStack
 from types import MappingProxyType
@@ -6,6 +7,9 @@ from typing import Mapping
 from typing import Optional
 from typing import List
 from random import randint
+
+from requests import HTTPError
+
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 
 from email_access import Email
@@ -17,6 +21,8 @@ from NoptixLibrary.server_api import ServerApi
 
 _CLOUD_API = CloudPortalAPI()
 _DOCKER_API = DockerApi()
+
+_logger = logging.getLogger(__name__)
 
 
 class Suite:
@@ -190,6 +196,28 @@ class Mediaserver:
             if username is not None and '@' in username:
                 token = _CLOUD_API.get_oauth2_token(self.id, username, password)
             return self.api.copy(url=new_url, token=token)
+
+    def cloud_merge(self, slave: 'Mediaserver'):
+        # Systems may not be ready for merging immediately after binding them
+        count_attempts = 5
+        for attempt in range(1, count_attempts+1):
+            try:
+                _CLOUD_API.cdb_merge_cloud_systems(
+                    self.id,
+                    slave.id,
+                    self._cloud_owner.email,
+                    self._cloud_owner.password,
+                    self.api.get_current_token(),
+                    slave.api.get_current_token(),
+                )
+            except HTTPError as exc:
+                if attempt >= count_attempts and exc.response.status_code == 500:
+                    raise exc
+                _logger.info(f"Failed to merge after {attempt} attempts. Retrying in 5 sec.")
+                time.sleep(5)
+            else:
+                slave.id = self.id
+                break
 
     def set_up(self):
         # Create a docker server.

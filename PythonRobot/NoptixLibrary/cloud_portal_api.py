@@ -111,11 +111,23 @@ class CloudPortalAPI(object):
             merge_response.raise_for_status()
             return merge_response.json()
 
-    def cdb_merge_cloud_systems(self, master_id, slave_id, email, password):
+    def cdb_merge_cloud_systems(
+            self,
+            master_id: str,
+            slave_id: str,
+            email: str,
+            password: str,
+            master_vms_token: str,
+            slave_vms_token: str,
+            ):
         cdb_merge_response = requests.post(
             url=f'{self.env}/cdb/system/{master_id}/merged_systems/',
             auth=HTTPBasicAuth(email, password),
-            json={"systemId": slave_id},
+            json={
+                "systemId": slave_id,
+                "masterSystemAccessToken": master_vms_token,
+                "slaveSystemAccessToken": slave_vms_token,
+            },
             verify=False,
             )
         cdb_merge_response.raise_for_status()
