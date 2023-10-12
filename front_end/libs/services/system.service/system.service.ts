@@ -53,8 +53,7 @@ export class NxSystemService {
         refreshConfig: SystemResourcesTypes.LoadPartialSystemResources,
     ): Observable<Partial<SystemResourcesTypes.SystemResourcesTypeMap>> {
         const system = this.createSystem(this.systemsService.userEmail, systemId, null, true, true);
-
-        return forkJoin({
+        const update = {
             [SystemResourcesTypes.SystemResourceTypeEnums.CAMERAS]: refreshConfig.cameras
                 ? from(system.cameraManager.getCameras()).pipe(
                       switchMap(cameras =>
@@ -81,7 +80,15 @@ export class NxSystemService {
             [SystemResourcesTypes.SystemResourceTypeEnums.WEB_PAGES]: refreshConfig.webPages
                 ? (system.mediaserver as NxSystemRestAPI).getWebPages()
                 : null,
-        });
+        };
+
+        for (const key in update) {
+            if (update[key] === null) {
+                delete update[key];
+            }
+        }
+
+        return forkJoin(update);
     }
 
     createSystem(

@@ -2,12 +2,15 @@ import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
 import {
+    EMPTY,
     catchError,
     distinctUntilChanged,
     filter,
     firstValueFrom,
+    interval,
     map,
     of,
+    startWith,
     switchMap,
     take,
 } from 'rxjs';
@@ -15,7 +18,7 @@ import {
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemService } from '@services/system.service/system.service';
-import { SystemResourcesSelectors } from '@store/system-resources';
+import { SystemResourcesActions, SystemResourcesSelectors } from '@store/system-resources';
 import { dirtyId } from '@utils/general';
 
 import { LayoutStateService } from './layout-state.service';
@@ -61,6 +64,31 @@ export class LayoutStateEffects {
                 this.store.select(SystemResourcesSelectors.selectLayoutsBySystemId(system.id)),
             ),
             map(layouts => LocalLayoutsActions.set({ layouts })),
+        );
+    });
+
+    updateSystemResources$ = createEffect(() => {
+        return this.layoutStateService.paramStateHandler.state$.pipe(
+            map(({ params: { systemId, layoutId } }) => ({ systemId, layoutId })),
+            distinctUntilChanged(),
+            switchMap(({ systemId, layoutId }) =>
+                layoutId
+                    ? interval(5 * 1000).pipe(
+                          startWith(60),
+                          map(pollInterval =>
+                              SystemResourcesActions.refreshSystemResources({
+                                  systems: {
+                                      [systemId]: {
+                                          layouts: !(pollInterval % 3),
+                                          cameras: !(pollInterval % 6),
+                                          servers: !(pollInterval % 12),
+                                      },
+                                  },
+                              }),
+                          ),
+                      )
+                    : EMPTY,
+            ),
         );
     });
 
