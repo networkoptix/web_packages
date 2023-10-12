@@ -73,6 +73,29 @@ def test_detailed_info_with_1_server(server1: Mediaserver, server2: Mediaserver,
     server2.start(True)
 
 
+def test_detailed_info_with_2_servers(server: Mediaserver, rb: RobotVariables):
+    """
+    13. Detailed info 2 servers
+    [Tags]    C70957    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        owner = server.get_cloud_owner()
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system_admin_page = SystemAdmin(driver, rb.language)
+        tab_settings = system_admin_page.get_tab_settings()
+        tab_settings.click()
+        servers_section = tab_settings.get_servers_section()
+        servers_section.click()
+        server_page = servers_section.get_default_server_page()
+        server_page.click()
+        server_page.get_detailed_info_button().click()
+        tab_info = system_admin_page.get_information_tab()
+        tab_info.get_servers_section().wait_until_visible()
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -88,3 +111,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{test_check_status.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         test_detailed_info_with_1_server(server1, server2, variables)
         print(f'{Fore.WHITE}{test_detailed_info_with_1_server.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_detailed_info_with_2_servers(server2, variables)
+        print(f'{Fore.WHITE}{test_detailed_info_with_2_servers.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')

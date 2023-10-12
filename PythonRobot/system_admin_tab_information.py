@@ -122,8 +122,8 @@ class TabInformation:
     def get_alerts_section(self) -> '_AlertsSection':
         return _AlertsSection(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]', 'Alerts')
 
-    def get_servers_section(self) -> '_Section':
-        return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]', 'Servers')
+    def get_servers_section(self) -> '_ServersSection':
+        return _ServersSection(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]', 'Servers')
 
     def get_cameras_section(self) -> '_Section':
         return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="cameras"]', 'Cameras')
@@ -267,3 +267,11 @@ class _AlertsSection(_Section):
         except (ElementNotVisible, ElementNotInDOM):
             online = False
         return online or offline
+
+
+class _ServersSection(_Section):
+    def wait_until_visible(self, timeout=5):
+        PageText(self._driver, '//nx-info-block//*[contains(text(), "Availability")]').wait_until_visible(timeout)
+        PageText(self._driver, '//nx-info-block//*[contains(text(), "Load")]').wait_until_visible(timeout)
+        PageText(self._driver, '//nx-info-block//*[contains(text(), "Info")]').wait_until_visible(timeout)
+        PageText(self._driver, '//nx-info-block//*[contains(text(), "Activity")]').wait_until_visible(timeout)
