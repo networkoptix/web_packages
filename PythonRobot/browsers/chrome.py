@@ -2,8 +2,6 @@ import time
 
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
-from selenium.webdriver.support import expected_conditions as ec
-from selenium.webdriver.support.wait import WebDriverWait
 
 
 class ChromeBrowser(Chrome):
@@ -18,10 +16,26 @@ class ChromeBrowser(Chrome):
         self._options.add_argument("--log-level=3")
 
     def location_should_be(self, url: str):
-        WebDriverWait(self, 1).until(ec.url_to_be(url))
+        timeout_sec = 1
+        started_at = time.monotonic()
+        while True:
+            current_url = self.current_url
+            if current_url == url:
+                return
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(f'Current url: {current_url}, Expected url {url}')
 
     def location_should_contain(self, url: str):
-        WebDriverWait(self, 10).until(ec.url_contains(url))
+        timeout_sec = 10
+        started_at = time.monotonic()
+        while True:
+            current_url = self.current_url
+            if url in current_url:
+                return
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(
+                    f'Current url {current_url} does not contain {url} substring',
+                    )
 
     def wait_until_number_of_tabs_are_open(self, number: int, timeout_sec=30):
         start_time = time.monotonic()
