@@ -392,9 +392,10 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, ChannelPartnerPermissions.manage_users):
             return True
-        elif self.users.filter(channelpartnertouser__roles__has_any_keys=self.allowed_role_names(
-            ChannelPartnerPermissions.manage_users)
-        ).count() == 0 and self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user):
+        elif (self.users.filter(channelpartnertouser__roles__has_any_keys=self.allowed_role_names(
+            ChannelPartnerPermissions.manage_users)).count() == 0
+              and self.parent_channel_partner
+              and self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user)):
             return True
         return False
 

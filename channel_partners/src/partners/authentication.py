@@ -38,7 +38,7 @@ class TokenCache:
     @classmethod
     def set_token(cls, token, email, expires_in=None):
         if expires_in:
-            timeout = min(cls.timeout, expires_in)
+            timeout = min(cls.timeout, int(expires_in))
         else:
             timeout = cls.timeout
         cls.cache().set(cls.cache_key(token), email, timeout=timeout)
@@ -143,7 +143,7 @@ def get_cloud_user_from_token(token, cloud_host):
     if response.is_success:
         resp = response.json()
         email = resp.get('username')
-        expires_in = resp.get('expires_in')
+        expires_in = resp.get('expires_in', 3600)
         TokenCache.set_token(token, email, expires_in=expires_in)
         return email
     elif response.status_code == 401:
