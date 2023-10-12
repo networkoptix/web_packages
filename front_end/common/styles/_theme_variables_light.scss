@@ -708,6 +708,8 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --bookmarks-background-color: #{$additional_light2};
     --bookmarks-calendar-today-border: rgba(0, 0, 0, 0.38);
     --bookmarks-calendar-today-highlight-shadow: var(--light1);
+    --bookmarks-calendar-cell-highlight-bg: var(--light3);
+    --bookmarks-calendar-month-text: var(--dark12);
     --bookmarks-input-border-color: var(--light10);
     --bookmarks-time-input-active-bg: var(--light3);
     --bookmarks-filter-header-bg: var(--light6);
@@ -716,6 +718,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --bookmarks-filter-clear-btn-stroke: var(--light16);
     --bookmarks-filter-body-bg: var(--light5);
     --bookmarks-filter-button-bg: var(--light4);
+    --bookmarks-filter-button-text: var(--dark12);
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--light3);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);

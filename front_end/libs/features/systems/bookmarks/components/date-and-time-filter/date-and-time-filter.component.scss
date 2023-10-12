@@ -22,8 +22,8 @@
             height: 1.25rem !important;
             font-size: 0.8rem !important;
             max-width: none !important;
-            background-color: var(--btn-default-bg);
-            color: var(--btn-default-color);
+            background-color: var(--bookmarks-filter-button-bg);
+            color: var(--bookmarks-filter-button-text);
             font-family: typography.$font-family-regular;
 
             &:hover {
@@ -32,170 +32,250 @@
 
             &.selected {
                 background-color: var(--brand-core);
-                color: var(--btn-default-active-color);
+                color: var(--light2); // Shared between Light/Dark theme
             }
         }
     }
 
-    // https://github.com/angular/components/blob/main/src/material/datepicker/_datepicker-theme.scss
+
+    /* We're technically not supposed to directly style Material components like this since
+    the internal implementation (class names, properties, etc.) can change at any time,
+    but it's required to get it to look like design wants. */
     mat-calendar {
+        /* Base Material styling. Note that the styles for the buttons has to be imported
+        separately from the calendar styling
+        https://github.com/angular/components/blob/main/src/material */
         @include material.button-theme(mat.$mat-test-theme);
+        @include material.icon-button-theme(mat.$mat-test-theme);
         @include material.datepicker-theme(mat.$mat-test-theme);
 
-        button {
-            &.mat-calendar-period-button {
-                height: initial !important;
-            }
-            &.mat-icon-button {
-                height: 40px !important;
-                border-radius: 50% !important;
-            }
-            &.mat-calendar-body-cell {
-                height: 100% !important;
+        // Utility mixin to target cells that aren't selected. Used to make selector easier to follow.
+        // https://github.com/angular/components/blob/main/src/material/datepicker/calendar-body.scss#L38C12-L38C12
+        @mixin _unselected-cell {
+            &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
+                @content;
             }
         }
-        button.mat-icon-button {
-            border-radius: 2px !important;
-        }
-        // Resets for global button style
 
-        thead th:first-child {
-            padding-left: 0 !important;
+        /*
+        mat-calendar-header
+            div.mat-calendar-header
+                div.mat-calendar-controls
+                    button.mat-calendar-period-button
+                    button.mat-calendar-previous-button
+                    button.mat-calendar-next-button
+        */
+        mat-calendar-header {
+            // Period button (switches between month/year view)
+            .mat-calendar-period-button {
+                height: 40px !important;
+                margin: 0;
+
+                // Label text
+                .mdc-button__label {
+                    font-size: 0.9375rem;
+                    font-family: typography.$font-family-medium;
+                    color: var(--bookmarks-calendar-month-text);
+
+                    // Arrow icon
+                    svg polygon {
+                        fill: var(--btn-dropdown-toggle-color);
+                        // Shared between light/dark
+                    }
+                }
+            }
+
+            // Arrow increment buttons (< >)
+            .mat-calendar-previous-button,
+            .mat-calendar-next-button {
+                height: 40px !important;
+
+                // This is actually for the arrow color
+                color: var(--light16);
+                // Shared between light/dark
+
+                .mdc-icon-button__ripple {
+                    border-radius: 2px !important;
+                }
+            }
         }
-        .mat-calendar-table-header-divider::after {
-            left: 0;
-            right: 0;
-        }
+
         .mat-calendar-content {
             padding: 0;
-        }
-        .mat-calendar-body-cell-content {
-            border-radius: 2px;
-        }
-        .mat-calendar-body-comparison-start:not(.mat-calendar-body-comparison-bridge-start)::before {
-            border-top-left-radius: 2px;
-            border-bottom-left-radius: 2px;
-        }
-        .mat-calendar-body-comparison-end:not(.mat-calendar-body-comparison-bridge-end)::before {
-            border-top-right-radius: 2px;
-            border-bottom-right-radius: 2px;
-        }
-        .mat-calendar-button-0,
-        thead tr th,
-        .mat-calendar-body-label,
-        .mat-calendar-body-cell-content {
-            color: var(--body-text-color);
-        }
-        // Other resets
 
-
-        // Switch between views
-        #mat-calendar-button-0 {
-            font-size: 0.9375rem;
-            font-family: typography.$font-family-medium;
-        }
-
-        // Triangle icon
-        .mat-calendar-period-button svg polygon {
-            fill: var(--btn-dropdown-toggle-color);
-            // Shared between light/dark
-        }
-
-        // < > icons
-        .mat-icon-button {
-            color: var(--light16);
-            // Shared between light/dark
-        }
-
-        // S M T W T F S
-        .mat-calendar-table-header th span {
-            font-size: 0.8125rem;
-            font-family: typography.$font-family-medium;
-        }
-
-        // Divider between day of week header and calendar days
-        .mat-calendar-table-header-divider {
-            visibility: hidden;
-        }
-
-        // Extra text for month/year
-        // If full row remove from DOM, otherwise hide text
-        mat-month-view .mat-calendar-body-label {
-                visibility: hidden;
-
-                &[colspan="7"] {
-                    display: none;
+            .mat-calendar-body {
+                // Day/month/year cell
+                &-cell {
+                    &-content {
+                        font-size: 0.875rem !important;
+                        font-family: typography.$font-family-regular;
+                        border-radius: 2px;
+                        color: var(--body-text-color);
+                    }
                 }
-        }
-        mat-year-view .mat-calendar-body-label {
-            display: none;
-        }
 
-        // Day/month/year cell
-        .mat-body-cell-content {
-            font-size: 0.875rem !important;
-        }
+                // Border around the present day/month/year cell
+                &-today {
+                    @include _unselected-cell() {
+                        border-color: var(--bookmarks-calendar-today-border);
+                    }
+                }
 
-        // Current day
-        .mat-calendar-body-today {
-            // @mixin _unselected-cell
-            &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                border-color: var(--input-border-color);
-            }
-        }
+                // Selected cell/endpoints of selected range
+                &-selected {
+                    background-color: var(--brand-core);
 
-        // Selection
-        .mat-calendar-body-selected {
-            background-color: var(--brand-core);
-            color: var(--bookmarks-filter-filled-text);
-        }
-        .mat-calendar-body-in-range {
-            .mat-calendar-body-cell-content {
-                color: var(--bookmarks-filter-filled-text);
-            }
-            &::before {
-                background-color: var(--brand-d1);
-            }
-            .mat-calendar-body-today {
-                &:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                    border-color: transparent;
-                    box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-today-highlight-shadow);
+                    // This is not a duplication, single-day selections don't
+                    // have mat-calendar-body-in-range class
+                    color: var(--bookmarks-filter-filled-text);
                 }
             }
+
+            // View of days in a single month
+            /*
+            mat-month-view
+                table.mat-calendar-table
+                    thead.mat-calendar-table-header
+                        tr
+                            th
+                                span // Hidden full day of week
+                                span // Visible abbreviated day of week
+                            ...
+                        tr
+                            th.mat-calendar-table-header-divider
+                    tbody.mat-calendar-body
+                        tr
+                            td.mat-calendar-body-label
+                            // The body label is only on its own row if the first
+                            // day of the month is Sunday, otherwise it is in the row with day cells
+                        tr
+                            td.mat-calendar-body-cell-container
+                                button.mat-calendar-body-cell
+                                // .mat-calendar-body-range-start: Range start day
+                                // .mat-calendar-body-in-range: Within selected range (endpoint inclusive)
+                                // .mat-calendar-body-range-end: Range end day
+                                // Note: range classes only appear if >1 day selected
+
+                                // .mat-calendar-body-comparison-identical: Comparison is same as selected
+                                // .mat-calendar-body-comparison-start: Comparison start day
+                                // .mat-calendar-body-in-comparison-range: Within compare range (endpoint inclusive)
+                                // .mat-calendar-body-comparison-end: Comparison end day
+
+                                    ::before
+                                    span.mat-calendar-body-cell-content
+                                    // .mat-calendar-body-today: Present day
+                                    // .mat-calendar-body-selected: Selected range endpoints
+                                    ::after
+                        ...
+            */
+            mat-month-view {
+                // Days of week labels and divider
+                .mat-calendar-table-header {
+                    span {
+                        font-size: 0.8125rem;
+                        font-family: typography.$font-family-medium;
+                        font-weight: normal;
+                        color: var(--body-text-color);
+                    }
+
+                    // First day of week (S in en-US)
+                    th:first-child {
+                        padding-left: 0 !important;
+                    }
+
+                    // Horizontal divider
+                    &-divider {
+                        visibility: hidden;
+                    }
+                }
+
+                .mat-calendar-body {
+                    // Extra month label in body
+                    &-label {
+                        visibility: hidden;
+
+                        // If the label takes up a full row remove from DOM, otherwise just hide text
+                        &[colspan="7"] {
+                            display: none;
+                        }
+                    }
+
+                    // All cells of selected range
+                    &-in-range {
+                        // This is covered up by the background for endpoint cells
+                        &::before {
+                            background-color: var(--brand-d1);
+                        }
+
+                        .mat-calendar-body-cell-content {
+                            color: var(--bookmarks-filter-filled-text);
+                        }
+
+                        // Adjust today outline colors
+                        .mat-calendar-body-today {
+                            @include _unselected-cell() {
+                                border-color: transparent;
+                                box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-today-highlight-shadow);
+                            }
+                        }
+                    }
+
+                    // Cells of mouse preview range
+                    &-in-comparison-range {
+                        &::before {
+                            background-color: var(--bookmarks-text-highlight-bg);
+                        }
+                    }
+                    &-comparison-start::before {
+                        border-top-left-radius: 2px;
+                        border-bottom-left-radius: 2px;
+                    }
+                    &-comparison-end::before {
+                        border-top-right-radius: 2px;
+                        border-bottom-right-radius: 2px;
+                    }
+                }
+            }
+
+            // View of years in a month
+            mat-year-view {
+                // Extra year label in body
+                .mat-calendar-body {
+                    &-label {
+                        display: none;
+                    }
+                }
+            }
         }
 
-        // Mouse preview
-        .mat-calendar-body-in-comparison-range::before {
-            background-color: var(--bookmarks-text-highlight-bg);
-        }
-        .mat-calendar-body-comparison-identical.mat-calendar-body-selected,
-        .mat-calendar-body-in-comparison-range > .mat-calendar-body-selected {
-            background-color: var(--brand-core);
-        }
-
-        // Quick preview
-        &.quick-preview {
-            .mat-calendar-body-in-range {
+        // For quick preview range, style the in-between cells differently than selected range
+        &.quick-preview .mat-calendar-content .mat-calendar-body {
+             &-in-range {
+                &::before {
+                    background-color: var(--bookmarks-calendar-cell-highlight-bg);
+                }
                 &:not(.mat-calendar-body-range-start):not(.mat-calendar-body-range-end) .mat-calendar-body-cell-content {
                     color: var(--body-text-color);
                 }
-                &::before {
-                    background-color: var(--input-border-color);
-                }
             }
         }
 
-        // Focus/hover
-        .cdk-keyboard-focused .mat-calendar-body-active,
-        .cdk-program-focused .mat-calendar-body-active,
+        // Cells focused by keyboard or hovered over by mouse
+        .mat-calendar-content.cdk-focused .mat-calendar-body-cell.mat-calendar-body-active,
         .mat-calendar-body-cell:not(.mat-calendar-body-disabled):hover {
-            // @mixin _highlighted-cell
-            & > .mat-calendar-body-cell-content:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                background-color: var(--input-border-color);
-                color: var(--body-text-color);
+            // Only style for focus if not selected
+            & > .mat-calendar-body-cell-content {
+                @include _unselected-cell() {
+                    background-color: var(--bookmarks-calendar-cell-highlight-bg);
+                    color: var(--body-text-color);
+                }
             }
-            &.mat-calendar-body-in-range > .mat-calendar-body-today:not(.mat-calendar-body-selected):not(.mat-calendar-body-comparison-identical) {
-                box-shadow: inset 0 0 0 1px var(--input-border-color);
+
+            // Match outline to focused background color if today is in range
+            &.mat-calendar-body-in-range > .mat-calendar-body-today {
+                @include _unselected-cell() {
+                    box-shadow: inset 0 0 0 1px var(--bookmarks-calendar-cell-highlight-bg);
+                }
             }
         }
     }
