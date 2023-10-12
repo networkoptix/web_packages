@@ -1,116 +1,7 @@
-<nx-block
+<nx-alexa
     *ngIf="CONFIG.cloudCapabilities.alexaIntegrationEnabled"
-    type="mt-3"
->
-    <header><h4 translate>Alexa Settings</h4></header>
-    <nx-section>
-        <div class="alexa-message">
-            <ng-template #preloader>
-                <nx-pre-loader type="alexa"></nx-pre-loader>
-            </ng-template>
-            <ng-container *ngIf="alexaSettings; else preloader">
-                <ng-template #notLinked>
-                    <h4 translate>Account not linked</h4>
-                    <p translate>
-                        Cloud portal account is not linked to Alexa, to use this system with Alexa
-                        first install the Alexa app and link using your cloud portal account.
-                    </p>
-                </ng-template>
-                <ng-container *ngIf="alexaSettings?.accountLinked; else notLinked">
-                    <ng-template #notEnabled>
-                        <h4 translate>Alexa not enabled</h4>
-                        <p translate>
-                            Alexa integration is currently disabled, press "Enable Alexa" to turn on
-                            integration.
-                        </p>
-                    </ng-template>
-                    <ng-container *ngIf="alexaSettings?.enabled; else notEnabled">
-                        <ng-template #enabledOnAnotherSystem>
-                            <h4 translate>Alexa linked to another system</h4>
-                            <p translate>
-                                Alexa is currently enabled but is linked to another system, press
-                                "Use this system with Alexa" to link Alexa to this system.
-                            </p>
-                        </ng-template>
-                        <ng-container
-                            *ngIf="
-                                alexaSettings?.selectedSystem === system.id;
-                                else enabledOnAnotherSystem
-                            "
-                        >
-                            <h4 translate>Alexa linked to this system</h4>
-                            <p translate>
-                                Alexa is currently currently linked to this system, to link a
-                                different open the system admin page on cloud portal for that
-                                system.
-                            </p>
-                            <p
-                                class="error-label"
-                                *ngIf="
-                                    alexaSettings?.enabled &&
-                                    !alexaSettings?.eventRulesSetup &&
-                                    !eventRulesBeingSetup
-                                "
-                                translate
-                            >
-                                An error has occurred when setting up event rules for Alexa. Please
-                                retry setting up event rules.
-                            </p>
-                        </ng-container>
-                    </ng-container>
-                </ng-container>
-            </ng-container>
-        </div>
-    </nx-section>
-    <nx-section>
-        <div class="d-flex flex-wrap">
-            <button
-                (click)="toggleAlexaEnabled()"
-                [disabled]="!alexaSettings?.accountLinked"
-                class="btn btn-default"
-            >
-                <ng-template #enableAlexa>
-                    <span translate>Enable Alexa</span>
-                </ng-template>
-                <ng-container
-                    *ngIf="alexaSettings?.enabled && alexaSettings?.accountLinked; else enableAlexa"
-                >
-                    <span translate>Disable Alexa</span>
-                </ng-container>
-            </button>
-            <button
-                *ngIf="alexaSettings?.enabled && !alexaSettings?.eventRulesSetup"
-                (click)="updateEventRules()"
-                [disabled]="eventRulesBeingSetup"
-                class="btn btn-default ml-2"
-            >
-                <ng-template #beingSetup>
-                    <span translate>Retry setting up event rules</span>
-                </ng-template>
-                <ng-container *ngIf="eventRulesBeingSetup; else beingSetup">
-                    <span translate>Event rule setup in progress...</span>
-                </ng-container>
-            </button>
-            <button
-                (click)="toggleSystemSelected()"
-                [disabled]="!alexaSettings?.enabled || system.id === alexaSettings?.selectedSystem"
-                class="btn btn-default ml-2"
-            >
-                <ng-template #useSystem>
-                    <span translate>Use this system with Alexa</span>
-                </ng-template>
-                <ng-container
-                    *ngIf="
-                        alexaSettings?.enabled && system.id === alexaSettings?.selectedSystem;
-                        else useSystem
-                    "
-                >
-                    <span translate>This system is connected to Alexa</span>
-                </ng-container>
-            </button>
-        </div>
-    </nx-section>
-</nx-block>
+    [system]="system"
+></nx-alexa>
 
 <form
     name="systemAndSecuritySettingsForm"
@@ -446,7 +337,7 @@
                                 'The recommended maximum user session lifetime is 30 days.'
                                     | translate
                             "
-                            [nxForceVisibility]="sessionLimitValueInput.touched"
+                            [nxForceVisibility]="sessionLimitValueInput?.touched || false"
                             [intersectionDebounce]="50"
                             [visibilityMargin]="'0px 0px -65px 0px'"
                             [visibilityThreshold]="1"

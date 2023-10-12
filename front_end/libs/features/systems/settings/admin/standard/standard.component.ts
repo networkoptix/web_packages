@@ -8,9 +8,8 @@ import {
     OnDestroy,
 } from '@angular/core';
 import { NgForm } from '@angular/forms';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { UntilDestroy } from '@ngneat/until-destroy';
 import { firstValueFrom } from 'rxjs';
-import { catchError, map, switchMap, tap } from 'rxjs/operators';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -20,8 +19,6 @@ import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
-import { NxCloudApiService } from '@services/nx-cloud-api';
-import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -29,7 +26,6 @@ import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { icons, menus } from '@static-variables';
-import { delayInitial } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 const HR_MINS = 60;
@@ -41,28 +37,6 @@ interface LimitSessionTimeItem extends DropdownItem<LimitSessionTimeUnit> {
     id: number;
     max: number;
     default?: number;
-}
-
-class AlexaSettings {
-    static CUSTOM_PROPERTY_ENDPOINT = 'alexa';
-
-    constructor(
-        public enabled = false,
-        public selectedSystem: string = null,
-        public accountLinked = false,
-        public eventRulesSetup = false,
-    ) {}
-
-    static clean = selectedSystem => input =>
-        new AlexaSettings(
-            input.enabled || false,
-            input.selectedSystem || selectedSystem,
-            input.accountLinked || false,
-            input.eventRulesSetup || false,
-        );
-
-    static cleanObservable = selectedSystem =>
-        map(AlexaSettings.clean(selectedSystem), AlexaSettings.clean(selectedSystem));
 }
 
 @UntilDestroy()
@@ -79,18 +53,13 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     readonly environment = environment;
     LANG = staticLang;
 
-    alexaSettingsCustomProperty: CustomAccountProperty<Partial<AlexaSettings>>;
-
     selectedTimeUnit: LimitSessionTimeItem;
     sessionLimitToggle: boolean;
     sessionLimitValue: number;
     currentMaxTimeUnit: number;
-    previousInputValue: number;
     saveSettings: Process;
     setWarningMessageThroughApplyService: () => void;
     selectElement;
-    alexaSettings: Partial<AlexaSettings>;
-    eventRulesBeingSetup = false;
 
     is2faDialogActive: boolean;
     system2faEnabled = false;
@@ -147,7 +116,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     constructor(
         configService: NxConfigService,
         private applyService: NxApplyService,
-        private cloudApi: NxCloudApiService,
         private dialogService: NxDialogsService,
         private menuService: NxMenuService,
         private processService: NxProcessService,
@@ -155,12 +123,6 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         private accountService: NxAccountService,
     ) {
         this.CONFIG = configService.getConfig();
-        if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
-            this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(
-                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT,
-                new AlexaSettings(),
-            );
-        }
     }
 
     DAY_MINS = DAY_MINS; // For template access
@@ -170,26 +132,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.menuService.selectedDetailsSection.set(menus.systemSettings.general.id);
         this.initProcess();
 
-        if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
-            delayInitial(this.alexaSettingsCustomProperty.value$)
-                .pipe(
-                    AlexaSettings.cleanObservable(this.system.id),
-                    switchMap(this.#syncEventRulesSetup),
-                    untilDestroyed(this),
-                )
-                .subscribe(
-                    settings => {
-                        this.alexaSettings = settings;
-                    },
-                    _ => {
-                        this.alexaSettings = {};
-                    },
-                );
-        }
-
-        this.system2faEnabled = this.systemsService.systems.find(
-            system => system.id === this.system.id,
-        )?.system2faEnabled;
+        this.system2faEnabled =
+            this.systemsService.systems.find(system => system.id === this.system.id)
+                ?.system2faEnabled || false;
     }
 
     ngOnChanges(changes: NgChanges<NxSystemStandardAdminComponent>): void {
@@ -326,9 +271,9 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             if (!this.sessionLimitValue) {
                 // prevent overwriting current value with default (in case of late init of the checkbox)
                 this.selectedTimeUnit = this.limitSessionTimeUnits.days;
-                this.sessionLimitValue = this.selectedTimeUnit.default;
+                this.sessionLimitValue = this.selectedTimeUnit.default || 0;
                 this.systemAndSecuritySettings.sessionLimitMinutes =
-                    this.selectedTimeUnit.default * DAY_MINS;
+                    (this.selectedTimeUnit.default || 0) * DAY_MINS;
                 this.updateTimeUnitInput(this.selectedTimeUnit);
             } else {
                 this.updateSessionLimitValue(this.sessionLimitValue);
@@ -363,100 +308,4 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
             });
         }
     }
-
-    // Alexa Methods
-    updateEventRules = (settings = { enabled: true }) => {
-        this.eventRulesBeingSetup = settings.enabled;
-        return delayInitial(this.system.updateAlexaRules(settings.enabled))
-            .pipe(
-                catchError(error => {
-                    console.error(error);
-                    return delayInitial(Promise.resolve(false));
-                }),
-                tap(setup => {
-                    if (settings.enabled) {
-                        this.alexaSettings = settings;
-                        this.alexaSettings.eventRulesSetup = !!setup && settings.enabled;
-                    }
-                    this.eventRulesBeingSetup = false;
-                    this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
-                }),
-            )
-            .toPromise();
-    };
-
-    #syncEventRulesSetup = (settings: Partial<AlexaSettings>) => {
-        return this.system.mediaserver.getEventRules().pipe(
-            switchMap(async rules => {
-                const checkCommand = (command: string) =>
-                    rules.find(rule => {
-                        const condition = JSON.parse(rule.eventCondition);
-                        const resourceName = condition.resourceName;
-                        return resourceName === command;
-                    });
-                const currentUserEmail = this.system.permissionManager.currentUser().email;
-                const layoutCommand = `"Alexa layout command for ${currentUserEmail}"`;
-                const customCommand = `"Alexa command for ${currentUserEmail}"`;
-                const rulesSetup = !!checkCommand(layoutCommand) && !!checkCommand(customCommand);
-                if (settings.eventRulesSetup !== rulesSetup) {
-                    settings.eventRulesSetup = rulesSetup;
-                    await this.alexaSettingsCustomProperty.save(settings, true);
-                }
-                return settings;
-            }),
-        );
-    };
-
-    #updateAlexa = (settings: Partial<AlexaSettings>) =>
-        this.CONFIG.cloudCapabilities.alexaIntegrationEnabled &&
-        delayInitial(this.alexaSettingsCustomProperty.save(settings))
-            .pipe(
-                tap(settings => {
-                    this.alexaSettings = settings;
-                }),
-                switchMap(this.updateEventRules),
-                map(setup => ({ ...settings, eventRulesSetup: !!setup })),
-                untilDestroyed(this),
-            )
-            .subscribe(settings => {
-                this.alexaSettings = settings;
-                this.alexaSettingsCustomProperty.save(this.alexaSettings, true);
-            });
-
-    toggleAlexaEnabled = (): void => {
-        const {
-            enabled,
-            // selectedSystem,
-            accountLinked = false,
-            eventRulesSetup = false,
-        } = this.alexaSettings;
-        this.alexaSettings = null;
-        this.#updateAlexa(
-            enabled
-                ? {
-                      enabled: false,
-                      accountLinked,
-                  }
-                : {
-                      enabled: true,
-                      accountLinked,
-                      eventRulesSetup,
-                      selectedSystem: this.system.id,
-                  },
-        );
-    };
-
-    toggleSystemSelected = () => {
-        if (this.alexaSettings.selectedSystem === this.system.id) {
-            return;
-        }
-        const { enabled, accountLinked = false, eventRulesSetup = false } = this.alexaSettings;
-        this.alexaSettings = null;
-        this.#updateAlexa({
-            enabled,
-            accountLinked,
-            eventRulesSetup,
-            selectedSystem: this.system.id,
-        });
-    };
 }
