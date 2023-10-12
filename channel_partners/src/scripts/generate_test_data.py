@@ -36,11 +36,11 @@ def run():
     with transaction.atomic():
         cloud_test_instance = CloudInstance.objects.get_or_create(name='cloud-test')[0]
         cloud_test_host = CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
-        nx_channel_partner_cloud_test = ChannelPartner.objects.get_or_create(name='Network Optix', instance=cloud_test_instance)[0]
+        nx_channel_partner_cloud_test = ChannelPartner.objects.get_or_create(name='Network Optix', cloud_host=cloud_test_host)[0]
 
         for i in range(25):
             print(f'Iteration #{i+1}')
-            channel_partner = ChannelPartner.objects.create(name=f'Test CP {i+1}', parent_channel_partner=nx_channel_partner_cloud_test, instance=cloud_test_instance)
+            channel_partner = ChannelPartner.objects.create(name=f'Test CP {i+1}', parent_channel_partner=nx_channel_partner_cloud_test, cloud_host=cloud_test_host)
             add_users_or_channel_partner(channel_partner)
             for j in range(25):
                 organization = Organization.objects.create(name=f'Test Org {j+1}', channel_partner=channel_partner)
@@ -51,7 +51,7 @@ def run():
             if i % 5 == 0:
                 sub_channel_partner = ChannelPartner.objects.create(name=f'Test CP {i + 1}',
                                                                 parent_channel_partner=channel_partner,
-                                                                instance=cloud_test_instance)
+                                                                cloud_host=cloud_test_host)
                 add_users_or_channel_partner(sub_channel_partner)
                 for j in range(25):
                     organization = Organization.objects.create(name=f'Test Org {j + 1}',
