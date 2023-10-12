@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { CdkStepper, CdkStepperModule } from '@angular/cdk/stepper';
+import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
 import { Component, OnInit, ViewChild, Inject, computed, signal, forwardRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
@@ -10,7 +10,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom, map } from 'rxjs';
 
-import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -56,7 +55,6 @@ type OrgItem = SearchableDropdownItem;
         NgxTranslateCutModule,
         LetDirective,
         NxSearchableDropdown,
-        NxAlertBlockComponent,
         NxRadioComponent,
         NxPreLoaderComponent,
         NxProcessButtonComponent,
@@ -66,7 +64,8 @@ type OrgItem = SearchableDropdownItem;
 })
 export class TransferOwnershipModalContent extends ModalBase<DT['return']> implements OnInit {
     @ViewChild('transferOwnershipForm') private form: NgForm;
-    @ViewChild('stepper') stepper: CdkStepper;
+
+    selectedIndex: number = 0;
 
     LANG = staticLang;
     icons = icons;
@@ -93,7 +92,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     advanceProcess = this.processService.createProcess(() => {
         this.newOwner =
             this.transferTargetType$$() === 'user' ? this.selectedUser.name : this.selectedOrg.name;
-        this.stepper.next();
+        this.selectedIndex += 1;
         return Promise.resolve();
     });
 
@@ -151,7 +150,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
             { errorCodes, ignoreError: true },
             async (res: SystemTransferInfo) => {
                 this.transferInfo = res;
-                this.stepper.next();
+                this.selectedIndex += 1;
                 this.unlock();
             },
             err => {
@@ -190,7 +189,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
             },
             { errorCodes, ignoreError: true },
             async (res: unknown) => {
-                this.stepper.next();
+                this.selectedIndex += 1;
                 this.unlock();
             },
             err => {

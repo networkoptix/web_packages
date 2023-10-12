@@ -26,7 +26,7 @@
     <nx-pre-loader *ngIf="!(userItems$$() && orgItems$$()); else content"></nx-pre-loader>
 
     <ng-template #content>
-        <nx-transfer-stepper #stepper>
+        <nx-transfer-stepper [(selectedIndex)]="selectedIndex">
             <cdk-step><ng-container [ngTemplateOutlet]="newOwnerSelect"></ng-container></cdk-step>
             <cdk-step><ng-container [ngTemplateOutlet]="confirmation"></ng-container></cdk-step>
             <cdk-step><ng-container [ngTemplateOutlet]="success"></ng-container></cdk-step>
@@ -192,13 +192,20 @@
                     ><strong>{{ aboutToTransfer | translateCut : 1 }}</strong></span
                 ><span>{{ aboutToTransfer | translateCut : 2 }}</span>
             </p>
-            <ng-template #content2>
-                <span
+            <div class="warning-block">
+                <div class="warning-block__header mb-1">
+                    <svg-icon
+                        [src]="icons.dirNonStandard + 'warning.svg'"
+                        [svgStyle]="{ height: '18px' }"
+                    ></svg-icon
+                    ><span translate>WARNING</span>
+                </div>
+                <p
                     *ngIf="currentOwnerType === 'user'"
                     translate
-                    >Once the ownership transfer is complete, you will be removed from the
-                    system.</span
                 >
+                    Once the ownership transfer is complete, you will be removed from the system.
+                </p>
                 <ul
                     class="from-org-warning"
                     *ngIf="currentOwnerType === 'org'"
@@ -211,21 +218,12 @@
                         Channel Partner and Organization users will be removed from this system
                     </li>
                 </ul>
-            </ng-template>
-            <!-- TODO: Create another warning block that matches the spec -->
-            <nx-alert-block
-                type="warning"
-                id="transfer-warning"
-                [iconSrc]="icons.dirNonStandard + 'warning.svg'"
-                [line1]="'WARNING' | translate"
-                [content2]="content2"
-            >
-            </nx-alert-block>
+            </div>
         </div>
         <div class="modal-footer modal-footer__justify-between">
             <button
                 class="btn btn-default"
-                (click)="stepper.previous()"
+                (click)="selectedIndex = selectedIndex - 1"
                 [disabled]="transferToUser.processing || transferToOrg.processing"
             >
                 <svg-icon

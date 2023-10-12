@@ -45,6 +45,33 @@
     }
 }
 
+.warning-block {
+    color: var(--card-simple-warning-color);
+    background-color: var(--card-simple-warning-bg);
+    border: 1px solid var(--card-simple-warning-border-color);
+
+    padding: 5px 10px;
+
+    &__header {
+        display: flex;
+        justify-content: start;
+        align-items: center;
+
+        // gap: 2px;
+
+        height: 20px;
+        line-height: 20px;
+
+        font-size: 14px;
+        font-family: var(--font-family-medium);
+
+        svg-icon {
+            display: flex;
+        }
+    }
+
+}
+
 .from-org-warning {
     padding-inline-start: 1rem;
 }
