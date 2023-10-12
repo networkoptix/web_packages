@@ -10,16 +10,14 @@ from random import randint
 from typing import ContextManager
 
 import urllib3
-from selenium import webdriver
-from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.remote.webdriver import WebDriver
 
 import robot_keywords
 import robot_lists as rl
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
+from browsers.chrome import ChromeBrowser
 from email_access import Email
-from login import LoginDialog
 from generic_elements import Button
 from generic_elements import Checkbox
 from generic_elements import DropDown
@@ -29,6 +27,7 @@ from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
 from generic_elements import Tooltip
+from login import LoginDialog
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -235,11 +234,7 @@ def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeo
         pass
 
 def get_headless_chrome():
-    chrome_options = Options()
-    chrome_options.add_argument("--enable-logging")
-    chrome_options.add_argument("--log-level=3")
-    driver = webdriver.Chrome(options=chrome_options)
-    return driver
+    return ChromeBrowser()
 
 
 @contextmanager
