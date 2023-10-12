@@ -83,6 +83,9 @@ export interface NxSystemCamera {
     recordingSettings: RecordingSettings;
     recordingStatus: RecordingStatus;
     webRtcUrl: ((param: { position: string | null }, resolvedRelay?: string) => string) | null;
+
+    // Permissions
+    canEdit: boolean;
 }
 
 export enum CameraStatus {
