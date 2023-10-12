@@ -1,32 +1,25 @@
 import datetime
-from dataclasses import dataclass
 from datetime import timedelta
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
-from enum import Enum
-from itertools import chain
-from typing import Dict, Union, Literal, List
-import random
-import string
-import time
-import llutil
+from typing import Dict, List
 import uuid
 
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import User, PermissionsMixin, BaseUserManager, Permission
-from django.core.exceptions import ValidationError
+from django.contrib.auth.models import User, PermissionsMixin, Permission
 from django.db import models
 from django.db.models import Sum, F, QuerySet
-from django.db.models.functions import Concat
-from django.shortcuts import reverse
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django_cte import CTEManager, With
+
+from channel_partners.utils import FieldOriginalMixin
 from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
+
 
 class Empty:
     pass
@@ -37,7 +30,8 @@ class AuthToken(Token):
     created_by = models.ForeignKey(settings.AUTH_USER_MODEL, blank=True, null=True, on_delete=models.SET_NULL)
     name = models.CharField(max_length=255, blank=True)
     key = models.CharField("Key", max_length=40)
-    internal = models.BooleanField(default=False, help_text='Only for internal services (such as clouddb). These keys have a higher level of access.')
+    internal = models.BooleanField(default=False,
+                                   help_text='Only for internal services (such as clouddb). These keys have a higher level of access.')
 
     # Remove user from original Token model
     user = None
@@ -126,12 +120,12 @@ class CloudHost(models.Model):
         return f'https://{self.hostname}'
 
 
-class CloudSystemId(ChannelPartnerStates, models.Model):
+class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     system_id = models.UUIDField()
     usage_issue_detected = models.BooleanField(default=False)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
-    organization = models.ForeignKey('Organization', null=True, blank=True,
-                                     on_delete=models.CASCADE, related_name='cloud_systems')
+    organization = models.ForeignKey('Organization', null=True, blank=True, on_delete=models.CASCADE,
+                                     related_name='cloud_systems')
     name = models.CharField(max_length=150, blank=True)
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False,
                                 default=ChannelPartnerStates.ACTIVE)
@@ -142,6 +136,8 @@ class CloudSystemId(ChannelPartnerStates, models.Model):
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
+
+    observed_fields = ('organization_id', 'state')
 
     def __str__(self):
         return self.name or str(self.system_id)
@@ -185,8 +181,34 @@ class CloudSystemId(ChannelPartnerStates, models.Model):
 
     def save(self, *args, **kwargs):
         self.system_id = models.UUIDField().to_python(self.system_id)
+        original_organization_id = self._original_organization_id
+        original_state = self._original_state
         super().save(*args, **kwargs)
+
+        if (self.organization_id and self.organization_id != original_organization_id) or (
+                self.state != original_state and self.state == ChannelPartnerStates.SHUTDOWN):
+            # TODO: Move to celery and use locks to make sure there is no race condition
+            self.negate_all_service(organization_id=original_organization_id)
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
+
+    def negate_all_service(self, organization_id):
+        existing_services = self.calculate_current_services()
+        for service_id, service_dict in existing_services.get('services').items():
+            current_qty = existing_services.get('services').get(service_id, {}).get('quantity')
+            if current_qty not in (None, 0):
+                qty_delta = -current_qty
+                ChannelPartnerServiceRecord.objects.create(
+                    quantity=qty_delta,
+                    service_id=service_id,
+                    effective_ts=timezone.now(),
+                    in_effect=True,
+                    cloud_system=self,
+                    organization_id=organization_id,
+                    created_by=None
+                )
+        self.calculate_current_services()
+        ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
+
 
     @property
     def effective_state(self):
@@ -199,7 +221,9 @@ class CloudSystemId(ChannelPartnerStates, models.Model):
 
     def calculate_current_services(self):
         services = {str(record['service']): {'quantity': record['quantity']}
-                    for record in self.service_records.values('service').annotate(quantity=Sum('quantity'))}
+                    for record in
+                    self.service_records.filter(organization=self.organization).values('service').annotate(
+                        quantity=Sum('quantity'))}
         self.current_services = {
             'services': services,
             'last_update_ts': round(timezone.now().timestamp())
@@ -240,9 +264,9 @@ class CloudSystemId(ChannelPartnerStates, models.Model):
         return data
 
     def remove_system_users_data(self, user: CloudUser) -> dict:
-        users = OrganizationToUser.objects\
-            .exclude(user__email=user.email)\
-            .filter(organization=self.organization)\
+        users = OrganizationToUser.objects \
+            .exclude(user__email=user.email) \
+            .filter(organization=self.organization) \
             .values_list('user__email', flat=True)
         data = BatchRequestItems(
             items=[
@@ -315,9 +339,10 @@ class ChannelPartnerPermissions:
     add_remove_service_quantities = 'add_remove_service_quantities'
 
 
-class ChannelPartner(ChannelPartnerStates, models.Model):
+class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
-    users = models.ManyToManyField(CloudUser, blank=True, related_name='channel_partners', through='ChannelPartnerToUser')
+    users = models.ManyToManyField(CloudUser, blank=True, related_name='channel_partners',
+                                   through='ChannelPartnerToUser')
     name = models.CharField(max_length=150)
     parent_channel_partner = models.ForeignKey('ChannelPartner', null=True, blank=True, on_delete=models.CASCADE, related_name='channel_partners')
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False, default=ChannelPartnerStates.ACTIVE)
@@ -332,6 +357,8 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
+    observed_fields = ('state',)
+
     tree = CTEManager()
 
     MAX_DEPTH = 5
@@ -339,15 +366,21 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
     class Meta:
         permissions = [
             (ChannelPartnerPermissions.configure_channel_partner, 'Change CP account settings if we have any'),
-            (ChannelPartnerPermissions.manage_users, 'Add/Remove users from CP account, assign them permissions, including Administrator permissions'),
-            (ChannelPartnerPermissions.add_remove_sub_channel_partners, 'A permission that allows to manage sub-CP accounts. This permission allow CP user to create/delete only direct children of their CP account.'),
+            (ChannelPartnerPermissions.manage_users,
+             'Add/Remove users from CP account, assign them permissions, including Administrator permissions'),
+            (ChannelPartnerPermissions.add_remove_sub_channel_partners,
+             'A permission that allows to manage sub-CP accounts. This permission allow CP user to create/delete only direct children of their CP account.'),
             (ChannelPartnerPermissions.add_remove_organizations, 'Create and delete Organizations for CP account.'),
             (ChannelPartnerPermissions.alter_state_sub_channel_partners, 'Suspend & Shutdown Sub Channel Partners'),
             (ChannelPartnerPermissions.alter_state_organizations, 'Suspend & Shutdown Organizations'),
-            (ChannelPartnerPermissions.administer_organization_systems, 'Access/administer organization\'s systems. Final access is determined by organization\'s settings.'),
-            (ChannelPartnerPermissions.view_service_reports, 'Ability to view how many services are consumed by direct children of the CP. With a breakdown for each organization by services, by systems and system groups, for each Sub-CP by services.'),
-            (ChannelPartnerPermissions.add_remove_service_quantities, 'Change the quantity of services for child organizations')
+            (ChannelPartnerPermissions.administer_organization_systems,
+             'Access/administer organization\'s systems. Final access is determined by organization\'s settings.'),
+            (ChannelPartnerPermissions.view_service_reports,
+             'Ability to view how many services are consumed by direct children of the CP. With a breakdown for each organization by services, by systems and system groups, for each Sub-CP by services.'),
+            (ChannelPartnerPermissions.add_remove_service_quantities,
+             'Change the quantity of services for child organizations')
         ]
+
     permissions = ChannelPartnerPermissions
 
     def __str__(self):
@@ -400,7 +433,8 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         return False
 
     def can_add_or_remove_sub_chanel_partners(self, user: CloudUser):
-        return self.can_create_sub_channels and self.has_perm(user, ChannelPartnerPermissions.add_remove_sub_channel_partners)
+        return self.can_create_sub_channels and self.has_perm(user,
+                                                              ChannelPartnerPermissions.add_remove_sub_channel_partners)
 
     def can_add_or_remove_organizations(self, user: CloudUser):
         return self.has_perm(user, ChannelPartnerPermissions.add_remove_organizations)
@@ -438,6 +472,8 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
             self.cloud_host = self.parent_channel_partner.cloud_host
 
+        original_state = self._original_state
+
         super().save(*args, **kwargs)
 
         if self.parent_channel_partner and new:
@@ -453,6 +489,10 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         if not self.allow_changing_services and not new:
             self.disable_successors_acs()
 
+        if self._original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
+            for system in CloudSystemId.objects.filter(organization__channel_partner__id=self.successors):
+                system.negate_all_service(organization_id=system.organization_id)
+
     def disable_successors_acs(self):
         successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
         for successor in successors:
@@ -465,11 +505,13 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
             value = self
         parent_conditions = models.Q(**{base_arg + (f'__{suffix_arg}' if suffix_arg else ''): value})
         for i in range(self.MAX_DEPTH):
-            parent_conditions |= models.Q(**{base_arg + f'__{secondary_arg}' * (i + 1) + (f'__{suffix_arg}' if suffix_arg else ''): value})
+            parent_conditions |= models.Q(
+                **{base_arg + f'__{secondary_arg}' * (i + 1) + (f'__{suffix_arg}' if suffix_arg else ''): value})
         return parent_conditions
 
     def service_changes_summary(self, start_ts: datetime.date = None):
-        channel_partner_condition = self.parent_channel_partner_args('service', 'parent_service', value=models.OuterRef('pk'))
+        channel_partner_condition = self.parent_channel_partner_args('service', 'parent_service',
+                                                                     value=models.OuterRef('pk'))
         if start_ts is None:
             start_ts = timezone.now() - relativedelta(months=1)
         start_calc = {
@@ -486,7 +528,7 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         end_calc = list(self.services.filter().annotate(quantity=models.Subquery(
             queryset=ChannelPartnerServiceRecord.objects.filter(
                 channel_partner_condition,
-                created_ts__lt=start_ts+relativedelta(months=1)
+                created_ts__lt=start_ts + relativedelta(months=1)
             ).annotate(sum=models.Func(F('quantity'), function='SUM')).values('sum'),
             output_field=models.IntegerField()
         )))
@@ -505,9 +547,11 @@ class ChannelPartner(ChannelPartnerStates, models.Model):
         if start_ts is None:
             start_ts = timezone.now() - relativedelta(months=1)
         qs = ChannelPartnerServiceRecord.objects.filter(
-            self.parent_channel_partner_args(base_arg='service', secondary_arg='parent_service', suffix_arg='created_by_channel_partner', value=self),
-            created_ts__gte=start_ts, created_ts__lt=start_ts+relativedelta(months=1)
-        ).select_related('cloud_system__organization', 'created_by', f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
+            self.parent_channel_partner_args(base_arg='service', secondary_arg='parent_service',
+                                             suffix_arg='created_by_channel_partner', value=self),
+            created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
+        ).select_related('cloud_system__organization', 'created_by',
+                         f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
         return qs
 
@@ -588,7 +632,6 @@ class ChannelPartnerToUser(models.Model):
             models.constraints.UniqueConstraint(fields=['channel_partner', 'user'], name='unique_channel_partner_user')
         ]
 
-
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
 
@@ -635,9 +678,7 @@ class ChannelPartnerAccessLevel:
     ]
 
 
-
-class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model):
-
+class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE, related_name='organizations')
     name = models.CharField(max_length=150)
@@ -659,17 +700,30 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
+    observed_fields = ('state',)
+
     class Meta:
         permissions = [
-            (OrganizationPermissions.manage_systems, 'Can add and remove systems to the Organization and create, edit, delete groups'),
-            (OrganizationPermissions.manage_users, 'Add/Remove users from the Organization, assign them permissions, including Administrator permissions'),
+            (OrganizationPermissions.manage_systems,
+             'Can add and remove systems to the Organization and create, edit, delete groups'),
+            (OrganizationPermissions.manage_users,
+             'Add/Remove users from the Organization, assign them permissions, including Administrator permissions'),
             (OrganizationPermissions.configure_organization, 'Edit Organization settings'),
-            (OrganizationPermissions.view_service_reports, 'Ability to view how many services are consumed by this Organization.'),
+            (OrganizationPermissions.view_service_reports,
+             'Ability to view how many services are consumed by this Organization.'),
             (OrganizationPermissions.view_health_monitoring, 'View health monitoring information'),
             (OrganizationPermissions.access_systems, 'Access Organization’s systems with system role\'s permissions')
 
         ]
+
     permissions = OrganizationPermissions
+
+    def save(self, *args, **kwargs):
+        original_state = self._original_state
+        super().save(*args, **kwargs)
+        if original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
+            for system in self.cloud_systems.all():
+                system.negate_all_service(organization_id=self.id)
 
     def __str__(self):
         return self.name
@@ -704,12 +758,13 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
             start_ts = timezone.now() - relativedelta(months=1)
         start_calc = {str(service.id): service
                       for service in ChannelPartnerService.objects.filter(
-                channelpartnerservicerecord__cloud_system__organization=self,
+                channelpartnerservicerecord__organization=self,
                 channelpartnerservicerecord__created_ts__lt=start_ts
             ).annotate(quantity=Sum('channelpartnerservicerecord__quantity'))}
 
         end_calc = list(ChannelPartnerService.objects.filter(
-            channelpartnerservicerecord__cloud_system__organization=self, channelpartnerservicerecord__created_ts__lt=start_ts+relativedelta(months=1)
+            channelpartnerservicerecord__organization=self,
+            channelpartnerservicerecord__created_ts__lt=start_ts + relativedelta(months=1)
         ).annotate(quantity=Sum('channelpartnerservicerecord__quantity')))
 
         summary = []
@@ -726,7 +781,7 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
         if start_ts is None:
             start_ts = timezone.now() - relativedelta(months=1)
         return ChannelPartnerServiceRecord.objects.filter(
-            cloud_system__organization=self, created_ts__gte=start_ts, created_ts__lt=start_ts+relativedelta(months=1)
+            organization=self, created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
         ).order_by('created_ts')
 
     def allowed_role_names(self, perm: str):
@@ -736,7 +791,9 @@ class Organization(ChannelPartnerAccessLevel, ChannelPartnerStates, models.Model
         allowed_role_names = self.allowed_role_names(perm)
         if self.users.filter(pk=user.pk, organizationtouser__roles__has_any_keys=allowed_role_names).exists():
             return True
-        channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner, roles__has_any_keys=['Administrator', 'Manager']).exists()
+        channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner,
+                                                                      roles__has_any_keys=['Administrator',
+                                                                                           'Manager']).exists()
         if channel_partner_manager:
             if self.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR:
                 role = 'Organization Administrator'
@@ -891,7 +948,14 @@ class ChannelPartnerServiceRecord(models.Model):
     effective_ts = models.DateTimeField()
     in_effect = models.BooleanField(default=False)
     created_by = models.ForeignKey(CloudUser, on_delete=models.SET_NULL, null=True)
-    cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.SET_NULL, null=True, related_name='service_records')
+    cloud_system = models.ForeignKey(CloudSystemId, on_delete=models.SET_NULL, null=True,
+                                     related_name='service_records')
+    organization = models.ForeignKey(Organization, on_delete=models.SET_NULL, null=True, related_name='service_records')
+
+    def save(self, *args, **kwargs):
+        if self._state.adding and not self.organization:
+            self.organization = self.cloud_system.organization
+        super().save(*args, **kwargs)
 
 
 class ServiceUsage(models.Model):
@@ -942,12 +1006,14 @@ class ServiceUsage(models.Model):
 
 class ServiceToSubChannelProperties(models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE, related_name='service_properties')
-    service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE, related_name='channel_partners_properties')
+    service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE,
+                                related_name='channel_partners_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['channel_partner', 'service'], name='unique_channel_partner_service_properties')
+            models.constraints.UniqueConstraint(fields=['channel_partner', 'service'],
+                                                name='unique_channel_partner_service_properties')
         ]
 
     def can_access(self, user: CloudUser):
@@ -986,7 +1052,8 @@ class ServiceToOrganizationProperties(models.Model):
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['organization', 'service'], name='unique_organization_service_properties')
+            models.constraints.UniqueConstraint(fields=['organization', 'service'],
+                                                name='unique_organization_service_properties')
         ]
 
     @classmethod
@@ -1048,7 +1115,8 @@ class ExternalIdManager(models.Manager):
 
 class ExternalId(models.Model):
     object_key = ''
-    created_by = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE, related_name='%(class)s_created_external_ids')
+    created_by = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE,
+                                   related_name='%(class)s_created_external_ids')
     custom_id = models.CharField(max_length=100)
     objects = ExternalIdManager()
 
@@ -1068,7 +1136,8 @@ class ChannelPartnerExternalId(ExternalId):
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'], name='channelpartner_unique_external_id')
+            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'],
+                                                name='channelpartner_unique_external_id')
         ]
 
 
@@ -1078,7 +1147,8 @@ class OrganizationExternalId(ExternalId):
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'], name='organization_unique_external_id')
+            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'],
+                                                name='organization_unique_external_id')
         ]
 
 
@@ -1088,17 +1158,20 @@ class CloudSystemExternalId(ExternalId):
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'], name='cloudsystem_unique_external_id')
+            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'],
+                                                name='cloudsystem_unique_external_id')
         ]
 
 
 class ChannelPartnerServiceExternalId(ExternalId):
     object_key = 'channel_partner_service'
-    channel_partner_service = models.ForeignKey('ChannelPartnerService', on_delete=models.CASCADE, related_name='external_ids')
+    channel_partner_service = models.ForeignKey('ChannelPartnerService', on_delete=models.CASCADE,
+                                                related_name='external_ids')
 
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'], name='channelpartnerservice_unique_external_id')
+            models.constraints.UniqueConstraint(fields=['created_by', 'custom_id'],
+                                                name='channelpartnerservice_unique_external_id')
         ]
 
 

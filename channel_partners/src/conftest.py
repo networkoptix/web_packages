@@ -243,9 +243,9 @@ def org_service_factory(cp_service_factory):
 
 @pytest.fixture()
 def service_record_factory():
-    def factory(service, cloud_system, quantity=1):
+    def factory(service, cloud_system, organization=None, quantity=1):
         return baker.make(ChannelPartnerServiceRecord, service=service,
-                          cloud_system=cloud_system, quantity=quantity)
+                          cloud_system=cloud_system, quantity=quantity, organization=organization or cloud_system.organization)
 
     return factory
 
