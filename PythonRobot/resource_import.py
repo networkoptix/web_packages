@@ -235,17 +235,10 @@ def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeo
         pass
 
 def get_headless_chrome():
-    # TODO: remove logging stuff and restore headless option
     chrome_options = Options()
     chrome_options.add_argument("--enable-logging")
     chrome_options.add_argument("--log-level=3")
-    # chrome_options.add_argument("--headless")
-
-    # capabilities = DesiredCapabilities.CHROME
-    # capabilities['goog:loggingPrefs'] = {'browser': 'ALL'}
-
     driver = webdriver.Chrome(options=chrome_options)
-    # driver.execute_script("localStorage.setItem('theme', 'light');")
     return driver
 
 
