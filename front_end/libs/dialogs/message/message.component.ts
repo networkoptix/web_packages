@@ -63,7 +63,7 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
         private processService: NxProcessService,
         private account: NxAccountService,
         private cloudApiService: NxCloudApiService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
         @Inject(WINDOW) private window: Window,
     ) {

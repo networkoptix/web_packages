@@ -61,16 +61,16 @@ export class NxEventGeneratorWidgetComponent
     errorParams: boolean;
     response: string = '';
 
-    static IDENTIFIER = 'event-generator';
-    static NAME = 'Generic Event Generator';
-    static SIZES = [
+    static override IDENTIFIER = 'event-generator';
+    static override NAME = 'Generic Event Generator';
+    static override SIZES = [
         { name: 'Medium', value: { cols: 4, rows: 5 } },
         { name: 'Large', value: { cols: 4, rows: 6 } },
     ];
 
-    static SELECTED_SIZE = 1;
+    static override SELECTED_SIZE = 1;
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         editMode: false,
         selectedSystem: '',
     };

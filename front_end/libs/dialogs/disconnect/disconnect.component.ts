@@ -56,7 +56,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
         private toastService: NxToastService,
         private cloudApiService: NxCloudApiService,
         private systemsService: NxSystemsService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
         @Inject(WINDOW) private window: Window,
     ) {

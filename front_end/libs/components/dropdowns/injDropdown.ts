@@ -1,4 +1,4 @@
-import { Injectable, OnChanges, OnInit } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ControlValueAccessor } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
@@ -6,13 +6,12 @@ import staticLang from '@language_static';
 import { Watcher } from '@services/apply.service/watcher';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NgChanges } from '@utils/ng-changes';
 
 const noop = () => {};
 
 @UntilDestroy()
 @Injectable()
-export abstract class BaseDropdown implements OnInit, OnChanges, ControlValueAccessor {
+export abstract class BaseDropdown implements ControlValueAccessor {
     CONFIG: IConfig;
     LANG = staticLang;
     message: string;
@@ -31,10 +30,6 @@ export abstract class BaseDropdown implements OnInit, OnChanges, ControlValueAcc
         this.message = this.LANG.pleaseSelect;
         this.show = false;
     }
-
-    ngOnInit(): void {}
-
-    ngOnChanges(changes: NgChanges<BaseDropdown>): void {}
 
     trackItem(index, item) {
         return item ? item.value : undefined;

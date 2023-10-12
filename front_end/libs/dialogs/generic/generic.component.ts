@@ -15,7 +15,7 @@ import { PipesModule } from '@pipes/pipes.module';
 })
 export class GenericModalContent extends ModalBase<DT['return']> {
     constructor(
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public dialogData: DT['data'],
     ) {
         super(dialogRef);

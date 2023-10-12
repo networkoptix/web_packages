@@ -24,9 +24,9 @@ import { FirstPartyWidget } from '../helper-classes';
 export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
     typeof NxThirdPartyWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'third-party';
-    static NAME = 'Third Party';
-    static SIZES = [
+    static override IDENTIFIER = 'third-party';
+    static override NAME = 'Third Party';
+    static override SIZES = [
         { name: '2 x 2', value: { cols: 2, rows: 2 } },
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
         { name: '4 x 2', value: { cols: 4, rows: 2 } },
@@ -36,7 +36,7 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
 
     static sharedState$: SharedWidgetState;
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         useSourceUrl: false,
         sourceUrl: '',
         source: '',

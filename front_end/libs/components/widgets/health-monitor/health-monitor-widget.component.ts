@@ -88,15 +88,15 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
 > {
     LANG = staticLang;
     icons = icons;
-    static IDENTIFIER = 'health-monitor';
-    static NAME = 'Health Monitor';
-    static SIZES = [
+    static override IDENTIFIER = 'health-monitor';
+    static override NAME = 'Health Monitor';
+    static override SIZES = [
         { name: '2 x 2', value: { cols: 2, rows: 2 } },
         { name: '4 x 2', value: { cols: 4, rows: 2 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         selectedSystem: '',
         resources: {},
         updateInterval: 5,

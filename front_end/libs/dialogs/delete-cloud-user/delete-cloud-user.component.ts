@@ -32,7 +32,7 @@ export class DeleteCloudUserModalContent extends ModalBase<DT['return']> {
     constructor(
         private processService: NxProcessService,
         private cloudService: NxCloudApiService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
     ) {
         super(dialogRef);
     }

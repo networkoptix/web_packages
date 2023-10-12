@@ -196,7 +196,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     private systemsService: NxSystemsService;
     private ribbonService: NxRibbonService;
     private router: Router;
-    public injector: Injector;
+    public override injector: Injector;
 
     constructor(
         currentUserEmail: string,

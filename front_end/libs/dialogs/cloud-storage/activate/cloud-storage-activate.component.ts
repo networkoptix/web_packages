@@ -23,7 +23,7 @@ import { CloudStorageModule } from '../cloud-storage.module';
     imports: [CloudStorageModule, NxAddSvgSrcDirective, NxFocusMeDirective],
 })
 export class CloudStorageActivateModalContent extends BaseCloudStorageActionModalContent {
-    actionType = CloudStorageActionType.ACTIVATE;
+    override actionType = CloudStorageActionType.ACTIVATE;
     icons = icons;
 
     constructor(
@@ -32,7 +32,7 @@ export class CloudStorageActivateModalContent extends BaseCloudStorageActionModa
         public renderer: Renderer2,
         dialogRef: DialogRef<DT['return']>,
         private processService: NxProcessService,
-        @Inject(DIALOG_DATA) protected dialogData: DT['data'],
+        @Inject(DIALOG_DATA) protected override dialogData: DT['data'],
     ) {
         super(dialogRef);
         this.init();

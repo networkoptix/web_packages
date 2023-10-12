@@ -58,14 +58,14 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxBookmarksWidgetComponent extends FirstPartyWidget<
     typeof NxBookmarksWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'bookmarks';
-    static NAME = 'Bookmarks';
-    static SIZES = [
+    static override IDENTIFIER = 'bookmarks';
+    static override NAME = 'Bookmarks';
+    static override SIZES = [
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
         { name: '4 x 6', value: { cols: 4, rows: 6 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         selectedSystem: '',
     };
 

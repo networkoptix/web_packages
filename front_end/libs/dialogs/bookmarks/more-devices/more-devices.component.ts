@@ -31,7 +31,7 @@ export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT>
     LANG = staticLang;
 
     constructor(
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public dialogData: DT['data'],
     ) {
         super(dialogRef);

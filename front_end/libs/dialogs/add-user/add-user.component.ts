@@ -66,7 +66,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         configService: NxConfigService,
         private processService: NxProcessService,
         private toastService: NxToastService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
         super(dialogRef);

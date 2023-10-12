@@ -54,14 +54,14 @@ interface AssetTypeInterface {
 export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
     typeof NxAssetExplorerWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'asset-explorer';
-    static NAME = 'Asset Explorer';
-    static SIZES = [
+    static override IDENTIFIER = 'asset-explorer';
+    static override NAME = 'Asset Explorer';
+    static override SIZES = [
         { name: '2 x 4', value: { cols: 2, rows: 4 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         assetTypes: [
             { name: 'Agreements', id: 'agreement', value: true },
             { name: 'Custom Clients', id: 'custom_clients', value: true },

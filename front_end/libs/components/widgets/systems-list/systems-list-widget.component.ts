@@ -32,17 +32,17 @@ import { FirstPartyWidget } from '../helper-classes';
 export class NxSystemsListWidgetComponent extends FirstPartyWidget<
     typeof NxSystemsListWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'systems-list';
-    static NAME = 'Systems';
-    static SIZES = [
+    static override IDENTIFIER = 'systems-list';
+    static override NAME = 'Systems';
+    static override SIZES = [
         { name: 'Small', value: { cols: 4, rows: 4 } },
         { name: 'Medium', value: { cols: 8, rows: 4 } },
         { name: 'Large', value: { cols: 16, rows: 4 } },
     ];
 
-    static SELECTED_SIZE = 1;
+    static override SELECTED_SIZE = 1;
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         editMode: false,
         searchEnabled: true,
         systems: null,

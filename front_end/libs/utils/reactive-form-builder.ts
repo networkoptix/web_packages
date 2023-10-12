@@ -19,7 +19,7 @@ export class NxFormControl<T> extends FormControl {
         super(value, opts);
         this.initialValue = cloneDeep(this.value);
     }
-    reset(): void {
+    override reset(): void {
         this.setValue(cloneDeep(this.initialValue));
     }
 

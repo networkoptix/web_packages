@@ -32,7 +32,7 @@ export class NewFeatureInformationModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
     constructor(
         public dialogsService: NxDialogsService,
-        protected dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) dialogData: DT['data'],
     ) {
         super(dialogRef);

@@ -116,13 +116,13 @@ import { NxUriCacheService } from './uri-cache.service';
  * Ideally, methods on NxSystemAPI with be labeled as deprecated with the last supported version noted.
  */
 export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConnection {
-    readonly version: number;
-    public readonly requiresPassword: boolean = false;
+    override readonly version: number;
+    public override readonly requiresPassword: boolean = false;
     private readonly cookieLoginSupport: boolean;
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
-    protected injector: Injector;
+    protected override injector: Injector;
     readonly sessionFreshnessSec: number = 600;
 
     protected _vmsToken: string;
@@ -174,7 +174,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.injector.get(SessionStorageService);
     }
 
-    public get isSessionOauth() {
+    public override get isSessionOauth() {
         return !environment.isLocal || (this.currentUser as t.CurrentUser)?.type === 'cloud';
     }
 
@@ -238,7 +238,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         () => false,
         Infinity,
     )
-    public setAccessTokenAsCookie(): Observable<true | t.UserSession> {
+    public override setAccessTokenAsCookie(): Observable<true | t.UserSession> {
         // Short circuit for new system, or if the token is already set as a cookie by the interceptor.
         if (
             this.CONFIG.newSystem ||
@@ -299,7 +299,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    protected retryHandler(request) {
+    protected override retryHandler(request) {
         return request.pipe(
             mergeMap(
                 (
@@ -355,7 +355,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    generateHeaders(): any {
+    override generateHeaders(): any {
         let headers = new HttpHeaders();
         // if (!environment.isLocal && this.authGet) {
         //     params.auth = this.authGet;
@@ -427,7 +427,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         ).pipe(map(() => this.buildHeader(customHttpHeaders, this.requiresToken(url))));
 
     @useJsonRpc
-    protected delete<T>(url: string, opts?: WithoutRT) {
+    protected override delete<T>(url: string, opts?: WithoutRT) {
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         if (this.requiresWeb(url)) {
@@ -567,7 +567,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @useJsonRpc
-    protected post<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
+    protected override post<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         url = `${this.urlBase}${url}`;
@@ -580,7 +580,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @useJsonRpc
-    protected put<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
+    protected override put<T>(url: string, data?: Record<string, unknown>, opts?: WithoutRT) {
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         if (this.requiresWeb(url)) {
@@ -597,7 +597,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @useJsonRpc
-    protected patch<T>(url: string, data: Record<string, unknown>, opts?: WithoutRT) {
+    protected override patch<T>(url: string, data: Record<string, unknown>, opts?: WithoutRT) {
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         if (this.requiresWeb(url)) {
@@ -614,7 +614,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
-    public getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
+    public override getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
         let headers: RequestOpts['headers'];
         if (forceReload) {
             // Clean cache to
@@ -664,15 +664,15 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.userRequest;
     }
 
-    public getCurrentServerInfo(): Observable<any> {
+    public override getCurrentServerInfo(): Observable<any> {
         return this.get('/rest/v1/servers/this');
     }
 
-    public checkIfConnectedToServer(serverId: string): Observable<boolean> {
+    public override checkIfConnectedToServer(serverId: string): Observable<boolean> {
         return this.getCurrentServerInfo().pipe(map(data => data.id === serverId));
     }
 
-    public isSessionFresh() {
+    public override isSessionFresh() {
         if (this.CONFIG.newSystem || !this.accessToken) {
             return of(false);
         }
@@ -683,7 +683,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    loginToken(username: string, password: string, remember: boolean): Observable<t.UserSession> {
+    override loginToken(
+        username: string,
+        password: string,
+        remember: boolean,
+    ): Observable<t.UserSession> {
         return this.post<t.UserSession>('/rest/v1/login/sessions', {
             username,
             password,
@@ -698,11 +702,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    loginTokenUrl(token: string): Observable<any> {
+    override loginTokenUrl(token: string): Observable<any> {
         return this.get(`/rest/v1/login/sessions/${token}`, { params: { setCookie: true } });
     }
 
-    loginOauth(code: string, skipSetting?: boolean) {
+    override loginOauth(code: string, skipSetting?: boolean) {
         const params = {
             code,
             grant_type: 'authorization_code',
@@ -745,7 +749,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
 
-    async logout() {
+    override async logout() {
         let { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
         let cloudLogoutObservable = of({});
         if (this.CONFIG.cloudSystemId && refreshToken) {
@@ -775,31 +779,31 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncPersistent
-    getApiDoc(type: APIDocType = 'main'): Promise<APIDoc> {
+    override getApiDoc(type: APIDocType = 'main'): Promise<APIDoc> {
         return this.get(this.apiDocURL[type]).toPromise();
     }
 
     @memoizeAsyncPersistent
-    fetchApiToolJSON(route: string): Promise<APIDoc> {
+    override fetchApiToolJSON(route: string): Promise<APIDoc> {
         return this.get<APIDoc>(`/static/${route}`).toPromise();
     }
 
     @memoizeAsyncPersistent
-    getAPIToolManifest(): Promise<MenuManifest> {
+    override getAPIToolManifest(): Promise<MenuManifest> {
         return this.get('/static/openapi_manifest.json')
             .toPromise()
             .catch(() => apiTool.defaultManifest);
     }
 
     @memoizeAsyncPersistent
-    getApiChangelog(): Promise<string> {
+    override getApiChangelog(): Promise<string> {
         return this.http
             .get(`${this.urlBase}/web/static/api_changelog.md`, { responseType: 'text' })
             .toPromise();
     }
 
     @memoizeAsyncPersistent
-    getApiPreamble(): Promise<string> {
+    override getApiPreamble(): Promise<string> {
         return this.http
             .get(`${this.urlBase}/web/static/api_preamble.md`, { responseType: 'text' })
             .toPromise();
@@ -807,7 +811,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     protected updateSystemSettings$ = new BehaviorSubject('');
 
-    getSystemSettings(): Promise<any> {
+    override getSystemSettings(): Promise<any> {
         this.updateSystemSettings$.next('update');
         return firstValueFrom(this.getSystemSettingsHandler());
     }
@@ -825,7 +829,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
+    override updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
         return (
             Object.keys(updateParams).length > 0
                 ? this.patch<t.Settings>('/rest/v1/system/settings', updateParams)
@@ -839,7 +843,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getMediaServers(useCache: boolean): Observable<RestV1ServerCompat[]> {
+    override getMediaServers(useCache: boolean): Observable<RestV1ServerCompat[]> {
         const endpoint = '/rest/v1/servers';
         return this.getWith(endpoint, serverKeyMapV1, {
             headers: this.cacheHeader(useCache),
@@ -875,14 +879,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         };
     }
 
-    getCamera(id: string): Observable<RestV1CameraCompat> {
+    override getCamera(id: string): Observable<RestV1CameraCompat> {
         return this.getWith('/rest/v1/devices', cameraKeyMapV1, {
             params: { id: this.cleanId(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV1(cameras[0])));
     }
 
     @memoizeAsyncShort
-    getCamerasAndServerTime(): Observable<CamerasAndServerTimes> {
+    override getCamerasAndServerTime(): Observable<CamerasAndServerTimes> {
         return combineLatest([this.getServerTimes(), this.getCameras()]).pipe(
             map(([serverTimesResp, cameras]) => ({
                 serverTimes: serverTimesResp.reply,
@@ -950,7 +954,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncMedium
-    getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
+    override getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
         return combineLatest([this.getViewMediaServers(), this.getViewCameras()]).pipe(
             map(([mediaServers, cameras]) => ({
                 mediaServers,
@@ -959,12 +963,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    public getServerTimes(): Observable<t.TimeOfServers> {
+    public override getServerTimes(): Observable<t.TimeOfServers> {
         return this.get('/ec2/getTimeOfServers');
     }
 
     @memoizeAsyncLong
-    public getStorageAnalytics(): Observable<StorageAnalytics> {
+    public override getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
         });
@@ -990,7 +994,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    backupControl(action?: 'start' | 'stop') {
+    override backupControl(action?: 'start' | 'stop') {
         const backupEndpoint = `/rest/v1/servers/${this.serverId}/backupSettings`;
         return this.post(backupEndpoint, {
             caption: action,
@@ -999,11 +1003,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }).toPromise();
     }
 
-    renameSystem(_, systemName: string) {
+    override renameSystem(_, systemName: string) {
         return firstValueFrom(this.updateOrGetSettings({ systemName })).catch();
     }
 
-    detachFromSystem(currentPassword?: string, serverId?: string) {
+    override detachFromSystem(currentPassword?: string, serverId?: string) {
         return this.post<any>(`/rest/v1/servers/${serverId || 'this'}/detach`);
     }
 
@@ -1019,7 +1023,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     private mergeUpdater$ = new BehaviorSubject(true);
 
-    checkMergeStatus(forceReload = true) {
+    override checkMergeStatus(forceReload = true) {
         this.mergeUpdater$.next(forceReload);
         return this.checkMergeStatusHandler(forceReload);
     }
@@ -1038,11 +1042,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     // serverId can be a server id, this, or *
-    getServerInfo = getServerInfoRestV1;
+    override getServerInfo = getServerInfoRestV1;
 
-    getRemoteServerInfo = getRemoteServerInfoRestV1;
+    override getRemoteServerInfo = getRemoteServerInfoRestV1;
 
-    mergeSystems(
+    override mergeSystems(
         remoteEndpoint: string,
         remoteServerId: string,
         dryRun: boolean,
@@ -1117,17 +1121,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    restartServer(serverId?: string) {
+    override restartServer(serverId?: string) {
         return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
             .toPromise()
             .catch(err => Promise.reject(err));
     }
 
-    restoreFactorySettings(password?: string, serverId?: string) {
+    override restoreFactorySettings(password?: string, serverId?: string) {
         return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`);
     }
 
-    saveCloudSystemCredentials(
+    override saveCloudSystemCredentials(
         cloudSystemID: string,
         cloudAuthKey: string,
         cloudAccountName: string,
@@ -1139,7 +1143,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         });
     }
 
-    getBookmarks(
+    override getBookmarks(
         params: t.BookmarksParams = {
             order: 'desc',
             column: 'creationTime',
@@ -1150,7 +1154,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
-    getBookmarkTags(params: t.BookmarksTagsParams = {}): Observable<t.BookmarksTags> {
+    override getBookmarkTags(params: t.BookmarksTagsParams = {}): Observable<t.BookmarksTags> {
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
     }
 
@@ -1167,7 +1171,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.getWith('/rest/v1/devices', ['id', 'name']);
     }
 
-    getWebPages(params = {}): Observable<t.WebPages> {
+    override getWebPages(params = {}): Observable<t.WebPages> {
         return this.get('/rest/v1/webPages', { params });
     }
 
@@ -1180,23 +1184,23 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             assertTransaction.removeLayout,
         ].some(assert => assert(transaction)),
     )
-    getLayouts(): ReturnType<typeof getLayoutsRestV1> {
+    override getLayouts(): ReturnType<typeof getLayoutsRestV1> {
         return getLayoutsRestV1.bind(this)();
     }
-    getLayout = getLayoutRestV1;
+    override getLayout = getLayoutRestV1;
     putLayout = putLayoutRestV1;
     createLayout = createLayoutRestV1;
     deleteLayout = deleteLayoutRestV1;
 
     @memoizeAsyncMedium
-    getLicenseSummaries(): Observable<any> {
+    override getLicenseSummaries(): Observable<any> {
         const params = {
             _keepDefault: true,
         };
         return this.get('/rest/v1/licenseSummaries', { params });
     }
 
-    previewUrl(
+    override previewUrl(
         cameraId: string,
         time?: number | string,
         width?: number | string,
@@ -1243,7 +1247,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    protected generateGetUrl(url: string, params_: RequestParams, absUrl?: boolean) {
+    protected override generateGetUrl(url: string, params_: RequestParams, absUrl?: boolean) {
         const params = new HttpParams({ fromObject: params_ });
         if (absUrl) {
             const proto = this.window.location.protocol;
@@ -1260,7 +1264,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected override cleanUserObject = cleanUserObjectRest;
 
     /** Not Implemented functions **/
-    updateLogLevel(logLevel: unknown): Observable<unknown> {
+    override updateLogLevel(logLevel: unknown): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
     }
 
@@ -1269,7 +1273,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     getUserRoles = getUserRolesRestV1;
 
     @memoizeAsyncShort
-    getAllRoles(): Observable<Role[]> {
+    override getAllRoles(): Observable<Role[]> {
         return forkJoin([this.getPredefinedRoles(), this.getUserRoles()]).pipe(
             map(([predefinedRoles, customRoles]) =>
                 [...predefinedRoles, ...customRoles].map(role => ({
@@ -1280,7 +1284,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getAggregatedUsersData(): Observable<AggregatedUsers> {
+    override getAggregatedUsersData(): Observable<AggregatedUsers> {
         return combineLatest([
             this.getUsers(),
             this.getPredefinedRoles(),
@@ -1301,7 +1305,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     private _addUser = addUserRestV1;
-    addUser(user): Observable<ChangedIdReturned> {
+    override addUser(user): Observable<ChangedIdReturned> {
         return this._addUser(user);
     }
 
@@ -1324,7 +1328,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    deleteUser(userId: string): Observable<ChangedIdReturned> {
+    override deleteUser(userId: string): Observable<ChangedIdReturned> {
         return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 }

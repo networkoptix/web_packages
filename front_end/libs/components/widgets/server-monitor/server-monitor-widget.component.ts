@@ -41,15 +41,15 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxServerMonitorWidgetComponent extends FirstPartyWidget<
     typeof NxServerMonitorWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'server-monitor';
-    static NAME = 'Server Monitor';
-    static SIZES = [
+    static override IDENTIFIER = 'server-monitor';
+    static override NAME = 'Server Monitor';
+    static override SIZES = [
         { name: '6 x 4', value: { cols: 6, rows: 4 } },
         { name: '8 x 6', value: { cols: 8, rows: 6 } },
         { name: '12 x 6', value: { cols: 12, rows: 6 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         selectedSystem: '',
         selectedServer: '',
         refreshInterval: 1000,

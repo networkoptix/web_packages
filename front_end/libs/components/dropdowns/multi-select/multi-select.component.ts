@@ -119,7 +119,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.updateItems();
     }
 
-    trackItem(_index: number, item: MultiSelectItem): string | undefined {
+    override trackItem(_index: number, item: MultiSelectItem): string | undefined {
         return item ? item.id : undefined;
     }
 
@@ -187,10 +187,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         }
     }
 
-    /**
-     * Overwrite
-     */
-    writeValue(value: string[]): void {
+    override writeValue(value: string[]): void {
         if (value !== null) {
             this.innerValue = value;
             this.updateLabel();

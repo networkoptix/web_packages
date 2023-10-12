@@ -41,15 +41,15 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxServerLoggerWidgetComponent extends FirstPartyWidget<
     typeof NxServerLoggerWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'server-logger';
-    static NAME = 'Server Logger';
-    static SIZES = [
+    static override IDENTIFIER = 'server-logger';
+    static override NAME = 'Server Logger';
+    static override SIZES = [
         { name: '4 x 6', value: { cols: 4, rows: 6 } },
         { name: '6 x 12', value: { cols: 6, rows: 8 } },
         { name: '12 x 12', value: { cols: 12, rows: 8 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         selectedSystem: '',
         selectedServer: '',
         autoRefresh: true,

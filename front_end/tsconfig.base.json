@@ -10,6 +10,7 @@
         "forceConsistentCasingInFileNames": true,
         "noPropertyAccessFromIndexSignature": false,
         "noFallthroughCasesInSwitch": true,
+        "noImplicitOverride": true,
         "esModuleInterop": true,
         "sourceMap": true,
         "experimentalDecorators": true,

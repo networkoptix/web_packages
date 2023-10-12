@@ -36,7 +36,6 @@ class BaseLanguageDropdown extends BaseDropdown {
     @Output() langChange = new EventEmitter<string>();
 
     currentLang: string;
-    show: boolean;
     direction: string;
     langCode: string;
     activeLanguage: ILanguage = {
@@ -135,10 +134,7 @@ class BaseLanguageDropdown extends BaseDropdown {
         });
     }
 
-    /**
-     * Overwrite
-     */
-    writeValue(langCode: any): void {
+    override writeValue(langCode: any): void {
         this.langCode = langCode;
         if (langCode) {
             this.setLanguage();

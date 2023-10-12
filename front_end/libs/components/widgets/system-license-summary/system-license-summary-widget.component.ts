@@ -45,15 +45,15 @@ interface SystemDropdownItem extends DropdownItem<string> {
 export class NxSystemLicenseSummaryWidget extends FirstPartyWidget<
     typeof NxSystemLicenseSummaryWidget.BASE_CONFIG
 > {
-    static IDENTIFIER = 'system-license-summary';
-    static NAME = 'System License Summary';
-    static SIZES = [
+    static override IDENTIFIER = 'system-license-summary';
+    static override NAME = 'System License Summary';
+    static override SIZES = [
         { name: '4 x 6', value: { cols: 4, rows: 6 } },
         { name: '6 x 12', value: { cols: 6, rows: 8 } },
         { name: '12 x 12', value: { cols: 12, rows: 8 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         selectedSystem: '',
         autoRefresh: true,
         refreshInterval: 5,

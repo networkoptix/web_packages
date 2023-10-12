@@ -98,7 +98,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
         private renderer: Renderer2,
         private storage: LocalStorageService,
         private account: NxAccountService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private system: DT['data'],
         @Inject(WINDOW) private window: Window,
     ) {

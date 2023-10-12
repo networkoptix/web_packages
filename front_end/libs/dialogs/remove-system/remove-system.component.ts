@@ -50,7 +50,7 @@ export class RemoveSystemModalContent extends ModalBase<DT['return']> {
         private processService: NxProcessService,
         private renderer: Renderer2,
         private toastService: NxToastService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
     ) {
         super(dialogRef);

@@ -106,7 +106,7 @@ interface ModuleInfoRest extends t.ModuleInformationReply {
 
 export class NxSystemRestAPI2 extends NxSystemRestAPI {
     static VERSION = 5.1;
-    readonly version: number;
+    override readonly version: number;
 
     private readonly defaultLogLevel = 'info';
 
@@ -159,7 +159,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 }, <t.LogLevelReply>{}),
         );
 
-    logLevel(): Observable<t.LogLevel> {
+    override logLevel(): Observable<t.LogLevel> {
         return this.get<LogLevelV2Response>('/rest/v2/servers/this/logSettings').pipe(
             map(this.parseLogData),
         );
@@ -175,7 +175,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
     */
 
-    updateLogLevel(logLevel: LogLevelV2Response): Observable<t.LogLevel> {
+    override updateLogLevel(logLevel: LogLevelV2Response): Observable<t.LogLevel> {
         const parsedLogLevels = Object.entries(logLevel).reduce(
             (data, [key, value]) => ({
                 ...data,
@@ -230,7 +230,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
+    override getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
         return this.getRuntimeInfo('*').pipe(
             map(servers =>
                 this.responseWrapper(
@@ -243,7 +243,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
+    override getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
         const timeToString = time => time?.toString() || '0';
         return this.getServerTimesHelper().pipe(
             map(servers =>
@@ -259,14 +259,17 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    configureServer(configureParams: t.ConfigureParams): Promise<any> {
+    override configureServer(configureParams: t.ConfigureParams): Promise<any> {
         return this.patch(
             '/rest/v2/servers/this/runtimeInfo',
             configureParams as Record<string, string>,
         ).toPromise();
     }
 
-    rebuildArchive(location: number, action?: string): Observable<t.RebuildArchiveResponse> {
+    override rebuildArchive(
+        location: number,
+        action?: string,
+    ): Observable<t.RebuildArchiveResponse> {
         let url = `/rest/v2/servers/this/rebuildArchive/${location ? 'main' : 'backup'}`;
         switch (action) {
             case 'start':
@@ -280,7 +283,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     // Licenses
-    activateLicense(key): Observable<any> {
+    override activateLicense(key): Observable<any> {
         return this.put(`/rest/v2/licenses/${key}`).pipe(map(res => this.responseWrapper(res)));
     }
 
@@ -289,23 +292,23 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     protected _getHealthManifest = getSystemMetricsManifestV2;
     protected _getHealthValues = getSystemMetricsValuesV2;
     @NxSystemAPI.memoizeHM
-    getHealthAlarms() {
+    override getHealthAlarms() {
         return this._getHealthAlarms();
     }
 
     @NxSystemAPI.memoizeHM
-    getHealthManifest() {
+    override getHealthManifest() {
         return this._getHealthManifest();
     }
 
     @NxSystemAPI.memoizeHM
-    getHealthValues() {
+    override getHealthValues() {
         return this._getHealthValues();
     }
 
     // TODO: Create a health manager and move this there for legacy and rest.
     @NxSystemAPI.memoizeHM
-    getAggregateHealthReport(forceUpdate = false): Observable<HealthReport> {
+    override getAggregateHealthReport(forceUpdate = false): Observable<HealthReport> {
         return forkJoin([
             this.getHealthAlarms(),
             this.getHealthManifest(),
@@ -351,19 +354,19 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         };
     }
 
-    getCamera(id: string): Observable<RestV2CameraCompat> {
+    override getCamera(id: string): Observable<RestV2CameraCompat> {
         return this.getWith('/rest/v2/devices', cameraKeyMapV2, {
             params: { id: this.cleanId(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV2(cameras[0])));
     }
 
-    getCameras(): Observable<RestV2CameraCompat[]> {
+    override getCameras(): Observable<RestV2CameraCompat[]> {
         return this.getWith('/rest/v2/devices', cameraKeyMapV2).pipe(
             map(cameras => cameras.map(this.patchCameraCompatibilityV2)),
         );
     }
 
-    getMediaServers(useCache: boolean): Observable<RestV2ServerCompat[]> {
+    override getMediaServers(useCache: boolean): Observable<RestV2ServerCompat[]> {
         const endpoint = '/rest/v2/servers';
         return this.getWith(endpoint, serverKeyMapV2, {
             headers: this.cacheHeader(useCache),
@@ -371,7 +374,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     @memoizeAsyncLong
-    public getStorageAnalytics(): Observable<StorageAnalytics> {
+    public override getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
         });
@@ -401,11 +404,11 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    protected getViewMediaServers(): Observable<ViewPreprocessServer[]> {
+    protected override getViewMediaServers(): Observable<ViewPreprocessServer[]> {
         return this.getWith('/rest/v2/servers', ['id', 'name', 'status', 'endpoints']);
     }
 
-    protected getViewCameras(): Observable<ViewBaseCamera[]> {
+    protected override getViewCameras(): Observable<ViewBaseCamera[]> {
         const viewCamKeyMap = {
             ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
             options: {
@@ -448,7 +451,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
 
     @memoizeAsyncMedium
-    getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
+    override getViewMediaServersAndCameras(): Observable<ViewMediaServersAndCameras> {
         return combineLatest([this.getViewMediaServers(), this.getViewCameras()]).pipe(
             map(([mediaServers, cameras]) => ({
                 mediaServers,

@@ -115,7 +115,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     readonly version: number;
     protected readonly emptyId = '{00000000-0000-0000-0000-000000000000}';
     protected readonly forbiddenMsg = 'Using legacy API calls for owner actions are forbidden.';
-    protected readonly notImplementedMsg = 'Not implemented in the legacy api.';
+    protected override readonly notImplementedMsg = 'Not implemented in the legacy api.';
     public readonly requiresPassword: boolean = true;
 
     protected CONFIG: IConfig;

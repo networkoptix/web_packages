@@ -49,15 +49,15 @@ interface CameraDropdownItem extends DropdownItem<string> {
 export class NxLiveViewWidgetComponent extends FirstPartyWidget<
     typeof NxLiveViewWidgetComponent.BASE_CONFIG
 > {
-    static IDENTIFIER = 'live-view';
-    static NAME = 'Live View';
-    static SIZES = [
+    static override IDENTIFIER = 'live-view';
+    static override NAME = 'Live View';
+    static override SIZES = [
         { name: '4 x 3', value: { cols: 4, rows: 3 } },
         { name: '4 x 4', value: { cols: 4, rows: 4 } },
         { name: '8 x 6', value: { cols: 8, rows: 6 } },
     ];
 
-    static BASE_CONFIG = {
+    static override BASE_CONFIG = {
         selectedSystem: '',
         selectedCamera: '',
         autoUpdate: true,

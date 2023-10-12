@@ -58,10 +58,7 @@ export class NxPermissionsDropdown extends BaseDropdown {
         super(configService);
     }
 
-    /**
-     * Overwrite
-     */
-    writeValue(value: AccessLevelItem | null): void {
+    override writeValue(value: AccessLevelItem | null): void {
         if (value !== null) {
             this.selected = value;
             const name = value?.name;

@@ -27,19 +27,19 @@ interface UserPerms {
 export class UserWithGroupsManager extends UserManager {
     LANG = staticLang;
 
-    protected mediaserver: NxSystemRestAPI3;
+    protected override mediaserver: NxSystemRestAPI3;
     userGroups: UserGroup[];
     protected groupsToPermissions: {
         [id: string]: Set<string>;
     };
-    protected _ownerEmail: string;
-    protected locale: string;
+    protected override _ownerEmail: string;
+    protected override locale: string;
     // isMySystem: boolean;
-    currentUser: NxUser;
-    currentUserEmail: string;
-    users: NxUser[];
+    override currentUser: NxUser;
+    override currentUserEmail: string;
+    override users: NxUser[];
 
-    protected CONFIG = nxConfig;
+    protected override CONFIG = nxConfig;
 
     constructor(mediaserver: NxSystemRestAPI3, currentUserEmail: string, userId: string) {
         super(mediaserver, currentUserEmail, userId);
@@ -50,7 +50,7 @@ export class UserWithGroupsManager extends UserManager {
         this._ownerEmail = '';
     }
 
-    get isMySystem(): boolean {
+    override get isMySystem(): boolean {
         return (
             (this._ownerEmail && this.currentUserEmail === this._ownerEmail) ||
             (this.currentUser && this.isOwner(this.currentUser))
@@ -64,11 +64,11 @@ export class UserWithGroupsManager extends UserManager {
     //         : isLocalOwner;
     // }
 
-    get ownerEmail(): string {
+    override get ownerEmail(): string {
         return this._ownerEmail;
     }
 
-    set ownerEmail(email: string) {
+    override set ownerEmail(email: string) {
         if (email) {
             this._ownerEmail = email;
             // this.isMySystem =
@@ -282,7 +282,7 @@ export class UserWithGroupsManager extends UserManager {
         );
     }
 
-    addUser(user: AddUser): Promise<ChangedIdReturned> {
+    override addUser(user: AddUser): Promise<ChangedIdReturned> {
         const userData = {
             ...user,
             isEnabled: true,

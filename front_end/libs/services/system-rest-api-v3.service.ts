@@ -26,7 +26,7 @@ import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
-    readonly version: number;
+    override readonly version: number;
 
     constructor(
         http: HttpClient,
@@ -60,7 +60,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)
-    public getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
+    public override getCurrentUser(forceReload?: boolean): Promise<SystemUser> {
         let headers: RequestOpts['headers'];
         if (forceReload) {
             // Clean cache to
@@ -116,9 +116,9 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     }
 
     // getUsers
-    getUsers = getUsersRestV3;
+    override getUsers = getUsersRestV3;
 
-    getAggregatedUsersData(): Observable<AggregatedUsers> {
+    override getAggregatedUsersData(): Observable<AggregatedUsers> {
         return combineLatest([this.getUsers(), this.getUserRoles()]).pipe(
             map(([users, roles]) => ({
                 reply: {
@@ -140,7 +140,7 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     // }
     private _addUserV3 = addUserRestV3;
 
-    addUser(user: BaseNewUser | AddUser): Observable<ChangedIdReturned> {
+    override addUser(user: BaseNewUser | AddUser): Observable<ChangedIdReturned> {
         return this._addUserV3(user as AddUser);
     }
 

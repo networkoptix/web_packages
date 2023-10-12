@@ -49,7 +49,7 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
 
     constructor(
         private processService: NxProcessService,
-        protected dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         private groupsService: NxSystemGroupsService,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {

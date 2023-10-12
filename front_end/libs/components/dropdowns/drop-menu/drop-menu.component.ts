@@ -98,7 +98,7 @@ export class NxDropMenu extends BaseDropdown {
         });
     }
 
-    trackItem(index, item) {
+    override trackItem(index, item) {
         return item ? item.id : undefined;
     }
 

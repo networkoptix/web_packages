@@ -19,7 +19,7 @@ export class NxTranslatePipe extends TranslatePipe implements PipeTransform {
         super(translate, _ref);
     }
 
-    transform(translatable: Translatable): string {
+    override transform(translatable: Translatable): string {
         if (typeof translatable === 'string') {
             return super.transform(translatable);
         } else if (!translatable.params || !Object.keys(translatable.params).length) {

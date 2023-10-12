@@ -38,7 +38,7 @@ export class RemoveUserModalContent extends ModalBase<DT['return']> {
     constructor(
         private processService: NxProcessService,
         private toastService: NxToastService,
-        public dialogRef: DialogRef<DT['return']>,
+        dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
         super(dialogRef);
