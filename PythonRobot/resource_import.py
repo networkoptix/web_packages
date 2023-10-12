@@ -12,7 +12,6 @@ from typing import ContextManager
 import urllib3
 from selenium.webdriver.remote.webdriver import WebDriver
 
-import robot_keywords
 import robot_lists as rl
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
@@ -308,7 +307,7 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
 
 def open_page_anonymously(driver: WebDriver, url: str, title: str):
     driver.get(url)
-    robot_keywords.location_should_be(driver, url)
+    driver.location_should_be(url)
     time.sleep(3)
     assert driver.title == title
 

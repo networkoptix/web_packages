@@ -1,10 +1,9 @@
 import time
 
-import robot_keywords
 from RobotVariables import RobotVariables
-from variables import ENV
 from generic_elements import Button
 from generic_elements import Pane
+from variables import ENV
 
 
 class LandingPage:
@@ -30,7 +29,7 @@ class LandingPage:
         start_time = time.monotonic()
         while start_time + timeout < time.monotonic():
             try:
-                robot_keywords.location_should_be(self.driver, f"{ENV}")
+                self.driver.location_should_be(f"{ENV}")
                 break
             except:
                 pass

@@ -1,10 +1,9 @@
-import robot_keywords
 from RobotVariables import RobotVariables
-from variables import ENV
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import Page
 from generic_elements import PageText
+from variables import ENV
 
 
 class SystemUsers:
@@ -34,4 +33,4 @@ class SystemUsers:
         Page(self.driver, "//nx-system-user-component").wait_until_exists(40)
 
     def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{ENV}systems/")
+        self.driver.location_should_be(f"{ENV}systems/")

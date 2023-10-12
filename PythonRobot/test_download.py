@@ -1,11 +1,7 @@
-from urllib.request import Request
-from urllib.request import urlopen
-
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
-import robot_keywords
 import variables
 from downloads_page import DownloadsPage
 from footer import Footer
@@ -35,11 +31,11 @@ def check_download_tabs():
     Footer(driver, 'cloud').get_downloads_link().click()
     download_page = DownloadsPage(driver)
     download_page.get_windows_client_installer_tab().click()
-    robot_keywords.location_should_be(driver, variables.ENV + '/download/windows')
+    driver.location_should_be(variables.ENV + '/download/windows')
     download_page.get_linux_client_installer_tab().click()
-    robot_keywords.location_should_be(driver, variables.ENV + '/download/linux')
+    driver.location_should_be(variables.ENV + '/download/linux')
     download_page.get_mac_client_installer_tab().click()
-    robot_keywords.location_should_be(driver, variables.ENV + '/download/macos')
+    driver.location_should_be(variables.ENV + '/download/macos')
     driver.close()
 
 

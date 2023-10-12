@@ -51,7 +51,7 @@ def copyright_link():
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(1)
-    robot_keywords.location_should_be(driver, rb.COPYRIGHT_URL)
+    driver.location_should_be(rb.COPYRIGHT_URL)
     driver.close()
 
 
@@ -75,7 +75,7 @@ def privacy_link():
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(1)
-    robot_keywords.location_should_be(driver, rb.PRIVACY_POLICY_FULL_URL)
+    driver.location_should_be(rb.PRIVACY_POLICY_FULL_URL)
     driver.close()
 
 

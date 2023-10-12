@@ -5,26 +5,26 @@ from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
-import robot_keywords
 from RobotVariables import RobotVariables
-from generic_elements import ElementNotInDOM
-from generic_elements import ElementNotVisible
-from system_admin_tab_information import TabInformation
-from system_admin_tab_settings import TabSettings
-from toast_notification import ToastNotification
-from variables import ENV
+from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import Checkbox
+from generic_elements import ElementNotInDOM
+from generic_elements import ElementNotVisible
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
+from system_admin_tab_information import TabInformation
+from system_admin_tab_settings import TabSettings
+from toast_notification import ToastNotification
+from variables import ENV
 
 _logger = logging.getLogger(__name__)
 
 
 class SystemAdmin:
-    def __init__(self, driver: WebDriver, lang="en_US"):
+    def __init__(self, driver: ChromeBrowser, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_page_loaded()
@@ -212,7 +212,7 @@ class SystemAdmin:
         TextField(self.driver, "//div/nx-editable-heading//nx-text-editable").wait_until_visible()
 
     def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{ENV}systems/")
+        self.driver.location_should_be(f"{ENV}systems/")
 
 
 class FailedToAccessSystemPage:

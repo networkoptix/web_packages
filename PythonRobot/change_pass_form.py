@@ -1,10 +1,9 @@
-import robot_keywords
 from RobotVariables import RobotVariables
-from variables import ENV
 from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from variables import ENV
 
 
 class ChangePassForm:
@@ -62,4 +61,4 @@ class ChangePassForm:
         element.wait_until_visible(timeout=10)
 
     def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{ENV}/account/password")
+        self.driver.location_should_be(f"{ENV}/account/password")

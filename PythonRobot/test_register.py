@@ -185,7 +185,7 @@ def should_respond_to_tab_key():
     time.sleep(1)
     assert register_form.terms_and_conditions_link().is_focused(), "TaC link not focused after TAB"
     driver.switch_to.window(driver.window_handles[1])
-    robot_keywords.location_should_be(driver, f"{rb.ENV}/content/eula")
+    driver.location_should_be(f"{rb.ENV}/content/eula")
     driver.switch_to.window(driver.window_handles[0])
     ActionChains(driver).send_keys(Keys.TAB).perform()
     time.sleep(1)
@@ -193,7 +193,7 @@ def should_respond_to_tab_key():
     time.sleep(1)
     assert register_form.privacy_policy_link().is_focused(), "Privacy link not focused after TAB"
     driver.switch_to.window(driver.window_handles[2])
-    robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
+    driver.location_should_be("https://www.networkoptix.com/privacy-policy")
     driver.switch_to.window(driver.window_handles[0])
     ActionChains(driver).send_keys(Keys.TAB).perform()
     time.sleep(1)
@@ -218,7 +218,7 @@ def terms_and_conditions_in_new_page():
     RegisterForm(driver).terms_and_conditions_link().click()
     time.sleep(1)
     driver.switch_to.window(driver.window_handles[1])
-    robot_keywords.location_should_be(driver, f"{rb.ENV}/content/eula")
+    driver.location_should_be(f"{rb.ENV}/content/eula")
     driver.close()
 
 
@@ -232,7 +232,7 @@ def privacy_policy_in_new_page():
     RegisterForm(driver).privacy_policy_link().click()
     time.sleep(1)
     driver.switch_to.window(driver.window_handles[1])
-    robot_keywords.location_should_be(driver, "https://www.networkoptix.com/privacy-policy")
+    driver.location_should_be("https://www.networkoptix.com/privacy-policy")
     driver.close()
 
 

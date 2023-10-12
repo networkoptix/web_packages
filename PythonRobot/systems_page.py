@@ -1,13 +1,12 @@
 from selenium.webdriver.common.by import By
 
-import robot_keywords
 from RobotVariables import RobotVariables
-from system_tile import SystemTile
-from variables import ENV
 from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from system_tile import SystemTile
+from variables import ENV
 
 
 class SystemsPage:
@@ -45,4 +44,4 @@ class SystemsPage:
         Pane(self.driver, "//nx-systems-list-component").wait_until_visible(40)
 
     def _location_is_correct(self):
-        robot_keywords.location_should_be(self.driver, f"{ENV}/systems")
+        self.driver.location_should_be(f"{ENV}/systems")

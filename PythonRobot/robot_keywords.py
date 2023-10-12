@@ -7,10 +7,6 @@ from browsers.chrome import ChromeBrowser
 # keep the following functions in alphabetical order
 
 
-def location_should_be(driver: ChromeBrowser, url: str) -> None:
-    driver.location_should_be(url)
-
-
 def location_should_contain(driver: ChromeBrowser, url: str) -> None:
     driver.location_should_contain(url)
 
