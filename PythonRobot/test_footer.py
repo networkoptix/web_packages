@@ -37,7 +37,7 @@ def support_link():
     robot_keywords.wait_until_number_of_tabs_are_open(driver, 2)
     driver.switch_to.window(driver.window_handles[1])
     time.sleep(1)
-    robot_keywords.location_should_contain(driver, rb.SUPPORT_URL)
+    driver.location_should_contain(rb.SUPPORT_URL)
     driver.close()
 
 
@@ -62,7 +62,7 @@ def terms_link():
     footer = Footer(driver, "cloud")
     footer.terms_link().click()
     time.sleep(2)
-    robot_keywords.location_should_contain(driver, rb.TERMS_URL)
+    driver.location_should_contain(rb.TERMS_URL)
     driver.close()
 
 

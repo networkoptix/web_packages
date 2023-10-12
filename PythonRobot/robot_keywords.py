@@ -7,10 +7,6 @@ from browsers.chrome import ChromeBrowser
 # keep the following functions in alphabetical order
 
 
-def location_should_contain(driver: ChromeBrowser, url: str) -> None:
-    driver.location_should_contain(url)
-
-
 def wait_until_element_has_style(driver, css_selector, style_name, expected_value, timeout=30):
     def check_style(driver):
         try:
