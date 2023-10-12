@@ -461,6 +461,7 @@ export class NxLayoutGridComponent {
         const aspectRatio = parseFloat(dragContainer.style?.aspectRatio.split('/')[0]);
 
         if (!aspectRatio) {
+            dragContainer.classList.remove('wide', 'narrow');
             return;
         }
 

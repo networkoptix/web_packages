@@ -25,21 +25,19 @@
     position: relative;
     z-index: 200;
     display: grid;
-    grid-gap: 12px;
     padding: 12px;
     grid-template-rows: 36px 1fr;
-    grid-template-columns: minmax(36px, auto) minmax(36px, auto) 1fr min-content;
+    grid-template-columns: minmax(36px, auto) minmax(48px, auto) 1fr min-content;
     grid-template-areas:
         'name actions actions menu-group'
         'info info status status';
 
-    @container overlay (max-width : 168px) {
-        grid: 36px / 36px 1fr 36px;
+    @container overlay (max-width : 200px) {
+        grid: 36px / 36px 1fr 48px;
         grid-template-areas: 'name . actions';
         grid-gap: 0;
 
-        .fullscreen,
-        .remove,
+        .menu-group,
         .info,
         .status {
             display: none;
@@ -92,7 +90,7 @@ svg-icon {
     display: flex;
     flex-direction: row;
     justify-content: end;
-    padding: 0;
+    padding: 0 0 0 12px;
     container: actions / inline-size;
 
     .action-icon {
@@ -147,6 +145,7 @@ svg-icon {
     display: flex;
     flex-direction: row;
     gap: 12px;
+    padding-left: 12px;
 }
 
 .info {
