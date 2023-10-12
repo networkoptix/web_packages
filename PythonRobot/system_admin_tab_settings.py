@@ -156,6 +156,10 @@ class _ServerPage:
     def get_restart_button(self) -> Button:
         return Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]')
 
+    def get_detailed_info_button(self) -> Button:
+        return Button(self._driver,
+                      f'//nx-standard-server-component//header//button/span[contains(text(),"{self._rb.DETAILED_INFO_TEXT}")]')
+
     def wait_until_offline_status(self, timeout=10):
         started_at = time.monotonic()
         while True:

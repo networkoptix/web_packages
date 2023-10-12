@@ -1,5 +1,3 @@
-import logging
-import time
 from pathlib import Path
 
 from colorama import Fore
@@ -49,6 +47,32 @@ def test_check_status(server1: Mediaserver, server2: Mediaserver, rb: RobotVaria
         server_page.wait_until_offline_status_not_visible()
 
 
+def test_detailed_info_with_1_server(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):
+    """
+    12. Detailed info 1 server
+    [Tags]    C70957    cloud    webadmin
+    """
+    server2.stop()
+    with (get_chrome() as driver):
+        driver.get(rb.ENV)
+        owner = server1.get_cloud_owner()
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        driver.get(rb.ENV + f"/systems/{server1.id}")
+        system_admin_page = SystemAdmin(driver, rb.language)
+        tab_settings = system_admin_page.get_tab_settings()
+        tab_settings.click()
+        servers_section = tab_settings.get_servers_section()
+        servers_section.click()
+        driver.refresh()
+        server_page = servers_section.get_default_server_page()
+        server_page.click()
+        server_page.get_detailed_info_button().click()
+        tab_info = system_admin_page.get_information_tab()
+        tab_info.check_links()
+    server2.start(True)
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
@@ -62,3 +86,5 @@ if __name__ == '__main__':
         server1.cloud_merge(server2)
         test_check_status(server1, server2, variables)
         print(f'{Fore.WHITE}{test_check_status.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_detailed_info_with_1_server(server1, server2, variables)
+        print(f'{Fore.WHITE}{test_detailed_info_with_1_server.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')

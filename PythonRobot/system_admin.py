@@ -185,7 +185,8 @@ class SystemAdmin:
         Problem: the Information tab couldn't appear without switching to another tab or refreshing the page
         See: https://networkoptix.atlassian.net/browse/CLOUD-11437
         """
-        locator = f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
+        locator = (f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
+                   f' | //header//div[contains(text(),"{self.rb.INFORMATION_TEXT}")]')
         self._wait_for_tab_loaded(locator)
         return TabInformation(self.driver, locator, self.rb)
 
