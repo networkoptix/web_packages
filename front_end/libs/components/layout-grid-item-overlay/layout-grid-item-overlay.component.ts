@@ -14,10 +14,13 @@ import {
     Signal,
     signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { round } from 'lodash-es';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
+import { distinctUntilChanged, map } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
@@ -87,6 +90,7 @@ const EMPTY_MENU_ACTION = {
         NxContextMenu,
         CdkMenuTrigger,
     ],
+    hostDirectives: [NxResizeObserver],
 })
 export class NxLayoutGridItemOverlayComponent {
     @Input({ alias: 'item', transform: (value: LayoutItem) => signal(value) })
@@ -103,6 +107,29 @@ export class NxLayoutGridItemOverlayComponent {
 
     isFullscreen$$ = signal(false);
     isMenuOpened$$ = signal(false);
+
+    scale$ = this.resizeObserver.resize.pipe(
+        map(({ width, height }) => {
+            const minWidth = 108;
+            const minHeight = 72;
+            const scaleWidth = minWidth / width;
+            const scaleHeight = minHeight / height;
+            const scaleClamp = 1;
+            return round(Math.max(scaleWidth, scaleHeight, scaleClamp), 2);
+        }),
+        distinctUntilChanged(),
+    );
+
+    scaled$$ = toSignal(this.scale$.pipe(map(scale => scale !== 1)), { initialValue: false });
+
+    getScaleStyle$ = this.scale$.pipe(
+        map(scale => ({
+            'height.%': scale * 100,
+            'width.%': scale * 100,
+            transform: `scale(${1 / scale})`,
+            'transform-origin': 'top left',
+        })),
+    );
 
     // TODO remove when Action Dispatcher for displayInfo is implemented
     // the name is long and stupid intentionally
@@ -342,6 +369,7 @@ export class NxLayoutGridItemOverlayComponent {
     constructor(
         @Inject(DOCUMENT) public document: Document,
         public ref: ElementRef<HTMLElement>,
+        private resizeObserver: NxResizeObserver,
         configService: NxConfigService,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;

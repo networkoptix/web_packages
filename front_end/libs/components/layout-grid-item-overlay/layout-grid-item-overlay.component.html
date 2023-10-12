@@ -1,5 +1,24 @@
+<ng-template #nodeActionMenu>
+    <nx-context-menu
+        [context]="node$$()"
+        [menuItems]="menuItemsByType[node$$().type]"
+    />
+</ng-template>
+
+<ng-template #tooSmall>
+    <div
+        [nxTooltip]="'Too Small' | translate"
+        class="too-small"
+        translate
+    >
+        Too Small
+    </div>
+</ng-template>
+
 <div
     class="nx-layout-grid-item-overlay"
+    [ngStyle]="getScaleStyle$ | async"
+    [cdkMenuTriggerFor]="scaled$$() && nodeActionMenu"
     [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide, hide: hide }"
 >
     <ng-template
@@ -50,17 +69,11 @@
         <div
             class="action-icon"
             *ngIf="menu$$()"
-            [cdkMenuTriggerFor]="nodeActionMenu"
+            [cdkMenuTriggerFor]="scaled$$() || nodeActionMenu"
             (cdkMenuOpened)="isMenuOpened$$.set(true)"
             (cdkMenuClosed)="isMenuOpened$$.set(false)"
         >
             <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: menu$$() }" />
-            <ng-template #nodeActionMenu>
-                <nx-context-menu
-                    [context]="node$$()"
-                    [menuItems]="menuItemsByType[node$$().type]"
-                />
-            </ng-template>
         </div>
         <ng-container *ngIf="quickActions$$()">
             <div
@@ -110,6 +123,8 @@
     </div>
 
     <div class="content">
-        <ng-content />
+        <ng-container *ngIf="!scaled$$(); else tooSmall">
+            <ng-content />
+        </ng-container>
     </div>
 </div>

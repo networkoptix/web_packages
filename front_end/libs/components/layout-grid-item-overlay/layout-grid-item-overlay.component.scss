@@ -1,3 +1,5 @@
+@use "typography";
+
 :host {
     &:hover {
         .nx-layout-grid-item-overlay {
@@ -184,4 +186,17 @@ svg-icon {
     right: 0;
     bottom: 0;
     z-index: -1;
+}
+
+.too-small {
+    @include typography.medium24nocolor;
+    background: var(--placeholder-background);
+    color: var(--error);
+    height: 100%;
+    width: 100%;
+    padding: 8px;
+    display: flex;
+    text-align: center;
+    justify-content: center;
+    align-items: center;
 }
