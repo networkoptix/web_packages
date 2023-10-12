@@ -1,8 +1,6 @@
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 
-from browsers.chrome import ChromeBrowser
-
 
 # keep the following functions in alphabetical order
 
@@ -17,7 +15,3 @@ def wait_until_element_has_style(driver, css_selector, style_name, expected_valu
             return False
 
     WebDriverWait(driver, timeout).until(check_style)
-
-
-def wait_until_number_of_tabs_are_open(driver: ChromeBrowser, number: int, timeout=30):
-    driver.wait_until_number_of_tabs_are_open(number, timeout)
