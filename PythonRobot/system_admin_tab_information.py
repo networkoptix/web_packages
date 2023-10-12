@@ -159,7 +159,7 @@ class _Section:
 
     def has_table(self) -> bool:
         try:
-            Link(self._driver, '//div[@id="nx-table"]')
+            Link(self._driver, '//div[@id="nx-table"]').wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
@@ -167,7 +167,7 @@ class _Section:
 
     def has_card(self) -> bool:
         try:
-            Link(self._driver, '//nx-single-entity')
+            Link(self._driver, '//nx-single-entity').wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
