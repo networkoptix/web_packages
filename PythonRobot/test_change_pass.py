@@ -3,7 +3,6 @@ import time
 from selenium.webdriver.common.keys import Keys
 
 import resource_import
-import robot_keywords
 from RobotVariables import RobotVariables
 from change_pass_form import ChangePassForm
 from header import HeaderNav

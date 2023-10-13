@@ -1,6 +1,5 @@
 import time
 
-import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite

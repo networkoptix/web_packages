@@ -1,7 +1,6 @@
 import time
 
 import resource_import
-import robot_keywords
 from RobotVariables import RobotVariables
 from email_access import Email
 from header import HeaderNav

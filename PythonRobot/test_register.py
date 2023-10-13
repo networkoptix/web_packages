@@ -4,17 +4,16 @@ from colorama import Fore
 from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
-import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
+from generic_elements import Button
 from header import HeaderNav
 from register_form import RegisterForm
 from resource_import import activate
 from resource_import import get_headless_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from generic_elements import Button
 
 rb = RobotVariables("en_US")
 CLOUD_API = CloudPortalAPI()

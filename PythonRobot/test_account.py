@@ -3,21 +3,20 @@ import time
 from urllib3.exceptions import MaxRetryError
 
 import resource_import
-import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
-from resource_import import get_headless_chrome
-from resource_import import get_lang_list
-from resource_import import get_random_email
-from resource_import import register_and_activate_account
-from resource_import import send_restore_password_email
-from resource_import import verify_in_account_page
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from resource_import import get_headless_chrome
+from resource_import import get_lang_list
+from resource_import import get_random_email
+from resource_import import register_and_activate_account
+from resource_import import send_restore_password_email
+from resource_import import verify_in_account_page
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"
@@ -180,36 +179,16 @@ def test_first_name_is_required():
     verify_in_account_page(driver)
     TextField(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
     TextField(driver, rb.ACCOUNT_LAST_NAME).click()
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_FIRST_NAME,
-        "border-color",
-        rb.ERROR_COLOR,
-        )
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_FIRST_NAME,
-        "color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
     account_save = Button(driver, rb.ACCOUNT_SAVE)
     account_cancel = Button(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
     account_cancel.wait_until_visible()
     account_save.wait_until_not_clickable()
     account_cancel.wait_until_clickable()
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_FIRST_NAME,
-        "border-color",
-        rb.ERROR_COLOR,
-        )
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_FIRST_NAME,
-        "color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
     Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
 
@@ -223,18 +202,8 @@ def test_last_name_is_required():
     verify_in_account_page(driver)
     TextField(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
     TextField(driver, rb.ACCOUNT_FIRST_NAME).click()
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_LAST_NAME,
-        "border-color",
-        rb.ERROR_COLOR,
-        )
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_LAST_NAME,
-        "color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
     account_save = Button(driver, rb.ACCOUNT_SAVE)
     cancel_button = Button(driver, rb.ACCOUNT_CANCEL)
     account_save.wait_until_visible()
@@ -245,18 +214,8 @@ def test_last_name_is_required():
     cancel_button.wait_until_visible()
     account_save.wait_until_not_clickable()
     cancel_button.wait_until_clickable()
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_LAST_NAME,
-        "border-color",
-        rb.ERROR_COLOR,
-        )
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_LAST_NAME,
-        "color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
     Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
 
@@ -270,18 +229,8 @@ def test_space_for_first_name_is_not_valid():
     verify_in_account_page(driver)
     TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(" ")
     PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_FIRST_NAME,
-        "border-color",
-        rb.ERROR_COLOR,
-        )
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_FIRST_NAME,
-        "color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
     Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
     Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()
@@ -297,18 +246,8 @@ def test_space_for_last_name_is_not_valid():
     TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("luke")
     TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(" ")
     PageText(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_LAST_NAME,
-        "border-top-color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
-    robot_keywords.wait_until_element_has_style(
-        driver,
-        rb.ACCOUNT_LAST_NAME,
-        "color",
-        rb.ERROR_COLOR_WITH_OPACITY,
-        )
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
     Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
     Button(driver, rb.ACCOUNT_CANCEL).click()
     driver.quit()

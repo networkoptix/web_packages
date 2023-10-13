@@ -1,10 +1,10 @@
 import time
 from pathlib import Path
-import robot_keywords
+
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
 from email_access import Email
 from header import HeaderNav
@@ -12,8 +12,8 @@ from landing_page import LandingPage
 from login import LoginDialog
 from register_form import RegisterForm
 from resource_import import get_chrome
-from resource_import import register_and_activate_account
 from resource_import import get_random_email
+from resource_import import register_and_activate_account
 from system_admin import SystemAdmin
 from system_left_menu import SystemLeftMenu
 from system_users import SystemUsers
