@@ -433,6 +433,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
                         this.getUsers(true, suppressUpdate).then(() => {
                             this.userManager.ownerEmail = this.info.ownerAccountEmail;
+                            this.info.ownerFullName = this.userManager.users.find(
+                                user => user.email === this.info.ownerAccountEmail,
+                            )?.fullName;
                             this.permissionManager.ownerEmail.set(this.info.ownerAccountEmail);
                             this.permissionManager.checkCurrentUser();
                         });
