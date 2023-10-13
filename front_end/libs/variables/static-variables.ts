@@ -527,6 +527,7 @@ export const servers: configTypes.Servers = {
         badRequest: 'badRequest',
         userPasswordRequired: 'userPasswordRequired',
         vmsRequestFailure: 'vmsRequestFailure',
+        wrongSessionToken: 'Auth_WrongSessionToken',
     },
 };
 

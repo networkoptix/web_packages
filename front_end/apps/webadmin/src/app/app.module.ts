@@ -33,6 +33,7 @@ import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-int
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
+import { TempUserExpiredInterceptor } from '@interceptors/temp-user-expired-interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -113,6 +114,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: SessionExpiredInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TempUserExpiredInterceptor,
             multi: true,
         },
         NxConfigService,
