@@ -193,6 +193,19 @@ class TextField:
     def wait_until_does_not_exist(self):
         self._element.wait_until_does_not_exist()
 
+    def wait_until_has_style(self, style_name: str, expected_value: str, timeout_sec: float = 30):
+        started_at = time.monotonic()
+        while True:
+            actual_value = self.value_of_css_property(style_name)
+            if actual_value == expected_value:
+                return
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(
+                    f'Wrong value for css property: {style_name}.'
+                    f' Actual: {actual_value}. Expected: {expected_value}',
+                    )
+            time.sleep(1)
+
 
 class SearchBar:
 
