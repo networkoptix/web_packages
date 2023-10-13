@@ -32,6 +32,7 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 rb = RobotVariables("en_US")
 
+
 def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
         link = get_email_link(email, password, from_email, "activate")
@@ -43,25 +44,27 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
         api = CloudPortalAPI()
         api.activate_account_via_api(email, password)
 
+
 def check_email_subject(email_id, sub_text, email_address, password, host, port):
-        conn = imaplib.IMAP4_SSL(host, int(port))
-        conn.login(email_address, password)
-        conn.select()
-        typ, data = conn.uid(
-            'fetch', email_id, '(BODY.PEEK[HEADER.FIELDS (SUBJECT)])')
-        for res in data:
-            if isinstance(res, tuple):
-                # Decoding ascii and header
-                header = email.header.decode_header(
-                    res[1].decode('ascii').strip())
-                # Decoding utf-8
-                header_str = "".join([x[0].decode(
-                    'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in header])
-                # Removing the word "Subject:" from the string
-                header_str = re.sub("Subject:", "", header_str)
-                if sub_text != header_str.strip():
-                    raise Exception(header_str + ' was not ' + sub_text)
-        conn.logout()
+    conn = imaplib.IMAP4_SSL(host, int(port))
+    conn.login(email_address, password)
+    conn.select()
+    typ, data = conn.uid(
+        'fetch', email_id, '(BODY.PEEK[HEADER.FIELDS (SUBJECT)])')
+    for res in data:
+        if isinstance(res, tuple):
+            # Decoding ascii and header
+            header = email.header.decode_header(
+                res[1].decode('ascii').strip())
+            # Decoding utf-8
+            header_str = "".join([x[0].decode(
+                'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in header])
+            # Removing the word "Subject:" from the string
+            header_str = re.sub("Subject:", "", header_str)
+            if sub_text != header_str.strip():
+                raise Exception(header_str + ' was not ' + sub_text)
+    conn.logout()
+
 
 def check_language_logged_in(email, password, language="en_US"):
     api = CloudPortalAPI()
@@ -70,7 +73,9 @@ def check_language_logged_in(email, password, language="en_US"):
         api.set_account_language(email, password, language)
     time.sleep(2)
 
-def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
+
+def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,
+                api=False, reset=False, two_FA=False, twoFA_backup_code=""):
     if button:
         Button(driver, button).wait_until_visible()
         Button(driver, button).click()
@@ -79,7 +84,7 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         # check language variable and set it to default. That is, set language before logging in
         # TODO: check language
         pass
-        #TODO: set user theme (ie, light or dark mode)
+        # TODO: set user theme (ie, light or dark mode)
         pass
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
     Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
@@ -104,10 +109,12 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
 
+
 def check_log_in(driver: WebDriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
     random_email = get_random_email(rb.BASE_EMAIL)
-    #LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
+    # LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
     LoginDialog(driver).basic_cloud_login(user, password)
+
 
 def check_password_badge(driver: WebDriver, password, new_focus):
     if password != "":
@@ -133,41 +140,40 @@ def check_password_badge(driver: WebDriver, password, new_focus):
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]',
-            )
+        )
         too_common.wait_until_visible()
     elif password in rl.WEAK_PASSWORDS:
         weak_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
-            )
+        )
         weak_password.wait_until_visible()
     elif password in rl.INCORRECT_PASSWORDS:
         incorrect_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]',
-            )
+        )
         incorrect_password.wait_until_visible()
     elif password in rl.FAIR_PASSWORDS:
         fair_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
-            )
+        )
         fair_password.wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
         seven_char_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and contains(text(), "{rb.PASSWORD_TOO_SHORT_TEXT}")]',
-            )
+        )
         seven_char_password.wait_until_visible()
 
-
     if password == rb.COMMON_PASSWORD:
-        move_focus_and_check_badge_stays(driver,rb.PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
-    elif password in  rl.WEAK_PASSWORDS:
+        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
+    elif password in rl.WEAK_PASSWORDS:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_WEAK_BADGE, new_focus)
     elif password in rl.INCORRECT_PASSWORDS:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_INCORRECT_BADGE, new_focus)
@@ -178,7 +184,9 @@ def check_password_badge(driver: WebDriver, password, new_focus):
     elif password == rb.SEVEN_CHAR_PASSWORD:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
 
-def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
+
+def check_new_password_outline_and_error_message(driver, new_password, new_focus, input,
+                                                 input_name):
     TextField(driver, new_focus).click()
     if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
         field = TextField(driver, input)
@@ -191,7 +199,7 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
             driver,
             f"//nx-password-input[@name='{input_name}' "
             f"and contains(@class, 'ng-invalid')]//input[@id='{input_name}']",
-            )
+        )
         password_element.wait_until_visible()
     if new_password == "" or new_password == " ":
         TextField(driver, input).input_text("")
@@ -205,10 +213,12 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
     elif new_password in rl.WEAK_PASSWORDS:
         move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
 
+
 def detect_language(text):
     from googletrans import Translator
     detected_langs = str(Translator().detect(text))
     return detected_langs
+
 
 def delete_email(mail, email_uid):
     # Mark the email for deletion
@@ -216,6 +226,7 @@ def delete_email(mail, email_uid):
 
     # Permanently remove mails that are marked for deletion
     mail.expunge()
+
 
 def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeout=300):
     if from_email:
@@ -231,6 +242,7 @@ def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeo
     else:
         print("from email only")
         pass
+
 
 def get_headless_chrome():
     return ChromeBrowser()
@@ -250,10 +262,12 @@ def get_lang_list():
     with open(path, encoding="utf-8") as langDict:
         return json.load(langDict)
 
+
 def get_nx_links_from_email(self, email_index, body):
-        url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
-        res = re.findall(url, str(body))
-        return str(res[0][0])
+    url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
+    res = re.findall(url, str(body))
+    return str(res[0][0])
+
 
 def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
     if not sendemail:
@@ -268,8 +282,8 @@ def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", s
         email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
         return email
 
-def logout_japanese(driver: WebDriver):
 
+def logout_japanese(driver: WebDriver):
     Pane(driver, rb.BACKDROP).wait_until_does_not_exist()
     element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""
     DropDownOption(driver, element).wait_until_visible()
@@ -280,15 +294,18 @@ def logout_japanese(driver: WebDriver):
     DropDownOption(driver, element).click()
     validate_log_out(driver)
 
+
 def move_focus_and_check_badge_stays(driver, badge, new_focus):
     badge = Image(driver, badge)
     badge.wait_until_visible()
     badge.click()
     badge.wait_until_visible()
 
+
 def move_focus_and_check_element(driver, element, new_focus):
     TextField(driver, new_focus).click()
     PageText(driver, element).wait_until_visible()
+
 
 def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMAIL, is_secure=True):
     try:
@@ -305,6 +322,7 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
         print(f"An error occurred: {e}")
         return None
 
+
 def open_page_anonymously(driver: WebDriver, url: str, title: str):
     driver.get(url)
     driver.location_should_be(url)
@@ -312,7 +330,8 @@ def open_page_anonymously(driver: WebDriver, url: str, title: str):
     assert driver.title == title
 
 
-def register_and_activate_account(driver, first_name, last_name, email, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
+def register_and_activate_account(driver, first_name, last_name, email, password, reg="api",
+                                  from_email=rb.FROM_EMAIL_DEFAULT):
     api = CloudPortalAPI()
 
     if reg == "api":
@@ -322,10 +341,14 @@ def register_and_activate_account(driver, first_name, last_name, email, password
     time.sleep(1)
     activate(driver, email, password, from_email=from_email)
 
-def register_and_activate_random_email(driver, first_name, last_name, password, reg="api", from_email=rb.FROM_EMAIL_DEFAULT):
+
+def register_and_activate_random_email(driver, first_name, last_name, password, reg="api",
+                                       from_email=rb.FROM_EMAIL_DEFAULT):
     random_email = get_random_email(sendemail=from_email)
-    register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg, from_email=from_email)
+    register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg,
+                                  from_email=from_email)
     return random_email
+
 
 def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
     if view_type:
@@ -406,4 +429,3 @@ def validate_on_register_page(driver: WebDriver):
     TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
-
