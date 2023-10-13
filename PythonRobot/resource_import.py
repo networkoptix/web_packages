@@ -222,7 +222,7 @@ def delete_email(mail, email_uid):
     mail.expunge()
 
 
-def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT, timeout=300):
+def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
         email_con = Email()
         email_id = email_con.wait_for_email(recipient)
