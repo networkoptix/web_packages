@@ -826,7 +826,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         adminNode.level3 = [
             {
                 id: menus.systemSettings.general.id,
-                svg: menus.systemSettings.general.icon,
                 label: this.LANG.menu.titles.general,
                 path: menus.systemSettings.general.path,
             },
@@ -835,7 +834,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.system.permissionManager.isAdmin() || this.system.permissionManager.isOwner()) {
             adminNode.level3.push({
                 id: menus.systemSettings.licenses.id,
-                svg: menus.systemSettings.licenses.icon,
                 label: this.LANG.menu.titles.licenses,
                 path: menus.systemSettings.licenses.path,
             });

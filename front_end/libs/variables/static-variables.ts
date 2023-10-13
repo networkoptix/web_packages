@@ -10,7 +10,6 @@ import {
     GroupingOptions,
     SortOptions,
 } from '@pages/developer-console/console/edit/console-edit.component.types';
-import * as configTypes from '@services/nx-config/base-config';
 
 export const alertTimeout: number = 3 * 1000; // Alerts are shown for 3 seconds
 export const longAlertTimeout: number = 6 * 1000; // Alerts are shown for 6 seconds
@@ -27,7 +26,7 @@ export const openMobileClientTimeout: number = 300;
 export const responseOk: string = 'ok';
 export const updateInterval: number = 30 * 1000;
 
-export const apiTool: configTypes.APIToolSettings = {
+export const apiTool = {
     manualSystemChangeCooldown: 5000,
     apiTypes: {
         main: {
@@ -75,12 +74,12 @@ export const apiTool: configTypes.APIToolSettings = {
     ],
 };
 
-export const clientMode: configTypes.ClientMode = {
+export const clientMode = {
     beta: false,
     debug: false,
 };
 
-export const credentialsValidation: configTypes.CredentialsValidation = {
+export const credentialsValidation = {
     emailRegex:
         "^[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$",
     passwordRequirements: {
@@ -92,7 +91,7 @@ export const credentialsValidation: configTypes.CredentialsValidation = {
     },
 };
 
-export const dialogs: configTypes.Dialogs = {
+export const dialogs = {
     message: {
         subjects: {
             integration: ['sales_inquiry', 'technical_inquiry', 'integration_feedback'],
@@ -108,7 +107,7 @@ export const dialogs: configTypes.Dialogs = {
     },
 };
 
-export const healthMonitoring: configTypes.HealthMonitoring = {
+export const healthMonitoring = {
     staleReportTimeout: 5, // Timeout before ribbon alert to refresh HM
     valueFormats: {
         '%': { multiplier: 100, decimals: 0 },
@@ -173,7 +172,7 @@ export const healthMonitoring: configTypes.HealthMonitoring = {
     },
 };
 
-export const icons: configTypes.Icons = {
+export const icons = {
     default: `/${staticBase}/images/integration/integration_tile_preview_plugin.svg`,
     platforms: [
         { name: 'mac', src: `/${staticBase}/images/icons/platforms/mac.svg` },
@@ -199,7 +198,7 @@ export const icons: configTypes.Icons = {
     dirLandingIcons: `/${staticBase}/images/landing/block_icons/`,
 };
 
-export const images: configTypes.Images = {
+export const images = {
     dir: `/${staticBase}/images/`,
     dirDevelopers: `/${staticBase}/images/developers/`,
     dirDevelopersDevtools: `/${staticBase}/images/developers/dev_tools/`,
@@ -209,7 +208,7 @@ export const images: configTypes.Images = {
     dirTheme: `/${staticBase}/images/themes/`,
 };
 
-export const meta: configTypes.Meta = {
+export const meta = {
     viewport: {
         default:
             'width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no, shrink-to-fit=no',
@@ -358,7 +357,7 @@ export const manifest = {
     },
 };
 
-export const menus: configTypes.Menus = {
+export const menus = {
     customization: {
         id: 'partners',
         baseUrl: '/partners/',
@@ -480,12 +479,12 @@ export const menus: configTypes.Menus = {
     },
 };
 
-export const oauthStore: configTypes.OauthStoreFlags = {
+export const oauthStore = {
     code: 'code',
     verify2fa: 'verify2fa',
 };
 
-export const redirect: configTypes.Redirect = {
+export const redirect = {
     authorised: environment.isLocal ? '/settings' : '/systems',
     channelPartners: '/home',
     unauthorised: '/',
@@ -493,7 +492,7 @@ export const redirect: configTypes.Redirect = {
     paths: ['/', '/register', '/restore_password', '/activate', '/404'],
 };
 
-export const search: configTypes.Search = {
+export const search = {
     debounceShortTime: 100,
     debounceTime: 500,
     maxLength: 200,
@@ -504,7 +503,7 @@ export const search: configTypes.Search = {
     },
 };
 
-export const servers: configTypes.Servers = {
+export const servers = {
     checkStatusTimeout: 3400,
     minLoaderTime: 500,
     port: {
@@ -530,7 +529,7 @@ export const servers: configTypes.Servers = {
     },
 };
 
-export const webclient: configTypes.Webclient = {
+export const webclient = {
     chunksToCheckFatal: 30,
     disableVolume: true,
     endOfArchiveTime: 30 * 1000,
@@ -560,7 +559,7 @@ const OtherSystemSettings = {
     defaultMotionMask: '5,0,0,44,32',
 };
 
-export const settingsConfig: configTypes.SettingsConfig = {
+export const settingsConfig = {
     additionalLocalFsTypes: { type: 'text' },
     arecontRtspEnabled: { type: 'checkbox' },
     auditTrailEnabled: {

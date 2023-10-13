@@ -2,8 +2,14 @@ import { Injectable } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { Meta } from '@services/nx-config/base-config';
 import { NxPageMetaService } from '@services/page-meta.service';
+
+type Meta = {
+    viewport: {
+        default: string;
+        desktopLayout: string;
+    };
+};
 
 @UntilDestroy()
 @Injectable({

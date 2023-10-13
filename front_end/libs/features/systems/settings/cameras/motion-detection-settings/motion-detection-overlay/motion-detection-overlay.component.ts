@@ -15,7 +15,6 @@ import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 
-import { CameraSettings } from '@services/nx-config/base-config';
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -41,7 +40,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     unsub$: Subject<boolean> = new Subject();
     motionMask: MotionMaskState;
     motionMaskRenderer: MotionMaskRenderer;
-    readonly cameraSettings: CameraSettings = {
+    readonly cameraSettings = {
         sensitivityColors: [
             '#FFFFFF',
             '#627CD6',
