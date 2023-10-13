@@ -10,7 +10,7 @@ This only works for the default customization.
 Replace networkoptix with the other customization's name. You can get it by using exec to access the docker container and running `ls /opt`
 
 # Instructions
-1. Place videos in `./tools/video` (Make sure files dont have spaces in the name)
+1. Place videos in `./tools/videos` (Make sure files dont have spaces in the name)
 2. ```bash
    ./cloud_helper.sh run_virtual_cameras
 3. Go to webadmin or cloud portal and check your systems cameras.
