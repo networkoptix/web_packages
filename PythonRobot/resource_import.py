@@ -227,8 +227,6 @@ def get_email_link(recipient, link_type, from_email=rb.FROM_EMAIL_DEFAULT):
         email_con = Email()
         email_id = email_con.wait_for_email(recipient)
         body = email_con.get_body(email_id)
-        # mbox = open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=recipient, is_secure=True)
-        # email_uid = wait_for_email(mbox, recipient=recipient, timeout_sec=120)
         if link_type == "activate":
             email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
         link = email_con.get_email_link(recipient, link_type)
