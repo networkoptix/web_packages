@@ -310,7 +310,7 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
         return None
 
 
-def open_page_anonymously(driver: WebDriver, url: str, title: str):
+def open_page_anonymously(driver: ChromeBrowser, url: str, title: str):
     driver.get(url)
     driver.location_should_be(url)
     time.sleep(3)
