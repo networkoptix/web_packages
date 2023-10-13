@@ -1,6 +1,7 @@
 import email
 import imaplib
 import json
+import logging
 import pathlib
 import re
 import time
@@ -347,11 +348,6 @@ def register(driver, first_name, last_name, email, password, checked=False, view
 
     TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).input_text(first_name)
     TextField(driver, rb.REGISTER_LAST_NAME_INPUT).input_text(last_name)
-    # continue on failure
-    try:
-        PageText(driver, rb.REGISTER_EMAIL_INPUT_LOCKED).wait_until_visible()
-    except:
-        pass
     TextField(driver, rb.REGISTER_EMAIL_INPUT).input_text(email)
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).input_text(password)
     if not checked:
@@ -416,3 +412,6 @@ def validate_on_register_page(driver: WebDriver):
     TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
+
+
+_logger = logging.getLogger(__name__)
