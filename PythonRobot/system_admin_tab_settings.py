@@ -1,4 +1,5 @@
 import time
+from typing import Callable
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -7,6 +8,7 @@ from RobotVariables import RobotVariables
 from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Button
+from generic_elements import Image
 from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
@@ -87,21 +89,17 @@ class _ServerPage:
         self._element.click()
 
     def wait_until_visible_common_elements(self):
-        Button(self._driver, f'//nx-section//button/span[contains(text(),"{self._rb.RESTART}")]/..').wait_until_visible()
-        Button(
-            self._driver,
-            ('//div[contains(@class, "server-info")]//header//button/'
-             f'span[contains(text(),"{self._rb.DETAILED_INFO_TEXT}")]/..'),
-            ).wait_until_visible()
+        self.get_restart_button().wait_until_visible()
+        self.get_detailed_info_button().wait_until_visible()
         PageText(self._driver, f'//header//p[contains(text(),"{self._rb.IP_TEXT}")]').wait_until_visible()
         PageText(self._driver, f'//header//p[contains(text(),"{self._rb.OS_TEXT}")]').wait_until_visible()
         PageText(self._driver, f'//header//p[contains(text(),"{self._rb.VERSION_TEXT}")]').wait_until_visible()
 
     def wait_until_visible_owner_elements(self):
-        TextField(self._driver, '//nx-standard-server-component//input[@id="server-port-numeric"]').wait_until_visible()
+        self.get_port_field().wait_until_visible()
 
     def set_server_name(self, name: str):
-        element_name = TextField(self._driver, f'//nx-block//nx-editable-heading//nx-text-editable')
+        element_name = self.get_name_field()
         element_name.click()
         element_name.input_text(name + Keys.ENTER)
         self.get_save_button().click()
@@ -160,6 +158,9 @@ class _ServerPage:
         return Button(self._driver,
                       f'//nx-standard-server-component//header//button/span[contains(text(),"{self._rb.DETAILED_INFO_TEXT}")]')
 
+    def get_name_field(self) -> TextField:
+        return TextField(self._driver, f'//nx-block//nx-editable-heading//nx-text-editable')
+
     def wait_until_offline_status(self, timeout=10):
         started_at = time.monotonic()
         while True:
@@ -208,6 +209,15 @@ class _ServerPage:
                     raise TimeoutError(f"Banner 'Checking' does not disappear after {timeout} seconds")
                 time.sleep(0.5)
 
+    def ensure_server_is_offline(self):
+        Image(self._driver, '//nx-server-component//*[local-name()="g" and @id="Cloud/Placeholders/NoSettings"]').wait_until_visible()
+        PageText(self._driver, '//*[@data-testid="placeholderTitle" and @name="NO_SETTINGS"]').wait_until_visible()
+        PageText(self._driver, '//*[contains(@class, "placeholder-message") and @name="NO_SETTINGS"]').wait_until_visible()
+        _wait_element_until_not_visible(self.get_port_field)
+        _wait_element_until_not_visible(self.get_restart_button)
+        _wait_element_until_not_visible(self.get_detailed_info_button)
+        _wait_element_until_not_visible(self.get_name_field)
+
     def _get_input_error_element(self, message_text: str) -> PageText:
         return PageText(
             self._driver,
@@ -254,3 +264,13 @@ class _RestartDialog:
 
     def get_button_restart(self) -> Button:
         return Button(self._driver, '//nx-modal-restart-server-content//button[@type="submit"]')
+
+
+def _wait_element_until_not_visible(element_getter: Callable, timeout=5):
+    try:
+        element = element_getter()
+        element.wait_until_visible(timeout=timeout)
+    except (ElementNotVisible, ElementNotInDOM):
+        return
+    else:
+        raise RuntimeError(f'Element "{element}" does not disappear after {timeout} seconds')
