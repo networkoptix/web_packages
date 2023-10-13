@@ -237,7 +237,7 @@ def get_headless_chrome():
 
 
 @contextmanager
-def get_chrome() -> ContextManager[WebDriver]:
+def get_chrome() -> ContextManager[ChromeBrowser]:
     driver = get_headless_chrome()
     try:
         yield driver
