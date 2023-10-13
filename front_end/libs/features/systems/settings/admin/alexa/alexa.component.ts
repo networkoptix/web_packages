@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, DestroyRef, inject, Input, OnInit } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { lastValueFrom, Observable, OperatorFunction, Subscription } from 'rxjs';
 import { catchError, map, switchMap, tap } from 'rxjs/operators';
@@ -9,8 +10,6 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { EventRule } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
 import { delayInitial } from '@utils/general';
@@ -56,36 +55,32 @@ class AlexaSettings {
 export class NxAlexaComponent implements OnInit {
     @Input({ required: true }) system: NxSystem;
 
-    CONFIG: IConfig;
-    alexaSettings: Partial<AlexaSettings>;
-    alexaSettingsCustomProperty: CustomAccountProperty<Partial<AlexaSettings>>;
-    eventRulesBeingSetup = false;
+    private cloudApi = inject(NxCloudApiService);
+    private destroyRef = inject(DestroyRef);
 
-    constructor(configService: NxConfigService, private cloudApi: NxCloudApiService) {
-        this.CONFIG = configService.getConfig();
-        if (this.CONFIG.cloudCapabilities.alexaIntegrationEnabled) {
-            this.alexaSettingsCustomProperty = this.cloudApi.customAccountPropertyFactory(
-                AlexaSettings.CUSTOM_PROPERTY_ENDPOINT,
-                new AlexaSettings(),
-            );
-        }
-    }
+    alexaSettings: Partial<AlexaSettings>;
+    alexaSettingsCustomProperty: CustomAccountProperty<Partial<AlexaSettings>> =
+        this.cloudApi.customAccountPropertyFactory(
+            AlexaSettings.CUSTOM_PROPERTY_ENDPOINT,
+            new AlexaSettings(),
+        );
+    eventRulesBeingSetup = false;
 
     ngOnInit(): void {
         delayInitial(this.alexaSettingsCustomProperty.value$)
             .pipe(
                 AlexaSettings.cleanObservable(this.system.id),
                 switchMap(this.syncEventRulesSetup),
-                untilDestroyed(this),
+                takeUntilDestroyed(this.destroyRef),
             )
-            .subscribe(
-                settings => {
+            .subscribe({
+                next: settings => {
                     this.alexaSettings = settings;
                 },
-                _ => {
+                error: _ => {
                     this.alexaSettings = {};
                 },
-            );
+            });
     }
 
     updateEventRules = (settings = { enabled: true }): Promise<unknown> => {
