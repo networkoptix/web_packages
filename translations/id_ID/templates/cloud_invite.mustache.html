@@ -1,14 +1,14 @@
-<h1>Hello, </h1>
+<h1>Halo, </h1>
 
-<p>You have been invited to %CLOUD_NAME%</p>
+<p>Anda telah diundang ke %CLOUD_NAME%</p>
 
 {{#message.message}}
 <p>{{ message.message }}</p>
 {{/message.message}}
 
-<p>Please create account on
+<p>Silakan buat akun di
     <a href="{{ config.portal_url }}">%CLOUD_NAME%</a>
-    using your current email address and follow further instructions.
+    menggunakan alamat email Anda saat ini dan ikuti instruksi lebih lanjut.
 </p>
 
-<a class="btn" href="{{ config.portal_url }}/authorize/register/{{ message.code }}">Register Account</a>
+<a class="btn" href="{{ config.portal_url }}/authorize/register/{{ message.code }}">Daftar akun</a>
