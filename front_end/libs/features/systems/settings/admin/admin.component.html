@@ -248,9 +248,8 @@
 
             <nx-section
                 *ngIf="
-                    system.permissionManager.isAdmin() &&
-                    ((system.permissionManager.isOwner() && !CONFIG.cloudSystemId) ||
-                        CONFIG.cloudSystemId)
+                    (system.permissionManager.isOwner() && !CONFIG.cloudSystemId) ||
+                    CONFIG.cloudSystemId
                 "
             >
                 <div class="row m-0">
