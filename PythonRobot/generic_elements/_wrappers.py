@@ -60,6 +60,9 @@ class Button:
             return False
         return self._element.is_enabled()
 
+    def hover(self):
+        return self._element.hover()
+
 
 class Checkbox:
 

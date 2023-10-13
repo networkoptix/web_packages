@@ -312,16 +312,18 @@ class Mediaserver:
             )
         return local_users
 
+    def disconnect_from_cloud(self):
+        _CLOUD_API.disconnect(
+            self._cloud_owner.email,
+            self._cloud_owner.password,
+            self.id,
+            self._cloud_owner.get_otp(),
+            )
 
     def tear_down(self):
         try:
             if self._cloud_owner is not None:
-                _CLOUD_API.disconnect(
-                    self._cloud_owner.email,
-                    self._cloud_owner.password,
-                    self.id,
-                    self._cloud_owner.get_otp(),
-                    )
+                self.disconnect_from_cloud()
         finally:
             self._container.delete()
 

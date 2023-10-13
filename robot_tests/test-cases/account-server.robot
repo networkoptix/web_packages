@@ -7,25 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Account Server Suite Teardown
 Force Tags        account
 
 *** Test Cases ***
-1. Delete account button becomes enabled
-    [Tags]    C69856        delete_account
-    Go To    ${url}/account
-    Log In    ${server 4}[cloudOwner]    ${password}    button=None   api=${False}
-    Verify in Account Page
-    Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
-    Mouse Over    ${DELETE ACCOUNT BUTTON}
-    Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${server 5}[port][0]    ${server 5}[localAuth]
-    Reload page
-    Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
-    Mouse Over    ${DELETE ACCOUNT BUTTON}
-    Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-    Detach Server From Cloud    https://${QA BURBANK IP}:${server 4}[port][0]    ${server 4}[localAuth]
-    Sleep    20
-    Reload page
-    Wait Until Element Is Visible    ${DELETE ACCOUNT BUTTON}
-    Wait Until Element Is Enabled    ${DELETE ACCOUNT BUTTON}
-
 2. After account deletion user is deleted from all systems that were shared with this user
     [Tags]    C69862    delete_account
     ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
