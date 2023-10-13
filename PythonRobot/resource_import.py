@@ -35,7 +35,7 @@ rb = RobotVariables("en_US")
 
 def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
-        link = get_email_link(email, from_email)
+        link = get_email_link(email)
         driver.get(link)
         PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible()
         Image(driver, rb.ACTIVATION_SUCCESS_ICON).wait_until_visible()
@@ -222,17 +222,13 @@ def delete_email(mail, email_uid):
     mail.expunge()
 
 
-def get_email_link(recipient, from_email=rb.FROM_EMAIL_DEFAULT):
-    if from_email:
-        email_con = Email()
-        email_id = email_con.wait_for_email(recipient)
-        link_type = "activate"
-        email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
-        link = email_con.get_email_link(recipient, link_type)
-        return link
-    else:
-        print("from email only")
-        pass
+def get_email_link(recipient):
+    email_con = Email()
+    email_id = email_con.wait_for_email(recipient)
+    link_type = "activate"
+    email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
+    link = email_con.get_email_link(recipient, link_type)
+    return link
 
 
 def get_headless_chrome():
