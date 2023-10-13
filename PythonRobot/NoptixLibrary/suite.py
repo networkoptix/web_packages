@@ -258,6 +258,8 @@ class CloudAccount:
         }
 
     def __init__(self):
+        self.first_name = "Mark"
+        self.last_name = "Hamill"
         self.password = DEFAULT_PASSWORD
         self._totp = None
         self._backup_codes = None
@@ -296,7 +298,7 @@ class CloudAccount:
             'noptixautoqa+sendemail@gmail.com',
             False,
             )
-        _CLOUD_API.register_account('Mark', 'Hamill', self.email, self.password)
+        _CLOUD_API.register_account(self.first_name, self.last_name, self.email, self.password)
         _CLOUD_API.activate_account_via_api(self.email, self.password)
 
     def _tear_down(self):

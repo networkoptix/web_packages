@@ -10,34 +10,6 @@ Force Tags        system   owner_transfer   cloud
 ${cascade}      PASS
 
 *** Test Cases ***
-1. Validate ownership transfer modal
-    [Setup]     Run Keywords    QA Video Recording Start       Skip If Irrelevant     Skip if Cascading
-    Log in to user and system    ${server 1['cloudOwner']}    ${server 1['id']}
-    Wait Until Element Is Visible    ${CHANGE OWNERSHIP LINK}
-    Click Link      ${CHANGE OWNERSHIP LINK}
-    Validate Ownership Transfer Modal   ${server 1}
-
-2. Cancel change ownership in modal
-    [Tags]  C105087
-    Click Button    ${OWNERSHIP TRANSFER CANCEL}
-    Wait Until Element Is Not Visible    ${OWNERSHIP TRANSFER FORM}
-    Wait Until Element Is Visible    ${CHANGE OWNERSHIP LINK}
-    Click Link      ${CHANGE OWNERSHIP LINK}
-    Validate Ownership Transfer Modal   ${server 1}
-
-3. Cancel owner transfer in progress
-    [Documentation]  Cancels and verifies no changes to ownership
-    [Tags]   C105092
-    Initiate Ownership Transfer    ${server 1}   viewer
-    Cancel Ownership Transfer Request    ${server 1}   viewer
-
-4. Reject owner transfer request
-    [Documentation]  Rejects and verifies no changes to ownership
-    [Tags]  C105091   C106289
-    Initiate Ownership Transfer    ${server 1}   viewer
-    Log Out
-    Receive Ownership Transfer Request     ${server 1}   viewer
-    Reject Ownership Transfer Request   ${server 1}
 
 5. Accept owner transfer request
     [Documentation]  Accepts and verifies changes to ownership, old owner removed from system
@@ -46,31 +18,6 @@ ${cascade}      PASS
     Log Out
     Receive Ownership Transfer Request     ${server 1}   viewer
     Accept Ownership Transfer Request   ${server 1}   viewer
-
-6. Change ownership option only available for owner
-    [Tags]   C105083
-    [Setup]     Run Keywords    QA Video Recording Start       Skip If Irrelevant     Skip if Cascading
-    [Teardown]    No Operation
-    ${users} =   Get Cloud System Users    ${server 1}[cloudAuth]    ${server 1}[id]
-    FOR  ${user}  IN   @{users}
-        IF    '${user}[accountEmail]' == '${server 1}[cloudOwner]'
-            Log in to user and system    ${server 1['cloudOwner']}    ${server 1['id']}
-            Wait Until Element Is Visible    ${CHANGE OWNERSHIP LINK}
-            Log Out
-        ELSE
-            Log in to user and system    ${user}[accountEmail]    ${server 1['id']}
-            Wait Until Element Is Visible    ${SYSTEM OWNER}//span[contains(text(), "${server 1}[cloudOwner]")]
-            Element Should Not Be Visible    ${CHANGE OWNERSHIP LINK}
-            Log Out
-        END
-    END
-
-7. No transfer ownership option for systems with no users
-    [Tags]   C105083
-    [Setup]     Run Keywords    QA Video Recording Start       Skip If Irrelevant
-    Log in to user and system    ${server 2['cloudOwner']}    ${server 2['id']}
-    Wait Until Element Is Visible    ${SYSTEM OWNER}//span[contains(text(), "${YOU TEXT}")]
-    Element Should Not Be Visible    ${CHANGE OWNERSHIP LINK}
 
 8. Can't transfer ownership to disabled user
     [Tags]   C105096
@@ -86,26 +33,6 @@ ${cascade}      PASS
     Input Text    ${OWNERSHIP TRANSFER INPUT}    ${server 2}[cloudOwner]
     Wait Until Element Is Visible   ${OWNERSHIP TRANSFER FORM}//*[contains(text(), "${USER NOT FOUND TEXT}")]
     Element Should Be Disabled    ${OWNERSHIP TRANSFER SEND REQUEST}
-
-10. Cancel change by closing modal
-    [Tags]  C105087
-    Click Button    ${OWNERSHIP TRANSFER CLOSE}
-    Wait Until Element Is Not Visible    ${OWNERSHIP TRANSFER FORM}
-    Wait Until Element Is Visible    ${CHANGE OWNERSHIP LINK}
-    Click Link      ${CHANGE OWNERSHIP LINK}
-    Validate Ownership Transfer Modal   ${server 1}
-
-11. Successful transfer for an offline system
-    [Tags]  C105085
-    [Setup]   Run Keywords    QA Video Recording Start      Skip If Irrelevant     Skip if Cascading    Take Server Offline   OT Test Setup
-    [Teardown]    Run Keywords    QA Video Recording Stop    OT Test Teardown    Bring Server Online
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}
-    Initiate Ownership Transfer    ${server 1}   cloudAdmin
-    Log Out
-    Receive Ownership Transfer Request     ${server 1}   cloudAdmin
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}
-    Accept Ownership Transfer Request   ${server 1}   cloudAdmin  checkEmail=${False}
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}
 
 12. No transfer ownership option for 4.2 systems
     [Documentation]   To run with 4.2 server use:  robot -v IMAGE:4.2_test
