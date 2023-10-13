@@ -110,12 +110,6 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     time.sleep(0.5)
 
 
-def check_log_in(driver: WebDriver, user: str, password: str, button=rb.LOG_IN_NAV_BAR):
-    random_email = get_random_email(rb.BASE_EMAIL)
-    # LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
-    LoginDialog(driver).basic_cloud_login(user, password)
-
-
 def check_password_badge(driver: WebDriver, password, new_focus):
     if password != "":
         Image(driver, rb.PASSWORD_BADGE).wait_until_visible()
