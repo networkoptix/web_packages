@@ -35,7 +35,7 @@ rb = RobotVariables("en_US")
 
 def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
     if from_email:
-        link = get_email_link(email, password, from_email, "activate")
+        link = get_email_link(email, "activate", from_email)
         driver.get(link)
         PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible()
         Image(driver, rb.ACTIVATION_SUCCESS_ICON).wait_until_visible()
