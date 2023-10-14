@@ -322,6 +322,9 @@ def normalize_system_email_data(data):
     if attachments := data.pop('attachments', []):
         data['attachments'] = [{ k.lower(): v for k, v in attachment.items() } for attachment in attachments]
 
+    if 'cloudWrapper' not in data:
+        data['cloudWrapper'] = False
+
     return data
 
 
@@ -339,11 +342,12 @@ class SystemEmailSerializer(serializers.ModelSerializer):
         validators=[validate_serialized_attachments], required=False)
     messageId = serializers.IntegerField(
         source='pk', required=False, read_only=True)
+    cloudWrapper = serializers.BooleanField(source='cloud_wrapper', required=False)
 
     class Meta:
         model = SystemEmail
         fields = ('systemId', 'subject', 'messageHtml',
-                  'messageText', 'targets', 'attachments', 'messageId')
+                  'messageText', 'targets', 'attachments', 'messageId', 'cloudWrapper')
 
     def __init__(self, *args, **kwargs):
         if data := kwargs.pop('data', False):

@@ -7,12 +7,13 @@ from django.conf import settings
 from django.core.mail.backends.smtp import EmailBackend
 from cms.controllers.static_files import read_cached_file, TemplatesCache, read_customized_db_file
 from cms.models import Asset
+import imghdr
 
 logger = logging.getLogger(__name__)
 EMAIL_CONFIG = ["portal_url", "smtp_host", "smtp_port", "smtp_password", "smtp_user", "smtp_tls", "mail_from_name", "mail_from_email"]
 
 
-def send(email, msg_type, message, language_code, customization_name, subject='', attachments=None):
+def send(email, msg_type, message, language_code, customization_name, subject='', attachments=None, cloud_wrapper=True):
     from email.mime.image import MIMEImage  # python 3
     from cms.models import cloud_portal_customization_cache
     from django.core.mail import EmailMultiAlternatives, get_connection
@@ -42,13 +43,18 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         subject = pystache.render(subject, {"message": message, "config": config})
         subject = subject.replace("\n", "")
 
-    message_html_template = read_cached_template(asset, customization_name, msg_type,
-                                                 language_code, True, skin, version_id)
-    message_txt_template = read_cached_template(asset, customization_name, msg_type,
-                                                language_code, False, skin, version_id)
+    if cloud_wrapper:
 
-    email_html_body = pystache.render(message_html_template, {"message": message, "config": config})
-    email_txt_body = pystache.render(message_txt_template, {"message": message, "config": config})
+        message_html_template = read_cached_template(asset, customization_name, msg_type,
+                                                    language_code, True, skin, version_id)
+        message_txt_template = read_cached_template(asset, customization_name, msg_type,
+                                                    language_code, False, skin, version_id)
+
+        email_html_body = pystache.render(message_html_template, {"message": message, "config": config})
+        email_txt_body = pystache.render(message_txt_template, {"message": message, "config": config})
+    else:
+        email_html_body = message.get('html_body', '')
+        email_txt_body = message.get('text_body', '')
 
     email_from_name = customization_cache["mail_from_name"]
     email_from_email = customization_cache["mail_from_email"]
@@ -76,18 +82,30 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     # msg.attach_alternative(email_txt_body, "text/plain")
 
     msg.mixed_subtype = 'related'
-    msg_img = MIMEImage(read_cached_file(asset, customization_name,
-                                         'templates/email_logo.png',
-                                         language_code, skin, version_id),
-                        _subtype="png")
-    msg_img.add_header('Content-ID', '<logo>')
-    msg.attach(msg_img)
+    if 'src="cid:logo"' in email_html_body or cloud_wrapper:
+        msg_img = MIMEImage(read_cached_file(asset, customization_name,
+                                            'templates/email_logo.png',
+                                            language_code, skin, version_id),
+                            _subtype="png")
+        msg_img.add_header('Content-ID', '<logo>')
+        msg.attach(msg_img)
 
     if not attachments:
         attachments = []
 
     for attachment in attachments:
-        msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
+        png_not_in_filename = 'png' not in attachment['filename']
+        filename_not_logo = attachment['filename'] != 'logo'
+        include_cid_header = png_not_in_filename and filename_not_logo and imghdr.what(None, attachment['content']) == 'png'
+
+        if include_cid_header:
+            # Handle images used in emails from mediaserver
+            message_icon = MIMEImage(attachment['content'], _subtype="png")
+            message_icon.add_header('Content-Disposition', f'attachment; filename= {attachment["filename"]}')
+            message_icon.add_header('Content-ID', f'<{attachment["filename"]}>')
+            msg.attach(message_icon)
+        else:
+            msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
 
     mail_obj.send_messages([msg])
     mail_obj.close()

@@ -85,8 +85,10 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
     send_individual = not isinstance(message, Message)
     subject = ''
     attachments = []
+    cloud_wrapper = True
 
     if isinstance(message, SystemEmail):
+        cloud_wrapper = message.cloud_wrapper
         message.result = RESULT_STATES.in_progress
         subject = message.subject
         cached_attachments = caches['emails'].get(message.attachments.get('cache_key'), [])
@@ -125,12 +127,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
             if is_dict_content and 'userFullName' not in email_content:
                 email_content['userFullName'] = get_email_full_name(email, send_individual)
             try:
-                args = [email, template_type, email_content, lang, customization, subject, attachments]
-                if settings.TESTING:
-                    # Arguments are being mutated within email_engine.send
-                    # Need to make a copy to prevent magic mock incorrectly thinking that the test failed
-                    args = copy.deepcopy([email, template_type, email_content, lang, customization, subject, attachments])
-                email_engine.send(*args)
+                email_engine.send(email, template_type, email_content, lang, customization, subject, attachments, cloud_wrapper)
             except Exception as e:
                 errors.append(e)
                 failed_emails.append(email)

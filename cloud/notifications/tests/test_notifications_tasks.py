@@ -45,8 +45,9 @@ def test_send_email_log(mocker):
 
 class TestSendEmail:
     @pytest.fixture(autouse=True)
-    def setup(self, mocker, db):
-        self.mock_send = mocker.patch('notifications.engines.email_engine.send')
+    def setup(self, mocker, CopyingMock, db):
+        self.mock_send = CopyingMock()
+        mocker.patch('notifications.engines.email_engine.send', new=self.mock_send)
         self.user_email = f'{uuid4()}@{uuid4()}.com'
         self.message = baker.make(Message, user_email=self.user_email, message=str(uuid4()))
         self.expected_lang = get_language_for_email(
@@ -58,7 +59,7 @@ class TestSendEmail:
         updated_message = Message.objects.get(id=self.message.id)
         assert updated_message.send_date
         self.mock_send.assert_called_once_with(
-            self.message.user_email, self.message.type, self.message.message, self.expected_lang, self.message.customization, '', [])
+            self.message.user_email, self.message.type, self.message.message, self.expected_lang, self.message.customization, '', [], True)
         assert status == {
             'user_email': self.message.user_email,
             'type': self.message.type,
@@ -117,7 +118,8 @@ class TestSendEmail:
                 self.expected_lang,
                 settings.TEST_CUSTOMIZATION,
                 sys_email.subject,
-                [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
+                [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments],
+                False
             )
             for email in activated_emails
         ]

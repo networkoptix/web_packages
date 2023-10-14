@@ -33,7 +33,7 @@ def test_email_notification(arf, account_factory, db, mocker):
 
     # Test success
     assert res.status_code == status.HTTP_200_OK
-    assert res.data == {**data, 'messageId': res.data['messageId'], 'messageHtml': f'<p>{message_html}</p>'}
+    assert res.data == {**data, 'messageId': res.data['messageId'], 'messageHtml': message_html, 'cloudWrapper': False}
 
     # Test missing subject
     request = arf.post(url, {**data, 'subject': ''}, format='json')
