@@ -88,7 +88,7 @@ class SystemAdmin:
         return Button(self.driver, translated_xpath)
     
     def system_offline_text(self):
-        return Button(self.driver, f"//div[contains(text(),'{self.rb.SYSTEM_IS_OFFLINE_TEXT}')]")
+        return PageText(self.driver, f"//div[contains(text(),'{self.rb.SYSTEM_IS_OFFLINE_TEXT}')]")
 
     def ensure_system_online(self, system_name: str, timeout = 10.0):
         error_message = f"System {system_name} is offline and cannot be merged with the current one"
