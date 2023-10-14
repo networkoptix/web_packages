@@ -26,7 +26,12 @@ class Element:
 
     def click(self):
         self.wait_until_clickable()
-        self._element.click()
+        try:
+            self._element.click()
+        except StaleElementReferenceException:
+            self._element = self._driver.find_element(By.XPATH, self._locator)
+            self._element.click()
+            print(".click() intercepted a 'StaleElementReferenceException'")
 
     def count(self, timeout: float = 10.0):
         # Wait for the page to fully load (by waiting for the document.readyState to be 'complete')
