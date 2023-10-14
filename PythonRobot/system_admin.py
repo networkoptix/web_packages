@@ -4,6 +4,7 @@ import time
 from selenium.common.exceptions import ElementClickInterceptedException
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
+from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
@@ -214,21 +215,20 @@ class SystemAdmin:
                     raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
                 self.driver.refresh()
 
-    def wait_until_system_is_loaded(self):
-        locator = "//span[contains(text(), 'Not able to load system')]"
-        try:
-            robot_keywords.wait_until_page_contains_element(self.driver, locator, timeout=10)
-        except:
-            pass
-        else:
-            robot_keywords.wait_until_page_does_not_contain_element(self.driver, locator, timeout=90)
-            self.refresh()
-            robot_keywords.wait_until_page_contains_element(self.driver, "//span[contains(text(), 'Enable auto discovery')]")
-        
     def _wait_until_page_loaded(self):
-        Page(self.driver, "//nx-system-settings-component").wait_until_exists()
-        TextField(self.driver, "//div/nx-editable-heading//nx-text-editable").wait_until_visible()
-
+        system_loaded_locator = "//nx-system-settings-component"
+        started_at = time.monotonic()
+        timeout_sec = 90
+        while True:
+            if len(self.driver.find_elements(By.XPATH, system_loaded_locator)) > 0:
+                break
+            try:
+                PageText(self.driver, system_loaded_locator).wait_until_visible()
+            except (ElementNotInDOM, ElementNotVisible):
+                self.driver.refresh()
+                if time.monotonic() - started_at > timeout_sec:
+                    raise TimeoutError(f"{system_loaded_locator!r} is not visible after {timeout_sec} seconds")
+        
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
 
