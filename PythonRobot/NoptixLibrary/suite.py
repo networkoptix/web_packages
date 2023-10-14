@@ -14,10 +14,6 @@ from NoptixLibrary.docker_api import DockerApi
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
-from login import LoginDialog
-from system_admin import SystemAdmin
-from resource_import import get_chrome
-from variables import ENV
 
 _CLOUD_API = CloudPortalAPI()
 _DOCKER_API = DockerApi()
@@ -82,11 +78,6 @@ class Suite:
             server._cloud_advanced_viewer = cloud_users.get('advancedViewer')
             server._cloud_live_viewer = cloud_users.get('liveViewer')
             server._cloud_custom_user = cloud_users.get('custom')
-        with get_chrome() as driver:
-            url = ENV + f"/systems/{server.id}"
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(cloud_owner.email, cloud_owner.password)
-            SystemAdmin(driver).wait_until_system_is_loaded()
         return server
 
     def create_cloud_users(self, permissions: Optional[Collection[str]] = None):
@@ -218,17 +209,17 @@ class Mediaserver:
             self._port_mapping[vms_default_port + index] = f'https://{_DOCKER_API.host_ip}:{docker_port}'
         # Set up a local system.
         server_api_port, *_ = data['port']
-        server_api_url = f'https://{_GENERIC_KEYWORDS.docker_host_ip}:{server_api_port}'
-        self._api = ServerApi(server_api_url, password=INITIAL_PASSWORD)
-        self._api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
+        server_api_url = f'https://{_DOCKER_API.host_ip}:{server_api_port}'
+        self.api = ServerApi(url=server_api_url, password=INITIAL_PASSWORD)
+        self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         self._local_users = self.create_local_users()
         return self
 
     def create_local_users(self) -> dict:
         local_users = {}
-        permissions = _GENERIC_KEYWORDS.permissions
+        permissions = CloudAccount().PERMISSIONS
         for permission in permissions:
-            self._api.save_user(
+            self.api.save_user(
                 "Local+" + permission,
                 permissions[permission],
                 f"noptixautoqa+local_{permission}@gmail.com",
