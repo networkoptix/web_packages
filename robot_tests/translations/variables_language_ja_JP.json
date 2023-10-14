@@ -453,7 +453,7 @@
     "MAX RTSP CONNECT DURATION TEXT": "RTSP接続期間の最大秒数",
     "MAX SCENE ITEMS TEXT": "シーン内最大アイテム数 (0でデフォルト値を使用)",
     "MAX VIRTUAL CAM ARCHIVE SYNC THREADS TEXT": "仮想カメラのアーカイブ同期スレッド最大数",
-    "MAX HTTP TRANSCODERS TEXT": "このサーバーに対する、トランスコーディングを使用したHTTP接続の最大数。Chromeは一度に2つの接続を開き、その後最初の接続を閉じます。したがって、このパラメータには2以上の値を設定することをお勧めします。",
+    "MAX HTTP TRANSCODERS TEXT": "このサーバーに対する、トランスコーディングを使用したHTTP接続の最大数。Chromeは一度に2つの接続を開き、その後最初の接続を閉じます。したがって、このパラメーターには2以上の値を設定することをお勧めします。",
     "META DATA STORAGE CHANGE TEXT": "メタデータストレージ変更ポリシー",
     "OS TIME CHANGE CHECK PERIOD TEXT": "OS時刻変更の確認間隔",
     "PRIMARY TIME SYNC SERVER TEXT": "プライマリ時刻同期サーバ",
