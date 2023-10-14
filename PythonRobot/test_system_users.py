@@ -4,6 +4,7 @@ import robot_keywords
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
 from email_access import Email
 from header import HeaderNav
@@ -23,7 +24,7 @@ password = "qweasd 123"
 
 CLOUD_API = CloudPortalAPI()
 rb = RobotVariables("en_US")
-permissions = keywords.permissions
+permissions = CloudAccount().PERMISSIONS
 viewer_permissions = permissions['viewer']
 admin_permissions = permissions['cloudAdmin']
 
