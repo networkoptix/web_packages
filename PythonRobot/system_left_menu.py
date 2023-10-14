@@ -13,6 +13,7 @@ from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TextField
 from generic_elements import Pane
+from generic_elements import Link
 from variables import ENV
 
 
@@ -34,7 +35,7 @@ class SystemLeftMenu:
 
     def update_users_list(self):
         locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
-        robot_keywords.wait_until_page_contains_element(self.driver, locator)
+        Link(self.driver, locator).wait_until_visible()
         users = self.driver.find_elements(By.XPATH,locator)
         self.users = []
         for user in users:
