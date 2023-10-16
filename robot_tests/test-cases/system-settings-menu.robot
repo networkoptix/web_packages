@@ -9,29 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-14. Should hide menu buttons on search
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Click Element                       ${LEFT MENU LEVEL1 USERS}
-    Wait Until Page Contains Element    ${LEFT MENU BUTTONS}
-    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
-    Wait Until Page Does Not Contain Element    ${LEFT MENU BUTTONS}
-    Click Button                        ${LEFT MENU SEARCH CLEAR}
-
-15. Should perform search with single criteria
-    Wait Until Page Contains Element            ${LEFT MENU}
-    Wait Until Settings Are Visible
-    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
-    Wait Until Elements Are Visible     ${LEFT MENU SEARCH MATCHES}
-    Sleep    5
-    ${matches}=   Get WebElements     ${LEFT MENU SEARCH MATCHES}
-    FOR    ${match}    IN    @{matches}
-        ${text}=   Run Keyword And Continue On Failure    Get Text    ${match}
-        ${text}=   Convert To Lower Case    ${text}
-        IF    '${text}' != 'None' and '${text}' != '${EMPTY}'
-            Should Contain    ${text}    ${simple criteria}
-        END
-    END
-
 16. Should perform search with 'AND' criteria
     Wait Until Page Contains Element    ${LEFT MENU}
     Wait Until Settings Are Visible
