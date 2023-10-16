@@ -138,7 +138,7 @@ class TextField:
         elif self._element.get_attribute("value"):
             return self._element.get_attribute("value")
         else:
-            raise RuntimeError("Element had no text")
+            return ""
 
     def get_outline_color(self) -> str:
         return self._element.value_of_css_property("border-color")

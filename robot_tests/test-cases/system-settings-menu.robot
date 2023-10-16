@@ -9,19 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-11. Should have button CLEAR for search
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
-    Wait Until Page Contains Element    ${LEFT MENU SEARCH CLEAR}
-    Wait Until Element Has Style        ${LEFT MENU SEARCH CLEAR}       height              ${SEARCH HEIGHT}
-
-12. Should clear search input
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Input Text                          ${LEFT MENU SEARCH INPUT}       ${simple criteria}
-    Wait Until Element Is Visible       ${LEFT MENU SEARCH CLEAR}
-    Click Button                        ${LEFT MENU SEARCH CLEAR}
-    Textfield Should Contain            ${LEFT MENU SEARCH INPUT}       ${EMPTY}
-
 13. Should display Nothing found
     Wait Until Page Contains Element    ${LEFT MENU}
     Input Text                          ${LEFT MENU SEARCH INPUT}       ${impossible search}

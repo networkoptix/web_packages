@@ -5,6 +5,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
+from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
@@ -107,7 +108,7 @@ class SystemLeftMenu:
         self.driver.location_should_be(f"{ENV}systems/")
 
     def get_search_field(self):
-        return TextField(self.driver, f"{self._locator}/nx-search//input")
+        return SearchField(self.driver, f"{self._locator}/nx-search//input")
 
     def get_node_by_name_within_timeout(self, name: str, timeout_sec=3):
         started_at = time.monotonic()
@@ -129,6 +130,33 @@ class SystemLeftMenu:
         except NoSuchElementException:
             return False
         return True
+
+
+class SearchField:
+    def __init__(self, driver: ChromeBrowser, locator: str):
+        self._locator = locator
+        self.driver = driver
+
+    def _get_field(self):
+        return TextField(self.driver, self._locator)
+
+    def wait_until_does_not_exist(self):
+        self._get_field().wait_until_does_not_exist()
+
+    def wait_until_visible(self):
+        self._get_field().wait_until_visible()
+
+    def input_text(self, text: str):
+        self._get_field().input_text(text)
+
+    def get_cross_button(self) -> Button:
+        locator = (
+            "/html/body/nx-app/div/div[2]/div/nx-system-settings-component/div/div/div[1]"
+            "/nx-menu/nx-search/div/div/div/div/div/button")
+        return Button(self.driver, locator)
+
+    def get_text(self) -> str:
+        return self._get_field().get_text()
 
 
 _logger = logging.getLogger(__name__)

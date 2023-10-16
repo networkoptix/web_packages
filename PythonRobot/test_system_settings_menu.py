@@ -74,6 +74,13 @@ def check_search_input(server: Mediaserver):
         assert not left_menu.has_node_with_name('Licenses')
         assert not left_menu.has_node_with_name('Cameras')
         assert not left_menu.has_node_with_name('Servers')
+        search_field.get_cross_button().click()
+        assert search_field.get_text() == ''
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name('System Administration')
+        assert left_menu.has_node_with_name('Licenses')
+        assert left_menu.has_node_with_name('Cameras')
+        assert left_menu.has_node_with_name('Servers')
         print("Pass")
 
 
