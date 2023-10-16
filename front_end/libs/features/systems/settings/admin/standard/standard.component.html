@@ -115,7 +115,10 @@
             </nx-section>
         </ng-template>
     </nx-block>
-    <nx-block type="mt-3">
+    <nx-block
+        type="mt-3"
+        *ngIf="canEditSecurity"
+    >
         <header><h4 translate>Security</h4></header>
         <nx-section-placeholder
             *ngIf="

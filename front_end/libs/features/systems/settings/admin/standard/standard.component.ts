@@ -23,6 +23,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { icons, menus } from '@static-variables';
@@ -65,6 +66,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
     system2faEnabled = false;
     settingsWatchersSet = false;
     canChange2fa = false;
+    canEditSecurity = false;
 
     systemAndSecuritySettings = {
         autoDiscoveryEnabled: false,
@@ -135,6 +137,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         this.system2faEnabled =
             this.systemsService.systems.find(system => system.id === this.system.id)
                 ?.system2faEnabled || false;
+        this.checkEditSecurity();
     }
 
     ngOnChanges(changes: NgChanges<NxSystemStandardAdminComponent>): void {
@@ -213,6 +216,20 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
         const changes = { ...sw };
 
         return firstValueFrom(this.system.updateOrGetSystemSettings(changes));
+    }
+
+    checkEditSecurity(): void {
+        if (this.system.mediaserver instanceof NxSystemRestAPI3) {
+            if (this.system.permissionManager.isOwner()) {
+                this.canEditSecurity = true;
+            } else {
+                this.system.mediaserver
+                    .powerUserCanEditSecuritySettings()
+                    .subscribe({ next: res => (this.canEditSecurity = res) });
+            }
+        } else {
+            this.canEditSecurity = true;
+        }
     }
 
     initProcess(): void {
