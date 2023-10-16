@@ -1,3 +1,4 @@
+import logging
 import time
 from pathlib import Path
 
@@ -144,7 +145,40 @@ def test_online_2_servers(server: Mediaserver, rb: RobotVariables):
         server_page.wait_until_visible_common_elements()
 
 
+def test_1_online_1_offline(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):
+    """
+    16. Server1 is online, Server2 is offline
+    [Tags]    C70955    cloud   webadmin
+    """
+    server2_name = server2.get_server_name()
+    server2.stop()
+    with (get_chrome() as driver):
+        driver.get(rb.ENV)
+        owner = server1.get_cloud_owner()
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        driver.get(rb.ENV + f"/systems/{server1.id}")
+        system_admin_page = SystemAdmin(driver, rb.language)
+        tab_settings = system_admin_page.get_tab_settings()
+        tab_settings.click()
+        time.sleep(20)  # Waiting for the server status to update on the portal
+        servers_section = tab_settings.get_servers_section()
+        servers_section.click()
+        server_page = servers_section.get_server_page(server1.get_server_name())
+        server_page.click()
+        server_page.wait_until_visible_common_elements()
+        server_page = servers_section.get_server_page(server2_name)
+        server_page.click()
+        server_page.wait_until_offline_status()
+        assert server_page.get_check_status_button().is_visible()
+        assert not server_page.get_restart_button().is_enabled()
+        assert server_page.get_detailed_info_button().is_visible()
+        assert not server_page.get_port_field().is_enabled()
+    server2.start(True)
+
+
 if __name__ == '__main__':
+    logging.basicConfig(level=logging.INFO)
     suite_name = Path(__file__).stem
     if 'test_' == suite_name[:5]:
         suite_name = suite_name.replace('test_', '', 1)
@@ -165,3 +199,5 @@ if __name__ == '__main__':
         print(f'{Fore.WHITE}{test_offline_system_1_server.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
         test_online_2_servers(server1, variables)
         print(f'{Fore.WHITE}{test_online_2_servers.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_1_online_1_offline(server1, server2, variables)
+        print(f'{Fore.WHITE}{test_1_online_1_offline.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')

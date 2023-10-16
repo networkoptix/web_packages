@@ -8,7 +8,8 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
-from ._generic_element import Element
+from generic_elements import ElementNotInDOM
+from generic_elements._generic_element import Element
 
 
 class Button:
@@ -22,6 +23,10 @@ class Button:
         self._element.click()
 
     def is_visible(self) -> bool:
+        try:
+            self._element.wait_until_exists()
+        except ElementNotInDOM:
+            return False
         return self._element.is_visible()
 
     def is_focused(self) -> bool:

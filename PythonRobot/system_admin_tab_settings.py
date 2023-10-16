@@ -152,7 +152,7 @@ class _ServerPage:
         return Button(self._driver, f'//nx-alert-block//button/span[contains(text(),"{self._rb.CHECK_STATUS_TEXT}")]')
 
     def get_restart_button(self) -> Button:
-        return Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]')
+        return Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]/parent::button')
 
     def get_detailed_info_button(self) -> Button:
         return Button(self._driver,
