@@ -131,6 +131,14 @@ class SystemLeftMenu:
             return False
         return True
 
+    def has_nothing_found_text(self):
+        placeholder = PageText(
+                self.driver,
+                f"{self._locator}"
+                f"/div[contains(@class,nx-menu)]/div[contains(@class,nx-menu-placeholder)]",
+                )
+        return placeholder.get_text() == 'Nothing found'
+
 
 class SearchField:
     def __init__(self, driver: ChromeBrowser, locator: str):

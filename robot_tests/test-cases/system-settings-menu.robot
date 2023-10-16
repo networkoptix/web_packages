@@ -9,14 +9,6 @@ Force Tags        system    left-menu    threaded    webadmin    cloud
 
 *** Test Cases ***
 
-13. Should display Nothing found
-    Wait Until Page Contains Element    ${LEFT MENU}
-    Input Text                          ${LEFT MENU SEARCH INPUT}       ${impossible search}
-    ${count}=   Get Element Count       ${LEFT MENU}/div[contains(@class,'nx-menu')]/div
-    Should Be True  ${count} == 1
-    Element Text Should Be              ${LEFT MENU NO RESULT}          ${nothing found}    ignore_case=True
-    Click Button                        ${LEFT MENU SEARCH CLEAR}
-
 14. Should hide menu buttons on search
     Wait Until Page Contains Element    ${LEFT MENU}
     Click Element                       ${LEFT MENU LEVEL1 USERS}

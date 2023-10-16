@@ -84,6 +84,25 @@ def check_search_input(server: Mediaserver):
         print("Pass")
 
 
+def should_display_nothing_found(server: Mediaserver):
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver)
+        left_menu = SystemLeftMenu(driver)
+        search_field = left_menu.get_search_field()
+        search_field.wait_until_visible()
+        search_field.input_text('velociraptor')
+        assert not left_menu.has_node_with_name('Users')
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        assert not left_menu.has_node_with_name('Servers')
+        assert left_menu.has_nothing_found_text()
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if suite_name.startswith('test_'):
@@ -97,3 +116,4 @@ if __name__ == '__main__':
         selected_node_has_different_color(cloud_server)
         users_are_seen_when_main_node_is_selected(cloud_server)
         check_search_input(cloud_server)
+        should_display_nothing_found(cloud_server)
