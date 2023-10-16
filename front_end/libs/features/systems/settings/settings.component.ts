@@ -724,9 +724,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
                         } else if (user.groupIds.length === 1) {
                             // @ts-expect-error Above TODO
-                            const { name } = this.system.userManager.userGroups.find(
-                                group => group.id === user.groupIds[0],
-                            );
+                            const { name } = this.system.userManager.userGroups[user.groupIds[0]];
                             additionalLabel = this.LANG.accessRoles[name]?.label || name;
                         } else if (user.groupIds.length >= 2) {
                             additionalLabel = {

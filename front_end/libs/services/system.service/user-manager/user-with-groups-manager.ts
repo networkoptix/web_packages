@@ -24,14 +24,20 @@ interface UserPerms {
     permissions: string;
 }
 
+interface GroupIdToPermissions {
+    [id: string]: Set<string>;
+}
+
+interface IdToGroup {
+    [id: string]: UserGroup;
+}
+
 export class UserWithGroupsManager extends UserManager {
     LANG = staticLang;
 
     protected mediaserver: NxSystemRestAPI3;
-    userGroups: UserGroup[];
-    protected groupsToPermissions: {
-        [id: string]: Set<string>;
-    };
+    userGroups: IdToGroup;
+    protected groupsToPermissions: GroupIdToPermissions;
     protected _ownerEmail: string;
     protected locale: string;
     // isMySystem: boolean;
@@ -108,53 +114,81 @@ export class UserWithGroupsManager extends UserManager {
     override async getUsersDataFromTheSystem(): Promise<any> {
         try {
             const userGroups: UserGroup[] = await lastValueFrom(this.mediaserver.getUserGroups());
+            // Converts userGroups to a map and makes a shortcut for permissions.
             this.processGroups(userGroups);
-            const users: NxUser[] = await lastValueFrom(this.mediaserver.getUsers());
-            return Promise.resolve(this.processUsers(users));
+            const rawUsers: NxUser[] = await lastValueFrom(this.mediaserver.getUsers());
+            const users: NxUser[] = this.processUsers(rawUsers);
+            // Creates the dropdowns for add user dialog and edit user page.
+            this.buildGroupsDropdown();
+            return Promise.resolve(users);
         } catch (err) {
             return Promise.reject('Media server cloud not be reached.');
         }
     }
 
     processGroups(userGroups: UserGroup[]): void {
+        const idToGroup: IdToGroup = {};
+        const groupIdToPermissions: GroupIdToPermissions = {};
+        userGroups.forEach(group => {
+            idToGroup[group.id] = group;
+            groupIdToPermissions[group.id] = new Set(group.permissions?.split('|') ?? '');
+        });
+        this.userGroups = idToGroup;
+        this.groupsToPermissions = groupIdToPermissions;
+    }
+
+    private isGroupPowerUser(group: UserGroup): boolean {
+        if (group.id.includes(AdminGroups.powerUserGroup)) {
+            return true;
+        } else if (!group.parentGroupIds) {
+            return false;
+        } else if (group.parentGroupIds.includes(AdminGroups.powerUserGroup)) {
+            return true;
+        }
+        return group.parentGroupIds.some(parentGroup =>
+            this.isGroupPowerUser(this.userGroups[parentGroup]),
+        );
+    }
+
+    private buildGroupsDropdown(): void {
         const { defaultUserGroupText, customUserGroupText, ldapUserGroupText } =
             this.LANG.dialogs.titles;
-        const groupsToPermissions: {
-            [id: string]: Set<string>;
-        } = {};
         const builtInGroup: UserGroupDropdown[] = [{ id: 'title', label: defaultUserGroupText }];
         const customGroup: UserGroupDropdown[] = [];
         const ldapGroup: UserGroupDropdown[] = [];
-        userGroups.forEach(({ id, name, description, attributes, permissions, type }) => {
-            groupsToPermissions[id] = new Set(permissions?.split('|'));
-            if (!description && attributes?.includes('readonly')) {
-                userGroups[id].description = this.LANG.accessRoles[name].description || name;
-            }
-            // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
-            if (id === AdminGroups.administratorGroup) {
-                return;
-            }
-            // Organize Built-In, LDAP, and Custom groups into smaller groups to combine later for the mult-select dropdown
-            if (attributes && attributes === 'readonly') {
-                builtInGroup.push({
-                    id,
-                    label: name,
-                    tooltip: description,
-                });
-            } else if (type && type === 'ldap') {
-                ldapGroup.push({
-                    id,
-                    label: name,
-                    tooltip: description,
-                });
-            } else {
-                customGroup.push({
-                    id,
-                    label: name,
-                    tooltip: description,
-                });
-            }
-        });
+        const currentUserIsOwner = this.currentUser.isOwner;
+        Object.values(this.userGroups)
+            .filter(group => currentUserIsOwner || !this.isGroupPowerUser(group)) // Remove all power user groups if user isn't owner;
+            .forEach(({ id, name, description, attributes, type }) => {
+                if (!description && attributes?.includes('readonly')) {
+                    this.userGroups[id].description =
+                        this.LANG.accessRoles[name].description || name;
+                }
+                // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
+                if (id === AdminGroups.administratorGroup) {
+                    return;
+                }
+                // Organize Built-In, LDAP, and Custom groups into smaller groups to combine later for the mult-select dropdown
+                if (attributes && attributes === 'readonly') {
+                    builtInGroup.push({
+                        id,
+                        label: name,
+                        tooltip: description,
+                    });
+                } else if (type && type === 'ldap') {
+                    ldapGroup.push({
+                        id,
+                        label: name,
+                        tooltip: description,
+                    });
+                } else {
+                    customGroup.push({
+                        id,
+                        label: name,
+                        tooltip: description,
+                    });
+                }
+            });
 
         // Used to insert the group title and horizontal divider for the mult-select dropdown
         if (customGroup.length > 0) {
@@ -172,9 +206,6 @@ export class UserWithGroupsManager extends UserManager {
         // Combine Built-In, LDAP, and Custom groups
         this.groups = builtInGroup.concat(customGroup, ldapGroup);
         this.groups$$.set(this.groups);
-
-        this.userGroups = userGroups;
-        this.groupsToPermissions = groupsToPermissions;
     }
 
     getPermissionsFromUserGroups({ groupIds, permissions }: UserPerms): Set<string> {
@@ -221,7 +252,9 @@ export class UserWithGroupsManager extends UserManager {
                 // user.userGroupNames = [];
                 // allMediaPermissionFlag exists if the all camera permission option selected...this still true?
                 user.isOwner = user.groupIds.includes(AdminGroups.administratorGroup);
-                user.isAdmin = user.isOwner || user.groupIds.includes(AdminGroups.powerUserGroup);
+                user.isAdmin =
+                    user.isOwner ||
+                    user.groupIds.some(groupId => this.isGroupPowerUser(this.userGroups[groupId]));
                 user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
                 user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
@@ -247,20 +280,6 @@ export class UserWithGroupsManager extends UserManager {
                 }
                 return userA.type === 'cloud' ? 1 : -1;
             });
-
-        // Power Users should not be able to add other Power Users, so we'll remove it from the dropdown for them
-        if (!this.currentUser.isOwner) {
-            this.groups$$.update(groups =>
-                groups.filter(
-                    group =>
-                        group.id !== AdminGroups.powerUserGroup &&
-                        !this.userGroups
-                            .find(({ id }) => id === group.id)
-                            ?.parentGroupIds?.includes(AdminGroups.powerUserGroup),
-                ),
-            );
-            this.groups = this.groups$$();
-        }
 
         return this.users;
     }
@@ -319,7 +338,6 @@ export class UserWithGroupsManager extends UserManager {
         // The mediaserver doesn't like any attempts to change admin's permissions
         if (user.isLocalOwner) {
             delete user.name;
-            delete user.permissions;
         }
 
         // v3 doesn't like user permissions for modifyUser
