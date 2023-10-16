@@ -103,6 +103,36 @@ def should_display_nothing_found(server: Mediaserver):
         assert left_menu.has_nothing_found_text()
 
 
+def should_perform_search_with_and_and_or_criteria(server: Mediaserver):
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver)
+        left_menu = SystemLeftMenu(driver)
+        search_field = left_menu.get_search_field()
+        search_field.wait_until_visible()
+        search_field.input_text('noptix @')
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name(owner.email)
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        assert not left_menu.has_node_with_name('Servers')
+        search_field.input_text('noptix velociraptor')
+        assert left_menu.has_nothing_found_text()
+        search_field.input_text(f'noptix | Server')
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name(owner.email)
+        assert left_menu.has_node_with_name('Servers')
+        assert left_menu.has_node_with_name(server.get_server_name())
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        print("Pass")
+
+
 if __name__ == '__main__':
     suite_name = Path(__file__).stem
     if suite_name.startswith('test_'):
@@ -117,3 +147,4 @@ if __name__ == '__main__':
         users_are_seen_when_main_node_is_selected(cloud_server)
         check_search_input(cloud_server)
         should_display_nothing_found(cloud_server)
+        should_perform_search_with_and_and_or_criteria(cloud_server)
