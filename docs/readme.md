@@ -6,9 +6,9 @@
 
 ## Introduction
 
-This repository `nx_open_cloud_portal` contains **Network Optix Meta Platform open source web
-packages** - the source code and published packages are used in building Nx Meta Cloud Portal,
-Webadmin, and various web projects within Network Optix.
+This repository contains **Network Optix Meta Platform open source web packages**  - the source
+code and published packages used in building Nx Meta Cloud Portal, Webadmin, and various web
+projects within Network Optix that might be useful for third-party developers.
 
 ### Contribution policy
 
