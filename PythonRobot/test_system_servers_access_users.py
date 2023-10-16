@@ -33,6 +33,27 @@ def test_access_owner(server: Mediaserver, rb: RobotVariables):
         server_page.wait_until_visible_owner_elements()
 
 
+def test_access_administrator(server: Mediaserver, rb: RobotVariables):
+    """
+    18. Administrator has Access
+    [Tags]    C70957    cloud    webadmin
+    """
+    with get_chrome() as driver:
+        driver.get(rb.ENV)
+        user = server.get_cloud_admin()
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(user.email, user.password)
+        driver.get(rb.ENV + f"/systems/{server.id}")
+        system_admin_page = SystemAdmin(driver, rb.language)
+        tab_settings = system_admin_page.get_tab_settings()
+        tab_settings.click()
+        servers_section = tab_settings.get_servers_section()
+        servers_section.click()
+        server_page = servers_section.get_default_server_page()
+        server_page.wait_until_visible_common_elements()
+        assert not server_page.get_port_field().is_enabled()
+
+
 if __name__ == '__main__':
     logging.basicConfig(level=logging.INFO)
     suite_name = Path(__file__).stem
@@ -41,7 +62,9 @@ if __name__ == '__main__':
     variables = RobotVariables("en_US")
     with Suite() as suite:
         cloud_owner = suite.create_cloud_account()
-        cloud_admin = suite.create_cloud_account()
-        server = suite.create_cloud_server(cloud_owner, f"{suite_name}", {'cloudAdmin': cloud_admin})
+        users = suite.create_cloud_users(['cloudAdmin'])
+        server = suite.create_cloud_server(cloud_owner, f"{suite_name}", users)
         test_access_owner(server, variables)
         print(f'{Fore.WHITE}{test_access_owner.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
+        test_access_administrator(server, variables)
+        print(f'{Fore.WHITE}{test_access_administrator.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
