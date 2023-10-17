@@ -1,12 +1,9 @@
-import email
 import imaplib
 import json
 import logging
 import pathlib
-import re
 import time
 from contextlib import contextmanager
-from email.header import decode_header
 from random import randint
 from typing import ContextManager
 
@@ -22,12 +19,12 @@ from generic_elements import Button
 from generic_elements import Checkbox
 from generic_elements import DropDown
 from generic_elements import DropDownOption
+from generic_elements import ElementNotInDOM
 from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
 from generic_elements import Tooltip
-from login import LoginDialog
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
@@ -44,27 +41,6 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
     else:
         api = CloudPortalAPI()
         api.activate_account_via_api(email, password)
-
-
-def check_email_subject(email_id, sub_text, email_address, password, host, port):
-    conn = imaplib.IMAP4_SSL(host, int(port))
-    conn.login(email_address, password)
-    conn.select()
-    typ, data = conn.uid(
-        'fetch', email_id, '(BODY.PEEK[HEADER.FIELDS (SUBJECT)])')
-    for res in data:
-        if isinstance(res, tuple):
-            # Decoding ascii and header
-            header = email.header.decode_header(
-                res[1].decode('ascii').strip())
-            # Decoding utf-8
-            header_str = "".join([x[0].decode(
-                'utf-8').strip() if x[1] else re.sub("(^b\'|\')", "", str(x[0])) for x in header])
-            # Removing the word "Subject:" from the string
-            header_str = re.sub("Subject:", "", header_str)
-            if sub_text != header_str.strip():
-                raise Exception(header_str + ' was not ' + sub_text)
-    conn.logout()
 
 
 def check_language_logged_in(email, password, language="en_US"):
@@ -209,12 +185,6 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
         move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
 
 
-def detect_language(text):
-    from googletrans import Translator
-    detected_langs = str(Translator().detect(text))
-    return detected_langs
-
-
 def delete_email(mail, email_uid):
     # Mark the email for deletion
     mail.uid('STORE', email_uid, '+FLAGS', '(\Deleted)')
@@ -249,12 +219,6 @@ def get_lang_list():
     path = pathlib.Path().parent / 'customizations' / 'default_lang_list.json'
     with open(path, encoding="utf-8") as langDict:
         return json.load(langDict)
-
-
-def get_nx_links_from_email(self, email_index, body):
-    url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
-    res = re.findall(url, str(body))
-    return str(res[0][0])
 
 
 def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
@@ -311,13 +275,6 @@ def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMA
         return None
 
 
-def open_page_anonymously(driver: ChromeBrowser, url: str, title: str):
-    driver.get(url)
-    driver.location_should_be(url)
-    time.sleep(3)
-    assert driver.title == title
-
-
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api",
                                   from_email=rb.FROM_EMAIL_DEFAULT):
     api = CloudPortalAPI()
@@ -328,14 +285,6 @@ def register_and_activate_account(driver, first_name, last_name, email, password
         api.register(first_name, last_name, email, password)
     time.sleep(1)
     activate(driver, email, password, from_email=from_email)
-
-
-def register_and_activate_random_email(driver, first_name, last_name, password, reg="api",
-                                       from_email=rb.FROM_EMAIL_DEFAULT):
-    random_email = get_random_email(sendemail=from_email)
-    register_and_activate_account(driver, first_name, last_name, random_email, password, reg=reg,
-                                  from_email=from_email)
-    return random_email
 
 
 def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
