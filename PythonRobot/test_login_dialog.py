@@ -29,5 +29,23 @@ def allows_login_with_correct_credentials_and_log_out():
         print("pass")
 
 
+def allows_log_in_with_existing_email_in_uppercase():
+    with get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(email.upper())
+        login.next_button().click()
+        login.password_input().input_text(password)
+        login.login_button().click()
+        SystemsPage(driver).no_systems()
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
+    allows_log_in_with_existing_email_in_uppercase()

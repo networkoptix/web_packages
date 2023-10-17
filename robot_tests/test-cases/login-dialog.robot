@@ -8,11 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-6. Allows log in with existing email in uppercase
-    ${email uppercase}    Convert To Uppercase    ${login user}
-    Log In    ${email uppercase}    ${password}    validate=${False}    api=${False}
-    Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
-
 8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     Log In    ${login user}    'aderhgadehf'    validate=${False}   api=${False}
     Wait Until Elements are Visible
