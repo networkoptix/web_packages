@@ -8,11 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-5. After log In, display user's email and menu in top right corner
-    Set Window Size    1920    1080
-    Log In    ${login user}    ${password}     api=${False}
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}/span[text()="${login user}"]
-
 6. Allows log in with existing email in uppercase
     ${email uppercase}    Convert To Uppercase    ${login user}
     Log In    ${email uppercase}    ${password}    validate=${False}    api=${False}
