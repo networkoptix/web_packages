@@ -37,7 +37,7 @@ export class NxContextMenu<Context> implements OnInit {
     @Input() context: Context;
     @Input() menuItems: MenuItemsFactoryCallback<Context> | MenuItem<Context>[];
 
-    menu: MenuItem<Context>[];
+    menu: MenuItem<Context>[] | undefined;
     protected readonly icons = icons;
 
     ngOnInit(): void {

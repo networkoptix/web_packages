@@ -13,6 +13,7 @@ import {
     Output,
     Signal,
     signal,
+    WritableSignal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -35,6 +36,7 @@ import {
     NxSystemCameraWithMappedFields,
     ResourceLeafNode,
     ResourceNode,
+    ResourceNodeMap,
     ResourceType,
 } from '@components/layout-grid/layout-grid.types';
 import { NxLayoutGridTreeComponent } from '@components/layout-grid-tree/layout-grid-tree.component';
@@ -50,6 +52,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LayoutItem } from '@services/system-api.types';
 import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import { icons } from '@static-variables';
+import { isDefinedOrTrue } from '@utils/array';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 const LANG = staticLang.layouts.overlay.menuActions;
@@ -133,13 +136,14 @@ export class NxLayoutGridItemOverlayComponent {
 
     // TODO remove when Action Dispatcher for displayInfo is implemented
     // the name is long and stupid intentionally
-    temporaryManualDisplayInfoToggle$$ = signal(null);
+    temporaryManualDisplayInfoToggle$$: WritableSignal<boolean | null> = signal(null);
     allowDebugMode: boolean;
     layoutsEditable: boolean;
 
     displayInfo$$ = computed(() => {
-        if (this.temporaryManualDisplayInfoToggle$$() !== null) {
-            return this.temporaryManualDisplayInfoToggle$$();
+        const manualToggle = this.temporaryManualDisplayInfoToggle$$();
+        if (manualToggle !== null) {
+            return manualToggle;
         }
         return this.item$$().displayInfo;
     });
@@ -203,10 +207,7 @@ export class NxLayoutGridItemOverlayComponent {
             icon: icons.dirLayoutsCamera + 'info.svg',
             ...LANG.info,
             checked$$: this.displayInfo$$,
-            action: () =>
-                this.temporaryManualDisplayInfoToggle$$.set(
-                    !this.temporaryManualDisplayInfoToggle$$(),
-                ),
+            action: () => this.temporaryManualDisplayInfoToggle$$.update(value => !value),
         },
         showOnItem: {
             id: 'showOnItem',
@@ -220,7 +221,7 @@ export class NxLayoutGridItemOverlayComponent {
             ...EMPTY_MENU_ACTION,
             subMenu: (node: ResourceNode) => {
                 if (!assertResourceOfType.camera(node)) {
-                    return null;
+                    return;
                 }
                 const rotation = this.item$$().rotation;
                 return Object.entries(ROTATION_TO_TEXT).map(
@@ -239,7 +240,7 @@ export class NxLayoutGridItemOverlayComponent {
             ...EMPTY_MENU_ACTION,
             subMenu: (node: ResourceNode) => {
                 if (!assertResourceOfType.camera(node)) {
-                    return null;
+                    return;
                 }
                 return [
                     {
@@ -311,15 +312,15 @@ export class NxLayoutGridItemOverlayComponent {
             return null;
         }
         return [
-            this.allowDebugMode ? this.MENU_ITEMS.ptz : null,
-            this.allowDebugMode ? this.MENU_ITEMS.fisheye : null,
-            this.allowDebugMode ? this.MENU_ITEMS.motion : null,
-            this.allowDebugMode ? this.MENU_ITEMS.object : null,
-            this.allowDebugMode ? this.MENU_ITEMS.zoomWindow : null,
-            this.allowDebugMode ? this.MENU_ITEMS.info : null,
-            this.allowDebugMode && this.canEdit$$() ? this.MENU_ITEMS.rotate : null,
-            this.allowDebugMode ? this.MENU_ITEMS.screenshot : null,
-        ].filter(i => !!i);
+            this.allowDebugMode && this.MENU_ITEMS.ptz,
+            this.allowDebugMode && this.MENU_ITEMS.fisheye,
+            this.allowDebugMode && this.MENU_ITEMS.motion,
+            this.allowDebugMode && this.MENU_ITEMS.object,
+            this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
+            this.allowDebugMode && this.MENU_ITEMS.info,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
+            this.allowDebugMode && this.MENU_ITEMS.screenshot,
+        ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>);
     });
 
     recordingIcon$$ = computed(() => {
@@ -341,29 +342,32 @@ export class NxLayoutGridItemOverlayComponent {
         if (this.canEdit$$() && this.showRemove && !this.isFullscreen$$()) {
             return this.MENU_ITEMS.remove;
         }
+        return null;
     });
 
-    menuItemsByType: Partial<
-        Record<ResourceType, MenuItem<ResourceNode>[] | MenuItemsFactoryCallback<ResourceNode>>
-    > = {
-        [ResourceType.CAMERA]: item =>
+    menuItemsByType: Partial<{
+        [key in keyof ResourceNodeMap]:
+            | MenuItem<ResourceNodeMap[key]>[]
+            | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
+    }> = {
+        [ResourceType.CAMERA]: (item): MenuItem<ResourceNode>[] =>
             [
                 this.fullscreenAction$$(),
                 this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
-                this.allowDebugMode ? this.MENU_ITEMS.resolution : null,
-                this.allowDebugMode ? this.MENU_ITEMS.zoomWindow : null,
-                this.allowDebugMode ? this.MENU_ITEMS.screenshot : null,
-                this.allowDebugMode ? this.MENU_ITEMS.divider : null,
-                this.allowDebugMode ? this.MENU_ITEMS.showOnItem : null,
+                this.allowDebugMode && this.MENU_ITEMS.resolution,
+                this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
+                this.allowDebugMode && this.MENU_ITEMS.screenshot,
+                this.allowDebugMode && this.MENU_ITEMS.divider,
+                this.allowDebugMode && this.MENU_ITEMS.showOnItem,
                 this.removeAction$$() && this.MENU_ITEMS.divider,
                 this.removeAction$$(),
-            ].filter(i => !!i),
+            ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>),
         [ResourceType.SERVER]: item =>
             [
                 this.fullscreenAction$$(),
                 this.removeAction$$() && this.MENU_ITEMS.divider,
                 this.removeAction$$(),
-            ].filter(i => !!i),
+            ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>),
     };
 
     constructor(
@@ -373,7 +377,7 @@ export class NxLayoutGridItemOverlayComponent {
         configService: NxConfigService,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
-        this.layoutsEditable = configService.getConfig().featureFlags.layoutsEditable || true;
+        this.layoutsEditable = configService.getConfig().featureFlags.layoutsEditable || false;
     }
 
     handleIconClick(action: MenuItemAction<LayoutItem> | undefined, $event: MouseEvent): void {

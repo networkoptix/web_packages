@@ -62,7 +62,7 @@ svg-icon {
 .info,
 .status {
     border-radius: 6px;
-    background: rgba(13, 14, 15, 0.6);
+    background-color: var(--overlay-action-bg);
     padding: 6px;
 }
 
@@ -70,16 +70,18 @@ svg-icon {
     grid-area: name;
     display: flex;
     flex-direction: row;
+    color: var(--overlay-text);
 
     svg-icon {
         padding: 4px;
     }
 
     .resource-name {
-        color: var(--light1);
+        color: var(--overlay-action-text);
         line-height: 24px;
         margin: 0 4px;
         font-size: 14px;
+        font-weight: 500;
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
@@ -98,7 +100,7 @@ svg-icon {
     .action-icon {
         width: 36px;
         height: 36px;
-        background: rgba(13, 14, 15, 0.6);
+        background-color: var(--overlay-action-bg);
 
         @for $i from 1 through 10 {
             &:nth-child(#{$i}) {
@@ -150,6 +152,17 @@ svg-icon {
     padding-left: 12px;
 }
 
+.quick-actions, .menu-group {
+    svg-icon {
+        svg path {
+            fill: var(--overlay-action-svg);
+        }
+        &:hover svg path {
+            fill: var(--overlay-action-svg-hover);
+        }
+    }
+}
+
 .info {
     grid-area: info;
     width: fit-content;
@@ -160,12 +173,13 @@ svg-icon {
     display: flex;
     flex-direction: column;
     font-size: 14px;
-    color: var(--light1);
+    font-weight: 500;
+    color: var(--overlay-text);
 
     .info-type {
         padding: 6px 0;
         line-height: 14px;
-        color: var(--light10);
+        color: var(--overlay-status-title);
     }
 }
 
@@ -176,7 +190,8 @@ svg-icon {
     height: 26px;
     line-height: 12px;
     font-size: 12px;
-    color: var(--light1);
+    font-weight: 700;
+    color: var(--overlay-text);
 }
 
 .content {

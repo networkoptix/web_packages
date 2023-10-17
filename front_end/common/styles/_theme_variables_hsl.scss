@@ -897,12 +897,19 @@ html[data-theme="hsl"] {
 
     /* Layouts */
     --context-menu-bg: var(--drop-menu-navigation-bg);
-    --context-menu-shadow: rgba(var(--tooltip-shadow-color), 0.2);
+    --context-menu-shadow: var(--new-dark1-t20);
     --context-menu-hr: var(--new-dark8);
     --context-menu-item-text: var(--btn-text-color);
     --context-menu-item-icon: var(--svg-path-dark-color);
-    --context-menu-item-text-hover: var(--light1);
-    --context-menu-item-icon-hover: var(--light1);
+    --context-menu-item-text-hover: var(--new-light1);
+    --context-menu-item-icon-hover: var(--new-light1);
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--new-dark9);
+
+    --overlay-action-bg: var(--new-dark3-t60);
+    --overlay-action-svg: var(--new-light1-t80);
+    --overlay-action-svg-hover: var(--new-light1);
+    --overlay-action-text: var(--new-light1);
+    --overlay-text: var(--new-light1);
+    --overlay-status-title: var(--new-light10);
 }

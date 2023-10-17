@@ -12,4 +12,6 @@ export type MenuItem<T> = {
     checked$$?: Signal<boolean>;
 };
 
-export type MenuItemsFactoryCallback<Context> = (context: Context) => MenuItem<Context>[];
+export type MenuItemsFactoryCallback<Context> = (
+    context: Context,
+) => MenuItem<Context>[] | undefined;
