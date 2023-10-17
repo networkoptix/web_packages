@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { EditorModule } from '@tinymce/tinymce-angular';
@@ -9,6 +10,7 @@ import { NxHTMLComponent } from './html-input.component';
 @NgModule({
     imports: [
         FormsModule,
+        CommonModule,
         EditorModule,
         PreLoaderModule,
     ],

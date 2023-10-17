@@ -127,7 +127,9 @@ export class NxHeaderService {
                     true
                 );
                 const { breadcrumbs, childNode } = this.currentLocation;
-                childNode.queryParamsHandling = 'merge';
+                if (childNode) {
+                    childNode.queryParamsHandling = 'merge';
+                }
                 baseNode.breadcrumbs = [...breadcrumbs, { ...childNode }];
                 const dynamicNode = {
                     isSystem: false,

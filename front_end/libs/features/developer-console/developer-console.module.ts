@@ -9,6 +9,7 @@ import { PipesModule } from '@app/pipes/pipes.module';
 import { ConsoleTableModule } from '@components/console-table/console-table.module';
 import { ContentBlockModule } from '@components/content-block/content-block.module';
 import { ContentBlockSectionModule } from '@components/content-block/section/section.module';
+import { HtmlInputModule } from '@components/html-input/html-input.module';
 import { PreLoaderModule } from '@components/placeholders/pre-loader/pre-loader.module';
 import { ProcessButtonModule } from '@components/process-button/process-button.module';
 import { ProcessCancelButtonModule } from '@components/process-cancel-Button/process-cancel-Button.module';
@@ -63,6 +64,7 @@ const appRoutes: Routes = [
         PreLoaderModule,
         ProcessButtonModule,
         ProcessCancelButtonModule,
+        HtmlInputModule
     ],
     providers: [],
     declarations: [
