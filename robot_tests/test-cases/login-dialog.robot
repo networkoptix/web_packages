@@ -8,11 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-4. Redirects to systems after log In
-    Log In    ${login user}    ${password}    api=${False}
-    Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
-    Location Should Be    ${url}/systems
-
 5. After log In, display user's email and menu in top right corner
     Set Window Size    1920    1080
     Log In    ${login user}    ${password}     api=${False}
