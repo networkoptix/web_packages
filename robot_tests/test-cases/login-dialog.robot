@@ -8,17 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-#2. Can be closed by clicking on the X
-#    [tags]    C24212
-#    Wait Until Element is Visible    ${LOG IN NAV BAR}
-#    Click Link    ${LOG IN NAV BAR}
-#    Wait Until Elements are Visible
-#    ...    ${LOG IN MODAL}
-#    ...    ${LOG IN NEXT BUTTON}
-#    ...    ${EMAIL INPUT}
-#    Click Button    ${LOG IN CLOSE BUTTON}
-#    Wait Until Page Does Not Contain Element    ${LOG IN MODAL}
-
 4. Redirects to systems after log In
     Log In    ${login user}    ${password}    api=${False}
     Wait Until Element is Visible    ${ACCOUNT DROPDOWN}
@@ -33,18 +22,6 @@ Force Tags        Threaded
     ${email uppercase}    Convert To Uppercase    ${login user}
     Log In    ${email uppercase}    ${password}    validate=${False}    api=${False}
     Wait Until Element Contains    ${ACCOUNT DROPDOWN}    ${login user}
-
-#7. Allows log in with 'Remember Me checkmark' switched off
-#    Wait Until Element is Visible    ${LOG IN NAV BAR}
-#    Click Link    ${LOG IN NAV BAR}
-#    Wait Until Elements are Visible
-#    ...    ${REMEMBER ME CHECKBOX VISIBLE}
-#    ...    ${EMAIL INPUT}
-#    ...    ${PASSWORD INPUT}
-#    ...    ${LOG IN BUTTON}
-#    Click Element    ${REMEMBER ME CHECKBOX VISIBLE}
-#    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-#    Log In    ${login user}    ${password}    button=None
 
 8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
     Log In    ${login user}    'aderhgadehf'    validate=${False}   api=${False}
@@ -142,14 +119,6 @@ Force Tags        Threaded
     Paste Text    ${EMAIL INPUT}
     Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
 
-#16. Should respond to Esc key and close dialog
-#    Wait Until Element is Visible    ${LOG IN NAV BAR}
-#    Click Link    ${LOG IN NAV BAR}
-#    Wait Until Element is Visible    ${PASSWORD INPUT}
-#    Press Keys    ${PASSWORD INPUT}    ESCAPE
-#    Wait Until Element Is Not Visible    ${LOG IN MODAL}
-#    Element Should Not Be Visible    ${LOG IN MODAL}
-
 17. Should respond to Enter key and log in
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
@@ -172,16 +141,6 @@ Force Tags        Threaded
     Element Should Be Focused    ${LOG IN CREATE ACCOUNT BUTTON}/parent::button
     Press Keys    ${EMAIL INPUT}    TAB   TAB
     Element Should Be Focused    ${LOG IN NEXT BUTTON}
-
-#19. Should respond to Space key and toggle checkbox
-#    Wait Until Element is Visible    ${LOG IN NAV BAR}
-#    Click Link    ${LOG IN NAV BAR}
-#    Wait Until Element is Visible    ${REMEMBER ME CHECKBOX VISIBLE}
-#    Set Focus To Element    ${REMEMBER ME CHECKBOX REAL}
-#    Press Keys    None    SPACE
-#    Checkbox Should Not Be Selected    ${REMEMBER ME CHECKBOX REAL}
-#    Press Keys    None    SPACE
-#    Checkbox Should Be Selected    ${REMEMBER ME CHECKBOX REAL}
 
 20. Handles two tabs, updates second tab state if logout is done on first
     [Tags]
@@ -284,21 +243,3 @@ Force Tags        Threaded
     Input Text    ${CURRENT PASSWORD INPUT}    ${ALT PASSWORD}
     Input Text    ${NEW PASSWORD INPUT}    ${password}
     Click Button    ${CHANGE PASSWORD BUTTON}
-
-# Remember Me Checkbox
-# Commented out due to CQA-172
-    # [Tags]    C41567
-    # Log    Step 1
-    # Log In With Remember Me    ${email}    ${password}
-    # Log    Step 2
-    # Persist Current Login State    ${url}
-    # Validate Log In    ${email}
-    # Log    Step 3
-    # Log Out
-    # Persist Current Login State    ${url}
-    # Validate Log Out
-    # Log In With Remember Me    ${login user}    ${password}     remember me=False
-    # Log    Step 4
-    # Validate Log In    ${login user}
-    # Persist Current Login State    ${url}
-    # Validate Log Out
