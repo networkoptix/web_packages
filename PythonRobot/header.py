@@ -1,10 +1,15 @@
+import logging
+
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
+from generic_elements import ElementNotInDOM
 from landing_page import LandingPage
 from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane
+
+_logger = logging.getLogger(__name__)
 
 
 class HeaderNav:
@@ -37,10 +42,23 @@ class HeaderNav:
     def administration_selection(self):
         pass
 
-    def log_in_button(self):
+    def log_in_button(self) -> Button:
         translated_xpath = self._rb.replace_nested_variables(
             "//header//a[contains(text(),'{LOG_IN_BUTTON_TEXT}')]/..")
-        return Button(self._driver, translated_xpath)
+        # TODO: Remove a boilerplate after stabilize the portal
+        # At times, the start page loads with the old design, which disrupts the tests
+        max_attempts = 5
+        for attempt in range(1, max_attempts + 1):
+            button = Button(self._driver, translated_xpath)
+            try:
+                button.wait_until_visible()
+            except ElementNotInDOM:
+                if attempt >= max_attempts:
+                    raise
+                self._driver.refresh()
+                _logger.info(f"The 'Log in' button cannot be found. Retrying after refresh.")
+            else:
+                return button
 
     def my_systems_button(self):
         # Todo: add "My Systems" to the translation files
