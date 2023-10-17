@@ -46,6 +46,23 @@ def allows_log_in_with_existing_email_in_uppercase():
         print("pass")
 
 
+def forgot_password_page_contains_prefilled_email():
+    with get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(email)
+        login.next_button().click()
+        login.forgot_password_button().click()
+        login.reset_password_email_input().wait_until_text_is(email)
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
+    forgot_password_page_contains_prefilled_email()

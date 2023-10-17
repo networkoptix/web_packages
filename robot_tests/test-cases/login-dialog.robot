@@ -8,17 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-8. Contains 'I forgot password' link that leads to Restore Password page with pre-filled email from log In form
-    Log In    ${login user}    'aderhgadehf'    validate=${False}   api=${False}
-    Wait Until Elements are Visible
-    ...    ${PASSWORD INPUT}
-    ...    ${LOG IN BUTTON}
-    ...    ${FORGOT PASSWORD}
-    Sleep    1
-    Click Button    ${FORGOT PASSWORD}
-    Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
-    Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
-
 9. Passes email from email input to Restore password page, even without clicking 'Log in' button
     [tags]    C41872
     Wait Until Element is Visible    ${LOG IN NAV BAR}
