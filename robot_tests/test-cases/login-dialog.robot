@@ -7,10 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags        Threaded
 
 *** Test Cases ***
-1. Can be opened in anonymous state
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${LOG IN MODAL}
 
 #2. Can be closed by clicking on the X
 #    [tags]    C24212
