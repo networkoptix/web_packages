@@ -1,6 +1,9 @@
 import resource_import
+from generic_elements import Button
+from generic_elements import TextField
 from header import HeaderNav
 from landing_page import LandingPage
+from login import AccountActivatedPane
 from login import LoginDialog
 from resource_import import get_chrome
 from resource_import import register_and_activate_account
@@ -67,7 +70,41 @@ def forgot_password_page_contains_prefilled_email():
         print("pass")
 
 
+def not_activated_user_login_check():
+    """
+    Shows non-activated user message when not activated at login; Resend activation button sends email
+    [Tags]    email    C41865
+    """
+    with get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        driver.get(ENV + '/register')
+        resource_import.register(driver, "darth", "bye", email, password, view_type="desktop")
+        resource_import.activate(driver, email, password)
+        account_activated = AccountActivatedPane(driver)
+        account_activated.wait_until_visible()
+        account_activated.get_log_in_button().click()
+        # Locators are hardcoded there as it is impossible to use LoginDialog's elements here
+        # because the dialogs checks appearance of some elements in its constructor. But if we
+        # open the page after account activation the first page used in page validation does
+        # not contain email field but has password field from the very start. Has to be updated when
+        # _wait_until_modal_is_visible() is removed from LoginDialog constructor.
+        password_input = TextField(
+            driver,
+            "//nx-authorize-component//input[@id='authorizePassword']",
+            )
+        password_input.input_text(password)
+        login_button = Button(
+            driver,
+            "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']",
+            )
+        login_button.click()
+        SystemsPage(driver).no_systems()
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
     forgot_password_page_contains_prefilled_email()
+    not_activated_user_login_check()

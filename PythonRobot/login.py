@@ -81,3 +81,25 @@ class LoginDialog:
     def _wait_until_modal_is_visible(self):
         modal = Pane(self.driver, "//nx-authorize-component/div[@class='authorize-main main-w']")
         modal.wait_until_visible()
+
+
+class AccountActivatedPane:
+
+    def __init__(self, driver):
+        self.driver = driver
+        self.rb = RobotVariables("en_US")
+
+    def wait_until_visible(self):
+        pane = Pane(
+            self.driver,
+            "//nx-authorize-activate-account-component//form",
+            )
+        pane.wait_until_visible()
+
+    def get_log_in_button(self):
+        self.wait_until_visible()
+        return Button(
+            self.driver,
+            "//nx-authorize-activate-account-component//button[contains(text(), "
+            f"'{self.rb.LOG_IN_BUTTON_TEXT}')]",
+            )

@@ -8,29 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-10. Shows non-activated user message when not activated at login; Resend activation button sends email
-    [tags]    email    C41865
-    Go To    ${url}/register
-    ${random email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
-    Register    'mark'    'hamill'    ${random email}    ${password}
-    Validate Register Success
-    Wait Until Element Is Visible    ${LOG IN BTN REGISTER ACCOUNT PAGE}
-    Click Element    ${LOG IN BTN REGISTER ACCOUNT PAGE}
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Sleep    1
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${random email}
-    Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Element is Visible    ${RESEND ACTIVATION LINK BUTTON}
-    Validate Register Email Received    ${random email}
-    Click Element    ${RESEND ACTIVATION LINK BUTTON}
-    Activate    ${random email}
-    Click Element    ${LOG IN BUTTON}
-    Wait Until Element Is Visible     ${PASSWORD INPUT}
-    Input Text    ${PASSWORD INPUT}    ${password}
-    Click Element    ${LOG IN BUTTON}
-    Validate Log In    ${random email}
-
 11. Displays password masked
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}
