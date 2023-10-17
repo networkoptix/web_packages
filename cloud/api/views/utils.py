@@ -10,6 +10,8 @@ from django.urls import reverse
 from uuid import uuid4
 
 from asgiref.sync import sync_to_async
+
+from cloud.customization_context import customization_ctx
 from util.helpers import HttpxAsyncRequest
 from django.core.cache import cache, caches
 from django.conf import settings
