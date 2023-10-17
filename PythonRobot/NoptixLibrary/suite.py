@@ -339,7 +339,19 @@ class CloudAccount:
             'noptixautoqa+sendemail@gmail.com',
             False,
             )
-        _CLOUD_API.register_account(self.first_name, self.last_name, self.email, self.password)
+        # The Portal could be flooded by requests. Give him a couple of second chances.
+        max_attempts = 3
+        for attempt in range(1, max_attempts + 1):
+            try:
+                _CLOUD_API.register_account(self.first_name, self.last_name, self.email, self.password)
+            except HTTPError as exc:
+                if exc.response.status_code == 500 and attempt < max_attempts:
+                    _logger.info(f"Failed to register account. Retrying in 1 sec.")
+                    time.sleep(1)
+                    continue
+                raise
+            else:
+                break
         _CLOUD_API.activate_account_via_api(self.email, self.password)
 
     def _tear_down(self):
