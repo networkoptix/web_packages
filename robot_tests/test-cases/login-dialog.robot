@@ -8,18 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-9. Passes email from email input to Restore password page, even without clicking 'Log in' button
-    [tags]    C41872
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${EMAIL INPUT}
-    Input Text    ${EMAIL INPUT}    ${login user}
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Element is Visible    ${FORGOT PASSWORD}
-    Click Button    ${FORGOT PASSWORD}
-    Wait Until Element is Visible    ${RESTORE PASSWORD EMAIL INPUT}
-    Textfield Should Contain    ${RESTORE PASSWORD EMAIL INPUT}    ${login user}
-
 10. Shows non-activated user message when not activated at login; Resend activation button sends email
     [tags]    email    C41865
     Go To    ${url}/register

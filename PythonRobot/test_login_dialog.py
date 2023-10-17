@@ -47,6 +47,11 @@ def allows_log_in_with_existing_email_in_uppercase():
 
 
 def forgot_password_page_contains_prefilled_email():
+    """
+    Passes email from email input to Restore password page, even without clicking
+    'Log in' button
+    [Tags]    C41872
+    """
     with get_chrome() as driver:
         email = resource_import.get_random_email()
         password = "qweasd 123"
