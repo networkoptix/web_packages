@@ -8,14 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-12. Requires log In, if the user has just logged out and pressed back button in browser
-    Log In    ${login user}    ${password}  api=${False}
-    Sleep   2
-    Log Out
-    Sleep   3
-    Go Back
-    Wait Until Element is Visible    ${LOG IN MODAL}
-
 13. Handles more than 255 symbols email and password
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}

@@ -118,9 +118,32 @@ def displays_password_masked():
         print("pass")
 
 
+def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser():
+    with get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(email.upper())
+        login.next_button().click()
+        login.password_input().input_text(password)
+        login.login_button().click()
+        SystemsPage(driver).no_systems()
+        header.account_dropdown().click()
+        header.log_out_option().click()
+        LandingPage(driver)
+        driver.back()
+        LoginDialog(driver)
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
     forgot_password_page_contains_prefilled_email()
     not_activated_user_login_check()
     displays_password_masked()
+    requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser()
