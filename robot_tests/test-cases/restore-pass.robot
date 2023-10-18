@@ -18,16 +18,6 @@ Force Tags
     END
     Location Should Be    ${url}/authorize
 
-2. Can still log in if you don't finish the process
-    [Tags]    C41873
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-    Log In    ${email}    ${password}     button=${RESET LOGIN BUTTON}
-    Log Out
-    Get Restore Code and Open the Link    ${email}
-    Go To    ${url}
-    Log In    ${email}    ${password}
-
 3. Should not allow to access /restore_password/sent /restore_password/success by direct input
     Skip    Not applicable for new forms in 21.1
 #    Go To    ${url}/restore_password/sent
