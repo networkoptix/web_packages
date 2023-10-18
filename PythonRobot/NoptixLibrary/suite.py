@@ -326,10 +326,11 @@ class CloudAccount:
         "custom": "NoGlobalPermissions",
         }
 
-    def __init__(self):
+    def __init__(self, sendemail = False):
         self.first_name = "Mark"
         self.last_name = "Hamill"
         self.password = DEFAULT_PASSWORD
+        self._sendemail = sendemail
         self._totp = None
         self._backup_codes = None
 
@@ -365,7 +366,7 @@ class CloudAccount:
     def _set_up(self):
         self.email = Email.get_random_email(
             'noptixautoqa+sendemail@gmail.com',
-            False,
+            self._sendemail,
             )
         # The Portal could be flooded by requests. Give him a couple of second chances.
         max_attempts = 3
