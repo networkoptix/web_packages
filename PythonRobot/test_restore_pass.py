@@ -1,7 +1,5 @@
-import time
-
 from NoptixLibrary.suite import CloudAccount
-from email_access import Email
+from email_access import EmailClient
 from header import HeaderNav
 from login import LoginDialog
 from resource_import import get_chrome
@@ -19,10 +17,15 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
         login.forgot_password_button().click()
         assert login.reset_password_email_input().get_text() == user.email, "Email was not autofilled in the field"
         login.reset_password_button().click()
-        email_con = Email()
-        link = email_con.get_email_link(user.email, "restore_password")
+        with EmailClient(email_alias=user.email) as client:
+            email = client.wait_for_reset_password_email()
+            link = email.get_nx_links_from_email()
+            client.delete_email(email)
         driver.get(link)
-        login.activation_success_login_button().click()
+        login.new_password_input().input_text(user.password)
+        login.password_reset_next_button().click()
+        assert login.reset_success_text() == "Password is set!"
+        login.password_reset_next_button().click()
         login.password_input().input_text(user.password)
         login.login_button().click()
         header.account_dropdown()
@@ -38,20 +41,19 @@ def check_restore_password_email(user: CloudAccount):
         login.next_button().click()
         login.forgot_password_button().click()
         login.reset_password_button().click()
-        email_con = Email()
-        email_id = email_con.wait_for_email(user.email)
-        body = email_con.get_body(email_id)
-        email_con.check_email_button(body, ENV, "#2FA2DB")
-        email_con.check_email_cloud_name(body, "Nx Cloud")
-        email_con.check_email_subject(email_id, "Reset your password")
-        expected_links = [
-            "https://support.networkoptix.com",
-            "https://www.networkoptix.com",
-            ENV,
-            f'{ENV}/authorize/restore_password'
-            ]
-        email_con.find_links_in_email(body, expected_links)
-        email_con.delete_email(email_id)
+        with EmailClient(email_alias=user.email) as client:
+            email = client.wait_for_reset_password_email()
+            email.check_email_button(ENV, "#2FA2DB")
+            email.check_email_cloud_name("Nx Cloud")
+            assert email.get_subject() == "Reset your password"
+            expected_links = [
+                "https://support.networkoptix.com",
+                "https://www.networkoptix.com",
+                ENV,
+                f'{ENV}/authorize/restore_password'
+                ]
+            email.find_links_in_body(expected_links)
+            client.delete_email(email)
 
 
 if __name__ == "__main__":

@@ -17,8 +17,14 @@ class LoginDialog:
     def password_input(self) -> TextField:
         return TextField(self.driver, "//nx-authorize-component//input[@id='authorizePassword']")
 
-    def restore_password_input(self) -> TextField:
-        return TextField(self.driver, "//nx-authorize-reset-password-component//input[@id='resetPassword']")
+    def new_password_input(self) -> TextField:
+        return TextField(self.driver, '//nx-authorize-component//input[@id="resetPassword"]')
+
+    def password_reset_next_button(self) -> Button:
+        return Button(self.driver, '//nx-authorize-component//nx-process-button[@data-testid="btnResetPassword"]')
+
+    def reset_success_text(self) -> PageText:
+        return PageText(self.driver, '//nx-authorize-component//h3[@data-testid="resetSuccess"]').get_text()
 
     def password_input_error_message(self) -> TextField:
         translated_xpath = self.rb.replace_nested_variables(
