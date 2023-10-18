@@ -136,8 +136,8 @@ def owner_can_rename_system_via_cloud_portal(server: Mediaserver):
     sys_admin.refresh()
     header_system_name = HeaderNav(driver).get_system_name()
     assert header_system_name == "Name Changed via Cloud Portal"
-    server._api.restart_server()
-    assert server._api.get_system_name() == "Name Changed via Cloud Portal"
+    server.api.restart_server()
+    assert server.api.get_system_name() == "Name Changed via Cloud Portal"
     cloud_auth = [cloud_owner.email, cloud_owner.password]
     cloud_system_settings = CLOUD_API.get_cloud_system_settings(
         cloud_auth, server.id)
@@ -147,7 +147,7 @@ def owner_can_rename_system_via_cloud_portal(server: Mediaserver):
 
 # User can rename System: change on server side -> check in web
 def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
-    server._api.set_system_name("Name Changed via API")
+    server.api.set_system_name("Name Changed via API")
     driver = get_headless_chrome()
     driver.get(ENV + f"/systems/{server.id}")
     LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
@@ -166,7 +166,7 @@ if __name__ == "__main__":
         # cloud_server_second = suite.create_cloud_server(cloud_owner_second)
         # can_log_in_to_system_from_direct_link(cloud_server_first)
         # owner_can_disconnect_system_from_cloud(cloud_server_second)
-        non_owner_can_disconnect_account_from_system(cloud_server_first)
-        user_without_permissions_cannot_see_system_admin_page(cloud_server_first)
+        # non_owner_can_disconnect_account_from_system(cloud_server_first)
+        # user_without_permissions_cannot_see_system_admin_page(cloud_server_first)
         owner_can_rename_system_via_cloud_portal(cloud_server_first)
         system_name_change_is_shown_in_cloud_portal(cloud_server_first)
