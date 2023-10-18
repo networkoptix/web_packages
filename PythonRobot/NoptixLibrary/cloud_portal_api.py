@@ -39,9 +39,8 @@ else:
 
 class CloudPortalAPI(object):
 
-    def __init__(self, env='https://cloud-test.hdw.mx', customization='default', password='qweasd 123', email='noptixautoqa@gmail.com'):
+    def __init__(self, env='https://cloud-test.hdw.mx', password='qweasd 123', email='noptixautoqa@gmail.com'):
         self.env = env
-        self.customization = customization
         self.password = password
         self.baseEmail = email
         self._is_debug = self._check_debug_status()
@@ -455,23 +454,6 @@ class CloudPortalAPI(object):
             )
         add_camera_response.raise_for_status()
         return add_camera_response.text
-
-    def bind_system(self, auth, cloudUrl, name="API made system"):
-        with self._session(auth[0], auth[1]) as s:
-            logger.debug(self.customization)
-            body = {
-                "name": name,
-                "customization": self.customization
-            }
-            bind_response = s.post(
-                url=f'{cloudUrl}/cdb/system/bind',
-                auth=HTTPBasicAuth(auth[0], auth[1]),
-                json=body,
-                verify=False,
-                )
-            logger.debug(bind_response.json())
-            bind_response.raise_for_status()
-            return bind_response.json()
 
     def unbind_system(self, auth, cloudUrl, systemId):
         unbind_response = requests.post(
