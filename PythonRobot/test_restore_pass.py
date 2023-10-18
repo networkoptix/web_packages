@@ -17,7 +17,6 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
         login.email_input().input_text(user.email)
         login.next_button().click()
         login.forgot_password_button().click()
-        time.sleep(3)
         assert login.reset_password_email_input().get_text() == user.email, "Email was not autofilled in the field"
         login.reset_password_button().click()
         email_con = Email()
