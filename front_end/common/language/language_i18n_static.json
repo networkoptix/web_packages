@@ -137,6 +137,14 @@
                 "name": "Share Layout",
                 "tooltip": "Share \"{name}\" layout"
             },
+            "lockLayout": {
+                "name": "Lock Layout",
+                "tooltip": "Lock \"{name}\" layout"
+            },
+            "unlockLayout": {
+                "name": "Unlock Layout",
+                "tooltip": "Unlock \"{name}\" layout"
+            },
             "cameraSettings": {
                 "name": "Camera Settings",
                 "tooltip": "\"{name}\" camera Settings"

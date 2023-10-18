@@ -195,6 +195,20 @@ export class LayoutStateService {
         });
     }
 
+    unlockLayout(layout: Layout): void {
+        this.updateLayout({
+            ...layout,
+            locked: false,
+        });
+    }
+
+    lockLayout(layout: Layout): void {
+        this.updateLayout({
+            ...layout,
+            locked: true,
+        });
+    }
+
     updateLayout(layout: Layout): void;
     updateLayout(layouts: Layout[]): void;
     updateLayout(layouts: Layout | Layout[]): void {

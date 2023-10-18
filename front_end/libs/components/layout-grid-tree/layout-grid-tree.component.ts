@@ -321,11 +321,12 @@ export class NxLayoutGridTreeComponent {
                           id: 'divider',
                           name: 'divider',
                       },
-                      node.editable && {
-                          id: 'startRename',
-                          name: this.ACTIONS.rename.name,
-                          action: () => this.editedLayout$$.set(node.details.id),
-                      },
+                      node.editable &&
+                          !node.details.locked && {
+                              id: 'startRename',
+                              name: this.ACTIONS.rename.name,
+                              action: () => this.editedLayout$$.set(node.details.id),
+                          },
                       {
                           id: 'duplicate',
                           name: this.ACTIONS.duplicate.name,
@@ -361,21 +362,45 @@ export class NxLayoutGridTreeComponent {
                                 },
                             ]
                           : []),
-                      {
-                          id: 'divider',
-                          name: 'divider',
-                      },
-                      node.shared
-                          ? {
-                                id: 'unshareLayout',
-                                name: this.ACTIONS.unshareLayout.name,
-                                action: () => this.layoutStateService.unshareLayout(node.details),
-                            }
-                          : {
-                                id: 'shareLayout',
-                                name: this.ACTIONS.shareLayout.name,
-                                action: () => this.layoutStateService.shareLayout(node.details),
-                            },
+                      ...(node.editable && !node.details.locked
+                          ? [
+                                {
+                                    id: 'divider',
+                                    name: 'divider',
+                                },
+                                node.shared
+                                    ? {
+                                          id: 'unshareLayout',
+                                          name: this.ACTIONS.unshareLayout.name,
+                                          action: () =>
+                                              this.layoutStateService.unshareLayout(node.details),
+                                      }
+                                    : {
+                                          id: 'shareLayout',
+                                          name: this.ACTIONS.shareLayout.name,
+                                          action: () =>
+                                              this.layoutStateService.shareLayout(node.details),
+                                      },
+                                {
+                                    id: 'lockLayout',
+                                    name: this.ACTIONS.lockLayout.name,
+                                    action: () => this.layoutStateService.lockLayout(node.details),
+                                },
+                            ]
+                          : node.editable
+                          ? [
+                                {
+                                    id: 'divider',
+                                    name: 'divider',
+                                },
+                                {
+                                    id: 'unlockLayout',
+                                    name: this.ACTIONS.unlockLayout.name,
+                                    action: () =>
+                                        this.layoutStateService.unlockLayout(node.details),
+                                },
+                            ]
+                          : []),
                   ].filter(i => i),
         [ResourceType.CAMERA]: !this.CONFIG.featureFlags.layoutsEditable
             ? this.OPEN_WINDOW_ACTIONS
