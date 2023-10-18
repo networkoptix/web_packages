@@ -1,3 +1,6 @@
+import random
+import string
+
 import resource_import
 from generic_elements import Button
 from generic_elements import TextField
@@ -140,6 +143,26 @@ def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_b
         print("pass")
 
 
+def handles_more_than_255_symbols_email_and_password():
+    # Now is not working because of CLOUD-11071
+    with get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        three_hundred_chars = ''.join(random.choice(string.ascii_letters) for i in range(300))
+        login.email_input().input_text(three_hundred_chars)
+        assert len(login.email_input().get_text()) == 255
+        login.email_input().input_text(email)
+        login.next_button().click()
+        login.password_input().input_text(three_hundred_chars)
+        assert len(login.password_input().get_text()) == 255
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
@@ -147,3 +170,4 @@ if __name__ == "__main__":
     not_activated_user_login_check()
     displays_password_masked()
     requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser()
+    handles_more_than_255_symbols_email_and_password()

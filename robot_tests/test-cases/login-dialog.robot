@@ -8,20 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-13. Handles more than 255 symbols email and password
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Sleep    1
-    Input Text    ${EMAIL INPUT}    ${300CHARS}
-    Textfield Should Contain    ${EMAIL INPUT}    ${255CHARS}
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
-    Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Element is Visible    ${PASSWORD INPUT}
-    Input Text    ${PASSWORD INPUT}    ${300CHARS}
-    Textfield Should Contain    ${PASSWORD INPUT}    ${255CHARS}
-
 14. Logout refreshes page
     Log In    ${login user}    ${password}    api=${False}
     Log Out
