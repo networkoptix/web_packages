@@ -243,17 +243,17 @@ const lazyRoutes: Routes = [
         path: '404',
         loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module),
     },
-    {
-        path: 'dashboard',
-        canLoad: [FeatureGuardMatch],
-        canActivate: [AuthGuard],
-        data: {
-            flags: FeatureFlagStrings.dashboard,
-            override: 'devServer',
-        },
-        loadChildren: () =>
-            import('@pages/dashboard/dashboard.module').then(m => m.NxDashboardModule),
-    },
+    // {
+    //     path: 'dashboard',
+    //     canLoad: [FeatureGuardMatch],
+    //     canActivate: [AuthGuard],
+    //     data: {
+    //         flags: FeatureFlagStrings.dashboard,
+    //         override: 'devServer',
+    //     },
+    //     loadChildren: () =>
+    //         import('@pages/dashboard/dashboard.module').then(m => m.NxDashboardModule),
+    // },
     {
         path: '**',
         loadChildren: () => import('@pages/404/404.module').then(m => m.Nx404Module),

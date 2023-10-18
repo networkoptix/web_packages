@@ -1,6 +1,5 @@
-const typeLintErrorCount = require('./type-lint-error-count');
-
 const { showOptionalWarnings } = require('./eslintrc-options.json');
+const typeLintErrorCount = require('./type-lint-error-count');
 
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
 
@@ -219,7 +218,21 @@ module.exports = {
             the entire codebase is typed, at which point it can be merged
             into the main TS override. */
             files: ['*.ts'],
-            excludedFiles: Object.keys(typeLintErrorCount),
+            excludedFiles: [
+                // Development stopped
+                'libs/features/dashboard/**',
+                '**/*widget*/**',
+
+                // Unused
+                'libs/features/debug/**',
+
+                // Replaced, but keep for reference
+                'libs/dialogs/merge/merge.component.ts',
+                'libs/dialogs/merge/stateForMergeDialog.ts',
+                'libs/dialogs/merge/stateMachine.ts',
+
+                ...Object.keys(typeLintErrorCount),
+            ],
             extends: ['plugin:@typescript-eslint/recommended'],
             rules: {
                 'nx/explicit-angular-boundary-types': 'error',

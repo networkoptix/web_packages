@@ -8,7 +8,7 @@ import {
     ModalContent,
 } from '@components/console-table/console-table.component.types';
 import staticLang from '@language_static';
-import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
+// import { DashboardConfiguration } from '@pages/dashboard/dashboard-configuration';
 
 import { DIALOG_SIZE } from './dialog-config-v2';
 import * as Dt from './dialogs.types';
@@ -19,34 +19,34 @@ export class NxDialogsService {
     constructor(private cdkDialog: Dialog) {}
 
     /* eslint-disable @typescript-eslint/no-explicit-any */
-    public async addWidget(
-        gridSize: any,
-        gridGap: any,
-        widgets: any,
-        dashboardMenu: DashboardConfiguration[],
-        activeDashboard: any,
-        updateSelectedDashboard: (id: string) => void,
-    ): Promise<any> {
-        const component = await import('./add-widget/add-widget.component').then(
-            m => m.AddWidgetModalContent,
-        );
-        const config: DialogConfig<any> = {
-            width: DIALOG_SIZE.LARGE,
-            data: {
-                widgets,
-                gridSize,
-                gridGap,
-                dashboardMenu,
-                activeDashboard,
-                updateSelectedDashboard,
-            },
-            disableClose: true,
-            // Disable click outside and Esc to close for now until dialog
-            // is properly migrated
-        };
+    // public async addWidget(
+    //     gridSize: any,
+    //     gridGap: any,
+    //     widgets: any,
+    //     dashboardMenu: DashboardConfiguration[],
+    //     activeDashboard: any,
+    //     updateSelectedDashboard: (id: string) => void,
+    // ): Promise<any> {
+    //     const component = await import('./add-widget/add-widget.component').then(
+    //         m => m.AddWidgetModalContent,
+    //     );
+    //     const config: DialogConfig<any> = {
+    //         width: DIALOG_SIZE.LARGE,
+    //         data: {
+    //             widgets,
+    //             gridSize,
+    //             gridGap,
+    //             dashboardMenu,
+    //             activeDashboard,
+    //             updateSelectedDashboard,
+    //         },
+    //         disableClose: true,
+    //         // Disable click outside and Esc to close for now until dialog
+    //         // is properly migrated
+    //     };
 
-        return this.openV2<any, any>(component, config);
-    }
+    //     return this.openV2<any, any>(component, config);
+    // }
 
     public async edit(genericEditModalContent: GenericEditModalContent);
     public async edit(
