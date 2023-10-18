@@ -153,7 +153,7 @@ def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
 
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
-    suite_name = suite_name.replace("test_","").replace(".py","")
+    suite_name = suite_name.replace("test_", "").replace(".py", "")
     with Suite() as suite:
         cloud_owner_first = suite.create_cloud_account()
         cloud_server_first = suite.create_cloud_server(cloud_owner_first, f"{suite_name}_1_")
