@@ -1,5 +1,6 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
+
 <div class="actions p-3">
     <button
         [disabled]="!isAdmin"
@@ -39,17 +40,19 @@
             (cdkDropListDropped)="onDrop($event)"
         >
             <div
-                class="card-container"
                 cdkDrag
                 [cdkDragData]="group"
             >
                 <div *cdkDragPlaceholder></div>
-                <nx-group-card
-                    [group]="group"
-                    [currentOrgId]="currentOrgId$$()"
-                ></nx-group-card>
+                <nx-card
+                    [icon]="icons.dir + 'folder2.svg'"
+                    [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
+                >
+                    <h3>{{ group.name }}</h3>
+                    <div>12</div>
+                </nx-card>
+                <div class="placeholder-shadow"></div>
             </div>
-            <div class="placeholder-shadow"></div>
         </div>
         <div
             *ngFor="let system of inRoot ? [] : currentSystems$$(); trackBy: trackItem"
@@ -58,18 +61,18 @@
             cdkDropListSortingDisabled
             [cdkDropListData]="system"
         >
+            <!-- Update to check if system requests ownership transfer -->
             <div
                 cdkDrag
                 [cdkDragData]="system"
             >
                 <div *cdkDragPlaceholder></div>
-                <nx-system-card
-                    [system]="system"
-                    [search]="''"
-                    [account]="account$$()"
-                ></nx-system-card>
+                <nx-card>
+                    <h3>{{ system.name }}</h3>
+                    <div>12</div>
+                </nx-card>
+                <div class="placeholder-shadow"></div>
             </div>
-            <div class="placeholder-shadow"></div>
         </div>
     </div>
 </ng-template>

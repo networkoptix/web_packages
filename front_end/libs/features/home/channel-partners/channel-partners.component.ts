@@ -23,6 +23,7 @@ import {
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
 
+import { NxCardComponent } from '../components/card/card.component';
 import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
 import {
@@ -36,8 +37,7 @@ import {
     templateUrl: 'channel-partners.component.html',
     styleUrls: [
         'channel-partners.component.scss',
-        '../components/groups-cards/groups-cards.component.scss',
-        '../components/system-card/system-card.component.scss',
+        '../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
     imports: [
@@ -51,6 +51,7 @@ import {
         CdkMenuModule,
         NxTabsDirective,
         AngularSvgIconModule,
+        NxCardComponent,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
@@ -83,7 +84,6 @@ export class NxChannelPartnersComponent implements OnInit {
             route: 'information',
         },
     ];
-    defaultImage = 'https://picsum.photos/100/50';
     searchConfig = searchConfig;
 
     search = { value: '' };

@@ -24,36 +24,18 @@
             </div>
             <div class="px-3 cards-container">
                 <ng-container *ngFor="let channel of filteredSubchannels$$()">
-                    <div
-                        class="system-button card-condensed system-card"
+                    <nx-card
                         (click)="handleChannelClick(channel.id)"
+                        [icon]="icons.dir + 'partner.svg'"
                     >
-                        <div class="card-body">
-                            <h3>{{ channel.name }}</h3>
-                            <div class="bottom">
-                                <div class="px-2 id">#{{ channel.id.slice(0, 3) }}</div>
-                                <div class="organizations">
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [src]="icons.dir + 'organization.svg'"
-                                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                                    ></svg-icon>
-                                    12
-                                </div>
-                            </div>
+                        <h3>{{ channel.name }}</h3>
+                        <div>
+                            <svg-icon [src]="icons.dir + 'organization_2.svg'"></svg-icon>
+                            12
+                            <svg-icon [src]="icons.dir + 'partner_small.svg'"></svg-icon>
+                            12
                         </div>
-                        <div
-                            class="three-dots"
-                            [cdkMenuTriggerFor]="menu"
-                        >
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                            <div class="dot"></div>
-                        </div>
-                    </div>
-                    <ng-template #menu>
-                        <div class="card-menu"></div>
-                    </ng-template>
+                    </nx-card>
                 </ng-container>
             </div>
         </div>

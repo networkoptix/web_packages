@@ -3,7 +3,6 @@ import { RouterModule, Routes } from '@angular/router';
 
 import { nxConfig } from '@services/nx-config/config';
 
-import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxOrganizationReportsComponent } from '../components/reports/reports.component';
 import { NxOrganizationSettingsComponent } from '../components/settings/settings.component';
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
@@ -14,6 +13,7 @@ import { SystemGroupsConnectedResolver } from '../resolvers/system-groups-connec
 import { TabGuard } from '../resolvers/tab-guard';
 import { TabResolver } from '../resolvers/tab-resolver';
 
+import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
 import { NxOrganizationsComponent } from './organization.component';
 
 const orgRoutes: Routes = [
@@ -31,7 +31,7 @@ const orgRoutes: Routes = [
         children: [
             {
                 path: 'systems',
-                component: NxGroupsCardsComponent,
+                component: NxOrganizationCardContainerComponent,
             },
             {
                 path: 'reports',
@@ -53,7 +53,7 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'group/:groupId',
-                component: NxGroupsCardsComponent,
+                component: NxOrganizationCardContainerComponent,
             },
             {
                 path: '**',

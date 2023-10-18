@@ -1,6 +1,8 @@
 import { NgFor } from '@angular/common';
 import { Component } from '@angular/core';
 
+import { NxCardComponent } from '../card/card.component';
+
 type Service = {
     name: string;
 };
@@ -9,11 +11,11 @@ type Service = {
     templateUrl: 'reports.component.html',
     styleUrls: [
         'reports.component.scss',
-        '../groups-cards/groups-cards.component.scss',
+        '../../organizations/cards-container/org-cards-container.component.scss',
         '../system-card/system-card.component.scss',
     ],
     standalone: true,
-    imports: [NgFor],
+    imports: [NgFor, NxCardComponent],
 })
 export class NxOrganizationReportsComponent {
     services = [

@@ -17,7 +17,7 @@ import type { OrgUserExt } from './org-users.types';
     templateUrl: 'org-users.component.html',
     styleUrls: [
         'org-users.component.scss',
-        '../../../components/groups-cards/groups-cards.component.scss',
+        '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
     imports: [CommonModule, NxUsersTableComponent, TranslateModule],

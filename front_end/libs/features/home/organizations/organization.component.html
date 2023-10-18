@@ -71,7 +71,7 @@
         <ng-template #cards>
             <ng-container *ngIf="!inChannelPartner; else channelPartnerView">
                 <ng-template [ngTemplateOutlet]="body"></ng-template>
-                <nx-groups-cards [inRoot]="true"></nx-groups-cards>
+                <nx-org-cards-container [inRoot]="true"></nx-org-cards-container>
             </ng-container>
             <ng-template #channelPartnerView>
                 <a

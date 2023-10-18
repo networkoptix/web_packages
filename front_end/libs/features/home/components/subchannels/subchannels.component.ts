@@ -27,6 +27,7 @@ import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
 
 import * as CPActions from '../../store/channel-partners/channel-partners.actions';
+import { NxCardComponent } from '../card/card.component';
 
 @UntilDestroy()
 @Component({
@@ -34,8 +35,7 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
     templateUrl: 'subchannels.component.html',
     styleUrls: [
         'subchannels.component.scss',
-        '../../components/groups-cards/groups-cards.component.scss',
-        '../../components/system-card/system-card.component.scss',
+        '../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
     imports: [
@@ -49,6 +49,7 @@ import * as CPActions from '../../store/channel-partners/channel-partners.action
         TranslateModule,
         NxTabsDirective,
         NxAddSvgSrcDirective,
+        NxCardComponent,
     ],
 })
 export class NxSubchannelsComponent {

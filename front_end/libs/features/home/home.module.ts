@@ -20,7 +20,6 @@ import { SystemsDisplayMode } from '@pages/home/home.types';
 
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
 import { NxGroupCardComponent } from './components/group-card/group-card.component';
-import { NxGroupsCardsComponent } from './components/groups-cards/groups-cards.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxHomeComponent } from './home.component';
@@ -98,7 +97,6 @@ const homeRoutes: Routes = [
         NxSearchComponent,
         FormsModule,
         NxChannelPartnersComponent,
-        NxGroupsCardsComponent,
         NxOrganizationsComponent,
     ],
 })

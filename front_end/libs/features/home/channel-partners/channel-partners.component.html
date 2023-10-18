@@ -51,33 +51,14 @@
             <ng-template #cards>
                 <div class="px-3 cards-container">
                     <ng-container *ngFor="let organization of filteredOrganizations$ | async">
-                        <div
-                            class="system-button card-condensed system-card"
+                        <nx-card
                             (click)="handleOrgClick(organization.id)"
+                            [icon]="icons.dir + 'organization.svg'"
+                            [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
                         >
-                            <div class="card-body">
-                                <h3>{{ organization.name }}</h3>
-                                <div class="groups mt-1">
-                                    <h3>12</h3>
-                                    <svg-icon
-                                        nx-add-svg-src
-                                        [src]="icons.dir + 'system_local.svg'"
-                                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                                    ></svg-icon>
-                                </div>
-                            </div>
-                            <div
-                                class="three-dots"
-                                [cdkMenuTriggerFor]="menu"
-                            >
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                                <div class="dot"></div>
-                            </div>
-                            <ng-template #menu>
-                                <div class="card-menu"></div>
-                            </ng-template>
-                        </div>
+                            <h3>{{ organization.name }}</h3>
+                            <div>12</div>
+                        </nx-card>
                     </ng-container>
                 </div>
             </ng-template>

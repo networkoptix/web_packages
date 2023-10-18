@@ -1,12 +1,7 @@
 <div class="px-3 pt-3 cards-container">
     <ng-container *ngFor="let service of services">
-        <div
-            class="system-button card-condensed system-card"
-            (click)="handleServiceClick(service)"
-        >
-            <div class="card-body">
-                {{ service.name }}
-            </div>
-        </div>
+        <nx-card>
+            <h3 name>{{ service.name }}</h3>
+        </nx-card>
     </ng-container>
 </div>

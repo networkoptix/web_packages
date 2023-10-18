@@ -20,7 +20,7 @@ import type { ChannelPartnerUserExt } from './channel-partner-users.types';
     templateUrl: 'channel-partner-users.component.html',
     styleUrls: [
         'channel-partner-users.component.scss',
-        '../../../components/groups-cards/groups-cards.component.scss',
+        '../../../organizations/cards-container/org-cards-container.component.scss',
     ],
     standalone: true,
     imports: [

@@ -39,7 +39,13 @@ export class NxThreeDotDropdown extends BaseDropdown {
         super(configService);
     }
 
-    change(item: ActionItems): void {
+    handleShow(event: MouseEvent): void {
+        event.stopPropagation();
+        this.show = !this.show;
+    }
+
+    change(item: ActionItems, event: MouseEvent): void {
+        event.stopPropagation();
         item.action();
     }
 }

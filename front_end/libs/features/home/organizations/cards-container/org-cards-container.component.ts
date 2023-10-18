@@ -5,14 +5,17 @@ import { Component, Input, booleanAttribute } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
+import { NxCardComponent } from '@pages/home/components/card/card.component';
 import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
-import type { Account } from '@services/account.service/account';
 import { icons } from '@variables/static-variables';
 
+import { NxGroupCardComponent } from '../../components/group-card/group-card.component';
+import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
+import { NxSystemCardComponent } from '../../components/system-card/system-card.component';
 import { GroupItem, GroupsItem, SystemItem } from '../../home.types';
 import { NxSystemGroupsService } from '../../services/system-groups.service';
 import * as GroupActions from '../../store/groups/groups.actions';
@@ -22,14 +25,11 @@ import {
     selectCurrentSystemItems,
     selectHasGroups,
 } from '../../store/groups/groups.selectors';
-import { NxGroupCardComponent } from '../group-card/group-card.component';
-import { NxNoSystemsCardsComponent } from '../no-systems/no-systems.component';
-import { NxSystemCardComponent } from '../system-card/system-card.component';
 
 @Component({
-    selector: 'nx-groups-cards',
-    templateUrl: 'groups-cards.component.html',
-    styleUrls: ['groups-cards.component.scss'],
+    selector: 'nx-org-cards-container',
+    templateUrl: 'org-cards-container.component.html',
+    styleUrls: ['org-cards-container.component.scss'],
     standalone: true,
     imports: [
         TranslateModule,
@@ -39,9 +39,11 @@ import { NxSystemCardComponent } from '../system-card/system-card.component';
         DragDropModule,
         NxGroupCardComponent,
         NxNoSystemsCardsComponent,
+        NxCardComponent,
+        AngularSvgIconModule,
     ],
 })
-export class NxGroupsCardsComponent {
+export class NxOrganizationCardContainerComponent {
     LANG = staticLang;
     icons = icons;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
@@ -50,7 +52,6 @@ export class NxGroupsCardsComponent {
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroupItems);
     currentSystems$$ = this.store.selectSignal<SystemItem[]>(selectCurrentSystemItems);
-    account$$ = this.store.selectSignal<Account>(selectCurrentUser);
     isAdmin = true;
     constructor(
         private store: Store,
