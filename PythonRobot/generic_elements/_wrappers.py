@@ -224,6 +224,12 @@ class TextField:
     def press_enter(self):
         self.send_keys(Keys.ENTER)
 
+    def press_tab(self):
+        self.send_keys(Keys.TAB)
+
+    def double_press_tab(self):
+        self.send_keys(Keys.TAB + Keys.TAB)
+
 
 class SearchBar:
 

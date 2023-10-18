@@ -8,17 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-18. Should respond to Tab key
-    [Tags]
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${EMAIL INPUT}
-    Set Focus To Element    ${EMAIL INPUT}
-    Press Keys    ${EMAIL INPUT}    TAB
-    Element Should Be Focused    ${LOG IN CREATE ACCOUNT BUTTON}/parent::button
-    Press Keys    ${EMAIL INPUT}    TAB   TAB
-    Element Should Be Focused    ${LOG IN NEXT BUTTON}
-
 20. Handles two tabs, updates second tab state if logout is done on first
     [Tags]
     Go To    ${url}/authorize?client_type=create

@@ -82,6 +82,12 @@ class LoginDialog:
         modal = Pane(self.driver, "//nx-authorize-component/div[@class='authorize-main main-w']")
         modal.wait_until_visible()
 
+    def create_account_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "/html/body/nx-auth-app-root/div/nx-authorize-component/div/div[1]/"
+            "nx-authorize-email-component/main/footer/div[1]/button/span/parent::button")
+        return Button(self.driver, translated_xpath)
+
 
 class AccountActivatedPane:
 

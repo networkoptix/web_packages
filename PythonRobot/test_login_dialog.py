@@ -195,6 +195,19 @@ def should_respond_to_enter_key_and_log_in():
         print("pass")
 
 
+def should_respond_to_tab_key():
+    with get_chrome() as driver:
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().press_tab()
+        assert login.create_account_button().is_focused()
+        login.email_input().double_press_tab()
+        assert login.next_button().is_focused()
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
@@ -205,3 +218,4 @@ if __name__ == "__main__":
     handles_more_than_255_symbols_email_and_password()
     allows_copy_paste_in_input_fields()
     should_respond_to_enter_key_and_log_in()
+    should_respond_to_tab_key()
