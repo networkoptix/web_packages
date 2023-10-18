@@ -17,23 +17,23 @@ import { drawStripyBar } from './stripy-bar/stripy-bar';
 })
 export class TimelineRecordsCanvasRendererService {
     constructor(
-        protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService,
+        private timeline: TimelineService,
+        private vms: VideoManagementSystemService,
         private drawingConfigsService: NxDrawingConfigsService,
     ) {}
 
-    protected get cfg(): RecordsConfig {
+    private get cfg(): RecordsConfig {
         return this.drawingConfigsService.recordsDrawingConfig;
     }
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    render(ctx: CanvasRenderingContext2D): void {
         ctx.save();
-        this._drawBackground(ctx);
-        this._drawRecords(ctx);
+        this.drawBackground(ctx);
+        this.drawRecords(ctx);
         ctx.restore();
     }
 
-    protected _drawBackground(ctx: CanvasRenderingContext2D): void {
+    private drawBackground(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = this.cfg.BACKGROUND_FILL_STYLE;
         ctx.fillRect(
             0,
@@ -43,7 +43,7 @@ export class TimelineRecordsCanvasRendererService {
         );
     }
 
-    protected _drawRecords(ctx: CanvasRenderingContext2D): void {
+    private drawRecords(ctx: CanvasRenderingContext2D): void {
         ctx.fillStyle = this.cfg.RECORD_FILL_STYLE;
 
         if (this.vms.selectedCamera) {
@@ -54,7 +54,7 @@ export class TimelineRecordsCanvasRendererService {
             const records = this.vms.selectedCamera.getRecords(startMs, endMs, minGapMs);
 
             records.forEach(r => {
-                this._drawRecord(ctx, r, startMs, pxPerMs);
+                this.drawRecord(ctx, r, startMs, pxPerMs);
             });
 
             const LAST_MINUTE_SIZE = 1.5 * 60 * 1000; // 1.5 minutes
@@ -63,12 +63,12 @@ export class TimelineRecordsCanvasRendererService {
                 endMs > lastMinuteStartMs &&
                 this.timeline.durationToCanvasWidth(LAST_MINUTE_SIZE) > 1
             ) {
-                this._drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs);
+                this.drawLastMinuteStripes(ctx, lastMinuteStartMs, pxPerMs);
             }
         }
     }
 
-    protected _drawRecord(
+    private drawRecord(
         ctx: CanvasRenderingContext2D,
         r: BaseTimeRange,
         startMs: ms,
@@ -86,7 +86,7 @@ export class TimelineRecordsCanvasRendererService {
         ctx.fillRect(x0, y, w, h);
     }
 
-    protected _drawLastMinuteStripes(
+    private drawLastMinuteStripes(
         ctx: CanvasRenderingContext2D,
         lastMinuteStartMs: ms,
         pxPerMs: float,

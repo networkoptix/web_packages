@@ -15,13 +15,13 @@ const MIN_BAR_WIDTH_PX = 50;
 })
 export class TimelineScrollbarAbsoluteService {
     constructor(
-        protected timeline: TimelineService,
-        protected relative: TimelineScrollbarRelativeService,
+        private timeline: TimelineService,
+        private relative: TimelineScrollbarRelativeService,
     ) {
-        this.relative.subject.subscribe(this._emit.bind(this));
+        this.relative.subject.subscribe(this.emit.bind(this));
     }
 
-    protected _subject = new BehaviorSubject<TimelineScrollbarAbsoluteServiceStatus>({
+    subject = new BehaviorSubject<TimelineScrollbarAbsoluteServiceStatus>({
         magnification: 1.0,
         offset: 0.0,
         isBarGrabbed: false,
@@ -34,78 +34,74 @@ export class TimelineScrollbarAbsoluteService {
         honestWidth: 0,
     });
 
-    protected _emit(): void {
-        this._subject.next({
+    private emit(): void {
+        this.subject.next({
             ...this.relative.subject.value,
             isIllusionary: this.isIllusionary,
             left: this.left,
             honestLeft: this.honestLeft,
             width: this.width,
             honestWidth: this.honestWidth,
-            isBarGrabbed: this._isBarGrabbed,
+            isBarGrabbed: this.isBarGrabbed,
         });
     }
 
-    public get subject(): BehaviorSubject<TimelineScrollbarAbsoluteServiceStatus> {
-        return this._subject;
-    }
+    private _backgroundWidth: px = 1000;
 
-    protected _backgroundWidth: px = 1000;
-
-    public get backgroundWidth(): px {
+    get backgroundWidth(): px {
         return this._backgroundWidth;
     }
 
-    public set backgroundWidth(w: px) {
+    set backgroundWidth(w: px) {
         this._backgroundWidth = w;
-        this._emit();
+        this.emit();
     }
 
-    public get isIllusionary(): boolean {
+    private get isIllusionary(): boolean {
         return this.honestWidth < MIN_BAR_WIDTH_PX;
     }
 
-    public get honestWidth(): px {
+    private get honestWidth(): px {
         return this.backgroundWidth / this.relative.magnification;
     }
 
-    public get honestLeft(): px {
+    private get honestLeft(): px {
         return this.backgroundWidth * this.relative.offset;
     }
 
-    public get dw(): px {
+    private get dw(): px {
         return !this.isIllusionary ? 0 : MIN_BAR_WIDTH_PX - this.honestWidth;
     }
 
-    public get width(): px {
+    private get width(): px {
         return this.isIllusionary ? MIN_BAR_WIDTH_PX : this.honestWidth;
     }
 
-    public get left(): px {
+    private get left(): px {
         return this.isIllusionary
             ? this.honestLeft - this.dw * this.relative.offset
             : this.honestLeft;
     }
 
-    protected _dragAnchorAbsolute: px = -1;
-    protected _isBarGrabbed: boolean = false;
+    private dragAnchorAbsolute: px = -1;
+    private isBarGrabbed: boolean = false;
 
-    public handleBarMouseDown(e: MouseEvent | TouchEvent): void {
-        this._dragAnchorAbsolute = calcClientX(e);
-        this._isBarGrabbed = true;
+    handleBarMouseDown(e: MouseEvent | TouchEvent): void {
+        this.dragAnchorAbsolute = calcClientX(e);
+        this.isBarGrabbed = true;
         if (e instanceof MouseEvent) {
             e.stopPropagation();
             e.preventDefault();
         }
     }
 
-    public handleBarMouseUp(e: MouseEvent | TouchEvent): void {
-        this._isBarGrabbed = false;
+    handleBarMouseUp(e: MouseEvent | TouchEvent): void {
+        this.isBarGrabbed = false;
     }
 
-    public handleBarDragMouseMove(e: MouseEvent): void {
-        if (this._isBarGrabbed) {
-            const dx = calcClientX(e) - this._dragAnchorAbsolute;
+    handleBarDragMouseMove(e: MouseEvent): void {
+        if (this.isBarGrabbed) {
+            const dx = calcClientX(e) - this.dragAnchorAbsolute;
             const leftEdgeMeansMs = this.timeline.visibleRange.start;
 
             // there's a dilemma:
@@ -116,9 +112,9 @@ export class TimelineScrollbarAbsoluteService {
 
             const newLeftEdgeMs = leftEdgeMeansMs + msPerBarPixel * dx;
             this.timeline.jumpScrollTo(newLeftEdgeMs); // don't animate the jump!
-            this._dragAnchorAbsolute = calcClientX(e); // unless you found a way to get rid of this update
+            this.dragAnchorAbsolute = calcClientX(e); // unless you found a way to get rid of this update
             // yet if you managed it, animation could make UX less bumpy
-            this._emit();
+            this.emit();
         }
     }
 }

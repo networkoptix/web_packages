@@ -10,11 +10,11 @@ import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.servi
 })
 export class TimelineWheelHandlerService {
     constructor(
-        protected timeline: TimelineService,
-        protected timeUnderMouse: TimelineTimeUnderMouseService,
+        private timeline: TimelineService,
+        private timeUnderMouse: TimelineTimeUnderMouseService,
     ) {}
 
-    public handleWheel(e: WheelEvent): void {
+    handleWheel(e: WheelEvent): void {
         if (Math.abs(e.deltaX) > Math.abs(e.deltaY)) {
             this.wheelScroll(e.deltaX);
         } else {
@@ -23,7 +23,7 @@ export class TimelineWheelHandlerService {
         this.timeUnderMouse.handleMouseMove(e);
     }
 
-    protected _sanitizeOffset(offset: number): number {
+    private sanitizeOffset(offset: number): number {
         if (offset > 0) {
             if (this.timeline.visibleRange.end + offset > this.timeline.fullRange.end) {
                 offset = this.timeline.fullRange.end - this.timeline.visibleRange.end;
@@ -36,15 +36,15 @@ export class TimelineWheelHandlerService {
         return offset;
     }
 
-    public wheelScroll(delta: int): void {
+    wheelScroll(delta: int): void {
         const step = 0.01;
-        const offset = this._sanitizeOffset(
+        const offset = this.sanitizeOffset(
             Math.round(delta * step * this.timeline.visibleRange.duration),
         );
         this.timeline.shiftVisibleRange(offset);
     }
 
-    public wheelZoom(e: WheelEvent): void {
+    private wheelZoom(e: WheelEvent): void {
         const delta: int = -e.deltaY;
         const edgeOffsetPx: px = 80;
         let offset: float;

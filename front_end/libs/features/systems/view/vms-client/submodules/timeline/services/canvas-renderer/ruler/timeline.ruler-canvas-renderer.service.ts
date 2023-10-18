@@ -8,13 +8,13 @@ import { TimelineTopRulerCanvasRendererService } from './timeline.top-ruler-canv
 })
 export class TimelineRulerCanvasRendererService {
     constructor(
-        protected primaryRenderer: TimelinePrimaryRulerCanvasRendererService,
-        protected topRenderer: TimelineTopRulerCanvasRendererService,
+        private primaryRenderer: TimelinePrimaryRulerCanvasRendererService,
+        private topRenderer: TimelineTopRulerCanvasRendererService,
     ) {}
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    render(ctx: CanvasRenderingContext2D): void {
         this.topRenderer.reset();
-        this.primaryRenderer.render(ctx, this.topRenderer.getInterval());
+        this.primaryRenderer.render(ctx, this.topRenderer.interval);
         this.topRenderer.render(ctx);
     }
 }

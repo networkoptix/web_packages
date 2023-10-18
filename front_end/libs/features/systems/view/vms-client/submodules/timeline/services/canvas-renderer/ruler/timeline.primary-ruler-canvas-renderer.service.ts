@@ -35,54 +35,54 @@ interface RulerSerif {
 export class TimelinePrimaryRulerCanvasRendererService {
     constructor(
         languageService: NxLanguageProviderService,
-        protected timeline: TimelineService,
-        protected vms: VideoManagementSystemService,
+        private timeline: TimelineService,
+        private vms: VideoManagementSystemService,
         private drawingConfigService: NxDrawingConfigsService,
     ) {
         languageService.loadTimelineTranslations();
     }
 
-    protected _prevIntervals: Array<IrregularLengthInterval> = [];
-    protected _lastIntervalChanges: Record<string, number> = {};
-    protected _intervalWeightAnimations: Record<string, AnimatedFloat> = {};
+    private prevIntervals: Array<IrregularLengthInterval> = [];
+    private lastIntervalChanges: Record<string, number> = {};
+    private intervalWeightAnimations: Record<string, AnimatedFloat> = {};
 
-    protected _haveIntervalsChanged(newIntervals: Array<IrregularLengthInterval>): boolean {
-        if (this._prevIntervals.length !== newIntervals.length) {
+    private haveIntervalsChanged(newIntervals: Array<IrregularLengthInterval>): boolean {
+        if (this.prevIntervals.length !== newIntervals.length) {
             return true;
         }
-        for (let i = 0; i < this._prevIntervals.length; i++) {
-            if (this._prevIntervals[i] !== newIntervals[i]) {
+        for (let i = 0; i < this.prevIntervals.length; i++) {
+            if (this.prevIntervals[i] !== newIntervals[i]) {
                 return true;
             }
         }
         return false;
     }
 
-    public render(
+    render(
         ctx: CanvasRenderingContext2D,
         intervalToSkip: IrregularLengthInterval | false = false,
     ): void {
-        this._withContext(ctx, () => {
-            const serifs = this._getSerifs().filter(s => s.weight > 0);
+        this.withContext(ctx, () => {
+            const serifs = this.getSerifs().filter(s => s.weight > 0);
             if (intervalToSkip) {
                 serifs.map(
                     s =>
                         !isAlignedByIrregularInterval(this.vms.tweakT(s.time), intervalToSkip) &&
-                        this._drawSerif(ctx, s),
+                        this.drawSerif(ctx, s),
                 );
             } else {
-                serifs.map(s => this._drawSerif(ctx, s));
+                serifs.map(s => this.drawSerif(ctx, s));
             }
         });
     }
 
-    protected _withContext(ctx: CanvasRenderingContext2D, actualDrawing: () => void): void {
+    private withContext(ctx: CanvasRenderingContext2D, actualDrawing: () => void): void {
         ctx.save();
         actualDrawing();
         ctx.restore();
     }
 
-    protected _getIntervals(): Array<IrregularLengthInterval> {
+    private getIntervals(): Array<IrregularLengthInterval> {
         const result: IrregularLengthInterval[] = [];
         for (const interval of irregularLengthIntervals) {
             const displayWidth = this.timeline.durationToDomWidth(
@@ -99,31 +99,31 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return result;
     }
 
-    protected _getSerifs(): Array<RulerSerif> {
-        const intervals = this._getIntervals();
+    private getSerifs(): Array<RulerSerif> {
+        const intervals = this.getIntervals();
 
         const ANIMATION_DURATION = 200;
 
-        if (this._haveIntervalsChanged(intervals)) {
-            const intervalDiffDict = getIntervalDiffDict(this._prevIntervals, intervals);
+        if (this.haveIntervalsChanged(intervals)) {
+            const intervalDiffDict = getIntervalDiffDict(this.prevIntervals, intervals);
             Object.keys(intervalDiffDict).forEach(k => {
                 const v = intervalDiffDict[k];
                 // @ts-expect-error TODO: Replace with Array.isArray()
                 if (v.length) {
-                    this._lastIntervalChanges[k] = Date.now();
+                    this.lastIntervalChanges[k] = Date.now();
                     // HERE animations happen
-                    if (k in this._intervalWeightAnimations) {
-                        this._intervalWeightAnimations[k].set(v[1]);
+                    if (k in this.intervalWeightAnimations) {
+                        this.intervalWeightAnimations[k].set(v[1]);
                     } else {
-                        this._intervalWeightAnimations[k] = new AnimatedFloat(
+                        this.intervalWeightAnimations[k] = new AnimatedFloat(
                             v[0],
                             ANIMATION_DURATION,
                         );
-                        this._intervalWeightAnimations[k].set(v[1]);
+                        this.intervalWeightAnimations[k].set(v[1]);
                     }
                 }
             });
-            this._prevIntervals = [...intervals];
+            this.prevIntervals = [...intervals];
         }
 
         if (!intervals || !intervals.length) {
@@ -135,7 +135,7 @@ export class TimelinePrimaryRulerCanvasRendererService {
         return this.timeline.visibleRange
             .iterate(smallestInterval, this.vms.timeZoneOffset)
             .map(time => {
-                const weight = this._getIntervalWeight(time, intervalsReversed);
+                const weight = this.getIntervalWeight(time, intervalsReversed);
                 const interval = intervalsReversed.find(i =>
                     isAlignedByIrregularInterval(this.vms.tweakT(time), i),
                 );
@@ -149,14 +149,14 @@ export class TimelinePrimaryRulerCanvasRendererService {
             .filter(s => s.interval);
     }
 
-    protected _getIntervalWeight(time: ms, intervalsReversed: Array<IrregularLengthInterval>): int {
+    private getIntervalWeight(time: ms, intervalsReversed: Array<IrregularLengthInterval>): int {
         const interval = intervalsReversed.find(i =>
             isAlignedByIrregularInterval(this.vms.tweakT(time), i),
         );
-        return this._intervalWeightAnimations[interval]?.get() || 0;
+        return this.intervalWeightAnimations[interval]?.get() || 0;
     }
 
-    protected _drawSerif(ctx: CanvasRenderingContext2D, s: RulerSerif): void {
+    private drawSerif(ctx: CanvasRenderingContext2D, s: RulerSerif): void {
         if (s.weight > MAX_WEIGHT || s.weight < MIN_WEIGHT) {
             return;
         }

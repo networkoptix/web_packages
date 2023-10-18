@@ -13,19 +13,19 @@ import { TimelineRecordsCanvasRendererService } from './timeline.records-canvas-
     providedIn: 'root',
 })
 export class TimelineCanvasRendererService {
-    protected CONFIG: IConfig;
+    private CONFIG: IConfig;
 
     constructor(
-        protected timeline: TimelineService,
-        protected rulerRenderer: TimelineRulerCanvasRendererService,
-        protected recordsRenderer: TimelineRecordsCanvasRendererService,
+        private timeline: TimelineService,
+        private rulerRenderer: TimelineRulerCanvasRendererService,
+        private recordsRenderer: TimelineRecordsCanvasRendererService,
         configService: NxConfigService,
-        protected debugRenderer: TimelineDebugCanvasRendererService,
+        private debugRenderer: TimelineDebugCanvasRendererService,
     ) {
         this.CONFIG = configService.getConfig();
     }
 
-    public render(ctx: CanvasRenderingContext2D): void {
+    render(ctx: CanvasRenderingContext2D): void {
         ctx.clearRect(
             0,
             0,
