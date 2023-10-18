@@ -158,11 +158,7 @@
                             [preloader]="true"
                             [state]="node.details.status"
                             [unavailableMessage]="'Cannot load preview' | translate"
-                            [url]="
-                                node?.details?.requiresTranscoding
-                                    ? ''
-                                    : (node?.details?.previewUrl | async)
-                            "
+                            [url]="node?.details?.previewUrl | async"
                             class="generic"
                         ></nx-health-image>
                     </div>
