@@ -8,32 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-21. Log in more than 5 times
-    [tags]    C42075
-    Go To    ${url}/authorize?client_type=create
-    ${email}    Get Random Email Robot    ${BASE EMAIL}    sendemail=${True}
-    Register    ${TEST FIRST NAME}    ${TEST LAST NAME}    ${email}    ${BASE PASSWORD}
-    Activate    ${email}
-    Wait Until Element Is Visible    ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
-    Click Button    ${LOG IN BTN ACTIVATE ACCOUNT PAGE}
-    Wait Until Elements are Visible
-    ...    ${LOG IN MODAL}
-    ...    ${LOG IN BUTTON}
-    ...    ${PASSWORD INPUT}
-    FOR  ${x}  IN RANGE  6
-        Sleep    2
-        Input Text    ${PASSWORD INPUT}    incorrect
-        Wait Until Element is Visible    ${LOG IN BUTTON}
-        Click Button    ${LOG IN BUTTON}
-        Sleep    1
-    END
-    Wait Until Element is Visible    ${TOO MANY ATTEMPTS MESSAGE}
-    Sleep    65
-    Input Text    ${PASSWORD INPUT}    ${BASE PASSWORD}
-    Wait Until Element is Visible    ${LOG IN BUTTON}
-    Click Button    ${LOG IN BUTTON}
-    Validate Log In    ${email}
-
 22. User is logged out of browser after a password change in another browser
     [tags]    C41837
     Close All Browsers

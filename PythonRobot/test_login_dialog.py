@@ -1,5 +1,6 @@
 import random
 import string
+import time
 
 import resource_import
 from generic_elements import Button
@@ -241,6 +242,33 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
         print("pass")
 
 
+def log_in_more_than_5_times():
+    """
+    [Tags]    C42075
+    """
+    with get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        wrong_password = "wrong 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(email)
+        login.next_button().click()
+        for attempt in range(6):
+            login.password_input().input_text(wrong_password)
+            login.login_button().click()
+            time.sleep(1)
+        login.wait_until_has_too_many_attempts_error()
+        time.sleep(65)
+        login.password_input().input_text(password)
+        login.login_button().click()
+        SystemsPage(driver).no_systems()
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
@@ -253,3 +281,4 @@ if __name__ == "__main__":
     should_respond_to_enter_key_and_log_in()
     should_respond_to_tab_key()
     handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first()
+    log_in_more_than_5_times()

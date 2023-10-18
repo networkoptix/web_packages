@@ -84,9 +84,16 @@ class LoginDialog:
 
     def create_account_button(self):
         translated_xpath = self.rb.replace_nested_variables(
-            "/html/body/nx-auth-app-root/div/nx-authorize-component/div/div[1]/"
-            "nx-authorize-email-component/main/footer/div[1]/button/span/parent::button")
+            "//nx-authorize-email-component//button[contains(text(), "
+            f"'{self.rb.CREATE_ACCOUNT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
+
+    def wait_until_has_too_many_attempts_error(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//nx-authorize-component//p[contains(text(), "
+            f"'{self.rb.TOO_MANY_ATTEMPTS_TEXT}')]")
+        label = PageText(self.driver, translated_xpath)
+        label.wait_until_visible()
 
 
 class AccountActivatedPane:
