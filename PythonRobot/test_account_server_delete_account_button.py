@@ -3,6 +3,7 @@ from pathlib import Path
 
 from colorama import Fore
 
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from pages.account_page import AccountPage
@@ -31,10 +32,25 @@ def delete_account_button_becomes_enabled(
         delete_account_button.wait_until_not_clickable()
         can_not_delete_account_tooltip = account_page.get_can_not_delete_account_tooltip()
         can_not_delete_account_tooltip.wait_until_visible()
+        actual_tooltip_text = can_not_delete_account_tooltip.text()
+        cloud_api = CloudPortalAPI(
+            env=base_url,
+            password=cloud_owner.password,
+            email=cloud_owner.email,
+            )
+        expected_tooltip_text = (
+            f"Disconnect all the systems you are the owner of from the "
+            f"{cloud_api.get_cloud_settings().get('cloudName')} portal and disable "
+            f"two factor authentication to delete your account.")
+        assert actual_tooltip_text == expected_tooltip_text, (
+            f"Actual: {actual_tooltip_text}; Expected: {expected_tooltip_text}")
         server_2.disconnect_from_cloud()
         driver.refresh()
         can_not_delete_account_tooltip = account_page.get_can_not_delete_account_tooltip()
         can_not_delete_account_tooltip.wait_until_visible()
+        actual_tooltip_text = can_not_delete_account_tooltip.text()
+        assert actual_tooltip_text == expected_tooltip_text, (
+            f"Actual: {actual_tooltip_text}; Expected: {expected_tooltip_text}")
         server_1.disconnect_from_cloud()
         driver.refresh()
         delete_account_button.wait_until_clickable(timeout=30)

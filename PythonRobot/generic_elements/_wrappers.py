@@ -421,6 +421,9 @@ class Tooltip:
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
+    def text(self):
+        return self._element.text()
+
 
 class TabItem:
 
