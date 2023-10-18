@@ -243,25 +243,28 @@ class OrganizationView:
     async def add_user_to_org(self, cloud_api, license_api):
         await self.sync_systems_from_channel_partner_service(license_api)
         await self.sync_user_with_channel_partner_service(license_api)
+        updated_groups = []
         user_for_other_groups = []
         for group_id in self.group_ids:
             user = User(email=self.email, role=self.access_role, group_id=group_id, enabled=True)
             self.db.session.add(user)
             user_for_other_groups.append(user)
-
+            updated_groups.append(group_id)
         batch = GroupUsersManager()
         batch.users_to_add(user_for_other_groups)
         await batch.execute_transaction(cloud_api.send_batch)
 
         self.db.session.commit()
-        return {"added_groups": [], "added_systems": []}
+        return {"added_groups": updated_groups, "added_systems": []}
 
     async def update_org_user(self, cloud_api, license_api):
         await self.sync_systems_from_channel_partner_service(license_api)
         updated_org = await self.sync_user_with_channel_partner_service(license_api)
         updated_org['org_id'] = self.org_id
 
+        updated_groups = []
         user_for_other_groups = []
+        remove_users = []
         for group_id in self.group_ids:
             user = self.db.session.query(User).filter(User.email == self.email, User.group_id == group_id).first()
             if user:
@@ -269,17 +272,32 @@ class OrganizationView:
                 user.enabled = self.enabled
                 user.group_id = group_id
             else:
+                if current_group := self.db.session.query(Group).get(group_id):
+                    if users_above := current_group.get_users_to_root():
+                        users_above = [user.as_dict()['email'] for user in users_above]
+                        if search_user := self.db.session.query(User).filter(User.email == self.email).first():
+                            if search_user.as_dict()['email'] in users_above:
+                                raise ValueError('Cannot update user, user exists above')
+                    for user in current_group.get_all_users():
+                        user_dict = user.as_dict()
+                        if(user_dict['email'] == self.email):
+                            del_group_id = user_dict['group_id']
+                            del_user = self.db.session.query(User).filter(User.email == self.email, User.group_id == del_group_id).first()
+                            remove_users.append(del_user)
+                            self.db.session.delete(del_user)
+                            updated_groups.append(del_group_id)
                 user = User(email=self.email, role=self.access_role, group_id=group_id, enabled=self.enabled)
                 self.db.session.add(user)
+            updated_groups.append(group_id)
             user_for_other_groups.append(user)
-        self.db.session.commit()
 
         batch = GroupUsersManager()
         batch.users_to_add(user_for_other_groups)
+        batch.users_to_remove(remove_users)
         await batch.execute_transaction(cloud_api.send_batch)
 
         self.db.session.commit()
-        return {"updated_org": updated_org, "updated_groups": [], "updated_systems": []}
+        return {"updated_org": updated_org, "updated_groups": updated_groups, "updated_systems": []}
 
     async def delete_org_user(self, cloud_api, license_api):
         await self.sync_systems_from_channel_partner_service(license_api)
