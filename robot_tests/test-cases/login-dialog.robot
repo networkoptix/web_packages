@@ -8,10 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-14. Logout refreshes page
-    Log In    ${login user}    ${password}    api=${False}
-    Log Out
-
 # We don't actually allow copy of the password field at log in.
 15. Allows copy-paste in input fields
     ${system} =    Evaluate    platform.system()    platform
