@@ -209,6 +209,7 @@ export function setupConfig(): IConfig {
             dirLayouts: '/static/images/icons/layouts/',
             dirLayoutsCamera: '/static/images/icons/layouts/camera/',
             dirNonStandard: '/static/images/icons/',
+            dirNonStandardTriangle: '/static/images/icons/triangle/',
             dirNonStandardView: '/static/images/icons/view/',
             dirPagePlaceholder: '/static/images/placeholders/page/',
             dirSectionPlaceholder: '/static/images/placeholders/section/',
