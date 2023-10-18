@@ -8,18 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-# We don't actually allow copy of the password field at log in.
-15. Allows copy-paste in input fields
-    ${system} =    Evaluate    platform.system()    platform
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Element is Visible    ${EMAIL INPUT}
-    Input Text    ${EMAIL INPUT}    Copy Paste Test
-    Copy Text    ${EMAIL INPUT}
-    Clear Element Text    ${EMAIL INPUT}
-    Paste Text    ${EMAIL INPUT}
-    Textfield Should Contain    ${EMAIL INPUT}    Copy Paste Test
-
 17. Should respond to Enter key and log in
     Wait Until Element is Visible    ${LOG IN NAV BAR}
     Click Link    ${LOG IN NAV BAR}

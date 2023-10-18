@@ -163,6 +163,21 @@ def handles_more_than_255_symbols_email_and_password():
         print("pass")
 
 
+def allows_copy_paste_in_input_fields():
+    with get_chrome() as driver:
+        copy_paste_text = "Copy Me"
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(copy_paste_text)
+        login.email_input().copy_text()
+        login.email_input().clear()
+        login.email_input().paste_text()
+        assert login.email_input().get_text() == "Copy Me"
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
@@ -171,3 +186,4 @@ if __name__ == "__main__":
     displays_password_masked()
     requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser()
     handles_more_than_255_symbols_email_and_password()
+    allows_copy_paste_in_input_fields()

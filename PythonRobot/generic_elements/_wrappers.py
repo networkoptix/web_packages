@@ -214,6 +214,13 @@ class TextField:
                     )
             time.sleep(1)
 
+    def copy_text(self):
+        self.send_keys(Keys.CONTROL + 'a')
+        self.send_keys(Keys.CONTROL + 'c')
+
+    def paste_text(self):
+        self.send_keys(Keys.CONTROL + 'v')
+
 
 class SearchBar:
 
