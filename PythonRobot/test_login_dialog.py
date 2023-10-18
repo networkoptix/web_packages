@@ -8,6 +8,7 @@ from header import HeaderNav
 from landing_page import LandingPage
 from login import AccountActivatedPane
 from login import LoginDialog
+from register_form import RegisterForm
 from resource_import import get_chrome
 from resource_import import register_and_activate_account
 from systems_page import SystemsPage
@@ -208,6 +209,38 @@ def should_respond_to_tab_key():
         print("pass")
 
 
+def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
+    with get_chrome() as driver:
+        driver.get(ENV + '/authorize?client_type=create')
+        register_form = RegisterForm(driver)
+        register_form.terms_and_conditions_link().click()
+        driver.switch_to.window(driver.window_handles[1])
+        driver.wait_until_number_of_tabs_are_open(2)
+        assert driver.current_url == ENV + '/content/eula'
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(email)
+        login.next_button().click()
+        login.password_input().input_text(password)
+        login.login_button().click()
+        SystemsPage(driver).no_systems()
+        driver.switch_to.window(driver.window_handles[0])
+        assert driver.current_url == ENV + '/authorize?client_type=create'
+        driver.get(ENV)
+        SystemsPage(driver).no_systems()
+        header.account_dropdown().click()
+        header.log_out_option().click()
+        LandingPage(driver)
+        driver.switch_to.window(driver.window_handles[1])
+        LoginDialog(driver)
+        print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
@@ -219,3 +252,4 @@ if __name__ == "__main__":
     allows_copy_paste_in_input_fields()
     should_respond_to_enter_key_and_log_in()
     should_respond_to_tab_key()
+    handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first()

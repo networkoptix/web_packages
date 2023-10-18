@@ -8,45 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-20. Handles two tabs, updates second tab state if logout is done on first
-    [Tags]
-    Go To    ${url}/authorize?client_type=create
-    Wait Until Elements are Visible
-    ...    ${REGISTER FIRST NAME INPUT}
-    ...    ${REGISTER LAST NAME INPUT}
-    ...    ${REGISTER EMAIL INPUT}
-    ...    ${REGISTER PASSWORD INPUT}
-    ...    ${CREATE ACCOUNT BUTTON}
-    Click Link    ${TERMS AND CONDITIONS LINK}
-    # This is specifically for Ubuntu Firefox because the new page
-    # isn't created fast enough and Get Window Handles only gets 1 item.
-    Sleep    2
-    ${tabs}    Get Window Handles
-    Switch Window    ${tabs}[1]
-    Set Window Size    1920    1080
-    Location Should Be    ${url}/content/eula
-    Go To    ${url}
-    Validate Log Out
-    # This is specifically for Ubuntu Firefox as the JS seems to
-    # load slowly and doesn't redirect correctly after login.
-    Sleep    5
-    Log In    ${login user}    ${password}   api=${False}
-    Switch Window    ${tabs}[0]
-    Location Should Be    ${url}/authorize?client_type=create
-    Go To   ${url}
-#    Reload Page
-#    Wait Until Element is Visible    ${LOGGED IN STAY LOGGED IN BUTTON}
-#    Click Button    ${LOGGED IN STAY LOGGED IN BUTTON}
-#    Sleep    2
-#    Wait Until Page Does Not Contain Elements    ${BACKDROP}    ${MODAL DIALOG}
-    Validate Log In    ${login user}
-    Log Out
-    ${tabs}    Get Window Handles
-    Switch Window    ${tabs}[1]
-    Location Should Be    ${url}/systems
-    Reload Page
-    Wait Until Element is Visible    ${LOG IN MODAL}
-
 21. Log in more than 5 times
     [tags]    C42075
     Go To    ${url}/authorize?client_type=create
