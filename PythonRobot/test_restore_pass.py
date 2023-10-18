@@ -3,6 +3,7 @@ from email_access import EmailClient
 from header import HeaderNav
 from login import LoginDialog
 from resource_import import get_chrome
+from toast_notification import ToastNotification
 from variables import ENV
 
 
@@ -83,8 +84,38 @@ def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
         header.account_dropdown().click()
 
 
+def test_should_not_allow_restore_twice(user: CloudAccount):
+    '''C42079'''
+    with get_chrome() as driver:
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(user.email)
+        login.next_button().click()
+        login.forgot_password_button().click()
+        assert login.reset_password_email_input().get_text() == user.email, "Email was not autofilled in the field"
+        login.reset_password_button().click()
+        with EmailClient(email_alias=user.email) as client:
+            email = client.wait_for_reset_password_email()
+            link = email.get_nx_links_from_email()
+            client.delete_email(email)
+        driver.get(link)
+        login.new_password_input().input_text(user.password)
+        login.password_reset_next_button().click()
+        assert login.reset_success_text() == "Password is set!"
+        login.password_reset_next_button().click()
+        driver.get(link)
+        login.new_password_input().input_text(user.password)
+        login.password_reset_next_button().click()
+        assert ToastNotification(driver, "Cannot save password").get_message().get_text() == (
+            "Cannot save password: Confirmation code is already used or incorrect"
+            )
+
+
 if __name__ == "__main__":
     with CloudAccount(sendemail=True) as user:
         sets_new_password_and_successfully_logs_in(user)
         check_restore_password_email(user)
         check_can_still_log_in_if_restore_not_finished(user)
+        test_should_not_allow_restore_twice(user)

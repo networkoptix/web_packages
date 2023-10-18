@@ -42,19 +42,6 @@ Force Tags
     ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
     Should Be Equal    '${input type}'    'password'
 
-7. Should not allow to use one restore link twice
-    [Tags]    email    C42079
-    # Failing due to CLOUD-8434
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-    ${restore url}=   Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${ALT PASSWORD}
-
-    Go To    ${restore url}
-    Wait Until Elements Are Visible    ${RESET PASSWORD INPUT}     ${RESET NEXT BUTTON}
-    Input Text    ${RESET PASSWORD INPUT}    ${ALT PASSWORD}
-    Click Button    ${RESET NEXT BUTTON}
-    Check For Alert    ${CANNOT SAVE PASSWORD}:${SPACE}${CODE USED/INCORRECT}
-
 8. Non-activated user cannot get to password entry page to restore password
     [Tags]    email    C41871
     ${email}    Get Random Email    ${BASE EMAIL}    sendemail=${True}
