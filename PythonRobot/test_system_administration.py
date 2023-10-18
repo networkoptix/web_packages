@@ -94,6 +94,7 @@ def user_without_permissions_cannot_see_system_admin_page(server: Mediaserver):
         driver.get(ENV + f"/systems/{server.id}")
         LoginDialog(driver).basic_cloud_login(email, password)
         assert FailedToAccessSystemPage(driver).is_shown()
+        print("pass")
 
 
 # User can rename System: change in web -> check server
@@ -135,6 +136,7 @@ def owner_can_rename_system_via_cloud_portal(server: Mediaserver):
         cloud_system_settings = CLOUD_API.get_cloud_system_settings(
             cloud_auth, server.id)
         assert cloud_system_settings['name'] == "Name Changed via Cloud Portal"
+        print("pass")
 
 
 # User can rename System: change on server side -> check in web
@@ -146,6 +148,7 @@ def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
         sys_admin = SystemAdmin(driver)
         sys_admin.get_system_name_edit_field().wait_until_name_is("Name Changed via API")
         assert HeaderNav(driver).get_system_name() == "Name Changed via API"
+        print("pass")
 
 
 if __name__ == "__main__":
