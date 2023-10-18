@@ -98,7 +98,14 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     sensitivityButtons$ = new BehaviorSubject<SensitivityButtonValue>(false);
 
-    overlayEnabled = computed(() => !this.isMobile && !!this.camera && !!this.motionMask);
+    overlayEnabled = (): boolean => {
+        return (
+            !this.isMobile &&
+            !!this.camera &&
+            !!this.motionMask &&
+            this.camera.status !== CameraStatus.Offline
+        );
+    };
 
     // TODO: Remove after Forms refactor
     @ViewChild(NxRecordingSettingsComponent)
