@@ -615,6 +615,7 @@
                                     [hide]="dragging$$()"
                                     [canEdit]="editCameras$$()"
                                     (removeItem)="removeItem($event)"
+                                    [system]="system"
                                 >
                                     <ng-container *ngTemplateOutlet="tileContent" />
                                 </nx-layout-grid-item-overlay>

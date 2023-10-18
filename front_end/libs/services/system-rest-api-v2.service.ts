@@ -322,6 +322,23 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             })),
         );
     }
+
+    getCameraStreamMetrics(cameraId: string) {
+        return this.get('/rest/v2/system/metrics/values', {
+            params: {
+                _with: `cameras.${cameraId}.primaryStream,cameras.${cameraId}.secondaryStream`,
+            },
+        }).pipe(
+            map(
+                (res: t.ValuesReply) =>
+                    res.cameras[cameraId] as Pick<
+                        t.CameraValue,
+                        'primaryStream' | 'secondaryStream'
+                    >,
+            ),
+        );
+    }
+
     /** End of Health Monitoring **/
 
     private patchCameraCompatibilityV2(

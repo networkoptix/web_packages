@@ -166,36 +166,49 @@ export interface ManifestReplyObjects {
     }[];
 }
 
-export interface CameraValues {
-    [id: string]: {
-        _: {
-            name: string;
-            thumbnail: string;
-        };
-        availability: {
-            ipConflicts: number;
-            ipConflicts3min: number;
-            offlineEvents: number;
-            status: CameraStatus | RecordingStatus.Recording;
-            streamIssues: number;
-            streamIssues1h: number;
-        };
-        info: {
-            firmware: string;
-            ip: string;
-            model: string;
-            recording: string;
-            server: string;
-            type: DeviceType;
-            vendor: string;
-        };
-        secondaryStream: {
-            recommendedMaxSecondaryResolution: string;
-        };
-        storage: {
-            hasArchiveRotated: boolean;
-        };
+export interface PrimaryStream {
+    actualBitrateBps: number;
+    actualFps: number;
+    codec: string;
+    resolution: string;
+    targetBitrateBps: number;
+}
+
+export interface SecondaryStream extends PrimaryStream {
+    recommendedMaxSecondaryResolution: string;
+}
+
+export interface CameraValue {
+    _: {
+        name: string;
+        thumbnail: string;
     };
+    availability: {
+        ipConflicts: number;
+        ipConflicts3min: number;
+        offlineEvents: number;
+        status: CameraStatus | RecordingStatus.Recording;
+        streamIssues: number;
+        streamIssues1h: number;
+    };
+    info: {
+        firmware: string;
+        ip: string;
+        model: string;
+        recording: string;
+        server: string;
+        type: DeviceType;
+        vendor: string;
+    };
+    primaryStream: PrimaryStream;
+    secondaryStream: SecondaryStream;
+    storage: {
+        hasArchiveRotated: boolean;
+    };
+}
+
+export interface CameraValues {
+    [id: string]: CameraValue;
 }
 
 interface NetworkInterfaces {

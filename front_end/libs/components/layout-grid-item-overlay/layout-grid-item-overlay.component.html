@@ -100,19 +100,20 @@
     </div>
 
     <div
-        *ngIf="displayInfo$$() && allowDebugMode"
+        *ngIf="displayInfo$$() && cameraOnline$$()"
         class="info"
     >
-        <div
-            class="info-type"
-            translate
-        >
-            Stream (stub data)
-        </div>
-        <div translate>1920x1080</div>
-        <div translate>29.00 fps</div>
-        <div translate>2.72 Mbps</div>
-        <div translate>Hi-Res</div>
+        <ng-template #preloader>
+            <nx-pre-loader type="short"></nx-pre-loader>
+        </ng-template>
+        <ng-container *ngIf="bitrateInfo$ | async as bitrateInfo; else preloader">
+            <div
+                *ngFor="let metric of bitrateInfo; let i = index"
+                [ngClass]="{ 'info-type': !i }"
+            >
+                {{ metric | nxTranslate }}
+            </div>
+        </ng-container>
     </div>
 
     <div

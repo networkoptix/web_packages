@@ -15,13 +15,23 @@ import {
     signal,
     WritableSignal,
 } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { round } from 'lodash-es';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
-import { distinctUntilChanged, map } from 'rxjs';
+import {
+    distinctUntilChanged,
+    map,
+    repeat,
+    defer,
+    switchMap,
+    combineLatest,
+    EMPTY,
+    delay,
+    catchError,
+} from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
@@ -50,7 +60,9 @@ import { NxImageComponent } from '@pages/health/table-components/image/image.com
 import { PipesModule } from '@pipes/pipes.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LayoutItem } from '@services/system-api.types';
+import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
+import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
 import { isDefinedOrTrue } from '@utils/array';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
@@ -98,18 +110,22 @@ const EMPTY_MENU_ACTION = {
 export class NxLayoutGridItemOverlayComponent {
     @Input({ alias: 'item', transform: (value: LayoutItem) => signal(value) })
     item$$: Signal<LayoutItem>;
-    @Input({ alias: 'node', transform: (value: BaseResourceNode) => signal(value) })
-    node$$: Signal<BaseResourceNode>;
+    node$$ = signal<BaseResourceNode | null>(null);
+    @Input() set node(value: BaseResourceNode) {
+        this.node$$.set(value);
+    }
     @Input() showRemove: boolean;
     @Input() hide: boolean;
     @Input() fullScreenTarget: HTMLElement;
     @Input({ alias: 'canEdit', transform: (value: boolean) => signal(value) })
     canEdit$$: Signal<boolean> = signal(true);
+    @Input() system: NxSystem;
 
     @Output() removeItem = new EventEmitter<LayoutItem>();
 
     isFullscreen$$ = signal(false);
     isMenuOpened$$ = signal(false);
+    hovered$$ = signal(false);
 
     scale$ = this.resizeObserver.resize.pipe(
         map(({ width, height }) => {
@@ -141,6 +157,9 @@ export class NxLayoutGridItemOverlayComponent {
     layoutsEditable: boolean;
 
     displayInfo$$ = computed(() => {
+        if (!this.cameraOnline$$()) {
+            return false;
+        }
         const manualToggle = this.temporaryManualDisplayInfoToggle$$();
         if (manualToggle !== null) {
             return manualToggle;
@@ -155,15 +174,105 @@ export class NxLayoutGridItemOverlayComponent {
         const node = this.checkGetCameraNode();
         return node ? node.details.recordingStatus === RecordingStatus.Recording : null;
     });
+    cameraOnline$$ = computed(() => {
+        const node = this.checkGetCameraNode();
+        return node ? node.details.online : null;
+    });
 
     extraCameraTooltip$$ = computed(() => {
         const node = this.checkGetCameraNode();
         return node ? `: ${node.name}` : '';
     });
 
+    updateMetrics$$ = computed(() => this.hovered$$() || this.isFullscreen$$());
+
+    bitrateInfo$ = combineLatest([
+        toObservable(this.displayInfo$$),
+        toObservable(this.cameraOnline$$),
+        toObservable(this.updateMetrics$$),
+    ]).pipe(
+        map(([displayInfo, cameraOnline, hovered]) =>
+            [displayInfo, cameraOnline, hovered].every(Boolean),
+        ),
+        delay(1000),
+        distinctUntilChanged(),
+        switchMap(displayInfo => {
+            const cameraNode = this.checkGetCameraNode();
+            const mediaserver = this.system.mediaserver;
+
+            if (!displayInfo || !cameraNode) {
+                return EMPTY;
+            }
+
+            if (mediaserver instanceof NxSystemRestAPI2) {
+                const {
+                    fps,
+                    unableToLoad,
+                    unavailable,
+                    streamType: { primary, secondary },
+                    resolution: { high, low },
+                } = staticLang.layouts.overlay.info;
+
+                return defer(() => mediaserver.getCameraStreamMetrics(cameraNode.details.id)).pipe(
+                    map(({ primaryStream, secondaryStream }) => {
+                        if (!primaryStream) {
+                            return [unavailable, unableToLoad];
+                        }
+
+                        const videoElement =
+                            this.ref.nativeElement.querySelector<HTMLVideoElement>(
+                                'video.original-stream',
+                            );
+                        if (!videoElement) {
+                            return null;
+                        }
+
+                        const currentResolution = `${videoElement.videoWidth}x${videoElement.videoHeight}`;
+                        const streams = [primaryStream, secondaryStream];
+                        const stream =
+                            streams.find(({ resolution }) => resolution === currentResolution) ||
+                            primaryStream;
+                        const resolution = stream?.resolution;
+                        const fpsText = stream?.actualFps && {
+                            value: fps,
+                            params: { fps: stream.actualFps.toFixed(2) },
+                        };
+                        const bitrate =
+                            stream?.actualBitrateBps &&
+                            `${((stream.actualBitrateBps / 1024 ** 2) * 8).toFixed(2)} Mbps`;
+                        const streamTitle = stream === primaryStream ? primary : secondary;
+                        const streamDescription = {
+                            value: stream === primaryStream ? high : low,
+                            params: { codec: stream.codec },
+                        };
+                        return [
+                            streamTitle,
+                            resolution,
+                            fpsText,
+                            bitrate,
+                            streamDescription,
+                        ].filter(Boolean);
+                    }),
+                    catchError(() => Promise.resolve([unavailable, unableToLoad])),
+                    repeat({ delay: 1000 }),
+                );
+            } else {
+                return EMPTY;
+            }
+        }),
+    );
+
     @HostListener('document:fullscreenchange')
     onFullscreenChange(): void {
         this.isFullscreen$$.set(this.document.fullscreenElement === this.fullScreenTarget);
+    }
+
+    @HostListener('mouseenter') onHoverStart(): void {
+        this.hovered$$.set(true);
+    }
+
+    @HostListener('mouseleave') onHoverEnd(): void {
+        this.hovered$$.set(false);
     }
 
     readonly MENU_ITEMS: Record<string, MenuItem<ResourceNode>> = {
@@ -317,7 +426,7 @@ export class NxLayoutGridItemOverlayComponent {
             this.allowDebugMode && this.MENU_ITEMS.motion,
             this.allowDebugMode && this.MENU_ITEMS.object,
             this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
-            this.allowDebugMode && this.MENU_ITEMS.info,
+            this.cameraOnline$$() && this.MENU_ITEMS.info,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
             this.allowDebugMode && this.MENU_ITEMS.screenshot,
         ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>);

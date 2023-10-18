@@ -260,6 +260,19 @@
             "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         },
         "overlay": {
+            "info": {
+                "resolution": {
+                    "high": "Hi-Res ({codec})",
+                    "low": "Lo-Res ({codec})"
+                },
+                "streamType": {
+                    "primary": "Primary Stream",
+                    "secondary": "Secondary Stream"
+                },
+                "unavailable": "Unavailable",
+                "unableToLoad": "Unable to load stream metrics",
+                "fps": "{fps} Fps"
+            },
             "menuActions": {
                 "menu": {
                     "name": "Menu",
