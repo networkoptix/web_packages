@@ -3,6 +3,7 @@ import string
 import time
 
 import resource_import
+from change_pass_form import ChangePassForm
 from generic_elements import Button
 from generic_elements import TextField
 from header import HeaderNav
@@ -11,6 +12,7 @@ from login import AccountActivatedPane
 from login import LoginDialog
 from register_form import RegisterForm
 from resource_import import get_chrome
+from resource_import import validate_log_out
 from resource_import import register_and_activate_account
 from systems_page import SystemsPage
 from variables import ENV
@@ -269,6 +271,47 @@ def log_in_more_than_5_times():
         print("pass")
 
 
+def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
+    """
+    [Tags]    C41837
+    """
+    with get_chrome() as driver1:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver1, "Mark", "Hamill", email, password)
+        driver1.get(ENV)
+        header = HeaderNav(driver1)
+        header.log_in_button().click()
+        login = LoginDialog(driver1)
+        login.email_input().input_text(email)
+        login.next_button().click()
+        login.password_input().input_text(password)
+        login.login_button().click()
+        SystemsPage(driver1).no_systems()
+        with get_chrome() as driver2:
+            driver2.get(ENV)
+            header = HeaderNav(driver2)
+            header.log_in_button().click()
+            login = LoginDialog(driver2)
+            login.email_input().input_text(email)
+            login.next_button().click()
+            login.password_input().input_text(password)
+            login.login_button().click()
+            SystemsPage(driver2).no_systems()
+            header.account_dropdown().click()
+            header.change_password_option().click()
+            change_pass_form = ChangePassForm(driver2)
+            change_pass_form.verify_form_is_visible()
+            change_pass_form.current_password_input().input_text(password)
+            new_password = "newpass 123"
+            change_pass_form.new_password_input().input_text(new_password)
+            change_pass_form.save_button().click()
+            driver1.refresh()
+            validate_log_out(driver1)
+            LandingPage(driver1)
+            print("pass")
+
+
 if __name__ == "__main__":
     allows_login_with_correct_credentials_and_log_out()
     allows_log_in_with_existing_email_in_uppercase()
@@ -282,3 +325,4 @@ if __name__ == "__main__":
     should_respond_to_tab_key()
     handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first()
     log_in_more_than_5_times()
+    user_is_logged_out_of_browser_after_a_password_change_in_another_browser()
