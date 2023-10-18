@@ -35,12 +35,6 @@ Force Tags
 #    Go To    ${url}/restore_password/success
 #    Wait Until Element Is Visible    ${JUMBOTRON}
 
-4. Should be able to set new password (which is same as old), redirect
-    [Tags]    email    C26260
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-    Get Restore Code and Open the Link    ${email}    restore=${True}    new password=${password}
-
 6. Displays password masked, shows password and changes eye icon when clicked
     [Tags]    C26260
     ${email}=   Register Random User

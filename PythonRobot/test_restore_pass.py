@@ -7,6 +7,7 @@ from variables import ENV
 
 
 def sets_new_password_and_successfully_logs_in(user: CloudAccount):
+    '''C26260'''
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
