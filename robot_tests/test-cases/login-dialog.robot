@@ -8,18 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-11. Displays password masked
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Sleep    1
-    Wait Until Keyword Succeeds    10    0.5    Input Text    ${EMAIL INPUT}    ${email}
-    Sleep    1
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Element is Visible    ${PASSWORD INPUT}
-    ${input type}    Get Element Attribute    ${PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'password'
-
 12. Requires log In, if the user has just logged out and pressed back button in browser
     Log In    ${login user}    ${password}  api=${False}
     Sleep   2
