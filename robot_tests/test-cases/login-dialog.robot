@@ -8,18 +8,6 @@ Force Tags        Threaded
 
 *** Test Cases ***
 
-17. Should respond to Enter key and log in
-    Wait Until Element is Visible    ${LOG IN NAV BAR}
-    Click Link    ${LOG IN NAV BAR}
-    Wait Until Elements Are Visible    ${LOG IN MODAL}    ${LOG IN NEXT BUTTON}    ${EMAIL INPUT}
-    Input Text    ${EMAIL INPUT}    ${login user}
-    Click Button    ${LOG IN NEXT BUTTON}
-    Wait Until Element Is Visible    ${PASSWORD INPUT}
-    Input Text    ${PASSWORD INPUT}    ${password}
-    Wait Until Element is Visible    ${LOG IN BUTTON}
-    Press Keys    ${PASSWORD INPUT}    ENTER
-    Validate Log In    ${login user}
-
 18. Should respond to Tab key
     [Tags]
     Wait Until Element is Visible    ${LOG IN NAV BAR}

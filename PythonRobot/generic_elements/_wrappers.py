@@ -221,6 +221,9 @@ class TextField:
     def paste_text(self):
         self.send_keys(Keys.CONTROL + 'v')
 
+    def press_enter(self):
+        self.send_keys(Keys.ENTER)
+
 
 class SearchBar:
 
