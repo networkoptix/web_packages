@@ -191,21 +191,21 @@ class Mediaserver:
         if self._cloud_owner is None:
             raise RuntimeError("System is not connected to Cloud")
         return self._cloud_owner
-    
+
     def get_cloud_viewer(self) -> 'CloudAccount':
         if self._cloud_viewer is None:
             if self._cloud_owner is None:
                 raise RuntimeError("System is not connected to Cloud")
             raise RuntimeError("System does not have cloud viewer")
         return self._cloud_viewer
-    
+
     def get_cloud_advanced_viewer(self) -> 'CloudAccount':
         if self._cloud_advanced_viewer is None:
             if self._cloud_owner is None:
                 raise RuntimeError("System is not connected to Cloud")
             raise RuntimeError("System does not have cloud advanced viewer")
         return self._cloud_advanced_viewer
-    
+
     def get_cloud_live_viewer(self) -> 'CloudAccount':
         if self._cloud_live_viewer is None:
             if self._cloud_owner is None:
@@ -326,10 +326,11 @@ class CloudAccount:
         "custom": "NoGlobalPermissions",
         }
 
-    def __init__(self, sendemail = False):
+    def __init__(self, activate = True, sendemail = False):
         self.first_name = "Mark"
         self.last_name = "Hamill"
         self.password = DEFAULT_PASSWORD
+        self._activate = activate
         self._sendemail = sendemail
         self._totp = None
         self._backup_codes = None
@@ -381,7 +382,8 @@ class CloudAccount:
                 raise
             else:
                 break
-        _CLOUD_API.activate_account_via_api(self.email, self.password)
+        if self._activate:
+            _CLOUD_API.activate_account_via_api(self.email, self.password)
 
     def _tear_down(self):
         _CLOUD_API.delete_account(self.email, self.password, self.get_otp())

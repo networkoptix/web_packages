@@ -164,6 +164,36 @@ def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
         login.reset_password_email_input().wait_until_visible()
 
 
+def test_account_activation_through_restore(user: CloudAccount):
+    '''C41871'''
+    with get_chrome() as driver:
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(user.email)
+        login.next_button().click()
+        assert login.login_input_error_text() == "Account not activated."
+        driver.get(f'{ENV}/authorize/restore_password')
+        login = LoginDialog(driver)
+        login.reset_password_email_input().input_text(user.email)
+        login.reset_password_button().click()
+        with EmailClient(email_alias=user.email) as client:
+            email = client.wait_for_reset_password_email()
+            link = email.get_nx_links_from_email()
+            client.delete_email(email)
+        driver.get(link)
+        reset_password = ResetPasswordForm(driver)
+        reset_password.type_new_password(user.password)
+        reset_password.click_next()
+        assert reset_password.get_reset_success_text() == "Password is set!"
+        reset_password.click_next()
+        login.password_input().input_text(user.password)
+        login.login_button().click()
+        header = HeaderNav(driver)
+        header.account_dropdown().click()
+
+
 if __name__ == "__main__":
     with CloudAccount(sendemail=True) as user:
         sets_new_password_and_successfully_logs_in(user)
@@ -172,3 +202,5 @@ if __name__ == "__main__":
         test_should_not_allow_restore_twice(user)
         check_password_masking(user)
         test_should_allow_visit_restore_after_log_in(user)
+    with CloudAccount(activate=False, sendemail=True) as user:
+        test_account_activation_through_restore(user)
