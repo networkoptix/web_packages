@@ -1,4 +1,4 @@
-import { Signal } from '@angular/core';
+import { WritableSignal } from '@angular/core';
 import { ActivatedRouteSnapshot } from '@angular/router';
 import { Observable } from 'rxjs';
 
@@ -24,9 +24,19 @@ export interface UpdateParams<State extends Partial<ParamState>> {
 
 export interface ParamStateHandler<State> {
     state$: Observable<State>;
-    state$$: Signal<State>;
+    state$$: WritableSignal<RecursivePartial<State>>;
     getInstantState: (route: ActivatedRouteSnapshot) => State;
     updater: <State extends Partial<ParamState>>(
-        stateCallback: (currentState?: State) => UpdateParams<State>,
+        stateCallbackOrUpdatedState:
+            | UpdateParams<State>
+            | ((currentState?: State) => UpdateParams<State>),
     ) => void;
 }
+
+export type RecursivePartial<T> = {
+    [P in keyof T]?: T[P] extends (infer U)[]
+        ? RecursivePartial<U>[]
+        : T[P] extends object | undefined
+        ? RecursivePartial<T[P]>
+        : T[P];
+};

@@ -149,11 +149,11 @@ export class LayoutStateService {
                         layoutIds.includes(dirtyLayoutId) &&
                         (deleted || unsavedState === staticLang.layouts.unsavedStates.unsaved)
                     ) {
-                        await this.paramStateHandler.updater(() => ({
+                        await this.paramStateHandler.updater({
                             params: {
                                 layoutId: 'default',
                             },
-                        }));
+                        });
                     }
                 }),
             )
