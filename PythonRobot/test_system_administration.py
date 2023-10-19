@@ -2,6 +2,7 @@ import os
 import time
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from header import HeaderNav
@@ -227,6 +228,35 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
         print("pass")
 
 
+def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, role_name: str):
+    """
+    [Tags]    C41562    webadmin
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        driver.get(ENV + f"/systems/{server.id}")
+        LoginDialog(driver).basic_cloud_login(user.email, user.password)
+        system_page = SystemAdmin(driver)
+        HeaderNav(driver).account_dropdown()
+        header = HeaderNav(driver)
+        header.systems_link().wait_until_visible()
+        assert header.get_system_name() == server.name
+        system_page.disconnect_from_account_button().wait_until_visible()
+        expected_owner_label = f"Owner – Mark Hamill ({owner.email})"
+        actual_owner_label = system_page.get_owner_label().get_text()
+        assert actual_owner_label == expected_owner_label
+        assert system_page.get_system_name_edit_field().get_text() == server.name
+        actual_access_text = system_page.get_your_access_level_label().get_text()
+        assert actual_access_text == f"Your access level – {role_name}"
+        left_menu = system_page.get_left_menu()
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        assert not left_menu.has_node_with_name('Users')
+        assert not left_menu.has_node_with_name('Servers')
+        system_page.merge_with_another_system_button().wait_until_does_not_exist()
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -249,3 +279,23 @@ if __name__ == "__main__":
         should_confirm_if_not_owner_deletes_system(cloud_server_first)
         correct_items_are_shown_for_owner(cloud_server_first)
         correct_items_are_shown_for_admin(cloud_server_first)
+        correct_items_are_shown_for_user(
+            cloud_server_first,
+            cloud_server_first.get_cloud_advanced_viewer(),
+            'Advanced Viewer',
+            )
+        correct_items_are_shown_for_user(
+            cloud_server_first,
+            cloud_server_first.get_cloud_viewer(),
+            'Viewer',
+            )
+        correct_items_are_shown_for_user(
+            cloud_server_first,
+            cloud_server_first.get_cloud_live_viewer(),
+            'Live Viewer',
+            )
+        correct_items_are_shown_for_user(
+            cloud_server_first,
+            cloud_server_first.get_cloud_custom_user(),
+            'Custom',
+            )

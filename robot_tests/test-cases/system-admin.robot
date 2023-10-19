@@ -8,44 +8,6 @@ Force Tags        system    cloud
 
 
 *** Test Cases ***
-# System Settings for different users
-
-17. Correct items are shown for advanced viewer and below
-    [Tags]    C41562    webadmin
-    ${custom role}=    Create And Add Custom Camera User Type and User
-    ${viewers}=    Create List
-        ...    ${system}[cloudUsers][advancedViewer]
-        ...    ${system}[cloudUsers][viewer]
-        ...    ${system}[cloudUsers][liveViewer]
-        ...    ${system}[cloudUsers][custom]
-        ...    ${custom role}
-    ${viewers text}=   Create List    ${ADV VIEWER TEXT}    ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${CUSTOM TEXT}    Custom Cameras
-    ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
-    FOR    ${user}    ${text}    IN ZIP    ${viewers}    ${viewers text}
-        Log in to system new    ${system}    ${user}
-        Wait Until Elements Are Visible
-            ...    ${current owner name}
-            ...    ${DISCONNECT FROM MY ACCOUNT}
-            ...    ${OWNER LABEL}
-            ...    //span[contains(text(), "${system}[cloudOwner]")]
-            ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${text}')]
-        Wait Until Elements Are Not Visible
-            ...    ${RENAME SYSTEM}
-            ...    ${DISCONNECT FROM NX}
-            ...    ${MERGE BUTTON SYSTEM}
-            ...    ${LICENSES LINK}
-            ...    ${USERS LINK}
-            ...    ${SERVERS LINK}
-        IF    '${text}' != 'Custom Cameras'
-            Wait Until Element Is Not Visible    ${CAMERAS LINK}
-        END
-        Element Should Be Enabled    ${DISCONNECT FROM MY ACCOUNT}
-        Log Out
-        Wait Until Element Is Visible    ${ANONYMOUS BODY}
-    END
-    Remove User By Email    ${system}[localAuth]    ${server url}    ${custom role}   ${IMAGE}
-
-
 # Left search
 18. Left menu search: Position and style
     [Tags]    C81759    webadmin    search
