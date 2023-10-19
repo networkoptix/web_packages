@@ -4,6 +4,7 @@ from generic_elements import DropDown
 from generic_elements import PageText
 from generic_elements import TextField
 from generic_elements import Tooltip
+from nx_modal import NxModalDialog
 
 
 class AccountPage:
@@ -65,3 +66,37 @@ class AccountPage:
             self._driver,
             "//nx-tooltip-component/div[contains(@class,\"tooltip-body\")]",
             )
+
+    def delete_account_dialog(self):
+        self.delete_account_button().click()
+        dialog = DeleteCloudAccountDialog(self._driver)
+        return dialog
+
+
+class DeleteCloudAccountDialog(NxModalDialog):
+
+    def __init__(self, driver: ChromeBrowser):
+        super().__init__(driver=driver, locator='//nx-modal-delete-cloud-user-content')
+
+    def _password_input(self):
+        return TextField(
+            self._driver,
+            self._locator + '//form[@name="deleteCloudUserForm"]//input[@id="password"]',
+            )
+
+    def _header(self):
+        return PageText(
+            self._driver,
+            self._locator + '//h1[@class="modal-title"]'
+            )
+
+    def wait_until_loaded(self):
+        self._submit_button().wait_until_visible()
+        self._close_button().wait_until_visible()
+        self._cancel_button().wait_until_visible()
+        self._password_input().wait_until_visible()
+        self._header().wait_until_visible()
+
+    def delete_account(self, password: str):
+        self._password_input().input_text(password)
+        self.submit()

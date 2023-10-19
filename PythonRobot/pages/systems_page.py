@@ -16,8 +16,7 @@ class SystemsPage:
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
-        self._wait_until_page_contains_systems_list()
-        self._location_is_correct()
+        self.wait_until_visible()
         self.tiles = self.update_system_tiles()
 
     def no_systems(self):
@@ -58,6 +57,10 @@ class SystemsPage:
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}/systems")
+
+    def wait_until_visible(self):
+        self._wait_until_page_contains_systems_list()
+        self._location_is_correct()
 
     def get_tiles_with_owner(self, expected_owner: str) -> Collection[SystemTile]:
         actual_tiles = []

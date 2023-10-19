@@ -38,3 +38,27 @@ class SettingsSavedModalWindow(NxModalWindow):
 
     def __init__(self, driver: WebDriver):
         super().__init__(driver, '//nx-modal-generic-content')
+
+
+class NxModalDialog(NxModalWindow):
+
+    def _cancel_button(self):
+        return Button(
+            self._driver,
+            self._locator + '//nx-cancel-button'
+            )
+
+    def _submit_button(self):
+        return Button(
+            self._driver,
+            self._locator + '//nx-process-button'
+            )
+
+    def cancel(self):
+        cancel_button = self._cancel_button()
+        cancel_button.click()
+        self.wait_until_not_visible()
+
+    def submit(self):
+        submit_button = self._submit_button()
+        submit_button.click()

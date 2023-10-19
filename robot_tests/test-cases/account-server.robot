@@ -7,37 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Account Server Suite Teardown
 Force Tags        account
 
 *** Test Cases ***
-2. After account deletion user is deleted from all systems that were shared with this user
-    [Tags]    C69862    delete_account
-    ${random email}=   Register and activate account with random email    mark    hamil    ${BASE PASSWORD}
-    Share    ${server 1}[cloudAuth]    ${server 1}[id]    ${ACCESS ROLES}[admin]    ${random email}      ${permissions}[cloudAdmin]
-    Share    ${server 1}[cloudAuth]    ${server 2}[id]    ${ACCESS ROLES}[viewer]    ${random email}     ${permissions}[viewer]
-    Share    ${server 1}[cloudAuth]    ${server 3}[id]    ${ACCESS ROLES}[custom]    ${random email}     ${permissions}[custom]
-    Go To    ${url}/account
-    Log In    ${random email}    ${password}    button=None    api=${False}
-    Verify in Account Page
-    Click Button    ${DELETE ACCOUNT BUTTON}
-    Verify Delete User Dialog
-    Input Text    ${DELETE ACCOUNT PASSWORD INPUT}    ${BASE PASSWORD}
-    Click Button    ${DELETE ACCOUNT MODAL BUTTON}
-    Validate Log Out
-    Log In    ${random email}    ${password}   validate=${False}    exists=${False}   api=${False}
-    Log In    ${server 1}[cloudOwner]    ${password}    button=None   api=${False}
-    Go To   ${url}/systems/${server 1}[id]
-    Go to Users List
-    Wait Until Element Is Visible    ${USERS LIST}
-    Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
-
-    Go To   ${url}/systems/${server 2}[id]
-    Go to Users List
-    Wait Until Element Is Visible    ${USERS LIST}
-    Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
-
-    Go To   ${url}/systems/${server 3}[id]
-    Go to Users List
-    Wait Until Element Is Visible    ${USERS LIST}
-    Wait Until Element Is Not Visible    ${USERS LIST}//nx-level-3-item//span[contains(text(),'${random email}')]/../../../a
-
 3. Admin and Owner can access account settings by selecting themselves in users List
     [Tags]
     Go To    ${url}

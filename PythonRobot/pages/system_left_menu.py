@@ -35,6 +35,11 @@ class SystemLeftMenu:
             "//span[contains(text(), '{USERS}')]")
         return Button(self.driver, translated_xpath)
 
+    def open_users_dropdown(self):
+        self.users_button().click()
+        # Currently it takes 30+ seconds to load the dropdown
+        self.add_users_button().wait_until_clickable(timeout=45)
+
     def update_users_list(self):
         locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
         Link(self.driver, locator).wait_until_visible()
@@ -49,6 +54,13 @@ class SystemLeftMenu:
             if user.get_text() == email:
                 return user
         raise _UserNotFoundError(email)
+
+    def has_user_with_email(self, email: str):
+        try:
+            self.get_user_with_email(email)
+        except _UserNotFoundError:
+            return False
+        return True
 
     def wait_for_user_with_email(self, email: str):
         started_at = time.monotonic()
