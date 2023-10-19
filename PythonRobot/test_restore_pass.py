@@ -18,7 +18,7 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
         login.email_input().input_text(user.email)
         login.next_button().click()
         login.forgot_password_button().click()
-        assert login.reset_password_email_input().get_text() == user.email, "Email was not autofilled in the field"
+        login.reset_password_email_input().wait_until_text_is(user.email)
         login.reset_password_button().click()
         with EmailClient(email_alias=user.email) as client:
             email = client.wait_for_reset_password_email()
@@ -71,7 +71,7 @@ def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
         login.email_input().input_text(user.email)
         login.next_button().click()
         login.forgot_password_button().click()
-        assert login.reset_password_email_input().get_text() == user.email, "Email was not autofilled in the field"
+        login.reset_password_email_input().wait_until_text_is(user.email)
         login.reset_password_button().click()
         with EmailClient(email_alias=user.email) as client:
             email = client.wait_for_reset_password_email()
@@ -97,7 +97,7 @@ def test_should_not_allow_restore_twice(user: CloudAccount):
         login.email_input().input_text(user.email)
         login.next_button().click()
         login.forgot_password_button().click()
-        assert login.reset_password_email_input().get_text() == user.email, "Email was not autofilled in the field"
+        login.reset_password_email_input().wait_until_text_is(user.email)
         login.reset_password_button().click()
         with EmailClient(email_alias=user.email) as client:
             email = client.wait_for_reset_password_email()
