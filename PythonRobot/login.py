@@ -1,8 +1,12 @@
+from typing import Tuple
 from RobotVariables import RobotVariables
+from generic_elements import ElementNotVisible
+from generic_elements import ElementNotInDOM
 from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from generic_elements import Image
 
 
 class LoginDialog:
@@ -16,15 +20,6 @@ class LoginDialog:
 
     def password_input(self) -> TextField:
         return TextField(self.driver, "//nx-authorize-component//input[@id='authorizePassword']")
-
-    def new_password_input(self) -> TextField:
-        return TextField(self.driver, '//nx-authorize-component//input[@id="resetPassword"]')
-
-    def password_reset_next_button(self) -> Button:
-        return Button(self.driver, '//nx-authorize-component//nx-process-button[@data-testid="btnResetPassword"]')
-
-    def reset_success_text(self) -> PageText:
-        return PageText(self.driver, '//nx-authorize-component//h3[@data-testid="resetSuccess"]').get_text()
 
     def password_input_error_message(self) -> TextField:
         translated_xpath = self.rb.replace_nested_variables(
@@ -70,6 +65,12 @@ class LoginDialog:
     def reset_password_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(), '{RESET_PASSWORD_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
+
+    def get_reset_password_email_sent_text(self) -> Tuple[str, str]:
+        base = '//div[@class="email-sent"]'
+        header_text = PageText(self.driver, f'{base}/h3').get_text()
+        description_text = PageText(self.driver, f'{base}/p').get_text()
+        return header_text, description_text
 
     def basic_cloud_login(self, email, password):
         self.email_input().input_text(email)
@@ -128,3 +129,45 @@ class AccountActivatedPane:
             "//nx-authorize-activate-account-component//button[contains(text(), "
             f"'{self.rb.LOG_IN_BUTTON_TEXT}')]",
             )
+
+
+class ResetPasswordForm:
+
+    def __init__(self, driver):
+        self._driver = driver
+        self._locator = '//nx-authorize-reset-password-component'
+
+    def is_password_input_masked(self):
+        return self.get_new_password_input().get_attribute('type') == 'password'
+
+    def is_password_eye_open(self):
+        try:
+            Image(self._driver, f'{self._locator}//svg-icon[contains(@data-src, "eye.svg")]').wait_until_visible(1)
+            return True
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+
+    def is_password_eye_closed(self):
+        try:
+            Image(self._driver, f'{self._locator}//svg-icon[contains(@data-src, "eye_closed.svg")]').wait_until_visible(1)
+            return True
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+
+    def toggle_password_mask(self):
+        Image(self._driver, f'{self._locator}//svg-icon').click()
+
+    def type_new_password(self, password: str):
+        self.get_new_password_input().input_text(password)
+
+    def get_new_password_input(self) -> TextField:
+        return TextField(self._driver, f'{self._locator}//input[@id="resetPassword"]')
+
+    def click_next(self):
+        Button(self._driver, f'{self._locator}//nx-process-button[@data-testid="btnResetPassword"]').click()
+
+    def get_reset_success_text(self) -> str:
+        return PageText(self._driver, f'{self._locator}//h3[@data-testid="resetSuccess"]').get_text()
+
+    def wait_until_visible(self):
+        Pane(self._driver, self._locator).wait_until_visible(10)

@@ -7,40 +7,12 @@ Suite Teardown    Run Keyword and Ignore Error    Close All Browsers
 Force Tags
 
 *** Test Cases ***
-1. Reset password email sent screen
-    [Tags]    email    C26260
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-    IF    "${LANGUAGE}"=="he_IL"
-        Wait Until Element Is Visible    ${RESET EMAIL SENT MESSAGE HEBREW}
-    ELSE
-        Wait Until Element Is Visible     ${RESET PASSWORD EMAIL SENT}
-    END
-    Location Should Be    ${url}/authorize
-
 3. Should not allow to access /restore_password/sent /restore_password/success by direct input
     Skip    Not applicable for new forms in 21.1
 #    Go To    ${url}/restore_password/sent
 #    Wait Until Element Is Visible    ${JUMBOTRON}
 #    Go To    ${url}/restore_password/success
 #    Wait Until Element Is Visible    ${JUMBOTRON}
-
-6. Displays password masked, shows password and changes eye icon when clicked
-    [Tags]    C26260
-    ${email}=   Register Random User
-    Send "Restore Password" Email    ${email}
-    Get Restore Code and Open the Link    ${email}
-
-    ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'password'
-    Click Element    ${RESET EYE ICON CLOSED}
-    Wait Until Element Is Visible    ${RESET EYE ICON OPEN}
-    ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'text'
-    Click Element    ${RESET EYE ICON OPEN}
-    Wait Until Element Is Visible    ${RESET EYE ICON CLOSED}
-    ${input type}    Get Element Attribute    ${RESET PASSWORD INPUT}    type
-    Should Be Equal    '${input type}'    'password'
 
 8. Non-activated user cannot get to password entry page to restore password
     [Tags]    email    C41871

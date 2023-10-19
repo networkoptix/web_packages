@@ -2,6 +2,7 @@ from NoptixLibrary.suite import CloudAccount
 from email_access import EmailClient
 from header import HeaderNav
 from login import LoginDialog
+from login import ResetPasswordForm
 from resource_import import get_chrome
 from toast_notification import ToastNotification
 from variables import ENV
@@ -24,13 +25,15 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
             link = email.get_nx_links_from_email()
             client.delete_email(email)
         driver.get(link)
-        login.new_password_input().input_text(user.password)
-        login.password_reset_next_button().click()
-        assert login.reset_success_text() == "Password is set!"
-        login.password_reset_next_button().click()
+        reset_password = ResetPasswordForm(driver)
+        reset_password.wait_until_visible()
+        reset_password.type_new_password(user.password)
+        reset_password.click_next()
+        assert reset_password.get_reset_success_text() == "Password is set!"
+        reset_password.click_next()
         login.password_input().input_text(user.password)
         login.login_button().click()
-        header.account_dropdown()
+        header.account_dropdown().click()
 
 
 def check_restore_password_email(user: CloudAccount):
@@ -75,7 +78,7 @@ def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
             link = email.get_nx_links_from_email()
             client.delete_email(email)
         driver.get(link)
-        login.new_password_input().wait_until_visible()
+        ResetPasswordForm(driver).wait_until_visible()
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
@@ -101,16 +104,52 @@ def test_should_not_allow_restore_twice(user: CloudAccount):
             link = email.get_nx_links_from_email()
             client.delete_email(email)
         driver.get(link)
-        login.new_password_input().input_text(user.password)
-        login.password_reset_next_button().click()
-        assert login.reset_success_text() == "Password is set!"
-        login.password_reset_next_button().click()
+        reset_password = ResetPasswordForm(driver)
+        reset_password.wait_until_visible()
+        reset_password.type_new_password(user.password)
+        reset_password.click_next()
+        assert reset_password.get_reset_success_text() == "Password is set!"
+        reset_password.click_next()
         driver.get(link)
-        login.new_password_input().input_text(user.password)
-        login.password_reset_next_button().click()
+        reset_password.type_new_password(user.password)
+        reset_password.click_next()
         assert ToastNotification(driver, "Cannot save password").get_message().get_text() == (
             "Cannot save password: Confirmation code is already used or incorrect"
             )
+
+
+def check_password_masking(user: CloudAccount):
+    '''C26260'''
+    with get_chrome() as driver:
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.email_input().input_text(user.email)
+        login.next_button().click()
+        login.forgot_password_button().click()
+        login.reset_password_button().click()
+        header, description = login.get_reset_password_email_sent_text()
+        assert header == "We've sent you an email"
+        assert description == (
+            "Please follow instructions there to reset your password"
+            " and return here to log in again."
+            )
+        with EmailClient(email_alias=user.email) as client:
+            email = client.wait_for_reset_password_email()
+            link = email.get_nx_links_from_email()
+            client.delete_email(email)
+        driver.get(link)
+        reset_password = ResetPasswordForm(driver)
+        reset_password.wait_until_visible()
+        assert reset_password.is_password_input_masked()
+        assert reset_password.is_password_eye_closed()
+        reset_password.toggle_password_mask()
+        assert not reset_password.is_password_input_masked()
+        assert reset_password.is_password_eye_open()
+        reset_password.toggle_password_mask()
+        assert reset_password.is_password_input_masked()
+        assert reset_password.is_password_eye_closed()
 
 
 if __name__ == "__main__":
@@ -119,3 +158,4 @@ if __name__ == "__main__":
         check_restore_password_email(user)
         check_can_still_log_in_if_restore_not_finished(user)
         test_should_not_allow_restore_twice(user)
+        check_password_masking(user)
