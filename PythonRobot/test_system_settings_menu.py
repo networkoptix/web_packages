@@ -140,7 +140,7 @@ if __name__ == '__main__':
     variables = RobotVariables("en_US")
     with Suite() as suite:
         cloud_owner = suite.create_cloud_account()
-        cloud_users = suite.create_cloud_users(['viewer'])
+        cloud_users = suite.create_cloud_accounts(['viewer'])
         cloud_server = suite.create_cloud_server(cloud_owner, cloud_users=cloud_users)
         should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(cloud_server)
         selected_node_has_different_color(cloud_server)

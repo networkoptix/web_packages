@@ -86,7 +86,7 @@ class Suite:
             server._cloud_custom_user = cloud_users.get('custom')
         return server
 
-    def create_cloud_users(self, permissions: Optional[Collection[str]] = None):
+    def create_cloud_accounts(self, permissions: Optional[Collection[str]] = None):
         cloud_users = {}
         if permissions is not None:
             if not set(permissions).issubset(CloudAccount.PERMISSIONS.keys()):

@@ -83,7 +83,7 @@ if __name__ == '__main__':
     variables = RobotVariables("en_US")
     with Suite() as suite:
         cloud_owner = suite.create_cloud_account()
-        users = suite.create_cloud_users()
+        users = suite.create_cloud_accounts()
         server = suite.create_cloud_server(cloud_owner, f"{suite_name}", users)
         test_access_owner(server, variables)
         print(f'{Fore.WHITE}{test_access_owner.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')

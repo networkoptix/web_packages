@@ -623,7 +623,7 @@ if __name__ == "__main__":
     suite_name = suite_name.removeprefix("test_")
     with Suite() as suite:
         cloud_owner = suite.create_cloud_account()
-        cloud_users = suite.create_cloud_users()
+        cloud_users = suite.create_cloud_accounts()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         cloud_owner_2 = suite.create_cloud_account()
         cloud_server_2 = suite.create_cloud_server(cloud_owner_2, suite_name)
