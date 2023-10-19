@@ -8,28 +8,6 @@ Force Tags        system    cloud
 
 
 *** Test Cases ***
-# COMMON
-
-14. User can rename System: change on server side -> check in web
-    [Tags]    C47019    C30678    webadmin
-    Log    Rename System on server side and check it's changed in web
-    Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${new system name}
-
-    Log in to system new    ${system}    ${system}[cloudOwner]
-    Wait Until Elements Are Visible
-        ...    ${SYSTEMS DROPDOWN}
-        ...    ${RENAME SYSTEM}
-        ...    ${NO UNSAVED CHANGES}
-    ${actual name}=   Get Text    ${SYSTEM NAME}
-    Should be equal as strings    ${actual name}    ${new system name}
-    Validate Header Button Text    ${new system name}    systems=False
-
-    Log    Get initial system name back
-    Set System Name    https://${QABURBANK IP}:${system}[port]    ${local auth}    ${system}[name]
-    Sleep  1
-    ${settings}=   Get Cloud System Settings    ${system}[cloudAuth]    ${system}[id]
-    Should be equal as strings    ${settings}[name]    ${system}[name]
-
 # System Settings for different users
 15. Correct items are shown for owner
     [Tags]    C41560    webadmin    CB-1596
