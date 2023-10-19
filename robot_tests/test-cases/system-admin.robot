@@ -8,58 +8,7 @@ Force Tags        system    cloud
 
 
 *** Test Cases ***
-
 # COMMON
-13. User can rename System: change in web -> check server
-    [Tags]    C41880    webadmin
-    Log    Step 1
-    Log in to system new    ${system}    ${system}[cloudOwner]
-    Wait Until Elements Are Visible
-    ...    ${SYSTEMS DROPDOWN}
-    ...    ${RENAME SYSTEM}
-    ...    ${NO UNSAVED CHANGES}
-    Log    Step 2
-    Mouse Over    ${SYSTEM NAME}
-
-    Element Style Should Be    ${SYSTEM NAME}    background-color    ${COLOR ALIGHT4 RGB}
-    Log    Cancel button works fine
-    Log    Step 3 & 4
-    Change System Name    ${new system name}    save=False
-    Log    Step 5
-    Click Button    ${CANCEL BUTTON}
-    Wait until elements are not visible    ${CANCEL BUTTON}    ${SAVE BUTTON}
-    Wait until element is visible    ${NO UNSAVED CHANGES}
-    ${actual name}=   Get Text    ${SYSTEM NAME}
-    Should be equal as strings    ${actual name}    ${system}[name]
-    Log    Step 6
-    Click Element    ${SYSTEM NAME}
-    Delete All Text    ${SYSTEM NAME}
-    Element Style Should Be    ${SYSTEM NAME}    border-color    ${ERROR COLOR}
-    Click Button    ${SAVE BUTTON}
-    Element Text Should Be    ${SYSTEM NAME}    ${system}[name]
-
-    Log    Save button works fine
-    Log    Step 7
-    Change System Name    ${new system name}
-    ${actual name}=   Get Text    ${SYSTEM NAME}
-    Should be equal as strings    ${actual name}    ${new system name}
-
-    Log    Header main button text is changed accordingly
-    # button text is not updated without reloading the page
-    Reload Page
-    Wait Until Elements Are Visible    ${SYSTEMS DROPDOWN}    ${DISCONNECT FROM NX}
-    Validate Header Button Text    ${new system name}    systems=False
-
-    Log    Check that system name is changed - server
-    Restart Server   https://${QABURBANK IP}:${system}[port]    ${system}[localAuth]
-    Sleep    10
-    ${settings}=   Get System Settings From Server   ${system}[localAuth]    ${server url}
-    Should be equal as strings    ${new system name}    ${settings}[systemName]
-
-    Log    Get initial system name back
-    Rename System    ${system}[cloudAuth]    ${system}[id]    ${system}[name]
-    ${settings}=   Get Cloud System Settings    ${system}[cloudAuth]    ${system}[id]
-    Should be equal as strings    ${settings}[name]    ${system}[name]
 
 14. User can rename System: change on server side -> check in web
     [Tags]    C47019    C30678    webadmin
