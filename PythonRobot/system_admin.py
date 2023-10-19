@@ -240,6 +240,14 @@ class SystemAdmin:
         locator = "//form[@name='systemAndSecuritySettingsForm']"
         PageText(self.driver, locator).wait_until_visible()
 
+    def get_owner_label(self):
+        locator = "//nx-system-admin-component/div/div/nx-block/div/div[1]/header/div/span"
+        return PageText(self.driver, locator)
+
+    def get_your_access_level_label(self):
+        locator = "//nx-system-admin-component//nx-block/div/nx-section/div/div[2]/span"
+        return PageText(self.driver, locator)
+
 
 class FailedToAccessSystemPage:
 

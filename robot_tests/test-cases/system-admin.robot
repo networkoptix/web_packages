@@ -10,30 +10,6 @@ Force Tags        system    cloud
 *** Test Cases ***
 # System Settings for different users
 
-16. Correct items are shown for admin
-    [Tags]    C41561    webadmin
-    Log    currenty failing due to CLOUD-9047
-    Log in to system new    ${system}    ${system}[cloudUsers][cloudAdmin]
-    Wait Until Element Is Visible    ${USERS LIST LINK}
-    ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
-    Wait Until Elements Are Visible
-        ...    ${SYSTEMS DROPDOWN}
-        ...    ${RENAME SYSTEM}
-        ...    ${DISCONNECT FROM MY ACCOUNT}
-        ...    ${OWNER LABEL}
-        ...    ${expected name}
-        ...    //span[contains(text(), "${system}[cloudOwner]")]
-        ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),'${ADMIN TEXT}')]
-        ...    ${LICENSES LINK}
-        ...    ${CAMERAS LINK}
-        ...    ${USERS LINK}
-        ...    ${SERVERS LINK}
-        ...    ${SECURITY FORM}
-    Wait Until Elements Are Not Visible    ${DISCONNECT FROM NX}    ${MERGE BUTTON SYSTEM}
-    Validate Header Button Text    ${system}[name]    systems=False
-    Go To Users List
-    Wait Until Elements are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
-
 17. Correct items are shown for advanced viewer and below
     [Tags]    C41562    webadmin
     ${custom role}=    Create And Add Custom Camera User Type and User

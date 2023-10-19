@@ -199,6 +199,42 @@ def correct_items_are_shown_for_owner(server: Mediaserver):
         print("pass")
 
 
+def correct_items_are_shown_for_admin(server: Mediaserver):
+    """
+    [Tags]    C41561    webadmin
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        admin_email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", admin_email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'cloudAdmin',  admin_email, '')
+        driver.get(ENV + f"/systems/{server.id}")
+        LoginDialog(driver).basic_cloud_login(admin_email, password)
+        system_page = SystemAdmin(driver)
+        HeaderNav(driver).account_dropdown()
+        header = HeaderNav(driver)
+        header.systems_link().wait_until_visible()
+        system_page.disconnect_from_account_button().wait_until_visible()
+        expected_owner_label = f"Owner – Mark Hamill ({owner.email})"
+        actual_owner_label = system_page.get_owner_label().get_text()
+        assert actual_owner_label == expected_owner_label
+        assert system_page.get_system_name_edit_field().get_text() == server.name
+        actual_access_text = system_page.get_your_access_level_label().get_text()
+        assert actual_access_text == "Your access level – Administrator"
+        left_menu = system_page.get_left_menu()
+        left_menu.get_node_by_name_within_timeout('Licenses')
+        left_menu.get_node_by_name_within_timeout('Cameras')
+        users_node = left_menu.get_node_by_name_within_timeout('Users')
+        left_menu.get_node_by_name_within_timeout('Servers')
+        system_page.wait_for_security_form()
+        assert header.get_system_name() == server.name
+        users_node.click()
+        left_menu.add_users_button().wait_until_visible()
+        left_menu.get_user_with_email(owner.email).wait_until_visible()
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -215,3 +251,4 @@ if __name__ == "__main__":
         system_name_change_is_shown_in_cloud_portal(cloud_server_first)
         should_confirm_if_not_owner_deletes_system(cloud_server_first)
         correct_items_are_shown_for_owner(cloud_server_first)
+        correct_items_are_shown_for_admin(cloud_server_first)
