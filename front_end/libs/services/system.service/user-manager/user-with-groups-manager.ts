@@ -38,6 +38,7 @@ export class UserWithGroupsManager extends UserManager {
     protected mediaserver: NxSystemRestAPI3;
     userGroups: IdToGroup;
     protected groupsToPermissions: GroupIdToPermissions;
+    private powerUserGroups = new Set<string>([AdminGroups.powerUserGroup]);
     protected _ownerEmail: string;
     protected locale: string;
     // isMySystem: boolean;
@@ -135,19 +136,65 @@ export class UserWithGroupsManager extends UserManager {
         });
         this.userGroups = idToGroup;
         this.groupsToPermissions = groupIdToPermissions;
+        try {
+            userGroups.forEach(group => {
+                this.buildPowerUserGroupsSet(group);
+            });
+        } catch (e) {
+            if (e instanceof RangeError) {
+                console.error('There is a cycle in the permission groups graph');
+            }
+        }
     }
 
-    private isGroupPowerUser(group: UserGroup): boolean {
-        if (group.id.includes(AdminGroups.powerUserGroup)) {
+    /**
+     * Builds a set of power user groups.
+     * Note: buildPowerUserGroupsSet works on several assumptions
+     * 1) All power user groups must inherit the default AdminGroups.powerUserGroup at some point.
+     * 2) If a group doesn't inherit from any groups and doesn't exist in powerUserGroups it's not a power user group.
+     * This is true since the powerUserGroups set is initialized with AdminGroups.powerUserGroup.
+     * 3) Every inherited group in group.parentGroupIds will be checked until one returns true. Once it does all of its child
+     * groups will recursively be marked as true as we return back to the original caller.
+     *
+     * Ex: Group A -> Group B -> Group C -> Group B
+     *                                  \-> Power User
+     * Explanation
+     * 1) Group A is passed in and powerUserGroups only has its default value.
+     * 2) Group B A's parent is marked as visited and will be checked next.
+     * 3) Group C B's parent is marked as visited and will be checked next.
+     * 4) When checking Group C's parents we find B in visited, so we skip.
+     * 5) Next we check Power User group which exists in powerUserGroups, so it returns true.
+     * 6) We bubble back and Group C, Group B and Group A are added to the powerUserGroups set.
+     *
+     * @param {UserGroup} group - The user group to start building the power user groups set from.
+     * @param {string[]} visited - An optional array that keeps track of visited group IDs to prevent infinite recursion. Defaults to an empty array.
+     * @returns {boolean} - Returns true if the given group or any of its parent groups are power user groups, otherwise returns false.
+     */
+    private buildPowerUserGroupsSet(group: UserGroup, visited: string[] = []): boolean {
+        if (this.powerUserGroups.has(group.id)) {
             return true;
         } else if (!group.parentGroupIds) {
             return false;
-        } else if (group.parentGroupIds.includes(AdminGroups.powerUserGroup)) {
+        }
+        const isPuGroup = group.parentGroupIds.some(parentGroupId => {
+            // If a parent has been visited the tree effectively ends here because if it were true the recursive call
+            // would have killed this loop before this returns true. Now that we don't worry about rechecking the node
+            // we can check other branches of the graph.
+            if (visited.includes(parentGroupId)) {
+                return false;
+            }
+            visited.push(parentGroupId);
+            return this.buildPowerUserGroupsSet(this.userGroups[parentGroupId], visited);
+        });
+        if (isPuGroup) {
+            this.powerUserGroups.add(group.id);
             return true;
         }
-        return group.parentGroupIds.some(parentGroup =>
-            this.isGroupPowerUser(this.userGroups[parentGroup]),
-        );
+        return false;
+    }
+
+    private isGroupPowerUser(group: UserGroup): boolean {
+        return this.powerUserGroups.has(group.id);
     }
 
     private buildGroupsDropdown(): void {
