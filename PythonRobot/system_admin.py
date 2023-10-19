@@ -236,6 +236,10 @@ class SystemAdmin:
     def get_left_menu(self):
         return SystemLeftMenu(self.driver)
 
+    def wait_for_security_form(self):
+        locator = "//form[@name='systemAndSecuritySettingsForm']"
+        PageText(self.driver, locator).wait_until_visible()
+
 
 class FailedToAccessSystemPage:
 
@@ -314,3 +318,6 @@ class _SystemName:
             _logger.info("System name does not match expected yet. Refreshing the page")
             self._element._driver.refresh()
             time.sleep(3)
+
+    def wait_until_visible(self):
+        self._element.wait_until_visible()

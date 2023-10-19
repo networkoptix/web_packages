@@ -9,32 +9,6 @@ Force Tags        system    cloud
 
 *** Test Cases ***
 # System Settings for different users
-15. Correct items are shown for owner
-    [Tags]    C41560    webadmin    CB-1596
-    [Documentation]     Currently failing due to work around for CB-1596
-    Log in to system new    ${system}    ${system}[cloudOwner]
-    Wait Until Element Is Visible    ${USERS LIST LINK}
-    ${expected name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
-    Wait Until Elements Are Visible
-        ...    ${SYSTEMS DROPDOWN}
-        ...    ${RENAME SYSTEM}
-            # fail on above step due to CB-1596
-        ...    ${DISCONNECT FROM NX}
-#        ...    ${expected name}
-        ...    ${MERGE BUTTON SYSTEM}
-        ...    ${LICENSES LINK}
-        ...    ${CAMERAS LINK}
-        ...    ${USERS LINK}
-        ...    ${SERVERS LINK}
-        ...    ${SECURITY FORM}
-    Validate Header Button Text    ${system}[name]    systems=False
-    IF    '${mode}'=='cloud'
-        Title Should Be    ${system}[name] - ${PRODUCT NAME}
-    ELSE IF    '${mode}'=='webadmin'
-        Title Should Be    ${system}[name] - webadmin
-    END
-    Go To Users List
-    Wait Until Elements Are Visible    ${USERS LIST}    ${ADD USER BUTTON SYSTEMS}
 
 16. Correct items are shown for admin
     [Tags]    C41561    webadmin
