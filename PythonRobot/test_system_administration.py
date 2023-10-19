@@ -6,6 +6,7 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from header import HeaderNav
 from login import LoginDialog
+from resource_import import cloud_login
 from resource_import import get_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
@@ -151,6 +152,24 @@ def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
         print("pass")
 
 
+def should_confirm_if_not_owner_deletes_system(server: Mediaserver):
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        viewer_email = get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", viewer_email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', viewer_email, viewer_permissions)
+        driver.get(ENV)
+        cloud_login(driver, viewer_email, password)
+        driver.get(ENV + f"/systems/{server.id}")
+        sys_admin = SystemAdmin(driver)
+        sys_admin.disconnect_from_account_button().click()
+        sys_admin.disconnect_modal_warning().click()
+        sys_admin.disconnect_from_account_cancel_button().click()
+        sys_admin.disconnect_from_account_cancel_button().wait_until_does_not_exist()
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -165,3 +184,4 @@ if __name__ == "__main__":
         # user_without_permissions_cannot_see_system_admin_page(cloud_server_first)
         owner_can_rename_system_via_cloud_portal(cloud_server_first)
         system_name_change_is_shown_in_cloud_portal(cloud_server_first)
+        should_confirm_if_not_owner_deletes_system(cloud_server_first)

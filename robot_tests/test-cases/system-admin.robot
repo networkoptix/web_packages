@@ -9,16 +9,6 @@ Force Tags        system    cloud
 
 *** Test Cases ***
 # CLOUD
-9. Should confirm, if not owner deletes system
-    Log in to system new   ${system}    ${system}[cloudUsers][viewer]
-    Wait Until Element Is Visible    ${DISCONNECT FROM MY ACCOUNT}
-    Click Button    ${DISCONNECT FROM MY ACCOUNT}
-    Wait Until Element Is Visible    ${DISCONNECT MODAL WARNING}
-    Click Element    ${DISCONNECT MODAL WARNING}
-    Sleep    .5
-    Wait Until Element Is Visible    ${DISCONNECT MODAL CANCEL}
-    Click Button    ${DISCONNECT MODAL CANCEL}
-    Wait Until Page Does Not Contain Element    ${REMOVE USER MODAL}
 
 11. Should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
