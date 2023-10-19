@@ -487,6 +487,7 @@ export interface Icons {
     dirLayouts: string;
     dirLayoutsCamera: string;
     dirNonStandard: string;
+    dirNonStandardTriangle: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;
     dirSectionPlaceholder: string;
@@ -715,6 +716,7 @@ export interface ServerError {
     badRequest: string;
     userPasswordRequired: string;
     vmsRequestFailure: string;
+    wrongSessionToken: string;
 }
 
 export interface ServersStatus {

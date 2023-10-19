@@ -78,15 +78,16 @@
     display: flex;
     align-items: center;
     width: 95%;
-    margin-bottom: 0.25em;
-    @include typography.medium22dark9lh24;
-
+    @include typography.medium16nocolor;
+    color: var(--body-text-color);
+    line-height: 24px;
 }
 
 .help-block {
     display: block;
     background-color: transparent;
-    color: var(--light16);
+    color: var(--light-text-color);
+    margin-bottom: 1rem;
 }
 
 .user-settings-form {
@@ -95,12 +96,7 @@
     padding: 6px 0 6px 8px;
 
     .user-form-labels {
-        color: var(--dark9);
-    }
-
-    input:disabled {
-        background-color: var(--light2);
-        border: 1px solid var(--light6);
+        color: var(--body-text-color);
     }
 }
 

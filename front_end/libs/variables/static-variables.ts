@@ -190,6 +190,7 @@ export const icons: configTypes.Icons = {
     dirLayouts: `/${staticBase}/images/icons/layouts/`,
     dirLayoutsCamera: `/${staticBase}/images/icons/layouts/camera/`,
     dirNonStandard: `/${staticBase}/images/icons/`,
+    dirNonStandardTriangle: `/${staticBase}/images/icons/triangle/`,
     dirNonStandardView: `/${staticBase}/images/icons/view/`,
     dirPagePlaceholder: `/${staticBase}/images/placeholders/page/`,
     dirSectionPlaceholder: `/${staticBase}/images/placeholders/section/`,
@@ -527,6 +528,7 @@ export const servers: configTypes.Servers = {
         badRequest: 'badRequest',
         userPasswordRequired: 'userPasswordRequired',
         vmsRequestFailure: 'vmsRequestFailure',
+        wrongSessionToken: 'Auth_WrongSessionToken',
     },
 };
 
