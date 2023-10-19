@@ -4,14 +4,14 @@ from pathlib import Path
 
 from colorama import Fore
 
-from PythonRobot.NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from PythonRobot.NoptixLibrary.suite import CloudAccount
-from PythonRobot.NoptixLibrary.suite import Mediaserver
-from PythonRobot.NoptixLibrary.suite import Suite
-from PythonRobot.RobotVariables import RobotVariables
-from PythonRobot.resource_import import cloud_login
-from PythonRobot.resource_import import get_chrome
-from PythonRobot.system_admin import SystemAdmin
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Mediaserver
+from NoptixLibrary.suite import Suite
+from RobotVariables import RobotVariables
+from resource_import import cloud_login
+from resource_import import get_chrome
+from system_admin import SystemAdmin
 
 
 def owner_admin_has_access_to_health_monitoring(server: Mediaserver, rb: RobotVariables):

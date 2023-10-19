@@ -4,12 +4,12 @@ from pathlib import Path
 
 from colorama import Fore
 
-from PythonRobot.NoptixLibrary.suite import Mediaserver
-from PythonRobot.NoptixLibrary.suite import Suite
-from PythonRobot.RobotVariables import RobotVariables
-from PythonRobot.resource_import import cloud_login
-from PythonRobot.resource_import import get_chrome
-from PythonRobot.system_admin import SystemAdmin
+from NoptixLibrary.suite import Mediaserver
+from NoptixLibrary.suite import Suite
+from RobotVariables import RobotVariables
+from resource_import import cloud_login
+from resource_import import get_chrome
+from system_admin import SystemAdmin
 
 
 def no_alerts_message_shows_when_no_alerts(server: Mediaserver, rb: RobotVariables):
