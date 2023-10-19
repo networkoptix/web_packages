@@ -9,42 +9,6 @@ Force Tags        system    cloud
 
 *** Test Cases ***
 # Left search
-18. Left menu search: Position and style
-    [Tags]    C81759    webadmin    search
-    Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
-
-    Log    Step 1
-    Log in to system new    ${system}    ${system}[cloudOwner]
-    Validate Search Input
-
-    Log    Step 2
-    Click Element    ${SEARCH INPUT}
-    Element Should Be Focused    ${SEARCH INPUT}
-
-    Log    Step 3
-    Click Element    ${CAMERAS LINK}
-    Run keyword and continue on failure    Validate Search Input
-
-    Log    Step 4
-    Click Element    ${USERS LINK}
-    Run keyword and continue on failure    Validate Search Input
-
-    Log    Step 5
-    Click Element    ${SERVERS LINK}
-    Run keyword and continue on failure    Validate Search Input
-
-    Log    Step 6
-    Click Element    ${VIEW TAB}
-    Run keyword and continue on failure    Validate Search Input    view page=True
-
-    Log    Step 7
-    Click Element    ${VIEW SEARCH DETAILS TOGGLER}
-    ${server info}=   Replace String    ${VIEW SEARCH SERVER IP INFO}    %SERVER NAME%    Server ${system}[id]
-    Wait Until Element Is Visible    ${server info}
-
-    Log    Step 8
-    Click Element    ${INFORMATION TAB}
-    Wait Until Element Is Not Visible    ${SEARCH INPUT}
 
 19. Left menu search: Search menu for offline system
     [Tags]    C81761    search

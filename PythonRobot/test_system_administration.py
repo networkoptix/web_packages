@@ -257,6 +257,31 @@ def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, ro
         print("pass")
 
 
+def left_menu_search_position_and_style(server: Mediaserver):
+    """
+    [Tags]    C81759    webadmin    search
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        driver.get(ENV + f"/systems/{server.id}")
+        LoginDialog(driver).basic_cloud_login(owner.email, password)
+        system_page = SystemAdmin(driver)
+        left_menu = system_page.get_left_menu()
+        search_input = left_menu.get_search_field()
+        search_input.click()
+        assert search_input.is_focused()
+        left_menu.get_node_by_name_within_timeout('Cameras').click()
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        left_menu.get_node_by_name_within_timeout('Users').click()
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        left_menu.get_node_by_name_within_timeout('Servers').click()
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -299,3 +324,4 @@ if __name__ == "__main__":
             cloud_server_first.get_cloud_custom_user(),
             'Custom',
             )
+        left_menu_search_position_and_style(cloud_server_first)

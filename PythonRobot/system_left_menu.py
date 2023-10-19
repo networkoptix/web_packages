@@ -9,6 +9,7 @@ from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
+from generic_elements import Image
 from generic_elements import MenuNode
 from generic_elements import Page
 from generic_elements import PageText
@@ -163,8 +164,21 @@ class SearchField:
             "/nx-menu/nx-search/div/div/div/div/div/button")
         return Button(self.driver, locator)
 
+    def wait_for_loupe_icon(self):
+        locator = f"{self._locator}//following-sibling::span[contains(@class, web-icon-search)]"
+        Image(self.driver, locator).wait_until_visible()
+
     def get_text(self) -> str:
         return self._get_field().get_text()
+
+    def click(self):
+        self._get_field().click()
+
+    def is_focused(self) -> bool:
+        return self._get_field().is_focused()
+
+    def get_placeholder_text(self):
+        return self._get_field().get_html_attribute('placeholder')
 
 
 _logger = logging.getLogger(__name__)

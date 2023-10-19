@@ -174,6 +174,10 @@ class Element:
         self.wait_until_exists()
         return self._element.find_element_by_partial_link_text(text)
 
+    def get_html_attribute(self, attribute_name: str):
+        self.wait_until_exists()
+        return self._element.get_attribute(attribute_name)
+
 
 class ElementNotInDOM(Exception):
     pass

@@ -230,6 +230,9 @@ class TextField:
     def double_press_tab(self):
         self.send_keys(Keys.TAB + Keys.TAB)
 
+    def get_html_attribute(self, attribute_name: str):
+        return self._element.get_html_attribute(attribute_name)
+
 
 class SearchBar:
 
