@@ -65,7 +65,7 @@
     <nx-systems-list-component
         *ngIf="!this.card.config.systems || !card.editMode; else editMode"
         (availableSystems)="updateSystems($event)"
-        base="/dashboard"
+        [atBase]="false"
         [size]="card.size.value.cols > 8 ? 'full' : card.size.value.cols > 4 ? 'mid' : 'compact'"
         [disableSearch]="!card.config.searchEnabled"
         [systemsToShow]="systemsToShow"

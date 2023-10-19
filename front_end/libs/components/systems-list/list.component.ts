@@ -1,4 +1,4 @@
-import { CommonModule, Location } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { booleanAttribute, Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router } from '@angular/router';
@@ -71,9 +71,7 @@ export class NxSystemsListComponent implements OnInit {
     searchChanged = new Subject<void>();
     showList: boolean = false;
 
-    static SYSTEMS_BASE = '/systems';
-
-    @Input() base: string;
+    @Input({ transform: booleanAttribute }) atBase: boolean = true;
     @Input() size: 'full' | 'mid' | 'compact';
     @Input({ transform: booleanAttribute }) disableSearch: boolean;
     @Input() systemsToShow: string[];
@@ -81,10 +79,6 @@ export class NxSystemsListComponent implements OnInit {
     @Input({ transform: booleanAttribute }) enableRedirect: boolean = false;
 
     @Output() availableSystems = new EventEmitter<NxSystemInfo[]>();
-
-    get showCompact(): boolean {
-        return this.base !== NxSystemsListComponent.SYSTEMS_BASE;
-    }
 
     chosenSystemName: string;
     show2faRequired = false;
@@ -102,13 +96,11 @@ export class NxSystemsListComponent implements OnInit {
         private menusService: NxMenusService,
         private router: Router,
         private route: ActivatedRoute,
-        private location: Location,
     ) {
         this.setupDefaults();
     }
 
     ngOnInit(): void {
-        this.base = this.base ?? NxSystemsListComponent.SYSTEMS_BASE;
         this.size = this.size ?? 'full';
         this.disableSearch = this.disableSearch ?? false;
         this.showSearch = false;
@@ -130,7 +122,7 @@ export class NxSystemsListComponent implements OnInit {
                     return;
                 }
                 this.hasOneSystem = this.systems.length === 1;
-                if (this.enableRedirect && this.location.path().startsWith(this.base)) {
+                if (this.enableRedirect && this.atBase) {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be
                     // established, and we'll get into a loop. It's safer not to open the system.
                     const [system] = this.systems;
@@ -139,13 +131,11 @@ export class NxSystemsListComponent implements OnInit {
                         (!system.system2faEnabled || account.sessionVerified)
                     ) {
                         this.openSystem(system);
-                    } else {
-                        this.showList = true;
                     }
                 }
 
+                this.showList = true;
                 this.showSearch = this.systems.length >= search.minSystems;
-
                 this.searchSystems();
             });
         });
