@@ -157,5 +157,9 @@
   "59956": {
     "name": "certifi",
     "note": "Certifi 2023.07.22 includes a fix for CVE-2023-37920: Certifi prior to version 2023.07.22 recognizes \"e-Tugra\" root certificates. e-Tugra's root certificates were subject to an investigation prompted by reporting of security issues in their systems. Certifi 2023.07.22 removes root certificates from \"e-Tugra\" from the root store."
+  },
+  "60956": {
+    "name": "Django",
+    "note": "CVE-2023-41164: Potential denial of service vulnerability in django.utils.encoding.uri_to_iri().https://www.djangoproject.com/weblog/2023/sep/04/security-releases"
   }
 }

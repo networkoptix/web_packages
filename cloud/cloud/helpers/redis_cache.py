@@ -14,6 +14,8 @@ from django.core.cache.backends.redis import RedisCacheClient, RedisCache
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from redis.asyncio import Redis as AsyncRedis, ConnectionPool as AsyncConnectionPool
 from redis.asyncio.connection import DefaultParser
+from redis.backoff import NoBackoff
+from redis.asyncio.retry import Retry
 
 logger = getLogger(__name__)
 thread_local = threading.local()
@@ -122,7 +124,13 @@ class AsyncCacheClient:
         if isinstance(parser_class, str):
             parser_class = import_string(parser_class)
         parser_class = parser_class or DefaultParser
-        self._pool_options = {"parser_class": parser_class, "client_name": "async", **options}
+
+        self._pool_options = {
+            "parser_class": parser_class,
+            "client_name": "async",
+            "retry": Retry(NoBackoff(), retries=2),
+            "retry_on_error": [redis.exceptions.ConnectionError],
+            **options}
 
     def _get_connection_server_index(self, write):
         # left in a case of using multiple servers in future
