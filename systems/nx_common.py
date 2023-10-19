@@ -20,7 +20,7 @@ def is_org_admin(f):
     async def check_role(*args, **kwargs):
         raw_data = await request.get_json()
         connector = RestConnector(request)
-        license_api = LicenseConnector(connector.email, await connector.get_token())
+        license_api = LicenseConnector(await connector.email, connector.get_token())
         if await license_api.is_admin_in_org(raw_data.get('org_id')):
             return await f(*args, **kwargs)
         return 'Unauthorized', httpx.codes.FORBIDDEN
@@ -313,9 +313,16 @@ class RestConnector:
         user = await self._get(f'/cdb/oauth2/token/{token}')
         return user.get('username')
 
+    def get_token(self):
+        return self.token.split(' ')[1]
+
     async def get_system(self, system_id):
         system = await self._get("/cdb/systems/get", params={'systemId': system_id})
         return system.get('systems')[0]
+
+    async def send_batch(self, data):
+        return await self._post('/cdb/systems/users/batch', data=data)
+
 
 def require_params(data, required_params):
     errors = {
@@ -325,5 +332,3 @@ def require_params(data, required_params):
     }
     if errors:
         raise httpx.RequestError(errors)
-    async def send_batch(self, data):
-        return await self._post('/cdb/systems/users/batch', data=data)

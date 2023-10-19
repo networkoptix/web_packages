@@ -18,7 +18,7 @@ class Group(db.Model):
     parent_group_id = db.Column(db.String(64), db.ForeignKey(id), nullable=True)
     parent = db.relationship('Group', backref='groups', remote_side=id, lazy=True)
     systems = db.relationship('System', backref='group', lazy="dynamic")
-    users = db.relationship('User',backref='group', lazy="dynamic")
+    users = db.relationship('User', backref='group', lazy="dynamic")
 
     def __repr__(self):
         return f'<Group {self.name}>'
