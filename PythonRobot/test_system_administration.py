@@ -6,6 +6,7 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from header import HeaderNav
+from information_page import InformationPage
 from login import LoginDialog
 from resource_import import cloud_login
 from resource_import import get_chrome
@@ -16,6 +17,7 @@ from system_admin import SystemAdmin
 from system_left_menu import SystemLeftMenu
 from systems_page import SystemsPage
 from variables import ENV
+from view_page import ViewPage
 
 password = "qweasd 123"
 
@@ -282,6 +284,46 @@ def left_menu_search_position_and_style(server: Mediaserver):
         print("pass")
 
 
+def left_menu_search_search_menu_for_offline_system(server: Mediaserver):
+    """
+    [Tags]    C81761    webadmin    CB-1596
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        server.stop()
+        base_system_url = ENV + f"/systems/{server.id}"
+        driver.get(base_system_url)
+        LoginDialog(driver).basic_cloud_login(owner.email, password)
+        system_page = SystemAdmin(driver)
+        left_menu = system_page.get_left_menu()
+        search_input = left_menu.get_search_field()
+        search_input.click()
+        assert search_input.is_focused()
+        left_menu.get_node_by_name_within_timeout('Licenses').click()
+        assert driver.current_url == base_system_url + "/licenses"
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        left_menu.get_node_by_name_within_timeout('Cameras').click()
+        assert driver.current_url == base_system_url + "/cameras"
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        left_menu.get_node_by_name_within_timeout('Users').click()
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        left_menu.get_node_by_name_within_timeout('Servers').click()
+        search_input.wait_for_loupe_icon()
+        assert search_input.get_placeholder_text() == "Search"
+        header = HeaderNav(driver)
+        header.click_tab_by_name('View')
+        ViewPage(driver).wait_for_system_offline_placeholder()
+        assert driver.current_url == base_system_url + "/view"
+        header.click_tab_by_name('Information')
+        InformationPage(driver).wait_for_system_offline_placeholder()
+        assert driver.current_url == base_system_url + "/health/alerts"
+        server.start()
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -325,3 +367,4 @@ if __name__ == "__main__":
             'Custom',
             )
         left_menu_search_position_and_style(cloud_server_first)
+        left_menu_search_search_menu_for_offline_system(cloud_server_first)

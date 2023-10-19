@@ -15,12 +15,13 @@ _logger = logging.getLogger(__name__)
 class HeaderNav:
 
     def __init__(self, driver: WebDriver, lang="en_US", ):
+        self._locator = "//nx-header"
         self._driver = driver
         self._rb = RobotVariables(lang)
         self._wait_until_header_is_visible()
 
     def _wait_until_header_is_visible(self):
-        Pane(self._driver, "//nx-header").wait_until_visible()
+        Pane(self._driver, self._locator).wait_until_visible()
 
     def account_dropdown(self):
         return Button(self._driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")
@@ -90,3 +91,10 @@ class HeaderNav:
     def get_system_name(self) -> str:
         element = PageText(self._driver, '//nx-header//span[@class="system-name"]')
         return element.get_text().strip()
+
+    def wait_for_system_offline_text(self):
+        locator = f"//h2[@name=OFFLINE and contains(text(),{self._rb.SYSTEM_OFFLINE_TEXT})]"
+        PageText(self._driver, locator).wait_until_visible()
+
+    def click_tab_by_name(self, tab_name: str):
+        self._driver.find_element_by_link_text(tab_name).click()

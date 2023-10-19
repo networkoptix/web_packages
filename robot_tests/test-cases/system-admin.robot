@@ -10,33 +10,6 @@ Force Tags        system    cloud
 *** Test Cases ***
 # Left search
 
-19. Left menu search: Search menu for offline system
-    [Tags]    C81761    search
-    Stop container    ${system}[container]
-    Log in to system new    ${system}    ${system}[cloudOwner]
-
-    Log    Steps 2, 3
-    ${links}=   Create List    ${LICENSES LINK}    ${CAMERAS LINK}    ${USERS LINK}    ${SERVERS LINK}
-    ${aliases}=   Create List    licenses    cameras    users    servers
-    FOR    ${link}    ${alias}    IN ZIP    ${links}    ${aliases}
-        Wait until element is visible    ${link}
-        Click Link    ${link}
-        Wait Until Location Contains    ${ENV}/systems/${system}[id]/${alias}
-        Run keyword and continue on failure    Validate Search Input
-    END
-
-    Log    Step 4
-    Click Link    ${VIEW TAB}
-    Wait Until Elements Are Visible     ${SYSTEM OFFLINE HEADER}    ${THIS SYSTEM IS OFFLINE}
-    Wait Until Element Is Not Visible    ${SEARCH INPUT}
-
-    Log    Step 5
-    Click Link    ${INFORMATION TAB}
-    Wait Until Elements Are Visible     ${SYSTEM OFFLINE HEADER}    ${THIS SYSTEM IS OFFLINE}
-    Wait Until Element Is Not Visible    ${SEARCH INPUT}
-
-    Start container   ${system}[container]
-
 20. Left menu search: Availability for different users
     [Tags]    C81760    webadmin    search
     FOR     ${user}    IN    ${system}[cloudOwner]    ${system}[cloudUsers][cloudAdmin]
