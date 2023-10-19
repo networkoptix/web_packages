@@ -16,7 +16,7 @@ from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from redis.asyncio import Redis as AsyncRedis, ConnectionPool as AsyncConnectionPool
 from redis.asyncio.connection import DefaultParser
 from redis.backoff import ConstantBackoff, NoBackoff
-from redis.retry import Retry
+from redis.asyncio.retry import Retry
 
 logger = getLogger(__name__)
 thread_local = threading.local()
