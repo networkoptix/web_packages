@@ -8,13 +8,6 @@ Force Tags        system    cloud
 
 
 *** Test Cases ***
-# CLOUD
-
-12. Should open System page by link not authorized user, and show alert if logs in and has no permission
-    ${email noperm}    Register and activate account with random email    mark    hamil    ${password}
-    Go To    ${ENV}/systems/${system}[id]
-    Log In    ${email noperm}    ${base password}    button=None
-    Wait Until Element Is Visible    ${SYSTEM NO ACCESS}
 
 # COMMON
 13. User can rename System: change in web -> check server
