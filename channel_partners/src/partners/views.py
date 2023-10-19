@@ -1,4 +1,4 @@
-from django.db.models import Q
+from django.db.models import Q, Subquery
 from time import sleep
 from uuid import uuid4
 
@@ -157,7 +157,8 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
         query = Q(
             Q(cloud_host=self.request.cloud_host) |
             Q(
-                parent_channel_partner__users=self.request.user,
+                parent_channel_partner__in=Subquery(
+                    ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner')),
                 parent_channel_partner__parent_channel_partner__isnull=True
             )
         )
@@ -342,16 +343,19 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         if self.action == 'retrieve':
             # LIC-278
             # If user is member of an organization, they should have read access to parent
-            query |= Q(organizations__users=self.request.user)
+            query |= Q(id__in=Subquery(
+                OrganizationToUser.objects.filter(user=self.request.user).values('organization__channel_partner__id')))
         if self.detail:
             # LIC-277 Map channel partners to cloud host instead of cloud instance
             # If channel partner’s parent has no parent (so it is the direct child of root channel partner)
             #   and current user is member of root channel partner:
             # /channel_partners/{id} should work even if the request is coming from a different cloud host
-            query |= Q(
-                Q(parent_channel_partner__users=self.request.user),
-                Q(parent_channel_partner__parent_channel_partner__isnull=True)
+            parent_channel_partners_query = (
+                ChannelPartnerToUser.objects
+                .filter(user=self.request.user, channel_partner__parent_channel_partner__isnull=True)
+                .values('channel_partner')
             )
+            query |= Q(parent_channel_partner__in=Subquery(parent_channel_partners_query))
             return ChannelPartner.objects.filter(query)
 
         return ChannelPartner.objects.filter(query)
