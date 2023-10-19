@@ -152,6 +152,18 @@ def check_password_masking(user: CloudAccount):
         assert reset_password.is_password_eye_closed()
 
 
+def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
+    with get_chrome() as driver:
+        driver.get(ENV)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        login = LoginDialog(driver)
+        login.basic_cloud_login(user.email, user.password)
+        HeaderNav(driver).account_dropdown().click()
+        driver.get(f'{ENV}/authorize/restore_password')
+        login.reset_password_email_input().wait_until_visible()
+
+
 if __name__ == "__main__":
     with CloudAccount(sendemail=True) as user:
         sets_new_password_and_successfully_logs_in(user)
@@ -159,3 +171,4 @@ if __name__ == "__main__":
         check_can_still_log_in_if_restore_not_finished(user)
         test_should_not_allow_restore_twice(user)
         check_password_masking(user)
+        test_should_allow_visit_restore_after_log_in(user)

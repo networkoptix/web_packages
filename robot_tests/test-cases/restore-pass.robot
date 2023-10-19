@@ -21,14 +21,3 @@ Force Tags
     Wait Until Element Has Style    ${EMAIL INPUT}    color    ${ERROR COLOR WITH OPACITY}
     Wait Until Element Has Style    ${EMAIL INPUT}    border-color    ${ERROR COLOR}
     Wait Until Element Is Visible    ${REGISTER NOT ACTIVATED}
-
-
-9. Should allow logged in user visit restore password page
-    [Tags]    email
-    ${email}    Get Random Email Robot    ${BASE EMAIL}
-    Go To    ${url}/register
-    Register    mark    hamill    ${email}    ${password}
-    Activate    ${email}    ${password}
-    Log In    ${email}    ${password}    button=${ACTIVATION SUCCESS LOG IN BUTTON}    reset=${True}
-    Go To    ${url}/authorize/restore_password
-    Wait Until Elements Are Visible    ${RESTORE PASSWORD EMAIL INPUT}    ${RESET PASSWORD BUTTON}    ${RESET PASSWORD COMP HEADER}
