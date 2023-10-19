@@ -90,10 +90,9 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
 
 def user_without_permissions_cannot_see_system_admin_page(server: Mediaserver):
     with get_chrome() as driver:
-        email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        viewer_user = server.get_cloud_viewer()
         driver.get(ENV + f"/systems/{server.id}")
-        LoginDialog(driver).basic_cloud_login(email, password)
+        LoginDialog(driver).basic_cloud_login(viewer_user.email, viewer_user.password)
         assert FailedToAccessSystemPage(driver).is_shown()
         print("pass")
 
@@ -154,13 +153,9 @@ def system_name_change_is_shown_in_cloud_portal(server: Mediaserver):
 
 def should_confirm_if_not_owner_deletes_system(server: Mediaserver):
     with get_chrome() as driver:
-        owner = server.get_cloud_owner()
-        cloud_auth = (owner.email, owner.password)
-        viewer_email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", viewer_email, password)
-        CLOUD_API.share(cloud_auth, server.id, 'viewer', viewer_email, viewer_permissions)
+        viewer_user = server.get_cloud_viewer()
         driver.get(ENV)
-        cloud_login(driver, viewer_email, password)
+        cloud_login(driver, viewer_user.email, viewer_user.password)
         driver.get(ENV + f"/systems/{server.id}")
         sys_admin = SystemAdmin(driver)
         sys_admin.disconnect_from_account_button().click()
@@ -204,13 +199,10 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
     [Tags]    C41561    webadmin
     """
     with get_chrome() as driver:
+        cloud_admin = server.get_cloud_admin()
         owner = server.get_cloud_owner()
-        cloud_auth = (owner.email, owner.password)
-        admin_email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", admin_email, password)
-        CLOUD_API.share(cloud_auth, server.id, 'cloudAdmin',  admin_email, '')
         driver.get(ENV + f"/systems/{server.id}")
-        LoginDialog(driver).basic_cloud_login(admin_email, password)
+        LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
         system_page = SystemAdmin(driver)
         HeaderNav(driver).account_dropdown()
         header = HeaderNav(driver)
@@ -240,7 +232,12 @@ if __name__ == "__main__":
     suite_name = suite_name.replace("test_", "").replace(".py", "")
     with Suite() as suite:
         cloud_owner_first = suite.create_cloud_account()
-        cloud_server_first = suite.create_cloud_server(cloud_owner_first, f"{suite_name}_1_")
+        cloud_users = suite.create_cloud_accounts()
+        cloud_server_first = suite.create_cloud_server(
+            cloud_owner_first,
+            f"{suite_name}_1_",
+            cloud_users=cloud_users,
+            )
         # cloud_owner_second = suite.create_cloud_account()
         # cloud_server_second = suite.create_cloud_server(cloud_owner_second)
         # can_log_in_to_system_from_direct_link(cloud_server_first)
