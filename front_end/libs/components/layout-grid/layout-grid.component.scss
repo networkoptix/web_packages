@@ -552,15 +552,21 @@ iframe {
     }
 
     .resize-handle {
+        --base-handle-size: 6px;
+        --corner-handle-size: calc(var(--base-handle-size) * 2);
+        --side-handle-size: calc(100% - var(--corner-handle-size) * 2);
         position: absolute;
-        width: 8px;
-        height: 8px;
+        width: var(--base-handle-size);
+        height: var(--base-handle-size);
         z-index: var(--z-index-resize-handle);
+
+        &.top.left, &.bottom.right, &.top.right, &.bottom.left {
+            width: var(--corner-handle-size);
+            height: var(--corner-handle-size);
+        }
 
         &.top.left,
         &.bottom.right {
-            height: 16px;
-            width: 16px;
             cursor: nwse-resize;
         }
         &.top.right,
@@ -568,21 +574,37 @@ iframe {
             cursor: nesw-resize;
         }
 
+        &.top.right {
+            clip-path: polygon(0 0, 100% 0%, 100% 100%, 50% 100%, 0 50%);
+        }
+
+        &.bottom.right {
+            clip-path: polygon(50% 0, 100% 0%, 100% 100%, 0 100%, 0 50%);
+        }
+
+        &.bottom.left {
+            clip-path: polygon(50% 0, 100% 45%, 100% 100%, 0 100%, 0 0);
+        }
+
+        &.top.left {
+            clip-path: polygon(100% 0, 100% 50%, 50% 100%, 0 100%, 0 0);
+        }
+
         &.top,
         &.bottom {
             &:not(.left):not(.right) {
-                width: calc(100% - 32px) !important;
+                width: var(--side-handle-size) !important;
                 cursor: ns-resize;
-                left: 16px;
+                left: var(--corner-handle-size);
             }
         }
 
         &.left,
         &.right {
             &:not(.top):not(.bottom) {
-                height: calc(100% - 32px) !important;
+                height: var(--side-handle-size) !important;
                 cursor: ew-resize;
-                top: 16px;
+                top: var(--corner-handle-size);
             }
         }
 
