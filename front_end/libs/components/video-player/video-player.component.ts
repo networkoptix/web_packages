@@ -251,18 +251,22 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        const [secondary] = this.camera.parameters.mediaStreams?.streams ?? [];
+        const streams = this.camera.parameters.mediaStreams?.streams ?? [];
+        const primary = streams.find(({ encoderIndex }) => encoderIndex === 0);
+        const secondary = streams.find(({ encoderIndex }) => encoderIndex === 1);
         const codecH265 = 173;
         const codecMjpeg = 7;
         const hasSecondary = secondary && ![codecH265, codecMjpeg].includes(secondary.codec);
+        const primaryIsH265 = primary?.codec === codecH265;
+        const primaryIsMJPEG = primary?.codec === codecMjpeg;
 
-        // if (primaryIsH265) {
-        //     return this.showError.emit(ConnectionError.transcodingDisabled)
-        // }
+        if (primaryIsH265) {
+            return this.showError.emit(ConnectionError.transcodingDisabled)
+        }
 
-        // if (primaryIsMJPEG) {
-        //     return this.showError.emit(ConnectionError.mjpegDisabled)
-        // }
+        if (primaryIsMJPEG) {
+            return this.showError.emit(ConnectionError.mjpegDisabled)
+        }
 
         const stream$ = this.reconnect$.pipe(
             switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, hasSecondary, this.accessToken)),

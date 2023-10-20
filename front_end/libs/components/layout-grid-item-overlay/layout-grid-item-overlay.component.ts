@@ -24,13 +24,12 @@ import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import {
     distinctUntilChanged,
     map,
-    repeat,
-    defer,
     switchMap,
-    combineLatest,
     EMPTY,
-    delay,
-    catchError,
+    interval,
+    finalize,
+    startWith,
+    tap,
 } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
@@ -125,7 +124,6 @@ export class NxLayoutGridItemOverlayComponent {
 
     isFullscreen$$ = signal(false);
     isMenuOpened$$ = signal(false);
-    hovered$$ = signal(false);
 
     scale$ = this.resizeObserver.resize.pipe(
         map(({ width, height }) => {
@@ -176,7 +174,18 @@ export class NxLayoutGridItemOverlayComponent {
     });
     cameraOnline$$ = computed(() => {
         const node = this.checkGetCameraNode();
-        return node ? node.details.online : null;
+        if (node?.details.online) {
+            const primaryStream = (node.details.parameters.mediaStreams?.streams ?? []).find(
+                ({ encoderIndex }) => encoderIndex === 0,
+            );
+
+            const nonWebRtcCodec = primaryStream && [7, 173].includes(primaryStream.codec);
+            if (!nonWebRtcCodec || this.system.version >= 6) {
+                return true;
+            }
+        }
+
+        return false;
     });
 
     extraCameraTooltip$$ = computed(() => {
@@ -184,17 +193,7 @@ export class NxLayoutGridItemOverlayComponent {
         return node ? `: ${node.name}` : '';
     });
 
-    updateMetrics$$ = computed(() => this.hovered$$() || this.isFullscreen$$());
-
-    bitrateInfo$ = combineLatest([
-        toObservable(this.displayInfo$$),
-        toObservable(this.cameraOnline$$),
-        toObservable(this.updateMetrics$$),
-    ]).pipe(
-        map(([displayInfo, cameraOnline, hovered]) =>
-            [displayInfo, cameraOnline, hovered].every(Boolean),
-        ),
-        delay(1000),
+    bitrateInfo$ = toObservable(this.displayInfo$$).pipe(
         distinctUntilChanged(),
         switchMap(displayInfo => {
             const cameraNode = this.checkGetCameraNode();
@@ -207,54 +206,86 @@ export class NxLayoutGridItemOverlayComponent {
             if (mediaserver instanceof NxSystemRestAPI2) {
                 const {
                     fps,
-                    unableToLoad,
-                    unavailable,
-                    streamType: { primary, secondary },
+                    loading,
+                    streamType: { primary, secondary, stream },
                     resolution: { high, low },
                 } = staticLang.layouts.overlay.info;
+                const mediaStreams = cameraNode.details.parameters?.mediaStreams?.streams || [];
 
-                return defer(() => mediaserver.getCameraStreamMetrics(cameraNode.details.id)).pipe(
-                    map(({ primaryStream, secondaryStream }) => {
-                        if (!primaryStream) {
-                            return [unavailable, unableToLoad];
+                const sampleRateSeconds = 0.33;
+                let sampleSizeSeconds = 0;
+                const minSampleSizeSeconds = 0.66;
+                const maxBufferSeconds = 6;
+
+                const videoElement =
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    this.ref.nativeElement.querySelector<HTMLVideoElement>(
+                        'video.original-stream',
+                    )!;
+                let frames: number[] = [];
+                let rvfcHandle: number;
+                const updateFrames = (): void => {
+                    frames.push(videoElement.currentTime);
+                    rvfcHandle = videoElement.requestVideoFrameCallback(updateFrames);
+                };
+                const removeRvfc = (): void => videoElement.cancelVideoFrameCallback(rvfcHandle);
+
+                updateFrames();
+
+                return interval(sampleRateSeconds * 1000).pipe(
+                    startWith(0),
+                    map(() => {
+                        const videoLoaded = [
+                            videoElement.videoWidth,
+                            videoElement.videoHeight,
+                        ].every(Boolean);
+
+                        if (sampleSizeSeconds < maxBufferSeconds) {
+                            sampleSizeSeconds += sampleRateSeconds;
                         }
 
-                        const videoElement =
-                            this.ref.nativeElement.querySelector<HTMLVideoElement>(
-                                'video.original-stream',
-                            );
-                        if (!videoElement) {
-                            return null;
-                        }
-
+                        const actualFps =
+                            sampleSizeSeconds < minSampleSizeSeconds
+                                ? 0
+                                : frames.length / sampleSizeSeconds;
                         const currentResolution = `${videoElement.videoWidth}x${videoElement.videoHeight}`;
-                        const streams = [primaryStream, secondaryStream];
-                        const stream =
-                            streams.find(({ resolution }) => resolution === currentResolution) ||
-                            primaryStream;
-                        const resolution = stream?.resolution;
-                        const fpsText = stream?.actualFps && {
+                        const currentStream = mediaStreams.find(
+                            ({ resolution }) => resolution === currentResolution,
+                        );
+
+                        const codecLookup = {
+                            27: 'H264',
+                            173: 'H265',
+                            7: 'MJPEG',
+                        };
+
+                        const hasStreamInfo = Boolean(currentStream);
+                        const isPrimary = currentStream?.encoderIndex === 0;
+                        const streamTitle = !hasStreamInfo
+                            ? stream
+                            : isPrimary
+                            ? primary
+                            : secondary;
+                        const streamDescription = hasStreamInfo && {
+                            value: isPrimary ? high : low,
+                            params: { codec: codecLookup[currentStream.codec] },
+                        };
+                        const fpsText = actualFps && {
                             value: fps,
-                            params: { fps: stream.actualFps.toFixed(2) },
+                            params: { fps: actualFps.toFixed(2) },
                         };
-                        const bitrate =
-                            stream?.actualBitrateBps &&
-                            `${((stream.actualBitrateBps / 1024 ** 2) * 8).toFixed(2)} Mbps`;
-                        const streamTitle = stream === primaryStream ? primary : secondary;
-                        const streamDescription = {
-                            value: stream === primaryStream ? high : low,
-                            params: { codec: stream.codec },
-                        };
-                        return [
-                            streamTitle,
-                            resolution,
-                            fpsText,
-                            bitrate,
-                            streamDescription,
-                        ].filter(Boolean);
+                        return videoLoaded
+                            ? [streamTitle, fpsText, currentResolution, streamDescription].filter(
+                                  Boolean,
+                              )
+                            : [streamTitle, loading];
                     }),
-                    catchError(() => Promise.resolve([unavailable, unableToLoad])),
-                    repeat({ delay: 1000 }),
+                    tap(() => {
+                        frames = frames.filter(
+                            frame => frame > videoElement.currentTime - maxBufferSeconds,
+                        );
+                    }),
+                    finalize(removeRvfc),
                 );
             } else {
                 return EMPTY;
@@ -265,14 +296,6 @@ export class NxLayoutGridItemOverlayComponent {
     @HostListener('document:fullscreenchange')
     onFullscreenChange(): void {
         this.isFullscreen$$.set(this.document.fullscreenElement === this.fullScreenTarget);
-    }
-
-    @HostListener('mouseenter') onHoverStart(): void {
-        this.hovered$$.set(true);
-    }
-
-    @HostListener('mouseleave') onHoverEnd(): void {
-        this.hovered$$.set(false);
     }
 
     readonly MENU_ITEMS: Record<string, MenuItem<ResourceNode>> = {
@@ -421,11 +444,11 @@ export class NxLayoutGridItemOverlayComponent {
             return null;
         }
         return [
-            this.allowDebugMode && this.MENU_ITEMS.ptz,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.ptz,
             this.allowDebugMode && this.MENU_ITEMS.fisheye,
             this.allowDebugMode && this.MENU_ITEMS.motion,
-            this.allowDebugMode && this.MENU_ITEMS.object,
-            this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.object,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.zoomWindow,
             this.cameraOnline$$() && this.MENU_ITEMS.info,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
             this.allowDebugMode && this.MENU_ITEMS.screenshot,

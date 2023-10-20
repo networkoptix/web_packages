@@ -274,12 +274,12 @@
                     "low": "Lo-Res ({codec})"
                 },
                 "streamType": {
+                    "stream": "Stream",
                     "primary": "Primary Stream",
                     "secondary": "Secondary Stream"
                 },
-                "unavailable": "Unavailable",
-                "unableToLoad": "Unable to load stream metrics",
-                "fps": "{fps} Fps"
+                "fps": "{fps} Fps",
+                "loading": "Loading..."
             },
             "menuActions": {
                 "menu": {

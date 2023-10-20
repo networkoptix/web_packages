@@ -178,7 +178,7 @@ const camObjParamKeys = {
         },
     },
     mediaStreams: {
-        streams: { codec: true },
+        streams: { codec: true, encoderIndex: true, resolution: true },
     },
 } as const satisfies NxRecursiveKeyMap<DeviceV2Full['parameters']>;
 

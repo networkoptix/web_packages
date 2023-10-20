@@ -163,9 +163,11 @@ export class NxLayoutViewComponent {
                         }
                     }
 
-                    const nonWebRtcCodec = [7, 173].includes(
-                        (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
+                    const primaryStream = (camera.parameters.mediaStreams?.streams ?? []).find(
+                        ({ encoderIndex }) => encoderIndex === 0,
                     );
+
+                    const nonWebRtcCodec = [7, 173].includes(primaryStream?.codec);
                     return {
                         ...cameras,
                         [camera.id]: {

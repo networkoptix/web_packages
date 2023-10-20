@@ -723,7 +723,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--light3);
 
-    --overlay-action-bg: rgba(var(--light_gray_1--rgb), 0.6);
+    --overlay-action-bg: rgba(255, 255, 255, 0.6); // $light_gray_1--rgb
     --overlay-action-svg: rgba(var(--dark17--rgb), 0.8);
     --overlay-action-svg-hover: var(--dark17);
     --overlay-action-text: var(--dark17);
