@@ -44,6 +44,9 @@ def selected_node_has_different_color(server: Mediaserver):
 
 
 def users_are_seen_when_main_node_is_selected(server: Mediaserver):
+    """
+    [Tags]    C81771    webadmin    search
+    """
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         url = ENV + f"/systems/{server.id}"
