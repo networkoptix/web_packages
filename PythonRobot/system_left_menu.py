@@ -89,6 +89,9 @@ class SystemLeftMenu:
     def add_user_modal_cancel_button(self):
         return Button(self.driver, "//nx-cancel-button[@data-testid='cancelAddUserBtn']/button")
 
+    def add_user_permissions_hint(self):
+        return PageText(self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
+
     def share_system_with_user(self, email, permissions):
         self.add_users_button().click()
         self.add_user_email_input().input_text(email)

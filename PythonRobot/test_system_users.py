@@ -616,6 +616,33 @@ def add_user_button_opens_cancellable_modal(server: Mediaserver):
         else:
             print("PASS")   
 
+def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
+    """
+    8. When user selects role - special hint appears
+    [Tags]    C41901    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.add_users_button().click()
+            system_left_menu.add_user_modal().wait_until_visible()
+            viewer_hint = system_left_menu.add_user_permissions_hint()
+            viewer_hint.wait_until_visible()
+            default_permission = system_left_menu.add_user_permissions_dropdown().text()
+            assert rb.VIEWER_TEXT in default_permission, "Viewer was not visible in the Dropdown element"
+            assert rb.ADD_USER_PERMISSIONS_HINT_VIEWER in viewer_hint.get_text() , "Hint text did not match Viewer hint"
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print("PASS")
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -643,3 +670,4 @@ if __name__ == "__main__":
         owner_can_unlink_offline_system_from_cloud(cloud_server_2)
         viewer_can_remove_offline_system_from_account(cloud_server_2)
         add_user_button_opens_cancellable_modal(cloud_server)
+        verify_special_hints_on_permissions_dropdown(cloud_server)
