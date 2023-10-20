@@ -63,7 +63,7 @@ def users_are_seen_when_main_node_is_selected(server: Mediaserver):
 
 def check_search_input(server: Mediaserver):
     """
-    [Tags]    C81762    C81772    webadmin    search
+    [Tags]    C81762    C81772    C81796    webadmin    search
     """
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
@@ -90,9 +90,25 @@ def check_search_input(server: Mediaserver):
         assert not left_menu.has_node_with_name('Licenses')
         assert not left_menu.has_node_with_name('Cameras')
         assert not left_menu.has_node_with_name('Servers')
+        search_field.input_text('viewer')
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name(viewer.email)
+        assert not left_menu.has_node_with_name(owner.email)
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        assert not left_menu.has_node_with_name('Servers')
         left_menu.get_node_by_name_within_timeout(viewer.email).click()
         users_page = SystemUsers(driver)
         assert viewer.email == users_page.user_header_text().get_text()
+        search_field.input_text(server.get_server_name())
+        assert left_menu.has_node_with_name('Servers')
+        assert left_menu.has_node_with_name(server.get_server_name())
+        assert not left_menu.has_node_with_name('Users')
+        assert not left_menu.has_node_with_name(owner.email)
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
         search_field.get_cross_button().click()
         assert search_field.get_text() == ''
         assert left_menu.has_node_with_name('Users')

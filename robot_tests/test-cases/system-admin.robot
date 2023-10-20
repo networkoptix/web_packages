@@ -8,45 +8,6 @@ Force Tags        system    cloud
 
 
 *** Test Cases ***
-# Left search
-
-24. Left menu search: Searchable fields
-    [Tags]    C81796    webadmin    search
-    Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version
-    Log in to system new    ${system}    ${system}[cloudOwner]
-
-    IF    '${LANGUAGE}'=='en_US'
-        Log    Step 1
-        Search For    en
-        Wait until elements are visible
-        ...    ${LICENSES LINK}
-        ...    ${GENERAL LINK}
-    END
-
-    Log    Step 2
-    Search For    ${CAMERA NAME}
-    Run keyword and continue on failure    Wait Until Element is Visible    //span[@class="highlighted" and contains(text(), "${CAMERA NAME}")]
-
-    Log    Steps 3,4,5 - cannot be autotested
-
-    Log    Step 6
-    Search For    admin
-    Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="admin"]]
-
-    Log    Step 7
-    Search For    viewer
-    Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and contains(text(), "viewer")]
-
-    Log    Step 8
-    Search For    ${system}[cloudUsers][viewer]
-    ${highlighted}=   Fetch From Right    ${system}[cloudUsers][viewer]    ${TEST EMAIL}+
-    Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and text()="${TEST EMAIL}"]/following-sibling::span[contains(@class, "highlighted") and text()="${highlighted}"]
-
-    Log    Step 9
-    Search For    ${system}[id]
-    Run keyword and continue on failure    Wait until element is visible    //span[contains(@class, "highlighted") and text()="${system}[id]"]
-
-
 # Disconnect System from Cloud
 25. Disconnect dialog interface checks
     [Tags]    C48834    webadmin
