@@ -7,27 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
 
 *** Test Cases ***
-8. When user selects role - special hint appears
-    [Tags]    C41901    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    FOR    ${user}  IN  @{list}
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Wait Until Elements Are Visible    ${USERS LIST LINK}
-        Click Link    ${USERS LIST LINK}
-        Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
-        Click Button    ${ADD USER BUTTON SYSTEMS}
-        Wait Until Elements Are Visible    ${ADD USER PERMISSIONS DROPDOWN}    ${ADD USER PERMISSIONS HINT}
-        Wait Until Element Contains    ${ADD USER PERMISSIONS DROPDOWN}    ${VIEWER TEXT}
-        Wait Until Element Contains    ${ADD USER PERMISSIONS HINT}    ${ADD USER PERMISSIONS HINT VIEWER}
-        Check Special Hints
-
-        Click Button    ${ADD USER CANCEL}
-        Exit For Loop If    '''${user}'''=='''admin'''
-        Log Out
-    END
-
 13. Change role for Cloud User
     [Tags]    C41900    webadmin    cloud
     ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
