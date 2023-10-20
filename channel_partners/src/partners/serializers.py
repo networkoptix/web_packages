@@ -13,6 +13,7 @@ from drf_spectacular.utils import extend_schema_serializer, extend_schema_field
 from drf_spectacular.utils import OpenApiExample
 from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem, CdbSystemAPIBase
 from rest_framework import serializers, exceptions
+from rest_framework.exceptions import ValidationError, ErrorDetail
 from rest_framework.fields import empty
 from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
@@ -483,29 +484,58 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
         user = validated_data.get('user')
-        existing_services = instance.calculate_current_services()
+        new_records = []
+        for service, qty_delta in services.items():
+            new_records.append(ChannelPartnerServiceRecord(
+                quantity=qty_delta,
+                service=service,
+                effective_ts=timezone.now(),
+                in_effect=True,
+                cloud_system=instance,
+                organization=instance.organization,
+                created_by=CloudUser.objects.get_or_create(email=user.email)[0]
+            ))
+        ChannelPartnerServiceRecord.objects.bulk_create(new_records)
+        instance.calculate_current_services()
+        ServiceUsage.check_excess(cloud_system=instance)
+        return instance
 
-        for service_id, service_dict in services.items():
+    def validate_services(self, value: dict):
+        existing_services = self.instance.calculate_current_services()
+        services = {service: value[str(service.id)] for service in
+                    ChannelPartnerService.objects.filter(id__in=list(value.keys()))}
+        new_records = {}
+        types_changes = {}
+        for service, service_dict in services.items():
             qty = service_dict.get('quantity')
-            current_qty = existing_services.get('services').get(service_id, {}).get('quantity')
+            current_qty = existing_services.get('services').get(str(service.id), {}).get('quantity')
             if current_qty is not None:
                 qty_delta = qty - current_qty
             else:
                 qty_delta = qty
             if qty_delta != 0:
-                ChannelPartnerServiceRecord.objects.create(
-                    quantity=qty_delta,
-                    service_id=service_id,
-                    effective_ts=timezone.now(),
-                    in_effect=True,
-                    cloud_system=instance,
-                    organization=instance.organization,
-                    created_by=CloudUser.objects.get_or_create(email=user.email)[0]
-                )
+                new_records[service] = qty_delta
+                types_changes[service.type] = types_changes.get(service.type, 0) + qty_delta
+        channel_partner = self.instance.organization.channel_partner
+        exceeded = []
+        while channel_partner:
+            # check remaining limits through all ancestors
+            limits = channel_partner.remaining_monthly_limits()
+            channel_partner = channel_partner.parent_channel_partner
+            if not limits:
+                continue
+            for service_type, delta in types_changes.items():
+                if service_type in exceeded:
+                    continue
+                if delta > limits[service_type]:
+                    exceeded.append(service_type)
+                    if set(exceeded) == set([t for t, n in ChannelPartnerService.SERVICE_TYPES]):
+                        break
 
-        instance.calculate_current_services()
-        ServiceUsage.check_excess(cloud_system=instance)
-        return instance
+        if exceeded:
+            types = ', '.join([dict(ChannelPartnerService.SERVICE_TYPES)[service_type] for service_type in exceeded])
+            raise ValidationError(f'Monthly limit exceeded for service types {types}.')
+        return new_records
 
 
 class ServiceSerializer(serializers.ModelSerializer):

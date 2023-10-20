@@ -8,7 +8,7 @@ from model_bakery import baker
 from rest_framework.test import APIRequestFactory
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
     ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerAccessLevel, ChannelPartnerService, \
-    ServiceToOrganizationProperties, ChannelPartnerServiceRecord
+    ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates
 
 
 @pytest.fixture()
@@ -217,18 +217,23 @@ def deny_user_administer_system(mocker):
 @pytest.fixture()
 def system_factory(cloud_test_host, default_organization):
 
-    def factory(organization=default_organization, cloud_host=cloud_test_host, system_id=None):
+    def factory(organization=default_organization, cloud_host=cloud_test_host,
+                system_id=None, state=ChannelPartnerStates.ACTIVE):
         return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}',
-                          organization=organization, cloud_host=cloud_host)
+                          organization=organization, cloud_host=cloud_host, state=state)
 
     return factory
 
 @pytest.fixture()
 def cp_service_factory(default_channel_partner):
-    def factory(channel_partner=None):
+    def factory(channel_partner=default_channel_partner, parent_service=None,
+                service_type=ChannelPartnerService.LOCAL_RECORDING):
         return baker.make(ChannelPartnerService, name=f'{uuid4()}',
-                          created_by_channel_partner=channel_partner or default_channel_partner,
-                          state=ChannelPartnerService.ACTIVE)
+                          created_by_channel_partner=channel_partner,
+                          parent_service=parent_service,
+                          state=ChannelPartnerService.ACTIVE,
+                          type=service_type
+                          )
 
     return factory
 

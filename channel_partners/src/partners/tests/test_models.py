@@ -1,9 +1,9 @@
 from uuid import uuid4
-
+from datetime import timedelta
 from model_bakery import baker
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel, \
-    Organization, OrganizationPermissions, ChannelPartner
+    Organization, OrganizationPermissions, ChannelPartnerStates, ChannelPartnerService, ChannelPartner
 
 
 class TestCloudSystemId:
@@ -77,7 +77,6 @@ class TestOrganizationToUser:
         assert batch_data["items"][0]["systems"].__len__() == gen_count
         assert set(batch_data["items"][0]["systems"]) == {str(system.system_id) for system in systems}
         assert batch_data["items"][0]["accessRole"] == 'none'
-from partners.models import ChannelPartner, ChannelPartnerEvent
 
 
 class TestChannelPartnerEvent:
@@ -138,6 +137,44 @@ class TestChannelPartner:
             partners[i].refresh_from_db()
             assert partners[i].allow_changing_services == (i < 2)
 
+    def test_calculate_monthly_changes(self, channel_partner_factory, organization_factory, system_factory,
+                                       cp_service_factory, service_record_factory):
+        root_cp = channel_partner_factory(parent_channel_partner=None)
+        cp = channel_partner_factory(parent_channel_partner=root_cp)
+        sub_cp = channel_partner_factory(parent_channel_partner=cp)
+        cp_orgs = [organization_factory(channel_partner=cp) for _ in range(3)]
+        sub_cp_orgs = [organization_factory(channel_partner=sub_cp) for _ in range(3)]
+        systems = []
+        cp_services = [cp_service_factory(channel_partner=cp, service_type=tid)
+                       for tid, tname in ChannelPartnerService.SERVICE_TYPES]
+        sub_cp_services = [cp_service_factory(channel_partner=sub_cp, parent_service=service, service_type=service.type)
+                           for service in cp_services]
+        for org in cp_orgs:
+            for state in [ChannelPartnerStates.SHUTDOWN, ChannelPartnerStates.SUSPENDED, ChannelPartnerStates.ACTIVE]:
+                sys = system_factory(organization=org, state=state)
+                for service in cp_services:
+                    systems.append(sys)
+                    service_record_factory(service=service, cloud_system=sys)
+
+        for org in sub_cp_orgs:
+            for state in [ChannelPartnerStates.SHUTDOWN, ChannelPartnerStates.SUSPENDED, ChannelPartnerStates.ACTIVE]:
+                sys = system_factory(organization=org, state=state)
+                systems.append(sys)
+                for service in sub_cp_services:
+                    service_record_factory(service=service, cloud_system=sys)
+                    old_record = service_record_factory(service=service, cloud_system=sys, quantity=1)
+                    old_record.created_ts = old_record.created_ts - timedelta(days=40)
+                    old_record.save()
+        changes = sub_cp.calculate_monthly_changes(use_cache=False)
+
+        for tid, tname in ChannelPartnerService.SERVICE_TYPES:
+            assert changes[tid] == len(sub_cp_orgs) * 2
+
+        changes = cp.calculate_monthly_changes(use_cache=False)
+
+        for tid, tname in ChannelPartnerService.SERVICE_TYPES:
+            assert changes[tid] == len(sub_cp_orgs) * 2 * 2
+
 
 
 class TestOrganization:
@@ -177,5 +214,3 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is False
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
-
-

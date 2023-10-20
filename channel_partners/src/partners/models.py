@@ -9,6 +9,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, Permission
+from django.core.cache import caches
 from django.db import models
 from django.db.models import Sum, F, QuerySet
 from django.utils import timezone
@@ -19,6 +20,9 @@ from channel_partners.utils import FieldOriginalMixin
 from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
+
+from tools.helpers import get_period_start
+
 
 
 class Empty:
@@ -543,7 +547,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date = None) -> List['ChannelPartnerServiceRecord']:
+    def service_changes(self, start_ts: datetime.date = None) -> 'QuerySet[ChannelPartnerServiceRecord]':
         if start_ts is None:
             start_ts = timezone.now() - relativedelta(months=1)
         qs = ChannelPartnerServiceRecord.objects.filter(
@@ -554,6 +558,32 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                          f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
         return qs
+
+    def calculate_monthly_changes(self, use_cache: bool = False) -> dict:
+        start_ts = get_period_start()
+        cache_key = f'monthly-changes-{self.id}-{start_ts.date()}'
+        if use_cache and (changes := caches['default'].get(cache_key)):
+            return changes
+        cp_tree = self.get_successors(self.pk)
+        qs = (
+            ChannelPartnerServiceRecord.objects
+            .exclude(cloud_system__state=ChannelPartnerStates.SHUTDOWN)
+            .filter(created_ts__gte=start_ts, cloud_system__organization__channel_partner__in=cp_tree)
+        ).values('service__type').annotate(monthly_changes=Sum('quantity'))
+        changes = {change['service__type']: change['monthly_changes'] for change in qs}
+        caches['default'].set(cache_key, changes, timeout=3600)
+        return changes
+
+    def remaining_monthly_limits(self):
+        if self.monthly_additional_service_limit == 0 or self.monthly_additional_service_limit is None:
+            return None
+        monthly_changes = self.calculate_monthly_changes(use_cache=True)
+        return {
+            s_type: self.monthly_additional_service_limit - monthly_changes.get(s_type, 0)
+            for s_type, _ in ChannelPartnerService.SERVICE_TYPES
+        }
+
+
 
     @classmethod
     def get_successors(cls, ancestor_id: str, include_ancestor: bool = True):

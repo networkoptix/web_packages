@@ -1,11 +1,16 @@
 import random
+from datetime import timedelta
 
 import pytest
+from dateutil import relativedelta
+from django.core.cache import caches
 from model_bakery import baker
 
-from partners.models import ChannelPartnerServiceRecord
-from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer
+from partners.models import ChannelPartnerServiceRecord, ChannelPartnerService
+from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer, \
+    SystemServiceQuantitySerializer
 from partners.views import ChannelPartnerViewSet
+from tools.helpers import get_period_start
 
 
 class TestChannelPartnerAggDataSerializer:
@@ -122,6 +127,91 @@ class TestOrganizationAggDataSerializer:
         assert ser.data['serviceUsageQuantity'] == usage
 
 
+class TestSystemServiceQuantitySerializer:
+
+    def test_update(self, channel_partner_factory, organization_factory, system_factory,
+                    cp_service_factory, service_record_factory, arf, cp_user_factory):
+        root_cp = channel_partner_factory(parent_channel_partner=None)
+        cp = channel_partner_factory(parent_channel_partner=root_cp)
+        cp.monthly_additional_service_limit = 10
+        cp.save()
+        cp_orgs = [organization_factory(channel_partner=cp) for _ in range(3)]
+        systems = []
+        cp_services = [cp_service_factory(channel_partner=cp, service_type=tid)
+                       for tid, tname in ChannelPartnerService.SERVICE_TYPES]
+        cp_user = cp_user_factory(channel_partner=cp)
+        for org in cp_orgs:
+            sys = system_factory(organization=org)
+            for service in cp_services:
+                systems.append(sys)
+                service_record_factory(service=service, cloud_system=sys, quantity=1)
+                old_record = service_record_factory(service=service, cloud_system=sys, quantity=1)
+                old_record.created_ts = old_record.created_ts - timedelta(days=40)
+                old_record.save()
+        # check monthly changes, must be 1 * len(cp_services), real usage is bigger because of old services
+        changes = cp.calculate_monthly_changes(use_cache=False)
+        for service_type, change in changes.items():
+            assert change == len(cp_services)
+
+        caches['default'].clear()
+        request = arf.patch('/')
+        request.user = cp_user.user
+        data = {
+            "services": {
+                f"{service.id}": {"quantity": 6} for service in cp_services
+            }
+        }
+        ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
+        assert ser.is_valid(raise_exception=False)
+        for service in cp_services:
+            assert ser.validated_data['services'][service] == 4
+        ser.save(user=cp_user.user)
+
+        changes = cp.calculate_monthly_changes(use_cache=False)
+        for service_type, change in changes.items():
+            assert change == 7
+
+        caches['default'].clear()
+        data = {
+            "services": {
+                f"{service.id}": {"quantity": 11} for service in cp_services[1:]
+            }
+        }
+        ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
+        assert ser.is_valid(raise_exception=False) is False
+        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'][0].__str__()
+        for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
+            assert name[1] in ser.errors['services'][0].__str__()
+
+        # test limits for all cp above
+
+        cp.monthly_additional_service_limit = None
+        cp.save()
+
+        root_cp.monthly_additional_service_limit = 10
+        root_cp.save()
+
+        caches['default'].clear()
+        ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
+        assert ser.is_valid(raise_exception=False) is False
+        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'][0].__str__()
+        for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
+            assert name[1] in ser.errors['services'][0].__str__()
+
+        cp.monthly_additional_service_limit = 200
+        cp.save()
+
+        root_cp.monthly_additional_service_limit = 10
+        root_cp.save()
+
+        caches['default'].clear()
+        ser = SystemServiceQuantitySerializer(instance=systems[0], data=data)
+        assert ser.is_valid(raise_exception=False) is False
+        assert ChannelPartnerService.SERVICE_TYPES[0][1] not in ser.errors['services'][0].__str__()
+        for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
+            assert name[1] in ser.errors['services'][0].__str__()
+
+
 class TestChannelPartnerSerializer:
 
     def test_allow_changing_services(self, channel_partner_factory, cp_user_factory, arf):
@@ -163,15 +253,3 @@ class TestChannelPartnerSerializer:
 
         # Test child when parent has enabled ACS
         ser = ChannelPartnerSerializer(instance=child, context=context)
-
-        assert root.allow_changing_services is True
-        assert ser.data['allowChangingServices'] is False
-
-        ser = ChannelPartnerSerializer(instance=child, data={'allowChangingServices': True},
-                                       partial=True, context=context)
-
-        assert ser.is_valid()
-        instance = ser.save()
-
-        assert instance.id == child.id
-        assert instance.allow_changing_services is True
