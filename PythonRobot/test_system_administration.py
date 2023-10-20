@@ -47,11 +47,17 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
 
         sys_admin = SystemAdmin(driver)
         sys_admin.disconnect_from_cloud_button().click()
-        sys_admin.disconnect_modal_disconnect_button().click()
+        sys_admin.disconnect_modal_close_button().click()
+        sys_admin.merge_with_another_system_button().wait_until_visible()
+        sys_admin.disconnect_from_cloud_button().click()
+        sys_admin.disconnect_modal_cancel_button().click()
+        sys_admin.merge_with_another_system_button().wait_until_visible()
+        sys_admin.disconnect_from_cloud_button().click()
+        sys_admin.disconnect_system_modal_button().click()
         message = sys_admin.disconnect_from_cloud_toast_notification().get_message()
         message.wait_until_visible()
         message.wait_until_not_visible(10)
-        assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 1, "Number of systems owned " \
+        assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 0, "Number of systems owned " \
                                                                                               "was not 1"
         print("pass")
 
