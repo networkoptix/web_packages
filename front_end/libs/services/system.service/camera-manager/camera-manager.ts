@@ -270,6 +270,14 @@ export class CameraManager {
                 credentials = camera.credentials;
             }
             parameters = camera.parameters ?? {};
+            // @ts-expect-error Server sometimes sends these as empty strings
+            if (parameters.overrideAr === '') {
+                delete parameters.overrideAr;
+            }
+            // @ts-expect-error Server sometimes sends these as empty strings
+            if (parameters.rotation === '') {
+                delete parameters.rotation;
+            }
         }
 
         const primaryStream = parameters.mediaCapabilities?.streamCapabilities?.find(
@@ -279,7 +287,8 @@ export class CameraManager {
         const previewUrl = this.serverManager.mediaserver.previewUrl(
             camera.id,
             null,
-            parameters.overrideAr * 120,
+            // covering cases where overrideAr is undefined or 0
+            parameters.overrideAr === undefined ? undefined : parameters.overrideAr * 120,
             120,
             parameters.rotation,
         );

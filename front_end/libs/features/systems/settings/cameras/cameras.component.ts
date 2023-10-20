@@ -220,8 +220,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     private get motionType(): MotionType {
-        const motionType = this.motionEnabledWatcher.value;
-        return parseInt(motionType) ? motionType : MotionType[motionType];
+        return this.motionEnabledWatcher.value;
     }
 
     constructor(
@@ -391,7 +390,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 ? ''
                 : this.selectedAspectWatcher.value.toString();
         const rotation = this.selectedRotationWatcher.value.toString();
-
         return Promise.all([
             this.system.cameraManager.updateRecordingSettings(updatedTask, cameraSettings),
             this.system.serverManager.updateResource(cameraSettings.id, {
@@ -506,11 +504,13 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.cameraDetailColumns = isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
         this.cameraName = this.camera.name;
         // Setup the automatic value based on the camera's dimensions
+
         if (defaultRatio) {
             this.defaultAspectRatio = defaultRatio;
         }
         this.selectedAspectWatcher.value = parameters.overrideAr ?? this.defaultAspectRatio;
         this.selectedRotationWatcher.value = parameters.rotation ?? DEFAULT_ROTATION;
+
         this.audioEnabled = audioEnabled;
         this.recordingModesWatcher.value = recordingSettings.modes;
         if (this.recordingSettingsComponent) {
