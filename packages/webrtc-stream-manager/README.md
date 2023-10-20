@@ -9,6 +9,7 @@ This package simplifies playing back videos via `WebRTC` from `Nx Meta VMS` medi
 ## What can it do?
 
 The exported `WebRTCStreamManager` class handles establishing a WebRTC connection with the mediaserver.
+
 When initializing the connection using the `connect` static method, a video element could optionally
 be passed as an argument to be used to gather metrics as part of the stream switching algorithm.
 
@@ -27,28 +28,28 @@ is no longer on the DOM.
 The `WebRTCStreamManager.connect` method takes as a first argument a function that returns the
 webrtc-tracker endpoint.
 
-The camera_id query parameters are required, pos is optional.
+The camera_id query parameters and x-server-guid query parameters are required, pos is optional.
 
 Authentication is handled either by cookie authentication before calling `WebRTCStreamManager.connect`
-or calling the `WebRTCStreamManager.connectWithAccessToken` with the system scoped access token as the
-second argument or by providing an digest auth key using the auth query param.
+or by passing a system scoped access token as the last argument or by providing an digest auth key
+using the auth query param.
 
 Cookie authentication is recommended because digest auth is disabled for 2fa enabled systems.
 
 ```typescript
 // Could be a direct connection '{serverIp}:{port}` or a cloud relayed connection '{serverId}.{cloudSystemId}.{relayUrl}'
-const serverUrl = 'Server url';
+const systemUrl = 'Server url';
+const serverId = 'Server id';
 const cameraId = 'Camera id';
-const auth = 'Auth key';
 const position = 0; // Initial position
 
 const webRtcUrlFactory = () =>
-  `wss://${serverUrl}/webrtc-tracker?camera_id=${cameraId}&pos=${position}&auth=${auth}`;
+  `wss://${systemUrl}/webrtc-tracker?camera_id=${cameraId}&x-server-guid=${serverId}&pos=${position}`;
 ```
 
 ### Example usage
 
-The `connect` and `connectWithAccessToken` static methods returns an observable emits streams and errors.
+The `connect` static methods returns an observable emits streams and errors.
 
 To update a video element to use that stream we set the `srcObject` to the stream if it exist.
 
@@ -91,9 +92,9 @@ WebRTCStreamManager.connect(webRtcUrlFactory, videoElement).subscribe(([stream, 
 /**
  * The access token should be a system scoped access token.
  *
- * The connectWithAccessToken static method authenticates using cookie authentication automatically.
+ * The connect static method can authenticate using cookie authentication automatically.
  */
-WebRTCStreamManager.connectWithAccessToken(webRtcUrlFactory, accessToken, videoElement).subscribe(([stream, error]) => {
+WebRTCStreamManager.connect(webRtcUrlFactory, videoElement, hasSecondaryStream, systemScopedAccessToken).subscribe(([stream, error]) => {
   if (stream) {
     targetVideoElement.srcObject = stream;
     targetVideoElement.muted = true;

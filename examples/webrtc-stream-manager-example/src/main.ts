@@ -132,7 +132,7 @@ const clean = (id: string): string => id.replace('{', '').replace('}', '');
 const startStream = (relayUrl: string, cameraId: string, serverId: string) => {
   const version = parseFloat(systemsInfo.find(({ id }) => id === systemSelect.value ).version);
 
-WebRTCStreamManager.connectWithAccessToken(generateWebRtcUrlFactory(relayUrl, cameraId, serverId, version), systemToken.access_token, videoElement)
+WebRTCStreamManager.connect(generateWebRtcUrlFactory(relayUrl, cameraId, serverId, version), videoElement, true, systemToken.access_token)
   .pipe(takeUntil(newStream$))
   .subscribe(([stream, error]) => {
     if (stream) {
