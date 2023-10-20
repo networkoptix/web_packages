@@ -10,12 +10,6 @@ Force Tags        system    cloud
 *** Test Cases ***
 # Left search
 
-23. Left menu search: Placeholder
-    [Tags]    C81772    webadmin    search
-    Log in to system new    ${system}    ${system}[cloudOwner]
-    Search For    backup
-    Wait until element is visible    ${SEARCH NOTHING FOUND}
-
 24. Left menu search: Searchable fields
     [Tags]    C81796    webadmin    search
     Skip If Image Is     5.0_test    msg=Cameras can't be added via API for this server version

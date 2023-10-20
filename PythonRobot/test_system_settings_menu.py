@@ -63,7 +63,7 @@ def users_are_seen_when_main_node_is_selected(server: Mediaserver):
 
 def check_search_input(server: Mediaserver):
     """
-    [Tags]    C81762    webadmin    search
+    [Tags]    C81762    C81772    webadmin    search
     """
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
