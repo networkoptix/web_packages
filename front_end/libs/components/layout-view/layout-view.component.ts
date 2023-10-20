@@ -137,7 +137,7 @@ export class NxLayoutViewComponent {
         map(cloneDeep),
         map(
             ([
-                { cameras, servers, webPages },
+                { cameras, servers, webPages = [] },
                 currentLayout,
                 layouts,
                 currentUser,
@@ -373,7 +373,7 @@ export class NxLayoutViewComponent {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
                 const isResourceId = Object.values(layoutItems).some(items =>
-                    items.some(({ id }) => id === layoutId),
+                    items?.some(({ id }) => id === layoutId),
                 );
 
                 // Prevent showing a layout that was accidentally saved with the same ID as a resource.

@@ -51,10 +51,8 @@ export const calculateWindowFocusThreshold = (baseline: number): number => {
     return Math.round(100 / (area / threshold))
 }
 
-export const sanitizeUrl = (webRtcUrl: string): string => {
-    const { origin, search } = new URL(webRtcUrl)
-    const cameraId = new URLSearchParams(search).get('camera_id')
-    return `${origin}?camera_id=${cameraId}`
+export const getConnectionKey = (webRtcUrl: string): string => {
+    return new URL(webRtcUrl).searchParams.get('camera_id');
 }
 
 export const generateWebRtcUrlFactory = (relayUrl: string, camera_id: string, serverId: string, version: number) => (additionalParams: Record<string, unknown> = {}) => {
