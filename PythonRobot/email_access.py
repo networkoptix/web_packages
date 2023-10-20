@@ -190,11 +190,11 @@ class EmailMessage:
     def get_subject(self):
         return self._message.get('Subject')
 
-    def get_body(self, content_type='text/html'):
+    def get_body(self):
         parts = []
         if self._message.is_multipart():
             for part in self._message.walk():
-                if part.get_content_type() == content_type:
+                if part.get_content_type() == 'text/html':
                     parts.append(part.get_content())
         else:
             parts.append(self._message.get_content())
