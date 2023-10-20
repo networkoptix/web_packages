@@ -8,7 +8,9 @@ class ToastNotification:
         self._alert_text = alert_text
 
     def get_message(self) -> PageText:
-        return PageText(
+        message = PageText(
             self._driver,
             f"//nx-toast//span[contains(text(),'{self._alert_text}')]",
             )
+        message.wait_until_visible(timeout=50)
+        message.wait_until_not_visible(10)

@@ -1,4 +1,5 @@
 import datetime
+import time
 from pathlib import Path
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
@@ -32,6 +33,7 @@ def enable_and_login_with_2fa(server: Mediaserver):
     security_form = SecurityForm(driver)
     security_form.turn_on_2fa(owner)
     security_form.twofa_enabled_badge()
+    time.sleep(2)
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
@@ -69,6 +71,7 @@ def login_with_backup_code(server: Mediaserver):
     security_form.twofa_enabled_badge()
     backup_code = owner.pop_backup_code()
     for _ in range(2):
+        time.sleep(2)
         header.log_out()
         header.log_in_button().click()
         LoginDialog(driver).twofa_backup_cloud_login(
@@ -161,6 +164,7 @@ def system_2fa_required(server: Mediaserver):
     system_admin_page.mandatory_2fa_chechbox().select()
     system_admin_page.twofa_verification_code_input().input_text(owner.get_otp())
     system_admin_page.twofa_enable_button().click()
+    time.sleep(2)
     header.log_out()
     header.log_in_button().click()
     LoginDialog(driver).twofa_cloud_login(
@@ -176,7 +180,7 @@ def system_2fa_required(server: Mediaserver):
     driver.close()
 
 
-def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_server: Mediaserver):
+def twofa_not_required_when_more_than_one_system(server: Mediaserver):
     """
     6.2 2fa is not required when accessing systems page with more than one system
     [Tags]    smoke    ci    C110067
@@ -185,9 +189,10 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     driver.get(ENV)
     header = HeaderNav(driver)
     header.log_in_button().click()
-    driver.get(f"{ENV}/systems/{second_server.id}")
+    driver.get(f"{ENV}/systems/{server.id}")
     owner = server.get_cloud_owner()
     LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+    time.sleep(2)
     SystemAdmin(driver)  # TODO: Consider removing when header ready logic is implemented
     header.account_dropdown().click()
     header.security_option().click()
@@ -202,16 +207,18 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver, second_ser
     security_form.twofa_settings_modal_cancel()
     security_form.twofa_totp_input().input_text(owner.get_otp())
     security_form.twofa_settings_modal_apply().click()
+    time.sleep(2)
     header.log_out()
-    second_server.connect_to_cloud(owner)
-    driver.get(f"{ENV}/systems/{second_server.id}")
-    LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-    SystemAdmin(driver)
-    CLOUD_API.toggle_2fa_off_api(
-        owner,
-        verification_code=owner.get_otp(),
-        )
-    driver.close()
+    with Suite() as suite:
+        second_server = suite.create_cloud_server(owner)
+        driver.get(f"{ENV}/systems/{second_server.id}")
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver)
+        CLOUD_API.toggle_2fa_off_api(
+            owner,
+            verification_code=owner.get_otp(),
+            )
+        driver.close()
 
 
 def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserver):
@@ -346,7 +353,7 @@ if __name__ == "__main__":
         disabling_2fa(cloud_server)
         system_2fa_required(cloud_server)
         second_cloud_server = suite.create_cloud_server(cloud_owner, f'{suite_name}_2_')
-        twofa_not_required_when_more_than_one_system(cloud_server, second_cloud_server)
+        twofa_not_required_when_more_than_one_system(cloud_server)
         change_2fa_for_user_to_specific_systems_and_whole_account(cloud_server)
         fail_to_login_with_expired_code(cloud_server)
         twofa_login_via_api(cloud_server)

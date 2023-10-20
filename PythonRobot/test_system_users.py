@@ -131,21 +131,20 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     rb = RobotVariables("en_US")
     email_con = Email()
-    email_id = email_con.wait_for_email(email)
+    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
+    subject = rb.replace_nested_variables(subject)
+    email_id = email_con.wait_for_email(email, subject)
+    if not email_id:
+        raise RuntimeError(f"No email with recipient: {email}\n and subject: {subject} \nwas found")
     body = email_con.get_body(email_id)
     email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
-    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
-    subject = rb.replace_nested_variables(subject)
-    print(subject)
-    assert email_con.check_email_subject(email_id, subject), "Email subject was not correct."
-    links = email_con.get_links_from_email(body)
     expected_links = [
         f'mailto:{owner.email}',
         rb.SUPPORT_URL,
         rb.WEBSITE_URL,
         rb.ENV,
-        f'{rb.ENV}/authorize/activate',
+        f'{rb.ENV}/authorize/register',
     ]
     email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)

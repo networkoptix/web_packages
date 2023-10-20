@@ -32,9 +32,10 @@ def sets_new_password_and_successfully_logs_in():
     email_con = Email()
     link = email_con.get_email_link(email, "restore_password")
     driver.get(link)
-    login.activation_success_login_button().click()
-    login.password_input().input_text(password)
-    login.login_button().click()
+    # login.activation_success_login_button().click()
+    login.restore_password_input().input_text(password)
+    login.next_button().click()
+    login.restore_password_login_button().click()
     header.account_dropdown()
 
     driver.quit()
@@ -56,13 +57,12 @@ def check_restore_password_email():
     login.reset_password_button().click()
 
     email_con = Email()
-    email_id = email_con.wait_for_email(email)
+    email_id = email_con.wait_for_email(email, rb.RESET_PASSWORD_EMAIL_SUBJECT)
     body = email_con.get_body(email_id)
     email_con.check_email_button(body, ENV, rb.THEME_COLOR)
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
-    email_con.check_email_subject(email_id, rb.RESET_PASSWORD_EMAIL_SUBJECT)
 
-    expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, ENV, f'{ENV}/restore_password']
+    expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, ENV, f'{ENV}/authorize/restore_password']
     email_con.find_links_in_email(body, expected_links)
     email_con.delete_email(email_id)
 

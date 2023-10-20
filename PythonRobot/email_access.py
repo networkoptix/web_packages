@@ -61,25 +61,27 @@ class Email:
                     return True
         self.logout()  
         return False
-    
+
     def get_body(self, email_id):
-        self.login()  
+        self.login()
         email_id_str = email_id.decode('utf-8')
         status, msg_data = self.mailbox.uid('fetch', email_id_str, "(RFC822)")
         if status == "OK":
             self.email_body = quopri.decodestring(msg_data[0][1]).decode("utf-8", errors="ignore")
             self.logout()
             return self.email_body
-        self.logout()  
+        self.logout()
         return False
 
     def get_email_link(self, recipient, link_type, timeout=120):
-        email_uid = self.wait_for_email(recipient, timeout=timeout)
+        email_uid = None
+        if link_type == "restore_password":
+            email_uid = self.wait_for_email(recipient, rb.RESET_PASSWORD_EMAIL_SUBJECT, timeout=timeout)
+        if link_type == 'activate':
+            email_uid = self.wait_for_email(recipient, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT, timeout=timeout)
         if email_uid is None:
             print("Email not received within timeout!")
             return
-        if link_type=='activate':
-            self.check_email_subject(email_uid, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
         body = self.get_body(email_uid)
         links = self.get_nx_links_from_email(body)
         return links
@@ -88,15 +90,15 @@ class Email:
         url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
         res = re.findall(url, str(email_body))
         return str(res[0][0])
-    
+
     def delete_email(self, email_uid):
-        self.login()  
+        self.login()
         # Mark the email for deletion
         self.mailbox.uid('STORE', email_uid, '+FLAGS', '(\Deleted)')
 
         # Permanently remove mails that are marked for deletion
         self.mailbox.expunge()
-        self.logout() 
+        self.logout()
 
     @staticmethod
     def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
@@ -111,8 +113,8 @@ class Email:
             index = email.find('@')
             email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
             return email
-    
-    def wait_for_email(self, recipient, timeout=30):
+
+    def wait_for_email(self, recipient, subject, timeout=30):
         """
         This function waits for a new email to be received by the specified recipient.
         """
@@ -126,9 +128,9 @@ class Email:
                     return None
                 # Search the inbox for emails with specific "To" header
                 self.mailbox.NOOP()
-                result, data = self.mailbox.uid('search', None, f'(HEADER "To" "{recipient}")')
+                result, data = self.mailbox.uid('search', None, f'(HEADER "To" "{recipient}")', f'(SUBJECT "{subject}")')
                 email_ids = data[0].split()
-                
+
                 for email_id in email_ids:
                     result, email_data = self.mailbox.uid('fetch', email_id, '(FLAGS)')
                     email_flags = email_data[0].decode()  # decode the entire byte string

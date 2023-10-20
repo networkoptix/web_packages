@@ -42,7 +42,7 @@ class SystemAdmin:
 
     def disconnect_modal_disconnect_button(self):
         translated_xpath = self.rb.replace_nested_variables(
-            "//nx-modal-generic-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
+            "//nx-modal-disconnect-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
 
     def disconnect_modal_warning(self):
@@ -78,7 +78,7 @@ class SystemAdmin:
         return Checkbox(self.driver, "//nx-checkbox[@name='mandatory2fa']", "//input")
 
     def twofa_verification_code_input(self):
-        return TextField(self.driver, '//input[@id="verificationCode"]')
+        return TextField(self.driver, '//nx-2fa-code-input/input')
 
     def twofa_enable_button(self):
         return Button(self.driver, "//button[text()='Enable']")
@@ -126,7 +126,7 @@ class SystemAdmin:
         return Checkbox(self.driver, "//label[@for='secondSystem']", "//input[@id='secondSystem']")
 
     def system_is_being_merged(self):
-        translated_xpath = self.rb.replace_nested_variables("//div[contains(text(), '${SYSTEM_IS_BEING_MERGED_TEXT}')]")
+        translated_xpath = self.rb.replace_nested_variables("//div[contains(text(), '{SYSTEM_IS_BEING_MERGED_TEXT}')]")
         return PageText(self.driver, translated_xpath)
 
     def systems_merged_success_toast_notification(self, primary_system_name, secondary_system_name):

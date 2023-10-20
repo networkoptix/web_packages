@@ -125,7 +125,8 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
     time.sleep(2)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_contains_text("namechanged", 40)
+    text = TextField(driver, rb.ACCOUNT_FIRST_NAME).get_text()
+    assert text == "namechanged", "Name was not 'namechanged'"
     TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
     TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
     Button(driver, rb.ACCOUNT_SAVE).click()
@@ -159,8 +160,8 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     driver.get(url1)
     cloud_login(driver, email, password, button=None, api=False)
     verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_contains_text("namechanged", 40)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(rb.TEST_LAST_NAME)
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
+    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
     Button(driver, rb.ACCOUNT_SAVE).click()
     alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
     xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"

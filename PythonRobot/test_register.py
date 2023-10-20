@@ -279,11 +279,10 @@ def check_register_email():
     time.sleep(10)
 
     email_con = Email()
-    email_id = email_con.wait_for_email(email)
+    email_id = email_con.wait_for_email(email, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
     body = email_con.get_body(email_id)
     email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
     email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
-    email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
 
     expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, rb.ENV, f'{rb.ENV}/authorize/activate']
     email_con.find_links_in_email(body, expected_links)

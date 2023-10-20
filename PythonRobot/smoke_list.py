@@ -1,3 +1,5 @@
+import time
+
 from NoptixLibrary.suite import Suite
 from test_2fa import disabling_2fa
 from test_2fa import enable_and_login_with_2fa
@@ -33,13 +35,25 @@ from test_system_users import share_with_unregistered_user_sends_notification
 # integrations
 
 if __name__ == "__main__":
-    merge_from_primary_system()
     with Suite() as suite:
+
         cloud_owner = suite.create_cloud_account()
         cloud_server = suite.create_cloud_server(cloud_owner)
         cloud_owner_second = suite.create_cloud_account()
         cloud_server_second = suite.create_cloud_server(cloud_owner_second)
-        local_server = suite.create_local_server()
+        cloud_owner_third = suite.create_cloud_account()
+        cloud_server_third = suite.create_cloud_server(cloud_owner_third)
+        cloud_owner_fourth = suite.create_cloud_account()
+        cloud_server_fourth = suite.create_cloud_server(cloud_owner_fourth)
+        cloud_owner_fifth = suite.create_cloud_account()
+        cloud_server_fifth = suite.create_cloud_server(cloud_owner_fourth)
+        cloud_owner_six = suite.create_cloud_account()
+        cloud_server_six = suite.create_cloud_server(cloud_owner_six)
+
+        cloud_server_seven = suite.create_cloud_server(cloud_owner_six)
+        time.sleep(90)
+
+        merge_from_primary_system(cloud_server_seven, cloud_server_six)
 
         owner_can_remove_user(cloud_server)
         share_with_registered_user_works(cloud_server)
@@ -50,11 +64,11 @@ if __name__ == "__main__":
         owner_can_disconnect_system_from_cloud(cloud_server_second)
         can_log_in_to_system_from_direct_link(cloud_server)
 
-        enable_and_login_with_2fa(cloud_server)
-        login_with_backup_code(cloud_server)
-        disabling_2fa(cloud_server)
-        system_2fa_required(cloud_server)
-        twofa_not_required_when_more_than_one_system(cloud_server, local_server)
+        enable_and_login_with_2fa(cloud_server_third)
+        login_with_backup_code(cloud_server_third)
+        disabling_2fa(cloud_server_third)
+        system_2fa_required(cloud_server_third)
+        twofa_not_required_when_more_than_one_system(cloud_server_fourth)
 
         test_changing_first_name_and_saving_maintains_that_setting()
         test_changing_last_name_and_saving_maintains_that_setting()
@@ -77,4 +91,3 @@ if __name__ == "__main__":
         page_in_anonymous_state_register_header()
         register_user_with_correct_credentials()
         check_register_email()
-
