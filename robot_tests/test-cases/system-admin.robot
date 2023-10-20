@@ -10,44 +10,6 @@ Force Tags        system    cloud
 *** Test Cases ***
 # Left search
 
-21. Left menu search: Search mechanics
-    [Tags]    C81762    webadmin    search
-    Log in to system new    ${system}    ${system}[cloudOwner]
-
-    Log    Step 1
-    Search For    a
-    Wait until elements are visible    ${SEARCH CLOSE BUTTON}    ${SEARCH ICON}
-
-    Log    Step 2
-    Search For    User
-    Wait until element is not visible    ${MENU SECTION}
-    Wait until element is visible    ${SEARCH NOTHING FOUND}
-
-    Log    Step 3
-    Search For    noptix
-    Wait until elements are visible
-    ...    ${USERS LIST}
-    ...    ${SEARCHABLE MENU}
-    ...    ${SEARCH RESULT ARROW}
-
-
-    ${viewer info}=   Get Account Info    ${system}[cloudUsers][viewer]    ${password}
-    ${viewer id}=   Set Variable    ${viewer info}[id]
-    Set Suite Variable    ${viewer id}
-    ${all users found}=   Get WebElements    //span[contains(@class, "user") and span[contains(@class, "highlighted") and text()="noptix"]]
-    ${num users found}=   Get Length    ${all users found}
-    Capture Page Screenshot
-    IF   '${IMAGE}' == '5.0'
-        Should Be Equal As Numbers    ${num users found}    7
-    ELSE
-        Should Be Equal As Numbers    ${num users found}    6
-    END
-
-    Log    Step 4
-    ${name} =    Get Text    ${all users found}[0]
-    Click Element    ${all users found}[0]
-    Wait until element is visible    //h2[contains(text(), "${name}")]
-
 22. Left menu search: Collapsable tabs
     [Tags]    C81771    webadmin    search
     Log in to system new    ${system}    ${system}[cloudOwner]

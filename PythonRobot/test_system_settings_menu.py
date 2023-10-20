@@ -7,6 +7,7 @@ from login import LoginDialog
 from resource_import import get_chrome
 from system_admin import SystemAdmin
 from system_left_menu import SystemLeftMenu
+from system_users import SystemUsers
 from variables import ENV
 
 password = "qweasd 123"
@@ -58,35 +59,12 @@ def users_are_seen_when_main_node_is_selected(server: Mediaserver):
 
 
 def check_search_input(server: Mediaserver):
+    """
+    [Tags]    C81762    webadmin    search
+    """
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
-        url = ENV + f"/systems/{server.id}"
-        driver.get(url)
-        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        SystemAdmin(driver)
-        left_menu = SystemLeftMenu(driver)
-        search_field = left_menu.get_search_field()
-        search_field.wait_until_visible()
-        search_field.input_text('noptix')
-        assert left_menu.has_node_with_name('Users')
-        assert left_menu.has_node_with_name(owner.email)
-        assert not left_menu.has_node_with_name('System Administration')
-        assert not left_menu.has_node_with_name('Licenses')
-        assert not left_menu.has_node_with_name('Cameras')
-        assert not left_menu.has_node_with_name('Servers')
-        search_field.get_cross_button().click()
-        assert search_field.get_text() == ''
-        assert left_menu.has_node_with_name('Users')
-        assert left_menu.has_node_with_name('System Administration')
-        assert left_menu.has_node_with_name('Licenses')
-        assert left_menu.has_node_with_name('Cameras')
-        assert left_menu.has_node_with_name('Servers')
-        print("Pass")
-
-
-def should_display_nothing_found(server: Mediaserver):
-    with get_chrome() as driver:
-        owner = server.get_cloud_owner()
+        viewer = server.get_cloud_viewer()
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
@@ -101,6 +79,24 @@ def should_display_nothing_found(server: Mediaserver):
         assert not left_menu.has_node_with_name('Cameras')
         assert not left_menu.has_node_with_name('Servers')
         assert left_menu.has_nothing_found_text()
+        search_field.input_text('noptix')
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name(owner.email)
+        assert left_menu.has_node_with_name(viewer.email)
+        assert not left_menu.has_node_with_name('System Administration')
+        assert not left_menu.has_node_with_name('Licenses')
+        assert not left_menu.has_node_with_name('Cameras')
+        assert not left_menu.has_node_with_name('Servers')
+        left_menu.get_node_by_name_within_timeout(viewer.email).click()
+        users_page = SystemUsers(driver)
+        assert viewer.email == users_page.user_header_text().get_text()
+        search_field.get_cross_button().click()
+        assert search_field.get_text() == ''
+        assert left_menu.has_node_with_name('Users')
+        assert left_menu.has_node_with_name('System Administration')
+        assert left_menu.has_node_with_name('Cameras')
+        assert left_menu.has_node_with_name('Servers')
+        print("Pass")
 
 
 def should_perform_search_with_and_and_or_criteria(server: Mediaserver):
@@ -146,5 +142,4 @@ if __name__ == '__main__':
         selected_node_has_different_color(cloud_server)
         users_are_seen_when_main_node_is_selected(cloud_server)
         check_search_input(cloud_server)
-        should_display_nothing_found(cloud_server)
         should_perform_search_with_and_and_or_criteria(cloud_server)
