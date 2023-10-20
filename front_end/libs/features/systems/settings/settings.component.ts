@@ -653,9 +653,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.cameraManager.cameras.sort(
                     alphabeticalSort(this.locale, camera => camera.name),
                 );
+                const camerasInMenu = this.system.cameraManager.cameras.filter(
+                    camera => camera.canEdit,
+                );
                 const getCameraIP = cameraUrl =>
                     cameraUrl.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)?.[0];
-                camerasNode.level3 = this.system.cameraManager.cameras.map<Level3Item>(camera => ({
+                camerasNode.level3 = camerasInMenu.map<Level3Item>(camera => ({
                     id: camera.id.replace(/\s|\{|\}/g, ''),
                     svgIcon: this.getCameraStatusIcon(camera),
                     disabled:
@@ -721,9 +724,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                             additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
                         } else if (user.groupIds.length === 1) {
                             // @ts-expect-error Above TODO
-                            const { name } = this.system.userManager.userGroups.find(
-                                group => group.id === user.groupIds[0],
-                            );
+                            const { name } = this.system.userManager.userGroups[user.groupIds[0]];
                             additionalLabel = this.LANG.accessRoles[name]?.label || name;
                         } else if (user.groupIds.length >= 2) {
                             additionalLabel = {

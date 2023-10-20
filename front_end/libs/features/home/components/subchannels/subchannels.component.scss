@@ -1,23 +1,5 @@
 @use "typography";
 
-.card-body {
-  display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  .bottom{
-    display: flex;
-    justify-content: space-between;
-    .id{
-      color: var(--subchannel-partner-card-id-color);
-      border-radius: 4px;
-      background: var(--subchannel-partner-card-id-background);
-    }
-    .organizations {
-      color: var(--subchannel-partner-card-color);
-    }
-  }
-}
-
 .actions {
   align-items: center;
 }

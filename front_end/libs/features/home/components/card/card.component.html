@@ -1,0 +1,15 @@
+<div class="system-button card card-condensed">
+    <div class="card-body">
+        <svg-icon
+            *ngIf="icon"
+            [src]="icon"
+            [svgStyle]="svgStyle"
+        ></svg-icon>
+        <div class="info">
+            <ng-content></ng-content>
+        </div>
+    </div>
+    <div class="dropdown">
+        <nx-three-dot></nx-three-dot>
+    </div>
+</div>

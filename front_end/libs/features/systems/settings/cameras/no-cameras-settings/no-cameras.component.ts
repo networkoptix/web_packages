@@ -17,8 +17,9 @@ export class NxNoCamerasComponent implements OnInit {
 
     ngOnInit(): void {
         this.system.infoSubject.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(system => {
-            if (system?.cameraManager.cameras?.length > 0) {
-                const cameraId = system.cameraManager.cameras[0].id;
+            const editableCameras = system?.cameraManager.cameras?.filter(camera => camera.canEdit);
+            if (editableCameras?.length > 0) {
+                const cameraId = editableCameras[0].id;
                 this.router.navigate([cameraId], { relativeTo: this.activatedRoute });
             }
         });

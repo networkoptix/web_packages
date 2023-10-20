@@ -539,6 +539,7 @@ class SystemEmail(models.Model):
     message_html = models.TextField(blank=True)
     message_text = models.TextField(blank=True)
     attachments = JSONField(blank=True, validators=[validate_attachments])
+    cloud_wrapper = models.BooleanField(default=False)
 
     # Email state
     created_date = models.DateTimeField(auto_now_add=True)
@@ -563,7 +564,6 @@ class SystemEmail(models.Model):
             return content
 
         self.subject = clean(self.subject)
-        self.message_html = ''.join(f'<p>{segment}</p>' for segment in self.message_html.split('\n') if segment)
         self.message_html = clean(self.message_html or wrap_text(self.message_text))
         self.message_text = clean(self.message_text or html2text(self.message_html))
 

@@ -18,6 +18,7 @@ import { NxSectionPlaceholderComponent } from '@components/placeholders/section/
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
+import { NxAlexaComponent } from '@pages/systems/settings/admin/alexa/alexa.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin.component';
@@ -46,6 +47,7 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         NxSectionPlaceholderComponent,
         NxTagComponent,
         NxForceVisibilityDirective,
+        NxAlexaComponent,
     ],
     providers: [],
     declarations: [

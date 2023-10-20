@@ -248,3 +248,19 @@ class ForceNonPartialSerializerMixin(Field):
 
 class NonPartialCharfield(ForceNonPartialSerializerMixin, CharField):
     pass
+
+
+class FieldOriginalMixin:
+    observed_fields = None
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if self.observed_fields:
+            for field_name in self.observed_fields:
+                setattr(self, f'_original_{field_name}', getattr(self, field_name))
+
+    def save(self, *args, **kwargs):
+        if self.observed_fields:
+            for field_name in self.observed_fields:
+                setattr(self, f'_original_{field_name}', getattr(self, field_name))
+        super().save(*args, **kwargs)

@@ -111,9 +111,18 @@ export class NxHomeComponent implements OnInit {
     }
 
     initChannelPartners(): void {
-        this.CPService.getChannelPartners().subscribe(partners =>
-            this.store.dispatch(CPActions.setChannelPartners({ channelPartners: partners })),
-        );
+        this.CPService.getChannelPartners().subscribe(partners => {
+            const channelPartnerIds = new Set<string>(partners.map(partner => partner.id));
+            this.store.dispatch(
+                CPActions.setChannelPartners({
+                    channelPartners: partners.filter(
+                        partner =>
+                            !partner.parentChannelPartner ||
+                            !channelPartnerIds.has(partner.parentChannelPartner),
+                    ),
+                }),
+            );
+        });
         this.CPService.getOrganizations().subscribe(orgs =>
             this.store.dispatch(CPActions.setOrganizations({ rootOrganizations: orgs })),
         );

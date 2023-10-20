@@ -1,6 +1,9 @@
+import asyncio
+import time
+
 import httpx
 import requests
-from math import log2
+
 import datetime
 import json
 import logging
@@ -10,6 +13,8 @@ from django.urls import reverse
 from uuid import uuid4
 
 from asgiref.sync import sync_to_async
+
+from cloud.customization_context import customization_ctx
 from util.helpers import HttpxAsyncRequest
 from django.core.cache import cache, caches
 from django.conf import settings
@@ -563,6 +568,7 @@ async def get_ipvd(request):
 
         if response := await check_ipvd_cache_response(version):
             return response
+
         cameras = await HttpxAsyncRequest.get(url, params="[]")
         cameras = cameras.json()
         serializer = IpvdSerializer(data=cameras)

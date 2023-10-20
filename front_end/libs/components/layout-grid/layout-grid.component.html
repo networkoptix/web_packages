@@ -107,12 +107,16 @@
     <div
         *ngIf="layout?.id && layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved"
         class="unsaved-ribbon"
+        [ngClass]="{ diverged: unsaved === unsavedStates.diverged }"
     >
         <ng-container [ngSwitch]="unsaved">
             <svg-icon
                 nx-add-svg-src
                 [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                [src]="icons.dirNonStandard + 'info.svg'"
+                [src]="
+                    icons.dirNonStandard +
+                    (unsaved === unsavedStates.diverged ? 'warning.svg' : 'info.svg')
+                "
             ></svg-icon>
             <span
                 *ngSwitchCase="unsavedStates.unsaved"
@@ -120,6 +124,13 @@
                 translate
             >
                 This layout hasn't been saved yet
+            </span>
+            <span
+                *ngSwitchCase="unsavedStates.diverged"
+                class="ribbon-message"
+                translate
+            >
+                This layout was recently updated by another user. What do you want to do?
             </span>
             <span
                 *ngSwitchCase="unsavedStates.saving"
@@ -136,6 +147,7 @@
                 There are unsaved changes on the layout
             </span>
             <button
+                *ngIf="unsaved !== unsavedStates.saving"
                 class="ribbon-button"
                 (click)="layoutStateService.saveLayout(layout.id)"
             >
@@ -149,7 +161,26 @@
                 ></svg-icon>
                 <span translate>Save</span>
             </button>
+        </ng-container>
+        <ng-container [ngSwitch]="unsaved">
             <button
+                *ngSwitchCase="unsavedStates.diverged"
+                class="ribbon-button"
+                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '20',
+                        'height.px': '20'
+                    }"
+                    [src]="icons.dirLayouts + 'reload.svg'"
+                ></svg-icon>
+                <span translate>Reload</span>
+            </button>
+            <ng-container *ngSwitchCase="unsavedStates.saving"></ng-container>
+            <button
+                *ngSwitchDefault
                 class="ribbon-button"
                 (click)="layoutStateService.discardUnsavedLayout(layout.id)"
                 translate
@@ -615,6 +646,7 @@
                                     [hide]="dragging$$()"
                                     [canEdit]="editCameras$$()"
                                     (removeItem)="removeItem($event)"
+                                    [system]="system"
                                 >
                                     <ng-container *ngTemplateOutlet="tileContent" />
                                 </nx-layout-grid-item-overlay>

@@ -224,6 +224,10 @@ h2.auto-save-overlay {
     align-items: center;
     gap: 8px;
 
+    &.diverged {
+        background-color: #594C0D;
+    }
+
     .info-svg {
         fill: #208FDF;
     }
@@ -247,7 +251,7 @@ h2.auto-save-overlay {
         color: var(--light1);
         padding: 3px 8px;
 
-        .save-icon {
+        .save-icon, .reload-icon {
             fill: var(--light1);
         }
     }

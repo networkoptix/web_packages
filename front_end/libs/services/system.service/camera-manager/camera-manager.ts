@@ -145,6 +145,11 @@ export class CameraManager {
                 ? camera.deviceType
                 : this.camerasHealth[cleanId(camera.id)]?.info.type ?? DeviceType.Camera;
 
+        const currentUser = this.system?.permissionManager.currentUser();
+        const canEditSpecificCamera =
+            currentUser?.resourceAccessRights?.[camera.id]?.includes('edit');
+        const canEdit = canEditSpecificCamera || currentUser.isAdmin;
+
         const {
             name,
             vendor,
@@ -190,6 +195,8 @@ export class CameraManager {
             recordingSettings,
             recordingStatus,
             webRtcUrl,
+
+            canEdit,
         };
     };
 

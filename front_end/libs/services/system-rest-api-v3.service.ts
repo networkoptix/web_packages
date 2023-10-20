@@ -198,4 +198,8 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     }> {
         return this.post('/rest/v3/login/temporaryToken', { token, setCookie: true });
     }
+
+    powerUserCanEditSecuritySettings(): Observable<boolean> {
+        return this.get('/rest/v3/system/settings/securityForPowerUsers');
+    }
 }

@@ -499,6 +499,7 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
                     effective_ts=timezone.now(),
                     in_effect=True,
                     cloud_system=instance,
+                    organization=instance.organization,
                     created_by=CloudUser.objects.get_or_create(email=user.email)[0]
                 )
 
@@ -741,7 +742,7 @@ class ChannelPartnerServiceRecordSerializer(serializers.ModelSerializer):
             return
         else:
             if obj.service.created_by_channel_partner == self.channel_partner:
-                obj.report_organization = obj.cloud_system.organization
+                obj.report_organization = obj.organization
                 obj.report_service = obj.service
             else:
                 service = find_direct_sub_service(obj.service)
@@ -821,7 +822,7 @@ class ChannelPartnerAggDataSerializer(serializers.Serializer):
 
     def get_service_usage_quantity(self, instance):
         service_records_quantity = ChannelPartnerServiceRecord.objects\
-            .filter(cloud_system__in=self.children_systems).aggregate(Sum('quantity'))
+            .filter(organization__in=self.children_organizations).aggregate(Sum('quantity'))
         return service_records_quantity.get('quantity__sum', 0) or 0
 
 
@@ -835,5 +836,5 @@ class OrganizationAggDataSerializer(serializers.Serializer):
 
     def get_service_usage_quantity(self, instance):
         service_records_quantity = ChannelPartnerServiceRecord.objects\
-            .filter(cloud_system__organization=instance).aggregate(Sum('quantity'))
+            .filter(organization=instance).aggregate(Sum('quantity'))
         return service_records_quantity.get('quantity__sum', 0) or 0

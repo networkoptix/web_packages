@@ -6,7 +6,7 @@
 <div
     *ngIf="systems && showList"
     class="auth-visible"
-    [ngClass]="{ 'm-2': showCompact, container: !showCompact }"
+    [ngClass]="[atBase ? 'container' : 'm-2']"
 >
     <ng-template #noSystems>
         <nx-no-systems></nx-no-systems>
@@ -27,7 +27,7 @@
         </div>
         <div *ngIf="systems.length">
             <div
-                *ngIf="!showCompact"
+                *ngIf="atBase"
                 class="p-0 mb-3 mt-3"
             >
                 <h1 class="old-h12">
@@ -62,5 +62,5 @@
             </div>
         </div>
     </ng-container>
-    <nx-footer *ngIf="!showCompact && !show2faRequired"></nx-footer>
+    <nx-footer *ngIf="atBase && !show2faRequired"></nx-footer>
 </div>

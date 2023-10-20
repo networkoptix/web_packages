@@ -50,7 +50,7 @@ export class NxMotionDetectionSettingsComponent implements OnInit {
     }
 
     lockGrid(lock: boolean): void {
-        if (!this.isMobile) {
+        if (!this.isMobile && this.overlayEnabled) {
             this.motionGridChangeWatcher.value = lock;
         }
     }

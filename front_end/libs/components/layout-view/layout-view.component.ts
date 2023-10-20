@@ -330,9 +330,9 @@ export class NxLayoutViewComponent {
                 .children.shift() as ResourceNode<NxSystemCamera>;
             const layoutId = cleanId((layout || camera)?.details?.id);
             if (layoutId) {
-                await this.layoutStateService.paramStateHandler.updater(() => ({
+                await this.layoutStateService.paramStateHandler.state$$.set({
                     params: { layoutId },
-                }));
+                });
             }
             return layoutId || '';
         }),
@@ -346,9 +346,9 @@ export class NxLayoutViewComponent {
         ),
         switchMap(async layoutId => {
             if (layoutId) {
-                await this.layoutStateService.paramStateHandler.updater(() => ({
+                await this.layoutStateService.paramStateHandler.state$$.set({
                     params: { layoutId },
-                }));
+                });
             }
 
             const systemName = this.systemService.getCurrentSystem().info.name;
@@ -484,7 +484,7 @@ export class NxLayoutViewComponent {
 
     changeLayout(layout: string | DropdownItem<string>): void {
         const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;
-        this.layoutStateService.paramStateHandler.updater(() => ({ params: { layoutId } }));
+        this.layoutStateService.paramStateHandler.state$$.set({ params: { layoutId } });
         if (layoutId) {
             this.#fetchingLayout$.next('fetching');
             WebRTCStreamManager.updatePosition();

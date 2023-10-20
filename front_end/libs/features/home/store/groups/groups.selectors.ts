@@ -152,14 +152,14 @@ export const selectLoadingState = createSelector(selectCurrentIndexes, indexes =
 export const selectCurrentGroupItems = createSelector(
     selectCurrentIndexes,
     selectRootGroupItems,
-    (indexes, rootGroups) => {
+    (indexes, rootGroup) => {
         if (!indexes) {
             return null;
         }
 
         return indexes.length
-            ? indexes.reduce((groups, index) => groups[index].groups, rootGroups)
-            : rootGroups;
+            ? indexes.reduce((groups, index) => groups[index].groups, rootGroup)
+            : rootGroup[0]?.groups;
     },
 );
 

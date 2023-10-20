@@ -1,4 +1,6 @@
+from copy import deepcopy
 from typing import Iterable
+from mock import MagicMock
 
 import pytest
 from random import randint
@@ -575,3 +577,12 @@ def check_hostname_ctx():
 def default_customization_host(default_customization):
     default_customization.host = 'cloud-test.hdw.mx'
     default_customization.save()
+
+@pytest.fixture()
+def CopyingMock():
+    class CopyingMock(MagicMock):
+        def __call__(self, /, *args, **kwargs):
+            args = deepcopy(args)
+            kwargs = deepcopy(kwargs)
+            return super().__call__(*args, **kwargs)
+    return CopyingMock

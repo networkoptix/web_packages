@@ -6,7 +6,7 @@
 >
     <button
         class="dot-menu"
-        (click)="show = !show"
+        (click)="handleShow($event)"
         type="button"
         data-toggle="dropdown"
     ></button>
@@ -22,7 +22,7 @@
                 <a
                     class="dropdown-item inset"
                     [id]="item.id"
-                    (click)="show = false; change(item)"
+                    (click)="show = false; change(item, $event)"
                 >
                     <span [innerText]="item.name || name"></span>
                 </a>

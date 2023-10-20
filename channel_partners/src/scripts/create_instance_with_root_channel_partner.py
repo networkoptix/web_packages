@@ -21,7 +21,7 @@ def run(instance_name, host_name):
     with transaction.atomic():
         instance = CloudInstance.objects.get_or_create(name=instance_name)[0]
         host = CloudHost.objects.get_or_create(hostname=host_name, instance=instance)[0]
-        nx_channel_partner = ChannelPartner.objects.get_or_create(name='Network Optix', instance=instance)[0]
+        nx_channel_partner = ChannelPartner.objects.get_or_create(name='Network Optix', cloud_host=host)[0]
 
         ChannelPartnerService.objects.create(
             created_by_channel_partner=nx_channel_partner, name='Local Recording', type=ChannelPartnerService.LOCAL_RECORDING

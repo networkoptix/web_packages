@@ -127,7 +127,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const builtInGroup: UserPermissionDescription[] = [];
         const customGroup: UserPermissionDescription[] = [];
         const ldapGroup: UserPermissionDescription[] = [];
-        (this.system.userManager as UserWithGroupsManager).userGroups.forEach(
+        Object.values((this.system.userManager as UserWithGroupsManager).userGroups).forEach(
             ({ id, name, description, attributes, type }) => {
                 if (!newList.includes(id)) {
                     return;

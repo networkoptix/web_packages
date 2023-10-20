@@ -137,6 +137,14 @@
                 "name": "Share Layout",
                 "tooltip": "Share \"{name}\" layout"
             },
+            "lockLayout": {
+                "name": "Lock Layout",
+                "tooltip": "Lock \"{name}\" layout"
+            },
+            "unlockLayout": {
+                "name": "Unlock Layout",
+                "tooltip": "Unlock \"{name}\" layout"
+            },
             "cameraSettings": {
                 "name": "Camera Settings",
                 "tooltip": "\"{name}\" camera Settings"
@@ -260,6 +268,19 @@
             "unableToAuthorizeCamera": "Unable to authorize \"{name}\" camera"
         },
         "overlay": {
+            "info": {
+                "resolution": {
+                    "high": "Hi-Res ({codec})",
+                    "low": "Lo-Res ({codec})"
+                },
+                "streamType": {
+                    "primary": "Primary Stream",
+                    "secondary": "Secondary Stream"
+                },
+                "unavailable": "Unavailable",
+                "unableToLoad": "Unable to load stream metrics",
+                "fps": "{fps} Fps"
+            },
             "menuActions": {
                 "menu": {
                     "name": "Menu",

@@ -53,7 +53,7 @@ class TestChannelPartnerAggDataSerializer:
         assert ser.data['systems'] == len(organizations) * gen_count
         assert ser.data['serviceUsageQuantity'] == 0
 
-        services = [baker.make(ChannelPartnerServiceRecord, cloud_system=systems[i], quantity=gen_count)
+        services = [baker.make(ChannelPartnerServiceRecord, cloud_system=systems[i], quantity=gen_count, organization=systems[i].organization)
                     for i in range(len(organizations))]
 
         ser = ChannelPartnerAggDataSerializer(instance=target_cp)
@@ -80,7 +80,7 @@ class TestChannelPartnerAggDataSerializer:
                 for _ in range(2):
                     sys = system_factory(organization=org)
                     for _ in range(2):
-                        baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=1)
+                        baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=1, organization=sys.organization)
 
 
         ser = ChannelPartnerAggDataSerializer(instance=other_cp)
@@ -113,7 +113,7 @@ class TestOrganizationAggDataSerializer:
         usage = 0
         for sys in systems:
             qty = random.randint(0, 10)
-            baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=qty)
+            baker.make(ChannelPartnerServiceRecord, cloud_system=sys, quantity=qty, organization=sys.organization)
             usage += qty
 
         ser = OrganizationAggDataSerializer(org)

@@ -45,7 +45,9 @@ export class NxImageComponent implements OnChanges {
     }
 
     private checkIfLive(state: string): boolean {
-        return state === CameraStatus.Online || Object.keys(RecordingStatus).includes(state);
+        return [CameraStatus.Online, ...Object.keys(RecordingStatus)]
+            .map(status => status.toLowerCase())
+            .includes(state.toLowerCase());
     }
 
     ngOnChanges(changes: NgChanges<NxImageComponent>): void {
@@ -61,9 +63,7 @@ export class NxImageComponent implements OnChanges {
                 this.show = this.isLive;
             }
         }
-        if (!this.url) {
-            this.loaded.emit(true);
-        }
+
         if (this.state === CameraStatus.Unauthorized || !this.isLive) {
             this.url = '';
             this.loaded.emit(true);

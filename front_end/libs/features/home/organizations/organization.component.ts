@@ -24,7 +24,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { icons } from '@static-variables';
 
 import { NxTabsComponent } from '../../../components/tabs/tabs.component';
-import { NxGroupsCardsComponent } from '../components/groups-cards/groups-cards.component';
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { GroupsItem, Crumb, OpenGroups, GroupPath } from '../home.types';
 import { NxSystemGroupsService } from '../services/system-groups.service';
@@ -43,6 +42,8 @@ import {
     selectOpenGroups,
 } from '../store/groups/groups.selectors';
 
+import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
+
 interface SidebarSettings {
     showSidebarState: boolean;
 }
@@ -59,7 +60,7 @@ interface SidebarSettings {
         CommonModule,
         AngularSvgIconModule,
         NxSystemGroupsSidebarComponent,
-        NxGroupsCardsComponent,
+        NxOrganizationCardContainerComponent,
         NxTabsComponent,
         NxTabsDirective,
         NxAddSvgSrcDirective,

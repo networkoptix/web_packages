@@ -1,4 +1,4 @@
-@use '../system-card/system-card.component' as system-card;
+@use '../../components/card/card.component' as system-card;
 
 .cards-container {
     display: flex;

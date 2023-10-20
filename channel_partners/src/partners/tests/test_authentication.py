@@ -11,7 +11,7 @@ def test_get_cloud_user_from_token(httpx_mock):
     url = f'https://{cloud_host}/cdb/oauth2/token/{token}'
     token_resp = {
         "username": email,
-        "expires_in": 3600,
+        "expires_in": '3600',
     }
     httpx_mock.add_response(url=url, json=token_resp)
     auth = get_cloud_user_from_token(token, cloud_host)
@@ -30,10 +30,10 @@ def test_get_cloud_user_from_token(httpx_mock):
 def test_token_cache(mocker):
     token = f'{uuid4()}'
     value = f'{uuid4()}'
-    TokenCache.set_token(token, value, expires_in=3600)
+    TokenCache.set_token(token, value, expires_in='3600')
     assert TokenCache.get_token(token) == value
 
-    TokenCache.set_token(token, value, expires_in=2)
+    TokenCache.set_token(token, value, expires_in='2')
     assert TokenCache.get_token(token) == value
     sleep(2)
     assert TokenCache.get_token(token) is None

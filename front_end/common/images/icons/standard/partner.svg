@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+<style type="text/css">
+  .st6{fill:var(--svg-placeholder-elm2-color);}
+  .st7{fill:var(--brand-core);}
+  .st8{fill:var(--light6);}
+</style>
+<path class="st6" fill-rule="evenodd" clip-rule="evenodd" d="M25 18V14H39V18H42V13C42 11.8954 41.1046 11 40 11H24C22.8954 11 22 11.8954 22 13V18H25Z"/>
+<rect class="st7" x="10" y="16" width="6" height="2"/>
+<rect class="st7" x="48" y="16" width="6" height="2"/>
+<path class="st6" fill-rule="evenodd" clip-rule="evenodd" d="M4 34.0481V52C4 53.1046 4.89543 54 6 54H58C59.1046 54 60 53.1046 60 52V34.0481C53.7834 35.409 40.0536 38 32 38C23.9464 38 10.2166 35.409 4 34.0481ZM60 32V21C60 19.8954 59.1046 19 58 19H6C4.89543 19 4 19.8954 4 21V32C10 33.3333 24 36 32 36C40 36 54 33.3333 60 32Z"/>
+<path class="st8" d="M32 36C24 36 10 33.3333 4 32V21C4 19.8954 4.89543 19 6 19H58C59.1046 19 60 19.8954 60 21V32C54 33.3333 40 36 32 36Z"/>
+</svg>

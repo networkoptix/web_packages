@@ -708,6 +708,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --bookmarks-background-color: inherit;
     --bookmarks-calendar-today-border: rgba(255, 255, 255, 0.38);
     --bookmarks-calendar-today-highlight-shadow: var(--light1);
+    --bookmarks-calendar-cell-highlight-bg: var(--dark12);
+    --bookmarks-calendar-month-text: var(--light10);
     --bookmarks-input-border-color: var(--dark11);
     --bookmarks-time-input-active-bg: var(--dark1);
     --bookmarks-filter-header-bg: var(--dark7);
@@ -716,6 +718,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --bookmarks-filter-clear-btn-stroke: var(--light4);
     --bookmarks-filter-body-bg: var(--dark8);
     --bookmarks-filter-button-bg: var(--dark6);
+    --bookmarks-filter-button-text: var(--light10);
     --bookmarks-filter-filled-text: var(--light2);
     --bookmarks-text-highlight-bg: var(--dark12);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
@@ -751,7 +754,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     /* Layouts */
     --svg-toggle-arrow-color: var(--light17);
     --svg-tab-arrow-color: var(--light5);
-    --placeholder-background: #161C1F;
+    --placeholder-background: var(--dark5);
     --placeholder-color: #B21A1A;
     --no-camera-placeholder-color: var(--light10);
     --sidebar-background: var(--dark4);
@@ -759,7 +762,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --sidebar-tab-closed: var(--dark8);
 
     --context-menu-bg: var(--drop-menu-navigation-bg);
-    --context-menu-shadow: rgba(var(--tooltip-shadow-color), 0.2);
+    --context-menu-shadow: rgba(var(--dark1--rgb), 0.4);
     --context-menu-hr: var(--dark10);
     --context-menu-item-text: var(--btn-text-color);
     --context-menu-item-icon: var(--svg-path-dark-color);
@@ -767,6 +770,13 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --context-menu-item-icon-hover: var(--light1);
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--dark9);
+
+    --overlay-action-bg: rgba(var(--dark3--rgb), 0.6);
+    --overlay-action-svg: rgba(var(--light1--rgb), 0.8);
+    --overlay-action-svg-hover: var(--light1);
+    --overlay-action-text: var(--light1);
+    --overlay-text: var(--light1);
+    --overlay-status-title: var(--light10);
 
     --no-systems-description-color: var(--dark17);
 }

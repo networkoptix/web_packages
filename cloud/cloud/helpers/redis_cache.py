@@ -7,6 +7,7 @@ import pickle
 import weakref
 from logging import getLogger
 
+import redis.exceptions
 from asgiref.sync import sync_to_async
 from django.utils.module_loading import import_string
 from django.utils.functional import cached_property
@@ -14,6 +15,8 @@ from django.core.cache.backends.redis import RedisCacheClient, RedisCache
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
 from redis.asyncio import Redis as AsyncRedis, ConnectionPool as AsyncConnectionPool
 from redis.asyncio.connection import DefaultParser
+from redis.backoff import ConstantBackoff, NoBackoff
+from redis.asyncio.retry import Retry
 
 logger = getLogger(__name__)
 thread_local = threading.local()
@@ -32,10 +35,11 @@ def _wrap_close(loop):
         self.close = orig_close
         if not (pools_ref := getattr(thread_local, 'pools_ref', None)) or not pools_ref():
             return self.close(*args, **kwargs)
-        if pool := pools_ref().get(loop, {}):
+        if pool := pools_ref().pop(loop, None):
             logger.info(f"Loop {id(loop)} is closing. Close pool {id(pool)}")
             if not self.is_closed():
-                self.run_until_complete(pool.disconnect())
+                # self.run_until_complete(pool.disconnect())
+                pass
         return self.close(*args, **kwargs)
 
     setattr(loop, 'is_wrapped', True)
@@ -123,7 +127,12 @@ class AsyncCacheClient:
         if isinstance(parser_class, str):
             parser_class = import_string(parser_class)
         parser_class = parser_class or DefaultParser
-        self._pool_options = {"parser_class": parser_class, "client_name": "async", **options}
+        self._pool_options = {
+            "parser_class": parser_class,
+            "client_name": "async",
+            "retry": Retry(NoBackoff(), retries=2),
+            "retry_on_error": [redis.exceptions.ConnectionError],
+            **options}
 
     def _get_connection_server_index(self, write):
         # left in a case of using multiple servers in future

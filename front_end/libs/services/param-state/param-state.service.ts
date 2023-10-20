@@ -1,4 +1,4 @@
-import { Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext, WritableSignal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import {
     ActivatedRoute,
@@ -7,9 +7,16 @@ import {
     Params,
     Router,
 } from '@angular/router';
+import { cloneDeep } from 'lodash-es';
 import { Observable, filter, map, shareReplay, startWith } from 'rxjs';
 
-import { MutationType, ParamState, ParamStateHandler, UpdateParams } from './param-state.types';
+import {
+    MutationType,
+    ParamState,
+    ParamStateHandler,
+    UpdateParams,
+    RecursivePartial,
+} from './param-state.types';
 
 @Injectable({
     providedIn: 'root',
@@ -59,7 +66,35 @@ export class NxParamStateService {
                 public updater: NxParamStateService['updateParamState'],
                 public getInstantState: (route: ActivatedRouteSnapshot) => T,
             ) {}
-            state$$ = runInInjectionContext(injector, () => toSignal(this.state$));
+            state$$ = runInInjectionContext(injector, () => {
+                const readOnlySignal$$ = toSignal(this.state$) as unknown as WritableSignal<
+                    RecursivePartial<T>
+                >;
+
+                const proxiedMethods = {
+                    set: this.updater,
+                    update: this.updater,
+                    mutate: (mutatorFn: (state: T) => void): void => {
+                        this.updater(state => {
+                            const mutableState = cloneDeep(state as T);
+                            mutatorFn(mutableState);
+                            return mutableState;
+                        });
+                    },
+                    asReadonly: () => readOnlySignal$$,
+                };
+
+                const proxyHandler = {
+                    get(target: WritableSignal<RecursivePartial<T>>, prop: string): unknown {
+                        if (prop in proxiedMethods) {
+                            return proxiedMethods[prop as keyof typeof proxiedMethods];
+                        }
+
+                        return Reflect.get(target, prop);
+                    },
+                };
+                return new Proxy(readOnlySignal$$, proxyHandler);
+            });
         }
 
         if (!mapState) {
@@ -78,12 +113,16 @@ export class NxParamStateService {
     }
 
     private updateParamState = <State extends Partial<ParamState>>(
-        updatedStateFactory: (previousState: State) => UpdateParams<State>,
+        updateStatePartialOrStateMapper:
+            | UpdateParams<State>
+            | ((previousState: State) => UpdateParams<State>),
     ): Promise<boolean> => {
         const state = this.paramState$$() as State;
         const { params = {}, queryParams: originalQueryParams = {} } = state;
         const { params: updatedParams = {}, queryParams: updatedQueryParams = {} } =
-            updatedStateFactory(state);
+            typeof updateStatePartialOrStateMapper === 'function'
+                ? updateStatePartialOrStateMapper(state)
+                : updateStatePartialOrStateMapper;
 
         const queryParams = Object.entries(updatedQueryParams).reduce((curr, [_key, _value]) => {
             const key = _key as keyof UpdateParams<State>['queryParams'];

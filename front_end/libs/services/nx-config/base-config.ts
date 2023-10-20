@@ -398,6 +398,7 @@ export interface ServerError {
     badRequest: string;
     userPasswordRequired: string;
     vmsRequestFailure: string;
+    wrongSessionToken: string;
 }
 
 export interface ServersStatus {

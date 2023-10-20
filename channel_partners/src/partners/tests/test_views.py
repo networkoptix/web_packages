@@ -200,7 +200,7 @@ class TestCloudSystemViewSet:
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
         services = [cp_service_factory(channel_partner=cp) for _ in range(2)]
-        service_records = [service_record_factory(service=service, cloud_system=system, quantity=10)
+        service_records = [service_record_factory(service=service, cloud_system=system, quantity=10, organization=system.organization)
                            for service in services]
         mock_auth_with_user(cp_user)
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)

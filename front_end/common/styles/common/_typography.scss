@@ -353,10 +353,6 @@ p {
     @include font-source($font-family-medium, $font-size-22, $dark9, false, rem(24px));
 }
 
-@mixin medium22dark9lh24 {
-    @include font-source($font-family-medium, $font-size-22, $dark9, false, rem(24px));
-}
-
 @mixin medium24 {
     @include font-source($font-family-medium, $font-size-xlg, $font-color-medium);
 }

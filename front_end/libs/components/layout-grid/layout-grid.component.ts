@@ -149,7 +149,7 @@ const SETTINGS_CONFIG: Setting[] = [
 ];
 
 const DEFAULT_ASPECT_RATIO = 1.7777777910232544 as const;
-const DEFAULT_CELL_ASPECT_RATIO = 1 as const;
+const DEFAULT_CELL_ASPECT_RATIO = DEFAULT_ASPECT_RATIO;
 
 interface Transform {
     transform: string;
@@ -461,6 +461,7 @@ export class NxLayoutGridComponent {
         const aspectRatio = parseFloat(dragContainer.style?.aspectRatio.split('/')[0]);
 
         if (!aspectRatio) {
+            dragContainer.classList.remove('wide', 'narrow');
             return;
         }
 
@@ -474,12 +475,39 @@ export class NxLayoutGridComponent {
         { width: wrapperWidth, height: wrapperHeight },
         {
             cellAspectRatio,
+            items,
             renderConfig: { gridWrapper, rows, columns, origin },
         },
     ]: [Size, ExtractObservable<typeof this.layout$>]) => {
-        cellAspectRatio ||= DEFAULT_CELL_ASPECT_RATIO;
+        const findCommonAspectRatio = (items: ParsedLayoutItems): number => {
+            const aspects = items
+                .map(({ resourceId, rotation }) => {
+                    const unknownItem = this.layoutItemLookup[resourceId];
+                    if (assertResourceOfType.camera(unknownItem)) {
+                        const initialAspect =
+                            unknownItem.details.parameters?.overrideAr ||
+                            unknownItem.details.defaultRatio;
+                        const isRotated = Boolean(
+                            (Math.round(
+                                (rotation || unknownItem.details.parameters?.rotation || 0) / 90,
+                            ) *
+                                90) %
+                                180,
+                        );
+
+                        return isRotated ? 1 / initialAspect : initialAspect;
+                    }
+
+                    return null;
+                })
+                .filter(Boolean);
+            const commonAspect = aspects.every(aspect => aspect === aspects[0]) && aspects[0];
+            return commonAspect || DEFAULT_CELL_ASPECT_RATIO;
+        };
         wrapperWidth = wrapperWidth - this.EDGE_GAP;
         wrapperHeight = wrapperHeight - this.EDGE_GAP;
+        cellAspectRatio ||=
+            items.length === 1 ? wrapperWidth / wrapperHeight : findCommonAspectRatio(items);
         const aspect = wrapperWidth / columns / (wrapperHeight / rows);
         const tooWide = aspect > cellAspectRatio;
         const calcWidth = tooWide
@@ -1356,6 +1384,13 @@ export class NxLayoutGridComponent {
         const right = left + 1;
         const bottom = top + 1;
         const id = dirtyId(uuid());
+        let rotation = 0;
+        const unknownItem = this.layoutItemLookup[dirtyId(resourceId)];
+
+        if (assertResourceOfType.camera(unknownItem)) {
+            rotation = unknownItem.details.parameters?.rotation ?? 0;
+        }
+
         return {
             bottom,
             contrastParams: {
@@ -1381,7 +1416,7 @@ export class NxLayoutGridComponent {
             resourceId: dirtyId(resourceId),
             resourcePath: '',
             right,
-            rotation: 0,
+            rotation,
             top,
             zoomBottom: 0,
             zoomLeft: 0,

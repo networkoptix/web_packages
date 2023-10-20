@@ -116,7 +116,7 @@ class LicenseConnector:
         self.session.headers.update({'Authorization': f'Bearer {token}'})
 
     async def get_org_systems(self, org_id):
-        return self._license_get(f'/api/v2/partners/organizations/{org_id}/cloud_systems/')
+        return await self._license_get(f'/api/v2/partners/organizations/{org_id}/cloud_systems/')
 
     async def _get_user(self, org_id):
         return await self._license_get(f'/api/v2/partners/organizations/{org_id}/users/self/')

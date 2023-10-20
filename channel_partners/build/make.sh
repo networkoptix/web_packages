@@ -31,6 +31,8 @@ function publish() {
   MODULE="nginx"
   pack
   push
+  popd
+  rm -rf channel_partners_prod/stage
 }
 
 main $@

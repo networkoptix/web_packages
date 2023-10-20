@@ -149,11 +149,11 @@ export class LayoutStateService {
                         layoutIds.includes(dirtyLayoutId) &&
                         (deleted || unsavedState === staticLang.layouts.unsavedStates.unsaved)
                     ) {
-                        await this.paramStateHandler.updater(() => ({
+                        await this.paramStateHandler.updater({
                             params: {
                                 layoutId: 'default',
                             },
-                        }));
+                        });
                     }
                 }),
             )
@@ -192,6 +192,20 @@ export class LayoutStateService {
             parentId:
                 this.accountService.account.id ||
                 this.systemService.getCurrentSystem().permissionManager.currentUser().id,
+        });
+    }
+
+    unlockLayout(layout: Layout): void {
+        this.updateLayout({
+            ...layout,
+            locked: false,
+        });
+    }
+
+    lockLayout(layout: Layout): void {
+        this.updateLayout({
+            ...layout,
+            locked: true,
         });
     }
 

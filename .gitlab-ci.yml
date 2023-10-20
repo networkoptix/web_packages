@@ -559,7 +559,7 @@ on-frontend-tests:
 
 on-jenkins-builds:
   extends: .fail-on-frontend
-  needs: ["jenkins-build-webadmin", "jenkins-build-frontend"]
+  needs: ["jenkins-build-frontend"]
 
 on-django-checks:
   extends: .fail-on-backend

@@ -51,8 +51,9 @@ const camerasExistActivator: CanActivateFn = async (
     const router: Router = inject(Router);
     const systemsService: NxSystemService = inject(NxSystemService);
     const currentSystem = systemsService.getCurrentSystem();
-    if (currentSystem.cameraManager.cameras?.length) {
-        const cameraId = currentSystem.cameraManager.cameras[0].id;
+    const editableCameras = currentSystem?.cameraManager.cameras?.filter(camera => camera.canEdit);
+    if (editableCameras?.length) {
+        const cameraId = editableCameras[0].id;
         router.navigate([state.url, cameraId]);
         return false;
     }
