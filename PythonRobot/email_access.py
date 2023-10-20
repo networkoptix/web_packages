@@ -198,21 +198,23 @@ class EmailMessage:
                     parts.append(part.get_content())
         else:
             parts.append(self._message.get_content())
+        if len(parts) == 0:
+            raise RuntimeError(f"Could not extract email body: message_uid={self.uid!r}")
         return ''.join(parts)
 
     def find_links_in_body(self, expected_links):
-        email_links = re.findall(r'href=[\'"]?([^\'" >]+)', self.get_body())
         for expected_link in expected_links:
-            for link in email_links:
+            for link in self._get_links():
                 if expected_link in link:
                     break
             else:
                 raise RuntimeError(f"Expected link not found in email: {expected_link}")
 
-    def get_nx_links_from_email(self):
-        url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
-        res = re.findall(url, self.get_body())
-        return str(res[0][0])
+    def get_restore_password_link(self):
+        for link in self._get_links():
+            if 'authorize/restore_password' in link:
+                return link
+        raise RuntimeError("Password restoration link not found in the email body")
 
     def get_button_color(self, href_value) -> str:
         href_value = re.escape(href_value)
@@ -224,6 +226,10 @@ class EmailMessage:
         cloud_name = re.escape(cloud_name)
         pattern = rf'<p.*?>[^<]*{cloud_name}[^<]*</p>'
         return re.search(pattern, self.get_body()) is not None
+
+    def _get_links(self):
+        for url in re.finditer(r'href=[\'"]?([^\'" >]+)', self.get_body()):
+            yield url.group(1)
 
 
 class EmailClient:
