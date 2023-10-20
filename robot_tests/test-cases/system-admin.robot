@@ -10,22 +10,6 @@ Force Tags        system    cloud
 *** Test Cases ***
 # Left search
 
-20. Left menu search: Availability for different users
-    [Tags]    C81760    webadmin    search
-    FOR     ${user}    IN    ${system}[cloudOwner]    ${system}[cloudUsers][cloudAdmin]
-        Log in to system new    ${system}    ${user}
-        Validate Search Input
-        Log Out
-        Wait Until Element Is Visible    ${ANONYMOUS BODY}
-    END
-
-    FOR     ${user}    IN    ${system}[cloudUsers][advancedViewer]    ${system}[cloudUsers][viewer]
-        Log in to system new    ${system}    ${user}
-        Wait until element is not visible    ${SEARCH INPUT}
-        Log Out
-        Wait Until Element Is Visible    ${ANONYMOUS BODY}
-    END
-
 21. Left menu search: Search mechanics
     [Tags]    C81762    webadmin    search
     Log in to system new    ${system}    ${system}[cloudOwner]

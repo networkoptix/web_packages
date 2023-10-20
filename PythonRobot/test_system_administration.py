@@ -170,7 +170,7 @@ def should_confirm_if_not_owner_deletes_system(server: Mediaserver):
 
 def correct_items_are_shown_for_owner(server: Mediaserver):
     """
-    [Tags]    C41560    webadmin    CB-1596
+    [Tags]    C41560    C81760    webadmin    CB-1596
     """
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
@@ -199,7 +199,7 @@ def correct_items_are_shown_for_owner(server: Mediaserver):
 
 def correct_items_are_shown_for_admin(server: Mediaserver):
     """
-    [Tags]    C41561    webadmin
+    [Tags]    C41561    C81760    webadmin
     """
     with get_chrome() as driver:
         cloud_admin = server.get_cloud_admin()
@@ -232,7 +232,7 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
 
 def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, role_name: str):
     """
-    [Tags]    C41562    webadmin
+    [Tags]    C41562    C81760    webadmin
     """
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
@@ -255,6 +255,7 @@ def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, ro
         assert not left_menu.has_node_with_name('Cameras')
         assert not left_menu.has_node_with_name('Users')
         assert not left_menu.has_node_with_name('Servers')
+        left_menu.get_search_field().wait_until_does_not_exist()
         system_page.merge_with_another_system_button().wait_until_does_not_exist()
         print("pass")
 
