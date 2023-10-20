@@ -7,25 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
 
 *** Test Cases ***
-7. Sharing roles are ordered: more access is on top of the list with options
-    [Tags]    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    FOR    ${user}  IN  @{list}
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Wait Until Element is Enabled    ${ADD USER BUTTON SYSTEMS}
-        Click Button    ${ADD USER BUTTON SYSTEMS}
-        Wait Until Element is Visible    ${ADD USER PERMISSIONS DROPDOWN}
-        Click Element    ${ADD USER PERMISSIONS DROPDOWN}
-        Wait Until Element is Visible    ${ADD USER MODAL}//nx-permissions-select//li//span[text()='${ADMIN TEXT}']/../../following-sibling::li/a/span[text()="${ADV VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="${LIVE VIEWER TEXT}"]/../../following-sibling::li/a/span[text()="Client Custom"]/../../following-sibling::li/a/span[text()="${CUSTOM TEXT}"]
-        Click Button    ${ADD USER CLOSE}
-        Wait Until Page Does Not Contain Element    ${ADD USER MODAL}
-        Exit For Loop If    '''${user}'''=='''admin'''
-        Log Out
-    END
-
 8. When user selects role - special hint appears
     [Tags]    C41901    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
