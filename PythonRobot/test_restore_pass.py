@@ -48,8 +48,8 @@ def check_restore_password_email(user: CloudAccount):
         login.reset_password_button().click()
         with EmailClient(email_alias=user.email) as client:
             email = client.wait_for_reset_password_email()
-            email.check_email_button(ENV, "#2FA2DB")
-            email.check_email_cloud_name("Nx Cloud")
+            assert email.get_button_color(ENV) == "#2FA2DB"
+            assert email.is_cloud_name_present("Nx Cloud")
             assert email.get_subject() == "Reset your password"
             expected_links = [
                 "https://support.networkoptix.com",

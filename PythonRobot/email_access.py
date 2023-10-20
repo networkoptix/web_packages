@@ -214,16 +214,16 @@ class EmailMessage:
         res = re.findall(url, self.get_body())
         return str(res[0][0])
 
-    def check_email_button(self, env, color):
-        pat = '(<a class="btn" href="{})(.[^>]*)(background-color: {};)'.format(
-            env, color)
-        if not re.search(pat, self.get_body()):
-            raise Exception("Button background-color was not found.")
+    def get_button_color(self, href_value) -> str:
+        href_value = re.escape(href_value)
+        pattern = rf'<a class="btn" href="{href_value}[^>]+?background-color: (#[A-F0-9]+);'
+        match = re.search(pattern, self.get_body())
+        return match.group(1)
 
-    def check_email_cloud_name(self, cloudName):
-        pat = '(<p).*({}).*(</p>)'.format(cloudName)
-        if not re.search(pat, self.get_body()):
-            raise Exception("Cloud name was not in the email.")
+    def is_cloud_name_present(self, cloud_name) -> bool:
+        cloud_name = re.escape(cloud_name)
+        pattern = rf'<p.*?>[^<]*{cloud_name}[^<]*</p>'
+        return re.search(pattern, self.get_body()) is not None
 
 
 class EmailClient:
