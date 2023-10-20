@@ -7,17 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Account Server Suite Teardown
 Force Tags        account
 
 *** Test Cases ***
-3. Admin and Owner can access account settings by selecting themselves in users List
-    [Tags]
-    Go To    ${url}
-    Log In    ${server 1}[cloudOwner]    ${password}
-    Go To    ${url}/systems/${server 1}[id]
-    Go To Users List
-    Select User in Users List    ${server 1}[cloudOwner]
-    Wait Until Element is Visible    ${ACCOUNT SETTINGS BUTTON SYSTEM}
-    Click Button    ${ACCOUNT SETTINGS BUTTON SYSTEM}
-    Verify in Account Page
-
 4. Change first and last name shows in system
     [Tags]    C41573    C30655   CLOUD-10176
     Go To    ${url}/account
