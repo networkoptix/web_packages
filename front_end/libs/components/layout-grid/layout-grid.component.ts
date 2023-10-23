@@ -326,7 +326,7 @@ export class NxLayoutGridComponent {
     }
 
     editCameras$$: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions().editCameras,
+        () => this.system.permissionManager.permissions().editCameras || false,
     );
 
     #lastWidth: number = Infinity;

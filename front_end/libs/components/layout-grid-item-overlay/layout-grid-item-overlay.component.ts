@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuTrigger } from '@angular/cdk/menu';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule, DOCUMENT, formatDate } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,6 +10,7 @@ import {
     HostListener,
     Inject,
     Input,
+    LOCALE_ID,
     Output,
     Signal,
     signal,
@@ -19,6 +20,7 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import FileSaver from 'file-saver';
 import { round } from 'lodash-es';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import {
@@ -107,7 +109,7 @@ const EMPTY_MENU_ACTION = {
     hostDirectives: [NxResizeObserver],
 })
 export class NxLayoutGridItemOverlayComponent {
-    @Input({ alias: 'item', transform: (value: LayoutItem) => signal(value) })
+    @Input({ alias: 'item', transform: (value: LayoutItem): Signal<LayoutItem> => signal(value) })
     item$$: Signal<LayoutItem>;
     node$$ = signal<BaseResourceNode | null>(null);
     @Input() set node(value: BaseResourceNode) {
@@ -398,7 +400,37 @@ export class NxLayoutGridItemOverlayComponent {
             id: 'screenshot',
             icon: icons.dirLayoutsCamera + 'screenshot.svg',
             ...LANG.screenshot,
-            ...EMPTY_MENU_ACTION,
+            action: () => {
+                const video = this.ref.nativeElement.querySelector(
+                    'video.web-rtc-stream',
+                ) as HTMLVideoElement;
+                if (!video) {
+                    return;
+                }
+                const canvas = this.document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const { videoHeight, videoWidth } = video;
+
+                if (!ctx || !videoHeight || !videoWidth) {
+                    return;
+                }
+
+                const fileName = `${encodeURIComponent(this.node$$()?.name || '')}_${formatDate(
+                    new Date(),
+                    'YYYY_MM_dd_HH_mm_ss',
+                    this.locale,
+                )}.png`;
+
+                const vertical = this.item$$().rotation % 180;
+                canvas.width = vertical ? videoHeight : videoWidth;
+                canvas.height = vertical ? videoWidth : videoHeight;
+
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate((this.item$$().rotation * Math.PI) / 180);
+                ctx.drawImage(video, -videoWidth / 2, -videoHeight / 2, videoWidth, videoHeight);
+
+                FileSaver.saveAs(canvas.toDataURL('image/png'), fileName);
+            },
         },
         fullscreenOn: {
             id: 'fullscreenOn',
@@ -440,7 +472,7 @@ export class NxLayoutGridItemOverlayComponent {
     };
 
     quickActions$$ = computed(() => {
-        if (this.node$$().type !== ResourceType.CAMERA) {
+        if (!this.checkGetCameraNode()) {
             return null;
         }
         return [
@@ -505,6 +537,7 @@ export class NxLayoutGridItemOverlayComponent {
     constructor(
         @Inject(DOCUMENT) public document: Document,
         public ref: ElementRef<HTMLElement>,
+        @Inject(LOCALE_ID) private locale: string,
         private resizeObserver: NxResizeObserver,
         configService: NxConfigService,
     ) {
@@ -523,7 +556,7 @@ export class NxLayoutGridItemOverlayComponent {
 
     checkGetCameraNode(): ResourceLeafNode<NxSystemCameraWithMappedFields> | null {
         const node = this.node$$();
-        if (!assertResourceOfType.camera(node)) {
+        if (!node || !assertResourceOfType.camera(node)) {
             return null;
         }
         return node;

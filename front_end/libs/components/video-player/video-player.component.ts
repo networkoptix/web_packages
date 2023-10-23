@@ -60,12 +60,12 @@ export class NxVideoPlayerComponent {
 
     connectionEstablished: boolean;
     @ViewChild('originalStream') originalStream: ElementRef<HTMLVideoElement>;
-    @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
+    @ViewChild('webRtcStream') webRtcStreamRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
         if (document.fullscreenElement === this.fullScreenTarget) {
             return 'fullscreen'
         }
-        const { paused, currentTime } = this.webRtcPlayerRef?.nativeElement || { paused: true, currentTime: 0 };
+        const { paused, currentTime } = this.webRtcStreamRef?.nativeElement || { paused: true, currentTime: 0 };
         this.connectionEstablished ||= !paused && currentTime > 1000;
         return this.connectionEstablished ? 'playing' : '';
     }
@@ -83,7 +83,7 @@ export class NxVideoPlayerComponent {
     lostConnection = false;
     streamManager = WebRTCStreamManager;
 
-    connection: WebRTCStreamManager;
+    connection: WebRTCStreamManager | null;
 
     ribbon$ = new Subject<{
         message: Translatable,
@@ -121,9 +121,9 @@ export class NxVideoPlayerComponent {
         this.playerId = uuid();
     }
 
-    reconnect$ = new BehaviorSubject<void>(null);
+    reconnect$ = new BehaviorSubject<void | null>(null);
 
-    _queuedReconnect: Promise<void>;
+    _queuedReconnect: Promise<void> | null;
 
     async queueReconnect() {
         const serverOffline = () => firstValueFrom(this.pingServer().pipe(
@@ -195,7 +195,7 @@ export class NxVideoPlayerComponent {
                 const updateFrame = (now?: number, metadata?: { mediaTime: number }) => {
                     if (!metadata || metadata.mediaTime > 1) {
                         const drawImageParams: DrawImageFullTuple = [...cropParams, ...drawParams];
-                        ctx.drawImage(video, ...drawImageParams);
+                        ctx && ctx.drawImage(video, ...drawImageParams);
                         resolve(null);
                     }
                     this.fpsTracker.reportFrame();
@@ -273,30 +273,30 @@ export class NxVideoPlayerComponent {
             tap(async ([stream, error, connection]) => {
                 if (stream) {
                     this.monitorFps(connection);
-                    this.webRtcPlayerRef.nativeElement.srcObject = await this.zoomStream(stream);
+                    this.webRtcStreamRef.nativeElement.srcObject = await this.zoomStream(stream);
                     // Checks if user has interacted to unmute
-                    this.webRtcPlayerRef.nativeElement.muted = await firstValueFrom(
+                    this.webRtcStreamRef.nativeElement.muted = await firstValueFrom(
                         this.appStateService.userInteracted$.pipe(
                             map(() => false),
                             timeout(10),
                             catchError(() => of(true)),
                         ),
                     );
-                    this.webRtcPlayerRef.nativeElement.autoplay = true;
+                    this.webRtcStreamRef.nativeElement.autoplay = true;
 
-                    while (this.webRtcPlayerRef.nativeElement.paused) {
+                    while (this.webRtcStreamRef.nativeElement.paused) {
                         await new Promise(resolve => setTimeout(resolve, 10));
                     }
 
-                    if (this.webRtcPlayerRef.nativeElement.muted) {
+                    if (this.webRtcStreamRef.nativeElement.muted) {
                         // Unmute and autoplay when user interacts with the page
                         this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
-                            this.webRtcPlayerRef.nativeElement.muted = false;
-                            this.webRtcPlayerRef.nativeElement.autoplay = true;
+                            this.webRtcStreamRef.nativeElement.muted = false;
+                            this.webRtcStreamRef.nativeElement.autoplay = true;
                         })
                     }
 
-                    while (this.webRtcPlayerRef.nativeElement.currentTime < 1) {
+                    while (this.webRtcStreamRef.nativeElement.currentTime < 1) {
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
 
