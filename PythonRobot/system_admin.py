@@ -373,3 +373,99 @@ class _AdvancedSettings:
         locator = self.rb.replace_nested_variables(
             "//span[text()='{ADVANCED_SETTINGS_WARNING_TEXT}']")
         return PageText(self.driver, locator)
+
+    def get_advanced_settings_element_block_one(self):
+        return _BlockOne(self.driver)
+
+
+class _BlockOne:
+    def __init__(self, driver: ChromeBrowser, lang="en_US"):
+        self.driver = driver
+        self.rb = RobotVariables(lang)
+
+    def get_additional_local_fs_types_input(self):
+        locator = self.rb.replace_nested_variables("//input[@id='additionalLocalFsTypes']")
+        return TextField(self.driver, locator)
+
+    def get_additional_local_fs_types_label(self):
+        locator = self.rb.replace_nested_variables(
+            "//div[text()='{ADDITIONAL_LOCAL_FS_TYPES_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_audit_trail_period_days_input(self):
+        locator = "//input[@id='auditTrailPeriodDays']"
+        return TextField(self.driver, locator)
+
+    def get_audit_trail_period_days_label(self):
+        locator = self.rb.replace_nested_variables("//div[text()='{AUDIT_TRAIL_PERIOD_DAYS_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_client_statistics_relative_url_input(self):
+        locator = "//input[@id='clientStatisticsSettingsUrl']"
+        return TextField(self.driver, locator)
+
+    def get_client_statistics_relative_url_label(self):
+        locator = self.rb.replace_nested_variables(
+            "//div[text()='{CLIENT_STATISTICS_RELATIVE_URL_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_arecont_rtsp_enabled_checkbox(self):
+        locator = "//*[@id='arecontRtspEnabled']"
+        return Checkbox(self.driver, locator)
+
+    def get_arecont_rtsp_enabled_label(self):
+        locator = self.rb.replace_nested_variables("//div[text()='{ARECONT_RTSP_ENABLED_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_auto_discovery_response_enabled_checkbox(self):
+        locator = "//*[@id='autoDiscoveryResponseEnabled']"
+        return Checkbox(self.driver, locator)
+
+    def get_auto_discovery_response_enabled_label(self):
+        locator = self.rb.replace_nested_variables("//div[text()='{AUTO_DISCOVERY_RESPONSE_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_auto_update_thumbnails_checkbox(self):
+        locator = "//*[@id='autoUpdateThumbnails']"
+        return Checkbox(self.driver, locator)
+
+    def get_auto_update_thumbnails_label(self):
+        locator = self.rb.replace_nested_variables("//div[text()='{AUTO_UPDATE_THUMNAILS_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_backup_new_cameras_by_default_checkbox(self):
+        locator = "//*[@id='backupNewCamerasByDefault']"
+        return Checkbox(self.driver, locator)
+
+    def get_backup_new_cameras_by_default_label(self):
+        locator = self.rb.replace_nested_variables(
+            "//div[text()='{BACKUP_NEW_CAMERAS_BY_DEFAULT_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def wait_until_elements_loaded(self):
+        self.get_additional_local_fs_types_input().wait_until_visible()
+        self.get_additional_local_fs_types_label().wait_until_visible()
+        self.get_audit_trail_period_days_input().wait_until_visible()
+        self.get_audit_trail_period_days_label().wait_until_visible()
+        self.get_client_statistics_relative_url_input().wait_until_visible()
+        self.get_client_statistics_relative_url_label().wait_until_visible()
+        self.get_arecont_rtsp_enabled_checkbox().wait_until_visible()
+        self.get_arecont_rtsp_enabled_label().wait_until_visible()
+        self.get_auto_discovery_response_enabled_checkbox()
+        self.get_auto_discovery_response_enabled_label().wait_until_visible()
+        self.get_auto_update_thumbnails_checkbox().wait_until_visible()
+        self.get_auto_update_thumbnails_label().wait_until_visible()
+        self.get_backup_new_cameras_by_default_checkbox().wait_until_visible()
+        self.get_backup_new_cameras_by_default_label().wait_until_visible()
+
+    def wait_until_elements_not_seen(self):
+        self.get_additional_local_fs_types_input().wait_until_does_not_exist()
+        self.get_additional_local_fs_types_label().wait_until_not_visible()
+        self.get_audit_trail_period_days_input().wait_until_does_not_exist()
+        self.get_audit_trail_period_days_label().wait_until_not_visible()
+        self.get_client_statistics_relative_url_input().wait_until_does_not_exist()
+        self.get_client_statistics_relative_url_label().wait_until_not_visible()
+        self.get_arecont_rtsp_enabled_label().wait_until_not_visible()
+        self.get_auto_discovery_response_enabled_label().wait_until_not_visible()
+        self.get_auto_update_thumbnails_label().wait_until_not_visible()
+        self.get_backup_new_cameras_by_default_label().wait_until_not_visible()

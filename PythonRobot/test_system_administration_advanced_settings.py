@@ -42,6 +42,27 @@ def advanced_system_settings_inaccessibility(server: Mediaserver, user: CloudAcc
         print("pass")
 
 
+def advanced_system_settings_for_offline_system(server: Mediaserver):
+    """
+    [Tags]    C76634
+    """
+    # Is now blocked by CLOUD-11655
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        server.stop()
+        driver.get(ENV + f"/systems/{server.id}")
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        driver.get(ENV + f"/systems/{server.id}/?advanced")
+        system_admin = SystemAdmin(driver)
+        system_admin.system_offline_text().wait_until_visible()
+        advanced_settings = system_admin.get_advanced_settings_block()
+        advanced_settings.get_advanced_settings_alert().wait_until_visible()
+        advanced_settings.get_advanced_settings_element_block_one().wait_until_elements_not_seen()
+        server.start(wait_for_started=True)
+        driver.refresh()
+        advanced_settings.get_advanced_settings_element_block_one().wait_until_elements_loaded()
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -62,3 +83,4 @@ if __name__ == "__main__":
             cloud_server.get_cloud_advanced_viewer(),
             )
         advanced_system_settings_inaccessibility(cloud_server, cloud_server.get_cloud_custom_user())
+        advanced_system_settings_for_offline_system(cloud_server)

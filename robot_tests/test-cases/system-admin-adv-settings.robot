@@ -7,26 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
-2. Advanced system settings for offline system
-    [Tags]    C76634
-    Remove Tags    webadmin
-    Skip If Irrelevant
-    Stop container    ${system}[container]
-    Log in to user and system    ${system}[cloudOwner]    ${system}[id]${ADVANCED SETTINGS}
-    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
-    Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}
-    IF    '${IMAGE}'=='5.0'
-        Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
-    ELSE
-        Elements Should Not Be Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
-    END
-
-    Log    Get System back online and check advanced settings
-    Start container    ${system}[container]
-    Sleep    4
-    Reload Page
-    Wait Until Advanced Settings Are Visible    ONE    timeout=180
-
 3. Hide Advanced Settings button functionality
     [Tags]    C76635    
     Log in to system New   ${system}    ${system}[cloudOwner]
