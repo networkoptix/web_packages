@@ -43,7 +43,7 @@ Force Tags
     Should Be Equal    '${input type}'    'password'
 
 7. Should not allow to use one restore link twice
-    [Tags]    email    C42079    CLOUD-8434
+    [Tags]    email    C42079
     # Failing due to CLOUD-8434
     ${email}=   Register Random User
     Send "Restore Password" Email    ${email}
