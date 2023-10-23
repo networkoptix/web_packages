@@ -47,7 +47,7 @@ class Suite:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        server = Mediaserver(suite_name, self.run_id).set_up(ports_count=2)
+        server = Mediaserver(suite_name, self.run_id).set_up(primary_port=7001, secondary_port=7002)
         self._exit_stack.callback(server.tear_down)
         return server
 
@@ -254,21 +254,20 @@ class Mediaserver:
                 slave.id = self.id
                 break
 
-    def set_up(self, ports_count: int):
+    def set_up(self, primary_port: int, secondary_port: int):
         # Create a docker server.
         # Mimic configuration from JSON files.
         container_name = self.suite_name + str(self.run_id)
-        docker_server_data = _DOCKER_API.create_docker_server(container_name, ports_count)
+        exposed_tcp_port = [primary_port, secondary_port]
+        docker_server_data = _DOCKER_API.create_docker_server(container_name, exposed_tcp_port)
         self.name = docker_server_data['name']
         self._container_id = docker_server_data['container']
         print(f"Container {self.name} should be up, waiting for 5 secs")
         time.sleep(5)  # Wait for the docker server to be ready
-        vms_default_port = 7001
-        for index, docker_port in enumerate(docker_server_data['port']):
-            self._port_mapping[vms_default_port + index] = f'https://{_DOCKER_API.host_ip}:{docker_port}'
+        for container_port, external_port in docker_server_data['ports_mapping'].items():
+            self._port_mapping[container_port] = f'https://{_DOCKER_API.host_ip}:{external_port}'
         # Set up a local system.
-        server_api_port, *_ = docker_server_data['port']
-        server_api_url = f'https://{_DOCKER_API.host_ip}:{server_api_port}'
+        server_api_url = self._port_mapping[primary_port]
         self.api = ServerApi(url=server_api_url, password=INITIAL_PASSWORD)
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         self._local_users = self.create_local_users()

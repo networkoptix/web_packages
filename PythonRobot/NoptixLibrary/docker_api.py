@@ -1,5 +1,7 @@
 import logging
-from random import randint
+from typing import Any
+from typing import Collection
+from typing import Mapping
 
 import requests
 
@@ -13,37 +15,37 @@ class DockerApi(object):
         self.host_port = 5555
         self.image = "5.1"
 
-    def create_docker_server(self, name: str, exposed_ports_count: int):
-        ports = []
-        for _ in range(exposed_ports_count):
-            ports.append(self._get_random_port_from_docker_server())
-        container = self._create_container(ports, name)
+    def create_docker_server(self, name: str, exposed_tcp_ports: Collection[int]):
+        ports_as_strings = [f'{port}/tcp' for port in exposed_tcp_ports]
+        container = self._create_container(name, ports_as_strings)
         self.start_container(container)
+        ports_mapping = {}
+        ports_output = self._inspect_container(container)['NetworkSettings']['Ports']
+        inspect_ports_mapping: Mapping[str, Collection[Mapping[str, str]]] = ports_output
+        for container_port_string, host_sockets in inspect_ports_mapping.items():
+            for host_socket in host_sockets:
+                if host_socket['HostIp'] == '0.0.0.0':
+                    external_port = int(host_socket['HostPort'])
+                    container_port = int(container_port_string.rstrip("/tcp"))
+                    ports_mapping[container_port] = external_port
         return {
             "name": name,
-            "port": ports,
+            "ports_mapping": ports_mapping,
             "container": container,
             }
 
-    def _create_container(self, ports, name):
-        port_count = 7001
-        PortBindings = {}
-        ExposedPorts = {}
-        for port in ports:
-            ExposedPorts.update({f'{port_count}/tcp': {}})
-            PortBindings.update({f'{port_count}/tcp': [{"HostPort": port}]})
-            port_count = port_count + 1
+    def _create_container(self, name: str, exposed_ports: Collection[str]):
         payload = {
             "Env": [f'CLOUD_HOST={self.env.replace("https://", "")}'],
             "Image": self.image,
-            "ExposedPorts": ExposedPorts,
+            "ExposedPorts": {port: {} for port in exposed_ports},
             "HostConfig": {
                 "RestartPolicy": {
                     "Name": "always"
                 },
-                "PortBindings": PortBindings,
                 "CapAdd": ["NET_ADMIN"],
-                "Privileged": True
+                "Privileged": True,
+                "PublishAllPorts": True,
             }
         }
         r = requests.post(
@@ -84,13 +86,6 @@ class DockerApi(object):
         assert r.status_code == 200
         return r.json()
 
-    def _get_random_port_from_docker_server(self):
-        usedPorts = []
-        docker_api = DockerApi()
-        for container in docker_api.list_containers():
-            for usedPort in container["Ports"]:
-                usedPorts.append(usedPort["PublicPort"])
-        port = randint(30000, 65535)
-        while port in usedPorts:
-            port = randint(30000, 65535)
-        return str(port)
+    def _inspect_container(self, id) -> Mapping[str, Any]:
+        response = requests.get(f'http://{self.host_ip}:{self.host_port}/containers/{id}/json')
+        return response.json()
