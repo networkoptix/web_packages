@@ -17,7 +17,7 @@ class DockerApi(object):
         ports = []
         for _ in range(server["ports"]):
             ports.append(self._get_random_port_from_docker_server())
-        container = self._create_container(ports, name, server)
+        container = self._create_container(ports, name)
         self.start_container(container)
         return {
             "name": name,
@@ -25,7 +25,7 @@ class DockerApi(object):
             "container": container,
             }
 
-    def _create_container(self, ports, name, server):
+    def _create_container(self, ports, name):
         port_count = 7001
         PortBindings = {}
         ExposedPorts = {}
@@ -46,8 +46,6 @@ class DockerApi(object):
                 "Privileged": True
             }
         }
-        if server.get("binds"):
-            payload["HostConfig"]["Binds"] = server["binds"]
         r = requests.post(
             url=f'http://{self.host_ip}:{self.host_port}/containers/create?name={name}',
             json=payload,
