@@ -9,7 +9,7 @@ from variables import ENV
 
 
 def sets_new_password_and_successfully_logs_in(user: CloudAccount):
-    '''C26260'''
+    """C26260 email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -37,6 +37,7 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
 
 
 def check_restore_password_email(user: CloudAccount):
+    """email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -62,7 +63,7 @@ def check_restore_password_email(user: CloudAccount):
 
 
 def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
-    '''C41873'''
+    """C41873 email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -88,7 +89,7 @@ def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
 
 
 def test_should_not_allow_restore_twice(user: CloudAccount):
-    '''C42079'''
+    """C42079 email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -119,7 +120,7 @@ def test_should_not_allow_restore_twice(user: CloudAccount):
 
 
 def check_password_masking(user: CloudAccount):
-    '''C26260'''
+    """C26260 email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -153,6 +154,7 @@ def check_password_masking(user: CloudAccount):
 
 
 def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
+    """email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -165,7 +167,7 @@ def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
 
 
 def test_account_activation_through_restore(user: CloudAccount):
-    '''C41871'''
+    """C41871 email"""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
