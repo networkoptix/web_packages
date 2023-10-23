@@ -10,6 +10,7 @@ export type StorageResponses = [ec2Storage[], any, any, any];
 export enum STORAGE_TYPES {
     LOCAL = 'local',
     USB = 'usb',
+    REMOVABLE = 'removable', // Loooks like newer systems use this instead of usb
     NETWORK = 'smb',
     SYSTEM_NETWORK = 'network',
     CLOUD = 'cloud',
