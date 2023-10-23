@@ -13,8 +13,7 @@ class DockerApi(object):
         self.host_port = 5555
         self.image = "5.1"
 
-    def create_docker_server(self, server, runName):
-        name = server['name'] + str(runName)
+    def create_docker_server(self, name: str, server):
         ports = []
         for _ in range(server["ports"]):
             ports.append(self._get_random_port_from_docker_server())

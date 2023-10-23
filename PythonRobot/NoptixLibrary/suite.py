@@ -264,10 +264,10 @@ class Mediaserver:
         # Create a docker server.
         # Mimic configuration from JSON files.
         data = {
-            'name': self.suite_name,
             'ports': self.ports,
             }
-        docker_server_data = _DOCKER_API.create_docker_server(data, self.run_id)
+        container_name = self.suite_name + str(self.run_id)
+        docker_server_data = _DOCKER_API.create_docker_server(container_name, data)
         data.update(docker_server_data)
         self.name = data['name']
         self._container_id = data['container']
