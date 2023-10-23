@@ -303,8 +303,6 @@
                                     (collisions$ | async)[item.id]
                                         | mergeObjects : item.renderConfig.child
                                 "
-                                (dblclick)="focusToggle(item.id)"
-                                (nxClickElsewhere)="removeFocus()"
                             >
                                 <ng-template #notSupported>
                                     <div

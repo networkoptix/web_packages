@@ -19,6 +19,7 @@
     class="nx-layout-grid-item-overlay"
     [ngStyle]="getScaleStyle$ | async"
     [cdkMenuTriggerFor]="scaled$$() ? nodeActionMenu : null"
+    (dblclick)="fullscreenAction$$().action?.($event)"
     [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide, hide: hide }"
 >
     <ng-template
