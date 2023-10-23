@@ -7,40 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Account Server Suite Teardown
 Force Tags        account
 
 *** Test Cases ***
-4. Change first and last name shows in system
-    [Tags]    C41573    C30655   CLOUD-10176
-    Go To    ${url}/account
-    Log In    ${server 1}[cloudUsers][liveViewer]    ${password}    button=None    api=${False}
-    Verify in Account Page
-    Input Text    ${ACCOUNT FIRST NAME}    nameChanged
-    Input Text    ${ACCOUNT LAST NAME}    nameChanged
-    Click Button    ${ACCOUNT SAVE}
-    Check For Alert    ${YOUR ACCOUNT IS SUCCESSFULLY SAVED}
-    Log Out   api=${False}
-    Go To    ${url}/systems/${server 1}[id]
-    Log In    ${server 1}[cloudOwner]    ${password}    button=None    api=${False}
-    Go To Users List
-    Select User in Users List   ${server 1}[cloudUsers][liveViewer]
-    Wait Until Element Is Visible    //nx-system-user-component//nx-block//header//span[contains(text(),'nameChanged nameChanged')]
-    Log Out    api=${False}
-    Go To    ${url}/account
-    Log In    ${server 1}[cloudUsers][liveViewer]    ${password}    button=None    api=${False}
-    Verify in Account Page
-    sleep    2
-    Wait Until Textfield Contains    ${ACCOUNT FIRST NAME}    nameChanged
-    Clear Element Text    ${ACCOUNT FIRST NAME}
-    Input Text    ${ACCOUNT FIRST NAME}    ${TEST FIRST NAME}
-    Wait Until Textfield Contains    ${ACCOUNT LAST NAME}    nameChanged
-
-    # Check that the user's name has changed in system via API
-    ${users}=   Get Users    ${AUTO SYS AUTH}    https://${QA BURBANK IP}:${server 1}[port][0] 
-    FOR    ${user}    IN    @{users}
-        Run Keyword If    '${user}[email]'=='${server 1}[cloudUsers][liveViewer]'    Run Keywords
-        ...    Should Be Equal As Strings    ${user}[fullName]    nameChanged nameChanged
-        ...    AND     Exit For Loop
-    END
-    Set Account Name    ${server 1}[cloudUsers][liveViewer]    ${password}    ${TEST FIRST NAME}    ${TEST LAST NAME}
-
 5. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account

@@ -6,13 +6,73 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from pages.account_page import AccountPage
+from pages.account_page import SuccessToast
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_left_menu import SystemLeftMenu
+from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
 from resource_import import get_chrome
 from variables import ENV
+
+
+def name_change_shown_in_system(
+        base_url: str,
+        server: Mediaserver,
+        ):
+    """
+    4. Change first and last name shows in system
+    [Tags] C41573 C30655 CLOUD-10176
+    """
+    # TODO: C30655 was copied from robot test but it involves Desktop Client and seems unrelated
+    owner = server.get_cloud_owner()
+    with get_chrome() as driver:
+        driver.get(base_url)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemsPage(driver).wait_until_visible()
+        driver.get(base_url + '/account')
+        account_page = AccountPage(driver)
+        account_page.wait_until_loaded()
+        assert account_page.first_name().get_text() == owner.first_name
+        assert account_page.last_name().get_text() == owner.last_name
+        account_page.first_name().delete_all_text()
+        account_page.save_button().wait_until_not_clickable(1)
+        account_page.cancel_button().wait_until_clickable(1)
+        account_page.last_name().click()  # Move focus from first_name
+        assert account_page.first_name().get_outline_color() == 'rgb(240, 44, 44)'  # Red
+        account_page.first_name().input_text("    ")
+        account_page.save_button().wait_until_not_clickable(1)
+        account_page.cancel_button().wait_until_clickable(1)
+        new_first_name = "NewFirstName"
+        account_page.first_name().input_text(new_first_name)
+        account_page.last_name().delete_all_text()
+        account_page.save_button().wait_until_not_clickable(1)
+        account_page.cancel_button().wait_until_clickable(1)
+        account_page.first_name().click()  # Move focus from last_name
+        assert account_page.last_name().get_outline_color() == 'rgb(240, 44, 44)'
+        account_page.last_name().input_text("    ")
+        account_page.save_button().wait_until_not_clickable(1)
+        account_page.cancel_button().wait_until_clickable(1)
+        new_last_name = "NewLastName"
+        account_page.last_name().input_text(new_last_name)
+        account_page.save_button().wait_until_clickable()
+        account_page.save_button().click()
+        assert account_page.first_name().get_text() == new_first_name
+        assert account_page.last_name().get_text() == new_last_name
+        success_toast = SuccessToast(driver)
+        success_toast.wait_until_visible()
+        # TODO: Only works for English localization
+        assert success_toast.get_text() == "Your account is successfully saved"
+        driver.get(base_url + f'/systems/{server.id}')
+        left_menu = SystemLeftMenu(driver)
+        left_menu.open_users_dropdown()
+        owner_menu_option = left_menu.get_user_with_email(owner.email)
+        owner_menu_option.click()
+        system_user = SystemUsers(driver)
+        assert system_user.user_header_text().get_text() == owner.email
+        assert system_user.user_name_text().get_text() == f"{new_first_name} {new_last_name}"
 
 
 def user_deleted_from_all_shared_systems(
@@ -63,6 +123,10 @@ if __name__ == '__main__':
         user = suite.create_cloud_account()
         cloud_server_1 = suite.create_cloud_server(
             cloud_owner=cloud_owner, suite_name=suite_name, cloud_users={'cloudAdmin': user})
+        name_change_shown_in_system(ENV, cloud_server_1)
+        print(
+            f"{Fore.WHITE}{name_change_shown_in_system.__doc__.strip()}\t\t\t"
+            f"{Fore.GREEN}| PASS |")
         cloud_server_2 = suite.create_cloud_server(
             cloud_owner=cloud_owner, suite_name=suite_name, cloud_users={'viewer': user})
         cloud_server_3 = suite.create_cloud_server(

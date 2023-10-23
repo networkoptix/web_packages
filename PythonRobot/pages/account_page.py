@@ -3,6 +3,7 @@ from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import PageText
 from generic_elements import TextField
+from generic_elements import ToastNotification
 from generic_elements import Tooltip
 from nx_modal import NxModalDialog
 
@@ -100,3 +101,9 @@ class DeleteCloudAccountDialog(NxModalDialog):
     def delete_account(self, password: str):
         self._password_input().input_text(password)
         self.submit()
+
+
+class SuccessToast(ToastNotification):
+
+    def __init__(self, driver):
+        super().__init__(driver, '//nx-app-toasts//div[@class="alert alert-success toast"]')

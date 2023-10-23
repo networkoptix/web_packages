@@ -221,3 +221,29 @@ class SearchField:
 
 
 _logger = logging.getLogger(__name__)
+
+
+class UsersDropdown(DropDown):
+
+    def __init__(self, driver):
+        self._locator = '//nx-menu//div[@class=level-1-container]'
+        super().__init__(driver, self._locator)
+
+    def _users_button(self):
+        return Button(
+            self._driver,
+            self._locator + '//a[@id="users"]',
+            )
+
+    def _add_user_button(self):
+        return Button(
+            self._driver,
+            self._locator + '//nx-menu-button[@data-testid="addUserBtn"]/button'
+            )
+
+    def _wait_for_open(self):
+        self._add_user_button().is_visible()
+
+    def open(self):
+        self._users_button().click()
+        self._wait_for_open()
