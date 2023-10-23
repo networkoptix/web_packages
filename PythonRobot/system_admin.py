@@ -12,6 +12,7 @@ from generic_elements import Button
 from generic_elements import Checkbox
 from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
+from generic_elements import Image
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TabItem
@@ -256,6 +257,9 @@ class SystemAdmin:
         locator = f"//nx-system-admin-component//span[contains(text(), '{self.rb.YOUR_ACCESS_LEVEL_TEXT}')]/.."
         return PageText(self.driver, locator)
 
+    def get_advanced_settings_block(self):
+        return _AdvancedSettings(self.driver)
+
 
 class FailedToAccessSystemPage:
 
@@ -337,3 +341,35 @@ class _SystemName:
 
     def wait_until_visible(self):
         self._element.wait_until_visible()
+
+
+class _AdvancedSettings:
+    def __init__(self, driver: ChromeBrowser, lang="en_US"):
+        self.driver = driver
+        self.rb = RobotVariables(lang)
+
+    def get_hide_advanced_settings_button(self):
+        locator = self.rb.replace_nested_variables(
+            "//button/span[text()='{HIDE_ADVANCED_SETTINGS_TEXT}']")
+        return Button(self.driver, locator)
+
+    def get_hide_advanced_settings_icon(self):
+        locator = self.rb.replace_nested_variables(
+            "//*[name()='svg-icon' and contains(@data-src, "
+            "'images/icons/standard/eye_closed.svg')]")
+        return Image(self.driver, locator)
+
+    def get_advanced_settings_alert_icon(self):
+        locator = self.rb.replace_nested_variables(
+            "//*[name()='svg-icon' and contains(@data-src, "
+            "'images/icons/error.svg')]")
+        return Image(self.driver, locator)
+
+    def get_advanced_settings_alert(self):
+        locator = self.rb.replace_nested_variables("//div[text()='{ADVANCED_SETTINGS_ALERT_TEXT}']")
+        return PageText(self.driver, locator)
+
+    def get_advanced_settings_warning(self):
+        locator = self.rb.replace_nested_variables(
+            "//span[text()='{ADVANCED_SETTINGS_WARNING_TEXT}']")
+        return PageText(self.driver, locator)

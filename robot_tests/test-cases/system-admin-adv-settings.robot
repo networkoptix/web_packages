@@ -7,25 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
-1. Advanced system settings availability
-    [Tags]    C76633    advanced settings
-    Log    Step 1, 2 - advanced block is available for admins
-    FOR    ${user}    IN    ${system}[cloudOwner]    ${system}[cloudUsers][cloudAdmin]
-        Log in to system new   ${system}    ${user}
-        Show Advanced Settings
-        Wait Until Elements Are Visible    @{ADVANCED SETTINGS ALERT BAR}    timeout=60
-        Log Out
-    END
-
-    Log    Step 3 - advanced block is not available for other users
-    FOR    ${user}    IN    ${system}[cloudUsers][viewer]    ${system}[cloudUsers][advancedViewer]    ${system}[cloudUsers][liveViewer]    ${system}[cloudUsers][custom]
-        Log in to system new   ${system}    ${user}
-        Show Advanced Settings
-        Wait Until Elements Are Visible    ${DISCONNECT FROM MY ACCOUNT}    timeout=50
-        Elements Should Not Be Visible    @{ADVANCED SETTINGS ALERT BAR}    timeout=50
-        Log Out
-    END
-
 2. Advanced system settings for offline system
     [Tags]    C76634
     Remove Tags    webadmin
