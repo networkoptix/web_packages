@@ -4,6 +4,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from generic_elements import ElementNotInDOM
+from generic_elements import ElementNotVisible
 from landing_page import LandingPage
 from generic_elements import Button
 from generic_elements import PageText
@@ -22,6 +23,13 @@ class HeaderNav:
 
     def _wait_until_header_is_visible(self):
         Pane(self._driver, self._locator).wait_until_visible()
+
+    def is_logged_in(self) -> bool:
+        try:
+            self.account_dropdown().wait_until_visible(10)
+        except (ElementNotVisible, ElementNotInDOM):
+            return False
+        return True
 
     def account_dropdown(self):
         return Button(self._driver, "//header//div[@data-testid='accountSettingsDropdown']/preceding-sibling::button")

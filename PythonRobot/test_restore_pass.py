@@ -33,7 +33,7 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
         reset_password.click_next()
         login.password_input().input_text(user.password)
         login.login_button().click()
-        header.account_dropdown().click()
+        assert header.is_logged_in()
 
 
 def check_restore_password_email(user: CloudAccount):
@@ -84,7 +84,7 @@ def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
         header.log_in_button().click()
         login = LoginDialog(driver)
         login.basic_cloud_login(user.email, user.password)
-        header.account_dropdown().click()
+        assert header.is_logged_in()
 
 
 def test_should_not_allow_restore_twice(user: CloudAccount):
@@ -159,7 +159,7 @@ def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
         header.log_in_button().click()
         login = LoginDialog(driver)
         login.basic_cloud_login(user.email, user.password)
-        HeaderNav(driver).account_dropdown().click()
+        assert HeaderNav(driver).is_logged_in()
         driver.get(f'{ENV}/authorize/restore_password')
         login.reset_password_email_input().wait_until_visible()
 
@@ -191,7 +191,7 @@ def test_account_activation_through_restore(user: CloudAccount):
         login.password_input().input_text(user.password)
         login.login_button().click()
         header = HeaderNav(driver)
-        header.account_dropdown().click()
+        assert header.is_logged_in()
 
 
 if __name__ == "__main__":
