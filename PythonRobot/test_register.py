@@ -10,9 +10,9 @@ from email_access import Email
 from generic_elements import Button
 from pages.header import HeaderNav
 from pages.register_form import RegisterForm
+from email_access import get_random_email
 from resource_import import activate
 from resource_import import get_chrome
-from resource_import import get_random_email
 from resource_import import register_and_activate_account
 
 rb = RobotVariables("en_US")

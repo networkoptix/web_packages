@@ -13,7 +13,7 @@ from generic_elements import Pane
 from generic_elements import TextField
 from resource_import import get_headless_chrome
 from resource_import import get_lang_list
-from resource_import import get_random_email
+from email_access import get_random_email
 from resource_import import register_and_activate_account
 from resource_import import send_restore_password_email
 from resource_import import verify_in_account_page
@@ -60,7 +60,7 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
 def test_can_access_account_page_from_dropdown():
     """1 Can access the account page from dropdown"""
     with resource_import.get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(rb.ENV)
         cloud_login(driver, email, password)
@@ -100,7 +100,7 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
 def test_changing_first_name_and_saving_maintains_that_setting():
     """5 changing first name and saving maintains that setting"""
     with resource_import.get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         register_and_activate_account(driver, "mark", "hamill", email, password)
         url = rb.ENV + "/account"
         driver.get(url)
@@ -137,7 +137,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     """6 changing last name and saving maintains that setting"""
     #todo: 
     with resource_import.get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         register_and_activate_account(driver, "mark", "hamill", email, password)
         url = rb.ENV + "/account"
         driver.get(url)
@@ -276,7 +276,7 @@ def test_language_change_affects_emails():
     """14 Language change affects emails"""
     with resource_import.get_chrome() as driver:
         password = "theF0rc3"
-        random_email = get_random_email(rb.BASE_EMAIL_SENDEMAIL, sendemail=True)
+        random_email = get_random_email(sendemail=True)
         register_and_activate_account(driver, "Darth", "Vader", random_email, password)
         url = rb.ENV + "/account"
         driver.get(url)
@@ -311,7 +311,7 @@ def test_language_change_is_new_default():
     ja_JP_account_info = lang_dict['ja_JP']['ACCOUNT INFORMATION']
     de_DE_account_info = lang_dict['de_DE']['ACCOUNT INFORMATION']
     with resource_import.get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         url = rb.ENV + "/account"

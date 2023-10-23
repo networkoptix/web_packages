@@ -11,6 +11,7 @@ from pages.landing_page import LandingPage
 from pages.login import AccountActivatedPane
 from pages.login import LoginDialog
 from pages.register_form import RegisterForm
+from email_access import get_random_email
 from resource_import import get_chrome
 from resource_import import validate_log_out
 from resource_import import register_and_activate_account
@@ -21,7 +22,7 @@ from variables import ENV
 def allows_login_with_correct_credentials_and_log_out():
     """C24212    C24213    smoke    ci    C94717    C94719"""
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -41,7 +42,7 @@ def allows_login_with_correct_credentials_and_log_out():
 
 def allows_log_in_with_existing_email_in_uppercase():
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -63,7 +64,7 @@ def forgot_password_page_contains_prefilled_email():
     [Tags]    C41872
     """
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -83,7 +84,7 @@ def not_activated_user_login_check():
     [Tags]    email    C41865
     """
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         driver.get(ENV + '/register')
         resource_import.register(driver, "darth", "bye", email, password, view_type="desktop")
@@ -112,7 +113,7 @@ def not_activated_user_login_check():
 
 def displays_password_masked():
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -127,7 +128,7 @@ def displays_password_masked():
 
 def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser():
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -150,7 +151,7 @@ def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_b
 def handles_more_than_255_symbols_email_and_password():
     # Now is not working because of CLOUD-11071
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -184,7 +185,7 @@ def allows_copy_paste_in_input_fields():
 
 def should_respond_to_enter_key_and_log_in():
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -220,7 +221,7 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
         driver.switch_to.window(driver.window_handles[1])
         driver.wait_until_number_of_tabs_are_open(2)
         assert driver.current_url == ENV + '/content/eula'
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
@@ -249,7 +250,7 @@ def log_in_more_than_5_times():
     [Tags]    C42075
     """
     with get_chrome() as driver:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         wrong_password = "wrong 123"
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
@@ -276,7 +277,7 @@ def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
     [Tags]    C41837
     """
     with get_chrome() as driver1:
-        email = resource_import.get_random_email()
+        email = get_random_email()
         password = "qweasd 123"
         register_and_activate_account(driver1, "Mark", "Hamill", email, password)
         driver1.get(ENV)

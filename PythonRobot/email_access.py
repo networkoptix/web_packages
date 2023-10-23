@@ -103,20 +103,6 @@ class Email:
         self.mailbox.expunge()
         self.logout()
 
-    @staticmethod
-    def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
-        if not sendemail:
-            email = email.replace('sendemail', '')
-        if symbols:
-            index = email.find('@')
-            email = email[:index] + \
-                    "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
-            return email
-        else:
-            index = email.find('@')
-            email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
-            return email
-
     def wait_for_email(self, recipient, subject, timeout=60):
         """
         This function waits for a new email to be received by the specified recipient.
@@ -176,6 +162,20 @@ class Email:
         pat = '(<a class="btn" href="{})(.[^>]*)(target=_blank)'.format(url)
         if not re.search(pat, body):
             raise Exception("Button target was not 'blank'.")
+
+
+def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
+    if not sendemail:
+        email = email.replace('sendemail', '')
+    if symbols:
+        index = email.find('@')
+        email = email[:index] + \
+                "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
+        return email
+    else:
+        index = email.find('@')
+        email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
+        return email
 
 
 class EmailMessage:

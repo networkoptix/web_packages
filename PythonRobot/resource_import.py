@@ -221,20 +221,6 @@ def get_lang_list():
         return json.load(langDict)
 
 
-def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
-    if not sendemail:
-        email = email.replace('sendemail', '')
-    if symbols:
-        index = email.find('@')
-        email = email[:index] + \
-                "!#$%'*-/=?^_`{|}~" + str(time.time()) + email[index:]
-        return email
-    else:
-        index = email.find('@')
-        email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
-        return email
-
-
 def logout_japanese(driver: WebDriver):
     Pane(driver, rb.BACKDROP).wait_until_does_not_exist()
     element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""

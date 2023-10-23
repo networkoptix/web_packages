@@ -12,7 +12,7 @@ from requests import HTTPError
 
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 
-from email_access import Email
+from email_access import get_random_email
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import ContainerConfiguration
 from NoptixLibrary.docker_api import DockerHTTPApi
@@ -361,7 +361,7 @@ class CloudAccount:
         self._tear_down()
 
     def _set_up(self):
-        self.email = Email.get_random_email(
+        self.email = get_random_email(
             'noptixautoqa+sendemail@gmail.com',
             self._sendemail,
             )

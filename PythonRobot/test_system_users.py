@@ -7,12 +7,12 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from email_access import Email
+from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.register_form import RegisterForm
 from resource_import import get_chrome
-from resource_import import get_random_email
 from resource_import import register_and_activate_account
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
@@ -171,7 +171,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
     with get_chrome() as driver:
         email_con = Email()
-        email = email_con.get_random_email(sendemail=True)
+        email = get_random_email(sendemail=True)
         owner = server.get_cloud_owner()
         cloud_auth = (owner.email, owner.password)
         CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
@@ -200,7 +200,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
             register_form.create_account_button().click()
             print("PASS")
             CLOUD_API.delete_account(email, password)
-            
+
 
 def share_with_registered_user_works(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""

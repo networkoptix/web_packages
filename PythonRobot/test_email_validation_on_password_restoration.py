@@ -2,8 +2,8 @@ from RobotVariables import RobotVariables
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.reset_password_dialog import ResetPasswordDialog
+from email_access import get_random_email
 from resource_import import get_chrome
-from resource_import import get_random_email
 from resource_import import register_and_activate_account
 from variables import ENV
 rb = RobotVariables("en_US")
