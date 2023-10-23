@@ -14,7 +14,7 @@ import robot_lists as rl
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
-from email_access import Email
+from email_access import EmailClient
 from generic_elements import Button
 from generic_elements import Checkbox
 from generic_elements import DropDown
@@ -194,12 +194,9 @@ def delete_email(mail, email_uid):
 
 
 def get_email_link(recipient):
-    email_con = Email()
-    email_id = email_con.wait_for_email(recipient)
-    link_type = "activate"
-    email_con.check_email_subject(email_id, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
-    link = email_con.get_email_link(recipient, link_type)
-    return link
+    with EmailClient(email_alias=recipient) as client:
+        email_message = client.wait_for_activate_account_email()
+        return email_message.get_activate_account_link()
 
 
 def get_headless_chrome():

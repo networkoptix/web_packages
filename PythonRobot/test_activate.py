@@ -4,6 +4,7 @@ import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import get_random_email
+from email_access import EmailClient
 from pages.login import LoginDialog
 from pages.register_form import RegisterForm
 from generic_elements import Button
@@ -69,13 +70,14 @@ def activate_same_link_twice():
         rf = RegisterForm(driver)
         rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
 
-        e = Email()
-        link = e.get_email_link(random_email, 'activate')
-        driver.get(link)
-        PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
-        # You go back, Jack,  do it again. Wheel turnin' round and round
-        driver.get(link)
-        PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+    with EmailClient(email_alias=random_email) as client:
+        email_message = client.wait_for_activate_account_email()
+        link = email_message.get_activate_account_link()
+    driver.get(link)
+    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+    # You go back, Jack,  do it again. Wheel turnin' round and round
+    driver.get(link)
+    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
 
 
 def save_user_data_correctly():
@@ -131,31 +133,26 @@ def link_works_logged_out():
 
 def login_before_activation():
     """14. Should allow to login with email instead of username"""
+    driver = resource_import.get_headless_chrome()
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         driver.get(f'{rb.ENV}/authorize?client_type=create')
         rf = RegisterForm(driver)
         rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
-
-        e = Email()
-        link = e.get_email_link(random_email, 'activate')
-        if not link:
-            raise Exception("Registration email not found")
+        with EmailClient(email_alias=random_email) as client:
+            email_message = client.wait_for_activate_account_email()
+            email_message.get_activate_account_link()
+            client.delete_email(email_message)
         driver.get(f'{rb.ENV}/authorize')
         login = LoginDialog(driver)
         login._wait_until_modal_is_visible()
         login.email_input().input_text(random_email)
         login.next_button().click()
         Button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).wait_until_visible()
-
         Button(driver, rb.RESEND_ACTIVATION_LINK_BUTTON).click()
-        sleep(10) # give time for email to arrive
-        link = e.get_email_link(random_email, 'activate')
-        if not link:
-            raise Exception("Registration email not found")
-
-
-
+        with EmailClient(email_alias=random_email) as client:
+            email_message = client.wait_for_activate_account_email()
+            email_message.get_activate_account_link()
 
 
 if __name__ == "__main__":

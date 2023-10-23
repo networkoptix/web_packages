@@ -76,19 +76,6 @@ class Email:
         self.logout()
         return False
 
-    def get_email_link(self, recipient, link_type, timeout=120):
-        email_uid = None
-        if link_type == "restore_password":
-            email_uid = self.wait_for_email(recipient, rb.RESET_PASSWORD_EMAIL_SUBJECT, timeout=timeout)
-        if link_type == 'activate':
-            email_uid = self.wait_for_email(recipient, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT, timeout=timeout)
-        if email_uid is None:
-            print("Email not received within timeout!")
-            return
-        body = self.get_body(email_uid)
-        links = self.get_nx_links_from_email(body)
-        return links
-
     def get_nx_links_from_email(self, email_body):
         url = rf'href=[\'\"]?(https:\/\/([^<>]*)(|.dev|.test|\.mx\/|.host\/|\.com\/)(authorize)\/[^\'\" >]+)'
         res = re.findall(url, str(email_body))
@@ -148,20 +135,10 @@ class Email:
         if not re.search(pat, body):
             raise Exception("Button background-color was not found.")
 
-    def check_email_user_names(self, body, fName, lName):
-        pat = '(<h1.*>).*({} {}.*</h1>)'.format(fName, lName)
-        if not re.search(pat, body):
-            raise Exception("User name was not in the email.")
-
     def check_email_cloud_name(self, body, cloudName):
         pat = '(<p).*({}).*(</p>)'.format(cloudName)
         if not re.search(pat, body):
             raise Exception("Cloud name was not in the email.")
-
-    def check_for_blank_target(self, body, url):
-        pat = '(<a class="btn" href="{})(.[^>]*)(target=_blank)'.format(url)
-        if not re.search(pat, body):
-            raise Exception("Button target was not 'blank'.")
 
 
 def get_random_email(email=rb.BASE_EMAIL_SENDEMAIL, sendemail=False, extra="", symbols=False):
@@ -210,6 +187,12 @@ class EmailMessage:
             else:
                 raise RuntimeError(f"Expected link not found in email: {expected_link}")
 
+    def get_activate_account_link(self):
+        for link in self._get_links():
+            if 'authorize/activate' in link:
+                return link
+        raise RuntimeError("Account activation link not found in the email body")
+
     def get_restore_password_link(self):
         for link in self._get_links():
             if 'authorize/restore_password' in link:
@@ -242,6 +225,9 @@ class EmailClient:
 
     def wait_for_reset_password_email(self, timeout=60) -> EmailMessage:
         return self.wait_for_email_subject('Reset', timeout=timeout)
+
+    def wait_for_activate_account_email(self, timeout=60):
+        return self.wait_for_email_subject("Activate your account", timeout=timeout)
 
     def wait_for_email_subject(self, subject: str, timeout=60) -> EmailMessage:
         return self._search(f'(TO "{self._alias}" SUBJECT "{subject}")', timeout)

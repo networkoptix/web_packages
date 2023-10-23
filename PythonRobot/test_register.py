@@ -6,7 +6,7 @@ from selenium.webdriver.common.keys import Keys
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
-from email_access import Email
+from email_access import EmailClient
 from generic_elements import Button
 from pages.header import HeaderNav
 from pages.register_form import RegisterForm
@@ -265,15 +265,14 @@ def check_register_email():
         register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
         time.sleep(10)
 
-        email_con = Email()
-        email_id = email_con.wait_for_email(email, rb.ACTIVATE_YOUR_ACCOUNT_EMAIL_SUBJECT)
-        body = email_con.get_body(email_id)
-        email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
-        email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
-
-        expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, rb.ENV, f'{rb.ENV}/authorize/activate']
-        email_con.find_links_in_email(body, expected_links)
-        email_con.delete_email(email_id)
+    with EmailClient(email_alias=email) as client:
+        email_message = client.wait_for_activate_account_email()
+        client.delete_email(email_message)
+    email_message.get_activate_account_link()
+    assert email_message.get_button_color(rb.ENV) == rb.THEME_COLOR
+    assert email_message.is_cloud_name_present(rb.PRODUCT_NAME)
+    expected_links = [rb.SUPPORT_URL, rb.WEBSITE_URL, rb.ENV, f'{rb.ENV}/authorize/activate']
+    email_message.find_links_in_body(expected_links)
 
 
 if __name__ == "__main__":
