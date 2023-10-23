@@ -115,6 +115,9 @@ class PageText:
     def click(self):
         self._element.click()
 
+    def hover(self):
+        self._element.hover()
+
     def wait_until_does_not_exist(self, timeout: float = 5):
         self._element.wait_until_does_not_exist(timeout)
 
@@ -176,6 +179,9 @@ class TextField:
 
     def click(self):
         self._element.click()
+
+    def hover(self):
+        self._element.hover()
 
     def is_visible(self) -> bool:
         return self._element.is_visible()
