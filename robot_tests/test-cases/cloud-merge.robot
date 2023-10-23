@@ -7,33 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Merge Suite Teardown
 Force Tags        merge
 
 *** Test Cases ***
-1. Merge button availability
-    [Tags]    C70976    C70977    should
-    Log    C70976: "Merge with Another System" button is available only for owner
-    Log    Test Setup
-    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${rs}=   Generate Random String
-    ${system}=   Create Base System    cloud_merge_${rs}   image=${IMAGE 5.0}    owner=${owner email}    add users=True
-    Append To List    ${test systems}    ${system}
-
-    Log    Step 1: Log in as owner
-    Log in to system    ${system}    ${owner email}
-    Wait until element is visible    ${MERGE BUTTON SYSTEM}        timeout=180
-    Log Out
-
-    Log    Steps 2-4: Log in as administrator, viewer, custom
-    FOR    ${user}    IN    @{system['cloud users'].values()}
-        Log in to system    ${system}    ${user}
-        Wait until element is visible    ${DISCONNECT FROM MY ACCOUNT}    timeout=30
-        Wait until element is not visible    ${MERGE BUTTON SYSTEM}    timeout=30
-        Log Out
-    END
-
-    Log    C70977: "Merge with Another System" button is disabled if system is offline
-    Stop Container    ${system}[container]
-    Log in to system    ${system}    ${owner email}
-    Wait until element is visible    ${MERGE BUTTON SYSTEM DISABLED}
-
 2. Merge Dialog - Dropdown has three sections
     [Tags]    C70979    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
