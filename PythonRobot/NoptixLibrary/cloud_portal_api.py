@@ -133,6 +133,15 @@ class CloudPortalAPI(object):
         cdb_merge_response.raise_for_status()
         return cdb_merge_response.json()
 
+    def cdb_system_status(self, system_id: str, email: str, password: str,):
+        cdb_system_status_response = requests.get(
+            url=f'{self.env}/cdb/systems/{system_id}',
+            auth=HTTPBasicAuth(email, password),
+            verify=False,
+            )
+        cdb_system_status_response.raise_for_status()
+        return cdb_system_status_response.json()
+
     def change_password(self, email, old_password, new_password):
         with self._session(email, old_password) as s:
             s.headers.update({"referer": f"{self.env}/account/password"})

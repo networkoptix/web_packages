@@ -84,7 +84,35 @@ class Suite:
             server._cloud_advanced_viewer = cloud_users.get('advancedViewer')
             server._cloud_live_viewer = cloud_users.get('liveViewer')
             server._cloud_custom_user = cloud_users.get('custom')
+        self._wait_for_system_ready(
+            server.id,
+            cloud_owner,
+            )
         return server
+
+    def _wait_for_system_ready(
+            self,
+            system_id: str,
+            cloud_owner: 'CloudAccount',
+            ):
+        started_at = time.monotonic()
+        timeout_sec = 20
+        while True:
+            json_status = _CLOUD_API.cdb_system_status(
+                system_id,
+                cloud_owner.email,
+                cloud_owner.password,
+                )
+            system_status = json_status['status']
+            state_of_health = json_status['stateOfHealth']
+            if system_status == 'activated' and state_of_health == 'online':
+                return
+            _logger.info("System is offline. Waiting for online status")
+            if time.monotonic() - started_at > timeout_sec:
+                raise RuntimeError(f"System is not ready within timeout. "
+                                   f"System status is {system_status}, "
+                                   f"System state of health is {state_of_health}",
+                                   )
 
     def create_cloud_accounts(self, permissions: Optional[Collection[str]] = None):
         cloud_users = {}
