@@ -263,21 +263,17 @@ class Mediaserver:
     def set_up(self):
         # Create a docker server.
         # Mimic configuration from JSON files.
-        data = {
-            'ports': self.ports,
-            }
         container_name = self.suite_name + str(self.run_id)
-        docker_server_data = _DOCKER_API.create_docker_server(container_name, data)
-        data.update(docker_server_data)
-        self.name = data['name']
-        self._container_id = data['container']
+        docker_server_data = _DOCKER_API.create_docker_server(container_name, self.ports)
+        self.name = docker_server_data['name']
+        self._container_id = docker_server_data['container']
         print(f"Container {self.name} should be up, waiting for 5 secs")
         time.sleep(5)  # Wait for the docker server to be ready
         vms_default_port = 7001
-        for index, docker_port in enumerate(data['port']):
+        for index, docker_port in enumerate(docker_server_data['port']):
             self._port_mapping[vms_default_port + index] = f'https://{_DOCKER_API.host_ip}:{docker_port}'
         # Set up a local system.
-        server_api_port, *_ = data['port']
+        server_api_port, *_ = docker_server_data['port']
         server_api_url = f'https://{_DOCKER_API.host_ip}:{server_api_port}'
         self.api = ServerApi(url=server_api_url, password=INITIAL_PASSWORD)
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
