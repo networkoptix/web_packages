@@ -249,11 +249,11 @@ class SystemAdmin:
         PageText(self.driver, locator).wait_until_visible()
 
     def get_owner_label(self):
-        locator = "//nx-system-admin-component/div/div/nx-block/div/div[1]/header/div/span"
+        locator = f"//nx-system-admin-component//span[contains(text(), '{self.rb.OWNER_TEXT}')]/.."
         return PageText(self.driver, locator)
 
     def get_your_access_level_label(self):
-        locator = "//nx-system-admin-component//nx-block/div/nx-section/div/div[2]/span"
+        locator = f"//nx-system-admin-component//span[contains(text(), '{self.rb.YOUR_ACCESS_LEVEL_TEXT}')]/.."
         return PageText(self.driver, locator)
 
 
