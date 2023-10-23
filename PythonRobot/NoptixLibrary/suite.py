@@ -47,7 +47,7 @@ class Suite:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        server = Mediaserver(suite_name, self.run_id, ports=2).set_up()
+        server = Mediaserver(suite_name, self.run_id).set_up(ports_count=2)
         self._exit_stack.callback(server.tear_down)
         return server
 
@@ -132,19 +132,13 @@ class Suite:
 
 class Mediaserver:
 
-    def __init__(
-            self,
-            suite_name,
-            run_id,
-            ports: int = 1,
-            ):
+    def __init__(self, suite_name: str, run_id: int):
         self._cloud_owner = None
         self._cloud_admin = None
         self._cloud_viewer = None
         self._cloud_advanced_viewer = None
         self._cloud_live_viewer = None
         self._cloud_custom_user = None
-        self.ports = ports
         self.suite_name = suite_name
         self.run_id = run_id
         self._port_mapping = {}
@@ -260,11 +254,11 @@ class Mediaserver:
                 slave.id = self.id
                 break
 
-    def set_up(self):
+    def set_up(self, ports_count: int):
         # Create a docker server.
         # Mimic configuration from JSON files.
         container_name = self.suite_name + str(self.run_id)
-        docker_server_data = _DOCKER_API.create_docker_server(container_name, self.ports)
+        docker_server_data = _DOCKER_API.create_docker_server(container_name, ports_count)
         self.name = docker_server_data['name']
         self._container_id = docker_server_data['container']
         print(f"Container {self.name} should be up, waiting for 5 secs")
