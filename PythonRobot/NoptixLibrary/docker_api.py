@@ -15,20 +15,18 @@ class DockerApi(object):
 
     def create_docker_server(self, server, runName):
         name = server['name'] + str(runName)
-        mac = self._get_random_mac()
         ports = []
         for _ in range(server["ports"]):
             ports.append(self._get_random_port_from_docker_server())
-        container = self._create_container(ports, mac, name, server)
+        container = self._create_container(ports, name, server)
         self.start_container(container)
         return {
             "name": name,
             "port": ports,
-            "mac": mac,
             "container": container,
             }
 
-    def _create_container(self, ports, mac, name, server):
+    def _create_container(self, ports, name, server):
         port_count = 7001
         PortBindings = {}
         ExposedPorts = {}
@@ -39,7 +37,6 @@ class DockerApi(object):
         payload = {
             "Env": [f'CLOUD_HOST={self.env.replace("https://", "")}'],
             "Image": self.image,
-            "MacAddress": mac,
             "ExposedPorts": ExposedPorts,
             "HostConfig": {
                 "RestartPolicy": {
@@ -100,9 +97,3 @@ class DockerApi(object):
         while port in usedPorts:
             port = randint(30000, 65535)
         return str(port)
-
-    def _get_random_mac(self):
-        prefix = 'AA'
-        suffix = ':'.join('%02x' % randint(0, 255) for x in range(5))
-        random_mac = ':'.join((prefix, suffix)).upper()
-        return random_mac
