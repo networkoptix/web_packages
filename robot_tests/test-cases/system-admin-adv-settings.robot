@@ -7,25 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
-3. Hide Advanced Settings button functionality
-    [Tags]    C76635    
-    Log in to system New   ${system}    ${system}[cloudOwner]
-    Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
-    Click Element    ${HIDE ADVANCED SETTINGS BUTTON}
-    IF    '${IMAGE}'=='5.0'
-        Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE ${IMAGE}}
-    ELSE
-        Wait Until Elements Are Not Visible    @{ADVANCED SETTING ELEMENT BLOCK ONE}
-    END
-    IF    '${mode}' == 'cloud'
-        Go To    ${ENV}/systems/${system}[id]${ADVANCED SETTINGS}
-    ELSE
-        ${location}=   Get Location
-        Go to    ${location}${ADVANCED SETTINGS}
-    END
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE
-
 4. Audit trail, backup and statistics section
     [Tags]    C78244
     Log    Preconditions

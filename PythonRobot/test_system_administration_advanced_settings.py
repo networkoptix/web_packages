@@ -63,6 +63,23 @@ def advanced_system_settings_for_offline_system(server: Mediaserver):
         advanced_settings.get_advanced_settings_element_block_one().wait_until_elements_loaded()
 
 
+def hide_advanced_settings_button_functionality(server: Mediaserver):
+    """
+    [Tags]    C76635    advanced settings
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        driver.get(ENV + f"/systems/{server.id}")
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        driver.get(ENV + f"/systems/{server.id}/?advanced")
+        system_admin = SystemAdmin(driver)
+        advanced_settings = system_admin.get_advanced_settings_block()
+        advanced_settings.get_advanced_settings_element_block_one().wait_until_elements_loaded()
+        advanced_settings.get_hide_advanced_settings_button().click()
+        advanced_settings.get_advanced_settings_element_block_one().wait_until_elements_not_seen()
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -84,3 +101,4 @@ if __name__ == "__main__":
             )
         advanced_system_settings_inaccessibility(cloud_server, cloud_server.get_cloud_custom_user())
         advanced_system_settings_for_offline_system(cloud_server)
+        hide_advanced_settings_button_functionality(cloud_server)
