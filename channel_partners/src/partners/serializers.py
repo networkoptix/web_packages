@@ -70,11 +70,11 @@ class CodeChoiceField(serializers.ChoiceField):
 class SupportInformationSerializer(serializers.Serializer):
     class PhoneSerializer(serializers.Serializer):
         phone = NonPartialCharfield(required=True)
-        description = NonPartialCharfield(required=True)
+        description = NonPartialCharfield(required=False)
 
     class EmailSerializer(serializers.Serializer):
         email = NonPartialCharfield(required=True)
-        description = NonPartialCharfield(required=True)
+        description = NonPartialCharfield(required=False)
 
     class CustomSerializer(serializers.Serializer):
         label = NonPartialCharfield(required=True)
