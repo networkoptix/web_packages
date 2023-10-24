@@ -64,7 +64,7 @@ def register_form_validation(driver, first_name, last_name, email, password, che
         check_password_badge(driver, password, rb.REGISTER_FORM)
     if checked:
         # Workaround. Rework Checkbox wrapper to simplify arguments.
-        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE, '').click()
+        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
     time.sleep(.1)
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 

@@ -84,7 +84,7 @@ class SystemAdmin:
         return ToastNotification(self.driver, replaced_disconnect_message)
 
     def mandatory_2fa_chechbox(self):
-        return Checkbox(self.driver, "//nx-checkbox[@name='mandatory2fa']", "//input")
+        return Checkbox(self.driver, "//nx-checkbox[@name='mandatory2fa']")
 
     def twofa_verification_code_input(self):
         return TextField(self.driver, '//nx-2fa-code-input/input')
@@ -129,10 +129,10 @@ class SystemAdmin:
         return Button(self.driver, translated_xpath)
 
     def primary_first_system(self):
-        return Checkbox(self.driver, "//label[@for='firstSystem']", "//input[@id='firstSystem']")
+        return Checkbox(self.driver, "//label[@for='firstSystem']")
 
     def primary_second_system(self):
-        return Checkbox(self.driver, "//label[@for='secondSystem']", "//input[@id='secondSystem']")
+        return Checkbox(self.driver, "//label[@for='secondSystem']")
 
     def system_is_being_merged(self):
         translated_xpath = self.rb.replace_nested_variables("//div[contains(text(), '{SYSTEM_IS_BEING_MERGED_TEXT}')]")

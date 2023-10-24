@@ -60,7 +60,7 @@ class SecurityForm:
         return PageText(self.driver, "//nx-authorize-backup-code-component//p")
 
     def twofa_verification_checkbox(self):
-        return Checkbox(self.driver, "//nx-account-security-component//nx-section//nx-checkbox", "//input[@id='skip-tfauth']" )
+        return Checkbox(self.driver, "//nx-account-security-component//nx-section//nx-checkbox")
 
     def twofa_settings_modal_uncheck(self):
         return PageText(self.driver, f"//nx-require-code-on-login//p/span[text()='{self.rb.TWOFA_SETTINGS_MODAL_DESCRIPTION_TEXT2}']")

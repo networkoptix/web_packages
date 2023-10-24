@@ -301,7 +301,7 @@ def register(driver, first_name, last_name, email, password, checked=False, view
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).input_text(password)
     if not checked:
         # Workaround. Rework Checkbox wrapper to simplify arguments.
-        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE, '').click()
+        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 
 

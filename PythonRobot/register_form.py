@@ -36,7 +36,7 @@ class RegisterForm:
         return Button(self.driver, f"//button[contains(text(),'{self.rb.CREATE_ACCOUNT_BUTTON_TEXT}')]")
     
     def terms_and_conditions_checkbox(self):
-        return Checkbox(self.driver, "//nx-checkbox[@name='termsAndConditions']", "//input[@id='termsAndConditions']")
+        return Checkbox(self.driver, "//nx-checkbox[@name='termsAndConditions']")
     
     def terms_and_conditions_link(self):
         return Button(self.driver, "//a[@href='/content/eula']")
