@@ -138,6 +138,7 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --placehoder-title-color: #{$dark_gray_9};
     --placehoder-body-color: #{$dark_gray_9};
     --placeholder-description-text: #{$light10};
+    --placeholder-bookmarks-bg-color: #{$light4};
 
     --progress-bar-color: #{$light_gray_4};
     --progress-bar-border-color: #{$light_gray_6};
@@ -695,8 +696,6 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
     --bookmarks-card-video-bg: inherit;
-    --bookmarks-no-results-text: var(--dark17);
-    --bookmarks-no-results-title: var(--dark17);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

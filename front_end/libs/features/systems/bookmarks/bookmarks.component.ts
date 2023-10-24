@@ -164,10 +164,6 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.noBksImgSrc = `${icons.dirSectionPlaceholder}empty-bookmarks${
-            this.CONFIG.isDarkTheme ? '-dark' : '-light'
-        }.svg`;
-
         this.route.queryParams.pipe(take(1)).subscribe(queryParams => {
             this.queryParams = { ...queryParams };
             /* (ngModelChange) for <nx-simple-search> and <nx-checkbox>
@@ -462,6 +458,7 @@ export class NxBookmarksComponent implements OnInit {
         this.deviceFilter.clear();
         this.tagFilter.clear();
         this.queryParams = {};
+        this.search = '';
         this.updateUri();
     }
 

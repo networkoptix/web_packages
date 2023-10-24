@@ -158,6 +158,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --placehoder-title-color : #{$dark9};
     --placehoder-body-color : #{$dark9};
     --placeholder-description-text: #{$light10};
+    --placeholder-bookmarks-bg-color: #{$light4};
 
     --progress-bar-color : #{$light4};
     --progress-bar-border-color : #{$light6};
@@ -736,8 +737,6 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     );
     --bookmarks-card-title-gradient-hover: var(--bookmarks-card-title-gradient);
     --bookmarks-card-video-bg: inherit;
-    --bookmarks-no-results-text: var(--dark17);
-    --bookmarks-no-results-title: var(--dark17);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 

@@ -140,6 +140,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --placehoder-title-color   : #E8E8E8; //$light_gray_4;
     --placehoder-body-color    : #B8B8B8; //light_gray_10;
     --placeholder-description-text: #{$light10};
+    --placeholder-bookmarks-bg-color: #A5B6C0;
 
     --progress-bar-color                  : #787878; //$dark_gray_16
     --progress-bar-border-color           : #787878; //$dark_gray_16
@@ -714,8 +715,6 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
     --bookmarks-card-video-bg: var(--dark6);
-    --bookmarks-no-results-text: var(--dark17);
-    --bookmarks-no-results-title: var(--light1);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
