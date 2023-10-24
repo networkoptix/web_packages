@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, ViewChild } from '@angular/core';
+import { Component, EventEmitter, Input, OnChanges, Output, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { SubscriptionLike } from 'rxjs';
 
@@ -38,6 +38,8 @@ export class NxLicenseNewComponent implements OnChanges {
 
     windowSizeSubscription: SubscriptionLike;
     hideErrors = true;
+
+    @Output() showNewLicense = new EventEmitter<boolean>();
 
     @ViewChild('newLicenseForm') licenseForm: HTMLFormElement;
     @ViewChild('errorDiv') errorDiv: HTMLDivElement;
@@ -80,6 +82,8 @@ export class NxLicenseNewComponent implements OnChanges {
                                         this.LANG.license.messages.activated,
                                         ToastType.Success,
                                     );
+
+                                    this.showNewLicense.emit(true);
 
                                     return;
                                 }
