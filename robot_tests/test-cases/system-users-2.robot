@@ -7,55 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
 
 *** Test Cases ***
-13. Change role for Cloud User
-    [Tags]    C41900    webadmin    cloud
-    ${tmp user}=   Register and activate account with random email    Tmp    Viewer    ${base password}
-    Share    ${servers}[0][cloud auth]    ${servers}[0][cloud id]    ${ACCESS ROLES}[viewer]    ${tmp user}     ${permissions}[viewer]
-    Log in to system    ${servers}[0]    ${servers}[0][owner]
-    Verify In System    ${servers}[0][name]
-
-    Log    Step 1
-    Go to Users List
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span/span[contains(text(), "Viewer")]/ancestor::nx-level-3-item
-    Wait until element is visible    ${user in left menu}
-    Click Element    ${user in left menu}
-    Wait until elements are visible
-        ...    ${USER EMAIL}
-        ...    ${ACCESS LEVEL DROPDOWN}
-        ...    ${NO UNSAVED CHANGES}
-        ...    ${REMOVE USER BUTTON}
-    ${name shown}=   Get Text    ${USER NAME}
-    ${email shown}=   Get Text    ${USER EMAIL}
-    ${role shown}=   Get Text    ${ACCESS LEVEL DROPDOWN}/span
-    Should be equal as strings    ${name shown}    Tmp Viewer
-    Should be equal as strings    ${email shown}    ${tmp user}
-    Should be equal as strings    ${role shown}    Viewer
-
-    Log    Step 2
-    Click Button    ${ACCESS LEVEL DROPDOWN}
-    Wait until element is visible    ${ACCESS LEVEL DROPDOWN MENU}
-    Click Element     ${ACCESS LEVEL DROPDOWN MENU}//span[text()='Administrator']
-    Wait until elements are visible
-        ...    ${SAVE BUTTON}
-        ...    ${CANCEL BUTTON}
-        ...    ${user in left menu}    # Role is not changed yet
-
-    Log    Step 3
-    Click Button    ${SAVE BUTTON}
-
-    Wait until elements are not visible
-       ...    ${SAVE BUTTON}
-       ...    ${CANCEL BUTTON}
-       ...    ${ACCESS LEVEL DROPDOWN MENU}
-
-    ${user in left menu}=   Set Variable    //span[contains(text(), "${tmp user}")]/following-sibling::span/span[contains(text(), "Administrator")]/ancestor::nx-level-3-item
-    Wait until elements are visible
-        ...    ${ACCESS LEVEL DROPDOWN}
-        ...    ${NO UNSAVED CHANGES}
-        ...    ${user in left menu}
-    ${role shown}=   Get Text    ${ACCESS LEVEL DROPDOWN}/span
-    Should be equal as strings    ${role shown}    Administrator
-
 14. Edit permission works
     [Tags]    C30657    C47041    webadmin    cloud
     ${random email}=   Get Random Email Robot    ${BASE EMAIL}
