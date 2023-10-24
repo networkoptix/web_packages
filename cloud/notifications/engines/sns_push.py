@@ -60,7 +60,8 @@ def generate_provider_specific_messages(title, body, payload, options, data_payl
             'notification': {'title': None, 'body': None},
             'data': {**data_payload, **options},
             'android': {'priority': android_priority, **options},
-            'priority': android_priority
+            'priority': android_priority,
+            'time_to_live': options.get('time_to_live', 2419200)
         })}),
         PushDevice.PROVIDERS.baidu: json.dumps({'BAIDU': json.dumps({
             'msg': {'title': None, 'description': None},
