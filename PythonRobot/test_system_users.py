@@ -57,7 +57,7 @@ def owner_can_remove_user(server: Mediaserver):
             header.log_in_button().click()
             LoginDialog(driver).basic_cloud_login(email, password)
             header.account_dropdown()
-            SystemsPage(driver).no_systems()
+            SystemsPage(driver).no_systems().wait_until_visible()
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -97,7 +97,7 @@ def cloud_admin_can_remove_user(server: Mediaserver):
             header.log_in_button().click()
             LoginDialog(driver).basic_cloud_login(email, password)
             header.account_dropdown()
-            SystemsPage(driver).no_systems()
+            SystemsPage(driver).no_systems().wait_until_visible()
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')

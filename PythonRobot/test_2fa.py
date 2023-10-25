@@ -79,7 +79,7 @@ def login_with_backup_code(server: Mediaserver):
             owner.password,
             backup_code,
             )
-    security_form.twofa_backup_code_error()
+    security_form.twofa_backup_code_error().wait_until_visible()
     CLOUD_API.toggle_2fa_off_api(
         owner,
         verification_code=owner.get_otp()
@@ -202,7 +202,7 @@ def twofa_not_required_when_more_than_one_system(server: Mediaserver):
     security_form.twofa_verification_checkbox().checked()
     security_form.twofa_verification_checkbox().unselect()
     security_form.twofa_settings_modal_check()
-    security_form.twofa_settings_modal_off_instructions()
+    security_form.twofa_settings_modal_off_instructions().wait_until_visible()
     security_form.twofa_settings_modal_apply()
     security_form.twofa_settings_modal_cancel()
     security_form.twofa_totp_input().input_text(owner.get_otp())
@@ -244,7 +244,7 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     security_form.twofa_page_cancel().wait_until_not_visible()
     security_form.twofa_verification_checkbox().unselect()
     security_form.twofa_settings_modal_check()
-    security_form.twofa_settings_modal_off_instructions()
+    security_form.twofa_settings_modal_off_instructions().wait_until_visible()
     security_form.twofa_settings_modal_apply().wait_until_visible()
     security_form.twofa_settings_modal_cancel().wait_until_visible()
     security_form.twofa_totp_input().input_text(owner.get_otp())
@@ -254,8 +254,8 @@ def change_2fa_for_user_to_specific_systems_and_whole_account(server: Mediaserve
     modal_apply.wait_until_visible()
     security_form.twofa_settings_modal_cancel().wait_until_not_visible()
     security_form.twofa_verification_checkbox().select()
-    security_form.twofa_settings_modal_uncheck()
-    security_form.twofa_settings_modal_on_instructions()
+    security_form.twofa_settings_modal_uncheck().wait_until_visible()
+    security_form.twofa_settings_modal_on_instructions().wait_until_visible()
     security_form.twofa_settings_modal_apply()
     security_form.twofa_settings_modal_cancel()
     security_form.twofa_totp_input().input_text(owner.get_otp())
@@ -295,7 +295,7 @@ def fail_to_login_with_expired_code(server: Mediaserver):
         owner.password,
         owner.get_otp(at_time=old_time),
         )
-    login_form.twofa_error_login_code()
+    login_form.twofa_error_login_code().wait_until_visible()
     CLOUD_API.toggle_2fa_off_api(
         owner,
         verification_code=owner.get_otp(),

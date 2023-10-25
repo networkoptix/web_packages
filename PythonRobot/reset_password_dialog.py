@@ -40,8 +40,8 @@ class ResetPasswordDialog:
 
     def wait_until_error(self) -> str:
         actual_error = self._get_error_message()
-        actual_error .wait_until_visible(3)
-        return actual_error .get_text().strip()
+        actual_error.wait_until_visible(3)
+        return actual_error.get_text().strip()
 
     def wait_until_no_error(self):
         self._get_error_message().wait_until_not_visible(3)

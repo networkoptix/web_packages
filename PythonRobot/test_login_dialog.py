@@ -32,7 +32,7 @@ def allows_login_with_correct_credentials_and_log_out():
         login.next_button().click()
         login.password_input().input_text(password)
         login.login_button().click()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
         header.log_out_option().click()
         LandingPage(driver)
@@ -52,7 +52,7 @@ def allows_log_in_with_existing_email_in_uppercase():
         login.next_button().click()
         login.password_input().input_text(password)
         login.login_button().click()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
 
 
@@ -106,7 +106,7 @@ def not_activated_user_login_check():
             "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']",
             )
         login_button.click()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
 
 
@@ -138,7 +138,7 @@ def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_b
         login.next_button().click()
         login.password_input().input_text(password)
         login.login_button().click()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
         header.log_out_option().click()
         LandingPage(driver)
@@ -195,7 +195,7 @@ def should_respond_to_enter_key_and_log_in():
         login.next_button().click()
         login.password_input().input_text(password)
         login.password_input().press_enter()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
 
 
@@ -231,11 +231,11 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
         login.next_button().click()
         login.password_input().input_text(password)
         login.login_button().click()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         driver.switch_to.window(driver.window_handles[0])
         assert driver.current_url == ENV + '/authorize?client_type=create'
         driver.get(ENV)
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
         header.log_out_option().click()
         LandingPage(driver)
@@ -267,7 +267,7 @@ def log_in_more_than_5_times():
         time.sleep(65)
         login.password_input().input_text(password)
         login.login_button().click()
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
 
 
@@ -287,7 +287,7 @@ def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
         login.next_button().click()
         login.password_input().input_text(password)
         login.login_button().click()
-        SystemsPage(driver1).no_systems()
+        SystemsPage(driver1).no_systems().wait_until_visible()
         with get_chrome() as driver2:
             driver2.get(ENV)
             header = HeaderNav(driver2)
@@ -297,7 +297,7 @@ def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
             login.next_button().click()
             login.password_input().input_text(password)
             login.login_button().click()
-            SystemsPage(driver2).no_systems()
+            SystemsPage(driver2).no_systems().wait_until_visible()
             header.account_dropdown().click()
             header.change_password_option().click()
             change_pass_form = ChangePassForm(driver2)

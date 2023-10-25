@@ -53,7 +53,7 @@ def no_systems_connected():
     HeaderNav(driver).log_in_button().click()
     LoginDialog(driver).basic_cloud_login(email, password)
     systems_page = SystemsPage(driver)
-    systems_page.no_systems()
+    systems_page.no_systems().wait_until_visible()
 
     driver.quit()
     print("pass")

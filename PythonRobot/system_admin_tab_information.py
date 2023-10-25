@@ -58,7 +58,7 @@ class TabInformation:
 
     def is_current_system_inaccessible(self) -> bool:
         try:
-            PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]')
+            PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]').wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
@@ -81,7 +81,7 @@ class TabInformation:
             PageText(
                 self._driver,
                 f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]',
-            )
+            ).wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
@@ -97,7 +97,7 @@ class TabInformation:
 
     def no_alerts(self) -> bool:
         try:
-            PageText(self._driver, f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]')
+            PageText(self._driver, f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]').wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
@@ -105,14 +105,14 @@ class TabInformation:
 
     def system_is_doing_well(self) -> bool:
         try:
-            PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]')
+            PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]').wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
             return True
 
     def get_alerts_count(self) -> int:
-        table_header = PageText(self._driver, '//div[@id="nx-table"]/div[contains(@class,"table-header")]')
+        table_header = PageText(self._driver, '//div[@id="nx-table"]/div[contains(@class,"table-header")]').wait_until_visible()
         (count, _) = table_header.get_text().strip().split()
         return int(count)
 
@@ -249,8 +249,9 @@ class _AlertsSection(_Section):
         )
 
     def get_pages_count(self):
+        paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
         try:
-            paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
+            paginator.wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return 1
         else:

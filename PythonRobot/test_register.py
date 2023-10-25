@@ -200,10 +200,10 @@ def should_respond_to_tab_key():
     ActionChains(driver).send_keys(Keys.TAB).perform()
     time.sleep(1)
     assert register_form.create_account_button().is_focused(), "Create Account Button not focused after TAB"
-    register_form.first_name_is_required_error()
-    register_form.last_name_is_required_error()
-    register_form.email_is_required_error()
-    register_form.password_is_required_error()
+    register_form.first_name_is_required_error().wait_until_visible()
+    register_form.last_name_is_required_error().wait_until_visible()
+    register_form.email_is_required_error().wait_until_visible()
+    register_form.password_is_required_error().wait_until_visible()
     driver.close()
 
 

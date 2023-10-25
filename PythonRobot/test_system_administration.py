@@ -82,7 +82,7 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
         message = sys_admin.disconnect_from_account_toast_notification(server.name).get_message()
         message.wait_until_visible()
         message.wait_until_not_visible(10)
-        SystemsPage(driver).no_systems()
+        SystemsPage(driver).no_systems().wait_until_visible()
         header = HeaderNav(driver)
         header.log_out()
         url1 = ENV + f"/systems/{server.id}"

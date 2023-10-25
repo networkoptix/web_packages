@@ -109,7 +109,7 @@ class _ServerPage:
         return _RestartDialog(self._driver, self._rb)
 
     def wait_until_restarting_banner(self):
-        PageText(self._driver, f"//nx-alert-block//span[contains(text(),{self._rb.RESTARTING})]")
+        PageText(self._driver, f"//nx-alert-block//span[contains(text(),{self._rb.RESTARTING})]").wait_until_visible()
 
     def wait_until_restarting_alert_visible(self):
         locator = ('//div[contains(@class,"toast")]//span[contains(@class,"toast-content")]'
@@ -136,7 +136,7 @@ class _ServerPage:
             PageText(
                 self._driver,
                 f'//nx-apply//div[contains(@class,"warning-text") and contains(text(),"{self._rb.PORT_TOO_LOW_TEXT}")]'
-            )
+            ).wait_until_visible()
         except (ElementNotVisible, ElementNotInDOM):
             return False
         else:
@@ -165,7 +165,7 @@ class _ServerPage:
         started_at = time.monotonic()
         while True:
             try:
-                PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]')
+                PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]').wait_until_visible()
             except (ElementNotVisible, ElementNotInDOM):
                 if time.monotonic() - started_at > timeout:
                     raise TimeoutError(f"Offline status does not appear after {timeout} seconds")
@@ -177,7 +177,7 @@ class _ServerPage:
         started_at = time.monotonic()
         while True:
             try:
-                PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]')
+                PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]').wait_until_visible()
             except (ElementNotVisible, ElementNotInDOM):
                 break
             else:
@@ -189,7 +189,7 @@ class _ServerPage:
         started_at = time.monotonic()
         while True:
             try:
-                self._get_checking_banner()
+                self._get_checking_banner().wait_until_visible()
             except (ElementNotVisible, ElementNotInDOM):
                 if time.monotonic() - started_at > timeout:
                     raise TimeoutError(f"Banner 'Checking' does not appear after {timeout} seconds")
