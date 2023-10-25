@@ -264,10 +264,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
                 if (this.keepPage) {
                     if (isRootPath) {
-                        this.router.navigate([redirect.authorised]).then(() => {
-                            // ensure language reload as translations are loaded on page load
-                            this.window.location.reload();
-                        });
+                        this.router.navigate([redirect.authorised]);
                     } else {
                         // TODO: remove window reload once we separate session state from account service
                         this.window.location.reload();
