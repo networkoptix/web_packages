@@ -241,10 +241,10 @@ export class NxLayoutViewComponent {
                                 id: details.id,
                                 type: ResourceType.LAYOUT,
                                 name: details.name,
-                                editable:
-                                    currentUser?.id === details.parentId || currentUser?.isAdmin,
+                                owned: currentUser?.id === details.parentId || currentUser?.isAdmin,
                                 shared:
                                     details.parentId === '{00000000-0000-0000-0000-000000000000}',
+                                locked: details.locked,
                                 details,
                             } as SharableResourceLeafNode<Layout>),
                     )

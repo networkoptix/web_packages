@@ -3,7 +3,14 @@ import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@an
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, Input, signal } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    Component,
+    Inject,
+    Input,
+    signal,
+    WritableSignal,
+} from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
@@ -26,7 +33,10 @@ import {
 } from 'rxjs/operators';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
-import { MenuItem, MenuItemsFactoryCallback } from '@components/context-menu/context-menu.types';
+import {
+    MenuItem,
+    MenuItemsOrMenuItemsCallback,
+} from '@components/context-menu/context-menu.types';
 import { EditableModule } from '@components/editable/editable.module';
 import { assertResourceParentNode } from '@components/layout-grid/layout-grid.type-guards';
 import {
@@ -73,17 +83,17 @@ const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
     childrenGetter: (item: DataType) => DataType[],
     showNodeFn: (item: DataType, matched: boolean) => boolean = (_, matched) => matched,
     compareFn: (query: QueryType, value: QueryType) => boolean = (query, value) =>
-        typeof value === 'string' && value.toLowerCase().includes(query.toString().toLowerCase()),
+        value.toLowerCase().includes(query.toString().toLowerCase()),
 ): DataType[] => {
     return query
         ? cloneDeep(dataSource).map(node => {
-              node.children = node.children.map(node => ({
+              node.children = node.children?.map(node => ({
                   ...node,
                   hidden: !node.name.toLowerCase().includes(query.toLowerCase()),
               }));
-              node.hidden = node.children.every(node => node.hidden);
+              node.hidden = node.children?.every(node => node.hidden);
               if (node.hidden) {
-                  node.children.push({
+                  node.children?.push({
                       name: staticLang.search.noMatches,
                       details: { id: 'noResults' },
                       type: null,
@@ -99,13 +109,13 @@ const findNode = (
     items: ResourceNode[],
     id: string,
     parent: ReturnType<typeof findNode> = null,
-): ResourceNode & { parent: ResourceNode } => {
+): (ResourceNode & { parent: ResourceNode }) | undefined => {
     if (!items) {
         return;
     }
 
     for (const item of items) {
-        if (cleanId(item.details.id) === cleanId(id)) {
+        if (cleanId(item.details?.id) === cleanId(id)) {
             return { ...item, parent };
         }
 
@@ -191,14 +201,14 @@ export class NxLayoutGridTreeComponent {
                 dataSource as ResourceNode[],
                 query,
                 node => node.name,
-                node => node.children,
-                (node, matched) => matched || !!node.children.length,
+                node => node.children || [],
+                (node, matched) => matched || !!node.children?.length,
             ),
         ),
     );
 
     // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
-    editedLayout$$ = signal(null);
+    editedLayout$$: WritableSignal<string | null> = signal(null);
 
     icons = icons;
     positions: ConnectedPosition[] = NxContextMenu.POSITIONS.default;
@@ -243,9 +253,8 @@ export class NxLayoutGridTreeComponent {
     preventDrop = (): boolean => false;
 
     expandNodesFromParams = (): void => {
-        const {
-            queryParams: { openNodes = [] },
-        } = this.layoutStateService.paramStateHandler.state$$();
+        const { queryParams: { openNodes = [] } = { openNodes: [] } } =
+            this.layoutStateService.paramStateHandler.state$$();
 
         let foundNode = findNode(this.dataSource, this.layout.id);
 
@@ -277,14 +286,130 @@ export class NxLayoutGridTreeComponent {
         },
     ];
 
-    menuItemsByType: Partial<{
-        [key in keyof ResourceNodeMap]:
-            | MenuItem<ResourceNodeMap[key]>[]
-            | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
-    }> = {
-        [ResourceType.LAYOUTS]: !this.CONFIG.featureFlags.layoutsEditable
-            ? []
+    getLayoutEditActions = (
+        node: ResourceNodeMap[ResourceType.LAYOUT],
+    ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
+        if (node.locked) {
+            return [];
+        }
+
+        return (
+            [
+                {
+                    id: 'divider',
+                    name: 'divider',
+                },
+                node.owned && {
+                    id: 'startRename',
+                    name: this.ACTIONS.rename.name,
+                    action: () => this.editedLayout$$.set(node.details.id),
+                },
+                {
+                    id: 'duplicate',
+                    name: this.ACTIONS.duplicate.name,
+                    action: () =>
+                        this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
+                },
+                node.owned && {
+                    id: 'delete',
+                    name: this.ACTIONS.delete.name,
+                    action: () => this.layoutStateService.deleteLayout(node.details.id),
+                },
+            ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
+        ).filter(Boolean);
+    };
+
+    getLayoutUpdateActions = (
+        node: ResourceNodeMap[ResourceType.LAYOUT],
+    ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
+        const unsaved = this.layoutStateService.unsavedLayoutsIds$$();
+        if (
+            !node.owned ||
+            !this.CONFIG.featureFlags.layoutsEditable ||
+            (unsaved && !unsaved[node.details.id])
+        ) {
+            return [];
+        }
+
+        return [
+            {
+                id: 'divider',
+                name: 'divider',
+            },
+            {
+                id: 'save',
+                name: node.shared
+                    ? this.ACTIONS.publishChanges.name
+                    : this.ACTIONS.saveChanges.name,
+                action: () => this.layoutStateService.saveLayout(node.details.id),
+            },
+            {
+                id: 'discard',
+                name: this.ACTIONS.discardChanges.name,
+                action: () => this.layoutStateService.discardUnsavedLayout(node.details.id),
+            },
+        ];
+    };
+
+    getLayoutShareActions = (
+        node: ResourceNodeMap[ResourceType.LAYOUT],
+    ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
+        if (!node.owned || node.locked || !this.CONFIG.featureFlags.layoutsEditable) {
+            return [];
+        }
+
+        return [
+            {
+                id: 'divider',
+                name: 'divider',
+            },
+            node.shared
+                ? {
+                      id: 'unshareLayout',
+                      name: this.ACTIONS.unshareLayout.name,
+                      action: () => this.layoutStateService.unshareLayout(node.details),
+                  }
+                : {
+                      id: 'shareLayout',
+                      name: this.ACTIONS.shareLayout.name,
+                      action: () => this.layoutStateService.shareLayout(node.details),
+                  },
+        ];
+    };
+
+    getLayoutLockActions = (
+        node: ResourceNodeMap[ResourceType.LAYOUT],
+    ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
+        if (!node.owned || !this.CONFIG.featureFlags.layoutsEditable) {
+            return [];
+        }
+
+        return !node.locked
+            ? [
+                  {
+                      id: 'lockLayout',
+                      name: this.ACTIONS.lockLayout.name,
+                      action: () => this.layoutStateService.lockLayout(node.details),
+                  },
+              ]
             : [
+                  {
+                      id: 'divider',
+                      name: 'divider',
+                  },
+                  {
+                      id: 'unlockLayout',
+                      name: this.ACTIONS.unlockLayout.name,
+                      action: () => this.layoutStateService.unlockLayout(node.details),
+                  },
+              ];
+    };
+
+    menuItemsByType: Partial<{
+        [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
+    }> = {
+        [ResourceType.LAYOUTS]: this.CONFIG.featureFlags.layoutsEditable
+            ? [
                   {
                       id: 'create',
                       name: this.ACTIONS.create.name,
@@ -301,153 +426,69 @@ export class NxLayoutGridTreeComponent {
                                   untilDestroyed(this),
                               )
                               .subscribe(node => {
-                                  this.treeControl.expand(
-                                      this.dataSource.find(
-                                          ({ details: { id } }: ResourceNode) =>
-                                              id === ResourceType.LAYOUTS,
-                                      ),
+                                  const layoutsNode = this.dataSource.find(
+                                      ({ type }) => type === ResourceType.LAYOUTS,
                                   );
+
+                                  if (layoutsNode) {
+                                      this.treeControl.expand(layoutsNode);
+                                  }
                                   this.editedLayout$$.set(dirtyId(newLayout));
                               });
                       },
                   },
-              ],
+              ]
+            : [],
         [ResourceType.LAYOUT]: node =>
-            !this.CONFIG.featureFlags.layoutsEditable
-                ? this.OPEN_WINDOW_ACTIONS
-                : [
-                      ...this.OPEN_WINDOW_ACTIONS,
-                      {
-                          id: 'divider',
-                          name: 'divider',
-                      },
-                      node.editable &&
-                          !node.details.locked && {
-                              id: 'startRename',
-                              name: this.ACTIONS.rename.name,
-                              action: () => this.editedLayout$$.set(node.details.id),
-                          },
-                      {
-                          id: 'duplicate',
-                          name: this.ACTIONS.duplicate.name,
-                          action: () =>
-                              this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
-                      },
-                      node.editable && {
-                          id: 'delete',
-                          name: this.ACTIONS.delete.name,
-                          action: () => this.layoutStateService.deleteLayout(node.details.id),
-                      },
-                      ...(this.layoutStateService.unsavedLayoutsIds$$()[node.details.id]
-                          ? [
-                                {
-                                    id: 'divider',
-                                    name: 'divider',
-                                },
-                                {
-                                    id: 'save',
-                                    name: node.shared
-                                        ? this.ACTIONS.publishChanges.name
-                                        : this.ACTIONS.saveChanges.name,
-                                    action: () =>
-                                        this.layoutStateService.saveLayout(node.details.id),
-                                },
-                                {
-                                    id: 'discard',
-                                    name: this.ACTIONS.discardChanges.name,
-                                    action: () =>
-                                        this.layoutStateService.discardUnsavedLayout(
-                                            node.details.id,
-                                        ),
-                                },
-                            ]
-                          : []),
-                      ...(node.editable && !node.details.locked
-                          ? [
-                                {
-                                    id: 'divider',
-                                    name: 'divider',
-                                },
-                                node.shared
-                                    ? {
-                                          id: 'unshareLayout',
-                                          name: this.ACTIONS.unshareLayout.name,
-                                          action: () =>
-                                              this.layoutStateService.unshareLayout(node.details),
-                                      }
-                                    : {
-                                          id: 'shareLayout',
-                                          name: this.ACTIONS.shareLayout.name,
-                                          action: () =>
-                                              this.layoutStateService.shareLayout(node.details),
-                                      },
-                                {
-                                    id: 'lockLayout',
-                                    name: this.ACTIONS.lockLayout.name,
-                                    action: () => this.layoutStateService.lockLayout(node.details),
-                                },
-                            ]
-                          : node.editable
-                          ? [
-                                {
-                                    id: 'divider',
-                                    name: 'divider',
-                                },
-                                {
-                                    id: 'unlockLayout',
-                                    name: this.ACTIONS.unlockLayout.name,
-                                    action: () =>
-                                        this.layoutStateService.unlockLayout(node.details),
-                                },
-                            ]
-                          : []),
-                  ].filter(i => i),
-        [ResourceType.CAMERA]: !this.CONFIG.featureFlags.layoutsEditable
-            ? this.OPEN_WINDOW_ACTIONS
-            : [
-                  ...this.OPEN_WINDOW_ACTIONS,
-                  ...(nxConfig.featureFlags.layoutsDeviceSettings
-                      ? [
-                            {
-                                id: 'divider',
-                                name: 'divider',
-                            },
-                            {
-                                id: 'settings',
-                                name: this.ACTIONS.cameraSettings.name,
-                                action: ($event, node) =>
-                                    this.layoutStateService.createPortal(NxCamerasComponent, {
-                                        system: this.system,
-                                        camera: node.details,
-                                    }),
-                            },
-                        ]
-                      : []),
-              ].filter(Boolean),
-        [ResourceType.SERVER]: !this.CONFIG.featureFlags.layoutsEditable
-            ? this.OPEN_WINDOW_ACTIONS
-            : [
-                  ...this.OPEN_WINDOW_ACTIONS,
-                  ...(nxConfig.featureFlags.layoutsDeviceSettings
-                      ? [
-                            {
-                                id: 'divider',
-                                name: 'divider',
-                            },
-                            {
-                                id: 'settings',
-                                name: this.ACTIONS.serverSettings.name,
-                                action: ($event, node) =>
-                                    this.layoutStateService.createPortal(NxSystemServersComponent, {
-                                        system: this.system,
-                                        server: this.system.serverManager.servers.find(({ id }) =>
-                                            id.includes(node.details.id),
-                                        ),
-                                    }),
-                            },
-                        ]
-                      : []),
-              ],
+            [
+                ...this.OPEN_WINDOW_ACTIONS,
+                ...this.getLayoutEditActions(node),
+                ...this.getLayoutUpdateActions(node),
+                ...this.getLayoutShareActions(node),
+                ...this.getLayoutLockActions(node),
+            ].filter(Boolean),
+        [ResourceType.CAMERA]: [
+            ...this.OPEN_WINDOW_ACTIONS,
+            ...([] ||
+                (this.CONFIG.featureFlags.layoutsEditable &&
+                    this.CONFIG.featureFlags.layoutsDeviceSettings && [
+                        {
+                            id: 'divider',
+                            name: 'divider',
+                        },
+                        {
+                            id: 'settings',
+                            name: this.ACTIONS.cameraSettings.name,
+                            action: ($event, node) =>
+                                this.layoutStateService.createPortal(NxCamerasComponent, {
+                                    system: this.system,
+                                    camera: node.details,
+                                }),
+                        },
+                    ])),
+        ].filter(Boolean),
+        [ResourceType.SERVER]: [
+            ...this.OPEN_WINDOW_ACTIONS,
+            ...([] ||
+                (this.CONFIG.featureFlags.layoutsEditable &&
+                    this.CONFIG.featureFlags.layoutsDeviceSettings && [
+                        {
+                            id: 'divider',
+                            name: 'divider',
+                        },
+                        {
+                            id: 'settings',
+                            name: this.ACTIONS.serverSettings.name,
+                            action: ($event, node) =>
+                                this.layoutStateService.createPortal(NxSystemServersComponent, {
+                                    system: this.system,
+                                    server: this.system.serverManager.servers.find(({ id }) =>
+                                        id.includes(node.details.id),
+                                    ),
+                                }),
+                        },
+                    ])),
+        ].filter(Boolean),
     };
 
     openWindow = (id: string, isNewWindow = false): void => {
@@ -460,7 +501,11 @@ export class NxLayoutGridTreeComponent {
     };
 
     toggleNode = (node: ResourceNode): void => {
-        const nodeId = node.details.id;
+        const nodeId = node.details?.id;
+        if (!nodeId) {
+            return;
+        }
+
         this.layoutStateService.paramStateHandler.updater(() => {
             this.treeControl.toggle(node);
             const nodeOpened = this.treeControl.isExpanded(node);
@@ -489,7 +534,7 @@ export class NxLayoutGridTreeComponent {
         });
     };
 
-    nodeId = (_: number, node: ResourceNode): string => node.details.id;
+    nodeId = (_: number, node: ResourceNode): string => node.details?.id || node.type;
 
     hasChild = (_: number, node: ResourceNode): boolean => assertResourceParentNode(node);
 

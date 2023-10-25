@@ -38,7 +38,7 @@ import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
     MenuItem,
     MenuItemAction,
-    MenuItemsFactoryCallback,
+    MenuItemsOrMenuItemsCallback,
 } from '@components/context-menu/context-menu.types';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
@@ -483,8 +483,8 @@ export class NxLayoutGridItemOverlayComponent {
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.zoomWindow,
             this.cameraOnline$$() && this.MENU_ITEMS.info,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
-            this.allowDebugMode && this.MENU_ITEMS.screenshot,
-        ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>);
+            this.MENU_ITEMS.screenshot,
+        ].filter(Boolean);
     });
 
     recordingIcon$$ = computed(() => {
@@ -510,9 +510,7 @@ export class NxLayoutGridItemOverlayComponent {
     });
 
     menuItemsByType: Partial<{
-        [key in keyof ResourceNodeMap]:
-            | MenuItem<ResourceNodeMap[key]>[]
-            | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
+        [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
     }> = {
         [ResourceType.CAMERA]: (item): MenuItem<ResourceNode>[] =>
             [
@@ -520,7 +518,7 @@ export class NxLayoutGridItemOverlayComponent {
                 this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
                 this.allowDebugMode && this.MENU_ITEMS.resolution,
                 this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
-                this.allowDebugMode && this.MENU_ITEMS.screenshot,
+                this.MENU_ITEMS.screenshot,
                 this.allowDebugMode && this.MENU_ITEMS.divider,
                 this.allowDebugMode && this.MENU_ITEMS.showOnItem,
                 this.removeAction$$() && this.MENU_ITEMS.divider,
