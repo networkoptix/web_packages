@@ -1,6 +1,6 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, signal, ViewChild } from '@angular/core';
+import { Component, HostBinding, Inject, signal, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -15,6 +15,7 @@ import { NxProcessCancelButtonComponent } from '@components/process-cancel-Butto
 import { ToastType } from '@components/toast-container/toast.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
+import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
@@ -22,6 +23,7 @@ import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import { AddUser, Role } from '@services/system-user.types';
 import { NxToastService } from '@services/toast.service';
+import { transitionEnter, transitionLeave } from '@variables/animations';
 
 import type { AddUser as DT } from '../dialogs.types';
 
@@ -41,12 +43,16 @@ import type { AddUser as DT } from '../dialogs.types';
         NxProcessCancelButtonComponent,
         NxMultiSelectDropdown,
     ],
+    animations: [transitionEnter, transitionLeave],
 })
 export class AddUserModalContent extends ModalBase<DT['return']> {
     @ViewChild('addUserForm') private form: NgForm;
 
     LANG = staticLang;
-    CONFIG: IConfig;
+    CONFIG: IConfig = nxConfig;
+
+    // To enable reusable animations to a dialog, add the following line
+    @HostBinding('@.disabled') enableAnimations = this.CONFIG.featureFlags.enableAnimations;
 
     hideErrors: boolean = true;
     systemName: string;

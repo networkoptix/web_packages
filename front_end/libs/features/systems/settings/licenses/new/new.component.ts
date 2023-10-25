@@ -10,6 +10,7 @@ import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxToastService } from '@services/toast.service';
 import { NgChanges } from '@utils/ng-changes';
+import { transitionEnter, transitionLeave } from '@variables/animations';
 
 interface ServerOption extends DropdownItem<string> {
     status: string;
@@ -20,6 +21,7 @@ interface ServerOption extends DropdownItem<string> {
     selector: 'nx-license-new-component',
     templateUrl: 'new.component.html',
     styleUrls: ['new.component.scss'],
+    animations: [transitionEnter, transitionLeave],
 })
 export class NxLicenseNewComponent implements OnChanges {
     LANG = staticLang;

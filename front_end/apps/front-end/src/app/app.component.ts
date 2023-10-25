@@ -6,6 +6,7 @@ import {
     ElementRef,
     ViewContainerRef,
     OnInit,
+    HostBinding,
 } from '@angular/core';
 import {
     ActivationEnd,
@@ -94,6 +95,9 @@ require('what-input');
 export class AppComponent implements OnInit {
     private window: Window = windowFactory();
     CONFIG: IConfig = nxConfig;
+
+    // This will disable all animations under nx-app. This won't apply to Dialogs since they're siblings
+    @HostBinding('@.disabled') animationsDisabled = !this.CONFIG.featureFlags.enableAnimations;
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
     newSystem: boolean;

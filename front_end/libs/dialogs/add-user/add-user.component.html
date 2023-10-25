@@ -45,23 +45,27 @@
                 <ng-container *ngIf="addUserDialogEmail.errors">
                     <span
                         *ngIf="addUserDialogEmail.errors.alreadyExists"
+                        [@transitionEnter]
                         class="input-error"
                         >{{ LANG.dialogs.addUser.alreadyExists | translate : { systemName } }}</span
                     >
                     <span
                         *ngIf="addUserDialogEmail.errors.cantEditAdmin"
+                        [@transitionEnter]
                         class="input-error"
                         >{{ LANG.dialogs.addUser.cantEditAdmin }}
                     </span>
                     <ng-container *ngIf="addUserDialogEmail.touched">
                         <span
                             *ngIf="addUserDialogEmail.errors.required"
+                            [@transitionEnter]
                             class="input-error"
                             translate
                             >Email is required</span
                         >
                         <span
                             *ngIf="addUserDialogEmail.errors.pattern"
+                            [@transitionEnter]
                             class="input-error"
                             translate
                             >Please enter a valid Email</span

@@ -42,5 +42,6 @@
     "serverSideMetadata": true,
     "layoutsIoDevices": false,
     "readonlyAPIs": true,
-    "cookieBanner": false
+    "cookieBanner": false,
+    "enableAnimations": false
 }
