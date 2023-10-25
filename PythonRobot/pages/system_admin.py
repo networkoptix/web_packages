@@ -85,7 +85,7 @@ class SystemAdmin:
         replaced_disconnect_message = disconnect_message.replace("{{system_name}}", system_name)
         return ToastNotification(self.driver, replaced_disconnect_message)
 
-    def mandatory_2fa_chechbox(self):
+    def mandatory_2fa_checkbox(self):
         return Checkbox(self.driver, "//nx-checkbox[@name='mandatory2fa']")
 
     def twofa_verification_code_input(self):

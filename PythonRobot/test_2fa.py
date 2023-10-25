@@ -161,7 +161,7 @@ def system_2fa_required(server: Mediaserver):
     security_form.twofa_enabled_badge()
     driver.get(f"{ENV}/systems/{server.id}")
     system_admin_page = SystemAdmin(driver)
-    system_admin_page.mandatory_2fa_chechbox().select()
+    system_admin_page.mandatory_2fa_checkbox().select()
     system_admin_page.twofa_verification_code_input().input_text(owner.get_otp())
     system_admin_page.twofa_enable_button().click()
     time.sleep(2)
