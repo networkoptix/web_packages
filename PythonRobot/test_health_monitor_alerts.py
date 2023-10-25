@@ -9,7 +9,7 @@ from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from resource_import import cloud_login
 from resource_import import get_chrome
-from system_admin import SystemAdmin
+from pages.system_admin import SystemAdmin
 
 
 def no_alerts_message_shows_when_no_alerts(server: Mediaserver, rb: RobotVariables):

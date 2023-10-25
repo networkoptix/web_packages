@@ -3,8 +3,8 @@ from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 
 import variables
-from downloads_page import DownloadsPage
-from footer import Footer
+from pages.downloads_page import DownloadsPage
+from pages.footer import Footer
 from resource_import import get_headless_chrome
 
 

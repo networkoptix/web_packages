@@ -8,10 +8,10 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from header import HeaderNav
-from login import LoginDialog
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_chrome
-from system_admin import SystemAdmin
+from pages.system_admin import SystemAdmin
 
 
 def test_check_status(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):

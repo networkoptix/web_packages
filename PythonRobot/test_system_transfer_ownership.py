@@ -4,15 +4,15 @@ from time import sleep
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from header import HeaderNav
-from login import LoginDialog
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_chrome
-from system_admin import FailedToAccessSystemPage
-from system_left_menu import SystemLeftMenu
-from system_transfer import SystemOwnership
-from system_transfer import SystemTransferOwnershipModal
-from system_users import SystemUsers
-from systems_page import SystemsPage
+from pages.system_admin import FailedToAccessSystemPage
+from pages.system_left_menu import SystemLeftMenu
+from pages.system_transfer import SystemOwnership
+from pages.system_transfer import SystemTransferOwnershipModal
+from pages.system_users import SystemUsers
+from pages.systems_page import SystemsPage
 from variables import ENV
 
 

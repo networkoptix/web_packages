@@ -1,6 +1,6 @@
 import resource_import
 from RobotVariables import RobotVariables
-from ipvd_page import IVPDPage
+from pages.ipvd_page import IVPDPage
 
 rb = RobotVariables("en_US")
 password = "qweasd1234"

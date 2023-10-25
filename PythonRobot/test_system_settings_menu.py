@@ -3,11 +3,11 @@ from pathlib import Path
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from login import LoginDialog
+from pages.login import LoginDialog
 from resource_import import get_chrome
-from system_admin import SystemAdmin
-from system_left_menu import SystemLeftMenu
-from system_users import SystemUsers
+from pages.system_admin import SystemAdmin
+from pages.system_left_menu import SystemLeftMenu
+from pages.system_users import SystemUsers
 from variables import ENV
 
 password = "qweasd 123"

@@ -8,8 +8,8 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
 from generic_elements import Button
-from header import HeaderNav
-from register_form import RegisterForm
+from pages.header import HeaderNav
+from pages.register_form import RegisterForm
 from resource_import import activate
 from resource_import import get_headless_chrome
 from resource_import import get_random_email

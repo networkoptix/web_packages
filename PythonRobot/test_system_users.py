@@ -7,17 +7,17 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from email_access import Email
-from header import HeaderNav
-from landing_page import LandingPage
-from login import LoginDialog
-from register_form import RegisterForm
+from pages.header import HeaderNav
+from pages.landing_page import LandingPage
+from pages.login import LoginDialog
+from pages.register_form import RegisterForm
 from resource_import import get_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from system_admin import SystemAdmin
-from system_left_menu import SystemLeftMenu
-from system_users import SystemUsers
-from systems_page import SystemsPage
+from pages.system_admin import SystemAdmin
+from pages.system_left_menu import SystemLeftMenu
+from pages.system_users import SystemUsers
+from pages.systems_page import SystemsPage
 from variables import ENV
 
 password = "qweasd 123"

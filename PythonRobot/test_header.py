@@ -2,11 +2,11 @@ from pathlib import Path
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.docker_api import DockerApi
-from header import HeaderNav
+from pages.header import HeaderNav
 from resource_import import get_chrome
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from login import LoginDialog
+from pages.login import LoginDialog
 from variables import ENV
 
 password = "qweasd 123"

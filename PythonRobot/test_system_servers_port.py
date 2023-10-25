@@ -1,6 +1,5 @@
 """robot_tests/test-cases/system-servers.robot"""
 import logging
-import time
 from pathlib import Path
 
 from colorama import Fore
@@ -11,10 +10,10 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from header import HeaderNav
-from login import LoginDialog
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_chrome
-from system_admin import SystemAdmin
+from pages.system_admin import SystemAdmin
 
 
 def test_change_port_only_for_owner(server: Mediaserver, rb: RobotVariables, cloud_account: CloudAccount):

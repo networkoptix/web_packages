@@ -3,18 +3,18 @@ import string
 import time
 
 import resource_import
-from change_pass_form import ChangePassForm
+from pages.change_pass_form import ChangePassForm
 from generic_elements import Button
 from generic_elements import TextField
-from header import HeaderNav
-from landing_page import LandingPage
-from login import AccountActivatedPane
-from login import LoginDialog
-from register_form import RegisterForm
+from pages.header import HeaderNav
+from pages.landing_page import LandingPage
+from pages.login import AccountActivatedPane
+from pages.login import LoginDialog
+from pages.register_form import RegisterForm
 from resource_import import get_chrome
 from resource_import import validate_log_out
 from resource_import import register_and_activate_account
-from systems_page import SystemsPage
+from pages.systems_page import SystemsPage
 from variables import ENV
 
 

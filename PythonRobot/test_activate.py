@@ -4,8 +4,8 @@ import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from email_access import Email
-from login import LoginDialog
-from register_form import RegisterForm
+from pages.login import LoginDialog
+from pages.register_form import RegisterForm
 from generic_elements import Button
 from generic_elements import PageText
 

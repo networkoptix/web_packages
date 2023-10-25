@@ -5,7 +5,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from RobotVariables import RobotVariables
 from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
-from landing_page import LandingPage
+from pages.landing_page import LandingPage
 from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane

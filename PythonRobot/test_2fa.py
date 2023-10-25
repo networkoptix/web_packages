@@ -5,11 +5,11 @@ from pathlib import Path
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from header import HeaderNav
-from login import LoginDialog
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_headless_chrome
-from security_form import SecurityForm
-from system_admin import SystemAdmin
+from pages.security_form import SecurityForm
+from pages.system_admin import SystemAdmin
 from variables import ENV
 
 

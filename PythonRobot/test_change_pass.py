@@ -4,10 +4,10 @@ from selenium.webdriver.common.keys import Keys
 
 import resource_import
 from RobotVariables import RobotVariables
-from change_pass_form import ChangePassForm
-from header import HeaderNav
-from landing_page import LandingPage
-from login import LoginDialog
+from pages.change_pass_form import ChangePassForm
+from pages.header import HeaderNav
+from pages.landing_page import LandingPage
+from pages.login import LoginDialog
 from resource_import import get_headless_chrome
 from resource_import import register_and_activate_account
 from variables import ENV

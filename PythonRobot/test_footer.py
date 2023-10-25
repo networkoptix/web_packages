@@ -3,7 +3,7 @@ import time
 from colorama import Fore
 
 from RobotVariables import RobotVariables
-from footer import Footer
+from pages.footer import Footer
 from resource_import import get_headless_chrome
 
 rb = RobotVariables("en_US")

@@ -5,19 +5,19 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from header import HeaderNav
-from information_page import InformationPage
-from login import LoginDialog
+from pages.header import HeaderNav
+from pages.information_page import InformationPage
+from pages.login import LoginDialog
 from resource_import import cloud_login
 from resource_import import get_chrome
 from resource_import import get_random_email
 from resource_import import register_and_activate_account
-from system_admin import FailedToAccessSystemPage
-from system_admin import SystemAdmin
-from system_left_menu import SystemLeftMenu
-from systems_page import SystemsPage
+from pages.system_admin import FailedToAccessSystemPage
+from pages.system_admin import SystemAdmin
+from pages.system_left_menu import SystemLeftMenu
+from pages.systems_page import SystemsPage
 from variables import ENV
-from view_page import ViewPage
+from pages.view_page import ViewPage
 
 password = "qweasd 123"
 
