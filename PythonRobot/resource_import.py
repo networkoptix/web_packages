@@ -216,7 +216,7 @@ def get_chrome() -> ContextManager[ChromeBrowser]:
 
 
 def get_lang_list():
-    path = pathlib.Path().parent / 'customizations' / 'default_lang_list.json'
+    path = pathlib.Path(__file__).parent / 'customizations' / 'default_lang_list.json'
     with open(path, encoding="utf-8") as langDict:
         return json.load(langDict)
 
