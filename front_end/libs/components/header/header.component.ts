@@ -156,7 +156,7 @@ export class NxHeaderComponent implements OnInit {
             effect(
                 () => {
                     const system = this.systemService.currentSystem$$();
-                    if (system?.permissionManager?.currentUser()) {
+                    if (system?.permissionManager?.currentUser$$()) {
                         this.getMenu();
                         this.menusService.updateActiveSystemMenu(system);
                     }
@@ -289,7 +289,7 @@ export class NxHeaderComponent implements OnInit {
                 if (environment.isLocal) {
                     const permissions = this.systemService
                         .currentSystem$$()
-                        ?.permissionManager.permissions();
+                        ?.permissionManager.permissions$$();
                     if (!permissions?.generateEvents) {
                         const forDevsIndex = nodes?.findIndex(
                             ({ name }) => name === 'For Developers',
@@ -545,7 +545,7 @@ export class NxHeaderComponent implements OnInit {
                     this.system
                         .getInfoAndPermissions(false)
                         .then(system => {
-                            this.canSeeInfo = system?.permissionManager.isAdmin() || false;
+                            this.canSeeInfo = system?.permissionManager.isAdmin$$() || false;
                         })
                         .catch(_ => {});
                 }

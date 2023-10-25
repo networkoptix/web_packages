@@ -208,7 +208,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     }
 
     protected setUserHelper(user: NxUser): void {
-        const currentUser = this.system.permissionManager.currentUser();
+        const currentUser = this.system.permissionManager.currentUser$$();
         this.isCloud$$.set(user.type === UserType.cloud);
         this.isLdap$$.set(user.type === UserType.ldap);
         this.isLocal$$.set(user.type === UserType.local);

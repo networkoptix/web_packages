@@ -201,7 +201,7 @@
                 *ngIf="
                     archiveSelectionEnabled &&
                     ux.state.isTimelineShown &&
-                    system?.permissionManager.permissions().exportArchives
+                    system?.permissionManager.permissions$$().exportArchives
                 "
             ></nx-timeline-selection-action-panel>
         </div>
@@ -231,7 +231,7 @@
                 <nx-zoom-controls *ngIf="camera.hasArchive && canViewArchives"></nx-zoom-controls>
                 <nx-timeline
                     *ngIf="showTimeline; else noArchiveYet"
-                    [canExport]="system.permissionManager.permissions().exportArchives"
+                    [canExport]="system.permissionManager.permissions$$().exportArchives"
                 ></nx-timeline>
                 <ng-template #noArchiveYet>
                     <nx-pre-loader

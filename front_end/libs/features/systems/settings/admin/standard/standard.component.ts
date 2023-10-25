@@ -220,7 +220,7 @@ export class NxSystemStandardAdminComponent implements OnInit, OnChanges, OnDest
 
     checkEditSecurity(): void {
         if (this.system.mediaserver instanceof NxSystemRestAPI3) {
-            if (this.system.permissionManager.isOwner()) {
+            if (this.system.permissionManager.isOwner$$()) {
                 this.canEditSecurity = true;
             } else {
                 this.system.mediaserver

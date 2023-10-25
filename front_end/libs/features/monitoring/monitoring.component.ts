@@ -46,7 +46,7 @@ export class NxMonitoringComponent implements OnInit {
         private translateService: TranslateService,
     ) {
         effect(() => {
-            const permissions = this.system.permissionManager.permissions();
+            const permissions = this.system.permissionManager.permissions$$();
             this.content = {
                 base: '',
                 selectedSection: 'graphs',

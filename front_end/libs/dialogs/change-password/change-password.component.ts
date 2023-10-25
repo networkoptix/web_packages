@@ -84,7 +84,7 @@ export class ChangePasswordModalContent
         if (!this.system || !this.user) {
             return false;
         }
-        const currentUser = this.system.permissionManager.currentUser();
+        const currentUser = this.system.permissionManager.currentUser$$();
         return this.user.id === currentUser.id;
     });
 
