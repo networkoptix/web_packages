@@ -70,7 +70,6 @@ class Checkbox:
     def __init__(self, driver: WebDriver, visible_locator, actual_locator):
         self._driver = driver
         self._element = Element(self._driver, visible_locator)
-        self._element.wait_until_visible()
         self._selenium_element = self._driver.find_element(By.XPATH, f"{visible_locator}{actual_locator}")
         self._checked_xpath = f'{visible_locator}//span[@class="tick checked"]'
         self._unchecked_xpath = f'{visible_locator}//span[contains(@class,"unchecked")]'
@@ -79,21 +78,29 @@ class Checkbox:
         self._element.click()
 
     def select(self):
+        self.wait_until_visible()
         if self.unchecked():
             self._element.click()
 
     def unselect(self):
+        self.wait_until_visible()
         if self.checked():
             self._element.click()
 
     def checked(self):
+        self.wait_until_visible()
         return self._driver.find_element(By.XPATH, self._checked_xpath)
 
     def unchecked(self):
+        self.wait_until_visible()
         return self._driver.find_element(By.XPATH, self._unchecked_xpath)
 
     def is_focused(self):
+        self.wait_until_visible()
         return self._selenium_element == self._driver.switch_to.active_element()
+
+    def wait_until_visible(self):
+        self._element.wait_until_visible()
 
 
 class PageText:
