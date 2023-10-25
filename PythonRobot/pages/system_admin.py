@@ -17,11 +17,11 @@ from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
+from generic_elements import ToastNotification
 from generic_elements._wrappers import NxCheckbox
 from system_admin_tab_information import TabInformation
 from system_admin_tab_settings import TabSettings
 from system_left_menu import SystemLeftMenu
-from toast_notification import ToastNotification
 from variables import ENV
 
 _logger = logging.getLogger(__name__)

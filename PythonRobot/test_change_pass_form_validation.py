@@ -1,11 +1,12 @@
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
+from generic_elements import ToastNotification
 from pages.change_pass_form import ChangePassForm
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from resource_import import get_chrome
 from NoptixLibrary.suite import Suite
-from toast_notification import ToastNotification
+
 from variables import ENV
 
 rb = RobotVariables("en_US")

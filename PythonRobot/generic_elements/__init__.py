@@ -19,6 +19,7 @@ from ._wrappers import SearchBar
 from ._wrappers import TabItem
 from ._wrappers import Table
 from ._wrappers import TextField
+from ._wrappers import ToastNotification
 from ._wrappers import Tooltip
 
 
@@ -44,5 +45,6 @@ __all__ = [
     'TabItem',
     'Table',
     'TextField',
+    'ToastNotification',
     'Tooltip',
     ]

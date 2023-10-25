@@ -1,10 +1,10 @@
 from NoptixLibrary.suite import CloudAccount
 from email_access import EmailClient
+from generic_elements import ToastNotification
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.login import ResetPasswordForm
 from resource_import import get_chrome
-from toast_notification import ToastNotification
 from variables import ENV
 
 
