@@ -355,11 +355,11 @@ export function staticImplements<T>() {
  * Source: https://stackoverflow.com/a/63553761
  */
 export type KeyFilter<T, F> = {
-    [K in keyof T]: T[K] extends F ? K : never;
+    [K in keyof T]: NonNullable<T[K]> extends F ? K : never;
 }[keyof T];
 
 /** Get element type of array. */
-export type ArrayType<T> = T extends (infer Item)[] ? Item : never;
+export type ArrayType<T> = NonNullable<T> extends (infer Item)[] ? Item : never;
 
 /** Get type from observable */
 export type ObservableValueType<T> = T extends Observable<infer Item> ? Item : never;
@@ -403,26 +403,17 @@ for key of keyof targetType
  */
 export type RecursivePick<T, Keys extends RecursiveKeyMap<T>> = Pick<
     {
-        [K in keyof T]: K extends keyof Keys
-            ? Keys[K] extends true
-                ? T[K]
-                : Keys[K] extends RecursiveKeyMap<T[K]>
-                ? RecursivePick<T[K], Keys[K]>
+        [K in keyof NonNullable<T>]: K extends keyof NonNullable<Keys>
+            ? NonNullable<Keys>[K] extends true
+                ? NonNullable<T>[K]
+                : NonNullable<Keys>[K] extends RecursiveKeyMap<NonNullable<T>[K]>
+                ? RecursivePick<NonNullable<T>[K], NonNullable<Keys>[K]>
                 : never
             : never;
     },
-    keyof T & keyof Keys
+    keyof NonNullable<T> & keyof NonNullable<Keys>
 >;
 
 export type RecursiveKeyMap<T> = {
-    [K in keyof T]?: T[K] extends object ? RecursiveKeyMap<T[K]> | true : true;
+    [K in keyof T]?: NonNullable<T[K]> extends object ? RecursiveKeyMap<T[K]> | true : true;
 };
-
-export function buildTopLevelKeyMap<T>(
-    topKeys: readonly (keyof T)[],
-): Record<(typeof topKeys)[number], true> {
-    return Object.fromEntries(topKeys.map(k => [k, true])) as Record<
-        (typeof topKeys)[number],
-        true
-    >;
-}

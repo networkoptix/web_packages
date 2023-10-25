@@ -10,7 +10,6 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
-import { buildTopLevelKeyMap } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
@@ -347,7 +346,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     private patchCameraCompatibilityV2(
         camera: NxRecursivePick<t.DeviceV2Full, typeof cameraKeyMapV2>,
     ): RestV2CameraCompat {
-        const { serverId, options, parameters, motion, schedule, ...rest } = camera;
+        const { serverId, options, parameters = {}, motion, schedule, ...rest } = camera;
         const {
             isAudioEnabled: audioEnabled,
             isControlEnabled: controlEnabled,
@@ -395,11 +394,10 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
         });
-        const cameraKeyMap = {
+        const getCameras = this.getWith('/rest/v2/devices', {
             serverId: true,
             parameters: { compatibleAnalyticsEngines: true },
-        } satisfies NxRecursiveKeyMap<t.DeviceV2Full>;
-        const getCameras = this.getWith('/rest/v2/devices', cameraKeyMap);
+        });
         const getServer = this.getWith(
             '/rest/v2/servers',
             { parameters: { metadataStorageId: true } },
@@ -414,7 +412,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 hasPlugins: cameras.some(
                     c =>
                         c.serverId === this.serverId &&
-                        !!c.parameters.compatibleAnalyticsEngines?.length,
+                        !!c.parameters?.compatibleAnalyticsEngines?.length,
                 ),
                 metadataStorageId: server.parameters.metadataStorageId,
             })),
@@ -427,7 +425,12 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     protected override getViewCameras(): Observable<ViewBaseCamera[]> {
         const viewCamKeyMap = {
-            ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
+            id: true,
+            model: true,
+            name: true,
+            status: true,
+            url: true,
+            serverId: true,
             options: {
                 isDualStreamingEnabled: true,
                 preferredServerId: true,
@@ -439,7 +442,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 mediaStreams: true,
                 rotation: true,
             },
-        } as const;
+        } satisfies NxRecursiveKeyMap<t.DeviceV2Full>;
 
         return this.getWith('/rest/v2/devices', viewCamKeyMap).pipe(
             map(cameras =>

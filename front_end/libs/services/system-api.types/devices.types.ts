@@ -12,7 +12,6 @@ import {
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { MotionType } from '@services/system.service/camera-manager/camera-manager-types';
-import { buildTopLevelKeyMap } from '@utils/general';
 import type { NxRecursiveKeyMap } from '@utils/nx';
 
 import { HiddenParams, NormalResponse, Param } from './system-api.types';
@@ -166,47 +165,47 @@ export interface DeviceV1Full {
     vendor: string;
 }
 
-const camObjParamKeys = {
-    bitrateInfos: {
-        streams: { resolution: true },
-    },
-    ioSettings: { id: true },
-    mediaCapabilities: {
-        streamCapabilities: {
-            key: true,
-            value: { maxFps: true },
-        },
-    },
-    mediaStreams: {
-        streams: { codec: true },
-    },
-} as const satisfies NxRecursiveKeyMap<DeviceV2Full['parameters']>;
+const sharedTopLevelKeyMap = {
+    id: true,
+    name: true,
+    vendor: true,
+    model: true,
+    url: true,
+    serverId: true,
+    status: true,
+} satisfies NxRecursiveKeyMap<DeviceV1Full>;
 
 export const cameraKeyMapV1 = {
-    ...buildTopLevelKeyMap(['id', 'name', 'vendor', 'model', 'url', 'serverId', 'status']),
-    options: buildTopLevelKeyMap([
-        'backupContentType',
-        'backupPolicy',
-        'backupQuality',
-        'isAudioEnabled',
-        'isControlEnabled',
-        'isDualStreamingEnabled',
-    ]),
+    ...sharedTopLevelKeyMap,
+    options: {
+        backupContentType: true,
+        backupPolicy: true,
+        backupQuality: true,
+        isAudioEnabled: true,
+        isControlEnabled: true,
+        isDualStreamingEnabled: true,
+    },
     parameters: {
-        ...buildTopLevelKeyMap([
-            // 'bitrateInfos',
-            'deviceType',
-            'hasDualStreaming',
-            // 'ioSettings',
-            'isAudioSupported',
-            // 'mediaCapabilities',
-            // 'mediaStreams',
-            'motionStream',
-            'overrideAr',
-            'rotation',
-            'supportedMotion',
-        ]),
-        ...camObjParamKeys,
+        bitrateInfos: {
+            streams: { resolution: true },
+        },
+        deviceType: true,
+        hasDualStreaming: true,
+        ioSettings: { id: true },
+        isAudioSupported: true,
+        mediaCapabilities: {
+            streamCapabilities: {
+                key: true,
+                value: { maxFps: true },
+            },
+        },
+        mediaStreams: {
+            streams: { codec: true },
+        },
+        motionStream: true,
+        overrideAr: true,
+        rotation: true,
+        supportedMotion: true,
     },
     motion: {
         mask: true,
@@ -214,77 +213,35 @@ export const cameraKeyMapV1 = {
     },
     schedule: {
         isEnabled: true,
-        tasks: buildTopLevelKeyMap([
-            // 'bitrateKbps',
-            'dayOfWeek',
-            'endTime',
-            'fps',
-            // 'metadataTypes',
-            'recordingType',
-            'startTime',
-            'streamQuality',
-        ]),
+        tasks: {
+            // 'bitrateKbps': true,
+            dayOfWeek: true,
+            endTime: true,
+            fps: true,
+            // 'metadataTypes': true,
+            recordingType: true,
+            startTime: true,
+            streamQuality: true,
+        },
     },
-} as const;
+} satisfies NxRecursiveKeyMap<DeviceV1Full>;
 
 export interface DeviceV2Full extends DeviceV1Full {
     deviceType: DeviceType; // Moved from parameters to top level property
-    parameters?: Omit<DeviceV1Full['parameters'], 'deviceType'>;
+    parameters?: Omit<NonNullable<DeviceV1Full['parameters']>, 'deviceType'>;
 }
 
+const { deviceType: _, ...v2ParamsKeyMap } = cameraKeyMapV1.parameters;
+
 export const cameraKeyMapV2 = {
-    ...buildTopLevelKeyMap([
-        'id',
-        'name',
-        'vendor',
-        'model',
-        'url',
-        'serverId',
-        'status',
-        'deviceType',
-        'credentials',
-    ]),
-    options: buildTopLevelKeyMap([
-        'backupContentType',
-        'backupPolicy',
-        'backupQuality',
-        'isAudioEnabled',
-        'isControlEnabled',
-        'isDualStreamingEnabled',
-    ]),
-    parameters: {
-        ...buildTopLevelKeyMap([
-            // 'bitrateInfos',
-            'hasDualStreaming',
-            // 'ioSettings',
-            'isAudioSupported',
-            // 'mediaCapabilities',
-            // 'mediaStreams',
-            'motionStream',
-            'overrideAr',
-            'rotation',
-            'supportedMotion',
-        ]),
-        ...camObjParamKeys,
-    },
-    motion: {
-        mask: true,
-        type: true,
-    },
-    schedule: {
-        isEnabled: true,
-        tasks: buildTopLevelKeyMap([
-            // 'bitrateKbps',
-            'dayOfWeek',
-            'endTime',
-            'fps',
-            // 'metadataTypes',
-            'recordingType',
-            'startTime',
-            'streamQuality',
-        ]),
-    },
-} as const;
+    ...sharedTopLevelKeyMap,
+    deviceType: true,
+    credentials: true,
+    options: cameraKeyMapV1.options,
+    parameters: v2ParamsKeyMap,
+    motion: cameraKeyMapV1.motion,
+    schedule: cameraKeyMapV1.schedule,
+} satisfies NxRecursiveKeyMap<DeviceV2Full>;
 
 export type DevicesParams = Omit<HiddenParams, '_local'>;
 

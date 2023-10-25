@@ -226,10 +226,10 @@ export class CameraManager {
                 credentials = { user, password };
             }
 
-            const boolKeys: KeyFilter<APT.ParsedAddParams, APT.BoolNum>[] = [
-                'hasDualStreaming',
-                'isAudioSupported',
-            ];
+            const boolKeys = ['hasDualStreaming', 'isAudioSupported'] satisfies KeyFilter<
+                APT.ParsedAddParams,
+                APT.BoolNum
+            >[];
             Object.assign(
                 parameters,
                 Object.fromEntries(
@@ -240,7 +240,10 @@ export class CameraManager {
                 ),
             );
 
-            const numKeys: KeyFilter<APT.ParsedAddParams, number>[] = ['overrideAr', 'rotation'];
+            const numKeys = ['overrideAr', 'rotation'] satisfies KeyFilter<
+                APT.ParsedAddParams,
+                number
+            >[];
             Object.assign(
                 parameters,
                 Object.fromEntries(
@@ -251,12 +254,12 @@ export class CameraManager {
                 ),
             );
 
-            const jsonKeys: KeyFilter<APT.ParsedAddParams, object>[] = [
+            const jsonKeys = [
                 'bitrateInfos',
                 'mediaCapabilities',
                 'mediaStreams',
                 'ioSettings',
-            ];
+            ] satisfies KeyFilter<APT.ParsedAddParams, object>[];
             Object.assign(
                 parameters,
                 Object.fromEntries(
@@ -269,7 +272,7 @@ export class CameraManager {
             if ('credentials' in camera) {
                 credentials = camera.credentials;
             }
-            parameters = camera.parameters ?? {};
+            parameters = camera.parameters;
         }
 
         const primaryStream = parameters.mediaCapabilities?.streamCapabilities?.find(

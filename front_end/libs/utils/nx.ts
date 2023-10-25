@@ -377,17 +377,17 @@ for key of keyof targetType
  */
 export type NxRecursivePick<T, Keys extends NxRecursiveKeyMap<T>> = Pick<
     {
-        [K in keyof T]: K extends keyof Keys
-            ? Keys[K] extends true
-                ? T[K]
-                : Keys[K] extends NxRecursiveKeyMap<ArrayType<T[K]>>
-                ? NxRecursivePick<ArrayType<T[K]>, Keys[K]>[]
-                : Keys[K] extends NxRecursiveKeyMap<T[K]>
-                ? NxRecursivePick<T[K], Keys[K]>
+        [K in keyof NonNullable<T>]: K extends keyof NonNullable<Keys>
+            ? NonNullable<Keys>[K] extends true
+                ? NonNullable<T>[K]
+                : Keys[K] extends NxRecursiveKeyMap<ArrayType<NonNullable<T>[K]>>
+                ? NxRecursivePick<ArrayType<NonNullable<T>[K]>, Keys[K]>[]
+                : NonNullable<Keys>[K] extends NxRecursiveKeyMap<NonNullable<T>[K]>
+                ? NxRecursivePick<NonNullable<T>[K], NonNullable<Keys>[K]>
                 : never
             : never;
     },
-    keyof T & keyof Keys
+    keyof NonNullable<T> & keyof NonNullable<Keys>
 >;
 
 /* The ordering of the branches is important here.
@@ -396,9 +396,9 @@ Arrays extend object but interfaces *do not* extend Record so we need to first
 check for arrays, then filter objects out from primitives.
 */
 export type NxRecursiveKeyMap<T> = {
-    [K in keyof T]?: T[K] extends unknown[]
-        ? NxRecursiveKeyMap<T[K][number]> | true
-        : T[K] extends object
+    [K in keyof T]?: NonNullable<T[K]> extends unknown[]
+        ? NxRecursiveKeyMap<NonNullable<T[K]>[number]> | true
+        : NonNullable<T[K]> extends object
         ? NxRecursiveKeyMap<T[K]> | true
         : true;
 };

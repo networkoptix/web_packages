@@ -46,7 +46,6 @@ import {
     ViewBaseCamera,
     ViewPreprocessServer,
 } from '@services/system.service/system-server-types';
-import { buildTopLevelKeyMap } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
@@ -560,7 +559,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         opts: WithOptionalJson = {},
     ): Observable<unknown> {
         const keyMap = Array.isArray(keysOrkeyMap)
-            ? buildTopLevelKeyMap(keysOrkeyMap)
+            ? Object.fromEntries((keysOrkeyMap as string[]).map(k => [k, true]))
             : keysOrkeyMap;
         opts.params = { ...(opts.params ?? {}), _keepDefault: true, _with: withKeyMap(keyMap) };
         return this.get(url, opts);
@@ -853,7 +852,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     private patchCameraCompatibilityV1(
         camera: NxRecursivePick<t.DeviceV1Full, typeof cameraKeyMapV1>,
     ): RestV1CameraCompat {
-        const { serverId, options, parameters: params, motion, schedule, ...rest } = camera;
+        const { serverId, options, parameters: params = {}, motion, schedule, ...rest } = camera;
         const {
             isAudioEnabled: audioEnabled,
             isControlEnabled: controlEnabled,
@@ -913,7 +912,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     protected getViewCameras(): Observable<ViewBaseCamera[]> {
         const viewCamKeyMap = {
-            ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
+            id: true,
+            model: true,
+            name: true,
+            status: true,
+            url: true,
+            serverId: true,
             options: {
                 isDualStreamingEnabled: true,
                 preferredServerId: true,
@@ -925,7 +929,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 mediaStreams: true,
                 rotation: true,
             },
-        } as const;
+        } satisfies NxRecursiveKeyMap<t.DeviceV1Full>;
 
         return this.getWith('/rest/v1/devices', viewCamKeyMap).pipe(
             map(cameras =>
@@ -972,11 +976,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
         });
-        const cameraKeyMap = {
+        const getCameras = this.getWith('/rest/v1/devices', {
             serverId: true,
             parameters: { compatibleAnalyticsEngines: true },
-        } satisfies NxRecursiveKeyMap<t.DeviceV1Full>;
-        const getCameras = this.getWith('/rest/v1/devices', cameraKeyMap);
+        });
         const getServer = this.getWith('/rest/v1/servers', ['metadataStorageId'], {
             params: { id: this.serverId },
         }).pipe(map(([server]) => server));
@@ -987,7 +990,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 hasPlugins: cameras.some(
                     c =>
                         c.serverId === this.serverId &&
-                        !!c.parameters.compatibleAnalyticsEngines?.length,
+                        !!c.parameters?.compatibleAnalyticsEngines?.length,
                 ),
                 metadataStorageId: server.metadataStorageId,
             })),
