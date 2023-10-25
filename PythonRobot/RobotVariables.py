@@ -2,17 +2,19 @@ import json
 import os
 import re
 
-from variables_dict import variables_dict, variables
+from variables_dict import variables
+from variables_dict import variables_dict
 
 
-class RobotVariables():
+class RobotVariables:
+
     def __init__(self, language: str) -> None:
         self.variables = {}
         self.warn_about_duplicates = False
         self.current_dir = os.path.abspath(os.getcwd())
         if language in ["en_US"]:
             self.language = language
-            self.load_variables(os.path.join(self.current_dir,'variables_language_en_US.json'))
+            self.load_variables(os.path.join(self.current_dir, 'variables_language_en_US.json'))
             self.load_variables(os.path.join(self.current_dir, 'account_variables.json'))
             self.load_variables(os.path.join(self.current_dir, 'customizations', 'default.json'))
 
@@ -27,7 +29,7 @@ class RobotVariables():
         with open(filepath, encoding="utf-8") as f:
             json_data = json.load(f)
             transformed_data = {k.replace(" ", "_"): v for k, v in json_data.items()}
-            for k, v in transformed_data.items(): 
+            for k, v in transformed_data.items():
                 if k in self.variables and self.warn_about_duplicates:
                     print(f'Warning: Key "{k}" in {filepath} is not unique. Overwriting value.')
                 self.variables[k] = v
