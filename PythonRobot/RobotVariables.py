@@ -12,12 +12,12 @@ class RobotVariables:
     def __init__(self, language: str) -> None:
         self.variables = {}
         self.warn_about_duplicates = False
-        self.current_dir = Path(__file__).parent
+        current_dir = Path(__file__).parent
         if language in ["en_US"]:
             self.language = language
-            self.load_variables(self.current_dir / 'variables_language_en_US.json')
-            self.load_variables(self.current_dir / 'account_variables.json')
-            self.load_variables(self.current_dir / 'customizations' / 'default.json')
+            self.load_variables(current_dir / 'variables_language_en_US.json')
+            self.load_variables(current_dir / 'account_variables.json')
+            self.load_variables(current_dir / 'customizations' / 'default.json')
 
         # Load the variables from variables_dict.py
         self.variables.update(variables_dict)
