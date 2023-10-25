@@ -28,6 +28,7 @@ _logger = logging.getLogger(__name__)
 
 
 class SystemAdmin:
+
     def __init__(self, driver: ChromeBrowser, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
@@ -38,7 +39,7 @@ class SystemAdmin:
     def disconnect_from_cloud_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[contains(text(),'{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
-    
+
     def disconnect_system_modal_button(self):
         return Button(self.driver, "//nx-process-button[@data-testid='disconnectSystemBtn']//button")
 
@@ -96,11 +97,11 @@ class SystemAdmin:
     def merge_with_another_system_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button[span[text()='{MERGE_SYSTEM_BUTTON_TEXT}']]")
         return Button(self.driver, translated_xpath)
-    
+
     def system_offline_text(self):
         return PageText(self.driver, f"//div[contains(text(),'{self.rb.SYSTEM_IS_OFFLINE_TEXT}')]")
 
-    def ensure_system_online(self, system_name: str, timeout = 10.0):
+    def ensure_system_online(self, system_name: str, timeout=10.0):
         error_message = f"System {system_name} is offline and cannot be merged with the current one"
         started_at = time.monotonic()
         clicked_next_button = False
@@ -205,7 +206,7 @@ class SystemAdmin:
             self.driver,
             f'//header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]',
             self.rb,
-        )
+            )
 
     def _wait_for_tab_loaded(self, locator: str):
         """
@@ -238,7 +239,7 @@ class SystemAdmin:
                 self.driver.refresh()
                 if time.monotonic() - started_at > timeout_sec:
                     raise TimeoutError(f"{system_loaded_locator!r} is not visible after {timeout_sec} seconds")
-        
+
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
 
@@ -272,7 +273,7 @@ class FailedToAccessSystemPage:
         text_element = PageText(
             self.driver,
             f'//h2[@name="FAILED_TO_ACCESS_SYSTEM" and contains(text(), \'{error_message}\')]',
-        )
+            )
         try:
             text_element.wait_until_visible()
         except ElementNotVisible:
