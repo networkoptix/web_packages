@@ -478,3 +478,16 @@ class MenuNode:
 
     def click(self):
         self._element.click()
+
+
+class NxCheckbox:
+
+    def __init__(self, driver: WebDriver, element: WebElement):
+        self._driver = driver
+        self._element = element
+
+    def is_visible(self):
+        try:
+            return self._element.is_displayed()
+        except ElementNotInDOM:
+            return False

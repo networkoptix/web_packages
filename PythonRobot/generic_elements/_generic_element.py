@@ -178,6 +178,9 @@ class Element:
         self.wait_until_exists()
         return self._element.get_attribute(attribute_name)
 
+    def find_element_by_id(self, child_id: str):
+        return self._element.find_element_by_id(child_id)
+
 
 class ElementNotInDOM(Exception):
     pass

@@ -17,6 +17,7 @@ from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
+from generic_elements._wrappers import NxCheckbox
 from system_admin_tab_information import TabInformation
 from system_admin_tab_settings import TabSettings
 from system_left_menu import SystemLeftMenu
@@ -383,6 +384,20 @@ class _BlockOne:
         self.driver = driver
         self.rb = RobotVariables(lang)
 
+    def _get_checkbox_by_id(self, checkbox_id: str):
+        parent_locator = "//*[@id='advancedSystemSettingsForm']"
+        el = Page(self.driver, parent_locator)
+        el._element.wait_until_visible()
+        checkbox = el._element.find_element_by_id(checkbox_id)
+        return NxCheckbox(self.driver, checkbox)
+
+    def has_checkbox_with_id(self, checkbox_id: str):
+        try:
+            self._get_checkbox_by_id(checkbox_id)
+        except ElementNotInDOM:
+            return False
+        return True
+
     def get_additional_local_fs_types_input(self):
         locator = self.rb.replace_nested_variables("//input[@id='additionalLocalFsTypes']")
         return TextField(self.driver, locator)
@@ -409,33 +424,53 @@ class _BlockOne:
             "//div[text()='{CLIENT_STATISTICS_RELATIVE_URL_TEXT}']")
         return PageText(self.driver, locator)
 
-    def get_arecont_rtsp_enabled_checkbox(self):
-        locator = "//*[@id='arecontRtspEnabled']"
-        return Checkbox(self.driver, locator)
+    def get_arecont_rtsp_enabled_checkbox(self) -> NxCheckbox:
+        return self._get_checkbox_by_id("arecontRtspEnabled")
+
+    def has_arecont_rtsp_enabled_checkbox(self) -> bool:
+        try:
+            self.get_arecont_rtsp_enabled_checkbox().is_visible()
+        except ElementNotInDOM:
+            return False
 
     def get_arecont_rtsp_enabled_label(self):
         locator = self.rb.replace_nested_variables("//div[text()='{ARECONT_RTSP_ENABLED_TEXT}']")
         return PageText(self.driver, locator)
 
-    def get_auto_discovery_response_enabled_checkbox(self):
-        locator = "//*[@id='autoDiscoveryResponseEnabled']"
-        return Checkbox(self.driver, locator)
+    def get_auto_discovery_response_enabled_checkbox(self) -> NxCheckbox:
+        return self._get_checkbox_by_id("autoDiscoveryResponseEnabled")
+
+    def has_auto_discovery_response_enabled_checkbox(self) -> bool:
+        try:
+            self.get_auto_discovery_response_enabled_checkbox().is_visible()
+        except ElementNotInDOM:
+            return False
 
     def get_auto_discovery_response_enabled_label(self):
         locator = self.rb.replace_nested_variables("//div[text()='{AUTO_DISCOVERY_RESPONSE_TEXT}']")
         return PageText(self.driver, locator)
 
-    def get_auto_update_thumbnails_checkbox(self):
-        locator = "//*[@id='autoUpdateThumbnails']"
-        return Checkbox(self.driver, locator)
+    def get_auto_update_thumbnails_checkbox(self) -> NxCheckbox:
+        return self._get_checkbox_by_id("autoUpdateThumbnails")
+
+    def has_auto_update_thumbnails_checkbox(self) -> bool:
+        try:
+            self.get_auto_update_thumbnails_checkbox().is_visible()
+        except ElementNotInDOM:
+            return False
 
     def get_auto_update_thumbnails_label(self):
         locator = self.rb.replace_nested_variables("//div[text()='{AUTO_UPDATE_THUMNAILS_TEXT}']")
         return PageText(self.driver, locator)
 
-    def get_backup_new_cameras_by_default_checkbox(self):
-        locator = "//*[@id='backupNewCamerasByDefault']"
-        return Checkbox(self.driver, locator)
+    def get_backup_new_cameras_by_default_checkbox(self) -> NxCheckbox:
+        return self._get_checkbox_by_id("backupNewCamerasByDefault")
+
+    def has_backup_new_cameras_by_default_checkbox(self) -> bool:
+        try:
+            self.get_backup_new_cameras_by_default_checkbox().is_visible()
+        except ElementNotInDOM:
+            return False
 
     def get_backup_new_cameras_by_default_label(self):
         locator = self.rb.replace_nested_variables(
@@ -449,13 +484,13 @@ class _BlockOne:
         self.get_audit_trail_period_days_label().wait_until_visible()
         self.get_client_statistics_relative_url_input().wait_until_visible()
         self.get_client_statistics_relative_url_label().wait_until_visible()
-        self.get_arecont_rtsp_enabled_checkbox().wait_until_visible()
+        self.has_arecont_rtsp_enabled_checkbox()
         self.get_arecont_rtsp_enabled_label().wait_until_visible()
-        self.get_auto_discovery_response_enabled_checkbox()
+        self.has_auto_discovery_response_enabled_checkbox()
         self.get_auto_discovery_response_enabled_label().wait_until_visible()
-        self.get_auto_update_thumbnails_checkbox().wait_until_visible()
+        self.has_auto_update_thumbnails_checkbox()
         self.get_auto_update_thumbnails_label().wait_until_visible()
-        self.get_backup_new_cameras_by_default_checkbox().wait_until_visible()
+        self.has_backup_new_cameras_by_default_checkbox()
         self.get_backup_new_cameras_by_default_label().wait_until_visible()
 
     def wait_until_elements_not_seen(self):
@@ -465,7 +500,15 @@ class _BlockOne:
         self.get_audit_trail_period_days_label().wait_until_not_visible()
         self.get_client_statistics_relative_url_input().wait_until_does_not_exist()
         self.get_client_statistics_relative_url_label().wait_until_not_visible()
+        if self.has_arecont_rtsp_enabled_checkbox():
+            raise RuntimeError("Arecont RTSP Enabled checkbox is visible")
         self.get_arecont_rtsp_enabled_label().wait_until_not_visible()
+        if self.has_auto_discovery_response_enabled_checkbox():
+            raise RuntimeError("Auto Discovery Response Enabled checkbox is visible")
         self.get_auto_discovery_response_enabled_label().wait_until_not_visible()
+        if self.has_auto_update_thumbnails_checkbox():
+            raise RuntimeError("Auto Update Thumbnails checkbox is visible")
         self.get_auto_update_thumbnails_label().wait_until_not_visible()
+        if self.get_backup_new_cameras_by_default_checkbox().is_visible():
+            raise RuntimeError("Backup New Cameras by Default checkbox is visible")
         self.get_backup_new_cameras_by_default_label().wait_until_not_visible()
