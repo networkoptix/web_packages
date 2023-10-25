@@ -2,9 +2,9 @@ import logging
 import time
 
 from selenium.common.exceptions import ElementClickInterceptedException
+from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
-from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser

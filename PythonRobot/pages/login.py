@@ -1,12 +1,13 @@
 from typing import Tuple
+
 from RobotVariables import RobotVariables
-from generic_elements import ElementNotVisible
-from generic_elements import ElementNotInDOM
 from generic_elements import Button
+from generic_elements import ElementNotInDOM
+from generic_elements import ElementNotVisible
+from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
-from generic_elements import Image
 
 
 class LoginDialog:

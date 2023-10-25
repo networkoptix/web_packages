@@ -5,9 +5,9 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
+from generic_elements import Button
 from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
-from generic_elements import Button
 from generic_elements import Image
 from generic_elements import Link
 from generic_elements import PageText

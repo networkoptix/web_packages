@@ -2,8 +2,8 @@ import time
 
 from RobotVariables import RobotVariables
 from generic_elements import Button
-from generic_elements import Pane
 from generic_elements import PageText
+from generic_elements import Pane
 from variables import ENV
 
 

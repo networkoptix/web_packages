@@ -1,5 +1,7 @@
 import logging
 
+from selenium.webdriver.remote.webdriver import WebDriver
+
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
@@ -7,7 +9,6 @@ from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Page
 from generic_elements import TextField
-from selenium.webdriver.remote.webdriver import WebDriver
 
 
 class SystemOwnership:
