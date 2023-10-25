@@ -490,6 +490,7 @@ class _BlockOne:
         self.get_auto_discovery_response_enabled_label().wait_until_visible()
         self.has_auto_update_thumbnails_checkbox()
         self.get_auto_update_thumbnails_label().wait_until_visible()
+        # Does not work because of CLOUD-11670
         self.has_backup_new_cameras_by_default_checkbox()
         self.get_backup_new_cameras_by_default_label().wait_until_visible()
 
@@ -509,6 +510,7 @@ class _BlockOne:
         if self.has_auto_update_thumbnails_checkbox():
             raise RuntimeError("Auto Update Thumbnails checkbox is visible")
         self.get_auto_update_thumbnails_label().wait_until_not_visible()
+        # Does not work because of CLOUD-11670
         if self.get_backup_new_cameras_by_default_checkbox().is_visible():
             raise RuntimeError("Backup New Cameras by Default checkbox is visible")
         self.get_backup_new_cameras_by_default_label().wait_until_not_visible()
