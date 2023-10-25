@@ -5,38 +5,35 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import variables
 from pages.downloads_page import DownloadsPage
 from pages.footer import Footer
-from resource_import import get_headless_chrome
+from resource_import import get_chrome
 
 
 def download_link_is_in_the_footer():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link()
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link()
 
 
 # Download link takes you to the /downloads page
 def check_download_link():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    DownloadsPage(driver)
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        DownloadsPage(driver)
 
 
 # Make sure each tab changes the text to show the corresponding OS and url
 def check_download_tabs():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    download_page = DownloadsPage(driver)
-    download_page.get_windows_client_installer_tab().click()
-    driver.location_should_be(variables.ENV + '/download/windows')
-    download_page.get_linux_client_installer_tab().click()
-    driver.location_should_be(variables.ENV + '/download/linux')
-    download_page.get_mac_client_installer_tab().click()
-    driver.location_should_be(variables.ENV + '/download/macos')
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        download_page = DownloadsPage(driver)
+        download_page.get_windows_client_installer_tab().click()
+        driver.location_should_be(variables.ENV + '/download/windows')
+        download_page.get_linux_client_installer_tab().click()
+        driver.location_should_be(variables.ENV + '/download/linux')
+        download_page.get_mac_client_installer_tab().click()
+        driver.location_should_be(variables.ENV + '/download/macos')
 
 
 # Going to the downloads page should show you the tab according to your OS
@@ -71,63 +68,58 @@ def check_default_download_tab():
 
 
 def validate_the_windows_download_links():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    download_page = DownloadsPage(driver)
-    tab = download_page.get_windows_client_installer_tab()
-    tab.click()
-    tab.check_download_button_link()
-    tab.check_other_packages_links()
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        download_page = DownloadsPage(driver)
+        tab = download_page.get_windows_client_installer_tab()
+        tab.click()
+        tab.check_download_button_link()
+        tab.check_other_packages_links()
 
 
 def validate_the_linux_download_links():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    download_page = DownloadsPage(driver)
-    tab = download_page.get_linux_client_installer_tab()
-    tab.click()
-    tab.check_download_button_link()
-    tab.check_other_packages_links()
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        download_page = DownloadsPage(driver)
+        tab = download_page.get_linux_client_installer_tab()
+        tab.click()
+        tab.check_download_button_link()
+        tab.check_other_packages_links()
 
 
 def validate_the_mac_download_links():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    download_page = DownloadsPage(driver)
-    tab = download_page.get_mac_client_installer_tab()
-    tab.click()
-    tab.check_download_button_link()
-    tab.check_other_packages_links()
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        download_page = DownloadsPage(driver)
+        tab = download_page.get_mac_client_installer_tab()
+        tab.click()
+        tab.check_download_button_link()
+        tab.check_other_packages_links()
 
 
 def check_play_store_link():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    download_page = DownloadsPage(driver)
-    actual_url = download_page.get_play_store_link()
-    expected_url = 'https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness'
-    if actual_url != expected_url:
-        raise RuntimeError(f"Actual Play Store URL is {actual_url}, expected {expected_url}")
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        download_page = DownloadsPage(driver)
+        actual_url = download_page.get_play_store_link()
+        expected_url = 'https://play.google.com/store/apps/details?id=com.networkoptix.nxwitness'
+        if actual_url != expected_url:
+            raise RuntimeError(f"Actual Play Store URL is {actual_url}, expected {expected_url}")
 
 
 def check_itunes_store_link():
-    driver = get_headless_chrome()
-    driver.get(variables.ENV)
-    Footer(driver, 'cloud').get_downloads_link().click()
-    download_page = DownloadsPage(driver)
-    actual_url = download_page.get_itunes_store_link()
-    expected_url = 'https://itunes.apple.com/eg/app/hd-witness/id1050899754'
-    if actual_url != expected_url:
-        raise RuntimeError(f"Actual Play Store URL is {actual_url}, expected {expected_url}")
-    driver.close()
+    with get_chrome() as driver:
+        driver.get(variables.ENV)
+        Footer(driver, 'cloud').get_downloads_link().click()
+        download_page = DownloadsPage(driver)
+        actual_url = download_page.get_itunes_store_link()
+        expected_url = 'https://itunes.apple.com/eg/app/hd-witness/id1050899754'
+        if actual_url != expected_url:
+            raise RuntimeError(f"Actual Play Store URL is {actual_url}, expected {expected_url}")
 
 
 def _get_chromedriver(user_agent):

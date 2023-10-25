@@ -59,29 +59,27 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
 
 def test_can_access_account_page_from_dropdown():
     """1 Can access the account page from dropdown"""
-    driver = get_headless_chrome()
-    email = resource_import.get_random_email()
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    driver.get(rb.ENV)
-    cloud_login(driver, email, password)
-    time.sleep(3)
-    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    Button(driver, rb.ACCOUNT_DROPDOWN).click()
-    Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_visible()
-    Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
-    verify_in_account_page(driver)
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        email = resource_import.get_random_email()
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        driver.get(rb.ENV)
+        cloud_login(driver, email, password)
+        time.sleep(3)
+        DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
+        Button(driver, rb.ACCOUNT_DROPDOWN).click()
+        Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_visible()
+        Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
+        verify_in_account_page(driver)
 
 
 def test_can_access_account_page_from_direct_link():
     """2 can access the account page from direct link while logged in"""
-    driver = get_headless_chrome()
-    driver.get(rb.env)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password)
-    url = rb.env + "/account"
-    driver.get(url)
-    verify_in_account_page(driver)
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        driver.get(rb.env)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password)
+        url = rb.env + "/account"
+        driver.get(url)
+        verify_in_account_page(driver)
 
 
 # def test_cannot_access_account_page_from_direct_link_closing_log():
@@ -90,219 +88,209 @@ def test_can_access_account_page_from_direct_link():
 
 def test_cannot_access_account_page_from_direct_link_on_valid_login():
     """4 accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page"""
-    driver = get_headless_chrome()
-    url = rb.env + "/account"
-    driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none)
-    url1 = rb.env + "/account"
-    driver.get(url1)
-    verify_in_account_page(driver)
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        url = rb.env + "/account"
+        driver.get(url)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none)
+        url1 = rb.env + "/account"
+        driver.get(url1)
+        verify_in_account_page(driver)
 
 
 def test_changing_first_name_and_saving_maintains_that_setting():
     """5 changing first name and saving maintains that setting"""
-    driver = get_headless_chrome()
-    email = resource_import.get_random_email()
-    register_and_activate_account(driver, "mark", "hamill", email, password)
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, email, password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
-    # todo: the save button doesn't appear.
-    Button(driver, rb.ACCOUNT_SAVE).click()
-    alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-    xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-    alert = PageText(driver, xpath)
-    alert.wait_until_visible(10)
-    alert.wait_until_not_visible(10)
-    driver.quit()
-    driver = get_headless_chrome()
-    url1 = rb.ENV + "/account"
-    driver.get(url1)
-    cloud_login(driver, email, password, button=None, api=False)
-    verify_in_account_page(driver)
-    time.sleep(2)
-    text = TextField(driver, rb.ACCOUNT_FIRST_NAME).get_text()
-    assert text == "namechanged", "Name was not 'namechanged'"
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
-    Button(driver, rb.ACCOUNT_SAVE).click()
-    alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-    xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-    alert1 = PageText(driver, xpath1)
-    alert1.wait_until_visible(10)
-    alert1.wait_until_not_visible(10)
+    with resource_import.get_chrome() as driver:
+        email = resource_import.get_random_email()
+        register_and_activate_account(driver, "mark", "hamill", email, password)
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, email, password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
+        # todo: the save button doesn't appear.
+        Button(driver, rb.ACCOUNT_SAVE).click()
+        alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+        xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+        alert = PageText(driver, xpath)
+        alert.wait_until_visible(10)
+        alert.wait_until_not_visible(10)
+    with resource_import.get_chrome() as driver:
+        url1 = rb.ENV + "/account"
+        driver.get(url1)
+        cloud_login(driver, email, password, button=None, api=False)
+        verify_in_account_page(driver)
+        time.sleep(2)
+        text = TextField(driver, rb.ACCOUNT_FIRST_NAME).get_text()
+        assert text == "namechanged", "Name was not 'namechanged'"
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
+        Button(driver, rb.ACCOUNT_SAVE).click()
+        alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+        xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+        alert1 = PageText(driver, xpath1)
+        alert1.wait_until_visible(10)
+        alert1.wait_until_not_visible(10)
 
 
 def test_changing_last_name_and_saving_maintains_that_setting():
     """6 changing last name and saving maintains that setting"""
     #todo: 
-    driver = get_headless_chrome()
-    email = resource_import.get_random_email()
-    register_and_activate_account(driver, "mark", "hamill", email, password)
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, email, password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
-    Button(driver, rb.ACCOUNT_SAVE).click()
-    alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-    xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-    alert = PageText(driver, xpath)
-    alert.wait_until_visible(10)
-    alert.wait_until_not_visible(10)
-    driver.quit()
-    driver = get_headless_chrome()
-    url1 = rb.ENV + "/account"
-    driver.get(url1)
-    cloud_login(driver, email, password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
-    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
-    Button(driver, rb.ACCOUNT_SAVE).click()
-    alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-    xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-    alert1 = PageText(driver, xpath1)
-    alert1.wait_until_visible(10)
-    alert1.wait_until_not_visible(10)
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        email = resource_import.get_random_email()
+        register_and_activate_account(driver, "mark", "hamill", email, password)
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, email, password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
+        Button(driver, rb.ACCOUNT_SAVE).click()
+        alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+        xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+        alert = PageText(driver, xpath)
+        alert.wait_until_visible(10)
+        alert.wait_until_not_visible(10)
+    with resource_import.get_chrome() as driver:
+        url1 = rb.ENV + "/account"
+        driver.get(url1)
+        cloud_login(driver, email, password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
+        TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
+        Button(driver, rb.ACCOUNT_SAVE).click()
+        alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
+        xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
+        alert1 = PageText(driver, xpath1)
+        alert1.wait_until_visible(10)
+        alert1.wait_until_not_visible(10)
 
 
 def test_first_name_is_required():
     """7 first name is required"""
-    driver = get_headless_chrome()
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
-    TextField(driver, rb.ACCOUNT_LAST_NAME).click()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-    account_save = Button(driver, rb.ACCOUNT_SAVE)
-    account_cancel = Button(driver, rb.ACCOUNT_CANCEL)
-    account_save.wait_until_visible()
-    account_cancel.wait_until_visible()
-    account_save.wait_until_not_clickable()
-    account_cancel.wait_until_clickable()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-    Button(driver, rb.ACCOUNT_CANCEL).click()
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
+        TextField(driver, rb.ACCOUNT_LAST_NAME).click()
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_save = Button(driver, rb.ACCOUNT_SAVE)
+        account_cancel = Button(driver, rb.ACCOUNT_CANCEL)
+        account_save.wait_until_visible()
+        account_cancel.wait_until_visible()
+        account_save.wait_until_not_clickable()
+        account_cancel.wait_until_clickable()
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        Button(driver, rb.ACCOUNT_CANCEL).click()
 
 
 def test_last_name_is_required():
     """8 last name is required"""
-    driver = get_headless_chrome()
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).click()
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-    account_save = Button(driver, rb.ACCOUNT_SAVE)
-    cancel_button = Button(driver, rb.ACCOUNT_CANCEL)
-    account_save.wait_until_visible()
-    cancel_button.wait_until_visible()
-    account_save.wait_until_not_clickable()
-    cancel_button.wait_until_clickable()
-    account_save.wait_until_visible()
-    cancel_button.wait_until_visible()
-    account_save.wait_until_not_clickable()
-    cancel_button.wait_until_clickable()
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-    Button(driver, rb.ACCOUNT_CANCEL).click()
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).click()
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_save = Button(driver, rb.ACCOUNT_SAVE)
+        cancel_button = Button(driver, rb.ACCOUNT_CANCEL)
+        account_save.wait_until_visible()
+        cancel_button.wait_until_visible()
+        account_save.wait_until_not_clickable()
+        cancel_button.wait_until_clickable()
+        account_save.wait_until_visible()
+        cancel_button.wait_until_visible()
+        account_save.wait_until_not_clickable()
+        cancel_button.wait_until_clickable()
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        Button(driver, rb.ACCOUNT_CANCEL).click()
 
 
 def test_space_for_first_name_is_not_valid():
     """9 space for first name is not valid"""
-    driver = get_headless_chrome()
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(" ")
-    PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-    Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-    Button(driver, rb.ACCOUNT_CANCEL).click()
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(" ")
+        PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
+        Button(driver, rb.ACCOUNT_CANCEL).click()
 
 
 def test_space_for_last_name_is_not_valid():
     """10 space for last name is not valid"""
-    driver = get_headless_chrome()
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    verify_in_account_page(driver)
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("luke")
-    TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(" ")
-    PageText(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-    Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-    Button(driver, rb.ACCOUNT_CANCEL).click()
-    driver.quit()
+    with resource_import.get_chrome() as driver:
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        verify_in_account_page(driver)
+        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("luke")
+        TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(" ")
+        PageText(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
+        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
+        Button(driver, rb.ACCOUNT_CANCEL).click()
 
 
 def test_language_is_changeable_on_the_account_page():
     """13 language is changeable on the account page"""
-    driver = get_headless_chrome()
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
-    driver.refresh()
-    lang_dict = get_lang_list()
-    for lang in lang_dict:
-        info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
+    with resource_import.get_chrome() as driver:
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        driver.refresh()
+        lang_dict = get_lang_list()
+        for lang in lang_dict:
+            info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
+            verify_in_account_page(driver)
+            if lang != rb.language:
+                Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+                language_button = Button(
+                    driver,
+                    f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
+                    )
+                assert language_button.in_dom, f"No button for language {lang}"
+                language_button.click()
+                PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
+        DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
+        Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+        Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
+        time.sleep(1)
         verify_in_account_page(driver)
-        if lang != rb.language:
-            Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-            language_button = Button(
-                driver,
-                f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
-                )
-            assert language_button.in_dom, f"No button for language {lang}"
-            language_button.click()
-            PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-    DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
-    Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-    Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
-    time.sleep(1)
-    verify_in_account_page(driver)
-    PageText(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
-    driver.quit()
+        PageText(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
 
 
 def test_language_change_affects_emails():
     """14 Language change affects emails"""
-    driver = get_headless_chrome()
-    password = "theF0rc3"
-    random_email = get_random_email(rb.BASE_EMAIL_SENDEMAIL, sendemail=True)
-    register_and_activate_account(driver, "Darth", "Vader", random_email, password)
-    url = rb.ENV + "/account"
-    driver.get(url)
-    if rb.LANGUAGE != "ru_Ru":
-        cloud_login(driver, random_email, password, button=None, api=False)
-        verify_in_account_page(driver)
-        Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-        button = Button(
-            driver,
-            "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
-            )
-        button.wait_until_visible()
-        Button(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
-        time.sleep(5)
-        driver.quit()
+    with resource_import.get_chrome() as driver:
+        password = "theF0rc3"
+        random_email = get_random_email(rb.BASE_EMAIL_SENDEMAIL, sendemail=True)
+        register_and_activate_account(driver, "Darth", "Vader", random_email, password)
+        url = rb.ENV + "/account"
+        driver.get(url)
+        if rb.LANGUAGE != "ru_Ru":
+            cloud_login(driver, random_email, password, button=None, api=False)
+            verify_in_account_page(driver)
+            Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+            button = Button(
+                driver,
+                "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
+                )
+            button.wait_until_visible()
+            Button(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
+            time.sleep(5)
     # if we just closed the browser, we'll get a MaxRetryError
     try:
         url1 = rb.ENV + "/login"
@@ -322,53 +310,51 @@ def test_language_change_is_new_default():
     lang_dict = resource_import.get_lang_list()
     ja_JP_account_info = lang_dict['ja_JP']['ACCOUNT INFORMATION']
     de_DE_account_info = lang_dict['de_DE']['ACCOUNT INFORMATION']
-    driver = resource_import.get_headless_chrome()
-    email = resource_import.get_random_email()
-    password = "qweasd 123"
-    register_and_activate_account(driver, "Mark", "Hamill", email, password)
-    url = rb.ENV + "/account"
-    driver.get(url)
-    cloud_login(driver, email, password, button=None, api=False)
-    verify_in_account_page(driver)
-    Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-    lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
-    droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
-    DropDown(driver, droplang1).wait_until_visible()
-    DropDown(driver, droplang1).click()
-    time.sleep(5)
-    driver.refresh()
-    dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
-    DropDown(driver, dropLang2).wait_until_visible()
-    drop_lang_element = DropDown(driver, dropLang2)
-    activeLang = drop_lang_element.text()
-    assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
-    if lang == 'ja_JP':
-        info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
-        info_element.wait_until_visible()
-    elif lang == 'de_DE':
-        info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
-        info_element.wait_until_visible()
-    resource_import.logout_japanese(driver)
-    url1 = rb.ENV + "/account"
-    driver.get(url1)
-    cloud_login(driver, email, password, button=None, api=False)
-    api = CloudPortalAPI()
-    api.set_account_language(email, password, new_language=lang)
-    time.sleep(5)
-    driver.refresh()
-    DropDown(driver, dropLang2).wait_until_visible()
-    activeLang = drop_lang_element.text()
-    if activeLang.lower() not in lang.lower():
-        assert False, f"{activeLang.lower()} not found in {lang.lower()}"  
-    if rb.LANGUAGE == 'ja_JP':
-        info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
-        info_element.wait_until_visible()
-    elif rb.LANGUAGE == 'de_DE':
-        info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
-        info_element.wait_until_visible()
-    resource_import.check_language_logged_in(email, password)
-    time.sleep(3)
-    driver.refresh()
+    with resource_import.get_chrome() as driver:
+        email = resource_import.get_random_email()
+        password = "qweasd 123"
+        register_and_activate_account(driver, "Mark", "Hamill", email, password)
+        url = rb.ENV + "/account"
+        driver.get(url)
+        cloud_login(driver, email, password, button=None, api=False)
+        verify_in_account_page(driver)
+        Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+        lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
+        droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
+        DropDown(driver, droplang1).wait_until_visible()
+        DropDown(driver, droplang1).click()
+        time.sleep(5)
+        driver.refresh()
+        dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
+        DropDown(driver, dropLang2).wait_until_visible()
+        drop_lang_element = DropDown(driver, dropLang2)
+        activeLang = drop_lang_element.text()
+        assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
+        if lang == 'ja_JP':
+            info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+            info_element.wait_until_visible()
+        elif lang == 'de_DE':
+            info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+            info_element.wait_until_visible()
+        resource_import.logout_japanese(driver)
+        url1 = rb.ENV + "/account"
+        driver.get(url1)
+        cloud_login(driver, email, password, button=None, api=False)
+        api = CloudPortalAPI()
+        api.set_account_language(email, password, new_language=lang)
+        time.sleep(5)
+        driver.refresh()
+        DropDown(driver, dropLang2).wait_until_visible()
+        activeLang = drop_lang_element.text()
+        if activeLang.lower() not in lang.lower():
+            assert False, f"{activeLang.lower()} not found in {lang.lower()}"
+        if rb.LANGUAGE == 'ja_JP':
+            info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
+            info_element.wait_until_visible()
+        elif rb.LANGUAGE == 'de_DE':
+            info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
+            info_element.wait_until_visible()
+        resource_import.check_language_logged_in(email, password)
 
 
 if __name__ == "__main__":
