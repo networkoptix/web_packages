@@ -645,7 +645,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
-    --system-card-bg: var(--dark_gray_7);
+    --system-card-bg: var(--dark_gray_11);
     --system-card-offline-color: var(--dark_gray_18);
     --system-card-border-color: var(--dark_gray_10);
     --system-card-owner-color: var(--dark_gray_16);
@@ -654,7 +654,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --card-menu-dots-fill: var(--dark_gray_18);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark_gray_1--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--dark_gray_1--rgb), 0.2);
-
+    --card-border-color: var(--dark_gray_7);
     --card-context-bg: var(--dark_gray_9);
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark_gray_1--rgb), 0.4);
 

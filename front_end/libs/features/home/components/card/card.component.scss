@@ -11,7 +11,7 @@ $card-border-radius: 12px;
 
 .card {
   border: none;
-  background-color: none;
+  background-color: transparent;
   
   width: $card-width;
   height: $card-height;
@@ -31,7 +31,6 @@ $card-border-radius: 12px;
           display: flex;
           flex-direction: column;
           height: 100%;
-          border: 2px var(--system-card-border-color) solid;
           border-radius: $card-border-radius;
           padding: $card-vertical-padding 1rem;
 
