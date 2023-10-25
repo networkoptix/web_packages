@@ -203,7 +203,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
     }
 
     ngOnChanges(changes: NgChanges<NxSystemStandardServerComponent>): void {
-        if (changes.system?.currentValue?.info && this.system.permissionManager.isAdmin()) {
+        if (changes.system?.currentValue?.info && this.system.permissionManager.isAdmin$$()) {
             this.fullInfoPath =
                 this.uriService.getSystemSettingsRoute({
                     systemId: this.system.id,
@@ -240,7 +240,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.selectedServer.ip = ip;
         this.parsedServerId = cleanId(this.selectedServer.id);
         const osName = this.selectedServer.osInfo.platform;
-        const { isAdmin, editAdmins } = this.system.permissionManager.permissions();
+        const { isAdmin, editAdmins } = this.system.permissionManager.permissions$$();
         this.enableEdit = isAdmin;
         this.restartDisabled = !isAdmin;
         this.detachDisabled = !editAdmins;

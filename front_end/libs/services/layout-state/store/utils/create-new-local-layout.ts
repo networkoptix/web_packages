@@ -32,7 +32,8 @@ export const createNewUnsavedLocalLayout = (
         logicalId: 0,
         name: name || staticLang.layouts.helpMessages.unsaved.title,
         systemId: system.id,
-        parentId: inject(NxAccountService).account.id || system.permissionManager.currentUser().id,
+        parentId:
+            inject(NxAccountService).account.id || system.permissionManager.currentUser$$().id,
     };
 
     return {
@@ -54,7 +55,8 @@ export const createNewUnsavedLocalLayoutDuplicate = (
         ...layout,
         id,
         locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
-        parentId: inject(NxAccountService).account.id || system.permissionManager.currentUser().id,
+        parentId:
+            inject(NxAccountService).account.id || system.permissionManager.currentUser$$().id,
     };
     return {
         id,

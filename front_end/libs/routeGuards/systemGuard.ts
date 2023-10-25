@@ -55,8 +55,8 @@ export const SystemGuard: CanActivateFn = (
         route.pathFromRoot.find(snapshot => snapshot.params.systemId).params.systemId;
 
     const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
-        const permissions = system.permissionManager.permissions();
-        const isOwner = system.permissionManager.isOwner();
+        const permissions = system.permissionManager.permissions$$();
+        const isOwner = system.permissionManager.isOwner$$();
         const isAdmin = permissions.isAdmin || isOwner;
         const canViewChecks = {
             users: permissions.editUsers,
@@ -130,7 +130,7 @@ export const SystemGuard: CanActivateFn = (
             await currSystem.update();
         }
 
-        menusService.currentUser = currSystem.permissionManager.currentUser();
+        menusService.currentUser = currSystem.permissionManager.currentUser$$();
         menusService.updateActiveSystemMenu(currSystem);
 
         if (currentRoute) {

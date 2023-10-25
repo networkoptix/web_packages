@@ -39,7 +39,7 @@ export class NxMenusService {
     activeSystem$$ = toSignal(this.activeSystem$);
     updateMenuByPermissions = effect(() => {
         const activeSystem = this.activeSystem$$();
-        if (activeSystem?.permissionManager.permissions()) {
+        if (activeSystem?.permissionManager.permissions$$()) {
             this.updateSystemMenu(activeSystem);
         }
     });
@@ -330,7 +330,7 @@ export class NxMenusService {
                 : 'system_offline.svg';
 
         const nodes = [];
-        const permissions = activeSystem.permissionManager?.permissions() || {};
+        const permissions = activeSystem.permissionManager?.permissions$$() || {};
         if (permissions.view || permissions.viewArchives) {
             const viewNode = new MenuNode(
                 'View',

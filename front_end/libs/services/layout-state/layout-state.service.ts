@@ -53,7 +53,7 @@ export class LayoutStateService {
             .subscribe(layouts => {
                 const currentUser = this.systemService
                     .currentSystem$$()
-                    .permissionManager.currentUser();
+                    .permissionManager.currentUser$$();
                 const existingNames = layouts
                     .filter(
                         ({ layout }) =>
@@ -191,7 +191,7 @@ export class LayoutStateService {
             ...layout,
             parentId:
                 this.accountService.account.id ||
-                this.systemService.getCurrentSystem().permissionManager.currentUser().id,
+                this.systemService.getCurrentSystem().permissionManager.currentUser$$().id,
         });
     }
 

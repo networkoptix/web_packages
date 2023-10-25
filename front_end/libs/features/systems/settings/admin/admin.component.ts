@@ -91,7 +91,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     transferInfo: SystemTransferInfo;
 
     userRole: Signal<string> = computed(() => {
-        const accessRole = this.system.permissionManager.currentUser()?.accessRole;
+        const accessRole = this.system.permissionManager.currentUser$$()?.accessRole;
         if (Object.keys(this.LANG.accessRoles).includes(accessRole)) {
             return this.LANG.accessRoles[accessRole].label;
         }
@@ -102,7 +102,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     get canSendTransferRequest(): boolean {
         return (
             this.ownershipTransferEnabled &&
-            this.system.permissionManager.isOwner() &&
+            this.system.permissionManager.isOwner$$() &&
             this.system.useRest &&
             !this.transferInfo
         );
@@ -113,7 +113,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         return (
             !environment.isLocal &&
             !!this.transferInfo &&
-            this.transferInfo.toAccount === this.system.permissionManager.currentUser().email
+            this.transferInfo.toAccount === this.system.permissionManager.currentUser$$().email
         );
     }
 
@@ -237,8 +237,8 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                 this.enableEdit =
                     this.system.isOnline &&
                     (this.environment.isLocal
-                        ? this.system.permissionManager.isAdmin()
-                        : this.system.permissionManager.isOwner()) &&
+                        ? this.system.permissionManager.isAdmin$$()
+                        : this.system.permissionManager.isOwner$$()) &&
                     !this.settings.renameDisabled;
                 // TODO: Restore cloud admin rename permissions
                 // See CB-1596
@@ -366,7 +366,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                         console.error(error);
                     });
                 }
-                if (this.system.permissionManager.isCloud()) {
+                if (this.system.permissionManager.isCloud$$()) {
                     return this.accountService.logout();
                 }
                 // give the user chance to read the toaster
@@ -429,7 +429,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     };
 
     delete() {
-        if (!this.system.permissionManager.isOwner()) {
+        if (!this.system.permissionManager.isOwner$$()) {
             // User is not owner. Deleting means he'll lose access to it
             if (this.environment.isLocal) {
                 return this.dialogs.removeSystem(this.system).then(response => {

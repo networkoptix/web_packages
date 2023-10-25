@@ -130,7 +130,7 @@ export class NxLayoutViewComponent {
                 this.store.select(selectResourcesValuesBySystemId(id)),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
-                new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser())),
+                new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser$$())),
             ]);
         }),
         filter(([resources]) => Object.values(resources).every(Boolean)),

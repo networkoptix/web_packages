@@ -83,7 +83,7 @@ export class CameraManager {
         serverTimes: ServerTime[],
     ): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
-        if (this.system?.permissionManager.isAdmin()) {
+        if (this.system?.permissionManager.isAdmin$$()) {
             this.camerasHealth = (
                 await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
             ).reply.cameras;
@@ -145,7 +145,7 @@ export class CameraManager {
                 ? camera.deviceType
                 : this.camerasHealth[cleanId(camera.id)]?.info.type ?? DeviceType.Camera;
 
-        const currentUser = this.system?.permissionManager.currentUser();
+        const currentUser = this.system?.permissionManager.currentUser$$();
         const canEditSpecificCamera =
             currentUser?.resourceAccessRights?.[camera.id]?.includes('edit');
         const canEdit = canEditSpecificCamera || currentUser?.isAdmin;

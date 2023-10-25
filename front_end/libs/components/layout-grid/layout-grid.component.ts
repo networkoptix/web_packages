@@ -326,7 +326,7 @@ export class NxLayoutGridComponent {
     }
 
     editCameras$$: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions().editCameras || false,
+        () => this.system.permissionManager.permissions$$().editCameras || false,
     );
 
     #lastWidth: number = Infinity;
@@ -1224,7 +1224,7 @@ export class NxLayoutGridComponent {
             this.changingLayout = cleanId(id);
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
-            if (!this.system.permissionManager.permissions().editCameras) {
+            if (!this.system.permissionManager.permissions$$().editCameras) {
                 delete this.additionalErrorMessages.defaultPassword;
                 delete this.additionalErrorMessages.unauthorized;
             }
