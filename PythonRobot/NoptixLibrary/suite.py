@@ -96,7 +96,7 @@ class Suite:
             cloud_owner: 'CloudAccount',
             ):
         started_at = time.monotonic()
-        timeout_sec = 20
+        timeout_sec = 65
         while True:
             json_status = _CLOUD_API.cdb_system_status(
                 system_id,

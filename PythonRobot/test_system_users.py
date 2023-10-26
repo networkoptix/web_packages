@@ -28,6 +28,7 @@ permissions = CloudAccount().PERMISSIONS
 viewer_permissions = permissions['viewer']
 admin_permissions = permissions['cloudAdmin']
 
+
 def owner_can_remove_user(server: Mediaserver):
     """
     15. Delete user works
@@ -66,6 +67,7 @@ def owner_can_remove_user(server: Mediaserver):
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
+
 
 def cloud_admin_can_remove_user(server: Mediaserver):
     """
@@ -107,6 +109,7 @@ def cloud_admin_can_remove_user(server: Mediaserver):
             print("PASS")
             CLOUD_API.delete_account(email, password)
 
+
 def share_with_registered_user_sends_notification(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
     with get_chrome() as driver:
@@ -119,9 +122,11 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     rb = RobotVariables("en_US")
     email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
     mail_box = Email()
-    assert mail_box.check_email_subject(None, email_subject), f"Did not find an email with the subject: {email_subject}."
+    assert mail_box.check_email_subject(None,
+                                        email_subject), f"Did not find an email with the subject: {email_subject}."
     print("pass")
     CLOUD_API.delete_account(email, password)
+
 
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
@@ -147,9 +152,20 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
         f'{rb.ENV}/authorize/register',
     ]
     email_con.find_links_in_email(body, expected_links)
+    # User cannot be deleted unless activated
+    registration_link = email_con.get_nx_links_from_email(body)
+    with get_chrome() as driver:
+        driver.get(registration_link)
+        register_form = RegisterForm(driver)
+        register_form.first_name_input().input_text("Mark")
+        register_form.last_name_input().input_text("Hamill")
+        register_form.password_input().input_text(password)
+        register_form.terms_and_conditions_checkbox().select()
+        register_form.create_account_button().click()
     email_con.delete_email(email_id)
     print("PASS")
     CLOUD_API.delete_account(email, password)
+
 
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
@@ -159,7 +175,9 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
         owner = server.get_cloud_owner()
         cloud_auth = (owner.email, owner.password)
         CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-        email_id = email_con.wait_for_email(email)
+        subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
+        subject = rb.replace_nested_variables(subject)
+        email_id = email_con.wait_for_email(email, subject)
         body = email_con.get_body(email_id)
         links = email_con.get_nx_links_from_email(body)
         driver.get(links)
@@ -171,8 +189,18 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
             CLOUD_API.delete_account(email, password)
             raise
         else:
+            # User cannot be deleted unless activated
+            registration_link = email_con.get_nx_links_from_email(body)
+            driver.get(registration_link)
+            register_form = RegisterForm(driver)
+            register_form.first_name_input().input_text("Mark")
+            register_form.last_name_input().input_text("Hamill")
+            register_form.password_input().input_text(password)
+            register_form.terms_and_conditions_checkbox().select()
+            register_form.create_account_button().click()
             print("PASS")
             CLOUD_API.delete_account(email, password)
+            
 
 def share_with_registered_user_works(server: Mediaserver):
     """email    C41888    cloud    smoke    ci    C30446"""
@@ -200,6 +228,7 @@ def share_with_registered_user_works(server: Mediaserver):
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
+
 
 def cancel_disconnect(server: Mediaserver):
     """
@@ -230,6 +259,7 @@ def cancel_disconnect(server: Mediaserver):
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
+
 
 def disconnect_should_remove_system(server: Mediaserver):
     """
@@ -271,6 +301,7 @@ def disconnect_should_remove_system(server: Mediaserver):
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
+
 
 def owner_cannot_edit_users_via_share(server: Mediaserver):
     """
@@ -329,6 +360,7 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
         else:
             print("PASS")
 
+
 def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
     """
     10. Admin and owner cannot edit self and other users via share
@@ -379,6 +411,7 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
         else:
             print("PASS")
 
+
 def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
     """
     9. Cloud Admin/administrator cannot delete or edit self
@@ -404,6 +437,7 @@ def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
             raise
         else:
             print("PASS")
+
 
 def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
     """
@@ -451,6 +485,7 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
             print("PASS")
             CLOUD_API.delete_account(email, password)
 
+
 def cloud_admin_cannot_invite_admin(server: Mediaserver):
     """
     12. Administrator cannot invite another administrator
@@ -473,7 +508,8 @@ def cloud_admin_cannot_invite_admin(server: Mediaserver):
             driver.save_screenshot('error.png')
             raise
         else:
-            print("PASS")   
+            print("PASS")
+
 
 def user_data_should_match_registration(server: Mediaserver):
     """
@@ -504,6 +540,7 @@ def user_data_should_match_registration(server: Mediaserver):
         else:
             print("PASS")
             CLOUD_API.delete_account(email, password)
+
 
 def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
     """
@@ -544,6 +581,7 @@ def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
             time.sleep(10)
             server.connect_to_cloud(owner)
             CLOUD_API.delete_account(email, password)
+
 
 def viewer_can_remove_offline_system_from_account(server: Mediaserver):
     """
@@ -586,6 +624,7 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
             server.start()
             CLOUD_API.delete_account(email, password)
 
+
 def add_user_button_opens_cancellable_modal(server: Mediaserver):
     """
     5. Share button - opens dialog
@@ -614,7 +653,8 @@ def add_user_button_opens_cancellable_modal(server: Mediaserver):
             driver.save_screenshot('error.png')
             raise
         else:
-            print("PASS")   
+            print("PASS")
+
 
 def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
     """
@@ -635,7 +675,7 @@ def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
             viewer_hint.wait_until_visible()
             default_permission = system_left_menu.add_user_permissions_dropdown().text()
             assert rb.VIEWER_TEXT in default_permission, "Viewer was not visible in the Dropdown element"
-            assert rb.ADD_USER_PERMISSIONS_HINT_VIEWER in viewer_hint.get_text() , "Hint text did not match Viewer hint"
+            assert rb.ADD_USER_PERMISSIONS_HINT_VIEWER in viewer_hint.get_text(), "Hint text did not match Viewer hint"
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')

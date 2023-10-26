@@ -105,17 +105,16 @@ class SystemAdmin:
         started_at = time.monotonic()
         clicked_next_button = False
         while True:
-            error = PageText(
-                self.driver,
-                f'//nx-modal-merge-content//p[text()="{error_message}"]',
-                )
             try:
-                error.wait_until_visible()
+                PageText(
+                    self.driver,
+                    f'//nx-modal-merge-content//p[text()="{error_message}"]',
+                    ).wait_until_visible()
             except (ElementNotVisible, ElementNotInDOM):
                 break
             if time.monotonic() - started_at > timeout:
                 raise RuntimeError(f"System {system_name} is not ready for merge in {timeout} seconds")
-            Button(self.driver, '//nx-modal-merge-content//button[text()="Check"]').click()
+            self.merge_next_button().click()
             clicked_next_button = True
             time.sleep(0.5)
         if not clicked_next_button:

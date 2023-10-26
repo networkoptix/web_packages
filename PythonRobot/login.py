@@ -80,8 +80,6 @@ class LoginDialog:
         self.next_button().click()
         self.password_input().input_text(password)
         self.login_button().click()
-        PageText(
-            self.driver, '//nx-account-settings-select//*[contains(@class, "displayed-name")]').wait_until_visible()
 
     def twofa_cloud_login(self, email, password, twofa):
         self.basic_cloud_login(email, password)

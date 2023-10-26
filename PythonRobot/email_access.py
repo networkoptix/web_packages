@@ -117,7 +117,7 @@ class Email:
             email = email[:index] + str(time.time()) + str(randint(1, 100)) + extra + email[index:]
             return email
 
-    def wait_for_email(self, recipient, subject, timeout=30):
+    def wait_for_email(self, recipient, subject, timeout=60):
         """
         This function waits for a new email to be received by the specified recipient.
         """

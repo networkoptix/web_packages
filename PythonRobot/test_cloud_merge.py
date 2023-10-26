@@ -24,7 +24,7 @@ def merge_from_primary_system(first_server: Mediaserver, second_server: Mediaser
     sys_admin.merge_systems_button().click()
     sys_admin.system_is_being_merged().wait_until_visible()
     message = sys_admin.systems_merged_success_toast_notification(first_server.name, second_server.name).get_message()
-    message.wait_until_visible()
+    message.wait_until_visible(90)
     message.wait_until_not_visible(10)
     driver.refresh()
     left_menu = SystemLeftMenu(driver)

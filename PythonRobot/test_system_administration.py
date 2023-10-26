@@ -58,7 +58,7 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
         message.wait_until_visible()
         message.wait_until_not_visible(10)
         assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 0, "Number of systems owned " \
-                                                                                              "was not 1"
+                                                                                              "was not 0"
         print("pass")
 
 

@@ -38,7 +38,7 @@ class SystemLeftMenu:
     def update_users_list(self):
         locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
         Link(self.driver, locator).wait_until_visible()
-        users = self.driver.find_elements(By.XPATH,locator)
+        users = self.driver.find_elements(By.XPATH, locator)
         self.users = []
         for user in users:
             self.users.append(Button(self.driver, f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]"))

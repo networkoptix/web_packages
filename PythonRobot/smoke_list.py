@@ -1,6 +1,8 @@
 import time
 
 from NoptixLibrary.suite import Suite
+from NoptixLibrary.suite import CloudAccount
+
 from test_2fa import disabling_2fa
 from test_2fa import enable_and_login_with_2fa
 from test_2fa import login_with_backup_code
@@ -36,9 +38,10 @@ from test_system_users import share_with_unregistered_user_sends_notification
 
 if __name__ == "__main__":
     with Suite() as suite:
+        cloud_users = suite.create_cloud_accounts()
 
         cloud_owner = suite.create_cloud_account()
-        cloud_server = suite.create_cloud_server(cloud_owner)
+        cloud_server = suite.create_cloud_server(cloud_owner, None, cloud_users)
         cloud_owner_second = suite.create_cloud_account()
         cloud_server_second = suite.create_cloud_server(cloud_owner_second)
         cloud_owner_third = suite.create_cloud_account()
@@ -51,7 +54,6 @@ if __name__ == "__main__":
         cloud_server_six = suite.create_cloud_server(cloud_owner_six)
 
         cloud_server_seven = suite.create_cloud_server(cloud_owner_six)
-        time.sleep(90)
 
         merge_from_primary_system(cloud_server_seven, cloud_server_six)
 
@@ -73,9 +75,9 @@ if __name__ == "__main__":
         test_changing_first_name_and_saving_maintains_that_setting()
         test_changing_last_name_and_saving_maintains_that_setting()
         test_can_access_account_page_from_dropdown()
-
-        sets_new_password_and_successfully_logs_in()
-        check_restore_password_email()
+        with CloudAccount(sendemail=True) as user:
+            sets_new_password_and_successfully_logs_in(user)
+            check_restore_password_email(user)
 
         password_is_actually_changed_and_login_works_with_new_password()
 

@@ -54,7 +54,7 @@ def check_restore_password_email(user: CloudAccount):
             assert email.get_subject() == "Reset your password"
             expected_links = [
                 "https://support.networkoptix.com",
-                "https://www.networkoptix.com",
+                "https://networkoptix.com",
                 ENV,
                 f'{ENV}/authorize/restore_password'
                 ]
@@ -202,6 +202,7 @@ if __name__ == "__main__":
         check_restore_password_email(user)
         check_can_still_log_in_if_restore_not_finished(user)
         test_should_not_allow_restore_twice(user)
+    with CloudAccount(sendemail=True) as user:
         check_password_masking(user)
         test_should_allow_visit_restore_after_log_in(user)
     with CloudAccount(activate=False, sendemail=True) as user:
