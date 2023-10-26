@@ -100,7 +100,7 @@
                         (showTooltip$ | async) &&
                         (node.type === RESOURCE_TYPE.CAMERA
                             ? cameraTooltip
-                            : node.type === RESOURCE_TYPE.SERVER
+                            : node.type === RESOURCE_TYPE.SERVER && CONFIG.featureFlags.layoutsDemo
                             ? serverTooltip
                             : '')
                     "
