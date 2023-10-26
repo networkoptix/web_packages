@@ -34,7 +34,9 @@ class SystemUsers:
         return DropDown(self.driver, "//nx-system-settings-component//nx-block/..//nx-section//button[@id='componentId']")
     
     def access_level_dropdown_option(self, permissions):
-        return DropDownOption(self.driver, f"//nx-system-settings-component//nx-block/..//nx-section//ul[contains(@class, 'dropdown-menu')]//span[text()='{permissions}']/..")
+        return DropDownOption(self.driver,
+            f"//nx-system-settings-component//nx-block/..//nx-section"
+            f"//ul[contains(@class, 'dropdown-menu')]//span[text()='{permissions}']/..")
 
     def save_button(self):
         return Button(self.driver, f"//nx-process-button//button[contains(text(), '{self.rb.SAVE_BUTTON_TEXT}')]")
