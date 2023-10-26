@@ -13,6 +13,7 @@ import {
     Inject,
     Input,
     Output,
+    signal,
     Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -381,7 +382,7 @@ export class NxLayoutGridComponent {
 
     previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
-    addingItem = false;
+    addingItem$$ = signal(false);
     addOffset = 0;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
@@ -576,6 +577,20 @@ export class NxLayoutGridComponent {
         const { move = {}, resize = {} } = this.draggingPosition$$();
         return [...Object.values(move), ...Object.values(resize)].some(Boolean);
     });
+
+    getCursor = (): string => {
+        if (this.addingItem$$()) {
+            return 'copy';
+        }
+
+        if (this.dragging$$()) {
+            return 'move';
+        }
+
+        return 'inherit';
+    };
+
+    cursorStyle$$ = computed(() => ({ cursor: this.getCursor() }));
 
     #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
         this.#draggingPosition$,
@@ -1168,7 +1183,7 @@ export class NxLayoutGridComponent {
         { pointerPosition: move }: { pointerPosition: Point },
         itemParent?: HTMLElement,
     ): void => {
-        this.addingItem = true;
+        this.addingItem$$.set(true);
         if (itemParent) {
             move.x -= itemParent.offsetLeft + itemParent.offsetWidth;
             move.y += this.addOffset - 108;
@@ -1432,7 +1447,7 @@ export class NxLayoutGridComponent {
             .subscribe(([{ x, y, resize }, collisions]) => {
                 const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
                 const notMoved = [x, y, resize.x, resize.y].every(change => !change);
-                this.addingItem = false;
+                this.addingItem$$.set(false);
                 if (unresolvedCollisions || notMoved) {
                     return this.updateLayout();
                 }

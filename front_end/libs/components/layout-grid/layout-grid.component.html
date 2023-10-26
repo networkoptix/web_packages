@@ -103,6 +103,7 @@
         else showPortal
     "
     class="grid-section"
+    [ngStyle]="cursorStyle$$()"
 >
     <div
         *ngIf="layout?.id && layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved"

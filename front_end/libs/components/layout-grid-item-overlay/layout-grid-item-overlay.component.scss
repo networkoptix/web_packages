@@ -47,6 +47,10 @@
     }
 }
 
+[role=button] {
+    cursor: inherit;
+}
+
 svg-icon {
     cursor: pointer;
     display: block;
