@@ -683,6 +683,50 @@ def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
         else:
             print("PASS")
 
+def change_role_for_cloud_user(server: Mediaserver):
+    """
+    13. Change role for Cloud User
+    [Tags]    C41900    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Tmp", "Viewer", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.get_user_with_email(email).click()
+            system_user = SystemUsers(driver)
+            system_user.user_header_text().wait_until_visible()
+            system_user.access_level_dropdown().wait_until_visible()
+            system_user.remove_user_button().wait_until_visible()
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            assert system_user.user_header_text().get_text() == email, "User email does not match"
+            assert system_user.user_name_text().get_text() == "Tmp Viewer", "User name does not match"
+            assert system_user.access_level_dropdown().text() == "Viewer", "User permission does not match"
+            system_user.access_level_dropdown().click()
+            system_user.access_level_dropdown_option("Administrator").click()
+            system_user.save_button().wait_until_visible()
+            system_user.cancel_button().wait_until_visible()
+            system_user.save_button().click()
+            system_user.save_button().wait_until_not_visible()
+            system_user.cancel_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_visible()
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            # CLOUD-11666 bug causes failure
+            assert system_user.access_level_dropdown().text() == "Administrator", "User permission does not match"
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print("PASS")
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -711,3 +755,4 @@ if __name__ == "__main__":
         viewer_can_remove_offline_system_from_account(cloud_server_2)
         add_user_button_opens_cancellable_modal(cloud_server)
         verify_special_hints_on_permissions_dropdown(cloud_server)
+        change_role_for_cloud_user(cloud_server)
