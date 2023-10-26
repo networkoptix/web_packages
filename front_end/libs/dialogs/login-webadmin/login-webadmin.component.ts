@@ -28,6 +28,8 @@ import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons, redirect } from '@static-variables';
 
+import { loginWebAdminService } from './login-webadmin.service';
+
 /**
  * Parse url string to:
  *
@@ -117,6 +119,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         private toastService: NxToastService,
         private router: Router,
         private cookieService: CookieService,
+        private loginWebAdminService: loginWebAdminService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private keepPage: DT['data'],
         @Inject(DOCUMENT) private document: Document,
@@ -188,7 +191,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
             return;
         } else {
-            this.loading = false;
+            this.loading = this.loginWebAdminService.processingToken;
         }
         // remove any leftovers  *****************************
         this.cookieService.delete('x-runtime-guid');
@@ -313,6 +316,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
     }
 
     oauthLogin(code: string): void {
+        this.loginWebAdminService.processingToken = true;
         this.account.mediaServerApi.loginOauth(code).subscribe((res: Record<string, string>) => {
             this.storageService.system2faEnabled = false;
             this.accountNotOnSystem = res.scope === '';
@@ -333,24 +337,29 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
             this.loading = !(this.accountNotOnSystem || this.account2faRequired);
 
             if (!this.accountNotOnSystem && !this.account2faRequired) {
-                this.account.get(true).then(
-                    res => {
-                        if (res) {
-                            this.window.location.reload();
-                        } else {
-                            this.loading = false;
-                            this.displayCloudConnectionError();
-                        }
-                    },
-                    err => {
-                        if (err.errorString === 'user is disabled') {
-                            this.toastService.show(
-                                this.LANG.toastMessage.userDisabled,
-                                ToastType.Danger,
-                            );
-                        }
-                    },
-                );
+                this.account
+                    .get(true)
+                    .then(
+                        res => {
+                            if (res) {
+                                this.window.location.reload();
+                            } else {
+                                this.loading = false;
+                                this.displayCloudConnectionError();
+                            }
+                        },
+                        err => {
+                            if (err.errorString === 'user is disabled') {
+                                this.toastService.show(
+                                    this.LANG.toastMessage.userDisabled,
+                                    ToastType.Danger,
+                                );
+                            }
+                        },
+                    )
+                    .finally(() => {
+                        this.loginWebAdminService.processingToken = false;
+                    });
             }
         });
     }

@@ -5,13 +5,12 @@ svg-icon {
     stroke: #2B383F
 }
 
-// Needs to be outside of the modal to hide the white background
+// Position absolute to avoid the modal background but we still want it centered
 #preloader-container {
     position: absolute;
-    top: 0;
-    bottom: 0;
-    left: 0;
-    right: 0;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
 }
 
 // The form needs to be in the DOM for the login process to work properly,
