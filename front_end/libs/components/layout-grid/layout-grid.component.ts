@@ -1186,6 +1186,11 @@ export class NxLayoutGridComponent {
         this.addingItem$$.set(true);
         if (itemParent) {
             move.x -= itemParent.offsetLeft + itemParent.offsetWidth;
+
+            if (move.x < 0) {
+                return this.updateLayout();
+            }
+
             move.y += this.addOffset - 108;
         }
         this.#draggingPosition$.next({ move, id: 'added' });
@@ -1454,7 +1459,7 @@ export class NxLayoutGridComponent {
 
                 const items = [...this.layout.items, this.generateLayoutItem(node, { x, y })];
                 if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
-                    const currentUser = this.system.permissionManager.currentUser();
+                    const currentUser = this.system.permissionManager.currentUser$$();
 
                     // If user doesn't have permissions to edit a layout then create duplicate local layout
                     if (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) {
