@@ -1,5 +1,5 @@
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
-import { Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -35,6 +35,8 @@ import { incrementUntilUnique } from './store/utils/increment-until-unique';
 @Injectable()
 export class LayoutStateService {
     static runInInjectionContext: <T>(callback: () => T) => T;
+
+    duplicatedLayouts$$ = signal<string[]>([]);
 
     createNewLocalLayout(items?: LayoutItem[]): string;
     createNewLocalLayout(name: string, items?: LayoutItem[]): string;
@@ -93,6 +95,8 @@ export class LayoutStateService {
 
     duplicateLayoutAsNewLocalLayout(layout: Layout): string {
         const id = uuid();
+
+        this.duplicatedLayouts$$.update(layouts => [...layouts, id]);
 
         this.store
             .select(SharedLayoutsSelectors.selectLayouts)

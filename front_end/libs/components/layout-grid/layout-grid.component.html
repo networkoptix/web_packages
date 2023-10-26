@@ -118,13 +118,24 @@
                     (unsaved === unsavedStates.diverged ? 'warning.svg' : 'info.svg')
                 "
             ></svg-icon>
-            <span
-                *ngSwitchCase="unsavedStates.unsaved"
-                class="ribbon-message"
-                translate
-            >
-                This layout hasn't been saved yet
-            </span>
+            <ng-container *ngSwitchCase="unsavedStates.unsaved">
+                <ng-template #notDuplicated>
+                    <span
+                        class="ribbon-message"
+                        translate
+                        >This layout hasn't been saved yet</span
+                    >
+                </ng-template>
+                <span
+                    *ngIf="
+                        layoutStateService.duplicatedLayouts$$().includes(cleanId(this.layout.id));
+                        else notDuplicated
+                    "
+                    class="ribbon-message"
+                    translate
+                    >This duplicated layout hasn't been saved yet</span
+                >
+            </ng-container>
             <span
                 *ngSwitchCase="unsavedStates.diverged"
                 class="ribbon-message"

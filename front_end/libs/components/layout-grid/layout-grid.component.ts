@@ -1439,7 +1439,17 @@ export class NxLayoutGridComponent {
 
                 const items = [...this.layout.items, this.generateLayoutItem(node, { x, y })];
                 if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
-                    this.layoutStateService.updateLayout({ ...this.layout, items });
+                    const currentUser = this.system.permissionManager.currentUser();
+
+                    // If user doesn't have permissions to edit a layout then create duplicate local layout
+                    if (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) {
+                        this.layoutStateService.duplicateLayoutAsNewLocalLayout({
+                            ...this.layout,
+                            items,
+                        });
+                    } else {
+                        this.layoutStateService.updateLayout({ ...this.layout, items });
+                    }
                 } else {
                     this.layoutStateService.createNewLocalLayout(items);
                 }
