@@ -39,6 +39,7 @@
     "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>": "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>",
     "<span class=\"error\">User not found</span>": "<span class=\"error\">User not found</span>",
     "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you": "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you",
+    "<strong>{username}</strong> wants to transfer the system to the organization": "<strong>{username}</strong> wants to transfer the system to the organization",
     "A": "上午",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "一种简单的方式来连接、管理和扩展任何 %VMS_NAME% 系统。",
     "AM": "上午",

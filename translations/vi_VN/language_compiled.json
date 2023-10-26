@@ -39,6 +39,7 @@
     "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>": "<p>Bây giờ bạn có thể tiếp tục đăng nhập vào %CLOUD_NAME% tại đây hoặc bất kỳ nơi nào khác</p>",
     "<span class=\"error\">User not found</span>": "<span class=\"error\">Không tìm thấy người dùng</span>",
     "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you": "<strong>{ ownerName } ({ ownerEmail })</strong> muốn chuyển quyền sở hữu hệ thống này cho bạn",
+    "<strong>{username}</strong> wants to transfer the system to the organization": "<strong>{username}</strong> wants to transfer the system to the organization",
     "A": "A",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Một cách đơn giản để kết nối, quản lý và mở rộng bất kỳ Hệ thống %VMS_NAME% nào.",
     "AM": "AM",
