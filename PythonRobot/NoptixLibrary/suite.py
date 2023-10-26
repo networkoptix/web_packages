@@ -14,13 +14,16 @@ from NoptixLibrary.cloud_2fa import TimeBasedOtp
 
 from email_access import Email
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
-from NoptixLibrary.docker_api import DockerApi
+from NoptixLibrary.docker_api import ContainerConfiguration
+from NoptixLibrary.docker_api import DockerHTTPApi
+from NoptixLibrary.docker_api import get_ports_mapping
 from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
 
+_docker_host = "10.1.5.48"
 _CLOUD_API = CloudPortalAPI()
-_DOCKER_API = DockerApi()
+_DOCKER_API = DockerHTTPApi(f'http://{_docker_host}:5555')
 
 _logger = logging.getLogger(__name__)
 
@@ -145,13 +148,13 @@ class Mediaserver:
         self.api: Optional[ServerApi] = None
         self.id: Optional[str] = None
         self.name: Optional[str] = None
-        self._container_id: Optional[str] = None
+        self._container = None
 
     def stop(self):
-        _DOCKER_API.stop_container(self._container_id)
+        self._container.stop()
 
     def start(self, wait_for_started: bool = False):
-        _DOCKER_API.start_container(self._container_id)
+        self._container.start()
         if not wait_for_started:
             return
         timeout_sec = 5
@@ -257,15 +260,19 @@ class Mediaserver:
     def set_up(self, primary_port: int, secondary_port: int):
         # Create a docker server.
         # Mimic configuration from JSON files.
-        container_name = self.suite_name + str(self.run_id)
-        exposed_tcp_port = [primary_port, secondary_port]
-        docker_server_data = _DOCKER_API.create_docker_server(container_name, exposed_tcp_port)
-        self.name = docker_server_data['name']
-        self._container_id = docker_server_data['container']
+        self.name = self.suite_name + str(self.run_id)
+        docker_configuration = ContainerConfiguration("5.1", "latest").\
+            with_env({'CLOUD_HOST': 'cloud-test.hdw.mx'}).\
+            with_exposed(tcp_ports=[primary_port, secondary_port])
+        self._container = docker_configuration.create(_DOCKER_API, self.name)
+        self._container.start()
         print(f"Container {self.name} should be up, waiting for 5 secs")
         time.sleep(5)  # Wait for the docker server to be ready
-        for container_port, external_port in docker_server_data['ports_mapping'].items():
-            self._port_mapping[container_port] = f'https://{_DOCKER_API.host_ip}:{external_port}'
+        for port_mapping in get_ports_mapping(self._container):
+            if port_mapping.inner_port in (primary_port, secondary_port):
+                container_port = port_mapping.inner_port
+                host_port = port_mapping.outer_port
+                self._port_mapping[container_port] = f'https://{_docker_host}:{host_port}'
         # Set up a local system.
         server_api_url = self._port_mapping[primary_port]
         self.api = ServerApi(url=server_api_url, password=INITIAL_PASSWORD)
@@ -303,7 +310,7 @@ class Mediaserver:
                 self.id,
                 self._cloud_owner.get_otp(),
                 )
-        _DOCKER_API.delete_container(self._container_id)
+        self._container.delete()
 
 
 class CloudAccount:
