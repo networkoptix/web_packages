@@ -8,6 +8,7 @@ import {
     EventEmitter,
     OnChanges,
     Inject,
+    ViewEncapsulation,
 } from '@angular/core';
 import type videojs from 'video.js';
 
@@ -21,6 +22,7 @@ import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
     selector: 'nx-player-js',
     templateUrl: 'player-js.component.html',
     styleUrls: ['player-js.component.scss'],
+    encapsulation: ViewEncapsulation.None,
 })
 export class PlayerJsComponent implements OnDestroy, OnChanges {
     @Input() mode: number;
