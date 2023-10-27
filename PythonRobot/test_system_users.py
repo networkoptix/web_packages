@@ -6,7 +6,7 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from email_access import Email
+from email_access import EmailClient
 from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
@@ -120,9 +120,8 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     rb = RobotVariables("en_US")
     email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
-    mail_box = Email()
-    assert mail_box.check_email_subject(None,
-                                        email_subject), f"Did not find an email with the subject: {email_subject}."
+    with EmailClient(email_alias=email) as client:
+        client.wait_for_email_subject(email_subject)
     print("pass")
     CLOUD_API.delete_account(email, password)
 
@@ -134,15 +133,12 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
     rb = RobotVariables("en_US")
-    email_con = Email()
     subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
     subject = rb.replace_nested_variables(subject)
-    email_id = email_con.wait_for_email(email, subject)
-    if not email_id:
-        raise RuntimeError(f"No email with recipient: {email}\n and subject: {subject} \nwas found")
-    body = email_con.get_body(email_id)
-    email_con.check_email_button(body, rb.ENV, rb.THEME_COLOR)
-    email_con.check_email_cloud_name(body, rb.PRODUCT_NAME)
+    with EmailClient(email_alias=email) as client:
+        email_message = client.wait_for_email_subject(subject)
+    assert email_message.get_button_color(ENV) == rb.THEME_COLOR
+    email_message.is_cloud_name_present(rb.PRODUCT_NAME)
     expected_links = [
         f'mailto:{owner.email}',
         rb.SUPPORT_URL,
@@ -150,9 +146,9 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
         rb.ENV,
         f'{rb.ENV}/authorize/register',
     ]
-    email_con.find_links_in_email(body, expected_links)
+    email_message.find_links_in_body(expected_links)
     # User cannot be deleted unless activated
-    registration_link = email_con.get_nx_links_from_email(body)
+    registration_link = email_message.get_register_account_link()
     with get_chrome() as driver:
         driver.get(registration_link)
         register_form = RegisterForm(driver)
@@ -161,7 +157,6 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
         register_form.password_input().input_text(password)
         register_form.terms_and_conditions_checkbox().select()
         register_form.create_account_button().click()
-    email_con.delete_email(email_id)
     print("PASS")
     CLOUD_API.delete_account(email, password)
 
@@ -169,16 +164,15 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci"""
     with get_chrome() as driver:
-        email_con = Email()
         email = get_random_email(sendemail=True)
         owner = server.get_cloud_owner()
         cloud_auth = (owner.email, owner.password)
         CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
         subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
         subject = rb.replace_nested_variables(subject)
-        email_id = email_con.wait_for_email(email, subject)
-        body = email_con.get_body(email_id)
-        links = email_con.get_nx_links_from_email(body)
+        with EmailClient(email_alias=email) as client:
+            email_message = client.wait_for_email_subject(subject)
+        links = email_message.get_register_account_link()
         driver.get(links)
         try:
             RegisterForm(driver).email_input_locked()
@@ -189,7 +183,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
             raise
         else:
             # User cannot be deleted unless activated
-            registration_link = email_con.get_nx_links_from_email(body)
+            registration_link = email_message.get_register_account_link()
             driver.get(registration_link)
             register_form = RegisterForm(driver)
             register_form.first_name_input().input_text("Mark")
