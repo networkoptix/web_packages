@@ -19,10 +19,12 @@ from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
 from generic_elements import ToastNotification
+from generic_elements._wrappers import ModalDialog
+from pages.login import LoginDialog
+from pages.system_admin_tab_information import TabInformation
+from pages.system_admin_tab_settings import TabSettings
+from pages.system_left_menu import SystemLeftMenu
 
-from system_admin_tab_information import TabInformation
-from system_admin_tab_settings import TabSettings
-from system_left_menu import SystemLeftMenu
 from variables import ENV
 
 _logger = logging.getLogger(__name__)
@@ -488,7 +490,7 @@ class _BlockOne:
         return PageText(self.driver, locator)
 
     def wait_until_elements_loaded(self):
-        self.get_additional_local_fs_types_input().wait_until_visible()
+        self.get_additional_local_fs_types_input().wait_until_visible(10)
         self.get_additional_local_fs_types_label().wait_until_visible()
         self.get_audit_trail_period_days_input().wait_until_visible()
         self.get_audit_trail_period_days_label().wait_until_visible()

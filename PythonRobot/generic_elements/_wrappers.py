@@ -506,3 +506,22 @@ class ToastNotification:
 
     def get_text(self) -> str:
         return self._element.text()
+
+
+class ModalDialog:
+
+    def __init__(self, driver: WebDriver):
+        self._element = Element(driver, "//nx-modal-generic-content")
+
+    def get_body_text(self):
+        return self._element.find_element("//div[@class='modal-body ng-star-inserted']").text()
+
+    def get_header_text(self):
+        return self._element.find_element("//div[@class='modal-header']").text()
+
+    def wait_until_visible(self):
+        self._element.wait_until_visible()
+
+    def close(self):
+        self._element.find_element("//button[contains(text(), 'Close')]").click()
+

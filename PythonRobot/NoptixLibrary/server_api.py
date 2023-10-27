@@ -223,3 +223,13 @@ class ServerApi:
     def _set_password(self, new_password: str):
         self._password = new_password
         self._token = None
+
+    def set_system_settings(self, settings: Mapping):
+        settings_response = requests.patch(
+            f'{self._url}/rest/v1/system/settings',
+            headers={"x-runtime-guid": self._token},
+            json=settings,
+            verify=False,
+            )
+        settings_response.raise_for_status()
+        return settings_response.json()

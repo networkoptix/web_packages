@@ -7,50 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    advanced_settings    cloud    webadmin
 
 *** Test Cases ***
-4. Audit trail, backup and statistics section
-    [Tags]    C78244
-    Log    Preconditions
-    ${settings}=   Create Dictionary
-        ...    additionalLocalFsTypes=${EMPTY}
-        ...    arecontRtspEnabled=false
-        ...    auditTrailPeriodDays=183
-        ...    autoDiscoveryResponseEnabled=${true}
-        ...    autoUpdateThumbnails=${true}
-        ...    backupSettings=${BACKUP SETTINGS DEFAULT TEXT}
-        ...    clientStatisticsSettingsUrl=${EMPTY}
-    Set System Settings    ${server url}    ${settings}    ${system}[token]
-    Log in to system New   ${system}    ${system}[cloudOwner]
-    Show Advanced Settings
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    ONE    timeout=70
-
-    Log    Step 1
-    Changing input setting changes it on server    ${ADDITIONAL LOCAL FS TYPES INPUT}    additionalLocalFsTypes    test Settings changed
-
-    Log    Step 2
-    Changing setting changes it on server    ${ARECONT RTSP ENABLED CHECKBOX}     arecontRtspEnabled    advanced=${True}
-
-    Log    Step 3
-    Changing input setting changes it on server    ${AUDIT TRAIL PERIOD DAYS INPUT}    auditTrailPeriodDays    150
-    
-    Log    Step 4
-    Changing setting changes it on server    ${AUTO DISCOVERY RESPONSE ENABLED CHECKBOX}     autoDiscoveryResponseEnabled    advanced=${True}
-    
-    Log    Step 5
-    Changing setting changes it on server    ${AUTO UPDATE THUMBNAILS CHECKBOX}     autoUpdateThumbnails    advanced=${True}
-    
-    Log    Step 6
-
-    IF    '${IMAGE}'=='5.0'
-        Changing input setting changes it on server    ${BACKUP SETTINGS INPUT}    backupSettings    {"backupNewCameras":true,"id":"{00000000-2222-0000-0000-000000000000}","quality":"CameraBackupBoth"}
-    ELSE
-        Changing setting changes it on server    ${BACKUP NEW CAMERAS BY DEFAULT CHECKBOX}     backupNewCamerasByDefault    advanced=${True}
-        Log    Step 7
-        Changing input setting changes it on server    ${BACKUP QUALITIES INPUT}    backupQualities    CameraBackupHighQuality
-    END
-
-    Log    Step 8
-    Changing input setting changes it on server    ${CLIENT STATISTICS RELATIVE URL INPUT}    clientStatisticsSettingsUrl    https://www.google.com
-
 5. Cloud connect and video codec
     [Tags]    C78259
     Log    Preconditions
