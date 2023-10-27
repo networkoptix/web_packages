@@ -78,12 +78,18 @@ class SystemAdmin:
 
     def disconnect_from_cloud_toast_notification(self):
         disconnect_message = self.rb.__getattr__('SUCCESSFULLY_DISCONNECTED')
-        return ToastNotification(self.driver, disconnect_message)
+        return ToastNotification(
+            self.driver,
+            f"//nx-toast//span[contains(text(),'{disconnect_message}')]",
+            )
 
     def disconnect_from_account_toast_notification(self, system_name):
         disconnect_message = self.rb.__getattr__("SYSTEM_DELETED_FROM_ACCOUNT")
         replaced_disconnect_message = disconnect_message.replace("{{system_name}}", system_name)
-        return ToastNotification(self.driver, replaced_disconnect_message)
+        return ToastNotification(
+            self.driver,
+            f"//nx-toast//span[contains(text(),'{replaced_disconnect_message}')]",
+            )
 
     def mandatory_2fa_checkbox(self):
         return Checkbox(self.driver, "//nx-checkbox[@name='mandatory2fa']")
@@ -143,7 +149,10 @@ class SystemAdmin:
         alert_text = self.rb.__getattr__("SYSTEM_MERGE_COMPLETED_TEXT", get_replacements=False)
         alert_text = alert_text.replace("%PRIMARY%", primary_system_name)
         alert_text = alert_text.replace("%SECONDARY%", secondary_system_name)
-        return ToastNotification(self.driver, alert_text)
+        return ToastNotification(
+            self.driver,
+            f"//nx-toast//span[contains(text(),'{alert_text}')]",
+            )
 
     def get_system_name_edit_field(self) -> '_SystemName':
         text_field = TextField(

@@ -8,6 +8,7 @@ from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from generic_elements import ToastNotification
 
 
 class LoginDialog:
@@ -173,3 +174,9 @@ class ResetPasswordForm:
 
     def wait_until_visible(self):
         Pane(self._driver, self._locator).wait_until_visible(10)
+
+    def get_cannot_save_notification(self) -> ToastNotification:
+        return ToastNotification(
+            self._driver,
+            "//nx-toast//span[contains(text(),'Cannot save password')]"
+            )

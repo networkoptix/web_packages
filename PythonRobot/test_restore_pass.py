@@ -114,7 +114,7 @@ def test_should_not_allow_restore_twice(user: CloudAccount):
         driver.get(link)
         reset_password.type_new_password(user.password)
         reset_password.click_next()
-        assert ToastNotification(driver, "Cannot save password").get_message().get_text() == (
+        assert reset_password.get_cannot_save_notification().get_text() == (
             "Cannot save password: Confirmation code is already used or incorrect"
             )
 

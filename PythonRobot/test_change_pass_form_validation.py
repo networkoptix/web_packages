@@ -27,7 +27,11 @@ def test_invalid_old_passwords(email: str):
         change_pass_form.current_password_input().input_text(rb.SEVEN_CHAR_PASSWORD)
         change_pass_form.new_password_input().input_text(rb.BASE_PASSWORD)
         change_pass_form.save_button().click()
-        message = ToastNotification(driver, f"{rb.CANNOT_SAVE_PASSWORD}: {rb.PASSWORD_INCORRECT}").get_message()
+        expected_notification_message = f"{rb.CANNOT_SAVE_PASSWORD}: {rb.PASSWORD_INCORRECT}"
+        message = ToastNotification(
+            driver,
+            f"//nx-toast//span[contains(text(),'{expected_notification_message}')]",
+            )
         message.wait_until_visible()
         message.wait_until_not_visible(10)
         change_pass_form.current_password_input().delete_all_text()

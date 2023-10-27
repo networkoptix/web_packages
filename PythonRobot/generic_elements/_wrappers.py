@@ -495,12 +495,14 @@ class NxCheckbox:
 
 class ToastNotification:
 
-    def __init__(self, driver, alert_text):
-        self._driver = driver
-        self._alert_text = alert_text
+    def __init__(self, driver: WebDriver, locator: str):
+        self._element = Element(driver, locator)
 
-    def get_message(self) -> PageText:
-        return PageText(
-            self._driver,
-            f"//nx-toast//span[contains(text(),'{self._alert_text}')]",
-            )
+    def wait_until_visible(self, timeout_sec: float = 5):
+        self._element.wait_until_visible(timeout_sec)
+
+    def wait_until_not_visible(self, timeout_sec: float = 5):
+        self._element.wait_until_not_visible(timeout_sec)
+
+    def get_text(self) -> str:
+        return self._element.text()
