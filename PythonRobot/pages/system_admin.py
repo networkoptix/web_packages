@@ -390,13 +390,9 @@ class _AdvancedSettings:
     def get_advanced_settings_element_block_one(self):
         return _BlockOne(self.driver)
 
-    def get_connection_keep_alive_timeout_input(self) -> TextField:
+    def get_connection_alive_update_interval_input(self) -> TextField:
         locator = self.rb.replace_nested_variables(
-            "//input[@id='ec2ConnectionKeepAliveTimeoutSec']")
-        return TextField(self.driver, locator)
-
-    def get_connection_keep_alive_probe_input(self) -> TextField:
-        locator = self.rb.replace_nested_variables("//input[@id='ec2KeepAliveProbeCount']")
+            "//input[@id='ec2ConnectionAliveUpdateIntervalSec']")
         return TextField(self.driver, locator)
 
     def get_email_from_input(self) -> TextField:

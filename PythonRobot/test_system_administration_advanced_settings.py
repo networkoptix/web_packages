@@ -154,21 +154,15 @@ def connection_and_email(server: Mediaserver):
         system_admin = SystemAdmin(driver)
         driver.get(ENV + f"/systems/{server.id}/?advanced")
         advanced_settings = system_admin.get_advanced_settings_block()
-        advanced_settings.get_connection_keep_alive_timeout_input().wait_until_visible()
-        advanced_settings.get_connection_keep_alive_timeout_input().input_text('7')
+        advanced_settings.get_connection_alive_update_interval_input().wait_until_visible()
+        advanced_settings.get_connection_alive_update_interval_input().input_text('62')
         system_admin.get_save_button().click()
         success_dialog = ModalDialog(driver)
         success_dialog.wait_until_visible()
         success_dialog.close()
         actual_api_result = server.api.get_system_settings_from_server()[
-            'ec2ConnectionKeepAliveTimeoutSec']
-        assert actual_api_result == 7
-        advanced_settings.get_connection_keep_alive_timeout_input().input_text('0')
-        system_admin.get_save_button().click()
-        success_dialog.wait_until_visible()
-        success_dialog.close()
-        actual_api_result = server.api.get_system_settings_from_server()['ec2KeepAliveProbeCount']
-        assert actual_api_result == 0
+            'ec2ConnectionAliveUpdateIntervalSec']
+        assert actual_api_result == 62
         advanced_settings.get_email_from_input().input_text('networkoptixtesting123@gmail.com')
         system_admin.get_save_button().click()
         success_dialog.wait_until_visible()
