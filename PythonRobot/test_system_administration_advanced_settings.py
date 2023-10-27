@@ -135,6 +135,62 @@ def audit_trail_backup_and_statistics_section(server: Mediaserver):
         print("pass")
 
 
+def connection_and_email(server: Mediaserver):
+    """
+    [Tags]    C78260    advanced settings
+    """
+    settings = {
+        "cloudConnectRelayingEnabled": True,
+        "cloudConnectUdpHolePunchingEnabled": True,
+        "crossdomainEnabled": False,
+        "defaultExportVideoCodec": 'mpeg4',
+        "defaultVideoCodec": 'h263p',
+        }
+    server.api.set_system_settings(settings)
+    owner = server.get_cloud_owner()
+    with get_chrome() as driver:
+        driver.get(ENV + f"/systems/{server.id}")
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        system_admin = SystemAdmin(driver)
+        driver.get(ENV + f"/systems/{server.id}/?advanced")
+        advanced_settings = system_admin.get_advanced_settings_block()
+        advanced_settings.get_connection_keep_alive_timeout_input().wait_until_visible()
+        advanced_settings.get_connection_keep_alive_timeout_input().input_text('7')
+        system_admin.get_save_button().click()
+        success_dialog = ModalDialog(driver)
+        success_dialog.wait_until_visible()
+        success_dialog.close()
+        actual_api_result = server.api.get_system_settings_from_server()[
+            'ec2ConnectionKeepAliveTimeoutSec']
+        assert actual_api_result == 7
+        advanced_settings.get_connection_keep_alive_timeout_input().input_text('0')
+        system_admin.get_save_button().click()
+        success_dialog.wait_until_visible()
+        success_dialog.close()
+        actual_api_result = server.api.get_system_settings_from_server()['ec2KeepAliveProbeCount']
+        assert actual_api_result == 0
+        advanced_settings.get_email_from_input().input_text('networkoptixtesting123@gmail.com')
+        system_admin.get_save_button().click()
+        success_dialog.wait_until_visible()
+        success_dialog.close()
+        actual_api_result = server.api.get_system_settings_from_server()['emailFrom']
+        assert actual_api_result == 'networkoptixtesting123@gmail.com'
+        advanced_settings.get_email_signature_input().input_text('Testing')
+        system_admin.get_save_button().click()
+        success_dialog.wait_until_visible()
+        success_dialog.close()
+        actual_api_result = server.api.get_system_settings_from_server()['emailSignature']
+        assert actual_api_result == 'Testing'
+        advanced_settings.get_support_email_input().input_text(
+            'http://support.networkoptix.testing.com')
+        system_admin.get_save_button().click()
+        success_dialog.wait_until_visible()
+        success_dialog.close()
+        actual_api_result = server.api.get_system_settings_from_server()['emailSupportEmail']
+        assert actual_api_result == 'http://support.networkoptix.testing.com'
+        print("pass")
+
+
 if __name__ == "__main__":
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -158,3 +214,4 @@ if __name__ == "__main__":
         advanced_system_settings_for_offline_system(cloud_server)
         hide_advanced_settings_button_functionality(cloud_server)
         audit_trail_backup_and_statistics_section(cloud_server)
+        connection_and_email(cloud_server)

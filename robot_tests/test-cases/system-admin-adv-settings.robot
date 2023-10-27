@@ -52,41 +52,6 @@ Force Tags        system    advanced_settings    cloud    webadmin
     
     Log    Step 8
     Changing input setting changes it on server    ${SYSTEM ALIVE INTERVAL INPUT}    ec2AliveUpdateIntervalSec    75
-    
-6. Connection and email
-    [Tags]    C78260
-    Log    Preconditions
-    ${settings}=   Create Dictionary
-       ...    cloudConnectRelayingEnabled=true
-       ...    cloudConnectUdpHolePunchingEnabled=true
-       ...    crossdomainEnabled=false
-       ...    defaultExportVideoCodec=mpeg4
-       ...    defaultVideoCodec=h263p
-    Set System Settings    ${server url}    ${settings}    ${system}[token]
-
-    Log in to system new   ${system}    ${system}[cloudOwner]
-    Show Advanced Settings
-
-    Run keyword and continue on failure    Wait Until Advanced Settings Are Visible    THREE    timeout=60
-
-    Log    Step 1
-    IF    '${IMAGE}' != '5.0'
-        Changing input setting changes it on server    ${CONNECTION KEEP ALIVE TIMEOUT INPUT}     ec2ConnectionKeepAliveTimeoutSec    7
-    END
-
-    Log    Step 2
-    IF    '${IMAGE}' != '5.0'
-        Changing input setting changes it on server    ${CONNECTION KEEP ALIVE PROBE INPUT}    ec2KeepAliveProbeCount    0
-    END
-    
-    Log    Step 3
-    Changing input setting changes it on server    ${EMAIL FROM INPUT}     emailFrom    networkoptixtesting123@gmail.com
-    
-    Log    Step 4
-    Changing input setting changes it on server    ${EMAIL SIGNATURE INPUT}    emailSignature    Testing
-    
-    Log    Step 5
-    Changing input setting changes it on server    ${SUPPORT EMAIL INPUT}    emailSupportEmail    http://support.networkoptix.testing.com
 
 7. Recording and log
     [Tags]    C78262

@@ -390,6 +390,27 @@ class _AdvancedSettings:
     def get_advanced_settings_element_block_one(self):
         return _BlockOne(self.driver)
 
+    def get_connection_keep_alive_timeout_input(self) -> TextField:
+        locator = self.rb.replace_nested_variables(
+            "//input[@id='ec2ConnectionKeepAliveTimeoutSec']")
+        return TextField(self.driver, locator)
+
+    def get_connection_keep_alive_probe_input(self) -> TextField:
+        locator = self.rb.replace_nested_variables("//input[@id='ec2KeepAliveProbeCount']")
+        return TextField(self.driver, locator)
+
+    def get_email_from_input(self) -> TextField:
+        locator = self.rb.replace_nested_variables("//input[@id='emailFrom']")
+        return TextField(self.driver, locator)
+
+    def get_email_signature_input(self) -> TextField:
+        locator = self.rb.replace_nested_variables("//input[@id='emailSignature']")
+        return TextField(self.driver, locator)
+
+    def get_support_email_input(self) -> TextField:
+        locator = self.rb.replace_nested_variables("//input[@id='emailSupportEmail']")
+        return TextField(self.driver, locator)
+
 
 class _BlockOne:
     def __init__(self, driver: ChromeBrowser, lang="en_US"):
