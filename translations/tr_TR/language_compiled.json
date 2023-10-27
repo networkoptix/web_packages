@@ -39,7 +39,7 @@
     "<p>Now you may continue to log in to %CLOUD_NAME% here or elsewhere</p>": "<p>%CLOUD_NAME% Şimdi burada veya başka bir yerde oturum açmaya devam edebilirsiniz</p>",
     "<span class=\"error\">User not found</span>": "<span class=\"error\">Kullanıcı bulunamadı</span>",
     "<strong>{ ownerName } ({ ownerEmail })</strong> wants to transfer ownership of this system to you": "<strong>{ ownerName } ({ ownerEmail })</strong> bu sistemin sahipliğini size devretmek istiyor",
-    "<strong>{username}</strong> wants to transfer the system to the organization": "<strong>{username}</strong> wants to transfer the system to the organization",
+    "<strong>{username}</strong> wants to transfer the system to the organization": "<strong>{username}</strong> sistemi kuruluşa devretmek istiyor",
     "A": "A",
     "A simple way to connect to, manage and expand any %VMS_NAME% System.": "Herhangi bir %VMS_NAME% Sisteme bağlanmanın, yönetmenin ve genişletmenin basit yolu.",
     "AM": "ÖÖ",

@@ -2,7 +2,7 @@ Witaj {{message.userFullName}}
 
   Kliknij link poniżej, aby potwierdzić swój adres e-mail i aktywować konto.
 
-{{config.portal_url}}/authorize/activate/{{message.code}}
+{{config.portal_url}}/autoryzuj/aktywuj/{{message.code}}
 
-Jeśli nie rejestrowałeś się w %CLOUD_NAME%, po prostu zignoruj ​​ten e-mail.
+Jeśli nie rejestrowałeś się w %CLOUD_NAME% zignoruj ​​ten e-mail.
 Nie udostępniaj nikomu wiadomości ani linku.
