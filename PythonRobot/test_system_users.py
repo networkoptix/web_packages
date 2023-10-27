@@ -118,7 +118,6 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     owner = server.get_cloud_owner()
     cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    time.sleep(30)
     rb = RobotVariables("en_US")
     email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
     mail_box = Email()
