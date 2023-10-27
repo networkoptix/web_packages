@@ -13,12 +13,13 @@ from generic_elements import Checkbox
 from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Image
+from generic_elements import NxCheckbox
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
 from generic_elements import ToastNotification
-from generic_elements._wrappers import NxCheckbox
+
 from system_admin_tab_information import TabInformation
 from system_admin_tab_settings import TabSettings
 from system_left_menu import SystemLeftMenu
