@@ -1,12 +1,12 @@
-Hello,
+Halo,
 
-You have been invited to %CLOUD_NAME%.
+Anda telah diundang ke %CLOUD_NAME%.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %CLOUD_NAME%
-using your current email address and follow further instructions.
+Silakan membuat akun pada %CLOUD_NAME%
+gunakan alamat email Anda saat ini dan ikuti instruksi selanjutnya.
 
-Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}
+Daftarkan akun Anda menggunakan link ini: {{ config.portal_url }}/otorisasi/daftar/{{ message.code }}
