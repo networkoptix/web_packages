@@ -578,7 +578,7 @@ export class NxLayoutViewComponent {
                     resourceId: `{${id}}`,
                     resourcePath: '',
                     right: 1,
-                    rotation,
+                    rotation: rotation || 0,
                     top: 0,
                     zoomBottom: 0,
                     zoomLeft: 0,
@@ -590,7 +590,7 @@ export class NxLayoutViewComponent {
             locked:
                 !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
             logicalId: 0,
-            name: 'Focus View',
+            name: this.layoutStateService.focusViewToken,
             systemId,
             parentId: this.accountService.account.id,
         };

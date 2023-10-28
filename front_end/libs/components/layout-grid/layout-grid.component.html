@@ -226,7 +226,7 @@
             ></div>
             <ng-container *ngIf="!changingLayout">
                 <div
-                    *ngIf="!layout?.items?.length"
+                    *ngIf="!dragging$$() && !layout?.items?.length"
                     class="no-camera-placeholder"
                 >
                     <svg-icon
@@ -296,7 +296,7 @@
                                 cdkDrag
                                 #dragContainer
                                 [cdkDragDisabled]="
-                                    layout.locked || !!window.document.fullscreenElement
+                                    !editItems$$() || !!window.document.fullscreenElement
                                 "
                                 [cdkDragData]="item"
                                 (cdkDragReleased)="moveItem(item)"
@@ -370,7 +370,7 @@
                                                 "
                                                 (click)="
                                                     assertResourceOfType.camera(itemDetail) &&
-                                                        editCameras$$() &&
+                                                        editItems$$() &&
                                                         (status === 'defaultPassword' ||
                                                             itemDetail.details.unauthorized) &&
                                                         updateCameraCredentials(
@@ -381,7 +381,7 @@
                                                 [ngClass]="{
                                                     'has-action':
                                                         assertResourceOfType.camera(itemDetail) &&
-                                                        editCameras$$() &&
+                                                        editItems$$() &&
                                                         (status === 'defaultPassword' ||
                                                             itemDetail.details.unauthorized),
                                                     'has-secondary-panel':
@@ -649,9 +649,9 @@
                                     [item]="item"
                                     [node]="layoutItemLookup[item.resourceId]"
                                     [fullScreenTarget]="layoutItemWrapper"
-                                    [showRemove]="!layout.locked && editCameras$$()"
+                                    [showRemove]="editItems$$()"
                                     [hide]="dragging$$()"
-                                    [canEdit]="editCameras$$()"
+                                    [canEdit]="editItems$$()"
                                     (removeItem)="removeItem($event)"
                                     [system]="system"
                                 >

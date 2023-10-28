@@ -12,7 +12,6 @@ import {
     Input,
     LOCALE_ID,
     Output,
-    Signal,
     signal,
     WritableSignal,
 } from '@angular/core';
@@ -109,17 +108,24 @@ const EMPTY_MENU_ACTION = {
     hostDirectives: [NxResizeObserver],
 })
 export class NxLayoutGridItemOverlayComponent {
-    @Input({ alias: 'item', transform: (value: LayoutItem): Signal<LayoutItem> => signal(value) })
-    item$$: Signal<LayoutItem>;
+    item$$ = signal<LayoutItem | null>(null);
+    @Input() set item(value: LayoutItem) {
+        this.item$$.set(value);
+    }
     node$$ = signal<BaseResourceNode | null>(null);
     @Input() set node(value: BaseResourceNode) {
         this.node$$.set(value);
     }
-    @Input() showRemove: boolean;
+    showRemove$$ = signal(false);
+    @Input() set showRemove(value: boolean) {
+        this.showRemove$$.set(value);
+    }
     @Input() hide: boolean;
     @Input() fullScreenTarget: HTMLElement;
-    @Input({ alias: 'canEdit', transform: (value: boolean) => signal(value) })
-    canEdit$$: Signal<boolean> = signal(true);
+    canEdit$$ = signal(true);
+    @Input() set canEdit(value: boolean) {
+        this.canEdit$$.set(value);
+    }
     @Input() system: NxSystem;
 
     @Output() removeItem = new EventEmitter<LayoutItem>();
@@ -503,7 +509,7 @@ export class NxLayoutGridItemOverlayComponent {
     });
 
     removeAction$$ = computed(() => {
-        if (this.canEdit$$() && this.showRemove && !this.isFullscreen$$()) {
+        if (this.canEdit$$() && this.showRemove$$() && !this.isFullscreen$$()) {
             return this.MENU_ITEMS.remove;
         }
         return null;

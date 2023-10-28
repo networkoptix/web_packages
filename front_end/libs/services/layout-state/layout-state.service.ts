@@ -38,6 +38,8 @@ export class LayoutStateService {
 
     duplicatedLayouts$$ = signal<string[]>([]);
 
+    focusViewToken = uuid();
+
     createNewLocalLayout(items?: LayoutItem[]): string;
     createNewLocalLayout(name: string, items?: LayoutItem[]): string;
     createNewLocalLayout(

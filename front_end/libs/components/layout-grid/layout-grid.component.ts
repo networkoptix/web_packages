@@ -326,9 +326,10 @@ export class NxLayoutGridComponent {
         this.layoutStateService.portal = null;
     }
 
-    editCameras$$: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions$$().editCameras || false,
-    );
+    editItems$$: Signal<boolean> = computed(() => {
+        const layout = this.layout$$?.();
+        return !layout?.locked && layout?.name !== this.layoutStateService.focusViewToken;
+    });
 
     #lastWidth: number = Infinity;
 
@@ -427,6 +428,8 @@ export class NxLayoutGridComponent {
             refCount: true,
         }),
     );
+
+    layout$$ = toSignal(this.layout$);
 
     showTooltip$ = this.#wrapperSize$.pipe(
         filter(Boolean),
