@@ -83,7 +83,8 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     # msg.attach_alternative(email_txt_body, "text/plain")
 
     msg.mixed_subtype = 'related'
-    if 'src="cid:logo"' in email_html_body or cloud_wrapper:
+    include_cloud_logo = cloud_wrapper or 'src="cid:logo"' in email_html_body
+    if include_cloud_logo:
         msg_img = MIMEImage(read_cached_file(asset, customization_name,
                                             'templates/email_logo.png',
                                             language_code, skin, version_id),
@@ -106,7 +107,7 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
             message_icon.add_header('Content-Disposition', f'attachment; filename= {attachment["filename"]}')
             message_icon.add_header('Content-ID', f'<{attachment["filename"]}>')
             msg.attach(message_icon)
-        else:
+        elif filename_not_logo or not include_cloud_logo:
             msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
 
     mail_obj.send_messages([msg])
