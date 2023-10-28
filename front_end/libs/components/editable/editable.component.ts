@@ -130,8 +130,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     @HostListener('keyup.esc')
     callOnEscape(): void {
+        this.writeValue(this._initialValue);
+        this.onChangeCallback(this._initialValue);
         this.onEditModeCancelled.emit();
-        this.el.nativeElement.textContent = this._initialValue;
         this.el.nativeElement.blur();
     }
 
