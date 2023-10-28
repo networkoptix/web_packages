@@ -94,13 +94,14 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         attachments = []
 
     for attachment in attachments:
-        png_not_in_filename = 'png' not in attachment['filename']
         filename_not_logo = attachment['filename'] != 'logo'
-        include_cid_header = png_not_in_filename and filename_not_logo and imghdr.what(None, attachment['content']) == 'png'
+        # Checking if jpeg this way since imghdr.what seems to have issues with the jpeg from mediaserver
+        is_jpeg = attachment['filename'].endswith('.jpeg')
+        include_cid_header = filename_not_logo and is_jpeg or imghdr.what(None, attachment['content']) == 'png'
 
         if include_cid_header:
             # Handle images used in emails from mediaserver
-            message_icon = MIMEImage(attachment['content'], _subtype="png")
+            message_icon = MIMEImage(attachment['content'], _subtype="jpeg" if is_jpeg else "png")
             message_icon.add_header('Content-Disposition', f'attachment; filename= {attachment["filename"]}')
             message_icon.add_header('Content-ID', f'<{attachment["filename"]}>')
             msg.attach(message_icon)
