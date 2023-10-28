@@ -53,7 +53,8 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         email_html_body = pystache.render(message_html_template, {"message": message, "config": config})
         email_txt_body = pystache.render(message_txt_template, {"message": message, "config": config})
     else:
-        email_html_body = message.get('html_body', '')
+        # Need to wrap so that gmail doesn't think that it's a quoted reply
+        email_html_body = f'<div style="display:inline-block;">{message.get("html_body", "")}</div>'
         email_txt_body = message.get('text_body', '')
 
     email_from_name = customization_cache["mail_from_name"]
