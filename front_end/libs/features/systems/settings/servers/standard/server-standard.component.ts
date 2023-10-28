@@ -285,7 +285,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
             const port = this.ipPortWatcher;
             const serverId = this.selectedServer.id;
             let newPort: number;
-
             if (this.serverNameWatcher.changed) {
                 await this.system.serverManager
                     .renameServer(this.selectedServer.id, this.serverNameWatcher.value)
@@ -319,7 +318,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                         this.portBusy = true;
                         port.value = port.originalValue;
                     } else {
-                        await this.system.update();
                         port.originalValue = port.value;
                         newPort = port.value;
                     }
@@ -336,7 +334,6 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                                 params,
                             );
                         }
-                        await this.system.update();
 
                         await firstValueFrom(this.system.storageManager.update());
                         this.saveStorageWatcher.value = false;
@@ -358,6 +355,8 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     this.uriService.changePort(newPort.toString());
                 });
             }
+
+            await this.system.update();
 
             this.applyService.reset();
             return Promise.resolve();
