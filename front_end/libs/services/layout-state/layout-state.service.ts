@@ -102,9 +102,7 @@ export class LayoutStateService {
             .select(SharedLayoutsSelectors.selectLayouts)
             .pipe(take(1))
             .subscribe((layouts: LayoutState[]) => {
-                const copyName = `${layout.name} ${this.translate.instant(
-                    staticLang.layouts.layoutCopy,
-                )}`;
+                const copyName = this.translate.instant(staticLang.layouts.layoutCopy, layout);
                 const existingNames = layouts.map(layout => layout.layout.name);
                 LayoutStateService.runInInjectionContext(() =>
                     this.store.dispatch(

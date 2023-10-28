@@ -90,7 +90,7 @@
     },
     "layouts": {
         "newLayout": "New Layout",
-        "layoutCopy": "(copy)",
+        "layoutCopy": "{name} (copy)",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "treeActions": {
             "create": {
