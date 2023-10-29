@@ -3,6 +3,21 @@
     style="border: 1px solid lightgray"
 >
     <div class="col-4 dropdownPadding">
+        <nx-multi-dropdown
+            placeholder="Placeholder text"
+            [(selected)]="selectedStates"
+        >
+            <nx-multi-select-dropdown-item
+                *ngFor="let state of states; index as i"
+                [value]="state"
+                [selected]="selectedStates.includes(state)"
+                [disabled]="i % 3 === 0"
+            >
+                {{ state }}
+            </nx-multi-select-dropdown-item>
+        </nx-multi-dropdown>
+    </div>
+    <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Placeholder text"
             [(selected)]="selectedState"
@@ -37,6 +52,9 @@
         <div>Selected: {{ selectedState }}</div>
     </div>
     <div class="col-4 dropdownPadding">
+        <div>Selected: {{ selectedStates }}</div>
+    </div>
+    <div class="col-4 dropdownPadding">
         <nx-dropdown
             placeholder="Select a user"
             [(selected)]="selectedComplicatedObject"
@@ -47,12 +65,28 @@
             <nx-simple-dropdown-item
                 *ngFor="let complicatedObject of complicatedObjectArray"
                 [value]="complicatedObject"
-                [selected]="complicatedObject === selectedComplicatedObject"
+                [selected]="complicatedObject?.userId === selectedComplicatedObject?.userId"
                 [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
             >
                 {{ complicatedObject.fullName }}
             </nx-simple-dropdown-item>
         </nx-dropdown>
+    </div>
+    <div class="col-4 dropdownPadding">
+        <nx-multi-dropdown
+            placeholder="Select a user"
+            [(selected)]="selectedComplicatedObjects"
+            (onChange)="logOnChange($event)"
+        >
+            <nx-simple-dropdown-item
+                *ngFor="let complicatedObject of complicatedObjectArray"
+                [value]="complicatedObject"
+                [selected]="isSelected(complicatedObject)"
+                [disabled]="complicatedObject.email === 'abc6@networkoptix.com'"
+            >
+                {{ complicatedObject.fullName }}
+            </nx-simple-dropdown-item>
+        </nx-multi-dropdown>
     </div>
 </div>
 <div

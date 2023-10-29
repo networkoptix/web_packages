@@ -31,6 +31,7 @@ export class MultiSelectComponent {
     stringConfigurationArray: string[];
 
     selectedState: string = 'California';
+    selectedStates: string[] = ['Arizona', 'California', 'Delaware'];
     states = [
         'Alabama',
         'Alaska',
@@ -177,7 +178,11 @@ export class MultiSelectComponent {
             created: '2023-08-24T19:14:46.748Z',
         },
     ];
-    selectedComplicatedObject: ComplicatedObject = undefined;
+    selectedComplicatedObject: ComplicatedObject | undefined = undefined;
+    selectedComplicatedObjects: ComplicatedObject[] = [];
+    isSelected(item: ComplicatedObject): boolean {
+        return this.selectedComplicatedObjects?.some(i => i.userId === item.userId);
+    }
 
     logOnChange(event: unknown): void {
         console.log('onChange', event);

@@ -1,25 +1,13 @@
-import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/overlay';
-import { CdkPortal, PortalModule } from '@angular/cdk/portal';
+import { OverlayModule } from '@angular/cdk/overlay';
+import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import {
-    AfterContentInit,
-    Component,
-    ContentChildren,
-    ElementRef,
-    EventEmitter,
-    HostListener,
-    Input,
-    OnChanges,
-    Output,
-    QueryList,
-    ViewChild,
-} from '@angular/core';
-import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
+import { Component, OnChanges, forwardRef } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
+import { BaseDropdownComponent } from './base-dropdown.component';
+import { BaseDropdownInjectionToken } from './dropdown.types';
 import { BaseDropdownItem } from './dropdownItems//baseDropdownItem/dropdown-item.component';
 
 @Component({
@@ -28,90 +16,48 @@ import { BaseDropdownItem } from './dropdownItems//baseDropdownItem/dropdown-ite
     templateUrl: 'dropdown.component.html',
     styleUrls: ['dropdown.component.scss'],
     standalone: true,
+    providers: [
+        {
+            provide: BaseDropdownInjectionToken,
+            useExisting: forwardRef(() => NxDropdownComponent),
+        },
+    ],
 })
-export class NxDropdownComponent<T> implements AfterContentInit, OnChanges {
-    @Input('id') inputId: string = '';
-    @Input() selected: T;
-    @Output() selectedChange = new EventEmitter<T>();
-    @Input() placeholder: string = '';
-    @Input() disabled: boolean = false;
-    @Input() error: boolean = false;
-    // TODO: Multiple and search are not implemented yet
-    @Input() multiple: boolean = false;
-    @Input() search: boolean = false;
-    @Input('aria-label') ariaLabel: string = '';
-    @Output() onChange = new EventEmitter<T>();
+export class NxDropdownComponent<T> extends BaseDropdownComponent<T, false> implements OnChanges {
+    // The selected DropdownItem
+    private selectedOptionComponent: BaseDropdownItem<T | undefined> | undefined;
 
-    @ViewChild('selectWrapper') selectWrapper: ElementRef<HTMLDivElement>;
-    @ViewChild('select') select: ElementRef<HTMLDivElement>;
-    @ContentChildren(BaseDropdownItem, { descendants: true }) dropdownItems: QueryList<
-        BaseDropdownItem<T>
-    >;
-    @ViewChild(CdkPortal) contentTemplate: CdkPortal;
-
-    private overlayRef: OverlayRef;
-    displayText: SafeHtml;
-    // TODO: refactor to signals/computed when signal inputs are ready https://github.com/angular/angular/discussions/49682
-    dropdownOpen: boolean = false;
-    showPlaceholder: boolean = true;
-
-    private selectedOptionComponent: BaseDropdownItem<T> | undefined;
-
-    constructor(private overlay: Overlay, private domSanitizer: DomSanitizer) {}
     ngOnChanges(changes: NgChanges<NxDropdownComponent<unknown>>): void {
         if (changes.selected) {
             this.manuallySetSelectedOption();
-            this.setSelectedOptionOrPlaceholder();
-        }
-    }
-    ngAfterContentInit(): void {
-        this.manuallySetSelectedOption();
-        this.setSelectedOptionOrPlaceholder();
-    }
-
-    handleSelectionChange(updatedSelection: T): void {
-        this.selectedChange.emit(updatedSelection);
-        this.onChange.emit(updatedSelection);
-    }
-
-    showDropdown(): void {
-        if (!this.disabled) {
-            this.overlayRef = this.overlay.create(this.getOverlayConfig());
-            this.overlayRef.attach(this.contentTemplate);
-            this.setOverlayWidth();
-            this.overlayRef.outsidePointerEvents().subscribe(() => this.hideDropdown());
-            this.dropdownOpen = true;
-        }
-    }
-    hideDropdown(): void {
-        this.overlayRef.detach();
-        this.dropdownOpen = false;
-    }
-
-    // TODO: Add keyboard navigation
-    onKeyDown(event: KeyboardEvent): void {}
-    onBlur(): void {}
-
-    onDropMenuIconClick(event: UIEvent): void {
-        if (!this.disabled) {
-            event.stopPropagation();
-            this.select.nativeElement.focus();
-            this.select.nativeElement.click();
+            this.setPlaceholderOrDisplayText();
         }
     }
 
-    handleOptionSelected(option: BaseDropdownItem<T> | undefined): void {
+    handleSelectionChange(): void {
+        const updatedSelect = this.selectedOptionComponent?.value;
+        this.selectedChange.emit(updatedSelect);
+        this.onChange.emit(updatedSelect);
+    }
+
+    override handleOptionSelected(option: BaseDropdownItem<T>): void {
         this.hideDropdown();
+        super.handleOptionSelected(option);
+    }
+
+    protected updateSelectedOptionComponent(option: BaseDropdownItem<T>): void {
         if (this.selectedOptionComponent !== option) {
-            this.selectedOptionComponent = option;
-            this.setSelectedOptionOrPlaceholder();
-            this.handleSelectionChange(option?.value);
+            // If the option value is undefined, then we assume the user wants to clear the selection
+            // This functionality is only needed for single select dropdowns
+            this.selectedOptionComponent = option.value === undefined ? undefined : option;
         }
     }
 
-    private manuallySetSelectedOption(): void {
+    // Called when the selected value is set or changed outside of this component
+    protected manuallySetSelectedOption(): void {
         if (this.selected !== undefined) {
-            this.dropdownItems?.forEach(item => {
+            // find the dropdownItem that matches the selected value
+            this.dropdownItems.forEach(item => {
                 if (item.value === this.selected) {
                     this.selectedOptionComponent = item;
                 }
@@ -119,63 +65,16 @@ export class NxDropdownComponent<T> implements AfterContentInit, OnChanges {
         }
     }
 
-    private setSelectedOptionOrPlaceholder(): void {
-        if (this.selectedOptionComponent !== undefined) {
+    protected setPlaceholderOrDisplayText(): void {
+        // If no option is selected, show the placeholder
+        if (this.selectedOptionComponent === undefined) {
+            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(this.placeholder);
+            this.showPlaceholder = true;
+        } else {
             this.displayText = this.domSanitizer.bypassSecurityTrustHtml(
                 this.selectedOptionComponent.getOptionHtml(),
             );
-            this.showPlaceholder = false;
-        } else {
-            this.displayText = this.domSanitizer.bypassSecurityTrustHtml(this.placeholder);
-            this.showPlaceholder = true;
         }
+        this.showPlaceholder = false;
     }
-
-    // Since we are programmatically setting the dropdown width we need to recalculate on window resize
-    @HostListener('window:resize')
-    onWinResize(): void {
-        this.setOverlayWidth();
-    }
-
-    // Set overlay width to the width of the select element. By default it would be the width of the dropdown items
-    setOverlayWidth(): void {
-        if (!this.overlayRef) {
-            return;
-        }
-        this.overlayRef.updateSize({
-            width: this.selectWrapper.nativeElement.getBoundingClientRect().width,
-        });
-    }
-
-    private getOverlayConfig(): OverlayConfig {
-        const positionStrategy = this.overlay
-            .position()
-            .flexibleConnectedTo(this.selectWrapper.nativeElement)
-            .withPush(true)
-            // Try to open below dropdown, if not enough space, open above
-            .withPositions([
-                {
-                    originX: 'start',
-                    originY: 'bottom',
-                    overlayX: 'start',
-                    overlayY: 'top',
-                    offsetY: 4,
-                },
-                {
-                    originX: 'start',
-                    originY: 'top',
-                    overlayX: 'start',
-                    overlayY: 'bottom',
-                    offsetY: -4,
-                },
-            ]);
-
-        const scrollStrategy = this.overlay.scrollStrategies.reposition();
-        return new OverlayConfig({
-            positionStrategy,
-            scrollStrategy,
-            hasBackdrop: false,
-        });
-    }
-    icons = icons;
 }
