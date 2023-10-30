@@ -1,4 +1,3 @@
-import imaplib
 import json
 import logging
 import pathlib
@@ -185,14 +184,6 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
         move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
 
 
-def delete_email(mail, email_uid):
-    # Mark the email for deletion
-    mail.uid('STORE', email_uid, '+FLAGS', '(\Deleted)')
-
-    # Permanently remove mails that are marked for deletion
-    mail.expunge()
-
-
 def get_email_link(recipient):
     with EmailClient(email_alias=recipient) as client:
         email_message = client.wait_for_activate_account_email()
@@ -240,22 +231,6 @@ def move_focus_and_check_badge_stays(driver, badge, new_focus):
 def move_focus_and_check_element(driver, element, new_focus):
     TextField(driver, new_focus).click()
     PageText(driver, element).wait_until_visible()
-
-
-def open_mailbox(host=rb.BASE_HOST, password=rb.BASE_PASSWORD, email=rb.BASE_EMAIL, is_secure=True):
-    try:
-        if is_secure:
-            mail = imaplib.IMAP4_SSL(host)
-        else:
-            mail = imaplib.IMAP4(host)
-
-        mail.login(email, password)
-        mail.select('inbox')
-        return mail
-
-    except Exception as e:
-        print(f"An error occurred: {e}")
-        return None
 
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api",
@@ -320,23 +295,6 @@ def verify_in_account_page(driver: WebDriver):
     Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_not_visible()
     Button(driver, rb.ACCOUNT_CANCEL).wait_until_not_visible()
     time.sleep(0.5)
-
-
-def wait_for_email(mail, recipient, timeout_sec):
-    started_at = time.monotonic()
-    while True:
-        # Search the inbox for emails with specific "To" header
-        result, data = mail.uid('search', None, f'(HEADER "To" "{recipient}")')
-        email_ids = data[0].split()
-        for email_id in email_ids:
-            result, email_data = mail.uid('fetch', email_id, '(FLAGS)')
-            email_flags = email_data[0].decode()  # decode the entire byte string
-            if result == 'OK' and '\\Seen' not in email_flags:
-                return email_id
-        if time.monotonic() - started_at > timeout_sec:
-            raise RuntimeError(
-                f"No email for {mail} to {recipient} within {timeout_sec} seconds timeout")
-        time.sleep(1)
 
 
 def validate_on_register_page(driver: WebDriver):

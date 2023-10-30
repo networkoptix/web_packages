@@ -13,6 +13,7 @@ from generic_elements import Pane
 from generic_elements import TextField
 from resource_import import get_headless_chrome
 from resource_import import get_lang_list
+from email_access import EmailClient
 from email_access import get_random_email
 from resource_import import register_and_activate_account
 from resource_import import send_restore_password_email
@@ -298,10 +299,9 @@ def test_language_change_affects_emails():
     except MaxRetryError:
         driver = get_headless_chrome()
     send_restore_password_email(driver, random_email)
-    time.sleep(10)
-    mbox = resource_import.open_mailbox(host=rb.BASE_HOST,password=rb.BASE_EMAIL_PASSWORD, email=random_email, is_secure=True)
-    email_uid = resource_import.wait_for_email(mbox, recipient=random_email, timeout_sec=120)
-    resource_import.delete_email(mbox, email_uid)
+    with EmailClient(email_alias=random_email) as email_client:
+        email_message = email_client.wait_for_reset_password_email()
+        email_client.delete_email(email_message)
     resource_import.check_language_logged_in(random_email, password)
 
 
