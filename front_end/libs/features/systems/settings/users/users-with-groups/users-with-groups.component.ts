@@ -52,11 +52,10 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     protected changeUser(user: NxUser): void {
         this.removeOldForm$.next(true);
         if (this.userGroupForm) {
-            this.userGroupForm = undefined;
             this.formIsNotDirty.emit(true);
         }
 
-        this.selectedGroups = user.groupIds;
+        this.selectedGroups = user.groupIds || [];
         const isLocalOwner = !this.isCloud$$() && user.isOwner;
         this.processSelectedGroupsList(this.selectedGroups, isLocalOwner);
 
@@ -72,7 +71,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     disabled: !this.editPermissions$$().changeInfo || this.isLdap$$(),
                 },
                 groupIds: {
-                    value: [...user.groupIds],
+                    value: [...this.selectedGroups],
                     disabled: !this.editPermissions$$().changePermissions,
                 },
                 isEnabled: {
@@ -86,6 +85,10 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     if (this.editPermissions$$().changePermissions) {
                         this.processSelectedGroupsList(values.groupIds);
                     }
+                });
+            this.userGroupForm.statusChanges
+                .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
+                .subscribe(() => {
                     this.formIsNotDirty.emit(!this.userGroupForm.dirty);
                 });
         });
