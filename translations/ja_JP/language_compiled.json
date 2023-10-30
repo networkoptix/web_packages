@@ -1871,6 +1871,7 @@
     "{hex} - light{number}": "{hex} - ライト{number}",
     "{hex} - yellow {label}": "{hex} - 黄色 {label}",
     "{name} (Offline)": "{name} (オフライン)",
+    "{name} (copy)": "{name} (copy)",
     "{name} Requirements": "{name} 要件",
     "{number} more required": "追加で {number} ライセンス必要",
     "{n} of {m}": "{n} / {m}",

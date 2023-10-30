@@ -1871,6 +1871,7 @@
     "{hex} - light{number}": "{hex} - light{number}",
     "{hex} - yellow {label}": "{hex} - yellow {label}",
     "{name} (Offline)": "{name} (Offline)",
+    "{name} (copy)": "{name} (copy)",
     "{name} Requirements": "Exigences de {name}",
     "{number} more required": "{number} de plus sont requis",
     "{n} of {m}": "{n} of {m}",

@@ -1871,6 +1871,7 @@
     "{hex} - light{number}": "{hex} - light{number}",
     "{hex} - yellow {label}": "{hex} - yellow {label}",
     "{name} (Offline)": "{name} (Offline)",
+    "{name} (copy)": "{name} (copy)",
     "{name} Requirements": "{name} Yêu cầu",
     "{number} more required": "Yêu cầu thêm {number}",
     "{n} of {m}": "{n} of {m}",
