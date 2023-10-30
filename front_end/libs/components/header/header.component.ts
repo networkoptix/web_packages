@@ -153,13 +153,12 @@ export class NxHeaderComponent implements OnInit {
 
         if (environment.isLocal) {
             // Polls for the system and currentUser. Once its ready the header is updated and the poll is killed off.
-            const eff = effect(
+            effect(
                 () => {
                     const system = this.systemService.currentSystem$$();
                     if (system?.permissionManager?.currentUser()) {
                         this.getMenu();
                         this.menusService.updateActiveSystemMenu(system);
-                        eff.destroy();
                     }
                 },
                 { allowSignalWrites: true },
