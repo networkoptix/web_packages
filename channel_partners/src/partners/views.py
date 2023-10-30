@@ -751,7 +751,7 @@ def partner_events(request):
     )
     cloud_host: CloudHost = data.get('cloudHost')
     if data.get('cloudHost'):
-        event_records = event_records.filter(cloud_instance=cloud_host.instance)
+        event_records = event_records.filter(cloud_host__instance=cloud_host.instance)
     event_records = event_records.select_related('cloud_system', 'service'
     ).order_by('id')[:limit]
 
@@ -774,7 +774,7 @@ def all_services(request):
     data = serializer.validated_data
 
     cloud_host: CloudHost = data.get('cloudHost')
-    services = ChannelPartnerService.objects.filter(created_by_channel_partner__instance=cloud_host.instance)
+    services = ChannelPartnerService.objects.filter(created_by_channel_partner__cloud_host__instance=cloud_host.instance)
 
     return Response(ServiceSerializer(services, many=True).data)
 
