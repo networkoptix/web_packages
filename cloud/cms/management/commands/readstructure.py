@@ -129,34 +129,15 @@ def read_structure(asset_type):
             read_structure_file(file, asset_type, global_strings, skin)
 
 
-def find_or_add_language(language_code):
-    language = Language.by_code(language_code)
-    if not language:
-        language = Language(code=language_code, name=language_code)
-
-    if language.code == language.name:  # name and code are the same - try to update name
-        # try to read language.json for LANGUAGE_NAME
-        language_json_path = os.path.join(SOURCE_DIR.replace("{{skin}}", settings.DEFAULT_SKIN),
-                                          "static", "lang_" + language_code,
-                                          "language_compiled.json")
-
-        with codecs.open(language_json_path, 'r', 'utf-8') as file_descriptor:
-            content = file_descriptor
-            language_content = json.load(content)
-        language_name = language_content["language_name"]
-        language.name = language_name
-        language.save()
-
-    return language
-
-
-def read_languages(skin_name):
-    languages_dir = os.path.join(
-        SOURCE_DIR.replace("{{skin}}", skin_name), "static")
-    languages = [directory.replace('lang_', '') for directory in os.listdir(languages_dir)
-                 if directory.startswith('lang_')]
-    for language_code in languages:
-        find_or_add_language(language_code)
+def read_languages(skin_name=None):
+    with open(os.path.join(settings.BASE_DIR, 'cms/structures/languages.json'), 'r') as f:
+        languages = json.load(f)
+    for language in languages:
+        lang, created = Language.objects.get_or_create(code=language['code'], name=language['name'])
+        if created:
+            logger.info(f"Created language {lang.name} - {lang.code}")
+    # Clean up no longer existing languages
+    Language.objects.exclude(code__in=[language['code'] for language in languages]).delete()
 
 
 class Command(BaseCommand):
@@ -175,7 +156,7 @@ class Command(BaseCommand):
             raise ValueError('asset_type required')
 
         asset_type = AssetType.get_type_by_name(asset_type_name)
-        read_languages(settings.DEFAULT_SKIN)
+        read_languages()
         customization = options['customization']
         if not customization_ctx.get():
             customization_ctx.set(customization)

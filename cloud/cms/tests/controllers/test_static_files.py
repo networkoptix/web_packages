@@ -42,7 +42,7 @@ def get_files():
 
 
 def read_struct(portal):
-    read_languages(settings.DEFAULT_SKIN)
+    read_languages()
     customization = settings.TEST_CUSTOMIZATION
     if not customization_ctx.get():
         customization_ctx.set(customization)
