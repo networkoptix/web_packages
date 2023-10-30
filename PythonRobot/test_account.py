@@ -285,8 +285,7 @@ def test_language_change_affects_emails():
                 driver,
                 "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
                 )
-            button.wait_until_visible()
-            Button(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
+            button.click()
             time.sleep(5)
         send_restore_password_email(driver, random_email)
         with EmailClient(email_alias=random_email) as email_client:
