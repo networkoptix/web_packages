@@ -23,7 +23,6 @@ rb = RobotVariables("en_US")
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
     if button:
         button_element = Button(driver, button)
-        button_element.wait_until_visible()
         button_element.click()
     if validate and not two_FA:
         # check language variable and set it to default. That is, set language before logging in
@@ -32,17 +31,13 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
         #TODO: set user theme (ie, light or dark mode)
         pass
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
-    TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
     time.sleep(1)
     TextField(driver, rb.EMAIL_INPUT).input_text(email)
     time.sleep(1)
     Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
     if exists:
-        TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
         TextField(driver, rb.PASSWORD_INPUT).input_text(password)
         time.sleep(1)
-        Button(driver, rb.LOG_IN_BUTTON).wait_until_visible()
         Button(driver, rb.LOG_IN_BUTTON).click()
     else:
         PageText(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
@@ -63,9 +58,7 @@ def test_can_access_account_page_from_dropdown():
         driver.get(rb.ENV)
         cloud_login(driver, email, password)
         time.sleep(3)
-        DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
         Button(driver, rb.ACCOUNT_DROPDOWN).click()
-        Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_visible()
         Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
         verify_in_account_page(driver)
 
@@ -175,11 +168,8 @@ def test_first_name_is_required():
         TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
         account_save = Button(driver, rb.ACCOUNT_SAVE)
-        account_cancel = Button(driver, rb.ACCOUNT_CANCEL)
         account_save.wait_until_visible()
-        account_cancel.wait_until_visible()
         account_save.wait_until_not_clickable()
-        account_cancel.wait_until_clickable()
         TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
         Button(driver, rb.ACCOUNT_CANCEL).click()
@@ -199,13 +189,7 @@ def test_last_name_is_required():
         account_save = Button(driver, rb.ACCOUNT_SAVE)
         cancel_button = Button(driver, rb.ACCOUNT_CANCEL)
         account_save.wait_until_visible()
-        cancel_button.wait_until_visible()
         account_save.wait_until_not_clickable()
-        cancel_button.wait_until_clickable()
-        account_save.wait_until_visible()
-        cancel_button.wait_until_visible()
-        account_save.wait_until_not_clickable()
-        cancel_button.wait_until_clickable()
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
         Button(driver, rb.ACCOUNT_CANCEL).click()
@@ -261,7 +245,6 @@ def test_language_is_changeable_on_the_account_page():
                     )
                 language_button.click()
                 PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-        DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
         Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
         Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
         time.sleep(1)
@@ -317,12 +300,10 @@ def test_language_change_is_new_default():
         Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
         lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
         droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
-        DropDown(driver, droplang1).wait_until_visible()
         DropDown(driver, droplang1).click()
         time.sleep(5)
         driver.refresh()
         dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
-        DropDown(driver, dropLang2).wait_until_visible()
         drop_lang_element = DropDown(driver, dropLang2)
         activeLang = drop_lang_element.text()
         assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
@@ -340,7 +321,6 @@ def test_language_change_is_new_default():
         api.set_account_language(email, password, new_language=lang)
         time.sleep(5)
         driver.refresh()
-        DropDown(driver, dropLang2).wait_until_visible()
         activeLang = drop_lang_element.text()
         if activeLang.lower() not in lang.lower():
             assert False, f"{activeLang.lower()} not found in {lang.lower()}"
