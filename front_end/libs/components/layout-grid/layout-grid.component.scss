@@ -448,8 +448,8 @@ h2.auto-save-overlay {
 .layout-item {
     height: 100%;
     width: 100%;
-    max-height: calc(100% - 8px);
-    max-width: calc(100% - 8px);
+    max-height: calc(100% - 6px);
+    max-width: calc(100% - 6px);
     border-radius: 4px;
     position: relative;
     display: flex;
@@ -471,12 +471,12 @@ h2.auto-save-overlay {
     }
 
     &:hover {
-        outline: 4px solid var(--border-color);
+        outline: 2px solid var(--border-color);
     }
 
     &:active,
     :focus {
-        outline: 4px solid var(--brand-core);
+        outline: 2px solid var(--brand-core);
     }
 
     ::ng-deep {

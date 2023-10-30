@@ -53,6 +53,10 @@ nx-search {
                     fill: var(--brand-core);
                     stroke: var(--brand-core);
                 }
+                path {
+                    fill: var(--brand-core);
+                    stroke: var(--brand-core);
+                }
             }
         }
     }
@@ -90,15 +94,25 @@ nx-search {
                         border-color: transparent !important;
                         background: transparent !important;
 
-                        &:active .st0 {
-                            stroke: var(--left-menu-l3-selected-bg);
-                            fill: var(--left-menu-l3-selected-bg);
+                        &:active {
+                            .st0 {
+                                stroke: var(--left-menu-l3-selected-bg);
+                                fill: var(--left-menu-l3-selected-bg);
+                            }
+                            path {
+                                fill: var(--left-menu-l3-selected-bg);
+                                stroke: var(--left-menu-l3-selected-bg);
+                            }
                         }
                     }
 
                     .st0 {
                         stroke: var(--left-menu-l3-hover-color);
                         fill: var(--left-menu-l3-hover-color);
+                    }
+                    path {
+                        fill: var(--left-menu-l3-hover-color);
+                        stroke: var(--left-menu-l3-hover-color);
                     }
 
                     .node-editable {
@@ -136,6 +150,10 @@ cdk-tree {
         stroke: var(--body-text-color);
         fill: var(--body-text-color);
     }
+    & path {
+        fill: var(--body-text-color);
+        stroke: var(--body-text-color);
+    }
 
     &:active {
         background: var(--left-menu-l3-selected-bg);
@@ -143,6 +161,10 @@ cdk-tree {
         & .st0 {
             stroke: var(--left-menu-l3-selected-color);
             fill: var(--left-menu-l3-selected-color);
+        }
+        & path {
+            fill: var(--left-menu-l3-selected-color);
+            stroke: var(--left-menu-l3-selected-color);
         }
     }
 }
@@ -218,6 +240,9 @@ cdk-tree {
     & .st0 {
         fill: var(--body-text-color);
     }
+    & path {
+        fill: var(--body-text-color);
+    }
 }
 
 .tooltip-offset {
@@ -243,6 +268,10 @@ cdk-tree {
 
 .dark-17-svg {
     .st0 {
+        fill: var(--svg-toggle-arrow-color);
+        stroke: var(--svg-toggle-arrow-color);
+    }
+    path {
         fill: var(--svg-toggle-arrow-color);
         stroke: var(--svg-toggle-arrow-color);
     }
@@ -287,8 +316,16 @@ cdk-tree {
         .st0 {
             stroke: var(--btn-text-hover-color);
         }
+        path {
+            fill: var(--btn-text-hover-color);
+            stroke: var(--btn-text-hover-color);
+        }
         &:hover {
             .st0 {
+                stroke: var(--btn-text-color);
+            }
+            path {
+                fill: var(--btn-text-color);
                 stroke: var(--btn-text-color);
             }
         }

@@ -1,7 +1,7 @@
 @use "utils" as *;
 @import "@vime/core/themes/light.css";
 @import "./native-theme/theme_palette";
-@import "_theme_palette";
+@import "theme_palette";
 
 html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     body {
@@ -722,7 +722,9 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--light3);
 
-    --overlay-action-bg: rgba(255, 255, 255, 0.6); // $light_gray_1--rgb
+    --overlay-action-bg: rgba(var(--light_gray_1--rgb), 0.6);
+    --overlay-action-bg-active: rgba(var(--light_gray_1--rgb), 0.5);
+    --overlay-action-bg-hover: rgba(var(--light_gray_1--rgb), 0.7);
     --overlay-action-svg: rgba(var(--dark17--rgb), 0.8);
     --overlay-action-svg-hover: var(--dark17);
     --overlay-action-text: var(--dark17);

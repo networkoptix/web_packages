@@ -32,7 +32,7 @@
             *ngIf="menuItem"
             nx-add-svg-src
             [ngClass]="{
-                active: menuItem.checked$$?.()
+                checked: menuItem.checked$$?.()
             }"
             [src]="menuItem.icon"
             [svgStyle]="{

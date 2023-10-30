@@ -414,7 +414,6 @@ export class NxLayoutGridTreeComponent {
                       id: 'create',
                       name: this.ACTIONS.create.name,
                       tooltip: this.ACTIONS.create.tooltip,
-                      icon: 'plus',
                       action: ($event, node) => {
                           $event.preventDefault();
                           const newLayout = this.layoutStateService.createNewLocalLayout();

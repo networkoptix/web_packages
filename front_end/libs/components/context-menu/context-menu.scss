@@ -1,3 +1,5 @@
+@use 'theme_variables_common' as *;
+
 :host {
     border: 0;
     border-radius: 6px;
@@ -16,8 +18,7 @@
         padding: 6px 0;
 
         button {
-            font-size: 14px !important;
-            line-height: 14px !important;
+            font-family: var(--font-family-regular);
             margin: 0;
             padding: 6px 16px !important;
             &:not(:has(svg)) {
@@ -32,11 +33,12 @@
             width: 100%;
             color: var(--context-menu-item-text) !important;
             background-color: transparent;
-            &[aria-expanded="true"] {
+            &[aria-expanded='true'] {
                 background-color: var(--context-menu-item-expanded-bg);
             }
 
             &.checked {
+                font-family: var(--font-family-medium);
                 svg-icon {
                     margin-left: 6px;
                 }

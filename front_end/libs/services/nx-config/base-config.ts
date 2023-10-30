@@ -485,7 +485,7 @@ export interface Icons {
     dirTextButtons: string;
     dirHeader: string;
     dirLayouts: string;
-    dirLayoutsCamera: string;
+    dirLayoutsOverlay: string;
     dirNonStandard: string;
     dirNonStandardTriangle: string;
     dirNonStandardView: string;

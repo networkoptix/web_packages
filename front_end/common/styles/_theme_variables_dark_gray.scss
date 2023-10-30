@@ -1,6 +1,6 @@
 @use "utils" as *;
 @import "./native-theme/theme_palette";
-@import "_theme_palette";
+@import "theme_palette";
 
 html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     body {
@@ -741,9 +741,10 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--dark9);
 
-    --overlay-action-bg: rgba(16, 16, 16, 0.6); // $dark_gray_3--rgb
+    --overlay-action-bg: rgba(var(--dark_gray_3--rgb), 0.6);
+    --overlay-action-bg-active: rgba(var(--dark_gray_3--rgb), 0.5);
+    --overlay-action-bg-hover: rgba(var(--dark_gray_3--rgb), 0.7);
     --overlay-action-svg: rgba(var(--light1--rgb), 0.8);
-    --overlay-action-svg-hover: var(--light1);
     --overlay-action-text: var(--light1);
     --overlay-text: var(--light1);
     --overlay-status-title: var(--light_gray_10);

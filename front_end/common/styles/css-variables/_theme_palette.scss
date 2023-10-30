@@ -31,7 +31,28 @@
 	@include generateVarAndRgb(--dark16, $dark16);
 	@include generateVarAndRgb(--dark17, $dark17);
 	@include generateVarAndRgb(--dark18, $dark18);
+
 	@include generateVarAndRgb(--additional_dark1, $additional_dark1);
+
+	@include generateVarAndRgb(--dark_gray_1, $dark_gray_1);
+	@include generateVarAndRgb(--dark_gray_2, $dark_gray_2);
+	@include generateVarAndRgb(--dark_gray_3, $dark_gray_3);
+	@include generateVarAndRgb(--dark_gray_4, $dark_gray_4);
+	@include generateVarAndRgb(--dark_gray_5, $dark_gray_5);
+	@include generateVarAndRgb(--dark_gray_6, $dark_gray_6);
+	@include generateVarAndRgb(--dark_gray_7, $dark_gray_7);
+	@include generateVarAndRgb(--dark_gray_8, $dark_gray_8);
+	@include generateVarAndRgb(--dark_gray_9, $dark_gray_9);
+	@include generateVarAndRgb(--dark_gray_10, $dark_gray_10);
+	@include generateVarAndRgb(--dark_gray_11, $dark_gray_11);
+	@include generateVarAndRgb(--dark_gray_12, $dark_gray_12);
+	@include generateVarAndRgb(--dark_gray_13, $dark_gray_13);
+	@include generateVarAndRgb(--dark_gray_14, $dark_gray_14);
+	@include generateVarAndRgb(--dark_gray_15, $dark_gray_15);
+	@include generateVarAndRgb(--dark_gray_16, $dark_gray_16);
+	@include generateVarAndRgb(--dark_gray_17, $dark_gray_17);
+	@include generateVarAndRgb(--dark_gray_18, $dark_gray_18);
+
 	@include generateVarAndRgb(--light1, $light1);
 	@include generateVarAndRgb(--light2, $light2);
 	@include generateVarAndRgb(--light3, $light3);
@@ -49,6 +70,25 @@
 	@include generateVarAndRgb(--light15, $light15);
 	@include generateVarAndRgb(--light16, $light16);
 	@include generateVarAndRgb(--light17, $light17);
+
+	@include generateVarAndRgb(--light_gray_1, $light_gray_1);
+	@include generateVarAndRgb(--light_gray_2, $light_gray_2);
+	@include generateVarAndRgb(--light_gray_3, $light_gray_3);
+	@include generateVarAndRgb(--light_gray_4, $light_gray_4);
+	@include generateVarAndRgb(--light_gray_5, $light_gray_5);
+	@include generateVarAndRgb(--light_gray_6, $light_gray_6);
+	@include generateVarAndRgb(--light_gray_7, $light_gray_7);
+	@include generateVarAndRgb(--light_gray_8, $light_gray_8);
+	@include generateVarAndRgb(--light_gray_9, $light_gray_9);
+	@include generateVarAndRgb(--light_gray_10, $light_gray_10);
+	@include generateVarAndRgb(--light_gray_11, $light_gray_11);
+	@include generateVarAndRgb(--light_gray_12, $light_gray_12);
+	@include generateVarAndRgb(--light_gray_13, $light_gray_13);
+	@include generateVarAndRgb(--light_gray_14, $light_gray_14);
+	@include generateVarAndRgb(--light_gray_15, $light_gray_15);
+	@include generateVarAndRgb(--light_gray_16, $light_gray_16);
+	@include generateVarAndRgb(--light_gray_17, $light_gray_17);
+
 	@include generateVarAndRgb(--additional-light1, $additional_light1);
 	@include generateVarAndRgb(--additional-light2, $additional_light2);
 	@include generateVarAndRgb(--additional-light3, $additional_light3);

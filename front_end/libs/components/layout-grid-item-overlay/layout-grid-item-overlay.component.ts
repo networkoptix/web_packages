@@ -309,42 +309,42 @@ export class NxLayoutGridItemOverlayComponent {
     readonly MENU_ITEMS: Record<string, MenuItem<ResourceNode>> = {
         menu: {
             id: 'menu',
-            icon: icons.dirLayouts + 'menu.svg',
+            icon: icons.dirLayoutsOverlay + 'menu.svg',
             ...LANG.menu,
         },
         ptz: {
             id: 'ptz',
-            icon: icons.dirLayoutsCamera + 'ptz.svg',
+            icon: icons.dirLayoutsOverlay + 'ptz.svg',
             ...LANG.ptz,
             ...EMPTY_MENU_ACTION,
         },
         fisheye: {
             id: 'fisheye',
-            icon: icons.dirLayoutsCamera + 'fisheye.svg',
+            icon: icons.dirLayoutsOverlay + 'fisheye.svg',
             ...LANG.fisheye,
             ...EMPTY_MENU_ACTION,
         },
         motion: {
             id: 'motion',
-            icon: icons.dirLayoutsCamera + 'motion.svg',
+            icon: icons.dirLayoutsOverlay + 'motion.svg',
             ...LANG.motion,
             ...EMPTY_MENU_ACTION,
         },
         object: {
             id: 'object',
-            icon: icons.dirLayoutsCamera + 'object.svg',
+            icon: icons.dirLayoutsOverlay + 'object.svg',
             ...LANG.object,
             ...EMPTY_MENU_ACTION,
         },
         zoomWindow: {
             id: 'zoomWindow',
-            icon: icons.dirLayoutsCamera + 'zoom_window.svg',
+            icon: icons.dirLayoutsOverlay + 'zoom_window.svg',
             ...LANG.zoomWindow,
             ...EMPTY_MENU_ACTION,
         },
         info: {
             id: 'info',
-            icon: icons.dirLayoutsCamera + 'info.svg',
+            icon: icons.dirLayoutsOverlay + 'info.svg',
             ...LANG.info,
             checked$$: this.displayInfo$$,
             action: () => this.temporaryManualDisplayInfoToggle$$.update(value => !value),
@@ -356,7 +356,7 @@ export class NxLayoutGridItemOverlayComponent {
         },
         rotate: {
             id: 'rotate',
-            icon: icons.dirLayoutsCamera + 'rotate.svg',
+            icon: icons.dirLayoutsOverlay + 'rotate.svg',
             ...LANG.rotate,
             ...EMPTY_MENU_ACTION,
             subMenu: (node: ResourceNode) => {
@@ -404,7 +404,7 @@ export class NxLayoutGridItemOverlayComponent {
         },
         screenshot: {
             id: 'screenshot',
-            icon: icons.dirLayoutsCamera + 'screenshot.svg',
+            icon: icons.dirLayoutsOverlay + 'screenshot.svg',
             ...LANG.screenshot,
             action: () => {
                 const video = this.ref.nativeElement.querySelector(
@@ -440,7 +440,7 @@ export class NxLayoutGridItemOverlayComponent {
         },
         fullscreenOn: {
             id: 'fullscreenOn',
-            icon: icons.dirLayoutsCamera + 'full_screen.svg',
+            icon: icons.dirLayoutsOverlay + 'full_screen.svg',
             ...LANG.fullscreenOn,
             action: () => {
                 this.fullScreenTarget.requestFullscreen({
@@ -450,7 +450,7 @@ export class NxLayoutGridItemOverlayComponent {
         },
         fullscreenOff: {
             id: 'fullscreenOff',
-            icon: icons.dirLayoutsCamera + 'collapse.svg',
+            icon: icons.dirLayoutsOverlay + 'collapse.svg',
             ...LANG.fullscreenOff,
             action: () => {
                 this.document.exitFullscreen();
@@ -458,18 +458,18 @@ export class NxLayoutGridItemOverlayComponent {
         },
         remove: {
             id: 'remove',
-            icon: icons.dirLayoutsCamera + 'close.svg',
+            icon: icons.dirLayoutsOverlay + 'close.svg',
             ...LANG.remove,
             action: ($event, item) => this.removeItem.emit(this.item$$()),
         },
         recordingOn: {
             id: 'recordingOn',
-            icon: icons.dirLayoutsCamera + 'camera_rec_on.svg',
+            icon: icons.dirLayoutsOverlay + 'camera_rec_on.svg',
             ...LANG.recordingOn,
         },
         recordingOff: {
             id: 'recordingOff',
-            icon: icons.dirLayoutsCamera + 'camera_rec_off.svg',
+            icon: icons.dirLayoutsOverlay + 'camera_rec_off.svg',
             ...LANG.recordingOff,
         },
         divider: {
