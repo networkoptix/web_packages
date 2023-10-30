@@ -1,7 +1,5 @@
 import time
 
-from urllib3.exceptions import MaxRetryError
-
 import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
@@ -11,7 +9,6 @@ from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
-from resource_import import get_headless_chrome
 from resource_import import get_lang_list
 from email_access import EmailClient
 from email_access import get_random_email
@@ -291,17 +288,11 @@ def test_language_change_affects_emails():
             button.wait_until_visible()
             Button(driver, "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']").click()
             time.sleep(5)
-    # if we just closed the browser, we'll get a MaxRetryError
-    try:
-        url1 = rb.ENV + "/login"
-        driver.get(url1)
-    except MaxRetryError:
-        driver = get_headless_chrome()
-    send_restore_password_email(driver, random_email)
-    with EmailClient(email_alias=random_email) as email_client:
-        email_message = email_client.wait_for_reset_password_email()
-        email_client.delete_email(email_message)
-    resource_import.check_language_logged_in(random_email, password)
+        send_restore_password_email(driver, random_email)
+        with EmailClient(email_alias=random_email) as email_client:
+            email_message = email_client.wait_for_reset_password_email()
+            email_client.delete_email(email_message)
+            resource_import.check_language_logged_in(random_email, password)
 
 
 def test_language_change_is_new_default():
