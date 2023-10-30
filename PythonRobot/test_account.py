@@ -9,11 +9,12 @@ from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from pages.login import LoginDialog
+from pages.reset_password_dialog import ResetPasswordDialog
 from resource_import import get_lang_list
 from email_access import EmailClient
 from email_access import get_random_email
 from resource_import import register_and_activate_account
-from resource_import import send_restore_password_email
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"
@@ -287,7 +288,14 @@ def test_language_change_affects_emails():
                 )
             button.click()
             time.sleep(5)
-        send_restore_password_email(driver, random_email)
+        driver.get(rb.ENV + "/authorize")
+        login = LoginDialog(driver, lang="ru_RU")
+        login.email_input().input_text(random_email)
+        login.russian_next_button().click()
+        login.russian_forgot_password_button().click()
+        reset_password_dialog = ResetPasswordDialog(driver)
+        reset_password_dialog.input_email(random_email)
+        reset_password_dialog.get_russian_reset_password_button().click()
         with EmailClient(email_alias=random_email) as email_client:
             email_message = email_client.wait_for_reset_password_email()
             email_client.delete_email(email_message)

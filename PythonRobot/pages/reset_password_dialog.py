@@ -1,5 +1,6 @@
 from selenium.webdriver.common.keys import Keys
 
+from generic_elements import Button
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import TextField
@@ -51,3 +52,6 @@ class ResetPasswordDialog:
             self._driver,
             '//nx-authorize-reset-request-component//p[contains(@class, "error-label")]',
             )
+
+    def get_russian_reset_password_button(self) -> Button:
+        return Button(self._driver, "//button[contains(text(),'Сброс пароля')]")
