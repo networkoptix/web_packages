@@ -13,9 +13,9 @@ default:
     - us-service
 
 variables:
-  JENKINS_JOB_LOG: "true"
   JUNKSHOP_ENABLED: "false"
-  JENKINS_URL: "https://jenkins.us.nxteam.dev"
+  # These variables are required for deploy cloud
+  K8S_PRODUCT_RELEASE: cp-mr-${CI_MERGE_REQUEST_IID}
 
 workflow:
   rules:
@@ -32,41 +32,33 @@ stages:
   - docker image
   - check
   - build
-  - create mr
+  - deploy
   - test
   - fail-fast
 
-.retries:
-  interruptible: true
-  retry:
-    max: 2
-    when:
-      - runner_system_failure
-      - stuck_or_timeout_failure
-      - scheduler_failure
-#
-.frontend-changes:
-  extends: .retries
-  rules:
-    - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
-      changes:
-        - front_end/**/*
+# Rules
 
-.get_target_branch_script:
-  script:
-  - set -e
-  - if [[ "$CI_COMMIT_REF_PROTECTED" == "true" ]]; then
-  -   TARGET_BRANCH_NAME=${CI_COMMIT_REF_NAME}
-  - else
-  -   TARGET_BRANCH_NAME=$(get_target_protected_branch.py
-        --gitlab-server-url=${CI_SERVER_URL}
-        --gitlab-token="${GITLAB_API_TOKEN}"
-        --project-id=${CI_PROJECT_ID}
-        --merge-request-iid=${CI_MERGE_REQUEST_IID})
-  - fi
+.enable_for_mr: '$CI_PIPELINE_SOURCE == "merge_request_event"'
+
+.frontend_changes:
+  - front_end/**/*
+  - .gitlab-ci.yml
+
+.notification_changes:
+ - desktop_notifications/**/*
+ - .gitlab-ci.yml
+
+.webadmin_changes:
+  - front_end/**/*
+  - webadmin/**/*
+
+.enable_for_mr_branch: '( $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/ ||
+  $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop" )'
+
+.enable_for_protected_branch: '( $CI_PIPELINE_SOURCE == "push" &&
+  ( $CI_COMMIT_REF_NAME =~ /^vms_/ || $CI_COMMIT_REF_NAME == "develop" ) )'
 
 no-changes:
-#  extends: .retries
   needs: []
   rules:
       - if: '$CI_PIPELINE_SOURCE == "merge_request_event"'
@@ -81,7 +73,6 @@ no-changes:
     - echo "If this is the only job that runs then no changes were made that requires the pipeline"
 
 .backend-changes:
-  extends: .retries
   needs:
     - job: docker:build-django-python
       optional: true
@@ -232,7 +223,6 @@ cp-common-python-unit-test:
         - channel_partners/pyproject.toml
 
 .frontend-node:
-  extends: .frontend-changes
   needs:
     - job: docker:build-node-chrome
       optional: true
@@ -241,11 +231,13 @@ cp-common-python-unit-test:
     FRONTEND_NODE_MODULES: /node_modules_frontend
     ES_LINT_PLUGIN_NODE_MODULES: /node_modules_es_lint_plugin
     NX_CLOUD_ACCESS_TOKEN: NzU4OWM0MGQtNmJkNi00YzI3LWJkZjUtMThiMmMwYTkyYWNifHJlYWQtd3JpdGU=
-
   image: ${NODE_JS_IMAGE}:${NODE_JS_IMAGE_TAG}
   before_script:
     - cp -r "$FRONTEND_NODE_MODULES" ./front_end/node_modules
     - cp -r "$ES_LINT_PLUGIN_NODE_MODULES" ./front_end/eslint-plugin-nx/node_modules
+  rules:
+  - if: !reference [ .enable_for_mr ]
+    changes: [ .frontend_changes ]
 
 open-source:monorepo-checks:
   extends: .frontend-node
@@ -410,34 +402,13 @@ frontend-tests:
       popd
 
 .jenkins-builds:
-  extends: .frontend-changes
   stage: build
   image: nx/ci
-  artifacts:
-    paths:
-      - logs/**/*
   secrets:
     JENKINS_API_TOKEN_FILE: !reference [.tokens, secrets, JENKINS_API_TOKEN_FILE]
 
 jenkins-build-webadmin:
   extends: .jenkins-builds
-  rules:
-  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME =~ /^vms_/'
-    when: on_success
-    changes:
-      - front_end/**/*
-  - if: '$CI_MERGE_REQUEST_ID && $CI_MERGE_REQUEST_TARGET_BRANCH_NAME == "develop"'
-    when: on_success
-    changes:
-      - front_end/**/*
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
-    when: on_success
-    changes:
-      - front_end/**/*
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
-    when: on_success
-    changes:
-      - front_end/**/*
   script:
     - |
       set -ex
@@ -446,7 +417,6 @@ jenkins-build-webadmin:
       else
         PUBLISH=OFF
       fi
-    - mkdir logs
     - echo "Running webadmin build"
     - runJenkinsJob.sh gitlab.vms.review.webadmin.build
       "PUBLISH=$PUBLISH"
@@ -456,13 +426,14 @@ jenkins-build-webadmin:
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
-      "GITLAB_JOB_URL=$CI_JOB_URL" 2>&1 | tee logs/webadmin.log & WEBADMIN_EXIT="$?"
-    - wait
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .webadmin_changes ]
 
 jenkins-build-frontend:
   extends: .jenkins-builds
   script:
-    - mkdir logs
     - echo "Running frontend build"
     - runJenkinsJob.sh gitlab.cloud.frontend
       "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
@@ -473,21 +444,99 @@ jenkins-build-frontend:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA" 2>&1 | tee logs/frontend.log & FRONTEND_EXIT="$?"
-    - wait
+      "REVISION=$CI_COMMIT_SHORT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .frontend_changes ]
+
+jenkins-build-notification:
+  extends: .jenkins-builds
+  script:
+    - echo "Running notification build"
+    - runJenkinsJob.sh gitlab.cloud.notification
+      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHORT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .notification_changes ]
+
+cloud-deploy:
+  extends: .jenkins-builds
+  stage: deploy
+  variables:
+    CLOUD_BACKEND_IMAGE_TAG: 41189.nightly
+  script:
+    - set -ex
+    - runJenkinsJob.sh gitlab.cloud.deploy
+        "CLOUD_PORTAL_IMAGE_TAG=${CI_PIPELINE_ID}.gitlab"
+        "CLOUD_BACKEND_IMAGE_TAG=${CLOUD_BACKEND_IMAGE_TAG}"
+        "RELEASE_NAME=${K8S_PRODUCT_RELEASE}" 2>&1 | tee "deploy.log"
+    - |
+      JENKINS_JOB_URL="$(grep 'Job Url:' "deploy.log" | \
+        head -1 | \
+        sed 's/\x1b\[[0-9;]*m//g' | \
+        awk -F ': ' '{print $2}')"
+    - curl
+        --fail
+        --silent
+        --show-error
+        -X GET
+        --user "jenkins:$(cat "${JENKINS_API_TOKEN_FILE}")"
+        "${JENKINS_JOB_URL}artifact/CLOUD_HOST.envvar" > cloud_host.env
+  artifacts:
+    reports:
+      dotenv: cloud_host.env
+  environment:
+    name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
+    url: https://${CLOUD_HOST}
+    on_stop: cloud-remove-deployment
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .frontend_changes ]
+
+# stop deployment and clean all data, manual UI action. may be used to verify clean deployment
+# may be invoked using manual UI action to verify clean deployment
+# also triggered when MR branch deleted (MR merged)
+# ref: https://docs.gitlab.com/ee/ci/environments/#stop-an-environment-when-a-branch-is-deleted
+cloud-remove-deployment:
+  extends: .jenkins-builds
+  stage: deploy
+  variables:
+    GIT_STRATEGY: none
+  secrets:
+    GITLAB_API_TOKEN: !reference [.tokens, secrets, GITLAB_API_TOKEN]
+  script:
+  - |
+    GL_ENV_ID="$(curl --silent --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN}" \
+      "${CI_SERVER_URL}/api/v4/projects/${CI_PROJECT_ID}/environments?name=${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}" |
+      jq ".[0].id")"
+    CLOUD_URL="$(curl --silent --header "PRIVATE-TOKEN: ${GITLAB_API_TOKEN}" \
+      "${CI_SERVER_URL}/api/v4/projects/${CI_PROJECT_ID}/environments/${GL_ENV_ID}" |
+      jq -r ".external_url")"
+  - runJenkinsJob.sh gitlab.cloud.remove-deployment
+    "CLOUD_HOST=${CLOUD_URL}"
+  environment:
+    name: ${K8S_PRODUCT_RELEASE}/${CI_COMMIT_REF_SLUG}
+    action: stop
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .frontend_changes ]
+    when: manual
+    # ref: https://docs.gitlab.com/ee/ci/yaml/#rulesallow_failure
+    # the directive also impacts pipeline stage representation on top level
+    # without it, the stage status shown unclear (as a cog) even if deploy successful
+    allow_failure: true
 
 create-vms-mr:
-  stage: create mr
+  stage: deploy
   extends: .jenkins-builds
-  rules:
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME =~ /^vms_/'
-    when: on_success
-    changes:
-    - front_end/**/*
-  - if: '$CI_COMMIT_REF_PROTECTED == "true" && $CI_COMMIT_REF_NAME == "develop"'
-    when: on_success
-    changes:
-    - front_end/**/*
   script:
     - runJenkinsJob.sh gitlab.vms.review.webadmin.create-vms-mr
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
@@ -496,9 +545,11 @@ create-vms-mr:
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+  rules:
+  - if: !reference [ .enable_for_protected_branch ]
+    changes: !reference [ .frontend_changes ]
 
 #wheel-uploader:
-#  extends: .retries
 #  stage: pre-build
 #  script:
 #    - mkdir ~/.nxcloud
@@ -645,7 +696,6 @@ fail-on-python-license-check:
       when: on_failure
 
 .cp-backend-changes:
-  extends: .retries
   needs:
     - job: docker:build-channel-partners
       optional: true
