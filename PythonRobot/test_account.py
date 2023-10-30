@@ -283,7 +283,7 @@ def test_language_change_affects_emails():
             Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
             button = Button(
                 driver,
-                "//nx-language-select//button/following-sibling::ul//span[@lang='ru_RU']/..",
+                "//nx-language-select//span[@lang='ru_RU']/..",
                 )
             button.click()
             time.sleep(5)
