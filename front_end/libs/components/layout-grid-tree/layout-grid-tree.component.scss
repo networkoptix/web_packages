@@ -81,12 +81,15 @@ nx-search {
                 &:not(:hover) > .action-button {
                     display: none !important;
                 }
+                &:hover:has(.editable-edit) > .action-button {
+                    display: none !important;
+                }
 
                 .action-button {
                     margin: 0;
                 }
 
-                &:hover {
+                &:hover:not(:has(.editable-edit)) {
                     background: var(--left-menu-l3-hover-bg);
                     color: var(--left-menu-l3-hover-color);
 
@@ -346,4 +349,9 @@ cdk-tree {
     max-width: calc(100% - 48px);
     display: flex;
     flex-direction: row;
+    height: 20px;
+    .editable-edit {
+        border: none;
+        background: transparent;
+    }
 }

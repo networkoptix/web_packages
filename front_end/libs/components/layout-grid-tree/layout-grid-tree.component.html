@@ -294,10 +294,11 @@
                         </ng-template>
                         <nx-text-editable
                             *ngIf="editedLayout$$() === node.id; else searchHighlight"
-                            class="node-name ellipsis"
+                            class="node-name"
                             [(ngModel)]="node.name"
                             [allowUserFocus]="false"
                             [editEnabled]="true"
+                            [required]="true"
                             (onFocusChanged)="!$event && handleRename(node)"
                             (onEditModeCancelled)="editedLayout$$.set(null)"
                         >
