@@ -308,11 +308,11 @@ def test_language_change_is_new_default():
         activeLang = drop_lang_element.text()
         assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
         if lang == 'ja_JP':
-            info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
-            info_element.wait_until_visible()
+            locator = f"//header//h4[contains(text(),'{ja_JP_account_info}')]"
         elif lang == 'de_DE':
-            info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
-            info_element.wait_until_visible()
+            locator = f"//header//h4[contains(text(),'{de_DE_account_info}')]"
+        info_element = PageText(driver, locator)
+        info_element.wait_until_visible()
         resource_import.logout_japanese(driver)
         url1 = rb.ENV + "/account"
         driver.get(url1)
@@ -325,11 +325,11 @@ def test_language_change_is_new_default():
         if activeLang.lower() not in lang.lower():
             assert False, f"{activeLang.lower()} not found in {lang.lower()}"
         if rb.LANGUAGE == 'ja_JP':
-            info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
-            info_element.wait_until_visible()
+            locator = f"//header//h4[contains(text(),'{ja_JP_account_info}')]"
         elif rb.LANGUAGE == 'de_DE':
-            info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
-            info_element.wait_until_visible()
+            locator = f"//header//h4[contains(text(),'{de_DE_account_info}')]"
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{locator}')]")
+        info_element.wait_until_visible()
         resource_import.check_language_logged_in(email, password)
 
 
