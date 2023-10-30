@@ -2,7 +2,7 @@ import { Overlay, OverlayConfig, OverlayModule, OverlayRef } from '@angular/cdk/
 import { CdkPortal, PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
 import {
-    AfterContentInit,
+    AfterViewInit,
     Component,
     ContentChildren,
     ElementRef,
@@ -29,7 +29,7 @@ import { BaseDropdownItem } from './dropdownItems//baseDropdownItem/dropdown-ite
     styleUrls: ['dropdown.component.scss'],
     standalone: true,
 })
-export class NxDropdownComponent<T> implements AfterContentInit, OnChanges {
+export class NxDropdownComponent<T> implements AfterViewInit, OnChanges {
     @Input('id') inputId: string = '';
     @Input() selected: T;
     @Output() selectedChange = new EventEmitter<T>();
@@ -64,7 +64,7 @@ export class NxDropdownComponent<T> implements AfterContentInit, OnChanges {
             this.setSelectedOptionOrPlaceholder();
         }
     }
-    ngAfterContentInit(): void {
+    ngAfterViewInit(): void {
         this.manuallySetSelectedOption();
         this.setSelectedOptionOrPlaceholder();
     }

@@ -293,7 +293,7 @@ export class CameraManager {
             parameters.rotation,
         );
 
-        let defaultRatio = 0;
+        let defaultRatio: number | null = null;
         const { bitrateInfos } = parameters;
         if (bitrateInfos) {
             const [x, y] = bitrateInfos.streams[0].resolution.split('x');

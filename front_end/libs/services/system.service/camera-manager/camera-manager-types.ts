@@ -76,7 +76,7 @@ export interface NxSystemCamera {
     deviceType: DeviceType; // Not included on ec2 => parameters.deviceType on restV1 => deviceType on restV2
 
     // Calculated
-    defaultRatio: number;
+    defaultRatio: number | null;
     isStream: boolean;
     maxFps: number;
     previewUrl: Observable<string>;

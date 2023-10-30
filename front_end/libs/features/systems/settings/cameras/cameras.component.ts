@@ -88,7 +88,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     @Input() camera: NxSystemCamera;
 
     LANG = staticLang;
-    defaultAspectRatio: number = null;
+    defaultAspectRatio: number | null = null;
     aspectRatioOptions = ASPECT_RATIOS;
     rotationOptions = ROTATION_OPTIONS;
     isMobile: boolean;
