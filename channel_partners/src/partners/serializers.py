@@ -4,6 +4,7 @@ import json
 
 import httpx
 import llutil
+import rest_framework.exceptions
 from django.conf import settings
 from django.db.models import Sum
 from django.utils import timezone
@@ -24,7 +25,7 @@ from partners.models import ChannelPartner, Organization, CloudSystemId, CloudUs
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent, \
     CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId, \
     ServiceToSubChannelProperties, ServiceToOrganizationProperties, ChannelPartnerAccessLevel
-from tools.utils import make_batch_request
+from tools.utils import make_batch_request, bind_system_to_cdb_organization
 from .authentication import check_user_can_administer_system
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
@@ -246,7 +247,7 @@ class CloudSystemSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CloudSystemId
-        fields = ['id', 'state', 'effectiveState', 'systemId', 'name', 'organization', 'services']
+        fields = ['id', 'state', 'effectiveState', 'systemId', 'name', 'organization', 'services', 'activated']
         read_only_fields = ['users', 'organization']
 
     def validate(self, data):
@@ -566,6 +567,68 @@ class AvailableOrganizationServiceSerializer(serializers.ModelSerializer):
         fields = ['service', 'price']
         model = ServiceToOrganizationProperties
 
+
+class BindLocalSystemSerializer(serializers.ModelSerializer):
+    id = serializers.CharField(required=False)
+    customization = serializers.CharField()
+    opaque = serializers.CharField(allow_blank=True)
+
+    class Meta:
+        model = CloudSystemId
+        fields = ['id', 'name', 'customization', 'opaque', 'organization']
+
+    def validate_organization(self, value: Organization):
+        req = self.context.get('request')
+        if value.can_manage_systems(req.user):
+            return value
+        else:
+            raise exceptions.PermissionDenied(detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
+
+    def bind_system(self):
+        validated_data = self.validated_data
+        request = self.context.get('request')
+        system_id = validated_data.get('id')
+        organization = validated_data.get('organization')
+        name = validated_data.get('name')
+        customization = validated_data.get('customization')
+        opaque = validated_data.get('opaque')
+
+        system_bind_response, status_code = bind_system_to_cdb_organization(
+            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=organization.id, system_id=system_id,
+            name=name, customization=customization, opaque=opaque
+        )
+
+        return system_bind_response, status_code
+
+    def create(self, validated_data):
+        cloud_host = validated_data.get('cloud_host')
+        system_id = validated_data.get('system_id')
+        organization = validated_data.get('organization')
+        name = validated_data.get('name')
+        system = CloudSystemId.objects.get_or_create(system_id=system_id, cloud_host=cloud_host)[0]
+        system.name = name
+        system.organization = organization
+        system.activated = False
+        system.save()
+        data = system.add_system_users_data()
+        make_batch_request(self.context['request'], data)
+        return system
+
+
+class SystemBindResponseSerializer(serializers.Serializer):
+    id = serializers.CharField()
+    name = serializers.CharField()
+    customization = serializers.CharField()
+    authKey = serializers.CharField()
+    authKeyHash = serializers.CharField()
+    status = serializers.ChoiceField(choices=('invalid', 'notActivated', 'activated', 'deleted_', 'beingMerged', 'deletedByMerge'))
+    systemSequence = serializers.CharField()
+    opaque = serializers.CharField()
+    version = serializers.CharField()
+    registrationTime = serializers.CharField()
+    system2faEnabled = serializers.BooleanField()
+    attributes = serializers.ListField(child=serializers.DictField())
+    organizationId = serializers.CharField()
 
 class CreateSystemSerializer(serializers.ModelSerializer):
     cloudSystemId = serializers.UUIDField(source='system_id')

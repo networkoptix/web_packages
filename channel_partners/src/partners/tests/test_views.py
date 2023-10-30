@@ -33,7 +33,7 @@ class TestCloudSystemViewSet:
         # Channel partner admin
         mock_auth_with_user(default_cp_admin)
         request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'create'})
+        view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
         response = view(request)
         assert CloudSystemId.objects.filter(system_id=sys_id).exists()
         assert response.status_code == 200
@@ -49,7 +49,7 @@ class TestCloudSystemViewSet:
 
         mock_auth_with_user(default_org_admin)
         request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'create'})
+        view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
         response = view(request)
         assert response.status_code == 200
         assert response.data['systemId'] == sys_id

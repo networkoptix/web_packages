@@ -588,7 +588,7 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     pagination_class = DefaultPagination
 
     def get_queryset(self):
-        return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host)
+        return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host, activated=True)
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_systems)
@@ -603,7 +603,8 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
 @extend_schema_view(
     list=extend_schema(summary='Get list of user\'s Systems'),
     retrieve=extend_schema(summary='Get a System', extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'}),
-    create=extend_schema(summary='Bind a System to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
+    create=extend_schema(summary='Bind a local system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
+    bind_existing=extend_schema(summary='Bind an existing cloud system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
     destroy=extend_schema(summary='Remove a system from an Organization',
                           auth=[{'Cloud Oauth Token': []}],  extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'})
 )
@@ -628,10 +629,12 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.detail:
             return CloudSystemId.objects.filter(cloud_host=self.request.cloud_host)
         else:
-            return CloudSystemId.objects.filter(cloud_host=self.request.cloud_host, organization__users=self.request.user)
+            return CloudSystemId.objects.filter(cloud_host=self.request.cloud_host, organization__users=self.request.user, activated=True)
 
     def get_serializer_class(self):
         if self.action == 'create':
+            return BindLocalSystemSerializer
+        elif self.action == 'bind_existing':
             return CreateSystemSerializer
         else:
             return CloudSystemSerializer
@@ -651,8 +654,18 @@ class CloudSystemViewSet(NestedViewSetMixin,
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
         return perms
 
-    @extend_schema(auth=[{'Cloud Oauth Token': []}], request=CreateSystemSerializer, responses=CloudSystemSerializer)
+    @extend_schema(auth=[{'Cloud Oauth Token': []}], request=BindLocalSystemSerializer, responses=SystemBindResponseSerializer)
     def create(self, request, *args, **kwargs):
+        serializer: BindLocalSystemSerializer = self.get_serializer(data={**request.data})
+        serializer.is_valid(raise_exception=True)
+        system_reponse, status_code = serializer.bind_system()
+        if status_code < 300:
+            serializer.save(cloud_host=request.cloud_host, system_id=system_reponse['id'])
+        return Response(system_reponse, status=status_code)
+
+    @extend_schema(auth=[{'Cloud Oauth Token': []}], request=CreateSystemSerializer, responses=CloudSystemSerializer)
+    @action(methods=['post'], detail=False)
+    def bind_existing(self, request, *args, **kwargs):
         serializer = self.get_serializer(data={**request.data})
         serializer.is_valid(raise_exception=True)
         system = serializer.save(cloud_host=request.cloud_host)

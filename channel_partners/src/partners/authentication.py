@@ -70,6 +70,9 @@ def check_system_credentials(system_id, system_auth_key, cloud_host):
     if response.ok:
         resp = response.json()
         resp_system_id = resp.get('id')
+        status = resp.get('status')
+        if status != 'activated':
+            return False
         if resp_system_id:
             return resp_system_id == system_id
         return False
@@ -115,7 +118,11 @@ class NxCloudSystemBasicAuthentication(BasicAuthentication):
             raise exceptions.AuthenticationFailed('Invalid cloud-host header.')
 
         if check_system_credentials(system_id=userid, system_auth_key=password, cloud_host=cloud_host_header):
-            request.cloud_system = CloudSystemId.objects.get_or_create(system_id=cloud_system_id, cloud_host=cloud_host)[0]
+            cloud_system = CloudSystemId.objects.get_or_create(system_id=cloud_system_id, cloud_host=cloud_host)[0]
+            if not cloud_system.activated:
+                cloud_system.activated = True
+                cloud_system.save()
+            request.cloud_system = cloud_system
             request.cloud_host = cloud_host
             return get_user_model()(), None
         else:

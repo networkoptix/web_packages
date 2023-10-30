@@ -140,6 +140,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
+    activated = models.BooleanField(default=True)
 
     observed_fields = ('organization_id', 'state')
 
@@ -493,7 +494,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         if not self.allow_changing_services and not new:
             self.disable_successors_acs()
 
-        if self._original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
+        if original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
             for system in CloudSystemId.objects.filter(organization__channel_partner__id=self.successors):
                 system.negate_all_service(organization_id=system.organization_id)
 
