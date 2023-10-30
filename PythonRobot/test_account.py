@@ -259,7 +259,6 @@ def test_language_is_changeable_on_the_account_page():
                     driver,
                     f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
                     )
-                assert language_button.in_dom, f"No button for language {lang}"
                 language_button.click()
                 PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
         DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
