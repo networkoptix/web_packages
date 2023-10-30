@@ -154,13 +154,8 @@ def send_restore_password_email(driver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
-    TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
-    time.sleep(1)
     TextField(driver, rb.EMAIL_INPUT).input_text(email)
-    time.sleep(1)
     Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
-    Button(driver, rb.FORGOT_PASSWORD_BUTTON).wait_until_visible()
     Button(driver, rb.FORGOT_PASSWORD_BUTTON).click()
     TextField(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT).input_text(email)
     Button(driver, rb.RESET_PASSWORD_BUTTON).click()
