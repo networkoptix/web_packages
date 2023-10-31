@@ -122,7 +122,7 @@ def pressing_enter_key_saves_data():
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(password)
-        change_pass_form.new_password_input().input_text(Keys.ENTER)
+        change_pass_form.new_password_input().press_enter()
         change_pass_form.no_unsaved_changes_message()
         print("pass")
 
@@ -135,10 +135,10 @@ def pressing_tab_key_moves_focus_to_the_next_element():
         LoginDialog(driver).basic_cloud_login(email, password)
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
-        change_pass_form.current_password_input().input_text(Keys.TAB)
+        change_pass_form.current_password_input().press_tab()
         assert change_pass_form.new_password_input().is_focused()
         change_pass_form.new_password_input().input_text(password)
-        change_pass_form.new_password_input().input_text(Keys.TAB)
+        change_pass_form.new_password_input().press_tab()
         assert change_pass_form.save_button().is_focused()
         print("pass")
 
