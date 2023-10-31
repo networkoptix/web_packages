@@ -103,8 +103,7 @@ def save_user_data_correctly():
 
 def truncate_long_names():
     """9. Should allow to enter more than 255 symbols in First and Last names and cut it to 255"""
-    # TODO: doesn't work with 300 chars.
-    # TODO: bug: https://networkoptix.atlassian.net/browse/CQA-580
+    # Bug: https://networkoptix.atlassian.net/browse/CLOUD-11071
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         resource_import.register_and_activate_account(
