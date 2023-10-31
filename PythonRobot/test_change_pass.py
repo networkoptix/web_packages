@@ -85,7 +85,7 @@ def password_with_symbols_is_valid():
         login_dialog.next_button().click()
         login_dialog.password_input().input_text(password)
         login_dialog.login_button().click()
-        login_dialog.password_input_error_message()
+        login_dialog.password_input_error_message().wait_until_visible()
         print("pass")
 
 
@@ -99,7 +99,7 @@ def password_with_space_in_the_middle_is_valid():
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text('qwea sd 123')
         change_pass_form.save_button().click()
-        change_pass_form.no_unsaved_changes_message()
+        change_pass_form.no_unsaved_changes_message().wait_until_visible()
         HeaderNav(driver).log_out()
         LandingPage(driver)
         header = HeaderNav(driver)
@@ -109,7 +109,7 @@ def password_with_space_in_the_middle_is_valid():
         login_dialog.next_button().click()
         login_dialog.password_input().input_text(password)
         login_dialog.login_button().click()
-        login_dialog.password_input_error_message()
+        login_dialog.password_input_error_message().wait_until_visible()
         print("pass")
 
 
@@ -123,7 +123,7 @@ def pressing_enter_key_saves_data():
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(password)
         change_pass_form.new_password_input().press_enter()
-        change_pass_form.no_unsaved_changes_message()
+        change_pass_form.no_unsaved_changes_message().wait_until_visible()
         print("pass")
 
 
@@ -153,10 +153,10 @@ def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
         assert change_pass_form.current_password_input().field_type() == 'password'
         assert change_pass_form.new_password_input().field_type() == 'password'
         change_pass_form.current_password_eye_icon_closed().click()
-        change_pass_form.current_password_eye_icon_open()
+        change_pass_form.current_password_eye_icon_open().wait_until_visible()
         assert change_pass_form.new_password_input().field_type() == 'text'
         change_pass_form.current_password_eye_icon_open().click()
-        change_pass_form.current_password_eye_icon_closed()
+        change_pass_form.current_password_eye_icon_closed().wait_until_visible()
         assert change_pass_form.new_password_input().field_type() == 'password'
         print("pass")
 
