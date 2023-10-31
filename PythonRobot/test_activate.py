@@ -149,7 +149,6 @@ def link_works_logged_out():
 
 def login_before_activation():
     """14. Should allow to login with email instead of username"""
-    driver = resource_import.get_headless_chrome()
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         driver.get(f'{rb.ENV}/authorize?client_type=create')
