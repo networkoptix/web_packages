@@ -287,8 +287,10 @@ def test_language_change_affects_emails():
 def test_language_change_is_new_default():
     """15 Language change is new default"""
     lang_dict = resource_import.get_lang_list()
-    ja_JP_account_info = lang_dict['ja_JP']['ACCOUNT INFORMATION']
-    de_DE_account_info = lang_dict['de_DE']['ACCOUNT INFORMATION']
+    japanese_code = 'ja_JP'
+    german_code = 'de_DE'
+    ja_JP_account_info = lang_dict[japanese_code]['ACCOUNT INFORMATION']
+    de_DE_account_info = lang_dict[german_code]['ACCOUNT INFORMATION']
     with resource_import.get_chrome() as driver:
         email = get_random_email()
         password = "qweasd 123"
@@ -298,37 +300,28 @@ def test_language_change_is_new_default():
         cloud_login(driver, email, password, button=None, api=False)
         verify_in_account_page(driver)
         Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-        lang = 'de_DE' if rb.LANGUAGE == 'ja_JP' else 'ja_JP'
-        droplang1 = rb.ACCOUNT_LANGUAGE_DROPDOWN + f"/following-sibling::ul//span[@lang='{lang}']"
-        DropDown(driver, droplang1).click()
+        japanese_button_locator = f"//following-sibling::ul//span[@id='{japanese_code}']"
+        DropDown(driver, japanese_button_locator).click()
         time.sleep(5)
         driver.refresh()
         dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
         drop_lang_element = DropDown(driver, dropLang2)
         activeLang = drop_lang_element.text()
-        assert activeLang.lower() in lang.lower(), f"{activeLang.lower()} not found in {lang.lower}"
-        if lang == 'ja_JP':
-            locator = f"//header//h4[contains(text(),'{ja_JP_account_info}')]"
-        elif lang == 'de_DE':
-            locator = f"//header//h4[contains(text(),'{de_DE_account_info}')]"
-        info_element = PageText(driver, locator)
+        assert activeLang.lower() in japanese_code.lower(), f"{activeLang.lower()} not found in {japanese_code.lower}"
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
         resource_import.logout_japanese(driver)
         url1 = rb.ENV + "/account"
         driver.get(url1)
         cloud_login(driver, email, password, button=None, api=False)
         api = CloudPortalAPI()
-        api.set_account_language(email, password, new_language=lang)
+        api.set_account_language(email, password, new_language=german_code)
         time.sleep(5)
         driver.refresh()
         activeLang = drop_lang_element.text()
-        if activeLang.lower() not in lang.lower():
-            assert False, f"{activeLang.lower()} not found in {lang.lower()}"
-        if rb.LANGUAGE == 'ja_JP':
-            locator = f"//header//h4[contains(text(),'{ja_JP_account_info}')]"
-        elif rb.LANGUAGE == 'de_DE':
-            locator = f"//header//h4[contains(text(),'{de_DE_account_info}')]"
-        info_element = PageText(driver, f"//header//h4[contains(text(),'{locator}')]")
+        if activeLang.lower() not in german_code.lower():
+            assert False, f"{activeLang.lower()} not found in {german_code.lower()}"
+        info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
         resource_import.check_language_logged_in(email, password)
 
