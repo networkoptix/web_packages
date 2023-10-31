@@ -3,13 +3,9 @@ from generic_elements import Button
 
 
 class Footer:
-    def __init__(self, driver, type, lang="en_US"):
+    def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
-        if type == "cloud":
-            self._wait_until_footer_is_visible_cloud()
-        else:
-            self._wait_until_footer_is_visible_webadmin()
 
     def api_documentation_link(self):
         return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.API_DOCUMENTATION_TEXT}')]")
@@ -49,13 +45,13 @@ class Footer:
         button.wait_until_visible(10)
         return button
 
-    def _wait_until_footer_is_visible_webadmin(self):
+    def wait_until_footer_is_visible_webadmin(self):
         self.api_documentation_link().wait_until_visible()
         self.api_download_sdk_link().wait_until_visible()
         self.support_link().wait_until_visible()
         self.copyright_link().wait_until_visible()
 
-    def _wait_until_footer_is_visible_cloud(self):
+    def wait_until_footer_is_visible_cloud(self):
         self.support_link().wait_until_visible()
         self.copyright_link().wait_until_visible()
         self.terms_link().wait_until_visible()
