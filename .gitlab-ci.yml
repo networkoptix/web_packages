@@ -430,6 +430,8 @@ jenkins-build-webadmin:
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .webadmin_changes ]
+  - if: !reference [.enable_for_protected_branch]
+    changes: !reference [ .webadmin_changes ]
 
 jenkins-build-frontend:
   extends: .jenkins-builds
@@ -537,6 +539,7 @@ cloud-remove-deployment:
 create-vms-mr:
   stage: deploy
   extends: .jenkins-builds
+  needs: [ "jenkins-build-webadmin" ]
   script:
     - runJenkinsJob.sh gitlab.vms.review.webadmin.create-vms-mr
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
@@ -547,7 +550,7 @@ create-vms-mr:
       "GITLAB_JOB_URL=$CI_JOB_URL"
   rules:
   - if: !reference [ .enable_for_protected_branch ]
-    changes: !reference [ .frontend_changes ]
+    changes: !reference [ .webadmin_changes ]
 
 #wheel-uploader:
 #  stage: pre-build
