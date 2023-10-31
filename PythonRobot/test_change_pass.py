@@ -13,7 +13,6 @@ from resource_import import register_and_activate_account
 from variables import ENV
 
 password = "qweasd 123"
-# login = ""
 rb = RobotVariables("en_US")
 
 def can_be_accessed_via_dropdown():
