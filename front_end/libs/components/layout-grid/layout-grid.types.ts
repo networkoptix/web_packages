@@ -60,7 +60,7 @@ export enum PlaceholderClasses {
 
 export interface LayoutItemRenderConfig {
     child?: {
-        'aspect-ratio': number;
+        'aspect-ratio': number | string;
     };
     aspect?: number;
     showTooltip: boolean;

@@ -1106,7 +1106,7 @@ export class NxLayoutGridComponent {
         layout: ExtractObservable<typeof this.layout$>,
     ): Size => {
         if (!size || !item) {
-            return;
+            return size;
         }
 
         const { height, width } = this.window.document.fullscreenElement
@@ -1116,14 +1116,20 @@ export class NxLayoutGridComponent {
 
         renderConfig.showTooltip = width < 360;
         if (assertResourceOfType.camera(node) && node.details.online) {
-            const initialAspect = node.aspectRatio || renderConfig.aspect;
+            const initialAspect = node.aspectRatio || renderConfig.aspect || 1;
 
             const isRotated = Boolean((Math.round(rotation / 90) * 90) % 180);
 
             const aspect = isRotated ? 1 / initialAspect : initialAspect;
 
             renderConfig.child = {
-                'aspect-ratio': aspect,
+                'aspect-ratio': aspect || 'unset',
+            };
+
+            const wide = width / height > aspect;
+            return {
+                width: wide && aspect ? height * aspect : width,
+                height: !wide && aspect ? width / aspect : height,
             };
         }
 
