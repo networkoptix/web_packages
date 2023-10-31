@@ -1,6 +1,7 @@
 """
 URL configuration for channel_partners project.
 """
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path, include, re_path
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
@@ -19,3 +20,6 @@ urlpatterns = [
     ), name='schema-internal'),
     path('api-docs/', swagger_ui, name='swagger-ui'),
 ]
+
+if settings.SILK_ENABLED:
+    urlpatterns.insert(0, path('profiler/', include('silk.urls')))

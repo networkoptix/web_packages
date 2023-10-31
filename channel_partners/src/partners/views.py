@@ -44,7 +44,8 @@ class DefaultPagination(PageNumberPagination):
 )
 @api_view(['GET'])
 def channel_partner_roles(request):
-    serializer = ChannelPartnerRoleSerializer(ChannelPartnerRole.objects.all(), many=True)
+    queryset = ChannelPartnerRole.objects.all().prefetch_related('permissions')
+    serializer = ChannelPartnerRoleSerializer(queryset, many=True)
     return Response(serializer.data)
 
 
@@ -55,7 +56,8 @@ def channel_partner_roles(request):
 )
 @api_view(['GET'])
 def organization_roles(request):
-    serializer = OrganizationRoleSerializer(OrganizationRole.objects.all(), many=True)
+    queryset = OrganizationRole.objects.all().prefetch_related('permissions')
+    serializer = OrganizationRoleSerializer(queryset, many=True)
     return Response(serializer.data)
 
 
@@ -89,7 +91,7 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     lookup_field = 'user__email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = ChannelPartnerToUser.objects.all()
+    queryset = ChannelPartnerToUser.objects.all().select_related('user')
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
@@ -230,7 +232,7 @@ class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
 )
 class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = CloudSystemIdExternalIdSerializer
-    queryset = CloudSystemExternalId.objects.all()
+    queryset = CloudSystemExternalId.objects.all().select_related('cloud_system')
 
 
 @extend_schema(
@@ -381,7 +383,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = channel_partner.service_changes(start_ts)
+        service_changes = channel_partner.service_changes(start_ts).select_related('created_by')
         context = self.get_serializer_context()
         context['channel_partner'] = channel_partner
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceRecordSerializer,
@@ -417,7 +419,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     http_method_names = ['get']
     serializer_class = OrganizationSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = Organization.objects.all()
+    queryset = Organization.objects.all().select_related('channel_partner')
     pagination_class = DefaultPagination
 
     def get_permissions(self):
@@ -449,6 +451,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     pagination_class = DefaultPagination
+    queryset = Organization.objects.all().select_related('channel_partner')
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -468,9 +471,9 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
 
     def get_queryset(self):
         if self.detail:
-            return Organization.objects.filter(channel_partner__cloud_host=self.request.cloud_host)
+            return self.queryset.filter(channel_partner__cloud_host=self.request.cloud_host)
         else:
-            return Organization.objects.filter(channel_partner__cloud_host=self.request.cloud_host, users=self.request.user)
+            return self.queryset.filter(channel_partner__cloud_host=self.request.cloud_host, users=self.request.user)
 
     @extend_schema(request=CreateOrganizationSerializer, responses=OrganizationSerializer)
     def create(self, request, *args, **kwargs):
@@ -490,7 +493,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = org.service_changes(start_ts).select_related('service', 'created_by')
+        service_changes = org.service_changes(start_ts).select_related('service', 'created_by', 'cloud_system')
         return paginated_response(self, service_changes, serializer_class=OrganizationServiceRecordSerializer)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
@@ -531,7 +534,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     lookup_field = 'user__email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = OrganizationToUser.objects.all()
+    queryset = OrganizationToUser.objects.all().select_related('user')
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
@@ -764,7 +767,7 @@ def partner_events(request):
     )
     cloud_host: CloudHost = data.get('cloudHost')
     if data.get('cloudHost'):
-        event_records = event_records.filter(cloud_host__instance=cloud_host.instance)
+        event_records = event_records.filter(cloud_host=cloud_host)
     event_records = event_records.select_related('cloud_system', 'service'
     ).order_by('id')[:limit]
 

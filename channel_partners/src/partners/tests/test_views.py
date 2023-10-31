@@ -2,10 +2,12 @@ import json
 import random
 from uuid import uuid4
 
+from dateutil.relativedelta import relativedelta
 from django.core.cache import caches
 from django.db import transaction
 
 import pytest
+from django.utils import timezone
 from model_bakery import baker
 from mock.mock import MagicMock
 
@@ -519,6 +521,7 @@ class TestChannelPartnerViewSet:
     def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
+        start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -526,7 +529,7 @@ class TestChannelPartnerViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/')
+        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=cp.id)
         assert response.status_code == 200
@@ -590,6 +593,7 @@ class TestOrganizationViewSet:
     def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
+        start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -597,7 +601,7 @@ class TestOrganizationViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_history/')
+        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -610,6 +614,7 @@ class TestOrganizationViewSet:
     def test_service_changes_summary(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
+        start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -617,7 +622,7 @@ class TestOrganizationViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/')
+        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200

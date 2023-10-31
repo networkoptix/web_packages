@@ -1,7 +1,7 @@
 from partners.models import *
 from django.db import transaction
 import uuid
-
+import random
 
 users = [
     CloudUser.objects.get_or_create(email='jcox@networkoptix.com')[0],
@@ -42,24 +42,44 @@ def run():
             print(f'Iteration #{i+1}')
             channel_partner = ChannelPartner.objects.create(name=f'Test CP {i+1}', parent_channel_partner=nx_channel_partner_cloud_test, cloud_host=cloud_test_host)
             add_users_or_channel_partner(channel_partner)
+            services = [
+                ChannelPartnerService.objects.create(name=uuid.uuid4(), type=st,
+                                                     created_by_channel_partner=channel_partner)
+                for st, _ in ChannelPartnerService.SERVICE_TYPES]
             for j in range(25):
                 organization = Organization.objects.create(name=f'Test Org {j+1}', channel_partner=channel_partner)
+                OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization, created_by=channel_partner)
                 add_users_to_organization(organization)
                 for k in range(25):
-                    CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}', organization=organization, cloud_host=cloud_test_host)
-
+                    sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}', organization=organization, cloud_host=cloud_test_host)
+                    CloudSystemExternalId.objects.create(custom_id=uuid.uuid4(), cloud_system=sys, created_by=channel_partner)
+                    for service in services:
+                        ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys, quantity=random.randint(1, 10))
             if i % 5 == 0:
                 sub_channel_partner = ChannelPartner.objects.create(name=f'Test CP {i + 1}',
                                                                 parent_channel_partner=channel_partner,
                                                                 cloud_host=cloud_test_host)
                 add_users_or_channel_partner(sub_channel_partner)
+                services = [
+                    ChannelPartnerService.objects.create(name=uuid.uuid4(), type=st,
+                                                         created_by_channel_partner=sub_channel_partner)
+                    for st, _ in ChannelPartnerService.SERVICE_TYPES]
+                for service in services:
+                    ChannelPartnerServiceExternalId.objects.create(custom_id=uuid.uuid4(), channel_partner_service=service, created_by=channel_partner)
                 for j in range(25):
                     organization = Organization.objects.create(name=f'Test Org {j + 1}',
                                                                channel_partner=sub_channel_partner)
+                    OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization,
+                                                          created_by=channel_partner)
                     add_users_to_organization(organization)
                     add_random_users_to_organization(organization)
                     for k in range(25):
-                        CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k + 1}', organization=organization,
+                        sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k + 1}', organization=organization,
                                                               cloud_host=cloud_test_host)
+                        CloudSystemExternalId.objects.create(custom_id=uuid.uuid4(), cloud_system=sys,
+                                                             created_by=channel_partner)
+                        for service in services:
+                            ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys,
+                                                        quantity=random.randint(1, 10))
 
 
