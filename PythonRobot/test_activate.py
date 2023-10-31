@@ -23,7 +23,7 @@ def register_and_activate():
 
 
 def register_and_activate_curly_text():
-    """2  Allows register, activate, login with curly text in First and Last name fields"""
+    """2. Allows register, activate, login with curly text in First and Last name fields"""
     with get_chrome() as driver:
         curly_names = [rb.CYRILLIC_TEXT, rb.SMILEY_TEXT, rb.GLYPH_TEXT, rb.SYMBOL_TEXT]
         for name in curly_names:
@@ -33,7 +33,7 @@ def register_and_activate_curly_text():
 
 
 def register_and_activate_special_chars():
-    """3  Allows register, activate,  login with +!#$%'*-/=\?^_`{\|}~ in email field"""
+    """3. Allows register, activate, login with +!#$%'*-/=\?^_`{\|}~ in email field"""
     with get_chrome() as driver:
         random_email = get_random_email(rb.BASE_EMAIL, symbols=True)
         resource_import.register_and_activate_account(
@@ -43,7 +43,7 @@ def register_and_activate_special_chars():
 
 
 def register_activate_with_leading_space():
-    """4. Allows register, activate, login with with leading space in email"""
+    """4. Allows register, activate, login with leading space in email"""
     # TODO: doesn't work with space, does work without it
     # Bug: https://networkoptix.atlassian.net/browse/CQA-581
     with get_chrome() as driver:
@@ -53,7 +53,7 @@ def register_activate_with_leading_space():
 
 
 def register_activate_with_trailing_space():
-    """5. Allows register, activate, login with with trailing space in email"""
+    """5. Allows register, activate, login with trailing space in email"""
     # TODO: doesn't work with space, does work without it
     # Bug: https://networkoptix.atlassian.net/browse/CQA-581
     with get_chrome() as driver:
