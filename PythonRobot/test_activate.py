@@ -75,7 +75,6 @@ def activate_same_link_twice():
         link = email_message.get_activate_account_link()
     driver.get(link)
     PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
-    # You go back, Jack,  do it again. Wheel turnin' round and round
     driver.get(link)
     PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
 
