@@ -136,7 +136,7 @@ def pressing_tab_key_moves_focus_to_the_next_element():
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.current_password_input().input_text(Keys.TAB)
-        assert change_pass_form.new_password_input().is_focused
+        assert change_pass_form.new_password_input().is_focused()
         change_pass_form.new_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(Keys.TAB)
         assert change_pass_form.save_button().is_focused()
