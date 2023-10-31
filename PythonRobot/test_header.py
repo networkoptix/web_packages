@@ -20,7 +20,7 @@ def anon_header_correct():
         header.resouces_link()
         header.for_developers_link()
         link = header.systems_link()
-        assert link.is_visible()
+        assert not link.is_visible()
         print("PASS")
 
 
