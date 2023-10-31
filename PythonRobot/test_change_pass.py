@@ -136,12 +136,10 @@ def pressing_tab_key_moves_focus_to_the_next_element():
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.current_password_input().input_text(Keys.TAB)
-        if not change_pass_form.new_password_input().is_focused:
-            raise RuntimeError("Element was not focused")
+        assert change_pass_form.new_password_input().is_focused
         change_pass_form.new_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(Keys.TAB)
-        if not change_pass_form.save_button().is_focused():
-            raise RuntimeError("Element was not focused")
+        assert change_pass_form.save_button().is_focused()
         print("pass")
 
 
@@ -152,18 +150,14 @@ def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
         change_pass_form = ChangePassForm(driver)
-        if change_pass_form.current_password_input().field_type() != 'password':
-            raise RuntimeError("Current password field was not of password type")
-        if change_pass_form.new_password_input().field_type() != 'password':
-            raise RuntimeError("New password field was not of password type")
+        assert change_pass_form.current_password_input().field_type() == 'password'
+        assert change_pass_form.new_password_input().field_type() == 'password'
         change_pass_form.current_password_eye_icon_closed().click()
         change_pass_form.current_password_eye_icon_open()
-        if change_pass_form.new_password_input().field_type() != 'text':
-            raise RuntimeError("New password field was not of text type")
+        assert change_pass_form.new_password_input().field_type() == 'text'
         change_pass_form.current_password_eye_icon_open().click()
         change_pass_form.current_password_eye_icon_closed()
-        if change_pass_form.new_password_input().field_type() != 'password':
-            raise RuntimeError("New password field was not of password type")
+        assert change_pass_form.new_password_input().field_type() == 'password'
         print("pass")
 
 
