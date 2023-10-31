@@ -1,5 +1,3 @@
-from time import sleep
-
 import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
