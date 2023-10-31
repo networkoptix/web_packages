@@ -25,13 +25,8 @@ def anon_header_correct():
         header.home_link()
         header.resouces_link()
         header.for_developers_link()
-        try:
-            link = header.systems_link()
-            assert link.is_visible()
-        except:
-            pass
-        else:
-            raise RuntimeError("Systems link is present on Anonymous")
+        link = header.systems_link()
+        assert link.is_visible()
         print("PASS")
 
 def logged_in_header_correct(server: Mediaserver):
