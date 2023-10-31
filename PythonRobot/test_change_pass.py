@@ -15,6 +15,7 @@ from variables import ENV
 password = "qweasd 123"
 rb = RobotVariables("en_US")
 
+
 def can_be_accessed_via_dropdown():
     with get_chrome() as driver:
         email = get_random_email()
@@ -158,6 +159,7 @@ def pressing_tab_key_moves_focus_to_the_next_element():
             raise RuntimeError("Element was not focused")
         print("pass")
 
+
 def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
     with get_chrome() as driver:
         email = get_random_email()
@@ -179,6 +181,7 @@ def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
         if change_pass_form.new_password_input().field_type() != 'password':
             raise RuntimeError("New password field was not of password type")
         print("pass")
+
 
 if __name__ == "__main__":
     can_be_accessed_via_dropdown()
