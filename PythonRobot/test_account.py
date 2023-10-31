@@ -319,8 +319,7 @@ def test_language_change_is_new_default():
         time.sleep(5)
         driver.refresh()
         activeLang = drop_lang_element.text()
-        if activeLang.lower() not in german_code.lower():
-            assert False, f"{activeLang.lower()} not found in {german_code.lower()}"
+        assert activeLang.lower() in german_code.lower(), f"{activeLang.lower()} not found in {german_code.lower()}"
         info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
         resource_import.check_language_logged_in(email, password)
