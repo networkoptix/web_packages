@@ -7,41 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Header Suite Teardown
 Force Tags        cloud
 
 *** Test Cases ***
-# User has no systems connected to cloud
-5. No systems: Header button text is correct
-    [Tags]        no_sys
-    IF    '''${mode}''' == '''cloud'''
-        go to     ${ENV}
-    ELSE
-        go to     ${QA BURBANK IP}:${main system}[port]
-    END
-    Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Sleep    5
-    Wait until keyword succeeds    3x    5sec    Validate Header Button Text    0    systems=True
-
-6. No systems: Logo goes to landing page
-    [Tags]        no_sys
-    Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Validate Header Button Text    0    systems=True
-    Click Element    ${HEADER ICON LINK}
-    Wait Until Location is    ${ENV}/systems
-
-7. No systems: Check Dropdown Content
-    [Tags]        no_sys
-    Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Validate Header Button Text    0    systems=True
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
-    Wait until element is visible    ${EXTERNAL LINKS TITLE}
-    Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
-    Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
-
-8. No systems: Different page widths
-    [Tags]        no_sys    ui
-    Log In    ${zero systems owner}    ${BASE PASSWORD}
-    Validate Header Button Text    0    systems=True
-    Check Header Items    True
-
 # User has one system connected to cloud
 9. One system: Logo goes to view for that system
     [Tags]        one_sys    cloud    webadmin

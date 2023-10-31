@@ -1,3 +1,4 @@
+import logging
 import time
 
 from RobotVariables import RobotVariables
@@ -49,3 +50,37 @@ class LandingPage:
                     continue
             if time.monotonic() - start_time > timeout:
                 raise RuntimeError(f"Wrong location. Expected {ENV}, got {self.driver.current_url}")
+
+
+class MetaLandingPage(LandingPage):
+
+    def get_page(self):
+        return Pane(
+            self.driver,
+            "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
+            )
+
+    def _wait_until_landing_page_is_visible(self):
+        self.get_page().wait_until_visible()
+
+    def _location_is_correct(self, timeout=10):
+        location = "https://metavms.cloud-test.hdw.mx/"
+        start_time = time.monotonic()
+        while True:
+            current_location = self.driver.current_url
+            if time.monotonic() - start_time > timeout:
+                raise RuntimeError(
+                    f"Wrong location. Expected {location}, got {current_location}")
+            try:
+                self.driver.location_should_be(f"{location}")
+                return
+            except RuntimeError as e:
+                if f'Expected url {location}' in str(e):
+                    _logger.info(
+                        "Waiting for location %s. Current location is %s",
+                        location,
+                        current_location,
+                        )
+
+
+_logger = logging.getLogger(__name__)
