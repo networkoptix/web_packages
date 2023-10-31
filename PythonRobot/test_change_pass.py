@@ -27,7 +27,6 @@ def can_be_accessed_via_dropdown():
         header = HeaderNav(driver)
         header.account_dropdown().click()
         header.change_password_option().click()
-
         ChangePassForm(driver).verify_form_is_visible()
         print("pass")
 
@@ -48,16 +47,13 @@ def password_is_actually_changed_and_login_works_with_new_password():
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
-
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text("qweasd1234")
         change_pass_form.save_button().click()
-
         time.sleep(1)
         HeaderNav(driver).log_out()
         LandingPage(driver)
-
         header = HeaderNav(driver)
         header.log_in_button().click()
         login_dialog = LoginDialog(driver)
@@ -75,16 +71,13 @@ def password_with_symbols_is_valid():
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
-
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text('''pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}''')
         change_pass_form.save_button().click()
-
         time.sleep(1)
         HeaderNav(driver).log_out()
         LandingPage(driver)
-
         header = HeaderNav(driver)
         header.log_in_button().click()
         login_dialog = LoginDialog(driver)
@@ -102,16 +95,13 @@ def password_with_space_in_the_middle_is_valid():
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
-
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text('qwea sd 123')
         change_pass_form.save_button().click()
         change_pass_form.no_unsaved_changes_message()
-
         HeaderNav(driver).log_out()
         LandingPage(driver)
-
         header = HeaderNav(driver)
         header.log_in_button().click()
         login_dialog = LoginDialog(driver)
@@ -129,12 +119,10 @@ def pressing_enter_key_saves_data():
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
-
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(Keys.ENTER)
-
         change_pass_form.no_unsaved_changes_message()
         print("pass")
 
@@ -145,16 +133,13 @@ def pressing_tab_key_moves_focus_to_the_next_element():
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
-
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(password)
         change_pass_form.current_password_input().input_text(Keys.TAB)
-
         if not change_pass_form.new_password_input().is_focused:
             raise RuntimeError("Element was not focused")
         change_pass_form.new_password_input().input_text(password)
         change_pass_form.new_password_input().input_text(Keys.TAB)
-
         if not change_pass_form.save_button().is_focused():
             raise RuntimeError("Element was not focused")
         print("pass")
@@ -166,7 +151,6 @@ def displays_password_masked_shows_password_and_changes_eye_icon_when_clicked():
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(f"{ENV}/account/password")
         LoginDialog(driver).basic_cloud_login(email, password)
-
         change_pass_form = ChangePassForm(driver)
         if change_pass_form.current_password_input().field_type() != 'password':
             raise RuntimeError("Current password field was not of password type")
