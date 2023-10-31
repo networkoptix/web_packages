@@ -15,7 +15,8 @@ def register_and_activate():
     """1. Register and Activate"""
     with resource_import.get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
         driver.get(rb.ENV + "/account")
         resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False)
 
@@ -25,13 +26,15 @@ def register_and_activate_curly_text():
         curly_names = [rb.CYRILLIC_TEXT, rb.SMILEY_TEXT, rb.GLYPH_TEXT, rb.SYMBOL_TEXT]
         for name in curly_names:
             random_email = get_random_email(sendemail=True)
-            resource_import.register_and_activate_account(driver, name, name, random_email, rb.BASE_PASSWORD, from_email=False)
+            resource_import.register_and_activate_account(
+                driver, name, name, random_email, rb.BASE_PASSWORD, from_email=False)
 
 def register_and_activate_special_chars():
     """3  Allows register, activate,  login with +!#$%'*-/=\?^_`{\|}~ in email field"""
     with get_chrome() as driver:
         random_email = get_random_email(rb.BASE_EMAIL, symbols=True)
-        resource_import.register_and_activate_account(driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
         driver.get(rb.ENV + "/account")
         resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False)
 
@@ -41,7 +44,8 @@ def register_activate_with_leading_space():
     # Bug: https://networkoptix.atlassian.net/browse/CQA-581
     with get_chrome() as driver:
         random_email = " " + get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(driver, "bla", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "bla", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
 
 def register_activate_with_trailing_space():
     """5. Allows register, activate, login with with trailing space in email"""
@@ -49,15 +53,18 @@ def register_activate_with_trailing_space():
     # Bug: https://networkoptix.atlassian.net/browse/CQA-581
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True) + " "
-        resource_import.register_and_activate_account(driver, "barf", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "barf", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
 
 def register_and_activate_with_special_chars_in_pw():
     """6. Allows register, activate, login with pass!@#$%^&*()_-+=;:'\"`~,./\|?[]{} password"""
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(driver, "#@!k", "Hamil", random_email, rb.SYMBOL_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "#@!k", "Hamil", random_email, rb.SYMBOL_PASSWORD, from_email=False)
         driver.get(rb.ENV + "/account")
-        resource_import.cloud_login(driver, random_email, rb.SYMBOL_PASSWORD, button=None, api=False)
+        resource_import.cloud_login(
+            driver, random_email, rb.SYMBOL_PASSWORD, button=None, api=False)
 
 def activate_same_link_twice():
     """7. Should show activation success if same link is used twice"""
@@ -82,7 +89,8 @@ def save_user_data_correctly():
 
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(driver, "Moo", "Cow", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "Moo", "Cow", random_email, rb.BASE_PASSWORD, from_email=False)
 
         api = CloudPortalAPI()
         user_data = api.get_account_data(random_email, rb.BASE_PASSWORD)
@@ -97,13 +105,15 @@ def truncate_long_names():
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         #resource_import.register_and_activate_account(driver, rb.THREEHUNDREDCHARS, rb.THREEHUNDREDCHARS, random_email, rb.BASE_PASSWORD, from_email=False)
-        resource_import.register_and_activate_account(driver, "bla", "bla", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "bla", "bla", random_email, rb.BASE_PASSWORD, from_email=False)
 
 def trim_leading_spaces():
     """10. Should trim leading spaces in First and Last names"""
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(driver, "   fra ", "   frafra ", random_email, rb.BASE_PASSWORD, from_email=False)
+        resource_import.register_and_activate_account(
+            driver, "   fra ", "   frafra ", random_email, rb.BASE_PASSWORD, from_email=False)
         api = CloudPortalAPI()
         user_data = api.get_account_data(random_email, rb.BASE_PASSWORD)
         assert user_data['first_name'] == "fra"
@@ -114,14 +124,16 @@ def allow_activation_desktop():
 
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register(driver, "darth", "bye", random_email, rb.BASE_PASSWORD, view_type="desktop")
+        resource_import.register(
+            driver, "darth", "bye", random_email, rb.BASE_PASSWORD, view_type="desktop")
         resource_import.activate(driver, random_email, rb.BASE_PASSWORD)
 
 def allow_activation_mobile():
     """12. Should allow activation, if user is registered by link /authorize?client_type=create&view_type=mobile"""
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register(driver, "darth", "desktop", random_email, rb.BASE_PASSWORD, view_type="mobile")
+        resource_import.register(
+            driver, "darth", "desktop", random_email, rb.BASE_PASSWORD, view_type="mobile")
         resource_import.activate(driver, random_email, rb.BASE_PASSWORD)
 
 def link_works_logged_out():
