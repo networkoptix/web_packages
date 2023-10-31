@@ -76,12 +76,10 @@ def register_and_activate_with_special_chars_in_pw():
 def activate_same_link_twice():
     """7. Should show activation success if same link is used twice"""
     random_email = get_random_email(sendemail=True)
-
     with get_chrome() as driver:
         driver.get(f'{rb.ENV}/authorize?client_type=create')
         rf = RegisterForm(driver)
         rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
-
     with EmailClient(email_alias=random_email) as client:
         email_message = client.wait_for_activate_account_email()
         link = email_message.get_activate_account_link()
@@ -93,15 +91,12 @@ def activate_same_link_twice():
 
 def save_user_data_correctly():
     """8. Should save user data to user account correctly"""
-
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         resource_import.register_and_activate_account(
             driver, "Moo", "Cow", random_email, rb.BASE_PASSWORD, from_email=False)
-
         api = CloudPortalAPI()
         user_data = api.get_account_data(random_email, rb.BASE_PASSWORD)
-
         assert user_data['first_name'] == "Moo"
         assert user_data['last_name'] == "Cow"
 
@@ -131,7 +126,6 @@ def trim_leading_spaces():
 
 def allow_activation_desktop():
     """11. Should allow activation, if user is registered by link /authorize?client_type=create&view_type=desktop"""
-
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         resource_import.register(
