@@ -13,7 +13,7 @@ def download_link_is_in_the_footer():
         driver.get(variables.ENV)
         footer = Footer(driver)
         footer.wait_until_footer_is_visible_cloud()
-        footer.get_downloads_link()
+        footer.get_downloads_link().wait_until_visible()
 
 
 # Download link takes you to the /downloads page
