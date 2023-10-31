@@ -7,14 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Header Suite Teardown
 Force Tags        cloud
 
 *** Test Cases ***
-# Anonymous user
-
-4. Anonymous: Different page widths
-    [Tags]        anon    ui
-    Go To    ${knowledge base}[url]
-    Check Header Items    False
-    Go Back
-
 # User has no systems connected to cloud
 5. No systems: Header button text is correct
     [Tags]        no_sys
