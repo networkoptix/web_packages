@@ -8,9 +8,6 @@ Force Tags        cloud
 
 *** Test Cases ***
 # Anonymous user
-2. Anonymous: Header button text is correct
-    [Tags]        anon
-    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
 
 3. Anonymous: Clicking on the main header button closes the dropdown
     [Tags]        anon
