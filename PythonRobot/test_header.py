@@ -13,14 +13,13 @@ def anon_header_correct():
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
-        header.create_account()
-        header.language_dropdown()
-        header.log_in_button()
-        header.home_link()
-        header.resouces_link()
-        header.for_developers_link()
-        link = header.systems_link()
-        assert not link.is_visible()
+        header.create_account().wait_until_visible()
+        header.language_dropdown().wait_until_visible()
+        assert header.log_in_button().is_visible()
+        assert header.home_link().is_visible()
+        assert header.resouces_link().is_visible()
+        assert header.for_developers_link().is_visible()
+        assert not header.systems_link().is_visible()
         print("PASS")
 
 
@@ -32,9 +31,9 @@ def logged_in_header_correct(server: Mediaserver):
         header.log_in_button().click()
         owner = server.get_cloud_owner()
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        header.systems_link()
-        header.resouces_link()
-        header.for_developers_link()
+        header.systems_link().wait_until_visible()
+        assert header.resouces_link().is_visible()
+        assert header.for_developers_link().is_visible()
         print("PASS")
 
 
