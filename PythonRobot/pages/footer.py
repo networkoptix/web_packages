@@ -59,13 +59,13 @@ class Footer:
         return button
 
     def _wait_until_footer_is_visible_webadmin(self):
-        self.api_documentation_link()
-        self.api_download_sdk_link()
-        self.support_link()
-        self.copyright_link()
+        self.api_documentation_link().wait_until_visible()
+        self.api_download_sdk_link().wait_until_visible()
+        self.support_link().wait_until_visible()
+        self.copyright_link().wait_until_visible()
 
     def _wait_until_footer_is_visible_cloud(self):
-        self.support_link()
-        self.copyright_link()
-        self.terms_link()
-        self.privacy_link()
+        self.support_link().wait_until_visible()
+        self.copyright_link().wait_until_visible()
+        self.terms_link().wait_until_visible()
+        self.privacy_link().wait_until_visible()
