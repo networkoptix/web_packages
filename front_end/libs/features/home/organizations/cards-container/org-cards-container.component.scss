@@ -44,6 +44,15 @@
 
 }
 
+.card-content {
+    h3 {
+      width: 90%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
+}
+
 .system-card.cdk-drop-list-receiving .card,
 .system-card.cdk-drop-list-dragging .card {
     opacity: 0.25;

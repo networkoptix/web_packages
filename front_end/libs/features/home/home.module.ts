@@ -19,7 +19,6 @@ import { AuthGuard } from '@guards/authGuard';
 import { SystemsDisplayMode } from '@pages/home/home.types';
 
 import { NxChannelPartnersComponent } from './channel-partners/channel-partners.component';
-import { NxGroupCardComponent } from './components/group-card/group-card.component';
 import { NxSystemGroupsSidebarComponent } from './components/sidebar/sidebar.component';
 import { NxSystemCardComponent } from './components/system-card/system-card.component';
 import { NxHomeComponent } from './home.component';
@@ -28,7 +27,7 @@ import { OrgResolver } from './resolvers/org-resolver';
 import { SubChannelResolver } from './resolvers/subchannel-resolver';
 import { channelPartnersReducer } from './store/channel-partners/channel-partners.reducer';
 import { groupsReducer } from './store/groups/groups.reducer';
-import { NxGroupsSystemsComponent } from './systems/systems.component';
+import { NxSystemsComponent } from './systems/systems.component';
 
 const homeRoutes: Routes = [
     {
@@ -47,14 +46,14 @@ const homeRoutes: Routes = [
                 data: {
                     displayMode: SystemsDisplayMode.Personal,
                 },
-                component: NxGroupsSystemsComponent,
+                component: NxSystemsComponent,
             },
             {
                 path: 'shared',
                 data: {
                     displayMode: SystemsDisplayMode.Shared,
                 },
-                component: NxGroupsSystemsComponent,
+                component: NxSystemsComponent,
             },
             {
                 path: 'organization',
@@ -93,7 +92,6 @@ const homeRoutes: Routes = [
         NxTabsComponent,
         NxSystemGroupsSidebarComponent,
         NxSystemCardComponent,
-        NxGroupCardComponent,
         NxSearchComponent,
         FormsModule,
         NxChannelPartnersComponent,

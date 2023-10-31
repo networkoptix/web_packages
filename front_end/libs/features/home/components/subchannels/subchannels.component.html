@@ -25,6 +25,7 @@
             <div class="px-3 cards-container">
                 <ng-container *ngFor="let channel of filteredSubchannels$$()">
                     <nx-card
+                        class="card-content"
                         (click)="handleChannelClick(channel.id)"
                         [icon]="icons.dir + 'partner.svg'"
                     >

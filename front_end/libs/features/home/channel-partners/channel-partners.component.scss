@@ -15,39 +15,6 @@
     padding: 1rem 1rem 0;
   }
 
-  .card-body{
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-
-    img {
-      width: 70%;
-      height: 70%;
-    }
-
-    .groups{
-      display: flex;
-      gap: .25rem;
-
-      h3 {
-        margin: 0;
-      }
-    }
-
-    .bottom {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-
-      h3{
-        width: 70%;
-        white-space: nowrap;
-        overflow: hidden;
-        text-overflow: ellipsis;
-      }
-    }
-  }
-
   a {
     padding-left: 1rem;
      
@@ -58,5 +25,14 @@
 
   .hidden{
     visibility: none;
+  }
+
+  .card-content {
+    h3 {
+      width: 90%;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+      overflow: hidden;
+    }
   }
 }

@@ -52,6 +52,7 @@
                 <div class="px-3 cards-container">
                     <ng-container *ngFor="let organization of filteredOrganizations$ | async">
                         <nx-card
+                            class="card-content"
                             (click)="handleOrgClick(organization.id)"
                             [icon]="icons.dir + 'organization.svg'"
                             [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"

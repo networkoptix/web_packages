@@ -33,3 +33,12 @@
   @include typography.regular13dark17;
   margin-bottom: 15px;
 }
+
+.card-content {
+  h3 {
+    width: 90%;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+}
