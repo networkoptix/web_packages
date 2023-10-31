@@ -107,7 +107,6 @@ def truncate_long_names():
     # TODO: bug: https://networkoptix.atlassian.net/browse/CQA-580
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        # resource_import.register_and_activate_account(driver, rb.THREEHUNDREDCHARS, rb.THREEHUNDREDCHARS, random_email, rb.BASE_PASSWORD, from_email=False)
         resource_import.register_and_activate_account(
             driver, "bla", "bla", random_email, rb.BASE_PASSWORD, from_email=False)
 
