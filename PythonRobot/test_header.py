@@ -14,6 +14,7 @@ password = "qweasd 123"
 docker_api = DockerApi()
 CLOUD_API = CloudPortalAPI()
 
+
 def anon_header_correct():
     """new: Anonymous Header shows correct items"""
     with get_chrome() as driver:
@@ -29,6 +30,7 @@ def anon_header_correct():
         assert link.is_visible()
         print("PASS")
 
+
 def logged_in_header_correct(server: Mediaserver):
     """new: Logged in Header shows correct items"""
     with get_chrome() as driver:
@@ -41,6 +43,7 @@ def logged_in_header_correct(server: Mediaserver):
         header.resouces_link()
         header.for_developers_link()
         print("PASS")
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
