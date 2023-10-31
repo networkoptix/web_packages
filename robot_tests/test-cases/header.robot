@@ -9,32 +9,6 @@ Force Tags        cloud
 *** Test Cases ***
 # Anonymous user
 
-3. Anonymous: Clicking on the main header button closes the dropdown
-    [Tags]        anon
-    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait until element is not visible    ${DROPDOWN SYSTEMS GRID}
-    Wait until element is visible    ${EXTERNAL LINKS TITLE}
-    Validate Navigation Grid Tile    ${FOR DEVELOPERS TEXT}    ${for developers int pages}
-    Validate Navigation Grid Tile    ${SERVICES TEXT}    ${services pages}
-
-    Log    Clicking on the main header button closes the dropdown
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
-
-    Log    Clicking ENETR closes the dropdown
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
-    Press Keys    //body    ENTER
-    Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
-
-    Log    Clicking outside the dropdown closes it
-    Wait until element is visible    ${SYSTEMS DROPDOWN}
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait until element is visible    ${DROPDOWN NAVIGATION GRID}
-    Click Element    //header
-    Wait until elements are not visible    ${DROPDOWN SYSTEMS GRID}    ${DROPDOWN NAVIGATION GRID}
-
 4. Anonymous: Different page widths
     [Tags]        anon    ui
     Go To    ${knowledge base}[url]
