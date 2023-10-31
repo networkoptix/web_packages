@@ -286,7 +286,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         archiveRanges: Record<string, BaseTimeRange>,
     ): ViewCamera {
         this.hasCameras = true;
-        const currentUser = this.system?.permissionManager.currentUser();
+        const currentUser = this.system?.permissionManager.currentUser$$();
         const canEditSpecificCamera =
             currentUser?.resourceAccessRights?.[dirtyId(c.id)]?.includes('edit');
         const canEdit = canEditSpecificCamera || currentUser.isAdmin;
