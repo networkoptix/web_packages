@@ -78,8 +78,7 @@ def activate_same_link_twice():
     random_email = get_random_email(sendemail=True)
     with get_chrome() as driver:
         driver.get(f'{rb.ENV}/authorize?client_type=create')
-        rf = RegisterForm(driver)
-        rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
+        RegisterForm(driver).register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
     with EmailClient(email_alias=random_email) as client:
         email_message = client.wait_for_activate_account_email()
         link = email_message.get_activate_account_link()
@@ -95,8 +94,7 @@ def save_user_data_correctly():
         random_email = get_random_email(sendemail=True)
         resource_import.register_and_activate_account(
             driver, "Moo", "Cow", random_email, rb.BASE_PASSWORD, from_email=False)
-        api = CloudPortalAPI()
-        user_data = api.get_account_data(random_email, rb.BASE_PASSWORD)
+        user_data = CloudPortalAPI().get_account_data(random_email, rb.BASE_PASSWORD)
         assert user_data['first_name'] == "Moo"
         assert user_data['last_name'] == "Cow"
 
@@ -116,8 +114,7 @@ def trim_leading_spaces():
         random_email = get_random_email(sendemail=True)
         resource_import.register_and_activate_account(
             driver, "   fra ", "   frafra ", random_email, rb.BASE_PASSWORD, from_email=False)
-        api = CloudPortalAPI()
-        user_data = api.get_account_data(random_email, rb.BASE_PASSWORD)
+        user_data = CloudPortalAPI().get_account_data(random_email, rb.BASE_PASSWORD)
         assert user_data['first_name'] == "fra"
         assert user_data['last_name'] == "frafra"
 
@@ -150,8 +147,7 @@ def login_before_activation():
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         driver.get(f'{rb.ENV}/authorize?client_type=create')
-        rf = RegisterForm(driver)
-        rf.register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
+        RegisterForm(driver).register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
         with EmailClient(email_alias=random_email) as client:
             email_message = client.wait_for_activate_account_email()
             email_message.get_activate_account_link()
