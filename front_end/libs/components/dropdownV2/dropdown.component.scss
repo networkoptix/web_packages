@@ -37,7 +37,6 @@ $paddingBottom: 5px;
     line-height: calc(2rem - $paddingTop - $paddingBottom);
 }
 
-// TODO: dropdown arrow should flip
 .dropdown-arrow {
     padding: $paddingTop 10px $paddingBottom 0px;
 
@@ -56,7 +55,7 @@ $paddingBottom: 5px;
     box-shadow: var(--dropdown-menu-shadow);
     flex-grow: 1;
     max-height: 302px;
-    overflow-y: scroll;
+    overflow-y: auto;
 }
 
 .placeholder {
@@ -68,4 +67,18 @@ $paddingBottom: 5px;
 
 :host {
     width: 100%;
+}
+
+.rotationTransition {
+    -webkit-transition: .2s ease-in-out;
+    -moz-transition: .2s ease-in-out;
+    -o-transition: .2s ease-in-out;
+    transition: .2s ease-in-out;
+}
+
+.rotate {
+    -webkit-transform: rotateX(180deg);
+    -moz-transform: rotateX(180deg);
+    -o-transform: rotateX(180deg);
+    transform: rotateX(180deg);
 }
