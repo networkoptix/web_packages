@@ -100,20 +100,6 @@ Force Tags        cloud
 
 # Other cases
 
-26. Check external links - For Developers
-    [Tags]        other
-    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}
-    Wait Until Element Is Not Visible    ${DROPDOWN SYSTEMS GRID}
-    ${links names}=   Get External Links Names   ${FOR DEVELOPERS TEXT}
-    FOR    ${name}    IN    @{links names}
-        ${actual url}=   Get Element Attribute    ${FOR DEVELOPERS LINK}\[contains(text(), "${name}")]    href
-        ${expected url}=    Get From Dictionary    ${FOR DEVS EXTERNAL LINKS}    ${name}
-        Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
-    END
-    Click Element    ${SYSTEMS DROPDOWN}
-
 27. Check External links
     [Tags]        other
     Validate Header Button Text    ${ALL SITE TEXT}    systems=False
