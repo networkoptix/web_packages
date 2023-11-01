@@ -40,9 +40,12 @@ class LandingPage:
 
     def _location_is_correct(self, timeout=10):
         start_time = time.monotonic()
-        while start_time + timeout < time.monotonic():
+        while True:
             try:
                 self.driver.location_should_be(f"{ENV}")
-                break
-            except:
-                pass
+                return
+            except RuntimeError as e:
+                if f'Expected url {ENV}' in str(e):
+                    continue
+            if time.monotonic() - start_time > timeout:
+                raise RuntimeError(f"Wrong location. Expected {ENV}, got {self.driver.current_url}")
