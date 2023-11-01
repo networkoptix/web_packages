@@ -13,7 +13,7 @@ from mock.mock import MagicMock
 
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser, \
-    ChannelPartnerServiceRecord, ChannelPartnerRole
+    ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates
 from partners.views import CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet, \
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet
 
@@ -154,8 +154,7 @@ class TestCloudSystemViewSet:
         mocked_batch_request_data.assert_not_called()
 
     def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
-                              arf, system_factory, mock_auth_with_user, cp_service_factory, service_record_factory,
-                              transactional_db):
+                              arf, system_factory, mock_auth_with_user, cp_service_factory, service_record_factory):
         root = channel_partner_factory(parent_channel_partner=None)
         child = channel_partner_factory(parent_channel_partner=root)
         root_user = cp_user_factory(channel_partner=root)
@@ -171,39 +170,42 @@ class TestCloudSystemViewSet:
 
         mock_auth_with_user(child_user)
         req.user = child_user.user
-        response = view(req, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(req, system_id=str(system.system_id))
 
         assert response.status_code == 403
 
         mock_auth_with_user(root_user)
         req.user = root_user.user
-        response = view(req, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(req, system_id=str(system.system_id))
         assert response.status_code == 200
 
         root.allow_changing_services = True
         root.save()
         req.user = root_user.user
-        response = view(req, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(req, system_id=str(system.system_id))
         assert response.status_code == 200
-
 
     def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
                                     mock_auth_with_user, arf, mocker):
         assert ChannelPartnerRole.objects.all().count() > 0
-
         cp = channel_partner_factory(acs=True)
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
         services = [cp_service_factory(channel_partner=cp) for _ in range(2)]
-        service_records = [service_record_factory(service=service, cloud_system=system, quantity=10, organization=system.organization)
+        service_records = [service_record_factory(service=service, cloud_system=system,
+                                                  quantity=10, organization=system.organization)
                            for service in services]
         mock_auth_with_user(cp_user)
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
         # test successful request
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 200
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
@@ -212,7 +214,8 @@ class TestCloudSystemViewSet:
         mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=False)
         caches['default'].set(CloudSystemViewSet.get_service_quantity_lock(system), 1)
         request = arf.patch('/', data={"services": {str(services[1].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 429
         assert response.headers['Retry-After'] == '2'
 
@@ -233,7 +236,8 @@ class TestCloudSystemViewSet:
         # test successful request and second service value
         mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 200
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
@@ -243,8 +247,32 @@ class TestCloudSystemViewSet:
         cp.save()
         mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 403
+
+    def test_service_quantity_patch_shutdown(selfself, channel_partner_factory, organization_factory, cp_user_factory,
+                                    service_record_factory, cp_service_factory, system_factory,
+                                    mock_auth_with_user, arf, mocker):
+        assert ChannelPartnerRole.objects.all().count() > 0
+        cp = channel_partner_factory(acs=True)
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org, state=ChannelPartnerStates.SHUTDOWN)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(2)]
+        service_records = [service_record_factory(service=service, cloud_system=system,
+                                                  quantity=10, organization=system.organization)
+                           for service in services]
+        mock_auth_with_user(cp_user)
+        view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
+
+        # test shutdown system change
+        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
+        request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
+
+        response = view(request, system_id=str(system.system_id))
+        assert response.status_code == 400
+        assert "Services quantity cannot be changed." in response.data['services'][0]
 
 
 class TestOrganizationUserViewSet:

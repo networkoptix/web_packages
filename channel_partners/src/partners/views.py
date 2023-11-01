@@ -689,10 +689,15 @@ class CloudSystemViewSet(NestedViewSetMixin,
         serializer = SaaSReportSerializer(system)
         return Response(serializer.data)
 
-    @extend_schema(summary='Get service quantities for a System', methods=['GET'], extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
-    @extend_schema(summary='Set service quantities for a System', methods=['PATCH'], responses={'200': SystemServiceQuantitySerializer, '429': ErrorMessageSerializer},
+    @extend_schema(summary='Get service quantities for a System', methods=['GET'],
+                   extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
+    @extend_schema(summary='Set service quantities for a System', methods=['PATCH'],
+                   responses={'200': SystemServiceQuantitySerializer,
+                              '429': ErrorMessageSerializer,
+                              '400': ErrorMessageSerializer},
                    extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_service_quantities} for Organization\'s Channel Partner'})
-    @extend_schema(auth=[{'Cloud Oauth Token': []}], request=SystemServiceQuantitySerializer, responses=SystemServiceQuantitySerializer)
+    @extend_schema(auth=[{'Cloud Oauth Token': []}], request=SystemServiceQuantitySerializer,
+                   responses=SystemServiceQuantitySerializer)
     @action(methods=['get', 'patch'], detail=True)
     def service_quantity(self, request, system_id):
         system: CloudSystemId = self.get_object()
@@ -703,24 +708,24 @@ class CloudSystemViewSet(NestedViewSetMixin,
             return self.update_service_quantity(request, system=system)
 
     def update_service_quantity(self, request, system):
-            lock_val = f'{uuid4()}'
-            if not caches['default'].add(self.get_service_quantity_lock(system), lock_val, timeout=60):
-                wait = 0
-                while caches['default'].get(self.get_service_quantity_lock(system)):
-                    sleep(0.2)
-                    if (wait := wait + 0.2) >= VIEW_LOCK_WAIT_TIME:
-                        return Response(data={"message": f"System {system.system_id} service "
-                                                         f"quantity was being modified during request."},
-                                        status=429, headers={'Retry-After': 2})
-                return self.update_service_quantity(request, system=system)
-            serializer = SystemServiceQuantitySerializer(system, data=request.data)
-            if serializer.is_valid(raise_exception=False):
-                serializer.save(user=request.user)
-                caches['default'].delete(self.get_service_quantity_lock(system))
-            else:
-                caches['default'].delete(self.get_service_quantity_lock(system))
-                serializer.is_valid(raise_exception=True)
-            return Response(serializer.data)
+        lock_val = f'{uuid4()}'
+        if not caches['default'].add(self.get_service_quantity_lock(system), lock_val, timeout=60):
+            wait = 0
+            while caches['default'].get(self.get_service_quantity_lock(system)):
+                sleep(0.2)
+                if (wait := wait + 0.2) >= VIEW_LOCK_WAIT_TIME:
+                    return Response(data={"message": f"System {system.system_id} service "
+                                                     f"quantity was being modified during request."},
+                                    status=429, headers={'Retry-After': 2})
+            return self.update_service_quantity(request, system=system)
+        serializer = SystemServiceQuantitySerializer(system, data=request.data)
+        if serializer.is_valid(raise_exception=False):
+            serializer.save(user=request.user)
+            caches['default'].delete(self.get_service_quantity_lock(system))
+        else:
+            caches['default'].delete(self.get_service_quantity_lock(system))
+            serializer.is_valid(raise_exception=True)
+        return Response(serializer.data)
 
     @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['get'], detail=True)

@@ -465,23 +465,6 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
     class ServiceQuantitySerializer(serializers.Serializer):
         quantity = serializers.IntegerField(required=True)
 
-    def validate_services(self, value: dict):
-        errors = []
-        for service_id, service_qty in value.items():
-            err = ''
-            if not ChannelPartnerService.objects.filter(id=service_id).exists():
-                err += f'Service {service_id} does not exist'
-            ser = self.ServiceQuantitySerializer(data=service_qty)
-            if not ser.is_valid():
-                err += ', Quantity is invalid:' + ' '.join(ser.errors['quantity'])
-                err += '.'
-            if err := err.strip():
-                errors.append(err)
-        if errors:
-            raise exceptions.ValidationError(detail=' '.join(errors))
-        return value
-
-
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
         user = validated_data.get('user')
@@ -502,6 +485,23 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
         return instance
 
     def validate_services(self, value: dict):
+        if self.instance.effective_state == ChannelPartnerStates.SHUTDOWN:
+            raise exceptions.ValidationError(detail=f"System {self.instance.system_id} service is in "
+                                                    f"shutdown state. Services quantity cannot be changed.")
+        errors = []
+        for service_id, service_qty in value.items():
+            err = ''
+            if not ChannelPartnerService.objects.filter(id=service_id).exists():
+                err += f'Service {service_id} does not exist'
+            ser = self.ServiceQuantitySerializer(data=service_qty)
+            if not ser.is_valid():
+                err += ', Quantity is invalid:' + ' '.join(ser.errors['quantity'])
+                err += '.'
+            if err := err.strip():
+                errors.append(err)
+        if errors:
+            raise exceptions.ValidationError(detail=' '.join(errors))
+
         existing_services = self.instance.calculate_current_services()
         services = {service: value[str(service.id)] for service in
                     ChannelPartnerService.objects.filter(id__in=list(value.keys()))}
