@@ -87,7 +87,8 @@
                         node.type === RESOURCE_TYPE.LAYOUT ||
                         !node.type
                     "
-                    (click)="node.type && layoutGridService.changeView.next(node)"
+                    (click)="handleSingleClick(node)"
+                    (dblclick)="handleDoubleClick(node)"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
                             event: $event,

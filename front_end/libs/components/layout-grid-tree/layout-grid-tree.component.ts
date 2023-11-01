@@ -19,8 +19,9 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Observable, Subject, combineLatest, timer } from 'rxjs';
+import { BehaviorSubject, Observable, Subject, combineLatest, of, timer } from 'rxjs';
 import {
+    delay,
     distinctUntilChanged,
     filter,
     map,
@@ -31,6 +32,7 @@ import {
     takeUntil,
     tap,
 } from 'rxjs/operators';
+import { v4 as uuid } from 'uuid';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
@@ -38,12 +40,15 @@ import {
     MenuItemsOrMenuItemsCallback,
 } from '@components/context-menu/context-menu.types';
 import { EditableModule } from '@components/editable/editable.module';
-import { assertResourceParentNode } from '@components/layout-grid/layout-grid.type-guards';
+import {
+    assertResourceOfType,
+    assertResourceParentNode,
+} from '@components/layout-grid/layout-grid.type-guards';
 import {
     BaseResourceNode,
-    LayoutRenderConfig,
+    LayoutResourceTree,
     MergedResourceNode,
-    ParsedLayoutItems,
+    Point,
     ResourceNode,
     ResourceNodeMap,
     ResourceType,
@@ -69,12 +74,14 @@ import { LayoutStateService } from '@services/layout-state/layout-state.service'
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { MutationType } from '@services/param-state/param-state.types';
-import { Layout } from '@services/system-api.types';
+import { Layout, LayoutItem } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+
+type GridBoundary = Pick<LayoutItem, 'top' | 'left' | 'bottom' | 'right'>;
 
 const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
     dataSource: DataType[],
@@ -128,6 +135,105 @@ const findNode = (
     }
 };
 
+const enum Direction {
+    RIGHT = 0,
+    DOWN = 1,
+    LEFT = 2,
+    UP = 3,
+}
+
+function* openSpotGenerator(existingItems: LayoutItem[], origin: Point): Generator<Point> {
+    const hasCollision = ({ x, y }: Point): boolean =>
+        existingItems.some(
+            ({ top, bottom, left, right }) =>
+                left < x + 1 && right > x && top < y + 1 && bottom > y,
+        );
+
+    let x = 0;
+    let y = 0;
+    let layer = 1;
+    let leg: Direction = Direction.RIGHT;
+
+    while (true) {
+        const point = { x: x + origin.x, y: y + origin.y };
+
+        if (!hasCollision(point)) {
+            yield point;
+        }
+
+        switch (leg) {
+            case Direction.RIGHT:
+                x++;
+                if (x === layer) {
+                    leg++;
+                }
+                break;
+            case Direction.DOWN:
+                y++;
+                if (y === layer) {
+                    leg++;
+                }
+                break;
+            case Direction.LEFT:
+                x--;
+                if (-x === layer) {
+                    leg++;
+                }
+                break;
+            case Direction.UP:
+                y--;
+                if (-y === layer) {
+                    leg = 0;
+                    layer++;
+                }
+                break;
+        }
+    }
+}
+
+const createAddedItems = (currentItems: LayoutItem[], itemsToAdd: LayoutItem[]): LayoutItem[] => {
+    const updateBoundary = (
+        { top, left, bottom, right }: GridBoundary,
+        item: LayoutItem,
+    ): GridBoundary => ({
+        top: Math.max(top, item.top),
+        left: Math.min(left, item.left),
+        bottom: Math.min(bottom, item.bottom),
+        right: Math.max(right, item.right),
+    });
+
+    const gridBoundary: GridBoundary = currentItems.length
+        ? currentItems.reduce(updateBoundary, {
+              top: -Infinity,
+              left: Infinity,
+              bottom: Infinity,
+              right: -Infinity,
+          })
+        : {
+              top: 0,
+              left: 0,
+              bottom: 0,
+              right: 0,
+          };
+
+    const origin = {
+        x: Math.round((gridBoundary.left + gridBoundary.right - 2) / 2),
+        y: Math.round((gridBoundary.top + gridBoundary.bottom - 2) / 2),
+    };
+
+    const mappedItems: LayoutItem[] = [];
+
+    for (const { x, y } of openSpotGenerator(currentItems, origin)) {
+        const position = { top: y, left: x, bottom: y + 1, right: x + 1 };
+        mappedItems.push({ ...itemsToAdd[mappedItems.length], ...position, id: uuid() });
+        if (mappedItems.length >= itemsToAdd.length) {
+            break;
+        }
+    }
+
+    return [...currentItems, ...mappedItems];
+};
+
 @UntilDestroy()
 @Component({
     selector: 'nx-layout-grid-tree',
@@ -164,14 +270,10 @@ const findNode = (
     styleUrls: ['./layout-grid-tree.component.scss'],
 })
 export class NxLayoutGridTreeComponent {
-    @Input() layout: {
-        items: ParsedLayoutItems;
-        renderConfig: LayoutRenderConfig;
-        locked?: boolean;
-        id?: string;
-    };
+    @Input() layout: Layout;
     @Input() system: NxSystem;
     @Input() dataSource: BaseResourceNode[];
+    @Input() layoutItemLookup: LayoutResourceTree;
     @Input() treeControl: NestedTreeControl<ResourceNode, string>;
     @Input() errorIcons: Record<string, string>;
     @Input() dragging: boolean;
@@ -352,6 +454,95 @@ export class NxLayoutGridTreeComponent {
                 action: () => this.layoutStateService.discardUnsavedLayout(node.details.id),
             },
         ];
+    };
+
+    doubleClick$ = new Subject<true>();
+
+    handleSingleClick = (node: ResourceNode): void => {
+        if (node.type) {
+            of(node)
+                .pipe(delay(250), takeUntil(this.doubleClick$))
+                .subscribe(node => this.layoutGridService.changeView.next(node));
+        }
+    };
+
+    createLayoutItem = (id: string): LayoutItem => {
+        let rotation = 0;
+        const resourceId = dirtyId(id);
+        const unknownItem = this.layoutItemLookup?.[resourceId];
+
+        if (assertResourceOfType.camera(unknownItem)) {
+            rotation = unknownItem.details.parameters?.rotation ?? 0;
+        }
+
+        return {
+            bottom: 0,
+            contrastParams: {
+                blackLevel: 0.001,
+                enabled: false,
+                gamma: 1,
+                whiteLevel: 0.0005,
+            },
+            controlPtz: false,
+            dewarpingParams: {
+                enabled: false,
+                fov: 1.2217304763960306,
+                panoFactor: 1,
+                xAngle: 0,
+                yAngle: 0,
+            },
+            displayAnalyticsObjects: false,
+            displayInfo: false,
+            displayRoi: false,
+            flags: 1,
+            id: uuid(),
+            left: 0,
+            resourceId,
+            resourcePath: '',
+            right: 0,
+            rotation,
+            top: 0,
+            zoomBottom: 0,
+            zoomLeft: 0,
+            zoomRight: 0,
+            zoomTargetId: '{00000000-0000-0000-0000-000000000000}',
+            zoomTop: 0,
+        };
+    };
+
+    handleDoubleClick = (node: ResourceNode): void => {
+        if (!this.CONFIG.featureFlags.layoutsEditable) {
+            return;
+        }
+        this.doubleClick$.next(true);
+        const itemsToAdd = assertResourceOfType.layout(node)
+            ? node.details.items
+            : [dirtyId(node.details?.id || '')].map(this.createLayoutItem);
+
+        if (!itemsToAdd.length) {
+            return;
+        }
+        const updatedLayout = {
+            ...this.layout,
+            items: createAddedItems(this.layout.items, itemsToAdd),
+        };
+        const currentUser = this.system.permissionManager.currentUser$$();
+
+        const focusView = this.layout.name === this.layoutStateService.focusViewToken;
+
+        if (
+            (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) ||
+            this.layout.locked ||
+            focusView
+        ) {
+            if (focusView) {
+                this.layoutStateService.createNewLocalLayout(updatedLayout.items);
+            } else {
+                this.layoutStateService.duplicateLayoutAsNewLocalLayout(updatedLayout);
+            }
+        } else {
+            this.layoutStateService.updateLayout(updatedLayout);
+        }
     };
 
     getLayoutShareActions = (
