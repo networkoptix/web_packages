@@ -100,7 +100,7 @@ Force Tags        cloud
 
 # Other cases
 25. Check header and dropdown content for not admins
-    [Tags]        other    CLOUD-6794    CLOUD-7200
+    [Tags]        other
     FOR    ${user}    IN
         ...    ${main system}[cloud users][viewer]
         ...    ${main system}[cloud users][liveViewer]
