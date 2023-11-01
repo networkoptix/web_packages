@@ -102,6 +102,34 @@ def check_header_and_dropdown_content_for_not_admins(cloud_user: CloudAccount):
         print("PASS")
 
 
+def check_header_for_many_systems_user(cloud_user: CloudAccount):
+    with get_chrome() as driver:
+        driver.get(ENV)
+        cloud_login(driver, cloud_user.email, cloud_user.password)
+        header = HeaderNav(driver)
+        systems_page = SystemsPage(driver)
+        header.my_systems_button().wait_until_visible()
+        assert header.is_logged_in()
+        assert header.systems_link().is_visible()
+        assert header.resouces_link().is_visible()
+        assert header.for_developers_link().is_visible()
+        systems_page.tiles[0].click()
+        system_administration = SystemAdmin(driver)
+        assert header.is_logged_in()
+        assert header.systems_link().is_visible()
+        assert header.resouces_link().is_visible()
+        assert header.for_developers_link().is_visible()
+        assert not header.my_systems_button().is_visible()
+        system_administration.get_not_active_tab_by_name('View').wait_until_visible()
+        system_administration.get_not_active_tab_by_name('Bookmarks').wait_until_visible()
+        system_administration.get_active_tab_by_name('Settings').wait_until_visible()
+        system_administration.get_not_active_tab_by_name('Information').wait_until_visible()
+        system_administration.get_not_active_tab_by_name('Monitoring').wait_until_visible()
+        system_administration.get_back_arrow_button().click()
+        SystemsPage(driver)
+        print("PASS")
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -117,3 +145,8 @@ if __name__ == "__main__":
         check_header_and_dropdown_content_for_not_admins(cloud_server.get_cloud_live_viewer())
         check_header_and_dropdown_content_for_not_admins(cloud_server.get_cloud_advanced_viewer())
         check_header_and_dropdown_content_for_not_admins(cloud_server.get_cloud_custom_user())
+        second_cloud_server = suite.create_cloud_server(
+            cloud_owner,
+            f'{suite_name}_2_',
+            )
+        check_header_for_many_systems_user(cloud_owner)

@@ -283,6 +283,10 @@ class SystemAdmin:
     def get_advanced_settings_block(self):
         return _AdvancedSettings(self.driver)
 
+    def get_back_arrow_button(self):
+        locator = "//header//nx-header-logo-area//div[@class='arrow-btn ng-star-inserted']"
+        return Button(self.driver, locator)
+
 
 class FailedToAccessSystemPage:
 
