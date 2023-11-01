@@ -5,7 +5,7 @@ from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
-from system_tile import SystemTile
+from pages.system_tile import SystemTile
 from variables import ENV
 
 
