@@ -136,7 +136,10 @@
             </header>
             <ng-template #notMine>
                 <nx-section>
-                    <span class="system-owner">
+                    <span
+                        *ngIf="userRole()"
+                        class="system-owner"
+                    >
                         <ng-container *ngIf="!showNewText; else newText">
                             <span
                                 translate
@@ -152,10 +155,35 @@
                             >
                         </ng-template>
                         <span>&nbsp;– </span>
-                        <span
-                            class="name"
-                            [innerText]="userRole() | translate"
-                        ></span>
+                        <ng-container *ngIf="permissionGroupsCount > 1; else oneGroup">
+                            <span
+                                class="group-count-container"
+                                [nxTooltip]="userGroups"
+                                horizontal
+                                alternateSecondary
+                            >
+                                <ng-template #userGroups>
+                                    <nx-ml-ellipsis
+                                        [viewHeight]="126"
+                                        [viewLineHeight]="21"
+                                        [viewLines]="6"
+                                    >
+                                        {{ userRole() }}
+                                    </nx-ml-ellipsis>
+                                </ng-template>
+                                <span
+                                    class="group-count"
+                                    [translate]="LANG.groupCount"
+                                    [translateParams]="{ count: permissionGroupsCount }"
+                                ></span>
+                            </span>
+                        </ng-container>
+                        <ng-template #oneGroup>
+                            <span
+                                class="name"
+                                [innerText]="userRole() | translate"
+                            ></span>
+                        </ng-template>
                     </span>
                     <div
                         class="mt-2"

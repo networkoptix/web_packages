@@ -16,6 +16,7 @@
     "productName": "",
     "NofM": "{n} of {m}",
     "downloadBookmark": "Download {title}",
+    "groupCount": "{count} Groups",
     "exclude": {
         "nested": "{start}{end}"
     },

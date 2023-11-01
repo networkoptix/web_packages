@@ -19,5 +19,15 @@
 
     .system-owner span {
         color: var(--system-admin-info-text);
+
+        &.group-count-container {
+            border-bottom: 2px dashed var(--anchor-color);
+            font-weight: bolder;
+            cursor: pointer;
+        }
+
+        .group-count, .groups-text {
+            color: var(--anchor-color);
+        }
     }
 }
