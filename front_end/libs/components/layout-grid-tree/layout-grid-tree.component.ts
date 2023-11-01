@@ -186,15 +186,18 @@ export class NxLayoutGridTreeComponent {
 
     initialDataSource$ = new BehaviorSubject<BaseResourceNode[]>([]);
 
+    lastQuery = '';
+
     dataSource$ = combineLatest([this.query$, this.initialDataSource$]).pipe(
         // Filter here
         tap(([query]) => {
             if (query) {
                 this.dataSource.forEach(node => this.treeControl.expand(node));
-            } else {
+            } else if (!query && this.lastQuery) {
                 this.treeControl.collapseAll();
                 this.expandNodesFromParams();
             }
+            this.lastQuery = query;
         }),
         map(([query, dataSource]) =>
             filterSearch(
