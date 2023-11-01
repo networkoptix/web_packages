@@ -19,8 +19,6 @@ from generic_elements import PageText
 from generic_elements import TabItem
 from generic_elements import TextField
 from generic_elements import ToastNotification
-from generic_elements._wrappers import ModalDialog
-from pages.login import LoginDialog
 from pages.system_admin_tab_information import TabInformation
 from pages.system_admin_tab_settings import TabSettings
 from pages.system_left_menu import SystemLeftMenu
