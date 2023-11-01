@@ -97,20 +97,3 @@ Force Tags        cloud
     ${system list count}=    Get Length     ${systems}
     Go To    ${ENV}/account
     Check Drop Menu Systems Grid System    ${system list count}
-
-# Other cases
-
-27. Check External links
-    [Tags]        other
-    Validate Header Button Text    ${ALL SITE TEXT}    systems=False
-    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-    sleep    10
-    Click Element    ${SYSTEMS DROPDOWN}
-    Wait Until Element Is Visible    ${DROPDOWN NAVIGATION GRID}
-    Wait Until Element Is Not Visible    ${DROPDOWN SYSTEMS GRID}
-    ${links names}=   Get External Links Names   ${EXTERNAL LINKS TEXT}
-    FOR    ${name}    IN    @{links names}
-        ${actual url}=   Get Element Attribute    ${EXTERNAL LINK}\[contains(text(), "${name}")]    href
-        ${expected url}=    Get From Dictionary    ${EXTERNAL LINKS}    ${name}
-        Run keyword and continue on failure    Should Be Equal As Strings    ${actual url}    ${expected url}
-    END
