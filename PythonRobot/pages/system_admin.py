@@ -218,6 +218,24 @@ class SystemAdmin:
             self.rb,
             )
 
+    def get_view_tab_button(self) -> Button:
+        return Button(
+            self.driver,
+            "//header//nx-header-level-two//a[contains(text(),'View')]",
+            )
+
+    def get_bookmarks_tab_button(self) -> Button:
+        return Button(
+            self.driver,
+            "//header//nx-header-level-two//a[contains(text(),'Bookmarks')]",
+            )
+
+    def get_monitoring_tab_button(self) -> Button:
+        return Button(
+            self.driver,
+            "//header//nx-header-level-two//a[contains(text(),'Monitoring')]",
+            )
+
     def _wait_for_tab_loaded(self, locator: str):
         """
         Problem: the Information tab and another couldn't appear without switching to another tab or refreshing the page.

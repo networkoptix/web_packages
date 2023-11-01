@@ -1,11 +1,12 @@
 from pathlib import Path
 
-from NoptixLibrary.suite import Mediaserver
+from NoptixLibrary.suite import Mediaserver, CloudAccount
 from NoptixLibrary.suite import Suite
 from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.landing_page import MetaLandingPage
 from pages.login import LoginDialog
+from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
 from resource_import import cloud_login
 from resource_import import get_chrome
@@ -63,6 +64,25 @@ def no_systems_header_button_text_is_correct():
         print("PASS")
 
 
+def one_system_check_header(cloud_user: CloudAccount):
+    with get_chrome() as driver:
+        driver.get(ENV)
+        cloud_login(driver, cloud_user.email, cloud_user.password)
+        system_administration = SystemAdmin(driver)
+        header = HeaderNav(driver)
+        assert header.is_logged_in()
+        assert header.systems_link().is_visible()
+        assert header.resouces_link().is_visible()
+        assert header.for_developers_link().is_visible()
+        assert not header.my_systems_button().is_visible()
+        system_administration.get_view_tab_button().wait_until_visible()
+        system_administration.get_bookmarks_tab_button().wait_until_visible()
+        system_administration.get_tab_settings()
+        system_administration.get_information_tab()
+        system_administration.get_monitoring_tab_button().wait_until_visible()
+        print("PASS")
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -72,3 +92,4 @@ if __name__ == "__main__":
         anon_header_correct()
         logged_in_header_correct(cloud_server)
         no_systems_header_button_text_is_correct()
+        one_system_check_header(cloud_owner)
