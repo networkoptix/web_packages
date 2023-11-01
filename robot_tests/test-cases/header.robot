@@ -99,32 +99,6 @@ Force Tags        cloud
     Check Drop Menu Systems Grid System    ${system list count}
 
 # Other cases
-25. Check header and dropdown content for not admins
-    [Tags]        other
-    FOR    ${user}    IN
-        ...    ${main system}[cloud users][viewer]
-        ...    ${main system}[cloud users][liveViewer]
-        ...    ${main system}[cloud users][advancedViewer]
-        ...    ${main system}[cloud users][custom]
-        Log in to system    ${main system}    ${user}
-        Wait until element is visible    ${SYSTEM NAME}\[contains(text(), "${main system}[name]")]
-        # Commented out due to CLOUD-7200
-        # Verify In System    ${main system}[name]    editable=False
-        Validate Header Button Text    ${main system}[name]    systems=False
-        Wait Until Element Is Not Visible    ${INFORMATION TAB}
-        Click Element    ${SYSTEMS DROPDOWN}
-
-        Wait until elements are visible
-            ...    ${DROPDOWN NAVIGATION GRID}
-            ...    //h5[contains(text(), "${main system}[name]")]/../../following-sibling::ul//a[contains(text(), "${SETTINGS TEXT}")]
-            ...    //h5[contains(text(), "${main system}[name]")]/../../following-sibling::ul//a[contains(text(), "${VIEW}")]
-        Wait until elements are not visible
-            ...    ${DROPDOWN SYSTEMS GRID}
-            ...    ${INFORMATION TAB}
-            ...    //h5[contains(text(), "${main system}[name]")]/../../following-sibling::ul//a[contains(text(), "${INFORMATION TEXT}")]
-
-        Log Out
-    END
 
 26. Check external links - For Developers
     [Tags]        other

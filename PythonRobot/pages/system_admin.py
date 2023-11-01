@@ -218,22 +218,16 @@ class SystemAdmin:
             self.rb,
             )
 
-    def get_view_tab_button(self) -> Button:
+    def get_active_tab_by_name(self, name: str) -> Button:
         return Button(
             self.driver,
-            "//header//nx-header-level-two//a[contains(text(),'View')]",
+            f"//header//nx-header-level-two//div[contains(text(),'{name}')]",
             )
 
-    def get_bookmarks_tab_button(self) -> Button:
+    def get_not_active_tab_by_name(self, name: str) -> Button:
         return Button(
             self.driver,
-            "//header//nx-header-level-two//a[contains(text(),'Bookmarks')]",
-            )
-
-    def get_monitoring_tab_button(self) -> Button:
-        return Button(
-            self.driver,
-            "//header//nx-header-level-two//a[contains(text(),'Monitoring')]",
+            f"//header//nx-header-level-two//a[contains(text(),'{name}')]",
             )
 
     def _wait_for_tab_loaded(self, locator: str):
