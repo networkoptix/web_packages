@@ -123,6 +123,7 @@ export class PermissionManager {
         const isAdmin = this.isAdmin$$();
         const permissions = this.permissions$$();
         const permissionsString = user.permissions.split('|').sort().join('|');
+        const accessRights = user && 'resourceAccessRights' in user && user?.resourceAccessRights;
 
         let accessRole = '';
         if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds) {
@@ -151,8 +152,9 @@ export class PermissionManager {
             isOwner,
             permissions,
             groupIds: (user && 'groupIds' in user && user?.groupIds) || [], // TODO: use this
-            resourceAccessRights:
-                (user && 'resourceAccessRights' in user && user?.resourceAccessRights) || {}, // TODO: use this
+            resourceAccessRights: accessRights || {}, // TODO: use this
+            hasCustomPermissions:
+                permissionsString !== 'none' || Object.keys(accessRights).length > 0,
         };
     });
     ownerEmail$$ = signal<string>(undefined);

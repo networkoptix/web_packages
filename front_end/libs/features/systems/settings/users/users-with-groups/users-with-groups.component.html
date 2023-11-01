@@ -90,6 +90,13 @@
                         <p class="help-block">{{ group.description | translate }}</p>
                     </div>
                 </div>
+                <div *ngIf="hasCustomPermissions$$()">
+                    <nx-alert-block
+                        type="info"
+                        [iconSrc]="icons.dirNonStandard + 'info.svg'"
+                        [line1]="LANG.toastMessage.customPermissions | translate"
+                    ></nx-alert-block>
+                </div>
             </nx-section>
 
             <nx-section

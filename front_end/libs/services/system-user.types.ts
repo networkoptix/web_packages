@@ -131,6 +131,7 @@ export interface RestV3User {
     attributes: string; // v3
     groupIds: string[]; // v3
     resourceAccessRights: { [key: string]: string }; // v3
+    hasCustomPermissions: boolean;
 }
 
 export type RestUser = RestV1User | RestV3User;
@@ -151,6 +152,7 @@ export interface CurrentUser {
     permissions: Permissions;
     resourceAccessRights?: { [key: string]: string };
     type?: string; // might remove since we have all of the is vars
+    hasCustomPermissions: boolean;
 }
 
 // Conversion of SystemUser for the app
@@ -174,6 +176,7 @@ export interface NxUser {
     role?: Role;
     type: string;
     userRoleId?: string;
+    hasCustomPermissions: boolean;
 }
 
 /* Types for adding users to a system
