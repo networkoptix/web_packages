@@ -40,6 +40,14 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const isLdap = this.isLdap$$();
         return this.processLdapGroups([...groups], isLdap);
     });
+    accountBlockFooterSettings$$ = computed(() => ({
+        cloudAccountSettings: !this.environment.isLocal && this.isCloud$$() && this.isMe$$(),
+        changePassword: this.editPermissions$$().changePassword,
+        delete: this.editPermissions$$().delete,
+    }));
+    isAccountBlockFooterVisible$$ = computed(() =>
+        Object.values(this.accountBlockFooterSettings$$()).some(Boolean),
+    );
 
     userGroupForm: NxFormGroup<UserGroupFormControls>;
 

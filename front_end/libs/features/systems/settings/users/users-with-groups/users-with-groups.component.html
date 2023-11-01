@@ -162,9 +162,9 @@
                 </div>
             </nx-section>
 
-            <nx-section *ngIf="canBeEdited$$() || isMe$$()">
+            <nx-section *ngIf="isAccountBlockFooterVisible$$()">
                 <div
-                    *ngIf="!environment.isLocal && isCloud$$() && isMe$$()"
+                    *ngIf="accountBlockFooterSettings$$().cloudAccountSettings"
                     class="float-left"
                 >
                     <button
@@ -177,7 +177,7 @@
                     </button>
                 </div>
                 <div
-                    *ngIf="editPermissions$$().changePassword"
+                    *ngIf="accountBlockFooterSettings$$().changePassword"
                     class="float-left"
                 >
                     <button
@@ -190,7 +190,7 @@
                 </div>
                 <div
                     class="float-right"
-                    *ngIf="editPermissions$$().delete"
+                    *ngIf="accountBlockFooterSettings$$().delete"
                 >
                     <button
                         class="btn btn-default has-icon"
