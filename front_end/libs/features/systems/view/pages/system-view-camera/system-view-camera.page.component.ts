@@ -31,23 +31,19 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
+import { PLAYBACK_MODE, PlaybackState } from '@view/datatypes/PlaybackState';
+import { PlaybackService } from '@view/services/playback.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
-import {
-    PLAYBACK_MODE,
-    PlaybackState,
-} from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
+import { Resolutions, ViewCamera } from '../../datatypes/Camera';
+import { newBaseTimeRange } from '../../datatypes/TimeRange';
+import { VMS_MODE } from '../../datatypes/VmsState';
 import { WebClientUxService } from '../../services/webclient-ux.service';
 import { TimelineTimeUnderMouseService } from '../../vms-client/submodules/timeline/services/timeline.time-under-mouse.service';
-import { Resolutions, ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
-import { newBaseTimeRange } from '../../vms-client/submodules/vms/datatypes/TimeRange';
-import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
-import { sidebarLayout } from '../sidebarLayout.cfg';
+import { FULLSCREEN_INACTIVITY_DELAY_MS } from '../constants';
 
 type Period = Ec2RecordedTimePeriodsResp['reply'][number]['periods'][number];
 
@@ -261,10 +257,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.getRecords();
             }
 
-            if (
-                this.window.innerWidth <=
-                sidebarLayout.cameraClickHidesSidebarWhenWindowWidthBelowPx
-            ) {
+            if (this.window.innerWidth <= this.ux.MIN_WINDOW_WIDTH_FOR_SIDEBAR) {
                 this.ux.isSidebarShown = false;
             }
         });
@@ -367,7 +360,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.fullscreenMode) {
             this.onShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
-            }, fullscreenInactivityCfg.delayMs);
+            }, FULLSCREEN_INACTIVITY_DELAY_MS);
 
             this.unListenMouseMove = this.renderer.listen(this.$self, 'mousemove', () => {
                 this.onEvent();
@@ -403,7 +396,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             clearTimeout(this.onMoveShowElements);
             this.onMoveShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
-            }, fullscreenInactivityCfg.delayMs);
+            }, FULLSCREEN_INACTIVITY_DELAY_MS);
         }
     }
 

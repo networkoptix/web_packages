@@ -1,6 +1,6 @@
 import { computed, Injectable, signal } from '@angular/core';
 
-import { GUID, ms } from '@vms-client/utils/type-aliases';
+import { GUID, ms } from '@view/datatypes/type-aliases';
 
 import { ViewCamera } from '../datatypes/Camera';
 import { ViewMediaServer } from '../datatypes/IMediaServer';

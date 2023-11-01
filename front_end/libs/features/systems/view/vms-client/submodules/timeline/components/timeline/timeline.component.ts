@@ -17,11 +17,11 @@ import { debounceTime, startWith } from 'rxjs/operators';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
+import { px, ms } from '@view/datatypes/type-aliases';
+import { PlaybackService } from '@view/services/playback.service';
 import { WebClientUxService } from '@view/services/webclient-ux.service';
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { calcScreenX, calcOffsetX, calcOffsetY } from '@vms-client/utils/calculate-coordinates';
-import { px, ms } from '@vms-client/utils/type-aliases';
 
+import { calcScreenX, calcOffsetX, calcOffsetY } from '../../calculate-coordinates';
 import { TimelineCanvasRendererService } from '../../services/canvas-renderer/timeline.canvas-renderer.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';

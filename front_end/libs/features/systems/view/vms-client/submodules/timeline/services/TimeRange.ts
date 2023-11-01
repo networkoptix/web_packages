@@ -1,4 +1,4 @@
-import { float, ms } from '@vms-client/utils/type-aliases';
+import { float, ms } from '@view/datatypes/type-aliases';
 
 import { IrregularLengthInterval } from './canvas-renderer/ruler/intervals/IrregularLengthInterval';
 import { alignTimeStamp } from './canvas-renderer/ruler/intervals/utils/alignTimeStamp';

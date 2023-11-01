@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     OnDestroy,
@@ -14,15 +15,19 @@ import type videojs from 'video.js';
 
 import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
-import { BASE64_SINGLE_TRANSPARENT_PIXEL } from '@vms-client/utils';
 
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
+
+const BASE64_SINGLE_TRANSPARENT_PIXEL =
+    'data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNkYAAAAAYAAjCB0C8AAAAASUVORK5CYII=';
 
 @Component({
     selector: 'nx-player-js',
     templateUrl: 'player-js.component.html',
     styleUrls: ['player-js.component.scss'],
     encapsulation: ViewEncapsulation.None,
+    standalone: true,
+    imports: [CommonModule],
 })
 export class PlayerJsComponent implements OnDestroy, OnChanges {
     @Input() mode: number;

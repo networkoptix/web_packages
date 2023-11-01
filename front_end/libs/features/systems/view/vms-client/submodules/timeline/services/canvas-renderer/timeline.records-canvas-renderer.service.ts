@@ -1,9 +1,9 @@
 import { Injectable } from '@angular/core';
 
+import type { BaseTimeRange } from '@view/datatypes/TimeRange';
+import { float, ms } from '@view/datatypes/type-aliases';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { RecordsConfig } from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
-import type { BaseTimeRange } from '@vms-client/submodules/vms/datatypes/TimeRange';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { float, ms } from '@vms-client/utils/type-aliases';
 
 import { TimelineService } from '../timeline.service';
 

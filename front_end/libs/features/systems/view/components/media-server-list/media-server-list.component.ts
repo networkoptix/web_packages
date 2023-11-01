@@ -1,6 +1,14 @@
+import { CommonModule } from '@angular/common';
 import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { LocalStorageService } from 'ngx-webstorage';
 
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxIntersectionObserver } from '@directives/nx-intersection.directive';
+import { PipesModule } from '@pipes/pipes.module';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
@@ -10,10 +18,26 @@ import { NgChanges } from '@utils/ng-changes';
 import { ViewCamera } from '../../datatypes/Camera';
 import type { ViewMediaServer } from '../../datatypes/IMediaServer';
 
+import { NxMediaServerListHeaderComponent } from './media-server-list-header/media-server-list-header.component';
+
 @Component({
     selector: 'nx-media-server-list',
     templateUrl: 'media-server-list.component.html',
     styleUrls: ['media-server-list.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+
+        AngularSvgIconModule,
+
+        NxAddSvgSrcDirective,
+        NxIntersectionObserver,
+        NxPreLoaderComponent,
+        PipesModule,
+        NxSearchHighlightComponent,
+        NxMediaServerListHeaderComponent,
+    ],
 })
 export class MediaServerListComponent implements OnChanges {
     @Input('mediaservers') _mediaservers: Array<ViewMediaServer> = [];

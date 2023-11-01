@@ -7,7 +7,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { environment } from '@environments/environment';
 import type { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
-import type { ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
+import type { ViewCamera } from '@view/datatypes/Camera';
 
 /* Usage
  <nx-player-placeholder

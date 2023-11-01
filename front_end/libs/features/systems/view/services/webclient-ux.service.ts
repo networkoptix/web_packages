@@ -1,6 +1,8 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
+import { GridBreakpoints } from '@styles/theme-variables-common';
+
 import type { WebClientUxState } from '../view.types';
 
 const webClientUxInitialState = (): WebClientUxState => ({
@@ -13,6 +15,8 @@ const webClientUxInitialState = (): WebClientUxState => ({
     providedIn: 'root',
 })
 export class WebClientUxService {
+    readonly MIN_WINDOW_WIDTH_FOR_SIDEBAR = GridBreakpoints.MD;
+
     subject = new BehaviorSubject<WebClientUxState>(webClientUxInitialState());
 
     private emit(): void {

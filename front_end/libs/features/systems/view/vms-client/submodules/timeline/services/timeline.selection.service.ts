@@ -4,11 +4,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxSystem } from '@services/system.service/system';
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { ms, px } from '@vms-client/utils/type-aliases';
-
-import type { PlayingState } from '../../playback/datatypes/PlaybackState';
+import type { PlayingState } from '@view/datatypes/PlaybackState';
+import { ms, px } from '@view/datatypes/type-aliases';
+import { PlaybackService } from '@view/services/playback.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimeRange } from './TimeRange';
 import { TimelineService } from './timeline.service';

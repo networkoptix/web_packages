@@ -1,4 +1,4 @@
-import { percentage } from '@vms-client/utils/type-aliases';
+import { percentage } from '@view/datatypes/type-aliases';
 
 type ByteHexString = string;
 

@@ -1,4 +1,4 @@
-import { int, ms } from '@vms-client/utils/type-aliases';
+import { int, ms } from '@view/datatypes/type-aliases';
 
 import { TimeRangeUtils, newBaseTimeRange, BaseTimeRange } from './TimeRange';
 

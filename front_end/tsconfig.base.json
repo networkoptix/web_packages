@@ -41,6 +41,8 @@
                 "node_modules/nx-open-web/packages/*",
                 "node_modules/nx-open-web-candidate/packages/*"
             ],
+            "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
+            "@view/*": ["libs/features/systems/view/*"],
             "@pages/*": ["libs/features/*"],
             "@pipes/*": ["libs/pipes/*"],
             "@resolvers/*": ["libs/resolvers/*"],
@@ -52,8 +54,6 @@
             "@utils/*": ["libs/utils/*"],
             "@static-variables": ["libs/variables/static-variables.ts"],
             "@variables/*": ["libs/variables/*"],
-            "@view/*": ["libs/features/systems/view/*"],
-            "@vms-client/*": ["libs/features/systems/view/vms-client/*"],
             "components-buildable-build": ["libs/components-buildable-build/src/index.ts"],
             "@common/*": ["common/*"],
             "@libs/*": ["libs/*"],

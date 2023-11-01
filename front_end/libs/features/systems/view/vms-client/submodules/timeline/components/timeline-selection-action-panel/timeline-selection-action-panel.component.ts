@@ -17,9 +17,9 @@ import { NxAccountService } from '@services/account.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
+import { PlaybackService } from '@view/services/playback.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
-import { PlaybackService } from '../../../playback/services/playback.service';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
 import type { TimelineSelectionServiceStatus } from '../../services/timeline.services.types';

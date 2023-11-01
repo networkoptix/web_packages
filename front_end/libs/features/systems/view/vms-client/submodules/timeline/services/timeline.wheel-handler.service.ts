@@ -1,6 +1,6 @@
 import { Injectable } from '@angular/core';
 
-import { int, float, px } from '@vms-client/utils/type-aliases';
+import { int, float, px } from '@view/datatypes/type-aliases';
 
 import { TimelineService } from './timeline.service';
 import { TimelineTimeUnderMouseService } from './timeline.time-under-mouse.service';

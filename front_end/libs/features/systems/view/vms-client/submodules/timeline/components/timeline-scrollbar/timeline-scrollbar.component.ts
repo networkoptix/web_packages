@@ -4,9 +4,9 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { animationFrameScheduler, interval } from 'rxjs';
 
 import { images } from '@static-variables';
-import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { px } from '@vms-client/utils/type-aliases';
+import { PLAYBACK_MODE } from '@view/datatypes/PlaybackState';
+import { px } from '@view/datatypes/type-aliases';
+import { PlaybackService } from '@view/services/playback.service';
 
 import { TimelineScrollbarAbsoluteService } from '../../services/timeline.scrollbarAbsolute.service';
 import { TimelineScrollbarRelativeService } from '../../services/timeline.scrollbarRelative.service';

@@ -3,8 +3,8 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { px } from '@vms-client/utils/type-aliases';
+import { px } from '@view/datatypes/type-aliases';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimelineService } from '../../services/timeline.service';
 import { TimelineTimeUnderMouseService } from '../../services/timeline.time-under-mouse.service';

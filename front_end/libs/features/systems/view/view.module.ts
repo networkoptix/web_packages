@@ -16,12 +16,13 @@ import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
+import { MediaServerListComponent } from './components/media-server-list/media-server-list.component';
+import { PlaybackControlsComponent } from './components/playback-controls/playback-controls.component';
+import { PlaybackStateIndicatorComponent } from './components/playback-state-indicator/playback-state-indicator.component';
+import { PlayerComponent } from './components/player/player.component';
 import { NxSystemViewCameraPageComponent } from './pages/system-view-camera/system-view-camera.page.component';
 import { NxSystemViewIndexPageComponent } from './pages/system-view-index/system-view-index.page.component';
-import { VmsClientPlaybackModule } from './vms-client/submodules/playback/playback.module';
 import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeline.module';
-import { VmsClientVmsModule } from './vms-client/submodules/vms/vms.module';
-import { VmsClientModule } from './vms-client/vms-client.module';
 
 @NgModule({
     imports: [
@@ -47,11 +48,12 @@ import { VmsClientModule } from './vms-client/vms-client.module';
         NxPlayerPlaceholderComponent,
         PipesModule,
         NxPreLoaderComponent,
-        VmsClientPlaybackModule,
         VmsClientTimelineModule,
-        VmsClientVmsModule,
-        VmsClientModule,
         NxAddSvgSrcDirective,
+        MediaServerListComponent,
+        PlaybackControlsComponent,
+        PlaybackStateIndicatorComponent,
+        PlayerComponent,
     ],
     providers: [CookieService],
     declarations: [

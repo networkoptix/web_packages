@@ -3,11 +3,10 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { PLAYBACK_MODE } from '@vms-client/submodules/playback/datatypes/PlaybackState';
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { assertNever } from '@vms-client/utils';
-import type { ms, px } from '@vms-client/utils/type-aliases';
+import { PLAYBACK_MODE } from '@view/datatypes/PlaybackState';
+import type { ms, px } from '@view/datatypes/type-aliases';
+import { PlaybackService } from '@view/services/playback.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimelineService } from '../../services/timeline.service';
 
@@ -74,8 +73,6 @@ export class TimelinePlaybackIndicatorComponent implements OnInit {
                     // a hack to keep the indicator in place while timeline animates a jump over the gap between records
                     // this.timeMs -= (this.timeline.targetScrollMs - this.timeline.visibleRange.start);
                     break;
-                default:
-                    assertNever(s);
             }
         });
 

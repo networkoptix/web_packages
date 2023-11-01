@@ -2,10 +2,10 @@ import { Component, OnInit, HostListener, effect } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, interval } from 'rxjs';
 
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
-import { VmsState, VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { float, int, ms } from '@vms-client/utils/type-aliases';
+import { VmsState, VMS_MODE } from '@view/datatypes/VmsState';
+import { float, int, ms } from '@view/datatypes/type-aliases';
+import { PlaybackService } from '@view/services/playback.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimelineService } from '../../services/timeline.service';
 import type { TimelineServiceStatus } from '../../services/timeline.services.types';

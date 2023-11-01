@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import dateFormat from 'dateformat';
 
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { ms, px } from '@vms-client/utils/type-aliases';
+import { ms, px } from '@view/datatypes/type-aliases';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { cfg } from '../../timeline.config';
 import { TimelineService } from '../../timeline.service';

@@ -98,7 +98,7 @@ module.exports = {
     'libs/features/systems/settings/licenses/new/new.component.ts': 11,
     'libs/features/systems/settings/licenses/trial/trial.component.ts': 7,
     'libs/features/systems/settings/settings.component.ts': 11,
-    'libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts': 1,
+    'libs/features/systems/view/components/player/player.component.ts': 1,
     'libs/services/account.service/base.ts': 35,
     'libs/services/account.service/cloud.ts': 4,
     'libs/services/apply.service/apply.service.ts': 25,
@@ -1236,7 +1236,7 @@ libs/features/systems/settings/settings.component.ts
   Missing return type on function  @typescript-eslint/explicit-function-return-type
   Missing return type on function  @typescript-eslint/explicit-function-return-type
 
-libs/features/systems/view/vms-client/submodules/playback/components/player/player.component.ts
+libs/features/systems/view/components/player/player.component.ts
   Unexpected any. Specify a different type  @typescript-eslint/no-explicit-any
 
 libs/services/account.service/base.ts

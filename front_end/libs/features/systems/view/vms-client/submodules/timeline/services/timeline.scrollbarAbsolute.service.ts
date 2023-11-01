@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { calcClientX } from '@vms-client/utils/calculate-coordinates';
-import { px } from '@vms-client/utils/type-aliases';
+import { px } from '@view/datatypes/type-aliases';
+
+import { calcClientX } from '../calculate-coordinates';
 
 import { TimelineScrollbarRelativeService } from './timeline.scrollbarRelative.service';
 import { TimelineService } from './timeline.service';

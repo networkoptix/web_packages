@@ -1,6 +1,6 @@
 // TODO: Combine with time range in timeline folder
 
-import { ms } from '@vms-client/utils/type-aliases';
+import { ms } from '@view/datatypes/type-aliases';
 
 export interface BaseTimeRange {
     start: ms;

@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 
 // import { RecordsConfig } from '@vms-client/submodules/timeline/services/canvas-renderer/drawingConfigs/drowingConfigs.service.types';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 
 import { TimelineService } from '../timeline.service';
 

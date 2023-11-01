@@ -13,13 +13,13 @@ import dateFormat from 'dateformat';
 import { animationFrameScheduler, interval } from 'rxjs';
 
 import { WINDOW } from '@services/window-provider';
-import { PlaybackService } from '@vms-client/submodules/playback/services/playback.service';
+import type { ms } from '@view/datatypes/type-aliases';
+import { px } from '@view/datatypes/type-aliases';
+import { PlaybackService } from '@view/services/playback.service';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { TimelineScrollbarRelativeService } from '@vms-client/submodules/timeline/services/timeline.scrollbarRelative.service';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
-import type { ms } from '@vms-client/utils/type-aliases';
-import { px } from '@vms-client/utils/type-aliases';
 
+import { calcOffsetX } from '../../calculate-coordinates';
 import { TimelineSelectionService } from '../../services/timeline.selection.service';
 import { TimelineService } from '../../services/timeline.service';
 import type { TimelineSelectionServiceStatus } from '../../services/timeline.services.types';

@@ -31,18 +31,17 @@ import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
+import type { ms } from '@view/datatypes/type-aliases';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { ViewCamera, CAMERA_STATUS } from '@vms-client/submodules/vms/datatypes/Camera';
-import type { ViewMediaServer } from '@vms-client/submodules/vms/datatypes/IMediaServer';
-import type { BaseTimeRange } from '@vms-client/submodules/vms/datatypes/TimeRange';
-import { VMS_MODE } from '@vms-client/submodules/vms/datatypes/VmsState';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import type { ms } from '@vms-client/utils/type-aliases';
 
+import { ViewCamera, CAMERA_STATUS } from '../../datatypes/Camera';
+import type { ViewMediaServer } from '../../datatypes/IMediaServer';
+import type { BaseTimeRange } from '../../datatypes/TimeRange';
+import { newBaseTimeRange } from '../../datatypes/TimeRange';
+import { VMS_MODE } from '../../datatypes/VmsState';
 import { WebClientUxService } from '../../services/webclient-ux.service';
-import { newBaseTimeRange } from '../../vms-client/submodules/vms/datatypes/TimeRange';
-import { fullscreenInactivityCfg } from '../fullscreenInactivity.cfg';
-import { sidebarLayout } from '../sidebarLayout.cfg';
+import { FULLSCREEN_INACTIVITY_DELAY_MS } from '../constants';
 
 const MAX_OUT_OF_SYNC_TIME = 60000; // ms
 
@@ -86,19 +85,19 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         return this.self.nativeElement;
     }
 
-    private _windowWidth = 1024; // should be larger than the threshold
+    private lastWindowWidth = 1024; // should be larger than the threshold
 
     @HostListener('window:resize', ['$event'])
     onResize(event: { target: { innerWidth: number } }): void {
-        const widthThreshold = sidebarLayout.sidebarOverlaysWhenWindowWidthBelowPx;
+        const widthThreshold = this.ux.MIN_WINDOW_WIDTH_FOR_SIDEBAR;
         const newWidth = event.target.innerWidth;
-        if (newWidth <= widthThreshold && this._windowWidth > widthThreshold) {
+        if (newWidth <= widthThreshold && this.lastWindowWidth > widthThreshold) {
             this.ux.isSidebarShown = false; // wide => narrow
         }
-        if (newWidth > widthThreshold && this._windowWidth <= widthThreshold) {
+        if (newWidth > widthThreshold && this.lastWindowWidth <= widthThreshold) {
             this.ux.isSidebarShown = true; // narrow => wide
         }
-        this._windowWidth = newWidth;
+        this.lastWindowWidth = newWidth;
     }
 
     constructor(
@@ -174,7 +173,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 this.fullscreenToggle = true;
                 this.onShowElements = this.window.setTimeout(() => {
                     this.showElementsInFSM = false;
-                }, fullscreenInactivityCfg.delayMs);
+                }, FULLSCREEN_INACTIVITY_DELAY_MS);
 
                 this.unListenMouseMove = this.renderer.listen(
                     this.$self,
@@ -235,7 +234,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             clearTimeout(this.onMoveShowElements);
             this.onMoveShowElements = this.window.setTimeout(() => {
                 this.showElementsInFSM = false;
-            }, fullscreenInactivityCfg.delayMs);
+            }, FULLSCREEN_INACTIVITY_DELAY_MS);
         }
     };
 

@@ -1,8 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, OnInit, Input } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 import { PlaybackState, PLAYBACK_MODE } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
@@ -12,6 +14,8 @@ import { PlaybackService } from '../../services/playback.service';
     selector: 'nx-playback-state-indicator',
     templateUrl: './playback-state-indicator.component.html',
     styleUrls: ['./playback-state-indicator.component.scss'],
+    standalone: true,
+    imports: [CommonModule, TranslateModule],
 })
 export class PlaybackStateIndicatorComponent implements OnInit {
     private state: PlaybackState;

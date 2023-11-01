@@ -1,7 +1,10 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import { distinctUntilChanged } from 'rxjs/operators';
 
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { icons } from '@static-variables';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 
@@ -15,6 +18,8 @@ type BtnClassesEnum = 'play' | 'pause';
     selector: 'nx-playback-controls',
     templateUrl: './playback-controls.component.html',
     styleUrls: ['./playback-controls.component.scss'],
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule, NxAddSvgSrcDirective],
 })
 export class PlaybackControlsComponent implements OnInit {
     @Input() enabled: boolean;

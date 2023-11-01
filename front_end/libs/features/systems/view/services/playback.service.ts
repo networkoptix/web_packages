@@ -2,12 +2,11 @@ import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
 
+import { ms, percentage } from '@view/datatypes/type-aliases';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { ms, percentage } from '@vms-client/utils/type-aliases';
 
-import { assertNever } from '../../../utils';
 import {
     PLAYBACK_MODE,
     PlaybackState,
@@ -174,8 +173,6 @@ export class PlaybackService {
                 return false;
             case PLAYBACK_MODE.ARCHIVE:
                 return true;
-            default:
-                assertNever(this.state);
         }
     }
 
@@ -266,8 +263,6 @@ export class PlaybackService {
                     this.emit();
                 }
                 break;
-            default:
-                assertNever(this.state);
         }
     }
 
@@ -284,8 +279,6 @@ export class PlaybackService {
                     this.playArchive(this.state.currentTime);
                 }
                 break;
-            default:
-                assertNever(this.state);
         }
     }
 
@@ -309,8 +302,6 @@ export class PlaybackService {
                 this.state.paused = false;
                 this.emit();
                 break;
-            default:
-                assertNever(this.state);
         }
     }
 
@@ -356,8 +347,6 @@ export class PlaybackService {
                 return true;
             case PLAYBACK_MODE.ARCHIVE:
                 return !this.state.paused;
-            default:
-                assertNever(this.state);
         }
     }
 
@@ -369,8 +358,6 @@ export class PlaybackService {
                 return false;
             case PLAYBACK_MODE.ARCHIVE:
                 return this.state.paused;
-            default:
-                assertNever(this.state);
         }
     }
 
@@ -382,8 +369,6 @@ export class PlaybackService {
                 return true;
             case PLAYBACK_MODE.ARCHIVE:
                 return true;
-            default:
-                assertNever(this.state);
         }
     }
 

@@ -3,13 +3,12 @@ import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angul
 
 import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
-import { VmsClientPlaybackModule } from '@vms-client/submodules/playback/playback.module';
 
 @Component({
     selector: 'nx-clip',
     templateUrl: 'clip.component.html',
     styleUrls: ['./clip.component.scss'],
-    imports: [CommonModule, PipesModule, VmsClientPlaybackModule],
+    imports: [CommonModule, PipesModule],
     standalone: true,
 })
 export class ClipComponent {

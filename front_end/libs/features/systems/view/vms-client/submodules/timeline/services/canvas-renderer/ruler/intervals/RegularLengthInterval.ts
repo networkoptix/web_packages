@@ -1,3 +1,3 @@
-import { ms } from '@vms-client/utils/type-aliases';
+import { ms } from '@view/datatypes/type-aliases';
 
 export type RegularLengthInterval = ms;

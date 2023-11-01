@@ -36,7 +36,6 @@ import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.componen
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
-import { VmsClientModule } from '@pages/systems/view/vms-client/vms-client.module';
 import { PipesModule } from '@pipes/pipes.module';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 import { SimpleWebGLTimelineModule } from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
@@ -197,7 +196,6 @@ const appRoutes: Routes = [
         NxSearchComponent,
         NxSearchableDropdown,
         SimpleWebGLTimelineModule,
-        VmsClientModule,
         VmsClientTimelineModule,
         WebGLTimelineModule,
         NxThemeGeneratorComponent,

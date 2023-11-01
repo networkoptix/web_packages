@@ -1,4 +1,4 @@
-import { ms, int } from '@vms-client/utils/type-aliases';
+import { ms, int } from '@view/datatypes/type-aliases';
 
 import { BirdViewTree } from './BirdViewTree';
 import { ICamera, ISimpleTimeRange, CAMERA_STATUS, CameraArchive } from './ICamera';

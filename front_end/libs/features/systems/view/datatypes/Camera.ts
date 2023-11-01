@@ -1,8 +1,8 @@
 import { Observable } from 'rxjs';
 
 import type { MediaStream } from '@services/system.service/camera-manager/add-params.types';
+import { ms, int } from '@view/datatypes/type-aliases';
 import { PlaybackTransport } from '@view/view.types';
-import { ms, int } from '@vms-client/utils/type-aliases';
 
 import { BirdViewTree } from './BirdViewTree';
 import type { BaseTimeRange } from './TimeRange';

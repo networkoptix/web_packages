@@ -1,7 +1,7 @@
 import { Observable } from 'rxjs';
 
+import { ms } from '@view/datatypes/type-aliases';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
-import { ms } from '@vms-client/utils/type-aliases';
 
 export enum PLAYBACK_MODE {
     STOPPED = 0,

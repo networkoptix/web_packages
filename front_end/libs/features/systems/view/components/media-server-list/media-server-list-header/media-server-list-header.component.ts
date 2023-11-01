@@ -1,4 +1,7 @@
+import { CommonModule } from '@angular/common';
 import { Component, Output, EventEmitter, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { TranslateModule } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 
 const COOKIE_NAME = 'nx_show_ips';
@@ -7,6 +10,8 @@ const COOKIE_NAME = 'nx_show_ips';
     selector: 'nx-media-server-list-header',
     templateUrl: 'media-server-list-header.component.html',
     styleUrls: ['media-server-list-header.component.scss'],
+    standalone: true,
+    imports: [CommonModule, FormsModule, TranslateModule],
 })
 export class NxMediaServerListHeaderComponent implements OnInit {
     @Output() ipVisibilityStateChange = new EventEmitter<boolean>();

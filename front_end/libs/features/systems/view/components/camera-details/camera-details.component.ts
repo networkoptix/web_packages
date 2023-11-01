@@ -5,7 +5,7 @@ import staticLang from '@language_static';
 import type { MediaStream } from '@services/system.service/camera-manager/add-params.types';
 import { WINDOW } from '@services/window-provider';
 
-import type { ViewCamera } from '../../vms-client/submodules/vms/datatypes/Camera';
+import type { ViewCamera } from '../../datatypes/Camera';
 
 interface ITransport {
     name: string;

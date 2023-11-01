@@ -11,9 +11,9 @@ import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { assignFrom } from '@utils/general';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { TimelineSelectionService } from '@vms-client/submodules/timeline/services/timeline.selection.service';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
 
 const DATE_FORMAT_STRING = 'yyyy-mm-dd';
 const TIME_FORMAT_STRING = 'HH:MM:ss';

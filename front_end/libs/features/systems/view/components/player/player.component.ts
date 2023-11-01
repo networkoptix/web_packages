@@ -1,12 +1,15 @@
+import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
 import { Component, OnInit, AfterViewInit, Output, EventEmitter, effect } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { SessionStorageService } from 'ngx-webstorage';
 
+import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import staticLang from '@language_static';
+import { PipesModule } from '@pipes/pipes.module';
+import { VideoManagementSystemService } from '@view/services/vms.service';
 import { PlaybackTransport } from '@view/view.types';
-import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
-import { generateClickDubleClickPair } from '@vms-client/utils/generateClickDubleClickPair';
 
 import {
     ArchivePlaybackState,
@@ -16,11 +19,49 @@ import {
 } from '../../datatypes/PlaybackState';
 import { PlaybackService } from '../../services/playback.service';
 
+import { PlayerJsComponent } from './player-js/player-js.component';
+
+function generateClickDubleClickPair(
+    onClick: (e: MouseEvent) => void,
+    onDblClick: (e: MouseEvent) => void,
+    dblClickDelayMs = 300,
+): (e: MouseEvent) => void {
+    let scheduledHandler: number = null;
+    let prevClickTime: number = null;
+
+    return function (e) {
+        const now = Date.now();
+        if (scheduledHandler) {
+            const timePassed = now - prevClickTime;
+            if (timePassed < dblClickDelayMs) {
+                clearTimeout(scheduledHandler);
+                scheduledHandler = null;
+                onDblClick(e);
+            }
+        } else {
+            scheduledHandler = window.setTimeout(() => {
+                scheduledHandler = null;
+                prevClickTime = null;
+                onClick(e);
+            }, dblClickDelayMs);
+            prevClickTime = now;
+        }
+    };
+}
+
 @UntilDestroy()
 @Component({
     selector: 'nx-player',
     templateUrl: './player.component.html',
     styleUrls: ['./player.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        NxPlayerPlaceholderComponent,
+        NxPreLoaderComponent,
+        PlayerJsComponent,
+        PipesModule,
+    ],
 })
 export class PlayerComponent implements OnInit, AfterViewInit {
     LANG = staticLang;

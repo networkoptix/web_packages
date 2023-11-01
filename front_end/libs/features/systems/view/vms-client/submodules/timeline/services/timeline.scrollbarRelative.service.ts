@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { BehaviorSubject } from 'rxjs';
 
-import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
-import { float, ms, px, sign } from '@vms-client/utils/type-aliases';
+import { float, ms, px, sign } from '@view/datatypes/type-aliases';
+
+import { calcOffsetX } from '../calculate-coordinates';
 
 import { TimelineService } from './timeline.service';
 import type { TimelineScrollbarRelativeServiceStatus } from './timeline.services.types';

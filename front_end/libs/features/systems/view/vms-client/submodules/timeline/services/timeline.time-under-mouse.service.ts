@@ -1,8 +1,9 @@
 import { Injectable } from '@angular/core';
 import { Subject } from 'rxjs';
 
-import { calcOffsetX } from '@vms-client/utils/calculate-coordinates';
-import { ms, px } from '@vms-client/utils/type-aliases';
+import { ms, px } from '@view/datatypes/type-aliases';
+
+import { calcOffsetX } from '../calculate-coordinates';
 
 import { TimelineService } from './timeline.service';
 import type { TimelineTimeUnderMouseServiceStatus } from './timeline.services.types';
