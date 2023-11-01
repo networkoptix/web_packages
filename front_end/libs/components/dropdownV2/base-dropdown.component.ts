@@ -61,7 +61,10 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
             this.overlayRef = this.overlay.create(this.getOverlayConfig());
             this.overlayRef.attach(this.contentTemplate);
             this.setOverlayWidth();
-            this.overlayRef.outsidePointerEvents().subscribe(() => this.hideDropdown());
+            this.overlayRef.outsidePointerEvents().subscribe(event => {
+                event.stopPropagation();
+                this.hideDropdown();
+            });
             this.dropdownOpen = true;
         }
     }
