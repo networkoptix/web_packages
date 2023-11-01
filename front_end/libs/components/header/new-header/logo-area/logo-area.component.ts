@@ -71,6 +71,14 @@ export class NxHeaderLogoAreaComponent implements OnInit {
             });
         systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
             this.singleSystem = systems.length === 1;
+            if (headerService.activeSystem$.getValue()) {
+                const updatedSystem = systems.find(
+                    system => system.id === this.headerService.activeSystem$.getValue().id,
+                );
+                if (updatedSystem) {
+                    this.activeSystemName$$.set(updatedSystem.name);
+                }
+            }
         });
     }
 
