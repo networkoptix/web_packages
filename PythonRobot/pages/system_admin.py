@@ -211,7 +211,7 @@ class SystemAdmin:
         return TabInformation(self.driver, locator, self.rb)
 
     def get_tab_settings(self) -> TabSettings:
-        self._wait_for_tab_loaded(f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]')
+        self._wait_for_tab_loaded(f'//header//a[contains(text(),"{self.rb.SETTINGS_TEXT}")]')
         return TabSettings(
             self.driver,
             f'//header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]',
