@@ -95,7 +95,7 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         attachments = [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
         if message.system_id:
             try:
-                users = cloud_api.System.basic_users(session['username'], session['password'], session['username'])
+                users = cloud_api.System.basic_users(session['username'], session['password'], session['username']).get('sharing', [])
             except:
                 users = []
 
