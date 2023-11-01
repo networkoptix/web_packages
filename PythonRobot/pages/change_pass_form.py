@@ -3,6 +3,7 @@ from generic_elements import Button
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from generic_elements import ToastNotification
 from variables import ENV
 
 
@@ -43,6 +44,12 @@ class ChangePassForm:
 
     def new_password_badge_tooltip(self) -> PageText:
         return PageText(self.driver, "//nx-tooltip-component//div[contains(@class, 'tooltip-body')]")
+
+    def invalid_current_password_toast(self) -> ToastNotification:
+        return ToastNotification(
+            self.driver,
+            f"//nx-toast//span[contains(text(),'{self.rb.PASSWORD_INCORRECT}')]",
+            )
 
     def verify_form_is_visible(self):
         self.new_password_input()
