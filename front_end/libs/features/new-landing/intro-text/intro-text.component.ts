@@ -19,7 +19,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
 import { images } from '@static-variables';
 
 @UntilDestroy()
@@ -47,7 +46,6 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         public headerService: NxHeaderService,
         public platform: Platform,
         @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -62,18 +60,15 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     routeToCreate(): void {
         let url = '/authorize?client_type=create';
         if (!environment.production) {
-            url = `https://${environment.cloudHost}/authorize?redirect_uri=${this.window.location.href}&client_type=create`;
+            url = `https://${environment.cloudHost}/authorize?redirect_uri=${window.location.href}&client_type=create`;
         }
-        this.window.location.href = url;
+        window.location.href = url;
     }
 
     checkVisible(elm: HTMLElement): boolean {
         const headerHeight = 48;
         const rect = elm.getBoundingClientRect();
-        const viewHeight = Math.max(
-            this.document.documentElement.clientHeight,
-            this.window.innerHeight,
-        );
+        const viewHeight = Math.max(this.document.documentElement.clientHeight, window.innerHeight);
         return !(rect.bottom - headerHeight < 0 || rect.top - viewHeight >= 0);
     }
 
@@ -92,8 +87,8 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
 
     getElementPosition(elm: HTMLElement): { top: number; left: number } {
         const rect = elm.getBoundingClientRect();
-        const scrollLeft = this.window.pageXOffset || this.document.documentElement.scrollLeft;
-        const scrollTop = this.window.pageYOffset || this.document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || this.document.documentElement.scrollLeft;
+        const scrollTop = window.pageYOffset || this.document.documentElement.scrollTop;
         return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
     }
 

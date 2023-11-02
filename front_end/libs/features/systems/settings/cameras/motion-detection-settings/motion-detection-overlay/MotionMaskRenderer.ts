@@ -60,7 +60,6 @@ export class MotionMaskRenderer {
         private unsub$: Subject<boolean>,
         private sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>,
         private isMobile: boolean,
-        private window: Window,
     ) {
         this.motionMask.maskMatrix.pipe(takeUntil(this.unsub$)).subscribe(matrix => {
             const columns = matrix[0].length;
@@ -124,7 +123,7 @@ export class MotionMaskRenderer {
         ].map(track);
 
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(event =>
-            this.isMobile ? EMPTY : fromEvent<KeyboardEvent>(this.window, event),
+            this.isMobile ? EMPTY : fromEvent<KeyboardEvent>(window, event),
         );
 
         // Utility functions

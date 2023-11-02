@@ -47,7 +47,6 @@ import {
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
-import { WINDOW } from '@services/window-provider';
 import { icons, menus, settingsConfig } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -234,7 +233,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         private processService: NxProcessService,
         private dialogService: NxDialogsService,
         private deviceService: DeviceDetectorService,
-        @Inject(WINDOW) private window: Window,
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
         private activeRoute: ActivatedRoute,
         @Optional()
@@ -622,10 +620,10 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                     },
                     error: () => {
                         if (!this.system.id) {
-                            if (!this.window.parent) {
-                                this.window.location.reload();
+                            if (!window.parent) {
+                                window.location.reload();
                             } else {
-                                this.window.parent.location.reload();
+                                window.parent.location.reload();
                             }
                         }
                     },

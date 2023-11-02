@@ -350,7 +350,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             (nxConfig.featureFlags.restCookieLogin || !this.info.system2faEnabled) &&
             (nxConfig.featureFlags.layoutsNonChrome ||
                 // @ts-expect-error chrome property only exist on chromium browsers
-                // eslint-disable-next-line nx/ban-global-variables
                 !!window.chrome)
         );
     }

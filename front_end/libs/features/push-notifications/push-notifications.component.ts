@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { AngularFireMessaging } from '@angular/fire/compat/messaging';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -9,7 +9,6 @@ import { NxAccountService } from '@services/account.service';
 import { isAccount } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
-import { WINDOW } from '@services/window-provider';
 import { redirect } from '@static-variables';
 
 @UntilDestroy({ checkProperties: true })
@@ -65,7 +64,6 @@ export class PushComponent implements OnInit {
         private afMessaging: AngularFireMessaging,
         private http: HttpClient,
         private router: Router,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.setupDefaults();
     }
@@ -189,7 +187,7 @@ export class PushComponent implements OnInit {
         if (form === undefined) {
             deviceToken = this.deviceToken;
             deviceInfo.name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
-            deviceInfo.model = this.window.navigator.userAgent;
+            deviceInfo.model = window.navigator.userAgent;
             provider = 'firebase';
         } else {
             deviceToken = this.newDevice.deviceToken;

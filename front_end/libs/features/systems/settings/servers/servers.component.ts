@@ -22,7 +22,6 @@ import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { NxSystemServer } from '@services/system.service/system-types';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 
 @UntilDestroy()
@@ -44,12 +43,12 @@ export class NxSystemServersComponent implements OnInit, OnChanges, OnDestroy {
     serverLoaded$$ = signal<boolean>(false);
     storagesOutdated$$ = signal<boolean>(false);
     icons = icons;
+    window = window;
 
     constructor(
         private router: Router,
         private applyService: NxApplyService,
         private menuService: NxMenuService,
-        @Inject(WINDOW) public window: Window,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         @Optional()
         @Inject(

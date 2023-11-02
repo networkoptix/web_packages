@@ -9,13 +9,11 @@ import {
     HostListener,
     Output,
     EventEmitter,
-    Inject,
 } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Subject, take } from 'rxjs';
 
-import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { MotionMaskRenderer } from './MotionMaskRenderer';
@@ -57,10 +55,7 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     @Output() updateMask: EventEmitter<string> = new EventEmitter();
 
-    constructor(
-        private deviceService: DeviceDetectorService,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(private deviceService: DeviceDetectorService) {
         this.firstCanvasSubject.pipe(take(1), takeUntilDestroyed()).subscribe(() => {
             setTimeout(() => {
                 this.initRenderer();
@@ -122,7 +117,6 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
             this.unsub$,
             this.sensitivityButtons$,
             this.deviceService.isMobile() || this.deviceService.isTablet(),
-            this.window,
         );
 
         this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);

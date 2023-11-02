@@ -1,5 +1,5 @@
 import { CommonModule, Location } from '@angular/common';
-import { Component, Output, EventEmitter, Inject, OnInit, Input } from '@angular/core';
+import { Component, Output, EventEmitter, OnInit, Input } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { QueryParamsHandling, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -17,7 +17,6 @@ import { MenuNode } from '@services/menus.service.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { highlight } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -73,7 +72,6 @@ export class NxDevelopersMenuComponent implements OnInit {
         public location: Location,
         public ribbonService: NxRibbonService,
         private uriService: NxUriService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
     }
@@ -82,7 +80,7 @@ export class NxDevelopersMenuComponent implements OnInit {
         this.activeRouteNodes = [];
         const updateActiveRoutes = (node: MenuNodeWithParent, updateUrl = false) => {
             if (updateUrl) {
-                const currentQueryParams = this.window.location.search;
+                const currentQueryParams = window.location.search;
                 const currentPath = this.location.path();
                 // Change URL in address bar to have the current one if a different one was used
                 if (node.url !== currentPath) {

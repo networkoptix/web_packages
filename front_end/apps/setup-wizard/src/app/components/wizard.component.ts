@@ -1,8 +1,7 @@
-import { Component, HostListener, Inject, OnInit } from '@angular/core';
+import { Component, HostListener, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 
 import { WizardStateService } from '../services/wizard-state.service';
@@ -35,7 +34,7 @@ export class WizardComponent implements OnInit {
         WIZARD_STATE.MergeProcess,
     ];
 
-    constructor(public wizardService: WizardStateService, @Inject(WINDOW) public window: Window) {}
+    constructor(public wizardService: WizardStateService) {}
 
     ngOnInit(): void {
         this.wizardService.init();

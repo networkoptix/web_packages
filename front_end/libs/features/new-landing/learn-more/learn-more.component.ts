@@ -1,9 +1,8 @@
 import { Platform } from '@angular/cdk/platform';
-import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
 
 import { NxLandingService } from '../landing.service';
 
@@ -27,7 +26,6 @@ export class NxLearnMoreComponent implements OnChanges {
         public landingService: NxLandingService,
         private platform: Platform,
         private scrollMechanics: NxScrollMechanicsService,
-        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {
@@ -52,7 +50,7 @@ export class NxLearnMoreComponent implements OnChanges {
                 behavior: 'smooth',
             });
             if (this.platform.SAFARI) {
-                this.scrollMechanics.windowScrollSubject.next(this.window.scrollY);
+                this.scrollMechanics.windowScrollSubject.next(window.scrollY);
             }
         }
     }

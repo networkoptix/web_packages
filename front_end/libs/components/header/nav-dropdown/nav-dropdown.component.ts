@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Inject, Input, ViewChild } from '@angular/core';
+import { Component, ElementRef, Input, ViewChild } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -9,7 +9,6 @@ import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { environment } from '@environments/environment';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 
 import { BaseDropdown } from '../../dropdowns/injDropdown';
@@ -63,11 +62,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
         return nodes;
     }
 
-    constructor(
-        configService: NxConfigService,
-        public headerService: NxHeaderService,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(configService: NxConfigService, public headerService: NxHeaderService) {
         super(configService);
     }
 
@@ -78,7 +73,7 @@ export class NxNavDropdownComponent extends BaseDropdown {
 
     updateOffset(): void {
         this.offset =
-            this.window.innerWidth > 420
+            window.innerWidth > 420
                 ? 0
                 : -this.dropDownButton.nativeElement.getBoundingClientRect().left;
     }

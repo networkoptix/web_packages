@@ -4,7 +4,6 @@ import {
     EventEmitter,
     forwardRef,
     HostListener,
-    Inject,
     Input,
     OnChanges,
     OnInit,
@@ -14,7 +13,6 @@ import {
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { escape } from 'lodash-es';
 
-import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({
@@ -73,7 +71,7 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
     }
 
     private focusTextEnd(el: ElementRef) {
-        const selection = this.window.getSelection();
+        const selection = window.getSelection();
         selection.selectAllChildren(el.nativeElement);
         selection.collapseToEnd();
     }
@@ -140,7 +138,7 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
     private onTouchedCallback = (): void => {};
     private onChangeCallback = (_: any): void => {};
 
-    constructor(private el: ElementRef, @Inject(WINDOW) public window: Window) {}
+    constructor(private el: ElementRef) {}
 
     ngOnInit(): void {
         this.required = Boolean(this.required); // handle "undefined" and string values

@@ -1,13 +1,5 @@
 import { CommonModule } from '@angular/common';
-import {
-    Component,
-    ElementRef,
-    EventEmitter,
-    Inject,
-    Input,
-    Output,
-    ViewChild,
-} from '@angular/core';
+import { Component, ElementRef, EventEmitter, Input, Output, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -20,7 +12,6 @@ import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -67,7 +58,6 @@ export class NxHeaderLevelTwoComponent {
         private menusService: NxMenusService,
         private scrollMechanics: NxScrollMechanicsService,
         nxApplyService: NxApplyService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.scrollMechanics.windowSizeSubject.pipe(untilDestroyed(this)).subscribe(size => {
             this.recalculateSizes(size.width);
@@ -118,7 +108,7 @@ export class NxHeaderLevelTwoComponent {
         }, 0);
     }
 
-    recalculateSizes(windowWidth = this.window.innerWidth): void {
+    recalculateSizes(windowWidth = window.innerWidth): void {
         const { logoAreaWidth, margins } = this.sizeConstants;
         this.menuItemsWidth = windowWidth - logoAreaWidth - this.mainActionWidth - margins;
         this.checkNavArrowsVisible(true);

@@ -41,7 +41,6 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
     @Output() codeChange = new EventEmitter<string>();
     @Input() checkAuthCodeProcess: Process;
     @Input() errorCode: string;
-    @Input() window: Window;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendCode: () => void;
@@ -73,7 +72,7 @@ export class NxAuthorizeAuthCodeComponent implements OnInit, OnChanges, OnDestro
                 : this.translateService.instant(this.LANG.authorize.authCode.login),
         });
 
-        fromEvent<Event>(this.window, 'resize')
+        fromEvent<Event>(window, 'resize')
             .pipe(debounceTime(100))
             .subscribe(() => {
                 this.needLargerFooter = this.backToPasswordSpan.nativeElement.offsetHeight > 32;

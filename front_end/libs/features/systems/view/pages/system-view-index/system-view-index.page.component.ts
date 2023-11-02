@@ -6,7 +6,6 @@ import {
     HostListener,
     Renderer2,
     HostBinding,
-    Inject,
     effect,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
@@ -27,7 +26,6 @@ import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/sy
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
@@ -114,7 +112,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private ux: WebClientUxService,
         private deviceService: DeviceDetectorService,
         private ribbonService: NxRibbonService,
-        @Inject(WINDOW) private window: Window,
         private toastService: NxToastService,
     ) {
         this.CONFIG = configService.getConfig();
@@ -171,7 +168,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             if (state.isFullScreen) {
                 this.fullscreenMode = true;
                 this.fullscreenToggle = true;
-                this.onShowElements = this.window.setTimeout(() => {
+                this.onShowElements = window.setTimeout(() => {
                     this.showElementsInFSM = false;
                 }, FULLSCREEN_INACTIVITY_DELAY_MS);
 
@@ -206,7 +203,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             }
         });
 
-        this.onResize({ target: { innerWidth: this.window.innerWidth } });
+        this.onResize({ target: { innerWidth: window.innerWidth } });
 
         // Handles the case where you are on the view tab and get redirected back to /view
         this.router.events
@@ -232,7 +229,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);
-            this.onMoveShowElements = this.window.setTimeout(() => {
+            this.onMoveShowElements = window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, FULLSCREEN_INACTIVITY_DELAY_MS);
         }

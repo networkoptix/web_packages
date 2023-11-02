@@ -1,11 +1,10 @@
-import { Component, Inject, ViewChild } from '@angular/core';
+import { Component, ViewChild } from '@angular/core';
 import { NgForm } from '@angular/forms';
 
 import { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import { SearchableDropdownItem as Item } from '@components/dropdowns/searchable/searchable.component.types';
 import * as staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import { WINDOW } from '@services/window-provider';
 import { simpleURLRegex } from '@static-variables';
 
 import {
@@ -49,7 +48,7 @@ export class FormElementsComponent {
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
-    constructor(private menuService: NxMenuService, @Inject(WINDOW) private window: Window) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('components');
@@ -141,6 +140,6 @@ export class FormElementsComponent {
         }
 
         this.submitted = true;
-        this.window.alert('SUBMIT!');
+        window.alert('SUBMIT!');
     }
 }

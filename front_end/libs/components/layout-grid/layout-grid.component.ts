@@ -10,7 +10,6 @@ import {
     computed,
     EventEmitter,
     HostListener,
-    Inject,
     Input,
     Output,
     Signal,
@@ -79,7 +78,6 @@ import {
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, dirtyId } from '@utils/general';
@@ -345,7 +343,7 @@ export class NxLayoutGridComponent {
     assertResourceOfType = assertResourceOfType;
     unsavedStates = staticLang.layouts.unsavedStates;
 
-    mouseMoving$ = fromEvent(this.window.document, 'mousemove').pipe(
+    mouseMoving$ = fromEvent(window.document, 'mousemove').pipe(
         switchMap(() => of(false).pipe(delay(5000), startWith(true))),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: false }),
@@ -431,7 +429,7 @@ export class NxLayoutGridComponent {
         filter(Boolean),
         map(
             ({ width }) =>
-                !this.window.matchMedia('(any-hover: none)').matches &&
+                !window.matchMedia('(any-hover: none)').matches &&
                 width > 288 &&
                 this.#lastWidth >= ViewportBreakpoints.Tablet.width,
         ),
@@ -718,6 +716,8 @@ export class NxLayoutGridComponent {
     CONFIG: IConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
 
+    window = window;
+
     constructor(
         configService: NxConfigService,
         private cd: ChangeDetectorRef,
@@ -725,7 +725,6 @@ export class NxLayoutGridComponent {
         private toastService: NxToastService,
         public tourService: TourService,
         private systemService: NxSystemService,
-        @Inject(WINDOW) public window: Window,
         private pageService: NxPageService,
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
@@ -842,7 +841,7 @@ export class NxLayoutGridComponent {
     // }
 
     ngAfterViewInit(): void {
-        this.onResize({ target: this.window });
+        this.onResize({ target: window });
     }
 
     startTour = (): void => this.tourService.start();
@@ -1091,7 +1090,7 @@ export class NxLayoutGridComponent {
             return;
         }
 
-        const { height, width } = this.window.document.fullscreenElement
+        const { height, width } = window.document.fullscreenElement
             ? size
             : this.calculateAspect([size, layout]).cellSize;
         const { renderConfig, rotation } = item;

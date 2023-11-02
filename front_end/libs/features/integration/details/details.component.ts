@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, effect, Inject, Injector, OnDestroy, OnInit } from '@angular/core';
+import { Component, effect, Injector, OnDestroy, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -22,7 +22,6 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, dialogs } from '@static-variables';
 
 import { IntegrationService } from '../integration.service';
@@ -61,7 +60,6 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
         private cloudApiService: NxCloudApiService,
         private uriService: NxUriService,
         private location: Location,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -261,15 +259,15 @@ export class NxIntegrationDetailsComponent implements OnInit, OnDestroy {
             const route = ['dashboard'];
             const options = { queryParams };
 
-            if (this.window.location === this.window.parent.location) {
+            if (window.location === window.parent.location) {
                 this.router.navigate(route, options);
             } else {
-                this.window.parent.postMessage({ route, options }, '*');
+                window.parent.postMessage({ route, options }, '*');
             }
         } else if (open === false) {
             // This is a deliberate check, confirm dialog returns true/false for
             // action/cancel buttons and undefined for closing with X
-            this.window.location.href = url;
+            window.location.href = url;
         }
     }
 

@@ -28,7 +28,6 @@ import type { Cameras, Vendors } from '@services/nx-cloud-api/nx-cloud-api.types
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { dialogs, icons, search } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
@@ -142,7 +141,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         private breakpointObserver: BreakpointObserver,
         private router: Router,
         @Inject(PLATFORM_ID) private platformId: object,
-        @Inject(WINDOW) private window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
@@ -377,7 +375,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
 
     setActiveCamera(): void {
         if (this.params.camera) {
-            this.uri.pageOffset = this.window.pageYOffset;
+            this.uri.pageOffset = window.pageYOffset;
             const selectedCamera = this.cameras.find(camera => camera.model === this.params.camera);
             this.activateCamera(selectedCamera);
         }

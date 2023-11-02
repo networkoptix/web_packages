@@ -6,7 +6,7 @@ import {
     HttpErrorResponse,
     HttpEvent,
 } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
 import { tap } from 'rxjs/operators';
 
@@ -15,7 +15,6 @@ import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { WINDOW } from '@services/window-provider';
 
 import { servers } from '../variables/static-variables';
 
@@ -28,7 +27,6 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         configService: NxConfigService,
         private appState: NxAppStateService,
         private dialogs: NxDialogsService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.config;
     }
@@ -57,7 +55,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         // Ignore external requests
         try {
             const url = new URL(res.url);
-            if (url.hostname !== this.window.location.hostname) {
+            if (url.hostname !== window.location.hostname) {
                 return;
             }
         } catch (e) {
@@ -65,7 +63,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         }
 
         // res might be just { type: number } and not full response
-        const url = res.url && new URL(res.url, this.window.location.origin);
+        const url = res.url && new URL(res.url, window.location.origin);
         if (url?.pathname.startsWith('/static') || url?.pathname.includes('proxy')) {
             // Don't check on request for static resource
             return;
@@ -100,7 +98,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             // remove overlay if visible
             this.appState.systemAvailable$.next(true);
             this.isDialogActive = true;
-            this.dialogs.expiredSession().then(() => this.window.location.reload());
+            this.dialogs.expiredSession().then(() => window.location.reload());
         } else if (
             res instanceof HttpResponse &&
             this.appState.systemAvailable$.value === false &&
@@ -112,7 +110,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             // lastErrorStatus$ could be "0" (because of res.type) ...
             if (this.appState.lastErrorStatus$.value !== undefined) {
                 if (offlineStatus) {
-                    this.window.location.reload();
+                    window.location.reload();
                 }
                 this.appState.lastErrorStatus$.next(undefined);
             }

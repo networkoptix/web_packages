@@ -20,7 +20,6 @@ import { NxApplyService } from '@services/apply.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { servers } from '@static-variables';
 
 @Component({
@@ -53,7 +52,6 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
         private applyService: NxApplyService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) { system, server }: DT['data'],
-        @Inject(WINDOW) private window: Window,
     ) {
         super(dialogRef);
 
@@ -137,7 +135,7 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                         mergeMap(() => {
                             if (environment.isLocal) {
                                 // give the user chance to read the toaster
-                                setTimeout(() => this.window.location.reload(), 2000);
+                                setTimeout(() => window.location.reload(), 2000);
                                 throw Error('re-login on restart');
                             }
                             // makes sure that system is online
@@ -202,7 +200,7 @@ export class RestartServerModalContent extends ModalBase<DT['return']> {
                 } else if (err.errorId === servers.errors.oldSessionErrorId) {
                     this.toastService.notify(this.LANG.servers.restartFailed, ToastType.Warning);
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => window.location.reload());
                 } else {
                     this.toastService.notify(message, ToastType.Warning);
                 }

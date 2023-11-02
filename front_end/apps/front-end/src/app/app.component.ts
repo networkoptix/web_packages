@@ -38,7 +38,6 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
-import { windowFactory } from '@services/window-provider';
 
 require('what-input');
 
@@ -93,7 +92,6 @@ require('what-input');
     encapsulation: ViewEncapsulation.None,
 })
 export class AppComponent implements OnInit {
-    private window: Window = windowFactory();
     CONFIG: IConfig = nxConfig;
 
     // This will disable all animations under nx-app. This won't apply to Dialogs since they're siblings
@@ -106,7 +104,7 @@ export class AppComponent implements OnInit {
     reauthorizing: boolean;
     headerHeight: number;
     themeSet: boolean = false;
-    windowHeight: number = this.window.innerHeight;
+    windowHeight: number = window.innerHeight;
 
     readonly environment = environment;
 
@@ -126,9 +124,7 @@ export class AppComponent implements OnInit {
         // requestIdleCallback is not supported in Safari so the next best thing is setTimeout.
         const idle = (): Promise<unknown> =>
             new Promise(resolve =>
-                this.window?.requestIdleCallback
-                    ? requestIdleCallback(resolve)
-                    : setTimeout(resolve),
+                window?.requestIdleCallback ? requestIdleCallback(resolve) : setTimeout(resolve),
             );
 
         await idle();
@@ -166,10 +162,10 @@ export class AppComponent implements OnInit {
         private themeService: NxThemeService,
         private sessionService: NxSessionService,
     ) {
-        this.reauthorizing = this.window.location.href.includes('cloud-authorize');
+        this.reauthorizing = window.location.href.includes('cloud-authorize');
         this.newHeader = this.CONFIG.featureFlags.newHeader;
 
-        const url = new URL(this.window.location.href.replace('#/', ''));
+        const url = new URL(window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
         const code = url.searchParams.get('code');
         const refreshToken = url.searchParams.get('refresh_token');
@@ -194,10 +190,10 @@ export class AppComponent implements OnInit {
             });
         }
         // Set Window height to accommodate mobile browser bars
-        fromEvent(windowFactory(), 'resize')
+        fromEvent(window, 'resize')
             .pipe(untilDestroyed(this))
             .subscribe(() => {
-                this.windowHeight = windowFactory().innerHeight;
+                this.windowHeight = window.innerHeight;
             });
 
         /* No real need to update often unless some browser have major upgrade
@@ -288,19 +284,19 @@ export class AppComponent implements OnInit {
 
         // Route check if page is displayed inside an iframe
         this.CONFIG.isInIframe =
-            this.window.location.pathname.startsWith('/embed') ||
-            this.window.location.search.includes('adminPreview=true');
+            window.location.pathname.startsWith('/embed') ||
+            window.location.search.includes('adminPreview=true');
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
         }
 
-        if (!environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver) {
+        if (!environment.isLocal && !this.CONFIG.isInIframe && !window.navigator.webdriver) {
             if (this.CONFIG.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
                 try {
                     FullStory.init({ orgId: this.CONFIG.cloudMonitoring.fullStory });
                     // eslint-disable-next-line dot-notation,@typescript-eslint/dot-notation
-                    this.window['_fs_ready'] = () => {
+                    window['_fs_ready'] = () => {
                         this.CONFIG.cloudMonitoring.isFullStoryActive = true;
                         console.info('FS: Please attach session url below to tickets');
                         console.info(
@@ -369,7 +365,7 @@ export class AppComponent implements OnInit {
     @HostListener('window:popstate')
     windowListener(): void {
         if (this.applyService.locked) {
-            this.window.history.go(1);
+            window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
     }

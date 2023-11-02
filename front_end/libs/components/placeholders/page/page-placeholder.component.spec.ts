@@ -1,12 +1,11 @@
 import { setupComponent } from '@components/src/setup';
 import staticLang from '@language_static';
-import { windowFactory } from '@services/window-provider';
 
 import { NxPagePlaceholderComponent } from './page-placeholder.component';
 
 const setWindowSize = (width: number = 1200, height: number = 600): void => {
-    windowFactory().innerWidth = width;
-    windowFactory().innerHeight = height;
+    window.innerWidth = width;
+    window.innerHeight = height;
 };
 
 const setupPagePlaceholderComponent = (): ReturnType<

@@ -41,7 +41,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, servers } from '@static-variables';
 import { cleanIp, strSplice, assignFrom, alphabeticalSort } from '@utils/general';
 
@@ -171,7 +170,6 @@ export class MergeModalContent {
         private accountService: NxAccountService,
         public dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
-        @Inject(WINDOW) private window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
@@ -551,9 +549,7 @@ export class MergeModalContent {
                     if (err.errorId === servers.errors.oldSessionErrorId) {
                         return this.handleOldSession();
                     } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                        return this.dialogs
-                            .expiredSession()
-                            .then(() => this.window.location.reload());
+                        return this.dialogs.expiredSession().then(() => window.location.reload());
                     }
                     if (err !== 'canceled') {
                         this.checkMergeButtonText = this.LANG.dialogs.merge.check;
@@ -706,7 +702,7 @@ export class MergeModalContent {
                 if (err.errorId === servers.errors.oldSessionErrorId) {
                     return this.handleOldSession();
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => window.location.reload());
                 }
                 console.error(err);
                 if (this.machine.currentState !== this.serverUrlErrors) {
@@ -868,9 +864,7 @@ export class MergeModalContent {
                         error.status === 403 ||
                         error.errorId === servers.errors.unauthorized
                     ) {
-                        return this.dialogs
-                            .expiredSession()
-                            .then(() => this.window.location.reload());
+                        return this.dialogs.expiredSession().then(() => window.location.reload());
                     }
                     // for errors that pop up during the merge
                     let errorCode = error.resultCode || error.data?.resultCode;
@@ -967,7 +961,7 @@ export class MergeModalContent {
         if (this.serverUrlInputExists) {
             this.serverUrl = this.machine.state.template.serverUrlInputValue;
             if (!/^https?:\/\//.test(this.serverUrl)) {
-                this.serverUrl = `${this.window.location.protocol}//${this.serverUrl}`;
+                this.serverUrl = `${window.location.protocol}//${this.serverUrl}`;
             }
             if (!/:\d{1,5}$/.test(this.serverUrl)) {
                 this.serverUrl += ':7001';

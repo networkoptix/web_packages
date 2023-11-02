@@ -1,11 +1,10 @@
-import { Component, Input, HostListener, OnInit, Inject } from '@angular/core';
+import { Component, Input, HostListener, OnInit } from '@angular/core';
 import { DomSanitizer } from '@angular/platform-browser';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
 
 import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { WINDOW } from '@services/window-provider';
 
 import type { AboutNode } from '../about.component.types';
 import { ErrorStateManager } from '../error-state/error-state-manager';
@@ -19,7 +18,7 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxIntegrationsComponent implements OnInit {
     @Input() integrationsNode: AboutNode;
 
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
 
     currentWindowWidth: number;
     scrollIndex = 0;
@@ -28,7 +27,7 @@ export class NxIntegrationsComponent implements OnInit {
     integrations;
 
     @HostListener('window:resize') onResize(): void {
-        this.currentWindowWidth = this.window.innerWidth;
+        this.currentWindowWidth = window.innerWidth;
     }
 
     // @ViewChild('integrationsScroll') integrationsScroll: ElementRef
@@ -75,17 +74,14 @@ export class NxIntegrationsComponent implements OnInit {
 
     navigate(url: string): void {
         // Need to figure out why router.navigate doesn't work
-        this.window.location.href = url;
+        window.location.href = url;
     }
 
     constructor(
-        @Inject(WINDOW) private window: Window,
         private translateService: TranslateService,
         public cloudApi: NxCloudApiService,
         public sanitizer: DomSanitizer,
-    ) {
-        this.errorManager = new ErrorStateManager(this.window);
-    }
+    ) {}
 
     ngOnInit(): void {
         this.cloudApi
@@ -95,7 +91,7 @@ export class NxIntegrationsComponent implements OnInit {
                 this.pluginCount = data.count || 0;
                 this.integrations = this.integrationsDetails();
             });
-        this.currentWindowWidth = this.window.innerWidth;
+        this.currentWindowWidth = window.innerWidth;
         this.integrationsShortDescription = (
             this.integrationsNode?.nodes?.[0]?.asset?.shortDescription || ''
         )

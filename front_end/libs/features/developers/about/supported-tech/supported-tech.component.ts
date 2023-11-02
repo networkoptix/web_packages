@@ -1,8 +1,7 @@
-import { Component, Input, Inject } from '@angular/core';
+import { Component, Input } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-import { WINDOW } from '@services/window-provider';
 import { images } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
@@ -17,12 +16,10 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxSupportedTechComponent {
     @Input() supportedTechNode: AboutNode;
 
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
     images = images;
 
-    constructor(public router: Router, @Inject(WINDOW) private window: Window) {
-        this.errorManager = new ErrorStateManager(this.window);
-    }
+    constructor(public router: Router) {}
 
     ngOnInit(): void {
         const { nodes, ...supportedTech } = this.supportedTechNode;

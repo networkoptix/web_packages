@@ -5,7 +5,6 @@ import {
     Renderer2,
     ViewChild,
     ElementRef,
-    Inject,
     OnDestroy,
     Injector,
 } from '@angular/core';
@@ -36,7 +35,6 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, search } from '@static-variables';
 import { highlight } from '@utils/general';
 
@@ -206,9 +204,9 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     }
 
     projectedLinkHandler({ url, target }: { url: string; target: string }) {
-        const base = this.window.location.origin;
+        const base = window.location.origin;
         if (target || !url.startsWith(base)) {
-            return this.window.open(url, target || '_self');
+            return window.open(url, target || '_self');
         }
         const updated = url.replace(base, '');
         this.router.navigateByUrl(updated);
@@ -269,7 +267,6 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         private processService: NxProcessService,
         private uriService: NxUriService,
         private pageService: NxPageService,
-        @Inject(WINDOW) private window: Window,
         private appStateService: NxAppStateService,
         public kbService: NxKnowledgebaseService,
     ) {

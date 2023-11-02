@@ -41,7 +41,6 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
     @Output() codeChange = new EventEmitter<string>();
     @Input() checkBackupCodeProcess: Process;
     @Input() errorCode: string;
-    @Input() window: Window;
     @Output() setCurrentState = new EventEmitter<AuthorizeStateType>();
 
     sendCode: () => void;
@@ -65,7 +64,7 @@ export class NxAuthorizeBackupCodeComponent implements OnInit, OnChanges, OnDest
             this.codeChange.emit(this.code);
         };
 
-        fromEvent<Event>(this.window, 'resize')
+        fromEvent<Event>(window, 'resize')
             .pipe(debounceTime(100))
             .subscribe(() => {
                 this.needLargerFooter = this.backToAuthSpan.nativeElement.offsetHeight > 32;

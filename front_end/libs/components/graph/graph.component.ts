@@ -1,7 +1,6 @@
 import {
     Component,
     ElementRef,
-    Inject,
     Input,
     OnChanges,
     TemplateRef,
@@ -23,7 +22,6 @@ import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
-import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
@@ -55,6 +53,8 @@ export class NxMonitoringGraphComponent implements OnChanges {
     @Input() lostConnectionPlaceholder: TemplateRef<unknown>;
 
     LANG = staticLang;
+
+    window = window;
 
     private destroy$ = new Subject<true>();
 
@@ -89,7 +89,6 @@ export class NxMonitoringGraphComponent implements OnChanges {
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
-        @Inject(WINDOW) public window: Window,
         private elRef: ElementRef,
     ) {
         this.setupDefaults();

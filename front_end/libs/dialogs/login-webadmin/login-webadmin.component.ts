@@ -25,7 +25,6 @@ import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxStorageService } from '@services/storage.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, redirect } from '@static-variables';
 
 /**
@@ -120,7 +119,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private keepPage: DT['data'],
         @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) protected window: Window,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -137,7 +135,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         params.delete(paramName);
         const paramString = params.toString();
         url.hash = hash + (paramString ? '?' + paramString : '');
-        this.window.location.href = url.toString();
+        window.location.href = url.toString();
     }
 
     private displayCloudConnectionError(): void {
@@ -266,11 +264,11 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                     if (isRootPath) {
                         this.router.navigate([redirect.authorised]).then(() => {
                             // ensure language reload as translations are loaded on page load
-                            this.window.location.reload();
+                            window.location.reload();
                         });
                     } else {
                         // TODO: remove window reload once we separate session state from account service
-                        this.window.location.reload();
+                        window.location.reload();
                     }
                 } else if (this.next) {
                     // sanitize this.next
@@ -278,7 +276,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                     this.router.navigate([this.next]).then(() => {
                         // *** window.location.reload(); // ensure language reload as translations are loaded on page load
                         // *** admin section is not a part of Angular project
-                        this.window.location.href = this.next;
+                        window.location.href = this.next;
                     });
                 } else {
                     setTimeout(() => {
@@ -286,7 +284,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                             .navigate([redirect.authorised], { replaceUrl: isRootPath })
                             .then(() => {
                                 // ensure language reload as translations are loaded on page load
-                                this.window.location.reload();
+                                window.location.reload();
                             });
                     });
                 }
@@ -305,7 +303,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 const systemHasInternet = data.some(system =>
                     system.serverFlags.includes('SF_HasPublicIP'),
                 );
-                if (this.window.navigator.onLine && systemHasInternet) {
+                if (window.navigator.onLine && systemHasInternet) {
                     this.account.mediaServerApi.redirectOauth();
                 } else {
                     this.displayCloudConnectionError();
@@ -327,7 +325,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                     '',
                     code,
                     res.access_token,
-                    this.window.location.href,
+                    window.location.href,
                 );
                 return;
             }
@@ -339,7 +337,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 this.account.get(true).then(
                     res => {
                         if (res) {
-                            this.window.location.reload();
+                            window.location.reload();
                         } else {
                             this.loading = false;
                             this.displayCloudConnectionError();
@@ -364,7 +362,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 this.account.mediaServerApi.getCurrentUser().then(account => {
                     this.account.loginState = account.email || account.name;
                     // If the page reloads too soon. Webadmin redirects to /
-                    setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
+                    setTimeout(() => window.location.reload(), this.urlUpdateTimeout);
                 });
             },
             () => {

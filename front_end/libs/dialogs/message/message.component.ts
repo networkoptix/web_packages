@@ -18,7 +18,6 @@ import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { WINDOW } from '@services/window-provider';
 import { credentialsValidation, dialogs } from '@static-variables';
 import { assignFrom } from '@utils/general';
 
@@ -65,13 +64,12 @@ export class MessageModalContent extends ModalBase<DT['return']> implements OnIn
         private cloudApiService: NxCloudApiService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
-        @Inject(WINDOW) private window: Window,
     ) {
         super(dialogRef);
         this.placeholder = '';
         this.subject = '';
         this.subjectMessage = '';
-        this.url = this.window.location.href;
+        this.url = window.location.href;
     }
 
     ngOnInit(): void {

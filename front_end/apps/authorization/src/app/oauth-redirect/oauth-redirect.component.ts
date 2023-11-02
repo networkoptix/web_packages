@@ -1,4 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
@@ -6,8 +6,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import { AuthorizeParams, ClientType } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { WINDOW } from '@services/window-provider';
-
 /* eslint-disable camelcase */
 @UntilDestroy()
 @Component({
@@ -26,11 +24,10 @@ export class NxOAuthRedirectComponent implements OnInit {
         private router: Router,
         private localStorageService: LocalStorageService,
         private deviceService: DeviceDetectorService,
-        @Inject(WINDOW) public window: Window,
     ) {}
 
     ngOnInit(): void {
-        if (this.window.nativeClient) {
+        if (window.nativeClient) {
             this.route.queryParams.subscribe(async (params: AuthorizeParams) => {
                 this.initialData = cloneDeep(params);
                 const { client_type, code, view_type } = this.initialData;

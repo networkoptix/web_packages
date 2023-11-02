@@ -1,6 +1,5 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
@@ -14,16 +13,12 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxNewCapabilitiesComponent implements OnInit {
     @Input() devCapabilitiesNode: AboutNode;
 
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
     svg = {
         width: '72',
         height: '76',
     };
     icons = icons;
-
-    constructor(@Inject(WINDOW) private window: Window) {
-        this.errorManager = new ErrorStateManager(this.window);
-    }
 
     ngOnInit(): void {
         const capabilitiesConfig = this.errorManager.buildConfig(

@@ -3,7 +3,7 @@ import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@an
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
-import { ChangeDetectionStrategy, Component, Inject, Input, signal } from '@angular/core';
+import { ChangeDetectionStrategy, Component, Input, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
@@ -61,7 +61,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { MutationType } from '@services/param-state/param-state.types';
 import { Layout } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -223,7 +222,6 @@ export class NxLayoutGridTreeComponent {
         public layoutStateService: LayoutStateService,
         private router: Router,
         public tourService: TourService,
-        @Inject(WINDOW) public window: Window,
     ) {
         if (this.CONFIG.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
@@ -456,7 +454,7 @@ export class NxLayoutGridTreeComponent {
             params.push('"width=100%, height=100%"');
         }
 
-        this.window.open(...params);
+        window.open(...params);
     };
 
     toggleNode = (node: ResourceNode): void => {

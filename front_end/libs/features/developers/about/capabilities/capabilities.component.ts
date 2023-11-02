@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
 
-import { windowFactory } from '@services/window-provider';
 import { icons, images } from '@static-variables';
 
 import type { AboutNode } from '../about.component.types';
@@ -14,13 +13,9 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxCapabilitiesComponent {
     @Input() capabilitiesNode: AboutNode;
 
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
     icons = icons;
     images = images;
-
-    constructor() {
-        this.errorManager = new ErrorStateManager(windowFactory());
-    }
 
     ngOnInit(): void {
         this.capabilitiesNode = {

@@ -40,7 +40,6 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, menus, redirect } from '@static-variables';
 
 interface Settings {
@@ -176,7 +175,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         private toastService: NxToastService,
         private translateService: TranslateService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
-        @Inject(WINDOW) private window: Window,
         private applyService: NxApplyService,
     ) {
         this.CONFIG = configService.getConfig();
@@ -280,7 +278,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     this.LANG.toastMessage.system.cloudConnect.success,
                     ToastType.Success,
                 );
-                setTimeout(() => this.window.location.reload(), 2000);
+                setTimeout(() => window.location.reload(), 2000);
             },
             () => {
                 this.toastService.notify(
@@ -370,7 +368,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                     return this.accountService.logout();
                 }
                 // give the user chance to read the toaster
-                setTimeout(() => this.window.location.reload(), 2000);
+                setTimeout(() => window.location.reload(), 2000);
             },
         );
     }
@@ -409,7 +407,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     connectLocalToCloud(): Promise<boolean> {
-        if (this.window.navigator.onLine) {
+        if (window.navigator.onLine) {
             return this.dialogs.connectLocalToCloud(this.system);
         } else {
             this.toastService.show(this.LANG.toastMessage.noInternet, ToastType.Warning);
@@ -571,7 +569,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     acceptOwnershipTransfer(): void {
         this.cloudApiService.respondToTransfer(this.system.id, 'accepted').subscribe(_ => {
             this.transferInfo = undefined;
-            this.window.location.reload();
+            window.location.reload();
         });
     }
 

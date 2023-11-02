@@ -1,17 +1,7 @@
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    Input,
-    OnChanges,
-    ViewChild,
-    Inject,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { fromEvent, Observable, Subscription } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
-
-import { WINDOW } from '@services/window-provider';
 
 import { NxHealthService } from '../../health.service';
 
@@ -38,7 +28,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit {
 
     fromEventSubscription: Subscription;
 
-    constructor(private healthService: NxHealthService, @Inject(WINDOW) private window: Window) {
+    constructor(private healthService: NxHealthService) {
         this.thumbnails = [];
         this.ready = false;
     }
@@ -48,7 +38,7 @@ export class NxImageSectionComponent implements OnChanges, AfterViewInit {
             return;
         }
         this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;
-        this.fromEventSubscription = fromEvent<Event>(this.window, 'resize')
+        this.fromEventSubscription = fromEvent<Event>(window, 'resize')
             .pipe(debounceTime(10))
             .subscribe(() => {
                 this.changeRow = this.imageSize.nativeElement.offsetWidth < 360;

@@ -1,6 +1,6 @@
 import { CdkTableModule } from '@angular/cdk/table';
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Inject, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -48,7 +48,6 @@ import {
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, manifest } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -121,7 +120,6 @@ export class NxConsoleTableComponent {
         private menusService: NxMenusService,
         private toastService: NxToastService,
         private consoleService: NxConsoleService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(this.updatePageState);
     }
@@ -328,7 +326,6 @@ export class NxConsoleTableComponent {
             generatePackage,
             checkPackage,
             getDownloadUrl,
-            this.window,
             notifyDownload,
         );
         this.asyncErrors[asyncSettings.lookupKey] = false;

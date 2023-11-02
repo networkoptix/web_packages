@@ -6,7 +6,6 @@ import {
     AfterViewInit,
     OnDestroy,
     HostListener,
-    Inject,
     Input,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -16,7 +15,6 @@ import { debounceTime, startWith } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemService } from '@services/system.service/system.service';
-import { WINDOW } from '@services/window-provider';
 import { px, ms } from '@view/datatypes/type-aliases';
 import { PlaybackService } from '@view/services/playback.service';
 import { WebClientUxService } from '@view/services/webclient-ux.service';
@@ -77,7 +75,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         private timeUnderMouse: TimelineTimeUnderMouseService,
         public selection: TimelineSelectionService,
         public ux: WebClientUxService,
-        @Inject(WINDOW) private window: Window,
     ) {
         const device = deviceService.getDeviceInfo();
         this.archiveSelectionEnabled =
@@ -110,7 +107,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     }
 
     ngAfterViewInit(): void {
-        fromEvent<Event>(this.window, 'resize')
+        fromEvent<Event>(window, 'resize')
             .pipe(untilDestroyed(this))
             .subscribe(() => this.updateCanvas.next(true));
 
@@ -119,7 +116,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
             .subscribe(() => {
                 // Update canvas geometry
                 const rect = this.canvasView.nativeElement.getBoundingClientRect();
-                const dpr = this.window.devicePixelRatio;
+                const dpr = window.devicePixelRatio;
                 this.canvasView.nativeElement.width = rect.width * dpr;
                 this.canvasView.nativeElement.height = rect.height * dpr;
                 this.timeline.setCanvasGeometry(rect.width * dpr, rect.height * dpr, dpr);
@@ -161,7 +158,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
 
         // if (times_rendered++ >= MAX_TIMES_RENDERED) return
 
-        this.animationTimeout = this.window.setTimeout(() => {
+        this.animationTimeout = window.setTimeout(() => {
             this.animationFrameRequestHandler = requestAnimationFrame(() =>
                 this.onAnimationFrame(),
             );
@@ -263,7 +260,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
         }
         this.timeUnderMouse.handleMouseDown();
         this.mouseNotReleasedYet = true;
-        this.clickAndHoldHandler = this.window.setTimeout(() => {
+        this.clickAndHoldHandler = window.setTimeout(() => {
             this.isDragging = true;
             clearTimeout(this.clickAndHoldHandler);
         }, CLICK_AND_HOLD_TIMEOUT);

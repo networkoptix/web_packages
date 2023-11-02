@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Inject, Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, Injector, runInInjectionContext } from '@angular/core';
 import { Router } from '@angular/router';
 import * as FullStory from '@fullstory/browser';
 import { CookieService } from 'ngx-cookie-service';
@@ -15,7 +15,6 @@ import { NxConsoleService } from '@pages/developer-console/console/console.servi
 import { NxDbService } from '@services/db.service';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
-import { WINDOW } from '@services/window-provider';
 import { apiBase, redirect, responseOk, staticBase } from '@static-variables';
 import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
@@ -150,7 +149,6 @@ export class NxCloudApiService {
         private consoleService: NxConsoleService,
         private oauthService: OauthService,
         private cookieService: CookieService,
-        @Inject(WINDOW) private window: Window,
         private db: NxDbService,
         private injector: Injector,
     ) {
@@ -168,7 +166,7 @@ export class NxCloudApiService {
                     ? this.CONFIG.cloudHost
                     : '';
             this.targetInstance =
-                new URL(_targetInstance).hostname === this.window.location.hostname
+                new URL(_targetInstance).hostname === window.location.hostname
                     ? ''
                     : _targetInstance;
         } catch (e) {
@@ -783,7 +781,7 @@ export class NxCloudApiService {
     getLanguages() {
         const uri = environment.isLocal
             ? '/static/languages.json'
-            : `${this.window.location.origin}/${staticBase}/languages.json`;
+            : `${window.location.origin}/${staticBase}/languages.json`;
         return this.cachedGet<t.ILanguages>(uri).toPromise();
     }
 

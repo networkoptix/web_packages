@@ -4,7 +4,6 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
 import staticLang from '@language_static';
-import { windowFactory } from '@services/window-provider';
 import { images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -22,12 +21,10 @@ export class NxSupportComponent implements OnChanges {
 
     LANG = staticLang;
     cleanSupportNode: AboutNode;
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
     images = images;
 
-    constructor(private sanitizer: DomSanitizer) {
-        this.errorManager = new ErrorStateManager(windowFactory());
-    }
+    constructor(private sanitizer: DomSanitizer) {}
 
     ngOnInit(): void {
         this.updateCleanedSupportNode(this.supportNode);

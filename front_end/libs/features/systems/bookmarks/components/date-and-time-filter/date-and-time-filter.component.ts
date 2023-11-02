@@ -6,14 +6,12 @@ import {
     EventEmitter,
     HostListener,
     ViewChild,
-    Inject,
 } from '@angular/core';
 import { DateAdapter } from '@angular/material/core';
 import { DateRange as DR, MatCalendar } from '@angular/material/datepicker';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject, timer } from 'rxjs';
 
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { MS, offsetDate } from '@utils/general';
 import { getSysLang } from '@utils/nx';
@@ -79,7 +77,7 @@ export class NxDateAndTimeFilterComponent {
         return new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
-    constructor(dateAdapter: DateAdapter<Date>, @Inject(WINDOW) private window: Window) {
+    constructor(dateAdapter: DateAdapter<Date>) {
         dateAdapter.setLocale(getSysLang(window));
         this.updateFixedDates();
         timer(MS.min, MS.min)
@@ -136,7 +134,7 @@ export class NxDateAndTimeFilterComponent {
             this.hoveredDate &&
             (e.target as HTMLElement).classList.contains('mat-calendar-body-cell-content')
         ) {
-            this.hoverTimeout = this.window.setTimeout(() => {
+            this.hoverTimeout = window.setTimeout(() => {
                 this.hoveredDate = null;
             }, 200);
         }

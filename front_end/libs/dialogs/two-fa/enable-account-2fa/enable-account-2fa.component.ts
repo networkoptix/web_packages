@@ -1,7 +1,7 @@
 import { DialogRef } from '@angular/cdk/dialog';
 import { CdkStepperModule } from '@angular/cdk/stepper';
 import { CommonModule } from '@angular/common';
-import { Component, ElementRef, Inject, ViewChild, forwardRef } from '@angular/core';
+import { Component, ElementRef, ViewChild, forwardRef } from '@angular/core';
 import { FormsModule, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -26,7 +26,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { apiBase, credentialsValidation, icons } from '@static-variables';
 
 import { NxBackupCodesComponent } from '../backup-codes/backup-codes.component';
@@ -90,7 +89,6 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
         dialogRef: DialogRef<DT['return']>,
         processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        @Inject(WINDOW) private window: Window,
         private cookieService: CookieService,
         private self: ElementRef<HTMLElement>,
         accountService: NxAccountService,
@@ -248,7 +246,7 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
             this.dialogRef.close();
         } else if (this.selectedIndex > 0 && this.selectedIndex < 3) {
             // Cleanup if user closes dialog after entering password and before entering code
-            this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
+            window.removeEventListener('beforeunload', this.removeUnverified2faKey);
             this.cloudApiService.deactivate2FaKey().catch(err => {
                 console.error('2FA cleanup failed ->', err);
             });

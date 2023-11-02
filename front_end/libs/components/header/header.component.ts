@@ -38,7 +38,6 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import type { NxSystemInfo } from '@services/systems.service.types';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
@@ -130,7 +129,6 @@ export class NxHeaderComponent implements OnInit {
         public headerService: NxHeaderService,
         public menusService: NxMenusService,
         private sessionStorage: SessionStorageService,
-        @Inject(WINDOW) private window: Window,
         private cookieService: CookieService,
         @Inject(DOCUMENT) private document: Document,
         public loginService: NxLoginService,
@@ -166,11 +164,11 @@ export class NxHeaderComponent implements OnInit {
             );
         }
         // Updates windowWidth$ behavior subject on window resize
-        fromEvent<Event>(this.window, 'resize')
+        fromEvent<Event>(window, 'resize')
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerWidth),
-                startWith(this.window.innerWidth),
+                startWith(window.innerWidth),
             )
             .subscribe(width => this.windowWidth$.next(width));
 
@@ -270,7 +268,7 @@ export class NxHeaderComponent implements OnInit {
         });
 
         if (!environment.production) {
-            this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${this.window.location.href}`;
+            this.headerService.authorizeUrl = `https://${environment.cloudHost}/authorize?redirect_url=${window.location.href}`;
         }
         this.headerService.createUrl = `${this.headerService.authorizeUrl}${
             environment.production ? '?' : '&'
@@ -305,7 +303,7 @@ export class NxHeaderComponent implements OnInit {
                         }
                     }
                 }
-                this.headerService.setLocation(this.window.location.pathname);
+                this.headerService.setLocation(window.location.pathname);
                 if (this.newHeader) {
                     if (!this.loginState) {
                         nodes.unshift(this.menusService.makeWelcomeNode());
@@ -317,7 +315,7 @@ export class NxHeaderComponent implements OnInit {
                 }
                 this.headerService.nodes = nodes;
 
-                this.headerService.setLocation(this.window.location.pathname);
+                this.headerService.setLocation(window.location.pathname);
             });
     }
 
@@ -343,9 +341,8 @@ export class NxHeaderComponent implements OnInit {
         this.breadcrumbWidth$.next(
             Array.from(wrapper.children).map(
                 (element: HTMLElement) =>
-                    parseInt(
-                        this.window.getComputedStyle(element).getPropertyValue('margin-right'),
-                    ) + element.offsetWidth,
+                    parseInt(window.getComputedStyle(element).getPropertyValue('margin-right')) +
+                    element.offsetWidth,
             ),
         );
 

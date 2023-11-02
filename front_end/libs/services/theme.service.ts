@@ -10,7 +10,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSessionService } from '@services/session.service';
-import { WINDOW } from '@services/window-provider';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
 import { AuthorizeParams } from './nx-cloud-api/nx-cloud-api.types';
@@ -44,7 +43,6 @@ export class NxThemeService {
         private sessionService: NxSessionService,
         private cookieService: CookieService,
         private route: ActivatedRoute,
-        @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) protected document: Document,
     ) {
         this.CONFIG = configService.getConfig();
@@ -68,8 +66,7 @@ export class NxThemeService {
             .pipe(untilDestroyed(this))
             .subscribe(async (params: AuthorizeParams) => {
                 if (!params.view_type) {
-                    this.viewType =
-                        this.window.document.documentElement.getAttribute('data-platform');
+                    this.viewType = window.document.documentElement.getAttribute('data-platform');
                 }
                 this.viewType ||= 'web';
             });
@@ -78,8 +75,8 @@ export class NxThemeService {
             .observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(theme => {
-                if (!this.window.document.hasFocus()) {
-                    this.window.document.documentElement.setAttribute(
+                if (!window.document.hasFocus()) {
+                    window.document.documentElement.setAttribute(
                         'data-theme',
                         this.getThemeRealName(theme),
                     );
@@ -142,7 +139,7 @@ export class NxThemeService {
         }
         this.themeSelected = this.sessionStorage.retrieve('theme');
 
-        this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+        this.darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
 
         if (this.themeSelected === 'auto') {
             NxConfigService.isDarkTheme = this.darkThemeMq.matches;
@@ -160,7 +157,7 @@ export class NxThemeService {
 
             const theme = NxConfigService.isDarkTheme ? 'dark' : 'light';
 
-            this.window.document.documentElement.setAttribute(
+            window.document.documentElement.setAttribute(
                 'data-theme',
                 this.getThemeRealName(theme),
             );
@@ -180,9 +177,9 @@ export class NxThemeService {
 
     async setTheme(themeSelected: string, username: string): Promise<void> {
         if (!this.darkThemeMq) {
-            this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
+            this.darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
         }
-        const docTheme = this.window.document.documentElement.getAttribute('data-theme');
+        const docTheme = window.document.documentElement.getAttribute('data-theme');
         let { themesEnabled } = this.CONFIG.featureFlags;
         if (username === 'setup' || this.viewType !== 'web') {
             themesEnabled = true;
@@ -196,7 +193,7 @@ export class NxThemeService {
                 NxConfigService.isDarkTheme && themesEnabled
                     ? this.getThemeRealName('dark')
                     : this.getThemeRealName('light');
-            this.window.document.documentElement.setAttribute('data-theme', theme);
+            window.document.documentElement.setAttribute('data-theme', theme);
             this.cookieService.set('theme', theme);
         } else {
             if (
@@ -208,7 +205,7 @@ export class NxThemeService {
             }
             this.sessionStorage.store('theme', themeSelected);
             NxConfigService.isDarkTheme = themeSelected === 'dark';
-            this.window.document.documentElement.setAttribute(
+            window.document.documentElement.setAttribute(
                 'data-theme',
                 this.getThemeRealName(themeSelected),
             );
@@ -243,7 +240,7 @@ export class NxThemeService {
         this.cookieService.set('theme', theme);
         this.themeSelected = theme;
 
-        this.window.document.documentElement.setAttribute('data-theme', theme);
+        window.document.documentElement.setAttribute('data-theme', theme);
 
         await this.themeCustomProperty
             .update(curr => {

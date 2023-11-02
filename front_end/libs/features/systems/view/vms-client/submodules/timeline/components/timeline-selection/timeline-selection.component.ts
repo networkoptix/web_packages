@@ -12,7 +12,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 import { animationFrameScheduler, interval } from 'rxjs';
 
-import { WINDOW } from '@services/window-provider';
 import type { ms } from '@view/datatypes/type-aliases';
 import { px } from '@view/datatypes/type-aliases';
 import { PlaybackService } from '@view/services/playback.service';
@@ -122,7 +121,6 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         private wheel: TimelineWheelHandlerService,
         private timeUnderMouse: TimelineTimeUnderMouseService,
         @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {
@@ -345,7 +343,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
 
     @HostListener('mousedown', ['$event'])
     mouseSelectionDownHandler(e: MouseEvent): void {
-        this.clickAndHoldHandler = this.window.setTimeout(() => {
+        this.clickAndHoldHandler = window.setTimeout(() => {
             this.selectionMode = true;
             this.selection.handleBackgroundMouseDown(e);
             clearTimeout(this.clickAndHoldHandler);

@@ -44,7 +44,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
 import { servers } from '@variables/static-variables';
 
@@ -235,7 +234,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         private elem: ElementRef<HTMLElement>,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
-        @Inject(WINDOW) public window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         super(dialogRef);
@@ -677,7 +675,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
 
     cleanUpUrl = (serverUrl: string): string => {
         if (!/^https?:\/\//.test(serverUrl)) {
-            serverUrl = `${this.window.location.protocol}//${serverUrl}`;
+            serverUrl = `${window.location.protocol}//${serverUrl}`;
         }
         if (!/:\d{1,5}$/.test(serverUrl)) {
             serverUrl += ':7001';

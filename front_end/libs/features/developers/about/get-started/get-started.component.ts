@@ -1,8 +1,7 @@
-import { Component, Input, Inject, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 
-import { WINDOW } from '@services/window-provider';
 import { images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -18,12 +17,8 @@ import { ErrorStateManager } from '../error-state/error-state-manager';
 export class NxGetStartedComponent implements OnChanges {
     @Input() getStartedNode: AboutNode;
     steps: AboutNode;
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
     images = images;
-
-    constructor(@Inject(WINDOW) private window: Window) {
-        this.errorManager = new ErrorStateManager(this.window);
-    }
 
     ngOnInit(): void {
         this.updateSteps(this.getStartedNode);

@@ -5,7 +5,6 @@ import {
     ViewChildren,
     QueryList,
     HostListener,
-    Inject,
     ElementRef,
     ViewChild,
 } from '@angular/core';
@@ -32,7 +31,6 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 
 import { DashboardConfiguration } from './dashboard-configuration';
@@ -156,7 +154,7 @@ export class NxDashboardComponent implements DashboardGroup {
         const active = this.dropsQuery.find(({ data }) => data === this.activeCellIndex);
         const activeElement = active?.element?.nativeElement;
         const { top, bottom } = activeElement?.getBoundingClientRect?.() || {};
-        if ((activeElement && top < 0) || bottom > this.window.innerHeight) {
+        if ((activeElement && top < 0) || bottom > window.innerHeight) {
             activeElement.scrollIntoView({ behavior: 'smooth' });
         }
     }
@@ -411,7 +409,7 @@ export class NxDashboardComponent implements DashboardGroup {
             `${action.params && !brokenRoute ? '&' : ''}${brokenRoute ? '' : 'adminPreview=true'}`;
         const label = action.label || action.name;
         if (brokenRoute) {
-            this.window.open(url, 'dashboard_tab');
+            window.open(url, 'dashboard_tab');
         } else {
             this.activeAction = { url, label };
         }
@@ -427,7 +425,7 @@ export class NxDashboardComponent implements DashboardGroup {
         ) {
             await this.router.navigateByUrl(url);
         } else {
-            this.window.open(url, 'dashboard_tab');
+            window.open(url, 'dashboard_tab');
         }
         this.activeAction = '';
         this.loading = false;
@@ -611,7 +609,6 @@ export class NxDashboardComponent implements DashboardGroup {
         private toastService: NxToastService,
         private pageService: NxPageService,
         private accountService: NxAccountService,
-        @Inject(WINDOW) private window: Window,
         private cookieService: CookieService,
     ) {
         this.CONFIG = configService.config;

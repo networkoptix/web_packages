@@ -1,6 +1,6 @@
 /* eslint-disable camelcase */
 import { HttpClient } from '@angular/common/http';
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
@@ -20,7 +20,6 @@ import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { ToastType } from '@components/toast-container/toast.types';
 import staticLang from '@language_static';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { isObject } from '@utils/general';
 
 import type { GroupsItem } from '../home.types';
@@ -49,9 +48,8 @@ export class NxSystemGroupsService {
         private router: Router,
         private toastService: NxToastService,
         private CPService: NxChannelPartnersService,
-        @Inject(WINDOW) private window: Window,
     ) {
-        this.WEBSOCKET_URL = `wss://${this.window.location.host}/system_groups/ws`;
+        this.WEBSOCKET_URL = `wss://${window.location.host}/system_groups/ws`;
 
         // Handles managing the connection to the WebSocket
         this.paramStateHandler.state$

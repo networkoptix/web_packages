@@ -28,7 +28,6 @@ import type { Ec2RecordedTimePeriodsResp } from '@services/system-api.types';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
 import { PLAYBACK_MODE, PlaybackState } from '@view/datatypes/PlaybackState';
@@ -138,7 +137,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         private store: Store,
         private localStorageService: LocalStorageService,
         @Inject(DOCUMENT) private document: Document,
-        @Inject(WINDOW) private window: Window & typeof globalThis,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -257,7 +255,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.getRecords();
             }
 
-            if (this.window.innerWidth <= this.ux.MIN_WINDOW_WIDTH_FOR_SIDEBAR) {
+            if (window.innerWidth <= this.ux.MIN_WINDOW_WIDTH_FOR_SIDEBAR) {
                 this.ux.isSidebarShown = false;
             }
         });
@@ -293,7 +291,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     rtsp: 'video/webm',
                 };
                 const video = this.document.createElement('video');
-                const isHlsSupported = this.window.MediaSource.isTypeSupported(
+                const isHlsSupported = window.MediaSource.isTypeSupported(
                     'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
                 );
                 this.transports = <PlaybackTransport[]>(
@@ -358,7 +356,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const fse = this.document.fullscreenElement;
         this.fullscreenMode = !!fse;
         if (this.fullscreenMode) {
-            this.onShowElements = this.window.setTimeout(() => {
+            this.onShowElements = window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, FULLSCREEN_INACTIVITY_DELAY_MS);
 
@@ -394,7 +392,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         if (this.fullscreenMode && !this.showElementsInFSM) {
             this.showElementsInFSM = true;
             clearTimeout(this.onMoveShowElements);
-            this.onMoveShowElements = this.window.setTimeout(() => {
+            this.onMoveShowElements = window.setTimeout(() => {
                 this.showElementsInFSM = false;
             }, FULLSCREEN_INACTIVITY_DELAY_MS);
         }

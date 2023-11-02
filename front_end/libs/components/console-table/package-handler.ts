@@ -34,7 +34,6 @@ export class PackageHandler {
         generatePackage: CustomClientAPI['generatePackage'],
         checkPackageHandler: CustomClientAPI['checkPackage'],
         packageDownloadHandler: CustomClientAPI['getDownloadUrl'],
-        private window: Window,
         notifyDownload = (downloadPath: string): void =>
             console.info(`Download ready: ${downloadPath}`),
         notifyError = console.error,
@@ -71,7 +70,7 @@ export class PackageHandler {
                         this.current = this.total;
                         this.downloadUrl = packageDownloadHandler(this.id, this.downloadId);
                         notifyDownload(this.downloadUrl);
-                        this.window.location.assign(this.downloadUrl);
+                        window.location.assign(this.downloadUrl);
                         this.#done$.next('done');
                         break;
 

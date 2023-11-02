@@ -1,4 +1,4 @@
-import { Component, OnInit, ViewChild, ViewContainerRef, Inject, OnDestroy } from '@angular/core';
+import { Component, OnInit, ViewChild, ViewContainerRef, OnDestroy } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -23,7 +23,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 
 @UntilDestroy()
@@ -63,7 +62,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private pageService: NxPageService,
         private toastService: NxToastService,
         private store: Store,
-        @Inject(WINDOW) protected window: Window,
         private db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();

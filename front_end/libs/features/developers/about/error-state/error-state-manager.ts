@@ -34,13 +34,6 @@ interface ErrorConfig extends Partial<BaseErrorConfig> {
 }
 
 export class ErrorStateManager {
-    /**
-     * To enable posting error messages when app is in iframe then window must be passed into the constructor.
-     *
-     * @param window - Injected window from angular
-     */
-    constructor(private window?: Window) {}
-
     private _errors: ErrorStateStructure = {};
 
     get hasErrors() {
@@ -52,9 +45,9 @@ export class ErrorStateManager {
     }
 
     set errors(value) {
-        if (value.name && this.window) {
+        if (value.name && window) {
             const message = `Section ${value.name} contains errors`;
-            this.window.parent.postMessage(message, '*');
+            window.parent.postMessage(message, '*');
         }
         this._errors = { ...this._errors, ...value };
     }

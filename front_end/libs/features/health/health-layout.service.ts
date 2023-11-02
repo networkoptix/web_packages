@@ -1,11 +1,10 @@
-import { ElementRef, Inject, Injectable } from '@angular/core';
+import { ElementRef, Injectable } from '@angular/core';
 import { sum } from 'lodash-es';
 import { BehaviorSubject } from 'rxjs';
 import { debounceTime } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { layout } from '@pages/static-variables-features';
-import { WINDOW } from '@services/window-provider';
 
 import { NxHealthService } from './health.service';
 
@@ -153,11 +152,7 @@ export class NxHealthLayoutService {
         this.tilesElementSubject.next(element);
     }
 
-    constructor(
-        private ribbonService: NxRibbonService,
-        private healthService: NxHealthService,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(private ribbonService: NxRibbonService, private healthService: NxHealthService) {
         this.pageSize = layout.tableLarge.rows;
 
         this.dimensionsSubject.pipe(debounceTime(10)).subscribe(() => {
@@ -238,7 +233,7 @@ export class NxHealthLayoutService {
             return;
         }
 
-        const { innerHeight: height, innerWidth: width } = this.window;
+        const { innerHeight: height, innerWidth: width } = window;
 
         const windowSize = { width, height };
 

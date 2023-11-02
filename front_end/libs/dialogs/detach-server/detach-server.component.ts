@@ -16,7 +16,6 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { servers } from '@static-variables';
 
 @Component({
@@ -50,7 +49,6 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
         private toastService: NxToastService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) { system, server }: DT['data'],
-        @Inject(WINDOW) private window: Window,
     ) {
         super(dialogRef);
 
@@ -63,7 +61,7 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
             () => {
                 this.close(true);
                 this.toastService.notify(this.LANG.servers.detachSystemSuccess, ToastType.Success);
-                this.window.location.reload();
+                window.location.reload();
                 // may need to remove & update system eventually
                 // const anotherServerId = this.system.servers.find(server => server.id !== this.serverId).id;
                 // return this.system.serverManager.removeMediaserver(anotherServerId, this.serverId).toPromise();
@@ -77,7 +75,7 @@ export class DetachServerModalContent extends ModalBase<DT['return']> implements
                         ToastType.Warning,
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => window.location.reload());
                 } else {
                     this.close();
                     this.toastService.notify(

@@ -1,9 +1,8 @@
-import { Component, Input, Output, EventEmitter, OnChanges, Inject } from '@angular/core';
+import { Component, Input, Output, EventEmitter, OnChanges } from '@angular/core';
 import { ClipboardService } from 'ngx-clipboard';
 
 import staticLang from '@language_static';
 import type { MediaStream } from '@services/system.service/camera-manager/add-params.types';
-import { WINDOW } from '@services/window-provider';
 
 import type { ViewCamera } from '../../datatypes/Camera';
 
@@ -31,10 +30,7 @@ export class NxCameraDetailsComponent implements OnChanges {
     cameraUrl: string;
     currentUrl: string;
 
-    constructor(
-        private clipboardService: ClipboardService,
-        @Inject(WINDOW) private window: Window,
-    ) {}
+    constructor(private clipboardService: ClipboardService) {}
 
     ngOnChanges(): void {
         if (this.camera) {
@@ -42,7 +38,7 @@ export class NxCameraDetailsComponent implements OnChanges {
             if (!this.cameraUrl.includes('//')) {
                 this.cameraUrl = `//${this.cameraUrl}`;
             }
-            this.currentUrl = this.window.location.href;
+            this.currentUrl = window.location.href;
             const mediaStreams = this.camera.mediaStreams;
             const findIndexTransports = (index: number): MediaStream | undefined =>
                 mediaStreams.find(({ encoderIndex }) => index === encoderIndex);

@@ -1,10 +1,9 @@
-import { Component, Inject, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import staticLang from '@language_static';
 import { OauthService } from '@services/oauth.service';
-import { WINDOW } from '@services/window-provider';
 import { oauthStore } from '@static-variables';
 
 @Component({
@@ -14,7 +13,6 @@ import { oauthStore } from '@static-variables';
 export class CloudOwnerAuthorizationComponent implements OnInit {
     LANG = staticLang;
     constructor(
-        @Inject(WINDOW) protected window: Window,
         private oauthService: OauthService,
         private storageService: LocalStorageService,
         private activatedRoute: ActivatedRoute,
@@ -22,7 +20,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
 
     handleCode(code: string): void {
         this.storageService.store(oauthStore.code, code);
-        this.window.close();
+        window.close();
     }
 
     ngOnInit(): void {

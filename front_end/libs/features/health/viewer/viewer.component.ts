@@ -27,7 +27,6 @@ import type { HealthReport } from '@services/system-api.aggregated-types';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, healthMonitoring } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
@@ -74,7 +73,6 @@ export class NxReportViewerComponent implements OnInit {
         private scrollMechanicsService: NxScrollMechanicsService,
         private headerService: NxHeaderService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
         pageService.pageTitle(this.LANG.pageTitles.information);
@@ -89,7 +87,7 @@ export class NxReportViewerComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.window.addEventListener('dragenter', event => {
+        window.addEventListener('dragenter', event => {
             let types = event.dataTransfer.types;
             // IE returns a DOMStringList instead of an array
             if (types instanceof DOMStringList) {

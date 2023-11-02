@@ -19,7 +19,6 @@ import {
     UserSession,
 } from '@services/system-api.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { WINDOW } from '@services/window-provider';
 import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
@@ -208,10 +207,9 @@ export class WizardStateService {
         private router: Router,
         private translate: TranslateService,
         private injector: Injector,
-        @Inject(WINDOW) public window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
-        const [host, port] = this.window.location.host.split(':');
+        const [host, port] = window.location.host.split(':');
         this.networkInfo = {
             ip: host,
             port: parseInt(port),
@@ -440,7 +438,7 @@ export class WizardStateService {
 
     private closeNative(): Promise<void> {
         if (this.hasNativeClient) {
-            this.window.close();
+            window.close();
             return Promise.resolve();
         }
         return Promise.reject();
@@ -465,11 +463,11 @@ export class WizardStateService {
         this.closeNative().catch(async () => {
             await this.server.logout();
 
-            const redirect = `${this.window.location.protocol}//${this.window.location.host}`;
-            if (this.window.top !== this.window.self) {
-                this.window.top.window.location.href = redirect;
+            const redirect = `${window.location.protocol}//${window.location.host}`;
+            if (window.top !== window.self) {
+                window.top.window.location.href = redirect;
             } else {
-                this.window.location.href = redirect;
+                window.location.href = redirect;
             }
         });
     }
@@ -805,7 +803,7 @@ export class WizardStateService {
                 .pipe(untilDestroyed(this))
                 .subscribe(() => {
                     clearInterval(pingInterval);
-                    this.window.location.reload();
+                    window.location.reload();
                 });
         }, alertTimeout);
     }
@@ -926,7 +924,7 @@ export class WizardStateService {
                 Promise.all([this.getAdvancedSettings(), this.discoverSystems()]).catch(() => {});
             })
             .catch(_ => {
-                const params = new URLSearchParams(this.window.location.search);
+                const params = new URLSearchParams(window.location.search);
                 if (
                     [WIZARD_STATE.CloudSuccess, WIZARD_STATE.LocalSuccess].includes(
                         this.currentState,
@@ -938,8 +936,8 @@ export class WizardStateService {
                     this.currentState = WIZARD_STATE.InitFailure;
                 } else {
                     params.set('retry', 'true');
-                    this.window.location.search = params.toString();
-                    setTimeout(() => this.window.location.reload(), 1000);
+                    window.location.search = params.toString();
+                    setTimeout(() => window.location.reload(), 1000);
                 }
             });
     };

@@ -9,11 +9,9 @@ import {
     EventEmitter,
     ViewEncapsulation,
     OnChanges,
-    Inject,
 } from '@angular/core';
 import type videojs from 'video.js';
 
-import { WINDOW } from '@services/window-provider';
 import { NgChanges } from '@utils/ng-changes';
 
 import { PLAYBACK_MODE } from '../../../datatypes/PlaybackState';
@@ -50,13 +48,11 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     protected transport = '';
     private readonly xRuntimeGuid = 'x-runtime-guid';
 
-    constructor(@Inject(WINDOW) private window: Window) {}
-
     // For lazy loading player
     #videojs: typeof videojs;
 
     private supportsNativeHls(): boolean {
-        const video = this.window.document.createElement('video');
+        const video = window.document.createElement('video');
         const supportsHls = !!(
             video.canPlayType('application/vnd.apple.megURL') || video.canPlayType('audio/mpegurl')
         );
@@ -117,7 +113,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         this.player.on('waiting', () => {
             if (!stallTimer) {
                 this.hasPlayed = false;
-                stallTimer = this.window.setTimeout(() => {
+                stallTimer = window.setTimeout(() => {
                     this.bufferingChange.emit(waitingTime);
                 }, waitingTime);
             }

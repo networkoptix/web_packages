@@ -1,4 +1,4 @@
-import { ApplicationRef, Inject, Injectable, Injector } from '@angular/core';
+import { ApplicationRef, Injectable, Injector } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
 import { TranslateService } from '@ngx-translate/core';
 import { concat, interval, zip } from 'rxjs';
@@ -8,7 +8,6 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxProcessService } from '@services/process.service';
-import { WINDOW } from '@services/window-provider';
 
 @Injectable({
     providedIn: 'root',
@@ -23,7 +22,6 @@ export class NxSwPromptUpdateService {
         updates: SwUpdate,
         appRef: ApplicationRef,
         injector: Injector,
-        @Inject(WINDOW) private window: Window,
     ) {
         const languageSet$ = translateService.onTranslationChange.pipe(
             filter(translations => translations !== null),
@@ -42,7 +40,7 @@ export class NxSwPromptUpdateService {
                         text: this.LANG.ribbon.newVersionAvailable.installButton,
                         value: this.processService.createProcess(() => {
                             return updates.activateUpdate().then(() => {
-                                this.window.location.reload();
+                                window.location.reload();
                             });
                         }),
                     },

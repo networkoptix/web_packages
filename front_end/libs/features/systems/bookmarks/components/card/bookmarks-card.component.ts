@@ -1,7 +1,6 @@
-import { Component, Input, OnInit, Inject, ViewEncapsulation } from '@angular/core';
+import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { msToParts } from '@utils/general';
 import { getSysLang } from '@utils/nx';
@@ -19,16 +18,14 @@ export class NxBookmarksCardComponent implements OnInit {
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
 
-    private locale: string;
+    private locale: string = getSysLang(window);
     startTime: string;
     startDate: string;
     duration: string;
     enableTooltip: boolean;
     thumbnailError: boolean;
 
-    constructor(private dialogs: NxDialogsService, @Inject(WINDOW) window: Window) {
-        this.locale = getSysLang(window);
-    }
+    constructor(private dialogs: NxDialogsService) {}
 
     ngOnInit(): void {
         const startDate = new Date(this.bookmark.startTimeMs + this.bookmark.timeZoneOffset);

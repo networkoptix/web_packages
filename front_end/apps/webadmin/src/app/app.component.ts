@@ -1,7 +1,6 @@
 import {
     Component,
     HostListener,
-    Inject,
     ViewEncapsulation,
     ViewChild,
     ElementRef,
@@ -34,7 +33,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 
 require('what-input');
 
@@ -140,10 +138,9 @@ export class AppComponent implements AfterViewInit {
         private dialogsService: NxDialogsService,
         private localStorageService: LocalStorageService,
         private themeService: NxThemeService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.reauthorizing = this.window.location.href.includes('cloud-authorize');
+        this.reauthorizing = window.location.href.includes('cloud-authorize');
         this.newHeader = this.CONFIG.featureFlags.newHeader;
 
         if (!this.CONFIG.browserNotSupported) {
@@ -236,8 +233,8 @@ export class AppComponent implements AfterViewInit {
 
         // Route check if page is displayed inside an iframe
         this.CONFIG.isInIframe =
-            this.window.location.pathname.startsWith('/embed') ||
-            this.window.location.search.includes('adminPreview=true');
+            window.location.pathname.startsWith('/embed') ||
+            window.location.search.includes('adminPreview=true');
         if (this.CONFIG.isInIframe) {
             this.appStateService.headerVisibility = false;
             this.appStateService.footerVisibility = false;
@@ -305,7 +302,7 @@ export class AppComponent implements AfterViewInit {
     @HostListener('window:popstate')
     windowListener(): void {
         if (this.applyService.locked) {
-            this.window.history.go(1);
+            window.history.go(1);
             this.applyService.showDialog().catch(() => {});
         }
     }

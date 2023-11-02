@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Component, Inject, Injector, OnInit } from '@angular/core';
+import { Component, Injector, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { SessionStorageService } from 'ngx-webstorage';
 
@@ -12,7 +12,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { WINDOW } from '@services/window-provider';
 import { apiBase } from '@static-variables';
 
 @Component({
@@ -57,7 +56,6 @@ export class NxContentComponent implements OnInit {
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
-        @Inject(WINDOW) private window: Window,
     ) {
         this.setupDefaults();
         this.CONFIG = configService.getConfig();
@@ -67,7 +65,7 @@ export class NxContentComponent implements OnInit {
         this.staticContent = JSON.parse(this.sessionStorage.retrieve('staticContent')) || {};
 
         // Clear staticContent on reload so we can try to fetch from db again
-        this.window.onbeforeunload = event => {
+        window.onbeforeunload = event => {
             this.sessionStorage.clear('staticContent');
         };
 
@@ -83,7 +81,7 @@ export class NxContentComponent implements OnInit {
             .then(() => {
                 this.showAgree = false;
                 if (this.account.is_staff) {
-                    this.window.location.href = decodeURIComponent(
+                    window.location.href = decodeURIComponent(
                         this.route.snapshot.queryParams.next
                             ? this.route.snapshot.queryParams.next
                             : '/admin/',

@@ -1,4 +1,4 @@
-import { Component, Inject, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { takeWhile } from 'rxjs/operators';
@@ -8,7 +8,6 @@ import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxHeaderService } from '@services/nx-header.service';
-import { WINDOW } from '@services/window-provider';
 import { images } from '@static-variables';
 
 import type { AboutNode } from '../about/about.component.types';
@@ -26,17 +25,14 @@ export class NxDevToolsComponent implements OnInit {
 
     CONFIG: IConfig = nxConfig;
     menuName = '';
-    errorManager: ErrorStateManager;
+    errorManager = new ErrorStateManager();
     images = images;
 
     constructor(
         private cloudApi: NxCloudApiService,
         public headerService: NxHeaderService,
         private route: ActivatedRoute,
-        @Inject(WINDOW) private window: Window,
-    ) {
-        this.errorManager = new ErrorStateManager(this.window);
-    }
+    ) {}
 
     ngOnInit(): void {
         let snapshot = this.route.snapshot;

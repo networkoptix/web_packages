@@ -1,6 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { HttpParams } from '@angular/common/http';
-import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
@@ -17,7 +17,6 @@ import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
-import { WINDOW } from '@services/window-provider';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -59,18 +58,14 @@ export class NxLoggerComponent implements OnChanges {
     systemRequires2fa = false;
     cancel$ = new Subject();
 
-    constructor(
-        config: NxConfigService,
-        private cookieService: CookieService,
-        @Inject(WINDOW) private window: Window,
-    ) {
+    constructor(config: NxConfigService, private cookieService: CookieService) {
         this.relayUrl = config.getConfig().trafficRelayHost;
     }
 
     async getLogs(logger: LoggerDropdownItem): Promise<void> {
         this.cancel$.next('cancel');
         let params = new HttpParams({ fromObject: { name: logger.value, lines: '1000' } });
-        const { host, protocol } = this.window.location;
+        const { host, protocol } = window.location;
         let loggerHost = host;
 
         if (!environment.isLocal) {

@@ -1,10 +1,9 @@
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRoute, Router, Params } from '@angular/router';
 import { isEqual } from 'lodash-es';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { WINDOW } from '@services/window-provider';
 
 import { menus } from '../variables/static-variables';
 
@@ -19,11 +18,7 @@ export class NxUriService {
 
     queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
 
-    constructor(
-        private router: Router,
-        private route: ActivatedRoute,
-        @Inject(WINDOW) private window: Window,
-    ) {}
+    constructor(private router: Router, private route: ActivatedRoute) {}
 
     get queryParams(): Params {
         return this.queryParamsSubject.getValue();
@@ -48,8 +43,8 @@ export class NxUriService {
     }
 
     changePort(newPort: string): void {
-        this.window.location.replace(
-            `${this.window.location.protocol}//${this.window.location.hostname}:${newPort}/${this.window.location.hash}`,
+        window.location.replace(
+            `${window.location.protocol}//${window.location.hostname}:${newPort}/${window.location.hash}`,
         );
     }
 

@@ -114,7 +114,6 @@
             [(code)]="authCode"
             [checkAuthCodeProcess]="checkAuthCodeProcess"
             [errorCode]="authCodeErrorCode"
-            [window]="window"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-auth-code-component>
         <nx-authorize-backup-code-component
@@ -126,7 +125,6 @@
             [(code)]="backupCode"
             [checkBackupCodeProcess]="checkBackupCodeProcess"
             [errorCode]="backupCodeErrorCode"
-            [window]="window"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-backup-code-component>
         <nx-show-404-authorize-component

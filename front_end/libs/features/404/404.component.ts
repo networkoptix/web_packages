@@ -1,5 +1,5 @@
 import { Location } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { TranslateService } from '@ngx-translate/core';
 
@@ -10,7 +10,6 @@ import type { RouteCheckTuple } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { longAlertTimeout } from '@static-variables';
 
 @Component({
@@ -31,7 +30,6 @@ export class Nx404Component {
         private location: Location,
         private toastService: NxToastService,
         private translate: TranslateService,
-        @Inject(WINDOW) private window: Window,
         configService: NxConfigService,
     ) {
         this.CONFIG = configService.config;
@@ -82,7 +80,7 @@ export class Nx404Component {
                 redirectUrl = '/';
                 if (translatedLink) {
                     // Open if redirect link found in translations
-                    this.window.open(translatedLink, '_blank');
+                    window.open(translatedLink, '_blank');
                 } else {
                     // Else return to show 404
                     this.redirecting = false;
@@ -96,7 +94,7 @@ export class Nx404Component {
                     queryParams: { redirected: url },
                 })
                 .then(_ => {
-                    const { origin } = this.window.location;
+                    const { origin } = window.location;
                     const redirectMessage = this.translate.instant(this.LANG.redirects.message, {
                         url: `${origin}/#${url}`,
                         redirectUrl: translatedLink || `${origin}/#${redirectUrl}`,

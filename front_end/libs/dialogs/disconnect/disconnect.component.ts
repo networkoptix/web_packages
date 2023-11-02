@@ -22,7 +22,6 @@ import { NxSystemAPIService } from '@services/system-api.service';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { servers } from '@static-variables';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
@@ -58,7 +57,6 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
         private systemsService: NxSystemsService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
-        @Inject(WINDOW) private window: Window,
     ) {
         super(dialogRef);
     }
@@ -111,7 +109,7 @@ export class DisconnectModalContent extends ModalBase<DT['return']> {
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
                     this.unlock();
-                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => window.location.reload());
                 } else {
                     this.unlock();
                 }

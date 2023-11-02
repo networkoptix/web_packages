@@ -1,5 +1,5 @@
 import { SelectionModel } from '@angular/cdk/collections';
-import { Component, OnInit, Inject, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
 import {
@@ -30,7 +30,6 @@ import type {
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import {
     alphabeticalSort,
@@ -149,7 +148,7 @@ export class NxBookmarksComponent implements OnInit {
     tagFilter = new SelectionModel<string>(true, []);
 
     private queryParams: BookmarkParams;
-    private locale: string;
+    private locale: string = getSysLang(window);
 
     constructor(
         configService: NxConfigService,
@@ -157,10 +156,8 @@ export class NxBookmarksComponent implements OnInit {
         private route: ActivatedRoute,
         public router: Router,
         private pageService: NxPageService,
-        @Inject(WINDOW) window: Window,
     ) {
         this.CONFIG = configService.getConfig();
-        this.locale = getSysLang(window);
     }
 
     ngOnInit(): void {

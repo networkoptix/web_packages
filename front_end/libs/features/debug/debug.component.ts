@@ -1,6 +1,6 @@
 /* eslint-disable no-console */
 import { HttpClient } from '@angular/common/http';
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 import { filter } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -13,7 +13,6 @@ import type { NxSystemWithUserInfo } from '@services/system.service/system-types
 import { NxSystemsService } from '@services/systems.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
 import type { LinkSettings } from '@services/url-protocol.service';
-import { WINDOW } from '@services/window-provider';
 import { openClientTimeout, openMobileClientTimeout } from '@variables/static-variables';
 
 @Component({
@@ -65,7 +64,6 @@ export class NxDebugComponent {
     type = 'activate_account';
     userEmail = '';
     constructor(
-        @Inject(WINDOW) private window: Window,
         private http: HttpClient,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
@@ -186,7 +184,7 @@ export class NxDebugComponent {
             this.debugProxySettings.method === 'GET'
                 ? this.debugProxySettings.authGet
                 : this.debugProxySettings.authPost;
-        const protocol = this.window.location.protocol;
+        const protocol = window.location.protocol;
         const systemId = this.debugProxySettings.systemId.value;
         const proxyUrl = this.debugProxySettings.proxyUrl;
         const apiCall = this.debugProxySettings.apiCall;
@@ -248,7 +246,7 @@ export class NxDebugComponent {
             .then((data: any) => {
                 const link = data.link;
                 // @ts-expect-error
-                this.window.protocolCheck(
+                window.protocolCheck(
                     link,
                     openClientTimeout,
                     openMobileClientTimeout,

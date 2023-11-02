@@ -6,13 +6,11 @@ import {
     EventEmitter,
     ViewChild,
     ElementRef,
-    Inject,
     OnChanges,
 } from '@angular/core';
 import { escapeRegExp } from 'lodash-es';
 import type { BehaviorSubject } from 'rxjs';
 
-import { WINDOW } from '@services/window-provider';
 import { MS } from '@utils/general';
 import type { NgChanges } from '@utils/ng-changes';
 import { getSysLang } from '@utils/nx';
@@ -134,10 +132,8 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     lastValidValue: string | null = null;
     postPeriod: boolean = true;
 
-    constructor(@Inject(WINDOW) private window: Window) {}
-
     ngOnInit(): void {
-        const dtFormat = Intl.DateTimeFormat(getSysLang(this.window), {
+        const dtFormat = Intl.DateTimeFormat(getSysLang(window), {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers

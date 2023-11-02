@@ -8,7 +8,6 @@ import {
     ViewEncapsulation,
     EventEmitter,
     Output,
-    Inject,
     booleanAttribute,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR, ControlValueAccessor, FormsModule } from '@angular/forms';
@@ -30,7 +29,6 @@ import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType } from '@services/search.service.types';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, search } from '@static-variables';
 
 import type { SearchFilter } from './search.component.types';
@@ -121,7 +119,6 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
         private uri: NxUriService,
         private searchService: NxSearchService,
         private scrollMechanicsService: NxScrollMechanicsService,
-        @Inject(WINDOW) private window: Window,
     ) {}
 
     ngOnInit(): void {
@@ -399,7 +396,7 @@ export class NxSearchComponent implements OnInit, ControlValueAccessor {
                 queryParams[select.id] = select.selected.join(',');
             }
         });
-        this.uri.pageOffset = this.window.pageYOffset;
+        this.uri.pageOffset = window.pageYOffset;
 
         if (!isEqual(queryParams, this.params)) {
             // make sure we reset page on new model

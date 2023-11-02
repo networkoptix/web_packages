@@ -12,7 +12,6 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 
 import { NxAPIToolSystemService } from '@pages/api-tool/services/api-tool-system.service';
-import { WINDOW } from '@services/window-provider';
 
 import {
     findLine,
@@ -37,7 +36,6 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     attributeMutationObserver: MutationObserver;
 
     constructor(
-        @Inject(WINDOW) private window: any,
         @Inject(DOCUMENT) private document: Document,
         private APIToolService: NxAPIToolSystemService,
         private elementRef: ElementRef,
@@ -175,7 +173,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
         // React overrides value setter so you can't simply do: this.textarea.value = 'text''
         // This code properly triggers the onChange handler in swagger's react code
         const setValue = Object.getOwnPropertyDescriptor(
-            this.window.HTMLTextAreaElement?.prototype,
+            window.HTMLTextAreaElement?.prototype,
             'value',
         )?.set;
         textContent = textContent.replace(/\u00A0/g, ' '); // Replace non-breaking spaces to make JSON parse properly

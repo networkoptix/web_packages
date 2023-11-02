@@ -20,7 +20,6 @@ import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
-import { WINDOW } from '@services/window-provider';
 import { icons, images } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
@@ -56,7 +55,6 @@ class BaseLanguageDropdown extends BaseDropdown {
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        @Inject(WINDOW) private window: Window,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         super(configService);
@@ -102,7 +100,7 @@ class BaseLanguageDropdown extends BaseDropdown {
             if (this.languageService.currentLang !== this.langCode) {
                 if (environment.isLocal) {
                     this.sessionService.language = this.langCode;
-                    this.window.location.reload();
+                    window.location.reload();
                 } else {
                     this.cloudApi.changeLanguage(this.langCode).then(() => {
                         this.languageService.currentLang = this.langCode;

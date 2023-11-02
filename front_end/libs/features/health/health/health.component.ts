@@ -34,7 +34,6 @@ import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
-import { WINDOW } from '@services/window-provider';
 import { healthMonitoring, icons, menus } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
@@ -82,7 +81,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private sourceService: NxAppSourceService,
         public healthService: NxHealthService,
-        @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
@@ -106,7 +104,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
-        this.window.addEventListener('dragenter', event => {
+        window.addEventListener('dragenter', event => {
             let types = event.dataTransfer.types;
             // IE returns a DOMStringList instead of an array
             if (types instanceof DOMStringList) {
@@ -597,10 +595,10 @@ export class NxHealthComponent implements OnInit, OnDestroy {
                 () => {},
                 () => {
                     if (!this.system.id) {
-                        if (!this.window.parent) {
-                            this.window.location.reload();
+                        if (!window.parent) {
+                            window.location.reload();
                         } else {
-                            this.window.parent.location.reload();
+                            window.parent.location.reload();
                         }
                     }
                     this.hasServerError = this.system.isOnline;

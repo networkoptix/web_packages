@@ -1,10 +1,9 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { iif, mergeMap, Observable, of } from 'rxjs';
 import { catchError, map } from 'rxjs/operators';
 
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { WINDOW } from '@services/window-provider';
 
 type ApiData = { [key: string]: string | boolean | number };
 
@@ -29,11 +28,7 @@ export class AuthService {
     readonly apiBase = '/cdb';
     readonly customization: string;
 
-    constructor(
-        @Inject(WINDOW) private window: Window,
-        config: NxConfigService,
-        private httpClient: HttpClient,
-    ) {
+    constructor(config: NxConfigService, private httpClient: HttpClient) {
         this.customization = config.getConfig().customization;
     }
 
@@ -86,7 +81,7 @@ export class AuthService {
         // TODO: Once client registration is supported verify clientId + redirectUrl before trying to get an access code.
         return this.post(endpoints.token, data).pipe(
             map(({ code, error }: { code: string; error: string }) => {
-                const [link, qs] = redirectUrl?.split('?') || [this.window.location.origin];
+                const [link, qs] = redirectUrl?.split('?') || [window.location.origin];
                 const params = new URLSearchParams(qs || '');
                 params.set('code', code);
 

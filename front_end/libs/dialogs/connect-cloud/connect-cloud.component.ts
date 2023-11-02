@@ -22,7 +22,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { WINDOW } from '@services/window-provider';
 import { apiBase, oauthStore } from '@static-variables';
 
 import type { ConnectLocalToCloud as DT } from '../dialogs.types';
@@ -100,7 +99,6 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
         private account: NxAccountService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private system: DT['data'],
-        @Inject(WINDOW) private window: Window,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -114,7 +112,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
             .observe(oauthStore.code)
             .subscribe(code => this.handleCode(code));
 
-        this.window.open('/#/cloud-authorize?state=connect', '_blank').focus();
+        window.open('/#/cloud-authorize?state=connect', '_blank').focus();
     }
 
     private connect(systemName: string, email: string, accessToken: string): Observable<Connect> {

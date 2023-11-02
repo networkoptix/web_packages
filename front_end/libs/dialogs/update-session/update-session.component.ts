@@ -16,7 +16,6 @@ import { NxLoginService } from '@services/login.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { alertTimeout } from '@static-variables';
 import { htmlStrConstructor } from '@utils/nx';
 
@@ -61,7 +60,6 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA)
         { sessionState, system, noConnectionMsg, openingRef, processAction }: DT['data'],
-        @Inject(WINDOW) private window: Window,
         processService: NxProcessService,
         toastService: NxToastService,
         loginService: NxLoginService,
@@ -81,10 +79,7 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
 
                 if (
                     this.isCloud &&
-                    !(
-                        this.window.navigator.onLine ||
-                        moduleInfo?.serverFlags.includes('SF_HasPublicIP')
-                    )
+                    !(window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))
                 ) {
                     this.close();
                     openingRef?.close();

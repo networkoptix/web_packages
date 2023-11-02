@@ -4,7 +4,6 @@ import {
     Component,
     ElementRef,
     HostListener,
-    Inject,
     OnDestroy,
     OnInit,
     ViewEncapsulation,
@@ -35,7 +34,6 @@ import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
 import { NxThemeService } from '@services/theme.service';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { oauthStore } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 
@@ -159,7 +157,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private themeService: NxThemeService,
         private cookieService: CookieService,
-        @Inject(WINDOW) public window: Window,
     ) {
         this.CONFIG = configService.getConfig();
         this.newHeader = this.CONFIG.featureFlags.newHeader;
@@ -187,7 +184,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     private checkRedirectUrl(): Promise<boolean> {
         const { scope } = this.initialData;
         let verifiedCheck = of(true);
-        if (scope && !this.initialData.redirect_uri.includes(this.window.location.origin)) {
+        if (scope && !this.initialData.redirect_uri.includes(window.location.origin)) {
             const findId = scope.match(/cloudSystemId=(?<systemId>.[\w\d-]+)/);
             if (findId?.groups.systemId) {
                 verifiedCheck = this.verifyRedirectUrlHelper(findId.groups.systemId);
@@ -232,7 +229,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             this.initialData = cloneDeep(params);
             this.isMobileClient = this.initialData.view_type === 'mobile';
             this.initialData.email &&= this.initialData.email.replace(' ', '+');
-            if (this.window.nativeClient && !this.initialData.email) {
+            if (window.nativeClient && !this.initialData.email) {
                 const clientEmail = nativeClient.username && (await nativeClient?.username());
                 if (clientEmail) {
                     this.initialData.email = clientEmail;
@@ -250,12 +247,12 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
             const isWeb = this.viewType === 'web' && this.initialData.client_id === 'webadmin';
 
             this.windowLargeEnough =
-                this.window.innerWidth > ViewportBreakpoints.Tablet.height &&
-                this.window.innerHeight > ViewportBreakpoints.Tablet.width &&
+                window.innerWidth > ViewportBreakpoints.Tablet.height &&
+                window.innerHeight > ViewportBreakpoints.Tablet.width &&
                 this.viewType === 'web';
-            this.windowSmallEnough = this.window.innerWidth <= AUTH_BREAKPOINT;
-            this.showScrollbar = this.window.innerHeight < AUTH_WINDOW_HEIGHT;
-            fromEvent<Event>(this.window, 'resize')
+            this.windowSmallEnough = window.innerWidth <= AUTH_BREAKPOINT;
+            this.showScrollbar = window.innerHeight < AUTH_WINDOW_HEIGHT;
+            fromEvent<Event>(window, 'resize')
                 .pipe(debounceTime(100))
                 .subscribe(event => {
                     const { innerHeight, innerWidth } = event.target as Window;
@@ -377,7 +374,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                     ? oauthStore.code
                     : oauthStore.verify2fa;
             this.localStorageService.store(key, code);
-            this.window.close();
+            window.close();
             return;
         }
         if (this.clientType === 'system2faAuth') {
@@ -400,10 +397,10 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         }
         this.hideError();
         // @es-ignore undefined link case for when using access_token and 2fa needed when connecting to a system from desktop
-        if (link?.includes('redirect-oauth') || (this.window.nativeClient && !link)) {
+        if (link?.includes('redirect-oauth') || (window.nativeClient && !link)) {
             const { client_id, client_type, access_code, access_token } = this.initialData;
             if (
-                this.window.nativeClient &&
+                window.nativeClient &&
                 [ClientType.renewDesktop, ClientType.renewWeb].includes(this.clientType) &&
                 (access_code || access_token || code)
             ) {
@@ -754,7 +751,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     };
 
     redirect = (route?: string): void => {
-        this.window.location.href = route || this.initialData.redirect_uri || '/';
+        window.location.href = route || this.initialData.redirect_uri || '/';
     };
 
     hideError(): void {

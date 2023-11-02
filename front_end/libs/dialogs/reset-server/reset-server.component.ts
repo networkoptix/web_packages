@@ -23,7 +23,6 @@ import { Process } from '@services/process.service/process';
 import { ModuleInformation } from '@services/system-api.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
-import { WINDOW } from '@services/window-provider';
 import { servers } from '@static-variables';
 import { cleanId } from '@utils/general';
 
@@ -62,7 +61,6 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         private router: Router,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) { system, server }: DT['data'],
-        @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) private document: Document,
     ) {
         super(dialogRef);
@@ -119,7 +117,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                     this.close(true);
                     if (numberOfServers === 1) {
                         this.localStorage.store('resetServer', true);
-                        setTimeout(() => this.window.location.reload(), 2000);
+                        setTimeout(() => window.location.reload(), 2000);
                     } else if (isResettingCurrentServer()) {
                         this.appState.systemAvailable$.next(false);
                     } else {
@@ -188,7 +186,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
                         ToastType.Warning,
                     );
                 } else if (err.status === 403 || err.errorId === servers.errors.unauthorized) {
-                    return this.dialogs.expiredSession().then(() => this.window.location.reload());
+                    return this.dialogs.expiredSession().then(() => window.location.reload());
                 }
             },
         );

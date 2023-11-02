@@ -9,7 +9,6 @@ import {
     OnInit,
     Output,
     ViewChild,
-    Inject,
     ElementRef,
 } from '@angular/core';
 import type { NgForm } from '@angular/forms';
@@ -25,7 +24,6 @@ import { NxPasswordValidationComponent } from '@components/password-input-valida
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { Process } from '@services/process.service/process';
-import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -98,8 +96,6 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     @ViewChild('rowPassword', { static: false }) rowPassword: ElementRef<HTMLDivElement>;
     @ViewChild('rowTerms', { static: false }) rowTerms: ElementRef<HTMLElement>;
 
-    constructor(@Inject(WINDOW) private window: Window) {}
-
     ngOnInit(): void {
         if (this.loginEmail) {
             if (this.viewType === 'setupWizard') {
@@ -149,7 +145,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     ngOnDestroy(): void {}
 
     externalLinkForDesktop(relativePath: string): false | undefined {
-        if (this.window.nativeClient) {
+        if (window.nativeClient) {
             nativeClient.openUrlInBrowser(relativePath);
             return false;
         }
