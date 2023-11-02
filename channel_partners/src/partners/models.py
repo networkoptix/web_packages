@@ -137,6 +137,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     last_usage_check = models.DateTimeField(default=timezone.now)
     last_usage_report = models.DateTimeField(default=timezone.now)
     security_statuses = models.JSONField(default=dict)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
@@ -358,6 +359,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     can_create_sub_channels = models.BooleanField(default=True)
     allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -726,6 +728,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                      },
                                                      default=OrganizationRole.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
+    created_ts = models.DateTimeField(auto_now_add=True)
     attributes = models.JSONField(default=dict)
 
     objects = ExternalIdTargetManager()
@@ -949,9 +952,11 @@ class ChannelPartnerService(models.Model):
     description = models.TextField(blank=True)
     parameters = models.JSONField(default=dict, blank=True)
     parent_service = models.ForeignKey('ChannelPartnerService', blank=True, null=True, on_delete=models.CASCADE)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
+
 
     def __str__(self):
         return f'{self.name} - {self.created_by_channel_partner.name}'
@@ -1040,6 +1045,7 @@ class ServiceToSubChannelProperties(models.Model):
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE,
                                 related_name='channel_partners_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
@@ -1074,6 +1080,7 @@ class ServiceToOrganizationProperties(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='service_properties')
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE, related_name='organization_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     def can_access(self, user: CloudUser):
         return self.organization.can_access(user)
@@ -1150,6 +1157,7 @@ class ExternalId(models.Model):
                                    related_name='%(class)s_created_external_ids')
     custom_id = models.CharField(max_length=100)
     objects = ExternalIdManager()
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True

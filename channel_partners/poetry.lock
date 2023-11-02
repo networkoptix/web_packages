@@ -391,6 +391,25 @@ url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
 reference = "pypi-remote"
 
 [[package]]
+name = "django-filter"
+version = "23.3"
+description = "Django-filter is a reusable Django application for allowing users to filter querysets dynamically."
+optional = false
+python-versions = ">=3.7"
+files = [
+    {file = "django-filter-23.3.tar.gz", hash = "sha256:015fe155582e1805b40629344e4a6cf3cc40450827d294d040b4b8c1749a9fa6"},
+    {file = "django_filter-23.3-py3-none-any.whl", hash = "sha256:65bc5d1d8f4fff3aaf74cb5da537b6620e9214fb4b3180f6c560776b1b6dccd0"},
+]
+
+[package.dependencies]
+Django = ">=3.2"
+
+[package.source]
+type = "legacy"
+url = "http://artifactory.us.nxteam.dev/artifactory/api/pypi/pypi-remote/simple"
+reference = "pypi-remote"
+
+[[package]]
 name = "django-silk"
 version = "5.0.4"
 description = "Silky smooth profiling for the Django Framework"
@@ -1399,4 +1418,4 @@ reference = "pypi-remote"
 [metadata]
 lock-version = "2.0"
 python-versions = "~3.11"
-content-hash = "da2fe23cacdaa30c53cc7c75aa4243fe6dbc88e758a8def47db3a629236f358b"
+content-hash = "98cf766e1a76aafbb3d6856981e53a12aca7cb97988dbeaec03a935b490c290f"

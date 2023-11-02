@@ -126,6 +126,7 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
     canCreateSubChannels = serializers.BooleanField(source='can_create_sub_channels', default=True, required=False)
     allowChangingServices = serializers.BooleanField(source='allow_changing_services', default=False, required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = ChannelPartner
@@ -204,11 +205,12 @@ class OrganizationSerializer(serializers.ModelSerializer):
                                                 choices=ChannelPartnerAccessLevel.LEVEL_CODES)
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = Organization
-        exclude = ['channel_partner_access_level', 'channel_partner']
-        read_only_fields = ['channelPartner', 'users']
+        exclude = ['channel_partner_access_level', 'channel_partner', 'created_ts']
+        read_only_fields = ['channelPartner', 'users', 'created']
 
     def update(self, instance: Organization, validated_data):
         instance.set_attributes(validated_data.get('attributes', {}), partial=self.partial)
@@ -244,10 +246,12 @@ class CloudSystemSerializer(serializers.ModelSerializer):
     effectiveState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     systemId = serializers.UUIDField(source='system_id', read_only=True)
     services = serializers.DictField(read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = CloudSystemId
-        fields = ['id', 'state', 'effectiveState', 'systemId', 'name', 'organization', 'services', 'activated']
+        fields = ['id', 'state', 'effectiveState', 'systemId', 'name',
+                  'organization', 'services', 'created', 'activated']
         read_only_fields = ['users', 'organization']
 
     def validate(self, data):
@@ -544,27 +548,31 @@ class ServiceSerializer(serializers.ModelSerializer):
     type = CodeChoiceField(choices=list(ChannelPartnerService.SERVICE_TYPE_CODES))
     state = CodeChoiceField(choices=list(ChannelPartnerService.STATES_CODES))
     displayName = serializers.CharField(source='name')
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = ChannelPartnerService
-        fields = ['id', 'type', 'state', 'displayName', 'description', 'createdByChannelPartner', 'parameters']
+        fields = ['id', 'type', 'state', 'displayName', 'description',
+                  'createdByChannelPartner', 'parameters', 'created']
 
 
 class AvailableChannelPartnerServiceSerializer(serializers.ModelSerializer):
     service = ServiceSerializer(read_only=True)
     price = serializers.DecimalField(decimal_places=3, max_digits=10)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
-        fields = ['service', 'price']
+        fields = ['service', 'price', 'created']
         model = ServiceToSubChannelProperties
 
 
 class AvailableOrganizationServiceSerializer(serializers.ModelSerializer):
     service = ServiceSerializer(read_only=True)
     price = serializers.DecimalField(decimal_places=3, max_digits=10)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
-        fields = ['service', 'price']
+        fields = ['service', 'price', 'created']
         model = ServiceToOrganizationProperties
 
 
@@ -723,10 +731,11 @@ class ChannelPartnerExternalIdSerializer(ExternalIdSerializerBase, serializers.M
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
                                    help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = ChannelPartnerExternalId
-        fields = ['customId', 'channelPartner', 'fullId']
+        fields = ['customId', 'channelPartner', 'fullId', 'created']
 
     def validate_channelPartner(self, value: ChannelPartner):
         req = self.context.get('request')
@@ -740,10 +749,11 @@ class OrganizationExternalIdSerializer(ExternalIdSerializerBase, serializers.Mod
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
                                    help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = OrganizationExternalId
-        fields = ['customId', 'organization', 'fullId']
+        fields = ['customId', 'organization', 'fullId', 'created']
 
     def validate_organization(self, value: Organization):
         req = self.context.get('request')
@@ -758,10 +768,11 @@ class CloudSystemIdExternalIdSerializer(ExternalIdSerializerBase, serializers.Mo
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
                                    help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = CloudSystemExternalId
-        fields = ['customId', 'cloudSystemId', 'fullId']
+        fields = ['customId', 'cloudSystemId', 'fullId', 'created']
 
     def validate_cloudSystemId(self, value: CloudSystemId):
         req = self.context.get('request')
@@ -776,10 +787,11 @@ class ChannelPartnerServiceExternalIdSerializer(ExternalIdSerializerBase, serial
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
                                    help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
         model = ChannelPartnerServiceExternalId
-        fields = ['customId', 'channelPartnerService', 'fullId']
+        fields = ['customId', 'channelPartnerService', 'fullId', 'created']
 
     def validate_channel_partner_service(self, value: ChannelPartnerService):
         req = self.context.get('request')

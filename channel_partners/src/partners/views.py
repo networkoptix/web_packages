@@ -4,24 +4,23 @@ from uuid import uuid4
 
 from django.core.cache import caches
 from django.shortcuts import get_object_or_404
-from drf_spectacular.openapi import OpenApiParameter, OpenApiTypes
-from drf_spectacular.utils import extend_schema_view, inline_serializer
+from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+from drf_spectacular.utils import extend_schema_view
 # from drf_spectacular.views import extend_schema
 
 
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.pagination import PageNumberPagination
 from rest_framework.response import Response
-from rest_framework import status
 from rest_framework.permissions import IsAuthenticated
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
-from rest_framework.generics import ListAPIView
-from rest_framework.mixins import RetrieveModelMixin
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from tools.exception import Conflict
 from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
+from partners import filters
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, IsInternalToken
 from .serializers import *
 # from channel_partners.utils import nx_extend_schema as extend_schema
@@ -91,7 +90,9 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     lookup_field = 'user__email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = ChannelPartnerToUser.objects.all().select_related('user')
+    queryset = ChannelPartnerToUser.objects.all().select_related('user').order_by('created_ts')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.UserFilter
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
@@ -152,8 +153,10 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     serializer_class = ChannelPartnerSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     # Base queryset used by NestedViewSetMixin
-    queryset = ChannelPartner.objects.all()
+    queryset = ChannelPartner.objects.all().order_by('created_ts')
     pagination_class = DefaultPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ChannelPartnerFilter
 
     def get_queryset(self):
         query = Q(
@@ -192,7 +195,7 @@ class ExternalIdBase:
         channel_partner = self.get_channel_partner()
         return super().get_queryset().filter(
             created_by=channel_partner,
-        )
+        ).order_by('created_ts')
 
     def create(self, request, *args, **kwargs):
         creating_channel_partner = self.get_channel_partner()
@@ -209,6 +212,8 @@ class ExternalIdBase:
 class ChannelPartnerExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = ChannelPartnerExternalIdSerializer
     queryset = ChannelPartnerExternalId.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ExternalId
 
 
 @extend_schema(
@@ -217,6 +222,8 @@ class ChannelPartnerExternalIdViewset(ExternalIdBase, ModelViewSet):
 class ChannelPartnerServiceExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = ChannelPartnerServiceExternalIdSerializer
     queryset = ChannelPartnerServiceExternalId.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ExternalId
 
 
 @extend_schema(
@@ -225,6 +232,8 @@ class ChannelPartnerServiceExternalIdViewset(ExternalIdBase, ModelViewSet):
 class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = OrganizationExternalIdSerializer
     queryset = OrganizationExternalId.objects.all()
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ExternalId
 
 
 @extend_schema(
@@ -233,6 +242,8 @@ class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
 class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = CloudSystemIdExternalIdSerializer
     queryset = CloudSystemExternalId.objects.all().select_related('cloud_system')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ExternalId
 
 
 @extend_schema(
@@ -243,7 +254,9 @@ class ChannelPartnerOwnedServiceViewset(NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = ServiceSerializer
-    queryset = ChannelPartnerService.objects.all()
+    queryset = ChannelPartnerService.objects.all().order_by('created_ts')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.CreatedTsAndNameFilter
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
@@ -261,8 +274,10 @@ class ChannelPartnerAvailableServiceViewset(ParentLookUpMixin, NestedViewSetMixi
     http_method_names = ['get', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = AvailableChannelPartnerServiceSerializer
-    queryset = ServiceToSubChannelProperties.objects.all()
+    queryset = ServiceToSubChannelProperties.objects.all().order_by('created_ts')
     lookup_field = 'service_id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.CreatedTsAndNameFilter
 
     def get_queryset(self):
         _, channel_partner_id = self.get_related_pair()
@@ -287,8 +302,10 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
     http_method_names = ['get', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = AvailableOrganizationServiceSerializer
-    queryset = ServiceToOrganizationProperties.objects.all()
+    queryset = ServiceToOrganizationProperties.objects.all().order_by('created_ts')
     lookup_field = 'service_id'
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.CreatedTsAndNameFilter
 
     def get_queryset(self):
         _, organization_id = self.get_related_pair()
@@ -321,7 +338,10 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
 class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
+    queryset = ChannelPartner.objects.order_by('created_ts')
     pagination_class = DefaultPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.ChannelPartnerFilter
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
@@ -358,9 +378,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
                 .values('channel_partner')
             )
             query |= Q(parent_channel_partner__in=Subquery(parent_channel_partners_query))
-            return ChannelPartner.objects.filter(query)
 
-        return ChannelPartner.objects.filter(query)
+        return self.queryset.filter(query)
 
 
     @extend_schema(request=CreateChannelPartnerSerializer, responses=ChannelPartnerSerializer)
@@ -419,8 +438,10 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     http_method_names = ['get']
     serializer_class = OrganizationSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = Organization.objects.all().select_related('channel_partner')
+    queryset = Organization.objects.all().order_by('created_ts').select_related('channel_partner')
     pagination_class = DefaultPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.OrganizationFilter
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
@@ -450,8 +471,10 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'post', 'patch', 'delete']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
+    queryset = Organization.objects.all().order_by('created_ts').select_related('channel_partner')
     pagination_class = DefaultPagination
-    queryset = Organization.objects.all().select_related('channel_partner')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.OrganizationFilter
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -534,7 +557,9 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     lookup_field = 'user__email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = OrganizationToUser.objects.all().select_related('user')
+    queryset = OrganizationToUser.objects.all().order_by('created_ts').select_related('user')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.UserFilter
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
@@ -587,8 +612,10 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     http_method_names = ['get']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = CloudSystemId.objects.all()
+    queryset = CloudSystemId.objects.all().order_by('created_ts')
     pagination_class = DefaultPagination
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.CreatedTsAndIdAndNameFilter
 
     def get_queryset(self):
         return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host, activated=True)
@@ -623,6 +650,9 @@ class CloudSystemViewSet(NestedViewSetMixin,
     lookup_field = 'system_id'
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
+    queryset = CloudSystemId.objects.all().order_by('created_ts')
+    filter_backends = [DjangoFilterBackend]
+    filterset_class = filters.CreatedTsAndIdAndNameFilter
 
     @staticmethod
     def get_service_quantity_lock(obj):
@@ -630,9 +660,9 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
     def get_queryset(self):
         if self.detail:
-            return CloudSystemId.objects.filter(cloud_host=self.request.cloud_host)
+            return self.queryset.filter(cloud_host=self.request.cloud_host)
         else:
-            return CloudSystemId.objects.filter(cloud_host=self.request.cloud_host, organization__users=self.request.user, activated=True)
+            return self.queryset.filter(cloud_host=self.request.cloud_host, organization__users=self.request.user, activated=True)
 
     def get_serializer_class(self):
         if self.action == 'create':
