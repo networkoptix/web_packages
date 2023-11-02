@@ -331,12 +331,11 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
                          extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_sub_channel_partners} for parentChannelPartner'}),
     retrieve=extend_schema(summary='Get a channel partner', description='Return a channel partner\'s details by id'),
     partial_update=extend_schema(summary='Update Channel Partner properties', description='Update Channel Partner properties', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_sub_channel_partners} for parentChannelPartner'}),
-    destroy=extend_schema(summary='Remove a Channel Partner', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_sub_channel_partners} for parentChannelPartner'}),
     service_changes_summary=extend_schema(summary='Get summary of service changes in a single period'),
     service_changes_history=extend_schema(summary='Get individual records of service changes in a single period')
 )
 class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = ['get', 'post', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     queryset = ChannelPartner.objects.order_by('created_ts')
     pagination_class = DefaultPagination
@@ -347,7 +346,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action == 'retrieve':
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_access))
-        if self.action in ('partial_update', 'destroy'):
+        if self.action in ('partial_update'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_manage))
         if self.action in ('service_changes_history', 'service_changes_summary'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_view_service_reports))
@@ -463,11 +462,10 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     retrieve=extend_schema(summary='Get an Organization'),
     create=extend_schema(summary='Create an Organization', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_organizations} for channelPartner'}),
     partial_update=extend_schema(summary='Update properties of an Organization', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_organizations} for channelPartner'}),
-    destroy=extend_schema(summary='Remove an Organization', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_organizations} for channelPartner'}),
     service_changes_history=extend_schema()
 )
 class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
-    http_method_names = ['get', 'post', 'patch', 'delete']
+    http_method_names = ['get', 'post', 'patch']
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     permission_classes = (IsAuthenticated,)
     queryset = Organization.objects.all().order_by('created_ts').select_related('channel_partner')
@@ -485,7 +483,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action == 'retrieve':
             perms.append(CanPerformChannelPartnerAction(Organization.can_access))
-        if self.action in ('update', 'destroy'):
+        if self.action in ('update'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage))
         if self.action in ('service_changes_history',):
             perms.append(CanPerformChannelPartnerAction(Organization.can_view_service_reports))
@@ -634,17 +632,14 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     retrieve=extend_schema(summary='Get a System', extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'}),
     create=extend_schema(summary='Bind a local system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
     bind_existing=extend_schema(summary='Bind an existing cloud system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
-    destroy=extend_schema(summary='Remove a system from an Organization',
-                          auth=[{'Cloud Oauth Token': []}],  extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'})
 )
 @extend_schema(tags=['Channel Partners - Systems'])
 class CloudSystemViewSet(NestedViewSetMixin,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
-                         mixins.DestroyModelMixin,
                          mixins.ListModelMixin,
                          GenericViewSet):
-    http_method_names = ['get', 'post', 'delete', 'patch']
+    http_method_names = ['get', 'post', 'patch']
     serializer_class = CloudSystemSerializer
     lookup_field = 'system_id'
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
@@ -682,8 +677,6 @@ class CloudSystemViewSet(NestedViewSetMixin,
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
             if self.request.method == 'GET':
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access, direct_access_allowed=True))
-        if self.action == 'destroy':
-            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
         return perms
 
     @extend_schema(auth=[{'Cloud Oauth Token': []}], request=BindLocalSystemSerializer, responses=SystemBindResponseSerializer)
@@ -704,12 +697,6 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
         response_serializer = CloudSystemSerializer(system)
         return Response(response_serializer.data)
-
-    def destroy(self, request, *args, **kwargs):
-        data = self.get_object().remove_system_users_data(request.user)
-        response = super().destroy(request, *args, **kwargs)
-        make_batch_request(request, data)
-        return response
 
     @extend_schema(responses=SaaSReportSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['GET'], detail=True)
