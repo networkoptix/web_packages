@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDropList } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -264,6 +264,7 @@ const createAddedItems = (currentItems: LayoutItem[], itemsToAdd: LayoutItem[]):
         NxForceVisibilityDirective,
         NxSearchComponent,
         NxSearchHighlightComponent,
+        CdkDragPreview,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './layout-grid-tree.component.html',

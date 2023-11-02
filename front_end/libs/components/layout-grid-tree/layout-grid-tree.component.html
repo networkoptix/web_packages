@@ -132,11 +132,19 @@
                         class="tooltip-offset-target"
                     ></div>
                     <div *cdkDragPreview>
-                        <div class="add-preview">
+                        <div
+                            class="add-preview"
+                            *ngIf="node.type !== RESOURCE_TYPE.CAMERA"
+                        >
                             <ng-container
-                                *ngTemplateOutlet="nodeInfo; context: { node: node, preview: true }"
+                                [ngTemplateOutlet]="nodeInfo"
+                                [ngTemplateOutletContext]="{ node: node, preview: true }"
                             ></ng-container>
                         </div>
+                        <ng-container
+                            *ngIf="node.type == RESOURCE_TYPE.CAMERA"
+                            [ngTemplateOutlet]="cameraTooltip"
+                        ></ng-container>
                     </div>
 
                     <ng-container
