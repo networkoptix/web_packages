@@ -303,14 +303,16 @@ class Mediaserver:
 
 
     def tear_down(self):
-        if self._cloud_owner is not None:
-            _CLOUD_API.disconnect(
-                self._cloud_owner.email,
-                self._cloud_owner.password,
-                self.id,
-                self._cloud_owner.get_otp(),
-                )
-        self._container.delete()
+        try:
+            if self._cloud_owner is not None:
+                _CLOUD_API.disconnect(
+                    self._cloud_owner.email,
+                    self._cloud_owner.password,
+                    self.id,
+                    self._cloud_owner.get_otp(),
+                    )
+        finally:
+            self._container.delete()
 
 
 class CloudAccount:
