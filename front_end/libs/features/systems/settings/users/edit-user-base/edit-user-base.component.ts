@@ -71,6 +71,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     protected isTemporary$$ = signal(false);
     protected isMe$$ = signal(false);
     protected canBeEdited$$ = signal(false);
+    protected hasCustomPermissions$$ = signal(false);
 
     protected editPermissions$$ = computed<EditActions>(() => {
         const isLocal = this.isLocal$$();
@@ -215,6 +216,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         this.isTemporary$$.set(user.type === UserType.temporaryLocal);
         this.isMe$$.set(currentUser.id === user.id);
         this.canBeEdited$$.set(user.canBeEdited);
+        this.hasCustomPermissions$$.set(user.hasCustomPermissions);
 
         this.deleteMessage = this.isCloud$$()
             ? this.LANG.system.users.cloudDelete

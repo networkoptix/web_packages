@@ -354,9 +354,7 @@ export class ServerManager {
 
     renameServer(serverId: string, serverName: string): Promise<t.ChangedIdReturned> {
         const cleanServerId = serverId.replace(/[{}]/g, '');
-        return this.mediaserverConnections[serverId].saveServerUserSettings(cleanServerId, {
-            serverName,
-        });
+        return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
     }
 
     restartServer(serverId: string): Promise<t.RestartServer> {

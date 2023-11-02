@@ -90,6 +90,13 @@
                         <p class="help-block">{{ group.description | translate }}</p>
                     </div>
                 </div>
+                <div *ngIf="hasCustomPermissions$$()">
+                    <nx-alert-block
+                        type="info"
+                        [iconSrc]="icons.dirNonStandard + 'info.svg'"
+                        [line1]="LANG.toastMessage.customPermissions | translate"
+                    ></nx-alert-block>
+                </div>
             </nx-section>
 
             <nx-section
@@ -105,7 +112,8 @@
                             for="fullName"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label': !editPermissions$$().changeInfo
+                                'disabled-input-label':
+                                    !editPermissions$$().changeInfo || isLdap$$()
                             }"
                             translate
                             >Name</label
@@ -125,7 +133,8 @@
                             for="email"
                             class="control-label text-nowrap user-form-labels text-right"
                             [ngClass]="{
-                                'disabled-input-label': !editPermissions$$().changeInfo
+                                'disabled-input-label':
+                                    !editPermissions$$().changeInfo || isLdap$$()
                             }"
                             translate
                             >Email</label
@@ -153,9 +162,9 @@
                 </div>
             </nx-section>
 
-            <nx-section *ngIf="canBeEdited$$() || isMe$$()">
+            <nx-section *ngIf="isAccountBlockFooterVisible$$()">
                 <div
-                    *ngIf="!environment.isLocal && isCloud$$() && isMe$$()"
+                    *ngIf="accountBlockFooterSettings$$().cloudAccountSettings"
                     class="float-left"
                 >
                     <button
@@ -168,7 +177,7 @@
                     </button>
                 </div>
                 <div
-                    *ngIf="editPermissions$$().changePassword"
+                    *ngIf="accountBlockFooterSettings$$().changePassword"
                     class="float-left"
                 >
                     <button
@@ -181,7 +190,7 @@
                 </div>
                 <div
                     class="float-right"
-                    *ngIf="editPermissions$$().delete"
+                    *ngIf="accountBlockFooterSettings$$().delete"
                 >
                     <button
                         class="btn btn-default has-icon"

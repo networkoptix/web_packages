@@ -189,9 +189,7 @@
                             *ngIf="!camera.isOffline && camera.isUnauthorized"
                             svgFileName="placeholder_camera_unauthorized"
                             [heading]="LANG.common.cameraStates.unauthorized"
-                            [showSettingsLink]="
-                                system.permissionManager.permissions$$().editCameras
-                            "
+                            [showSettingsLink]="camera.canEdit"
                             [camera]="camera"
                             [system]="system"
                             description=""

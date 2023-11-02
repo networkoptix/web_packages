@@ -76,7 +76,7 @@ export interface NxSystemCamera {
     deviceType: DeviceType; // Not included on ec2 => parameters.deviceType on restV1 => deviceType on restV2
 
     // Calculated
-    defaultRatio: number;
+    defaultRatio: number | null;
     isStream: boolean;
     maxFps: number;
     previewUrl: Observable<string>;
@@ -109,12 +109,12 @@ export enum DeviceType {
 }
 
 export enum MotionType {
-    // 4.3 systems
+    // > 5.0 systems
     HardwareGrid = 'hardware',
     SoftwareGrid = 'software',
     NoMotion = 'none',
 
-    // All systems
+    // < 5.0 systems but some 5.0+ may still have these if upgraded from < 4.2
     Default = '0',
     Hardware = '1',
     Software = '2',

@@ -541,7 +541,10 @@ export class NxSystemStorageComponent implements OnInit {
         const svgName =
             this.updatingModes.includes(store.storageId) || !store.storageType
                 ? 'loading.svg'
-                : `storage_${store.storageType}.svg`;
+                : `storage_${store.storageType.replace(
+                      STORAGE_TYPES.REMOVABLE,
+                      STORAGE_TYPES.USB,
+                  )}.svg`;
         return `${this.icons.dirTextButtons}${svgName}`;
     }
 

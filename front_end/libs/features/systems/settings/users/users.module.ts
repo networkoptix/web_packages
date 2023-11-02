@@ -5,6 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxApplyComponent } from '@components/apply/apply.component';
+import { NxAlertBlockComponent } from '@components/content-block/alert/block.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
@@ -32,6 +33,7 @@ import { NxSystemUsersComponent } from './users.component';
         NxPermissionsDropdown,
         NxSwitchComponent,
         NxAddSvgSrcDirective,
+        NxAlertBlockComponent,
         NxMultiLineEllipsisComponent,
         NxApplyComponent,
     ],

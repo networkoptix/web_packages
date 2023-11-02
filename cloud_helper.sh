@@ -219,7 +219,12 @@ function stop_docker_containers() {
 function build_mediaserver_image() {
     VERSION=$1
     COPY=$2
+    BUILD_PATH="tools/$VERSION.deb"
     echo "Building the mediaserver image for $VERSION (Local $COPY)"
+    if [[ ! -f $BUILD_PATH ]]; then
+        echo "Can't find $BUILD_PATH. Please verify the download command"
+        exit 1
+    fi
     docker image build tools --tag "mediaserver:$VERSION" --build-arg mediaserver_deb=$VERSION.deb --build-arg copy=$COPY
 }
 
@@ -246,9 +251,29 @@ function run_mediaserver() {
     done
 }
 
-function stop_mediaserver() {
-    echo "Stopping all auto-nx-servers"
-    docker ps --format '{{.Names}}' | grep auto-nx-server- | xargs docker rm -f
+function smart_stop_mediaserver() {
+    local PORTS=$1
+    RUNNING_CONTAINERS="$(docker ps --format '{{.Names}}' | grep auto-nx-server-)"
+
+    for CONTAINER in $RUNNING_CONTAINERS
+    do
+        for PORT in $PORTS
+        do
+            if [[ $CONTAINER == *"$PORT" ]] ; then
+                docker rm -f $CONTAINER
+            fi
+        done
+    done
+}
+
+function stop_mediaserver {
+    local PORTS=${1:-""}
+    if [[ -z $PORTS ]] ; then
+        echo "Stopping all auto-nx-servers"
+        docker ps --format '{{.Names}}' | grep auto-nx-server- | xargs docker rm -f
+    else
+        smart_stop_mediaserver $PORTS
+    fi
 }
 
 function update_webadmin() {
@@ -557,7 +582,8 @@ do
             remove_mediaserver
             ;;
         stop_mediaserver)
-            stop_mediaserver
+            PORTS=${2:-""}
+            stop_mediaserver $PORTS
             ;;
         start_https_tunnel)
             start_https_tunnel
@@ -578,7 +604,7 @@ do
                 SKIP_BUILD="false"
             fi
 
-            stop_mediaserver
+            smart_stop_mediaserver $PORTS
 
             if [ "$LOCAL_WEBADMIN" == "true" ]; then
                 build_webadmin_locally
@@ -589,6 +615,10 @@ do
 
             if [ "$SKIP_BUILD" != "true" ]; then
                 build_mediaserver_image $VERSION $USE_LOCAL
+                if [[ $? -ne 0 ]]; then
+                    echo "Failed to build the mediaserver image for $VERSION.deb"
+                    break
+                fi
             fi
 
             run_mediaserver $VERSION "$PORTS" $CLOUD_HOST
@@ -669,7 +699,7 @@ do
             else
                 cloud-helper
             fi
-
+            break
             ;;
     esac
 done

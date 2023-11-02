@@ -200,6 +200,7 @@ export class UserManager {
             });
 
             const postprocess: NxUser = {
+                hasCustomPermissions: false,
                 id,
                 name,
                 fullName,

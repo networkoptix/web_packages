@@ -7,6 +7,7 @@ import {
     ɵTypedOrUntyped,
 } from '@angular/forms';
 import { cloneDeep } from 'lodash';
+import { isEqual } from 'lodash-es';
 
 export class NxFormControl<T> extends FormControl {
     initialValue: T;
@@ -19,6 +20,11 @@ export class NxFormControl<T> extends FormControl {
         super(value, opts);
         this.initialValue = cloneDeep(this.value);
     }
+
+    override get dirty(): boolean {
+        return !isEqual(this.value, this.initialValue);
+    }
+
     reset(): void {
         this.setValue(cloneDeep(this.initialValue));
     }
@@ -34,6 +40,10 @@ export class NxFormGroup<T> extends FormGroup {
     freeze(): void {
         Object.values(this.controls).forEach(control => control.setInitialValue());
         this.markAsPristine();
+    }
+
+    override get dirty(): boolean {
+        return Object.values(this.controls).some(control => control.dirty);
     }
 
     override reset(

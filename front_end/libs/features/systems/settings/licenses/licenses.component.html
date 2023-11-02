@@ -12,6 +12,7 @@
         [system]="system"
         [servers]="system?.serverManager.servers"
         [licenses]="licenses"
+        (showNewLicense)="showNewLicense$$.set($event)"
     >
     </nx-license-new-component>
 
@@ -20,6 +21,7 @@
     <nx-license-summary-component
         [licensesLegacyInfo]="licenseSummaries"
         [system]="system"
+        #licenseSummary
     >
     </nx-license-summary-component>
 

@@ -1,8 +1,9 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, ViewChild, effect, signal } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
 import { delay, map, retryWhen, takeUntil } from 'rxjs/operators';
 
+import { NxLicenseSummaryComponent } from '@components/summary/summary.component';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import type { IConfig } from '@services/nx-config/config-types';
@@ -22,6 +23,7 @@ import { getDynamicLicense } from './dynamic-license';
 })
 export class NxSystemLicensesComponent implements OnInit {
     @Input() system: NxSystem;
+    @ViewChild('licenseSummary', { static: false }) licenseSummary: NxLicenseSummaryComponent;
     CONFIG: IConfig;
     LANG = staticLang;
 
@@ -31,6 +33,8 @@ export class NxSystemLicensesComponent implements OnInit {
 
     licenses: any = [];
     licenseSummaries: License[];
+
+    showNewLicense$$ = signal(false);
 
     private updateLicenses(): void {
         this.resetLicense$.next(true);
@@ -64,6 +68,12 @@ export class NxSystemLicensesComponent implements OnInit {
 
     constructor(configService: NxConfigService, private menuService: NxMenuService) {
         this.CONFIG = configService.getConfig();
+
+        effect(() => {
+            if (this.showNewLicense$$()) {
+                this.licenseSummary.getLicenses();
+            }
+        });
     }
 
     ngOnInit(): void {
