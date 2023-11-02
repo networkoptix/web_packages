@@ -181,11 +181,11 @@ def search_only_visible_with_more_than_eight_systems(
         print("pass")
 
 
-def should_show_your_system_for_owner_and_owner_name_for_non_owners(
+def should_show_correct_content_for_owned_and_not_owned_system_tiles_and_search(
         owned_server: Mediaserver,
         not_owned_server: Mediaserver,
         ):
-    """C41893"""
+    """C41893, C41891"""
     rb = RobotVariables("en_US")
     user = owned_server.get_cloud_owner()
     with get_chrome() as driver:
@@ -199,6 +199,10 @@ def should_show_your_system_for_owner_and_owner_name_for_non_owners(
                 assert tile.owner().text == "carrie fisher"
             else:
                 assert tile.owner().text == rb.YOUR_SYSTEM_TEXT
+        sys_page.search_bar().input_text(not_owned_server.get_cloud_owner().email)
+        sys_page.update_system_tiles()
+        assert len(sys_page.tiles) == 1
+        assert sys_page.tiles[0].title().text == not_owned_server.name
         print("pass")
 
 
@@ -236,7 +240,7 @@ if __name__ == "__main__":
             cloud_server_second,
             cloud_api,
             )
-        should_show_your_system_for_owner_and_owner_name_for_non_owners(
+        should_show_correct_content_for_owned_and_not_owned_system_tiles_and_search(
             cloud_server_first,
             cloud_server_second,
             )
