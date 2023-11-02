@@ -34,10 +34,8 @@ def system_tiles_represent_actual_information(server: Mediaserver):
         sys_page = SystemsPage(driver)
         rb = RobotVariables("en_US")
         for tile in sys_page.tiles:
-            if tile.owner().text not in [rb.YOUR_SYSTEM_TEXT, "Mark Hamill"]:
-                raise RuntimeError("Owner was not 'Your System' or 'mark hamill'.")
-        if len(sys_page.tiles) < 9:
-            raise RuntimeError("Not enough tiles present on page.")
+            assert tile.owner().text in [rb.YOUR_SYSTEM_TEXT, "Mark Hamill"]
+        assert len(sys_page.tiles) == 9
         print("pass")
 
 
