@@ -18,12 +18,10 @@ password = "qweasd 123"
 
 def should_open_systems_page_from_anonymous_state(server: Mediaserver):
     with get_chrome() as driver:
-
         url = ENV + "/systems"
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         SystemsPage(driver)
 
 
@@ -71,7 +69,6 @@ def opens_system_admin_when_tile_is_clicked(server: Mediaserver):
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         systems_page = SystemsPage(driver)
         systems_page.tiles[0].click()
         SystemAdmin(driver)
@@ -85,12 +82,10 @@ def search_highlights_system_name(server: Mediaserver):
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text(server.name)
         assert sys_page.systems_found(1).is_visible(), \
             "System tiles not found or incorrect number of tiles."
-
         sys_page.update_system_tiles()
         assert "highlighted" in sys_page.tiles[0].title().find_element_by_xpath("./span").get_attribute("class")
         print("pass")
@@ -103,13 +98,11 @@ def search_highlights_owner_name(server: Mediaserver):
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text("mark hamill")
         time.sleep(1)
         assert sys_page.systems_found(1).is_visible(), \
             "System tiles not found or incorrect number of tiles."
-
         sys_page.update_system_tiles()
         assert "highlighted" in sys_page.tiles[0].owner().find_element_by_xpath(
             ".//nx-search-highlight/span").get_attribute("class")
@@ -123,7 +116,6 @@ def search_is_cleared_by_x_button(server: Mediaserver):
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text(server.name)
         assert sys_page.systems_found(1).is_visible(), \
@@ -147,7 +139,6 @@ def should_update_owner_name(
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server_first.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         sys_page = SystemsPage(driver)
         for tile in sys_page.tiles:
             if tile.owner().text == "carrie fisher":
@@ -174,7 +165,6 @@ def search_only_visible_with_more_than_eight_systems(
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(server_first.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
-
         sys_page = SystemsPage(driver)
         assert len(sys_page.tiles) == 8, f"Number of tiles was: {len(sys_page.tiles)}.  Expected 8."
         assert not sys_page.search_bar().is_visible(), "Search bar was still visible."
