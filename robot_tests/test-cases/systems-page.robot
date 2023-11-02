@@ -7,12 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Systems Page Suite Teardown
 Force Tags        system    cloud
 
 *** Test Cases ***
-5. Should show your system for owner and owner name for non-owners
-    [Tags]    C41893    threaded
-    Log In    ${system}[cloudOwner]    ${base password}    api=${False}
-    Validate on Systems Page
-    Validate Tile    ${system}[name]    ${YOUR SYSTEM TEXT}
-    Validate Tile    ${extra system}[name]    Another Owner
 
 9. Searching for owner email should only show systems with that owner
     [Tags]    C41891    threaded

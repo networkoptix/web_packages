@@ -181,6 +181,27 @@ def search_only_visible_with_more_than_eight_systems(
         print("pass")
 
 
+def should_show_your_system_for_owner_and_owner_name_for_non_owners(
+        owned_server: Mediaserver,
+        not_owned_server: Mediaserver,
+        ):
+    """C41893"""
+    rb = RobotVariables("en_US")
+    user = owned_server.get_cloud_owner()
+    with get_chrome() as driver:
+        url = ENV + "/systems"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(user.email, user.password)
+        HeaderNav(driver).account_dropdown()
+        sys_page = SystemsPage(driver)
+        for tile in sys_page.tiles:
+            if tile.title().text == not_owned_server.name:
+                assert tile.owner().text == "carrie fisher"
+            else:
+                assert tile.owner().text == rb.YOUR_SYSTEM_TEXT
+        print("pass")
+
+
 if __name__ == "__main__":
     with Suite() as suite:
         cloud_owner_first = suite.create_cloud_account()
@@ -214,4 +235,8 @@ if __name__ == "__main__":
             cloud_server_first,
             cloud_server_second,
             cloud_api,
+            )
+        should_show_your_system_for_owner_and_owner_name_for_non_owners(
+            cloud_server_first,
+            cloud_server_second,
             )
