@@ -82,8 +82,7 @@ def search_highlights_system_name(server: Mediaserver):
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text(server.name)
-        assert sys_page.systems_found(1).is_visible(), \
-            "System tiles not found or incorrect number of tiles."
+        assert sys_page.systems_found(1).is_visible()
         sys_page.update_system_tiles()
         assert sys_page.tiles[0].is_title_highlighted()
         print("pass")
@@ -99,8 +98,7 @@ def search_highlights_owner_name(server: Mediaserver):
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text("mark hamill")
         time.sleep(1)
-        assert sys_page.systems_found(1).is_visible(), \
-            "System tiles not found or incorrect number of tiles."
+        assert sys_page.systems_found(1).is_visible()
         sys_page.update_system_tiles()
         assert sys_page.tiles[0].is_owner_highlighted()
         print("pass")
@@ -115,13 +113,11 @@ def search_is_cleared_by_x_button(server: Mediaserver):
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text(server.name)
-        assert sys_page.systems_found(1).is_visible(), \
-            "System tiles not found or incorrect number of tiles."
+        assert sys_page.systems_found(1).is_visible()
         sys_page.search_x_button().click()
         time.sleep(1)
         sys_page.update_system_tiles()
-        assert len(sys_page.tiles) == 9, \
-            "9 tiles were not present."
+        assert len(sys_page.tiles) == 9
         print("pass")
 
 
@@ -164,7 +160,7 @@ def search_only_visible_with_more_than_eight_systems(
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
         assert len(sys_page.tiles) == 8, f"Number of tiles was: {len(sys_page.tiles)}.  Expected 8."
-        assert not sys_page.search_bar().is_visible(), "Search bar was still visible."
+        assert not sys_page.search_bar().is_visible()
         print("pass")
 
 
