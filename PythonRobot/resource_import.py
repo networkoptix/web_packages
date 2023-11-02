@@ -25,6 +25,7 @@ from generic_elements import Pane
 from generic_elements import TextField
 from generic_elements import Tooltip
 
+
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 rb = RobotVariables("en_US")
@@ -231,7 +232,6 @@ def move_focus_and_check_badge_stays(driver, badge, new_focus):
 def move_focus_and_check_element(driver, element, new_focus):
     TextField(driver, new_focus).click()
     PageText(driver, element).wait_until_visible()
-
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api",
                                   from_email=rb.FROM_EMAIL_DEFAULT):
