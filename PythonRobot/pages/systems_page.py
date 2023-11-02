@@ -1,3 +1,4 @@
+import time
 from typing import Collection
 
 from selenium.webdriver.common.by import By
@@ -41,6 +42,16 @@ class SystemsPage:
         tiles = self.driver.find_elements(By.XPATH, "//nx-system-card")
         self.tiles = list((SystemTile(self.driver, tile) for tile in tiles))
         return self.tiles
+
+    def wait_for_tiles_count(self, count: int):
+        started_at = time.monotonic()
+        while True:
+            self.update_system_tiles()
+            actual_tiles_count = len(self.tiles)
+            if actual_tiles_count == count:
+                return
+            if time.monotonic() - started_at > 3:
+                raise RuntimeError(f"Wrong tiles count. Expected {count}, got {actual_tiles_count}")
 
     def _wait_until_page_contains_systems_list(self):
         Pane(self.driver, "//nx-systems-list-component").wait_until_visible(40)

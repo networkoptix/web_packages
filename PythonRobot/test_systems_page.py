@@ -82,8 +82,7 @@ def search_highlights_system_name(server: Mediaserver):
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text(server.name)
-        assert sys_page.systems_found(1).is_visible()
-        sys_page.update_system_tiles()
+        sys_page.wait_for_tiles_count(1)
         assert sys_page.tiles[0].is_title_highlighted()
         print("pass")
 
@@ -97,9 +96,7 @@ def search_highlights_owner_name(server: Mediaserver):
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text("mark hamill")
-        time.sleep(1)
-        assert sys_page.systems_found(1).is_visible()
-        sys_page.update_system_tiles()
+        sys_page.wait_for_tiles_count(1)
         assert sys_page.tiles[0].is_owner_highlighted()
         print("pass")
 
@@ -113,11 +110,10 @@ def search_is_cleared_by_x_button(server: Mediaserver):
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
         sys_page.search_bar().input_text(server.name)
-        assert sys_page.systems_found(1).is_visible()
+        sys_page.wait_for_tiles_count(1)
         sys_page.search_x_button().click()
         time.sleep(1)
-        sys_page.update_system_tiles()
-        assert len(sys_page.tiles) == 9
+        sys_page.wait_for_tiles_count(9)
         print("pass")
 
 
@@ -179,8 +175,7 @@ def should_show_correct_content_for_owned_and_not_owned_system_tiles_and_search(
             else:
                 assert tile.owner().text == rb.YOUR_SYSTEM_TEXT
         sys_page.search_bar().input_text("carrie fisher")
-        sys_page.update_system_tiles()
-        sys_page.systems_found(1).wait_until_visible()
+        sys_page.wait_for_tiles_count(1)
         assert sys_page.tiles[0].title().text == not_owned_server.name
         print("pass")
 
