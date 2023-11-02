@@ -178,9 +178,9 @@ def should_show_correct_content_for_owned_and_not_owned_system_tiles_and_search(
                 assert tile.owner().text == "carrie fisher"
             else:
                 assert tile.owner().text == rb.YOUR_SYSTEM_TEXT
-        sys_page.search_bar().input_text(not_owned_server.get_cloud_owner().email)
+        sys_page.search_bar().input_text("carrie fisher")
         sys_page.update_system_tiles()
-        assert len(sys_page.tiles) == 1
+        sys_page.systems_found(1).wait_until_visible()
         assert sys_page.tiles[0].title().text == not_owned_server.name
         print("pass")
 
