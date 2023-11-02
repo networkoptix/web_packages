@@ -138,8 +138,8 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if self.queryset.filter(channel_partner=instance.channel_partner, roles=["Administrator"])\
-                .exclude(pk=instance.pk).exists():
+        cp_admin_qs = self.queryset.filter(channel_partner=instance.channel_partner, roles__contains="Administrator")
+        if not cp_admin_qs.exists() or cp_admin_qs.exclude(pk=instance.pk).exists():
             return super().destroy(request, *args, **kwargs)
         raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
 
@@ -372,12 +372,13 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
 
     def get_queryset(self):
         # common case with filtering by cloud_host
-        query = Q(cloud_host=self.request.cloud_host)
+        query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
+                ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
         if self.action == 'retrieve':
             # LIC-278
             # If user is member of an organization, they should have read access to parent
             query |= Q(id__in=Subquery(
-                OrganizationToUser.objects.filter(user=self.request.user).values('organization__channel_partner__id')))
+                OrganizationToUser.objects.filter(user=self.request.user).values('organization__channel_partner_id')))
         if self.detail:
             # LIC-277 Map channel partners to cloud host instead of cloud instance
             # If channel partner’s parent has no parent (so it is the direct child of root channel partner)
@@ -616,8 +617,8 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        if self.queryset.filter(organization=instance.organization, roles=["Organization Administrator"])\
-                .exclude(pk=instance.pk).exists():
+        org_admin_qs = self.queryset.filter(organization=instance.organization, roles__contains="Organization Administrator")
+        if not org_admin_qs.exists() or org_admin_qs.exclude(pk=instance.pk).exists():
             data = instance.update_user_systems_data(None)
             make_batch_request(request, data)
             return super().destroy(request, *args, **kwargs)

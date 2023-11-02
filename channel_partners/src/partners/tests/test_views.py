@@ -435,8 +435,8 @@ class TestChannelPartnerViewSet:
         request.cloud_host = host
         response = view(request)
         assert response.status_code == 200
-        # must contain 'default_host_subs + root_cp'
-        assert set([cp['id'] for cp in response.data['results']]) == set([str(cp.id) for cp in [root_cp] + default_host_subs])
+        # must contain only root_cp
+        assert set([cp['id'] for cp in response.data['results']]) == {str(root_cp.id)}
 
         # Test organization user retrieve parent channel partner
         org = organization_factory(channel_partner=sub_cp)
@@ -451,7 +451,7 @@ class TestChannelPartnerViewSet:
         assert response.data['parentChannelPartner'] == root_cp.id
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
-                       system_factory, arf, mock_auth_with_user, default_cp_admin):
+                       system_factory, arf, mock_auth_with_user, cp_user_factory):
         gen_count = 3
         target_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
         other_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
@@ -469,7 +469,8 @@ class TestChannelPartnerViewSet:
                     for i in range(len(organizations))]
 
         view = ChannelPartnerViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
-        mock_auth_with_user(default_cp_admin)
+        cp_user = cp_user_factory(channel_partner=target_cp)
+        mock_auth_with_user(cp_user)
         response = view(arf.get(f'/partners/channel_partners/{target_cp.id}/aggregate/'), pk=target_cp.id)
         assert response.status_code == 200
         assert response.data['channelPartners'] == len(target_partners) - 1
