@@ -387,7 +387,6 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         parent_channel_partner = serializer.validated_data.get('parent_channel_partner')
-        # Todo. That is replaced in ChannelPartner.save()
         channeL_partner = serializer.save(cloud_host=parent_channel_partner.cloud_host)
 
         response_serializer = ChannelPartnerSerializer(channeL_partner, context={'request': request})

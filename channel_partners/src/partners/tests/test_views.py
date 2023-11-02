@@ -444,8 +444,6 @@ class TestChannelPartnerNestedViewSet:
         other_subs = [channel_partner_factory(parent_channel_partner=other_root_cp) for _ in range(gen_count)]
         for sub in default_subs + other_subs:
             channel_partner_factory(parent_channel_partner=sub, cloud_host=host)
-            # this will be replaced with parent `cloud_host` in `ChannelPartner.save()`
-            # Todo. needs to be discussed how to save channel partner's cloud host
             channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host)
         # Test root channel partner's subs
         view = ChannelPartnerNestedViewSet(kwargs={'parent_lookup_parent_channel_partner': str(root_cp.id)})

@@ -30,8 +30,8 @@ def cloud_test_instance(db):
 
 
 @pytest.fixture()
-def cloud_test_host(db):
-    return CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx')[0]
+def cloud_test_host(cloud_test_instance):
+    return CloudHost.objects.get_or_create(hostname='cloud-test.hdw.mx', instance=cloud_test_instance)[0]
 
 @pytest.fixture()
 def cloud_host_factory(db, cloud_test_instance):

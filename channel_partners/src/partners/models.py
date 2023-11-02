@@ -95,16 +95,6 @@ class CloudUser(models.Model):
         return True
 
 
-def get_cloud_test_instance():
-    return CloudInstance.objects.get_or_create(name='cloud-test')[0].id
-
-
-def get_default_cloud_host():
-    # Todo. Instance must be defined in config somehow!
-    return CloudHost.objects.get_or_create(hostname=settings.INSTANCE_CONFIG.default_host,
-                                           defaults={'instance': get_cloud_test_instance()})[0].id
-
-
 class CloudInstance(models.Model):
     name = models.CharField(max_length=50)
 
@@ -114,7 +104,7 @@ class CloudInstance(models.Model):
 
 class CloudHost(models.Model):
     hostname = models.CharField(max_length=255)
-    instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
+    instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.hostname
@@ -353,7 +343,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     parent_channel_partner = models.ForeignKey('ChannelPartner', null=True, blank=True, on_delete=models.CASCADE, related_name='channel_partners')
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False, default=ChannelPartnerStates.ACTIVE)
     # instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
-    cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE, default=get_default_cloud_host)
+    cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
     can_create_sub_channels = models.BooleanField(default=True)

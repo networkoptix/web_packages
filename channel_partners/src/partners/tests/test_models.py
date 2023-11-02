@@ -3,7 +3,7 @@ from datetime import timedelta
 from model_bakery import baker
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel, \
-    Organization, OrganizationPermissions, ChannelPartnerStates, ChannelPartnerService, ChannelPartner
+    Organization, OrganizationPermissions, ChannelPartnerStates, ChannelPartnerService, ChannelPartner, ChannelPartnerEvent
 
 
 class TestCloudSystemId:
@@ -78,20 +78,46 @@ class TestOrganizationToUser:
         assert set(batch_data["items"][0]["systems"]) == {str(system.system_id) for system in systems}
         assert batch_data["items"][0]["accessRole"] == 'none'
 
-
 class TestChannelPartnerEvent:
+    def test_new_event(self, cloud_test_host, channel_partner_factory, organization_factory,
+                    system_factory, cp_service_factory, service_record_factory):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        service = cp_service_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        service_record_factory(service=service, cloud_system=system, organization=organization_factory)
 
-    def test_creat(self, cloud_test_host, default_channel_partner):
-        # Todo. Make with services fixtures
-        pass
+        ChannelPartnerEvent.new_event(ChannelPartnerEvent.SYSTEM_UPDATED, system=system, service=None)
+        assert ChannelPartnerEvent.objects.filter(service=None, cloud_system=system).count() == 1
+        assert ChannelPartnerEvent.objects.filter(service=None, cloud_system=system).first().cloud_host == cloud_test_host
+        ChannelPartnerEvent.new_event(ChannelPartnerEvent.SYSTEM_UPDATED, system=system, service=None)
+        assert ChannelPartnerEvent.objects.filter(service=None, cloud_system=system).count() == 1
 
+        ChannelPartnerEvent.new_event(ChannelPartnerEvent.SERVICE_CHANGED, system=None, service=service)
+        assert ChannelPartnerEvent.objects.filter(service=service, cloud_system=None).count() == 1
+        assert ChannelPartnerEvent.objects.filter(service=service,
+                                                  cloud_system=None).first().cloud_host == cloud_test_host
+        ChannelPartnerEvent.new_event(ChannelPartnerEvent.SERVICE_CHANGED, system=None, service=service)
+        assert ChannelPartnerEvent.objects.filter(service=service, cloud_system=None).count() == 1
 
 class TestChannelPartner:
-    def test_creat(self, cloud_test_host):
-        partner = ChannelPartner.objects.create(name=f'{uuid4()}')
-
+    def test_create(self, cloud_test_host, channel_partner_factory):
+        root = channel_partner_factory()
+        partner = ChannelPartner.objects.create(
+            name=f'{uuid4()}',
+            parent_channel_partner=root,
+            cloud_host=cloud_test_host
+        )
         assert partner.id
         assert partner.cloud_host == cloud_test_host
+
+        sub_partner = ChannelPartner.objects.create(
+            name=f'{uuid4()}',
+            parent_channel_partner=partner,
+        )
+        assert sub_partner.id
+        assert sub_partner.cloud_host == cloud_test_host
+
 
     def test_get_ancestors(self, channel_partner_factory):
         count = 10
@@ -184,7 +210,7 @@ class TestOrganization:
         admin = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
 
-        # test full access
+        # test ORGANIZATION_ADMINISTRATOR
 
         assert org.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is True
@@ -194,7 +220,7 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
-        #  test privacy mode
+        #  test SYSTEM_HEALTH_VIEWER
         org.channel_partner_access_level_id = OrganizationRole.SYSTEM_HEALTH_VIEWER
         org.save()
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
@@ -204,8 +230,7 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
-        #  test no access.
-        # todo create tests for NO_ACCESS
+        #  test SYSTEM_HEALTH_VIEWER.
         org.channel_partner_access_level_id = OrganizationRole.SYSTEM_HEALTH_VIEWER
         org.save()
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
