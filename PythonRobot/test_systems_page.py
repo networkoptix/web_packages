@@ -85,7 +85,7 @@ def search_highlights_system_name(server: Mediaserver):
         assert sys_page.systems_found(1).is_visible(), \
             "System tiles not found or incorrect number of tiles."
         sys_page.update_system_tiles()
-        assert "highlighted" in sys_page.tiles[0].title().find_element_by_xpath("./span").get_attribute("class")
+        assert sys_page.tiles[0].is_title_highlighted()
         print("pass")
 
 
@@ -102,8 +102,7 @@ def search_highlights_owner_name(server: Mediaserver):
         assert sys_page.systems_found(1).is_visible(), \
             "System tiles not found or incorrect number of tiles."
         sys_page.update_system_tiles()
-        assert "highlighted" in sys_page.tiles[0].owner().find_element_by_xpath(
-            ".//nx-search-highlight/span").get_attribute("class")
+        assert sys_page.tiles[0].is_owner_highlighted()
         print("pass")
 
 
