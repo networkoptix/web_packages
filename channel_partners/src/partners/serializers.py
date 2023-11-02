@@ -1,12 +1,13 @@
 from collections import defaultdict
 import datetime
 import json
+from typing import List, Optional
 
 import httpx
 import llutil
 import rest_framework.exceptions
 from django.conf import settings
-from django.db.models import Sum
+from django.db.models import Sum, QuerySet
 from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
@@ -31,6 +32,44 @@ from .authentication import check_user_can_administer_system
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
 STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STATE_CHOICES}
 STATE_CHOICES_STR_MAP = {choice[1]: choice[0] for choice in ChannelPartnerStates.STATE_CHOICES}
+
+
+def get_to_user_relation(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
+                         instance: ChannelPartner | Organization,
+                         instance_lookup: str) -> Optional[OrganizationToUser | ChannelPartnerToUser]:
+    # todo. move it serializer and use with @cached_property decoration
+    if not all([to_user_rel, instance]):
+        return
+    return next(filter(lambda rel: getattr(rel, instance_lookup, None) == instance.id, to_user_rel), None)
+
+
+def get_instance_permissions_list(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
+                                  roles: QuerySet[OrganizationRole] | QuerySet[ChannelPartnerRole],
+                                  instance: ChannelPartner | Organization,
+                                  instance_lookup: str) -> List[str]:
+    if not all([to_user_rel, roles, instance]):
+        return []
+    instance_to_user = get_to_user_relation(to_user_rel=to_user_rel, instance=instance, instance_lookup=instance_lookup)
+    if not instance_to_user:
+        return []
+    permissions = set()
+    for role in filter(lambda r: r.name in instance_to_user.roles, roles):
+        permissions.update({p.codename for p in role.permissions.all()})
+    return sorted(list(permissions))
+
+
+def get_organization_permissions_list(to_user_rel: QuerySet[OrganizationToUser],
+                                      roles: QuerySet[OrganizationRole],
+                                      instance: Organization) -> List[str]:
+    return get_instance_permissions_list(to_user_rel=to_user_rel, roles=roles,
+                                         instance=instance, instance_lookup='organization_id')
+
+
+def get_channel_partner_permissions_list(to_user_rel: QuerySet[ChannelPartnerToUser],
+                                         roles: QuerySet[ChannelPartnerRole],
+                                         instance: ChannelPartner) -> List[str]:
+    return get_instance_permissions_list(to_user_rel=to_user_rel, roles=roles,
+                                         instance=instance, instance_lookup='channel_partner_id')
 
 
 class CodeChoiceField(serializers.ChoiceField):
@@ -127,6 +166,8 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
     allowChangingServices = serializers.BooleanField(source='allow_changing_services', default=False, required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
+    ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
+    ownRoles = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
 
     class Meta:
         model = ChannelPartner
@@ -150,6 +191,18 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
         validated_data_filtered = validated_data.copy()
         validated_data_filtered.pop('attributes', None)
         return super().update(instance, validated_data_filtered)
+
+    def get_permissions_list(self, instance):
+        perms = get_channel_partner_permissions_list(to_user_rel=self.context.get('channel_partner_to_user'),
+                                                     roles=self.context.get('channel_partner_roles'),
+                                                     instance=instance)
+        return perms
+
+    def get_roles_list(self, instance):
+        rels = get_to_user_relation(to_user_rel=self.context.get('channel_partner_to_user'),
+                                    instance=instance,
+                                    instance_lookup='channel_partner_id')
+        return rels.roles if rels else []
 
 
 class CreateChannelPartnerSerializer(serializers.ModelSerializer):
@@ -206,6 +259,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     created = serializers.DateTimeField(source='created_ts', read_only=True)
+    ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
+    ownRoles = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
 
     class Meta:
         model = Organization
@@ -217,6 +272,18 @@ class OrganizationSerializer(serializers.ModelSerializer):
         validated_data_filtered = validated_data.copy()
         validated_data_filtered.pop('attributes', None)
         return super().update(instance, validated_data_filtered)
+
+    def get_permissions_list(self, instance):
+        perms = get_organization_permissions_list(to_user_rel=self.context.get('organizations_to_user'),
+                                                  roles=self.context.get('organization_roles'),
+                                                  instance=instance)
+        return perms
+
+    def get_roles_list(self, instance):
+        rels = get_to_user_relation(to_user_rel=self.context.get('organizations_to_user'),
+                                    instance=instance,
+                                    instance_lookup='organization_id')
+        return rels.roles if rels else []
 
 
 class CreateOrganizationSerializer(serializers.ModelSerializer):

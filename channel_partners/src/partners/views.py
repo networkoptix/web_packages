@@ -158,6 +158,12 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ChannelPartnerFilter
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['channel_partner_roles'] = ChannelPartnerRole.objects.all().prefetch_related('permissions')
+        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
+        return context
+
     def get_queryset(self):
         query = Q(
             Q(cloud_host=self.request.cloud_host) |
@@ -358,6 +364,12 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         else:
             return ChannelPartnerSerializer
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['channel_partner_roles'] = ChannelPartnerRole.objects.all().prefetch_related('permissions')
+        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
+        return context
+
     def get_queryset(self):
         # common case with filtering by cloud_host
         query = Q(cloud_host=self.request.cloud_host)
@@ -441,6 +453,12 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.OrganizationFilter
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
+        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user)
+        return context
+
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
 
@@ -478,6 +496,12 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             return CreateOrganizationSerializer
         else:
             return OrganizationSerializer
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
+        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user)
+        return context
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]

@@ -6,9 +6,11 @@ from dateutil import relativedelta
 from django.core.cache import caches
 from model_bakery import baker
 
-from partners.models import ChannelPartnerServiceRecord, ChannelPartnerService
-from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer, \
-    SystemServiceQuantitySerializer
+from partners.models import ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser, \
+    ChannelPartnerRole, ChannelPartnerToUser
+from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, \
+    OrganizationAggDataSerializer, \
+    SystemServiceQuantitySerializer, OrganizationSerializer
 from partners.views import ChannelPartnerViewSet
 from tools.helpers import get_period_start
 
@@ -221,7 +223,11 @@ class TestChannelPartnerSerializer:
         root_user = cp_user_factory(channel_partner=root)
         request = arf.get('/')
         request.user = root_user.user
-        context = {'request': request}
+        context = {
+            'request': request,
+            'channel_partner_roles': None,
+            'channel_partner_to_user': None,
+        }
         # Test child when parent has disabled ACS
         ser = ChannelPartnerSerializer(instance=child, context=context)
 
@@ -253,3 +259,64 @@ class TestChannelPartnerSerializer:
 
         # Test child when parent has enabled ACS
         ser = ChannelPartnerSerializer(instance=child, context=context)
+
+    def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf):
+        cp = channel_partner_factory()
+        roles = ChannelPartnerRole.objects.all()
+        partners = []
+        users = []
+        for role in roles:
+            partner = channel_partner_factory(parent_channel_partner=cp)
+            partners.append(partner)
+            user = cp_user_factory(channel_partner=partner, role=role.name)
+            users.append(user)
+
+        def context(cloud_user):
+            context = {}
+            context['channel_partner_roles'] = ChannelPartnerRole.objects.all().prefetch_related('permissions')
+            context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
+            context['request'] = arf.get('/')
+            context['request'].user = cloud_user
+            return context
+
+        for role, partner, user in zip(roles, partners, users):
+            serializer = ChannelPartnerSerializer(partners, many=True, context=context(user.user))
+            for data in serializer.data:
+                if str(partner.id) == data['id']:
+                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert data['ownRoles'] == user.roles
+                else:
+                    assert data['ownPermissions'] == []
+                    assert data['ownRoles'] == []
+
+
+class TestOrganizationSerializer:
+
+    def test_ownPermissions(self, channel_partner_factory, organization_factory, org_user_factory, arf):
+        cp = channel_partner_factory()
+        roles = OrganizationRole.objects.all()
+        orgs = []
+        users = []
+        for role in roles:
+            org = organization_factory(channel_partner=cp)
+            orgs.append(org)
+            user = org_user_factory(organization=org, role=role.name)
+            users.append(user)
+
+        def context(cloud_user):
+            context = {}
+            context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
+            context['organizations_to_user'] = OrganizationToUser.objects.filter(user=cloud_user)
+            context['request'] = arf.get('/')
+            context['request'].user = cloud_user
+            return context
+
+        for role, org, user in zip(roles, orgs, users):
+            serializer = OrganizationSerializer(orgs, many=True, context=context(user.user))
+            for data in serializer.data:
+                if str(org.id) == data['id']:
+                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert data['ownRoles'] == user.roles
+                else:
+                    assert data['ownPermissions'] == []
+                    assert data['ownRoles'] == []

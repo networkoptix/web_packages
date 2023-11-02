@@ -519,6 +519,33 @@ class TestChannelPartnerViewSet:
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
 
+    def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf, mock_auth_with_user):
+        cp = channel_partner_factory()
+        roles = ChannelPartnerRole.objects.all()
+        partners = []
+        users = []
+        for role in roles:
+            partner = channel_partner_factory(parent_channel_partner=cp)
+            partners.append(partner)
+            user = cp_user_factory(channel_partner=partner, role=role.name)
+            users.append(user)
+
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'list'})
+
+        for role, partner, user in zip(roles, partners, users):
+            request = arf.get(f'/partners/channel_partners/')
+            request.user = user.user
+            mock_auth_with_user(user)
+
+            response = view(request)
+            for data in response.data['results']:
+                if str(partner.id) == data['id']:
+                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert data['ownRoles'] == user.roles
+                else:
+                    assert data['ownPermissions'] == []
+                    assert data['ownRoles'] == []
+
 
 class TestOrganizationViewSet:
 
@@ -590,3 +617,30 @@ class TestOrganizationViewSet:
         assert 'next' in response.data
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
+
+    def test_ownPermissions(self, channel_partner_factory, organization_factory,
+                              org_user_factory, arf, mock_auth_with_user):
+        cp = channel_partner_factory()
+        roles = OrganizationRole.objects.all()
+        orgs = []
+        users = []
+        for role in roles:
+            org = organization_factory(channel_partner=cp)
+            orgs.append(org)
+            user = org_user_factory(organization=org, role=role.name)
+            users.append(user)
+
+        view = OrganizationViewSet.as_view(actions={'get': 'list'})
+
+        for role, org, user in zip(roles, orgs, users):
+            request = arf.get(f'/partners/channel_partners/')
+            request.user = user.user
+            mock_auth_with_user(user)
+            response = view(request)
+            for data in response.data['results']:
+                if str(org.id) == data['id']:
+                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert data['ownRoles'] == user.roles
+                else:
+                    assert data['ownPermissions'] == []
+                    assert data['ownRoles'] == []
