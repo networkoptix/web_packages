@@ -133,11 +133,7 @@ def should_update_owner_name(
         LoginDialog(driver).basic_cloud_login(server_first.get_cloud_owner().email, password)
         HeaderNav(driver).account_dropdown()
         sys_page = SystemsPage(driver)
-        for tile in sys_page.tiles:
-            if tile.owner().text == "carrie fisher":
-                break
-            else:
-                raise RuntimeError("carrie fisher was not the owner on any tiles")
+        assert len(sys_page.get_tiles_with_owner("carrie fisher")) == 1
         print("pass")
 
 

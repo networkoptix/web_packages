@@ -1,3 +1,5 @@
+from typing import Collection
+
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
@@ -45,3 +47,11 @@ class SystemsPage:
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}/systems")
+
+    def get_tiles_with_owner(self, expected_owner: str) -> Collection[SystemTile]:
+        actual_tiles = []
+        self.update_system_tiles()
+        for tile in self.tiles:
+            if tile.owner().text == expected_owner:
+                actual_tiles.append(tile)
+        return actual_tiles
