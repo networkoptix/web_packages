@@ -99,7 +99,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     });
 
     get permissionGroupsCount(): number {
-        return this.system.permissionManager.currentUser()?.groupIds?.length;
+        return this.system.permissionManager.currentUser$$()?.groupIds?.length;
     }
 
     /** Owner (current user) can send a new ownership transfer request */
