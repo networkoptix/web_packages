@@ -1,7 +1,7 @@
 import { Overlay, OverlayConfig, OverlayRef } from '@angular/cdk/overlay';
 import { CdkPortal } from '@angular/cdk/portal';
 import {
-    AfterContentInit,
+    AfterViewInit,
     Component,
     ContentChildren,
     ElementRef,
@@ -22,7 +22,7 @@ type SelectedType<Value, Multiple extends boolean> = Multiple extends true
     ? Value[]
     : Value | undefined;
 @Component({ template: '' })
-export abstract class BaseDropdownComponent<T, M extends boolean> implements AfterContentInit {
+export abstract class BaseDropdownComponent<T, M extends boolean> implements AfterViewInit {
     @Input() selected: SelectedType<T, M>;
     @Output() selectedChange = new EventEmitter<SelectedType<T, M>>();
     @Output() onChange = new EventEmitter<SelectedType<T, M>>();
@@ -49,7 +49,7 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
 
     constructor(public overlay: Overlay, public domSanitizer: DomSanitizer) {}
 
-    ngAfterContentInit(): void {
+    ngAfterViewInit(): void {
         this.manuallySetSelectedOption();
         this.setPlaceholderOrDisplayText();
     }
