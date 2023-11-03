@@ -503,6 +503,7 @@ cloud-deploy:
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .frontend_changes ]
+    allow_failure: true # Remove when job becomes stable.
 
 # stop deployment and clean all data, manual UI action. may be used to verify clean deployment
 # may be invoked using manual UI action to verify clean deployment
