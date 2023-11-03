@@ -406,7 +406,7 @@ class _AdvancedSettings:
 
     def get_connection_alive_update_interval_input(self) -> TextField:
         locator = self.rb.replace_nested_variables(
-            "//input[@id='ec2ConnectionAliveUpdateIntervalSec']")
+            "//input[@id='ec2AliveUpdateIntervalSec']")
         return TextField(self.driver, locator)
 
     def get_email_from_input(self) -> TextField:

@@ -161,7 +161,7 @@ def connection_and_email(server: Mediaserver):
         success_dialog.wait_until_visible()
         success_dialog.close()
         actual_api_result = server.api.get_system_settings_from_server()[
-            'ec2ConnectionAliveUpdateIntervalSec']
+            'ec2AliveUpdateIntervalSec']
         assert actual_api_result == 62
         advanced_settings.get_email_from_input().input_text('networkoptixtesting123@gmail.com')
         system_admin.get_save_button().click()
