@@ -10,8 +10,6 @@ from generic_elements import TextField
 from generic_elements import Tooltip
 from generic_elements import Image
 
-from selenium.webdriver.remote.webdriver import WebDriver
-
 
 rb = RobotVariables("en_US")
 driver = get_headless_chrome()
@@ -133,7 +131,7 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
         move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
 
 
-def check_password_badge(driver: WebDriver, password, new_focus):
+def check_password_badge(driver, password, new_focus):
     if password != "":
         Image(driver, rb.PASSWORD_BADGE).wait_until_visible()
     if password == rb.COMMON_PASSWORD:
