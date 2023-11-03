@@ -7,7 +7,8 @@ from model_bakery import baker
 
 from rest_framework.test import APIRequestFactory
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
-    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerAccessLevel, ChannelPartnerService, \
+    ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
+    ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
     ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates
 
 

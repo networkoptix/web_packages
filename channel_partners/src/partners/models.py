@@ -11,8 +11,8 @@ from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, Permission
 from django.core.cache import caches
 from django.db import models
-from django.db.models import Sum, F, QuerySet
 from django.db.models.functions import Concat, Greatest
+from django.db.models import Sum, F, QuerySet, FilteredRelation, Q
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django_cte import CTEManager, With
@@ -559,7 +559,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             self.parent_channel_partner_args(base_arg='service', secondary_arg='parent_service',
                                              suffix_arg='created_by_channel_partner', value=self),
             created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
-        ).select_related('cloud_system__organization', 'created_by',
+        ).select_related('organization', 'created_by',
                          f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
         return qs
@@ -573,7 +573,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         qs = (
             ChannelPartnerServiceRecord.objects
             .exclude(cloud_system__state=ChannelPartnerStates.SHUTDOWN)
-            .filter(created_ts__gte=start_ts, cloud_system__organization__channel_partner__in=cp_tree)
+            .filter(created_ts__gte=start_ts, organization__channel_partner__in=cp_tree)
         ).values('service__type').annotate(monthly_changes=Sum('quantity'))
         changes = {change['service__type']: change['monthly_changes'] for change in qs}
         caches['default'].set(cache_key, changes, timeout=3600)
@@ -854,6 +854,23 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return ChannelPartnerServiceRecord.objects.filter(
             organization=self, created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
         ).order_by('created_ts')
+
+    def current_services(self) -> dict:
+
+        service_records = (ChannelPartnerServiceRecord.objects.filter(organization=self)
+                           .values('service').annotate(quantity=Sum('quantity')))
+        services_ids = [service.get('service') for service in service_records]
+        current_services = {}
+        properties = ServiceToOrganizationProperties.objects.filter(organization=self, service__in=services_ids)
+        for service in service_records:
+            prop = next(filter(lambda p: p.service_id == service.get('service'), properties), None)
+            price = 0 if not prop else (prop.price or 0)
+            current_services[str(service['service'])] = {
+                'price': price,
+                'quantity': service.get('quantity') or 0,
+                'total': price * (service.get('quantity') or 0)
+            }
+        return current_services
 
     def allowed_role_names(self, perm: str):
         return [role.name for role in OrganizationRole.objects.filter(permissions__codename=perm)]

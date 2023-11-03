@@ -6,9 +6,10 @@ from datetime import timedelta
 from model_bakery import baker
 
 from partners.models import (
-    CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel,
-    Organization, OrganizationPermissions, ChannelPartnerStates, ChannelPartnerService,
-    ChannelPartner, ChannelPartnerEvent)
+    CloudSystemId, OrganizationRole, OrganizationToUser,
+    Organization, OrganizationPermissions, ChannelPartnerStates,
+    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent
+)
 
 
 class TestCloudSystemId:
@@ -207,8 +208,31 @@ class TestChannelPartner:
             assert changes[tid] == len(sub_cp_orgs) * 2 * 2
 
 
-
 class TestOrganization:
+
+    def test_current_services(self, default_channel_partner, organization_factory, system_factory,
+                              cp_service_factory, org_service_factory, service_record_factory):
+        org = organization_factory()
+        systems = [system_factory(organization=org) for _ in range(5)]
+        systems[4].state = ChannelPartnerStates.SUSPENDED
+        systems[4].save()
+        disabled_system = system_factory(organization=org)
+        services = [cp_service_factory() for _ in range(3)]
+        org_service_properties = [org_service_factory(organization=org, service=service, price=10-i) for i, service in enumerate(services)]
+        service_records = []
+        for i, service in enumerate(services):
+            service_records += [service_record_factory(service, sys, quantity=1+i) for sys in systems[i:]]
+            service_record_factory(service, disabled_system)
+        disabled_system.state = ChannelPartnerStates.SHUTDOWN
+        disabled_system.save()
+        current_services = org.current_services()
+
+        assert set(current_services.keys()) == set([str(service.id) for service in services])
+        for i, service in enumerate(services):
+            assert current_services[str(service.id)]["price"] == 10 - i
+            assert current_services[str(service.id)]["quantity"] == (1 + i) * (len(systems) - i)
+            assert current_services[str(service.id)]["total"] == (1 + i) * (10 - i) * (len(systems) - i)
+
 
     def test_has_perm(self, channel_partner_factory, cp_user_factory, organization_factory):
         cp = channel_partner_factory()
