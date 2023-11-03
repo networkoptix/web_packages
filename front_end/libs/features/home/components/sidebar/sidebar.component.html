@@ -40,6 +40,7 @@
     <!--Groups Sidebar-->
     <ng-template #groupsSidebar>
         <nx-sidebar-level
+            [rootOrg]="currentOrg$$()"
             [groups]="rootGroupItems$ | async"
             [openGroups]="openGroups"
         ></nx-sidebar-level>

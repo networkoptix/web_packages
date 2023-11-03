@@ -9,6 +9,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
@@ -36,6 +37,7 @@ export class NxGroupsSidebarLevelComponent {
     @Input() groups: GroupItem[];
     @Input() openGroups: OpenGroups;
     @Input() groupId: string;
+    @Input() rootOrg: Organization;
 
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
@@ -80,5 +82,9 @@ export class NxGroupsSidebarLevelComponent {
 
     toGroup(groupId: string): void {
         this.router.navigate(['group', groupId], { relativeTo: this.route });
+    }
+
+    toRoot(): void {
+        this.router.navigate(['./'], { relativeTo: this.route });
     }
 }
