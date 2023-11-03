@@ -422,11 +422,12 @@ jenkins-build-webadmin:
       "PUBLISH=$PUBLISH"
       "BUILD_DESCRIPTION=$CI_COMMIT_TITLE"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
+      "GITLAB_REFSPEC=$CI_COMMIT_SHA"
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .webadmin_changes ]
@@ -441,12 +442,12 @@ jenkins-build-frontend:
       "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA"
+      "REVISION=$CI_COMMIT_SHA"
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .frontend_changes ]
@@ -459,12 +460,12 @@ jenkins-build-notification:
       "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
       "BUILD_IDENTITY=$CI_PIPELINE_ID"
       "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
-      "GITLAB_COMMIT=$CI_COMMIT_SHORT_SHA"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
       "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
       "GITLAB_JOB_ID=$CI_JOB_ID"
       "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
       "GITLAB_JOB_URL=$CI_JOB_URL"
-      "REVISION=$CI_COMMIT_SHORT_SHA"
+      "REVISION=$CI_COMMIT_SHA"
   rules:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .notification_changes ]
