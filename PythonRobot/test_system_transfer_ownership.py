@@ -1,18 +1,21 @@
 from pathlib import Path
 from time import sleep
 
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from email_access import EmailClient
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from resource_import import get_chrome
 from pages.system_admin import FailedToAccessSystemPage
+from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_transfer import SystemOwnership
 from pages.system_transfer import SystemTransferOwnershipModal
 from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
+from resource_import import get_chrome
 from variables import ENV
 
 
@@ -197,6 +200,53 @@ def test_transfer_no_users(server: Mediaserver):
         left_menu.add_user_modal_close_button().click()
 
 
+def test_initiate_transfer_then_accept_and_check_email(
+        server: Mediaserver,
+        viewer_user: CloudAccount,
+        ):
+    """C106290"""
+    owner = server.get_cloud_owner()
+    cloud_auth = (owner.email, owner.password)
+    viewer_role_name = "viewer"
+    CloudPortalAPI().share(
+        cloud_auth,
+        server.id,
+        viewer_role_name,
+        viewer_user.email,
+        CloudAccount.PERMISSIONS[viewer_role_name],
+        )
+    with get_chrome() as driver:
+        driver.get(f"{ENV}/systems/{server.id}")
+        login_dialog = LoginDialog(driver)
+        login_dialog.basic_cloud_login(owner.email, owner.password)
+        system_ownership = SystemOwnership(driver)
+        transfer_ownership_modal = system_ownership.open_ownership_transfer_dialog()
+        transfer_ownership_modal.do_transfer(viewer_user.email)
+        navbar = HeaderNav(driver)
+        navbar.log_out()
+        navbar = HeaderNav(driver)
+        navbar.log_in_button().click()
+        login_dialog.basic_cloud_login(viewer_user.email, viewer_user.password)
+        _check_user_wants_to_transfer_to_you(system_ownership, owner)
+        system_ownership.accept_ownership_transfer()
+        SystemAdmin(driver)
+        _check_system_owner_is_you(system_ownership)
+        with EmailClient(email_alias=owner.email) as client:
+            email_message = client.wait_for_email_subject(
+                f"Ownership transfer for {server.name} - accepted")
+            expected_message = (f"Mark Hamill ({viewer_user.email}) has accepted your request "
+                                f"to transfer ownership of {server.name}.")
+            actual_message = email_message.get_body()
+            assert expected_message in actual_message
+            expected_links = [
+                "https://support.networkoptix.com",
+                "https://networkoptix.com",
+                ]
+            email_message.find_links_in_body(expected_links)
+            client.delete_email(email_message)
+            print("PASS")
+
+
 def _check_no_users(modal: SystemTransferOwnershipModal):
     no_users_text = modal.get_no_users_text()
     if no_users_text != (
@@ -239,7 +289,7 @@ if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
     with Suite() as suite:
-        cloud_owner = suite.create_cloud_account()
+        cloud_owner = suite.create_cloud_account(sendemail=True)
         cloud_users = suite.create_cloud_accounts()
         mediaserver_first = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         test_change_button_only_for_owner(mediaserver_first)
@@ -260,3 +310,5 @@ if __name__ == "__main__":
         # TODO: this case works very strange without this sleep
         sleep(90)
         test_transfer_no_users(mediaserver_single_user)
+        user = suite.create_cloud_account(sendemail=True)
+        test_initiate_transfer_then_accept_and_check_email(mediaserver_single_user, user)

@@ -42,8 +42,8 @@ class Suite:
         # Calling close() from context manager's __exit__ will suppress parent exceptions
         self._exit_stack.__exit__(*exc_details)
 
-    def create_cloud_account(self):
-        return self._exit_stack.enter_context(CloudAccount())
+    def create_cloud_account(self, sendemail=False):
+        return self._exit_stack.enter_context(CloudAccount(sendemail=sendemail))
 
     def create_local_server(self, suite_name: Optional[str] = None):
         if suite_name is None:

@@ -11,14 +11,6 @@ ${cascade}      PASS
 
 *** Test Cases ***
 
-5. Accept owner transfer request
-    [Documentation]  Accepts and verifies changes to ownership, old owner removed from system
-    [Tags]  C105093   C106290
-    Initiate Ownership Transfer    ${server 1}   viewer
-    Log Out
-    Receive Ownership Transfer Request     ${server 1}   viewer
-    Accept Ownership Transfer Request   ${server 1}   viewer
-
 8. Can't transfer ownership to disabled user
     [Tags]   C105096
     [Setup]   Run Keywords    QA Video Recording Start      Skip If Irrelevant     Skip if Cascading    Disable User OT   OT Test Setup
