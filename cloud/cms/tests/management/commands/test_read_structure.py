@@ -270,7 +270,8 @@ def test_read_languages(mocker,db):
     read_languages()
 
     mock_get_or_create.assert_has_calls(
-        call(name=language['name'], code=language['code']) for language in languages)
+        [call(code=language['code'], defaults={"name": language['name']}) for language in languages]
+    )
 
 
 class TestReadStructure:
