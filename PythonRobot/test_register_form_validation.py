@@ -1,6 +1,5 @@
 import time
 
-import robot_lists as rl
 from RobotVariables import RobotVariables
 from resource_import import get_headless_chrome
 from generic_elements import Button
@@ -14,6 +13,42 @@ from generic_elements import Image
 rb = RobotVariables("en_US")
 driver = get_headless_chrome()
 driver.get(f'{rb.ENV}/authorize?client_type=create')
+
+
+GOOD_PASSWORDS = [
+    rb.LOWER_UPPER_NUMBER_PASSWORD,
+    rb.LOWER_UPPER_SYMBOL_PASSWORD,
+    rb.LOWER_NUMBER_SYMBOL_PASSWORD,
+    rb.UPPER_NUMBER_SYMBOL_PASSWORD,
+    rb.BASE_PASSWORD
+    ]
+
+WEAK_PASSWORDS = [
+    rb.UPPERCASE_PASSWORD,
+    rb.LOWERCASE_PASSWORD,
+    rb.COMMON_PASSWORD,
+    rb.NUMBERS_PASSWORD,
+    rb.SYMBOL_ONLY_PASSWORD
+    ]
+
+FAIR_PASSWORDS = [
+    rb.LOWER_UPPER_PASSWORD,
+    rb.LOWER_NUMBER_PASSWORD,
+    rb.LOWER_SYMBOL_PASSWORD,
+    rb.UPPER_NUMBER_PASSWORD,
+    rb.UPPER_SYMBOL_PASSWORD,
+    rb.NUMBER_SYMBOL_PASSWORD,
+    rb.SYMBOL_PASSWORD
+    ]
+
+INCORRECT_PASSWORDS = [
+    rb.CYRILLIC_TEXT,
+    rb.SMILEY_TEXT,
+    rb.GLYPH_TEXT,
+    rb.TM_TEXT,
+    f' {rb.BASE_PASSWORD}',
+    f'{rb.BASE_PASSWORD} '
+    ]
 
 
 def test_register_invalid(driver, first, last, email, password, checked):
@@ -105,7 +140,7 @@ def check_terms_and_conditions_error(driver):
 def check_new_password_outline_and_error_message(driver, new_password, new_focus, input,
                                                  input_name):
     TextField(driver, new_focus).click()
-    if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
+    if new_password not in FAIR_PASSWORDS and new_password not in GOOD_PASSWORDS:
         field = TextField(driver, input)
         assert field.value_of_css_property("border-bottom-color") == rb.ERROR_COLOR_WITH_OPACITY
         assert field.value_of_css_property("border-top-color") == rb.ERROR_COLOR_WITH_OPACITY
@@ -123,11 +158,11 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
         move_focus_and_check_element(driver, rb.PASSWORD_IS_REQUIRED, new_focus)
     elif new_password == rb.SEVEN_CHAR_PASSWORD:
         move_focus_and_check_element(driver, rb.PASSWORD_TOO_SHORT, new_focus)
-    elif new_password in rl.INCORRECT_PASSWORDS:
+    elif new_password in INCORRECT_PASSWORDS:
         move_focus_and_check_element(driver, rb.PASSWORD_SPECIAL_CHARS, new_focus)
     elif new_password == rb.COMMON_PASSWORD:
         move_focus_and_check_element(driver, rb.PASSWORD_TOO_COMMON, new_focus)
-    elif new_password in rl.WEAK_PASSWORDS:
+    elif new_password in WEAK_PASSWORDS:
         move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
 
 
@@ -136,13 +171,13 @@ def check_password_badge(driver, password, new_focus):
         Image(driver, rb.PASSWORD_BADGE).wait_until_visible()
     if password == rb.COMMON_PASSWORD:
         Image(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE).wait_until_visible()
-    elif password in rl.WEAK_PASSWORDS:
+    elif password in WEAK_PASSWORDS:
         Image(driver, rb.PASSWORD_IS_WEAK_BADGE).wait_until_visible()
-    elif password in rl.INCORRECT_PASSWORDS:
+    elif password in INCORRECT_PASSWORDS:
         Image(driver, rb.PASSWORD_INCORRECT_BADGE).wait_until_visible()
-    elif password in rl.FAIR_PASSWORDS:
+    elif password in FAIR_PASSWORDS:
         Image(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
-    elif password in rl.GOOD_PASSWORDS:
+    elif password in GOOD_PASSWORDS:
         Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
         Image(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE).wait_until_visible()
@@ -157,21 +192,21 @@ def check_password_badge(driver, password, new_focus):
             f'and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]',
         )
         too_common.wait_until_visible()
-    elif password in rl.WEAK_PASSWORDS:
+    elif password in WEAK_PASSWORDS:
         weak_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
         )
         weak_password.wait_until_visible()
-    elif password in rl.INCORRECT_PASSWORDS:
+    elif password in INCORRECT_PASSWORDS:
         incorrect_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]',
         )
         incorrect_password.wait_until_visible()
-    elif password in rl.FAIR_PASSWORDS:
+    elif password in FAIR_PASSWORDS:
         fair_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
@@ -188,13 +223,13 @@ def check_password_badge(driver, password, new_focus):
 
     if password == rb.COMMON_PASSWORD:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
-    elif password in rl.WEAK_PASSWORDS:
+    elif password in WEAK_PASSWORDS:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_WEAK_BADGE, new_focus)
-    elif password in rl.INCORRECT_PASSWORDS:
+    elif password in INCORRECT_PASSWORDS:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_INCORRECT_BADGE, new_focus)
-    elif password in rl.FAIR_PASSWORDS:
+    elif password in FAIR_PASSWORDS:
         Image(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
-    elif password in rl.GOOD_PASSWORDS:
+    elif password in GOOD_PASSWORDS:
         Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
         move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
