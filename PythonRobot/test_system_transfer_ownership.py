@@ -229,6 +229,7 @@ def test_initiate_transfer_then_accept_and_check_email(
         login_dialog.basic_cloud_login(viewer_user.email, viewer_user.password)
         _check_user_wants_to_transfer_to_you(system_ownership, owner)
         system_ownership.accept_ownership_transfer()
+        # Fails because of https://networkoptix.atlassian.net/browse/CLOUD-11749
         SystemAdmin(driver)
         _check_system_owner_is_you(system_ownership)
         with EmailClient(email_alias=owner.email) as client:
