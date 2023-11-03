@@ -1,9 +1,14 @@
 from uuid import uuid4
+
+import pytest
+from django.db.models import Subquery
 from datetime import timedelta
 from model_bakery import baker
 
-from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel, \
-    Organization, OrganizationPermissions, ChannelPartnerStates, ChannelPartnerService, ChannelPartner, ChannelPartnerEvent
+from partners.models import (
+    CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerAccessLevel,
+    Organization, OrganizationPermissions, ChannelPartnerStates, ChannelPartnerService,
+    ChannelPartner, ChannelPartnerEvent)
 
 
 class TestCloudSystemId:
@@ -239,3 +244,206 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is False
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
+
+
+class TestEffectiveStates:
+
+    @pytest.fixture(autouse=True, scope='function')
+    def setup(self, channel_partner_factory, organization_factory, system_factory,
+              cp_service_factory, service_record_factory):
+        self.degree = 2
+        depth = 3
+
+        def gen_from_cp(parent, cur_depth=0):
+            if (cur_depth := cur_depth+1) > depth:
+                return
+            for _ in range(self.degree):
+                child = channel_partner_factory(parent_channel_partner=parent)
+                gen_from_cp(child, cur_depth=cur_depth)
+
+        self.root: ChannelPartner = channel_partner_factory()
+        self.unchanged_parent: ChannelPartner = channel_partner_factory(parent_channel_partner=self.root)
+        gen_from_cp(self.unchanged_parent, cur_depth=0)
+        self.changed_parent: ChannelPartner = channel_partner_factory(parent_channel_partner=self.root)
+        gen_from_cp(self.changed_parent, cur_depth=0)
+        self.services = [cp_service_factory(channel_partner=self.root) for _ in range(self.degree)]
+        for cp in ChannelPartner.get_successors(self.root.id):
+            orgs = [organization_factory(channel_partner=cp) for _ in range(self.degree)]
+            for org in orgs:
+                for _ in range(self.degree):
+                    system = system_factory(organization=org)
+                    self.last_system = system
+                    for service in self.services:
+                        service_record_factory(service=service, cloud_system=system)
+
+        self.changed_organizations = Organization.objects.filter(
+            channel_partner__in=ChannelPartner.get_successors(self.changed_parent.id, include_ancestor=False))
+        self.last_system = (CloudSystemId.objects.filter(organization__in=self.changed_organizations).last())
+
+    def ensure_unchanged(self):
+        unchanged_tree = ChannelPartner.get_successors(self.unchanged_parent.id)
+        for cp in unchanged_tree:
+            assert cp.state == ChannelPartnerStates.ACTIVE
+            assert cp.effective_state == ChannelPartnerStates.ACTIVE
+            for org in cp.organizations.all():
+                assert org.state == ChannelPartnerStates.ACTIVE
+                assert org.effective_state == ChannelPartnerStates.ACTIVE
+                for sys in org.cloud_systems.all():
+                    assert sys.state == ChannelPartnerStates.ACTIVE
+                    assert sys.effective_state == ChannelPartnerStates.ACTIVE
+
+    def test_initial_tree(self):
+        tree = ChannelPartner.get_successors(self.root.id)
+        for cp in tree:
+            assert cp.organizations.count() == self.degree
+            for org in cp.organizations.all():
+                assert org.cloud_systems.count() == self.degree
+
+    def test_suspend_with_all_active(self):
+        self.changed_parent.state = ChannelPartnerStates.SUSPENDED
+        self.changed_parent.save()
+        assert self.changed_parent.effective_state == ChannelPartnerStates.SUSPENDED
+        tree = ChannelPartner.get_successors(self.changed_parent.id)
+        for cp in tree:
+            if cp == self.changed_parent:
+                assert cp.state == ChannelPartnerStates.SUSPENDED
+            else:
+                assert cp.state == ChannelPartnerStates.ACTIVE
+            assert cp.effective_state == ChannelPartnerStates.SUSPENDED
+            for org in cp.organizations.all():
+                assert org.state == ChannelPartnerStates.ACTIVE
+                assert org.effective_state == ChannelPartnerStates.SUSPENDED
+                for sys in org.cloud_systems.all():
+                    assert sys.state == ChannelPartnerStates.ACTIVE
+                    assert sys.effective_state == ChannelPartnerStates.SUSPENDED
+        self.ensure_unchanged()
+
+    def test_shutdown_with_all_active(self):
+        assert self.last_system.service_records.count() == self.degree
+        self.changed_parent.state = ChannelPartnerStates.SHUTDOWN
+        self.changed_parent.save()
+        assert self.changed_parent.effective_state == ChannelPartnerStates.SHUTDOWN
+        tree = ChannelPartner.get_successors(self.changed_parent.id)
+        for cp in tree:
+            if cp == self.changed_parent:
+                assert cp.state == ChannelPartnerStates.SHUTDOWN
+            else:
+                assert cp.state == ChannelPartnerStates.ACTIVE
+            assert cp.effective_state == ChannelPartnerStates.SHUTDOWN
+            for org in cp.organizations.all():
+                assert org.state == ChannelPartnerStates.ACTIVE
+                assert org.effective_state == ChannelPartnerStates.SHUTDOWN
+                for sys in org.cloud_systems.all():
+                    assert sys.state == ChannelPartnerStates.ACTIVE
+                    assert sys.effective_state == ChannelPartnerStates.SHUTDOWN
+        self.ensure_unchanged()
+
+        assert self.last_system.service_records.count() == self.degree * 2
+        last_sys_current_services = self.last_system.calculate_current_services()['services']
+        assert len(last_sys_current_services) == self.degree
+        for service, usage in last_sys_current_services.items():
+            assert usage['quantity'] == 0
+
+    def test_system_states(self):
+        # Test SUSPENDED
+        assert self.last_system.service_records.count() == self.degree
+        self.last_system.state = ChannelPartnerStates.SUSPENDED
+        self.last_system.save()
+        self.last_system.refresh_from_db()
+        assert self.last_system.effective_state == ChannelPartnerStates.SUSPENDED
+        assert self.last_system.service_records.count() == self.degree
+        # Test SHUTDOWN
+        self.last_system.state = ChannelPartnerStates.SHUTDOWN
+        self.last_system.save()
+        self.last_system.refresh_from_db()
+        assert self.last_system.service_records.count() == self.degree * 2
+        last_sys_current_services = self.last_system.calculate_current_services()['services']
+        assert len(last_sys_current_services) == self.degree
+        for service, usage in last_sys_current_services.items():
+            assert usage['quantity'] == 0
+        self.ensure_unchanged()
+
+    def test_organization_states(self):
+        last_org = self.last_system.organization
+        suspended_system = self.last_system.organization.cloud_systems.last()
+        shutdown_system = self.last_system.organization.cloud_systems.first()
+        assert suspended_system.id != shutdown_system.id
+        assert suspended_system.organization_id == shutdown_system.organization_id
+        assert suspended_system.service_records.count() == self.degree
+        assert shutdown_system.service_records.count() == self.degree
+        suspended_system.state = ChannelPartnerStates.SUSPENDED
+        suspended_system.save()
+        shutdown_system.state = ChannelPartnerStates.SHUTDOWN
+        shutdown_system.save()
+        suspended_system.refresh_from_db()
+        shutdown_system.refresh_from_db()
+        assert suspended_system.effective_state == ChannelPartnerStates.SUSPENDED
+        assert shutdown_system.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert suspended_system.service_records.count() == self.degree
+        assert shutdown_system.service_records.count() == self.degree * 2
+
+        # Test suspended
+        last_org.state = ChannelPartnerStates.SUSPENDED
+        last_org.save()
+        last_org.refresh_from_db()
+        suspended_system.refresh_from_db()
+        shutdown_system.refresh_from_db()
+        assert last_org.effective_state == ChannelPartnerStates.SUSPENDED
+        assert suspended_system.effective_state == ChannelPartnerStates.SUSPENDED
+        assert shutdown_system.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert suspended_system.service_records.count() == self.degree
+        assert shutdown_system.service_records.count() == self.degree * 2
+
+        # Test shurdown
+
+        last_org.state = ChannelPartnerStates.SHUTDOWN
+        last_org.save()
+        last_org.refresh_from_db()
+        suspended_system.refresh_from_db()
+        shutdown_system.refresh_from_db()
+        assert last_org.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert suspended_system.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert shutdown_system.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert suspended_system.service_records.count() == self.degree * 2
+        assert shutdown_system.service_records.count() == self.degree * 2
+        self.ensure_unchanged()
+
+    def test_partners_states(self):
+        first_org = self.changed_parent.organizations.first()
+        last_org = self.last_system.organization
+        first_org.state = ChannelPartnerStates.SUSPENDED
+        first_org.save()
+        last_org.state = ChannelPartnerStates.SHUTDOWN
+        last_org.save()
+        first_org.refresh_from_db()
+        last_org.refresh_from_db()
+        assert first_org.effective_state == ChannelPartnerStates.SUSPENDED
+        assert last_org.effective_state == ChannelPartnerStates.SHUTDOWN
+
+        self.changed_parent.state = ChannelPartnerStates.SUSPENDED
+        self.changed_parent.save()
+
+        self.changed_parent.refresh_from_db()
+        first_org.refresh_from_db()
+        last_org.refresh_from_db()
+        assert self.changed_parent.effective_state == ChannelPartnerStates.SUSPENDED
+        assert first_org.effective_state == ChannelPartnerStates.SUSPENDED
+        assert last_org.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert first_org.cloud_systems.first().service_records.count() == self.degree
+        assert last_org.cloud_systems.first().service_records.count() == self.degree * 2
+        assert first_org.cloud_systems.first().effective_state == ChannelPartnerStates.SUSPENDED
+        assert last_org.cloud_systems.first().effective_state == ChannelPartnerStates.SHUTDOWN
+
+        self.changed_parent.state = ChannelPartnerStates.SHUTDOWN
+        self.changed_parent.save()
+        self.changed_parent.refresh_from_db()
+        first_org.refresh_from_db()
+        last_org.refresh_from_db()
+        assert self.changed_parent.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert first_org.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert last_org.effective_state == ChannelPartnerStates.SHUTDOWN
+        assert first_org.cloud_systems.first().service_records.count() == self.degree * 2
+        assert last_org.cloud_systems.first().service_records.count() == self.degree * 2
+        assert first_org.cloud_systems.first().effective_state == ChannelPartnerStates.SHUTDOWN
+        assert last_org.cloud_systems.first().effective_state == ChannelPartnerStates.SHUTDOWN
+        self.ensure_unchanged()

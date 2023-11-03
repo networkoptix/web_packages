@@ -251,6 +251,10 @@ class NonPartialCharfield(ForceNonPartialSerializerMixin, CharField):
 
 
 class FieldOriginalMixin:
+    """
+    Populates '_original_{field_name}' fields with original values.
+    TODO. Fix usage with newly created objects
+    """
     observed_fields = None
 
     def __init__(self, *args, **kwargs):

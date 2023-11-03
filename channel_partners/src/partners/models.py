@@ -12,6 +12,7 @@ from django.contrib.auth.models import User, PermissionsMixin, Permission
 from django.core.cache import caches
 from django.db import models
 from django.db.models import Sum, F, QuerySet
+from django.db.models.functions import Concat, Greatest
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django_cte import CTEManager, With
@@ -123,6 +124,8 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     name = models.CharField(max_length=150, blank=True)
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False,
                                 default=ChannelPartnerStates.ACTIVE)
+    effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
+                                          blank=False, default=ChannelPartnerStates.ACTIVE)
     current_services = models.JSONField(default=dict)
     last_usage_check = models.DateTimeField(default=timezone.now)
     last_usage_report = models.DateTimeField(default=timezone.now)
@@ -133,7 +136,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
     activated = models.BooleanField(default=True)
 
-    observed_fields = ('organization_id', 'state')
+    observed_fields = ('organization_id', 'state', 'effective_state')
 
     def __str__(self):
         return self.name or str(self.system_id)
@@ -177,54 +180,63 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     def save(self, *args, **kwargs):
         self.system_id = models.UUIDField().to_python(self.system_id)
-        original_organization_id = self._original_organization_id
-        original_state = self._original_state
+        self.update_state()
         super().save(*args, **kwargs)
 
-        if (self.organization_id and self.organization_id != original_organization_id) or (
-                self.state != original_state and self.state == ChannelPartnerStates.SHUTDOWN):
-            # TODO: Move to celery and use locks to make sure there is no race condition
-            self.negate_all_service(organization_id=original_organization_id)
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
 
     def negate_all_service(self, organization_id):
-        existing_services = self.calculate_current_services()
-        for service_id, service_dict in existing_services.get('services').items():
-            current_qty = existing_services.get('services').get(service_id, {}).get('quantity')
-            if current_qty not in (None, 0):
-                qty_delta = -current_qty
+        """
+        Negate all service for system with a given organization. Can be used when system goes down with
+        current organization id or when system transferred to another organization with old organization id.
+        """
+        existing_services = (ChannelPartnerServiceRecord.objects
+                             .filter(organization_id=organization_id, cloud_system=self)
+                             .values('service_id', 'cloud_system_id', 'organization_id')
+                             .annotate(negation=-Sum('quantity')))
+        for service in existing_services:
+            if service['negation'] not in (None, 0):
                 ChannelPartnerServiceRecord.objects.create(
-                    quantity=qty_delta,
-                    service_id=service_id,
+                    quantity=service['negation'],
+                    service_id=service['service_id'],
                     effective_ts=timezone.now(),
                     in_effect=True,
                     cloud_system=self,
                     organization_id=organization_id,
                     created_by=None
                 )
-        self.calculate_current_services()
+        # All services zeroed so we can save empty dict
+        self.current_services = {}
         ChannelPartnerEvent.new_event(event_type=ChannelPartnerEvent.SYSTEM_UPDATED, system=self)
 
+    def update_state(self):
+        """
+        Updates CloudSystemId.effective_state due to state changes, if effective_state
+         changed then negates services when needed.
+         Note. This method does not save states, super().save() must be called after.
+        """
+        self.effective_state = max(self.state, getattr(self.organization, 'effective_state', ChannelPartnerStates.ACTIVE))
+        if self._state.adding:
+            return
+        if self.state == self._original_state and self.organization_id == self._original_organization_id:
+            return
+        if self.organization_id != self._original_organization_id or self.state == ChannelPartnerStates.SHUTDOWN:
+            # TODO. Move to background.
+            self.negate_all_service(self._original_organization_id)
 
-    @property
-    def effective_state(self):
-        if self.organization:
-            organization_state = self.organization.effective_state
-            if organization_state > self.state:
-                return organization_state
-
-        return self.state
-
-    def calculate_current_services(self):
-        services = {str(record['service']): {'quantity': record['quantity']}
-                    for record in
-                    self.service_records.filter(organization=self.organization).values('service').annotate(
-                        quantity=Sum('quantity'))}
+    def calculate_current_services(self, organization_id=None, save_results=True):
+        services = {
+            str(record['service']): {'quantity': record['quantity']}
+            for record in
+            self.service_records
+            .filter(organization_id=organization_id or self.organization.id)
+            .values('service').annotate(quantity=Sum('quantity'))}
         self.current_services = {
             'services': services,
             'last_update_ts': round(timezone.now().timestamp())
         }
-        self.save()
+        if save_results:
+            self.save()
         return self.current_services
 
     @property
@@ -340,8 +352,12 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     users = models.ManyToManyField(CloudUser, blank=True, related_name='channel_partners',
                                    through='ChannelPartnerToUser')
     name = models.CharField(max_length=150)
-    parent_channel_partner = models.ForeignKey('ChannelPartner', null=True, blank=True, on_delete=models.CASCADE, related_name='channel_partners')
-    state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False, default=ChannelPartnerStates.ACTIVE)
+    parent_channel_partner = models.ForeignKey('ChannelPartner', null=True, blank=True,
+                                               on_delete=models.CASCADE, related_name='channel_partners')
+    state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
+                                blank=False, default=ChannelPartnerStates.ACTIVE)
+    effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
+                                          blank=False, default=ChannelPartnerStates.ACTIVE)
     # instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
@@ -354,7 +370,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
-    observed_fields = ('state',)
+    observed_fields = ('state', 'effective_state')
 
     tree = CTEManager()
 
@@ -453,9 +469,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             and self.allow_changing_services
 
 
-    @property
-    def effective_state(self):
-        return self.state
+    # @property
+    # def effective_state(self):
+    #     return self.state
 
     @property
     def all_services(self):
@@ -470,7 +486,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             self.cloud_host = self.parent_channel_partner.cloud_host
 
         original_state = self._original_state
-
+        self.update_state()
         super().save(*args, **kwargs)
 
         if self.parent_channel_partner and new:
@@ -485,10 +501,6 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
         if not self.allow_changing_services and not new:
             self.disable_successors_acs()
-
-        if original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
-            for system in CloudSystemId.objects.filter(organization__channel_partner__id=self.successors):
-                system.negate_all_service(organization_id=system.organization_id)
 
     def disable_successors_acs(self):
         successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
@@ -642,6 +654,42 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def successors(self):
         return self.get_successors(ancestor_id=self.id)
 
+    @classmethod
+    def update_effective_states(cls, queryset, parent_effective_state):
+        cp_to_update = []
+        # exclude records which do not require for changing state
+        queryset = queryset.exclude(
+            effective_state=Greatest(F("state"), models.Value(parent_effective_state)))
+        for channel_partner in queryset:
+            effective_state = max(channel_partner.state, parent_effective_state)
+            if effective_state == channel_partner.effective_state:
+                continue
+            channel_partner.effective_state = max(channel_partner.state, parent_effective_state)
+            cp_to_update.append(channel_partner)
+            Organization.update_effective_states(channel_partner.organizations, parent_effective_state=effective_state)
+            cls.update_effective_states(
+                cls.objects.filter(parent_channel_partner=channel_partner),
+                parent_effective_state=effective_state
+            )
+        cls.objects.bulk_update(cp_to_update, fields=['effective_state'])
+
+    def update_state(self):
+        """
+        Updates Organization.effective_state due to state changes, if effective_state
+         changed then updates effective states on all children organization and systems
+         and negates services when needed.
+         Note. This method does not save states themselves, super().save() must be called after.
+        """
+        self.effective_state = max(self.state, getattr(self.parent_channel_partner, 'effective_state', 0))
+        if self._state.adding:
+            return
+        if self.state == self._original_state:
+            return
+        if self.effective_state == self._original_effective_state:
+            return
+        Organization.update_effective_states(self.organizations, parent_effective_state=self.effective_state)
+        self.update_effective_states(self.channel_partners, parent_effective_state=self.effective_state)
+
 
 class ChannelPartnerToUser(models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE)
@@ -709,6 +757,8 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                    blank=True, through='OrganizationToUser')
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
                                 blank=False, default=ChannelPartnerStates.ACTIVE)
+    effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
+                                          blank=False, default=ChannelPartnerStates.ACTIVE)
     channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
                                                      limit_choices_to={
                                                          "id__in": [
@@ -724,7 +774,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
 
-    observed_fields = ('state',)
+    observed_fields = ('state', 'effective_state')
 
     class Meta:
         permissions = [
@@ -743,11 +793,8 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     permissions = OrganizationPermissions
 
     def save(self, *args, **kwargs):
-        original_state = self._original_state
+        self.update_state()
         super().save(*args, **kwargs)
-        if original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
-            for system in self.cloud_systems.all():
-                system.negate_all_service(organization_id=self.id)
 
     def __str__(self):
         return self.name
@@ -860,16 +907,42 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.has_perm(user, OrganizationPermissions.access_systems) or self.channel_partner.can_access(user)
 
     @property
-    def effective_state(self):
-        channel_partner_state = self.channel_partner.effective_state
-        if channel_partner_state > self.state:
-            return channel_partner_state
-        else:
-            return self.state
-
-    @property
     def all_services(self):
         return self.channel_partner.all_services
+
+    @classmethod
+    def update_effective_states(cls, queryset, parent_effective_state):
+        org_updated = []
+        queryset = queryset.exclude(
+            effective_state=Greatest("state", models.Value(parent_effective_state)))
+        for organization in queryset:
+            effective_state = max(organization.state, parent_effective_state)
+            organization.effective_state = max(organization.state, parent_effective_state)
+            org_updated.append(organization)
+            organization.update_systems_effective_states(organization_effective_state=effective_state)
+        cls.objects.bulk_update(org_updated, fields=['effective_state'], batch_size=100)
+
+    def update_systems_effective_states(self, organization_effective_state):
+        if organization_effective_state == ChannelPartnerStates.SHUTDOWN:
+            ChannelPartnerServiceRecord.negate_services_on_shutdown(
+                systems=self.cloud_systems.exclude(effective_state=organization_effective_state))
+        self.cloud_systems.update(
+            effective_state=Greatest("state", models.Value(organization_effective_state)))
+
+    def update_state(self):
+        """
+        Updates Organization.effective_state due to state changes, if effective_state
+         changed then updates effective states on all children systems and negates services when needed.
+         Note. This method does not save states, super().save() must be called after.
+        """
+        self.effective_state = max(self.state, self.channel_partner.effective_state)
+        if self._state.adding:
+            return
+        if self.state == self._original_state:
+            return
+        if self.effective_state == self._original_effective_state:
+            return
+        self.update_systems_effective_states(organization_effective_state=self.effective_state)
 
 
 class OrganizationToUser(models.Model):
@@ -982,6 +1055,27 @@ class ChannelPartnerServiceRecord(models.Model):
         if self._state.adding and not self.organization:
             self.organization = self.cloud_system.organization
         super().save(*args, **kwargs)
+
+    @classmethod
+    def negate_services_on_shutdown(cls, systems: QuerySet[CloudSystemId]):
+        #  We probably need to zeroing of CloudSystemId.current_services
+        systems.update(current_services={})
+        records = (cls.objects
+                   .filter(cloud_system__in=systems)
+                   .values('service_id', 'cloud_system_id', 'organization_id')
+                   .annotate(negation=-Sum('quantity')).exclude(negation=0))
+        negation_records = []
+        for record in records:
+            negation_records.append(cls(
+                organization_id=record['organization_id'],
+                cloud_system_id=record['cloud_system_id'],
+                service_id=record['service_id'],
+                quantity=record['negation'],
+                effective_ts=timezone.now(),
+                in_effect=True,
+                created_by=None
+            ))
+        cls.objects.bulk_create(negation_records, batch_size=100)
 
 
 class ServiceUsage(models.Model):
