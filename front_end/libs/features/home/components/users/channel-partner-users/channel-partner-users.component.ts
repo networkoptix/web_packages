@@ -1,9 +1,8 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
+import { catchError, distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
@@ -43,17 +42,14 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     constructor(
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
-        private route: ActivatedRoute,
     ) {
-        this.currentPartnerId$ = this.route.parent.params.pipe(
-            map(({ id }) => id),
+        this.currentPartnerId$ = this.CPService.paramStateHandler.state$.pipe(
+            map(({ params: { partnerId } }) => partnerId),
             distinctUntilChanged(),
         );
 
         this.records$ = this.currentPartnerId$.pipe(
-            switchMap(id => {
-                return this.CPService.getChannelPartnerUsers(id);
-            }),
+            switchMap(id => this.CPService.getChannelPartnerUsers(id)),
             map(users =>
                 users.map(user => ({
                     ...user,
@@ -88,5 +84,18 @@ export class NxChannelPartnerUsersComponent implements OnInit {
 
     selectUser(rec: ChannelPartnerUserExt): void {
         this.selectedUserEmail = rec.email;
+    }
+
+    deleteChannelPartnerUser(email: string): void {
+        this.currentPartnerId$
+            .pipe(
+                switchMap(id => this.CPService.deleteChannelPartnerUser(id, email)),
+                catchError(err => {
+                    throw err;
+                }),
+            )
+            .subscribe({
+                error: err => console.error(err),
+            });
     }
 }

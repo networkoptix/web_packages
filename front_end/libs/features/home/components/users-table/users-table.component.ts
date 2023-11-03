@@ -31,6 +31,7 @@ export class NxUsersTableComponent {
     @Input() records: ChannelPartnerUserExt[];
     @Input() selectedRecordId: string;
 
+    @Output() public onDeleteClick = new EventEmitter<string>();
     @Output() public onRowClick = new EventEmitter<ChannelPartnerUserExt>();
 
     LANG = staticLang;

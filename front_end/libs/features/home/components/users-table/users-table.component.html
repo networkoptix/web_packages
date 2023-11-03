@@ -186,6 +186,7 @@
             <div class="div-container-wrapper">
                 <svg-icon
                     nx-add-svg-src
+                    (click)="onDeleteClick.emit(row.email)"
                     [src]="icons.dir + 'delete.svg'"
                     [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                 ></svg-icon>
