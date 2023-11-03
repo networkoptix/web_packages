@@ -9,7 +9,6 @@ from typing import ContextManager
 import urllib3
 from selenium.webdriver.remote.webdriver import WebDriver
 
-import robot_lists as rl
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
@@ -23,7 +22,6 @@ from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
-from generic_elements import Tooltip
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -87,104 +85,6 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     time.sleep(0.5)
 
 
-def check_password_badge(driver: WebDriver, password, new_focus):
-    if password != "":
-        Image(driver, rb.PASSWORD_BADGE).wait_until_visible()
-    if password == rb.COMMON_PASSWORD:
-        Image(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE).wait_until_visible()
-    elif password in rl.WEAK_PASSWORDS:
-        Image(driver, rb.PASSWORD_IS_WEAK_BADGE).wait_until_visible()
-    elif password in rl.INCORRECT_PASSWORDS:
-        Image(driver, rb.PASSWORD_INCORRECT_BADGE).wait_until_visible()
-    elif password in rl.FAIR_PASSWORDS:
-        Image(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
-    elif password in rl.GOOD_PASSWORDS:
-        Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
-    elif password == rb.SEVEN_CHAR_PASSWORD:
-        Image(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE).wait_until_visible()
-
-    if password != "":
-        Image(driver, rb.PASSWORD_BADGE).hover()
-
-    if password == rb.COMMON_PASSWORD:
-        too_common = Tooltip(
-            driver,
-            f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
-            f'and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]',
-        )
-        too_common.wait_until_visible()
-    elif password in rl.WEAK_PASSWORDS:
-        weak_password = Tooltip(
-            driver,
-            f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
-            f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
-        )
-        weak_password.wait_until_visible()
-    elif password in rl.INCORRECT_PASSWORDS:
-        incorrect_password = Tooltip(
-            driver,
-            f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
-            f'and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]',
-        )
-        incorrect_password.wait_until_visible()
-    elif password in rl.FAIR_PASSWORDS:
-        fair_password = Tooltip(
-            driver,
-            f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
-            f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
-        )
-        fair_password.wait_until_visible()
-    elif password == rb.SEVEN_CHAR_PASSWORD:
-        seven_char_password = Tooltip(
-            driver,
-            f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
-            f'and contains(text(), "{rb.PASSWORD_TOO_SHORT_TEXT}")]',
-        )
-        seven_char_password.wait_until_visible()
-
-    if password == rb.COMMON_PASSWORD:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_COMMON_BADGE, new_focus)
-    elif password in rl.WEAK_PASSWORDS:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_WEAK_BADGE, new_focus)
-    elif password in rl.INCORRECT_PASSWORDS:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_INCORRECT_BADGE, new_focus)
-    elif password in rl.FAIR_PASSWORDS:
-        Image(driver, rb.PASSWORD_IS_FAIR_BADGE).wait_until_visible()
-    elif password in rl.GOOD_PASSWORDS:
-        Image(driver, rb.PASSWORD_IS_GOOD_BADGE).wait_until_visible()
-    elif password == rb.SEVEN_CHAR_PASSWORD:
-        move_focus_and_check_badge_stays(driver, rb.PASSWORD_IS_TOO_SHORT_BADGE, new_focus)
-
-
-def check_new_password_outline_and_error_message(driver, new_password, new_focus, input,
-                                                 input_name):
-    TextField(driver, new_focus).click()
-    if new_password not in rl.FAIR_PASSWORDS and new_password not in rl.GOOD_PASSWORDS:
-        field = TextField(driver, input)
-        assert field.value_of_css_property("border-bottom-color") == rb.ERROR_COLOR_WITH_OPACITY
-        assert field.value_of_css_property("border-top-color") == rb.ERROR_COLOR_WITH_OPACITY
-        assert field.value_of_css_property("border-right-color") == rb.ERROR_COLOR_WITH_OPACITY
-        assert field.value_of_css_property("border-left-color") == rb.ERROR_COLOR_WITH_OPACITY
-        assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
-        password_element = TextField(
-            driver,
-            f"//nx-password-input[@name='{input_name}' "
-            f"and contains(@class, 'ng-invalid')]//input[@id='{input_name}']",
-        )
-        password_element.wait_until_visible()
-    if new_password == "" or new_password == " ":
-        TextField(driver, input).input_text("")
-        move_focus_and_check_element(driver, rb.PASSWORD_IS_REQUIRED, new_focus)
-    elif new_password == rb.SEVEN_CHAR_PASSWORD:
-        move_focus_and_check_element(driver, rb.PASSWORD_TOO_SHORT, new_focus)
-    elif new_password in rl.INCORRECT_PASSWORDS:
-        move_focus_and_check_element(driver, rb.PASSWORD_SPECIAL_CHARS, new_focus)
-    elif new_password == rb.COMMON_PASSWORD:
-        move_focus_and_check_element(driver, rb.PASSWORD_TOO_COMMON, new_focus)
-    elif new_password in rl.WEAK_PASSWORDS:
-        move_focus_and_check_element(driver, rb.PASSWORD_IS_WEAK, new_focus)
-
-
 def get_email_link(recipient):
     with EmailClient(email_alias=recipient) as client:
         email_message = client.wait_for_activate_account_email()
@@ -221,17 +121,6 @@ def logout_japanese(driver: WebDriver):
     DropDownOption(driver, element).click()
     validate_log_out(driver)
 
-
-def move_focus_and_check_badge_stays(driver, badge, new_focus):
-    badge = Image(driver, badge)
-    badge.wait_until_visible()
-    badge.click()
-    badge.wait_until_visible()
-
-
-def move_focus_and_check_element(driver, element, new_focus):
-    TextField(driver, new_focus).click()
-    PageText(driver, element).wait_until_visible()
 
 def register_and_activate_account(driver, first_name, last_name, email, password, reg="api",
                                   from_email=rb.FROM_EMAIL_DEFAULT):
