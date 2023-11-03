@@ -168,7 +168,7 @@ export class NxSystemStorageComponent implements OnInit {
         this.loading = true;
         this.waitingForStorages = true;
         this.previouslyReserved.clear();
-        this.canSeeDetailInfo = this.system.permissionManager.isAdmin();
+        this.canSeeDetailInfo = this.system.permissionManager.isAdmin$$();
         this.system.storageManager.serverId$.pipe(untilDestroyed(this)).subscribe(() => {
             this.saveSettings = null;
         });
@@ -541,7 +541,10 @@ export class NxSystemStorageComponent implements OnInit {
         const svgName =
             this.updatingModes.includes(store.storageId) || !store.storageType
                 ? 'loading.svg'
-                : `storage_${store.storageType}.svg`;
+                : `storage_${store.storageType.replace(
+                      STORAGE_TYPES.REMOVABLE,
+                      STORAGE_TYPES.USB,
+                  )}.svg`;
         return `${this.icons.dirTextButtons}${svgName}`;
     }
 

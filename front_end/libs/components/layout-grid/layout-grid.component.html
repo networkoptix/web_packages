@@ -72,6 +72,7 @@
     <nx-layout-grid-tree
         [layout]="layout"
         [system]="system"
+        [layoutItemLookup]="layoutItemLookup"
         [dataSource]="layoutItemLookup.tree"
         [treeControl]="treeControl"
         [errorIcons]="errorIcons"
@@ -103,6 +104,8 @@
         else showPortal
     "
     class="grid-section"
+    [cdkContextMenuTriggerFor]="layoutStateService.contextMenu"
+    [ngStyle]="cursorStyle$$()"
 >
     <div
         *ngIf="layout?.id && layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved"
@@ -118,13 +121,24 @@
                     (unsaved === unsavedStates.diverged ? 'warning.svg' : 'info.svg')
                 "
             ></svg-icon>
-            <span
-                *ngSwitchCase="unsavedStates.unsaved"
-                class="ribbon-message"
-                translate
-            >
-                This layout hasn't been saved yet
-            </span>
+            <ng-container *ngSwitchCase="unsavedStates.unsaved">
+                <ng-template #notDuplicated>
+                    <span
+                        class="ribbon-message"
+                        translate
+                        >This layout hasn't been saved yet</span
+                    >
+                </ng-template>
+                <span
+                    *ngIf="
+                        layoutStateService.duplicatedLayouts$$().includes(cleanId(this.layout.id));
+                        else notDuplicated
+                    "
+                    class="ribbon-message"
+                    translate
+                    >This duplicated layout hasn't been saved yet</span
+                >
+            </ng-container>
             <span
                 *ngSwitchCase="unsavedStates.diverged"
                 class="ribbon-message"
@@ -214,7 +228,7 @@
             ></div>
             <ng-container *ngIf="!changingLayout">
                 <div
-                    *ngIf="!layout?.items?.length"
+                    *ngIf="!dragging$$() && !layout?.items?.length"
                     class="no-camera-placeholder"
                 >
                     <svg-icon
@@ -284,7 +298,7 @@
                                 cdkDrag
                                 #dragContainer
                                 [cdkDragDisabled]="
-                                    layout.locked || !!window.document.fullscreenElement
+                                    !editItems$$() || !!window.document.fullscreenElement
                                 "
                                 [cdkDragData]="item"
                                 (cdkDragReleased)="moveItem(item)"
@@ -303,8 +317,6 @@
                                     (collisions$ | async)[item.id]
                                         | mergeObjects : item.renderConfig.child
                                 "
-                                (dblclick)="focusToggle(item.id)"
-                                (nxClickElsewhere)="removeFocus()"
                             >
                                 <ng-template #notSupported>
                                     <div
@@ -360,7 +372,7 @@
                                                 "
                                                 (click)="
                                                     assertResourceOfType.camera(itemDetail) &&
-                                                        editCameras$$() &&
+                                                        editItems$$() &&
                                                         (status === 'defaultPassword' ||
                                                             itemDetail.details.unauthorized) &&
                                                         updateCameraCredentials(
@@ -371,7 +383,7 @@
                                                 [ngClass]="{
                                                     'has-action':
                                                         assertResourceOfType.camera(itemDetail) &&
-                                                        editCameras$$() &&
+                                                        editItems$$() &&
                                                         (status === 'defaultPassword' ||
                                                             itemDetail.details.unauthorized),
                                                     'has-secondary-panel':
@@ -511,9 +523,6 @@
                                                         [pingServer]="
                                                             pingServer(itemDetail.details)
                                                         "
-                                                        [getRelayHost]="
-                                                            getRelayHost(itemDetail.details)
-                                                        "
                                                         [showFullScreenButton]="false"
                                                         [rotation]="item.rotation"
                                                         (showError)="
@@ -642,9 +651,9 @@
                                     [item]="item"
                                     [node]="layoutItemLookup[item.resourceId]"
                                     [fullScreenTarget]="layoutItemWrapper"
-                                    [showRemove]="!layout.locked && editCameras$$()"
+                                    [showRemove]="editItems$$()"
                                     [hide]="dragging$$()"
-                                    [canEdit]="editCameras$$()"
+                                    [canEdit]="editItems$$()"
                                     (removeItem)="removeItem($event)"
                                     [system]="system"
                                 >

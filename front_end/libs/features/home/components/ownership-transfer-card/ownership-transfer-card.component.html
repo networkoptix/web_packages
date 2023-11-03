@@ -1,0 +1,39 @@
+<div class="system-button card card-condensed">
+    <div class="card-body body">
+        <div class="description">
+            <ng-content select="[systemName]"></ng-content>
+            <div>
+                <span
+                    [innerHTML]="
+                        LANG.channelPartners.userWantsToTransferToOrg
+                            | translate : { username: username }
+                    "
+                >
+                </span>
+            </div>
+        </div>
+        <div class="buttons">
+            <button
+                class="check"
+                (click)="canTransfer.emit(true)"
+            >
+                <svg-icon
+                    [src]="images.dirTheme + 'check.svg'"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    [applyClass]="true"
+                ></svg-icon>
+            </button>
+            <button
+                class="cross"
+                (click)="canTransfer.emit(false)"
+            >
+                <svg-icon
+                    [src]="icons.dirTextButtons + 'close.svg'"
+                    [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    [applyClass]="true"
+                >
+                </svg-icon>
+            </button>
+        </div>
+    </div>
+</div>

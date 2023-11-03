@@ -261,3 +261,21 @@ $preloader_small_circle_distance : 8px;
     justify-content: center;
     align-items: center;
 }
+
+.bookmarks-placeholder-bg {
+    fill: var(--placeholder-bookmarks-bg-color);
+}
+
+.bookmarks-placeholder-cloud {
+    opacity: 0.1;
+    
+    html[data-theme="dark"] & {
+        // Dark theme doesn't have the cloud icon, so we hide it here
+        display: none;
+    }
+}
+
+html[data-theme="dark"] .no-bookmarks .placeholder-icon {
+    // This fixes the void when we hide the cloud
+    margin-bottom: 0;
+}

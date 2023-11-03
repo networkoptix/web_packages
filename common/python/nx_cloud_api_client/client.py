@@ -4,7 +4,7 @@ import inspect
 from functools import wraps
 from .apis import (
     CdbAccountAPIBase, CdbSystemTransferAPIBase,
-    CdbAuthSupportAPIBase, CdbSystemAPIBase, Cdb2faAPIBase
+    CdbAuthSupportAPIBase, CdbSystemAPIBase, Cdb2faAPIBase, CdbOrganizationAPIBase
 )
 from .base_api import NotUsedInRequest, NOT_USED_IN_REQUEST, ContextAPIMixin
 from .base_auth import BearerTokenAuth, QueryParamAuth, CdbAuthAPIClient
@@ -130,6 +130,10 @@ class AMfaApi(AddAuthMixin, Cdb2faAPIBase):
     pass
 
 
+class AOrganizationAPI(AddAuthMixin, CdbOrganizationAPIBase):
+    pass
+
+
 class NxCloudAPIClient(ContextAPIMixin):
     """
     NX CDB API Client. Used for access API with auto credentials refresh. Class automatically
@@ -182,6 +186,7 @@ class NxCloudAPIClient(ContextAPIMixin):
         self.account = CdbAccountAPIBase(client=self.client, host=host)
         self.auth_support = CdbAuthSupportAPIBase(client=self.client, host=host)
         self.mfa = Cdb2faAPIBase(client=self.client, host=host)
+        self.organizations = CdbOrganizationAPIBase(client=self.client, host=host)
         self._update_api_modules()
 
     @property
@@ -267,3 +272,10 @@ class NxCloudAPIClient(ContextAPIMixin):
         module.__setattr__(f'_orig_{name}', module.__getattribute__(name))
         module.__setattr__(name, wrapper)
 
+
+class NxCloudAPISyncClient(NxCloudAPIClient):
+    _default_client_class = httpx.Client
+
+
+class NxCloudAPIAsyncClient(NxCloudAPIClient):
+    _default_client_class = httpx.AsyncClient

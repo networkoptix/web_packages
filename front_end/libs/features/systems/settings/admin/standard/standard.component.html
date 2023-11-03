@@ -227,7 +227,7 @@
                         *ngIf="
                             !environment.isLocal &&
                             system.useRest &&
-                            system.permissionManager.isOwner()
+                            system.permissionManager.isOwner$$()
                         "
                     >
                         <div class="d-flex checkbox-block align-items-center mt-1">

@@ -35,10 +35,12 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         this.removeOldForm$.next(true);
 
         if (this.userRoleForm) {
-            this.userRoleForm = undefined;
             this.formIsNotDirty.emit(true);
         }
-        this.role = !this.isCloud$$() && user.name === 'admin' ? 'Owner' : user.role.name;
+        this.role =
+            !this.isCloud$$() && user.name === 'admin'
+                ? 'Owner'
+                : user?.role?.name || this.LANG.accessRoles.custom.label;
 
         this.userRoleForm = NxFormBuilder<UserRoleFormControls>({
             email: {
@@ -62,6 +64,10 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
             .subscribe(values => {
                 this.setPermission();
+            });
+        this.userRoleForm.statusChanges
+            .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
+            .subscribe(() => {
                 this.formIsNotDirty.emit(!this.userRoleForm.dirty);
             });
     }
@@ -103,6 +109,6 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             ? this.LANG.accessRoles[userRole].description
             : this.LANG.accessRoles.customRole.description;
 
-        this.role = this.selectedUser.role.name;
+        this.role = this.selectedUser?.role?.name || this.LANG.accessRoles.custom.label;
     }
 }

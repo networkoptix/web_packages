@@ -1,4 +1,5 @@
 import { CdkDrag, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
@@ -12,6 +13,7 @@ import {
     HostListener,
     Input,
     Output,
+    signal,
     Signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -301,6 +303,7 @@ const calculateResize = (
         NxClickElsewhereDirective,
         PortalModule,
         NxLayoutGridItemOverlayComponent,
+        CdkContextMenuTrigger,
     ],
 })
 export class NxLayoutGridComponent {
@@ -323,9 +326,10 @@ export class NxLayoutGridComponent {
         this.layoutStateService.portal = null;
     }
 
-    editCameras$$: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions().editCameras,
-    );
+    editItems$$: Signal<boolean> = computed(() => {
+        const layout = this.layout$$?.();
+        return !layout?.locked && layout?.name !== this.layoutStateService.focusViewToken;
+    });
 
     #lastWidth: number = Infinity;
 
@@ -379,7 +383,7 @@ export class NxLayoutGridComponent {
 
     previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
-    addingItem = false;
+    addingItem$$ = signal(false);
     addOffset = 0;
     changingLayout: string | boolean = true;
     errors: Record<string, string> = {};
@@ -424,6 +428,8 @@ export class NxLayoutGridComponent {
             refCount: true,
         }),
     );
+
+    layout$$ = toSignal(this.layout$);
 
     showTooltip$ = this.#wrapperSize$.pipe(
         filter(Boolean),
@@ -574,6 +580,20 @@ export class NxLayoutGridComponent {
         const { move = {}, resize = {} } = this.draggingPosition$$();
         return [...Object.values(move), ...Object.values(resize)].some(Boolean);
     });
+
+    getCursor = (): string => {
+        if (this.addingItem$$()) {
+            return 'copy';
+        }
+
+        if (this.dragging$$()) {
+            return 'move';
+        }
+
+        return 'inherit';
+    };
+
+    cursorStyle$$ = computed(() => ({ cursor: this.getCursor() }));
 
     #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
         this.#draggingPosition$,
@@ -1087,7 +1107,7 @@ export class NxLayoutGridComponent {
         layout: ExtractObservable<typeof this.layout$>,
     ): Size => {
         if (!size || !item) {
-            return;
+            return size;
         }
 
         const { height, width } = window.document.fullscreenElement
@@ -1097,14 +1117,20 @@ export class NxLayoutGridComponent {
 
         renderConfig.showTooltip = width < 360;
         if (assertResourceOfType.camera(node) && node.details.online) {
-            const initialAspect = node.aspectRatio || renderConfig.aspect;
+            const initialAspect = node.aspectRatio || renderConfig.aspect || 1;
 
             const isRotated = Boolean((Math.round(rotation / 90) * 90) % 180);
 
             const aspect = isRotated ? 1 / initialAspect : initialAspect;
 
             renderConfig.child = {
-                'aspect-ratio': aspect,
+                'aspect-ratio': aspect || 'unset',
+            };
+
+            const wide = width / height > aspect;
+            return {
+                width: wide && aspect ? height * aspect : width,
+                height: !wide && aspect ? width / aspect : height,
             };
         }
 
@@ -1167,9 +1193,14 @@ export class NxLayoutGridComponent {
         { pointerPosition: move }: { pointerPosition: Point },
         itemParent?: HTMLElement,
     ): void => {
-        this.addingItem = true;
+        this.addingItem$$.set(true);
         if (itemParent) {
             move.x -= itemParent.offsetLeft + itemParent.offsetWidth;
+
+            if (move.x < 0) {
+                return this.updateLayout();
+            }
+
             move.y += this.addOffset - 108;
         }
         this.#draggingPosition$.next({ move, id: 'added' });
@@ -1223,7 +1254,7 @@ export class NxLayoutGridComponent {
             this.changingLayout = cleanId(id);
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
-            if (!this.system.permissionManager.permissions().editCameras) {
+            if (!this.system.permissionManager.permissions$$().editCameras) {
                 delete this.additionalErrorMessages.defaultPassword;
                 delete this.additionalErrorMessages.unauthorized;
             }
@@ -1431,14 +1462,24 @@ export class NxLayoutGridComponent {
             .subscribe(([{ x, y, resize }, collisions]) => {
                 const unresolvedCollisions = Object.values(collisions).some(c => !c.moveTo);
                 const notMoved = [x, y, resize.x, resize.y].every(change => !change);
-                this.addingItem = false;
+                this.addingItem$$.set(false);
                 if (unresolvedCollisions || notMoved) {
                     return this.updateLayout();
                 }
 
                 const items = [...this.layout.items, this.generateLayoutItem(node, { x, y })];
                 if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
-                    this.layoutStateService.updateLayout({ ...this.layout, items });
+                    const currentUser = this.system.permissionManager.currentUser$$();
+
+                    // If user doesn't have permissions to edit a layout then create duplicate local layout
+                    if (!currentUser.isAdmin && currentUser.id !== this.layout.parentId) {
+                        this.layoutStateService.duplicateLayoutAsNewLocalLayout({
+                            ...this.layout,
+                            items,
+                        });
+                    } else {
+                        this.layoutStateService.updateLayout({ ...this.layout, items });
+                    }
                 } else {
                     this.layoutStateService.createNewLocalLayout(items);
                 }
@@ -1510,9 +1551,4 @@ export class NxLayoutGridComponent {
             this.system.serverManager.mediaserverConnections[serverId]
                 .ping()
                 .pipe(catchError(() => Promise.resolve()));
-
-    getRelayHost =
-        ({ parentId: serverId }: { parentId: string }) =>
-        (): Observable<string> =>
-            this.system.serverManager.mediaserverConnections[serverId].getRelayHost();
 }

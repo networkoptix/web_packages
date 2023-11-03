@@ -45,7 +45,6 @@ export class NxVideoPlayerComponent {
      * Pings the server to allow NxCurrentRelayInterceptor to map to resolved relay instance.
      */
     @Input() pingServer: () => Observable<unknown>;
-    @Input() getRelayHost: () => Observable<string>;
     @Input({ transform: booleanAttribute }) controls: boolean = false;
     @Input({ transform: booleanAttribute }) autoplay: boolean = false;
     @Input({ transform: booleanAttribute }) autopause: boolean = false;
@@ -54,18 +53,19 @@ export class NxVideoPlayerComponent {
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
+    @Input() accessToken: string;
 
     @Output() showPtz = new EventEmitter<NxSystemCamera>();
     @Output() showError = new EventEmitter<ConnectionError>();
 
     connectionEstablished: boolean;
     @ViewChild('originalStream') originalStream: ElementRef<HTMLVideoElement>;
-    @ViewChild('webRtcPlayer') webRtcPlayerRef: ElementRef<HTMLVideoElement>;
+    @ViewChild('webRtcStream') webRtcStreamRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
         if (document.fullscreenElement === this.fullScreenTarget) {
             return 'fullscreen'
         }
-        const { paused, currentTime } = this.webRtcPlayerRef?.nativeElement || { paused: true, currentTime: 0 };
+        const { paused, currentTime } = this.webRtcStreamRef?.nativeElement || { paused: true, currentTime: 0 };
         this.connectionEstablished ||= !paused && currentTime > 1000;
         return this.connectionEstablished ? 'playing' : '';
     }
@@ -83,7 +83,7 @@ export class NxVideoPlayerComponent {
     lostConnection = false;
     streamManager = WebRTCStreamManager;
 
-    connection: WebRTCStreamManager;
+    connection: WebRTCStreamManager | null;
 
     ribbon$ = new Subject<{
         message: Translatable,
@@ -121,9 +121,9 @@ export class NxVideoPlayerComponent {
         this.playerId = uuid();
     }
 
-    reconnect$ = new BehaviorSubject<void>(null);
+    reconnect$ = new BehaviorSubject<void | null>(null);
 
-    _queuedReconnect: Promise<void>;
+    _queuedReconnect: Promise<void> | null;
 
     async queueReconnect() {
         const serverOffline = () => firstValueFrom(this.pingServer().pipe(
@@ -195,7 +195,7 @@ export class NxVideoPlayerComponent {
                 const updateFrame = (now?: number, metadata?: { mediaTime: number }) => {
                     if (!metadata || metadata.mediaTime > 1) {
                         const drawImageParams: DrawImageFullTuple = [...cropParams, ...drawParams];
-                        ctx.drawImage(video, ...drawImageParams);
+                        ctx && ctx.drawImage(video, ...drawImageParams);
                         resolve(null);
                     }
                     this.fpsTracker.reportFrame();
@@ -251,49 +251,52 @@ export class NxVideoPlayerComponent {
     }
 
     ngAfterViewInit(): void {
-        const [secondary] = this.camera.parameters.mediaStreams?.streams ?? [];
+        const streams = this.camera.parameters.mediaStreams?.streams ?? [];
+        const primary = streams.find(({ encoderIndex }) => encoderIndex === 0);
+        const secondary = streams.find(({ encoderIndex }) => encoderIndex === 1);
         const codecH265 = 173;
         const codecMjpeg = 7;
         const hasSecondary = secondary && ![codecH265, codecMjpeg].includes(secondary.codec);
+        const primaryIsH265 = primary?.codec === codecH265;
+        const primaryIsMJPEG = primary?.codec === codecMjpeg;
 
-        // if (primaryIsH265) {
-        //     return this.showError.emit(ConnectionError.transcodingDisabled)
-        // }
+        if (primaryIsH265) {
+            return this.showError.emit(ConnectionError.transcodingDisabled)
+        }
 
-        // if (primaryIsMJPEG) {
-        //     return this.showError.emit(ConnectionError.mjpegDisabled)
-        // }
+        if (primaryIsMJPEG) {
+            return this.showError.emit(ConnectionError.mjpegDisabled)
+        }
 
         const stream$ = this.reconnect$.pipe(
-            switchMap(this.getRelayHost),
-            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params, resolvedRelay), this.originalStream.nativeElement, hasSecondary)),
+            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, hasSecondary, this.accessToken)),
             tap(async ([stream, error, connection]) => {
                 if (stream) {
                     this.monitorFps(connection);
-                    this.webRtcPlayerRef.nativeElement.srcObject = await this.zoomStream(stream);
+                    this.webRtcStreamRef.nativeElement.srcObject = await this.zoomStream(stream);
                     // Checks if user has interacted to unmute
-                    this.webRtcPlayerRef.nativeElement.muted = await firstValueFrom(
+                    this.webRtcStreamRef.nativeElement.muted = await firstValueFrom(
                         this.appStateService.userInteracted$.pipe(
                             map(() => false),
                             timeout(10),
                             catchError(() => of(true)),
                         ),
                     );
-                    this.webRtcPlayerRef.nativeElement.autoplay = true;
+                    this.webRtcStreamRef.nativeElement.autoplay = true;
 
-                    while (this.webRtcPlayerRef.nativeElement.paused) {
+                    while (this.webRtcStreamRef.nativeElement.paused) {
                         await new Promise(resolve => setTimeout(resolve, 10));
                     }
 
-                    if (this.webRtcPlayerRef.nativeElement.muted) {
+                    if (this.webRtcStreamRef.nativeElement.muted) {
                         // Unmute and autoplay when user interacts with the page
                         this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
-                            this.webRtcPlayerRef.nativeElement.muted = false;
-                            this.webRtcPlayerRef.nativeElement.autoplay = true;
+                            this.webRtcStreamRef.nativeElement.muted = false;
+                            this.webRtcStreamRef.nativeElement.autoplay = true;
                         })
                     }
 
-                    while (this.webRtcPlayerRef.nativeElement.currentTime < 1) {
+                    while (this.webRtcStreamRef.nativeElement.currentTime < 1) {
                         await new Promise(resolve => setTimeout(resolve, 100));
                     }
 

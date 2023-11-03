@@ -2,16 +2,18 @@ import json
 import random
 from uuid import uuid4
 
+from dateutil.relativedelta import relativedelta
 from django.core.cache import caches
 from django.db import transaction
 
 import pytest
+from django.utils import timezone
 from model_bakery import baker
 from mock.mock import MagicMock
 
 
 from partners.models import CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser, \
-    ChannelPartnerServiceRecord, ChannelPartnerRole
+    ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates
 from partners.views import CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet, \
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet
 
@@ -33,7 +35,7 @@ class TestCloudSystemViewSet:
         # Channel partner admin
         mock_auth_with_user(default_cp_admin)
         request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'create'})
+        view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
         response = view(request)
         assert CloudSystemId.objects.filter(system_id=sys_id).exists()
         assert response.status_code == 200
@@ -49,7 +51,7 @@ class TestCloudSystemViewSet:
 
         mock_auth_with_user(default_org_admin)
         request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'create'})
+        view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
         response = view(request)
         assert response.status_code == 200
         assert response.data['systemId'] == sys_id
@@ -84,75 +86,8 @@ class TestCloudSystemViewSet:
         assert response.status_code == 403
         assert response.data['detail']
 
-    def test_destroy_200(self, mock_auth_with_user, organization_factory, org_user_factory,
-                         httpx_mock, arf, cloud_test_host, system_factory):
-        sys_id = f'{uuid4()}'
-        view = CloudSystemViewSet.as_view({'delete': 'destroy'})
-        org = organization_factory()
-        system = system_factory(organization=org, system_id=sys_id)
-        users = [org_user_factory(organization=org) for _ in range(5)]
-        user = users[0]
-        mock_auth_with_user(user)
-        httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
-        request = arf.delete(f'/partners/cloud_systems/{sys_id}/')
-        response = view(request, system_id=sys_id)
-        assert response.status_code == 204
-        batch_request = httpx_mock.get_request(url=self.batch_url)
-        batch_data = json.loads(batch_request.content)
-        assert not CloudSystemId.objects.filter(system_id=sys_id).exists()
-        assert batch_data
-        assert batch_data['items'].__len__() == 1
-        assert batch_data['items'][0]['systems'] == [sys_id]
-        assert batch_data['items'][0]['accessRole'] == 'none'
-        assert batch_data['items'][0]['users'].__len__() == len(users) - 1
-        for user in users[1:]:
-            assert user.user.email in batch_data['items'][0]['users']
-
-    def test_destroy_404(self, default_org_admin, mock_auth_with_user, arf, httpx_mock, mocker,
-                         default_organization, cloud_test_host, default_cp_user, system_factory):
-        sys_id = f'{uuid4()}'
-        view = CloudSystemViewSet.as_view({'delete': 'destroy'})
-        mock_auth_with_user(default_org_admin)
-        mocked_batch_request_data = mocker.patch('partners.models.CloudSystemId.remove_system_users_data')
-        httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
-        request = arf.delete(f'/partners/cloud_systems/{sys_id}/')
-        with transaction.atomic():
-            response = view(request, system_id=sys_id)
-        batch_request = httpx_mock.get_request(url=self.batch_url)
-        assert response.status_code == 404
-        mocked_batch_request_data.assert_not_called()
-        assert batch_request is None
-        system = baker.make(CloudSystemId, system_id=sys_id,
-                            organization=default_organization,
-                            cloud_host=cloud_test_host)
-
-        # check with channel partner user without permissions
-        mock_auth_with_user(default_cp_user)
-        response = view(request, system_id=sys_id)
-        batch_request = httpx_mock.get_request(url=self.batch_url)
-        assert response.status_code == 404
-        mocked_batch_request_data.assert_not_called()
-        assert batch_request is None
-
-
-    def test_destroy_403(self, default_org_user, mock_auth_with_user, default_cp_user,
-                         arf, httpx_mock, mocker, cloud_test_host, default_organization):
-        sys_id = f'{uuid4()}'
-        system = baker.make(CloudSystemId, system_id=sys_id,
-                            organization=default_organization,
-                            cloud_host=cloud_test_host)
-        view = CloudSystemViewSet.as_view({'delete': 'destroy'})
-        mock_auth_with_user(default_org_user)
-        mocked_batch_request_data = mocker.patch('partners.models.CloudSystemId.remove_system_users_data')
-        httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
-        request = arf.delete(f'/partners/cloud_systems/{sys_id}/')
-        response = view(request, system_id=sys_id)
-        batch_request = httpx_mock.get_request(url=self.batch_url)
-        assert response.status_code == 403
-        mocked_batch_request_data.assert_not_called()
-
-    def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory,
-                              org_user_factory, arf, system_factory, mock_auth_with_user, transactional_db):
+    def test_service_quantity(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
+                              arf, system_factory, mock_auth_with_user, cp_service_factory, service_record_factory):
         root = channel_partner_factory(parent_channel_partner=None)
         child = channel_partner_factory(parent_channel_partner=root)
         root_user = cp_user_factory(channel_partner=root)
@@ -160,53 +95,50 @@ class TestCloudSystemViewSet:
         root_org = organization_factory(channel_partner=root)
         root_org_user = org_user_factory(organization=root_org)
         system = system_factory(organization=root_org)
-        service_data = {
-          "services": {
-            "3fa85f64-5717-4562-b3fc-2c963f66a567": {
-              "quantity": 10.5
-            }
-          }
-        }
-        req = arf.patch(f'/partners/cloud_systems/{system.system_id}/service_quantity/',
-                        data=service_data, format='json')
+        service = cp_service_factory(channel_partner=root)
+        service_record = service_record_factory(service, system, quantity=10.5)
+        req = arf.get(f'/partners/cloud_systems/{system.system_id}/service_quantity/')
         CloudSystemViewSet.detail = True
-        view = CloudSystemViewSet.as_view({'patch': 'service_quantity'}, detail=True)
+        view = CloudSystemViewSet.as_view({'get': 'service_quantity'}, detail=True)
 
-        mock_auth_with_user(root_org_user)
-        req.user = root_org_user.user
-        response = view(req, system_id=str(system.system_id))
+        mock_auth_with_user(child_user)
+        req.user = child_user.user
+        with transaction.atomic():
+            response = view(req, system_id=str(system.system_id))
 
         assert response.status_code == 403
 
         mock_auth_with_user(root_user)
         req.user = root_user.user
-        response = view(req, system_id=str(system.system_id))
-        assert response.status_code == 403
+        with transaction.atomic():
+            response = view(req, system_id=str(system.system_id))
+        assert response.status_code == 200
 
         root.allow_changing_services = True
         root.save()
         req.user = root_user.user
-        response = view(req, system_id=str(system.system_id))
-        assert response.status_code != 403
-
+        with transaction.atomic():
+            response = view(req, system_id=str(system.system_id))
+        assert response.status_code == 200
 
     def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
                                     mock_auth_with_user, arf, mocker):
         assert ChannelPartnerRole.objects.all().count() > 0
-
         cp = channel_partner_factory(acs=True)
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
         system = system_factory(organization=org)
         services = [cp_service_factory(channel_partner=cp) for _ in range(2)]
-        service_records = [service_record_factory(service=service, cloud_system=system, quantity=10, organization=system.organization)
+        service_records = [service_record_factory(service=service, cloud_system=system,
+                                                  quantity=10, organization=system.organization)
                            for service in services]
         mock_auth_with_user(cp_user)
         view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
         # test successful request
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 200
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
@@ -215,7 +147,8 @@ class TestCloudSystemViewSet:
         mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=False)
         caches['default'].set(CloudSystemViewSet.get_service_quantity_lock(system), 1)
         request = arf.patch('/', data={"services": {str(services[1].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 429
         assert response.headers['Retry-After'] == '2'
 
@@ -236,10 +169,44 @@ class TestCloudSystemViewSet:
         # test successful request and second service value
         mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
         request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
-        response = view(request, system_id=str(system.system_id))
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
         assert response.status_code == 200
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
+
+        # test disabled acs
+        cp.allow_changing_services = False
+        cp.save()
+        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
+        request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
+        with transaction.atomic():
+            response = view(request, system_id=str(system.system_id))
+        assert response.status_code == 403
+
+    def test_service_quantity_patch_shutdown(selfself, channel_partner_factory, organization_factory, cp_user_factory,
+                                    service_record_factory, cp_service_factory, system_factory,
+                                    mock_auth_with_user, arf, mocker):
+        assert ChannelPartnerRole.objects.all().count() > 0
+        cp = channel_partner_factory(acs=True)
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org, state=ChannelPartnerStates.SHUTDOWN)
+        services = [cp_service_factory(channel_partner=cp) for _ in range(2)]
+        service_records = [service_record_factory(service=service, cloud_system=system,
+                                                  quantity=10, organization=system.organization)
+                           for service in services]
+        mock_auth_with_user(cp_user)
+        view = CloudSystemViewSet.as_view(actions={'patch': 'service_quantity'}, detail=True)
+
+        # test shutdown system change
+        mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
+        request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
+
+        response = view(request, system_id=str(system.system_id))
+        assert response.status_code == 400
+        assert "Services quantity cannot be changed." in response.data['services'][0]
+
 
 class TestOrganizationUserViewSet:
 
@@ -410,8 +377,6 @@ class TestChannelPartnerNestedViewSet:
         other_subs = [channel_partner_factory(parent_channel_partner=other_root_cp) for _ in range(gen_count)]
         for sub in default_subs + other_subs:
             channel_partner_factory(parent_channel_partner=sub, cloud_host=host)
-            # this will be replaced with parent `cloud_host` in `ChannelPartner.save()`
-            # Todo. needs to be discussed how to save channel partner's cloud host
             channel_partner_factory(parent_channel_partner=sub, cloud_host=cloud_test_host)
         # Test root channel partner's subs
         view = ChannelPartnerNestedViewSet(kwargs={'parent_lookup_parent_channel_partner': str(root_cp.id)})
@@ -470,8 +435,8 @@ class TestChannelPartnerViewSet:
         request.cloud_host = host
         response = view(request)
         assert response.status_code == 200
-        # must contain 'default_host_subs + root_cp'
-        assert set([cp['id'] for cp in response.data['results']]) == set([str(cp.id) for cp in [root_cp] + default_host_subs])
+        # must contain only root_cp
+        assert set([cp['id'] for cp in response.data['results']]) == {str(root_cp.id)}
 
         # Test organization user retrieve parent channel partner
         org = organization_factory(channel_partner=sub_cp)
@@ -486,7 +451,7 @@ class TestChannelPartnerViewSet:
         assert response.data['parentChannelPartner'] == root_cp.id
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
-                       system_factory, arf, mock_auth_with_user, default_cp_admin):
+                       system_factory, arf, mock_auth_with_user, cp_user_factory):
         gen_count = 3
         target_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
         other_cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
@@ -504,7 +469,8 @@ class TestChannelPartnerViewSet:
                     for i in range(len(organizations))]
 
         view = ChannelPartnerViewSet.as_view(actions={'get': 'aggregate'}, detail=True)
-        mock_auth_with_user(default_cp_admin)
+        cp_user = cp_user_factory(channel_partner=target_cp)
+        mock_auth_with_user(cp_user)
         response = view(arf.get(f'/partners/channel_partners/{target_cp.id}/aggregate/'), pk=target_cp.id)
         assert response.status_code == 200
         assert response.data['channelPartners'] == len(target_partners) - 1
@@ -515,6 +481,7 @@ class TestChannelPartnerViewSet:
     def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
+        start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -522,7 +489,7 @@ class TestChannelPartnerViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = ChannelPartnerViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/')
+        request = arf.get(f'/partners/channel_partners/{cp.id}/service_changes_history/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=cp.id)
         assert response.status_code == 200
@@ -552,6 +519,33 @@ class TestChannelPartnerViewSet:
         assert 'next' in response.data
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
+
+    def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf, mock_auth_with_user):
+        cp = channel_partner_factory()
+        roles = ChannelPartnerRole.objects.all()
+        partners = []
+        users = []
+        for role in roles:
+            partner = channel_partner_factory(parent_channel_partner=cp)
+            partners.append(partner)
+            user = cp_user_factory(channel_partner=partner, role=role.name)
+            users.append(user)
+
+        view = ChannelPartnerViewSet.as_view(actions={'get': 'list'})
+
+        for role, partner, user in zip(roles, partners, users):
+            request = arf.get(f'/partners/channel_partners/')
+            request.user = user.user
+            mock_auth_with_user(user)
+
+            response = view(request)
+            for data in response.data['results']:
+                if str(partner.id) == data['id']:
+                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert data['ownRoles'] == user.roles
+                else:
+                    assert data['ownPermissions'] == []
+                    assert data['ownRoles'] == []
 
 
 class TestOrganizationViewSet:
@@ -586,6 +580,7 @@ class TestOrganizationViewSet:
     def test_service_changes_history(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
+        start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -593,7 +588,7 @@ class TestOrganizationViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_history'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_history/')
+        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_history/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -606,6 +601,7 @@ class TestOrganizationViewSet:
     def test_service_changes_summary(self, channel_partner_factory, organization_factory, cp_user_factory,
                                      cp_service_factory, system_factory, service_record_factory,
                                      mock_auth_with_user, arf):
+        start_ts = (timezone.now() - relativedelta(days=7)).date()
         cp = channel_partner_factory()
         cp_user = cp_user_factory(channel_partner=cp)
         org = organization_factory(channel_partner=cp)
@@ -613,7 +609,7 @@ class TestOrganizationViewSet:
         services = [cp_service_factory(channel_partner=cp) for _ in range(5)]
         records = [service_record_factory(service, system) for service in services]
         view = OrganizationViewSet.as_view(actions={'get': 'service_changes_summary'}, detail=True)
-        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/')
+        request = arf.get(f'/partners/channel_partners/{org.id}/service_changes_summary/?startTs={start_ts.isoformat()}')
         mock_auth_with_user(cp_user)
         response = view(request, pk=org.id)
         assert response.status_code == 200
@@ -622,3 +618,30 @@ class TestOrganizationViewSet:
         assert 'next' in response.data
         assert 'previous' in response.data
         assert len(response.data['results']) == len(services)
+
+    def test_ownPermissions(self, channel_partner_factory, organization_factory,
+                              org_user_factory, arf, mock_auth_with_user):
+        cp = channel_partner_factory()
+        roles = OrganizationRole.objects.all()
+        orgs = []
+        users = []
+        for role in roles:
+            org = organization_factory(channel_partner=cp)
+            orgs.append(org)
+            user = org_user_factory(organization=org, role=role.name)
+            users.append(user)
+
+        view = OrganizationViewSet.as_view(actions={'get': 'list'})
+
+        for role, org, user in zip(roles, orgs, users):
+            request = arf.get(f'/partners/channel_partners/')
+            request.user = user.user
+            mock_auth_with_user(user)
+            response = view(request)
+            for data in response.data['results']:
+                if str(org.id) == data['id']:
+                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert data['ownRoles'] == user.roles
+                else:
+                    assert data['ownPermissions'] == []
+                    assert data['ownRoles'] == []

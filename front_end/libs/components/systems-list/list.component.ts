@@ -67,7 +67,6 @@ export class NxSystemsListComponent implements OnInit {
     filteredSystems: NxSystemInfo[];
     account: Account;
     endpoint: Endpoint = {};
-    hasOneSystem: boolean;
     searchChanged = new Subject<void>();
     showList: boolean = false;
 
@@ -121,22 +120,22 @@ export class NxSystemsListComponent implements OnInit {
                 if (this.systems === undefined) {
                     return;
                 }
-                this.hasOneSystem = this.systems.length === 1;
-                if (this.enableRedirect && this.atBase) {
+
+                if (this.systems.length === 1 && this.enableRedirect) {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be
                     // established, and we'll get into a loop. It's safer not to open the system.
                     const [system] = this.systems;
                     if (
-                        this.hasOneSystem &&
+                        system.stateOfHealth === 'online' &&
                         (!system.system2faEnabled || account.sessionVerified)
                     ) {
                         this.openSystem(system);
                     }
+                } else {
+                    this.showList = true;
+                    this.showSearch = this.systems.length >= search.minSystems;
+                    this.searchSystems();
                 }
-
-                this.showList = true;
-                this.showSearch = this.systems.length >= search.minSystems;
-                this.searchSystems();
             });
         });
 
@@ -196,8 +195,11 @@ export class NxSystemsListComponent implements OnInit {
         this.endpoint.register = this.isActive('/authorize/register');
         this.endpoint.view = this.isActive('/view');
         this.endpoint.information = this.isActive('/health');
-        this.endpoint.settings =
-            id && this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+
+        if (id) {
+            this.endpoint.settings =
+                this.isActive('/systems') && !this.isActive('/view') && !this.isActive('/health');
+        }
     }
 
     openSystem = (system: NxSystemInfo): void => {

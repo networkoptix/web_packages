@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkMenuTrigger } from '@angular/cdk/menu';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
+import { CommonModule, DOCUMENT, formatDate } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -10,8 +10,8 @@ import {
     HostListener,
     Inject,
     Input,
+    LOCALE_ID,
     Output,
-    Signal,
     signal,
     WritableSignal,
 } from '@angular/core';
@@ -19,25 +19,25 @@ import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import FileSaver from 'file-saver';
 import { round } from 'lodash-es';
 import { TourMatMenuModule } from 'ngx-ui-tour-md-menu';
 import {
     distinctUntilChanged,
     map,
-    repeat,
-    defer,
     switchMap,
-    combineLatest,
     EMPTY,
-    delay,
-    catchError,
+    interval,
+    finalize,
+    startWith,
+    tap,
 } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
     MenuItem,
     MenuItemAction,
-    MenuItemsFactoryCallback,
+    MenuItemsOrMenuItemsCallback,
 } from '@components/context-menu/context-menu.types';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
@@ -104,28 +104,35 @@ const EMPTY_MENU_ACTION = {
         NxTooltipDirective,
         NxContextMenu,
         CdkMenuTrigger,
+        CdkContextMenuTrigger,
     ],
     hostDirectives: [NxResizeObserver],
 })
 export class NxLayoutGridItemOverlayComponent {
-    @Input({ alias: 'item', transform: (value: LayoutItem) => signal(value) })
-    item$$: Signal<LayoutItem>;
+    item$$ = signal<LayoutItem | null>(null);
+    @Input() set item(value: LayoutItem) {
+        this.item$$.set(value);
+    }
     node$$ = signal<BaseResourceNode | null>(null);
     @Input() set node(value: BaseResourceNode) {
         this.node$$.set(value);
     }
-    @Input() showRemove: boolean;
+    showRemove$$ = signal(false);
+    @Input() set showRemove(value: boolean) {
+        this.showRemove$$.set(value);
+    }
     @Input() hide: boolean;
     @Input() fullScreenTarget: HTMLElement;
-    @Input({ alias: 'canEdit', transform: (value: boolean) => signal(value) })
-    canEdit$$: Signal<boolean> = signal(true);
+    canEdit$$ = signal(true);
+    @Input() set canEdit(value: boolean) {
+        this.canEdit$$.set(value);
+    }
     @Input() system: NxSystem;
 
     @Output() removeItem = new EventEmitter<LayoutItem>();
 
     isFullscreen$$ = signal(false);
     isMenuOpened$$ = signal(false);
-    hovered$$ = signal(false);
 
     scale$ = this.resizeObserver.resize.pipe(
         map(({ width, height }) => {
@@ -176,7 +183,18 @@ export class NxLayoutGridItemOverlayComponent {
     });
     cameraOnline$$ = computed(() => {
         const node = this.checkGetCameraNode();
-        return node ? node.details.online : null;
+        if (node?.details.online) {
+            const primaryStream = (node.details.parameters.mediaStreams?.streams ?? []).find(
+                ({ encoderIndex }) => encoderIndex === 0,
+            );
+
+            const nonWebRtcCodec = primaryStream && [7, 173].includes(primaryStream.codec);
+            if (!nonWebRtcCodec || this.system.version >= 6) {
+                return true;
+            }
+        }
+
+        return false;
     });
 
     extraCameraTooltip$$ = computed(() => {
@@ -184,17 +202,7 @@ export class NxLayoutGridItemOverlayComponent {
         return node ? `: ${node.name}` : '';
     });
 
-    updateMetrics$$ = computed(() => this.hovered$$() || this.isFullscreen$$());
-
-    bitrateInfo$ = combineLatest([
-        toObservable(this.displayInfo$$),
-        toObservable(this.cameraOnline$$),
-        toObservable(this.updateMetrics$$),
-    ]).pipe(
-        map(([displayInfo, cameraOnline, hovered]) =>
-            [displayInfo, cameraOnline, hovered].every(Boolean),
-        ),
-        delay(1000),
+    bitrateInfo$ = toObservable(this.displayInfo$$).pipe(
         distinctUntilChanged(),
         switchMap(displayInfo => {
             const cameraNode = this.checkGetCameraNode();
@@ -207,54 +215,86 @@ export class NxLayoutGridItemOverlayComponent {
             if (mediaserver instanceof NxSystemRestAPI2) {
                 const {
                     fps,
-                    unableToLoad,
-                    unavailable,
-                    streamType: { primary, secondary },
+                    loading,
+                    streamType: { primary, secondary, stream },
                     resolution: { high, low },
                 } = staticLang.layouts.overlay.info;
+                const mediaStreams = cameraNode.details.parameters?.mediaStreams?.streams || [];
 
-                return defer(() => mediaserver.getCameraStreamMetrics(cameraNode.details.id)).pipe(
-                    map(({ primaryStream, secondaryStream }) => {
-                        if (!primaryStream) {
-                            return [unavailable, unableToLoad];
+                const sampleRateSeconds = 0.33;
+                let sampleSizeSeconds = 0;
+                const minSampleSizeSeconds = 0.66;
+                const maxBufferSeconds = 6;
+
+                const videoElement =
+                    // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+                    this.ref.nativeElement.querySelector<HTMLVideoElement>(
+                        'video.original-stream',
+                    )!;
+                let frames: number[] = [];
+                let rvfcHandle: number;
+                const updateFrames = (): void => {
+                    frames.push(videoElement.currentTime);
+                    rvfcHandle = videoElement.requestVideoFrameCallback(updateFrames);
+                };
+                const removeRvfc = (): void => videoElement.cancelVideoFrameCallback(rvfcHandle);
+
+                updateFrames();
+
+                return interval(sampleRateSeconds * 1000).pipe(
+                    startWith(0),
+                    map(() => {
+                        const videoLoaded = [
+                            videoElement.videoWidth,
+                            videoElement.videoHeight,
+                        ].every(Boolean);
+
+                        if (sampleSizeSeconds < maxBufferSeconds) {
+                            sampleSizeSeconds += sampleRateSeconds;
                         }
 
-                        const videoElement =
-                            this.ref.nativeElement.querySelector<HTMLVideoElement>(
-                                'video.original-stream',
-                            );
-                        if (!videoElement) {
-                            return null;
-                        }
-
+                        const actualFps =
+                            sampleSizeSeconds < minSampleSizeSeconds
+                                ? 0
+                                : frames.length / sampleSizeSeconds;
                         const currentResolution = `${videoElement.videoWidth}x${videoElement.videoHeight}`;
-                        const streams = [primaryStream, secondaryStream];
-                        const stream =
-                            streams.find(({ resolution }) => resolution === currentResolution) ||
-                            primaryStream;
-                        const resolution = stream?.resolution;
-                        const fpsText = stream?.actualFps && {
+                        const currentStream = mediaStreams.find(
+                            ({ resolution }) => resolution === currentResolution,
+                        );
+
+                        const codecLookup = {
+                            27: 'H264',
+                            173: 'H265',
+                            7: 'MJPEG',
+                        };
+
+                        const hasStreamInfo = Boolean(currentStream);
+                        const isPrimary = currentStream?.encoderIndex === 0;
+                        const streamTitle = !hasStreamInfo
+                            ? stream
+                            : isPrimary
+                            ? primary
+                            : secondary;
+                        const streamDescription = hasStreamInfo && {
+                            value: isPrimary ? high : low,
+                            params: { codec: codecLookup[currentStream.codec] },
+                        };
+                        const fpsText = actualFps && {
                             value: fps,
-                            params: { fps: stream.actualFps.toFixed(2) },
+                            params: { fps: actualFps.toFixed(2) },
                         };
-                        const bitrate =
-                            stream?.actualBitrateBps &&
-                            `${((stream.actualBitrateBps / 1024 ** 2) * 8).toFixed(2)} Mbps`;
-                        const streamTitle = stream === primaryStream ? primary : secondary;
-                        const streamDescription = {
-                            value: stream === primaryStream ? high : low,
-                            params: { codec: stream.codec },
-                        };
-                        return [
-                            streamTitle,
-                            resolution,
-                            fpsText,
-                            bitrate,
-                            streamDescription,
-                        ].filter(Boolean);
+                        return videoLoaded
+                            ? [streamTitle, fpsText, currentResolution, streamDescription].filter(
+                                  Boolean,
+                              )
+                            : [streamTitle, loading];
                     }),
-                    catchError(() => Promise.resolve([unavailable, unableToLoad])),
-                    repeat({ delay: 1000 }),
+                    tap(() => {
+                        frames = frames.filter(
+                            frame => frame > videoElement.currentTime - maxBufferSeconds,
+                        );
+                    }),
+                    finalize(removeRvfc),
                 );
             } else {
                 return EMPTY;
@@ -267,53 +307,45 @@ export class NxLayoutGridItemOverlayComponent {
         this.isFullscreen$$.set(this.document.fullscreenElement === this.fullScreenTarget);
     }
 
-    @HostListener('mouseenter') onHoverStart(): void {
-        this.hovered$$.set(true);
-    }
-
-    @HostListener('mouseleave') onHoverEnd(): void {
-        this.hovered$$.set(false);
-    }
-
     readonly MENU_ITEMS: Record<string, MenuItem<ResourceNode>> = {
         menu: {
             id: 'menu',
-            icon: icons.dirLayouts + 'menu.svg',
+            icon: icons.dirLayoutsOverlay + 'menu.svg',
             ...LANG.menu,
         },
         ptz: {
             id: 'ptz',
-            icon: icons.dirLayoutsCamera + 'ptz.svg',
+            icon: icons.dirLayoutsOverlay + 'ptz.svg',
             ...LANG.ptz,
             ...EMPTY_MENU_ACTION,
         },
         fisheye: {
             id: 'fisheye',
-            icon: icons.dirLayoutsCamera + 'fisheye.svg',
+            icon: icons.dirLayoutsOverlay + 'fisheye.svg',
             ...LANG.fisheye,
             ...EMPTY_MENU_ACTION,
         },
         motion: {
             id: 'motion',
-            icon: icons.dirLayoutsCamera + 'motion.svg',
+            icon: icons.dirLayoutsOverlay + 'motion.svg',
             ...LANG.motion,
             ...EMPTY_MENU_ACTION,
         },
         object: {
             id: 'object',
-            icon: icons.dirLayoutsCamera + 'object.svg',
+            icon: icons.dirLayoutsOverlay + 'object.svg',
             ...LANG.object,
             ...EMPTY_MENU_ACTION,
         },
         zoomWindow: {
             id: 'zoomWindow',
-            icon: icons.dirLayoutsCamera + 'zoom_window.svg',
+            icon: icons.dirLayoutsOverlay + 'zoom_window.svg',
             ...LANG.zoomWindow,
             ...EMPTY_MENU_ACTION,
         },
         info: {
             id: 'info',
-            icon: icons.dirLayoutsCamera + 'info.svg',
+            icon: icons.dirLayoutsOverlay + 'info.svg',
             ...LANG.info,
             checked$$: this.displayInfo$$,
             action: () => this.temporaryManualDisplayInfoToggle$$.update(value => !value),
@@ -325,7 +357,7 @@ export class NxLayoutGridItemOverlayComponent {
         },
         rotate: {
             id: 'rotate',
-            icon: icons.dirLayoutsCamera + 'rotate.svg',
+            icon: icons.dirLayoutsOverlay + 'rotate.svg',
             ...LANG.rotate,
             ...EMPTY_MENU_ACTION,
             subMenu: (node: ResourceNode) => {
@@ -373,13 +405,43 @@ export class NxLayoutGridItemOverlayComponent {
         },
         screenshot: {
             id: 'screenshot',
-            icon: icons.dirLayoutsCamera + 'screenshot.svg',
+            icon: icons.dirLayoutsOverlay + 'screenshot.svg',
             ...LANG.screenshot,
-            ...EMPTY_MENU_ACTION,
+            action: () => {
+                const video = this.ref.nativeElement.querySelector(
+                    'video.web-rtc-stream',
+                ) as HTMLVideoElement;
+                if (!video) {
+                    return;
+                }
+                const canvas = this.document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                const { videoHeight, videoWidth } = video;
+
+                if (!ctx || !videoHeight || !videoWidth) {
+                    return;
+                }
+
+                const fileName = `${encodeURIComponent(this.node$$()?.name || '')}_${formatDate(
+                    new Date(),
+                    'YYYY_MM_dd_HH_mm_ss',
+                    this.locale,
+                )}.png`;
+
+                const vertical = this.item$$().rotation % 180;
+                canvas.width = vertical ? videoHeight : videoWidth;
+                canvas.height = vertical ? videoWidth : videoHeight;
+
+                ctx.translate(canvas.width / 2, canvas.height / 2);
+                ctx.rotate((this.item$$().rotation * Math.PI) / 180);
+                ctx.drawImage(video, -videoWidth / 2, -videoHeight / 2, videoWidth, videoHeight);
+
+                FileSaver.saveAs(canvas.toDataURL('image/png'), fileName);
+            },
         },
         fullscreenOn: {
             id: 'fullscreenOn',
-            icon: icons.dirLayoutsCamera + 'full_screen.svg',
+            icon: icons.dirLayoutsOverlay + 'full_screen.svg',
             ...LANG.fullscreenOn,
             action: () => {
                 this.fullScreenTarget.requestFullscreen({
@@ -389,7 +451,7 @@ export class NxLayoutGridItemOverlayComponent {
         },
         fullscreenOff: {
             id: 'fullscreenOff',
-            icon: icons.dirLayoutsCamera + 'collapse.svg',
+            icon: icons.dirLayoutsOverlay + 'collapse.svg',
             ...LANG.fullscreenOff,
             action: () => {
                 this.document.exitFullscreen();
@@ -397,18 +459,18 @@ export class NxLayoutGridItemOverlayComponent {
         },
         remove: {
             id: 'remove',
-            icon: icons.dirLayoutsCamera + 'close.svg',
+            icon: icons.dirLayoutsOverlay + 'close.svg',
             ...LANG.remove,
             action: ($event, item) => this.removeItem.emit(this.item$$()),
         },
         recordingOn: {
             id: 'recordingOn',
-            icon: icons.dirLayoutsCamera + 'camera_rec_on.svg',
+            icon: icons.dirLayoutsOverlay + 'camera_rec_on.svg',
             ...LANG.recordingOn,
         },
         recordingOff: {
             id: 'recordingOff',
-            icon: icons.dirLayoutsCamera + 'camera_rec_off.svg',
+            icon: icons.dirLayoutsOverlay + 'camera_rec_off.svg',
             ...LANG.recordingOff,
         },
         divider: {
@@ -417,19 +479,19 @@ export class NxLayoutGridItemOverlayComponent {
     };
 
     quickActions$$ = computed(() => {
-        if (this.node$$().type !== ResourceType.CAMERA) {
+        if (!this.checkGetCameraNode()) {
             return null;
         }
         return [
-            this.allowDebugMode && this.MENU_ITEMS.ptz,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.ptz,
             this.allowDebugMode && this.MENU_ITEMS.fisheye,
             this.allowDebugMode && this.MENU_ITEMS.motion,
-            this.allowDebugMode && this.MENU_ITEMS.object,
-            this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.object,
+            this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.zoomWindow,
             this.cameraOnline$$() && this.MENU_ITEMS.info,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
-            this.allowDebugMode && this.MENU_ITEMS.screenshot,
-        ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>);
+            this.MENU_ITEMS.screenshot,
+        ].filter(Boolean);
     });
 
     recordingIcon$$ = computed(() => {
@@ -448,16 +510,14 @@ export class NxLayoutGridItemOverlayComponent {
     });
 
     removeAction$$ = computed(() => {
-        if (this.canEdit$$() && this.showRemove && !this.isFullscreen$$()) {
+        if (this.canEdit$$() && this.showRemove$$() && !this.isFullscreen$$()) {
             return this.MENU_ITEMS.remove;
         }
         return null;
     });
 
     menuItemsByType: Partial<{
-        [key in keyof ResourceNodeMap]:
-            | MenuItem<ResourceNodeMap[key]>[]
-            | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
+        [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
     }> = {
         [ResourceType.CAMERA]: (item): MenuItem<ResourceNode>[] =>
             [
@@ -465,7 +525,7 @@ export class NxLayoutGridItemOverlayComponent {
                 this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
                 this.allowDebugMode && this.MENU_ITEMS.resolution,
                 this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
-                this.allowDebugMode && this.MENU_ITEMS.screenshot,
+                this.MENU_ITEMS.screenshot,
                 this.allowDebugMode && this.MENU_ITEMS.divider,
                 this.allowDebugMode && this.MENU_ITEMS.showOnItem,
                 this.removeAction$$() && this.MENU_ITEMS.divider,
@@ -482,6 +542,7 @@ export class NxLayoutGridItemOverlayComponent {
     constructor(
         @Inject(DOCUMENT) public document: Document,
         public ref: ElementRef<HTMLElement>,
+        @Inject(LOCALE_ID) private locale: string,
         private resizeObserver: NxResizeObserver,
         configService: NxConfigService,
     ) {
@@ -500,7 +561,7 @@ export class NxLayoutGridItemOverlayComponent {
 
     checkGetCameraNode(): ResourceLeafNode<NxSystemCameraWithMappedFields> | null {
         const node = this.node$$();
-        if (!assertResourceOfType.camera(node)) {
+        if (!node || !assertResourceOfType.camera(node)) {
             return null;
         }
         return node;

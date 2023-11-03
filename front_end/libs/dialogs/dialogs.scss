@@ -256,6 +256,7 @@ nx-modal-wizard {
             background-color: transparent;
             color: var(--label-color);
             padding: .5rem 0 0;
+            overflow-wrap: break-word;
         }
 
         .clipboard-block {

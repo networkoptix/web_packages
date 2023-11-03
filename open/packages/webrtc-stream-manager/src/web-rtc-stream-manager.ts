@@ -7,7 +7,7 @@ import { FrameTracker, FocusTracker, MosScoreTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, StreamOrUrl } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { calculateElementFocus, calculateWindowFocusThreshold, sanitizeUrl } from './utils';
+import { calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey } from './utils';
 
 /**
  * Manages connection negotation using websockets as well as webRTC peer connections to mediaservers.
@@ -21,6 +21,8 @@ export class WebRTCStreamManager {
 
     /** For Tracking existing connections */
     static EXISTING_CONNECTIONS: Record<string, WebRTCStreamManager> = {};
+
+    static AUTHENTICATED_HOSTS: Record<string, Promise<Boolean>> = {};
 
     /** Configure how often performance tuning as well as connection cleanup happens  */
     static SYNC_INTERVAL = 1000;
@@ -297,66 +299,38 @@ export class WebRTCStreamManager {
         })
     ).subscribe()
 
+
     /**
      * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance.
+     *
+     * If accessToken is passed in it will attempt to login to the mediaserver using cookie authentication before connecting.
+     *
+     * Relay redirects are automatically resolved to ensure that the connection is made to the correct host.
      *
      * @param webRtcUrlFactory () => string
      * @param videoElement HTMLVideoElement
      * @param hasSecondary boolean - if the camera has a secondary stream available
+     * @param accessToken string
      * @returns Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
      */
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
         hasSecondary = true,
+        accessToken: string = null
     ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]> {
-        const webRtcUrl = sanitizeUrl(webRtcUrlFactory());
+        const connectionKey = getConnectionKey(webRtcUrlFactory());
 
-        WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(
-            webRtcUrlFactory,
-            videoElement,
-            hasSecondary
-        );
-
-        WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].registerElement(videoElement);
-
-        return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$.pipe(
-            filter(res => !!res)
-        );
-    }
-
-    /**
-     * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance.
-     *
-     * The connectWithAccessToken method accepts a system scoped accessToken.
-     *
-     * The difference between this and the connect method is it handles authenticating using cookie authentication whereas
-     * connect method assumes that the user is already authenticated or is being authenticated via a different method.
-     *
-     * @param webRtcUrlFactory () => string
-     * @param accessToken string
-     * @param videoElement HTMLVideoElement
-     * @param hasSecondary boolean - if the camera has a secondary stream available
-     * @returns Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
-     */
-    static connectWithAccessToken(
-        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
-        accessToken: string,
-        videoElement?: HTMLVideoElement,
-        hasSecondary = true,
-    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]> {
-        const webRtcUrl = sanitizeUrl(webRtcUrlFactory());
-
-        WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl] ||= new WebRTCStreamManager(
+        WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey] ||= new WebRTCStreamManager(
             webRtcUrlFactory,
             videoElement,
             hasSecondary,
             accessToken
         );
 
-        WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].registerElement(videoElement);
+        WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey].registerElement(videoElement);
 
-        return WebRTCStreamManager.EXISTING_CONNECTIONS[webRtcUrl].mediaStream$.pipe(
+        return WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey].mediaStream$.pipe(
             filter(res => !!res)
         );
     }
@@ -577,7 +551,7 @@ export class WebRTCStreamManager {
         this.closeWsConnection();
         this.peerConnection?.close();
 
-        delete WebRTCStreamManager.EXISTING_CONNECTIONS[sanitizeUrl(this.webRtcUrlFactory())];
+        delete WebRTCStreamManager.EXISTING_CONNECTIONS[getConnectionKey(this.webRtcUrlFactory())];
     };
 
     /**
@@ -727,11 +701,16 @@ export class WebRTCStreamManager {
 
         console.info('Starting stream')
         console.table({ webRtcUrl, stream, position })
-        const relayHost = new URL(webRtcUrl).host;
+        const webRtcUrlObject = new URL(webRtcUrl);
+        const relayHost = webRtcUrlObject.host;
+        const serverId = webRtcUrlObject.searchParams.get('x-server-guid');
 
-        const resolvedHost = await fetch(`https://${relayHost}/api/ping`).then(response => new URL(response.url).host).catch(() => relayHost);
+        const resolvedHost = await fetch(`https://${relayHost}/api/ping?x-server-guid=${serverId}`).then(response => new URL(response.url).host).catch(() => false as const)
 
-        webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
+        if (resolvedHost) {
+            webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
+        }
+
 
         if (this.wsConnectionUrl === webRtcUrl) {
             return;
@@ -825,12 +804,17 @@ export class WebRTCStreamManager {
         private hasSecondary = true,
         accessToken = ''
     ) {
-        const relayHost = new URL(webRtcUrlFactory()).host;
+        const relayUrlObject = new URL(webRtcUrlFactory());
+        const serverId = relayUrlObject.searchParams.get('x-server-guid');
+        const relayHost = relayUrlObject.host;
         this.updateStream(WebRTCStreamManager.getInitialStream(videoElement));
-        from(accessToken ? fetch(
-            `https://${relayHost}/rest/v2/login/sessions/${accessToken}?setCookie=true`,
+
+        WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost] ||= accessToken ? fetch(
+            `https://${relayHost}/rest/v2/login/sessions/${accessToken}?setCookie=true&x-server-guid=${serverId}`,
             { credentials: 'include' }
-        ).catch() : Promise.resolve()).pipe(switchMap(() => combineLatest([
+        ).then(() => true).catch(() => false) : Promise.resolve(true);
+
+        from(WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost]).pipe(switchMap(() => combineLatest([
             this.position$,
             this.stream$
         ])),

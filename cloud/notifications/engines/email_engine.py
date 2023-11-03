@@ -53,7 +53,8 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         email_html_body = pystache.render(message_html_template, {"message": message, "config": config})
         email_txt_body = pystache.render(message_txt_template, {"message": message, "config": config})
     else:
-        email_html_body = message.get('html_body', '')
+        # Need to wrap so that gmail doesn't think that it's a quoted reply
+        email_html_body = f'<div style="display:inline-block;">{message.get("html_body", "")}</div>'
         email_txt_body = message.get('text_body', '')
 
     email_from_name = customization_cache["mail_from_name"]
@@ -82,7 +83,8 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
     # msg.attach_alternative(email_txt_body, "text/plain")
 
     msg.mixed_subtype = 'related'
-    if 'src="cid:logo"' in email_html_body or cloud_wrapper:
+    include_cloud_logo = cloud_wrapper or 'src="cid:logo"' in email_html_body
+    if include_cloud_logo:
         msg_img = MIMEImage(read_cached_file(asset, customization_name,
                                             'templates/email_logo.png',
                                             language_code, skin, version_id),
@@ -94,17 +96,18 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         attachments = []
 
     for attachment in attachments:
-        png_not_in_filename = 'png' not in attachment['filename']
         filename_not_logo = attachment['filename'] != 'logo'
-        include_cid_header = png_not_in_filename and filename_not_logo and imghdr.what(None, attachment['content']) == 'png'
+        # Checking if jpeg this way since imghdr.what seems to have issues with the jpeg from mediaserver
+        is_jpeg = attachment['filename'].endswith('.jpeg')
+        include_cid_header = filename_not_logo and is_jpeg or imghdr.what(None, attachment['content']) == 'png'
 
         if include_cid_header:
             # Handle images used in emails from mediaserver
-            message_icon = MIMEImage(attachment['content'], _subtype="png")
+            message_icon = MIMEImage(attachment['content'], _subtype="jpeg" if is_jpeg else "png")
             message_icon.add_header('Content-Disposition', f'attachment; filename= {attachment["filename"]}')
             message_icon.add_header('Content-ID', f'<{attachment["filename"]}>')
             msg.attach(message_icon)
-        else:
+        elif filename_not_logo or not include_cloud_logo:
             msg.attach(attachment['filename'], attachment['content'], attachment['mimetype'])
 
     mail_obj.send_messages([msg])

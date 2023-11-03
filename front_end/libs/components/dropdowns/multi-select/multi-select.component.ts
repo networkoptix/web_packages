@@ -133,6 +133,9 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     updateLabel(): void {
+        const isUserGroup =
+            this.componentId.includes('user-groups') ||
+            this.componentId.includes('addUserDialogGroupsSelect');
         switch (this.innerValue.length) {
             case 1: {
                 const selectedItem = this.items.find(item => item.id === this.innerValue[0]);
@@ -140,12 +143,12 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                 break;
             }
             case 0:
-                this.textSelected = this.componentId.includes('user-groups')
+                this.textSelected = isUserGroup
                     ? this.LANG.search.selectOptions
                     : this.LANG.search.Any;
                 break;
             case this.items.length: {
-                this.textSelected = this.componentId.includes('user-groups')
+                this.textSelected = isUserGroup
                     ? {
                           value: this.LANG.userGroups.multiple,
                           params: {
@@ -156,7 +159,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                 break;
             }
             default: {
-                this.textSelected = this.componentId.includes('user-groups')
+                this.textSelected = isUserGroup
                     ? {
                           value: this.LANG.userGroups.multiple,
                           params: {

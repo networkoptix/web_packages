@@ -45,6 +45,7 @@ export class ViewCamera {
         public require2fa: boolean = false,
         public mediaStreams: MediaStream[],
         public rotation: int,
+        public canEdit: boolean = false,
     ) {
         this.initBirdView();
     }

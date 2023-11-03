@@ -7,8 +7,8 @@ import {
     Input,
     Output,
     EventEmitter,
-    ViewEncapsulation,
     OnChanges,
+    ViewEncapsulation,
 } from '@angular/core';
 import type videojs from 'video.js';
 
@@ -66,7 +66,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
         }
 
         let videoJsAutoRetry = 0;
-        let stallTimer: number;
+        let stallTimer: number | null;
         const waitingTime = 8 * 1000;
         const nativeSupport = this.supportsNativeHls();
         const options = {
@@ -86,7 +86,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
             if (stallTimer) {
                 clearTimeout(stallTimer);
             }
-            stallTimer = undefined;
+            stallTimer = null;
         };
 
         this.#videojs ||= await import('video.js').then(m => m.default);

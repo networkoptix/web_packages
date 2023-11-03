@@ -1,7 +1,7 @@
 @use "utils" as *;
 @import "@vime/core/themes/light.css";
 @import "./native-theme/theme_palette";
-@import "_theme_palette";
+@import "theme_palette";
 
 html[data-theme="light"], .theme-override[data-theme="light"] {
     body {
@@ -158,6 +158,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --placehoder-title-color : #{$dark9};
     --placehoder-body-color : #{$dark9};
     --placeholder-description-text: #{$light10};
+    --placeholder-bookmarks-bg-color: #{$light4};
 
     --progress-bar-color : #{$light4};
     --progress-bar-border-color : #{$light6};
@@ -665,7 +666,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $light1);
     @include generateVarAndRgb(--system-card-bg-grad100, $light3);
-    --system-card-bg: var(--light4);
+    --system-card-bg: var(--light3);
     --system-card-offline-color: var(--light16);
     --system-card-border-color: var(--light7);
     --system-card-owner-color: var(--light16);
@@ -674,7 +675,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --card-menu-dots-fill: var(--light16);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark15--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.2);
-
+    --card-border-color: var(--light6);
     --card-context-bg: var(--light4);
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark15--rgb), 0.4);
 
@@ -736,8 +737,6 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     );
     --bookmarks-card-title-gradient-hover: var(--bookmarks-card-title-gradient);
     --bookmarks-card-video-bg: inherit;
-    --bookmarks-no-results-text: var(--dark17);
-    --bookmarks-no-results-title: var(--dark17);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
@@ -768,8 +767,9 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --context-menu-item-expanded-bg: var(--light3);
 
     --overlay-action-bg: rgba(var(--light2--rgb), 0.6);
+    --overlay-action-bg-active: rgba(var(--light2--rgb), 0.5);
+    --overlay-action-bg-hover: rgba(var(--light2--rgb), 0.7);
     --overlay-action-svg: rgba(var(--dark17--rgb), 0.8);
-    --overlay-action-svg-hover: var(--dark17);
     --overlay-action-text: var(--dark17);
     --overlay-text: var(--dark17);
     --overlay-status-title: var(--dark12);

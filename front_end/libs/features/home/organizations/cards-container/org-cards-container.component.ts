@@ -13,7 +13,6 @@ import { NxCardComponent } from '@pages/home/components/card/card.component';
 import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { icons } from '@variables/static-variables';
 
-import { NxGroupCardComponent } from '../../components/group-card/group-card.component';
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
 import { NxSystemCardComponent } from '../../components/system-card/system-card.component';
 import { GroupItem, GroupsItem, SystemItem } from '../../home.types';
@@ -37,7 +36,6 @@ import {
         CommonModule,
         NxSystemCardComponent,
         DragDropModule,
-        NxGroupCardComponent,
         NxNoSystemsCardsComponent,
         NxCardComponent,
         AngularSvgIconModule,

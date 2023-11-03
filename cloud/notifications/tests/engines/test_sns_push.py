@@ -16,7 +16,8 @@ def test_generate_provider_specific_messages():
         1: '{"GCM": "{\\"notification\\": {\\"title\\": null, \\"body\\": null}, '
            '\\"data\\": {\\"data_key\\": \\"data_value\\", \\"options_key\\": '
            '\\"options_value\\"}, \\"android\\": {\\"priority\\": \\"normal\\", '
-           '\\"options_key\\": \\"options_value\\"}, \\"priority\\": \\"normal\\"}"}',
+           '\\"options_key\\": \\"options_value\\"}, \\"priority\\": \\"normal\\", '
+           '\\"time_to_live\\": 2419200}"}',
         2: '{"APNS": "{\\"aps\\": {\\"alert\\": {\\"title\\": \\"title\\", '
            '\\"body\\": \\"body\\"}, \\"options-key\\": \\"options_value\\"}, '
            '\\"payload_key\\": \\"payload_value\\"}"}',

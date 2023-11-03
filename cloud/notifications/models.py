@@ -487,7 +487,7 @@ def check_urls(known_urls, sub_val='{redacted_url}'):
         original = match_obj.group()
         domain = original.split('//')[-1].split('/')[0]
         parent_domain = '.'.join(domain.split('.')[-2:])
-        matched = domain in known_urls or parent_domain in known_urls
+        matched = domain.startswith('src="cid:') or domain in known_urls or parent_domain in known_urls
         is_email = re.fullmatch(EMAIL_REGEX, original)
         is_relay = relay in original
         return original if matched or is_email or is_relay else original.replace(domain, sub_val)

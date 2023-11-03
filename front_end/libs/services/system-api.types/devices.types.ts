@@ -200,7 +200,7 @@ export const cameraKeyMapV1 = {
             },
         },
         mediaStreams: {
-            streams: { codec: true },
+            streams: { codec: true, encoderIndex: true, resolution: true },
         },
         motionStream: true,
         overrideAr: true,

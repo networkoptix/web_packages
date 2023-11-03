@@ -20,7 +20,8 @@
 ></video>
 
 <video
-    #webRtcPlayer
+    #webRtcStream
+    class="web-rtc-stream"
     autoplay
     muted
     [style.opacity]="lostConnection ? 0 : 1"
@@ -29,11 +30,11 @@
 
 <nx-pre-loader
     *ngIf="
-        !error && (loading || lostConnection || webRtcPlayer.paused || !webRtcPlayer.currentTime)
+        !error && (loading || lostConnection || webRtcStream.paused || !webRtcStream.currentTime)
     "
 ></nx-pre-loader>
 
-<ng-container *ngIf="webRtcPlayer.paused && error">
+<ng-container *ngIf="webRtcStream.paused && error">
     <div class="connection-error">
         {{ error }}
     </div>

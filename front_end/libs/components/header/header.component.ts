@@ -151,13 +151,12 @@ export class NxHeaderComponent implements OnInit {
 
         if (environment.isLocal) {
             // Polls for the system and currentUser. Once its ready the header is updated and the poll is killed off.
-            const eff = effect(
+            effect(
                 () => {
                     const system = this.systemService.currentSystem$$();
-                    if (system?.permissionManager?.currentUser()) {
+                    if (system?.permissionManager?.currentUser$$()) {
                         this.getMenu();
                         this.menusService.updateActiveSystemMenu(system);
-                        eff.destroy();
                     }
                 },
                 { allowSignalWrites: true },
@@ -288,7 +287,7 @@ export class NxHeaderComponent implements OnInit {
                 if (environment.isLocal) {
                     const permissions = this.systemService
                         .currentSystem$$()
-                        ?.permissionManager.permissions();
+                        ?.permissionManager.permissions$$();
                     if (!permissions?.generateEvents) {
                         const forDevsIndex = nodes?.findIndex(
                             ({ name }) => name === 'For Developers',
@@ -543,7 +542,7 @@ export class NxHeaderComponent implements OnInit {
                     this.system
                         .getInfoAndPermissions(false)
                         .then(system => {
-                            this.canSeeInfo = system?.permissionManager.isAdmin() || false;
+                            this.canSeeInfo = system?.permissionManager.isAdmin$$() || false;
                         })
                         .catch(_ => {});
                 }

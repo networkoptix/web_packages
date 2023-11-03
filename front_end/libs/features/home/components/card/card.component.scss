@@ -11,30 +11,21 @@ $card-border-radius: 12px;
 
 .card {
   border: none;
-  background-color: none;
+  background-color: transparent;
   
   width: $card-width;
   height: $card-height;
   user-select: none;
   cursor: pointer;
   // overflow    : hidden;
-
-  h2 {
-      @include mixins.ellipsis;
-      color: var(--card-header-text) !important;
-      line-height: $card-header-height;
-      height: $card-header-height;
-  }
-
+  
   &.card-condensed {
       .card-body {
           display: flex;
           flex-direction: column;
           height: 100%;
-          border: 2px var(--system-card-border-color) solid;
           border-radius: $card-border-radius;
           padding: $card-vertical-padding 1rem;
-
           background: var(--system-card-bg);
 
           .info {
@@ -43,10 +34,6 @@ $card-border-radius: 12px;
             justify-content: space-between;
             align-items: center;
             width: 100%;
-          }
-
-          h2{
-              display: block !important;
           }
 
           &:hover {

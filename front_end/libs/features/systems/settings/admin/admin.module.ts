@@ -11,6 +11,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
+import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -18,6 +19,7 @@ import { NxSectionPlaceholderComponent } from '@components/placeholders/section/
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxAlexaComponent } from '@pages/systems/settings/admin/alexa/alexa.component';
 import { PipesModule } from '@pipes/pipes.module';
 
@@ -47,6 +49,9 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         NxSectionPlaceholderComponent,
         NxTagComponent,
         NxForceVisibilityDirective,
+        NxTooltipDirective,
+        TranslateModule,
+        NxMultiLineEllipsisComponent,
         NxAlexaComponent,
     ],
     providers: [],

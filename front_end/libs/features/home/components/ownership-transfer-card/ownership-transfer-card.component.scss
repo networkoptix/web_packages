@@ -1,0 +1,51 @@
+.card {
+  cursor: default !important;
+}
+
+.body {
+  flex-direction: row !important;
+
+  &:hover {
+    background: var(--system-card-bg) !important;
+    cursor: default;
+  }
+}
+
+.description {
+  width: 70%;
+}
+
+.buttons {
+  position: absolute;
+  top: 0;
+  border: 2px solid var(--card-border-color);
+  right: 0;
+  height: 100%;
+  width: 17%;
+  border-radius: 0px 10px 10px 0;
+
+  button {
+    height: 50% !important;
+    width: 100%;
+    background: transparent;
+
+    &:hover {
+      background: var(--system-card-bg-grad0);
+  }
+  }
+  .check {
+    border-radius: 0 10px 0 0 !important;
+    border-bottom: 2px solid var(--card-border-color);
+
+    path {
+      stroke: var(--green_main);
+    }
+  }
+
+  .cross {
+    border-radius: 0 0 10px 0 !important;
+    .st0 {
+      stroke: var(--error) !important;
+    }
+  }
+}

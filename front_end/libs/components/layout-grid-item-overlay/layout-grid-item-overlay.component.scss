@@ -47,6 +47,10 @@
     }
 }
 
+[role=button] {
+    cursor: inherit;
+}
+
 svg-icon {
     cursor: pointer;
     display: block;
@@ -85,6 +89,21 @@ svg-icon {
         overflow: hidden;
         text-overflow: ellipsis;
         white-space: nowrap;
+    }
+}
+
+.quick-actions .action-icon, .menu-group div {
+    &:hover {
+        background-color: var(--overlay-action-bg-hover);
+    }
+    &:active {
+        background-color: var(--overlay-action-bg-active);
+    }
+
+    svg-icon {
+        svg path {
+            fill: var(--overlay-action-svg);
+        }
     }
 }
 
@@ -134,7 +153,7 @@ svg-icon {
             border-radius: 6px;
         }
 
-        &:has(.active) {
+        &:has(.checked) {
             background-color: var(--brand-core);
         }
 
@@ -150,17 +169,6 @@ svg-icon {
     flex-direction: row;
     gap: 12px;
     padding-left: 12px;
-}
-
-.quick-actions, .menu-group {
-    svg-icon {
-        svg path {
-            fill: var(--overlay-action-svg);
-        }
-        &:hover svg path {
-            fill: var(--overlay-action-svg-hover);
-        }
-    }
 }
 
 .info {

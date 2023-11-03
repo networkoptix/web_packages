@@ -358,10 +358,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
             return false;
         }
-        const isOwner = this.permissionManager.isOwner();
+        const isOwner = this.permissionManager.isOwner$$();
         return (
             (this.CONFIG.featureFlags.cloudStorage && isOwner) ||
-            (this.permissionManager.isAdmin() && this.systemInfo?.cloudStorageSystemEnabled) ||
+            (this.permissionManager.isAdmin$$() && this.systemInfo?.cloudStorageSystemEnabled) ||
             (this.systemInfo?.cloudStorageCapable && isOwner)
         );
     }
@@ -371,7 +371,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             !isMobile &&
             this.CONFIG.featureFlags.bookmarks &&
             this.version >= 5 &&
-            this.permissionManager.permissions()?.viewBookmarks
+            this.permissionManager.permissions$$()?.viewBookmarks
         );
     }
 
@@ -412,7 +412,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         if (Object.keys(res).length) {
                             parsedSettings = parseSettings(res);
                         }
-                        const currentUser = this.permissionManager.currentUser();
+                        const currentUser = this.permissionManager.currentUser$$();
                         if (currentUser) {
                             delete currentUser.name;
                             Object.assign(parsedSettings, currentUser);
@@ -435,7 +435,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                             this.info.ownerFullName = this.userManager.users.find(
                                 user => user.email === this.info.ownerAccountEmail,
                             )?.fullName;
-                            this.permissionManager.ownerEmail.set(this.info.ownerAccountEmail);
+                            this.permissionManager.ownerEmail$$.set(this.info.ownerAccountEmail);
                             this.permissionManager.checkCurrentUser();
                         });
                         return systemPromise;
@@ -464,7 +464,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 }
                 let directCapabilities = {};
                 try {
-                    if (this.permissionManager.isAdmin()) {
+                    if (this.permissionManager.isAdmin$$()) {
                         directCapabilities = (await this.getSystemCapabilities()) || {};
                     }
                     response.capabilities = { ...response.capabilities, ...directCapabilities };
@@ -475,10 +475,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                     this.info = response;
                 }
                 this.userManager.ownerEmail = this.info.ownerAccountEmail;
-                this.permissionManager.ownerEmail.set(this.info.ownerAccountEmail);
+                this.permissionManager.ownerEmail$$.set(this.info.ownerAccountEmail);
                 this.isOnline = this.info.stateOfHealth === this.CONFIG.system.status.online;
                 const capabilities = this.info?.capabilities || {}; // Make capabilities defined so that its easier to check feature flags.
-                this.canMerge = this.permissionManager.isOwner() && 'cloudMerge' in capabilities;
+                this.canMerge = this.permissionManager.isOwner$$() && 'cloudMerge' in capabilities;
                 this.cloudStorageCapable = '5_1_cloud_storage' in capabilities;
                 if (this.cloudStorageCapable) {
                     // Cloud storage backend is currently not ready. Removed for CB-1657
@@ -591,7 +591,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                             })
                             .then(() => {
                                 if (!environment.isLocal) {
-                                    this.permissionManager.ownerEmail.set(
+                                    this.permissionManager.ownerEmail$$.set(
                                         this.info.ownerAccountEmail,
                                     );
                                     this.getUsersCachedInCloud().then(users => {
@@ -664,7 +664,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
      * Handles rules that need to be added/removed when enabling/disabling Alexa
      */
     updateAlexaRules(enabled = true) {
-        const currentUser = this.permissionManager.currentUser();
+        const currentUser = this.permissionManager.currentUser$$();
         return this.mediaserver
             .getEventRules()
             .pipe(
@@ -903,7 +903,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         this.isAvailable = true;
                     })
                     .catch(() => {
-                        if (!environment.isLocal && this.permissionManager.isAdmin()) {
+                        if (!environment.isLocal && this.permissionManager.isAdmin$$()) {
                             return this.getUsersCachedInCloud().then(users => {
                                 this.userManager.processUsers(users);
                                 return Promise.resolve();
@@ -912,7 +912,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                             return Promise.resolve();
                         }
                     });
-            } else if (!environment.isLocal && this.permissionManager.isAdmin()) {
+            } else if (!environment.isLocal && this.permissionManager.isAdmin$$()) {
                 // or we get old cached data from the cloud
                 usersPromise = this.getUsersCachedInCloud().then(users => {
                     return this.userManager.processUsers(users);
@@ -934,7 +934,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     deleteFromCurrentAccount(password?: string) {
-        const currentUser = this.permissionManager.currentUser();
+        const currentUser = this.permissionManager.currentUser$$();
         const email = currentUser?.email || this.currentUserEmail;
         if (this.isAvailable && currentUser) {
             // Try to remove me from the system directly

@@ -16,6 +16,7 @@
     "productName": "",
     "NofM": "{n} of {m}",
     "downloadBookmark": "Download {title}",
+    "groupCount": "{count} Groups",
     "exclude": {
         "nested": "{start}{end}"
     },
@@ -90,7 +91,7 @@
     },
     "layouts": {
         "newLayout": "New Layout",
-        "layoutCopy": "(copy)",
+        "layoutCopy": "{name} (copy)",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "treeActions": {
             "create": {
@@ -274,12 +275,12 @@
                     "low": "Lo-Res ({codec})"
                 },
                 "streamType": {
+                    "stream": "Stream",
                     "primary": "Primary Stream",
                     "secondary": "Secondary Stream"
                 },
-                "unavailable": "Unavailable",
-                "unableToLoad": "Unable to load stream metrics",
-                "fps": "{fps} Fps"
+                "fps": "{fps} Fps",
+                "loading": "Loading..."
             },
             "menuActions": {
                 "menu": {
@@ -1215,7 +1216,8 @@
             "fullName": "Full Name",
             "accessLevel": "Access Level",
             "groups": "Groups"
-        }
+        },
+        "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization"
     },
     "menu": {
         "titles": {
@@ -1583,6 +1585,7 @@
     },
     "toastMessage": {
         "cloudUnavailable": "Something went wrong. Please refresh the page in about 30 seconds.",
+        "customPermissions": "This user has custom permissions. Use the %VMS_NAME% application to view and set up custom permissions.",
         "nameFail": "Failed to change {type} name",
         "noConnection": "Restore the connection to %CLOUD_NAME% and try again.",
         "noInternet": "%CLOUD_NAME% is currently unavailable. Please try again later.",

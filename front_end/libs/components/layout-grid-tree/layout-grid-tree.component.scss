@@ -77,12 +77,15 @@ nx-search {
                 &:not(:hover) > .action-button {
                     display: none !important;
                 }
+                &:hover:has(.editable-edit) > .action-button {
+                    display: none !important;
+                }
 
                 .action-button {
                     margin: 0;
                 }
 
-                &:hover {
+                &:hover:not(:has(.editable-edit)) {
                     background: var(--left-menu-l3-hover-bg);
                     color: var(--left-menu-l3-hover-color);
 
@@ -90,9 +93,19 @@ nx-search {
                         border-color: transparent !important;
                         background: transparent !important;
 
-                        &:active .st0 {
-                            stroke: var(--left-menu-l3-selected-bg);
-                            fill: var(--left-menu-l3-selected-bg);
+                        &:active {
+                            .st0 {
+                                stroke: var(--left-menu-l3-selected-bg);
+                                fill: var(--left-menu-l3-selected-bg);
+                            }
+                            path {
+                                fill: var(--left-menu-l3-selected-bg);
+                                stroke: var(--left-menu-l3-selected-bg);
+                            }
+                        }
+                        path {
+                            fill: var(--left-menu-l3-hover-color);
+                            stroke: var(--left-menu-l3-hover-color);
                         }
                     }
 
@@ -136,6 +149,10 @@ cdk-tree {
         stroke: var(--body-text-color);
         fill: var(--body-text-color);
     }
+    & path {
+        fill: var(--body-text-color);
+        stroke: var(--body-text-color);
+    }
 
     &:active {
         background: var(--left-menu-l3-selected-bg);
@@ -143,6 +160,10 @@ cdk-tree {
         & .st0 {
             stroke: var(--left-menu-l3-selected-color);
             fill: var(--left-menu-l3-selected-color);
+        }
+        & path {
+            fill: var(--left-menu-l3-selected-color);
+            stroke: var(--left-menu-l3-selected-color);
         }
     }
 }
@@ -287,8 +308,16 @@ cdk-tree {
         .st0 {
             stroke: var(--btn-text-hover-color);
         }
+        path {
+            fill: var(--btn-text-hover-color);
+            stroke: var(--btn-text-hover-color);
+        }
         &:hover {
             .st0 {
+                stroke: var(--btn-text-color);
+            }
+            path {
+                fill: var(--btn-text-color);
                 stroke: var(--btn-text-color);
             }
         }
@@ -309,4 +338,14 @@ cdk-tree {
     max-width: calc(100% - 48px);
     display: flex;
     flex-direction: row;
+    height: 20px;
+    .editable-edit {
+        padding-left: 0;
+        border: 0;
+        background: transparent;
+    }
+}
+
+.add-preview button {
+    display: none !important;
 }

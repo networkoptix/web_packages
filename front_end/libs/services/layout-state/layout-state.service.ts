@@ -1,5 +1,5 @@
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
-import { Injectable, Injector, runInInjectionContext } from '@angular/core';
+import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -36,6 +36,12 @@ import { incrementUntilUnique } from './store/utils/increment-until-unique';
 export class LayoutStateService {
     static runInInjectionContext: <T>(callback: () => T) => T;
 
+    duplicatedLayouts$$ = signal<string[]>([]);
+
+    focusViewToken = uuid();
+
+    contextMenu: TemplateRef<unknown>;
+
     createNewLocalLayout(items?: LayoutItem[]): string;
     createNewLocalLayout(name: string, items?: LayoutItem[]): string;
     createNewLocalLayout(
@@ -53,7 +59,7 @@ export class LayoutStateService {
             .subscribe(layouts => {
                 const currentUser = this.systemService
                     .currentSystem$$()
-                    .permissionManager.currentUser();
+                    .permissionManager.currentUser$$();
                 const existingNames = layouts
                     .filter(
                         ({ layout }) =>
@@ -94,13 +100,13 @@ export class LayoutStateService {
     duplicateLayoutAsNewLocalLayout(layout: Layout): string {
         const id = uuid();
 
+        this.duplicatedLayouts$$.update(layouts => [...layouts, id]);
+
         this.store
             .select(SharedLayoutsSelectors.selectLayouts)
             .pipe(take(1))
             .subscribe((layouts: LayoutState[]) => {
-                const copyName = `${layout.name} ${this.translate.instant(
-                    staticLang.layouts.layoutCopy,
-                )}`;
+                const copyName = this.translate.instant(staticLang.layouts.layoutCopy, layout);
                 const existingNames = layouts.map(layout => layout.layout.name);
                 LayoutStateService.runInInjectionContext(() =>
                     this.store.dispatch(
@@ -191,7 +197,7 @@ export class LayoutStateService {
             ...layout,
             parentId:
                 this.accountService.account.id ||
-                this.systemService.getCurrentSystem().permissionManager.currentUser().id,
+                this.systemService.getCurrentSystem().permissionManager.currentUser$$().id,
         });
     }
 

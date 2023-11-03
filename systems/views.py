@@ -221,7 +221,7 @@ class OrganizationView:
 
     async def sync_systems_from_channel_partner_service(self, license_api):
         try:
-            system_ids = await license_api.get_org_systems(self.org_id)
+            res = await license_api.get_org_systems(self.org_id)
         except httpx.HTTPStatusError as e:
             raise e
 
@@ -229,7 +229,7 @@ class OrganizationView:
         if not self.group_ids:
             self.group_ids = [root_group_id]
 
-        if system_ids:
+        if system_ids := res.get('results', []):
             self._create_missing_systems(root_group_id, system_ids)
 
     async def sync_user_with_channel_partner_service(self, license_api):

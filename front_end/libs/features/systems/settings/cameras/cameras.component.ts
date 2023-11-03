@@ -87,7 +87,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     @Input() camera: NxSystemCamera;
 
     LANG = staticLang;
-    defaultAspectRatio: number = null;
+    defaultAspectRatio: number | null = null;
     aspectRatioOptions = ASPECT_RATIOS;
     rotationOptions = ROTATION_OPTIONS;
     isMobile: boolean;
@@ -141,18 +141,20 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     motionEnabledWatcher = new Watcher<MotionType>();
     motionMaskWatcher = new Watcher<string>();
 
-    editCameras = computed<boolean>(() => this.system.permissionManager.permissions().editCameras);
+    editCameras = computed<boolean>(
+        () => this.system.permissionManager.permissions$$().editCameras,
+    );
     canSeeInfo = computed<boolean>(() => {
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
-        return this.system.permissionManager.permissions()?.systemHealth;
+        return this.system.permissionManager.permissions$$()?.systemHealth;
     });
     canSeeView = computed<boolean>(() => {
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
-        const permissions = this.system.permissionManager.permissions();
+        const permissions = this.system.permissionManager.permissions$$();
         return permissions.view || permissions.viewArchives;
     });
     fullInfoPath = computed<string>(() => {
@@ -219,8 +221,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     private get motionType(): MotionType {
-        const motionType = this.motionEnabledWatcher.value;
-        return parseInt(motionType) ? motionType : MotionType[motionType];
+        return this.motionEnabledWatcher.value;
     }
 
     constructor(
@@ -389,7 +390,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 ? ''
                 : this.selectedAspectWatcher.value.toString();
         const rotation = this.selectedRotationWatcher.value.toString();
-
         return Promise.all([
             this.system.cameraManager.updateRecordingSettings(updatedTask, cameraSettings),
             this.system.serverManager.updateResource(cameraSettings.id, {
@@ -467,7 +467,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     private setCamera = async (): Promise<void> => {
-        this.enableEdit = this.system.permissionManager.isAdmin() || this.editCameras();
+        this.enableEdit = this.system.permissionManager.isAdmin$$() || this.editCameras();
 
         this.menuService.selectedDetailsSection.set(this.camera.id);
 
@@ -504,11 +504,13 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.cameraDetailColumns = isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
         this.cameraName = this.camera.name;
         // Setup the automatic value based on the camera's dimensions
+
         if (defaultRatio) {
             this.defaultAspectRatio = defaultRatio;
         }
         this.selectedAspectWatcher.value = parameters.overrideAr ?? this.defaultAspectRatio;
         this.selectedRotationWatcher.value = parameters.rotation ?? DEFAULT_ROTATION;
+
         this.audioEnabled = audioEnabled;
         this.recordingModesWatcher.value = recordingSettings.modes;
         if (this.recordingSettingsComponent) {
@@ -606,7 +608,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     private updateValues(): void {
         this.healthService.ready = false;
-        if (this.system.permissionManager.isAdmin()) {
+        if (this.system.permissionManager.isAdmin$$()) {
             this.system.mediaserver
                 .getHealthAlarms()
                 .pipe(untilDestroyed(this))

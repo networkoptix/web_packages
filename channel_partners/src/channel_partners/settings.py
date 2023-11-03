@@ -39,7 +39,7 @@ CACHE_SALT = 'just-a-salt-Jah2ro2zaex7ChieChieShaiz)ah5ieh>ieR*uku1xeecheeCh$ae3
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
-
+SILK_ENABLED = os.getenv('SILK_ENABLED', False)
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
 
@@ -208,3 +208,7 @@ KEYS_PATH = os.path.join(BASE_DIR, 'keys')
 RSA_KEY1 = open(os.path.join(KEYS_PATH, 'vms.nop.pvt')).read()
 RSA_KEY2 = open(os.path.join(KEYS_PATH, 'vms2.nop.pvt')).read()
 RSA_KEY3 = open(os.path.join(KEYS_PATH, 'vms3.nop.pvt')).read()
+
+if SILK_ENABLED:
+    INSTALLED_APPS.append('silk')
+    MIDDLEWARE.append('silk.middleware.SilkyMiddleware')

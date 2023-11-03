@@ -1,7 +1,9 @@
+import json
 from uuid import uuid4
 import uuid
 
 from django.conf import settings
+from django.http import HttpResponse
 
 from cloud.customization_context import customization_ctx
 from cloud.helpers.exceptions import ErrorCodes
@@ -499,7 +501,7 @@ class TestIPVD:
 
         # Should redirect if not versioned request
         request = arf.get('/api/ipvd')
-        response = async_to_sync(utils.get_ipvd)(request)
+        response: HttpResponse = async_to_sync(utils.get_ipvd)(request)
 
         versioned_url = response.url
 
@@ -509,14 +511,14 @@ class TestIPVD:
         request = arf.get(versioned_url)
         response = async_to_sync(utils.get_ipvd)(request)
         assert response.status_code == status.HTTP_200_OK
-        assert response.data == ipvd_data_processed
+        assert response.content == json.dumps(ipvd_data_processed).encode()
         ipvd_mock.assert_has_calls([mocker.call(settings.IPVD_CONNECT, params="[]")], any_order=True)
         # Test cached
         request = arf.get(versioned_url)
         response = async_to_sync(utils.get_ipvd)(request)
         ipvd_data_processed['cached'] = True
         assert response.status_code == status.HTTP_200_OK
-        assert response.data == ipvd_data_processed
+        assert response.content == json.dumps(ipvd_data_processed).encode()
 
 
 @pytest.mark.asyncio

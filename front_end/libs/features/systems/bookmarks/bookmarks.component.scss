@@ -66,31 +66,22 @@
             flex-direction: column;
             justify-content: center;
             align-items: center;
-            margin-top: 100px;
+            margin-top: 50px;
 
             &-content {
                 display: flex;
                 flex-direction: column;
                 justify-content: center;
-                align-items: center
+                align-items: center;
             }
 
-            &-content {
-                font-family: $font-family-regular;
-                font-size: 14px !important;
-                font-weight: 400;
-                margin-top: 20px;
-                color: var(--bookmarks-no-results-text);
-
-                h2 {
-                    font-size: 20px !important;
-                    margin-bottom: 5px;
-                    color: var(--bookmarks-no-results-title) !important;
-                }
-
-                .clear-filters {
-                    margin-top: 20px;
-                }
+            .clear-filters {
+                color: var(--brand-core);
+                background: transparent;
+                height: unset !important;
+                padding: 0 !important;
+                margin-top: -85px;
+                z-index: 1;
             }
         }
     }

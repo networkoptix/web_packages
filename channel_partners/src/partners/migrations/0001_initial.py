@@ -188,7 +188,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='cloudhost',
             name='instance',
-            field=models.ForeignKey(default=partners.models.get_cloud_test_instance, on_delete=django.db.models.deletion.CASCADE, to='partners.cloudinstance'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='partners.cloudinstance'),
         ),
         migrations.CreateModel(
             name='ChannelPartnerToUser',
@@ -253,7 +253,7 @@ class Migration(migrations.Migration):
         migrations.AddField(
             model_name='channelpartner',
             name='instance',
-            field=models.ForeignKey(default=partners.models.get_cloud_test_instance, on_delete=django.db.models.deletion.CASCADE, to='partners.cloudinstance'),
+            field=models.ForeignKey(on_delete=django.db.models.deletion.CASCADE, to='partners.cloudinstance'),
         ),
         migrations.AddField(
             model_name='channelpartner',

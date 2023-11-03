@@ -60,7 +60,7 @@ export enum PlaceholderClasses {
 
 export interface LayoutItemRenderConfig {
     child?: {
-        'aspect-ratio': number;
+        'aspect-ratio': number | string;
     };
     aspect?: number;
     showTooltip: boolean;
@@ -119,8 +119,9 @@ export interface ResourceLeafNode<T = { id: string }> extends BaseResourceNode {
 
 export interface SharableResourceLeafNode<T = { id: string }>
     extends Omit<ResourceLeafNode<T>, 'aspectRatio'> {
-    editable: boolean;
+    owned: boolean;
     shared: boolean;
+    locked: boolean;
 }
 
 export interface MergedResourceNode<T = { id: string }>
@@ -199,6 +200,6 @@ export type ServerStatsObservable = Observable<
         Observable<{
             error: string;
             statistics: ServerStats;
-        }>
+        } | null>
     >
 >;

@@ -9,6 +9,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, Permission
+from django.core.cache import caches
 from django.db import models
 from django.db.models import Sum, F, QuerySet
 from django.utils import timezone
@@ -19,6 +20,9 @@ from channel_partners.utils import FieldOriginalMixin
 from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
+
+from tools.helpers import get_period_start
+
 
 
 class Empty:
@@ -91,16 +95,6 @@ class CloudUser(models.Model):
         return True
 
 
-def get_cloud_test_instance():
-    return CloudInstance.objects.get_or_create(name='cloud-test')[0].id
-
-
-def get_default_cloud_host():
-    # Todo. Instance must be defined in config somehow!
-    return CloudHost.objects.get_or_create(hostname=settings.INSTANCE_CONFIG.default_host,
-                                           defaults={'instance': get_cloud_test_instance()})[0].id
-
-
 class CloudInstance(models.Model):
     name = models.CharField(max_length=50)
 
@@ -110,7 +104,7 @@ class CloudInstance(models.Model):
 
 class CloudHost(models.Model):
     hostname = models.CharField(max_length=255)
-    instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
+    instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE)
 
     def __str__(self):
         return self.hostname
@@ -133,9 +127,11 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     last_usage_check = models.DateTimeField(default=timezone.now)
     last_usage_report = models.DateTimeField(default=timezone.now)
     security_statuses = models.JSONField(default=dict)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
+    activated = models.BooleanField(default=True)
 
     observed_fields = ('organization_id', 'state')
 
@@ -347,12 +343,13 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     parent_channel_partner = models.ForeignKey('ChannelPartner', null=True, blank=True, on_delete=models.CASCADE, related_name='channel_partners')
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False, default=ChannelPartnerStates.ACTIVE)
     # instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
-    cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE, default=get_default_cloud_host)
+    cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
     can_create_sub_channels = models.BooleanField(default=True)
     allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -489,7 +486,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         if not self.allow_changing_services and not new:
             self.disable_successors_acs()
 
-        if self._original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
+        if original_state != self.state and self.state == ChannelPartnerStates.SHUTDOWN:
             for system in CloudSystemId.objects.filter(organization__channel_partner__id=self.successors):
                 system.negate_all_service(organization_id=system.organization_id)
 
@@ -543,7 +540,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date = None) -> List['ChannelPartnerServiceRecord']:
+    def service_changes(self, start_ts: datetime.date = None) -> 'QuerySet[ChannelPartnerServiceRecord]':
         if start_ts is None:
             start_ts = timezone.now() - relativedelta(months=1)
         qs = ChannelPartnerServiceRecord.objects.filter(
@@ -554,6 +551,32 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                          f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
         return qs
+
+    def calculate_monthly_changes(self, use_cache: bool = False) -> dict:
+        start_ts = get_period_start()
+        cache_key = f'monthly-changes-{self.id}-{start_ts.date()}'
+        if use_cache and (changes := caches['default'].get(cache_key)):
+            return changes
+        cp_tree = self.get_successors(self.pk)
+        qs = (
+            ChannelPartnerServiceRecord.objects
+            .exclude(cloud_system__state=ChannelPartnerStates.SHUTDOWN)
+            .filter(created_ts__gte=start_ts, cloud_system__organization__channel_partner__in=cp_tree)
+        ).values('service__type').annotate(monthly_changes=Sum('quantity'))
+        changes = {change['service__type']: change['monthly_changes'] for change in qs}
+        caches['default'].set(cache_key, changes, timeout=3600)
+        return changes
+
+    def remaining_monthly_limits(self):
+        if self.monthly_additional_service_limit == 0 or self.monthly_additional_service_limit is None:
+            return None
+        monthly_changes = self.calculate_monthly_changes(use_cache=True)
+        return {
+            s_type: self.monthly_additional_service_limit - monthly_changes.get(s_type, 0)
+            for s_type, _ in ChannelPartnerService.SERVICE_TYPES
+        }
+
+
 
     @classmethod
     def get_successors(cls, ancestor_id: str, include_ancestor: bool = True):
@@ -695,6 +718,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                      },
                                                      default=OrganizationRole.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
+    created_ts = models.DateTimeField(auto_now_add=True)
     attributes = models.JSONField(default=dict)
 
     objects = ExternalIdTargetManager()
@@ -918,9 +942,11 @@ class ChannelPartnerService(models.Model):
     description = models.TextField(blank=True)
     parameters = models.JSONField(default=dict, blank=True)
     parent_service = models.ForeignKey('ChannelPartnerService', blank=True, null=True, on_delete=models.CASCADE)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
+
 
     def __str__(self):
         return f'{self.name} - {self.created_by_channel_partner.name}'
@@ -1009,6 +1035,7 @@ class ServiceToSubChannelProperties(models.Model):
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE,
                                 related_name='channel_partners_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         constraints = [
@@ -1043,6 +1070,7 @@ class ServiceToOrganizationProperties(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='service_properties')
     service = models.ForeignKey(ChannelPartnerService, on_delete=models.CASCADE, related_name='organization_properties')
     price = models.DecimalField(null=True, max_digits=10, decimal_places=3)
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     def can_access(self, user: CloudUser):
         return self.organization.can_access(user)
@@ -1119,6 +1147,7 @@ class ExternalId(models.Model):
                                    related_name='%(class)s_created_external_ids')
     custom_id = models.CharField(max_length=100)
     objects = ExternalIdManager()
+    created_ts = models.DateTimeField(auto_now_add=True)
 
     class Meta:
         abstract = True

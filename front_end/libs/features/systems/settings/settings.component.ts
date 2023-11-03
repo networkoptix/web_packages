@@ -70,10 +70,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() system: NxSystem;
 
     editCameras: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions().editCameras,
+        () => this.system.permissionManager.permissions$$().editCameras,
     );
     editUsers: Signal<boolean> = computed(
-        () => this.system.permissionManager.permissions().editUsers,
+        () => this.system.permissionManager.permissions$$().editUsers,
     );
 
     CONFIG: IConfig;
@@ -215,7 +215,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.setupDefaults();
 
         effect(() => {
-            this.system.permissionManager.permissions();
+            this.system.permissionManager.permissions$$();
             this.updateMenu();
         });
 
@@ -461,7 +461,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         if (this.system.isAvailable) {
                             this.updateAlert();
                         }
-                        if (this.system.permissionManager.isAdmin()) {
+                        if (this.system.permissionManager.isAdmin$$()) {
                             // Makes request to get health, this is used to cache request.
                             this.system.mediaserver
                                 .getAggregateHealthReport()
@@ -777,7 +777,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             );
         }
 
-        if (this.system.permissionManager.isAdmin()) {
+        if (this.system.permissionManager.isAdmin$$()) {
             let serversNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.servers.id,
             );
@@ -832,7 +832,10 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             },
         ];
 
-        if (this.system.permissionManager.isAdmin() || this.system.permissionManager.isOwner()) {
+        if (
+            this.system.permissionManager.isAdmin$$() ||
+            this.system.permissionManager.isOwner$$()
+        ) {
             adminNode.level3.push({
                 id: menus.systemSettings.licenses.id,
                 label: this.LANG.menu.titles.licenses,
@@ -851,7 +854,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
         // hide search if no permissions for potentially long list ... cameras, servers and users
         this.menuSearchable =
-            this.editCameras() && this.system.permissionManager.isAdmin() && this.editUsers();
+            this.editCameras() && this.system.permissionManager.isAdmin$$() && this.editUsers();
         this.updateContent();
     }
 

@@ -19,7 +19,7 @@ import { SystemsDisplayMode } from '../home.types';
     standalone: true,
     imports: [CommonModule, NxPreLoaderComponent, NxSystemsListComponent],
 })
-export class NxGroupsSystemsComponent implements OnChanges {
+export class NxSystemsComponent implements OnChanges {
     @Input() displayMode: SystemsDisplayMode;
     store = inject(Store);
     systemsService = inject(NxSystemsService);
@@ -39,7 +39,7 @@ export class NxGroupsSystemsComponent implements OnChanges {
             .map(({ id }) => id);
     });
 
-    ngOnChanges(changes: NgChanges<NxGroupsSystemsComponent>): void {
+    ngOnChanges(changes: NgChanges<NxSystemsComponent>): void {
         this.showPersonal$$.set(this.displayMode === SystemsDisplayMode.Personal);
     }
 }

@@ -9,6 +9,8 @@ import json
 import logging
 import re
 import os
+
+from django.http import HttpResponse
 from django.urls import reverse
 from uuid import uuid4
 
@@ -31,7 +33,7 @@ from cloud import settings
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
-from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer
+from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras
 from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
     cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
@@ -528,17 +530,6 @@ IPVD_EXPIRES = 60**2 * 24
 IPVD_CACHE_HEADER = {'Cache-Control': f'max-age={IPVD_EXPIRES}'}
 
 
-async def check_ipvd_cache_response(version):
-    if all([
-            k in (ipvd := await cache.aget(version, {}))
-            for k in ("cameras", "vendors", "analytics", "num_cameras")
-    ]):
-        return Response({
-            **ipvd,
-            "cached": True
-        }, headers=IPVD_CACHE_HEADER)
-
-
 @swagger_auto_schema(method="GET",
                      operation_description="Returns the list of supported devices.",
                      responses={200: IpvdSerializer()})
@@ -566,20 +557,29 @@ async def get_ipvd(request):
             # Redirect to new version if changed. Only really happens if IPVD cache was cleared
             return redirect(f'{reverse("get-ipvd")}?version={current_version}')
 
-        if response := await check_ipvd_cache_response(version):
-            return response
+        ipvd = await cache.aget(version, {})
+        if not ipvd or not all([k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")]):
+            ipvd = await HttpxAsyncRequest.get(url, params="[]")
+            ipvd = ipvd.json()
+            # serializer = IpvdSerializer(data=ipvd)
+            # serializer.is_valid()
+            # ipvd = serializer.data
+            # del serializer
+            ipvd = process_cameras(ipvd)
+            # validate ipvd
+            if not all([k in ipvd for k in ("cameras", "vendors", "analytics", "num_cameras")]):
+                return Response({"message": "Cannot retrieve ipvd info."},
+                                status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+            # Save the IPVD data as the current version
+            await cache.aset(current_version, ipvd, IPVD_EXPIRES)
+        else:
+            ipvd["cached"] = True
 
-        cameras = await HttpxAsyncRequest.get(url, params="[]")
-        cameras = cameras.json()
-        serializer = IpvdSerializer(data=cameras)
-        serializer.is_valid()
-        ipvd = serializer.data
-
-        # Save the IPVD data as the current version
-        await cache.aset(current_version, ipvd, IPVD_EXPIRES)
-
+        # Added for monitoring.
+        if request.headers.get('NX-TEST-REQ'):
+            ipvd = {k: len(v) if hasattr(v, '__len__') else v for k, v in ipvd.items()}
         # The IPVD cache header max-age could outlive the data ttl in the cache but that's ok since we already checked the version
-        return Response(ipvd, headers=IPVD_CACHE_HEADER)
+        return HttpResponse(json.dumps(ipvd).encode(), headers=IPVD_CACHE_HEADER, content_type='application/json')
 
     elif request.method == 'POST':
         # Really only care about deleting the ipvd cache so might not even have to check if current_version cache was deleted

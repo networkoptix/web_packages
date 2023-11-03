@@ -52,6 +52,7 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
     @Output() onEditModeCancelled = new EventEmitter<any>();
 
     private _initialValue: string;
+    private _editing = false;
 
     ngOnChanges(changes: NgChanges<NxTextEditableComponent>) {
         if (changes.editEnabled) {
@@ -72,8 +73,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     private focusTextEnd(el: ElementRef) {
         const selection = window.getSelection();
-        selection.selectAllChildren(el.nativeElement);
-        selection.collapseToEnd();
+        selection?.selectAllChildren(el.nativeElement);
+        selection?.collapseToEnd();
+        el.nativeElement.scrollBy(el.nativeElement.scrollWidth, 0);
     }
 
     @HostListener('click', ['$event'])
@@ -107,6 +109,8 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
         this.el.nativeElement.classList.add(this.initialClass);
         this.onFocusChanged.emit(false);
         this.onTouchedCallback();
+
+        this._editing = false;
     }
 
     @HostListener('focus')
@@ -118,6 +122,8 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
         if (!this.allowUserFocus) {
             this.focusTextEnd(this.el);
         }
+
+        this._editing = true;
     }
 
     @HostListener('keyup.enter')
@@ -128,8 +134,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     @HostListener('keyup.esc')
     callOnEscape(): void {
+        this.writeValue(this._initialValue);
+        this.onChangeCallback(this._initialValue);
         this.onEditModeCancelled.emit();
-        this.el.nativeElement.textContent = this._initialValue;
         this.el.nativeElement.blur();
     }
 
@@ -155,6 +162,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     // called when model is written to view. (model -> view)
     writeValue(value: string): void {
+        if (this._editing) {
+            return;
+        }
         if ((!this._initialValue && value) || value) {
             // do not update before component is initialized
             this._initialValue = value;

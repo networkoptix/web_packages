@@ -1,6 +1,6 @@
 @use "utils" as *;
 @import "./native-theme/theme_palette";
-@import "_theme_palette";
+@import "theme_palette";
 
 html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     body {
@@ -140,6 +140,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --placehoder-title-color   : #E8E8E8; //$light_gray_4;
     --placehoder-body-color    : #B8B8B8; //light_gray_10;
     --placeholder-description-text: #{$light10};
+    --placeholder-bookmarks-bg-color: #A5B6C0;
 
     --progress-bar-color                  : #787878; //$dark_gray_16
     --progress-bar-border-color           : #787878; //$dark_gray_16
@@ -644,7 +645,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark_gray_1);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark_gray_11);
-    --system-card-bg: var(--dark_gray_7);
+    --system-card-bg: var(--dark_gray_11);
     --system-card-offline-color: var(--dark_gray_18);
     --system-card-border-color: var(--dark_gray_10);
     --system-card-owner-color: var(--dark_gray_16);
@@ -653,7 +654,7 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --card-menu-dots-fill: var(--dark_gray_18);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--dark_gray_1--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--dark_gray_1--rgb), 0.2);
-
+    --card-border-color: var(--dark_gray_7);
     --card-context-bg: var(--dark_gray_9);
     --card-context-shadow: 0 1rem 2rem rgba(var(--dark_gray_1--rgb), 0.4);
 
@@ -714,8 +715,6 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --bookmarks-background-color: inherit;
     --bookmarks-duration-bg: rgba(0, 0, 0, .5);
     --bookmarks-card-video-bg: var(--dark6);
-    --bookmarks-no-results-text: var(--dark17);
-    --bookmarks-no-results-title: var(--light1);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
@@ -743,8 +742,9 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --context-menu-item-expanded-bg: var(--dark9);
 
     --overlay-action-bg: rgba(var(--dark_gray_3--rgb), 0.6);
+    --overlay-action-bg-active: rgba(var(--dark_gray_3--rgb), 0.5);
+    --overlay-action-bg-hover: rgba(var(--dark_gray_3--rgb), 0.7);
     --overlay-action-svg: rgba(var(--light1--rgb), 0.8);
-    --overlay-action-svg-hover: var(--light1);
     --overlay-action-text: var(--light1);
     --overlay-text: var(--light1);
     --overlay-status-title: var(--light_gray_10);

@@ -83,7 +83,7 @@ export class CameraManager {
         serverTimes: ServerTime[],
     ): Promise<NxSystemCamera[]> {
         this.serverTimes = serverTimes;
-        if (this.system?.permissionManager.isAdmin()) {
+        if (this.system?.permissionManager.isAdmin$$()) {
             this.camerasHealth = (
                 await firstValueFrom(this.serverManager.mediaserver.getHealthValues())
             ).reply.cameras;
@@ -145,10 +145,10 @@ export class CameraManager {
                 ? camera.deviceType
                 : this.camerasHealth[cleanId(camera.id)]?.info.type ?? DeviceType.Camera;
 
-        const currentUser = this.system?.permissionManager.currentUser();
+        const currentUser = this.system?.permissionManager.currentUser$$();
         const canEditSpecificCamera =
             currentUser?.resourceAccessRights?.[camera.id]?.includes('edit');
-        const canEdit = canEditSpecificCamera || currentUser.isAdmin;
+        const canEdit = canEditSpecificCamera || currentUser?.isAdmin;
 
         const {
             name,
@@ -273,6 +273,14 @@ export class CameraManager {
                 credentials = camera.credentials;
             }
             parameters = camera.parameters;
+            // @ts-expect-error Server sometimes sends these as empty strings
+            if (parameters?.overrideAr === '') {
+                delete parameters.overrideAr;
+            }
+            // @ts-expect-error Server sometimes sends these as empty strings
+            if (parameters?.rotation === '') {
+                delete parameters.rotation;
+            }
         }
 
         const primaryStream = parameters.mediaCapabilities?.streamCapabilities?.find(
@@ -282,12 +290,13 @@ export class CameraManager {
         const previewUrl = this.serverManager.mediaserver.previewUrl(
             camera.id,
             null,
-            parameters.overrideAr * 120,
+            // covering cases where overrideAr is undefined or 0
+            parameters.overrideAr === undefined ? undefined : parameters.overrideAr * 120,
             120,
             parameters.rotation,
         );
 
-        let defaultRatio = 0;
+        let defaultRatio: number | null = null;
         const { bitrateInfos } = parameters;
         if (bitrateInfos) {
             const [x, y] = bitrateInfos.streams[0].resolution.split('x');

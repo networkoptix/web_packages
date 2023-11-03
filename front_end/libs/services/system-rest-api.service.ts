@@ -1006,6 +1006,12 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }).toPromise();
     }
 
+    override renameServer(serverId: string, name: string) {
+        return this.patch<t.ChangedIdReturned>(`/rest/v1/servers/${serverId || 'this'}`, {
+            name,
+        }).toPromise();
+    }
+
     override renameSystem(_, systemName: string) {
         return firstValueFrom(this.updateOrGetSettings({ systemName })).catch();
     }

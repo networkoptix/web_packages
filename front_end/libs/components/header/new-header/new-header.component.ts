@@ -47,8 +47,9 @@ export class NxNewHeaderComponent {
             )
             .subscribe(node => {
                 if (
-                    this.selectedNode?.url !== node.url ||
-                    this.selectedNode.nodes.length !== node.nodes.length
+                    router.url.includes('systems') &&
+                    (this.selectedNode?.url !== node.url ||
+                        this.selectedNode.nodes.length !== node.nodes.length)
                 ) {
                     // specific system page
                     this.selectedNode = cloneDeep({ ...node, name: 'systems' });

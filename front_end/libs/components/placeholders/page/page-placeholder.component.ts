@@ -198,6 +198,9 @@ export class NxPagePlaceholderComponent implements OnInit {
                     this.placeholderTitle =
                         this.LANG.placeholderTexts.systemLoadFailureApiTool.title;
                     break;
+                case 'NO_BOOKMARKS':
+                    this.iconName = 'noBookmarksCloudIcon';
+                    break;
             }
         }
     }

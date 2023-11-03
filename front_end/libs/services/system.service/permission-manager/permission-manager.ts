@@ -72,24 +72,24 @@ export const AdminGroups = {
 
 export class PermissionManager {
     private readonly LANG = staticLang;
-    private user = signal<SystemUser>(undefined);
-    private currentUserPermissions = signal<string>('');
-    private currentUserResourceRights = signal<string>('');
-    private type = computed<string>(() => coerceUserType(this.user()));
-    private permissionsFromGroups = computed<Permissions>(() => {
-        const user = this.user();
-        const aggregatedPermissions = this.currentUserPermissions(); // New permissions for groups
-        const aggregatedDeviceAccessRights = this.currentUserResourceRights();
+    private user$$ = signal<SystemUser>(undefined);
+    private currentUserPermissions$$ = signal<string>('');
+    private currentUserResourceRights$$ = signal<string>('');
+    private type$$ = computed<string>(() => coerceUserType(this.user$$()));
+    private permissionsFromGroups$$ = computed<Permissions>(() => {
+        const user = this.user$$();
+        const aggregatedPermissions = this.currentUserPermissions$$(); // New permissions for groups
+        const aggregatedDeviceAccessRights = this.currentUserResourceRights$$();
 
         if (!user) {
             return initializePermissions();
         }
 
         const isOwner =
-            this.isOwner() || aggregatedPermissions.includes(PermissionStringsV3.administrator);
+            this.isOwner$$() || aggregatedPermissions.includes(PermissionStringsV3.administrator);
         const isAdmin =
             isOwner ||
-            this.isAdmin() ||
+            this.isAdmin$$() ||
             aggregatedPermissions.includes(PermissionStringsV3.powerUser);
         return Object.assign(initializePermissions(isOwner, isAdmin), {
             editCameras: isAdmin || aggregatedDeviceAccessRights.includes(ResourceFlags.edit),
@@ -109,20 +109,21 @@ export class PermissionManager {
             viewLogs: isAdmin || aggregatedPermissions.includes(PermissionStringsV3.viewLogs),
         });
     });
-    groups = signal<UserGroup[]>([]);
-    roles = signal<Role[]>([]);
-    currentUser = computed<CurrentUser>(() => {
-        const user = this.user();
+    groups$$ = signal<UserGroup[]>([]);
+    roles$$ = signal<Role[]>([]);
+    currentUser$$ = computed<CurrentUser>(() => {
+        const user = this.user$$();
         if (!user) {
             return;
         }
-        const groups = this.groups();
-        const roles = this.roles();
+        const groups = this.groups$$();
+        const roles = this.roles$$();
 
-        const isOwner = this.isOwner();
-        const isAdmin = this.isAdmin();
-        const permissions = this.permissions();
+        const isOwner = this.isOwner$$();
+        const isAdmin = this.isAdmin$$();
+        const permissions = this.permissions$$();
         const permissionsString = user.permissions.split('|').sort().join('|');
+        const accessRights = user && 'resourceAccessRights' in user && user?.resourceAccessRights;
 
         let accessRole = '';
         if (this.mediaserver instanceof NxSystemRestAPI3 && (user as RestV3User).groupIds) {
@@ -151,15 +152,16 @@ export class PermissionManager {
             isOwner,
             permissions,
             groupIds: (user && 'groupIds' in user && user?.groupIds) || [], // TODO: use this
-            resourceAccessRights:
-                (user && 'resourceAccessRights' in user && user?.resourceAccessRights) || {}, // TODO: use this
+            resourceAccessRights: accessRights || {}, // TODO: use this
+            hasCustomPermissions:
+                permissionsString !== 'none' || Object.keys(accessRights).length > 0,
         };
     });
-    ownerEmail = signal<string>(undefined);
-    isAdmin = computed<boolean>(() => {
-        const user = this.user();
-        const isOwner = this.isOwner();
-        const permissions = this.currentUserPermissions();
+    ownerEmail$$ = signal<string>(undefined);
+    isAdmin$$ = computed<boolean>(() => {
+        const user = this.user$$();
+        const isOwner = this.isOwner$$();
+        const permissions = this.currentUserPermissions$$();
         if (!user) {
             return false;
         }
@@ -170,30 +172,32 @@ export class PermissionManager {
             permissions.includes(PermissionStringsV3.powerUser)
         );
     });
-    isCloud = computed<boolean>(() => this.type() === UserType.cloud);
-    isLdap = computed<boolean>(() => this.type() === UserType.ldap);
-    isTemporaryLocal = computed<boolean>(() => this.type() === UserType.temporaryLocal);
-    isLocal = computed<boolean>(() => this.type() === UserType.local || this.isTemporaryLocal());
-    isOwner = computed<boolean>(() => {
-        const user = this.user();
+    isCloud$$ = computed<boolean>(() => this.type$$() === UserType.cloud);
+    isLdap$$ = computed<boolean>(() => this.type$$() === UserType.ldap);
+    isTemporaryLocal$$ = computed<boolean>(() => this.type$$() === UserType.temporaryLocal);
+    isLocal$$ = computed<boolean>(
+        () => this.type$$() === UserType.local || this.isTemporaryLocal$$(),
+    );
+    isOwner$$ = computed<boolean>(() => {
+        const user = this.user$$();
         if (!user) {
             return false;
         }
-        const ownerEmail = this.ownerEmail();
+        const ownerEmail = this.ownerEmail$$();
         return (
             (ownerEmail && ownerEmail === user?.email) ||
             ('isOwner' in user && user.isOwner) ||
             ('groupIds' in user && user.groupIds.includes(AdminGroups.administratorGroup))
         );
     });
-    permissions = computed<Permissions>(() => {
-        const isOwner = this.isOwner();
-        const isAdmin = isOwner || this.isAdmin();
-        const groups = this.groups();
+    permissions$$ = computed<Permissions>(() => {
+        const isOwner = this.isOwner$$();
+        const isAdmin = isOwner || this.isAdmin$$();
+        const groups = this.groups$$();
         if (groups.length) {
-            return this.permissionsFromGroups();
+            return this.permissionsFromGroups$$();
         }
-        const permissions = this.user()?.permissions || '';
+        const permissions = this.user$$()?.permissions || '';
         return Object.assign(initializePermissions(isOwner, isAdmin), {
             editUsers: isAdmin || permissions.includes(PermissionStrings.editUserPermissionFlag),
             editCameras:
@@ -223,7 +227,7 @@ export class PermissionManager {
         this.cloudApi.users(this.systemId).subscribe(users => {
             const user = users.find(({ accountEmail }) => accountEmail === this.currentUserEmail);
             if (user) {
-                this.user.set({
+                this.user$$.set({
                     ...user,
                     name: user.accountEmail,
                     email: user.accountEmail,
@@ -241,25 +245,25 @@ export class PermissionManager {
     async checkCurrentUser(): Promise<void> {
         const user = await this.mediaserver.getCurrentUser(true);
         if (user) {
-            this.user.set(user);
+            this.user$$.set(user);
         } else {
             return Promise.reject();
         }
         if (this.mediaserver instanceof NxSystemRestAPI3) {
-            this.mediaserver.getUserGroups().subscribe(userGroups => this.groups.set(userGroups));
+            this.mediaserver.getUserGroups().subscribe(userGroups => this.groups$$.set(userGroups));
             this.mediaserver.getCurrentUserPermissions().subscribe(data => {
-                this.currentUserPermissions.set(data?.permissions || '');
+                this.currentUserPermissions$$.set(data?.permissions || '');
                 if (data.resourceAccessRights) {
                     const resources = new Set<string>();
                     Object.values(data.resourceAccessRights).forEach(permissions => {
                         permissions.split('|').forEach(resources.add, resources);
                     });
-                    this.currentUserResourceRights.set(Array.from(resources).join('|'));
+                    this.currentUserResourceRights$$.set(Array.from(resources).join('|'));
                 }
             });
         }
         this.mediaserver.getAllRoles().subscribe(roles => {
-            this.roles.set(
+            this.roles$$.set(
                 roles.map(role => {
                     role.permissions = role.permissions?.split('|').sort().join('|');
                     return role;

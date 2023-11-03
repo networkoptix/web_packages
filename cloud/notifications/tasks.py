@@ -95,22 +95,22 @@ def send_email(msg_id, queue="", attempt=1, email_type='', emails = None, sessio
         attachments = [{**attachment, 'content': base64.b64decode(attachment['content'])} for attachment in cached_attachments]
         if message.system_id:
             try:
-                users = cloud_api.System.basic_users(session['username'], session['password'], session['username'])
+                users = cloud_api.System.basic_users(session['username'], session['password'], session['username']).get('sharing', [])
             except:
                 users = []
 
             try:
                 if not users:
-                    users = cloud_api.System.users(session, message.system_id) if session.get('access_token') else {'sharing': []}
+                    users = cloud_api.System.users(session, message.system_id).get('sharing', []) if session.get('access_token') else []
 
             except:
                 message.result = RESULT_STATES.failure
                 message.save()
                 return
-
-            activated_cloud_users = Account.objects.annotate(email_lower=Lower('email')).filter(email_lower__in=[email.lower() for email in message.targets]).exclude(activated_date=None).values_list('email_lower', flat=True)
-            valid_recipients = [*activated_cloud_users, *users]
-            message.targets = [email for email in message.targets if email in valid_recipients]
+            system_emails = [email['accountEmail'].lower() for email in users]
+            message_targets = [email.lower() for email in message.targets if email.lower() in system_emails]
+            activated_cloud_users = Account.objects.annotate(email_lower=Lower('email')).filter(email_lower__in=message_targets).exclude(activated_date=None).values_list('email_lower', flat=True)
+            message.targets = [email for email in message_targets if email in activated_cloud_users]
             emails = message.targets
 
 

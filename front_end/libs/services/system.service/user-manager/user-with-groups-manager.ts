@@ -305,6 +305,9 @@ export class UserWithGroupsManager extends UserManager {
                 user.isCloudOwner = user.type === UserType.cloud && user.isOwner;
                 user.isLocalOwner = user.type === UserType.local && user.isOwner;
                 user.canBeEdited = this.canBeEdited(user);
+                user.hasCustomPermissions =
+                    user.permissions !== 'none' ||
+                    Object.keys(user.resourceAccessRights).length > 0;
 
                 if (
                     this.userId === user.id ||
@@ -416,6 +419,7 @@ export class UserWithGroupsManager extends UserManager {
         groupIds,
         type,
         resourceAccessRights,
+        hasCustomPermissions,
     }: NxUser): RestV3User {
         return {
             id,
@@ -428,6 +432,7 @@ export class UserWithGroupsManager extends UserManager {
             groupIds,
             type,
             resourceAccessRights,
+            hasCustomPermissions,
         };
     }
 }

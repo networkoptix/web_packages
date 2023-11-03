@@ -27,7 +27,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
-import { cleanId } from '@utils/general';
+import { cleanId, dirtyId } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import type { ms } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
@@ -282,6 +282,10 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         archiveRanges: Record<string, BaseTimeRange>,
     ): ViewCamera {
         this.hasCameras = true;
+        const currentUser = this.system?.permissionManager.currentUser$$();
+        const canEditSpecificCamera =
+            currentUser?.resourceAccessRights?.[dirtyId(c.id)]?.includes('edit');
+        const canEdit = canEditSpecificCamera || currentUser.isAdmin;
         const result = new ViewCamera(
             c.id,
             c.parentId,
@@ -308,6 +312,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this.system.info?.system2faEnabled,
             c.mediaStreams,
             c.rotation,
+            canEdit,
         );
         return result;
     }

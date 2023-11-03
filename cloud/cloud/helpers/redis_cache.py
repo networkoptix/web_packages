@@ -36,7 +36,7 @@ def _wrap_close(loop):
         if not (pools_ref := getattr(thread_local, 'pools_ref', None)) or not pools_ref():
             return self.close(*args, **kwargs)
         if pool := pools_ref().pop(loop, None):
-            logger.info(f"Loop {id(loop)} is closing. Close pool {id(pool)}")
+            logger.debug(f"Loop {id(loop)} is closing. Close pool {id(pool)}")
             if not self.is_closed():
                 # self.run_until_complete(pool.disconnect())
                 pass

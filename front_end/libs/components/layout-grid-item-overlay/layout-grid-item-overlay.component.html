@@ -18,7 +18,9 @@
 <div
     class="nx-layout-grid-item-overlay"
     [ngStyle]="getScaleStyle$ | async"
+    [cdkContextMenuTriggerFor]="nodeActionMenu"
     [cdkMenuTriggerFor]="scaled$$() ? nodeActionMenu : null"
+    (dblclick)="fullscreenAction$$().action?.($event)"
     [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide, hide: hide }"
 >
     <ng-template
@@ -31,7 +33,7 @@
             *ngIf="menuItem"
             nx-add-svg-src
             [ngClass]="{
-                active: menuItem.checked$$?.()
+                checked: menuItem.checked$$?.()
             }"
             [src]="menuItem.icon"
             [svgStyle]="{
@@ -62,10 +64,7 @@
         </div>
     </div>
 
-    <div
-        class="quick-actions"
-        *ngIf="layoutsEditable"
-    >
+    <div class="quick-actions">
         <div
             class="action-icon"
             *ngIf="menu$$()"

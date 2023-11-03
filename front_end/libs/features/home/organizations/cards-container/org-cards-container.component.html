@@ -45,6 +45,7 @@
             >
                 <div *cdkDragPlaceholder></div>
                 <nx-card
+                    class="card-content"
                     [icon]="icons.dir + 'folder2.svg'"
                     [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
                 >
@@ -67,7 +68,7 @@
                 [cdkDragData]="system"
             >
                 <div *cdkDragPlaceholder></div>
-                <nx-card>
+                <nx-card class="card-content">
                     <h3>{{ system.name }}</h3>
                     <div>12</div>
                 </nx-card>

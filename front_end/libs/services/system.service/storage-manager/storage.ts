@@ -10,6 +10,7 @@ export type StorageResponses = [ec2Storage[], any, any, any];
 export enum STORAGE_TYPES {
     LOCAL = 'local',
     USB = 'usb',
+    REMOVABLE = 'removable', // Loooks like newer systems use this instead of usb
     NETWORK = 'smb',
     SYSTEM_NETWORK = 'network',
     CLOUD = 'cloud',
@@ -167,7 +168,8 @@ export class CurrentStorageState {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    #checkCanStoreAnalytics = ({ storageType }: Storage) => storageType === STORAGE_TYPES.LOCAL;
+    #checkCanStoreAnalytics = ({ storageType, isWritable }: Storage) =>
+        isWritable && [STORAGE_TYPES.LOCAL, STORAGE_TYPES.REMOVABLE].includes(storageType);
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     checkAnalytics = (storage: Storage) => ({

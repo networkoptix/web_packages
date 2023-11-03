@@ -56,32 +56,33 @@
                 }"
             >
                 <ng-container *ngIf="!bookmarks.length">
-                    <svg-icon
-                        nx-add-svg-src
-                        [src]="noBksImgSrc"
-                    >
-                    </svg-icon>
                     <div
+                        *ngIf="creationCutOffTimeMS$ | async; else noBookmarksYet"
                         class="no-bookmarks-content"
-                        *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText"
                     >
-                        <h2 translate>Nothing found</h2>
-                        <span
-                            class="no-bookmarks-info"
-                            translate
-                            >Please change search keywords</span
-                        >
+                        <nx-page-placeholder
+                            type="NO_BOOKMARKS"
+                            placeholderTitle="{{ 'No matching results.' | translate }}"
+                            class="page-placeholder"
+                        ></nx-page-placeholder>
                         <button
                             (click)="clearAllFilters()"
-                            class="btn btn-primary clear-filters"
+                            class="clear-filters"
                             type="button"
                             translate
                         >
-                            Clear search
+                            Clear Filters
                         </button>
                     </div>
-                    <ng-template #noBookmarksText>
-                        <span translate>You don't have any Bookmarks yet.</span>
+
+                    <ng-template #noBookmarksYet>
+                        <nx-page-placeholder
+                            type="NO_BOOKMARKS"
+                            placeholderTitle="{{
+                                'You don\'t have any Bookmarks yet.' | translate
+                            }}"
+                            class="page-placeholder"
+                        ></nx-page-placeholder>
                     </ng-template>
                 </ng-container>
                 <div

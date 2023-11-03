@@ -21,7 +21,7 @@ class CdbAccountAPIBase(CdbAPIModuleBase):
     """
     Account API. /cdb/account
     """
-    
+
     base_path = '/cdb/account'
 
     def register(
@@ -413,7 +413,7 @@ class BatchRequestItems(typing.TypedDict):
 
 
 class CdbSystemAPIBase(CdbAPIModuleBase):
-    
+
     base_path = '/cdb/systems'
 
     def get_systems(
@@ -1075,7 +1075,7 @@ class CdbSystemAPIBase(CdbAPIModuleBase):
 
 
 class CdbSystemTransferAPIBase(CdbAPIModuleBase):
-    
+
     base_path = '/cdb/offered-systems'
 
     def systems_offers(
@@ -1254,7 +1254,7 @@ class CdbSystemTransferAPIBase(CdbAPIModuleBase):
 
 
 class CdbAuthSupportAPIBase(CdbAPIModuleBase):
-    
+
     base_path = '/cdb/auth'
 
     def get_nonce(
@@ -1370,7 +1370,7 @@ class CdbAuthSupportAPIBase(CdbAPIModuleBase):
 
 
 class Cdb2faAPIBase(CdbAPIModuleBase):
-    
+
     base_path = '/cdb/account/self/2fa'
 
     def get_totp_secret_key(
@@ -1532,3 +1532,44 @@ class Cdb2faAPIBase(CdbAPIModuleBase):
         """
         return self.delete(f'/backup-code/{code}', headers=headers, auth=auth, **kwargs)
 
+
+class CdbOrganizationAPIBase(CdbAPIModuleBase):
+    base_path = '/cdb/organizations'
+
+    def bind(
+            self,
+            id: str,
+            name: str,
+            customization: str,
+            opaque: str,
+            organization_id: str,
+            headers: typing.Optional[dict] = None,
+            auth: AUTH_TYPES.BASIC_BEARER = None,
+            **kwargs
+    ) -> typing.Union[httpx.Response, typing.Awaitable[httpx.Response]]:
+        """
+        POST /cdb/systems/bind
+        Register a new system.
+        Create new system and bind it to the organization specified in the request path. The system will be owned by the organization.
+        Note: No users are added to the system by this call. All access is available through the organizations API only.
+        id and authKey attributes from the response must be reported to the VMS system immediately so that the VMS may use them to interact with the Cloud. There is no way to request the key again.
+        Args:
+            id (str, optional): If specified, then an attempt to assign this id will be made. If the id was alredy taken, an error is raised.
+            name (str, required): System name, non-unique.
+            customization (str, required): Customization name
+            opaque (str, required): Vms-specific data. Transparently stored and returned.
+            organization_id (str, required): Organization ID which will own the cloud system
+            auth (Union[httpx.BasicAuth, BearerTokenAuth, RequestedTokenAuth], optional): authentication
+            headers (dict, optional): request headers dict
+            **kwargs: request handler arguments
+
+        Returns:
+
+        """
+        data = {
+            # "id": '',
+            "name": name,
+            "customization": customization,
+            "opaque": opaque
+        }
+        return self.post(f"/{organization_id}/systems", json=data, headers=headers, auth=auth, **kwargs)

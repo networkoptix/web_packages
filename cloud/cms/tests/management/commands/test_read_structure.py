@@ -1,3 +1,6 @@
+import json
+import os.path
+
 import pytest
 from unittest.mock import call
 from uuid import uuid4
@@ -259,47 +262,15 @@ def test_read_structure(mocker, db):
             expected_read_structure_file_calls)
 
 
-def test_find_or_add_language(mocker, db):
-    code, language_name = [str(uuid4()) for _ in range(2)]
-    language_code = code[:8]
-    json_content = json.dumps({'language_name': language_name})
+def test_read_languages(mocker,db):
+    with open(os.path.join(settings.BASE_DIR, 'cms/structures/languages.json'), 'r') as f:
+        languages = json.load(f)
+    mock_get_or_create = mocker.patch('cms.models.Language.objects.get_or_create', return_value=(Language(code=f'{uuid4()}', name=f'{uuid4()}'), True))
 
-    with FileTest(content=json_content) as json_path:
-        mock_join = mocker.patch.object(
-            os.path, 'join', return_value=json_path)
+    read_languages()
 
-        language = find_or_add_language(language_code)
-
-        assert language
-        assert language.id
-        assert language.code == language_code
-        assert language.name == language_name
-
-        mock_join.assert_called_once_with(
-            SOURCE_DIR.replace(
-                "{{skin}}", settings.DEFAULT_SKIN),
-            "static", "lang_" + language_code,
-            "language_compiled.json"
-        )
-
-
-def test_read_languages(mocker):
-    skin_name, *languages = [
-        str(uuid4()) for _ in range(5, 15)]
-    languages_dir = os.path.join(
-        SOURCE_DIR.replace("{{skin}}", skin_name), "static")
-    language_dirs = [
-        f'lang_{language}' for language in languages]
-    mock_listdir = mocker.patch.object(
-        os, 'listdir', return_value=language_dirs)
-    mock_find_or_add_language = mocker.patch(
-        f'{BASE_PATH}.find_or_add_language')
-
-    read_languages(skin_name)
-
-    mock_listdir.assert_called_once_with(languages_dir)
-    mock_find_or_add_language.assert_has_calls(
-        call(language) for language in languages)
+    mock_get_or_create.assert_has_calls(
+        call(name=language['name'], code=language['code']) for language in languages)
 
 
 class TestReadStructure:
@@ -354,5 +325,5 @@ class TestReadStructure:
             call(instance.style.SUCCESS(
                 message))
             for message in expected_std_messages)
-        mock_read_languages.assert_called_with(settings.DEFAULT_SKIN)
+        mock_read_languages.assert_called()
         assert deployment_cache.get(settings.DEPLOYMENT_READY)

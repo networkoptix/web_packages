@@ -1,6 +1,6 @@
 @use "utils" as *;
 @import "./native-theme/theme_palette";
-@import "_theme_palette";
+@import "theme_palette";
 
 html[data-theme="dark"], .theme-override[data-theme="dark"] {
     body {
@@ -159,6 +159,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --placehoder-title-color   : #E1E7EA; //$light4;
     --placehoder-body-color    : #A5B7C0; //light10;
     --placeholder-description-text: #{$light10};
+    --placeholder-bookmarks-bg-color: #A5B6C0;
 
     --progress-bar-color                  : #4E6977; //$dark16
     --progress-bar-border-color           : #4E6977; //$dark16
@@ -665,7 +666,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
 
     @include generateVarAndRgb(--system-card-bg-grad0, $dark4);
     @include generateVarAndRgb(--system-card-bg-grad100, $dark5);
-    --system-card-bg: var(--dark7);
+    --system-card-bg: var(--dark5);
     --system-card-offline-color: var(--light4);
     --system-card-border-color: var(--dark10);
     --system-card-owner-color: var(--dark16);
@@ -674,7 +675,7 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --card-menu-dots-fill: var(--light4);
     --card-placeholder-shadow: inset 0 0.25rem 0.5rem rgba(var(--light6--rgb), 0.2);
     --card-drag-shadow: 0 1rem 2rem rgba(var(--light6--rgb), 0.2);
-
+    --card-border-color: var(--dark7);
     --card-context-bg: var(--dark9);
     --card-context-shadow: 0 1rem 2rem rgba(var(--light6--rgb), 0.4);
 
@@ -740,8 +741,6 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
         rgba(var(--dark7--rgb), 1)
     );
     --bookmarks-card-video-bg: var(--dark6);
-    --bookmarks-no-results-text: var(--dark17);
-    --bookmarks-no-results-title: var(--light1);
 
     --tour-background: rgba(var(--dark9--rgb), 0.4);
 
@@ -761,19 +760,20 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --sidebar-tab-hover: var(--dark6);
     --sidebar-tab-closed: var(--dark8);
 
-    --context-menu-bg: var(--drop-menu-navigation-bg);
+    --context-menu-bg: var(--drop-menu-navigation-bg); // $dark7
     --context-menu-shadow: rgba(var(--dark1--rgb), 0.4);
     --context-menu-hr: var(--dark10);
-    --context-menu-item-text: var(--btn-text-color);
-    --context-menu-item-icon: var(--svg-path-dark-color);
+    --context-menu-item-text: var(--btn-text-color); // $light4
+    --context-menu-item-icon: var(--svg-path-dark-color); // $light4
     --context-menu-item-text-hover: var(--light1);
     --context-menu-item-icon-hover: var(--light1);
     --context-menu-item-bg-hover: var(--brand-core);
     --context-menu-item-expanded-bg: var(--dark9);
 
     --overlay-action-bg: rgba(var(--dark3--rgb), 0.6);
+    --overlay-action-bg-active: rgba(var(--dark3--rgb), 0.5);
+    --overlay-action-bg-hover: rgba(var(--dark3--rgb), 0.7);
     --overlay-action-svg: rgba(var(--light1--rgb), 0.8);
-    --overlay-action-svg-hover: var(--light1);
     --overlay-action-text: var(--light1);
     --overlay-text: var(--light1);
     --overlay-status-title: var(--light10);

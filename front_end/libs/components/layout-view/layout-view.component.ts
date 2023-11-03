@@ -130,14 +130,14 @@ export class NxLayoutViewComponent {
                 this.store.select(selectResourcesValuesBySystemId(id)),
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
-                new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser())),
+                new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser$$())),
             ]);
         }),
         filter(([resources]) => Object.values(resources).every(Boolean)),
         map(cloneDeep),
         map(
             ([
-                { cameras, servers, webPages },
+                { cameras, servers, webPages = [] },
                 currentLayout,
                 layouts,
                 currentUser,
@@ -163,9 +163,11 @@ export class NxLayoutViewComponent {
                         }
                     }
 
-                    const nonWebRtcCodec = [7, 173].includes(
-                        (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
+                    const primaryStream = (camera.parameters.mediaStreams?.streams ?? []).find(
+                        ({ encoderIndex }) => encoderIndex === 0,
                     );
+
+                    const nonWebRtcCodec = [7, 173].includes(primaryStream?.codec);
                     return {
                         ...cameras,
                         [camera.id]: {
@@ -239,10 +241,10 @@ export class NxLayoutViewComponent {
                                 id: details.id,
                                 type: ResourceType.LAYOUT,
                                 name: details.name,
-                                editable:
-                                    currentUser?.id === details.parentId || currentUser?.isAdmin,
+                                owned: currentUser?.id === details.parentId || currentUser?.isAdmin,
                                 shared:
                                     details.parentId === '{00000000-0000-0000-0000-000000000000}',
+                                locked: details.locked,
                                 details,
                             } as SharableResourceLeafNode<Layout>),
                     )
@@ -373,7 +375,7 @@ export class NxLayoutViewComponent {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
                 const isResourceId = Object.values(layoutItems).some(items =>
-                    items.some(({ id }) => id === layoutId),
+                    items?.some(({ id }) => id === layoutId),
                 );
 
                 // Prevent showing a layout that was accidentally saved with the same ID as a resource.
@@ -576,7 +578,7 @@ export class NxLayoutViewComponent {
                     resourceId: `{${id}}`,
                     resourcePath: '',
                     right: 1,
-                    rotation,
+                    rotation: rotation || 0,
                     top: 0,
                     zoomBottom: 0,
                     zoomLeft: 0,
@@ -588,7 +590,7 @@ export class NxLayoutViewComponent {
             locked:
                 !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
             logicalId: 0,
-            name: 'Focus View',
+            name: this.layoutStateService.focusViewToken,
             systemId,
             parentId: this.accountService.account.id,
         };

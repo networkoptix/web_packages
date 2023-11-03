@@ -1,3 +1,10 @@
+<ng-template #currentItemContext>
+    <nx-context-menu
+        [context]="currentNode"
+        [menuItems]="menuItemsByType[currentNode.type]"
+    />
+</ng-template>
+
 <div class="resource-tree-wrapper">
     <nx-search
         *ngIf="layoutGridService.isLeftMenuOpen$$()"
@@ -87,7 +94,8 @@
                         node.type === RESOURCE_TYPE.LAYOUT ||
                         !node.type
                     "
-                    (click)="node.type && layoutGridService.changeView.next(node)"
+                    (click)="handleSingleClick(node)"
+                    (dblclick)="handleDoubleClick(node)"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
                             event: $event,
@@ -100,7 +108,7 @@
                         (showTooltip$ | async) &&
                         (node.type === RESOURCE_TYPE.CAMERA
                             ? cameraTooltip
-                            : node.type === RESOURCE_TYPE.SERVER
+                            : node.type === RESOURCE_TYPE.SERVER && CONFIG.featureFlags.layoutsDemo
                             ? serverTooltip
                             : '')
                     "
@@ -131,11 +139,19 @@
                         class="tooltip-offset-target"
                     ></div>
                     <div *cdkDragPreview>
-                        <div class="add-preview">
+                        <div
+                            class="add-preview"
+                            *ngIf="node.type !== RESOURCE_TYPE.CAMERA"
+                        >
                             <ng-container
-                                *ngTemplateOutlet="nodeInfo; context: { node: node, preview: true }"
+                                [ngTemplateOutlet]="nodeInfo"
+                                [ngTemplateOutletContext]="{ node: node, preview: true }"
                             ></ng-container>
                         </div>
+                        <ng-container
+                            *ngIf="node.type == RESOURCE_TYPE.CAMERA"
+                            [ngTemplateOutlet]="cameraTooltip"
+                        ></ng-container>
                     </div>
 
                     <ng-container
@@ -274,7 +290,7 @@
                                 'width.px': '20',
                                 'height.px': '20'
                             }"
-                            [src]="icons.dir + menuItem.icon + '.svg'"
+                            [src]="icons.dirLayouts + 'add.svg'"
                         >
                         </svg-icon>
                     </button>
@@ -294,10 +310,11 @@
                         </ng-template>
                         <nx-text-editable
                             *ngIf="editedLayout$$() === node.id; else searchHighlight"
-                            class="node-name ellipsis"
+                            class="node-name"
                             [(ngModel)]="node.name"
                             [allowUserFocus]="false"
                             [editEnabled]="true"
+                            [required]="true"
                             (onFocusChanged)="!$event && handleRename(node)"
                             (onEditModeCancelled)="editedLayout$$.set(null)"
                         >
@@ -315,7 +332,7 @@
                                 'width.px': '20',
                                 'height.px': '20',
                             }"
-                            [src]="icons.dir + 'menu_icn.svg'"
+                            [src]="icons.dirLayouts + 'menu.svg'"
                         >
                         </svg-icon>
                     </button>
@@ -360,7 +377,7 @@
                 opacity: expandable ? '1' : '0',
                 }"
                     svgClass="dark-17-svg"
-                    [src]="icons.dirTextButtons + (expanded ? 'arrow_close.svg' : 'arrow_open.svg')"
+                    [src]="icons.dirLayouts + (expanded ? 'arrow_close.svg' : 'arrow_open.svg')"
                 >
                 </svg-icon>
             </ng-template>

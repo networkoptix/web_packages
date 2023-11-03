@@ -187,7 +187,7 @@ export const icons = {
     dirTextButtons: `/${staticBase}/images/icons/text_buttons/`,
     dirHeader: `/${staticBase}/images/icons/header/`,
     dirLayouts: `/${staticBase}/images/icons/layouts/`,
-    dirLayoutsCamera: `/${staticBase}/images/icons/layouts/camera/`,
+    dirLayoutsOverlay: `/${staticBase}/images/icons/layouts/overlay/`,
     dirNonStandard: `/${staticBase}/images/icons/`,
     dirNonStandardTriangle: `/${staticBase}/images/icons/triangle/`,
     dirNonStandardView: `/${staticBase}/images/icons/view/`,
