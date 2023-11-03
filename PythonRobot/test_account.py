@@ -17,7 +17,6 @@ from email_access import EmailClient
 from email_access import get_random_email
 from resource_import import register_and_activate_account
 from resource_import import send_restore_password_email
-from resource_import import verify_in_account_page
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"
@@ -355,6 +354,18 @@ def test_language_change_is_new_default():
             info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
             info_element.wait_until_visible()
         resource_import.check_language_logged_in(email, password)
+
+
+def verify_in_account_page(driver):
+    TextField(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
+    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
+    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
+    DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
+    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
+    Button(driver, rb.DELETE_ACCOUNT_BUTTON).wait_until_visible()
+    Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_not_visible()
+    Button(driver, rb.ACCOUNT_CANCEL).wait_until_not_visible()
+    time.sleep(0.5)
 
 
 if __name__ == "__main__":

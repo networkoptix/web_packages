@@ -171,18 +171,6 @@ def validate_log_out(driver):
     PageText(driver, rb.ANONYMOUS_BODY).wait_until_visible()
 
 
-def verify_in_account_page(driver):
-    TextField(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
-    DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
-    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    Button(driver, rb.DELETE_ACCOUNT_BUTTON).wait_until_visible()
-    Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_not_visible()
-    Button(driver, rb.ACCOUNT_CANCEL).wait_until_not_visible()
-    time.sleep(0.5)
-
-
 def validate_on_register_page(driver):
     TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
