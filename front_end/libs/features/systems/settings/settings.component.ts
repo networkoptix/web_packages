@@ -877,7 +877,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.archivesPresent.has(id) && recordingStatus !== RecordingStatus.Recording) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
-        return menus.systemSettings.cameras.statusIcons[status];
+        return menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 
     getServerStatusIcon({ status }: NxSystemServer): string {
