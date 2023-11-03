@@ -6,7 +6,6 @@ from contextlib import contextmanager
 from typing import ContextManager
 
 import urllib3
-from selenium.webdriver.remote.webdriver import WebDriver
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
@@ -108,7 +107,7 @@ def get_lang_list():
         return json.load(langDict)
 
 
-def logout_japanese(driver: WebDriver):
+def logout_japanese(driver):
     Pane(driver, rb.BACKDROP).wait_until_does_not_exist()
     element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""
     DropDownOption(driver, element).wait_until_visible()
@@ -151,7 +150,7 @@ def register(driver, first_name, last_name, email, password, checked=False, view
 
 
 # from robot_tests/Resources/front-end-resources/restore-pass-resource.robot
-def send_restore_password_email(driver: WebDriver, email: str) -> None:
+def send_restore_password_email(driver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
@@ -167,12 +166,12 @@ def send_restore_password_email(driver: WebDriver, email: str) -> None:
     Button(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 
-def validate_log_out(driver: WebDriver):
+def validate_log_out(driver):
     Pane(driver, rb.BACKDROP).wait_until_not_visible(10)
     PageText(driver, rb.ANONYMOUS_BODY).wait_until_visible()
 
 
-def verify_in_account_page(driver: WebDriver):
+def verify_in_account_page(driver):
     TextField(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
     TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
     TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
@@ -184,7 +183,7 @@ def verify_in_account_page(driver: WebDriver):
     time.sleep(0.5)
 
 
-def validate_on_register_page(driver: WebDriver):
+def validate_on_register_page(driver):
     TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
     TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
