@@ -1,6 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, OnInit } from '@angular/core';
+import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { LetDirective } from '@ngrx/component';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -24,9 +26,13 @@ import { icons, apiBase } from '@static-variables';
     standalone: true,
     imports: [
         CommonModule,
-        TranslateModule,
-        NgxTranslateCutModule,
+        RouterModule,
+
         AngularSvgIconModule,
+        NgxTranslateCutModule,
+        LetDirective,
+        TranslateModule,
+
         NxAddSvgSrcDirective,
     ],
 })
