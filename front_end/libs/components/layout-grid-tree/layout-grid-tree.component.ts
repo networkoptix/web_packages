@@ -6,9 +6,12 @@ import { CommonModule } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
+    effect,
     Inject,
     Input,
     signal,
+    TemplateRef,
+    ViewChild,
     WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -274,12 +277,21 @@ export class NxLayoutGridTreeComponent {
     @Input() layout: Layout;
     @Input() system: NxSystem;
     @Input() dataSource: BaseResourceNode[];
-    @Input() layoutItemLookup: LayoutResourceTree;
+    layoutItemLookup$$ = signal<LayoutResourceTree | null>(null);
+    @Input() set layoutItemLookup(value: LayoutResourceTree) {
+        this.layoutItemLookup$$.set(value);
+    }
     @Input() treeControl: NestedTreeControl<ResourceNode, string>;
     @Input() errorIcons: Record<string, string>;
     @Input() dragging: boolean;
     @Input() showTooltip$: Observable<boolean>;
     @Input() changingLayout: string | boolean = true;
+
+    @ViewChild('currentItemContext') set currentItemContext(value: TemplateRef<unknown>) {
+        this.layoutStateService.contextMenu = value;
+    }
+
+    currentNode: ResourceNode;
 
     query$ = this.layoutStateService.paramStateHandler.state$.pipe(
         map(({ queryParams: { search } }) => search?.[0] || ''),
@@ -344,6 +356,27 @@ export class NxLayoutGridTreeComponent {
         if (this.CONFIG.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
+        effect(() => {
+            const findNode = (nodes: ResourceNode[], id: string): ResourceNode | undefined => {
+                for (const node of nodes) {
+                    if (cleanId(node.details?.id) === cleanId(id)) {
+                        return node;
+                    }
+
+                    const childNode = node.children && findNode(node.children, id);
+                    if (childNode) {
+                        return childNode;
+                    }
+                }
+            };
+
+            const { params: { layoutId } = { layoutId: null } } =
+                this.layoutStateService.paramStateHandler.state$$();
+            const { tree = null } = this.layoutItemLookup$$() || {};
+            if (layoutId && tree) {
+                this.currentNode = findNode(tree, layoutId);
+            }
+        });
     }
 
     ngOnChanges({ dataSource }: NgChanges<NxLayoutGridTreeComponent>): void {
@@ -470,7 +503,7 @@ export class NxLayoutGridTreeComponent {
     createLayoutItem = (id: string): LayoutItem => {
         let rotation = 0;
         const resourceId = dirtyId(id);
-        const unknownItem = this.layoutItemLookup?.[resourceId];
+        const unknownItem = this.layoutItemLookup$$()?.[resourceId];
 
         if (assertResourceOfType.camera(unknownItem)) {
             rotation = unknownItem.details.parameters?.rotation ?? 0;

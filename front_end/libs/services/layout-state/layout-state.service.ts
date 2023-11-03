@@ -1,5 +1,5 @@
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
-import { Injectable, Injector, runInInjectionContext, signal } from '@angular/core';
+import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -39,6 +39,8 @@ export class LayoutStateService {
     duplicatedLayouts$$ = signal<string[]>([]);
 
     focusViewToken = uuid();
+
+    contextMenu: TemplateRef<unknown>;
 
     createNewLocalLayout(items?: LayoutItem[]): string;
     createNewLocalLayout(name: string, items?: LayoutItem[]): string;

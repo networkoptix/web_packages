@@ -1,5 +1,5 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
-import { CdkMenuTrigger } from '@angular/cdk/menu';
+import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
 import { CommonModule, DOCUMENT, formatDate } from '@angular/common';
 import {
     ChangeDetectionStrategy,
@@ -104,6 +104,7 @@ const EMPTY_MENU_ACTION = {
         NxTooltipDirective,
         NxContextMenu,
         CdkMenuTrigger,
+        CdkContextMenuTrigger,
     ],
     hostDirectives: [NxResizeObserver],
 })

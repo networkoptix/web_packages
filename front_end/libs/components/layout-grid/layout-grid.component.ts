@@ -1,4 +1,5 @@
 import { CdkDrag, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
@@ -304,6 +305,7 @@ const calculateResize = (
         NxClickElsewhereDirective,
         PortalModule,
         NxLayoutGridItemOverlayComponent,
+        CdkContextMenuTrigger,
     ],
 })
 export class NxLayoutGridComponent {

@@ -1,3 +1,10 @@
+<ng-template #currentItemContext>
+    <nx-context-menu
+        [context]="currentNode"
+        [menuItems]="menuItemsByType[currentNode.type]"
+    />
+</ng-template>
+
 <div class="resource-tree-wrapper">
     <nx-search
         *ngIf="layoutGridService.isLeftMenuOpen$$()"
