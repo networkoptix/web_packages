@@ -1,7 +1,7 @@
 import os
 
 from NoptixLibrary.suite import Suite, Mediaserver, CloudAccount
-from generic_elements._wrappers import ModalDialog
+from nx_modal import SettingsSavedModalWindow
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from resource_import import get_chrome
@@ -112,7 +112,7 @@ def audit_trail_backup_and_statistics_section(server: Mediaserver):
         advanced_settings.get_hide_advanced_settings_button().wait_until_visible()
         block_one.get_additional_local_fs_types_input().input_text('test Settings changed')
         system_admin.get_save_button().click()
-        success_dialog = ModalDialog(driver)
+        success_dialog = SettingsSavedModalWindow(driver)
         success_dialog.wait_until_visible()
         assert 'Success' == success_dialog.get_header_text()
         assert 'Settings saved.' == success_dialog.get_body_text()
@@ -157,7 +157,7 @@ def connection_and_email(server: Mediaserver):
         advanced_settings.get_connection_alive_update_interval_input().wait_until_visible()
         advanced_settings.get_connection_alive_update_interval_input().input_text('62')
         system_admin.get_save_button().click()
-        success_dialog = ModalDialog(driver)
+        success_dialog = SettingsSavedModalWindow(driver)
         success_dialog.wait_until_visible()
         success_dialog.close()
         actual_api_result = server.api.get_system_settings_from_server()[

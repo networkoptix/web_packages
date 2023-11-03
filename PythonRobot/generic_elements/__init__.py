@@ -12,6 +12,7 @@ from ._wrappers import DropDownOption
 from ._wrappers import Image
 from ._wrappers import Link
 from ._wrappers import MenuNode
+from ._wrappers import ModalWindow
 from ._wrappers import NxCheckbox
 from ._wrappers import Page
 from ._wrappers import PageText
@@ -38,6 +39,7 @@ __all__ = [
     'Image',
     'Link',
     'MenuNode',
+    'ModalWindow',
     'NxCheckbox',
     'Page',
     'PageText',
