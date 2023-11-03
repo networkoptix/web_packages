@@ -27,15 +27,15 @@ def test_register_invalid(driver, first, last, email, password, checked):
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
 
     invisible_elements = [
-                         rb.EMAIL_INVALID, 
-                         rb.EMAIL_ALREADY_REGISTERED, 
-                         rb.EMAIL_IS_REQUIRED, 
-                         rb.PASSWORD_BADGE, 
-                         rb.PASSWORD_IS_REQUIRED, 
-                         rb.PASSWORD_SPECIAL_CHARS, 
-                         rb.PASSWORD_IS_WEAK, 
-                         rb.FIRST_NAME_IS_REQUIRED, 
-                         rb.LAST_NAME_IS_REQUIRED, 
+                         rb.EMAIL_INVALID,
+                         rb.EMAIL_ALREADY_REGISTERED,
+                         rb.EMAIL_IS_REQUIRED,
+                         rb.PASSWORD_BADGE,
+                         rb.PASSWORD_IS_REQUIRED,
+                         rb.PASSWORD_SPECIAL_CHARS,
+                         rb.PASSWORD_IS_WEAK,
+                         rb.FIRST_NAME_IS_REQUIRED,
+                         rb.LAST_NAME_IS_REQUIRED,
                          rb.TERMS_AND_CONDITIONS_ERROR
                          ]
     for element in invisible_elements:
@@ -102,115 +102,115 @@ def check_terms_and_conditions_error(driver):
 
 # test-cases
 def invalid_email_1():
-    """1. Register Invalid Email 1 noptixqagmail.com"""   
+    """1. Register Invalid Email 1 noptixqagmail.com"""
     test_register_invalid(driver, "mark", "hamill", "noptixqagmail.com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_2():
     """2. Register Invalid Email 2 @gmail.com"""
     test_register_invalid(driver, "mark", "hamill", "@gmail.com", rb.BASE_PASSWORD, True)
- 
+
 def invalid_email_3():
     """3. Register Invalid Email 3 noptixqa@gmail..com"""
     test_register_invalid(driver, "mark", "hamill", "noptixqa@gmail..com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_4():
     """4. Register Invalid Email 4 noptixqa@192.168.1.1.0"""
     test_register_invalid(driver, "mark", "hamill", "noptixqa@192.168.1.1.0", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_5():
     """5. Register Invalid Email 5 noptixqa.@gmail.com"""
     test_register_invalid(driver, "mark", "hamill", "noptixqa.@gmail.com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_6():
     """6. Register Invalid Email 6 noptixq..a@gmail.c"""
     test_register_invalid(driver, "mark", "hamill", "noptixq..a@gmail.", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_7():
     """7. Register Invalid Email 7 noptixqa@-gmail.com"""
     test_register_invalid(driver, "mark", "hamill", "noptixqa@-gmail.com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_8():
     """8. Register Invalid Email 8 space"""
     test_register_invalid(driver, "mark", "hamill", " ", rb.BASE_PASSWORD, True)
- 
+
 def invalid_email_9():
     """9. Register Invalid Email 9 myemail@"""
     test_register_invalid(driver, "mark", "hamill", "myemail@", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_10():
     """10. Register Invalid Email 10 myemail@gmail"""
     test_register_invalid(driver, "mark", "hamill", "myemail@gmail", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_11():
     """11. Register Invalid Email 11 myemail@.com"""
     test_register_invalid(driver, "mark", "hamill", "myemail@.com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_12():
     """12. Register Invalid Email 12 my@email@gmail.com"""
     test_register_invalid(driver, "mark", "hamill", "my@email@gmail.com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_13():
     """13. Register Invalid Email 13 myemail@ gmail.com"""
     test_register_invalid(driver, "mark", "hamill", "myemail@ gmail.com", rb.BASE_PASSWORD, True)
-    
+
 def invalid_email_14():
     """14. Register Invalid Email 14 myemail@gmail.com;"""
     test_register_invalid(driver, "mark", "hamill", "myemail@gmail.com;", rb.BASE_PASSWORD, True)
-    
+
 def empty_email():
     """15. Register Empty Email"""
     test_register_invalid(driver, "mark", "hamill", "", rb.BASE_PASSWORD, True)
 
 def registered_email():
-    """16. Register Registered Email"""                                
+    """16. Register Registered Email"""
     test_register_invalid(driver, "mark", "hamill", rb.EXISTING_EMAIL, rb.BASE_PASSWORD, True)
 
 def short_password():
-    """17. Register Short Password asdfghj"""                        
+    """17. Register Short Password asdfghj"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SEVEN_CHAR_PASSWORD, True)
 
 def weak_1_lowercase_password():
-    """18. Register Weak 1 Lowercase Password adrhartjad"""            
+    """18. Register Weak 1 Lowercase Password adrhartjad"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWERCASE_PASSWORD, True)
 
 def weak_2_uppercase_password():
-    """19. Register Weak 2 Uppercase Password ADRHARTJAD"""           
+    """19. Register Weak 2 Uppercase Password ADRHARTJAD"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPERCASE_PASSWORD, True)
 
 def weak_3_numbers_password():
-    """20. Register Weak 3 Numbers Password 13462344"""                
+    """20. Register Weak 3 Numbers Password 13462344"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.NUMBERS_PASSWORD, True)
 
 def weak_4_symbol_only_password():
-    """21. Register Weak 4 Symbol only Password !@#$%^&*()_-+="""     
+    """21. Register Weak 4 Symbol only Password !@#$%^&*()_-+="""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SYMBOL_ONLY_PASSWORD, True)
 
 def fair_1_lower_and_uppercase():
-    """22. Register Fair 1 Lower and Uppercase"""                      
+    """22. Register Fair 1 Lower and Uppercase"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_UPPER_PASSWORD, True)
 
 def fair_2_lowercase_and_numbers():
-    """23. Register Fair 2 Lowercase and numbers"""                    
+    """23. Register Fair 2 Lowercase and numbers"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_NUMBER_PASSWORD, True)
 
 def fair_3_lowercase_and_symbols():
-    """24. Register Fair 3 Lowercase and Symbols"""                    
+    """24. Register Fair 3 Lowercase and Symbols"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_SYMBOL_PASSWORD, True)
 
 def fair_4_uppercase_and_numbers():
-    """25. Register Fair 4 Uppercase and numbers"""                   
+    """25. Register Fair 4 Uppercase and numbers"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPER_NUMBER_PASSWORD, True)
 
 def fair_5_uppercase_and_symbols():
-    """26. Register Fair 5 Uppercase and Symbols"""                   
+    """26. Register Fair 5 Uppercase and Symbols"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPER_SYMBOL_PASSWORD, True)
 
 def fair_6_numbers_and_symbols():
-    """27. Register Fair 6 Numbers and Symbols"""              
+    """27. Register Fair 6 Numbers and Symbols"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.NUMBER_SYMBOL_PASSWORD, True)
 
 def good_1():
-    """28. Register Good 1 qweASD123"""                               
+    """28. Register Good 1 qweASD123"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_UPPER_NUMBER_PASSWORD, True)
 
 def good_2():
@@ -218,7 +218,7 @@ def good_2():
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_UPPER_SYMBOL_PASSWORD, True)
 
 def good_3():
-    """30. Register Good 3 qwe123!@#""" 
+    """30. Register Good 3 qwe123!@#"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_NUMBER_SYMBOL_PASSWORD, True)
 
 def good_4():
@@ -226,11 +226,11 @@ def good_4():
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPER_NUMBER_SYMBOL_PASSWORD, True)
 
 def common_password():
-    """32. Register Common Password qweasd123"""                  
+    """32. Register Common Password qweasd123"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.COMMON_PASSWORD, True)
 
 def cyrillic_password():
-    """33. Register Cyrillic Password Кенгшщзх"""                 
+    """33. Register Cyrillic Password Кенгшщзх"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.CYRILLIC_TEXT, True)
 
 def smiley_password():
@@ -238,7 +238,7 @@ def smiley_password():
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SMILEY_TEXT, True)
 
 def glyph_password():
-    """35. Register Glyph Password 您都可以享受源源不絕的好禮及優惠"""    
+    """35. Register Glyph Password 您都可以享受源源不絕的好禮及優惠"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.GLYPH_TEXT, True)
 
 def tm_password():
@@ -246,104 +246,104 @@ def tm_password():
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.TM_TEXT, True)
 
 def leading_space_password():
-    """37. Register Leading Space Password"""                         
+    """37. Register Leading Space Password"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, f' {rb.BASE_PASSWORD}', True)
 
-def trailing_space_password(): 
-    """38. Register Trailing Space Password"""                        
+def trailing_space_password():
+    """38. Register Trailing Space Password"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, f'{rb.BASE_PASSWORD} ', True)
 
 def middle_space_password():
-    """39. Register Middle Space Password qweasd 123"""               
+    """39. Register Middle Space Password qweasd 123"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
 def empty_password():
-    """40. Register Empty Password"""                                 
+    """40. Register Empty Password"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, "", True)
 
 def symbol_password():
-    """41. Register Symbol Password pass!@#$%^&*()_-+=;:''`~,./\|?[]{}"""    
+    """41. Register Symbol Password pass!@#$%^&*()_-+=;:''`~,./\|?[]{}"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SYMBOL_PASSWORD, True)
 
 def invalid_first_name():
-    """42. Register Invalid First Name"""                             
+    """42. Register Invalid First Name"""
     test_register_invalid(driver, " ", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
-def empty_first_name():    
-    """43. Register Empty First Name"""                                
+def empty_first_name():
+    """43. Register Empty First Name"""
     test_register_invalid(driver, "", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
 def invalid_last_name():
-    """44. Register Invalid Last Name"""                              
+    """44. Register Invalid Last Name"""
     test_register_invalid(driver, "mark", " ", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
-def empty_last_name(): 
-    """45. Register Empty Last Name"""                                 
+def empty_last_name():
+    """45. Register Empty Last Name"""
     test_register_invalid(driver, "mark", "", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
 def invalid_all():
-    """46. Register Invalid All"""                                     
+    """46. Register Invalid All"""
     test_register_invalid(driver, " ", " ", "noptixqagmail.com", rb.SEVEN_CHAR_PASSWORD, True)
 
 def terms_unchecked():
-    """47. Register Terms Unchecked"""                               
+    """47. Register Terms Unchecked"""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, False)
 
 def empty_all():
-    """48. Register Empty All"""                                    
+    """48. Register Empty All"""
     test_register_invalid(driver, "", "", " ", "", False)
 
-    
+
 
 if __name__ == "__main__":
     invalid_email_1()
     print(f'{Fore.WHITE}{invalid_email_1.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_2()
     print(f'{Fore.WHITE}{invalid_email_2.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_3()
     print(f'{Fore.WHITE}{invalid_email_3.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_4()
     print(f'{Fore.WHITE}{invalid_email_4.__doc__}\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_5()
     print(f'{Fore.WHITE}{invalid_email_5.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_6()
     print(f'{Fore.WHITE}{invalid_email_6.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_7()
     print(f'{Fore.WHITE}{invalid_email_7.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_8()
     print(f'{Fore.WHITE}{invalid_email_8.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_9()
     print(f'{Fore.WHITE}{invalid_email_9.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_10()
     print(f'{Fore.WHITE}{invalid_email_10.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_11()
     print(f'{Fore.WHITE}{invalid_email_11.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_12()
     print(f'{Fore.WHITE}{invalid_email_12.__doc__}\t\t\t{Fore.GREEN}| PASS |')
-    
+
     invalid_email_13()
     print(f'{Fore.WHITE}{invalid_email_13.__doc__}\t\t\t{Fore.GREEN}| PASS |')
-  
+
     invalid_email_14()
     print(f'{Fore.WHITE}{invalid_email_14.__doc__}\t\t\t{Fore.GREEN}| PASS |')
-  
+
     empty_email()
     print(f'{Fore.WHITE}{empty_email.__doc__}\t\t\t\t\t\t{Fore.GREEN}| PASS |')
-  
+
     registered_email()
     print(f'{Fore.WHITE}{registered_email.__doc__}\t\t\t\t\t\t{Fore.GREEN}| PASS |')
- 
+
     short_password()
     print(f'{Fore.WHITE}{short_password.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
 
@@ -363,7 +363,7 @@ if __name__ == "__main__":
     print(f'{Fore.WHITE}{fair_1_lower_and_uppercase.__doc__}\t\t\t\t\t{Fore.GREEN}| PASS |')
 
     fair_2_lowercase_and_numbers()
-    print(f'{Fore.WHITE}{fair_2_lowercase_and_numbers.__doc__}\t\t\t\t{Fore.GREEN}| PASS |') 
+    print(f'{Fore.WHITE}{fair_2_lowercase_and_numbers.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
 
     fair_3_lowercase_and_symbols()
     print(f'{Fore.WHITE}{fair_3_lowercase_and_symbols.__doc__}\t\t\t\t{Fore.GREEN}| PASS |')
@@ -441,4 +441,3 @@ if __name__ == "__main__":
     print(f'{Fore.WHITE}{empty_all.__doc__}\t\t\t\t\t\t\t{Fore.GREEN}| PASS |')
 
     driver.close()
-    
