@@ -92,6 +92,12 @@ class ServerApi:
     def get_users(self):
         return self._get('rest/v1/users?_format=JSON&_keepDefault=true')
 
+    def get_user_by_email(self, email):
+        users = self.get_users()
+        for user in users:
+            if user['email'] == email:
+                return user
+
     def get_storages_via_api(self):
         return self._get('rest/v1/servers/this/storages?_format=JSON')
 

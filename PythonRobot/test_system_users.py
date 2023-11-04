@@ -27,6 +27,7 @@ rb = RobotVariables("en_US")
 permissions = CloudAccount().PERMISSIONS
 viewer_permissions = permissions['viewer']
 admin_permissions = permissions['cloudAdmin']
+liveViewer_permissions = permissions['liveViewer']
 
 
 def owner_can_remove_user(server: Mediaserver):
@@ -118,7 +119,6 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
     owner = server.get_cloud_owner()
     cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    rb = RobotVariables("en_US")
     email_subject = rb.__getattr__("INVITED_TO_SYSTEM_EMAIL_SUBJECT").replace("{{message.system_name}}", server.name)
     with EmailClient(email_alias=email) as client:
         client.wait_for_email_subject(email_subject)
@@ -132,7 +132,6 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
     owner = server.get_cloud_owner()
     cloud_auth = (owner.email, owner.password)
     CLOUD_API.share(cloud_auth, server.id, 'viewer', email, viewer_permissions)
-    rb = RobotVariables("en_US")
     subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
     subject = rb.replace_nested_variables(subject)
     with EmailClient(email_alias=email) as client:
@@ -676,6 +675,7 @@ def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
         else:
             print("PASS")
 
+
 def change_role_for_cloud_user(server: Mediaserver):
     """
     13. Change role for Cloud User
@@ -720,6 +720,45 @@ def change_role_for_cloud_user(server: Mediaserver):
         else:
             print("PASS")
 
+def edit_permission_works_for_owner(server: Mediaserver):
+    """
+    14. Edit permission works
+    [Tags]    C30657    C47041    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Tmp", "LiveViewer", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'liveViewer', email, liveViewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.get_user_with_email(email).click()
+            system_user = SystemUsers(driver)
+            system_user.access_level_dropdown().click()
+            system_user.access_level_dropdown_option("Viewer").click()
+            system_user.save_button().wait_until_visible()
+            system_user.cancel_button().wait_until_visible()
+            system_user.save_button().click()
+            system_user.save_button().wait_until_not_visible()
+            system_user.cancel_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_visible()
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            vms_user = server.api.get_user_by_email(email)
+            assert vms_user['permissions'] == viewer_permissions, "User permissions did not change on VMS"
+            # CLOUD-11666 bug causes failure
+            assert system_user.access_level_dropdown().text() == "Viewer", "User permission displayed does not match"
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print("PASS")
+
 
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
@@ -749,3 +788,4 @@ if __name__ == "__main__":
         add_user_button_opens_cancellable_modal(cloud_server)
         verify_special_hints_on_permissions_dropdown(cloud_server)
         change_role_for_cloud_user(cloud_server)
+        edit_permission_works_for_owner(cloud_server)
