@@ -286,11 +286,10 @@ export class NxSystemsService {
     }
 
     private sortSystems(systems: System[]): System[] {
-        // Priority: alphabetical => system owner => usage frequency
+        // Priority: name => status
         // Note: JS sort has been stable since ECMAScript 2019
         return systems
-            .sort(alphabeticalSort(this.locale, sys => this.getSystemOwnerName(sys)))
-            .sort(paramSortFunc(sys => Number(sys.ownerAccountEmail === this.userEmail)))
-            .sort(paramSortFunc(sys => sys.usageFrequency, false));
+            .sort(alphabeticalSort(this.locale, sys => sys.name))
+            .sort(paramSortFunc(sys => Number(sys.stateOfHealth !== 'online')));
     }
 }
