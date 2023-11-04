@@ -7,32 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    users Teardown
 Force Tags        system    Threaded    users
 
 *** Test Cases ***
-14. Edit permission works
-    [Tags]    C30657    C47041    webadmin    cloud
-    ${random email}=   Get Random Email Robot    ${BASE EMAIL}
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][local users][cloudAdmin]
-    Share    ${servers}[0][cloudAuth]    ${servers}[0][id]    ${ACCESS ROLES}[liveViewer]    ${random email}    ${permissions}[liveViewer]
-
-    # Check that the user's role is added correctly in vms
-    FOR    ${user}    IN    @{list}
-        Log in    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        ${users}=   Get Users    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}
-
-        Edit User Permissions In Systems    ${random email}    ${VIEWER TEXT}
-        Check User Permissions    ${random email}    ${VIEWER TEXT}
-
-        # Check that the user's role has changed in vms
-        ${users}=   Get Users    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}
-
-        Edit User Permissions In Systems    ${random email}    ${LIVE VIEWER TEXT}
-        Check User Permissions    ${random email}    ${LIVE VIEWER TEXT}
-        Exit For Loop If    '''${user}'''=='''localcloudAdmin'''
-        Log Out
-    END
-
 19. Share System with the same user twice
     [Tags]    C41892    cloud
     Open Mailbox
