@@ -720,6 +720,7 @@ def change_role_for_cloud_user(server: Mediaserver):
         else:
             print("PASS")
 
+
 def edit_permission_works_for_owner(server: Mediaserver):
     """
     14. Edit permission works
@@ -735,6 +736,47 @@ def edit_permission_works_for_owner(server: Mediaserver):
         try:
             driver.get(url)
             LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            system_left_menu = SystemLeftMenu(driver)
+            system_left_menu.users_button().click()
+            system_left_menu.get_user_with_email(email).click()
+            system_user = SystemUsers(driver)
+            system_user.access_level_dropdown().click()
+            system_user.access_level_dropdown_option("Viewer").click()
+            system_user.save_button().wait_until_visible()
+            system_user.cancel_button().wait_until_visible()
+            system_user.save_button().click()
+            system_user.save_button().wait_until_not_visible()
+            system_user.cancel_button().wait_until_not_visible()
+            system_user.access_level_dropdown().wait_until_visible()
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            vms_user = server.api.get_user_by_email(email)
+            assert vms_user['permissions'] == viewer_permissions, "User permissions did not change on VMS"
+            # CLOUD-11666 bug causes failure
+            assert system_user.access_level_dropdown().text() == "Viewer", "User permission displayed does not match"
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print("PASS")
+
+
+def edit_permission_works_for_cloud_admin(server: Mediaserver):
+    """
+    14. Edit permission works
+    [Tags]    C30657    C47041    webadmin    cloud
+    """
+    with get_chrome() as driver:
+        owner = server.get_cloud_owner()
+        admin = server.get_cloud_admin()
+        cloud_auth = (owner.email, owner.password)
+        email = get_random_email()
+        register_and_activate_account(driver, "Tmp", "LiveViewer", email, password)
+        CLOUD_API.share(cloud_auth, server.id, 'liveViewer', email, liveViewer_permissions)
+        url = ENV + f"/systems/{server.id}"
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
             system_left_menu = SystemLeftMenu(driver)
             system_left_menu.users_button().click()
             system_left_menu.get_user_with_email(email).click()
@@ -789,3 +831,4 @@ if __name__ == "__main__":
         verify_special_hints_on_permissions_dropdown(cloud_server)
         change_role_for_cloud_user(cloud_server)
         edit_permission_works_for_owner(cloud_server)
+        edit_permission_works_for_cloud_admin(cloud_server)
