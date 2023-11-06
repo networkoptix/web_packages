@@ -424,7 +424,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutEditActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (node.locked) {
+        if (node.locked || !this.CONFIG.featureFlags.layoutsEditable) {
             return [];
         }
 
