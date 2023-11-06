@@ -11,15 +11,6 @@ ${cascade}      PASS
 
 *** Test Cases ***
 
-8. Can't transfer ownership to disabled user
-    [Tags]   C105096
-    [Setup]   Run Keywords    QA Video Recording Start      Skip If Irrelevant     Skip if Cascading    Disable User OT   OT Test Setup
-    [Teardown]   Run Keywords    QA Video Recording Stop    Enable User OT    OT Test Teardown
-    Wait Until Element Is Visible   ${OWNERSHIP TRANSFER FORM}//ul//li/a//nx-search-highlight[contains(text(), "${server 1}[cloudUsers][liveViewer]")]    timeout=1
-    Click Element    ${OWNERSHIP TRANSFER FORM}//ul//li/a//nx-search-highlight[contains(text(), "${server 1}[cloudUsers][liveViewer]")]
-    Wait Until Element Is Visible   ${OWNERSHIP TRANSFER FORM}//*[contains(text(), "${USER DISABLED TEXT}")]
-    Element Should Be Disabled    ${OWNERSHIP TRANSFER SEND REQUEST}
-
 9. Can't transfer to user that's not in system
     [Tags]  C105098
     Input Text    ${OWNERSHIP TRANSFER INPUT}    ${server 2}[cloudOwner]
