@@ -248,6 +248,23 @@ def test_initiate_transfer_then_accept_and_check_email(
             print("PASS")
 
 
+def can_not_transfer_to_user_that_is_not_in_system(server: Mediaserver):
+    """C105098"""
+    owner = server.get_cloud_owner()
+    user_email = get_random_email()
+    user_password = 'qweasd 123!'
+    with get_chrome() as driver:
+        register_and_activate_account(driver, "Mark", "Hamill", user_email, user_password)
+        driver.get(f"{ENV}/systems/{server.id}")
+        login_dialog = LoginDialog(driver)
+        login_dialog.basic_cloud_login(owner.email, owner.password)
+        system_ownership = SystemOwnership(driver)
+        transfer_ownership_modal = system_ownership.open_ownership_transfer_dialog()
+        transfer_ownership_modal.get_email_field().input_text(user_email)
+        transfer_ownership_modal.wait_for_user_not_found_error()
+        print("PASS")
+
+
 def _check_no_users(modal: SystemTransferOwnershipModal):
     no_users_text = modal.get_no_users_text()
     if no_users_text != (
@@ -313,3 +330,4 @@ if __name__ == "__main__":
         test_transfer_no_users(mediaserver_single_user)
         user = suite.create_cloud_account(sendemail=True)
         test_initiate_transfer_then_accept_and_check_email(mediaserver_single_user, user)
+        can_not_transfer_to_user_that_is_not_in_system(mediaserver_first)

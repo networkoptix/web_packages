@@ -8,6 +8,7 @@ from generic_elements import DropDownOption
 from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Page
+from generic_elements import PageText
 from generic_elements import TextField
 
 
@@ -150,6 +151,17 @@ class SystemTransferOwnershipModal:
 
     def _wait_until_not_visible(self):
         Page(self._driver, self.locator)._element.wait_until_not_visible()
+
+    def get_email_field(self) -> TextField:
+        return TextField(self._driver, f'{self.locator}//*[@id="search-input"]')
+
+    def wait_for_user_not_found_error(self):
+        error_label = PageText(
+                self._driver,
+                (f'{self.locator}//span[contains(@class,error-label) '
+                 'and contains(text(),"User not found")]'),
+                )
+        error_label.wait_until_visible()
 
 
 _logger = logging.getLogger(__name__)

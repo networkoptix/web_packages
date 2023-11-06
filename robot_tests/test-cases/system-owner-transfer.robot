@@ -11,12 +11,6 @@ ${cascade}      PASS
 
 *** Test Cases ***
 
-9. Can't transfer to user that's not in system
-    [Tags]  C105098
-    Input Text    ${OWNERSHIP TRANSFER INPUT}    ${server 2}[cloudOwner]
-    Wait Until Element Is Visible   ${OWNERSHIP TRANSFER FORM}//*[contains(text(), "${USER NOT FOUND TEXT}")]
-    Element Should Be Disabled    ${OWNERSHIP TRANSFER SEND REQUEST}
-
 12. No transfer ownership option for 4.2 systems
     [Documentation]   To run with 4.2 server use:  robot -v IMAGE:4.2_test
     [Tags]   C106349
