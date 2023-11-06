@@ -219,17 +219,17 @@ h2.auto-save-overlay {
 
 .unsaved-ribbon {
     padding: 6px 16px;
-    background-color: #0D3959;
+    background-color: #0d3959;
     display: flex;
     align-items: center;
     gap: 8px;
 
     &.diverged {
-        background-color: #594C0D;
+        background-color: #594c0d;
     }
 
     .info-svg {
-        fill: #208FDF;
+        fill: #208fdf;
     }
 
     .ribbon-message {
@@ -251,7 +251,8 @@ h2.auto-save-overlay {
         color: var(--light1);
         padding: 3px 8px;
 
-        .save-icon, .reload-icon {
+        .save-icon,
+        .reload-icon {
             fill: var(--light1);
         }
     }
@@ -341,6 +342,7 @@ h2.auto-save-overlay {
         justify-content: center;
         align-items: center;
         background: var(--placeholder-background);
+        padding-bottom: 8px;
 
         &.has-secondary-panel > {
             :not(.main-panel) {
@@ -366,6 +368,10 @@ h2.auto-save-overlay {
 
         .svg-wrapper {
             flex: 1;
+        }
+        svg-icon {
+            display: contents;
+            margin-bottom: 8px;
         }
 
         &.small {
@@ -560,7 +566,10 @@ iframe {
         height: var(--base-handle-size);
         z-index: var(--z-index-resize-handle);
 
-        &.top.left, &.bottom.right, &.top.right, &.bottom.left {
+        &.top.left,
+        &.bottom.right,
+        &.top.right,
+        &.bottom.left {
             width: var(--corner-handle-size);
             height: var(--corner-handle-size);
         }

@@ -1,4 +1,4 @@
-@use "typography";
+@use 'typography';
 
 :host {
     &:hover {
@@ -47,7 +47,7 @@
     }
 }
 
-[role=button] {
+[role='button'] {
     cursor: inherit;
 }
 

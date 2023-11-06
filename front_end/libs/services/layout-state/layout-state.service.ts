@@ -86,7 +86,7 @@ export class LayoutStateService {
         return id;
     }
 
-    portal: Portal<unknown>;
+    portal: Portal<unknown> | null;
 
     createPortal<T, D>(component: ComponentType<T>, data: D): void {
         const DATA_TOKEN = createPortalToken(component, data);

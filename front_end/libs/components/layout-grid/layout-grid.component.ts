@@ -383,7 +383,6 @@ export class NxLayoutGridComponent {
         },
     );
 
-    previousOpenMenu: 'left' | 'right' | 'both' = null;
     unsaved: Layout | false = false;
     addingItem$$ = signal(false);
     addOffset = 0;
@@ -391,7 +390,9 @@ export class NxLayoutGridComponent {
     errors: Record<string, string> = {};
     skipDefaultCredentialsCheck: Record<string, true> = {};
     errorIcons: Record<string, string> = {};
-    additionalErrorMessages: Record<string, Translatable> = {};
+    LANG = staticLang;
+    additionalErrorMessages: Record<string, Translatable> =
+        this.LANG.layouts.additionalErrorMessages;
     icons = icons;
     readonly RESOURCE_TYPE = ResourceType;
     readonly EDGE_GAP = 60;
@@ -579,7 +580,7 @@ export class NxLayoutGridComponent {
     draggingPosition$$ = toSignal(this.#draggingPosition$);
 
     dragging$$ = computed(() => {
-        const { move = {}, resize = {} } = this.draggingPosition$$();
+        const { move = {}, resize = {} } = this.draggingPosition$$() || {};
         return [...Object.values(move), ...Object.values(resize)].some(Boolean);
     });
 
@@ -721,7 +722,7 @@ export class NxLayoutGridComponent {
                 return {
                     ...collisions,
                     [currentId]: this.getCollisionStyle(current, draggingItem, items),
-                    [draggingItem.id]: {
+                    [draggingItem.id || '']: {
                         opacity: 0.25,
                         background: 'var(--error)',
                     },
@@ -734,7 +735,6 @@ export class NxLayoutGridComponent {
         }),
     );
 
-    LANG = staticLang;
     CONFIG: IConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
 
@@ -868,9 +868,9 @@ export class NxLayoutGridComponent {
     startTour = (): void => this.tourService.start();
 
     checkIframeContent(id: string, frame: HTMLIFrameElement): void {
-        const loaded = frame.contentWindow.window.length;
+        const loaded = frame.contentWindow?.window.length;
         try {
-            if (frame.contentWindow.location.href) {
+            if (frame.contentWindow?.location.href) {
                 return;
             }
         } catch ({ message }) {
@@ -1249,10 +1249,10 @@ export class NxLayoutGridComponent {
         }
 
         const isLayoutItem = 'id' in node;
-        const id = isLayoutItem ? node.id : node.details?.id;
+        const id = cleanId(isLayoutItem ? node.id : node.details?.id);
 
-        if (id && cleanId(id) !== cleanId(this.layout.id)) {
-            this.changingLayout = cleanId(id);
+        if (id && id !== cleanId(this.layout.id)) {
+            this.changingLayout = id;
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
             if (!this.system.permissionManager.permissions$$().editCameras) {
