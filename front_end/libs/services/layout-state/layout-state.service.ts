@@ -3,7 +3,7 @@ import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, of, switchMap, take, tap } from 'rxjs';
+import { Observable, firstValueFrom, of, switchMap, take, tap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { createPortalToken } from '@common/tokens';
@@ -37,6 +37,9 @@ export class LayoutStateService {
     static runInInjectionContext: <T>(callback: () => T) => T;
 
     duplicatedLayouts$$ = signal<string[]>([]);
+
+    // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
+    editedLayout$$ = signal<string | null>(null);
 
     focusViewToken = uuid();
 
@@ -83,7 +86,7 @@ export class LayoutStateService {
         return id;
     }
 
-    portal: Portal<unknown>;
+    portal: Portal<unknown> | null;
 
     createPortal<T, D>(component: ComponentType<T>, data: D): void {
         const DATA_TOKEN = createPortalToken(component, data);
@@ -150,10 +153,12 @@ export class LayoutStateService {
                 take(1),
                 switchMap(async activeLayoutId => {
                     const dirtyLayoutId = dirtyId(activeLayoutId);
-                    const unsavedState = this.unsavedLayoutsIds$$()[dirtyLayoutId];
+                    const savedLayouts = await firstValueFrom(
+                        this.store.select(LocalLayoutsSelectors.selectLocalLayoutsState),
+                    );
                     if (
                         layoutIds.includes(dirtyLayoutId) &&
-                        (deleted || unsavedState === staticLang.layouts.unsavedStates.unsaved)
+                        (deleted || !savedLayouts.find(({ id }) => id === dirtyLayoutId))
                     ) {
                         await this.paramStateHandler.updater({
                             params: {

@@ -1,29 +1,35 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
 
-<div class="actions p-3">
-    <button
-        [disabled]="!isAdmin"
-        class="btn btn-default"
-        translate
-        (click)="newGroupDialog()"
-    >
-        New Group
-    </button>
-    <div class="input px-2">
-        <span class="glyphicon web-icon-search icon-search"></span>
-        <input
-            class="pl-2"
-            [placeholder]="'Search' | translate"
-        />
+<ng-container *ngIf="isLoading; else showContent">
+    <nx-pre-loader></nx-pre-loader>
+</ng-container>
+
+<ng-template #showContent>
+    <div class="actions p-3">
+        <button
+            [disabled]="!isAdmin"
+            class="btn btn-default"
+            translate
+            (click)="newGroupDialog()"
+        >
+            New Group
+        </button>
+        <div class="input px-2">
+            <span class="glyphicon web-icon-search icon-search"></span>
+            <input
+                class="pl-2"
+                [placeholder]="'Search' | translate"
+            />
+        </div>
     </div>
-</div>
-<div
-    *ngIf="!currentGroups$$()?.length && !currentSystems$$()?.length; else showGroups"
-    class="no-systems"
->
-    <nx-no-systems-cards></nx-no-systems-cards>
-</div>
+    <div
+        *ngIf="!currentGroups$$()?.length && !currentSystems$$()?.length; else showGroups"
+        class="no-systems"
+    >
+        <nx-no-systems-cards></nx-no-systems-cards>
+    </div>
+</ng-template>
 
 <ng-template
     #showGroups
@@ -48,6 +54,7 @@
                     class="card-content"
                     [icon]="icons.dir + 'folder2.svg'"
                     [svgStyle]="{ 'height.px': '64', 'width.px': '54' }"
+                    (click)="handleGroupClick(group)"
                 >
                     <h3>{{ group.name }}</h3>
                     <div>12</div>

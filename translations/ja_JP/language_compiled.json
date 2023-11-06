@@ -1040,6 +1040,7 @@
     "Outgoing Primary streams": "プライマリストリーム配信数",
     "Outgoing Secondary streams": "セカンダリストリーム配信数",
     "Outgoing connections": "発信接続",
+    "Overwrite": "Overwrite",
     "Owner": "オーナー",
     "Ownership transfer will occur as soon as the new owner accepts the request.": "新しいオーナーにリクエストが承認され次第、所有権の変更が実行されます。",
     "P": "P",

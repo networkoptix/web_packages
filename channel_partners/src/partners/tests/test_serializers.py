@@ -7,7 +7,7 @@ from django.core.cache import caches
 from model_bakery import baker
 
 from partners.models import ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser, \
-    ChannelPartnerRole, ChannelPartnerToUser
+    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates
 from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, \
     OrganizationAggDataSerializer, \
     SystemServiceQuantitySerializer, OrganizationSerializer
@@ -260,6 +260,18 @@ class TestChannelPartnerSerializer:
         # Test child when parent has enabled ACS
         ser = ChannelPartnerSerializer(instance=child, context=context)
 
+        assert root.allow_changing_services is True
+        assert ser.data['allowChangingServices'] is False
+
+        ser = ChannelPartnerSerializer(instance=child, data={'allowChangingServices': True},
+                                       partial=True, context=context)
+
+        assert ser.is_valid()
+        instance = ser.save()
+
+        assert instance.id == child.id
+        assert instance.allow_changing_services is True
+
     def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf):
         cp = channel_partner_factory()
         roles = ChannelPartnerRole.objects.all()
@@ -291,6 +303,33 @@ class TestChannelPartnerSerializer:
 
 
 class TestOrganizationSerializer:
+
+    def test_current_services(self, default_channel_partner, organization_factory, system_factory,
+                              cp_service_factory, org_service_factory, service_record_factory, arf,
+                              default_cp_admin):
+        request = arf.get('/')
+        request.user = default_cp_admin
+        org = organization_factory()
+        systems = [system_factory(organization=org) for _ in range(5)]
+        disabled_system = system_factory(organization=org)
+        services = [cp_service_factory() for _ in range(3)]
+        org_service_properties = [org_service_factory(organization=org, service=service, price=10-i) for i, service in enumerate(services)]
+        service_records = []
+        for i, service in enumerate(services):
+            service_records += [service_record_factory(service, sys, quantity=1+i) for sys in systems[i:]]
+            service_record_factory(service, disabled_system)
+        disabled_system.state = ChannelPartnerStates.SHUTDOWN
+        disabled_system.save()
+
+        ser = OrganizationSerializer(org, context={'request': request})
+
+        current_services = ser.data["currentServices"]
+
+        assert set(current_services.keys()) == set([str(service.id) for service in services])
+        for i, service in enumerate(services):
+            assert current_services[str(service.id)]["price"] == 10 - i
+            assert current_services[str(service.id)]["quantity"] == (1 + i) * (len(systems) - i)
+            assert current_services[str(service.id)]["total"] == (1 + i) * (10 - i) * (len(systems) - i)
 
     def test_ownPermissions(self, channel_partner_factory, organization_factory, org_user_factory, arf):
         cp = channel_partner_factory()

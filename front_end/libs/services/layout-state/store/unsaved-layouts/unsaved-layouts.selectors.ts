@@ -16,11 +16,19 @@ const { unsavedStates } = staticLang.layouts;
 export const selectUnsavedLayoutsIds = createSelector(
     selectUnsavedLayoutsState,
     selectLocalLayoutsState,
-    (unsavedLayouts, existingLayouts): Record<string, string> =>
-        unsavedLayouts.reduce((unsavedLayouts, layout) => {
+    (unsavedLayoutsState, existingLayouts): Record<string, string> =>
+        unsavedLayoutsState.reduce((unsavedLayouts, layout) => {
             unsavedLayouts[dirtyId(layout.id)] =
                 layout.unsaved === UnsavedState.PENDING
                     ? unsavedStates.saving
+                    : existingLayouts.find(
+                          ({ name, id, parentId }) =>
+                              name === layout.layout.name &&
+                              id !== layout.id &&
+                              'parentId' in layout.layout &&
+                              layout.layout.parentId === parentId,
+                      )
+                    ? unsavedStates.overwrite
                     : !existingLayouts.find(({ id }) => id === layout.id)
                     ? unsavedStates.unsaved
                     : hashItem(existingLayouts.find(({ id }) => id === layout.id)) ===

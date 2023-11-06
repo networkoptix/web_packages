@@ -110,7 +110,9 @@
     <div
         *ngIf="layout?.id && layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved"
         class="unsaved-ribbon"
-        [ngClass]="{ diverged: unsaved === unsavedStates.diverged }"
+        [ngClass]="{
+            diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(unsaved)
+        }"
     >
         <ng-container [ngSwitch]="unsaved">
             <svg-icon
@@ -118,7 +120,9 @@
                 [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                 [src]="
                     icons.dirNonStandard +
-                    (unsaved === unsavedStates.diverged ? 'warning.svg' : 'info.svg')
+                    ([unsavedStates.diverged, unsavedStates.overwrite].includes(unsaved)
+                        ? 'warning.svg'
+                        : 'info.svg')
                 "
             ></svg-icon>
             <ng-container *ngSwitchCase="unsavedStates.unsaved">
@@ -147,6 +151,13 @@
                 This layout was recently updated by another user. What do you want to do?
             </span>
             <span
+                *ngSwitchCase="unsavedStates.overwrite"
+                class="ribbon-message"
+                translate
+            >
+                There is a another layout with the same name. Overwrite existing layout?
+            </span>
+            <span
                 *ngSwitchCase="unsavedStates.saving"
                 class="ribbon-message"
                 translate
@@ -173,7 +184,12 @@
                     }"
                     [src]="icons.dirLayouts + 'save.svg'"
                 ></svg-icon>
-                <span translate>Save</span>
+                <span>{{
+                    (unsaved === unsavedStates.overwrite
+                        ? unsavedStates.overwrite
+                        : unsavedStates.save
+                    ) | translate
+                }}</span>
             </button>
         </ng-container>
         <ng-container [ngSwitch]="unsaved">
@@ -193,14 +209,23 @@
                 <span translate>Reload</span>
             </button>
             <ng-container *ngSwitchCase="unsavedStates.saving"></ng-container>
-            <button
-                *ngSwitchDefault
-                class="ribbon-button"
-                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
-                translate
-            >
-                Discard
-            </button>
+            <ng-container *ngSwitchDefault>
+                <button
+                    *ngIf="unsaved === unsavedStates.overwrite"
+                    class="ribbon-button"
+                    (click)="layoutStateService.editedLayout$$.set(layout.id)"
+                    translate
+                >
+                    Rename
+                </button>
+                <button
+                    class="ribbon-button"
+                    (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                    translate
+                >
+                    Discard
+                </button>
+            </ng-container>
         </ng-container>
     </div>
     <div

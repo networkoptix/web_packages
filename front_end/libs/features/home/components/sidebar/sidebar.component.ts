@@ -8,7 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@variables/static-variables';
 
 import { GroupsItem, OpenGroups, GroupPath, GroupItem } from '../../home.types';
@@ -40,7 +41,7 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     @Input() currentPath: GroupPath[];
     @Output() dismiss = new EventEmitter<void>();
     rootGroupItems$ = this.store.select<GroupItem[]>(selectCurrentOrganizationRootGroupItems);
-    currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
+    currentOrg$$ = this.store.selectSignal<Organization>(selectCurrentOrganization);
     icons = icons;
     LANG = staticLang;
     constructor(
@@ -67,7 +68,7 @@ export class NxSystemGroupsSidebarComponent implements OnInit {
     newGroupDialog(): void {
         this.dialogsService.createSystemGroup({
             targetId: this.currentGroupId,
-            orgId: this.currentOrgId$$(),
+            orgId: this.currentOrg$$().id,
             parentGroup: null,
             hasGroups: false,
         });

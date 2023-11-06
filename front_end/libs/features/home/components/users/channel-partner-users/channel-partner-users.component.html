@@ -24,6 +24,7 @@
             [headers]="headers"
             [records]="records$ | async"
             [selectedRecordId]="selectedUserEmail"
+            (onDeleteClick)="deleteChannelPartnerUser($event)"
             (onRowClick)="selectUser($event)"
         ></nx-users-table>
     </div>

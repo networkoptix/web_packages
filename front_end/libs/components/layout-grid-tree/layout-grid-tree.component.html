@@ -309,14 +309,17 @@
                             ></nx-search-highlight>
                         </ng-template>
                         <nx-text-editable
-                            *ngIf="editedLayout$$() === node.id; else searchHighlight"
+                            *ngIf="
+                                layoutStateService.editedLayout$$() === node.id;
+                                else searchHighlight
+                            "
                             class="node-name"
                             [(ngModel)]="node.name"
                             [allowUserFocus]="false"
                             [editEnabled]="true"
                             [required]="true"
                             (onFocusChanged)="!$event && handleRename(node)"
-                            (onEditModeCancelled)="editedLayout$$.set(null)"
+                            (onEditModeCancelled)="layoutStateService.editedLayout$$.set(null)"
                         >
                         </nx-text-editable>
                     </div>

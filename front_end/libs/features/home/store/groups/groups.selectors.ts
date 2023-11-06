@@ -80,7 +80,7 @@ export const selectCurrentOrganizationRootGroupItems = createSelector(
     selectCurrentOrgId,
     selectGroupsItems,
     (orgId, items) =>
-        items.filter(item => item.type === 'group' && item.org_id === orgId) as GroupItem[],
+        (items.find(item => item.type === 'group' && item.org_id === orgId) as GroupItem).groups,
 );
 
 export const selectHasGroups = createSelector(selectRootGroupItems, groups => !!groups?.length);
@@ -167,18 +167,18 @@ export const selectCurrentSystemItems = createSelector(
     selectCurrentIndexes,
     selectRootGroupItems,
     selectRootSystemItems,
-    (indexes, rootGroups, rootSystems) => {
+    (indexes, rootGroup, rootSystems) => {
         if (!indexes) {
             return null;
         }
         if (indexes.length) {
             const currentGroup = indexes.reduce((group, index) => group.groups[index], {
-                groups: rootGroups,
+                groups: rootGroup,
                 systems: rootSystems,
             });
             return currentGroup.systems;
         } else {
-            return rootSystems;
+            return rootGroup[0]?.systems;
         }
     },
 );

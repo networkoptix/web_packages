@@ -1,12 +1,13 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Input, booleanAttribute, effect } from '@angular/core';
+import { ActivatedRoute, Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
@@ -39,6 +40,7 @@ import {
         NxNoSystemsCardsComponent,
         NxCardComponent,
         AngularSvgIconModule,
+        NxPreLoaderComponent,
     ],
 })
 export class NxOrganizationCardContainerComponent {
@@ -51,14 +53,22 @@ export class NxOrganizationCardContainerComponent {
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroupItems);
     currentSystems$$ = this.store.selectSignal<SystemItem[]>(selectCurrentSystemItems);
     isAdmin = true;
+    isLoading = true;
     constructor(
         private store: Store,
         private dialogsService: NxDialogsService,
         private route: ActivatedRoute,
         private groupsService: NxSystemGroupsService,
+        private router: Router,
     ) {
         this.route.params.subscribe(({ groupId }) => {
             this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
+        });
+
+        effect(() => {
+            if (this.currentGroups$$() && this.currentSystems$$()) {
+                this.isLoading = false;
+            }
         });
     }
 
@@ -87,5 +97,9 @@ export class NxOrganizationCardContainerComponent {
             hasGroups: this.hasGroups$$(),
             parentGroup: null,
         });
+    }
+
+    handleGroupClick(group: GroupItem): void {
+        this.router.navigate(['group', group.id], { relativeTo: this.route.parent });
     }
 }

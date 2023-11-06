@@ -11,7 +11,6 @@ import {
     signal,
     TemplateRef,
     ViewChild,
-    WritableSignal,
 } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
@@ -323,9 +322,6 @@ export class NxLayoutGridTreeComponent {
         ),
     );
 
-    // This will be added to an ngrx store as some kind of ephemeral state that will handle any actions where only a single type can be active at a type. Probably action types would be 'renaming', 'adding', 'dialogShown'.
-    editedLayout$$: WritableSignal<string | null> = signal(null);
-
     icons = icons;
     positions: ConnectedPosition[] = NxContextMenu.POSITIONS.default;
     forceVisible = '';
@@ -425,7 +421,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutEditActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (node.locked) {
+        if (node.locked || !this.CONFIG.featureFlags.layoutsEditable) {
             return [];
         }
 
@@ -438,7 +434,7 @@ export class NxLayoutGridTreeComponent {
                 node.owned && {
                     id: 'startRename',
                     name: this.ACTIONS.rename.name,
-                    action: () => this.editedLayout$$.set(node.details.id),
+                    action: () => this.layoutStateService.editedLayout$$.set(node.details.id),
                 },
                 {
                     id: 'duplicate',
@@ -657,7 +653,7 @@ export class NxLayoutGridTreeComponent {
                                   if (layoutsNode) {
                                       this.treeControl.expand(layoutsNode);
                                   }
-                                  this.editedLayout$$.set(dirtyId(newLayout));
+                                  this.layoutStateService.editedLayout$$.set(dirtyId(newLayout));
                               });
                       },
                   },
@@ -745,7 +741,7 @@ export class NxLayoutGridTreeComponent {
     };
 
     handleRename = (node: ResourceNode): void => {
-        this.editedLayout$$.set(null);
+        this.layoutStateService.editedLayout$$.set(null);
         const layout = node.details as Layout;
 
         if (node.name === layout.name) {

@@ -252,12 +252,14 @@ class OrganizationSerializer(serializers.ModelSerializer):
     users = UsersField(source='*', read_only=True)
     cloudSystems = CloudSystemsField(source='*', read_only=True)
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
+    created = serializers.DateTimeField(source='created_ts', read_only=True)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     channelPartnerAccessLevel = CodeChoiceField(source='channel_partner_access_level_code',
                                                 choices=ChannelPartnerAccessLevel.LEVEL_CODES)
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
+    currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
     ownRoles = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
@@ -265,7 +267,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
     class Meta:
         model = Organization
         exclude = ['channel_partner_access_level', 'channel_partner', 'created_ts']
-        read_only_fields = ['channelPartner', 'users', 'created']
+        read_only_fields = ['channelPartner', 'users', 'currentServices', 'created']
 
     def update(self, instance: Organization, validated_data):
         instance.set_attributes(validated_data.get('attributes', {}), partial=self.partial)

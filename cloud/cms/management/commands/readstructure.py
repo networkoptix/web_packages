@@ -133,11 +133,9 @@ def read_languages(skin_name=None):
     with open(os.path.join(settings.BASE_DIR, 'cms/structures/languages.json'), 'r') as f:
         languages = json.load(f)
     for language in languages:
-        lang, created = Language.objects.get_or_create(code=language['code'], name=language['name'])
+        lang, created = Language.objects.get_or_create(code=language['code'], defaults={"name": language['name']})
         if created:
             logger.info(f"Created language {lang.name} - {lang.code}")
-    # Clean up no longer existing languages
-    Language.objects.exclude(code__in=[language['code'] for language in languages]).delete()
 
 
 class Command(BaseCommand):

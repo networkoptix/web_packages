@@ -18,4 +18,5 @@
 <nx-users-table
     [headers]="headers"
     [records]="records$ | async"
+    (onDeleteClick)="deleteOrgUser($event)"
 ></nx-users-table>
