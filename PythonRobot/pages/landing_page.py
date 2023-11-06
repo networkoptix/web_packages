@@ -48,6 +48,8 @@ class LandingPage:
             except RuntimeError as e:
                 if f'Expected url {ENV}' in str(e):
                     _logger.info("Waiting for correct location")
+                else:
+                    raise
             if time.monotonic() - start_time > timeout:
                 raise RuntimeError(f"Wrong location. Expected {ENV}, got {self.driver.current_url}")
 
