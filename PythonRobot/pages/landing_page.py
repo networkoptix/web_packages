@@ -43,7 +43,7 @@ class LandingPage:
         start_time = time.monotonic()
         while True:
             try:
-                self.driver.location_should_be(f"{ENV}")
+                self.driver.location_should_be(f"{ENV}/")
                 return
             except RuntimeError as e:
                 if f'Expected url {ENV}' in str(e):
