@@ -315,6 +315,11 @@ class Mediaserver:
             self._container.delete()
 
 
+    def share_with_user(self, user: 'CloudAccount', access_role, permissions):
+        _auth = [self._cloud_owner.email, self._cloud_owner.password]
+        _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
+
+
 class CloudAccount:
     PERMISSIONS = {
         "cloudAdmin": "GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
