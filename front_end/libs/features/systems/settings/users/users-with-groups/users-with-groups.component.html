@@ -22,7 +22,7 @@
                     <h2 class="fs-mask heading-style">{{ username }}</h2>
                     <div class="user-status-switch-wrapper">
                         <span
-                            *ngIf="!selectedUser.isEnabled"
+                            *ngIf="!userGroupForm.controls.isEnabled.value"
                             class="text-danger"
                             [ngClass]="{ 'pr-2': canBeEdited$$() }"
                             translate

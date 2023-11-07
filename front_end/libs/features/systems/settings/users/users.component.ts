@@ -4,6 +4,9 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { FormActions, NxCanNavigate } from '@services/apply.service/apply.service.type';
 import type { NxUser } from '@services/system-user.types';
 import { NxSystem } from '@services/system.service/system';
+import { NxFormGroup } from '@utils/reactive-form-builder';
+
+import { UserFormControls } from './user-form.types';
 
 @Component({
     selector: 'nx-system-user-component',
@@ -15,14 +18,11 @@ export class NxSystemUsersComponent implements NxCanNavigate {
     @Input() user: NxUser;
 
     private dialogService = inject(NxDialogsService);
-    canNavigate$$ = signal<boolean>(true);
-    onNavigate = {
-        applyFunc: undefined,
-        discardFunc: () => {},
-    };
+    userFormSignal$$ = signal<NxFormGroup<UserFormControls> | undefined>(undefined);
+    onNavigate: FormActions;
     canNavigate(): Promise<boolean> {
-        const canNavigate = this.canNavigate$$();
-        if (!canNavigate) {
+        const canNavigate = this.userFormSignal$$();
+        if (canNavigate?.dirty) {
             return this.showApplyDialog();
         }
         return Promise.resolve(true);
