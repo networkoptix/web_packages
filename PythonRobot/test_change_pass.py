@@ -189,15 +189,15 @@ def incorrect_or_empty_old_password_prevents_password_change(user):
 
 
 if __name__ == "__main__":
-    with Suite():
-        with CloudAccount() as user:
-            can_be_accessed_via_dropdown(user)
-            can_be_accessed_via_direct_url(user)
-            password_is_actually_changed_and_login_works_with_new_password(user)
-            password_with_symbols_is_valid(user)
-            password_with_space_in_the_middle_is_valid(user)
-            pressing_enter_key_saves_data(user)
-            pressing_tab_key_moves_focus_to_the_next_element(user)
-            displays_password_masked_shows_password_and_changes_eye_icon_when_clicked(user)
-            new_password_is_trimmed_to_255_character(user)
-            incorrect_or_empty_old_password_prevents_password_change(user)
+    with Suite() as suite:
+        user = suite.create_cloud_account()
+        can_be_accessed_via_dropdown(user)
+        can_be_accessed_via_direct_url(user)
+        password_is_actually_changed_and_login_works_with_new_password(user)
+        password_with_symbols_is_valid(user)
+        password_with_space_in_the_middle_is_valid(user)
+        pressing_enter_key_saves_data(user)
+        pressing_tab_key_moves_focus_to_the_next_element(user)
+        displays_password_masked_shows_password_and_changes_eye_icon_when_clicked(user)
+        new_password_is_trimmed_to_255_character(user)
+        incorrect_or_empty_old_password_prevents_password_change(user)
