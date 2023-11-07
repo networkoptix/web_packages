@@ -31,6 +31,10 @@ import {
     finalize,
     startWith,
     tap,
+    fromEvent,
+    sampleTime,
+    merge,
+    timer,
 } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
@@ -514,6 +518,26 @@ export class NxLayoutGridItemOverlayComponent {
             return this.MENU_ITEMS.remove;
         }
         return null;
+    });
+
+    mouseInactive$$ = toSignal(
+        merge(
+            fromEvent<MouseEvent>(this.document, 'mousemove'),
+            fromEvent<KeyboardEvent>(this.document, 'keydown'),
+            fromEvent<MouseEvent>(this.document, 'mousedown'),
+        ).pipe(
+            sampleTime(250),
+            switchMap(() =>
+                timer(5000).pipe(
+                    map(() => true),
+                    startWith(false),
+                ),
+            ),
+        ),
+    );
+
+    hide$$ = computed(() => {
+        return this.hide || (!this.isMenuOpened$$() && this.mouseInactive$$());
     });
 
     menuItemsByType: Partial<{

@@ -21,7 +21,7 @@
     [cdkContextMenuTriggerFor]="nodeActionMenu"
     [cdkMenuTriggerFor]="scaled$$() ? nodeActionMenu : null"
     (dblclick)="fullscreenAction$$().action?.($event)"
-    [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide, hide: hide }"
+    [ngClass]="{ show: (isMenuOpened$$() || isFullscreen$$()) && !hide$$(), hide: hide$$() }"
 >
     <ng-template
         #svgIcon
