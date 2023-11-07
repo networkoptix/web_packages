@@ -127,7 +127,7 @@ class Suite:
         else:
             permissions = CloudAccount.PERMISSIONS
         for permission in permissions:
-            account = self._exit_stack.enter_context(CloudAccount())
+            account = self.create_cloud_account()
             cloud_users.update({permission: account})
             time.sleep(2)
         return cloud_users
