@@ -757,8 +757,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 });
 
                 usersNode.level3 = [];
+                const sortByEmailLabel = alphabeticalSort<Level3Item>(
+                    this.locale,
+                    ({ label }) => label,
+                );
                 if (localUsers.length) {
-                    usersNode.level3.push(...localUsers);
+                    usersNode.level3.push(...localUsers.sort(sortByEmailLabel));
                     if (cloudUsers.length) {
                         usersNode.level3.push({ horizontal: true } as Level3Item);
                     }
@@ -767,7 +771,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     // (See menu.component.html)
                 }
                 if (cloudUsers.length) {
-                    usersNode.level3.push(...cloudUsers);
+                    usersNode.level3.push(...cloudUsers.sort(sortByEmailLabel));
                 }
             }
         } else {
@@ -877,7 +881,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.archivesPresent.has(id) && recordingStatus !== RecordingStatus.Recording) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
-        return menus.systemSettings.cameras.statusIcons[status];
+        return menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 
     getServerStatusIcon({ status }: NxSystemServer): string {
