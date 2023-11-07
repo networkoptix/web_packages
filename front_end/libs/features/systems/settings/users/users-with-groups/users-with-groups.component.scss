@@ -75,19 +75,35 @@
 }
 
 .group-list-item {
-    display: flex;
-    align-items: center;
-    width: 95%;
-    @include typography.medium16nocolor;
-    color: var(--body-text-color);
-    line-height: 24px;
+    margin-bottom: 0.25em;
+      @include typography.medium20nocolor;
+            color: var(--body-text-color);
+
+    .group-name {
+        @include mixins.ellipsis;
+    }
+
+    &.no-edit {
+        @include mixins.ellipsis;
+
+        .group-name {
+            @include typography.medium13nocolor;
+            color: var(--body-text-color);
+            margin-right: 5px;
+        }
+
+        .help-block {
+            display: unset;
+        }
+    }
 }
 
 .help-block {
     display: block;
     background-color: transparent;
-    color: var(--light-text-color);
-    margin-bottom: 1rem;
+    color: var(--light16);
+    font-size: 0.825rem;
+    line-height: 18px;
 }
 
 .user-settings-form {
