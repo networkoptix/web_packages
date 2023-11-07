@@ -1330,6 +1330,10 @@ export class NxLayoutGridComponent {
     }
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
+        // TODO: Need to update once granular permissions by camera/resource are setup.
+        if (!system.permissionManager.permissions$$().editCameras) {
+            return;
+        }
         const defaultPassword = camera.status !== CameraStatus.Unauthorized;
         const retriesTimeout = 30 * 1000;
         const firstCheckTimeout = 10 * 1000;
