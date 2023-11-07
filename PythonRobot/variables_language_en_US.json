@@ -15,6 +15,7 @@
     "DISCONNECT_FORM_ALL_USERS_WILL_BE_DELETED_TEXT": "All cloud users will be deleted",
     "DISCONNECT_FORM_SYSTEM_WILL_BE_ACCESSIBLE_TEXT": "System will be accessible only via local network.",
     "DISCONNECT_FORM_ENTER_PASSWORD_TO_CONTINUE_TEXT": "Enter password to continue",
+    "ENTER_PASSWORD_ERROR_TEXT": "Enter password",
     "SYSTEM_NO_ACCESS_TEXT": "Failed to access system",
     "USERS": "Users",
     "SERVERS": "Servers",
