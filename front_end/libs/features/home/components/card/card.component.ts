@@ -20,7 +20,10 @@ import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component
     imports: [AngularSvgIconModule, CommonModule, NxThreeDotDropdown],
 })
 export class NxCardComponent {
-    @Input() dropdownItems: ActionItems[];
-    @Input() icon: string;
-    @Input() svgStyle: { 'width.px': string; 'height.px': string };
+    @Input() dropdownItems: ActionItems[] = [];
+    @Input() icon: string = '';
+    @Input() svgStyle: { 'width.px': string; 'height.px': string } = {
+        'width.px': '0',
+        'height.px': '0',
+    };
 }

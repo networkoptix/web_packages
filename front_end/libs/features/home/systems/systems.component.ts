@@ -5,7 +5,7 @@ import { Store } from '@ngrx/store';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxSystemsListComponent } from '@components/systems-list/list.component';
+import { HomeSystemListComponent } from '@pages/home/components/systems-list/systems-list.component';
 import { Account } from '@services/account.service/account';
 import { NxSystemsService } from '@services/systems.service';
 import { NgChanges } from '@utils/ng-changes';
@@ -17,7 +17,7 @@ import { SystemsDisplayMode } from '../home.types';
     templateUrl: 'systems.component.html',
     styleUrls: ['systems.component.scss'],
     standalone: true,
-    imports: [CommonModule, NxPreLoaderComponent, NxSystemsListComponent],
+    imports: [CommonModule, NxPreLoaderComponent, HomeSystemListComponent],
 })
 export class NxSystemsComponent implements OnChanges {
     @Input() displayMode: SystemsDisplayMode;

@@ -20,6 +20,7 @@ const appRoutes: Routes = [
         component: NxSystemsListComponent,
         canActivate: [AuthGuard],
         data: {
+            atBase: true,
             enableRedirect: true,
         },
     },
