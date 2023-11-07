@@ -6,6 +6,7 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from email_access import EmailClient
+from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.system_admin import FailedToAccessSystemPage
@@ -307,13 +308,14 @@ if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
     with Suite() as suite:
-        cloud_owner = suite.create_cloud_account(sendemail=True)
-        cloud_users = suite.create_cloud_accounts()
-        mediaserver_first = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
-        test_change_button_only_for_owner(mediaserver_first)
-        test_initiate_transfer_then_cancel(mediaserver_first)
-        test_initiate_transfer_then_reject(mediaserver_first)
-        test_initiate_transfer_then_accept(mediaserver_first)
+        with CloudAccount(get_random_email(sendemail=True)) as cloud_owner:
+            cloud_users = suite.create_cloud_accounts()
+            mediaserver_first = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
+            test_change_button_only_for_owner(mediaserver_first)
+            test_initiate_transfer_then_cancel(mediaserver_first)
+            test_initiate_transfer_then_reject(mediaserver_first)
+            test_initiate_transfer_then_accept(mediaserver_first)
+            can_not_transfer_to_user_that_is_not_in_system(mediaserver_first)
         cloud_owner = suite.create_cloud_account()
         cloud_users = suite.create_cloud_accounts()
         mediaserver_second = suite.create_cloud_server(cloud_owner, f'{suite_name}_delete_user', cloud_users)
@@ -328,6 +330,5 @@ if __name__ == "__main__":
         # TODO: this case works very strange without this sleep
         sleep(90)
         test_transfer_no_users(mediaserver_single_user)
-        user = suite.create_cloud_account(sendemail=True)
-        test_initiate_transfer_then_accept_and_check_email(mediaserver_single_user, user)
-        can_not_transfer_to_user_that_is_not_in_system(mediaserver_first)
+        with CloudAccount(get_random_email(sendemail=True)) as user:
+            test_initiate_transfer_then_accept_and_check_email(mediaserver_single_user, user)

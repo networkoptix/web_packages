@@ -2,7 +2,7 @@ import time
 
 from NoptixLibrary.suite import Suite
 from NoptixLibrary.suite import CloudAccount
-
+from email_access import get_random_email
 from test_2fa import disabling_2fa
 from test_2fa import enable_and_login_with_2fa
 from test_2fa import login_with_backup_code
@@ -75,7 +75,7 @@ if __name__ == "__main__":
         test_changing_first_name_and_saving_maintains_that_setting()
         test_changing_last_name_and_saving_maintains_that_setting()
         test_can_access_account_page_from_dropdown()
-        with CloudAccount(sendemail=True) as user:
+        with CloudAccount(get_random_email(sendemail=True)) as user:
             sets_new_password_and_successfully_logs_in(user)
             check_restore_password_email(user)
 

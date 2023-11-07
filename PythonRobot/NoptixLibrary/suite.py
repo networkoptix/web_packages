@@ -42,8 +42,11 @@ class Suite:
         # Calling close() from context manager's __exit__ will suppress parent exceptions
         self._exit_stack.__exit__(*exc_details)
 
-    def create_cloud_account(self, sendemail=False):
-        return self._exit_stack.enter_context(CloudAccount(sendemail=sendemail))
+    def create_cloud_account(self):
+        dummy_email_address = get_random_email(sendemail=False)
+        cloud_account = CloudAccount(dummy_email_address)
+        self._exit_stack.enter_context(cloud_account)
+        return cloud_account
 
     def create_local_server(self, suite_name: Optional[str] = None):
         if suite_name is None:
@@ -330,12 +333,12 @@ class CloudAccount:
         "custom": "NoGlobalPermissions",
         }
 
-    def __init__(self, first_name = "Mark", last_name = "Hamill", activate = True, sendemail = False):
+    def __init__(self, email: str, first_name = "Mark", last_name = "Hamill", activate = True):
+        self.email = email
         self.first_name = first_name
         self.last_name = last_name
         self.password = DEFAULT_PASSWORD
         self._activate = activate
-        self._sendemail = sendemail
         self._totp = None
         self._backup_codes = None
 
@@ -369,10 +372,6 @@ class CloudAccount:
         self._tear_down()
 
     def _set_up(self):
-        self.email = get_random_email(
-            'noptixautoqa+sendemail@gmail.com',
-            self._sendemail,
-            )
         # The Portal could be flooded by requests. Give him a couple of second chances.
         max_attempts = 3
         for attempt in range(1, max_attempts + 1):
