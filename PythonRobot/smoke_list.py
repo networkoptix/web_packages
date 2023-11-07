@@ -76,6 +76,7 @@ if __name__ == "__main__":
         test_changing_last_name_and_saving_maintains_that_setting()
         test_can_access_account_page_from_dropdown()
         with CloudAccount(get_random_email(sendemail=True)) as user:
+            user.activate()
             sets_new_password_and_successfully_logs_in(user)
             check_restore_password_email(user)
 

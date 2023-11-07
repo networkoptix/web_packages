@@ -309,6 +309,7 @@ if __name__ == "__main__":
     suite_name = suite_name.removeprefix("test_")
     with Suite() as suite:
         with CloudAccount(get_random_email(sendemail=True)) as cloud_owner:
+            cloud_owner.activate()
             cloud_users = suite.create_cloud_accounts()
             mediaserver_first = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
             test_change_button_only_for_owner(mediaserver_first)
@@ -331,4 +332,5 @@ if __name__ == "__main__":
         sleep(90)
         test_transfer_no_users(mediaserver_single_user)
         with CloudAccount(get_random_email(sendemail=True)) as user:
+            cloud_owner.activate()
             test_initiate_transfer_then_accept_and_check_email(mediaserver_single_user, user)

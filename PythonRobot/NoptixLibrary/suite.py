@@ -46,6 +46,7 @@ class Suite:
         dummy_email_address = get_random_email(sendemail=False)
         cloud_account = CloudAccount(dummy_email_address)
         self._exit_stack.enter_context(cloud_account)
+        cloud_account.activate()
         return cloud_account
 
     def create_local_server(self, suite_name: Optional[str] = None):
@@ -333,12 +334,11 @@ class CloudAccount:
         "custom": "NoGlobalPermissions",
         }
 
-    def __init__(self, email: str, first_name = "Mark", last_name = "Hamill", activate = True):
+    def __init__(self, email: str, first_name = "Mark", last_name = "Hamill"):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
         self.password = DEFAULT_PASSWORD
-        self._activate = activate
         self._totp = None
         self._backup_codes = None
 
@@ -385,8 +385,9 @@ class CloudAccount:
                 raise
             else:
                 break
-        if self._activate:
-            _CLOUD_API.activate_account_via_api(self.email, self.password)
+
+    def activate(self):
+        _CLOUD_API.activate_account_via_api(self.email, self.password)
 
     def _tear_down(self):
         _CLOUD_API.delete_account(self.email, self.password, self.get_otp())

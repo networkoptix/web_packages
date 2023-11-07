@@ -199,12 +199,14 @@ def test_account_activation_through_restore(user: CloudAccount):
 
 if __name__ == "__main__":
     with CloudAccount(get_random_email(sendemail=True)) as user:
+        user.activate()
         sets_new_password_and_successfully_logs_in(user)
         check_restore_password_email(user)
         check_can_still_log_in_if_restore_not_finished(user)
         test_should_not_allow_restore_twice(user)
     with CloudAccount(get_random_email(sendemail=True)) as user:
+        user.activate()
         check_password_masking(user)
         test_should_allow_visit_restore_after_log_in(user)
-    with CloudAccount(get_random_email(sendemail=True), activate=False) as user:
+    with CloudAccount(get_random_email(sendemail=True)) as user:
         test_account_activation_through_restore(user)
