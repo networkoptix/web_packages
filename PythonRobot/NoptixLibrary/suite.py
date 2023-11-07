@@ -324,9 +324,9 @@ class CloudAccount:
         "custom": "NoGlobalPermissions",
         }
 
-    def __init__(self, activate = True, sendemail = False):
-        self.first_name = "Mark"
-        self.last_name = "Hamill"
+    def __init__(self, first_name = "Mark", last_name = "Hamill", activate = True, sendemail = False):
+        self.first_name = first_name
+        self.last_name = last_name
         self.password = DEFAULT_PASSWORD
         self._activate = activate
         self._sendemail = sendemail
