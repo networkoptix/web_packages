@@ -16,7 +16,6 @@ class Button:
 
     def __init__(self, driver: WebDriver, locator):
         self.driver = driver
-        # TODO: add check to confirm button text is correct?
         self._element = Element(self.driver, locator)
 
     def click(self):
@@ -256,7 +255,6 @@ class SearchBar:
 
     def search_text(self, text: str):
         self._element.send_keys(text)
-        # self._element.submit()
 
     def wait_until_visible(self, timeout: float = 0.5):
         self._element.wait_until_visible(timeout)
@@ -307,14 +305,12 @@ class Table:
             row_locator = f'({locator}//tr)[{row_n}]'
             if len(self._driver.find_elements(By.XPATH, row_locator)) == 0:
                 break
-            print("found at least one  f'({self.locator}//tr)[{row_n}]'")
             row = []
             cell_n = 1
             while True:
                 cell_locator = f'({row_locator}//td)[{cell_n}]'
                 if len(self._driver.find_elements(By.XPATH, cell_locator)) == 0:
                     break
-                print("found cell_locator")
                 cell = Element(self._driver, cell_locator)
                 row.append(cell)
                 cell_n += 1

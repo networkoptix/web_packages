@@ -1,3 +1,4 @@
+import random
 import time
 
 from selenium.webdriver.common.by import By
@@ -51,13 +52,23 @@ class IPVDTable(Table):
             data.append(data_row)
         return data
 
-    def row_count(self):
+    def _get_rows(self):
         self.wait_until_visible()
         xpath = '//nx-ipvd//div[@class="content"]//div[not(contains(@style, '
         xpath = xpath + '"grid-area: id / id")) and not(contains(@style, '
         xpath = xpath + '"grid-area: sort"))]/div[@class="ng-star-inserted" '
         xpath = xpath + 'and contains(text(), " ") and string-length() > 2]'
-        return len(self.driver.find_elements(By.XPATH, xpath))
+        return self.driver.find_elements(By.XPATH, xpath)
+
+    def row_count(self):
+        rows = self._get_rows()
+        return len(rows)
+
+    def random_row(self, ):
+        row_count = self.row_count()
+        row_number = random.randint(1, row_count - 1)
+        return self._get_rows()[row_number]
+
 
 class FeedbackForm:
     def __init__(self, driver, lang="en_US"):
@@ -102,6 +113,10 @@ class FeedbackForm:
     def feedback_submit(self):
         button = self.messageForm + self.rb.replace_nested_variables("//button[text()='{SEND_BUTTON_TEXT}']")
         return Button(self.driver, button)
+
+    def send_device_feedback(self):
+        xpath = self.rb.replace_nested_variables("//nx-ipvd//a[contains(text(), '{IPVD_SEND_DEVICE_FEEDBACK_TEXT}')]")
+        return Link(self.driver, xpath)
 
     def submit_a_request_button(self):
         xpath = "//nx-ipvd//span[contains(text(),'{IPVD_SUBMIT_A_REQUEST_TEXT}')]"
@@ -204,40 +219,56 @@ class IVPDPage:
     def search_bar(self):
         return SearchBar(self.driver, "//input[@name='query']")
 
+
     def search_text(self, text: str):
-        self.search_bar().click()
-        self.search_bar().should_be_focused()
         self.search_bar().search_text(text)
+
+    def select_device_from_table_by_row(self, row_number=1, include_last=True):
+        pass
+
+    def select_device_from_table_randomly(self, include_last=True):
+        self.validate_device_table_has_contents(include_last)
+        table = IPVDTable(self.driver)
+        row = table.random_row()
+        row.click()
+
 
     def validate_device_column_content(self, querystring: str):
         """Validate IPVD Device Table Column contains Desired Value in all Rows"""
         table = IPVDTable(self.driver)
         table.column_should_contain(querystring)
 
-    def validate_device_table_contents(self, querystring: str):
+    def validate_device_table_contents(self, querystring: str)-> bool:
         """Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages"""
-        row_count = self.validate_device_table_not_empty()
-        assert row_count > 0
-        self.first_page_button().click()
-        last_page = self.last_page_number()
-        for page_number in range(1, last_page + 1):
-            self.validate_device_column_content(querystring)
-            if page_number < last_page:
-                self.next_page_button().click()
+        if self.validate_device_table_has_contents():
+            self.first_page_button().click()
+            last_page = self.last_page_number()
+            for page_number in range(1, last_page + 1):
+                self.validate_device_column_content(querystring)
+                if page_number < last_page:
+                    self.next_page_button().click()
+            return True
+        else:
+            return False
 
-    def validate_device_table_not_empty(self, include_last=True):
-        """Validate IPVD Device Table Not Empty"""
+    def table_has_rows(self) -> bool:
         table = IPVDTable(self.driver)
         row_count = table.row_count()
         if not row_count:
-            raise TableEmpty
+            return False
+        return True
+
+    def validate_device_table_has_contents(self, include_last=True) -> bool:
+        """Validate IPVD Device Table Not Empty"""
+        if not self.table_has_rows():
+            return False
         if include_last:
             self.last_page_button().wait_until_visible()
         self.previous_page_button().wait_until_visible()
         self.first_page_button().wait_until_visible()
         self.next_page_button().wait_until_visible()
         self.export_to_csv_link().wait_until_visible()
-        return row_count
+        return True
 
     def validate_landing_page_objects_not_visible(self):
         for element in [self.manufactures_pane(), self.and_more(), self.devices_pane()]:

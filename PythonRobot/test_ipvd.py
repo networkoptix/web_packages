@@ -56,7 +56,8 @@ def text_search_manufacturer():
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
         ipvd_page.search_text("hanwha")
-        row_count = ipvd_page.validate_device_table_contents("Hanwha")
+        valid = ipvd_page.validate_device_table_contents("Hanwha")
+        assert valid
 
 def request_form_basic_validation():
     """5. Request Form Basic Validations"""
@@ -82,6 +83,32 @@ def request_form_basic_validation():
         ff.feedback_close_button().click()
         ff.feedback().wait_until_does_not_exist()
 
+def feedback_form_basic_validations():
+    """6. Feedback Form Basic Validations"""
+    with resource_import.get_chrome() as driver:
+        ipvd_page = IVPDPage(driver)
+        resource_import.cloud_login(driver, login, password)
+        ipvd_page.go_to_ipvd()
+        ipvd_page.validate_on_ipvd_page()
+        ipvd_page.search_text("Axis")
+        ipvd_page.select_device_from_table_randomly()
+
+        ff = FeedbackForm(driver)
+        ff.send_device_feedback().click()
+        ff.feedback().wait_until_visible()
+        before_color = ff.feedback_message().get_outline_color()
+        assert ipvd_page.validate_privacy_policy()
+        ff.feedback_send_button().click()
+        after_color = ff.feedback_message().get_outline_color()
+        assert before_color != after_color
+        assert ff.feedback_message().get_outline_color() == after_color
+        ff.feedback_cancel_button().click()
+        ff.feedback().wait_until_does_not_exist()
+        ff.send_device_feedback().click()
+        ff.feedback().wait_until_visible()
+        ff.feedback_cancel_button().click()
+        ff.feedback().wait_until_does_not_exist()
+
 if __name__ == "__main__":
     print("Running test_ipvd.py")
     ipvd_page_loads_without_login()
@@ -89,4 +116,5 @@ if __name__ == "__main__":
     ipvd_landing_page_actions()
     text_search_manufacturer()
     request_form_basic_validation()
+    feedback_form_basic_validations()
 
