@@ -282,7 +282,7 @@ class Mediaserver:
 
     def create_local_users(self) -> dict:
         local_users = {}
-        permissions = CloudAccount().PERMISSIONS
+        permissions = CloudAccount.PERMISSIONS
         for permission in permissions:
             self.api.save_user(
                 "Local+" + permission,

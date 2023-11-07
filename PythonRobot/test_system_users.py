@@ -19,7 +19,7 @@ from variables import ENV
 
 password = "qweasd 123"
 rb = RobotVariables("en_US")
-permissions = CloudAccount().PERMISSIONS
+permissions = CloudAccount.PERMISSIONS
 viewer_permissions = permissions['viewer']
 admin_permissions = permissions['cloudAdmin']
 liveViewer_permissions = permissions['liveViewer']
