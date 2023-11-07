@@ -1,5 +1,5 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
-import { CommonModule, DOCUMENT } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     AfterContentInit,
     Component,
@@ -133,7 +133,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         private renderer: Renderer2,
         private uri: NxUriService,
         @Inject(LOCALE_ID) private locale: string,
-        @Inject(DOCUMENT) protected document: Document,
     ) {
         this.uri
             .getParams()
@@ -225,7 +224,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
             try {
                 // const sortElement = this.renderer.selectRootElement(`#${sortBy[0]} div`);
-                const sortElement = this.document.querySelector(`#${sortBy[0]}`);
+                const sortElement = document.querySelector(`#${sortBy[0]}`);
                 const sortSvg = sortElement.querySelector('div');
                 this.selectedHeader = sortBy[0];
                 this.sortColumn(sortSvg, sortElement.attributes['data-sort'].value, false);
@@ -385,8 +384,8 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
         this.renderer.addClass(sort, 'sort-svg');
         this.renderer.setAttribute(sort, 'id', id);
 
-        const iconSvg = this.document.createElementNS('http://www.w3.org/2000/svg', 'svg');
-        const iconPath = this.document.createElementNS('http://www.w3.org/2000/svg', 'path');
+        const iconSvg = document.createElementNS('http://www.w3.org/2000/svg', 'svg');
+        const iconPath = document.createElementNS('http://www.w3.org/2000/svg', 'path');
 
         // iconSvg.setAttribute('id', id);
         iconSvg.setAttribute('fill', 'none');

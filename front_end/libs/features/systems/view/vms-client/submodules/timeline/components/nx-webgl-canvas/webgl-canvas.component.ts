@@ -1,12 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import {
-    AfterViewInit,
-    Component,
-    Inject,
-    Input,
-    OnChanges,
-    ViewEncapsulation,
-} from '@angular/core';
+import { AfterViewInit, Component, Input, OnChanges, ViewEncapsulation } from '@angular/core';
 import { chartCartesian } from '@d3fc/d3fc-chart';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
@@ -166,7 +158,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     lastDataDateEnd: Date;
     // *******************************
 
-    constructor(public webglService: NxWebGLService, @Inject(DOCUMENT) private document: Document) {
+    constructor(public webglService: NxWebGLService) {
         this.data = [];
         this.dataAllCameras = [];
     }
@@ -449,7 +441,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     }
 
     initContainer(): void {
-        this.container = this.document.querySelector('#chart');
+        this.container = document.querySelector('#chart');
         this.webglService.canvasWidth$.next(this.container.clientWidth);
         this.webglService.canvasHeight$.next(this.container.clientHeight);
         this.webglService.canvasRect$.next(this.container.getBoundingClientRect());

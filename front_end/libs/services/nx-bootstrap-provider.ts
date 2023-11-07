@@ -6,13 +6,11 @@ import { environment } from '@environments/environment';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { NxLanguageProviderService } from './nx-language-provider';
-import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxBootstrapProvider {
-    window = windowFactory();
     CONFIG: IConfig;
     readonly environment = environment;
 
@@ -37,8 +35,8 @@ export class NxBootstrapProvider {
     #isVmsApiAvailable = () =>
         new Promise(resolve => {
             // @ts-expect-error
-            this.window.vmsApiInit = () => resolve(true);
-            if (this.window.requestIdleCallback) {
+            window.vmsApiInit = () => resolve(true);
+            if (window.requestIdleCallback) {
                 requestIdleCallback(() => resolve(false));
             } else {
                 setTimeout(() => resolve(false));
@@ -47,13 +45,13 @@ export class NxBootstrapProvider {
 
     #useRefreshTokenFromVms = async () => {
         // @ts-expect-error
-        const refreshToken = await this.window?.vms?.auth.cloudToken();
+        const refreshToken = await window?.vms?.auth.cloudToken();
         if (!refreshToken) {
             return;
         }
-        const url = new URL(this.window.location.href);
+        const url = new URL(window.location.href);
         url.searchParams.set('refresh_token', refreshToken);
-        this.window.history.pushState({ url: url.toString() }, '', url.toString());
+        window.history.pushState({ url: url.toString() }, '', url.toString());
     };
 
     #init = async (): Promise<void> => {
@@ -106,7 +104,7 @@ export class NxBootstrapProvider {
                     resolve(true);
                 })
                 .finally(() => {
-                    this.window.document.querySelector('body').style.backgroundColor = null;
+                    document.querySelector('body').style.backgroundColor = null;
                 });
         });
     }

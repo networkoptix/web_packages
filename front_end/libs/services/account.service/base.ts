@@ -29,7 +29,6 @@ import { NxSessionService } from '../session.service';
 import { NxStorageService } from '../storage.service';
 import { NxSystemAPIService } from '../system-api.service';
 import { NxUriService } from '../uri.service';
-import { windowFactory } from '../window-provider';
 
 import { Account } from './account';
 
@@ -41,8 +40,6 @@ import { Account } from './account';
 @Injectable()
 export abstract class BaseAccount {
     protected CONFIG: IConfig = nxConfig;
-    protected window: Window = windowFactory();
-    protected document: Document = this.window.document;
     protected LANG = staticLang;
     protected location: Location;
     protected requestingLogin: any;
@@ -129,7 +126,7 @@ export abstract class BaseAccount {
             this.localStorage.clear('systemId');
             // Changing "loginState" is enough here. Re-init routes are subscribed to it.
             this.sessionService.loginState = res.email;
-            setTimeout(() => this.window.location.reload());
+            setTimeout(() => window.location.reload());
         });
     }
 
@@ -217,13 +214,13 @@ export abstract class BaseAccount {
                 setTimeout(() => {
                     this.account = undefined;
                     if (!skipReload) {
-                        this.window.location.reload();
+                        window.location.reload();
                     }
                 });
             });
         } else if (!skipReload) {
             setTimeout(() => {
-                this.window.location.reload();
+                window.location.reload();
             });
         }
     }
@@ -303,9 +300,9 @@ export abstract class BaseAccount {
     }
 
     private clearCodeFromUri(): void {
-        const url = new URL(this.window.location.href);
+        const url = new URL(window.location.href);
         url.searchParams.delete('code');
-        this.window.history.pushState({ url: url.toString() }, '', url.toString());
+        window.history.pushState({ url: url.toString() }, '', url.toString());
     }
 
     protected sleep(time) {
@@ -329,13 +326,13 @@ export abstract class BaseAccount {
     };
 
     public async handleRefreshTokenLogin(refreshToken) {
-        const url = new URL(this.window.location.href);
+        const url = new URL(window.location.href);
         url.searchParams.delete('refresh_token');
         const { code }: any = await this.cloudApi
             .getTokensFromCloud(refreshToken, 'refresh_token', 'code')
             .toPromise();
         url.searchParams.set('code', code);
-        this.window.history.pushState({ url: url.toString() }, '', url.toString());
+        window.history.pushState({ url: url.toString() }, '', url.toString());
         return this.handleCodeLogin(code);
     }
 
@@ -347,10 +344,10 @@ export abstract class BaseAccount {
                 .then(res => {
                     this.sessionService.loginState = res.email;
                     this.clearCodeFromUri();
-                    this.window.location.reload();
+                    window.location.reload();
                 })
                 .catch(e =>
-                    this.handleCodeError(e).then(reload => reload && this.window.location.reload()),
+                    this.handleCodeError(e).then(reload => reload && window.location.reload()),
                 )
                 .finally(() => {
                     this.appStateService.ready = true;
@@ -363,7 +360,7 @@ export abstract class BaseAccount {
                 .then(() => {
                     this.clearCodeFromUri();
                     if (reload) {
-                        this.window.location.reload();
+                        window.location.reload();
                     }
                 });
         };
@@ -405,7 +402,7 @@ export abstract class BaseAccount {
     public async handleAuthKeyLogin(auth: string) {
         const account: Account = await this.get(true);
         if (!account || !account.is_authenticated) {
-            return this.loginWithAuthKey(auth).then(() => this.document.location.reload());
+            return this.loginWithAuthKey(auth).then(() => document.location.reload());
         }
         try {
             const result: any = await this.cloudApi.checkAuthCode(decodeURIComponent(auth));
@@ -428,9 +425,9 @@ export abstract class BaseAccount {
             if (response) {
                 await this.logoutHelper(true, true);
                 await this.sleep(1000);
-                return this.window.location.reload();
+                return window.location.reload();
             }
-            return this.clearAuthFromUri().then(() => this.document.location.reload());
+            return this.clearAuthFromUri().then(() => document.location.reload());
         } catch (e) {
             this.toasts.show(this.LANG.errorCodes.wrongAuthCode, ToastType.Danger);
             return this.requireLogin();

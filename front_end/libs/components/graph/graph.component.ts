@@ -97,8 +97,8 @@ export class NxMonitoringGraphComponent implements OnChanges {
     }
 
     toggleFullScreen(): void {
-        if (this.window.document.fullscreenElement) {
-            this.window.document.exitFullscreen();
+        if (document.fullscreenElement) {
+            document.exitFullscreen();
         } else {
             this.elRef.nativeElement.requestFullscreen({ navigationUI: 'hide' });
         }

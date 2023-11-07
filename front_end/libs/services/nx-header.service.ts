@@ -10,14 +10,12 @@ import { NxMenusService } from './menus.service';
 import { MenuNode } from './menus.service.types';
 import { ContextManifest } from './nx-cloud-api/nx-cloud-api.types';
 import { createButtonType, MenuNodeNavProps } from './nx-header.service.types';
-import { windowFactory } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
     providedIn: 'root',
 })
 export class NxHeaderService {
-    private window: Window = windowFactory();
     public showSubject = new BehaviorSubject(false);
     public activeSystem$ = new BehaviorSubject<NxSystem>(null);
     public lastActive$ = new BehaviorSubject<NxSystem>(null);
@@ -242,10 +240,10 @@ export class NxHeaderService {
             if (!url.startsWith('http')) {
                 url = `http://${url}`;
             }
-            this.window.open(url, openNewWindow ? '_blank' : '_self');
+            window.open(url, openNewWindow ? '_blank' : '_self');
         } else if (openNewWindow) {
             const serializedUrl = this.router.serializeUrl(this.router.createUrlTree([url]));
-            this.window.open(serializedUrl, '_blank');
+            window.open(serializedUrl, '_blank');
         } else {
             this.router.navigate([url], { queryParamsHandling }).catch(ex => {
                 console.error(ex);

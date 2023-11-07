@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
     Component,
     OnInit,
@@ -6,7 +5,6 @@ import {
     ElementRef,
     ViewChild,
     AfterViewInit,
-    Inject,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
@@ -120,7 +118,6 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
         private playback: PlaybackService,
         private wheel: TimelineWheelHandlerService,
         private timeUnderMouse: TimelineTimeUnderMouseService,
-        @Inject(DOCUMENT) private document: Document,
     ) {}
 
     ngOnInit(): void {
@@ -354,7 +351,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     @HostListener('mouseup', ['$event'])
     mouseSelectionUpHandler(e: MouseEvent): void {
         this.selectedRangeView.nativeElement.classList.remove('range-drag');
-        if (!this.selectionMode && e.currentTarget !== this.document) {
+        if (!this.selectionMode && e.currentTarget !== document) {
             if (this.clickAndHoldHandler) {
                 clearTimeout(this.clickAndHoldHandler);
             }

@@ -22,7 +22,6 @@ import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxSearchService } from '@services/search.service';
 import { ButtonArrowType, SearchModel } from '@services/search.service.types';
 import type { NxSystem } from '@services/system.service/system';
-import { windowFactory } from '@services/window-provider';
 import type { NgChanges } from '@utils/ng-changes';
 
 import { menus } from '../variables/static-variables';
@@ -59,8 +58,6 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
     @Output() menuSearchMode = new EventEmitter<boolean>();
     @Output() contentToggle = new EventEmitter<ContentToggle>();
-
-    private window: Window = windowFactory();
 
     selectedLevel1: string;
     selectedLevel2: string;
@@ -148,11 +145,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
             }
         });
 
-        fromEvent<Event>(this.window, 'resize')
+        fromEvent<Event>(window, 'resize')
             .pipe(
                 untilDestroyed(this),
                 map(event => (event.target as Window).innerHeight),
-                startWith(this.window.innerHeight),
+                startWith(window.innerHeight),
             )
             .subscribe(height => {
                 this.totalWindowHeight = height;
@@ -340,7 +337,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
                 // set scrollbar if needed but only after resizing finishes
                 clearTimeout(this.menuOverflowCalc);
-                this.menuOverflowCalc = this.window.setTimeout(() => {
+                this.menuOverflowCalc = window.setTimeout(() => {
                     const magicNumberToAdd = actualSearchHeight + 2 * this.stdPadding; // bottom and top padding
                     this.menuOverflow =
                         windowHeightFit + magicNumberToAdd > this.windowHeight ? 'auto' : 'hidden';

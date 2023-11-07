@@ -1,5 +1,5 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
-import { CommonModule, DOCUMENT, Location } from '@angular/common';
+import { CommonModule, Location } from '@angular/common';
 import { Component, Inject, OnInit, Renderer2, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
@@ -121,7 +121,6 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         private loginWebAdminService: loginWebAdminService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private keepPage: DT['data'],
-        @Inject(DOCUMENT) private document: Document,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -160,13 +159,10 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
     }
 
     ngOnInit(): void {
-        const url = new URL(this.document.location.href);
+        const url = new URL(document.location.href);
         if (url.search) {
-            const { origin } = this.document.location;
-            this.document.location.href = this.document.location.href.replace(
-                origin,
-                `${origin}/#`,
-            );
+            const { origin } = document.location;
+            document.location.href = document.location.href.replace(origin, `${origin}/#`);
             url.hash = `${url.hash}?${url.search}`;
         }
         const [hash, query] = url.hash.split('?');
@@ -200,7 +196,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         // ****************************************************
 
         // Check the url queryParams for next. if it exists set next equal to it.
-        const nextUrl = /\?next=(.*)/.exec(this.document.location.search.replace(/%2F/g, '/'));
+        const nextUrl = /\?next=(.*)/.exec(document.location.search.replace(/%2F/g, '/'));
         if (nextUrl && nextUrl.length > 1) {
             this.next = nextUrl[1];
         }

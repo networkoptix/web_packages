@@ -168,9 +168,11 @@ export function useJsonRpc(
             /**
              * Parse request to generate JSON-RPC payload.
              */
-            const jsonRpcEndpoint = `${
-                this.window.location.protocol === 'http' ? 'ws' : 'wss'
-            }://${(this.urlBase || this.window.location.origin).split('://').pop()}/jsonrpc`;
+            const jsonRpcEndpoint = `${window.location.protocol === 'http' ? 'ws' : 'wss'}://${(
+                this.urlBase || window.location.origin
+            )
+                .split('://')
+                .pop()}/jsonrpc`;
             const connection = JsonRpcHandler.getConnection(jsonRpcEndpoint, () =>
                 this.authGet && !nxConfig.featureFlags.restCookieLogin
                     ? `?auth=${this.authGet}`

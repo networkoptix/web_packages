@@ -148,7 +148,7 @@ export class NxBookmarksComponent implements OnInit {
     tagFilter = new SelectionModel<string>(true, []);
 
     private queryParams: BookmarkParams;
-    private locale: string = getSysLang(window);
+    private locale: string = getSysLang();
 
     constructor(
         configService: NxConfigService,

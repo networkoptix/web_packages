@@ -52,7 +52,7 @@ export class PlayerJsComponent implements OnDestroy, OnChanges {
     #videojs: typeof videojs;
 
     private supportsNativeHls(): boolean {
-        const video = window.document.createElement('video');
+        const video = document.createElement('video');
         const supportsHls = !!(
             video.canPlayType('application/vnd.apple.megURL') || video.canPlayType('audio/mpegurl')
         );

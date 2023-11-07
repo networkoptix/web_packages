@@ -1,13 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import {
-    AfterViewInit,
-    Component,
-    ElementRef,
-    Inject,
-    Input,
-    OnInit,
-    ViewChild,
-} from '@angular/core';
+import { AfterViewInit, Component, ElementRef, Input, OnInit, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { fromEvent } from 'rxjs';
 
@@ -35,11 +26,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     isInvalid = false;
     attributeMutationObserver: MutationObserver;
 
-    constructor(
-        @Inject(DOCUMENT) private document: Document,
-        private APIToolService: NxAPIToolSystemService,
-        private elementRef: ElementRef,
-    ) {}
+    constructor(private APIToolService: NxAPIToolSystemService, private elementRef: ElementRef) {}
 
     ngOnInit(): void {
         this.isDisabled = this.textarea.getAttribute('disabled') === '';
@@ -77,9 +64,9 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
                     // If you type something while the content-editable div is empty, add a line counter
                     element.innerHTML = '<div class="line"><br></div>';
                 } else {
-                    const node = this.document.createElement('span');
+                    const node = document.createElement('span');
                     node.innerText = focusPositionMarker;
-                    const originalSelection = this.document.getSelection();
+                    const originalSelection = document.getSelection();
                     // Insert a marker to focus on after highlight
                     originalSelection.getRangeAt(0).insertNode(node);
                     const line = findLine(originalSelection.anchorNode);
@@ -102,7 +89,7 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
                 this.APIToolService.preventNextChangeDetection = true;
 
                 event.preventDefault();
-                this.document.execCommand(
+                document.execCommand(
                     'inserttext',
                     false,
                     event.clipboardData.getData('text/plain'),
@@ -150,9 +137,9 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
      * This is neccessary because the position is lost after styling elements are inserted by highlightLine
      */
     setTextareaFocusPosition = (element: HTMLElement): void => {
-        const selection = this.document.getSelection();
-        const range = this.document.createRange();
-        const focusPositionElement = this.document.querySelector('.focus-position');
+        const selection = document.getSelection();
+        const range = document.createRange();
+        const focusPositionElement = document.querySelector('.focus-position');
         range.selectNode(focusPositionElement);
         range.setStart(focusPositionElement, 0);
         range.collapse(true);

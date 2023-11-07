@@ -1,13 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    Inject,
-    Input,
-    OnInit,
-    OnDestroy,
-    ViewEncapsulation,
-    effect,
-} from '@angular/core';
+import { Component, Input, OnInit, OnDestroy, ViewEncapsulation, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import FileSaver from 'file-saver';
@@ -81,7 +72,6 @@ export class NxHealthComponent implements OnInit, OnDestroy {
         private scrollMechanicsService: NxScrollMechanicsService,
         private sourceService: NxAppSourceService,
         public healthService: NxHealthService,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -199,7 +189,7 @@ export class NxHealthComponent implements OnInit, OnDestroy {
     }
 
     setHeaderHeight(): void {
-        this.headerHeight = this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     ngOnDestroy(): void {

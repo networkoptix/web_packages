@@ -13,7 +13,6 @@ import {
 
 import { NxAccountService } from './account.service';
 import { nxConfig } from './nx-config/config';
-import { windowFactory } from './window-provider';
 
 /** Service to handle opening the VMS Client from the browser
  *
@@ -24,8 +23,7 @@ import { windowFactory } from './window-provider';
 })
 export class NxUrlProtocolService {
     public CONFIG: typeof nxConfig = nxConfig;
-    public window: Window = windowFactory();
-    public host = environment.production ? this.window.location.host : environment.cloudHost;
+    public host = environment.production ? window.location.host : environment.cloudHost;
 
     constructor(
         private accountService: NxAccountService,
@@ -124,7 +122,7 @@ export class NxUrlProtocolService {
     }
 
     openDesktopAsTemporaryUser(temporaryUserToken: string): void {
-        const uri = `${this.baseUri}${this.window.location.host}?tmp_token=${temporaryUserToken}`;
-        this.window.location.href = uri;
+        const uri = `${this.baseUri}${window.location.host}?tmp_token=${temporaryUserToken}`;
+        window.location.href = uri;
     }
 }

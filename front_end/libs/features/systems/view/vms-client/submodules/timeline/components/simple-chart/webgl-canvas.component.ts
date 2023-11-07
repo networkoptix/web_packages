@@ -1,8 +1,6 @@
-import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     Component,
-    Inject,
     Input,
     OnChanges,
     OnInit,
@@ -72,10 +70,7 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
     nowDateDomain: Date;
     nowDateOrigDomain: Date;
 
-    constructor(
-        private webglService: NxWebGLService,
-        @Inject(DOCUMENT) private document: Document,
-    ) {}
+    constructor(private webglService: NxWebGLService) {}
 
     ngOnInit(): void {
         this.data = [];
@@ -281,7 +276,7 @@ export class SimpleNxWebGLCanvasComponent implements OnInit, AfterViewInit, OnCh
             this.nowMs = Date.now();
             this.timeFrameInS = Math.ceil((this.nowMs - this.start) / 1000);
 
-            this.container = this.document.querySelector('#chart');
+            this.container = document.querySelector('#chart');
             this.webglService.canvasWidth$.next(this.container.clientWidth);
             this.webglService.canvasHeight$.next(this.container.clientHeight);
             this.webglService.canvasRect$.next(this.container.getBoundingClientRect());

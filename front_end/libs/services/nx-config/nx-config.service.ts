@@ -4,7 +4,6 @@ import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
 import { FeatureFlagType } from '@services/nx-config/base-config';
-import { windowFactory } from '@services/window-provider';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
@@ -13,16 +12,10 @@ import { DynamicConfig } from './dynamic-config';
 const findNode = <T>(targetObject: T, nodes: (string | symbol)[]): unknown =>
     nodes.reduce((ref, nodeName) => ref[nodeName], targetObject);
 
-type WindowWithOverrides = Window & {
-    debugConfig: IConfig;
-    resetConfigOverrides: () => void;
-};
-
 @Injectable({
     providedIn: 'root',
 })
 export class NxConfigService {
-    private window: WindowWithOverrides = windowFactory() as unknown as WindowWithOverrides;
     config: IConfig;
     static OVERRIDE_KEY = 'configOverrides';
 
@@ -45,14 +38,15 @@ export class NxConfigService {
     }
 
     public generateDebugConfigProxy(): IConfig {
-        this.window.resetConfigOverrides = () =>
-            this.window.confirm('Do you want to reset overrides?') &&
+        // @ts-expect-error: Dev debugging stuff
+        window.resetConfigOverrides = () =>
+            window.confirm('Do you want to reset overrides?') &&
             this.session.store(NxConfigService.OVERRIDE_KEY, {}) &&
-            this.window.confirm('Reload page to update config?') &&
-            this.window.location.reload();
+            window.confirm('Reload page to update config?') &&
+            window.location.reload();
 
         const debugHandlerFactory = (
-            (configRef = this.config, session = this.session, windowRef = this.window) =>
+            (configRef = this.config, session = this.session, windowRef = window) =>
             (nodeNames: (string | symbol)[] = []): ProxyHandler<IConfig> => ({
                 set(target, property, value) {
                     const currentNodeString = [...nodeNames, property].join('.');
@@ -113,8 +107,9 @@ export class NxConfigService {
     }
 
     private attachDebugConfigToWindow(): void {
-        if (this.window) {
-            this.window.debugConfig = this.generateDebugConfigProxy();
+        if (window) {
+            // @ts-expect-error: Dev debugging stuff
+            window.debugConfig = this.generateDebugConfigProxy();
         }
     }
 

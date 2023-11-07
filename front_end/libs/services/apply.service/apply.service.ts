@@ -1,6 +1,5 @@
 import { Dialog } from '@angular/cdk/dialog';
-import { DOCUMENT } from '@angular/common';
-import { ComponentRef, Injectable, ViewContainerRef, Inject } from '@angular/core';
+import { ComponentRef, Injectable, ViewContainerRef } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { isEqual, cloneDeep, isArray } from 'lodash-es';
@@ -66,11 +65,7 @@ export class NxApplyService {
     applyOnNavSubject = new BehaviorSubject('');
     isOnline$ = new BehaviorSubject(true);
 
-    constructor(
-        private dialog: Dialog,
-        private processService: NxProcessService,
-        @Inject(DOCUMENT) private document: Document,
-    ) {}
+    constructor(private dialog: Dialog, private processService: NxProcessService) {}
 
     get popupActive() {
         return this.popupActive$.value;
@@ -494,8 +489,8 @@ export class NxApplyService {
         form: NgForm,
     ): Promise<DialogTypes['return']> {
         // Blur activeElement to prevent ExpressionChangedAfterItHasBeenCheckedError
-        if (this.document.activeElement instanceof HTMLElement) {
-            this.document.activeElement.blur();
+        if (document.activeElement instanceof HTMLElement) {
+            document.activeElement.blur();
         }
 
         // when using FormWatchers

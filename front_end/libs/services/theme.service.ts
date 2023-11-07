@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Inject, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { CookieService } from 'ngx-cookie-service';
@@ -43,7 +42,6 @@ export class NxThemeService {
         private sessionService: NxSessionService,
         private cookieService: CookieService,
         private route: ActivatedRoute,
-        @Inject(DOCUMENT) protected document: Document,
     ) {
         this.CONFIG = configService.getConfig();
         this.viewType = this.route.snapshot.queryParams.view_type || 'web';
@@ -66,7 +64,7 @@ export class NxThemeService {
             .pipe(untilDestroyed(this))
             .subscribe(async (params: AuthorizeParams) => {
                 if (!params.view_type) {
-                    this.viewType = window.document.documentElement.getAttribute('data-platform');
+                    this.viewType = document.documentElement.getAttribute('data-platform');
                 }
                 this.viewType ||= 'web';
             });
@@ -75,8 +73,8 @@ export class NxThemeService {
             .observe('theme')
             .pipe(untilDestroyed(this))
             .subscribe(theme => {
-                if (!window.document.hasFocus()) {
-                    window.document.documentElement.setAttribute(
+                if (!document.hasFocus()) {
+                    document.documentElement.setAttribute(
                         'data-theme',
                         this.getThemeRealName(theme),
                     );
@@ -107,7 +105,7 @@ export class NxThemeService {
                 await this.setTheme(this.themeSelected, loginState);
             });
 
-        this.scope = this.document.documentElement;
+        this.scope = document.documentElement;
         this.themeMode$.pipe(untilDestroyed(this)).subscribe((mode: number) => {
             if (mode) {
                 // 0 - dark, 1 - light
@@ -157,10 +155,7 @@ export class NxThemeService {
 
             const theme = NxConfigService.isDarkTheme ? 'dark' : 'light';
 
-            window.document.documentElement.setAttribute(
-                'data-theme',
-                this.getThemeRealName(theme),
-            );
+            document.documentElement.setAttribute('data-theme', this.getThemeRealName(theme));
             this.cookieService.set('theme', theme);
         });
     }
@@ -179,7 +174,7 @@ export class NxThemeService {
         if (!this.darkThemeMq) {
             this.darkThemeMq = window.matchMedia('(prefers-color-scheme: dark)');
         }
-        const docTheme = window.document.documentElement.getAttribute('data-theme');
+        const docTheme = document.documentElement.getAttribute('data-theme');
         let { themesEnabled } = this.CONFIG.featureFlags;
         if (username === 'setup' || this.viewType !== 'web') {
             themesEnabled = true;
@@ -193,7 +188,7 @@ export class NxThemeService {
                 NxConfigService.isDarkTheme && themesEnabled
                     ? this.getThemeRealName('dark')
                     : this.getThemeRealName('light');
-            window.document.documentElement.setAttribute('data-theme', theme);
+            document.documentElement.setAttribute('data-theme', theme);
             this.cookieService.set('theme', theme);
         } else {
             if (
@@ -205,7 +200,7 @@ export class NxThemeService {
             }
             this.sessionStorage.store('theme', themeSelected);
             NxConfigService.isDarkTheme = themeSelected === 'dark';
-            window.document.documentElement.setAttribute(
+            document.documentElement.setAttribute(
                 'data-theme',
                 this.getThemeRealName(themeSelected),
             );
@@ -240,7 +235,7 @@ export class NxThemeService {
         this.cookieService.set('theme', theme);
         this.themeSelected = theme;
 
-        window.document.documentElement.setAttribute('data-theme', theme);
+        document.documentElement.setAttribute('data-theme', theme);
 
         await this.themeCustomProperty
             .update(curr => {

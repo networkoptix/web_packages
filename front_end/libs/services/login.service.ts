@@ -17,14 +17,12 @@ import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import type { NxSystem } from './system.service/system';
 import { NxToastService } from './toast.service';
-import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxLoginService {
     CONFIG: IConfig = nxConfig;
-    private window: Window = windowFactory();
     LANG = staticLang;
 
     done$: Subject<boolean> = new Subject<boolean>();
@@ -103,7 +101,7 @@ export class NxLoginService {
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${
                 state ? '?state=' + state : ''
             }`;
-            this.window.open(authorizeUrl, '_blank').focus();
+            window.open(authorizeUrl, '_blank').focus();
             return this.storage
                 .observe(oauthStore.code)
                 .pipe(

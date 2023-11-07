@@ -250,7 +250,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
         ).pipe(
             catchError(e => {
-                const location = this.window.location;
+                const location = window.location;
                 if (
                     !environment.isLocal &&
                     [401, 403, 422].includes(e.status) &&
@@ -732,7 +732,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     async redirectOauth(allSystems?: boolean): Promise<void> {
-        const { href } = this.window.location;
+        const { href } = window.location;
         const params = new URLSearchParams({
             client_type: 'loginWebadmin',
             view_type: 'web',
@@ -745,7 +745,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 '',
             )}/cdb/oauth2/token cloudSystemId=${allSystems ? '*' : this.CONFIG.cloudSystemId}`,
         });
-        this.window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
+        window.location.href = `${this.CONFIG.cloudHost}/authorize?${params.toString()}`;
     }
 
     override async logout() {
@@ -1259,9 +1259,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     protected override generateGetUrl(url: string, params_: RequestParams, absUrl?: boolean) {
         const params = new HttpParams({ fromObject: params_ });
         if (absUrl) {
-            const proto = this.window.location.protocol;
-            const hostName = this.window.location.hostname;
-            const usePort = this.window.location.port;
+            const proto = window.location.protocol;
+            const hostName = window.location.hostname;
+            const usePort = window.location.port;
             const port = usePort ? `:${usePort}` : '';
             url = `${proto}//${hostName}${port}${url}`;
         } else {

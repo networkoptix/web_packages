@@ -1,11 +1,10 @@
-import { DOCUMENT, Location } from '@angular/common';
+import { Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
     effect,
     ElementRef,
     HostListener,
-    Inject,
     OnDestroy,
     OnInit,
     Renderer2,
@@ -136,7 +135,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         public ux: WebClientUxService,
         private store: Store,
         private localStorageService: LocalStorageService,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -195,10 +193,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         // this.fpsMeter.install()
         // @ts-expect-error: Old debugging thing? Should probably remove
-        this.document.fpsMeter = this.fpsMeter;
+        document.fpsMeter = this.fpsMeter;
         // allows calling document.fpsMeter.install() from the developer console, if needed
 
-        this.ux.isFullScreen = !!this.document.fullscreenElement;
+        this.ux.isFullScreen = !!document.fullscreenElement;
     }
 
     ngOnDestroy(): void {
@@ -290,7 +288,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     hls: 'application/x-mpegURL',
                     rtsp: 'video/webm',
                 };
-                const video = this.document.createElement('video');
+                const video = document.createElement('video');
                 const isHlsSupported = window.MediaSource.isTypeSupported(
                     'video/mp4; codecs="avc1.42E01E,mp4a.40.2"',
                 );
@@ -353,7 +351,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private unListenTouchMove: () => void;
 
     private onFullScreenChange = (e: MouseEvent): void => {
-        const fse = this.document.fullscreenElement;
+        const fse = document.fullscreenElement;
         this.fullscreenMode = !!fse;
         if (this.fullscreenMode) {
             this.onShowElements = window.setTimeout(() => {
@@ -752,14 +750,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     toggleFullScreen($event?: MouseEvent): void {
         $event?.stopPropagation();
 
-        if (!this.document.fullscreenElement) {
+        if (!document.fullscreenElement) {
             // if browser is currently not in full screen
             this.$self.parentElement.requestFullscreen();
             setTimeout(() => {
                 this.$self.classList.add('is-full-screen');
             }, 250);
         } else {
-            this.document.exitFullscreen();
+            document.exitFullscreen();
             setTimeout(() => {
                 this.$self.classList.remove('is-full-screen');
             }, 250);

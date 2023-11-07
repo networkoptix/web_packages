@@ -1,5 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import { Component, Inject } from '@angular/core';
+import { Component } from '@angular/core';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
@@ -188,7 +187,7 @@ export class MultiSelectComponent {
         console.log('onChange', event);
     }
 
-    constructor(private menuService: NxMenuService, @Inject(DOCUMENT) private document: Document) {}
+    constructor(private menuService: NxMenuService) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('components');
@@ -343,10 +342,10 @@ export class MultiSelectComponent {
         this.modeSelected = this.mode[2];
 
         // calculate dd size
-        const btn = this.document.createElement('span');
+        const btn = document.createElement('span');
         btn.style.visibility = 'hidden';
         btn.innerText = this.modeSelected.name;
-        this.document.body.appendChild(btn);
+        document.body.appendChild(btn);
         // add button's left and right padding and space for info icon
         this.ddWidth = Math.round(btn.getBoundingClientRect().width + 100);
     }

@@ -1,5 +1,5 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, Inject, Input, OnChanges } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, Input, OnChanges } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -56,7 +56,7 @@ export class DownloadComponent implements OnChanges {
 
     // TODO: Fix arm supported. It says the same thing as linux
 
-    constructor(configService: NxConfigService, @Inject(DOCUMENT) private document: Document) {
+    constructor(configService: NxConfigService) {
         this.CONFIG = configService.getConfig();
     }
 
@@ -95,7 +95,7 @@ export class DownloadComponent implements OnChanges {
             if (os === this.activePlatform) {
                 const link = this.LANG.downloads.mobile[name].link;
                 if (link !== 'disabled') {
-                    this.document.location.href = link;
+                    document.location.href = link;
                     return;
                 }
                 break;

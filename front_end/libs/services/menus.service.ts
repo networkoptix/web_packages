@@ -19,7 +19,6 @@ import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxSessionService } from './session.service';
-import { windowFactory } from './window-provider';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -28,7 +27,6 @@ import { windowFactory } from './window-provider';
 export class NxMenusService {
     private menusStructure: MenusStructure;
     public CONFIG: IConfig = nxConfig;
-    private window: Window = windowFactory();
     private LANG = staticLang;
     private languageChanged$ = new BehaviorSubject('');
     public currentSystemNode$ = new BehaviorSubject<MenuNode>(null);
@@ -387,7 +385,7 @@ export class NxMenusService {
             (this.CONFIG.featureFlags.restCookieLogin || !activeSystem.system2faEnabled);
         const layoutsEnabledForBrowser =
             // @ts-expect-error window.chrome only in Chromium browsers
-            this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;
+            this.CONFIG.featureFlags.layoutsNonChrome || !!window.chrome;
         if (layoutsEnabled && layoutsEnabledForBrowser) {
             const layoutsNode = new MenuNode(
                 'Layouts',

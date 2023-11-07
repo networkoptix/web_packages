@@ -347,7 +347,7 @@ export class NxLayoutGridComponent {
     assertResourceOfType = assertResourceOfType;
     unsavedStates = staticLang.layouts.unsavedStates;
 
-    mouseMoving$ = fromEvent(window.document, 'mousemove').pipe(
+    mouseMoving$ = fromEvent(document, 'mousemove').pipe(
         switchMap(() => of(false).pipe(delay(5000), startWith(true))),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: false }),
@@ -1110,7 +1110,7 @@ export class NxLayoutGridComponent {
             return size;
         }
 
-        const { height, width } = window.document.fullscreenElement
+        const { height, width } = document.fullscreenElement
             ? size
             : this.calculateAspect([size, layout]).cellSize;
         const { renderConfig, rotation } = item;

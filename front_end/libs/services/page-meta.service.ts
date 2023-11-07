@@ -12,7 +12,6 @@ import type { BaseConfig } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxConfigService } from './nx-config/nx-config.service';
-import { windowFactory } from './window-provider';
 
 interface MetaLookup {
     [key: string]: Record<string, string>;
@@ -25,7 +24,6 @@ interface MetaLookup {
 export class NxPageMetaService {
     CONFIG: IConfig = nxConfig;
     LANG = staticLang;
-    protected window: Window = windowFactory();
 
     routerUrl: string = '';
     updater$ = new Subject<void>();
@@ -53,7 +51,7 @@ export class NxPageMetaService {
     }
 
     private getRoot(): string {
-        return this.window.location.href.replace(this.routerUrl, '');
+        return window.location.href.replace(this.routerUrl, '');
     }
 
     private mapMeta = (metaProperties: Record<string, string>): Record<string, string> => {

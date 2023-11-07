@@ -1,5 +1,5 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
-import { DOCUMENT, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import { AfterViewInit, Component, ElementRef, Inject, ViewChild } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
@@ -61,7 +61,6 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         private router: Router,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) { system, server }: DT['data'],
-        @Inject(DOCUMENT) private document: Document,
     ) {
         super(dialogRef);
         this.system = system;
@@ -80,7 +79,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         const isResettingCurrentServer = (): boolean => {
             const currentServer = this.system.serverManager.servers.find(s => s.id === server.id);
             return (
-                currentServer.endpoints.some(e => e.includes(this.document.location.host)) ||
+                currentServer.endpoints.some(e => e.includes(document.location.host)) ||
                 this.system.info.name === currentServer.name
             );
         };

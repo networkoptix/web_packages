@@ -130,13 +130,13 @@ export class LocalAccount extends BaseAccount {
                     this.sessionService.invalidateSession(); // Clear session
                     this.account = undefined;
                     if (!skipReload) {
-                        this.window.location.reload();
+                        window.location.reload();
                     }
                 });
             });
         } else if (!skipReload) {
             setTimeout(() => {
-                this.window.location.reload();
+                window.location.reload();
             });
         }
     }
@@ -147,7 +147,7 @@ export class LocalAccount extends BaseAccount {
 
     private showLoginDialog(): Promise<Account | undefined> {
         this.loginDialogActive = true;
-        const temporaryUserToken = new URLSearchParams(this.window.location.href.split('?')[1]).get(
+        const temporaryUserToken = new URLSearchParams(window.location.href.split('?')[1]).get(
             'tmp_token',
         );
         if (temporaryUserToken) {

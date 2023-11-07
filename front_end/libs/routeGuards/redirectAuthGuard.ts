@@ -1,13 +1,9 @@
-import { inject } from '@angular/core';
 import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@angular/router';
-
-import { WINDOW } from '@services/window-provider';
 
 export const RedirectAuthGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
     state: RouterStateSnapshot,
 ): boolean => {
-    const iWindow: Window = inject(WINDOW);
     const { url } = state;
     let newUrl = '';
     // exists to handle register & restore password for systems < 5.0 on desktop login
@@ -17,7 +13,7 @@ export const RedirectAuthGuard: CanActivateFn = (
         newUrl = '/authorize/restore_password';
     }
     if (newUrl) {
-        iWindow.location.href = newUrl;
+        window.location.href = newUrl;
     }
     return false;
 };

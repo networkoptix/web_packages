@@ -14,7 +14,6 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
-import { WINDOW } from '@services/window-provider';
 import { images } from '@static-variables';
 
 @Component({
@@ -34,7 +33,6 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
     private account = inject(NxAccountService);
     private loginService = inject(NxLoginService);
     private dialogService = inject(NxDialogsService);
-    private window = inject(WINDOW);
     private temporaryUserToken: string;
 
     protected mediaServerApi: NxSystemRestAPI3;
@@ -67,7 +65,7 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
                 this.mediaServerApi.loginTokenUrl(res.token).subscribe(loggedInAccount => {
                     this.account.loginState =
                         loggedInAccount.email || loggedInAccount.name || loggedInAccount.username;
-                    setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
+                    setTimeout(() => window.location.reload(), this.urlUpdateTimeout);
                 });
             },
             error: error => {

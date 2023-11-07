@@ -1,6 +1,6 @@
 import { DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenuTrigger } from '@angular/cdk/menu';
-import { CommonModule, DOCUMENT, formatDate } from '@angular/common';
+import { CommonModule, formatDate } from '@angular/common';
 import {
     ChangeDetectionStrategy,
     Component,
@@ -304,7 +304,7 @@ export class NxLayoutGridItemOverlayComponent {
 
     @HostListener('document:fullscreenchange')
     onFullscreenChange(): void {
-        this.isFullscreen$$.set(this.document.fullscreenElement === this.fullScreenTarget);
+        this.isFullscreen$$.set(document.fullscreenElement === this.fullScreenTarget);
     }
 
     readonly MENU_ITEMS: Record<string, MenuItem<ResourceNode>> = {
@@ -414,7 +414,7 @@ export class NxLayoutGridItemOverlayComponent {
                 if (!video) {
                     return;
                 }
-                const canvas = this.document.createElement('canvas');
+                const canvas = document.createElement('canvas');
                 const ctx = canvas.getContext('2d');
                 const { videoHeight, videoWidth } = video;
 
@@ -454,7 +454,7 @@ export class NxLayoutGridItemOverlayComponent {
             icon: icons.dirLayoutsOverlay + 'collapse.svg',
             ...LANG.fullscreenOff,
             action: () => {
-                this.document.exitFullscreen();
+                document.exitFullscreen();
             },
         },
         remove: {
@@ -540,7 +540,6 @@ export class NxLayoutGridItemOverlayComponent {
     };
 
     constructor(
-        @Inject(DOCUMENT) public document: Document,
         public ref: ElementRef<HTMLElement>,
         @Inject(LOCALE_ID) private locale: string,
         private resizeObserver: NxResizeObserver,

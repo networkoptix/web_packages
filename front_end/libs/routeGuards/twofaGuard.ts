@@ -14,7 +14,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { OauthService } from '@services/oauth.service';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
-import { WINDOW } from '@services/window-provider';
 
 export const TwofaGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -25,7 +24,6 @@ export const TwofaGuard: CanActivateFn = (
     const router: Router = inject(Router);
     const cloudApi: NxCloudApiService = inject(NxCloudApiService);
     const oauthService: OauthService = inject(OauthService);
-    const iWindow: Window = inject(WINDOW);
     return systemsService.systemsSubject.pipe(
         take(1),
         switchMap(async (systems: NxSystemInfo[]) => {
@@ -37,7 +35,7 @@ export const TwofaGuard: CanActivateFn = (
             }
             if (systemInfo?.system2faEnabled && !account.sessionVerified) {
                 if (!account.totpExistsForAccount) {
-                    const noRedirect = iWindow.location.href.endsWith(
+                    const noRedirect = window.location.href.endsWith(
                         `twofa-required?systemName=${systemInfo.name}`,
                     );
                     if (!noRedirect) {
@@ -54,7 +52,7 @@ export const TwofaGuard: CanActivateFn = (
                         account.email,
                         undefined,
                         accessToken,
-                        Location.joinWithSlash(iWindow.location.origin, state.url),
+                        Location.joinWithSlash(window.location.origin, state.url),
                     );
                 }
             } else {

@@ -1,9 +1,8 @@
-import { DOCUMENT, CommonModule } from '@angular/common';
+import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     Component,
     ElementRef,
-    Inject,
     Input,
     OnInit,
     ViewChild,
@@ -107,14 +106,13 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
         private sessionService: NxSessionService,
         private menuService: NxMenuService,
         public themeService: NxThemeService,
-        @Inject(DOCUMENT) protected document: Document,
     ) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('colors');
         this.menuService.selectedDetailsSection.set('themeHSL');
 
-        this.scope = this.document.documentElement;
+        this.scope = document.documentElement;
 
         this.isHSLTheme = this.themeService.isHSLTheme();
         this.isLiteTheme = this.scope.getAttribute('data-theme-mode') === 'light';

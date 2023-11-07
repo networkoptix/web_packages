@@ -1,9 +1,7 @@
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
-import { Injector } from '@angular/core';
 import { catchError, Observable, switchMap } from 'rxjs';
 
 import { environment } from '@environments/environment';
-import { WINDOWS_PROVIDERS, WINDOW } from '@services/window-provider';
 import { staticImplements } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import { startWithCache } from '@utils/start-with-cached';
@@ -78,9 +76,7 @@ export abstract class BaseCloudServiceAPI {
             this.serverUrl = this.serverUrl.slice(0, -1);
         }
 
-        this.hostOrCustomization ||= () =>
-            environment.cloudHost ||
-            Injector.create({ providers: WINDOWS_PROVIDERS }).get(WINDOW).location.hostname;
+        this.hostOrCustomization ||= () => environment.cloudHost || window.location.hostname;
     }
 
     public get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> =>

@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import { Component, Inject, ViewContainerRef, LOCALE_ID, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
@@ -130,7 +129,6 @@ export class NxSystemStorageComponent implements OnInit {
         private applyService: NxApplyService,
         @Inject(LOCALE_ID) public locale: string,
         private uriService: NxUriService,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         this.viewContainerRef = viewContainerRef;
         this.loading = true;
@@ -740,15 +738,15 @@ export class NxSystemStorageComponent implements OnInit {
         this.ddWidth = Object.entries(modes).reduce((width, current) => {
             const [key, currentText] = current;
             // calculate dd size ... for simplicity a span is used
-            const dd = this.document.createElement('span');
+            const dd = document.createElement('span');
             dd.style.visibility = 'hidden';
             dd.innerText = currentText;
-            this.document.body.appendChild(dd);
+            document.body.appendChild(dd);
             // add button's left and right padding and space for info icon
             const iconWidths = addWidth[key] || 16;
             const currentWidth = Math.round(dd.getBoundingClientRect().width + iconWidths);
 
-            this.document.body.removeChild(dd);
+            document.body.removeChild(dd);
             return Math.max(width, currentWidth);
         }, 0);
     }

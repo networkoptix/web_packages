@@ -37,8 +37,8 @@ export function withSystemBusUpdates(predicateCallback: PredicateCallback) {
         descriptor.value = function (this: typeof target, ...originalArgs: unknown[]) {
             if (jsonRpcEnabled(this)) {
                 const transactionBusEndpoint = `${
-                    this.window.location.protocol === 'http' ? 'ws' : 'wss'
-                }://${(this.urlBase || this.window.location.origin)
+                    window.location.protocol === 'http' ? 'ws' : 'wss'
+                }://${(this.urlBase || window.location.origin)
                     .split('://')
                     .pop()}/ec2/transactionBus/websocket?noInitialData=true`;
                 const connection = TransactionBusHandler.getConnection(transactionBusEndpoint, () =>

@@ -176,7 +176,7 @@ export class NxVideoPlayerComponent {
         } else {
             video.srcObject = stream;
         }
-        const canvas = this.document.createElement('canvas');
+        const canvas = document.createElement('canvas');
 
         this.zoomStreamCleanup = () => {
             if (typeof stream !== 'string' && 'getTracks' in stream) {

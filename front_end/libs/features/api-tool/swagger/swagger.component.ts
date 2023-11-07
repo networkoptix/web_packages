@@ -1,10 +1,8 @@
-import { DOCUMENT } from '@angular/common';
 import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
-    Inject,
     Input,
     OnChanges,
     OnInit,
@@ -80,7 +78,6 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         private renderer2: Renderer2,
         private componentFactoryResolver: ComponentFactoryResolver,
         private toastService: NxToastService,
-        @Inject(DOCUMENT) private document: Document,
     ) {}
 
     ngOnInit(): void {
@@ -302,7 +299,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addSpinner = (singleAPIRoute): void => {
-        const opblocks = this.document.querySelectorAll('.opblock-summary');
+        const opblocks = document.querySelectorAll('.opblock-summary');
         for (const opblock of opblocks as any) {
             if (opblock.nextElementSibling.tagName !== 'NX-SWAGGER-SPINNER') {
                 const { componentRef, element } = this.generateComponent(NxSwaggerSpinnerComponent);
@@ -316,14 +313,13 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     private addButtonEventListeners = (): void => {
         // Clicking on execute or try-it-out/cancel button triggers a rerender
-        const buttons = this.document.querySelectorAll('.try-out__btn, .opblock-control__btn');
+        const buttons = document.querySelectorAll('.try-out__btn, .opblock-control__btn');
         for (const button of buttons) {
             fromEvent<MouseEvent>(button, 'click')
                 .pipe(take(1), untilDestroyed(this))
                 .subscribe(event => {
                     if ((event?.target as HTMLButtonElement)?.classList.contains('execute')) {
-                        const clearBtn: HTMLButtonElement =
-                            this.document.querySelector('.btn-clear');
+                        const clearBtn: HTMLButtonElement = document.querySelector('.btn-clear');
                         clearBtn?.click(); // CLOUD-8423, clear the response if the previous one is showing, then generate a new one
                     }
                     if (!this.customComponentsRendering) {
@@ -337,7 +333,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         const observer = new MutationObserver(mutations => {
             for (const mutation of mutations) {
                 if (mutation.type === 'childList') {
-                    const resetButton = this.document.querySelector('.reset');
+                    const resetButton = document.querySelector('.reset');
                     if (
                         resetButton &&
                         (!this.resetButtonListener$ || this.resetButtonListener$.closed)
@@ -356,20 +352,18 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             }
         });
 
-        observer.observe(this.document, { childList: true, subtree: true });
+        observer.observe(document, { childList: true, subtree: true });
     };
 
     private changeRequestBodyText = (): void => {
-        const requestBody: HTMLElement = this.document.querySelector(
-            '.opblock-title.parameter__name',
-        );
+        const requestBody: HTMLElement = document.querySelector('.opblock-title.parameter__name');
         if (requestBody) {
             requestBody.innerText = 'Body';
         }
     };
 
     private modifyCodeBlocksAndTextareas = (): void => {
-        const elements = this.document.querySelectorAll<HTMLElement>('pre, .text-area');
+        const elements = document.querySelectorAll<HTMLElement>('pre, .text-area');
         for (const element of elements) {
             if (
                 element.nextSibling?.nodeName !== 'NX-COPY-TO-CLIPBOARD' &&
@@ -382,7 +376,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                     element.parentElement.tagName !== 'DIV' ||
                     !element.parentElement.classList.contains('highlight-code')
                 ) {
-                    const wrapper = this.document.createElement('div');
+                    const wrapper = document.createElement('div');
                     element.parentElement.replaceChild(wrapper, element);
                     wrapper.appendChild(element);
                 }
@@ -399,14 +393,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private removeInputPlaceholders = (): void => {
-        const inputs = this.document.querySelectorAll('input');
+        const inputs = document.querySelectorAll('input');
         for (const input of inputs) {
             input.removeAttribute('placeholder');
         }
     };
 
     private modifyTitlesInResponse = (): void => {
-        const visibleResponseSections = this.document.querySelectorAll('.btn-group');
+        const visibleResponseSections = document.querySelectorAll('.btn-group');
         for (const visibleResponseSection of visibleResponseSections) {
             const responsesWrapper = visibleResponseSection.nextElementSibling;
             const titles = responsesWrapper?.querySelectorAll('h4');
@@ -426,7 +420,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addCustomTextareas(): void {
-        const textareas = this.document.body.querySelectorAll<HTMLTextAreaElement>(
+        const textareas = document.body.querySelectorAll<HTMLTextAreaElement>(
             'textarea:not(.custom-textarea):not([readonly])',
         );
         for (const textarea of textareas) {
@@ -456,7 +450,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     }
 
     private generateRequestTypeLabel = () => {
-        const label = this.document.createElement('label');
+        const label = document.createElement('label');
         label.innerHTML =
             '<div class="media-type-wrapper"><div class="media-type">application/json</div></div>';
         return label;
@@ -464,7 +458,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
 
     /** Moves the example response and schema outside of the response table, also adds a label.  */
     private moveExampleResponse = (): void => {
-        const responses = this.document.querySelector('.responses-inner:not(.with-label)');
+        const responses = document.querySelector('.responses-inner:not(.with-label)');
         if (responses) {
             const exampleResponse = responses.querySelector('.model-example');
             // Should skip this response on next iteration so with-label class is added even if a label is not actually added.
@@ -478,7 +472,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addTabItemEventListener = (): void => {
-        const tabItems = this.document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
+        const tabItems = document.querySelectorAll('.tabitem:not(.tagged-tabitem)');
         for (const tabItem of tabItems) {
             tabItem.classList.add('tagged-tabitem');
             fromEvent<MouseEvent>(tabItem, 'click')
@@ -550,7 +544,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private addLabelToRequest = (): void => {
-        const requestModelExample = this.document.querySelector(
+        const requestModelExample = document.querySelector(
             '.opblock-description-wrapper .model-example:not(.with-label)',
         );
         if (requestModelExample) {
@@ -561,7 +555,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private insertCustomDropdown = (): void => {
-        const selects = this.document.body.querySelectorAll<HTMLSelectElement>(
+        const selects = document.body.querySelectorAll<HTMLSelectElement>(
             'select:not(.custom-dropdown):not(.content-type)',
         );
 
@@ -583,14 +577,14 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         this.swaggerMenuDescription.title = highlightAll(this.swaggerMenuDescription.title, query);
         this.singleRoutePath = highlightAll(this.singleRoutePath, query);
 
-        const paramsDescriptions = this.document.querySelectorAll(
+        const paramsDescriptions = document.querySelectorAll(
             '.parameters-col_description > .renderedMarkdown > p',
         );
         for (const paramDescription of paramsDescriptions) {
             paramDescription.innerHTML = highlightAll(paramDescription.innerHTML, query);
         }
 
-        const jsons = this.document.querySelectorAll('.microlight');
+        const jsons = document.querySelectorAll('.microlight');
         for (const json of jsons) {
             json.innerHTML = highlightAll(json.innerHTML, query);
         }

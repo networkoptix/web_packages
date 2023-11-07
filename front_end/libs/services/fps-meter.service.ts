@@ -1,13 +1,10 @@
-import { DOCUMENT } from '@angular/common';
-import { Injectable, Inject } from '@angular/core';
+import { Injectable } from '@angular/core';
 
 @Injectable({
     providedIn: 'root',
 })
 export class FpsMeterService {
     protected _isInstalled: boolean = false;
-
-    constructor(@Inject(DOCUMENT) private document: Document) {}
 
     public install(): void {
         if (!this._isInstalled) {
@@ -18,12 +15,12 @@ export class FpsMeterService {
 
     protected _install(): void {
         // a guard against SSR failure
-        if (typeof this.document === 'object') {
-            const script = this.document.createElement('script');
+        if (typeof document === 'object') {
+            const script = document.createElement('script');
             script.onload = () => {
                 // @ts-expect-error
                 const stats = new Stats();
-                this.document.body.appendChild(stats.dom);
+                document.body.appendChild(stats.dom);
 
                 const loop = () => {
                     stats.update();
@@ -32,7 +29,7 @@ export class FpsMeterService {
                 requestAnimationFrame(loop);
             };
             script.src = '//mrdoob.github.io/stats.js/build/stats.min.js';
-            this.document.head.appendChild(script);
+            document.head.appendChild(script);
         }
     }
 }

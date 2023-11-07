@@ -8,14 +8,12 @@ import { memoizeAsyncShort } from '@utils/memoize';
 import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxStorageService } from './storage.service';
-import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class OauthService {
     CONFIG: IConfig = nxConfig;
-    protected window: Window = windowFactory();
 
     constructor(private http: HttpClient, private storage: NxStorageService) {}
 
@@ -58,7 +56,7 @@ export class OauthService {
         accessToken?: string,
         redirectTo?: string,
     ) {
-        redirectTo ??= this.window.location.href;
+        redirectTo ??= window.location.href;
         const cleanRedirect = url => {
             const [baseUrl, query] = url.split('?');
             const params = new URLSearchParams(query);
@@ -118,7 +116,7 @@ export class OauthService {
             : environment.cloudHost
             ? `https://${environment.cloudHost}`
             : this.CONFIG.cloudHost;
-        this.window.location.href = `${host}/authorize?${params.toString()}`;
+        window.location.href = `${host}/authorize?${params.toString()}`;
         return false;
     }
 
@@ -126,7 +124,7 @@ export class OauthService {
         const authorizeUrl = `${
             environment.isLocal ? '/#' : ''
         }/cloud-authorize?state=renew&access_token=${accessToken}`;
-        this.window.open(authorizeUrl, '_blank').focus();
+        window.open(authorizeUrl, '_blank').focus();
     }
 
     setTokens(tokens): void {

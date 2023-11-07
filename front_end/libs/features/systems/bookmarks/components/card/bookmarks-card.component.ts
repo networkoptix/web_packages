@@ -18,7 +18,7 @@ export class NxBookmarksCardComponent implements OnInit {
     DATE_FORMAT = 'mmm dd, yyyy';
     icons = icons;
 
-    private locale: string = getSysLang(window);
+    private locale: string = getSysLang();
     startTime: string;
     startDate: string;
     duration: string;

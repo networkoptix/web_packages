@@ -1,13 +1,5 @@
 import { Platform } from '@angular/cdk/platform';
-import { DOCUMENT } from '@angular/common';
-import {
-    AfterViewChecked,
-    Component,
-    ElementRef,
-    Inject,
-    OnDestroy,
-    ViewChild,
-} from '@angular/core';
+import { AfterViewChecked, Component, ElementRef, OnDestroy, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Observable, Subscription } from 'rxjs';
 import { filter, startWith } from 'rxjs/operators';
@@ -45,7 +37,6 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
         scrollMechanics: NxScrollMechanicsService,
         public headerService: NxHeaderService,
         public platform: Platform,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -68,7 +59,7 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
     checkVisible(elm: HTMLElement): boolean {
         const headerHeight = 48;
         const rect = elm.getBoundingClientRect();
-        const viewHeight = Math.max(this.document.documentElement.clientHeight, window.innerHeight);
+        const viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight);
         return !(rect.bottom - headerHeight < 0 || rect.top - viewHeight >= 0);
     }
 
@@ -87,8 +78,8 @@ export class NxIntroTextComponent implements AfterViewChecked, OnDestroy {
 
     getElementPosition(elm: HTMLElement): { top: number; left: number } {
         const rect = elm.getBoundingClientRect();
-        const scrollLeft = window.pageXOffset || this.document.documentElement.scrollLeft;
-        const scrollTop = window.pageYOffset || this.document.documentElement.scrollTop;
+        const scrollLeft = window.pageXOffset || document.documentElement.scrollLeft;
+        const scrollTop = window.pageYOffset || document.documentElement.scrollTop;
         return { top: rect.top + scrollTop, left: rect.left + scrollLeft };
     }
 

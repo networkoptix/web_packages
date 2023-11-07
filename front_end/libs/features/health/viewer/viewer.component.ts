@@ -1,13 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    Inject,
-    OnInit,
-    ViewEncapsulation,
-    ViewChild,
-    ElementRef,
-    effect,
-} from '@angular/core';
+import { Component, OnInit, ViewEncapsulation, ViewChild, ElementRef, effect } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -73,7 +64,6 @@ export class NxReportViewerComponent implements OnInit {
         private scrollMechanicsService: NxScrollMechanicsService,
         private headerService: NxHeaderService,
         public healthService: NxHealthService,
-        @Inject(DOCUMENT) private document: Document,
     ) {
         pageService.pageTitle(this.LANG.pageTitles.information);
 
@@ -142,7 +132,7 @@ export class NxReportViewerComponent implements OnInit {
     }
 
     setHeaderHeight(): void {
-        this.headerHeight = this.document.getElementsByClassName('headerContainer')[0].scrollHeight;
+        this.headerHeight = document.getElementsByClassName('headerContainer')[0].scrollHeight;
     }
 
     setupReport(_data: HealthReport) {

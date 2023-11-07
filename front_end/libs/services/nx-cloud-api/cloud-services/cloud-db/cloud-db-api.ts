@@ -1,11 +1,9 @@
 import { HttpClient } from '@angular/common/http';
-import { inject } from '@angular/core';
 import md5 from 'md5';
 import { iif, Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { WINDOW } from '@services/window-provider';
 import { memoizeAsyncMedium, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
@@ -25,8 +23,6 @@ interface ShareBody {
     systemId: string;
     isEnabled;
 }
-
-const getWindow = (): Window => inject(WINDOW);
 
 @implementsCloudServiceApi
 export class CloudDbAPI extends BaseCloudServiceAPI {
@@ -59,7 +55,6 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
         };
 
     #refreshToken$: Observable<string>;
-    window = getWindow();
 
     constructor(
         serverUrl: string,
@@ -140,7 +135,7 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
                 scope:
                     systemId === '*'
                         ? undefined
-                        : `${this.window.location.host} cloudSystemId=${systemId}`,
+                        : `${window.location.host} cloudSystemId=${systemId}`,
                 code,
             })),
             switchMap(body => this.post<{ code: string }>(this.authEndpoint('token'), { body })),

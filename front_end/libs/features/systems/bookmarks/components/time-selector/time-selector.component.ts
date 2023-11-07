@@ -133,7 +133,7 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     postPeriod: boolean = true;
 
     ngOnInit(): void {
-        const dtFormat = Intl.DateTimeFormat(getSysLang(window), {
+        const dtFormat = Intl.DateTimeFormat(getSysLang(), {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers

@@ -73,7 +73,7 @@ export function setServerIpAndPort<S extends { endpoints: string[] }>(server: S)
     return { ...server, ip, port };
 }
 
-export function getSysLang(window: Window): string {
+export function getSysLang(): string {
     return window.navigator.languages[0];
 }
 

@@ -4,7 +4,6 @@ import { ActivatedRouteSnapshot, CanActivateFn, RouterStateSnapshot } from '@ang
 import { NxAccountService } from '@services/account.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { WINDOW } from '@services/window-provider';
 
 export const AuthGuard: CanActivateFn = (
     route: ActivatedRouteSnapshot,
@@ -12,7 +11,6 @@ export const AuthGuard: CanActivateFn = (
 ): Promise<boolean> | boolean => {
     // All route to pass account service will handle auth login.
     const CONFIG: IConfig = inject(NxConfigService).getConfig();
-    const iWindow: Window = inject(WINDOW);
 
     if (CONFIG.newSystem) {
         return false;
@@ -23,7 +21,7 @@ export const AuthGuard: CanActivateFn = (
     }
 
     // check if requested in iFrame
-    if (iWindow.location !== iWindow.parent.location) {
+    if (window.location !== window.parent.location) {
         return false;
     }
 

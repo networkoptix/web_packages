@@ -3,19 +3,16 @@ import { BehaviorSubject, fromEvent, map, shareReplay, startWith } from 'rxjs';
 
 import { GridBreakpoints } from '@styles/theme-variables-common';
 
-import { windowFactory } from './window-provider';
-
 @Injectable({
     providedIn: 'root',
 })
 export class NxScrollMechanicsService {
-    private window: Window = windowFactory();
-    windowSizeSubject = fromEvent<Event>(this.window, 'resize').pipe(
+    windowSizeSubject = fromEvent<Event>(window, 'resize').pipe(
         map(({ target }) => {
             const { innerWidth: width, innerHeight: height } = target as Window;
             return { width, height };
         }),
-        startWith({ width: this.window.innerWidth, height: this.window.innerHeight }),
+        startWith({ width: window.innerWidth, height: window.innerHeight }),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
     windowScrollSubject = new BehaviorSubject(0);
@@ -72,10 +69,10 @@ export class NxScrollMechanicsService {
     }
 
     mediaQueryMax(media: number): boolean {
-        return this.window.matchMedia('(max-width: ' + media + 'px)').matches;
+        return window.matchMedia('(max-width: ' + media + 'px)').matches;
     }
 
     mediaQueryMin(media: number): boolean {
-        return this.window.matchMedia('(min-width: ' + media + 'px)').matches;
+        return window.matchMedia('(min-width: ' + media + 'px)').matches;
     }
 }

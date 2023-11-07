@@ -10,7 +10,6 @@ import { NxDbService } from './db.service';
 import { NxConfigService } from './nx-config/nx-config.service';
 import type { LoginParams } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
-import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
@@ -22,7 +21,6 @@ export class NxSessionService {
     loginParams$: BehaviorSubject<LoginParams>;
     language$: BehaviorSubject<string>;
     langChanged$: BehaviorSubject<boolean>;
-    public window: Window = windowFactory();
 
     constructor(public nxCache: NxSwCacheService, private db: NxDbService) {
         this.loginParams$ = new BehaviorSubject(
@@ -58,9 +56,9 @@ export class NxSessionService {
                 // Clear config overrides between sessions
                 this.session.store(NxConfigService.OVERRIDE_KEY, {});
 
-                if (!this.window.document.hasFocus() && !environment.testing) {
+                if (!document.hasFocus() && !environment.testing) {
                     // Don't reload on null since that state should show a session expired dialog
-                    this.window.location.reload();
+                    window.location.reload();
                 }
             });
     }

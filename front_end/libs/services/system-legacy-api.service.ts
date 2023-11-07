@@ -77,7 +77,6 @@ import type {
 import type { SaveStoragePayload } from './system.service/storage-manager/storage';
 import type { PreprocessServer, ViewBaseCamera } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
-import { WINDOW } from './window-provider';
 
 export class NxSystemAPI extends MediaserverLegacyConnection {
     // Exclude V5.2 since we should try to remove all legacy calls at that point.
@@ -167,10 +166,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         this.currentRelayHost = this.urlBase.split('://').pop();
     }
 
-    public get window() {
-        return this.injector.get(WINDOW);
-    }
-
     public get isSessionOauth() {
         return false;
     }
@@ -211,16 +206,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return btoa(`${login}:${nonce}:${authDigest}`);
     }
 
-    protected getUrlBase(protocol = this.window.location.protocol) {
+    protected getUrlBase(protocol = window.location.protocol) {
         const getCurrentRelayHost = () =>
             this.currentRelayHost ||
             this.CONFIG.trafficRelayHost
-                .replace('{host}', this.window.location.host)
+                .replace('{host}', window.location.host)
                 .replace('{systemId}', this.systemId);
         let urlBase =
-            protocol !== this.window.location.protocol
-                ? `${protocol}//${this.window.location.host}`
-                : '';
+            protocol !== window.location.protocol ? `${protocol}//${window.location.host}` : '';
         if (this.systemId) {
             const localProxy = this.cookieService.get('cors_bypass') || '';
             if (localProxy) {
@@ -244,9 +237,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected generateGetUrl(url: string, params_: RequestParams, absUrl?: boolean) {
         const params = new HttpParams({ fromObject: params_ });
         if (absUrl) {
-            const proto = this.window.location.protocol;
-            const hostName = this.window.location.hostname;
-            const usePort = this.window.location.port;
+            const proto = window.location.protocol;
+            const hostName = window.location.hostname;
+            const usePort = window.location.port;
             const port = usePort ? `:${usePort}` : '';
             url = `${proto}//${hostName}${port}${url}`;
         } else {
@@ -1231,7 +1224,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 let urlBase = this.getUrlBase();
                 // If we are in webadmin we need to have the origin or else https is not replaced with rtsp.
                 if (!urlBase) {
-                    urlBase = this.window.location.origin;
+                    urlBase = window.location.origin;
                 }
                 url = `${urlBase}/${this.cleanId(cameraId)}?stream=${resolution}&`.replace(
                     /https?:\/\//,

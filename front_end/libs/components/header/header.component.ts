@@ -1,13 +1,4 @@
-import { DOCUMENT } from '@angular/common';
-import {
-    Component,
-    OnInit,
-    Renderer2,
-    Inject,
-    ViewChild,
-    ViewContainerRef,
-    effect,
-} from '@angular/core';
+import { Component, OnInit, Renderer2, ViewChild, ViewContainerRef, effect } from '@angular/core';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -130,7 +121,6 @@ export class NxHeaderComponent implements OnInit {
         public menusService: NxMenusService,
         private sessionStorage: SessionStorageService,
         private cookieService: CookieService,
-        @Inject(DOCUMENT) private document: Document,
         public loginService: NxLoginService,
     ) {
         this.CONFIG = configService.getConfig();
@@ -405,8 +395,8 @@ export class NxHeaderComponent implements OnInit {
                     this.userEmail = loginState;
                     this.dropdownsVisible = true;
                     this.loginState = true;
-                    this.renderer.removeClass(this.document.body, 'anonymous');
-                    this.renderer.addClass(this.document.body, 'authorized');
+                    this.renderer.removeClass(document.body, 'anonymous');
+                    this.renderer.addClass(document.body, 'authorized');
                     if (this.newHeader) {
                         const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
                         const systemLang = this.LANG.appHeader.headerMenuNodes.system;
@@ -428,10 +418,10 @@ export class NxHeaderComponent implements OnInit {
                     }
                 } else {
                     this.loginState = false;
-                    this.renderer.removeClass(this.document.body, 'authorized');
-                    this.renderer.addClass(this.document.body, 'anonymous');
+                    this.renderer.removeClass(document.body, 'authorized');
+                    this.renderer.addClass(document.body, 'anonymous');
                 }
-                setTimeout(() => this.renderer.removeClass(this.document.body, 'loading'));
+                setTimeout(() => this.renderer.removeClass(document.body, 'loading'));
             });
 
         if (this.environment.isLocal) {

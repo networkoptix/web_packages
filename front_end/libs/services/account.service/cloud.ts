@@ -99,7 +99,7 @@ export class CloudAccount extends BaseAccount {
                         res?.message === 'unauthorized'
                     ) {
                         // Ensures that we logout if the user tries to leave the page.
-                        this.window.onbeforeunload = () => {
+                        window.onbeforeunload = () => {
                             this.sessionService.invalidateSession();
                         };
                         return this.dialogs.expiredSession().then(() => this.logoutHelper(true));
@@ -199,7 +199,7 @@ export class CloudAccount extends BaseAccount {
                 // TODO: CLOUD-7267: Handle account changes without reload
                 if (result.data?.resultCode === responseOk) {
                     (navigateHome ? this.redirectToHome() : Promise.resolve()).then(() =>
-                        this.window.location.reload(),
+                        window.location.reload(),
                     );
                 }
                 return result;

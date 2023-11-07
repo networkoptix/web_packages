@@ -78,7 +78,7 @@ export class NxDateAndTimeFilterComponent {
     }
 
     constructor(dateAdapter: DateAdapter<Date>) {
-        dateAdapter.setLocale(getSysLang(window));
+        dateAdapter.setLocale(getSysLang());
         this.updateFixedDates();
         timer(MS.min, MS.min)
             .pipe(untilDestroyed(this))

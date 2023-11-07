@@ -1,5 +1,5 @@
-import { CommonModule, DOCUMENT } from '@angular/common';
-import { Component, forwardRef, Input, HostListener, ViewChild, Inject } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { Component, forwardRef, Input, HostListener, ViewChild } from '@angular/core';
 import { NG_VALUE_ACCESSOR, NgForm } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
@@ -56,16 +56,14 @@ export class NxApplyComponent {
     handleKeyboardEvent(event: KeyboardEvent): void {
         if (
             event.key === 'Enter' &&
-            this.document.activeElement.tagName === 'INPUT' &&
+            document.activeElement.tagName === 'INPUT' &&
             this.processButton &&
-            !this.document.querySelector('.modal') && // Modal is active (old)
-            !this.document.querySelector('cdk-dialog-container') // CDK dialogs
+            !document.querySelector('.modal') && // Modal is active (old)
+            !document.querySelector('cdk-dialog-container') // CDK dialogs
         ) {
             this.processButton.checkForm();
         }
     }
-
-    constructor(@Inject(DOCUMENT) private document: Document) {}
 
     setIsSaveDisabled(isSaveDisabled: boolean): void {
         this.isSaveDisabled = isSaveDisabled;

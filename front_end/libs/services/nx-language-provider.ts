@@ -16,7 +16,6 @@ import { Language, processLanguageFactory } from '@utils/nx';
 import { nxConfig } from './nx-config/config';
 import { IConfig } from './nx-config/config-types';
 import { NxSessionService } from './session.service';
-import { windowFactory } from './window-provider';
 
 const i18nOriginal = { ...i18n };
 
@@ -24,7 +23,6 @@ const i18nOriginal = { ...i18n };
     providedIn: 'root',
 })
 export class NxLanguageProviderService {
-    private window: Window = windowFactory();
     CONFIG: IConfig = nxConfig;
     constructor(
         public translate: TranslateService,
@@ -39,7 +37,7 @@ export class NxLanguageProviderService {
         this.defaultLanguage = this.CONFIG.defaultLanguage;
 
         if (environment.isWizard) {
-            const lang = new URLSearchParams(this.window.location.search).get('lang');
+            const lang = new URLSearchParams(window.location.search).get('lang');
             this.currentLang = lang ?? this.translate.getDefaultLang();
         }
 
@@ -52,8 +50,8 @@ export class NxLanguageProviderService {
 
         this.storageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
-            if (!environment.isLocal && !this.window.document.hasFocus()) {
-                this.window.location.reload();
+            if (!environment.isLocal && !document.hasFocus()) {
+                window.location.reload();
             }
         });
 
