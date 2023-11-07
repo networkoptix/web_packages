@@ -196,6 +196,7 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
                 },
             },
             () => {
+                this.window.removeEventListener('beforeunload', this.removeUnverified2faKey);
                 this.next();
                 this.unlock();
             },
