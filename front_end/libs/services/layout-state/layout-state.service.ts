@@ -45,6 +45,18 @@ export class LayoutStateService {
 
     contextMenu: TemplateRef<unknown>;
 
+    gridSection: HTMLElement;
+
+    toggleLayoutFullScreen(): void {
+        // eslint-disable-next-line nx/ban-global-variables
+        if (document.fullscreenElement === this.gridSection) {
+            // eslint-disable-next-line nx/ban-global-variables
+            document.exitFullscreen();
+        } else {
+            this.gridSection.requestFullscreen({ navigationUI: 'hide' });
+        }
+    }
+
     createNewLocalLayout(items?: LayoutItem[]): string;
     createNewLocalLayout(name: string, items?: LayoutItem[]): string;
     createNewLocalLayout(

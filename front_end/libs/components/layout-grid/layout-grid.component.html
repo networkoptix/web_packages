@@ -103,7 +103,9 @@
         !(layoutStateService.portal && CONFIG.featureFlags.layoutsDeviceSettings);
         else showPortal
     "
+    #gridSection
     class="grid-section"
+    (dblclick)="layoutStateService.toggleLayoutFullScreen()"
     [cdkContextMenuTriggerFor]="layoutStateService.contextMenu"
     [ngStyle]="cursorStyle$$()"
 >
@@ -305,7 +307,10 @@
                             #layoutItemWrapper
                             cdkDropList
                             [cdkDropListDisabled]="
-                                layout.locked || !!window.document.fullscreenElement
+                                layout.locked ||
+                                (window.document.fullscreenElement &&
+                                    window.document.fullscreenElement !==
+                                        layoutStateService.gridSection)
                             "
                             [cdkDropListEnterPredicate]="preventDrop"
                             [cdkDropListData]="item"
@@ -323,7 +328,10 @@
                                 cdkDrag
                                 #dragContainer
                                 [cdkDragDisabled]="
-                                    !editItems$$() || !!window.document.fullscreenElement
+                                    !editItems$$() ||
+                                    (window.document.fullscreenElement &&
+                                        window.document.fullscreenElement !==
+                                            layoutStateService.gridSection)
                                 "
                                 [cdkDragData]="item"
                                 (cdkDragReleased)="moveItem(item)"
@@ -645,7 +653,13 @@
                                         </div>
                                     </ng-container>
                                 </ng-template>
-                                <ng-container *ngIf="!window.document.fullscreenElement">
+                                <ng-container
+                                    *ngIf="
+                                        !window.document.fullscreenElement ||
+                                        window.document.fullscreenElement ===
+                                            layoutStateService.gridSection
+                                    "
+                                >
                                     <div
                                         *ngFor="let alignment of alignments"
                                         cdkDropList
@@ -669,7 +683,10 @@
                                 <nx-layout-grid-item-overlay
                                     cdkDragHandle
                                     [cdkDragHandleDisabled]="
-                                        layout.locked || !!window.document.fullscreenElement
+                                        layout.locked ||
+                                        (window.document.fullscreenElement &&
+                                            window.document.fullscreenElement !==
+                                                layoutStateService.gridSection)
                                     "
                                     [ngClass]="'overlay'"
                                     [item]="item"

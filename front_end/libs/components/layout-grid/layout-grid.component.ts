@@ -9,6 +9,7 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
+    ElementRef,
     EventEmitter,
     HostListener,
     Inject,
@@ -16,6 +17,7 @@ import {
     Output,
     signal,
     Signal,
+    ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -322,6 +324,10 @@ export class NxLayoutGridComponent {
     ): void {
         this.removeFocus();
         this.layoutStateService.portal = null;
+    }
+
+    @ViewChild('gridSection') set gridSection(value: ElementRef) {
+        this.layoutStateService.gridSection = value.nativeElement;
     }
 
     ngOnDestroy(): void {
