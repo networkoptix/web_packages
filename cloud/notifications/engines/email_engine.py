@@ -99,7 +99,7 @@ def send(email, msg_type, message, language_code, customization_name, subject=''
         filename_not_logo = attachment['filename'] != 'logo'
         # Checking if jpeg this way since imghdr.what seems to have issues with the jpeg from mediaserver
         is_jpeg = attachment['filename'].endswith('.jpeg')
-        include_cid_header = filename_not_logo and is_jpeg or imghdr.what(None, attachment['content']) == 'png'
+        include_cid_header = filename_not_logo and (is_jpeg or imghdr.what(None, attachment['content']) == 'png')
 
         if include_cid_header:
             # Handle images used in emails from mediaserver
