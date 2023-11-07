@@ -236,16 +236,20 @@ export class UserWithGroupsManager extends UserManager {
                     });
                 }
             });
+        const sortByGroupName = alphabeticalSort<UserGroupDropdown>(
+            this.locale,
+            ({ label }) => label,
+        );
 
         // Used to insert the group title and horizontal divider for the mult-select dropdown
         if (customGroup.length > 0) {
-            customGroup.sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase()));
+            customGroup.sort(sortByGroupName);
             customGroup.unshift({ id: 'title', label: customUserGroupText });
             customGroup.unshift({ id: 'horizontal', label: 'horizontal' });
         }
         if (ldapGroup.length > 0) {
             const defaultLdapGroup = ldapGroup.shift();
-            ldapGroup.sort(alphabeticalSort(this.locale, ({ label }) => label.toLowerCase()));
+            ldapGroup.sort(sortByGroupName);
             ldapGroup.unshift(defaultLdapGroup);
             ldapGroup.unshift({ id: 'title', label: ldapUserGroupText });
             ldapGroup.unshift({ id: 'horizontal', label: 'horizontal' });
