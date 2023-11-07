@@ -211,3 +211,21 @@ class ResetPasswordForm:
             self._driver,
             "//nx-toast//span[contains(text(),'Cannot save password')]"
             )
+
+    def wait_for_password_required_error(self):
+        error = PageText(self._driver, "//*[@id='passwordRequiredError']")
+        error.wait_until_visible()
+
+    def wait_for_error_label(self, error_text: str):
+        error = PageText(
+            self._driver,
+            f"//*[@id='failMessages']/nx-tag/a[contains (text(), '{error_text}')]",
+            )
+        error.wait_until_visible()
+
+    def wait_for_success_label(self, label_text: str):
+        label = PageText(
+            self._driver,
+            f"//*[@id='successMessages']/nx-tag/a[contains (text(), '{label_text}')]",
+            )
+        label.wait_until_visible()

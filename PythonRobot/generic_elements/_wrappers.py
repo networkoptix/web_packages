@@ -243,6 +243,10 @@ class TextField:
     def get_html_attribute(self, attribute_name: str):
         return self._element.get_html_attribute(attribute_name)
 
+    def clear_text_like_users(self):
+        self.send_keys(Keys.CONTROL + 'a')
+        self.send_keys(Keys.BACKSPACE)
+
 
 class SearchBar:
 

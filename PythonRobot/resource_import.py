@@ -149,7 +149,6 @@ def register(driver, first_name, last_name, email, password, checked=False, view
     Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
 
 
-# from robot_tests/Resources/front-end-resources/restore-pass-resource.robot
 def send_restore_password_email(driver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
