@@ -171,6 +171,11 @@ export class NxDialogsService {
         { autoFocus: '#message' },
     );
 
+    tosUpdate = this.dialogV2Factory<Dt.TosUpdate>(
+        () => import('./tos-update/tos-update.component').then(m => m.TosUpdateModalContent),
+        { disableClose: true, width: DIALOG_SIZE.LARGE },
+    );
+
     /* WebAdmin */
     wizard = this.dialogV2Factory<Dt.Wizard>(
         () => import('./wizard/wizard.component').then(m => m.WizardModalContent),

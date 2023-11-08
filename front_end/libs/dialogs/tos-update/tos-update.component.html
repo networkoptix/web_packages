@@ -1,0 +1,55 @@
+<div class="modal-header">
+    <h1 class="modal-title">
+        <span
+            class="ellipsis"
+            translate
+            >Update on Terms and Conditions</span
+        >
+    </h1>
+</div>
+<div class="modal-body">
+    <p [innerHTML]="body | translate | safe : 'html'"></p>
+</div>
+
+<div
+    class="modal-footer"
+    style="flex-wrap: unset"
+>
+    <button
+        type="button"
+        class="btn btn-primary"
+        (click)="close('accepted')"
+        translate
+    >
+        Accept
+    </button>
+    <button
+        type="button"
+        class="btn btn-default"
+        (click)="close(inGracePeriod ? 'deferred' : 'rejected')"
+    >
+        <ng-template #noGraceCancel><span translate>Decline</span></ng-template>
+        <span
+            *ngIf="inGracePeriod; else noGraceCancel"
+            class="ellipsis"
+            translate
+            >Skip for now</span
+        >
+    </button>
+    <div id="grace-text">
+        <ng-template #noGrace>
+            <span
+                class="error-label"
+                translate
+                >Your grace period has ended. Please read and accept the terms and conditions to
+                continue using cloud services</span
+            >
+        </ng-template>
+        <ng-container *ngIf="inGracePeriod; else noGrace">
+            <span>{{
+                'You have until {date} to accept the updated terms and conditions'
+                    | translate : { date: gracePeriod | date : 'longDate' }
+            }}</span>
+        </ng-container>
+    </div>
+</div>

@@ -82,6 +82,7 @@ class AgreementSerializer(serializers.Serializer):
     body = serializers.CharField()
     id = serializers.IntegerField()
     review_id = serializers.IntegerField()
+    reviewed_date = serializers.DateTimeField()
     preview = serializers.BooleanField()
     accepted = serializers.BooleanField()
 

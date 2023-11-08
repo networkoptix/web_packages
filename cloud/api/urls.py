@@ -12,7 +12,7 @@ urlpatterns = [
     re_path(r'^permission-autocomplete/$', account.PermissionsAutocomplete.as_view(),
         name='permission-autocomplete',),
     re_path(r'^utils/visitedKey/?$',                utils.visited_key),
-    re_path(r'^utils/language/?$',                  utils.language),
+    re_path(r'^utils/language/?$',                  utils.language, name='get_language'),
     re_path(r'^utils/languages/?$',                 utils.languages),
     re_path(r'^utils/downloads/history$',           utils.downloads_history),
     re_path(r'^utils/downloads/(?P<build>.*)$',     utils.download_build),
@@ -30,7 +30,7 @@ urlpatterns = [
     re_path(r'^account/login$',              account.login),
     re_path(r'^account/loginCode$',          account.login_with_code),
     re_path(r'^account/loginTokens$',        account.login_with_tokens),
-    re_path(r'^account/logout$',             account.logout),
+    re_path(r'^account/logout$',             account.logout, name='user_logout'), # Using user_logout to avoid the clash with the /admin/logout
     re_path(r'^account/register$',           account.register),
     re_path(r'^account/restorePassword$',    account.restore_password),
     re_path(r'^account/changePassword$',     account.change_password),

@@ -133,6 +133,9 @@ export abstract class BaseCloudServiceAPI {
                     environment.cloudHost ||
                     '',
             };
+            if (!accessToken) {
+                throw Error('Access token is missing');
+            }
 
             const updateHeading = ([key, value]: [string, string]): void => {
                 if (options.headers instanceof HttpHeaders) {
