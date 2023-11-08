@@ -290,6 +290,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
             this.modifyTitlesInResponse();
             this.addLabelToRequest();
             this.addResetButtonEventListener();
+            this.replaceHTMLAsterisk();
             if (this.openAPIJSONService.searchQuery) {
                 this.highlightSearchMoreQuery(this.openAPIJSONService.searchQuery);
             }
@@ -397,6 +398,11 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         for (const input of inputs) {
             input.removeAttribute('placeholder');
         }
+    };
+
+    private replaceHTMLAsterisk = (): void => {
+        const swaggerBody = this.document.querySelector('.opblock-body');
+        swaggerBody.innerHTML = swaggerBody.innerHTML.replace(/&amp;ast;/g, '&ast;');
     };
 
     private modifyTitlesInResponse = (): void => {
