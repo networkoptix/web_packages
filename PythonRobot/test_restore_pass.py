@@ -1,7 +1,6 @@
 from NoptixLibrary.suite import CloudAccount
 from email_access import EmailClient
 from email_access import get_random_email
-from generic_elements import ToastNotification
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.login import ResetPasswordForm
