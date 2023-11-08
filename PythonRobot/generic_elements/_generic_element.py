@@ -76,7 +76,6 @@ class Element:
         return element.is_displayed()
 
     def send_keys(self, text: str):
-        self.wait_until_clickable()
         self._get_element().send_keys(text)
 
     def should_contain(self, text: str):

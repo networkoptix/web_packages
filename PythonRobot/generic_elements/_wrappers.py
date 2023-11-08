@@ -244,6 +244,16 @@ class TextField:
         self.send_keys(Keys.BACKSPACE)
 
 
+class FileInput:
+    def __init__(self, driver: WebDriver, locator):
+        self._driver = driver
+        self._element = Element(self._driver, locator)
+        self.locator = locator
+
+    def input_text(self, text: str):
+        self._element.send_keys(text)
+
+
 class SearchBar:
 
     def __init__(self, driver: WebDriver, locator):
@@ -254,6 +264,7 @@ class SearchBar:
         return self._element.is_focused()
 
     def search_text(self, text: str):
+        self._element.wait_until_clickable()
         self._element.send_keys(text)
 
     def wait_until_visible(self, timeout: float = 0.5):

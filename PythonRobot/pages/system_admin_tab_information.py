@@ -7,12 +7,12 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from generic_elements import ElementNotVisible
+from generic_elements import FileInput
 from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TabItem
 from generic_elements import Table
-from generic_elements import TextField
 
 
 class TabInformation:
@@ -64,7 +64,7 @@ class TabInformation:
             return True
 
     def upload_json_report(self, filename: Path):
-        element = TextField(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
+        element = FileInput(self._driver, '//input[contains(@class,"ngx-file-drop__file-input")]')
         element.input_text(str(filename))
         started_at = time.monotonic()
         timeout_sec = 10

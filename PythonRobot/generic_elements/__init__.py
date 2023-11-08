@@ -9,6 +9,7 @@ from ._wrappers import Button
 from ._wrappers import Checkbox
 from ._wrappers import DropDown
 from ._wrappers import DropDownOption
+from ._wrappers import FileInput
 from ._wrappers import Image
 from ._wrappers import Link
 from ._wrappers import ListWrapper
@@ -37,6 +38,7 @@ __all__ = [
     'ElementNotVisible',
     'ElementTextIncorrect',
     'ElementVisible',
+    'FileInput',
     'Image',
     'Link',
     'ListWrapper',
