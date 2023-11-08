@@ -45,6 +45,7 @@ const proxyTargetConfig = dynamicInstanceProxy({
     dev2: 'https://dev2.cloud.hdw.mx',
     dev3: 'https://dev3.cloud.hdw.mx',
     local: 'http://localhost:8000',
+    meta: 'https://meta.nxvms.com',
     'cloud-test': 'https://cloud-test.hdw.mx',
     ...legacyTargetConfigs
 });

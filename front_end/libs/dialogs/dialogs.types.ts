@@ -3,7 +3,7 @@ import type { DialogRef as CdkDialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 
-import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
+import type { Bookmark, DeviceFilter } from '@pages/systems/bookmarks/bookmarks.types';
 import type { ExportSelection } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/selection/selection.types';
 import type { SELECTION_DATE_RANGE } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
 import type { TimelineSelectionService } from '@pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
@@ -197,7 +197,7 @@ export type ChangePassword = DialogType<{ system: NxSystem; user: NxUser }, bool
 /* Bookmarks */
 export type MoreDevices = DialogType<
     {
-        devices: string[];
+        devices: DeviceFilter[];
         selection: SelectionModel<string>;
         emitter: EventEmitter<void>;
     },

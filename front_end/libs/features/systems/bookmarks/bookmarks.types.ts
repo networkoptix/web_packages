@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import type { Bookmark as BookmarkResp } from '@services/system-api.types';
+import type { Bookmark as BookmarkResp, Device } from '@services/system-api.types';
 
 export interface Bookmark extends BookmarkResp {
     tags: string[];
@@ -18,3 +18,5 @@ export interface TimeRange {
     start: number | null;
     end: number | null;
 }
+
+export type DeviceFilter = Pick<Device, 'id' | 'name'>;

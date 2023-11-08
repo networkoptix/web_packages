@@ -1,16 +1,9 @@
 import { Component, Input } from '@angular/core';
 
-import { spaceSplitSearch } from '@utils/general';
-
-@Component({
-    standalone: true,
-    template: '',
-})
-export class SearchBaseComponent {
-    @Input() items: string[];
+@Component({ template: '', standalone: true })
+export abstract class SearchBaseComponent<ST = string> {
+    @Input() items: ST[];
     search: string = '';
 
-    get searchMatches(): string[] {
-        return !this.search ? this.items : spaceSplitSearch(this.items, this.search);
-    }
+    abstract get searchMatches(): ST[];
 }

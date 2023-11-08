@@ -979,6 +979,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/devices/*/bookmarks', params);
     }
 
+    @memoizeAsyncMedium
     getBookmarkTags(
         params: t.BookmarksTagsParams = {}
     ): Observable<t.BookmarksTags> {
@@ -989,6 +990,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
     }
 
+    @memoizeAsyncMedium
     getDevices(
         params: t.DevicesParams = {}
     ): Observable<t.Device[]> {

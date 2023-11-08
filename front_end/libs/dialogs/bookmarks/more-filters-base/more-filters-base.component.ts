@@ -10,7 +10,7 @@ import { type DialogType } from '../../dialogs.types';
     templateUrl: 'more-filters-base.component.html',
     styleUrls: ['more-filters-base.component.scss'],
 })
-export class NxMoreFiltersBaseModalContent<DT extends DialogType> extends SearchBaseComponent {
+export class NxMoreFiltersBaseModalContent<DT extends DialogType, T> extends SearchBaseComponent<T> {
     constructor(public dialogRef: DialogRef<DT['return']>) {
         super();
     }
@@ -18,4 +18,8 @@ export class NxMoreFiltersBaseModalContent<DT extends DialogType> extends Search
     close = (value?: DT['return']): void => {
         this.dialogRef.close(value);
     };
+
+    get searchMatches(): T[] {
+        return [];
+    }
 }

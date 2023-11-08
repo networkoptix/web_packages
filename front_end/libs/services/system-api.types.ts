@@ -1075,6 +1075,7 @@ type HiddenParams = Partial<{
 
 export type BookmarksParams = HiddenParams &
     Partial<{
+        deviceId: string[];
         startTimeMs: number;
         endTimeMs: number;
         text: string;

@@ -17,13 +17,13 @@
     <div class="devices">
         <label
             *ngFor="let device of searchMatches | slice: 0:displayLimit"
-            [ngClass]="{ selected: selection.isSelected(device) }"
+            [ngClass]="{ selected: selection.isSelected(device.id) }"
         >
             <nx-checkbox
-                [ngModel]="selection.isSelected(device)"
+                [ngModel]="selection.isSelected(device.id)"
                 (ngModelChange)="updateSelection(device, $event)"
             ></nx-checkbox>
-            <span>{{ device }}</span>
+            <span>{{ device.name }}</span>
         </label>
     </div>
     <div>
