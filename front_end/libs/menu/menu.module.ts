@@ -14,6 +14,7 @@ import { NxAlertCounter } from './alert-counter/alert-counter.component';
 import { NxLevel1ItemComponent } from './level-1/level-1-item.component';
 import { NxLevel2ItemComponent } from './level-2/level-2-item.component';
 import { NxLevel3ItemComponent } from './level-3/level-3-item.component';
+import { NxLevel3InfScrollComponent } from './level-3-inf-scroll/level-3-inf-scroll.component';
 import { NxMenuButtonComponent } from './menu-button/button.component';
 import { NxMenuComponent } from './menu.component';
 
@@ -30,16 +31,17 @@ import { NxMenuComponent } from './menu.component';
         NxSearchComponent,
         NxSearchHighlightComponent,
         NxAddSvgSrcDirective,
+        NxLevel3ItemComponent,
+        NxLevel3InfScrollComponent,
     ],
     declarations: [
         NxMenuComponent,
         NxLevel1ItemComponent,
         NxLevel2ItemComponent,
-        NxLevel3ItemComponent,
         NxAlertCounter,
         NxMenuButtonComponent,
     ],
     bootstrap: [],
-    exports: [NxMenuComponent, NxAlertCounter],
+    exports: [NxMenuComponent, NxAlertCounter, NxLevel3ItemComponent],
 })
 export class MenuModule {}
