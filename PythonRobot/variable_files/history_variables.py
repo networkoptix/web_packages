@@ -1,5 +1,0 @@
-
-EMAIL = f"{EMAIL_OWNER}"
-PASSWORD = f"{BASE_PASSWORD}"
-URL = f"{ENV}"
-FULL = f"False"
