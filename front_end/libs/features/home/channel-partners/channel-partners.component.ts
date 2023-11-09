@@ -7,7 +7,16 @@ import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, Subject, catchError, combineLatestWith, debounceTime, map, of } from 'rxjs';
+import {
+    Observable,
+    Subject,
+    combineLatestWith,
+    debounceTime,
+    distinctUntilChanged,
+    map,
+    switchMap,
+    throwError,
+} from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
@@ -59,7 +68,6 @@ export class NxChannelPartnersComponent implements OnInit {
     LANG = staticLang;
 
     isLoading = true;
-    currentPartnerId: string;
     currentPartnerOrgs: Organization[];
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
@@ -69,6 +77,7 @@ export class NxChannelPartnersComponent implements OnInit {
     destroyRef = inject(DestroyRef);
     @Input() isAdmin: boolean;
     @Input() currentTabRoute: string;
+    @Input() partnerId: string;
     currentTab: Tab;
     tabs: Tab[] = [
         {
@@ -114,38 +123,33 @@ export class NxChannelPartnersComponent implements OnInit {
         }
         this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
         this.CPService.paramStateHandler.state$
-            .pipe(takeUntilDestroyed(this.destroyRef), combineLatestWith(this.channelPartners$))
-            .subscribe(
-                ([
-                    {
-                        params: { partnerId: id },
-                    },
-                    partners,
-                ]) => {
-                    this.currentPartnerId = id;
-                    if (partners.length && !partners.find(p => p.id === this.currentPartnerId)) {
-                        this.router.navigate(['404']);
+            .pipe(
+                map(({ params }) => params.partnerId),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+                combineLatestWith(this.channelPartners$),
+                switchMap(([id, partners]) => {
+                    if (partners.length && !partners.find(p => p.id === id)) {
+                        return throwError(() => 'Partner not found');
                     }
-                    this.CPService.getPartnerOrganizations(id)
-                        .pipe(catchError(err => of(err)))
-                        .subscribe({
-                            next: orgs => {
-                                this.isLoading = false;
-                                this.currentPartnerOrgs = orgs;
-                                this.store.dispatch(
-                                    CPActions.setCurrentPartner({
-                                        currentPartnerId: this.currentPartnerId,
-                                        currentPartnerOrganizations: orgs,
-                                    }),
-                                );
-                            },
-                            error: () => {
-                                this.router.navigate(['404']);
-                            },
-                        });
+                    return this.CPService.getPartnerOrganizations(id);
+                }),
+            )
+            .subscribe({
+                next: orgs => {
+                    this.isLoading = false;
+                    this.currentPartnerOrgs = orgs;
+                    this.store.dispatch(
+                        CPActions.setCurrentPartner({
+                            currentPartnerId: this.partnerId,
+                            currentPartnerOrganizations: orgs,
+                        }),
+                    );
                 },
-            );
-
+                error: () => {
+                    this.router.navigate(['404']);
+                },
+            });
         this.searchChanged
             .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
@@ -157,10 +161,10 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     newOrgDialog(): void {
-        this.dialogsService.createOrganization(this.currentPartnerId).then((org: Organization) => {
+        this.dialogsService.createOrganization(this.partnerId).then((org: Organization) => {
             this.store.dispatch(
                 CPActions.setCurrentPartner({
-                    currentPartnerId: this.currentPartnerId,
+                    currentPartnerId: this.partnerId,
                     currentPartnerOrganizations: [...this.currentPartnerOrgs, org],
                 }),
             );
@@ -170,9 +174,9 @@ export class NxChannelPartnersComponent implements OnInit {
     onTabClick(tab: TabEmit): void {
         this.currentTab = this.tabs[tab.index];
         if (tab.route) {
-            this.router.navigate(['home', 'channelPartners', this.currentPartnerId, tab.route]);
+            this.router.navigate(['home', 'channelPartners', this.partnerId, tab.route]);
         } else {
-            this.router.navigate(['home', 'channelPartners', this.currentPartnerId]);
+            this.router.navigate(['home', 'channelPartners', this.partnerId]);
         }
     }
 
