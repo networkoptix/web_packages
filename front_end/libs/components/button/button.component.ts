@@ -1,10 +1,15 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { environment } from '@environments/environment';
+import { icons } from '@static-variables';
 
 import { ButtonType } from './button.component.types';
 
 @Component({
-    imports: [CommonModule],
+    imports: [CommonModule, AngularSvgIconModule, NxAddSvgSrcDirective],
     selector: 'nx-button',
     templateUrl: 'button.component.html',
     styleUrls: ['button.component.scss'],
@@ -15,6 +20,9 @@ export class NxButtonComponent {
     @Input() type: ButtonType = ButtonType.secondary;
     @Input() asyncClick: boolean = false;
     @Input() disabled: boolean = false;
+    @Input() active: boolean = false;
+    @Input() btnIconSrc: string = '';
+
     @Output() onClick = new EventEmitter<void>();
 
     ButtonType = ButtonType;
@@ -22,4 +30,7 @@ export class NxButtonComponent {
     handleClick(): void {
         this.onClick.emit();
     }
+
+    protected readonly icons = icons;
+    protected readonly environment = environment;
 }

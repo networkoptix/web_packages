@@ -1,0 +1,11 @@
+:host {
+    height: 100%;
+
+    div {
+        border: 1px solid transparent;
+
+        .active {
+            border-color: var(--brand-core);
+        }
+    }
+}

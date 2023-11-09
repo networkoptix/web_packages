@@ -173,6 +173,6 @@ export class WebGlTimelineSelectionActionPanelComponent implements OnInit, After
         this.selection.endDate = result.end;
 
         this.webglService.selection$.next(this.selection);
-        this.webglService.updateSelection();
+        // this.webglService.updateSelection();
     };
 }

@@ -1,5 +1,5 @@
 import { Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -22,9 +22,9 @@ const DATE_FORMAT = 'ddd mmm dd yyyy';
     styleUrls: ['./timeline-playback-indicator.component.scss'],
 })
 export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
-    @Input() playbackPosition: number | undefined;
-    @Input() playbackTime: Date;
+    @Input() position: number;
 
+    playbackTime: Date;
     public date: string = '';
     public time: string = '';
 
@@ -42,54 +42,67 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
     constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
         languageService.loadTimelineTranslations();
 
-        this.webglService.xScale$.subscribe(scale => {
-            if (this.playbackPosition !== undefined && this.playbackTime) {
-                this.playbackPosition = scale(this.playbackTime);
-                this.setMarkerPosition();
-            }
+        // this.webglService.xScale$.subscribe(scale => {
+        //     if (this.position) {
+        //         this.playbackTime = this.webglService.xScale$.value.invert(this.position);
+        //         this.position = scale(this.playbackTime);
+        //         this.setMarkerPosition();
+        //     }
+        // });
+
+        this.webglService.levelZoom$.pipe(untilDestroyed(this)).subscribe(level => {
+            this.setMarkerPosition();
+        });
+
+        this.webglService.scrollBarScroll$.pipe(untilDestroyed(this)).subscribe(scroll => {
+            this.setMarkerPosition();
         });
     }
 
     ngOnChanges(changes: NgChanges<WebGlTimelinePlaybackIndicatorComponent>): void {
-        if (changes.playbackPosition) {
-            this.setMarkerPosition();
-
+        if (changes.position?.currentValue) {
+            this.playbackTime = this.webglService.xScale$.value.invert(
+                changes.position.currentValue,
+            );
             this.time = dateFormat(this.playbackTime, TIME_FORMAT);
             this.date = dateFormat(this.playbackTime, DATE_FORMAT);
+            this.setMarkerPosition();
         }
     }
 
     private setMarkerPosition(): void {
-        if (this.playbackPosition !== undefined) {
-            if (this.playbackPosition > this.webglService.canvasWidth$.value) {
-                this.playbackPosition = this.webglService.canvasWidth$.value;
+        if (this.position === undefined) {
+            if (this.timePlaybackEar !== undefined) {
+                this.timePlaybackEar.nativeElement.style.opacity = '0';
             }
-
-            if (this.playbackPosition < 0) {
-                this.playbackPosition = 0;
-            }
-            this.timePlaybackEar.nativeElement.style.opacity = '1';
-            this.svgArrow = this.svgArrowPoints();
-        } else {
-            this.timePlaybackEar.nativeElement.style.opacity = '0';
             return;
         }
 
-        if (this.playbackPosition - PRIMARY_WIDTH / 2 <= 0) {
+        const scale = this.webglService.xScale$.getValue();
+        // this.playbackTime = this.webglService.xScale$.value.invert(this.position);
+        this.position = scale(this.playbackTime);
+
+        if (this.position > this.webglService.canvasWidth$.value) {
+            this.position = this.webglService.canvasWidth$.value;
+        } else if (this.position < 0) {
+            this.position = 0;
+        }
+
+        this.timePlaybackEar.nativeElement.style.opacity = '1';
+        this.svgArrow = this.svgArrowPoints();
+
+        if (this.position - PRIMARY_WIDTH / 2 <= 0) {
             this.timePlaybackEar.nativeElement.style.left = `${PRIMARY_WIDTH / 2}px`;
-            this.vlPosition = this.playbackPosition;
-        } else if (
-            this.playbackPosition + PRIMARY_WIDTH / 2 >=
-            this.webglService.canvasWidth$.value
-        ) {
+            this.vlPosition = this.position;
+        } else if (this.position + PRIMARY_WIDTH / 2 >= this.webglService.canvasWidth$.value) {
             this.timePlaybackEar.nativeElement.style.left = `${
                 this.webglService.canvasWidth$.value - PRIMARY_WIDTH / 2
             }px`;
             const padding =
-                this.webglService.canvasWidth$.value - this.playbackPosition - PRIMARY_WIDTH / 2;
+                this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
             this.vlPosition = PRIMARY_WIDTH / 2 - padding;
         } else {
-            this.timePlaybackEar.nativeElement.style.left = `${this.playbackPosition}px`;
+            this.timePlaybackEar.nativeElement.style.left = `${this.position}px`;
             this.vlPosition = PRIMARY_WIDTH / 2;
         }
 
@@ -101,37 +114,32 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
     }
 
     private svgArrowPoints(): string {
-        if (this.playbackPosition === undefined) {
-            return;
+        if (this.position === undefined) {
+            return '';
         }
-        const offset = this.playbackPosition - PRIMARY_WIDTH / 2;
+        const offset = this.position - PRIMARY_WIDTH / 2;
         let tl = Math.round((PRIMARY_WIDTH - ARROW_WIDTH) / 2); // top left vertex
         let tr = Math.round((PRIMARY_WIDTH + ARROW_WIDTH) / 2); // top right vertex
         let b = Math.round(PRIMARY_WIDTH / 2); // bottom vertex
 
         if (offset < 0) {
-            if (this.playbackPosition < ARROW_WIDTH) {
+            if (this.position < ARROW_WIDTH) {
                 tl = 0;
                 tr = ARROW_WIDTH;
-                b = this.playbackPosition;
+                b = this.position;
             } else {
                 tl += offset;
                 tr += offset;
                 b += offset;
             }
-        } else if (
-            this.webglService.canvasWidth$.value - this.playbackPosition <
-            PRIMARY_WIDTH / 2
-        ) {
-            if (this.webglService.canvasWidth$.value - this.playbackPosition < ARROW_WIDTH) {
+        } else if (this.webglService.canvasWidth$.value - this.position < PRIMARY_WIDTH / 2) {
+            if (this.webglService.canvasWidth$.value - this.position < ARROW_WIDTH) {
                 tl = PRIMARY_WIDTH - ARROW_WIDTH;
                 tr = PRIMARY_WIDTH;
-                b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.playbackPosition);
+                b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.position);
             } else {
                 const padding =
-                    this.webglService.canvasWidth$.value -
-                    this.playbackPosition -
-                    PRIMARY_WIDTH / 2;
+                    this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
                 tl -= padding;
                 tr -= padding;
                 b -= padding;

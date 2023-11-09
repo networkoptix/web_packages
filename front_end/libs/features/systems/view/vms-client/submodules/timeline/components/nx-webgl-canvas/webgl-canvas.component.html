@@ -1,17 +1,18 @@
 <nx-pre-loader
-    *ngIf="cameras.length && (!data?.length || !dataAllCameras?.length)"
-    [minHeight]="85"
+    *ngIf="cameras.length && (!data$$()?.length || !dataAllCameras$$()?.length)"
+    [minHeight]="115"
 ></nx-pre-loader>
+
 <div
-    class="d-flex timeline-container"
-    *ngIf="data?.length || dataAllCameras?.length"
+    class="d-flex flex-column timeline-container"
+    *ngIf="data$$()?.length || dataAllCameras$$()?.length"
 >
-    <div>
-        <nx-timeline-zoom
-            (onZoom)="doZoom($event)"
-            (constantZoom)="constantZoom($event)"
-        ></nx-timeline-zoom>
-    </div>
+    <!--    <div>-->
+    <!--        <nx-timeline-zoom-->
+    <!--            (onZoom)="doZoom($event)"-->
+    <!--            (constantZoom)="constantZoom($event)"-->
+    <!--        ></nx-timeline-zoom>-->
+    <!--    </div>-->
 
     <div class="nx-timeline-wrapper">
         <div id="nx-x-axis-major"></div>
@@ -101,14 +102,15 @@
         </div>
 
         <nx-timeline-interactions
+            [actions]="timelineActions"
             [chart]="chart"
             [zoomInProcess]="zoomInProcess"
-            (scrollShift)="scrollShift($event)"
+            (scrollToPos)="scrollToPos($event)"
         ></nx-timeline-interactions>
 
         <nx-timeline-scroll
-            [barWidth]="scrollBarWidth"
-            [barPos]="scrollBarPos"
+            [barWidth]="scrollBarWidth$$()"
+            [barPos]="scrollBarPos$$()"
             [playbackPos]="scrollPlaybackPosition"
             (scrollToPos)="scrollToPos($event)"
             (scrollEnd)="scrollEnd()"
@@ -116,28 +118,13 @@
             (constantScroll)="constantScroll($event)"
         >
         </nx-timeline-scroll>
-
-        <!--        <nx-webgl-time-under-mouse [position]="timeLabelPosition"></nx-webgl-time-under-mouse>-->
-
-        <!--        <nx-webgl-timeline-playback-indicator-->
-        <!--            [playbackPosition]="playbackLabelPosition"-->
-        <!--            [playbackTime]="playbackPointer"-->
-        <!--        ></nx-webgl-timeline-playback-indicator>-->
-
-        <!--        <nx-webgl-timeline-selection-->
-        <!--            [position]="timeLabelPosition"-->
-        <!--            (posChange)="getSelectionDate($event)"-->
-        <!--            (scrollShift)="scrollShift($event)"-->
-        <!--        ></nx-webgl-timeline-selection>-->
-
-        <!--        <nx-webgl-timeline-selection-action-panel></nx-webgl-timeline-selection-action-panel>-->
     </div>
 
-    <div><nx-playback-control></nx-playback-control></div>
+    <nx-timeline-actions (onActions)="onActions($event)"></nx-timeline-actions>
 </div>
 
 <div
-    *ngIf="data?.length"
+    *ngIf="nxConfig.timelineDebugData && data$$()?.length"
     style="
         position: absolute;
         width: 700px;
@@ -157,8 +144,8 @@
             <span>{{ 'LMPos' | translate }}</span> :
             {{ Math.trunc(-(canvasVirtualWidth - webglService.canvasWidth$.value + xPos) || 0) }}
             <br />
-            <span>{{ 'BarPos' | translate }}</span> : {{ scrollBarPos }} <br />
-            <span>{{ 'BarWidth' | translate }}</span> : {{ scrollBarWidth }} <br />
+            <span>{{ 'BarPos' | translate }}</span> : {{ scrollBarPos$$() }} <br />
+            <span>{{ 'BarWidth' | translate }}</span> : {{ scrollBarWidth$$() }} <br />
             <span>{{ 'Sel' | translate }}</span> : {{ this.webglService.selectionDrag$.value }} /
             {{ this.webglService.selection$.value.drag }} <br />
             <!--    tPos : {{ timeLabelPosition }} <br />-->

@@ -4,13 +4,15 @@ import dateFormat from 'dateformat';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NgChanges } from '@utils/ng-changes';
+import {
+    DATE_FORMAT,
+    TIME_FORMAT,
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 
 import { NxWebGLService } from '../../services/webgl.service';
 
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
-const TIME_FORMAT = 'HH:MM:ss';
-const DATE_FORMAT = 'ddd mmm dd yyyy';
 
 @UntilDestroy()
 @Component({
@@ -19,7 +21,7 @@ const DATE_FORMAT = 'ddd mmm dd yyyy';
     styleUrls: ['./time-under-mouse.component.scss'],
 })
 export class WebGlTimeUnderMouseComponent implements OnChanges {
-    @Input() position: number | undefined;
+    @Input() position: number;
 
     public date: string = '';
     public time: string = '';

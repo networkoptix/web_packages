@@ -303,16 +303,19 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
 
     --sidebar-toggling-ear-color : #{$light16};
 
-    --time-under-mouse-bg : rgba(var(--light6--rgb), 0.9);
-    --time-under-mouse-color : #{$dark9};
+    --time-under-mouse-bg : var(--light8);
+    --timeline-date-color : #{$dark9};
+    --timeline-time-color        : #{$dark4};
     --timeline-bg : #{$light1};
+    --timeline-tick-color: #{$light10};
+    --timeline-major-color: #{$dark4};
+    --timeline-manor-color: #{$dark10};
     --timeline-scrollbar-bg : #{$light16};
     --timeline-scrollbar-hover-bg : #{$light14};
     --timeline-scrollbar-stripe-bg : #{$dark12};
     --timeline-scrollbutton-bg : rgba(var(--dark9--rgb), 0.5);
     --timeline-scrollbutton-hover-bg : rgba(var(--dark9--rgb), 0.9);
-    --timeline-playback-indicator-bg : rgba(var(--dark9--rgb), 0.9);
-    --timeline-playback-indicator-color : #{$light1};
+    --timeline-playback-indicator-bg : var(--light10);
     --timeline-selection-panel-bg : var(--brand-core);
     --timeline-selection-panel-hover-bg : var(--brand-l1);
     --timeline-selection-panel-active-bg : var(--brand-d1);
@@ -325,6 +328,11 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --timeline-control-color : #{$dark9};
     --timeline-chunk-color : var(--green_l2);
     --timeline-background : rgba(var(--green_l2--rgb), 0.1);
+
+    // Timeline actions (for now) --TT
+    --button-action-bg: var(--light3);
+    --button-action-border-color: var(--light15);
+    --button-action-icon-fill: var(--light10);
 
     --paginator-bg : #{$light4};
     --paginator-color : #{$light16};

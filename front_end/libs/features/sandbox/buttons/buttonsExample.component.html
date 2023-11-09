@@ -7,7 +7,7 @@
         (click)="onClick()"
     />
 </div>
-<div>
+<div class="mt-3">
     <span>Secondary button</span>
     <nx-button
         [type]="ButtonType.secondary"
@@ -16,7 +16,7 @@
         (click)="onClick()"
     />
 </div>
-<div>
+<div class="mt-3">
     <span>Primary/Brand button disabled</span>
     <nx-button
         [type]="ButtonType.brand"
@@ -25,12 +25,20 @@
         (click)="onClick()"
     />
 </div>
-<div>
+<div class="mt-3">
     <span>Secondary button disabled</span>
     <nx-button
         [type]="ButtonType.secondary"
         text="Secondary"
         [disabled]="true"
+        (click)="onClick()"
+    />
+</div>
+<div class="mt-3">
+    <span>Action button (timeline)</span>
+    <nx-button
+        [type]="ButtonType.action"
+        [btnIconSrc]="icons.dirActions + 'selection.svg'"
         (click)="onClick()"
     />
 </div>

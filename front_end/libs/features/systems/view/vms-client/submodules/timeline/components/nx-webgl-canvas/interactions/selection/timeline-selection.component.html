@@ -1,17 +1,16 @@
 <div
-    (nxHoldStart)="selectionHandler($event, SELECTION_ACTION.start)"
-    (nxHoldStop)="selectionHandler($event, SELECTION_ACTION.end)"
-    (nxDblClick)="selectedRangeDoubleClickHandler($event)"
+    [ngStyle]="{ 'pointer-events': !enabled ? 'none' : 'all' }"
+    (nxClick)="selectionHandler($event)"
+    (nxDblClick)="selectedRangeDoubleClickHandler()"
     (mousemove)="selectionMoveHandler($event)"
 >
     <div
         #selectedRange
         [style.display]="selection?.active ? 'block' : 'none'"
         [style.left.px]="selection?.startDisplay"
-        [style.width.px]="selection?.endDisplay - selection?.startDisplay"
+        [style.width.px]="selection?.widthInPx"
         [id]="canvasWidth"
         [ngClass]="{
-            hideLeftBorder: selection?.startDisplay < 1 || selection?.startDisplay > canvasWidth,
             hideRightBorder: selection?.endDisplay < 3 || selection?.endDisplay === canvasWidth
         }"
         class="selected-range"
@@ -27,25 +26,39 @@
             #leftEar
             [style.display]="!hideLeftEar ? 'block' : 'none'"
             [style.left.px]="leftEarViewLeft"
+            [ngClass]="{ docked: leftEarViewLeft > 0, 'short-view': leftEarShortView }"
             class="ear left"
         >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirActions + 'arrow.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
             <span class="date">{{ selection.leftDate }}</span>
             <span class="time">{{ selection.leftTime }}</span>
-            <svg viewbox="0 0 140 5">
-                <polygon [attr.points]="svgLeftArrowPoints" />
-            </svg>
+            <!--            <svg viewbox="0 0 140 5">-->
+            <!--                <polygon [attr.points]="svgLeftArrowPoints" />-->
+            <!--            </svg>-->
         </div>
         <div
             #rightEar
             [style.display]="!hideRightEar ? 'block' : 'none'"
             [style.right.px]="rightEarViewRight"
+            [ngClass]="{ docked: rightEarViewRight >= 0, 'short-view': rightEarShortView }"
             class="ear right"
         >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirActions + 'arrow.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
             <span class="date">{{ selection.rightDate }}</span>
             <span class="time">{{ selection.rightTime }}</span>
-            <svg viewbox="0 0 140 5">
-                <polygon [attr.points]="svgRightArrowPoints" />
-            </svg>
+            <!--            <svg viewbox="0 0 140 5">-->
+            <!--                <polygon [attr.points]="svgRightArrowPoints" />-->
+            <!--            </svg>-->
         </div>
         <div
             class="right-draggable"

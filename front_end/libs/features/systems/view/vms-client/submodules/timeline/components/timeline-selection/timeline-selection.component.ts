@@ -50,7 +50,7 @@ enum EDGE_SCROLLING_SPEED_POS {
 const MARGIN = 5;
 const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
-const WNM = PRIMARY_WIDTH - 2 * MARGIN; // widthNoMargins
+const WNM = PRIMARY_WIDTH - 2 * MARGIN; // widthNoMargins(?)
 
 @UntilDestroy()
 @Component({

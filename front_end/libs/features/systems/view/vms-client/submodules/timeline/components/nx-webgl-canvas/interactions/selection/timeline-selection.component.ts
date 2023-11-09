@@ -8,32 +8,41 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { animationFrameScheduler, distinctUntilChanged, interval, Subject, takeUntil } from 'rxjs';
+import dateFormat from 'dateformat';
+import { distinctUntilChanged } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
+import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
-import { SCROLL_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
+import {
+    DATE_FORMAT,
+    TIME_FORMAT,
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.types';
 
 import { ExportSelection, SELECTION_ACTION } from './selection.types';
 
-const MARGIN = 5;
-const HANDLE_ADJ = 1;
-const ARROW_WIDTH = 10;
 const PRIMARY_WIDTH = 140;
+const SHORT_WIDTH = 36;
 
-enum EDGE_SCROLLING_SPEED {
-    NONE = 0,
-    SLOW = 1,
-    MEDIUM = 2,
-    FAST = 3,
-}
+// Keep --TT *******************
+// const MARGIN = 5;
+// const HANDLE_ADJ = 1;
+// const ARROW_WIDTH = 10;
 
-enum EDGE_SCROLLING_SPEED_POS {
-    FAR = 80,
-    MID = 40,
-    NEAR = 20,
-}
+// enum EDGE_SCROLLING_SPEED {
+//     NONE = 0,
+//     SLOW = 1,
+//     MEDIUM = 2,
+//     FAST = 3,
+// }
+//
+// enum EDGE_SCROLLING_SPEED_POS {
+//     FAR = 80,
+//     MID = 40,
+//     NEAR = 20,
+// }
+// ************************
 
 @UntilDestroy()
 @Component({
@@ -42,24 +51,27 @@ enum EDGE_SCROLLING_SPEED_POS {
     styleUrls: ['./timeline-selection.component.scss'],
 })
 export class WebGlTimelineSelectionComponent implements OnChanges {
-    // @Input() cursorTime: Date;
-    @Input() position: number | undefined;
+    @Input() enabled: boolean = false;
 
     @Output() onHover = new EventEmitter<boolean>();
     @Output() posChange = new EventEmitter<number>();
-    @Output() scrollShift = new EventEmitter<{
-        direction: SCROLL_DIRECTION;
-        position: number;
-    }>();
+
+    // Not sure if UX want selection to scroll timeline (when selecting)
+    // @Output() scrollShift = new EventEmitter<{
+    //     direction: SCROLL_DIRECTION;
+    //     position: number;
+    // }>();
 
     SELECTION_ACTION = SELECTION_ACTION;
 
-    public hideLeftEar: boolean = false;
-    public hideRightEar: boolean = false;
+    public hideLeftEar: boolean = true;
+    public hideRightEar: boolean = true;
 
     // private selectionMode: boolean;
     leftEarViewLeft: number;
+    leftEarShortView: boolean = false;
     rightEarViewRight: number;
+    rightEarShortView: boolean = false;
 
     left: number;
     right: number;
@@ -81,7 +93,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     dragRight: boolean = false;
     canvasWidth: number;
 
-    dragStop$: Subject<boolean> = new Subject<boolean>();
+    // dragStop$: Subject<boolean> = new Subject<boolean>();
 
     constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
         languageService.loadTimelineTranslations();
@@ -90,13 +102,21 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             .pipe(untilDestroyed(this), distinctUntilChanged())
             .subscribe((selection: ExportSelection) => {
                 this.selection = selection;
-                this.leftEarPosition();
-                this.rightEarPosition();
+                if (this.selection.active) {
+                    this.leftEarPosition();
+                    this.rightEarPosition();
+                }
             });
 
         this.webglService.levelZoom$.pipe(untilDestroyed(this)).subscribe(level => {
             if (this.selection.active) {
-                this.webglService.updateSelection();
+                this.updateSelection();
+            }
+        });
+
+        this.webglService.scrollBarScroll$.pipe(untilDestroyed(this)).subscribe(scroll => {
+            if (this.selection.active) {
+                this.updateSelection();
             }
         });
 
@@ -106,55 +126,95 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
     }
 
     ngOnChanges(changes: NgChanges<WebGlTimelineSelectionComponent>): void {
-        if (changes.position?.currentValue) {
-            if (this.selection.drag) {
-                const dateUnder = this.webglService.xScale$.value.invert(
-                    changes.position.currentValue,
-                );
-                if (this.dragLeft || this.selection.leftDate === '') {
-                    this.selection.startDate = dateUnder;
-                }
+        // this.scale = this.webglService.xScale$.getValue();
 
-                if (this.dragRight || this.selection.rightDate === '') {
-                    this.selection.endDate = dateUnder;
-                }
-
-                this.webglService.selection$.next(this.selection);
-                this.webglService.updateSelection();
-            }
-        }
-    }
-
-    public selectedRangeDoubleClickHandler(event: MouseEvent): void {
-        this.webglService.selectionReset();
-    }
-
-    selectionHandler(event: MouseEvent, action: SELECTION_ACTION): void {
-        if (action === SELECTION_ACTION.start && !this.mouseOverEar && this.selection.active) {
+        // TODO: Do we need to clear  selection on mode change?
+        if (changes.enabled && [undefined, false].includes(changes.enabled.currentValue)) {
             this.webglService.selectionReset();
-        }
-        this.selection.drag = action === SELECTION_ACTION.start;
-
-        if (this.selection.drag && !this.selection.active) {
-            const offsetX = event.pageX - this.webglService.canvasRect$.value.left;
-            this.selection.active = true;
-            this.selection.startDisplay = offsetX;
-            this.selection.endDisplay = offsetX;
-            this.hideLeftEar = false;
-            this.hideRightEar = false;
-
-            this.leftEarPosition();
-            this.rightEarPosition();
-
-            this.posChange.emit(offsetX);
-        }
-
-        if (action === SELECTION_ACTION.end) {
             this.hideLeftEar = true;
             this.hideRightEar = true;
-            this.dragRight = false;
-            this.dragLeft = false;
-            this.dragStop$.next(true);
+        }
+    }
+
+    updateStartTimeLabels(): void {
+        const newDate = this.webglService.xScale$.value.invert(this.selection.startDisplay);
+        this.selection.leftDate = dateFormat(newDate, DATE_FORMAT);
+        this.selection.leftTime = dateFormat(newDate, TIME_FORMAT);
+    }
+
+    updateEndTimeLabels(): void {
+        const newDate = this.webglService.xScale$.value.invert(this.selection.endDisplay);
+        this.selection.rightDate = dateFormat(newDate, DATE_FORMAT);
+        this.selection.rightTime = dateFormat(newDate, TIME_FORMAT);
+    }
+
+    updateSelection(): void {
+        const scale = this.webglService.xScale$.getValue();
+        this.selection.startDisplay = Math.trunc(
+            scale(new Date(this.selection.leftDate + ' ' + this.selection.leftTime)),
+        );
+        this.selection.endDisplay = Math.trunc(
+            scale(new Date(this.selection.rightDate + ' ' + this.selection.rightTime)),
+        );
+
+        this.updateStartTimeLabels();
+        this.updateEndTimeLabels();
+
+        this.selection.widthInPx = this.selection.endDisplay - this.selection.startDisplay;
+
+        this.webglService.selection$.next(this.selection);
+
+        this.leftEarPosition();
+        this.rightEarPosition();
+    }
+
+    public selectedRangeDoubleClickHandler(): void {
+        this.webglService.selectionReset();
+        this.hideLeftEar = true;
+        this.hideRightEar = true;
+    }
+
+    selectionHandler(event: MouseEvent): void {
+        if (this.selection.startDisplay && this.selection.endDisplay) {
+            this.webglService.selectionReset();
+            this.hideLeftEar = true;
+            this.hideRightEar = true;
+        }
+
+        // const offsetX = event.pageX - this.webglService.canvasRect$.value.left;
+
+        const dateUnder = this.webglService.xScale$.value.invert(event.offsetX);
+        const time = dateFormat(dateUnder, TIME_FORMAT);
+        const date = dateFormat(dateUnder, DATE_FORMAT);
+        let swap = false;
+
+        if (this.selection.startDisplay > event.offsetX) {
+            swap = true;
+            this.selection.endDisplay = this.selection.startDisplay;
+            this.selection.rightDate = this.selection.leftDate;
+            this.selection.rightTime = this.selection.leftTime;
+            this.hideRightEar = false;
+            this.rightEarPosition();
+        }
+
+        if (!this.selection.active || swap) {
+            this.selection.active = true;
+            this.selection.startDisplay = event.offsetX;
+            if (this.selection.endDisplay) {
+                this.selection.widthInPx = this.selection.endDisplay - this.selection.startDisplay;
+            }
+            this.selection.leftDate = date;
+            this.selection.leftTime = time;
+            this.hideLeftEar = false;
+            this.leftEarPosition();
+            // this.posChange.emit(offsetX);
+        } else if (!this.selection.endDisplay) {
+            this.selection.endDisplay = event.offsetX;
+            this.selection.widthInPx = this.selection.endDisplay - this.selection.startDisplay;
+            this.selection.rightDate = date;
+            this.selection.rightTime = time;
+            this.hideRightEar = false;
+            this.rightEarPosition();
         }
 
         this.webglService.selection$.next(this.selection);
@@ -169,12 +229,12 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
                 event.pageX >= this.webglService.canvasRect$.value.right ||
                 event.pageX <= this.webglService.canvasRect$.value.left
             ) {
-                this.selectionHandler(event, SELECTION_ACTION.end);
+                this.selectionHandler(event);
                 return;
             }
 
             const duration = offsetX - this.selection.startDisplay;
-            const newDrag = this.selection.startDisplay === this.selection.endDisplay;
+            // const newDrag = this.selection.startDisplay === this.selection.endDisplay;
 
             if (this.selection.endDisplay + duration < this.selection.startDisplay) {
                 this.dragRight = false;
@@ -186,22 +246,24 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
                 this.dragLeft = false;
             }
 
-            if (duration > 0 && (this.dragRight || newDrag)) {
+            if (duration > 0 && this.dragRight) {
                 this.dragRight = true;
                 this.selection.endDisplay = offsetX;
                 this.posChange.emit(offsetX);
 
-                this.scroll(SCROLL_DIRECTION.right);
+                // this.scroll(SCROLL_DIRECTION.right);
                 this.rightEarPosition();
             }
-            if ((duration <= 0 && (this.dragLeft || newDrag)) || (duration > 0 && this.dragLeft)) {
+            if ((duration <= 0 && this.dragLeft) || (duration > 0 && this.dragLeft)) {
                 this.dragLeft = true;
                 this.selection.startDisplay = offsetX;
                 this.posChange.emit(offsetX);
 
-                this.scroll(SCROLL_DIRECTION.left);
+                // this.scroll(SCROLL_DIRECTION.left);
                 this.leftEarPosition();
             }
+
+            this.selection.widthInPx = this.selection.endDisplay - this.selection.startDisplay;
 
             this.webglService.selection$.next(this.selection);
         }
@@ -209,58 +271,22 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         this.webglService.selectionDrag$.next(this.selection.drag);
     }
 
-    private scroll(direction: SCROLL_DIRECTION): void {
-        if (
-            this.webglService.canScroll$.value.right &&
-            direction === SCROLL_DIRECTION.right &&
-            this.selection.endDisplay > this.canvasWidth - EDGE_SCROLLING_SPEED_POS.FAR
-        ) {
-            this.dragStop$.next(true);
-            const diff = this.canvasWidth - this.selection.endDisplay;
-            const step = this.edgeScrollingSpeed(diff);
+    // private distanceToScrollingSpeed(distanceFromEdge: number): EDGE_SCROLLING_SPEED {
+    //     if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.FAR) {
+    //         return EDGE_SCROLLING_SPEED.NONE;
+    //     }
+    //     if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.MID) {
+    //         return EDGE_SCROLLING_SPEED.SLOW;
+    //     }
+    //     if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.NEAR) {
+    //         return EDGE_SCROLLING_SPEED.MEDIUM;
+    //     }
+    //     return EDGE_SCROLLING_SPEED.FAST;
+    // }
 
-            interval(0, animationFrameScheduler)
-                .pipe(untilDestroyed(this), takeUntil(this.dragStop$))
-                .subscribe(() => {
-                    this.scrollShift.emit({
-                        direction: SCROLL_DIRECTION.scrollTo,
-                        position: -step,
-                    });
-                });
-        } else if (
-            this.webglService.canScroll$.value.left &&
-            direction === SCROLL_DIRECTION.left &&
-            this.selection.startDisplay < EDGE_SCROLLING_SPEED_POS.FAR
-        ) {
-            this.dragStop$.next(true);
-            const step = this.edgeScrollingSpeed(this.selection.startDisplay);
-
-            interval(0, animationFrameScheduler)
-                .pipe(untilDestroyed(this), takeUntil(this.dragStop$))
-                .subscribe(() => {
-                    this.scrollShift.emit({ direction: SCROLL_DIRECTION.scrollTo, position: step });
-                });
-        } else {
-            this.dragStop$.next(true);
-        }
-    }
-
-    private distanceToScrollingSpeed(distanceFromEdge: number): EDGE_SCROLLING_SPEED {
-        if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.FAR) {
-            return EDGE_SCROLLING_SPEED.NONE;
-        }
-        if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.MID) {
-            return EDGE_SCROLLING_SPEED.SLOW;
-        }
-        if (distanceFromEdge > EDGE_SCROLLING_SPEED_POS.NEAR) {
-            return EDGE_SCROLLING_SPEED.MEDIUM;
-        }
-        return EDGE_SCROLLING_SPEED.FAST;
-    }
-
-    private edgeScrollingSpeed(pos: number): EDGE_SCROLLING_SPEED {
-        return this.distanceToScrollingSpeed(pos);
-    }
+    // private edgeScrollingSpeed(pos: number): EDGE_SCROLLING_SPEED {
+    //     return this.distanceToScrollingSpeed(pos);
+    // }
 
     rightEarPosition(): void {
         if (this.selection.endDisplay > this.selection.startDisplay) {
@@ -270,82 +296,96 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
                 this.rightEarViewRight = -PRIMARY_WIDTH;
             }
         }
+        // Right marker close to left marker
+        this.hideRightEar = this.selection.endDisplay - SHORT_WIDTH <= 0;
+        this.leftEarShortView =
+            this.selection.endDisplay !== 0 && this.selection.endDisplay <= PRIMARY_WIDTH;
+
+        // Left marker close to right marker
+        this.hideLeftEar = this.selection.startDisplay + SHORT_WIDTH >= this.canvasWidth;
+        this.rightEarShortView = this.selection.startDisplay + PRIMARY_WIDTH >= this.canvasWidth;
+        this.updateEndTimeLabels();
     }
 
     leftEarPosition(): void {
         this.leftEarViewLeft = -PRIMARY_WIDTH;
         if (this.selection.startDisplay - PRIMARY_WIDTH <= 0) {
             const padding = this.selection.startDisplay - PRIMARY_WIDTH;
-            this.leftEarViewLeft = -PRIMARY_WIDTH - padding;
+            this.leftEarViewLeft = -PRIMARY_WIDTH - padding - 3;
         }
+        this.updateStartTimeLabels();
     }
 
-    public get svgLeftArrowPoints(): string {
-        let tl: number;
-        let tr: number;
-        let b: number;
+    // ***** Keep this just in case UX team change their mind --TT ************
+    // public get svgLeftArrowPoints(): string {
+    //     let tl: number;
+    //     let tr: number;
+    //     let b: number;
+    //
+    //     if (!this.hideLeftEar) {
+    //         const offset = this.selection.startDisplay - PRIMARY_WIDTH;
+    //
+    //         tl = this.selection.startDisplay - offset - ARROW_WIDTH / 2;
+    //         tr = this.selection.startDisplay - offset;
+    //         b = this.selection.startDisplay - offset;
+    //
+    //         if (offset < 0) {
+    //             tl = this.selection.startDisplay - MARGIN - HANDLE_ADJ;
+    //             tr = this.selection.startDisplay + MARGIN - HANDLE_ADJ;
+    //             b = this.selection.startDisplay - HANDLE_ADJ;
+    //
+    //             if (offset < -PRIMARY_WIDTH + MARGIN) {
+    //                 tr = MARGIN;
+    //             }
+    //         }
+    //
+    //         return `${tl},0 ${tr},0 ${b},5`;
+    //     }
+    // }
 
-        if (!this.hideLeftEar) {
-            const offset = this.selection.startDisplay - PRIMARY_WIDTH;
-
-            tl = this.selection.startDisplay - offset - ARROW_WIDTH / 2;
-            tr = this.selection.startDisplay - offset;
-            b = this.selection.startDisplay - offset;
-
-            if (offset < 0) {
-                tl = this.selection.startDisplay - MARGIN - HANDLE_ADJ;
-                tr = this.selection.startDisplay + MARGIN - HANDLE_ADJ;
-                b = this.selection.startDisplay - HANDLE_ADJ;
-
-                if (offset < -PRIMARY_WIDTH + MARGIN) {
-                    tr = MARGIN;
-                }
-            }
-
-            return `${tl},0 ${tr},0 ${b},5`;
-        }
-    }
-
-    public get svgRightArrowPoints(): string {
-        let tl: number;
-        let tr: number;
-        let b: number;
-
-        if (!this.hideRightEar) {
-            const canvasWidth = this.canvasWidth;
-            const offset = this.selection.endDisplay - canvasWidth + PRIMARY_WIDTH;
-
-            if (offset > 0) {
-                tl = offset - MARGIN - 3 * HANDLE_ADJ;
-                tr = offset + MARGIN - 3 * HANDLE_ADJ;
-                b = offset - 3 * HANDLE_ADJ;
-            } else {
-                tl = 0;
-                tr = ARROW_WIDTH / 2;
-                b = 0;
-            }
-
-            return `${tl},0 ${tr},0 ${b},5`;
-        }
-    }
+    // public get svgRightArrowPoints(): string {
+    //     let tl: number;
+    //     let tr: number;
+    //     let b: number;
+    //
+    //     if (!this.hideRightEar) {
+    //         const canvasWidth = this.canvasWidth;
+    //         const offset = this.selection.endDisplay - canvasWidth + PRIMARY_WIDTH;
+    //
+    //         if (offset > 0) {
+    //             tl = offset - MARGIN - 3 * HANDLE_ADJ;
+    //             tr = offset + MARGIN - 3 * HANDLE_ADJ;
+    //             b = offset - 3 * HANDLE_ADJ;
+    //         } else {
+    //             tl = 0;
+    //             tr = ARROW_WIDTH / 2;
+    //             b = 0;
+    //         }
+    //
+    //         return `${tl},0 ${tr},0 ${b},5`;
+    //     }
+    // }
+    // **************************************************************
 
     public leftEarMouseHandler(event: MouseEvent, action: SELECTION_ACTION): void {
+        this.selection.drag = action === SELECTION_ACTION.start;
         this.dragLeft = this.selection.drag;
         this.hideLeftEar = false;
-        this.hideRightEar = false;
+        // this.hideRightEar = false;
     }
 
     public rightEarMouseHandler(event: MouseEvent, action: SELECTION_ACTION): void {
+        this.selection.drag = action === SELECTION_ACTION.start;
         this.dragRight = this.selection.drag;
         this.hideRightEar = false;
-        this.hideLeftEar = false;
+        // this.hideLeftEar = false;
     }
 
     public rightEarMouseInOutHandler(status: boolean): void {
         if (!this.selection.drag) {
             this.onHover.emit(status);
             this.mouseOverEar = status;
-            this.hideRightEar = !status;
+            // this.hideRightEar = !status;
         }
     }
 
@@ -353,7 +393,9 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         if (!this.selection.drag) {
             this.onHover.emit(status);
             this.mouseOverEar = status;
-            this.hideLeftEar = !status;
+            // this.hideLeftEar = !status;
         }
     }
+
+    protected readonly icons = icons;
 }

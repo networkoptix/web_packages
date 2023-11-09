@@ -245,7 +245,7 @@ const vars = `    --body-bg    : #0D0E0F; //$dark3;
             // end View tab ****************************
 
             --time-under-mouse-bg               : rgba(var(--dark9--rgb), 0.9);
-            --time-under-mouse-color            : #A5B7C0; //$light10;
+            --timeline-date-color            : #A5B7C0; //$light10;
             --timeline-bg                       : #171C1F; //$dark5;
             --timeline-scrollbar-bg             : #2B383F; //$dark9;
             --timeline-scrollbar-hover-bg       : #263137; //$dark8;

@@ -1,7 +1,6 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import * as d3 from 'd3';
-import dateFormat from 'dateformat';
 import { BehaviorSubject } from 'rxjs';
 
 import { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
@@ -9,9 +8,6 @@ import { DATA } from '@vms-client/submodules/timeline/components/nx-webgl-canvas
 import { ZOOM_DIRECTIONS } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
 
 import { SCROLL_DIRECTIONS } from './webgl.types';
-
-const TIME_FORMAT = 'HH:MM:ss';
-const DATE_FORMAT = 'ddd mmm dd yyyy';
 
 @UntilDestroy()
 @Injectable({
@@ -35,11 +31,12 @@ export class NxWebGLService {
     levelZoom$ = new BehaviorSubject<number>(1);
     selectionDrag$ = new BehaviorSubject<boolean>(false);
     scrollBarScroll$ = new BehaviorSubject<boolean>(false);
-    selection$ = new BehaviorSubject<ExportSelection>({
+
+    selection = {
         active: false,
         drag: false,
-        startDate: new Date(),
-        endDate: new Date(),
+        startDate: undefined,
+        endDate: undefined,
         startDisplay: 0,
         endDisplay: 0,
         start: 0,
@@ -48,16 +45,18 @@ export class NxWebGLService {
         leftTime: '',
         rightDate: '',
         rightTime: '',
-        timelineStart: new Date(),
-        timelineEnd: new Date(),
-    });
+        timelineStart: undefined,
+        timelineEnd: undefined,
+        widthInPx: 0,
+    };
+    selection$ = new BehaviorSubject<ExportSelection>(this.selection);
 
     selectionReset(): void {
         this.selection$.next({
             active: false,
             drag: false,
-            startDate: new Date(),
-            endDate: new Date(),
+            startDate: undefined,
+            endDate: undefined,
             startDisplay: 0,
             endDisplay: 0,
             start: 0,
@@ -66,21 +65,22 @@ export class NxWebGLService {
             leftTime: '',
             rightDate: '',
             rightTime: '',
-            timelineStart: new Date(),
-            timelineEnd: new Date(),
+            timelineStart: undefined,
+            timelineEnd: undefined,
+            widthInPx: 0,
         });
     }
 
-    updateSelection(): void {
-        const selection = this.selection$.value;
-
-        selection.leftDate = dateFormat(selection.startDate, DATE_FORMAT);
-        selection.leftTime = dateFormat(selection.startDate, TIME_FORMAT);
-        selection.rightDate = dateFormat(selection.endDate, DATE_FORMAT);
-        selection.rightTime = dateFormat(selection.endDate, TIME_FORMAT);
-
-        this.selection$.next(selection);
-    }
+    // updateSelection(): void {
+    //     const selection = this.selection$.value;
+    //
+    //     selection.leftDate = dateFormat(selection.startDate, DATE_FORMAT);
+    //     selection.leftTime = dateFormat(selection.startDate, TIME_FORMAT);
+    //     selection.rightDate = dateFormat(selection.endDate, DATE_FORMAT);
+    //     selection.rightTime = dateFormat(selection.endDate, TIME_FORMAT);
+    //
+    //     this.selection$.next(selection);
+    // }
 
     updateTimelineRange(): void {
         const selection = this.selection$.value;

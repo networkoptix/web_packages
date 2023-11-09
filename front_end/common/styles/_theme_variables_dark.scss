@@ -304,17 +304,20 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
 
     --sidebar-toggling-ear-color : #E1E7EA; // $light16;
 
-    --time-under-mouse-bg               : rgba(var(--dark9--rgb), 0.9);
-    --time-under-mouse-color            : #A5B7C0; //$light10;
+    --time-under-mouse-bg               : var(--dark10);
+    --timeline-date-color               : #A5B7C0; //$light10;
+    --timeline-time-color               : #{$light4};
     --timeline-bg                       : #171C1F; //$dark5;
+    --timeline-tick-color               : #{$dark10};
+    --timeline-major-color              : #{$light4};
+    --timeline-manor-color              : #{$light10};
     --timeline-scrollbar-bg             : #2B383F; //$dark9;
     --timeline-scrollbar-hover-bg       : #263137; //$dark8;
     --timeline-scrollbar-stripe-bg      : #587785; //$dark18;
     --timeline-scrollbutton-bg          : rgba(var(--dark9--rgb), 0.5);
     --timeline-scrollbutton-hover-bg    : rgba(var(--dark9--rgb), 0.9);
-    --timeline-playback-indicator-bg    : #E1E7EA; //$light4;
-    --timeline-playback-indicator-color : #080707; //$dark2
-    --timeline-selection-panel-bg       : var(--brand-d3);
+    --timeline-playback-indicator-bg    : #263137; //$dark8;
+    --timeline-selection-panel-bg       : var(--brand-d4);
     --timeline-selection-panel-hover-bg       : var(--brand-d4);
     --timeline-selection-panel-active-bg      : var(--brand-d2);
     --timeline-selection-panel-color    : #{$light4};
@@ -326,6 +329,11 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --timeline-control-color            : #{$light4};
     --timeline-chunk-color : var(--green_d2);
     --timeline-background : rgba(var(--green_d2--rgb), 0.1);
+
+    // Timeline actions (for now) --TT
+    --button-action-bg: var(--dark5);
+    --button-action-border-color: var(--light15);
+    --button-action-icon-fill: var(--light10);
 
     --paginator-bg           : #1C2327; //$dark6;
     --paginator-color        : #A5B7C0; //$light10;

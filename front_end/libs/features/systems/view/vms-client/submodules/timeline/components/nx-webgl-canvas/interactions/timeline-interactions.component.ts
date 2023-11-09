@@ -1,8 +1,12 @@
 import { Component, EventEmitter, HostBinding, Input, OnChanges, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
-// import * as d3 from 'd3';
 
+// import * as d3 from 'd3';
 import { NgChanges } from '@utils/ng-changes';
+import {
+    ACTIONS,
+    MODE,
+} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.types';
 import { SCROLL_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 // import {
@@ -21,8 +25,9 @@ export class WebGlTimelineInteractionsComponent implements OnChanges {
     @Input() chart;
     // eslint-disable-next-line nx/explicit-angular-boundary-types
     @Input() zoomInProcess: boolean;
+    @Input() actions: ACTIONS;
 
-    @Output() scrollShift = new EventEmitter<{
+    @Output() scrollToPos = new EventEmitter<{
         direction: SCROLL_DIRECTION;
         position: number;
     }>();
@@ -68,33 +73,8 @@ export class WebGlTimelineInteractionsComponent implements OnChanges {
 
     handleMouseWheel(event: WheelEvent): void {
         event.preventDefault();
-
+        // leave this to canvas
         this.hostStyle = 'pointer-events: none';
-
-        // const t = d3.zoomIdentity
-        //     .translate(event.offsetX, 0)
-        //     .scale(this.webglService.levelZoom$.value);
-        //
-        // this.canvas.call(this.zoom.transform.t);
-        // this.canvasAll?.call(this.zoom.transform, t);
-
-        // const currentK = Math.max(this.webglService.levelZoom$.value, 1);
-        // let zoomK: number;
-        //
-        // if (event.deltaY < 0) {
-        //     zoomK = currentK * ZOOM_FACTOR;
-        // } else {
-        //     zoomK = currentK * (1 / ZOOM_FACTOR);
-        // }
-        //
-        // this.canvas
-        //     .transition()
-        //     .duration(ZOOM_DURATION)
-        //     .call(this.zoom.transform, d3.zoomIdentity.scale(zoomK));
-        // this.canvasAll
-        //     .transition()
-        //     .duration(ZOOM_DURATION)
-        //     .call(this.zoom.transform, d3.zoomIdentity.scale(zoomK));
     }
 
     handleSelectionOnHover(status: boolean): void {
@@ -102,17 +82,25 @@ export class WebGlTimelineInteractionsComponent implements OnChanges {
     }
 
     handleMouseClick(event: MouseEvent): void {
-        if (!this.webglService.selectionDrag$.value) {
+        if (!this.webglService.selectionDrag$.value && this.actions.mode === MODE.DRAG) {
             this.playbackPosition = this.cursorPosition;
         }
     }
 
-    getSelectionDate(coordX: number): void {
-        this.playbackPosition = undefined;
-        this.webglService.currentPointer$.next(this.chart.xInvert(coordX));
+    handleMouseHold(event: MouseEvent, hold: boolean): void {
+        event.preventDefault();
+        if (hold) {
+            this.scrollToPos.emit({
+                direction: SCROLL_DIRECTION.scrollTo,
+                position: event.offsetX,
+            });
+        }
     }
 
-    scrollShiftAction(params: { direction: SCROLL_DIRECTION; position: number }): void {
-        this.scrollShift.emit(params);
-    }
+    // getSelectionDate(coordX: number): void {
+    //     this.playbackPosition = undefined;
+    //     this.webglService.currentPointer$.next(this.chart.xInvert(coordX));
+    // }
+
+    protected readonly MODE = MODE;
 }

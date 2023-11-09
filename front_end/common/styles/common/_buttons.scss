@@ -137,6 +137,39 @@ button,
     }
 }
 
+.btn.btn-action {
+    border-radius: 6px !important;
+    background-color: var(--button-action-bg) !important;
+    border: 1px solid transparent;
+    padding: 6px !important;
+
+    &.active {
+        border: 1px solid var(--button-action-border-color);
+    }
+
+    svg-icon svg path {
+        fill: var(--button-action-icon-fill);
+        stroke: none;
+    }
+
+    &:hover:not([disabled]):not(.disabled) {
+        //background-color: var(--btn-default-hover-bg) !important;
+        //box-shadow: var(--btn-default-hover-shadow);
+    }
+
+    &:active,
+    &.active {
+        //color: var(--btn-default-active-color) !important;
+        //background-color: var(--btn-default-active-bg) !important;
+        //box-shadow: var(--btn-default-active-shadow) !important;
+
+        &.has-icon svg-icon svg .st0 {
+            //fill: var(--btn-default-active-color) !important;
+        }
+    }
+}
+
+
 .btn.btn-dropdown-toggle {
     color: var(--btn-dropdown-toggle-color) !important;
     background-color: var(--btn-dropdown-toggle-bg);

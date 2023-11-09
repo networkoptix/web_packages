@@ -499,8 +499,12 @@ html[data-theme="hsl"] {
     --sidebar-toggling-ear-color : var(--new-light16);
 
     --time-under-mouse-bg               : var(--new-dark9-t90);
-    --time-under-mouse-color            : var(--new-light10);
+    --timeline-date-color               : var(--new-light10);
+    --timeline-time-color               : var(--new-light4);
     --timeline-bg                       : var(--new-dark5);
+    --timeline-tick-color               : var(--new-dark10);
+    --timeline-major-color              : var(--new-dark4);
+    --timeline-manor-color              : var(--new-dark10);
     --timeline-scrollbar-bg             : var(--new-dark9);
     --timeline-scrollbar-hover-bg       : var(--new-dark8);
     --timeline-scrollbar-stripe-bg      : var(--new-dark18);
@@ -520,6 +524,11 @@ html[data-theme="hsl"] {
     --timeline-control-color            : var(--new-light4);
     --timeline-chunk-color : var(--green_l2);
     --timeline-background : rgba(var(--green_l2--rgb), 0.1);
+
+    // Timeline actions (for now) --TT
+    --button-action-bg: var(--new-light3);
+    --button-action-border-color: var(--new-light15);
+    --button-action-icon-fill: var(--new-light10);
 
     --paginator-bg           : var(--new-dark6);
     --paginator-color        : var(--new-light10);

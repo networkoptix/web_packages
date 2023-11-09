@@ -6,6 +6,7 @@ import {
 import { environment } from '@environments/environment';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import type { IConfig } from '@services/nx-config/config-types';
+import { staticBase } from '@static-variables';
 
 export function setupConfig(): IConfig {
     return {
@@ -216,6 +217,7 @@ export function setupConfig(): IConfig {
             dirDevCapabilities: '/static/images/icons/dev_capabilities/',
             dirLandingIcons: '/static/images/landing/block_icons/',
             dirConfirmations: '/static/images/confirmations/',
+            dirActions: `/static/images/icons/actions/`,
         },
         images: {
             dir: '/static/images/',

@@ -468,6 +468,10 @@ p {
     @include font-source($font-family-bold, rem(16px), $dark9);
 }
 
+@mixin bold14nocolor {
+    @include font-source($font-family-bold, rem(14px), false, 700);
+}
+
 @mixin bold16nocolor {
     @include font-source($font-family-bold, rem(16px), false, 700);
 }

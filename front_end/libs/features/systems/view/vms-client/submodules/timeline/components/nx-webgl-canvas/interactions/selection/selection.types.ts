@@ -13,6 +13,7 @@ export interface ExportSelection {
     rightTime: string;
     timelineStart: Date;
     timelineEnd: Date;
+    widthInPx: number;
 }
 
 export enum SELECTION_ACTION {

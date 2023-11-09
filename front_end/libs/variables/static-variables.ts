@@ -197,6 +197,7 @@ export const icons = {
     dirDevCapabilities: `/${staticBase}/images/icons/dev_capabilities/`,
     dirCloudStorage: `/${staticBase}/images/icons/cloud_storage/`,
     dirLandingIcons: `/${staticBase}/images/landing/block_icons/`,
+    dirActions: `/${staticBase}/images/icons/actions/`,
 };
 
 export const images = {

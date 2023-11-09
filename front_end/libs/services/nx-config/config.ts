@@ -37,6 +37,7 @@ export const nxConfig: IConfig = {
         },
     ],
     clientProtocol: '',
+    timelineDebugData: false,
     downloads: {
         mobile: [
             {

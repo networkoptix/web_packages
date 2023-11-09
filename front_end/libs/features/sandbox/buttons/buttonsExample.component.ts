@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 
 import { ButtonType } from '@components/button/button.component.types';
+import { icons } from '@static-variables';
 
 @Component({
     selector: 'nx-buttons-example',
@@ -13,4 +14,6 @@ export class NxButtonsExampleComponent {
     onClick(): void {
         console.log('Example button clicked!');
     }
+
+    protected readonly icons = icons;
 }

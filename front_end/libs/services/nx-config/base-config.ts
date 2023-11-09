@@ -51,6 +51,7 @@ export interface BaseConfig {
     newSystem: boolean;
     system: System;
     clientProtocol: string;
+    timelineDebugData: boolean;
     cloudCapabilities: CloudCapabilities;
     cloudName: string;
     cloudHost: string;

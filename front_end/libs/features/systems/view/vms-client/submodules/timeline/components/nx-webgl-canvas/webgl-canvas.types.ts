@@ -24,3 +24,6 @@ export enum TICK_BREAKPOINTS {
     denseMAJOR = 20,
     denseMINOR = 25,
 }
+
+export const TIME_FORMAT = 'HH:MM';
+export const DATE_FORMAT = 'ddd mmm dd yyyy';

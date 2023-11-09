@@ -4,11 +4,14 @@ import { NgModule } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxButtonComponent } from '@components/button/button.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickDoubleDirective } from '@directives/nx-single-double-click.directive';
+import { WebGlTimelineModeComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/mode/timeline-mode.component';
+import { WebGlTimelineActionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.component';
 import { WebGlTimelinePlaybackIndicatorComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/playback-indicator/timeline-playback-indicator.component';
-import { WebGlTimelineSelectionActionPanelComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection-action-panel/timeline-selection-action-panel.component';
+import { WebGlTimelineSelectionActionPanelComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/__DELETE_selection-action-panel/timeline-selection-action-panel.component';
 import { WebGlTimelineSelectionComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/timeline-selection.component';
 import { WebGlTimeUnderMouseComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/time-under-mouse/time-under-mouse.component';
 import { WebGlTimelineInteractionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/timeline-interactions.component';
@@ -29,6 +32,8 @@ import { WebGlTimelineZoomComponent } from '@vms-client/submodules/timeline/comp
         WebGlTimelineZoomComponent,
         WebGlTimelineSelectionActionPanelComponent,
         WebGlPlaybackControlComponent,
+        WebGlTimelineActionsComponent,
+        WebGlTimelineModeComponent,
     ],
     exports: [NxWebGLCanvasComponent],
     imports: [
@@ -39,6 +44,7 @@ import { WebGlTimelineZoomComponent } from '@vms-client/submodules/timeline/comp
         NxPreLoaderComponent,
         NxAddSvgSrcDirective,
         NxClickDoubleDirective,
+        NxButtonComponent,
     ],
     providers: [],
 })

@@ -297,6 +297,12 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --timeline-control-color: #{$dark_gray_9};
     --timeline-chunk-color: var(--green_l2);
     --timeline-background: rgba(var(--green_l2--rgb), 0.1);
+    --timeline-date-color               : #{$dark_gray_9};
+    --timeline-time-color               : #{$light_gray_4};
+    // Timeline actions (for now) --TT
+    --button-action-bg: #{$light_gray_3};
+    --button-action-border-color: #{$light_gray_15};
+    --button-action-icon-fill: #{$light_gray_10};
 
     --paginator-bg: #{$light_gray_4};
     --paginator-color: #{$light_gray_16};

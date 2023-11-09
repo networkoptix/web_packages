@@ -1,8 +1,10 @@
+import { DOCUMENT } from '@angular/common';
 import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
+    inject,
     Input,
     OnChanges,
     OnInit,
@@ -70,6 +72,8 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     componentMap: componentMap = {}; // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
     resetButtonListener$: Subscription;
+
+    private document: Document = inject(DOCUMENT);
 
     constructor(
         public APIToolSystemService: NxAPIToolSystemService,

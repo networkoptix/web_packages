@@ -3,8 +3,24 @@
     [ngClass]="{
         'btn-primary': type === ButtonType.brand,
         'btn-default': type === ButtonType.secondary,
+        'btn-action': type === ButtonType.action,
+        'active': active,
     }"
-    [innerText]="text"
     (click)="handleClick()"
     [disabled]="disabled"
-></button>
+>
+    <ng-container *ngIf="type === ButtonType.action; else text">
+        <svg-icon
+            nx-add-svg-src
+            [src]="btnIconSrc"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </ng-container>
+    <ng-template #text>
+        <span [innerText]="text"></span>
+    </ng-template>
+</button>
