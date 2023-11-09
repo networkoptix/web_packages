@@ -5,6 +5,7 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import ChromeBrowser
 from email_access import EmailClient
 from email_access import get_random_email
 from pages.header import HeaderNav
@@ -752,6 +753,91 @@ def edit_permission_works_for_cloud_admin(server: Mediaserver):
                 print("PASS")
 
 
+def test_email_validation(server: Mediaserver):
+    """
+    [Tags]    C78227    C41902    C47296
+    """
+    owner = server.get_cloud_owner()
+    url = ENV + f"/systems/{server.id}"
+    with get_chrome() as driver:
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        _wait_for_system_administration_elements_clickable(driver, owner.email)
+        system_left_menu = SystemLeftMenu(driver)
+        system_left_menu.add_users_button().click()
+        system_left_menu.add_user_modal().wait_until_visible()
+        email_field = system_left_menu.add_user_email_input()
+        email_field.input_text('')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Email is required'
+        email_field.input_text('noptixqagmail.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('@gmail.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('noptixqa@gmail..com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('noptixqa@192.168.1.1.0')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('noptixqa.@gmail.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('noptixq..a@gmail.c')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('noptixqa@-gmail.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('myemail')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('myemail@')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('myemail@gmail')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('myemail@.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('my@email@gmail.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('myemail@ gmail.com')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text('myemail@gmail.com;')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        email_field.input_text(' ')
+        system_left_menu.add_user_modal_button().click()
+        assert system_left_menu.get_error().get_text() == 'Email is required'
+        email_field.input_text(' myemail@gmail.com')
+        email_field.press_tab()
+        system_left_menu.get_error().wait_until_not_visible()
+        email_field.input_text('myemail@gmail.com ')
+        email_field.press_tab()
+        system_left_menu.get_error().wait_until_not_visible()
+        email_field.input_text('myemail@gmail.com')
+        email_field.press_tab()
+        system_left_menu.get_error().wait_until_not_visible()
+
+
+def _wait_for_system_administration_elements_clickable(driver: ChromeBrowser, owner_email: str):
+    # This method is needed as it takes a lot of time to wait until buttons become active
+    # just after system setup. The button to add users is quite tricky as when we try to
+    # wait_until_clickable() for it can raise StaleElementReferenceException when it is changing its
+    # state. This has to be fixed in the future.
+    system_admin = SystemAdmin(driver)
+    system_left_menu = SystemLeftMenu(driver)
+    system_left_menu.users_button().click()
+    system_admin.merge_with_another_system_button().wait_until_clickable(90)
+    system_left_menu.wait_for_user_with_email(owner_email)
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -782,3 +868,4 @@ if __name__ == "__main__":
         change_role_for_cloud_user(cloud_server)
         edit_permission_works_for_owner(cloud_server)
         edit_permission_works_for_cloud_admin(cloud_server)
+        test_email_validation(cloud_server)

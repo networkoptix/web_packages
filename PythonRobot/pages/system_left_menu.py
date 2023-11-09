@@ -50,6 +50,16 @@ class SystemLeftMenu:
                 return user
         raise _UserNotFoundError(email)
 
+    def wait_for_user_with_email(self, email: str):
+        started_at = time.monotonic()
+        while True:
+            try:
+                return self.get_user_with_email(email)
+            except _UserNotFoundError:
+                _logger.info(f"Waiting for user with email {email} in users list")
+            if time.monotonic() - started_at > 5:
+                raise _UserNotFoundError(email)
+
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
             "//span[contains(text(), '{SERVERS}')]")
@@ -141,6 +151,12 @@ class SystemLeftMenu:
                 f"/div[contains(@class,nx-menu)]/div[contains(@class,nx-menu-placeholder)]",
                 )
         return placeholder.get_text() == 'Nothing found'
+
+    def get_error(self) -> PageText:
+        return PageText(
+            self.driver,
+            '//nx-modal-add-user-content//span[contains(@class, "input-error")]',
+            )
 
 
 class _UserNotFoundError(Exception):
