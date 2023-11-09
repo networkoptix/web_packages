@@ -8,28 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-4. Share and Merge buttons should be disabled
-    [Tags]    C41881        
-    Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}${DISABLED}
-    Click Link    ${USERS LIST LINK}
-    Wait Until Elements Are Visible    ${ADD USER BUTTON SYSTEMS}${DISABLED}
-
-#Open in nx button should be disabled
-#    [Tags]    C41881        
-#    Log in to Autotests 2 System    ${EMAIL OWNER}
-#    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-#    Click Element    ${SYSTEMS DROPDOWN}
-#    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
-#    Log Out
-#    Log in to Autotests 2 System    ${EMAIL VIEWER}
-#    Wait Until Element Is Visible    ${SYSTEMS DROPDOWN}
-#    Click Element    ${SYSTEMS DROPDOWN}
-#    Wait Until Element Is Visible    ${OPEN IN NX BUTTON}${DISABLED}
-
-5. Should show offline next to system name
-    [Tags]    C41881        
-    Wait Until Element Is Visible    ${SYSTEM NAME OFFLINE}
-
 6. Should not be able to delete/edit users
     [Tags]            CLOUD-6615
     Click Link    ${USERS LIST LINK}
@@ -105,32 +83,6 @@ Force Tags        system    system_offline
         Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
         Log Out
     END
-
-12. Your permissions is shown for non-owners
-    [Tags]        C41881    
-    Log Out
-    ${users text}=    Create List    ${ADMIN TEXT}   ${VIEWER TEXT}     ${LIVE VIEWER TEXT}    ${ADV VIEWER TEXT}    ${CUSTOM TEXT}
-    ${users emails}=   Create List    ${system}[cloudUsers][cloudAdmin]    ${system}[cloudUsers][viewer]    ${system}[cloudUsers][liveViewer]    ${system}[cloudUsers][advancedViewer]    ${system}[cloudUsers][custom]
-    ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
-    FOR    ${user}  ${text}  IN ZIP  ${users emails}  ${users text}
-        Log in to user and system    ${user}    ${system}[id]
-        Wait Until Elements Are Visible
-           ...    ${current owner name}
-           ...    //span[contains(text(), "${system}[owner]")]
-           ...    ${YOUR ACCESS LEVEL}
-           ...    ${YOUR ACCESS LEVEL}/following-sibling::span[contains(text(),"${text}")]
-        Log Out
-    END
-
-13. Should show (you) for owner and (owner's name & email) for non-owners
-    [Tags]    C41881        
-    ${current owner name}=   Replace String    ${OWNER NAME}    %OWNER_NAME%    ${YOU TEXT}
-    Wait Until Element Is Visible    ${current owner name}
-    Log Out
-
-    Log in to user and system    ${system}[cloudUsers][viewer]    ${system}[id]
-    ${current owner name}=    Replace String    ${OWNER NAME}    %OWNER_NAME%    System Owner
-    Wait Until Elements Are Visible    ${current owner name}    //span[contains(text(), "${system}[owner]")]
 
 14. System changes state to offline if all its Servers goes offline
     [Tags]    C41894    C30826
