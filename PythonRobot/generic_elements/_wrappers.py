@@ -78,12 +78,12 @@ class Checkbox:
 
     def select(self):
         self.wait_until_visible()
-        if self.unchecked():
+        if not self.is_checked():
             self._element.click()
 
     def unselect(self):
         self.wait_until_visible()
-        if self.checked():
+        if self.is_checked():
             self._element.click()
 
     def checked(self):
