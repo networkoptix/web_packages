@@ -46,6 +46,35 @@ def offline_system_opens_system_page_by_link_to_user_without_permission(
         SystemsPage(driver).no_systems().wait_until_visible()
 
 
+def system_changes_state_to_offline_if_all_its_servers_goes_offline(
+        master_merged_server: Mediaserver,
+        slave_merged_server: Mediaserver,
+        ):
+    """
+    [Tags]    C41894    C30826    cloud
+    """
+    owner = master_merged_server.get_cloud_owner()
+    with get_chrome() as driver:
+        url = ENV + f"/systems/"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        systems_page = SystemsPage(driver)
+        systems_page.wait_for_tiles_count(2)
+        tile = systems_page.get_tile_by_name(master_merged_server.name)
+        assert tile.online()
+        master_merged_server.stop()
+        slave_merged_server.stop()
+        tile.wait_until_is_offline()
+        tile.click()
+        # Falls down because of CLOUD-11715 and CLOUD-11629
+        SystemAdmin(driver).system_offline_text().wait_until_visible(timeout=65)
+        # TODO: Falls down here ConnectionError: Mex retries exceeded. Needs to be investigated
+        master_merged_server.start(wait_for_started=True)
+        driver.get(url)
+        tile = SystemsPage(driver).get_tile_by_name(master_merged_server.name)
+        tile.wait_until_is_online()
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -60,4 +89,10 @@ if __name__ == "__main__":
             cloud_server,
             dummy_account,
             )
+        second_server = suite.create_cloud_server(cloud_owner, suite_name)
+        # TODO: Falls down here ConnectionError: Mex retries exceeded. Needs to be investigated
+        cloud_server.start(wait_for_started=True)
+        cloud_server.cloud_merge(second_server)
+        third_server = suite.create_cloud_server(cloud_owner, suite_name)
+        system_changes_state_to_offline_if_all_its_servers_goes_offline(cloud_server, second_server)
 

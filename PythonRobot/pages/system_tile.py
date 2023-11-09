@@ -1,3 +1,5 @@
+import time
+
 import selenium.common.exceptions
 
 from RobotVariables import RobotVariables
@@ -21,6 +23,24 @@ class SystemTile:
             return True
         except selenium.common.exceptions.NoSuchElementException:
             return False
+        except selenium.common.exceptions.StaleElementReferenceException:
+            return False
+
+    def wait_until_is_online(self):
+        started_at = time.monotonic()
+        while True:
+            if self.online():
+                return
+            if time.monotonic() - started_at > 60:
+                raise RuntimeError("Tile is offline after timeout")
+
+    def wait_until_is_offline(self):
+        started_at = time.monotonic()
+        while True:
+            if not self.online():
+                return
+            if time.monotonic() - started_at > 40:
+                raise RuntimeError("Tile is online after timeout")
 
     def click(self):
         self.selenium_element.click()

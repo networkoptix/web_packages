@@ -66,3 +66,10 @@ class SystemsPage:
             if tile.owner().text == expected_owner:
                 actual_tiles.append(tile)
         return actual_tiles
+
+    def get_tile_by_name(self, expected_name: str) -> SystemTile:
+        self.update_system_tiles()
+        for tile in self.tiles:
+            if tile.title().text == expected_name:
+                if tile is not None:
+                    return tile
