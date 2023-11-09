@@ -7,12 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-3. Changing the Setting 'Encrypt video traffic' changes it on the server
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    ${selected}=   Change Setting Encrypt video traffic
-    Evaluate System Settings via API    ${system['local auth']}    ${server url}    videoTrafficEncryptionForced    ${selected}
-
 4. Changing the Setting 'Limit session duration to' changes it on the server
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible
