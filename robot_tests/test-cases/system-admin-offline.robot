@@ -8,16 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
-    [Tags]    C41572        
-    ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
-    Log Out
-    Log In    ${random email}    ${base password}
-    Go To    ${ENV}/systems/${system}[id]
-    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
-    Slow   Click Link    ${TAKE ME HOME}
-    Wait Until Location Is    ${ENV}/systems
-
 #See CLOUD-6592: offline system cannot be renamed
 #Owner is able to rename offline system via Cloud
 #    [Tags]    C41899    

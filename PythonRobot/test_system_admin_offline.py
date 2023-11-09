@@ -1,10 +1,13 @@
 from pathlib import Path
 
+from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from pages.login import LoginDialog
+from pages.system_admin import FailedToAccessSystemPage
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
+from pages.systems_page import SystemsPage
 from resource_import import get_chrome
 from variables import ENV
 
@@ -24,6 +27,25 @@ def page_is_opened_and_shows_the_user_list_to_owner(server: Mediaserver):
         # TODO: Add check on CLOUD-6615 when blocking bugs are fixed and test is ready
 
 
+def offline_system_opens_system_page_by_link_to_user_without_permission(
+        server: Mediaserver,
+        user: CloudAccount,
+        ):
+    """
+    [Tags]    C41572    cloud
+    """
+    with get_chrome() as driver:
+        url = ENV + f"/systems/{server.id}"
+        driver.get(url)
+        LoginDialog(driver).basic_cloud_login(user.email, user.password)
+        failed_to_access_system_page = FailedToAccessSystemPage(driver)
+        assert failed_to_access_system_page.is_shown()
+        failed_to_access_system_page.wait_for_broken_link_text()
+        failed_to_access_system_page.get_go_to_main_page_button().click()
+        # Falls down because of CLOUD-11656
+        SystemsPage(driver).no_systems().wait_until_visible()
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -33,3 +55,9 @@ if __name__ == "__main__":
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         cloud_server.stop()
         page_is_opened_and_shows_the_user_list_to_owner(cloud_server)
+        dummy_account = suite.create_cloud_account()
+        offline_system_opens_system_page_by_link_to_user_without_permission(
+            cloud_server,
+            dummy_account,
+            )
+

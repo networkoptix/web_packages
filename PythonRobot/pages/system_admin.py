@@ -306,6 +306,14 @@ class FailedToAccessSystemPage:
             return False
         return True
 
+    def get_go_to_main_page_button(self) -> Button:
+        return Button(self.driver, '//button//a[@routerlink="/"]/..')
+
+    def wait_for_broken_link_text(self):
+        link_is_broken_xpath = self.rb.replace_nested_variables(
+            '//div[contains(text(), "{THIS_LINK_IS_BROKEN_TEXT}")]')
+        PageText(self.driver, link_is_broken_xpath).wait_until_visible()
+
 
 class _SystemName:
 
