@@ -94,6 +94,54 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
             )
 
 
+def changing_several_random_checkboxes_works(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings
+    """
+    with get_chrome() as driver:
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        server_settings = server.api.get_system_settings_from_server()
+        settings.autodiscovery_option().click()
+        settings.statistics_allowed_option().click()
+        settings.optimize_camera_settings_option().click()
+        settings.save()
+        server.api.wait_until_server_setting_to_be(
+            'autoDiscoveryEnabled',
+            not server_settings['autoDiscoveryEnabled'],
+            )
+        server.api.wait_until_server_setting_to_be(
+            'statisticsAllowed',
+            not server_settings['statisticsAllowed'],
+            )
+        server.api.wait_until_server_setting_to_be(
+            'cameraSettingsOptimization',
+            not server_settings['cameraSettingsOptimization'],
+            )
+
+        server_settings = server.api.get_system_settings_from_server()
+        settings.autodiscovery_option().click()
+        settings.statistics_allowed_option().click()
+        settings.optimize_camera_settings_option().click()
+        settings.cancel()
+        server.api.wait_until_server_setting_to_be(
+            'autoDiscoveryEnabled',
+            server_settings['autoDiscoveryEnabled'],
+            )
+        server.api.wait_until_server_setting_to_be(
+            'statisticsAllowed',
+            server_settings['statisticsAllowed'],
+            )
+        server.api.wait_until_server_setting_to_be(
+            'cameraSettingsOptimization',
+            server_settings['cameraSettingsOptimization'],
+            )
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -105,3 +153,4 @@ if __name__ == '__main__':
             )
         system_settings_and_security_settings_should_match_settings_on_server(cloud_server_first)
         test_changing_settings_changes_it_on_server(cloud_server_first)
+        changing_several_random_checkboxes_works(cloud_server_first)

@@ -413,3 +413,6 @@ class _GeneralSettings:
 
     def save(self):
         self._get_save_button().click()
+
+    def cancel(self):
+        self._get_cancel_button().click()

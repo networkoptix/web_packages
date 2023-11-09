@@ -7,13 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-6. Changing Several Random Checkboxes Works
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Changing Several Settings at Random    ${SAVE BUTTON}
-    Changing Several Settings at Random    ${CANCEL BUTTON}
-    
 7. Systems Settings Block is Available for Administrator or Owner
     [Tags]    C69736
     Log    Preconditions
