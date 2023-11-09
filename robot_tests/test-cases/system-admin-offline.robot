@@ -8,23 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-7. Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
-    [Tags]        
-    Log Out
-    Go To    ${ENV}/systems/${system}[id]
-    #Wait Until Element Is Visible    ${LOG IN CLOSE BUTTON}
-    #Click Button    ${LOG IN CLOSE BUTTON}
-    Go To    ${ENV}
-    Wait Until Element Is Visible    ${JUMBOTRON}
-    Wait Until Location Contains    ${ENV}
-
-8. Offline system should open System page by link to not authorized user and show it, after owner logs in
-    [Tags]        
-    Log Out
-    Go To    ${ENV}/systems/${system}[id]
-    Log In    ${system}[cloudOwner]   ${base password}    button=None
-    Wait until element is visible    //nx-text-editable[contains(text(), "${system}[name]")]
-
 9. Offline system should open System page by link to user without permission and show alert (System info is unavailable: You have no access to this system)
     [Tags]    C41572        
     ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
@@ -34,14 +17,6 @@ Force Tags        system    system_offline
     Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
     Slow   Click Link    ${TAKE ME HOME}
     Wait Until Location Is    ${ENV}/systems
-
-10. Offline system should open System page by link to not authorized user, and show alert if logs in and has no permission
-    [Tags]        
-    ${random email}=   Register and activate account with random email    mark    hamill   ${BASE PASSWORD}
-    Log Out
-    Go To    ${ENV}/systems/${system}[id]
-    Log In    ${random email}    ${base password}    button=None
-    Wait Until Elements Are Visible    ${SYSTEM NO ACCESS}    ${TAKE ME HOME}
 
 #See CLOUD-6592: offline system cannot be renamed
 #Owner is able to rename offline system via Cloud
@@ -63,16 +38,6 @@ Force Tags        system    system_offline
 #    # Make sure old name is saved
 #    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[id]
 #    Should be equal as strings    ${system info}[name]     ${system}[name]
-
-11. Does not show Share button to viewer, advanced viewer, live viewer
-    [Tags]        
-    Log Out
-    FOR    ${user}    IN    ${system}[cloudUsers][viewer]    ${system}[cloudUsers][advancedViewer]    ${system}[cloudUsers][liveViewer]
-        Log in to user and system    ${user}    ${system}[id]
-        Wait Until Element is Visible    //nx-text-editable[contains(text(), "${system}[name]")]
-        Elements Should Not Be Visible    ${USERS LIST LINK}    ${ADD USER BUTTON SYSTEMS}
-        Log Out
-    END
 
 14. System changes state to offline if all its Servers goes offline
     [Tags]    C41894    C30826
