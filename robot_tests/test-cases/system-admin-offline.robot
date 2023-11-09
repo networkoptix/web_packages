@@ -8,26 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-#See CLOUD-6592: offline system cannot be renamed
-#Owner is able to rename offline system via Cloud
-#    [Tags]    C41899    
-#    ${new name}=   Get random system name
-#    Change System Name    ${new name}
-#    Log Out
-#
-#    # Make sure new name is saved
-#    Log in to user and system    ${system}[cloudOwner]   ${system}[id]
-#    ${current name}=   Get Text    //h2[@id="editable-title"]
-#    ${system info}=   Get Cloud System Settings    ${cloud auth}    ${system}[clud id]
-#    Should be equal as strings    ${system}[name]     ${new name}
-#    Should be equal as strings    ${current name}     ${new name}
-#
-#    # Return to initial name
-#    Rename System    ${auth}    ${system}[id]    ${system}[name]
-#
-#    # Make sure old name is saved
-#    ${system info}=   Get Cloud System Settings    ${auth}    ${system}[id]
-#    Should be equal as strings    ${system info}[name]     ${system}[name]
 
 14. System changes state to offline if all its Servers goes offline
     [Tags]    C41894    C30826
