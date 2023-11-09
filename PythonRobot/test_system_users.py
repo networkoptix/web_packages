@@ -478,7 +478,7 @@ def user_data_should_match_registration(server: Mediaserver):
     """
     combo_text = "Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이"
     with get_chrome() as driver:
-        with CloudAccount(combo_text, combo_text) as combo_user:
+        with CloudAccount(get_random_email(), combo_text, combo_text) as combo_user:
             server.share_with_user(combo_user, 'cloudAdmin', admin_permissions)
             url = ENV + f"/systems/{server.id}"
             try:
@@ -639,7 +639,7 @@ def change_role_for_cloud_user(server: Mediaserver):
     [Tags]    C41900    webadmin    cloud
     """
     with get_chrome() as driver:
-        with CloudAccount("Tmp", "Viewer") as tmp_user:
+        with CloudAccount(get_random_email(), "Tmp", "Viewer") as tmp_user:
             server.share_with_user(tmp_user, 'viewer', viewer_permissions)
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
@@ -682,7 +682,7 @@ def edit_permission_works_for_owner(server: Mediaserver):
     [Tags]    C30657    C47041    webadmin    cloud
     """
     with get_chrome() as driver:
-        with CloudAccount("Tmp", "liveViewer") as tmp_user:
+        with CloudAccount(get_random_email(), "Tmp", "liveViewer") as tmp_user:
             server.share_with_user(tmp_user, 'liveViewer', liveViewer_permissions)
             owner = server.get_cloud_owner()
             url = ENV + f"/systems/{server.id}"
@@ -720,7 +720,7 @@ def edit_permission_works_for_cloud_admin(server: Mediaserver):
     [Tags]    C30657    C47041    webadmin    cloud
     """
     with get_chrome() as driver:
-        with CloudAccount("Tmp", "liveViewer") as tmp_user:
+        with CloudAccount(get_random_email(), "Tmp", "liveViewer") as tmp_user:
             server.share_with_user(tmp_user, 'liveViewer', liveViewer_permissions)
             admin = server.get_cloud_admin()
             url = ENV + f"/systems/{server.id}"
