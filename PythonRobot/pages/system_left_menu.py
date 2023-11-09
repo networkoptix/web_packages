@@ -48,8 +48,7 @@ class SystemLeftMenu:
         for user in self.users:
             if user.get_text() == email:
                 return user
-        raise RuntimeError(
-            f"No user with email {email} found in the system. Existing users: {self.users}")
+        raise _UserNotFoundError(email)
 
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
@@ -142,6 +141,15 @@ class SystemLeftMenu:
                 f"/div[contains(@class,nx-menu)]/div[contains(@class,nx-menu-placeholder)]",
                 )
         return placeholder.get_text() == 'Nothing found'
+
+
+class _UserNotFoundError(Exception):
+
+    def __init__(self, node):
+        self._node = node
+
+    def __str__(self):
+        return f"{self._node} node is not present in left menu"
 
 
 class SearchField:
