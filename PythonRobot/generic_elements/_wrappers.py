@@ -87,10 +87,12 @@ class Checkbox:
             self._element.click()
 
     def checked(self):
+        # TODO: Use the is_checked() method instead of this.
         self.wait_until_visible()
         return self._driver.find_element(By.XPATH, self._checked_xpath)
 
     def unchecked(self):
+        # TODO: Use the is_checked() method instead of this.
         self.wait_until_visible()
         return self._driver.find_element(By.XPATH, self._unchecked_xpath)
 
@@ -100,6 +102,14 @@ class Checkbox:
 
     def wait_until_visible(self):
         self._element.wait_until_visible()
+
+    def is_checked(self) -> bool:
+        self._element.wait_until_visible()
+        try:
+            Element(self._driver, self._checked_xpath).wait_until_visible(.5)
+        except ElementNotVisible:
+            return False
+        return True
 
 
 class PageText:
@@ -560,3 +570,13 @@ class ModalWindow:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
+
+
+class SpinBox:
+
+    def __init__(self, driver: WebDriver, locator: str):
+        self._locator = locator
+        self._element = Element(driver, self._locator)
+
+    def get_value(self) -> str:
+        return self._element.get_attribute('value')

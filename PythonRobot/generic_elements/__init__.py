@@ -20,6 +20,7 @@ from ._wrappers import Page
 from ._wrappers import PageText
 from ._wrappers import Pane
 from ._wrappers import SearchBar
+from ._wrappers import SpinBox
 from ._wrappers import TabItem
 from ._wrappers import Table
 from ._wrappers import TextField
@@ -49,6 +50,7 @@ __all__ = [
     'PageText',
     'Pane',
     'SearchBar',
+    'SpinBox',
     'TabItem',
     'Table',
     'TextField',
