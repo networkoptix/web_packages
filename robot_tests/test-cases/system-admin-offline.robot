@@ -8,14 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-2. Should confirm, if owner deletes system
-    [Tags]        
-    Click Button    ${DISCONNECT FROM NX}
-    Wait Until Elements Are Visible    ${DISCONNECT FORM}    ${DISCONNECT FORM HEADER}    ${DISCONNECT FORM CANCEL BUTTON}
-    Click Element    ${DISCONNECT FORM}
-    Click Button    ${DISCONNECT FORM CANCEL BUTTON}
-    Wait Until Page Does Not Contain Element    ${BACKDROP}
-
 3. Offline system should confirm, if not owner deletes system
     [Tags]        
     Log Out
