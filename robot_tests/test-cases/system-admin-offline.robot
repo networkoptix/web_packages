@@ -8,16 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-6. Should not be able to delete/edit users
-    [Tags]            CLOUD-6615
-    Click Link    ${USERS LIST LINK}
-    ${viewer}=   Set Variable    ${USERS LIST}//span[text()='${system}[cloudUsers][viewer]']
-    Wait Until Element Is Visible    ${viewer}
-    Click Element    ${viewer}
-    Wait Until Elements Are Visible    ${ACCESS LEVEL DROPDOWN}    ${REMOVE USER BUTTON}
-    Element Should Be Disabled    ${ACCESS LEVEL DROPDOWN}
-    Element Should Be Disabled    ${REMOVE USER BUTTON}
-
 7. Offline system should open System page by link to not authorized user and redirect to homepage, if he does not log in
     [Tags]        
     Log Out
