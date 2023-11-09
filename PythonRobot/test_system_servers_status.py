@@ -55,7 +55,7 @@ def test_detailed_info_with_1_server(server1: Mediaserver, server2: Mediaserver,
     [Tags]    C70957    cloud    webadmin
     """
     server2.stop()
-    with (get_chrome() as driver):
+    with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server1.get_cloud_owner()
         HeaderNav(driver).log_in_button().click()
@@ -103,7 +103,7 @@ def test_offline_system_1_server(server1: Mediaserver, server2: Mediaserver, rb:
     14. Offline system 1 server settings
     [Tags]    C70950    cloud
     """
-    with (get_chrome() as driver):
+    with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server1.get_cloud_owner()
         HeaderNav(driver).log_in_button().click()
@@ -152,7 +152,7 @@ def test_1_online_1_offline(server1: Mediaserver, server2: Mediaserver, rb: Robo
     """
     server2_name = server2.get_server_name()
     server2.stop()
-    with (get_chrome() as driver):
+    with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server1.get_cloud_owner()
         HeaderNav(driver).log_in_button().click()
