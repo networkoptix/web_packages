@@ -7,14 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-2. Changing the Setting * changes it on the server
-    Log in to system    ${system}    ${system}[cloudOwner]
-    Wait Until Settings Are Visible    timeout=300
-
-    FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization    auditTrailEnabled    trafficEncryptionForced
-        Changing setting changes it on server     //*[@id="${setting}"]    ${setting}
-    END
-
 3. Changing the Setting 'Encrypt video traffic' changes it on the server
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible

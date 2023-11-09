@@ -52,6 +52,40 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert current_session_limit_min == session_limit_minutes
 
 
+def test_changing_settings_changes_it_on_server(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings
+    """
+    with get_chrome() as driver:
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        settings.autodiscovery_option().unselect()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', False)
+        settings.statistics_allowed_option().select()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('statisticsAllowed', True)
+        settings.optimize_camera_settings_option().unselect()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('cameraSettingsOptimization', False)
+        settings.audit_trail_option().unselect()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('auditTrailEnabled', False)
+        settings.force_encrypted_connections_option().select()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('trafficEncryptionForced', True)
+        settings.video_traffic_encryption_option().select()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('videoTrafficEncryptionForced', True)
+        settings.limit_session_duration_option().unselect()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -62,3 +96,4 @@ if __name__ == '__main__':
             f"{suite_name}_1_",
             )
         system_settings_and_security_settings_should_match_settings_on_server(cloud_server_first)
+        test_changing_settings_changes_it_on_server(cloud_server_first)

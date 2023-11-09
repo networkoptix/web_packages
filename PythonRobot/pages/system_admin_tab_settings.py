@@ -404,3 +404,6 @@ class _GeneralSettings:
         # The default value is in days. Recalculation according to hours and
         # minutes are not implemented.
         return int(SpinBox(self._driver, '//input[@id="generic-numeric"]').get_value())
+
+    def save(self):
+        self._get_save_button().click()
