@@ -3,7 +3,6 @@ import { Component, EventEmitter, Input, Output } from '@angular/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
-import { environment } from '@environments/environment';
 import { icons } from '@static-variables';
 
 import { ButtonType } from './button.component.types';
@@ -16,12 +15,10 @@ import { ButtonType } from './button.component.types';
     standalone: true,
 })
 export class NxButtonComponent {
-    @Input() text: string = '';
     @Input() type: ButtonType = ButtonType.secondary;
     @Input() asyncClick: boolean = false;
     @Input() disabled: boolean = false;
     @Input() active: boolean = false;
-    @Input() btnIconSrc: string = '';
 
     @Output() onClick = new EventEmitter<void>();
 
@@ -32,5 +29,4 @@ export class NxButtonComponent {
     }
 
     protected readonly icons = icons;
-    protected readonly environment = environment;
 }

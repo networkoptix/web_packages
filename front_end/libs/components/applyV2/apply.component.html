@@ -13,12 +13,14 @@
             [type]="ButtonType.brand"
             [disabled]="saveDisabled"
             (onClick)="save()"
-            text="{{ 'Save' | translate }}"
-        ></nx-button>
+        >
+            <span [innerText]="'Save' | translate"></span>
+        </nx-button>
         <nx-button
             [type]="ButtonType.secondary"
             (onClick)="discard()"
-            text="{{ 'Cancel' | translate }}"
-        ></nx-button>
+        >
+            <span [innerText]="'Cancel' | translate"></span>
+        </nx-button>
     </div>
 </div>

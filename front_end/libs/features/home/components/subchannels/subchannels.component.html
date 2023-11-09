@@ -71,10 +71,11 @@
             </div>
             <div>
                 <nx-button
-                    text="{{ 'New Partner' | translate }}"
                     [type]="buttonType"
                     (onClick)="newPartnerDialog()"
-                ></nx-button>
+                >
+                    <span [innerText]="'New Partner' | translate"></span>
+                </nx-button>
             </div>
         </div>
     </ng-template>

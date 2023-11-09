@@ -26,6 +26,7 @@ import { NxSliderComponent } from '@components/slider/slider.component';
 import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
@@ -214,6 +215,7 @@ const appRoutes: Routes = [
         NxResizeObserver,
         LanguageModule,
         NxDropdownModule,
+        NxAddSvgSrcDirective,
     ],
     providers: [],
 

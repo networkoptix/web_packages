@@ -2,7 +2,16 @@
     <nx-button
         [type]="ButtonType.action"
         [active]="mode === MODE.SELECTION"
-        [btnIconSrc]="icons.dirActions + 'selection.svg'"
         (click)="handleModeClick()"
-    />
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'selection.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
 </div>

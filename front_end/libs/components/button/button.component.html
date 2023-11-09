@@ -9,18 +9,5 @@
     (click)="handleClick()"
     [disabled]="disabled"
 >
-    <ng-container *ngIf="type === ButtonType.action; else text">
-        <svg-icon
-            nx-add-svg-src
-            [src]="btnIconSrc"
-            [svgStyle]="{
-                'width.px': '20',
-                'height.px': '20'
-            }"
-            [applyClass]="true"
-        ></svg-icon>
-    </ng-container>
-    <ng-template #text>
-        <span [innerText]="text"></span>
-    </ng-template>
+    <ng-content></ng-content>
 </button>

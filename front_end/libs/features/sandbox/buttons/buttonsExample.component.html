@@ -2,19 +2,21 @@
     <span>Primary/Brand button</span>
     <nx-button
         [type]="ButtonType.brand"
-        text="Primary"
         [disabled]="false"
         (click)="onClick()"
-    />
+    >
+        <span [innerText]="'Primary' | translate"></span>
+    </nx-button>
 </div>
 <div class="mt-3">
     <span>Secondary button</span>
     <nx-button
         [type]="ButtonType.secondary"
-        text="Secondary"
         [disabled]="false"
         (click)="onClick()"
-    />
+    >
+        <span [innerText]="'Secondary' | translate"></span>
+    </nx-button>
 </div>
 <div class="mt-3">
     <span>Primary/Brand button disabled</span>
@@ -23,16 +25,19 @@
         text="Primary"
         [disabled]="true"
         (click)="onClick()"
-    />
+    >
+        <span [innerText]="'Primary' | translate"></span>
+    </nx-button>
 </div>
 <div class="mt-3">
     <span>Secondary button disabled</span>
     <nx-button
         [type]="ButtonType.secondary"
-        text="Secondary"
         [disabled]="true"
         (click)="onClick()"
-    />
+    >
+        <span [innerText]="'Secondary' | translate"></span>
+    </nx-button>
 </div>
 <div class="mt-3">
     <span>Action button (timeline)</span>
@@ -40,5 +45,15 @@
         [type]="ButtonType.action"
         [btnIconSrc]="icons.dirActions + 'selection.svg'"
         (click)="onClick()"
-    />
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'selection.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
 </div>
