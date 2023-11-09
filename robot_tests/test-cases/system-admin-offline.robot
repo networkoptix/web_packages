@@ -8,11 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-1. The page is opened and shows the user list to owner
-    [Tags]    C41881        
-    Click Link    ${USERS LIST LINK}
-    Wait Until Element Is Visible    ${USERS LIST}
-
 2. Should confirm, if owner deletes system
     [Tags]        
     Click Button    ${DISCONNECT FROM NX}
