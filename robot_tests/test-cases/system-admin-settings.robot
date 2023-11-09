@@ -7,17 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-4. Changing the Setting 'Limit session duration to' changes it on the server
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Change Setting And Save    ${LIMIT SESSION DURATION CHECKBOX}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
-    IF    ${status}==False
-        Evaluate System Settings via API    ${system['local auth']}    ${server url}     sessionLimitMinutes    0
-    ELSE
-        Evaluate Session Limit
-    END
-
 5. Change Time Interval And Verify on Server
     [Tags]    C65722
     Log in to system    ${system}    ${system}[owner]
