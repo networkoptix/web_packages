@@ -54,7 +54,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
     """
-    [tags]    system    cloud    webadmin    system settings
+    [tags]    system    cloud    webadmin    system settings    C65722
     """
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
@@ -84,6 +84,14 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings.limit_session_duration_option().unselect()
         settings.save()
         server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
+        settings.limit_session_duration_option().select()
+        new_session_limit_value_days = 1
+        settings.set_session_duration_limit(new_session_limit_value_days)
+        settings.save()
+        server.api.wait_until_server_setting_to_be(
+            'sessionLimitMinutes',
+            new_session_limit_value_days * 24 * 60,
+            )
 
 
 if __name__ == '__main__':

@@ -7,20 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-5. Change Time Interval And Verify on Server
-    [Tags]    C65722
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    ${status}=   Run Keyword and Return Status    Checkbox Should Be Selected     ${LIMIT SESSION DURATION CHECKBOX}
-    Run Keyword If    ${status}==False    Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
-    Change Duration Time Interval    ${SYSTEM SAVE}
-    Evaluate Session Limit
-    Reload Page
-    Wait Until Settings Are Visible
-    Change Duration Time Interval    ${SYSTEM SAVE}
-    Evaluate Session Limit
-
 6. Changing Several Random Checkboxes Works
     Log in to system    ${system}    ${system}[owner]
     Wait Until Settings Are Visible

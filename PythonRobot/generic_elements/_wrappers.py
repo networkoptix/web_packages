@@ -580,3 +580,7 @@ class SpinBox:
 
     def get_value(self) -> str:
         return self._element.get_attribute('value')
+
+    def set_value(self, value: str):
+        self._element.clear_text()
+        self._element.send_keys(value)

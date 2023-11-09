@@ -400,10 +400,16 @@ class _GeneralSettings:
             '//label[@for="sessionLimitMinutesToggle"]//span'
             ).get_text()
 
+    def _get_session_limit_spin_box(self) -> SpinBox:
+        return SpinBox(self._driver, '//input[@id="generic-numeric"]')
+
     def get_session_duration_limit(self) -> int:
         # The default value is in days. Recalculation according to hours and
         # minutes are not implemented.
-        return int(SpinBox(self._driver, '//input[@id="generic-numeric"]').get_value())
+        return int(self._get_session_limit_spin_box().get_value())
+
+    def set_session_duration_limit(self, value: int):
+        self._get_session_limit_spin_box().set_value(str(value))
 
     def save(self):
         self._get_save_button().click()
