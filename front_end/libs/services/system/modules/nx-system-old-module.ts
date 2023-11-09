@@ -376,6 +376,14 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         );
     }
 
+    canViewADevice(): boolean {
+        const { cameras } = this.cameraManager;
+        const { canViewDevice, canViewDeviceArchive } = this.permissionManager;
+        return (cameras || [{ id: '' }]).some(
+            ({ id }) => canViewDevice(id) || canViewDeviceArchive(id),
+        );
+    }
+
     getInfoFromCloudDb() {
         return this.cloudApi.systems(this.id);
     }

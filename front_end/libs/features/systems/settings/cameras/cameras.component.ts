@@ -157,8 +157,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
-        const permissions = this.system.permissionManager.permissions$$();
-        return permissions.view || permissions.viewArchives;
+        const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
+        return canViewDevice(this.camera.id) || canViewDeviceArchive(this.camera.id);
     });
 
     private get cameraName(): string {
