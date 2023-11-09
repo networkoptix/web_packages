@@ -1,0 +1,9 @@
+<svg xmlns="http://www.w3.org/2000/svg"
+     width="40" height="20"
+     viewBox="0 0 40 20"
+>
+    <g>
+        <rect x="2" y="4" width="3" height="12" rx="1.5" fill="#3D525C"/>
+        <text x="11" y="15" fill="#A3B8C2">LIVE</text>
+    </g>
+</svg>
