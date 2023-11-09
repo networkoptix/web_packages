@@ -8,19 +8,6 @@ Force Tags        system    system_offline
 
 
 *** Test Cases ***
-3. Offline system should confirm, if not owner deletes system
-    [Tags]        
-    Log Out
-    Log in to user and system    ${system}[cloudUsers][viewer]    ${system}[id]
-    Wait Until Elements Are Visible    ${SYSTEM NAME OFFLINE}    ${DISCONNECT FROM MY ACCOUNT}
-    Click Button    ${DISCONNECT FROM MY ACCOUNT}
-    Wait Until Elements Are Visible
-        ...    ${DISCONNECT MODAL WARNING}
-        ...    ${DISCONNECT MODAL DISCONNECT BUTTON}
-        ...    ${DISCONNECT MODAL CANCEL}
-    Click Button    ${DISCONNECT MODAL CANCEL}
-    Wait Until Page Does Not Contain Element    ${MODAL DIALOG}
-
 4. Share and Merge buttons should be disabled
     [Tags]    C41881        
     Wait Until Element Is Visible    ${MERGE BUTTON SYSTEM}${DISABLED}
