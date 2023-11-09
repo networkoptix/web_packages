@@ -41,10 +41,10 @@ class TabInformation:
             time.sleep(1)
 
     def check_links(self):
-        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="alerts"]').wait_until_visible()
-        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="systems"]').wait_until_visible()
-        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="servers"]').wait_until_visible()
-        Link(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]').wait_until_visible()
+        Link(self._driver, self.get_alerts_section())
+        Link(self._driver, self.get_systems_section())
+        Link(self._driver, self.get_servers_section())
+        Link(self._driver, self.get_network_section())
         Link(self._driver, '//div[contains(@class,"menuLinks")]/nx-health-update').wait_until_visible()
         Link(self._driver, '//div[contains(@class,"menuLinks")]/div').wait_until_visible()
 
@@ -270,6 +270,7 @@ class _AlertsSection(_Section):
 
 
 class _ServersSection(_Section):
+
     def wait_until_visible(self, timeout=5):
         PageText(self._driver, '//nx-info-block//*[contains(text(), "Availability")]').wait_until_visible(timeout)
         PageText(self._driver, '//nx-info-block//*[contains(text(), "Load")]').wait_until_visible(timeout)

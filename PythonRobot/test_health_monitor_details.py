@@ -24,6 +24,8 @@ def test_health_monitor_warnings(server: Mediaserver):
         tab_info.check_links()
         json_file = Path(__file__).parent.absolute() / 'test_data/one-of-each.json'
         tab_info.upload_json_report(json_file)
+        tab = system_administration.get_information_tab()
+        tab.get_servers_section().click()
 
 
 if __name__ == "__main__":
