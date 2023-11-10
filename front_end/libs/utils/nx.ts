@@ -73,10 +73,6 @@ export function setServerIpAndPort<S extends { endpoints: string[] }>(server: S)
     return { ...server, ip, port };
 }
 
-export function getSysLang(): string {
-    return window.navigator.languages[0];
-}
-
 type TranslatableStep = Omit<IStepOption, 'title' | 'content'> & {
     title: Translatable;
     content: Translatable;

@@ -13,7 +13,6 @@ import type { BehaviorSubject } from 'rxjs';
 
 import { MS } from '@utils/general';
 import type { NgChanges } from '@utils/ng-changes';
-import { getSysLang } from '@utils/nx';
 import { icons } from '@variables/static-variables';
 
 const oneToTwelve = '((0?[1-9])|(1[0-2]))';
@@ -133,7 +132,7 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     postPeriod: boolean = true;
 
     ngOnInit(): void {
-        const dtFormat = Intl.DateTimeFormat(getSysLang(), {
+        const dtFormat = Intl.DateTimeFormat(navigator.language, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers

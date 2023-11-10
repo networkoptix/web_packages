@@ -212,16 +212,14 @@ function sortOrder(result: number, ascendingOrder = true): number {
 }
 
 /** Generates a function for alphabetic sorting (case insensitive).
- * @param locale - Locale to use for comparison
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
  */
 export function alphabeticalSort<P>(
-    locale: string,
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
 ): (a: P, b: P) => number {
-    return (a, b) => sortOrder(fn(a).localeCompare(fn(b), locale), ascendingOrder);
+    return (a, b) => sortOrder(fn(a).localeCompare(fn(b), navigator.language), ascendingOrder);
 }
 
 /** Generates a function for sorting mixed alphabetic and numeric strings.
@@ -230,12 +228,10 @@ export function alphabeticalSort<P>(
  *
  * This is to match the sorting behavior used within the thick client.
  *
- * @param locale - Locale to use for comparison
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
  */
 export function alphaNumericSort<P>(
-    locale: string,
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
 ): (a: P, b: P) => number {
@@ -259,7 +255,7 @@ export function alphaNumericSort<P>(
 
                 if (bothStrings) {
                     const [aSegment = '', bSegment = ''] = firstVariance;
-                    return aSegment.localeCompare(bSegment, locale);
+                    return aSegment.localeCompare(bSegment, navigator.language);
                 }
 
                 if (someStrings) {

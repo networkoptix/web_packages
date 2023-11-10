@@ -8,9 +8,7 @@ import {
     ElementRef,
     EventEmitter,
     HostListener,
-    Inject,
     Input,
-    LOCALE_ID,
     Output,
     signal,
     WritableSignal,
@@ -425,7 +423,7 @@ export class NxLayoutGridItemOverlayComponent {
                 const fileName = `${encodeURIComponent(this.node$$()?.name || '')}_${formatDate(
                     new Date(),
                     'YYYY_MM_dd_HH_mm_ss',
-                    this.locale,
+                    navigator.language,
                 )}.png`;
 
                 const vertical = this.item$$().rotation % 180;
@@ -541,7 +539,6 @@ export class NxLayoutGridItemOverlayComponent {
 
     constructor(
         public ref: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) private locale: string,
         private resizeObserver: NxResizeObserver,
         configService: NxConfigService,
     ) {

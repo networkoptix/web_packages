@@ -291,7 +291,7 @@ export class AppComponent implements OnInit {
             this.appStateService.footerVisibility = false;
         }
 
-        if (!environment.isLocal && !this.CONFIG.isInIframe && !window.navigator.webdriver) {
+        if (!environment.isLocal && !this.CONFIG.isInIframe && !navigator.webdriver) {
             if (this.CONFIG.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
                 try {
                     FullStory.init({ orgId: this.CONFIG.cloudMonitoring.fullStory });

@@ -53,8 +53,7 @@ interface WithResponseType<RT extends ResponseTypes> extends RequestOpts {
 }
 const staffSWBypass = (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
     // CLOUD-9104: Firefox does not support service workers in private mode.
-    // this isn't in the scope so we are using window by itself
-    if (!('serviceWorker' in window.navigator)) {
+    if (!('serviceWorker' in navigator)) {
         return;
     }
     const originalMethod = descriptor.value;
@@ -85,8 +84,7 @@ const swClear =
     (cacheName, url, toPromise) =>
     (target: Object, propertyKey: string, descriptor: PropertyDescriptor) => {
         // CLOUD-9104: Firefox does not support service workers in private mode.
-        // this isn't in the scope so we are using window by itself
-        if (!('serviceWorker' in window.navigator)) {
+        if (!('serviceWorker' in navigator)) {
             return;
         }
         const originalMethod = descriptor.value;

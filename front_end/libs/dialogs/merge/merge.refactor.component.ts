@@ -7,7 +7,6 @@ import {
     Inject,
     OnDestroy,
     OnInit,
-    LOCALE_ID,
     ViewChild,
     signal,
     effect,
@@ -234,7 +233,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         private elem: ElementRef<HTMLElement>,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -390,18 +388,18 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     async webadminSetup(): Promise<void> {
-        const peerSystems: DiscoveredPeersReply[] = (
+        const peerSystems = (
             await this.system.mediaserver.getPeerSystems().toPromise()
-        ).reply.filter((peer: DiscoveredPeersReply) => this.system.id !== peer.localSystemId);
+        ).reply.filter(peer => this.system.id !== peer.localSystemId);
         this.mergeSystems = peerSystems
-            .map((peer: DiscoveredPeersReply) =>
+            .map(peer =>
                 this.cleanUpWebadminSystem(
                     peer,
                     this.systemUrls,
                     this.CONFIG.system.flags.newSystem,
                 ),
             )
-            .sort(alphabeticalSort(this.locale, (sys: MergeSystem) => sys.name));
+            .sort(alphabeticalSort(sys => sys.name));
 
         if (this.mergeSystems.length === 0) {
             this.otherSystem = true;

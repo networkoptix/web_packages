@@ -411,7 +411,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     connectLocalToCloud(): Promise<boolean> {
-        if (window.navigator.onLine) {
+        if (navigator.onLine) {
             return this.dialogs.connectLocalToCloud(this.system);
         } else {
             this.toastService.show(this.LANG.toastMessage.noInternet, ToastType.Warning);

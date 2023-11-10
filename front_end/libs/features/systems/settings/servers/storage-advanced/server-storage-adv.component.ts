@@ -1,4 +1,4 @@
-import { Component, Inject, LOCALE_ID, Input, OnChanges } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
 import { filter } from 'rxjs/operators';
@@ -171,7 +171,6 @@ export class NxSystemAdvancedStorageComponent implements OnChanges {
     Math = Math;
 
     constructor(
-        @Inject(LOCALE_ID) private locale: string,
         private processService: NxProcessService,
         private dialogsService: NxDialogsService,
     ) {}
@@ -307,9 +306,7 @@ export class NxSystemAdvancedStorageComponent implements OnChanges {
     }
 
     friendlyBytes(bits: number, gbTb?: GbOrTb): string {
-        const { locale } = this;
         return bitsToString(bits, {
-            locale,
             roundTo: gbTb === 'TB' ? 1073741824 * 102.4 : 1073741824,
         });
     }

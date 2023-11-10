@@ -187,7 +187,7 @@ export class PushComponent implements OnInit {
         if (form === undefined) {
             deviceToken = this.deviceToken;
             deviceInfo.name = this.currentDeviceName ? this.currentDeviceName : 'Browser';
-            deviceInfo.model = window.navigator.userAgent;
+            deviceInfo.model = navigator.userAgent;
             provider = 'firebase';
         } else {
             deviceToken = this.newDevice.deviceToken;

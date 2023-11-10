@@ -1,9 +1,7 @@
 import {
     AfterViewInit,
     Component,
-    Inject,
     Input,
-    LOCALE_ID,
     OnChanges,
     OnDestroy,
     TemplateRef,
@@ -60,7 +58,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     constructor(
         private popoverService: NxPopoverService,
         private _viewContainerRef: ViewContainerRef,
-        @Inject(LOCALE_ID) private locale: string,
     ) {}
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
@@ -155,10 +152,9 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
         if (bits <= 0) {
             return '&mdash;';
         }
-        const { locale } = this;
         const gbBits = 1073741824;
         const roundTo = bits < gbBits / 2 ? gbBits / 1024 : gbBits / (fractionGb ? 10 : 1);
-        const friendlySize = bitsToString(bits, { locale, roundTo });
+        const friendlySize = bitsToString(bits, { roundTo });
         if (friendlySize === '0 B') {
             return '< 1 MB';
         }
@@ -172,6 +168,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             GB: 1,
             TB: 2,
         };
-        return `${new NumberParser(locale).parse(size).toFixed(fixed[units])} ${units}`;
+        return `${new NumberParser().parse(size).toFixed(fixed[units])} ${units}`;
     }
 }

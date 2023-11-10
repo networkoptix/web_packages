@@ -1,9 +1,8 @@
-import { LOCALE_ID, signal } from '@angular/core';
+import { signal } from '@angular/core';
 import { firstValueFrom } from 'rxjs';
 
 import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { nxConfig } from '@services/nx-config/config';
-import { NxSystemBase } from '@services/system/system-base';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
@@ -33,14 +32,12 @@ export class UserManager {
     users: NxUser[];
 
     protected CONFIG = nxConfig;
-    protected locale: string;
 
     constructor(
         protected mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3,
         public currentUserEmail: string,
         protected userId: string,
     ) {
-        this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
         this.accessRoles = this.CONFIG.accessRoles.predefinedRoles;
     }
 
@@ -231,9 +228,9 @@ export class UserManager {
 
         this.users = nxUsers.sort((a, b) => {
             if (a.type === UserType.cloud && b.type === UserType.cloud) {
-                return a.email.localeCompare(b.email, this.locale);
+                return a.email.localeCompare(b.email, navigator.language);
             } else if (a.type !== UserType.cloud && b.type !== UserType.cloud) {
-                return a.name.localeCompare(b.name, this.locale);
+                return a.name.localeCompare(b.name, navigator.language);
             } else {
                 return a.type === UserType.cloud ? 1 : -1;
             }

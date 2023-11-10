@@ -1,14 +1,4 @@
-import {
-    Component,
-    computed,
-    effect,
-    Inject,
-    Input,
-    LOCALE_ID,
-    OnDestroy,
-    OnInit,
-    Signal,
-} from '@angular/core';
+import { Component, computed, effect, Input, OnDestroy, OnInit, Signal } from '@angular/core';
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
@@ -207,7 +197,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private applyService: NxApplyService,
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
-        @Inject(LOCALE_ID) private locale: string,
         private db: NxDbService,
     ) {
         this.CONFIG = configService.getConfig();
@@ -650,9 +639,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(camerasNode);
             }
             if (this.system.cameraManager.cameras) {
-                this.system.cameraManager.cameras.sort(
-                    alphabeticalSort(this.locale, camera => camera.name),
-                );
+                this.system.cameraManager.cameras.sort(alphabeticalSort(camera => camera.name));
                 const camerasInMenu = this.system.cameraManager.cameras.filter(
                     camera => camera.canEdit,
                 );
@@ -792,9 +779,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             }
 
             if (this.system.serverManager.servers) {
-                this.system.serverManager.servers.sort(
-                    alphabeticalSort(this.locale, server => server.name),
-                );
+                this.system.serverManager.servers.sort(alphabeticalSort(server => server.name));
 
                 serversNode.level3 = [];
                 this.system.serverManager.servers.forEach(server => {

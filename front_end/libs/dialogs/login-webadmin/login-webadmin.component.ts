@@ -299,7 +299,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
                 const systemHasInternet = data.some(system =>
                     system.serverFlags.includes('SF_HasPublicIP'),
                 );
-                if (window.navigator.onLine && systemHasInternet) {
+                if (navigator.onLine && systemHasInternet) {
                     this.account.mediaServerApi.redirectOauth();
                 } else {
                     this.displayCloudConnectionError();

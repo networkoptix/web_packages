@@ -1,4 +1,3 @@
-import { LOCALE_ID } from '@angular/core';
 import { BehaviorSubject, firstValueFrom, Observable } from 'rxjs';
 import { map, shareReplay, switchMap, tap } from 'rxjs/operators';
 
@@ -64,7 +63,6 @@ export class ServerManager {
     private systemId: string;
     private cloudApi: NxCloudApiService;
     private system: PartialSystem;
-    private locale: string;
 
     constructor(system: PartialSystem) {
         const injector = NxSystemBase.INJECTOR;
@@ -74,7 +72,6 @@ export class ServerManager {
         this.systemId = system.id;
         this.cloudApi = injector.get(NxCloudApiService);
         this.system = system;
-        this.locale = injector.get(LOCALE_ID);
     }
 
     handleInitSystemMediaServers(): Record<
@@ -155,7 +152,7 @@ export class ServerManager {
 
                     this.servers = res
                         .map(setServerIpAndPort)
-                        .sort(alphabeticalSort(this.locale, server => server.name));
+                        .sort(alphabeticalSort(server => server.name));
                     return this.servers;
                 }),
             );

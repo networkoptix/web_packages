@@ -7,9 +7,7 @@ import {
     ContentChildren,
     ElementRef,
     EventEmitter,
-    Inject,
     Input,
-    LOCALE_ID,
     OnChanges,
     Output,
     QueryList,
@@ -129,11 +127,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     tableClasses: string;
 
-    constructor(
-        private renderer: Renderer2,
-        private uri: NxUriService,
-        @Inject(LOCALE_ID) private locale: string,
-    ) {
+    constructor(private renderer: Renderer2, private uri: NxUriService) {
         this.uri
             .getParams()
             .pipe(untilDestroyed(this))
@@ -263,7 +257,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
         switch (sortType) {
             case 'string':
-                const collator = new Intl.Collator(this.locale);
+                const collator = new Intl.Collator(navigator.language);
                 // Using collator object here for speed
                 // https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/String/localeCompare#performance
                 byParam = (a, b) => {

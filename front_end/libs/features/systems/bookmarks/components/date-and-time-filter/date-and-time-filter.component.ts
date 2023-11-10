@@ -14,7 +14,6 @@ import { BehaviorSubject, timer } from 'rxjs';
 
 import { icons } from '@static-variables';
 import { MS, offsetDate } from '@utils/general';
-import { getSysLang } from '@utils/nx';
 
 import type { TimeRange } from '../../bookmarks.types';
 
@@ -78,7 +77,7 @@ export class NxDateAndTimeFilterComponent {
     }
 
     constructor(dateAdapter: DateAdapter<Date>) {
-        dateAdapter.setLocale(getSysLang());
+        dateAdapter.setLocale(navigator.language);
         this.updateFixedDates();
         timer(MS.min, MS.min)
             .pipe(untilDestroyed(this))

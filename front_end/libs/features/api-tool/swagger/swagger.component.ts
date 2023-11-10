@@ -1,10 +1,8 @@
-import { DOCUMENT } from '@angular/common';
 import {
     Component,
     ComponentFactoryResolver,
     ComponentRef,
     ElementRef,
-    inject,
     Input,
     OnChanges,
     OnInit,
@@ -72,8 +70,6 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     componentMap: componentMap = {}; // Contains references to created componentRefs, which makes it possible to manually destroy them
     textareaMap: textareaMap = {}; // textAreas innerHTMLs are preserved here to be reapplied to code blocks
     resetButtonListener$: Subscription;
-
-    private document: Document = inject(DOCUMENT);
 
     constructor(
         public APIToolSystemService: NxAPIToolSystemService,
@@ -405,7 +401,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private replaceHTMLAsterisk = (): void => {
-        const swaggerBody = this.document.querySelector('.opblock-body');
+        const swaggerBody = document.querySelector('.opblock-body');
         swaggerBody.innerHTML = swaggerBody.innerHTML.replace(/&amp;ast;/g, '&ast;');
     };
 

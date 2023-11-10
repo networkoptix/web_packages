@@ -1,4 +1,3 @@
-import { DOCUMENT } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -177,7 +176,6 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     // *******************************
 
     public webglService = inject(NxWebGLService);
-    private document: Document = inject(DOCUMENT);
 
     // check if new chunk starting time is within previous chunk duration
     private checkChunkInProgress(newChunk: DATA): DATA {
@@ -360,7 +358,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         timer(0, 100)
             .pipe(takeUntil(this.canvasRendered$), untilDestroyed(this))
             .subscribe(fps => {
-                this.container = this.document.querySelector('#chart');
+                this.container = document.querySelector('#chart');
                 if (!this.container) {
                     return;
                 }

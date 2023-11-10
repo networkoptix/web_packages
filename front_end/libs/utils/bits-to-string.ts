@@ -19,25 +19,8 @@ type UnitTypeOptions = 'bit' | 'byte' | 'bps';
 interface IFromBytesOptions {
     unitType?: UnitTypeOptions;
     signed?: boolean;
-    locale?: string | boolean;
     percentFrom?: number;
     roundTo?: number | { unit: Byte | Bit; toDecimal: number };
-}
-
-/**
- * Formats the given number using `Number.toLocaleString()`.
- * - If locale is a string, the value is expected to be a locale-key (for example: `de`).
- * - If locale is `true`, the system default locale is used for translation.
- * - If no value for locale is specified, the number is returned unmodified.
- */
-function numberToLocaleString(number: number, locale?: string | boolean): string | number {
-    if (typeof locale === 'string') {
-        return number.toLocaleString(locale);
-    } else if (locale) {
-        return number.toLocaleString();
-    } else {
-        return number;
-    }
 }
 
 export function bitsToString(number: number, options?: IFromBytesOptions): string {
@@ -68,7 +51,7 @@ export function bitsToString(number: number, options?: IFromBytesOptions): strin
     }
 
     if (number < 1) {
-        const numberString = numberToLocaleString(number, options.locale);
+        const numberString = number.toLocaleString(navigator.language);
         return `${prefix}${numberString} ${UNITS[0]}`;
     }
 
@@ -79,7 +62,7 @@ export function bitsToString(number: number, options?: IFromBytesOptions): strin
 
     number = Math.round(Number(number / Math.pow(base, exponent)) * 100) / 100;
     // round 2 decimals
-    const numberString = numberToLocaleString(number, options.locale);
+    const numberString = number.toLocaleString(navigator.language);
 
     return `${prefix}${numberString} ${UNITS[exponent]}`;
 }

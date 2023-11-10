@@ -4,10 +4,8 @@ import {
     Input,
     forwardRef,
     Directive,
-    Inject,
     Output,
     EventEmitter,
-    LOCALE_ID,
     booleanAttribute,
     signal,
 } from '@angular/core';
@@ -55,7 +53,6 @@ class BaseLanguageDropdown extends BaseDropdown {
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         super(configService);
         this.currentLang = languageService.currentLang;
@@ -121,7 +118,7 @@ class BaseLanguageDropdown extends BaseDropdown {
                     : data.filter(language =>
                           this.CONFIG.supportedLanguages?.includes(language.language),
                       );
-            this.languages.sort(alphabeticalSort(this.locale, lang => lang.language));
+            this.languages.sort(alphabeticalSort(lang => lang.language));
 
             this.splitLanguages();
 

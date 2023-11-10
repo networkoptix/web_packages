@@ -79,7 +79,7 @@ export class NxUpdateSessionModalContent extends ModalBase<DT['return']> {
 
                 if (
                     this.isCloud &&
-                    !(window.navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))
+                    !(navigator.onLine || moduleInfo?.serverFlags.includes('SF_HasPublicIP'))
                 ) {
                     this.close();
                     openingRef?.close();

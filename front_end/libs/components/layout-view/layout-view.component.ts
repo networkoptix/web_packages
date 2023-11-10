@@ -1,11 +1,5 @@
 // import { Location } from '@angular/common';
-import {
-    ChangeDetectionStrategy,
-    ChangeDetectorRef,
-    Component,
-    LOCALE_ID,
-    inject,
-} from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -223,10 +217,7 @@ export class NxLayoutViewComponent {
                     }),
                     {} as ResourceLookup<(typeof webPages)[0]>,
                 );
-                const byName = alphaNumericSort<Pick<Resource, 'name'>>(
-                    LayoutStateService.runInInjectionContext(() => inject(LOCALE_ID)),
-                    r => r.name || '',
-                );
+                const byName = alphaNumericSort<Pick<Resource, 'name'>>(r => r.name || '');
 
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')

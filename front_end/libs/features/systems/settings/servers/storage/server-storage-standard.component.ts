@@ -1,4 +1,4 @@
-import { Component, Inject, ViewContainerRef, LOCALE_ID, Input, OnInit } from '@angular/core';
+import { Component, Inject, ViewContainerRef, Input, OnInit } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     combineLatest,
@@ -120,6 +120,7 @@ export class NxSystemStorageComponent implements OnInit {
     STATUS = STORAGE_STATUS;
 
     cleanSmbUrl = cleanSmbUrl;
+    locale = navigator.language;
 
     constructor(
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,
@@ -127,7 +128,6 @@ export class NxSystemStorageComponent implements OnInit {
         private toastService: NxToastService,
         private processService: NxProcessService,
         private applyService: NxApplyService,
-        @Inject(LOCALE_ID) public locale: string,
         private uriService: NxUriService,
     ) {
         this.viewContainerRef = viewContainerRef;
