@@ -540,7 +540,12 @@ export class NxHeaderComponent implements OnInit {
             if (system) {
                 if (!this.system || this.system.id !== this.systemId) {
                     this.stopActiveSubscription();
-                    this.system = this.systemService.createSystem(this.userEmail, system.id);
+                    this.system = this.systemService.createSystem(
+                        this.userEmail,
+                        system.id,
+                        '',
+                        true,
+                    );
 
                     this.system
                         .getInfoAndPermissions(false)
