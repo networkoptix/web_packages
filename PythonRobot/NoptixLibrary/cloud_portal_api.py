@@ -306,7 +306,7 @@ class CloudPortalAPI(object):
             disconnect_response.raise_for_status()
             return disconnect_response.json()
 
-    def subscribe_push_notification(self, env, email, password, token, name):
+    def subscribe_push_notification(self, email, password, token, name):
         auth_ascii = f'{email}:{password}'
         auth_ascii = auth_ascii.encode('ascii')
         auth = b"Basic " + base64.b64encode(auth_ascii)
@@ -477,7 +477,7 @@ class CloudPortalAPI(object):
         status_response.raise_for_status()
         return status_response.json()
 
-    def add_fake_camera(self, server_url, cameras, user="mark", password="hamill"):
+    def add_fake_camera(self, server_url, cameras):
         logger.debug("cameras value")
         logger.debug(cameras)
         body = {"cameras": cameras, "user": "mark", "password": "hamill"}
