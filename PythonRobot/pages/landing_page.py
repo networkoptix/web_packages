@@ -4,7 +4,6 @@ import time
 from RobotVariables import RobotVariables
 from generic_elements import Button
 from generic_elements import PageText
-from generic_elements import Pane
 from variables import ENV
 
 
@@ -32,11 +31,11 @@ class LandingPage:
     def wait_until_loaded(self):
         self._session_expired_dismiss()
         self._location_is_correct()
-        landing_page = Pane(
+        header = PageText(
             self.driver,
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
             )
-        landing_page.wait_until_visible()
+        header.wait_until_visible()
 
     def _location_is_correct(self, timeout=10):
         start_time = time.monotonic()
@@ -56,7 +55,7 @@ class LandingPage:
 class MetaLandingPage(LandingPage):
 
     def get_page(self):
-        return Pane(
+        return PageText(
             self.driver,
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
             )
