@@ -119,14 +119,11 @@ def logout_japanese(driver):
     validate_log_out(driver)
 
 
-def register_and_activate_account(driver, first_name, last_name, email, password, reg="api",
+def register_and_activate_account(driver, first_name, last_name, email, password,
                                   from_email=rb.FROM_EMAIL_DEFAULT):
     api = CloudPortalAPI()
 
-    if reg == "api":
-        api.register_account(first_name, last_name, email, password)
-    elif reg == "ui":
-        api.register(first_name, last_name, email, password)
+    api.register_account(first_name, last_name, email, password)
     time.sleep(1)
     activate(driver, email, password, from_email=from_email)
 
