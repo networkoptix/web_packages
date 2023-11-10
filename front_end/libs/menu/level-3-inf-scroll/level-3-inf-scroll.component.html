@@ -1,0 +1,24 @@
+<div
+    class="post"
+    *ngFor="let details of visibleItems$$(); last as isLast; first as isFirst; trackBy: trackItem"
+>
+    <div
+        class="horizontal"
+        *ngIf="details.horizontal"
+    >
+        <hr />
+    </div>
+    <nx-level-3-item
+        *ngIf="!details.horizontal"
+        [item]="details"
+        [base]="routerBase"
+        [ngClass]="{ 'last-level-3': isLast }"
+        [first]="isFirst"
+        [selected]="selectedId === details.id"
+    >
+    </nx-level-3-item>
+</div>
+<div
+    *ngIf="visibleItems$$().length"
+    (nxOnIntersect)="nextPage($event === 'Visible')"
+></div>

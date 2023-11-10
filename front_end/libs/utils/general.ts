@@ -214,10 +214,12 @@ function sortOrder(result: number, ascendingOrder = true): number {
 /** Generates a function for alphabetic sorting (case insensitive).
  * @param fn - A function which returns a string from item being sorted
  * @param ascendingOrder - Sort by ascending order (default)
+ * @param options - Additional options for the collator used for string comparison.
  */
 export function alphabeticalSort<P>(
     fn: (param: P) => string,
     ascendingOrder: boolean = true,
+    options: Intl.CollatorOptions = { numeric: true },
 ): (a: P, b: P) => number {
     return (a, b) => sortOrder(fn(a).localeCompare(fn(b), navigator.language), ascendingOrder);
 }

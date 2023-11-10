@@ -38,13 +38,10 @@ export class NxSettingsGeneralComponent implements OnInit {
     @Output() updateName = new EventEmitter<string>();
     @Output() updateAccess = new EventEmitter<boolean>();
     @Output() updateExtId = new EventEmitter<string>();
-    @Output() updateChangeService = new EventEmitter<boolean>();
     extId: string;
     name: string;
     currAccess: DropdownItem<boolean>;
     changeService: boolean;
-    // Todo: update can change service to value from item
-    canChangeService: boolean = true;
 
     ngOnInit(): void {
         // this.currRole = this.roles.find(role => role.value === this.CProle);

@@ -24,4 +24,5 @@ export enum AuthorizeState {
     backup = 'backupCode',
     notSecure = 'notSecure',
     show404 = 'show404',
+    bind = 'bind',
 }

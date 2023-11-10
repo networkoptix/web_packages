@@ -626,6 +626,27 @@ export class NxLayoutGridTreeComponent {
               ];
     };
 
+    getFullScreenActions = (
+        node: ResourceNodeMap[ResourceType.LAYOUT],
+    ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
+        return node.details.id === this.layout.id
+            ? [
+                  {
+                      id: 'divider',
+                      name: 'divider',
+                  },
+                  {
+                      id: 'toggleFullScreen',
+                      // eslint-disable-next-line nx/ban-global-variables
+                      name: document.fullscreenElement
+                          ? this.ACTIONS.exitFullScreen.name
+                          : this.ACTIONS.openFullScreen.name,
+                      action: () => this.layoutStateService.toggleLayoutFullScreen(),
+                  },
+              ]
+            : [];
+    };
+
     menuItemsByType: Partial<{
         [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
     }> = {
@@ -666,6 +687,7 @@ export class NxLayoutGridTreeComponent {
                 ...this.getLayoutUpdateActions(node),
                 ...this.getLayoutShareActions(node),
                 ...this.getLayoutLockActions(node),
+                ...this.getFullScreenActions(node),
             ].filter(Boolean),
         [ResourceType.CAMERA]: [
             ...this.OPEN_WINDOW_ACTIONS,

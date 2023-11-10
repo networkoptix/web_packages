@@ -49,7 +49,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
     updatedExtId = new BehaviorSubject<string>(null);
     updatedPartnerAccess = new BehaviorSubject<boolean>(null);
     updatedState = new BehaviorSubject<State>(null);
-    updatedChangeService = new BehaviorSubject<boolean>(null);
     updateStateProcess: Process;
 
     @Input() cpSettings: boolean;

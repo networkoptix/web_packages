@@ -31,3 +31,6 @@ type-lint-error-count.js
 # Keeping as reference while refactoring view, will eventually delete
 libs/features/systems/view/datatypes/TestCamera.ts
 libs/features/systems/view/datatypes/testMediaServers.ts
+
+apps/**/*.d.ts
+**/*.example.ts

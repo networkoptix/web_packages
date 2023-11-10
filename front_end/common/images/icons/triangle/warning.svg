@@ -1,3 +1,8 @@
-<svg width="20" height="20" viewBox="0 0 20 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-<path fill-rule="evenodd" clip-rule="evenodd" d="M9.11872 1.53881C9.49527 0.833251 10.5066 0.833251 10.8832 1.53881L18.8834 16.5292C19.2389 17.1953 18.7562 18 18.0012 18L2.00071 18C1.24567 18 0.762987 17.1953 1.11849 16.5292L9.11872 1.53881ZM11 12L8.99995 12L8.99995 6L11 6L11 12ZM8.99995 16L11 16L11 14L8.99995 14L8.99995 16Z" fill="#FBBC05"/>
+<?xml version="1.0" encoding="UTF-8"?>
+<svg version="1.1" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+<title>Actions/Bold/Warning</title>
+<desc>Created with Sketch.</desc>
+<g fill="none" fill-rule="evenodd">
+<path d="m12 16c0 0.55228-0.44772 1-1 1h-2c-0.55228 0-1-0.44772-1-1h4zm-8-1v-1h1v-5.5c0-3.0376 2.2386-5.5 5-5.5 2.7614 0 5 2.4624 5 5.5v5.5h1v1h-12z" fill="#E1A700" fill-rule="nonzero"/>
+</g>
 </svg>

@@ -1,6 +1,13 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnChanges, computed, Signal } from '@angular/core';
+import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxSearchComponent } from '@components/search/search.component';
+import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxMenuService } from '@menu/menu.service';
+import { PipesModule } from '@pipes/pipes.module';
 import { icons } from '@static-variables';
 import type { NgChanges } from '@utils/ng-changes';
 
@@ -13,6 +20,16 @@ import type { Level3Item } from '../menu.types';
     selector: 'nx-level-3-item',
     templateUrl: 'level-3-item.component.html',
     styleUrls: ['level-3-item.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        RouterModule,
+        TranslateModule,
+        AngularSvgIconModule,
+        NxSearchComponent,
+        NxSearchHighlightComponent,
+        PipesModule,
+    ],
 })
 export class NxLevel3ItemComponent implements OnChanges {
     @Input() base: string = '';

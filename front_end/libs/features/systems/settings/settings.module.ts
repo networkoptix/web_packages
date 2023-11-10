@@ -18,6 +18,7 @@ import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-lo
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
+import { IsCloudGuard } from '@guards/environment.guard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { MenuModule } from '@menu/menu.module';
@@ -162,6 +163,7 @@ export const cloudSettingsRoutes: Routes = [
                 title: SystemTitleResolver,
                 component: NxCloudStorageComponent,
                 canDeactivate: [ApplyGuard],
+                canActivate: [IsCloudGuard],
                 resolve: { system: currentSystemResolver },
             },
             {

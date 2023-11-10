@@ -2,7 +2,7 @@ import { CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
 import { ConnectedPosition } from '@angular/cdk/overlay';
 import { PortalModule } from '@angular/cdk/portal';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, HostListener, Input, OnInit } from '@angular/core';
 import { MatDividerModule } from '@angular/material/divider';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -36,6 +36,11 @@ export class NxContextMenu<Context> implements OnInit {
     @Input() subMenu: boolean = false;
     @Input() context: Context;
     @Input() menuItems: MenuItemsFactoryCallback<Context> | MenuItem<Context>[];
+
+    @HostListener('document:fullscreenchange')
+    closeMenuOnFullscreenChange(): void {
+        this.menu = undefined;
+    }
 
     menu: MenuItem<Context>[] | undefined;
     protected readonly icons = icons;

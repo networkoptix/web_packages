@@ -1,0 +1,30 @@
+@use "theme_variables_common" as theme_vars;
+@use "_mixins";
+
+h3 {
+    @include mixins.ellipsis;
+}
+
+.card-status {
+    display: block;
+    margin-top: 12px;
+}
+
+.search-block {
+    padding-top    : 10px;
+    padding-bottom : 10px;
+    border-bottom:1px solid var(--border-color) !important;
+    margin-bottom  : 10px;
+}
+
+.systems-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, 320px);
+    grid-gap: 1rem;
+}
+
+.user-name {
+    @include mixins.ellipsis;
+    color: var(--body-text-color);
+    display: block;
+}

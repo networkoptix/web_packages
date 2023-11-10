@@ -1,0 +1,95 @@
+<ng-template #loading>
+    <nx-pre-loader type="page"></nx-pre-loader>
+</ng-template>
+<ng-container *ngIf="nonOrgSystems$$(); else loading">
+    <ng-template #noSystems>
+        <nx-no-systems></nx-no-systems>
+    </ng-template>
+    <div
+        *ngIf="nonOrgSystems$$().length; else noSystems"
+        class="container"
+    >
+        <div
+            *ngIf="showSearch$$()"
+            class="search-block row border-bottom"
+        >
+            <nx-search
+                class="col-sm-9 col-md-8 col-lg-6"
+                [formControl]="search"
+                [placeholder]="'Search systems' | translate"
+                layout="compact"
+                instant
+            ></nx-search>
+        </div>
+        <div>
+            <div class="p-0 my-3">
+                <h1 class="old-h12">
+                    <span *ngIf="search$$()">{{
+                        LANG.systemsCount | translate : { count: visibleSystems$$().length }
+                    }}</span>
+                    <span
+                        *ngIf="!search$$()"
+                        translate
+                        >Systems</span
+                    >
+                </h1>
+            </div>
+            <div class="systems-grid">
+                <nx-card
+                    *ngFor="let system of visibleSystems$$(); trackBy: trackItem"
+                    (click)="openSystem(system.id)"
+                    [dropdownItems]="actionItemsForSystems$$()[system.id] ?? []"
+                >
+                    <div class="d-flex flex-column w-100">
+                        <div
+                            *ngIf="system.ownerAccountEmail !== account.email"
+                            class="fs-mask user-name"
+                        >
+                            <span translate>Owner</span>:&nbsp;
+                            <nx-search-highlight
+                                [search]="search$$()"
+                                [text]="system.ownerFullName"
+                            ></nx-search-highlight>
+                        </div>
+                        <div class="d-flex justify-content-between">
+                            <h3>
+                                <nx-search-highlight
+                                    [search]="search$$()"
+                                    [text]="system.name"
+                                ></nx-search-highlight>
+                            </h3>
+                            <ng-template #notOnline>
+                                <nx-tag
+                                    class="card-status"
+                                    [clickable]="false"
+                                    [type]="tagType(system.stateOfHealth)"
+                                    [id]="system.id"
+                                >
+                                    {{
+                                        LANG.systemStatuses[this.system.stateOfHealth] ||
+                                            this.system.stateOfHealth | translate
+                                    }}
+                                </nx-tag>
+                            </ng-template>
+                            <ng-container
+                                *ngIf="
+                                    system.stateOfHealth === CONFIG.system.status.online;
+                                    else notOnline
+                                "
+                            >
+                                <svg-icon
+                                    *ngIf="system.system2faEnabled && !account?.sessionVerified"
+                                    class="margin-system-list-status"
+                                    nx-add-svg-src
+                                    [src]="icons.dir + 'lock.svg'"
+                                    [svgStyle]="{ 'height.px': '20' }"
+                                    [applyClass]="true"
+                                ></svg-icon>
+                            </ng-container>
+                        </div>
+                    </div>
+                </nx-card>
+            </div>
+        </div>
+    </div>
+</ng-container>

@@ -472,9 +472,18 @@ export interface AuthorizeParams {
     access_code?: string;
     access_token?: string;
     lang?: string;
+    system_name?: string;
 }
 
 export interface AuthenticateResp {
     code?: string;
     link?: string;
+}
+
+export interface TosInfo {
+    accepted: boolean;
+    body: string;
+    grace_period: number;
+    reviewed_date: string;
+    review_id: string;
 }

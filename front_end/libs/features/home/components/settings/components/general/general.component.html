@@ -43,15 +43,5 @@
                 (change)="updateExtId.emit(extId)"
             />
         </div>
-        <div
-            class="box-input"
-            *ngIf="view === settingsViews.SUBCHANNELS"
-        >
-            <nx-checkbox
-                [checked]="canChangeService"
-                (onClick)="updateChangeService.emit($event)"
-            ></nx-checkbox>
-            <div translate>Allow changing services</div>
-        </div>
     </div>
 </div>

@@ -1,0 +1,41 @@
+<div
+    class="bind-btn"
+    [style.margin-right.px]="12"
+    (click)="bindSelection.emit(bindType.account)"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'user_cloud.svg'"
+        [svgStyle]="{ width: '64px', height: '64px' }"
+    ></svg-icon>
+    <div translate>My Account</div>
+</div>
+<div
+    class="bind-btn"
+    [ngClass]="{ 'option-disabled': !orgCount$$() }"
+    [style.pointer-events]="!orgCount$$() ? 'none' : 'unset'"
+    (click)="bindSelection.emit(bindType.org)"
+>
+    <svg-icon
+        nx-add-svg-src
+        [src]="icons.dir + 'organization.svg'"
+        [svgStyle]="{ width: '64px', height: '64px' }"
+    ></svg-icon>
+    <ng-container [ngSwitch]="orgCount$$()">
+        <div
+            *ngSwitchCase="0"
+            translate
+        >
+            No organizations
+        </div>
+        <div *ngSwitchCase="1">
+            {{ orgs$$()[0].name }}
+        </div>
+        <div
+            *ngSwitchDefault
+            translate
+        >
+            Organizations
+        </div>
+    </ng-container>
+</div>

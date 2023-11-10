@@ -45,12 +45,14 @@ import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
 import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
+import { TosInterceptor } from '@interceptors/tos-interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
 import { initializeApp } from '@pages/push-notifications/push-notifications.module';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { ServiceModule } from '@services/services.module';
 import { NxSwPromptUpdateService } from '@services/sw-prompt-update.service';
+import { TosService } from '@services/tos.service';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
 import { SystemResourcesReducer } from '@store/system-resources';
@@ -126,6 +128,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         CookieService,
         NxUriCacheService,
         NxApplyComponent,
+        TosService,
         {
             provide: HTTP_INTERCEPTORS,
             useClass: NxSwCacheInterceptor,
@@ -159,6 +162,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: SessionExpiredInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: TosInterceptor,
             multi: true,
         },
         NxConfigService,

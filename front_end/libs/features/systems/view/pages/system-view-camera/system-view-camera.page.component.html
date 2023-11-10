@@ -150,7 +150,7 @@
 
     <div
         class="player-and-controls-wrapper"
-        [ngClass]="{ slim: !canViewArchives }"
+        [ngClass]="{ slim: !canViewArchive$$() }"
     >
         <div class="player-wrapper">
             <nx-player
@@ -198,11 +198,7 @@
                 </div>
             </ng-template>
             <nx-timeline-selection-action-panel
-                *ngIf="
-                    archiveSelectionEnabled &&
-                    ux.state.isTimelineShown &&
-                    system?.permissionManager.permissions$$().exportArchives
-                "
+                *ngIf="archiveSelectionEnabled && ux.state.isTimelineShown && canExportArchive$$()"
             ></nx-timeline-selection-action-panel>
         </div>
 
@@ -228,19 +224,21 @@
             </div>
             <div class="controls">
                 <nx-playback-controls [enabled]="enableControls"></nx-playback-controls>
-                <nx-zoom-controls *ngIf="camera.hasArchive && canViewArchives"></nx-zoom-controls>
+                <nx-zoom-controls
+                    *ngIf="camera.hasArchive && canViewArchive$$()"
+                ></nx-zoom-controls>
                 <nx-timeline
                     *ngIf="showTimeline; else noArchiveYet"
-                    [canExport]="system.permissionManager.permissions$$().exportArchives"
+                    [canExport]="canExportArchive$$()"
                 ></nx-timeline>
                 <ng-template #noArchiveYet>
                     <nx-pre-loader
                         class="loading-archive-indicator"
-                        *ngIf="getRecordsInProgress && canViewArchives; else noArchive"
+                        *ngIf="getRecordsInProgress && canViewArchive$$(); else noArchive"
                     ></nx-pre-loader>
                     <ng-template #noArchive>
                         <div class="no-archive-message">
-                            <ng-container *ngIf="canViewArchives">
+                            <ng-container *ngIf="canViewArchive$$()">
                                 <ng-template #nvr>
                                     <div translate>No license active for this camera</div>
                                     <div>

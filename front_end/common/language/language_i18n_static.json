@@ -142,6 +142,12 @@
                 "name": "Lock Layout",
                 "tooltip": "Lock \"{name}\" layout"
             },
+            "openFullScreen": {
+                "name": "Open Full Screen"
+            },
+            "exitFullScreen": {
+                "name": "Exit Full Screen"
+            },
             "unlockLayout": {
                 "name": "Unlock Layout",
                 "tooltip": "Unlock \"{name}\" layout"
@@ -692,6 +698,7 @@
             "enable": "Enable",
             "download": "Download %VMS_NAME%",
             "logoutAuthorised": "Log Out",
+            "goBack": "Go Back",
             "ok": "OK",
             "remove": "Remove",
             "stayAs": "Stay logged as {email} ",
@@ -910,10 +917,14 @@
             "serversRestart": "Restart server&nbsp;<strong>{ title }</strong>?",
             "defaultUserGroupText": "Built-In",
             "customUserGroupText": "Custom",
-            "ldapUserGroupText": "LDAP"
+            "ldapUserGroupText": "LDAP",
+            "tosUpdate": "Update on Terms and Conditions"
         },
         "tooltips": {
             "deleteAccount": "Disconnect all the systems you are the owner of from the %CLOUD_NAME% portal and disable two factor authentication to delete your account."
+        },
+        "tosUpdate": {
+            "warning": "You will be logged out shortly.<br><br>To continue using cloud services, please read and accept the updated terms and conditions"
         },
         "twoFactor": {
             "action": "Login",

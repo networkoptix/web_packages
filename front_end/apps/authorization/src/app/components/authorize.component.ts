@@ -23,9 +23,9 @@ import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
-    ClientType,
-    AuthorizeParams,
     AuthenticateResp,
+    AuthorizeParams,
+    ClientType,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -132,6 +132,9 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     backupCode: string;
     checkBackupCodeProcess: Process;
     backupCodeErrorCode: string;
+
+    // bind
+    code: string;
 
     @HostListener('document:keypress', ['$event'])
     handleKeyboardEvent(event: KeyboardEvent): void {
@@ -356,6 +359,14 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         link = this.redirectLink,
         code = this.loginCode,
     }: AuthenticateResp): Promise<void> => {
+        if (
+            ClientType[this.initialData.client_type] === ClientType.connect &&
+            this.initialData.system_name
+        ) {
+            this.currentState = AuthorizeState.bind;
+            this.code = code;
+            return;
+        }
         // bypass for code or backup code for resetPassword workflow
         if (
             this.action === 'restore_password' &&

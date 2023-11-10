@@ -26,6 +26,11 @@ export interface MobileLinks {
     ios_application_link: string;
 }
 
+export interface TosConfig {
+    hourly: number;
+    daily: number;
+}
+
 export interface BaseConfig {
     preloadedAccount: unknown;
     preloadedTranslation: Object;
@@ -50,6 +55,7 @@ export interface BaseConfig {
     downloads: Downloads;
     newSystem: boolean;
     system: System;
+    tosConfig: TosConfig; // This will not be a cms setting, but we need it here so that qa can test faster.
     clientProtocol: string;
     timelineDebugData: boolean;
     cloudCapabilities: CloudCapabilities;
@@ -190,6 +196,7 @@ const FeatureFlagKeys = [
     'layoutsUnsavedSync',
     'layoutsRemoveItemDialog',
     'enableAnimations',
+    'tosRequired',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];

@@ -194,6 +194,7 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
                 },
             },
             () => {
+                window.removeEventListener('beforeunload', this.removeUnverified2faKey);
                 this.next();
                 this.unlock();
             },
@@ -203,6 +204,10 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
             },
         );
     }
+
+    markAsDirty = (): void => {
+        this.tfaCodeInput.markAsDirty();
+    };
 
     // Using fetch api because angular http request is canceled when page is unloading.
     private removeUnverified2faKey = (): void => {

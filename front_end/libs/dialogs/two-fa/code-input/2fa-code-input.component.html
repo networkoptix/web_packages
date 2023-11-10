@@ -7,8 +7,11 @@
     #codeInputModel="ngModel"
     autocomplete="off"
     maxlength="255"
+    required
+    id="codeInput"
 />
-<ng-container *ngIf="codeInputModel.invalid">
+<!-- Add id for more specificity to override Bootstrap overrides -->
+<ng-container *ngIf="codeInputModel.dirty && codeInputModel.invalid">
     <div
         class="input-error"
         *ngIf="codeInputModel.errors?.unauthorized"
@@ -18,7 +21,7 @@
     </div>
     <div
         class="input-error"
-        *ngIf="codeInputModel.touched && codeInputModel.errors?.required"
+        *ngIf="codeInputModel.errors?.required"
         [innerText]="LANG.dialogs.message.twoFactor.codeRequired | translate"
     ></div>
 </ng-container>

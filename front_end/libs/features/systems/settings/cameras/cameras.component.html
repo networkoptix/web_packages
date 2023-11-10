@@ -65,7 +65,7 @@
                             <button
                                 *ngIf="canSeeView()"
                                 class="camera-buttons"
-                                [routerLink]="cameraViewPath()"
+                                [routerLink]="cameraViewPath"
                                 id="view-camera"
                             >
                                 <span>
@@ -85,7 +85,7 @@
                                 *ngIf="canSeeInfo()"
                                 class="camera-buttons"
                                 id="detailed-info"
-                                [routerLink]="fullInfoPath()"
+                                [routerLink]="fullInfoPath"
                                 [queryParams]="{ id: camera.id }"
                             >
                                 <span>

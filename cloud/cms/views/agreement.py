@@ -199,8 +199,11 @@ def accept_agreement(request):
         ContributorAgreement.objects.get_or_create(
             accepted_agreement=agreement_review, user=request.user)
         # clear user cached agreements
-        BaseCacheV2(f'{request.CUSTOMIZATION}-user-{request.user.email}-accepted-agreements',
-                    customization_name=request.CUSTOMIZATION, cache_key='agreement').clear_cache()
+        BaseCacheV2(
+            f'{request.CUSTOMIZATION}-user-{request.user.email}-accepted-agreements',
+            customization_name=request.CUSTOMIZATION,
+            cache_key='agreement'
+        ).set_cached_item(None)
         return api_success()
     else:
         return api_success(AGREEMENT_REVIEW_NOT_FOUND, status_code=status.HTTP_404_NOT_FOUND)

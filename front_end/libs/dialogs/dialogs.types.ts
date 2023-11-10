@@ -14,7 +14,11 @@ import type {
     OrganizationUser,
     State,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
-import type { CloudResponse, SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
+import type {
+    CloudResponse,
+    SystemTransferInfo,
+    TosInfo,
+} from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
 import type { MergeInfo } from '@services/system-api.types';
 import { NxUser } from '@services/system-user.types';
@@ -206,6 +210,7 @@ export type RemoveUser = DialogType<
 >;
 export type DeleteCloudUser = DialogType<void, CloudResponse>;
 export type ChangePassword = DialogType<{ system: NxSystem; user: NxUser }, boolean>;
+export type TosUpdate = DialogType<TosInfo, 'accepted' | 'deferred' | 'rejected'>;
 
 /* Servers */
 interface ServerData {

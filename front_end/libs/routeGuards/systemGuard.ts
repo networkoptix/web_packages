@@ -70,7 +70,7 @@ export const SystemGuard: CanActivateFn = (
             bookmarks: system.canViewBookmarks(
                 deviceService.isMobile() || deviceService.isTablet(),
             ),
-            view: permissions.view || permissions.viewArchives,
+            view: system.canViewADevice(),
         };
 
         return (

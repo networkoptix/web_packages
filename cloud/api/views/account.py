@@ -38,6 +38,7 @@ from api.views.account_serializers import (
     AccountSerializer, CreateAccountSerializer, AccountSecuritySerializer, AccountUpdateSerializer)
 from nx_drf.drf_async import async_api_view as api_view, AsyncAPIView as APIView
 from cloud.utils import get_authenticated_session_cookie_age, method_decorator_async
+from cms.models import ContributorAgreement, get_tos_reviews
 
 logger = logging.getLogger(__name__)
 
@@ -107,6 +108,23 @@ async def login_helper(request, token, user):
 
     return api_success(await sync_to_async(AccountSerializer.data.fget)(serializer))
 
+async def implicit_accept(customization, account):
+    """
+    Accepts the latest terms of service (TOS) agreement for a given account.
+
+    :param customization: The customization associated with the account.
+    :type customization: Customization
+
+    :param account: The account for which the TOS agreement needs to be accepted.
+    :type account: Account
+
+    :returns: None
+    """
+    last_review = await get_tos_reviews(customization).alast()
+    if last_review:
+        await ContributorAgreement.objects.aget_or_create(
+            accepted_agreement=last_review, user=account)
+
 
 @swagger_auto_schema(method="POST",  # auto_schema=None,
                      request_body=openapi.Schema(
@@ -150,6 +168,8 @@ async def register(request):
     activated = models.AccountManager().check_if_activated(
         request, data['email'], data['password'])
     logger.debug('/api/account/register completed')
+    # Implicit acceptance of the current tos when registering
+    await implicit_accept(request.CUSTOMIZATION, account)
     return api_success({'activated': activated})
 
 

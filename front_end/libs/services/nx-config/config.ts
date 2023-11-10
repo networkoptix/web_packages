@@ -1,6 +1,7 @@
 import metaDefaults from '@common/scripts/metaDefaults.json';
 import { environment } from '@environments/environment';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
+import { MS } from '@utils/general';
 
 import { IConfig } from './config-types';
 
@@ -159,6 +160,10 @@ export const nxConfig: IConfig = {
             slave: 'slave',
         },
         auditTime: 500,
+    },
+    tosConfig: {
+        hourly: MS.hr,
+        daily: MS.day,
     },
 
     // Dynamic from cloud_portal

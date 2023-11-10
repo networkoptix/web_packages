@@ -277,12 +277,13 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     updateStateHistory = (state?: MergeState): void => {
-        this.stateHistory.mutate(history => {
+        this.stateHistory.update(history => {
             if (state) {
                 history.push(state);
             } else {
                 history.pop();
             }
+            return history;
         });
     };
 

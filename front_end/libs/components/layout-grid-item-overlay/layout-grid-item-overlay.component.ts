@@ -29,6 +29,10 @@ import {
     finalize,
     startWith,
     tap,
+    fromEvent,
+    sampleTime,
+    merge,
+    timer,
 } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
@@ -107,7 +111,7 @@ const EMPTY_MENU_ACTION = {
     hostDirectives: [NxResizeObserver],
 })
 export class NxLayoutGridItemOverlayComponent {
-    item$$ = signal<LayoutItem | null>(null);
+    item$$ = signal<LayoutItem | undefined>(undefined);
     @Input() set item(value: LayoutItem) {
         this.item$$.set(value);
     }
@@ -169,7 +173,7 @@ export class NxLayoutGridItemOverlayComponent {
         if (manualToggle !== null) {
             return manualToggle;
         }
-        return this.item$$().displayInfo;
+        return this.item$$()?.displayInfo || false;
     });
     statusText$$ = computed(() => {
         const node = this.checkGetCameraNode();
@@ -362,7 +366,7 @@ export class NxLayoutGridItemOverlayComponent {
                 if (!assertResourceOfType.camera(node)) {
                     return;
                 }
-                const rotation = this.item$$().rotation;
+                const rotation = this.item$$()?.rotation;
                 return Object.entries(ROTATION_TO_TEXT).map(
                     ([rotationString, rotationName]: [string, string]) => ({
                         id: rotationString,
@@ -426,12 +430,13 @@ export class NxLayoutGridItemOverlayComponent {
                     navigator.language,
                 )}.png`;
 
-                const vertical = this.item$$().rotation % 180;
+                const rotation = this.item$$()?.rotation || 0;
+                const vertical = rotation % 180;
                 canvas.width = vertical ? videoHeight : videoWidth;
                 canvas.height = vertical ? videoWidth : videoHeight;
 
                 ctx.translate(canvas.width / 2, canvas.height / 2);
-                ctx.rotate((this.item$$().rotation * Math.PI) / 180);
+                ctx.rotate((rotation * Math.PI) / 180);
                 ctx.drawImage(video, -videoWidth / 2, -videoHeight / 2, videoWidth, videoHeight);
 
                 FileSaver.saveAs(canvas.toDataURL('image/png'), fileName);
@@ -512,6 +517,26 @@ export class NxLayoutGridItemOverlayComponent {
             return this.MENU_ITEMS.remove;
         }
         return null;
+    });
+
+    mouseInactive$$ = toSignal(
+        merge(
+            fromEvent<MouseEvent>(document, 'mousemove'),
+            fromEvent<KeyboardEvent>(document, 'keydown'),
+            fromEvent<MouseEvent>(document, 'mousedown'),
+        ).pipe(
+            sampleTime(250),
+            switchMap(() =>
+                timer(5000).pipe(
+                    map(() => true),
+                    startWith(false),
+                ),
+            ),
+        ),
+    );
+
+    hide$$ = computed(() => {
+        return this.hide || (!this.isMenuOpened$$() && this.mouseInactive$$());
     });
 
     menuItemsByType: Partial<{

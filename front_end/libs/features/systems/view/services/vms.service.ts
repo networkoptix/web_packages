@@ -114,7 +114,7 @@ export class VideoManagementSystemService {
 
     setMediaServers(systemId: string, mediaServers: ViewMediaServer[]): void {
         // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
-        this.state.mutate(state => {
+        this.state.update(state => {
             state.systemId = systemId;
             state.mediaServers = mediaServers;
             state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
@@ -129,6 +129,7 @@ export class VideoManagementSystemService {
                 state.mode = VMS_MODE.CAMERA_SELECTED;
                 state.selectedCamera = state.cameras[prevSelectedCameraId];
             }
+            return state;
         });
     }
 
@@ -159,12 +160,13 @@ export class VideoManagementSystemService {
             // console.warn('attempt to select camera while VMS is not initialized yet');
             return;
         }
-        this.state.mutate(state => {
+        this.state.update(state => {
             if (cameraId in state.cameras) {
                 state.mode = VMS_MODE.CAMERA_SELECTED;
                 state.selectedCamera = state.cameras[cameraId];
                 state.selectedCameraId = cameraId;
             }
+            return state;
         });
     }
 
@@ -173,10 +175,11 @@ export class VideoManagementSystemService {
             // console.warn('attempt to clear camera selection while VMS is not initialized yet');
             return;
         }
-        this.state.mutate(state => {
+        this.state.update(state => {
             state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
             state.selectedCamera = undefined;
             state.selectedCameraId = '';
+            return state;
         });
     }
 }

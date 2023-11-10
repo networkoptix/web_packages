@@ -9,12 +9,14 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
+    ElementRef,
     EventEmitter,
     HostListener,
     Input,
     Output,
     signal,
     Signal,
+    ViewChild,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -320,6 +322,10 @@ export class NxLayoutGridComponent {
     ): void {
         this.removeFocus();
         this.layoutStateService.portal = null;
+    }
+
+    @ViewChild('gridSection') set gridSection(value: ElementRef) {
+        this.layoutStateService.gridSection = value.nativeElement;
     }
 
     ngOnDestroy(): void {
@@ -1329,6 +1335,10 @@ export class NxLayoutGridComponent {
     }
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
+        // TODO: Need to update once granular permissions by camera/resource are setup.
+        if (!system.permissionManager.permissions$$().editCameras) {
+            return;
+        }
         const defaultPassword = camera.status !== CameraStatus.Unauthorized;
         const retriesTimeout = 30 * 1000;
         const firstCheckTimeout = 10 * 1000;

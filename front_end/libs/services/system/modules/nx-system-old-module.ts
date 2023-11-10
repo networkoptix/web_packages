@@ -2,6 +2,7 @@ import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom, Subject } from 'rxjs';
 import { auditTime, catchError, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
+import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import stringify from 'safe-stable-stringify';
 import { v4 as uuid } from 'uuid';
 
@@ -235,6 +236,69 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         }
     }
 
+    private jsonRpc: WebSocketSubject<unknown>;
+    private useRpcOverPolling(): void {
+        if (this.mediaserver instanceof NxSystemRestAPI3) {
+            this.mediaserver.buildRpcUrl().subscribe(url => {
+                this.jsonRpc = webSocket(url);
+                this.jsonRpc.pipe(takeUntil(this.killPoll$)).subscribe({
+                    next: (v: Partial<{ method: string }>) => {
+                        if (v.method) {
+                            switch (v.method) {
+                                case 'rest.v3.users.update':
+                                    this.getUsers(true, true);
+                                    break;
+                                case 'rest.v3.devices.update':
+                                    this.proxied.cameraManager.updateSystemCameras();
+                                    break;
+                                case 'rest.v3.servers.update':
+                                    firstValueFrom(
+                                        this.proxied.serverManager.getForceServers(false),
+                                    );
+                                    break;
+                            }
+                        }
+                    },
+                    error: e => {
+                        console.error(e);
+                    },
+                    complete: () => {
+                        console.warn('Rpc connection has been closed.');
+                    },
+                });
+
+                this.jsonRpc.next([
+                    {
+                        jsonrpc: '2.0',
+                        method: 'rest.v3.users.subscribe',
+                        params: {},
+                        id: '1',
+                    },
+                    {
+                        jsonrpc: '2.0',
+                        method: 'rest.v3.devices.subscribe',
+                        params: {},
+                        id: '2',
+                    },
+                    {
+                        jsonrpc: '2.0',
+                        method: 'rest.v3.servers.subscribe',
+                        params: {},
+                        id: '3',
+                    },
+                ]);
+                this.getInfo(true, false, true);
+                if (!environment.isLocal) {
+                    this.getUsers(true, true)
+                        .then(() => this.proxied.cameraManager.updateSystemCameras())
+                        .then(() =>
+                            firstValueFrom(this.proxied.serverManager.getForceServers(false)),
+                        );
+                }
+            });
+        }
+    }
+
     initSystem = (
         currentUserEmail: string,
         systemId?: string,
@@ -372,6 +436,14 @@ export class NxSystemOldModule extends NxSystemModuleBase {
             this.CONFIG.featureFlags.bookmarks &&
             this.version >= 5 &&
             this.permissionManager.permissions$$()?.viewBookmarks
+        );
+    }
+
+    canViewADevice(): boolean {
+        const { cameras } = this.cameraManager;
+        const { canViewDevice, canViewDeviceArchive } = this.permissionManager;
+        return (cameras || [{ id: '' }]).some(
+            ({ id }) => canViewDevice(id) || canViewDeviceArchive(id),
         );
     }
 
@@ -520,6 +592,10 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
+            if (this.mediaserver instanceof NxSystemRestAPI3) {
+                this.killPoll$.next(true);
+                return this.useRpcOverPolling();
+            }
             if (
                 environment.isLocal ||
                 this.mediaserver?.authGet ||
@@ -558,6 +634,9 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     update = (): Promise<any> => {
+        if (this.mediaserver instanceof NxSystemRestAPI3) {
+            return Promise.resolve();
+        }
         if (!this.updatePromise) {
             this.updatePromise = this.getInfo(true, false, true)
                 .then(() =>

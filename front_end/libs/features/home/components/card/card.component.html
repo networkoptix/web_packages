@@ -9,7 +9,10 @@
             <ng-content></ng-content>
         </div>
     </div>
-    <div class="dropdown">
-        <nx-three-dot></nx-three-dot>
+    <div
+        *ngIf="dropdownItems.length"
+        class="dropdown"
+    >
+        <nx-three-dot [items]="dropdownItems"></nx-three-dot>
     </div>
 </div>

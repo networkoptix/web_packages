@@ -144,6 +144,8 @@ export class NxDialogsService {
         const component = await import('./apply/apply.component').then(m => m.ApplyModalContent);
         const dialogConfig: DialogConfig<Dt.Apply['data']> = {
             data: { ...data },
+            disableClose: true,
+            hasBackdrop: true,
         };
         return this.openV2(component, dialogConfig);
     }
@@ -151,6 +153,11 @@ export class NxDialogsService {
     message = this.dialogV2Factory<Dt.Message>(
         () => import('./message/message.component').then(m => m.MessageModalContent),
         { autoFocus: '#message' },
+    );
+
+    tosUpdate = this.dialogV2Factory<Dt.TosUpdate>(
+        () => import('./tos-update/tos-update.component').then(m => m.TosUpdateModalContent),
+        { disableClose: true, width: DIALOG_SIZE.LARGE },
     );
 
     /* WebAdmin */

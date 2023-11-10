@@ -24,6 +24,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxUser, UserType } from '@services/system-user.types';
 import {
     RecordingStatus,
@@ -618,11 +619,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // }
 
         this.systemNoAccess = false;
-
-        await Promise.allSettled([
-            this.system.serverManager.getServers().toPromise(),
-            this.system.cameraManager.getCameras(),
-        ]);
+        if (!(this.system.mediaserver instanceof NxSystemRestAPI3)) {
+            await Promise.allSettled([
+                this.system.serverManager.getServers().toPromise(),
+                this.system.cameraManager.getCameras(),
+            ]);
+        }
 
         if (this.editCameras()) {
             let camerasNode = this.content.level1.find(
@@ -744,8 +746,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 });
 
                 usersNode.level3 = [];
+                const sortByEmailLabel = alphabeticalSort<Level3Item>(({ label }) => label);
                 if (localUsers.length) {
-                    usersNode.level3.push(...localUsers);
+                    usersNode.level3.push(...localUsers.sort(sortByEmailLabel));
                     if (cloudUsers.length) {
                         usersNode.level3.push({ horizontal: true } as Level3Item);
                     }
@@ -754,7 +757,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     // (See menu.component.html)
                 }
                 if (cloudUsers.length) {
-                    usersNode.level3.push(...cloudUsers);
+                    usersNode.level3.push(...cloudUsers.sort(sortByEmailLabel));
                 }
             }
         } else {
@@ -860,7 +863,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (this.archivesPresent.has(id) && recordingStatus !== RecordingStatus.Recording) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
-        return menus.systemSettings.cameras.statusIcons[status];
+        return menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
     }
 
     getServerStatusIcon({ status }: NxSystemServer): string {

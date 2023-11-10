@@ -7,23 +7,10 @@ import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select
 import { NxUser, UserPermissionDescription } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { alphabeticalSort } from '@utils/general';
-import { NxFormBuilder, NxFormControl, NxFormGroup } from '@utils/reactive-form-builder';
+import { NxFormBuilder, NxFormGroup } from '@utils/reactive-form-builder';
 
 import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.component';
-
-/**
- * POTENTIAL FUTURE TASKS TO GET DONE
- * get remove user working
- * get add user working (use separate api endpoint from modifyUser)
- * check other places that might use the user object (search for this.system.users and userManager.users)
- * try to bring more logic into user-with-groups-manager
- */
-interface UserGroupFormControls {
-    email: NxFormControl<string>;
-    isEnabled: NxFormControl<boolean>;
-    fullName: NxFormControl<string>;
-    groupIds: NxFormControl<string[]>;
-}
+import { type UserGroupFormControls } from '../user-form.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -60,7 +47,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     protected changeUser(user: NxUser): void {
         this.removeOldForm$.next(true);
         if (this.userGroupForm) {
-            this.formIsNotDirty.emit(true);
+            this.userForm.emit(undefined);
         }
 
         this.selectedGroups = user.groupIds || [];
@@ -94,11 +81,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                         this.processSelectedGroupsList(values.groupIds);
                     }
                 });
-            this.userGroupForm.statusChanges
-                .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
-                .subscribe(() => {
-                    this.formIsNotDirty.emit(!this.userGroupForm.dirty);
-                });
+            this.userForm.emit(this.userGroupForm);
         });
     }
 
@@ -106,7 +89,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
         this.editUser = this.processService.createProcess(
             async () => {
-                await this.checkIfEditable();
+                await this.checkIfEditable(this.userGroupForm);
                 const user = Object.assign(
                     this.formatUser(this.selectedUser),
                     this.userGroupForm.getRawValue(),

@@ -144,6 +144,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     editCameras = computed<boolean>(
         () => this.system.permissionManager.permissions$$().editCameras,
     );
+    cameraViewPath: string;
+    fullInfoPath: string;
     canSeeInfo = computed<boolean>(() => {
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
@@ -154,24 +156,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
-        const permissions = this.system.permissionManager.permissions$$();
-        return permissions.view || permissions.viewArchives;
-    });
-    fullInfoPath = computed<string>(() => {
-        return (
-            this.uriService.getSystemSettingsRoute({
-                systemId: this.system.id,
-                childRoute: ChildRoutes.HEALTH,
-            }) + menus.systemSettings.cameras.path
-        );
-    });
-    cameraViewPath = computed<string>(() => {
-        return (
-            this.uriService.getSystemSettingsRoute({
-                systemId: this.system.id,
-                childRoute: ChildRoutes.VIEW,
-            }) + this.camera.id
-        );
+        const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
+        return canViewDevice(this.camera.id) || canViewDeviceArchive(this.camera.id);
     });
 
     private get cameraName(): string {
@@ -503,6 +489,16 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         ];
         this.cameraDetailColumns = isStream ? [otherInfoColumn] : [deviceColumn, otherInfoColumn];
         this.cameraName = this.camera.name;
+        this.cameraViewPath =
+            this.uriService.getSystemSettingsRoute({
+                systemId: this.system.id,
+                childRoute: ChildRoutes.VIEW,
+            }) + this.camera.id;
+        this.fullInfoPath =
+            this.uriService.getSystemSettingsRoute({
+                systemId: this.system.id,
+                childRoute: ChildRoutes.HEALTH,
+            }) + menus.systemSettings.cameras.path;
         // Setup the automatic value based on the camera's dimensions
 
         if (defaultRatio) {
@@ -523,6 +519,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.selectedQualityWatcher.value = recordingSettings.quality;
         this.recordingWatcher.value = recordingSettings.recording;
         this.updateValues();
+        this.updateAlerts();
 
         this.setWatcherDefaults({
             motionGridChange: false,
@@ -592,6 +589,9 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                     error.toLowerCase() !== unauthorizedMessage &&
                     error.toLowerCase() !== offlineMessage,
             );
+        } else {
+            this.warnings = [];
+            this.errors = [];
         }
         this.showUnauthorized = this.camera.status === CameraStatus.Unauthorized;
 

@@ -39,3 +39,5 @@ inline-wizard/customization/custom/_custom_palette.scss
 .angular/cache
 
 .angular/cache
+
+.nx/cache

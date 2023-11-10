@@ -93,11 +93,16 @@ class TOSAgreementMiddleware(MiddlewareMixin):
         '/',
         reverse_lazy('get_agreement'),
         reverse_lazy('accept_agreement'),
+        reverse_lazy('get_language'),
         reverse_lazy('get_settings'),
         reverse_lazy('account'),
+        reverse_lazy('user_logout')
     ]
     EXCLUDE_PATHS = [
-        '/api/notifications/'
+        '/api/notifications/',
+        '/serve/',
+        '/static/',
+        '/api/custom-properties/theme'
     ]
 
     def process_request(self, request: HttpRequest):
