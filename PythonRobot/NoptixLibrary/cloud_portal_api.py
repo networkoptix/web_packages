@@ -6,6 +6,7 @@ import random
 import re
 import string
 import tempfile
+import time
 import uuid
 from contextlib import contextmanager
 from pathlib import Path
@@ -15,6 +16,7 @@ from typing import Mapping
 import certifi
 import requests
 import urllib3
+from requests import HTTPError
 from requests.auth import HTTPBasicAuth
 from requests.auth import HTTPDigestAuth
 
@@ -598,14 +600,28 @@ class CloudPortalAPI(object):
             "first_name": firstName,
             "last_name": lastName,
             }
-        register_response = requests.post(
-            url=f'{self.env}/api/account/register',
-            auth=HTTPBasicAuth(self.baseEmail, self.password),
-            json=body,
-            verify=False,
-            )
-        logger.debug(register_response.status_code)
-        register_response.raise_for_status()
+        # The Cloud Portal could be flooded by requests. Give it a few chances.
+        timeout = 5
+        started_at = time.monotonic()
+        while True:
+            register_response = requests.post(
+                url=f'{self.env}/api/account/register',
+                auth=HTTPBasicAuth(self.baseEmail, self.password),
+                json=body,
+                verify=False,
+                )
+            logger.debug(register_response.status_code)
+            try:
+                register_response.raise_for_status()
+                break
+            except HTTPError as exc:
+                if exc.response.status_code != 500:
+                    raise exc
+                time_elapsed = time.monotonic() - started_at
+                if time_elapsed > timeout:
+                    raise TimeoutError("Failed to register account after %dsec", time_elapsed)
+                logger.info(f"Failed to register account. Retrying in 1 sec.")
+                time.sleep(1)
         return register_response.json()
 
     def activate_account_via_api(self, email, password):
