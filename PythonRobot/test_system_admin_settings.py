@@ -158,6 +158,57 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
             )
 
 
+def system_and_security_settings_block_is_not_available_for_other_users(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings    C69737    C65698
+    """
+    with get_chrome() as driver:
+        server.api.restore_default_general_settings()
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        viewer = server.get_cloud_viewer()
+        LoginDialog(driver).basic_cloud_login(viewer.email, viewer.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.get_system_name() == server.name
+        disconnect_button = settings.get_disconnect_from_account_button()
+        assert disconnect_button.get_text() == rb.DISCONNECT_FROM_MY_ACCOUNT_TEXT
+        settings.get_system_settings_form().wait_until_not_visible()
+        settings.get_security_settings_form().wait_until_not_visible()
+        HeaderNav(driver).log_out()
+
+        HeaderNav(driver).log_in_button().click()
+        advanced_viewer = server.get_cloud_advanced_viewer()
+        LoginDialog(driver).basic_cloud_login(advanced_viewer.email, advanced_viewer.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.get_system_name() == server.name
+        disconnect_button = settings.get_disconnect_from_account_button()
+        assert disconnect_button.get_text() == rb.DISCONNECT_FROM_MY_ACCOUNT_TEXT
+        settings.get_system_settings_form().wait_until_not_visible()
+        settings.get_security_settings_form().wait_until_not_visible()
+        HeaderNav(driver).log_out()
+
+        HeaderNav(driver).log_in_button().click()
+        live_viewer = server.get_cloud_live_viewer()
+        LoginDialog(driver).basic_cloud_login(live_viewer.email, live_viewer.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.get_system_name() == server.name
+        disconnect_button = settings.get_disconnect_from_account_button()
+        assert disconnect_button.get_text() == rb.DISCONNECT_FROM_MY_ACCOUNT_TEXT
+        settings.get_system_settings_form().wait_until_not_visible()
+        settings.get_security_settings_form().wait_until_not_visible()
+        HeaderNav(driver).log_out()
+
+        HeaderNav(driver).log_in_button().click()
+        custom_user = server.get_cloud_custom_user()
+        LoginDialog(driver).basic_cloud_login(custom_user.email, custom_user.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.get_system_name() == server.name
+        disconnect_button = settings.get_disconnect_from_account_button()
+        assert disconnect_button.get_text() == rb.DISCONNECT_FROM_MY_ACCOUNT_TEXT
+        settings.get_system_settings_form().wait_until_not_visible()
+        settings.get_security_settings_form().wait_until_not_visible()
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -172,3 +223,4 @@ if __name__ == '__main__':
         system_settings_and_security_settings_should_match_settings_on_server(cloud_server_first)
         test_changing_settings_changes_it_on_server(cloud_server_first)
         changing_several_random_checkboxes_works(cloud_server_first)
+        system_and_security_settings_block_is_not_available_for_other_users(cloud_server_first)

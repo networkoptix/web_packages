@@ -33,7 +33,6 @@ class TabSettings:
 
     def _wait_until_ready(self):
         Pane(self._driver, "//nx-system-settings-component").wait_until_visible()
-        Pane(self._driver, "//div[contains(@class, 'fixed-sidebar')]//a[@id='servers']").wait_until_visible()
         TextField(self._driver, "//div/nx-editable-heading//nx-text-editable").wait_until_visible()
 
     def get_servers_section(self) -> '_ServersSection':
@@ -416,3 +415,15 @@ class _GeneralSettings:
 
     def cancel(self):
         self._get_cancel_button().click()
+
+    def get_system_name(self) -> str:
+        return TextField(self._driver, '//nx-text-editable').get_text()
+
+    def get_disconnect_from_account_button(self) -> Button:
+        return Button(self._driver, '//button[@data-testid="disconnectAccountBtn"]')
+
+    def get_system_settings_form(self) -> Pane:
+        return Pane(self._driver, '//form[@name="systemSettingsForm"]')
+
+    def get_security_settings_form(self) -> Pane:
+        return Pane(self._driver, '//form[@name="systemAndSecuritySettingsForm"]')

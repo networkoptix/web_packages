@@ -7,19 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-8. System and Security Settings block is not available for other users
-    [Tags]    C69737    C65698
-    FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]     ${system}[cloud users][custom]
-        Log in to system    ${system}    ${user}
-        Wait Until Elements Are Visible
-        ...    //nx-text-editable[contains(text(), "${system}[name]")]
-        ...    ${DISCONNECT FROM MY ACCOUNT}
-        Wait until elements are not visible
-        ...    ${SECURITY FORM}
-        ...    ${SECURITY FORM}
-        Log Out
-    END
-    
 9. Cancel changes in System Settings block
     [Tags]    C69738
     Log    Preconditions
