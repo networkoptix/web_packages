@@ -23,8 +23,6 @@ from requests.auth import HTTPDigestAuth
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.cloud_session import CloudSession
 
-#from CloudSession import CloudSession
-
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 _letsencrypt_stage_cert_path = str(Path(__file__).parent / 'letsencrypt-stg.crt')
