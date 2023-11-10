@@ -153,12 +153,19 @@ class Mediaserver:
         self.id: Optional[str] = None
         self.name: Optional[str] = None
         self._container = None
+        self._primary_port = None
+        self._secondary_port = None
 
     def stop(self):
         self._container.stop()
 
     def start(self, wait_for_started: bool = False):
         self._container.start()
+        print(f"Container {self.name} should be up, updating port mappings")
+        self._update_ports_mapping()
+        password = INITIAL_PASSWORD if self.api is None else DEFAULT_PASSWORD
+        api_url = self._port_mapping[self._primary_port]
+        self.api = ServerApi(url=api_url, password=password)
         if not wait_for_started:
             return
         timeout_sec = 5
@@ -172,6 +179,13 @@ class Mediaserver:
                 time.sleep(1)
             else:
                 break
+
+    def _update_ports_mapping(self):
+        for port_mapping in get_ports_mapping(self._container):
+            if port_mapping.inner_port in (self._primary_port, self._secondary_port):
+                container_port = port_mapping.inner_port
+                host_port = port_mapping.outer_port
+                self._port_mapping[container_port] = f'https://{_docker_host}:{host_port}'
 
     def connect_to_cloud(self, cloud_owner: 'CloudAccount'):
         bind_info = _CLOUD_API.connect(self.name, cloud_owner.email, cloud_owner.password)
@@ -265,21 +279,14 @@ class Mediaserver:
         # Create a docker server.
         # Mimic configuration from JSON files.
         self.name = self.suite_name + str(self.run_id)
+        self._primary_port = primary_port
+        self._secondary_port = secondary_port
         docker_configuration = ContainerConfiguration("5.1", "latest").\
             with_env({'CLOUD_HOST': 'cloud-test.hdw.mx'}).\
             with_exposed(tcp_ports=[primary_port, secondary_port])
         self._container = docker_configuration.create(_DOCKER_API, self.name)
-        self._container.start()
-        print(f"Container {self.name} should be up, waiting for 5 secs")
-        time.sleep(5)  # Wait for the docker server to be ready
-        for port_mapping in get_ports_mapping(self._container):
-            if port_mapping.inner_port in (primary_port, secondary_port):
-                container_port = port_mapping.inner_port
-                host_port = port_mapping.outer_port
-                self._port_mapping[container_port] = f'https://{_docker_host}:{host_port}'
+        self.start()
         # Set up a local system.
-        server_api_url = self._port_mapping[primary_port]
-        self.api = ServerApi(url=server_api_url, password=INITIAL_PASSWORD)
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         self._local_users = self.create_local_users()
         return self

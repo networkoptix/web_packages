@@ -68,7 +68,6 @@ def system_changes_state_to_offline_if_all_its_servers_goes_offline(
         tile.click()
         # Falls down because of CLOUD-11715 and CLOUD-11629
         SystemAdmin(driver).system_offline_text().wait_until_visible(timeout=65)
-        # TODO: Falls down here ConnectionError: Mex retries exceeded. Needs to be investigated
         master_merged_server.start(wait_for_started=True)
         driver.get(url)
         tile = SystemsPage(driver).get_tile_by_name(master_merged_server.name)
@@ -90,7 +89,6 @@ if __name__ == "__main__":
             dummy_account,
             )
         second_server = suite.create_cloud_server(cloud_owner, suite_name)
-        # TODO: Falls down here ConnectionError: Mex retries exceeded. Needs to be investigated
         cloud_server.start(wait_for_started=True)
         cloud_server.cloud_merge(second_server)
         third_server = suite.create_cloud_server(cloud_owner, suite_name)
