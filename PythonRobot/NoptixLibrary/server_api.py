@@ -252,3 +252,15 @@ class ServerApi:
                     f'Server setting {setting} value is {current_setting_value}.'
                     f' Expected value: {expected_value}',
                     )
+
+    def restore_default_general_settings(self):
+        default_settings = {
+            'autoDiscoveryEnabled': True,
+            'statisticsAllowed': True,
+            'cameraSettingsOptimization': True,
+            'auditTrailEnabled': True,
+            'trafficEncryptionForced': False,
+            'videoTrafficEncryptionForced': False,
+            'sessionLimitMinutes': 0,
+            }
+        self.set_system_settings(default_settings)

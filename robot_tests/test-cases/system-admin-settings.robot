@@ -7,20 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-7. Systems Settings Block is Available for Administrator or Owner
-    [Tags]    C69736
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-    FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
-        Log in to system    ${system}    ${user}
-        Wait Until Settings Are Visible
-        Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-        Checkbox should be selected     ${ENABLE AUTO DISCOVERY CHECKBOX}
-        Checkbox should be selected     ${SEND ANONYMOUS USAGE CHECKBOX}
-        Checkbox should be selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
-        Log Out
-    END
-
 8. System and Security Settings block is not available for other users
     [Tags]    C69737    C65698
     FOR    ${user}    IN    ${system}[cloud users][viewer]    ${system}[cloud users][advancedViewer]    ${system}[cloud users][liveViewer]     ${system}[cloud users][custom]

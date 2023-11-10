@@ -4,9 +4,10 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
+from pages.header import HeaderNav
+from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
-
 from variables import ENV
 
 rb = RobotVariables("en_US")
@@ -14,9 +15,10 @@ rb = RobotVariables("en_US")
 
 def system_settings_and_security_settings_should_match_settings_on_server(server: Mediaserver):
     """
-    [tags]    system    cloud    webadmin    system settings
+    [tags]    system    cloud    webadmin    system settings    C69736
     """
     with get_chrome() as driver:
+        server.api.restore_default_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -46,10 +48,22 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert settings.force_encrypted_connections_option().is_checked() == server_settings['trafficEncryptionForced']
         assert settings.video_traffic_encryption_option().is_checked() == server_settings['videoTrafficEncryptionForced']
         session_limit_minutes = server_settings['sessionLimitMinutes']
-        assert session_limit_minutes > 0
-        assert settings.limit_session_duration_option().is_checked()
-        current_session_limit_min = settings.get_session_duration_limit() * 24 * 60
-        assert current_session_limit_min == session_limit_minutes
+        assert session_limit_minutes == 0
+        assert not settings.limit_session_duration_option().is_checked()
+
+        # https://networkoptix.testrail.net/index.php?/cases/view/69736
+        assert settings.autodiscovery_option().is_checked()
+        assert settings.statistics_allowed_option().is_checked()
+        assert settings.optimize_camera_settings_option().is_checked()
+        administrator = server.get_cloud_admin()
+        HeaderNav(driver).log_out()
+        LandingPage(driver)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(administrator.email, administrator.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.autodiscovery_option().is_checked()
+        assert settings.statistics_allowed_option().is_checked()
+        assert settings.optimize_camera_settings_option().is_checked()
 
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
@@ -57,6 +71,7 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C65722
     """
     with get_chrome() as driver:
+        server.api.restore_default_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -66,9 +81,9 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings.autodiscovery_option().unselect()
         settings.save()
         server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', False)
-        settings.statistics_allowed_option().select()
+        settings.statistics_allowed_option().unselect()
         settings.save()
-        server.api.wait_until_server_setting_to_be('statisticsAllowed', True)
+        server.api.wait_until_server_setting_to_be('statisticsAllowed', False)
         settings.optimize_camera_settings_option().unselect()
         settings.save()
         server.api.wait_until_server_setting_to_be('cameraSettingsOptimization', False)
@@ -81,9 +96,6 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings.video_traffic_encryption_option().select()
         settings.save()
         server.api.wait_until_server_setting_to_be('videoTrafficEncryptionForced', True)
-        settings.limit_session_duration_option().unselect()
-        settings.save()
-        server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
         settings.limit_session_duration_option().select()
         new_session_limit_value_days = 1
         settings.set_session_duration_limit(new_session_limit_value_days)
@@ -92,6 +104,9 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
             'sessionLimitMinutes',
             new_session_limit_value_days * 24 * 60,
             )
+        settings.limit_session_duration_option().unselect()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
 
 
 def changing_several_random_checkboxes_works(server: Mediaserver):
@@ -99,6 +114,7 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings
     """
     with get_chrome() as driver:
+        server.api.restore_default_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -147,9 +163,11 @@ if __name__ == '__main__':
     suite_name = suite_name.replace("test_", "").replace(".py", "")
     with Suite() as suite:
         cloud_owner_first = suite.create_cloud_account()
+        users = suite.create_cloud_accounts()
         cloud_server_first = suite.create_cloud_server(
             cloud_owner_first,
             f"{suite_name}_1_",
+            cloud_users=users,
             )
         system_settings_and_security_settings_should_match_settings_on_server(cloud_server_first)
         test_changing_settings_changes_it_on_server(cloud_server_first)
