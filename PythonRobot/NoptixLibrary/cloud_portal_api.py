@@ -345,30 +345,30 @@ class CloudPortalAPI(object):
             auth=HTTPDigestAuth(email, password),
             verify=_ssl_certs_path,
             )
-        self.systemsDict = r.json()
-        self.systemsList = []
-        for system in self.systemsDict['systems']:
-            self.systemsList.append(system)
-        self.sortedList = sorted(self.systemsList, key=lambda i: i['registrationTime'])
+        self.systems_dict = r.json()
+        self.systems_list = []
+        for system in self.systems_dict['systems']:
+            self.systems_list.append(system)
+        self.sorted_list = sorted(self.systems_list, key=lambda i: i['registrationTime'])
         uid = 0
-        self.userId = str(uuid.uuid1())
-        txtFile = os.environ['LOCUSTTEXT']
-        f = open(f'{txtFile}.txt', 'a')
+        self.user_id = str(uuid.uuid1())
+        text_file = os.environ['LOCUSTTEXT']
+        f = open(f'{text_file}.txt', 'a')
         min = int(min)
         max = int(max)
-        for system in self.sortedList[min:max]:
-            authKey = system["authKey"]
+        for system in self.sorted_list[min:max]:
+            auth_key = system["authKey"]
             id = system["id"]
             name = system["name"]
-            title = process + " " + str(uid) + "_" + self.userId
-            emailIntStart = (int(name.strip(string.ascii_letters))) * 10
-            emailIntEnd = emailIntStart + 10
-            targetList = []
-            for x in range(emailIntStart, emailIntEnd):
-                targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
+            title = process + " " + str(uid) + "_" + self.user_id
+            email_int_start = (int(name.strip(string.ascii_letters))) * 10
+            email_int_end = email_int_start + 10
+            target_list = []
+            for x in range(email_int_start, email_int_end):
+                target_list.append(f"noptixautoqa+notifications{x}@gmail.com")
             body = {
                 "systemId": id,
-                "targets": targetList,
+                "targets": target_list,
                 "notification": {
                     "title": title,
                     "body": name,
@@ -383,7 +383,7 @@ class CloudPortalAPI(object):
             # to test script comment o6ut the post and write to file instead
             r = requests.post(
                 f'{self.env}api/notifications/push_notification',
-                auth=HTTPBasicAuth(id, authKey),
+                auth=HTTPBasicAuth(id, auth_key),
                 headers={'Content-Type': 'application/json'},
                 data=json.dumps(body),
                 verify=_ssl_certs_path,
@@ -398,30 +398,30 @@ class CloudPortalAPI(object):
             auth=HTTPBasicAuth(email, password),
             verify=_ssl_certs_path,
             )
-        systemsDict = r.json()
-        systemsList = []
-        for system in systemsDict['systems']:
-            systemsList.append(system)
-        sortedList = sorted(systemsList, key=lambda i: i['registrationTime'])
-        sysID = 1
-        systemsJson = []
-        for system in sortedList:
-            authKey = system["authKey"]
+        systems_dict = r.json()
+        systems_list = []
+        for system in systems_dict['systems']:
+            systems_list.append(system)
+        sorted_list = sorted(systems_list, key=lambda i: i['registrationTime'])
+        sys_id = 1
+        systems_json = []
+        for system in sorted_list:
+            auth_key = system["authKey"]
             id = system["id"]
             name = system["name"]
-            title = str(sysID) + " " + str(uuid.uuid1())
-            emailIntStart = (int(name.strip(string.ascii_letters))) * 10
-            emailIntEnd = emailIntStart + 10
-            targetList = []
-            for x in range(emailIntStart, emailIntEnd):
-                targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
+            title = str(sys_id) + " " + str(uuid.uuid1())
+            email_int_start = (int(name.strip(string.ascii_letters))) * 10
+            email_int_end = email_int_start + 10
+            target_list = []
+            for x in range(email_int_start, email_int_end):
+                target_list.append(f"noptixautoqa+notifications{x}@gmail.com")
             body = {
                 "process": True,
                 "object": True,
                 "queue": True,
                 "pre-authenticate": True,
                 "systemId": id,
-                "targets": targetList,
+                "targets": target_list,
                 "notification": {
                     "title": title,
                     "body": name,
@@ -433,11 +433,11 @@ class CloudPortalAPI(object):
                     },
                 },
             }
-            systemsJson.append(
-                {"authKey": authKey, "id": id, "body": json.dumps(body), "title": title})
-            sysID += 1
+            systems_json.append(
+                {"authKey": auth_key, "id": id, "body": json.dumps(body), "title": title})
+            sys_id += 1
         f = open('systems.json', 'w')
-        f.write(json.dumps(systemsJson))
+        f.write(json.dumps(systems_json))
         f.close()
 
     def check_connection(self, url, verify=True):
@@ -449,18 +449,18 @@ class CloudPortalAPI(object):
 
     def camera_search(
             self,
-            serverUrl,
-            cameraPort,
-            camFile,
-            serverIp,
+            server_url,
+            camera_port,
+            camera_file,
+            server_ip,
             user='mark',
             password='hamill',
             ):
         search_response = requests.get(
-            url=f"{serverUrl}/api/manualCamera/search",
+            url=f"{server_url}/api/manualCamera/search",
             auth=HTTPDigestAuth('admin', 'qweasd 123'),
             params={
-                'url': f'http://{serverIp}:{cameraPort}/{camFile}.mjpeg',
+                'url': f'http://{server_ip}:{camera_port}/{camera_file}.mjpeg',
                 'user': user,
                 'password': password,
                 },
@@ -469,9 +469,9 @@ class CloudPortalAPI(object):
         search_response.raise_for_status()
         return search_response.json()['reply']['processUuid']
 
-    def camera_status(self, serverUrl, uuid):
+    def camera_status(self, server_url, uuid):
         status_response = requests.get(
-            url=f"{serverUrl}/api/manualCamera/status",
+            url=f"{server_url}/api/manualCamera/status",
             auth=HTTPDigestAuth('admin', 'qweasd 123'),
             params={'uuid': uuid},
             verify=False,
@@ -479,13 +479,13 @@ class CloudPortalAPI(object):
         status_response.raise_for_status()
         return status_response.json()
 
-    def add_fake_camera(self, serverUrl, cameras, user="mark", password="hamill"):
+    def add_fake_camera(self, server_url, cameras, user="mark", password="hamill"):
         logger.debug("cameras value")
         logger.debug(cameras)
         body = {"cameras": cameras, "user": "mark", "password": "hamill"}
         logger.debug(body)
         add_camera_response = requests.post(
-            url=f'{serverUrl}/api/manualCamera/add',
+            url=f'{server_url}/api/manualCamera/add',
             auth=HTTPDigestAuth('admin', 'qweasd 123'),
             headers={'Content-Type': 'application/json'},
             json=body,
@@ -494,24 +494,24 @@ class CloudPortalAPI(object):
         add_camera_response.raise_for_status()
         return add_camera_response.text
 
-    def unbind_system(self, auth, cloudUrl, systemId):
+    def unbind_system(self, auth, cloud_url, system_id):
         unbind_response = requests.post(
-            url=f'{cloudUrl}/cdb/system/unbind',
+            url=f'{cloud_url}/cdb/system/unbind',
             auth=HTTPBasicAuth(auth[0], auth[1]),
-            json={"systemId": systemId},
+            json={"systemId": system_id},
             verify=False,
             )
         unbind_response.raise_for_status()
         return unbind_response.json()
 
-    def save_cloud_system_credentials(self, auth, serverUrl, authKey, cloudSystemId, ownerEmail):
+    def save_cloud_system_credentials(self, auth, server_url, auth_key, cloud_system_id, owner_email):
         body = {
-            "cloudAuthKey": authKey,
-            "cloudSystemID": cloudSystemId,
-            "cloudAccountName": ownerEmail
+            "cloudAuthKey": auth_key,
+            "cloudSystemID": cloud_system_id,
+            "cloudAccountName": owner_email
             }
         save_credentials_response = requests.post(
-            url=f"{serverUrl}/api/saveCloudSystemCredentials",
+            url=f"{server_url}/api/saveCloudSystemCredentials",
             auth=HTTPBasicAuth(auth[0], auth[1]),
             json=body,
             verify=False,
@@ -520,10 +520,10 @@ class CloudPortalAPI(object):
         save_credentials_response.raise_for_status()
         return save_credentials_response.json()
 
-    def rename_system(self, auth, systemId, newName):
+    def rename_system(self, auth, system_id, new_name):
         body = {
-            "systemId": systemId,
-            "name": newName
+            "systemId": system_id,
+            "name": new_name
             }
         rename_response = requests.post(
             url=f'{self.env}/cdb/system/rename',
@@ -534,19 +534,19 @@ class CloudPortalAPI(object):
         rename_response.raise_for_status()
         return rename_response.json()
 
-    def share(self, auth, systemId, accessRole, accountEmail, customPermissions):
+    def share(self, auth, system_id, access_role, account_email, custom_permissions):
         body = {
-            "accessRole": accessRole,
-            "accountEmail": accountEmail,
-            "customPermissions": customPermissions,
+            "accessRole": access_role,
+            "accountEmail": account_email,
+            "customPermissions": custom_permissions,
             "userRoleId": "",
             "isEnabled": True,
             "vmsUserId": "",
             "sendNotification": "",
-            "systemId": systemId,
+            "systemId": system_id,
             }
         share_response = requests.post(
-            url=f'{self.env}/cdb/systems/{systemId}/users',
+            url=f'{self.env}/cdb/systems/{system_id}/users',
             auth=HTTPBasicAuth(auth[0], auth[1]),
             json=body,
             verify=False,
@@ -554,40 +554,40 @@ class CloudPortalAPI(object):
         share_response.raise_for_status()
         return share_response.json()
 
-    def get_cloud_system_settings(self, auth, systemId):
+    def get_cloud_system_settings(self, auth, system_id):
         get_settings_response = requests.get(
-            url=f'{self.env}/cdb/system/get?systemId={systemId}',
+            url=f'{self.env}/cdb/system/get?systemId={system_id}',
             auth=HTTPBasicAuth(auth[0], auth[1]),
             verify=_ssl_certs_path)
         get_settings_response.raise_for_status()
         return get_settings_response.json()['systems'][0]
 
-    def get_cloud_system_users(self, auth, systemId):
+    def get_cloud_system_users(self, auth, system_id):
         system_users_response = requests.get(
-            url=f'{self.env}/cdb/system/getCloudUsers?systemId={systemId}',
+            url=f'{self.env}/cdb/system/getCloudUsers?systemId={system_id}',
             auth=HTTPBasicAuth(auth[0], auth[1]),
             verify=False,
             )
         system_users_response.raise_for_status()
         return system_users_response.json()['sharing']
 
-    def _check_user_is_in_cloud(self, email, systemId, auth):
-        users = self.get_cloud_system_users(auth, systemId)
+    def _check_user_is_in_cloud(self, email, system_id, auth):
+        users = self.get_cloud_system_users(auth, system_id)
         for user in users:
             if user["accountEmail"] == email:
                 return True
 
-    def add_user_to_cloud(self, systemId, accessRole, email, auth, customPermissions):
-        in_cloud = self._check_user_is_in_cloud(email, systemId, auth)
+    def add_user_to_cloud(self, system_id, access_role, email, auth, custom_permissions):
+        in_cloud = self._check_user_is_in_cloud(email, system_id, auth)
         if in_cloud:
             logger.info(email + " already in system")
         else:
             r = self.share(
                 auth,
-                systemId,
-                accessRole,
+                system_id,
+                access_role,
                 email,
-                customPermissions,
+                custom_permissions,
                 )
             logger.debug(r)
 
@@ -609,12 +609,12 @@ class CloudPortalAPI(object):
         capabilities_response.raise_for_status()
         return capabilities_response.json()['integrationStoreEnabled']
 
-    def register_account(self, firstName, lastName, email, password):
+    def register_account(self, first_name, last_name, email, password):
         body = {
             "email": email,
             "password": password,
-            "first_name": firstName,
-            "last_name": lastName,
+            "first_name": first_name,
+            "last_name": last_name,
             }
         # The Cloud Portal could be flooded by requests. Give it a few chances.
         timeout = 5
@@ -653,10 +653,10 @@ class CloudPortalAPI(object):
         activate_response.raise_for_status()
         return f"{self.env}/authorize/activate/{activate_response.json()}"
 
-    def disconnect_server_via_api(self, auth, sysId, password, email):
+    def disconnect_server_via_api(self, auth, system_id, password, email):
         body = {
             "password": password,
-            "system_id": sysId,
+            "system_id": system_id,
             "email": email,
             }
         disconnect_response = requests.post(
@@ -674,14 +674,14 @@ class CloudPortalAPI(object):
                 backup_code=backup_code,
                 verification_code=verification_code) as s:
             s.headers.update({'Referer': self.env})
-            verificationRes = s.post(
+            verification_res = s.post(
                 url=f'{self.env}/api/2fa/verification',
                 data=None,
                 )
-            dataString = str(verificationRes.json().get("keyUrl"))
-            logger.info(verificationRes)
-            _, secretKey = dataString.split('secret=')
-            totp = TimeBasedOtp(secretKey)
+            data_string = str(verification_res.json().get("keyUrl"))
+            logger.info(verification_res)
+            _, secret_key = data_string.split('secret=')
+            totp = TimeBasedOtp(secret_key)
             totp_code = totp.generate_otp()
             body = {"action": "toggle", "mfaCode": totp_code}
             security_response = s.post(
@@ -733,8 +733,8 @@ class CloudPortalAPI(object):
                 data={"count": "8"},
                 )
             backup_post_response.raise_for_status()
-            backupList = backup_post_response.json()
-            return [backup['backup_code'] for backup in backupList]
+            backup_list = backup_post_response.json()
+            return [backup['backup_code'] for backup in backup_list]
 
     def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
         with self._session(
@@ -745,15 +745,15 @@ class CloudPortalAPI(object):
             backup_code_response = s.get(
                 f'{self.env}/api/2fa/backup/codes', data=None)
             backup_code_response.raise_for_status()
-            backupList = backup_code_response.json()
-            backupDict = backupList[random.randint(0, 7)]
-            backupCode = backupDict.get("backup_code")
-            return backupCode
+            backup_list = backup_code_response.json()
+            backup_dict = backup_list[random.randint(0, 7)]
+            backup_code = backup_dict.get("backup_code")
+            return backup_code
 
-    def set_feature_flags(self, featuresDict):
+    def set_feature_flags(self, features_dict):
         set_flags_response = requests.post(
             url=f'{self.env}/api/robot/set_flags',
-            data=featuresDict,
+            data=features_dict,
             verify=_ssl_certs_path,
             )
         if set_flags_response.status_code != 200:
