@@ -339,7 +339,7 @@ class CloudPortalAPI(object):
         token = registration_response.json()['token']
         return token
 
-    def push_notifications_requests(self, env, email, password, process, min, max):
+    def push_notifications_requests(self, env, email, password, process, min: int, max: int):
         r = requests.get(
             url=f"{env}cdb/system/get",
             auth=HTTPDigestAuth(email, password),
@@ -354,8 +354,6 @@ class CloudPortalAPI(object):
         self.user_id = str(uuid.uuid1())
         text_file = os.environ['LOCUSTTEXT']
         f = open(f'{text_file}.txt', 'a')
-        min = int(min)
-        max = int(max)
         for system in self.sorted_list[min:max]:
             auth_key = system["authKey"]
             id = system["id"]
