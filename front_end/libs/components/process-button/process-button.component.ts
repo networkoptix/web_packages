@@ -30,7 +30,7 @@ export class NxProcessButtonComponent implements OnInit {
     @Input() buttonDisabledInProgress: boolean;
     @Input() actionType: string;
     @Input() form;
-    @Input() customClass: unknown = '';
+    @Input() customClass: string = '';
     @Input() customButtonClass = '';
     @Input() svg: SvgData;
     @Input() textOnly: boolean = false;

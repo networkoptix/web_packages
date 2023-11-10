@@ -1,6 +1,9 @@
-import { Injectable } from '@angular/core';
+import { Injectable, signal } from '@angular/core';
+import { Router } from '@angular/router';
 
+import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
+import LANG from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { slashJoin } from '@utils/general';
 import { protocolCheck } from '@utils/protocolcheck';
@@ -12,7 +15,9 @@ import {
 } from '../variables/static-variables';
 
 import { NxAccountService } from './account.service';
-import { nxConfig } from './nx-config/config';
+import { nxConfig as CONFIG } from './nx-config/config';
+import { NxSystemService } from './system.service/system.service';
+import type { NxSystemInfo } from './systems.service.types';
 
 /** Service to handle opening the VMS Client from the browser
  *
@@ -22,19 +27,21 @@ import { nxConfig } from './nx-config/config';
     providedIn: 'root',
 })
 export class NxUrlProtocolService {
-    public CONFIG: typeof nxConfig = nxConfig;
-    public host = environment.production ? window.location.host : environment.cloudHost;
+    private host = environment.production ? window.location.host : environment.cloudHost;
 
     constructor(
+        private router: Router,
         private accountService: NxAccountService,
         private cloudApiService: NxCloudApiService,
+        private systemService: NxSystemService,
+        private dialogs: NxDialogsService,
     ) {}
 
-    get baseUri(): string {
-        return `${this.CONFIG.clientProtocol}://`;
+    private get baseUri(): string {
+        return `${CONFIG.clientProtocol}://`;
     }
 
-    public generateLink(systemId: string, auth: string, code: string): string {
+    private generateLink(systemId: string, auth: string, code: string): string {
         const base = slashJoin([`${this.baseUri}${this.host}`, 'client', systemId], {
             trailing: true,
         });
@@ -48,33 +55,24 @@ export class NxUrlProtocolService {
         return url.toString();
     }
 
-    public getLinkLegacy(systemId: string, useOauth: boolean): Promise<string> {
-        return Promise.all([
-            useOauth ? Promise.resolve('') : this.accountService.authKey(),
-            environment.isLocal || !useOauth
-                ? Promise.resolve({ code: '' })
-                : this.cloudApiService.getCode('*').toPromise(),
-        ]).then(([auth, { code }]) => {
-            return this.generateLink(systemId, auth, code);
-        });
-        // .catch(() => this.generateLink(systemId));
-        // Commenting this out for now because nobody remembers what this was for
+    private getLinkLegacy(systemId: string): Promise<string> {
+        return this.accountService.authKey().then(auth => this.generateLink(systemId, auth, ''));
     }
 
-    public getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
-        return Promise.resolve(
+    private getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
+        return (
             environment.isLocal
                 ? Promise.resolve({ code: '' })
-                : this.cloudApiService.getCode('*').toPromise(),
+                : this.cloudApiService.getCode('*').toPromise()
         ).then(({ code }) => {
             const link = this.generateLink(systemId, '', code);
             return { code, link };
         });
     }
 
-    open(systemId: string, useOauth: boolean): Promise<void> {
+    private checkLink(systemId: string, useOauth: boolean): Promise<void> {
         if (!useOauth) {
-            return this.getLinkLegacy(systemId, useOauth).then(link => {
+            return this.getLinkLegacy(systemId).then(link => {
                 /* The browser opens a dialog that we cannot directly detect or get a response from.
                  * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
                  */
@@ -124,5 +122,43 @@ export class NxUrlProtocolService {
     openDesktopAsTemporaryUser(temporaryUserToken: string): void {
         const uri = `${this.baseUri}${window.location.host}?tmp_token=${temporaryUserToken}`;
         window.location.href = uri;
+    }
+
+    openingSystem$$ = signal<string | null>(null);
+    openVmsClient(system?: Pick<NxSystemInfo, 'id' | 'useRest'>): void {
+        const account = this.accountService.account;
+        system ??= this.systemService.getCurrentSystem();
+
+        if (account.account2faEnabled && !system.useRest) {
+            this.dialogs.client2faWarning();
+            return;
+        }
+
+        const startUrl = this.router.url;
+        this.openingSystem$$.set(system.id);
+        this.checkLink(system.id, system.useRest)
+            .catch(() => {
+                // Don't show the dialog if user has already navigated away
+                if (startUrl !== this.router.url) {
+                    return Promise.resolve();
+                }
+                return this.dialogs
+                    .confirm({
+                        title: LANG.dialogs.titles.noClientDetected,
+                        message: LANG.errorCodes.cantOpenClient,
+                        footer: {
+                            actionLabel: LANG.dialogs.buttons.download,
+                            cancelLabel: LANG.dialogs.buttons.cancel,
+                        },
+                    })
+                    .then(result => {
+                        if (result) {
+                            this.router.navigate(['/download']);
+                        }
+                    });
+            })
+            .finally(() => {
+                this.openingSystem$$.set(null);
+            });
     }
 }

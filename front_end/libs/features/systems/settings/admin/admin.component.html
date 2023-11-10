@@ -18,11 +18,9 @@
                             [(ngModel)]="systemName"
                             [editEnabled]="enableEdit"
                         ></nx-editable-heading>
-                        <nx-client-button
-                            *ngIf="!CONFIG.isLocal && !editMode"
-                            [system]="system"
-                            [textOnly]="true"
-                        ></nx-client-button>
+                        <nx-vms-client-text
+                            *ngIf="!environment.isLocal && !editMode"
+                        ></nx-vms-client-text>
                     </div>
                 </form>
 

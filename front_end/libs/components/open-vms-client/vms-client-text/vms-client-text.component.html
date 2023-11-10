@@ -1,0 +1,19 @@
+<span
+    class="text-button"
+    [ngClass]="{ 'text-button--processing': openingSystem$$() }"
+>
+    <ng-container *ngIf="!openingSystem$$(); else openingText">
+        <svg-icon
+            [src]="icons.dirTextButtons + 'external.svg'"
+            [svgStyle]="{ 'margin-inline-end': '2px', 'width.px': '20' }"
+        ></svg-icon>
+        <a
+            (click)="open()"
+            translate
+            >Open in %VMS_NAME%</a
+        >
+    </ng-container>
+    <ng-template #openingText>
+        <span translate>Opening %VMS_NAME%...</span>
+    </ng-template>
+</span>

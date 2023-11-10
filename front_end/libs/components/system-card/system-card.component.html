@@ -32,11 +32,11 @@
             >
                 <ng-container>{{ systemState | translate }}</ng-container>
             </nx-tag>
-            <nx-client-button
-                [system]="system"
-                [actionType]="system ? 'default' : 'primary'"
+            <nx-vms-client-button
                 *ngIf="canShowButton"
-            ></nx-client-button>
+                [system]="system"
+                (click)="$event.stopPropagation()"
+            ></nx-vms-client-button>
             <svg-icon
                 [ngClass]="{
                     'margin-system-list-status': canShowTag

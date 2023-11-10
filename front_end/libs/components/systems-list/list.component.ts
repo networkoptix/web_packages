@@ -10,7 +10,6 @@ import { debounceTime } from 'rxjs/operators';
 
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
-import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { SystemCardComponent } from '@components/system-card/system-card.component';
@@ -48,7 +47,6 @@ type Endpoint = Partial<{
         FormsModule,
         TranslateModule,
         AngularSvgIconModule,
-        NxClientButtonComponent,
         NxFooterComponent,
         NxNoSystemsComponent,
         NxPreLoaderComponent,

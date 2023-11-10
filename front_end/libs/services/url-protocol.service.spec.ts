@@ -5,8 +5,11 @@ import { environment } from '@environments/environment';
 
 import { NxAccountService } from './account.service';
 import { NxCloudApiService } from './nx-cloud-api';
+import { nxConfig as CONFIG } from './nx-config/config';
 import { setupTestBed } from './src/setup';
 import { NxUrlProtocolService } from './url-protocol.service';
+
+const clientProtocol = 'test';
 
 const setupUrlProtocolService = async (): Promise<{
     urlService: NxUrlProtocolService;
@@ -23,7 +26,6 @@ const setupUrlProtocolService = async (): Promise<{
     authKeySpy: jest.SpyInstance<Promise<string>, []>;
 }> => {
     const { inject } = await setupTestBed();
-    const clientProtocol = 'test';
     const systemId = uuid();
     const auth = uuid();
     const code = uuid();
@@ -32,7 +34,6 @@ const setupUrlProtocolService = async (): Promise<{
     const accountService = inject(NxAccountService);
     const getCodeSpy = jest.spyOn(cloudApiService, 'getCode').mockReturnValue(of({ code }));
     const authKeySpy = jest.spyOn(accountService, 'authKey').mockReturnValue(Promise.resolve(auth));
-    urlService.CONFIG.clientProtocol = clientProtocol;
     return {
         urlService,
         clientProtocol,
@@ -45,6 +46,13 @@ const setupUrlProtocolService = async (): Promise<{
 };
 
 describe('Url Protocol Service', () => {
+    let replaced: jest.ReplaceProperty<string>;
+    beforeAll(() => {
+        replaced = jest.replaceProperty(CONFIG, 'clientProtocol', clientProtocol);
+    });
+    afterAll(() => {
+        replaced.restore();
+    });
     it('should create the service', async () => {
         const { urlService } = await setupUrlProtocolService();
         expect(urlService).toBeTruthy();
@@ -53,25 +61,25 @@ describe('Url Protocol Service', () => {
     it('should generatelink with client protocol', async () => {
         const { urlService, clientProtocol, systemId, auth, code } =
             await setupUrlProtocolService();
-        expect(urlService.generateLink(systemId, auth, code)).toBe(
+        expect(urlService['generateLink'](systemId, auth, code)).toBe(
             `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}&code=${code}`,
         );
     });
 
-    it('should use code if useOauth === true', async () => {
+    it('should use code if OAuth compatible', async () => {
         const { urlService, clientProtocol, systemId, getCodeSpy } =
             await setupUrlProtocolService();
-        const { code, link } = await urlService.getLinkOauth(systemId);
+        const { code, link } = await urlService['getLinkOauth'](systemId);
         expect(getCodeSpy).toHaveBeenCalledWith('*');
         expect(link).toBe(
             `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?code=${code}`,
         );
     });
 
-    it('should use authKey if useOauth is falsy', async () => {
+    it('should use authKey if OAuth-incompatible', async () => {
         const { urlService, clientProtocol, systemId, auth, authKeySpy } =
             await setupUrlProtocolService();
-        const link = await urlService.getLinkLegacy(systemId, false);
+        const link = await urlService['getLinkLegacy'](systemId);
         expect(authKeySpy).toHaveBeenCalledWith();
         expect(link).toBe(
             `${clientProtocol}://${environment.cloudHost}/client/${systemId}/?auth=${auth}`,

@@ -11,7 +11,6 @@ import { filter } from 'rxjs/operators';
 import { ActionItems } from '@components/dropdowns/three-dot/three-dot.component.types';
 import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
 import { NxNoSystemsComponent } from '@components/no-systems/no-systems.component';
-import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
 import { SearchFilter } from '@components/search/search.component.types';
@@ -50,7 +49,6 @@ import { caseInsenstiveSearch } from '@utils/general';
         RouterLink,
         AngularSvgIconModule,
         NxAddSvgSrcDirective,
-        NxClientButtonComponent,
         NxTagComponent,
     ],
 })
@@ -103,33 +101,17 @@ export class HomeSystemListComponent {
     actionItemsForSystems$$ = computed<Record<string, ActionItems[]>>(() => {
         const systems = this.nonOrgSystems$$();
         const openVms = this.translateService.instant('Open in %VMS_NAME%');
-        return systems.reduce((actionMap, { id, useRest }) => {
-            actionMap[id] = [
-                { name: openVms, id, action: () => this.protocolFactory(id, useRest) },
+        return systems.reduce((actionMap, system) => {
+            actionMap[system.id] = [
+                {
+                    name: openVms,
+                    id: system.id,
+                    action: () => this.urlProtocol.openVmsClient(system),
+                },
             ];
             return actionMap;
         }, {});
     });
-
-    protocolFactory = (id: string, useRest: boolean) => () =>
-        this.urlProtocol.open(id, useRest).catch(() =>
-            this.dialogs
-                .confirm({
-                    title: this.LANG.dialogs.titles.noClientDetected,
-                    message: this.LANG.errorCodes.cantOpenClient,
-                    footer: {
-                        actionLabel: this.LANG.dialogs.buttons.download,
-                        cancelLabel: this.LANG.dialogs.buttons.cancel,
-                    },
-                })
-                .then(result => {
-                    if (result) {
-                        this.router.navigate(['/download']).catch(error => {
-                            console.error(error);
-                        });
-                    }
-                }),
-        );
 
     tagType(state: string): string {
         return this.CONFIG.system.status[state]?.style || this.CONFIG.system.status.default.style;

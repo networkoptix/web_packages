@@ -50,8 +50,8 @@
             cdkMenu
         >
             <div
-                *ngIf="!openClient.processing"
-                (cdkMenuItemTriggered)="openClient.run()"
+                *ngIf="!openingClient$$()"
+                (cdkMenuItemTriggered)="openVmsClient()"
                 class="card-menu-option"
                 cdkMenuItem
                 translate
@@ -59,7 +59,7 @@
                 Open in %VMS_NAME%
             </div>
             <div
-                *ngIf="openClient.processing"
+                *ngIf="openingClient$$()"
                 class="card-menu-option no-hover"
                 translate
             >

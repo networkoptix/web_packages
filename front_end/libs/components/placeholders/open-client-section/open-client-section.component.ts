@@ -1,37 +1,18 @@
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
-import staticLang from '@language_static';
-import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
-
-/* Usage
- <nx-section-placeholder
-     svgFileName='filename minus the .svg'
-     height?='#' // desired height (in px's) of icon
-     width?='#' // desired width (in px's) of icon
-     translatedMessage?='{{ LANG.whateverYouWantFromHere }}'>
- </nx-section-placeholder>
- */
 
 @Component({
     selector: 'nx-open-client-section-placeholder',
     templateUrl: './open-client-section.component.html',
     styleUrls: ['../section/section-placeholder.component.scss'],
 })
-export class NxOpenClientSectionPlaceholderComponent implements OnInit {
-    @Input() svgFileName: string;
-    @Input() wrapperHeight: number = 203;
-    @Input() height: string;
-    @Input() width: string;
-    @Input() system: NxSystem;
+export class NxOpenClientSectionPlaceholderComponent {
+    @Input() wrapperHeightPx: number = 203;
+    @Input() svgHeightPx: number = 64;
+    @Input() svgWidthPx: number = 64;
+    @Input() svgFileName: string = 'system_settings_placeholder';
     @Input() translatedMessage: string;
 
-    LANG = staticLang;
     icons = icons;
-
-    ngOnInit(): void {
-        this.height = this.height || '64';
-        this.width = this.width || '64';
-        this.svgFileName = this.svgFileName || 'system_settings_placeholder';
-    }
 }

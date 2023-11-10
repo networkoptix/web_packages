@@ -3,12 +3,11 @@ import { Component, Input, OnChanges } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
-import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxVmsClientButtonComponent } from '@components/open-vms-client/vms-client-button/vms-client-button.component';
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
-import { SystemItem } from '@pages/home/home.types';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -26,17 +25,17 @@ import { NgChanges } from '@utils/ng-changes';
         CommonModule,
         TranslateModule,
         AngularSvgIconModule,
-        NxClientButtonComponent,
         NxSearchHighlightComponent,
         NxTagComponent,
         NxAddSvgSrcDirective,
+        NxVmsClientButtonComponent,
     ],
 })
 export class SystemCardComponent implements OnChanges {
-    @Input() system: SystemItem | NxSystemInfo;
+    @Input() system: NxSystemInfo;
     @Input() search: string;
     @Input() account: Account;
-    @Input() openSystem: (system: NxSystemInfo | SystemItem) => void;
+    @Input() openSystem: (system: NxSystemInfo) => void;
 
     LANG = staticLang;
     CONFIG: IConfig;

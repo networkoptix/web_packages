@@ -44,6 +44,10 @@
     .system-list-bottom-bar {
         display: flex;
 
+        nx-vms-client-button {
+            margin-top: 12px;
+        }
+
         svg-icon {
             margin-top: 24px;
             margin-left: -3px;

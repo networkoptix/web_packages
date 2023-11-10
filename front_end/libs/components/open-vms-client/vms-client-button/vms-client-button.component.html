@@ -1,0 +1,27 @@
+<button
+    type="button"
+    class="btn btn-default"
+    (click)="open()"
+    [disabled]="openingSystem$$()"
+>
+    <span
+        translate
+        [ngStyle]="{
+            visibility: openingSystem$$() === system.id ? 'hidden' : undefined
+        }"
+        >Open in %VMS_NAME%</span
+    >
+    <div
+        *ngIf="openingSystem$$() === system.id"
+        class="loading-dots"
+        [ngClass]="{
+            'loading-dots--light-default': !CONFIG.isDarkTheme
+        }"
+    >
+        <div
+            *ngFor="let _ of [].constructor(3); index as i"
+            class="loading-dots__dot"
+            [ngClass]="'loading-dots__dot--' + i"
+        ></div>
+    </div>
+</button>

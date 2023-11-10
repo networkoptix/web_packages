@@ -34,7 +34,6 @@ module.exports = {
     'libs/components/html-input/html-input.component.ts': 8,
     'libs/components/info-block/info-block.component.ts': 9,
     'libs/components/logger/logger.component.ts': 5,
-    'libs/components/open-client-button/client-button.component.ts': 5,
     'libs/components/password-input-tag-validation/password-tag-validation.component.ts': 1,
     'libs/components/password-input/password.component.ts': 15,
     'libs/components/process-button/process-button.component.ts': 6,
@@ -467,13 +466,6 @@ libs/components/logger/logger.component.ts
   Untyped subject                  nx/no-untyped-subject
   Missing return type on function  @typescript-eslint/explicit-function-return-type
   Missing return type on function  @typescript-eslint/explicit-function-return-type
-
-libs/components/open-client-button/client-button.component.ts
-  Missing Input type  nx/explicit-angular-boundary-types
-  Missing Input type  nx/explicit-angular-boundary-types
-  Missing Input type  nx/explicit-angular-boundary-types
-  Missing Input type  nx/explicit-angular-boundary-types
-  Untyped property    nx/no-untyped-init
 
 libs/components/password-input-tag-validation/password-tag-validation.component.ts
   Missing Input type  nx/explicit-angular-boundary-types
@@ -1906,6 +1898,6 @@ libs/utils/logger.ts
   Untyped argument                          nx/no-untyped-arg
   Missing return type on function           @typescript-eslint/explicit-function-return-type
 
-✖ 1490 problems (1490 errors, 0 warnings)
+✖ 1485 problems (1485 errors, 0 warnings)
 
 */

@@ -1,20 +1,18 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, booleanAttribute } from '@angular/core';
+import { Component, Input, booleanAttribute, computed } from '@angular/core';
 import { Router } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxSearchHighlightComponent } from '@components/search-highlight/search-highlight.component';
-import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
-import { icons, openClientError } from '@static-variables';
+import { icons } from '@static-variables';
 
 import type { SystemItem } from '../../home.types';
 
@@ -31,7 +29,7 @@ import type { SystemItem } from '../../home.types';
         NxAddSvgSrcDirective,
     ],
 })
-export class NxSystemCardComponent implements OnInit {
+export class NxSystemCardComponent {
     @Input() system: SystemItem;
     @Input() search: string;
     @Input() account: Account;
@@ -43,6 +41,8 @@ export class NxSystemCardComponent implements OnInit {
     openClient: Process;
     modalActive: boolean;
     icons = icons;
+
+    openingClient$$ = computed(() => this.urlProtocol.openingSystem$$());
 
     get tagType(): string {
         return (
@@ -63,55 +63,10 @@ export class NxSystemCardComponent implements OnInit {
 
     constructor(
         configService: NxConfigService,
-        private dialogs: NxDialogsService,
-        private processService: NxProcessService,
         private urlProtocol: NxUrlProtocolService,
         private router: Router,
     ) {
         this.CONFIG = configService.config;
-    }
-
-    ngOnInit(): void {
-        this.openClient = this.processService.createProcess(
-            () => {
-                return this.account.account2faEnabled && !this.useRest
-                    ? this.dialogs.client2faWarning()
-                    : this.urlProtocol.open(this.system.id, this.useRest);
-            },
-            {
-                errorCodes: {
-                    [openClientError]: () => {},
-                },
-            },
-            () => {
-                this.modalActive = false;
-            },
-            () => {
-                if (this.modalActive) {
-                    return;
-                }
-                this.modalActive = true;
-                return this.dialogs
-                    .confirm({
-                        title: this.LANG.dialogs.titles.noClientDetected,
-                        message: this.LANG.errorCodes.cantOpenClient,
-                        footer: {
-                            actionLabel: this.LANG.dialogs.buttons.download,
-                            cancelLabel: this.LANG.dialogs.buttons.cancel,
-                        },
-                    })
-                    .then(result => {
-                        if (result) {
-                            this.router.navigate(['/download']).catch(error => {
-                                console.error(error);
-                            });
-                        }
-                    })
-                    .finally(() => {
-                        this.modalActive = false;
-                    });
-            },
-        );
     }
 
     get getSystemOwnerName(): string {
@@ -138,5 +93,9 @@ export class NxSystemCardComponent implements OnInit {
 
     openSystem(): void {
         this.router.navigate(['systems', this.system.id]);
+    }
+
+    openVmsClient(): void {
+        this.urlProtocol.openVmsClient({ id: this.system.id, useRest: this.useRest });
     }
 }

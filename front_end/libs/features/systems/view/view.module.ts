@@ -5,7 +5,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 
-import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxVmsClientTextComponent } from '@components/open-vms-client/vms-client-text/vms-client-text.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPlayerPlaceholderComponent } from '@components/placeholders/player/player-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -43,7 +43,6 @@ import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeli
         ]),
         TranslateModule,
         AngularSvgIconModule,
-        NxClientButtonComponent,
         NxPagePlaceholderComponent,
         NxPlayerPlaceholderComponent,
         PipesModule,
@@ -54,6 +53,7 @@ import { VmsClientTimelineModule } from './vms-client/submodules/timeline/timeli
         PlaybackControlsComponent,
         PlaybackStateIndicatorComponent,
         PlayerComponent,
+        NxVmsClientTextComponent,
     ],
     providers: [CookieService],
     declarations: [

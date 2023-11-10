@@ -13,18 +13,18 @@ import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.
 import { EditableModule } from '@components/editable/editable.module';
 import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
-import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
+import { NxVmsClientTextComponent } from '@components/open-vms-client/vms-client-text/vms-client-text.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSectionPlaceholderComponent } from '@components/placeholders/section/section-placeholder.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxForceVisibilityDirective } from '@directives/nx-force-visibility.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
-import { NxAlexaComponent } from '@pages/systems/settings/admin/alexa/alexa.component';
 import { PipesModule } from '@pipes/pipes.module';
 
 import { NxSystemAdminComponent } from './admin.component';
 import { NxSystemAdvancedAdminComponent } from './advanced/advanced.component';
+import { NxAlexaComponent } from './alexa/alexa.component';
 import { NxSystemDetailedSettingComponent } from './detailedSetting/detailedSetting.component';
 import { NxSystemStandardAdminComponent } from './standard/standard.component';
 
@@ -37,7 +37,6 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         AngularSvgIconModule,
         NxAlertBlockComponent,
         NxCheckboxComponent,
-        NxClientButtonComponent,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         EditableModule,
@@ -53,6 +52,7 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         TranslateModule,
         NxMultiLineEllipsisComponent,
         NxAlexaComponent,
+        NxVmsClientTextComponent,
     ],
     providers: [],
     declarations: [
