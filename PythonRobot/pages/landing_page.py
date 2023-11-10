@@ -4,12 +4,11 @@ import time
 from RobotVariables import RobotVariables
 from generic_elements import Button
 from generic_elements import PageText
-from variables import ENV
 
 
 class LandingPage:
 
-    def __init__(self, driver, lang="en_US", ):
+    def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
 
@@ -36,44 +35,21 @@ class LandingPage:
 
     def wait_until_loaded(self):
         self._session_expired_dismiss()
-        self._location_is_correct()
         self.get_label().wait_until_visible()
 
-    def _location_is_correct(self, timeout=10):
+    def location_is_correct(self, url: str, timeout=10):
         start_time = time.monotonic()
         while True:
             try:
-                self.driver.location_should_be(f"{ENV}/")
+                self.driver.location_should_be(url)
                 return
             except RuntimeError as e:
-                if f'Expected url {ENV}' in str(e):
+                if f'Expected url {url}' in str(e):
                     _logger.info("Waiting for correct location")
                 else:
                     raise
             if time.monotonic() - start_time > timeout:
-                raise RuntimeError(f"Wrong location. Expected {ENV}, got {self.driver.current_url}")
-
-
-class MetaLandingPage(LandingPage):
-
-    def _location_is_correct(self, timeout=10):
-        location = "https://metavms.cloud-test.hdw.mx/"
-        start_time = time.monotonic()
-        while True:
-            current_location = self.driver.current_url
-            if time.monotonic() - start_time > timeout:
-                raise RuntimeError(
-                    f"Wrong location. Expected {location}, got {current_location}")
-            try:
-                self.driver.location_should_be(f"{location}")
-                return
-            except RuntimeError as e:
-                if f'Expected url {location}' in str(e):
-                    _logger.info(
-                        "Waiting for location %s. Current location is %s",
-                        location,
-                        current_location,
-                        )
+                raise RuntimeError(f"Wrong location. Expected {url}, got {self.driver.current_url}")
 
 
 _logger = logging.getLogger(__name__)

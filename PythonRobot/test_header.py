@@ -4,7 +4,7 @@ from NoptixLibrary.suite import Mediaserver, CloudAccount
 from NoptixLibrary.suite import Suite
 from email_access import get_random_email
 from pages.header import HeaderNav
-from pages.landing_page import MetaLandingPage
+from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
@@ -59,8 +59,10 @@ def no_systems_header_button_text_is_correct():
         assert header.my_systems_button().is_visible()
         header.for_developers_link().click()
         # Now fails because of bug https://networkoptix.atlassian.net/browse/CLOUD-11719
-        assert driver.current_url == 'https://metavms.cloud-test.hdw.mx/'
-        MetaLandingPage(driver).get_label().should_contain('Nx Meta Cloud')
+        landing_page = LandingPage(driver)
+        landing_page.wait_until_loaded()
+        landing_page.location_is_correct(url="https://metavms.cloud-test.hdw.mx/")
+        landing_page.get_label().should_contain('Nx Meta Cloud')
         print("PASS")
 
 
