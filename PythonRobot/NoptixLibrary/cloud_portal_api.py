@@ -380,7 +380,7 @@ class CloudPortalAPI(object):
                         },
                     },
                 }
-            # to test script comment o6ut the post and write to file instead
+            # to test script comment out the post and write to file instead
             r = requests.post(
                 f'{self.env}api/notifications/push_notification',
                 auth=HTTPBasicAuth(id, auth_key),
