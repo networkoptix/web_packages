@@ -50,7 +50,6 @@ import {
     BaseResourceNode,
     LayoutResourceTree,
     MergedResourceNode,
-    Point,
     ResourceNode,
     ResourceNodeMap,
     ResourceType,
@@ -73,6 +72,7 @@ import { NxSystemServersComponent } from '@pages/systems/settings/servers/server
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { MutationType } from '@services/param-state/param-state.types';
@@ -82,8 +82,6 @@ import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
-
-type GridBoundary = Pick<LayoutItem, 'top' | 'left' | 'bottom' | 'right'>;
 
 const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
     dataSource: DataType[],
@@ -135,105 +133,6 @@ const findNode = (
             }
         }
     }
-};
-
-const enum Direction {
-    RIGHT = 0,
-    DOWN = 1,
-    LEFT = 2,
-    UP = 3,
-}
-
-function* openSpotGenerator(existingItems: LayoutItem[], origin: Point): Generator<Point> {
-    const hasCollision = ({ x, y }: Point): boolean =>
-        existingItems.some(
-            ({ top, bottom, left, right }) =>
-                left < x + 1 && right > x && top < y + 1 && bottom > y,
-        );
-
-    let x = 0;
-    let y = 0;
-    let layer = 1;
-    let leg: Direction = Direction.RIGHT;
-
-    while (true) {
-        const point = { x: x + origin.x, y: y + origin.y };
-
-        if (!hasCollision(point)) {
-            yield point;
-        }
-
-        switch (leg) {
-            case Direction.RIGHT:
-                x++;
-                if (x === layer) {
-                    leg++;
-                }
-                break;
-            case Direction.DOWN:
-                y++;
-                if (y === layer) {
-                    leg++;
-                }
-                break;
-            case Direction.LEFT:
-                x--;
-                if (-x === layer) {
-                    leg++;
-                }
-                break;
-            case Direction.UP:
-                y--;
-                if (-y === layer) {
-                    leg = 0;
-                    layer++;
-                }
-                break;
-        }
-    }
-}
-
-const createAddedItems = (currentItems: LayoutItem[], itemsToAdd: LayoutItem[]): LayoutItem[] => {
-    const updateBoundary = (
-        { top, left, bottom, right }: GridBoundary,
-        item: LayoutItem,
-    ): GridBoundary => ({
-        top: Math.max(top, item.top),
-        left: Math.min(left, item.left),
-        bottom: Math.min(bottom, item.bottom),
-        right: Math.max(right, item.right),
-    });
-
-    const gridBoundary: GridBoundary = currentItems.length
-        ? currentItems.reduce(updateBoundary, {
-              top: -Infinity,
-              left: Infinity,
-              bottom: Infinity,
-              right: -Infinity,
-          })
-        : {
-              top: 0,
-              left: 0,
-              bottom: 0,
-              right: 0,
-          };
-
-    const origin = {
-        x: Math.round((gridBoundary.left + gridBoundary.right - 2) / 2),
-        y: Math.round((gridBoundary.top + gridBoundary.bottom - 2) / 2),
-    };
-
-    const mappedItems: LayoutItem[] = [];
-
-    for (const { x, y } of openSpotGenerator(currentItems, origin)) {
-        const position = { top: y, left: x, bottom: y + 1, right: x + 1 };
-        mappedItems.push({ ...itemsToAdd[mappedItems.length], ...position, id: uuid() });
-        if (mappedItems.length >= itemsToAdd.length) {
-            break;
-        }
-    }
-
-    return [...currentItems, ...mappedItems];
 };
 
 @UntilDestroy()

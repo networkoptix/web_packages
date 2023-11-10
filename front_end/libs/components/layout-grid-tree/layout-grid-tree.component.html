@@ -88,18 +88,14 @@
             >
                 <div
                     cdkDrag
-                    [cdkDragDisabled]="
-                        !node.details ||
-                        layout.locked ||
-                        node.type === RESOURCE_TYPE.LAYOUT ||
-                        !node.type
-                    "
+                    [cdkDragDisabled]="!node.details || layout.locked || !node.type"
                     (click)="handleSingleClick(node)"
                     (dblclick)="handleDoubleClick(node)"
                     (cdkDragMoved)="
                         layoutGridService.moveAddedItem.next({
                             event: $event,
-                            itemParent: currentItem
+                            itemParent: currentItem,
+                            type: node.type
                         })
                     "
                     (cdkDragReleased)="layoutGridService.addItem.next(node)"

@@ -323,6 +323,11 @@ h2.auto-save-overlay {
         background: rgba($brand_core, 0.1);
     }
 
+    &.swap {
+        background: var(--success);
+        opacity: 0.25;
+    }
+
     &:hover .item-error.has-secondary-panel {
         padding-top: 8px;
 
