@@ -9,6 +9,7 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
+    effect,
     ElementRef,
     EventEmitter,
     HostListener,
@@ -330,6 +331,13 @@ export class NxLayoutGridComponent {
         this.layoutStateService.gridSection = value.nativeElement;
     }
 
+    /**
+     * Configuration for grid cell spacing calculation.
+     *
+     * Set below 1 to lower the spacing between cells or above to increase.
+     */
+    readonly CELL_SPACE_RATIO = 0.5;
+
     ngOnDestroy(): void {
         this.layoutStateService.portal = null;
     }
@@ -439,6 +447,8 @@ export class NxLayoutGridComponent {
     );
 
     layout$$ = toSignal(this.layout$);
+
+    wrapperSize$$ = toSignal(this.#wrapperSize$);
 
     showTooltip$ = this.#wrapperSize$.pipe(
         filter(Boolean),
@@ -772,6 +782,25 @@ export class NxLayoutGridComponent {
             .pipe(untilDestroyed(this))
             .subscribe(({ event, itemParent }) => this.moveAddedItem(event, itemParent));
         // TODO - end -
+
+        effect(() => {
+            const layout = this.layout$$();
+            const { width = 0, height = 0 } = this.wrapperSize$$() || {};
+            if (!layout || !width || !height) {
+                // eslint-disable-next-line nx/ban-global-variables
+                document.documentElement.style.setProperty('--current-layout-gap', '0px');
+                return;
+            }
+            const cellWidth = width / layout.renderConfig.columns;
+            const cellHeight = height / layout.renderConfig.rows;
+            const constraint = Math.min(cellWidth, cellHeight);
+            const size = constraint * layout.cellSpacing;
+            // eslint-disable-next-line nx/ban-global-variables
+            document.documentElement.style.setProperty(
+                '--current-layout-gap',
+                `${(size / 2) * this.CELL_SPACE_RATIO}px`,
+            );
+        });
     }
 
     async ngOnChanges({ layout }: NgChanges<NxLayoutGridComponent>): Promise<void> {
@@ -1155,7 +1184,7 @@ export class NxLayoutGridComponent {
         fixedHeight,
     }: Layout): LayoutRenderConfig {
         const aspectRatio = cellAspectRatio || DEFAULT_ASPECT_RATIO;
-        const spacing = cellSpacing ?? 0.1;
+        const spacing = cellSpacing ?? 0;
         const { width, height, originX: x, originY: y } = this.calculateSize(items);
         const columns = items.length <= 1 ? 1 : fixedWidth || width;
         const rows = items.length <= 1 ? 1 : fixedHeight || height;

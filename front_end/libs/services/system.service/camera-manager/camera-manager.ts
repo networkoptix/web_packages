@@ -293,12 +293,15 @@ export class CameraManager {
             parameters.rotation,
         );
 
-        let defaultRatio: number | null = null;
         const { bitrateInfos } = parameters;
-        if (bitrateInfos) {
-            const [x, y] = bitrateInfos.streams[0].resolution.split('x');
-            defaultRatio = Number(x) / Number(y);
-        }
+        const [x, y]: number[] = (
+            parameters?.mediaStreams?.streams.find(({ encoderIndex }) => encoderIndex === 0) ||
+            bitrateInfos?.streams?.[0] || { resolution: '1920x1080' }
+        ).resolution
+            .split('x')
+            .map(Number);
+        const defaultRatio = [x, y].every(Boolean) ? x / y : 1920 / 1080;
+
         const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
         const motionLowResEnabled =
             !camera.disableDualStreaming && (multiStream || !!parameters.hasDualStreaming);
