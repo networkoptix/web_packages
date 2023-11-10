@@ -9,6 +9,7 @@ import {
     OnDestroy,
     OnInit,
     Renderer2,
+    signal,
 } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -91,7 +92,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     drawQualityDivider$ = new BehaviorSubject<string>('');
 
     controlsShown: boolean = false;
-    canViewArchives = false;
     showPlayerSection = true;
     cameraError: string;
     // private cameraCurrentState: PlaybackState;
@@ -99,6 +99,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     isLocal: boolean = false;
     cameraDetailsShown: boolean = false;
     isNvr: boolean = false;
+    canViewArchive$$ = signal(false);
+    canExportArchive$$ = signal(false);
 
     private user$$ = this.store.selectSignal(accountSelectors.selectCurrentUser);
     get user(): string {
@@ -583,13 +585,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const camera = this.system.cameraManager.cameras?.find(({ id }) => id?.includes(this.id));
         this.isNvr = camera?.deviceType === DeviceType.Nvr;
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {
-            this.canViewArchives = this.system.permissionManager.permissions$$().viewArchives;
+            const { canViewDeviceArchive, canExportDeviceArchive } = this.system.permissionManager;
+            this.canViewArchive$$.set(canViewDeviceArchive(this.camera.id));
+            this.canExportArchive$$.set(canExportDeviceArchive(this.camera.id));
             if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {
                 this.getRecordsInProgress = undefined;
                 this.initSelectedCamera();
                 this.restorePlayback();
             } else {
-                const archivePromise = this.canViewArchives
+                const archivePromise = this.canViewArchive$$()
                     ? this.system.mediaserver.getRecords(this.id, 0, now, 1).toPromise()
                     : Promise.reject();
                 archivePromise
@@ -708,7 +712,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         return (
             this.camera &&
             this.camera.hasArchive &&
-            this.canViewArchives &&
+            this.canViewArchive$$() &&
             this.getRecordsInProgress === undefined
         );
     }
@@ -718,7 +722,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             this.camera &&
             !this.cameraError &&
             ((this.camera.isOnline && !this.camera.isUnauthorized) ||
-                (this.camera.hasArchive && this.canViewArchives))
+                (this.camera.hasArchive && this.canViewArchive$$()))
         );
     }
 

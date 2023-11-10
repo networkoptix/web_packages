@@ -27,6 +27,26 @@ class ClipboardEvent {
     }
 }
 
+interface IIntersectionObserverEntry {
+    isIntersecting: boolean;
+}
+
+type IntersectionObserverCallback = (
+    entries: IIntersectionObserverEntry[],
+    observer: IntersectionObserver,
+) => void;
+
+class IntersectionObserver {
+    callback: IntersectionObserverCallback;
+    constructor(callback: IntersectionObserverCallback) {
+        this.callback = callback;
+    }
+
+    observe(): void {}
+    unobserve(): void {}
+    disconnect(): void {}
+}
+
 export const patchGlobals = (): unknown =>
     Object.assign(global, {
         TextDecoder,
@@ -34,4 +54,5 @@ export const patchGlobals = (): unknown =>
         ResizeObserver,
         DataTransfer,
         ClipboardEvent,
+        IntersectionObserver,
     });

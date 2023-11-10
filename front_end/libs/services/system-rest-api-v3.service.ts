@@ -202,4 +202,22 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     powerUserCanEditSecuritySettings(): Observable<boolean> {
         return this.get('/rest/v3/system/settings/securityForPowerUsers');
     }
+
+    createTicket(): Observable<{
+        id: string;
+        username: string;
+        token: string;
+        ageS: number;
+        expiresInS: number;
+    }> {
+        return this.post('/rest/v3/login/tickets');
+    }
+
+    buildRpcUrl(): Observable<string> {
+        return this.createTicket().pipe(map(({ token }) => this.generateRpcSocketUrl(token)));
+    }
+
+    private generateRpcSocketUrl(token: string): string {
+        return `${this.getUrlBase('wss:')}/jsonrpc?_ticket=${token}`;
+    }
 }

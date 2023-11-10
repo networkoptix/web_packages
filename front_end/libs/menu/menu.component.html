@@ -83,12 +83,11 @@
 
                     <div class="level-3-items">
                         <div *ngFor="let details of subItem.level3; trackBy: trackItem">
-                            <nx-level-3-item
-                                [item]="details"
-                                [base]="content.base"
-                                [selected]="selectedLevel3 === details.id"
-                            >
-                            </nx-level-3-item>
+                            <nx-level-3-inf-scroll
+                                [routerBase]="content.base"
+                                [items]="item.level3"
+                                [selectedId]="selectedLevel3"
+                            ></nx-level-3-inf-scroll>
                         </div>
                     </div>
                 </div>
@@ -111,30 +110,11 @@
                     #scrollArea
                     [ngStyle]="{ height: scrollHeightFit }"
                 >
-                    <div
-                        *ngFor="
-                            let details of item.level3;
-                            last as isLast;
-                            first as isFirst;
-                            trackBy: trackItem
-                        "
-                    >
-                        <div
-                            class="horizontal"
-                            *ngIf="details.horizontal"
-                        >
-                            <hr />
-                        </div>
-                        <nx-level-3-item
-                            *ngIf="!details.horizontal"
-                            [item]="details"
-                            [ngClass]="{ 'last-level-3': isLast }"
-                            [base]="content.base"
-                            [first]="isFirst"
-                            [selected]="selectedLevel3 === details.id"
-                        >
-                        </nx-level-3-item>
-                    </div>
+                    <nx-level-3-inf-scroll
+                        [routerBase]="content.base"
+                        [items]="item.level3"
+                        [selectedId]="selectedLevel3"
+                    ></nx-level-3-inf-scroll>
                     <div class="bottom-shadow-cover"></div>
                 </div>
                 <div class="bottom-shadow"></div>

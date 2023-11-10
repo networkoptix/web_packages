@@ -10,8 +10,7 @@
             "executor": "@nx/angular:ng-packagr-lite",
             "outputs": ["{workspaceRoot}/dist/{projectRoot}"],
             "options": {
-                "project": "libs/routeGuards/ng-package.json",
-                "updateBuildableProjectDepsInPackageJson": true
+                "project": "libs/routeGuards/ng-package.json"
             },
             "configurations": {
                 "production": {

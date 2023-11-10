@@ -34,6 +34,7 @@ import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
+import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxUser, UserType } from '@services/system-user.types';
 import {
     RecordingStatus,
@@ -629,11 +630,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         // }
 
         this.systemNoAccess = false;
-
-        await Promise.allSettled([
-            this.system.serverManager.getServers().toPromise(),
-            this.system.cameraManager.getCameras(),
-        ]);
+        if (!(this.system.mediaserver instanceof NxSystemRestAPI3)) {
+            await Promise.allSettled([
+                this.system.serverManager.getServers().toPromise(),
+                this.system.cameraManager.getCameras(),
+            ]);
+        }
 
         if (this.editCameras()) {
             let camerasNode = this.content.level1.find(

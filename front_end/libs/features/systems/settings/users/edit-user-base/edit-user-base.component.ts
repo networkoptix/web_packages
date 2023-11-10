@@ -13,7 +13,6 @@ import {
     ViewChild,
     ViewContainerRef,
 } from '@angular/core';
-import { NgForm } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { untilDestroyed } from '@ngneat/until-destroy';
 import { Subject } from 'rxjs';
@@ -33,6 +32,9 @@ import { NxUriService } from '@services/uri.service';
 import { credentialsValidation, icons, menus } from '@static-variables';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+import { NxFormGroup } from '@utils/reactive-form-builder';
+
+import { UserFormControls } from '../user-form.types';
 
 interface EditActions {
     enable: boolean;
@@ -59,7 +61,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
 
     @Input() system: NxSystem;
     @Input() selectedUser: NxUser;
-    @Output() formIsNotDirty = new EventEmitter<boolean>();
+    @Output() userForm = new EventEmitter<NxFormGroup<UserFormControls>>();
     @Output() formActions = new EventEmitter<FormActions>();
     protected removeOldForm$ = new Subject<boolean>();
 
@@ -105,8 +107,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true })
     protected pageApply: ViewContainerRef;
-    @ViewChild('userEnabledForm', { read: NgForm }) protected userEnabledForm: NgForm;
-    @ViewChild('userSettingsForm', { read: NgForm }) protected userSettingsForm: NgForm;
 
     constructor(
         protected route: ActivatedRoute,
@@ -122,9 +122,9 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
     }
 
     ngOnChanges(changes: NgChanges<NxSystemUsersBaseComponent>): void {
-        const user = changes.selectedUser.currentValue;
-        this.menuService.selectedDetailsSection.set(user?.id);
+        const user = changes.selectedUser?.currentValue;
         if (user) {
+            this.menuService.selectedDetailsSection.set(user.id);
             this.locked.clear();
             this.setUserHelper(user);
             this.changeUser(user);
@@ -183,16 +183,17 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         const decIndex = currentUserIndex - 1;
         const nextIndex = incIndex !== this.system.userManager.users?.length ? incIndex : decIndex;
         // single-user list case check required here, too?
-        return cleanId(this.system.userManager.users[nextIndex].id);
+        return cleanId(this.system.userManager.users[nextIndex].id) ?? '';
     }
 
-    protected checkIfEditable(): Promise<Error> {
-        if (this.userSettingsForm?.invalid) {
+    protected checkIfEditable(form: NxFormGroup<UserFormControls>): Promise<Error | void> {
+        if (form.invalid) {
             return Promise.reject({ errorString: 'form is invalid' });
         }
         if (!this.selectedUser.name || this.locked.has(this.selectedUser.email)) {
             return Promise.reject({ errorString: 'its locked' });
         }
+        return Promise.resolve();
     }
 
     protected formatUser(user: NxUser): NxUser {
@@ -222,7 +223,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
             ? this.LANG.system.users.cloudDelete
             : this.LANG.system.users.localDelete;
 
-        this.menuService.selectedDetailsSection.set(cleanId(user.id));
+        this.menuService.selectedDetailsSection.set(cleanId(user.id) ?? '');
 
         this.fullName = user.fullName;
         this.email = user.email;

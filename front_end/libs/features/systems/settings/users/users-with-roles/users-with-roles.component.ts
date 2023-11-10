@@ -5,14 +5,9 @@ import { takeUntil } from 'rxjs/operators';
 
 import { NxSystemUsersBaseComponent } from '@pages/systems/settings/users/edit-user-base/edit-user-base.component';
 import { NxUser } from '@services/system-user.types';
-import { NxFormBuilder, NxFormControl, NxFormGroup } from '@utils/reactive-form-builder';
+import { NxFormBuilder, NxFormGroup } from '@utils/reactive-form-builder';
 
-interface UserRoleFormControls {
-    email: NxFormControl<string>;
-    isEnabled: NxFormControl<boolean>;
-    fullName: NxFormControl<string>;
-    role: NxFormControl<string>;
-}
+import { type UserRoleFormControls } from '../user-form.types';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -35,7 +30,7 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
         this.removeOldForm$.next(true);
 
         if (this.userRoleForm) {
-            this.formIsNotDirty.emit(true);
+            this.userForm.emit(undefined);
         }
         this.role =
             !this.isCloud$$() && user.name === 'admin'
@@ -65,18 +60,14 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
             .subscribe(values => {
                 this.setPermission();
             });
-        this.userRoleForm.statusChanges
-            .pipe(debounceTime(100), takeUntil(this.removeOldForm$))
-            .subscribe(() => {
-                this.formIsNotDirty.emit(!this.userRoleForm.dirty);
-            });
+        this.userForm.emit(this.userRoleForm);
     }
 
     protected initProcesses(): void {
         // DO not attempt to set the process correctly!!! Due to issues with multiple for watchers it's best to leave this alone for now.
         this.editUser = this.processService.createProcess(
             async () => {
-                await this.checkIfEditable();
+                await this.checkIfEditable(this.userRoleForm);
                 const user = Object.assign(
                     this.formatUser(this.selectedUser),
                     this.userRoleForm.getRawValue(),

@@ -331,7 +331,7 @@ export class NxMenusService {
 
         const nodes = [];
         const permissions = activeSystem.permissionManager?.permissions$$() || {};
-        if (permissions.view || permissions.viewArchives) {
+        if (activeSystem.canViewADevice()) {
             const viewNode = new MenuNode(
                 'View',
                 this.getUrl(activeSystem.id, { view: true }),
@@ -388,7 +388,7 @@ export class NxMenusService {
         const layoutsEnabledForBrowser =
             // @ts-expect-error window.chrome only in Chromium browsers
             this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;
-        if (layoutsEnabled && layoutsEnabledForBrowser) {
+        if (activeSystem.canViewADevice() && layoutsEnabled && layoutsEnabledForBrowser) {
             const layoutsNode = new MenuNode(
                 'Layouts',
                 this.getUrl(activeSystem.id, { layouts: true }),

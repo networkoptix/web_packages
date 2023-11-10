@@ -7,7 +7,7 @@
         [selectedUser]="user"
         [system]="system"
         (formActions)="setFormActions($event)"
-        (formIsNotDirty)="canNavigate$$.set($event)"
+        (userForm)="userFormSignal$$.set($event)"
     ></nx-system-user-with-roles-component>
 </ng-template>
 
@@ -17,6 +17,6 @@
         [selectedUser]="user"
         [system]="system"
         (formActions)="setFormActions($event)"
-        (formIsNotDirty)="canNavigate$$.set($event)"
+        (userForm)="userFormSignal$$.set($event)"
     ></nx-system-user-with-groups-component>
 </ng-container>

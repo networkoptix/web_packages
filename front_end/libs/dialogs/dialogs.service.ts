@@ -162,6 +162,8 @@ export class NxDialogsService {
         const component = await import('./apply/apply.component').then(m => m.ApplyModalContent);
         const dialogConfig: DialogConfig<Dt.Apply['data']> = {
             data: { ...data },
+            disableClose: true,
+            hasBackdrop: true,
         };
         return this.openV2(component, dialogConfig);
     }
