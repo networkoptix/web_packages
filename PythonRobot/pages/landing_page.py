@@ -28,14 +28,16 @@ class LandingPage:
         else:
             Button(self.driver, "//button[contains(text(),'OK')]").click()
 
-    def wait_until_loaded(self):
-        self._session_expired_dismiss()
-        self._location_is_correct()
-        header = PageText(
+    def get_label(self):
+        return PageText(
             self.driver,
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
             )
-        header.wait_until_visible()
+
+    def wait_until_loaded(self):
+        self._session_expired_dismiss()
+        self._location_is_correct()
+        self.get_label().wait_until_visible()
 
     def _location_is_correct(self, timeout=10):
         start_time = time.monotonic()
@@ -53,15 +55,6 @@ class LandingPage:
 
 
 class MetaLandingPage(LandingPage):
-
-    def get_label(self):
-        return PageText(
-            self.driver,
-            "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
-            )
-
-    def wait_until_loaded(self):
-        self.get_label().wait_until_visible()
 
     def _location_is_correct(self, timeout=10):
         location = "https://metavms.cloud-test.hdw.mx/"
