@@ -207,6 +207,10 @@ export class NxEnableAccount2faModalContent extends ModalBase<DT['return']> {
         );
     }
 
+    markAsDirty = (): void => {
+        this.tfaCodeInput.markAsDirty();
+    };
+
     // Using fetch api because angular http request is canceled when page is unloading.
     private removeUnverified2faKey = (): void => {
         const options = {

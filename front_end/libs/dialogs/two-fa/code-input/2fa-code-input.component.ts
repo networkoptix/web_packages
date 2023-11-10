@@ -51,6 +51,10 @@ export class Nx2faCodeInputComponent implements ControlValueAccessor {
         this.element.focus();
     }
 
+    markAsDirty(): void {
+        this.codeInputModel.control.markAsDirty();
+    }
+
     setUnauthorized(): void {
         this.codeForm.control.setErrors({ unauthorized: true });
         /* Need to set parent form as having errors to prevent submitting a value just rejected

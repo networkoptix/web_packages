@@ -236,6 +236,7 @@
                 ></svg-icon>
             </button>
             <nx-process-button
+                [clickFn]="markAsDirty"
                 [process]="codeProcess"
                 [form]="codeForm"
                 actionType="primary"

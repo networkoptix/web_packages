@@ -20,4 +20,8 @@ export abstract class NxSingleStage2faModalBase<R> extends ModalBase<R> {
         this.dialogRef.disableClose = false;
         this.tfaCodeInput.enable();
     };
+
+    markAsDirty = (): void => {
+        this.tfaCodeInput.markAsDirty();
+    };
 }
