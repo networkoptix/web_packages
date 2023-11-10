@@ -27,7 +27,7 @@ class ServerApi:
             url: Optional[str] = None,
             username: str = _DEFAULT_USERNAME,
             password: str = DEFAULT_PASSWORD,
-    ):
+            ):
         self._url = url
         self._username = username
         self._password = password
@@ -38,11 +38,11 @@ class ServerApi:
             'name': system_name,
             'settings': {
                 'statisticsAllowed': False,
-                'trafficEncryptionForced': False
-            },
+                'trafficEncryptionForced': False,
+                },
             'local': {
-                'password': new_password
-            }
+                'password': new_password,
+                }
         })
         self._set_password(new_password)
 
@@ -60,14 +60,14 @@ class ServerApi:
             user_role_id=None,
             is_cloud=True,
             patch=False,
-    ):
+            ):
         body = {
             'email': email,
             'name': name,
             'fullName': full_name,
             'permissions': permissions,
             'isCloud': is_cloud,
-        }
+            }
         if password:
             body['password'] = password
         if user_id:
@@ -163,7 +163,7 @@ class ServerApi:
             self,
             url: Optional[str] = None,
             token: Optional[str] = None,
-    ) -> 'ServerApi':
+            ) -> 'ServerApi':
         url = url or self._url
         username = self._username if token is None else ''
         password = self._password if token is None else ''
@@ -196,14 +196,14 @@ class ServerApi:
             method: str,
             path: str,
             data: Optional[Mapping[str, Any]] = None,
-    ) -> Union[Mapping[str, Any], Optional[bytes]]:
+            ) -> Union[Mapping[str, Any], Optional[bytes]]:
         response = requests.request(
             method,
             f'{self._url}/{path.rstrip("/")}',
             json=data,
             headers={'Authorization': self._auth_header()},
             verify=False,
-        )
+            )
         response.raise_for_status()
         try:
             return response.json()
@@ -220,7 +220,7 @@ class ServerApi:
             'username': username,
             'password': password,
             'setCookie': False,
-        }
+            }
         response = requests.post(f'{self._url}/rest/v1/login/sessions', json=data, verify=False)
         response.raise_for_status()
         json_response = response.json()
