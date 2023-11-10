@@ -121,7 +121,7 @@ class CloudPortalAPI(object):
             slave_vms_token: str,
             ):
         cdb_merge_response = requests.post(
-            url=f'{self.env}/cdb/system/{master_id}/merged_systems/',
+            url=f'{self.env}/cdb/systems/{master_id}/merged_systems/',
             auth=HTTPBasicAuth(email, password),
             json={
                 "systemId": slave_id,
