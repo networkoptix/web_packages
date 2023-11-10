@@ -108,7 +108,7 @@ urlpatterns = [
                              content_type='application/json')),
 
     re_path(r'^ngsw-worker.js$',
-        TemplateView.as_view(template_name='static/scripts/ngsw-worker.js',
+        TemplateView.as_view(template_name='static/ngsw-worker.js' if settings.LOCAL_ENVIRONMENT else 'static/scripts/ngsw-worker.js',
                              content_type='application/javascript')),
     re_path(r'^authorize.*', TemplateView.as_view(template_name="static/authorization/index.html")),
     re_path(r'^robots.txt', robots_txt),

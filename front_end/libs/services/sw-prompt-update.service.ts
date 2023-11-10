@@ -1,61 +1,47 @@
-import { ApplicationRef, Inject, Injectable, Injector } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { SwUpdate } from '@angular/service-worker';
-import { TranslateService } from '@ngx-translate/core';
-import { concat, interval, zip } from 'rxjs';
-import { first, tap, filter, take } from 'rxjs/operators';
+import { LocalStorageService } from 'ngx-webstorage';
+import { filter, tap } from 'rxjs';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxProcessService } from '@services/process.service';
-import { WINDOW } from '@services/window-provider';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxSwPromptUpdateService {
-    LANG = staticLang;
-    ribbonService: NxRibbonService;
-    processService: NxProcessService;
-
+    RELOAD_KEY = 'RELOAD_WINDOWS_ON_UPDATE';
     constructor(
-        translateService: TranslateService,
         updates: SwUpdate,
-        appRef: ApplicationRef,
-        injector: Injector,
-        @Inject(WINDOW) private window: Window,
+        ribbonService: NxRibbonService,
+        processService: NxProcessService,
+        session: LocalStorageService,
     ) {
-        const languageSet$ = translateService.onTranslationChange.pipe(
-            filter(translations => translations !== null),
-            take(1),
-            tap(_ => {
-                this.ribbonService = injector.get(NxRibbonService);
-                this.processService = injector.get(NxProcessService);
-            }),
-        );
         if (environment.production && !environment.isLocal) {
-            updates.versionUpdates.subscribe(evt => {
-                // console.log(`New app version available: ${evt.available.hash}`);
-                this.ribbonService.show(this.LANG.ribbon.newVersionAvailable.notification, [
-                    {
-                        type: 'process-button',
-                        text: this.LANG.ribbon.newVersionAvailable.installButton,
-                        value: this.processService.createProcess(() => {
-                            return updates.activateUpdate().then(() => {
-                                this.window.location.reload();
-                            });
-                        }),
-                    },
-                ]);
-            });
-        }
-        const appIsStable$ = appRef.isStable.pipe(first(isStable => isStable === true));
-        const everyMinute$ = interval(60 * 1001);
-        const everyMinuteOnceAppIsStable$ = concat(zip(languageSet$, appIsStable$), everyMinute$);
-        if (environment.production && !environment.isLocal) {
-            everyMinuteOnceAppIsStable$.subscribe(_ => {
-                updates.checkForUpdate();
-            });
+            updates.versionUpdates
+                .pipe(
+                    tap(evt => console.info('version update', evt)),
+                    filter(evt => evt.type === 'VERSION_READY'),
+                )
+                .subscribe(() => {
+                    const { notification, installButton } = staticLang.ribbon.newVersionAvailable;
+                    ribbonService.show(notification, [
+                        {
+                            type: 'process-button',
+                            text: installButton,
+                            value: processService.createProcess(() =>
+                                updates
+                                    .activateUpdate()
+                                    .then(() => session.store(this.RELOAD_KEY, true)),
+                            ),
+                        },
+                    ]);
+                });
+
+            // eslint-disable-next-line nx/ban-global-variables
+            session.observe(this.RELOAD_KEY).subscribe(() => window.location.reload());
         }
     }
 }
