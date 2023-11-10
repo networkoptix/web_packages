@@ -76,7 +76,7 @@ class HeaderNav:
     def log_out(self):
         self.account_dropdown().click()
         self.log_out_option().click()
-        LandingPage(self._driver)
+        LandingPage(self._driver).wait_until_loaded()
 
     def create_account(self):
         return Button(self._driver, "//header//a[@href='/authorize?client_type=create']")

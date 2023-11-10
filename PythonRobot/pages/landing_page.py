@@ -13,9 +13,6 @@ class LandingPage:
     def __init__(self, driver, lang="en_US", ):
         self.driver = driver
         self.rb = RobotVariables(lang)
-        self._session_expired_dismiss()
-        self._wait_until_landing_page_is_visible()
-        self._location_is_correct()
 
     def create_account_button(self):
         translated_xpath = self.rb.replace_nested_variables("//a[contains(text(), '{CREATE ACCOUNT BUTTON TEXT}')]")
@@ -32,7 +29,9 @@ class LandingPage:
         else:
             Button(self.driver, "//button[contains(text(),'OK')]").click()
 
-    def _wait_until_landing_page_is_visible(self):
+    def wait_until_loaded(self):
+        self._session_expired_dismiss()
+        self._location_is_correct()
         landing_page = Pane(
             self.driver,
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
@@ -62,7 +61,7 @@ class MetaLandingPage(LandingPage):
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
             )
 
-    def _wait_until_landing_page_is_visible(self):
+    def wait_until_loaded(self):
         self.get_page().wait_until_visible()
 
     def _location_is_correct(self, timeout=10):

@@ -36,7 +36,7 @@ def allows_login_with_correct_credentials_and_log_out():
         SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
         header.log_out_option().click()
-        LandingPage(driver)
+        LandingPage(driver).wait_until_loaded()
         print("pass")
 
 
@@ -142,7 +142,7 @@ def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_b
         SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
         header.log_out_option().click()
-        LandingPage(driver)
+        LandingPage(driver).wait_until_loaded()
         driver.back()
         LoginDialog(driver)
         print("pass")
@@ -239,7 +239,7 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
         SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
         header.log_out_option().click()
-        LandingPage(driver)
+        LandingPage(driver).wait_until_loaded()
         driver.switch_to.window(driver.window_handles[1])
         LoginDialog(driver)
         print("pass")
