@@ -161,12 +161,8 @@ module.exports = {
                     },
                 ],
                 ...tsExtension('dot-notation', ['error', { allowKeywords: true }]),
-                ...tsExtension('lines-between-class-members', [
-                    'error',
-                    {
-                        exceptAfterSingleLine: true,
-                    },
-                ]),
+                // Rule has been updated so that exceptAfterSingleLine isn't a valid option anymore. It's also being removed from typescript-eslint
+                ...tsExtension('lines-between-class-members', 'off'),
                 ...tsExtension('no-array-constructor'),
                 ...tsExtension('no-dupe-class-members'),
                 ...tsExtension('no-implied-eval'),
