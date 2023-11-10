@@ -39,6 +39,7 @@
                 [form]="addUserForm"
                 [setFocus]="true"
                 #addUserDialogEmail="ngModel"
+                [disabled]="busy$$()"
             >
             </nx-email-input>
             <div class="col-12 ml-n2 d-flex">
@@ -128,18 +129,22 @@
         </div>
     </div>
     <div class="modal-footer">
-        <nx-process-button
-            [clickFn]="preSubmit"
-            [process]="addUser"
-            [form]="addUserForm"
-            [buttonText]="'Add' | translate"
+        <nx-async-action-button
+            [action]="addUserAction"
+            [busy$$]="busy$$"
             data-testid="addUserBtn"
-        ></nx-process-button>
-        <nx-cancel-button
-            [process]="addUser"
-            [cancelFn]="unlock"
-            [discardFn]="close"
+        >
+            {{ 'Add' | translate }}
+        </nx-async-action-button>
+        <button
+            type="button"
+            class="btn btn-default"
+            [disabled]="busy$$()"
+            (click)="close()"
             data-testid="cancelAddUserBtn"
-        ></nx-cancel-button>
+            translate
+        >
+            Cancel
+        </button>
     </div>
 </form>

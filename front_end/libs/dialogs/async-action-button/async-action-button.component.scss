@@ -1,0 +1,51 @@
+@use "mixins" as mixins;
+
+button {
+    position: relative;
+}
+
+.loading-dots {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+
+    @include mixins.keyframe(bubblingG) {
+        0% {
+            opacity : 1;
+        }
+
+        77% {
+            opacity : 0;
+        }
+
+        100% {
+            opacity : 0;
+        }
+    }
+
+    &__dot {
+        height: 8px;
+        width: 8px;
+        border-radius: 8px;
+        animation: bubblingG 650ms infinite alternate;
+
+        background: var(--light1);
+        .loading-dots--light-default & {
+            background: var(--light16);
+        }
+
+        @for $i from 0 through 2 {
+            &--#{$i} {
+                animation-delay: $i * 0.3s
+                // 0, 0.3, 0.6
+            }
+        }
+    }
+}

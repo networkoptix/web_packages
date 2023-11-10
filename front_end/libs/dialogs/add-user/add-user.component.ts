@@ -1,6 +1,6 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, HostBinding, Inject, signal, ViewChild } from '@angular/core';
+import { Component, ElementRef, HostBinding, Inject, signal, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -10,16 +10,14 @@ import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-
 import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
-import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
-import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
+import { NxAsyncActionButtonComponent } from '@dialogs/async-action-button/async-action-button.component';
+import { createAsyncAction } from '@dialogs/async-action-button/create-async-action';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxProcessService } from '@services/process.service';
-import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import { AddUser, Role } from '@services/system-user.types';
 import { NxToastService } from '@services/toast.service';
@@ -39,9 +37,8 @@ import type { AddUser as DT } from '../dialogs.types';
 
         NxEmailComponent,
         NxPermissionsDropdown,
-        NxProcessButtonComponent,
-        NxProcessCancelButtonComponent,
         NxMultiSelectDropdown,
+        NxAsyncActionButtonComponent,
     ],
     animations: [transitionEnter, transitionLeave],
 })
@@ -56,7 +53,6 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
 
     hideErrors: boolean = true;
     systemName: string;
-    addUser: Process;
     user: AddUser;
     selectedPermissionSubject = new BehaviorSubject<Role>({
         id: '',
@@ -68,12 +64,44 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     useGroups$$ = signal<boolean>(false);
     groups: MultiSelectItem[];
 
+    addUserAction = createAsyncAction({
+        action: () => {
+            this.hideErrors = false;
+            const userExists = this.system.userManager.users.some(item => {
+                return item.email === this.user.email;
+            });
+            if (userExists) {
+                return Promise.reject('alreadyExists');
+            } else {
+                return this.saveUser();
+            }
+        },
+        success: user => {
+            this.hideErrors = true;
+            this.close(user.id);
+        },
+        error: (err: 'alreadyExists' | unknown) => {
+            if (err === 'alreadyExists') {
+                this.form.controls.addUserDialogEmail.setErrors({ alreadyExists: true });
+            } else {
+                // User cancelled session expired dialog
+                this.toastService.notify(
+                    this.LANG.dialogs.updateSession.addUser,
+                    ToastType.Warning,
+                );
+            }
+        },
+        postError: () => {
+            this.self.nativeElement.querySelector('input')?.focus();
+        },
+    });
+
     constructor(
         configService: NxConfigService,
-        private processService: NxProcessService,
         private toastService: NxToastService,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) public system: DT['data'],
+        private self: ElementRef<HTMLElement>,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -155,42 +183,5 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             groupIds: [],
         };
         this.setPermission(this.user.role);
-
-        this.addUser = this.processService.createProcess(
-            () => {
-                this.lock();
-                this.hideErrors = false;
-                const userExists = this.system.userManager.users.some(item => {
-                    return item.email === this.user.email;
-                });
-                if (userExists) {
-                    return Promise.reject({ resultCode: 'alreadyExists' });
-                } else {
-                    return this.saveUser();
-                }
-            },
-            {
-                errorCodes: {
-                    alreadyExists: () => {
-                        this.form.controls.addUserDialogEmail.setErrors({ alreadyExists: true });
-                    },
-                    cantEditAdmin: () => {
-                        this.form.controls.addUserDialogEmail.setErrors({ cantEditAdmin: true });
-                    },
-                },
-                ignoreError: true,
-            },
-            user => {
-                this.hideErrors = true;
-                this.close(user.id);
-            },
-            () => {
-                this.toastService.notify(
-                    this.LANG.dialogs.updateSession.addUser,
-                    ToastType.Warning,
-                );
-                this.unlock();
-            },
-        );
     }
 }

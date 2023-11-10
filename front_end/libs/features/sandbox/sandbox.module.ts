@@ -216,6 +216,7 @@ const appRoutes: Routes = [
         LanguageModule,
         NxDropdownModule,
         NxAddSvgSrcDirective,
+        NxButtonsExampleComponent,
     ],
     providers: [],
 
@@ -239,7 +240,6 @@ const appRoutes: Routes = [
         NxHSLThemeColorsComponent,
         WebglComponent,
         SimpleWebglComponent,
-        NxButtonsExampleComponent,
     ],
     bootstrap: [],
     exports: [NxSandboxComponent],
