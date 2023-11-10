@@ -1,0 +1,20 @@
+.form-group {
+    position: relative;
+}
+
+.form-group > .search-icon {
+    position: absolute;
+    top: 6px;
+    left: 4px;
+}
+
+.form-group > input {
+    height: 32px !important;
+    padding-left: 28px !important;
+}
+
+.form-group > .search-clear {
+    position: absolute;
+    top: 8px;
+    right: 4px;
+}

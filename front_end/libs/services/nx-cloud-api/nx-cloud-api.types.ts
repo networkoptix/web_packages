@@ -472,6 +472,7 @@ export interface AuthorizeParams {
     access_code?: string;
     access_token?: string;
     lang?: string;
+    system_name?: string;
 }
 
 export interface AuthenticateResp {

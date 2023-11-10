@@ -1,0 +1,20 @@
+:host-context {
+    display: flex;
+    align-items: center;
+    flex-direction: row;
+    height: 100%;
+}
+
+.bind-btn {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 175px;
+    width: 154px;
+    background-color: var(--dark10);
+    border-radius: 4px;
+}
+.bind-btn.option-disabled {
+    opacity: 40%;
+}

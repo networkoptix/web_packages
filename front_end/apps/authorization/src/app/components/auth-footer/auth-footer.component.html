@@ -1,0 +1,36 @@
+<footer
+    [ngClass]="{
+        'footer-w': viewType === 'web',
+        'footer-d': viewType === 'desktop',
+        'footer-m': viewType === 'mobile'
+    }"
+>
+    <div class="d-flex justify-content-end flex-1 w-100 right">
+        <button
+            class="btn text-button"
+            type="button"
+            [disabled]="blockBack"
+            (click)="goBack.emit()"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dir + 'arrow_back_button.svg'"
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [applyClass]="true"
+            ></svg-icon>
+            <span
+                class="pl-1"
+                translate
+                >Back</span
+            >
+        </button>
+        <nx-process-button
+            [process]="bindProcess"
+            [buttonDisabled]="!readyToBind"
+            [removeMinWidth]="true"
+            [buttonText]="'Connect' | translate"
+            data-testid="btnConnect"
+        >
+        </nx-process-button>
+    </div>
+</footer>

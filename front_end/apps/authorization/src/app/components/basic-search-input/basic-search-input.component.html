@@ -1,0 +1,17 @@
+<div
+    class="form-group"
+    [formGroup]="searchForm"
+>
+    <span class="glyphicon web-icon-search search-icon"></span>
+    <input
+        class="form-control search-input inset"
+        autocomplete="off"
+        formControlName="search"
+        [placeholder]="'Search' | translate"
+    />
+    <span
+        class="glyphicon close-icon search-clear"
+        [hidden]="searchForm.controls.search.value === ''"
+        (click)="searchForm.controls.search.setValue('')"
+    ></span>
+</div>

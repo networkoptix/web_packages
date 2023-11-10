@@ -1,0 +1,37 @@
+<nx-auth-header [viewType]="viewType">{{ 'Connect system to' | translate }}</nx-auth-header>
+<main>
+    <div
+        class="d-flex flex-grow-1 align-items-center"
+        [ngSwitch]="fsmState$$()"
+    >
+        <nx-select-bind-type
+            *ngSwitchCase="fsmStates.initial"
+            [orgs]="orgs$$()"
+            (bindSelection)="setBindType($event)"
+        ></nx-select-bind-type>
+        <nx-select-org
+            *ngSwitchCase="fsmStates.selectOrg"
+            [orgs]="orgs$$()"
+            (selectedOrg)="selectedOrg = $event"
+        ></nx-select-org>
+        <div
+            class="d-flex flex-column"
+            *ngSwitchCase="fsmStates.finished"
+        >
+            <h2 [style]="{ color: 'red !important' }">
+                {{ 'Debug info. Will replace later' }}
+            </h2>
+            <pre
+                *ngSwitchCase="fsmStates.finished"
+                [innerHtml]="bindInfo$$() | json"
+            ></pre>
+        </div>
+    </div>
+    <nx-auth-footer
+        [bindProcess]="bindSystem"
+        [blockBack]="fsmState$$() === fsmStates.initial || fsmState$$() === fsmStates.finished"
+        [readyToBind]="readyToBind$$() && fsmState$$() !== fsmStates.finished"
+        [viewType]="viewType"
+        (goBack)="back()"
+    ></nx-auth-footer>
+</main>

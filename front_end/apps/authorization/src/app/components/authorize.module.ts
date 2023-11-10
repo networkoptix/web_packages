@@ -7,6 +7,7 @@ import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { BindSystemToCloudComponent } from '@authorization/src/app/components/bind-system-to-cloud/bind-system-to-cloud.component';
 import { NxFooterComponent } from '@components/footer/footer.component';
 import { NxNavFooterComponent } from '@components/nav-footer/nav-footer.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -82,6 +83,7 @@ export const authorizedRoutes: Routes = [
         NxAuthorizeCreateAccountComponent,
         NxAuthorizeResetPasswordComponent,
         NxFocusMeDirective,
+        BindSystemToCloudComponent,
     ],
     providers: [],
     declarations: [

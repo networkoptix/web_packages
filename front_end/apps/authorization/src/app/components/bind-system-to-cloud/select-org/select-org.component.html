@@ -1,0 +1,16 @@
+<div [formGroup]="searchForm">
+    <nx-basic-search-input formControlName="search"></nx-basic-search-input>
+    <cdk-virtual-scroll-viewport
+        class="scroll-area"
+        [itemSize]="50"
+    >
+        <div
+            class="scroll-item"
+            *ngFor="let org of visibleOrgs$$()"
+            (click)="selectedOrg$$.set(org)"
+            [class]="{ 'selected-scroll-item': selectedOrg$$()?.id === org.id }"
+        >
+            {{ org.name }}
+        </div>
+    </cdk-virtual-scroll-viewport>
+</div>

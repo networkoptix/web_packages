@@ -129,6 +129,13 @@
             [window]="window"
             (setCurrentState)="setCurrentState($event)"
         ></nx-authorize-backup-code-component>
+        <nx-bind-system-to-cloud
+            *ngSwitchCase="AuthorizeState.bind"
+            [systemName]="initialData.system_name"
+            [viewType]="viewType"
+            [code]="code"
+            [redirectUri]="initialData.redirect_uri"
+        ></nx-bind-system-to-cloud>
         <nx-show-404-authorize-component
             *ngSwitchCase="AuthorizeState.show404"
             [viewType]="viewType"
