@@ -83,7 +83,7 @@
         @include mixins.ellipsis;
     }
 
-    &.no-edit {
+    &.edit {
         @include mixins.ellipsis;
 
         .group-name {
