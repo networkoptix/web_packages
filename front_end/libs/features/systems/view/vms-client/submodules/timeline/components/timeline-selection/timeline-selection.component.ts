@@ -401,15 +401,7 @@ export class TimelineSelectionComponent implements OnInit, AfterViewInit {
     }
 
     private updateMouseMoveEvent(e: MouseEvent): void {
-        // @ts-expect-error FIXME: TIL errors inside event listeners will silently crash
-        // without anything displaying in the console. Currently this call always crashes and
-        // blocks the code under from ever executing
-        this.timeUnderMouse.handleMouseMove({
-            offsetX:
-                (e.target as HTMLElement).getBoundingClientRect().left -
-                this.host.getBoundingClientRect().left +
-                e.offsetX,
-        });
+        this.timeUnderMouse.handleMouseMove(e);
 
         if (this.selectionMode && e.buttons) {
             this.selection.handleMouseMove(e);
