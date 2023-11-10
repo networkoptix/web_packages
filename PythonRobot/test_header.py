@@ -60,7 +60,7 @@ def no_systems_header_button_text_is_correct():
         header.for_developers_link().click()
         # Now fails because of bug https://networkoptix.atlassian.net/browse/CLOUD-11719
         assert driver.current_url == 'https://metavms.cloud-test.hdw.mx/'
-        MetaLandingPage(driver).get_page().should_contain('Nx Meta Cloud')
+        MetaLandingPage(driver).get_label().should_contain('Nx Meta Cloud')
         print("PASS")
 
 

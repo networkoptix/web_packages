@@ -54,14 +54,14 @@ class LandingPage:
 
 class MetaLandingPage(LandingPage):
 
-    def get_page(self):
+    def get_label(self):
         return PageText(
             self.driver,
             "//body[contains(@class,'anonymous')]//h1[@data-testid='welcomeCaption']",
             )
 
     def wait_until_loaded(self):
-        self.get_page().wait_until_visible()
+        self.get_label().wait_until_visible()
 
     def _location_is_correct(self, timeout=10):
         location = "https://metavms.cloud-test.hdw.mx/"
