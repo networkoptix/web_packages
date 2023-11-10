@@ -39,7 +39,12 @@ else:
 
 class CloudPortalAPI(object):
 
-    def __init__(self, env='https://cloud-test.hdw.mx', password='qweasd 123', email='noptixautoqa@gmail.com'):
+    def __init__(
+            self,
+            env='https://cloud-test.hdw.mx',
+            password='qweasd 123',
+            email='noptixautoqa@gmail.com',
+            ):
         self.env = env
         self.password = password
         self.baseEmail = email
@@ -68,7 +73,8 @@ class CloudPortalAPI(object):
             password,
             backup_code,
             verification_code,
-            verify_ssl_cert=_ssl_certs_path)
+            verify_ssl_cert=_ssl_certs_path,
+            )
         cloud_session.login()
         return cloud_session
 
@@ -104,7 +110,11 @@ class CloudPortalAPI(object):
     def merge_cloud_systems(self, master_id, slave_id, email, password):
         with self._session(email, password) as s:
             logger.debug(f'The headers are {s.headers}')
-            data = {'master_system_id': master_id, 'password': password, 'slave_system_id': slave_id}
+            data = {
+                'master_system_id': master_id,
+                'password': password,
+                'slave_system_id': slave_id,
+                }
             s.headers.update({"referer": f"{self.env}"})
             merge_response = s.post(f'{self.env}/api/systems/merge', data)
             logger.debug(f'Value of merge_response.content: {merge_response.content}')
@@ -127,7 +137,7 @@ class CloudPortalAPI(object):
                 "systemId": slave_id,
                 "masterSystemAccessToken": master_vms_token,
                 "slaveSystemAccessToken": slave_vms_token,
-            },
+                },
             verify=False,
             )
         cdb_merge_response.raise_for_status()
@@ -203,11 +213,12 @@ class CloudPortalAPI(object):
 
     def set_user_theme(self, email, password, theme):
         with self._session(email, password) as s:
-            s.headers.update({"Referer":self.env})
+            s.headers.update({"Referer": self.env})
             set_user_theme_response = s.post(
                 f'{self.env}/api/custom-properties/theme/{email}',
                 auth=HTTPBasicAuth(email, password),
-                data={"theme": f"{theme}"})
+                data={"theme": f"{theme}"},
+                )
             set_user_theme_response.raise_for_status()
             return set_user_theme_response.json()
 
@@ -216,7 +227,8 @@ class CloudPortalAPI(object):
             s.headers.update({"referer": f"{self.env}"})
             set_name_response = s.post(
                 f'{self.env}/api/account/',
-                json={'first_name': first_name, 'last_name': last_name})
+                json={'first_name': first_name, 'last_name': last_name},
+                )
             logger.debug(set_name_response.content)
             set_name_response.raise_for_status()
             return set_name_response.json()
@@ -229,21 +241,22 @@ class CloudPortalAPI(object):
                 f'{self.env}/api/systems/connect',
                 json=credentials,
                 verify=False,
-            )
+                )
             data = response.json()
         logger.debug(data)
         return {
             'systemId': data['id'],
             'authKey': data['authKey'],
             'owner': data['ownerAccountEmail'],
-        }
+            }
 
     def disconnect(self, email, password, system_id, verification_code=None):
         with self._session(email, password, verification_code=verification_code) as s:
             s.headers.update({"referer": f"{self.env}"})
             disconnect_system_response = s.post(
                 f'{self.env}/api/systems/disconnect',
-                json={'system_id': system_id, 'password': password})
+                json={'system_id': system_id, 'password': password},
+                )
             disconnect_system_response.raise_for_status()
             return disconnect_system_response.json()
 
@@ -268,7 +281,7 @@ class CloudPortalAPI(object):
             get_code_response = requests.post(
                 f'{self.env}/api/robot/get_code',
                 json={'email': email, 'type': message_type},
-                verify=_ssl_certs_path
+                verify=_ssl_certs_path,
                 )
         else:
             with self._session(self.baseEmail, self.password) as s:
@@ -276,7 +289,8 @@ class CloudPortalAPI(object):
                 logger.debug(message_type)
                 get_code_response = s.post(
                     f'{self.env}/api/robot/get_code',
-                    json={'email': email, 'type': message_type})
+                    json={'email': email, 'type': message_type}
+                    )
         logger.debug(get_code_response.content)
         get_code_response.raise_for_status()
         return get_code_response.json()['code']
@@ -287,7 +301,8 @@ class CloudPortalAPI(object):
         with self._session(email, password) as s:
             disconnect_response = s.post(
                 f'{self.env}/api/systems/{system_id}/users',
-                json={'user_email': email, 'role': 'none'})
+                json={'user_email': email, 'role': 'none'},
+                )
             disconnect_response.raise_for_status()
             return disconnect_response.json()
 
@@ -297,15 +312,16 @@ class CloudPortalAPI(object):
         auth = b"Basic " + base64.b64encode(auth_ascii)
         headers = {'Authorization': auth}
         subscription_response = requests.put(
-            f'{self.env}/api/notifications/subscriptions/{token}', headers=headers,
+            f'{self.env}/api/notifications/subscriptions/{token}',
+            headers=headers,
             json={
                 'type': 'notification',
                 'systems': ['all'],
                 'deviceInfo': {'name': name, 'os': 'web'},
                 'provider': 'firebase',
-            },
-            verify=_ssl_certs_path
-        )
+                },
+            verify=_ssl_certs_path,
+            )
         subscription_response.raise_for_status()
         return subscription_response.json()
 
@@ -331,10 +347,8 @@ class CloudPortalAPI(object):
             )
         self.systemsDict = r.json()
         self.systemsList = []
-
         for system in self.systemsDict['systems']:
             self.systemsList.append(system)
-
         self.sortedList = sorted(self.systemsList, key=lambda i: i['registrationTime'])
         uid = 0
         self.userId = str(uuid.uuid1())
@@ -347,10 +361,8 @@ class CloudPortalAPI(object):
             id = system["id"]
             name = system["name"]
             title = process + " " + str(uid) + "_" + self.userId
-
             emailIntStart = (int(name.strip(string.ascii_letters))) * 10
             emailIntEnd = emailIntStart + 10
-
             targetList = []
             for x in range(emailIntStart, emailIntEnd):
                 targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
@@ -362,10 +374,12 @@ class CloudPortalAPI(object):
                     "body": name,
                     "payload": {
                         "url": "nx-vms://test4.cloud.hdw.mx/client/" + id + "/view",
-                        "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c",
+                        "imageUrl": (
+                            "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/"
+                            "ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"),
+                        },
                     },
-                },
-            }
+                }
             # to test script comment o6ut the post and write to file instead
             r = requests.post(
                 f'{self.env}api/notifications/push_notification',
@@ -386,25 +400,18 @@ class CloudPortalAPI(object):
             )
         systemsDict = r.json()
         systemsList = []
-
         for system in systemsDict['systems']:
             systemsList.append(system)
-
         sortedList = sorted(systemsList, key=lambda i: i['registrationTime'])
         sysID = 1
         systemsJson = []
-
         for system in sortedList:
-
             authKey = system["authKey"]
             id = system["id"]
             name = system["name"]
-
             title = str(sysID) + " " + str(uuid.uuid1())
-
             emailIntStart = (int(name.strip(string.ascii_letters))) * 10
             emailIntEnd = emailIntStart + 10
-
             targetList = []
             for x in range(emailIntStart, emailIntEnd):
                 targetList.append(f"noptixautoqa+notifications{x}@gmail.com")
@@ -420,11 +427,14 @@ class CloudPortalAPI(object):
                     "body": name,
                     "payload": {
                         "url": "nx-vms://test4.cloud.hdw.mx/client/" + id + "/view",
-                        "imageUrl": "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c",
+                        "imageUrl": (
+                            "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/"
+                            "cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"),
                     },
                 },
             }
-            systemsJson.append({"authKey": authKey, "id": id, "body": json.dumps(body), "title": title})
+            systemsJson.append(
+                {"authKey": authKey, "id": id, "body": json.dumps(body), "title": title})
             sysID += 1
         f = open('systems.json', 'w')
         f.write(json.dumps(systemsJson))
@@ -437,7 +447,15 @@ class CloudPortalAPI(object):
             return 'SSL Error'
         return r.status_code
 
-    def camera_search(self, serverUrl, cameraPort, camFile, serverIp, user='mark', password='hamill'):
+    def camera_search(
+            self,
+            serverUrl,
+            cameraPort,
+            camFile,
+            serverIp,
+            user='mark',
+            password='hamill',
+            ):
         search_response = requests.get(
             url=f"{serverUrl}/api/manualCamera/search",
             auth=HTTPDigestAuth('admin', 'qweasd 123'),
@@ -629,7 +647,7 @@ class CloudPortalAPI(object):
         activate_response = requests.post(
             url=f'{self.env}/api/account/activate',
             auth=HTTPBasicAuth(email, password),
-            json={"code":code},
+            json={"code": code},
             verify=False,
             )
         activate_response.raise_for_status()
@@ -698,7 +716,13 @@ class CloudPortalAPI(object):
                 security_post_response.raise_for_status()
             cloud_account.disable_2fa()
 
-    def generate_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
+    def generate_2fa_backup_codes_api(
+            self,
+            email,
+            password,
+            backup_code=None,
+            verification_code=None,
+            ):
         with self._session(
                 email, password,
                 backup_code=backup_code,
@@ -749,7 +773,7 @@ class CloudPortalAPI(object):
             'grant_type': 'password',
             'response_type': 'token',
             'scope': f'cloudSystemId={system_id}',
-        }
+            }
         response = requests.post(
             url=f'{self.env}/cdb/oauth2/token',
             json=body,
