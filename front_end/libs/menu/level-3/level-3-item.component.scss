@@ -24,6 +24,10 @@
                 fill: var(--left-menu-l3-color);
             }
 
+            .icon-accent-with-fill {
+                fill: var(--left-menu-l3-accent-color);
+            }
+
             .st0 {
                 stroke: var(--left-menu-l3-color);
             }
@@ -105,6 +109,10 @@
                     fill: var(--left-menu-l3-selected-color) !important;
                 }
 
+                .icon-accent-with-fill {
+                    fill: var(--left-menu-l3-selected-color) !important;
+                }
+
                 .st0 {
                     stroke: var(--left-menu-l3-selected-color) !important;
                 }
@@ -127,6 +135,10 @@
         .menu-level-3-svg-icon {
             svg {
                 .icon-with-fill {
+                    fill: var(--left-menu-l3-hover-color) !important;
+                }
+
+                .icon-accent-with-fill {
                     fill: var(--left-menu-l3-hover-color) !important;
                 }
 

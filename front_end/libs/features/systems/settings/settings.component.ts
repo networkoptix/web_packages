@@ -715,66 +715,66 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 usersNode.level2 = [];
             }
             if (this.system && this.system.userManager.users?.length > 0) {
-                const cloudUsers: Level3Item[] = [];
                 const localUsers: Level3Item[] = [];
+                const tempUsers: Level3Item[] = [];
+                const organizationUsers: Level3Item[] = [];
+                const cloudUsers: Level3Item[] = [];
+                const ldapUsers: Level3Item[] = [];
                 // TODO: Reconcile UserManager types
                 this.system.userManager.users.forEach((user: NxUser) => {
                     const id = cleanId(user.id);
-                    let additionalLabel: Translatable = this.LANG.accessRoles.Custom.label;
-                    if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
-                        if (user.groupIds.length === 0 && user.attributes === 'readonly') {
-                            additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
-                        } else if (user.groupIds.length === 1) {
-                            // @ts-expect-error Above TODO
-                            const { name } = this.system.userManager.userGroups[user.groupIds[0]];
-                            additionalLabel = this.LANG.accessRoles[name]?.label || name;
-                        } else if (user.groupIds.length >= 2) {
-                            additionalLabel = {
-                                value: this.LANG.userGroups.multiple,
-                                params: { number: user.groupIds.length.toString() },
-                            };
-                        }
-                    } else {
-                        additionalLabel =
-                            user.type !== UserType.cloud && user.name === 'admin'
-                                ? this.LANG.accessRoles.Owner.label || 'Owner'
-                                : this.LANG.accessRoles[user.role.name]?.label || user.role.name;
-                    }
+                    const additionalLabel = this.getUserMenuAdditionalLabel(user);
+                    const svgIcon = this.getUserMenuSvgIcon(user);
+                    const label =
+                        user.type === UserType.cloud ? user.email : user.name || user.email;
                     const node: Level3Item = {
                         id,
                         additionalLabel,
                         disabled: !user.isEnabled,
-                        label: user.name || user.email,
+                        label,
                         path: 'users/' + id,
-                        svgIcon: user.type === UserType.temporaryLocal ? 'user_temp' : 'user',
+                        svgIcon,
                     };
-                    if (user.type === UserType.cloud) {
-                        node.svgIcon = 'user_cloud';
-                        node.icon = '';
-                        node.label = user.email;
+                    if (user.type === UserType.local) {
+                        localUsers.push(node);
+                    } else if (user.type === UserType.temporaryLocal) {
+                        tempUsers.push(node);
+                    } else if (user.type === UserType.cloud) {
                         cloudUsers.push(node);
+                    } else if (user.type === UserType.ldap) {
+                        ldapUsers.push(node);
                     } else {
+                        // Defaulting to localUsers since that is what it always was
+                        // Would be a good place to put an error logger to see why it's missed
                         localUsers.push(node);
                     }
                 });
 
-                usersNode.level3 = [];
                 const sortByEmailLabel = alphabeticalSort<Level3Item>(
                     this.locale,
                     ({ label }) => label,
                 );
-                if (localUsers.length) {
-                    usersNode.level3.push(...localUsers.sort(sortByEmailLabel));
-                    if (cloudUsers.length) {
-                        usersNode.level3.push({ horizontal: true } as Level3Item);
-                    }
-                    // Hack to get a horizontal divider
-                    // between local and cloud users
-                    // (See menu.component.html)
+
+                const allUsers: Level3Item[] = [];
+                allUsers.push(...localUsers.sort(sortByEmailLabel));
+                if (tempUsers.length > 0) {
+                    allUsers.push({ horizontal: true } as Level3Item);
                 }
-                if (cloudUsers.length) {
-                    usersNode.level3.push(...cloudUsers.sort(sortByEmailLabel));
+                allUsers.push(...tempUsers.sort(sortByEmailLabel));
+                if (organizationUsers.length > 0) {
+                    allUsers.push({ horizontal: true } as Level3Item);
                 }
+                allUsers.push(...organizationUsers.sort(sortByEmailLabel));
+                if (cloudUsers.length > 0) {
+                    allUsers.push({ horizontal: true } as Level3Item);
+                }
+                allUsers.push(...cloudUsers.sort(sortByEmailLabel));
+                if (ldapUsers.length > 0) {
+                    allUsers.push({ horizontal: true } as Level3Item);
+                }
+                allUsers.push(...ldapUsers.sort(sortByEmailLabel));
+
+                usersNode.level3 = allUsers;
             }
         } else {
             // remove Users
@@ -864,6 +864,44 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.menuSearchable =
             this.editCameras() && this.system.permissionManager.isAdmin$$() && this.editUsers();
         this.updateContent();
+    }
+
+    getUserMenuAdditionalLabel(user: NxUser): Translatable {
+        let additionalLabel: Translatable = this.LANG.accessRoles.Custom.label;
+        if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
+            if (user.groupIds.length === 0 && user.attributes === 'readonly') {
+                additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
+            } else if (user.groupIds.length === 1) {
+                // @ts-expect-error TODO: Reconcile UserManager types
+                const { name } = this.system.userManager.userGroups[user.groupIds[0]];
+                additionalLabel = this.LANG.accessRoles[name]?.label || name;
+            } else if (user.groupIds.length >= 2) {
+                additionalLabel = {
+                    value: this.LANG.userGroups.multiple,
+                    params: { number: user.groupIds.length.toString() },
+                };
+            }
+        } else {
+            additionalLabel =
+                user.type !== UserType.cloud && user.name === 'admin'
+                    ? this.LANG.accessRoles.Owner.label || 'Owner'
+                    : this.LANG.accessRoles[user.role.name]?.label || user.role.name;
+        }
+        return additionalLabel;
+    }
+    getUserMenuSvgIcon(user: NxUser): string {
+        switch (user.type) {
+            case UserType.cloud:
+                return 'user_cloud';
+            case UserType.temporaryLocal:
+                return 'user_temp';
+            case UserType.ldap:
+                return 'user_ldap';
+            case UserType.local:
+                return 'user';
+            default:
+                return 'user';
+        }
     }
 
     getCameraStatusIcon({
