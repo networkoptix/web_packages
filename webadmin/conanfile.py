@@ -1,5 +1,8 @@
-from conans import ConanFile, tools
-from conans.errors import ConanException
+from conan import ConanFile
+from conan.errors import ConanException
+from conan.tools.env import Environment
+from conan.tools.files import copy
+from conan.tools.scm import Git
 from pathlib import Path
 import os
 import shutil
@@ -13,15 +16,19 @@ class WebadminConan(ConanFile):
     no_copy_source = True
 
     def set_version(self):
-        git = tools.Git()
-        self.version = git.get_revision()
+        git = Git(self)
+        self.version = git.get_commit()
 
     def source(self):
-        # Using default for local building fallback.
-        gitlab_url = os.getenv("DEFAULT_GIT_URL") or 'git@gitlab.ru.nxteam.dev'
-        # Cannot use the `scm` attribute because the version is set dynamically.
-        git = tools.Git()
-        git.clone(f"{gitlab_url}:dev/cloud_portal.git", self.version, shallow=True)
+        gitlab_url = os.getenv("DEFAULT_GIT_URL") or 'git@gitlab.nxvms.dev'
+        git = Git(self)
+        git.fetch_commit(f"{gitlab_url}:dev/cloud_portal.git", commit=self.version)
+
+    def generate(self):
+        env = Environment()
+        env.define("NPM_CONFIG_CACHE", str(Path(self.build_folder) / ".npm"))
+        env.define("NG_CLI_ANALYTICS", "false")
+        env.vars(self).save_script("buildenv")
 
     def build(self):
         self.run(" ".join([
@@ -36,16 +43,8 @@ class WebadminConan(ConanFile):
 
         os.rename(Path("customization_pack-default") / "package.zip", "package.zip")
 
-        env = {
-            "NPM_CONFIG_CACHE": str(Path(self.build_folder) / ".npm"),
-            "NG_CLI_ANALYTICS": "false",
-        }
-
-        with tools.environment_append(env):
-            self.run(Path(self.source_folder) / "webadmin"/ "build.sh")
+        self.run(Path(self.source_folder) / "webadmin"/ "build.sh")
 
     def package(self):
-        os.rename(
-            Path(self.build_folder) / "webadmin.zip", Path(self.package_folder) / "webadmin.zip")
-        shutil.copy(
-            Path(self.source_folder) / "webadmin" / "apply_customization.py", self.package_folder)
+        copy(self, "webadmin.zip", self.build_folder, self.package_folder)
+        copy(self, "apply_customization.py", f"{self.source_folder}/webadmin", self.package_folder)
