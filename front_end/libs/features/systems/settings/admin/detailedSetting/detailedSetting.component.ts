@@ -1,5 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
 
+import staticLang from '@language_static';
+
 type SettingValue = string | boolean | number;
 
 interface SystemSetting {
@@ -29,4 +31,6 @@ export class NxSystemDetailedSettingComponent {
     getType(value: SettingValue): string {
         return typeof value;
     }
+
+    LANG = staticLang;
 }
