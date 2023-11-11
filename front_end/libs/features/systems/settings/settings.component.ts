@@ -915,10 +915,13 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         if (parentServer?.status === 'offline') {
             return menus.systemSettings.cameras.statusIcons.offline;
         }
-        if (scheduleEnabled && recordingStatus !== RecordingStatus.Recording) {
+        if (recordingStatus === RecordingStatus.Recording) {
+            return menus.systemSettings.cameras.statusIcons.recording;
+        }
+        if (scheduleEnabled) {
             return menus.systemSettings.cameras.statusIcons.scheduled;
         }
-        if (this.archivesPresent.has(id) && recordingStatus !== RecordingStatus.Recording) {
+        if (this.archivesPresent.has(id)) {
             return menus.systemSettings.cameras.statusIcons.archive;
         }
         return menus.systemSettings.cameras.statusIcons[status.toLowerCase()];
