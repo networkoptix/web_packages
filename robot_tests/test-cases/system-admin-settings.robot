@@ -7,69 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-14. Changes made in the thick client are displayed in the security block in Cloud Portal
-    [Tags]    C65723
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-
-    Log    Step 1
-    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
-
-    Log    Step 2
-    ${settings}=   Create Dictionary    auditTrailEnabled=${true}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
-
-    Log    Step 3
-    ${settings}=   Create Dictionary    trafficEncryptionForced=${true}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
-
-    Log    Step 4
-    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${true}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
-
-    Log    Step 5
-    ${settings}=   Create Dictionary    videoTrafficEncryptionForced=${False}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-
-    Log    Step 6
-    ${settings}=   Create Dictionary    trafficEncryptionForced=${False}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-
-    Log    Step 7
-    ${settings}=   Create Dictionary    sessionLimitMinutes=${30}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    ${value}=   Get Value    ${TIME NUMBER INPUT}
-    Run Keyword If    ${value} != 30    Fail
-    
-    Log    Step 8
-    ${settings}=   Create Dictionary    sessionLimitMinutes=${0}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
-
 15. Security block is available for administrator or owner
     [Tags]    C65697
     Log    Preconditions

@@ -270,7 +270,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
 
 def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Mediaserver):
     """
-    [tags]    system    cloud    webadmin    system settings    C69741
+    [tags]    system    cloud    webadmin    system settings    C69741    C65723
     """
     with get_chrome() as driver:
         server.api.restore_default_general_settings()
@@ -331,6 +331,49 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
         assert settings.autodiscovery_option().is_checked()
         assert settings.statistics_allowed_option().is_checked()
         assert settings.optimize_camera_settings_option().is_checked()
+
+        # https://networkoptix.testrail.net/index.php?/cases/view/65723
+        server.api.set_system_settings({'auditTrailEnabled': False})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.audit_trail_option().is_checked()
+
+        server.api.set_system_settings({'auditTrailEnabled': True})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.audit_trail_option().is_checked()
+
+        server.api.set_system_settings({'trafficEncryptionForced': False})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.force_encrypted_connections_option().is_checked()
+
+        server.api.set_system_settings({'trafficEncryptionForced': True})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.force_encrypted_connections_option().is_checked()
+
+        server.api.set_system_settings({'videoTrafficEncryptionForced': False})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.video_traffic_encryption_option().is_checked()
+
+        server.api.set_system_settings({'videoTrafficEncryptionForced': True})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.video_traffic_encryption_option().is_checked()
+
+        server.api.set_system_settings({'sessionLimitMinutes': 0})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.limit_session_duration_option().is_checked()
+
+        new_session_limit_days = 1
+        server.api.set_system_settings({'sessionLimitMinutes': new_session_limit_days * 24 * 60})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.limit_session_duration_option().is_checked()
+        assert settings.get_session_duration_limit() == new_session_limit_days
 
 
 def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
