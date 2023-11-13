@@ -73,10 +73,10 @@ class SystemLeftMenu:
 
     def add_users_button(self):
         return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
-    
+
     def add_user_email_input(self):
         return TextField(self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
-    
+
     def add_user_modal_button(self):
         return Button(self.driver, "//form[@name='addUserForm']//nx-process-button[@data-testid='addUserBtn']")
 

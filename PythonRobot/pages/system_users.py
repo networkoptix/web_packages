@@ -23,16 +23,16 @@ class SystemUsers:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-modal-remove-user-content//button[contains(text(),'{REMOVE_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
-    
+
     def user_header_text(self):
         return PageText(self.driver, "//nx-system-settings-component//nx-block/..//header//h2")
-    
+
     def user_name_text(self):
         return PageText(self.driver, "//nx-system-settings-component//nx-block/..//header//span[contains(@class, 'user-name')]")
-    
+
     def access_level_dropdown(self):
         return DropDown(self.driver, "//nx-system-settings-component//nx-block/..//nx-section//button[@id='componentId']")
-    
+
     def access_level_dropdown_option(self, permissions):
         return DropDownOption(self.driver,
             f"//nx-system-settings-component//nx-block/..//nx-section"

@@ -35,15 +35,15 @@ class HistoryPage:
         return collected_links
 
     def get_releases_tab(self) -> '_Tab':
-        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")' 
+        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")'
                              f' and text()="{self._variables.RELEASES_TAB_TEXT}"]')
 
     def get_patches_tab(self) -> '_Tab':
-        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")' 
+        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")'
                              f' and text()="{self._variables.PATCHES_TAB_TEXT}"]')
 
     def get_betas_tab(self) -> '_Tab':
-        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")' 
+        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")'
                              f' and text()="{self._variables.BETAS_TAB_TEXT}"]')
 
     def _get_tab(self, locator):

@@ -121,7 +121,7 @@ class LoginDialog:
     def _get_error_message(self) -> PageText:
         return PageText(
             self._driver,
-            '''//nx-authorize-email-component//p[contains(@class, "error-label")] | 
+            '''//nx-authorize-email-component//p[contains(@class, "error-label")] |
             //nx-authorize-password-component//p[contains(@class, "error-label")]''',
             )
 
