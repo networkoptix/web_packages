@@ -268,6 +268,71 @@ def changing_page_without_saving_changes(server: Mediaserver):
         assert settings.optimize_camera_settings_option().is_checked()
 
 
+def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings    C69741
+    """
+    with get_chrome() as driver:
+        server.api.restore_default_general_settings()
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+
+        server.api.set_system_settings({'autoDiscoveryEnabled': False})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.autodiscovery_option().is_checked()
+
+        server.api.set_system_settings({'autoDiscoveryEnabled': True})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.autodiscovery_option().is_checked()
+
+        server.api.set_system_settings({'statisticsAllowed': False})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.statistics_allowed_option().is_checked()
+
+        server.api.set_system_settings({'statisticsAllowed': True})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.statistics_allowed_option().is_checked()
+
+        server.api.set_system_settings({'cameraSettingsOptimization': False})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.optimize_camera_settings_option().is_checked()
+
+        server.api.set_system_settings({'cameraSettingsOptimization': True})
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.optimize_camera_settings_option().is_checked()
+
+        server.api.set_system_settings({
+            'autoDiscoveryEnabled': False,
+            'statisticsAllowed': False,
+            'cameraSettingsOptimization': False,
+            })
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.autodiscovery_option().is_checked()
+        assert not settings.statistics_allowed_option().is_checked()
+        assert not settings.optimize_camera_settings_option().is_checked()
+
+        server.api.set_system_settings({
+            'autoDiscoveryEnabled': True,
+            'statisticsAllowed': True,
+            'cameraSettingsOptimization': True,
+            })
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.autodiscovery_option().is_checked()
+        assert settings.statistics_allowed_option().is_checked()
+        assert settings.optimize_camera_settings_option().is_checked()
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -284,3 +349,4 @@ if __name__ == '__main__':
         changing_several_random_checkboxes_works(cloud_server_first)
         system_and_security_settings_block_is_not_available_for_other_users(cloud_server_first)
         changing_page_without_saving_changes(cloud_server_first)
+        changes_made_in_the_thick_client_are_displayed_in_system_settings(cloud_server_first)

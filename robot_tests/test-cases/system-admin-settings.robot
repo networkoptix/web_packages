@@ -7,68 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-12. Changes made in the thick client are displayed in System Settings block in Cloud Portal
-    [Tags]    C69741
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-    Log    Step 1
-    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${false}
-
-    Log    Step 2
-    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${true}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
-
-    Log    Step 3
-    ${settings}=   Create Dictionary    statisticsAllowed=${false}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
-
-    Log    Step 4
-    ${settings}=   Create Dictionary    statisticsAllowed=${true}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${true}
-
-    Log    Step 5
-    ${settings}=   Create Dictionary    cameraSettingsOptimization=${false}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
-
-    Log    Step 6
-    ${settings}=   Create Dictionary    cameraSettingsOptimization=${true}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${true}
-
-    Log    Step 7
-    ${settings}=   Create Dictionary    autoDiscoveryEnabled=${false}   statisticsAllowed=${false}    cameraSettingsOptimization=${false}
-    Set System Settings    ${server url}    ${settings}   ${system}[token]
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${false}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${false}
-
-    Log    Step 8
-    Reset Settings To Default    ${system['token']}    ${server url}
-    Reload Page
-    Wait Until Settings Are Visible
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${true}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${true}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${true}
-
 13. Checking the dependency of system settings checkboxes
     [Tags]    C69742
     Log    Preconditions
