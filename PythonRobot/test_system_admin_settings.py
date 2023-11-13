@@ -125,6 +125,7 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
         settings.autodiscovery_option().click()
         settings.statistics_allowed_option().click()
         settings.optimize_camera_settings_option().click()
+        settings.get_unsaved_changes_label().wait_until_not_visible(1)
         settings.save()
         server.api.wait_until_server_setting_to_be(
             'autoDiscoveryEnabled',
@@ -140,21 +141,24 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
             )
 
         server_settings = server.api.get_system_settings_from_server()
+        # https://networkoptix.testrail.net/index.php?/cases/view/69738
         settings.autodiscovery_option().click()
         settings.statistics_allowed_option().click()
         settings.optimize_camera_settings_option().click()
+        settings.get_unsaved_changes_label().wait_until_not_visible(1)
         settings.cancel()
-        server.api.wait_until_server_setting_to_be(
-            'autoDiscoveryEnabled',
-            server_settings['autoDiscoveryEnabled'],
-            )
-        server.api.wait_until_server_setting_to_be(
-            'statisticsAllowed',
-            server_settings['statisticsAllowed'],
-            )
+        settings.get_unsaved_changes_label().wait_until_visible(1)
+        auto_discovery_enabled = server_settings['autoDiscoveryEnabled']
+        statistics_allowed = server_settings['statisticsAllowed']
+        camera_settings_optimized = server_settings['cameraSettingsOptimization']
+        assert settings.autodiscovery_option().is_checked() == auto_discovery_enabled
+        assert settings.statistics_allowed_option().is_checked() == statistics_allowed
+        assert settings.optimize_camera_settings_option().is_checked() == camera_settings_optimized
+        server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', auto_discovery_enabled)
+        server.api.wait_until_server_setting_to_be('statisticsAllowed', statistics_allowed)
         server.api.wait_until_server_setting_to_be(
             'cameraSettingsOptimization',
-            server_settings['cameraSettingsOptimization'],
+            camera_settings_optimized,
             )
 
 

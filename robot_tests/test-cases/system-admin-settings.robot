@@ -7,24 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-9. Cancel changes in System Settings block
-    [Tags]    C69738
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-    ${tested settings}=   Create List    ${ENABLE AUTO DISCOVERY CHECKBOX}    ${SEND ANONYMOUS USAGE CHECKBOX}    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-
-    FOR    ${setting}    IN    @{tested settings}
-        Checkbox Is Selected    ${setting}    ${True}
-        Change Setting    ${setting}
-        Slow    Click Button    ${CANCEL BUTTON}    timeout=0.5
-        Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-        Elements Should Not Be Visible    ${SYSTEM SAVE}    ${CANCEL BUTTON}
-        Checkbox Is Selected    ${setting}    ${True}
-    END
-
 10. Moving to a different page after making changes in System Settings without saving them first
     [Tags]    C69739
     Log    Preconditions

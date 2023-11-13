@@ -411,10 +411,14 @@ class _GeneralSettings:
         self._get_session_limit_spin_box().set_value(str(value))
 
     def save(self):
-        self._get_save_button().click()
+        button = self._get_save_button()
+        button.click()
+        button.wait_until_not_visible(1)
 
     def cancel(self):
-        self._get_cancel_button().click()
+        button = self._get_cancel_button()
+        button.click()
+        button.wait_until_not_visible(1)
 
     def get_system_name(self) -> str:
         return TextField(self._driver, '//nx-text-editable').get_text()
@@ -427,3 +431,9 @@ class _GeneralSettings:
 
     def get_security_settings_form(self) -> Pane:
         return Pane(self._driver, '//form[@name="systemAndSecuritySettingsForm"]')
+
+    def get_unsaved_changes_label(self) -> PageText:
+        return PageText(
+            self._driver,
+            '//nx-apply//div[contains(text(), "No unsaved changes")]',
+            )
