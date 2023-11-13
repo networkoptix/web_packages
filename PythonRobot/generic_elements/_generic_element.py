@@ -18,20 +18,14 @@ class Element:
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._locator = locator
-        self._element = None
 
     def clear_text(self):
         self.wait_until_clickable()
-        self._element.clear()
+        self._get_element().clear()
 
     def click(self):
         self.wait_until_clickable()
-        try:
-            self._element.click()
-        except StaleElementReferenceException:
-            self._element = self._driver.find_element(By.XPATH, self._locator)
-            self._element.click()
-            print(".click() intercepted a 'StaleElementReferenceException'")
+        self._get_element().click()
 
     def count(self, timeout: float = 10.0):
         # Wait for the page to fully load (by waiting for the document.readyState to be 'complete')
@@ -49,30 +43,30 @@ class Element:
     def hover(self):
         self.wait_until_visible()
         action = ActionChains(self._driver)
-        action.move_to_element(self._element).perform()
+        action.move_to_element(self._get_element()).perform()
 
     def get_attribute(self, attribute: str):
         self.wait_until_visible()
-        return self._element.get_attribute(attribute)
+        return self._get_element().get_attribute(attribute)
 
     def get_property(self, name: str):
         self.wait_until_visible()
-        return self._element.get_property(name)
+        return self._get_element().get_property(name)
 
     def get_screenshot(self) -> bytes:
         self.wait_until_visible()
-        return self._element.screenshot_as_png
+        return self._get_element().screenshot_as_png
 
     def is_focused(self):
         self.wait_until_clickable()
-        return self._element == self._driver.switch_to.active_element
+        return self._get_element() == self._driver.switch_to.active_element
 
     def is_visible(self):
-        return False if self._element is None else self._element.is_displayed()
+        return False if self._get_element() is None else self._get_element().is_displayed()
 
     def send_keys(self, text: str):
         self.wait_until_clickable()
-        self._element.send_keys(text)
+        self._get_element().send_keys(text)
 
     def should_contain(self, text: str):
         if text not in self.text():
@@ -80,22 +74,22 @@ class Element:
 
     def text(self):
         self.wait_until_visible()
-        return self._element.text
+        return self._get_element().text
 
     def value_of_css_property(self, style_property: str):
         self.wait_until_visible()
-        return self._element.value_of_css_property(style_property)
+        return self._get_element().value_of_css_property(style_property)
 
     def wait_until_clickable(self, timeout: float = _DEFAULT_TIMEOUT):
         started_at = time.monotonic()
         while True:
             try:
-                self._element = self._driver.find_element(By.XPATH, self._locator)
-            except NoSuchElementException:
-                _logger.debug('Element with locator %s not in DOM yet', self._locator)
+                element = self._get_element()
+            except ElementNotInDOM as e:
+                _logger.debug(e)
             else:
                 try:
-                    if self._element.is_enabled():
+                    if element.is_enabled():
                         return
                 except StaleElementReferenceException:
                     _logger.debug('Element with locator %s has gone or updated', self._locator)
@@ -107,11 +101,11 @@ class Element:
         started_at = time.monotonic()
         while True:
             try:
-                self._element = self._driver.find_element(By.XPATH, self._locator)
-            except NoSuchElementException:
+                element = self._get_element()
+            except ElementNotInDOM:
                 return
             try:
-                if not self._element.is_enabled():
+                if not element.is_enabled():
                     return
             except StaleElementReferenceException:
                 return
@@ -123,11 +117,11 @@ class Element:
         started_at = time.monotonic()
         while True:
             try:
-                self._element = self._driver.find_element(By.XPATH, self._locator)
-            except NoSuchElementException:
+                element = self._get_element()
+            except ElementNotInDOM:
                 return
             try:
-                if not self._element.is_displayed():
+                if not element.is_displayed():
                     return
             except StaleElementReferenceException:
                 return
@@ -139,12 +133,12 @@ class Element:
         started_at = time.monotonic()
         while True:
             try:
-                self._element = self._driver.find_element(By.XPATH, self._locator)
-            except NoSuchElementException:
-                _logger.debug('Element with locator %s not in DOM yet', self._locator)
+                element = self._get_element()
+            except ElementNotInDOM as e:
+                _logger.debug(e)
             else:
                 try:
-                    if self._element.is_displayed():
+                    if element.is_displayed():
                         return
                 except StaleElementReferenceException:
                     _logger.debug('Element with locator %s has gone or updated', self._locator)
@@ -157,18 +151,24 @@ class Element:
 
     def is_enabled(self, timeout: float = _DEFAULT_TIMEOUT) -> bool:
         self.wait_until_visible(timeout)
-        return self._element.is_enabled()
+        return self._get_element().is_enabled()
 
     def find_element_by_partial_link_text(self, text: str):
         self.wait_until_visible()
-        return self._element.find_element_by_partial_link_text(text)
+        return self._get_element().find_element_by_partial_link_text(text)
 
     def get_html_attribute(self, attribute_name: str):
         self.wait_until_visible()
-        return self._element.get_attribute(attribute_name)
+        return self._get_element().get_attribute(attribute_name)
 
     def find_element_by_id(self, child_id: str):
-        return self._element.find_element_by_id(child_id)
+        return self._get_element().find_element_by_id(child_id)
+
+    def _get_element(self):
+        try:
+            return self._driver.find_element(By.XPATH, self._locator)
+        except NoSuchElementException:
+            raise ElementNotInDOM(f"Element with locator {self._locator!r} not in DOM")
 
 
 class ElementNotInDOM(Exception):
