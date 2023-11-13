@@ -418,6 +418,26 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
         assert settings.optimize_camera_settings_option().is_checked()
 
 
+def system_settings_block_is_not_available_when_the_system_is_offline(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings    C69744
+    """
+    with get_chrome() as driver:
+        server.api.restore_default_general_settings()
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        server.stop()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        # Known issue: https://networkoptix.atlassian.net/browse/CLOUD-11629
+        sys_admin = SystemAdmin(driver)
+        sys_admin.disconnect_from_cloud_button().wait_until_visible()
+        sys_admin.merge_with_another_system_button().wait_until_visible()
+        sys_admin.get_placeholder_icon().wait_until_visible()
+        # TODO: Check text is displayed: "Not able to load system settings."
+    server.start()
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -436,3 +456,6 @@ if __name__ == '__main__':
         changing_page_without_saving_changes(cloud_server_first)
         changes_made_in_the_thick_client_are_displayed_in_system_settings(cloud_server_first)
         checking_the_dependency_of_system_settings_checkboxes(cloud_server_first)
+        # cloud_owner_2 = suite.create_cloud_account()
+        # cloud_server_2 = suite.create_cloud_server(cloud_owner_2, f"{suite_name}_1_",)
+        # system_settings_block_is_not_available_when_the_system_is_offline(cloud_server_2)

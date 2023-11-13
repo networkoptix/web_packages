@@ -283,6 +283,13 @@ class SystemAdmin:
         locator = "//header//nx-header-logo-area//div[@class='arrow-btn ng-star-inserted']"
         return Button(self.driver, locator)
 
+    def get_placeholder_icon(self):
+        return Image(
+            self.driver,
+            '//*[name()="svg-icon" and contains(@data-src,'
+            '"/images/placeholders/section/system_settings_placeholder.svg")]',
+            )
+
 
 class FailedToAccessSystemPage:
 

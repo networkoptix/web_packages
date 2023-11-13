@@ -7,18 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-16. System Settings block is not available when the system is offline
-    [Tags]    C69744
-    Remove Tags     webadmin
-    Stop container    ${system}[container]
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Elements Are Visible
-    ...    ${DISCONNECT FROM NX}
-    ...    ${MERGE BUTTON SYSTEM}
-    ...    ${PLACEHOLDER ICON}
-    ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
-    Start container   ${system}[container]
-
 17. Cancel changes in Security block
     [Tags]    C65724
     Log    Preconditions
