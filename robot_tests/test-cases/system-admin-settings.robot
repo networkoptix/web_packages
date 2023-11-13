@@ -200,35 +200,6 @@ Force Tags        system    cloud    webadmin    system settings
     ...    //span[text()='${NOT ABLE TO LOAD TEXT}']
     Start container   ${system}[container]
 
-#System settings block view for different System versions
-#    [Tags]    C69743    C65829    cloud    system settings    
-#    ${rand}=   Generate Random String
-#    ${4.0 system}=   Create Base System    system_4.0_${rand}    image=${image 4.0}    owner=${EMAIL OWNER}
-#    Set Suite Variable    ${4.0 cont}    ${4.0 system}[cont]
-#    ${3.2 system id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
-#    ${ids}=   Create List    ${3.2 system id}    ${4.0 system}[cloud id]
-#    ${urls}=   Create List    ${3.2 system url}    https://${QABURBANK IP}:${4.0 system}[port]
-#    Common Restart Logout    ${ENV}
-#    FOR    ${url}    ${id}    IN ZIP    ${urls}    ${ids}
-#        Set System Settings    ${system['local auth']}    ${url}     ${default settings}
-#        Log in to user and system    ${EMAIL OWNER}    ${id}
-#        Reload Page
-#        Run Keyword If    '''${url}''' == '''${3.2 system url}'''    Wait Until Settings Are Visible    timeout=60    old system=True
-#        ...    ELSE    Wait Until Settings Are Visible    timeout=60    old system=False
-#        Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-#        Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-#        Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-#        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
-#
-#        Changing setting changes it on server    ${ENABLE AUTO DISCOVERY CHECKBOX}    autoDiscoveryEnabled    ${url}
-#        Changing setting changes it on server    ${SEND ANONYMOUS USAGE CHECKBOX}    statisticsAllowed    ${url}
-#        Changing setting changes it on server    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    cameraSettingsOptimization    ${url}
-#        Changing setting changes it on server    ${ENABLE AUDIT TRAIL CHECKBOX}    auditTrailEnabled    ${url}
-#        Log Out
-#    END
-#
-#    Delete Docker Server    ${4.0 system}[id]
-
 17. Cancel changes in Security block
     [Tags]    C65724
     Log    Preconditions
@@ -272,44 +243,6 @@ Force Tags        system    cloud    webadmin    system settings
     Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
     Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
     Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
-    
-# The testcase below is retired - no dependency of checkboxes is expected
-# Checking the dependency of security settings checkboxes
-    # [Tags]    C65700    cloud    webadmin    system settings    
-    # Log    Preconditions
-    # Set System Settings    ${system['local auth']}    ${server url}    ${default settings}
-    
-    # Log    Step 1
-    # Log in to system    ${system}    ${system}[owner]
-    # Wait Until Settings Are Visible    timeout=60
-    # Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    # Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
-    # Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    # Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-    # Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-    # Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
-
-    # Log    Step 2
-    # Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
-    # Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    # Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${True}
-    # Run Keyword And Expect Error    *    Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
-    
-    # Log    Step 3
-    # Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
-    # Wait Until Element is Visible    ${ENCRYPTING VIDEO WARNING}
-    # Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${True}
-    # Element Style Should Be    ${ENCRYPTING VIDEO WARNING}    color    ${ERROR COLOR WITH OPACITY}
-    
-    # Log    Step 4
-    # Change Setting    ${ALLOW ONLY SECURE CHECKBOX}    buttons=False
-    # Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
-    # Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-    # Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-
-    # Page Should Not Contain Element    ${ENCRYPTING VIDEO WARNING}
-    # Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-    # Wait until elements are not visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
 
 18. Check Limit session duration
     [Tags]    C65703
@@ -522,17 +455,6 @@ Force Tags        system    cloud    webadmin    system settings
     Should Be Equal As Strings    ${resp}    200
 
     Go To    ${ENV}
-
-#Security block view for 3 dot 2 System
-#    [Tags]    C65829    cloud    system settings    
-#    Log    Preconditions
-#    ${settings}=   Create Dictionary    auditTrailEnabled=true
-#    Set System Settings via API    ${system['local auth']}    ${3.2 system url}    ${settings}
-#    ${3.2 sys id}=   Get Cloud System Id    ${3.2 system url}    ${system}[local auth]
-#
-#    Log in to user and system    ${EMAIL OWNER}    ${3.2 sys id}
-#    Wait Until Settings Are Visible    old system=True
-#    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
 
 20. Changes in System Settings block are displayed in thick client
     [Tags]    C69740
