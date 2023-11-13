@@ -4,6 +4,7 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
+from nx_modal import ApplyChangesModalDialog
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
@@ -213,6 +214,60 @@ def system_and_security_settings_block_is_not_available_for_other_users(server: 
         settings.get_security_settings_form().wait_until_not_visible()
 
 
+def changing_page_without_saving_changes(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings    C69739
+    """
+    with get_chrome() as driver:
+        server.api.restore_default_general_settings()
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        settings.autodiscovery_option().unselect()
+        settings.statistics_allowed_option().unselect()
+        settings.optimize_camera_settings_option().unselect()
+        settings.get_unsaved_changes_label().wait_until_not_visible(1)
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        SystemAdmin(driver).get_information_tab().click()
+        modal_window = ApplyChangesModalDialog(driver)
+        modal_window.wait_until_visible()
+        modal_window.discard()
+        assert SystemAdmin(driver).get_information_tab().no_alerts()
+
+        HeaderNav(driver).click_tab_by_name('Settings')
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        settings.autodiscovery_option().unselect()
+        settings.statistics_allowed_option().unselect()
+        settings.optimize_camera_settings_option().unselect()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        SystemAdmin(driver).get_information_tab().click()
+        modal_window.wait_until_visible()
+        modal_window.cancel()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        assert not settings.autodiscovery_option().is_checked()
+        assert not settings.statistics_allowed_option().is_checked()
+        assert not settings.optimize_camera_settings_option().is_checked()
+
+        SystemAdmin(driver).get_information_tab().click()
+        modal_window.wait_until_visible()
+        modal_window.close()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not settings.is_ok_button_visible()
+        assert not settings.is_cancel_button_visible()
+        assert settings.autodiscovery_option().is_checked()
+        assert settings.statistics_allowed_option().is_checked()
+        assert settings.optimize_camera_settings_option().is_checked()
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -228,3 +283,4 @@ if __name__ == '__main__':
         test_changing_settings_changes_it_on_server(cloud_server_first)
         changing_several_random_checkboxes_works(cloud_server_first)
         system_and_security_settings_block_is_not_available_for_other_users(cloud_server_first)
+        changing_page_without_saving_changes(cloud_server_first)

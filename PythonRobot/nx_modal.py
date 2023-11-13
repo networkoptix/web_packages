@@ -62,3 +62,25 @@ class NxModalDialog(NxModalWindow):
     def submit(self):
         submit_button = self._submit_button()
         submit_button.click()
+
+
+class ApplyChangesModalDialog(NxModalDialog):
+
+    def __init__(self, driver: WebDriver):
+        super().__init__(driver, '//nx-modal-apply-content')
+
+    def _cancel_button(self) -> Button:
+        return Button(
+            self._driver,
+            self._locator + '//button[@data-testid="cancelChanges"]'
+            )
+
+    def _discard_button(self) -> Button:
+        return Button(
+            self._driver,
+            self._locator + '//nx-cancel-button',
+            )
+
+    def discard(self):
+        self._discard_button().click()
+        self.wait_until_not_visible()
