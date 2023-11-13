@@ -108,7 +108,7 @@ def get_lang_list():
 
 
 def logout_japanese(driver):
-    Pane(driver, rb.BACKDROP).wait_until_does_not_exist()
+    Pane(driver, rb.BACKDROP).wait_until_not_visible()
     element = """//header//li[contains(@class, 'dropdown-item-container')]//a/span[contains(text(),"ログアウト")]"""
     DropDownOption(driver, element).wait_until_visible()
 

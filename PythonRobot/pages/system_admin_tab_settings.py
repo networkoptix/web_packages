@@ -6,7 +6,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from generic_elements import Button
-from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Image
 from generic_elements import Link
@@ -71,7 +70,7 @@ class _ServersSection:
     def _is_active(self) -> bool:
         try:
             self.get_default_server_page()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -115,7 +114,7 @@ class _ServerPage:
         locator = ('//div[contains(@class,"toast")]//span[contains(@class,"toast-content")]'
                    f'/../span[contains(text(),"{self._rb.SERVER_RESTARTED_TEXT}")]')
         PageText(self._driver, locator).wait_until_visible(timeout=30)
-        PageText(self._driver, locator).wait_until_does_not_exist()
+        PageText(self._driver, locator).wait_until_not_visible()
 
     def get_port_field(self) -> TextField:
         return TextField(self._driver, f'//nx-numeric[@name="server-port"]/input[@id="server-port-numeric"]')
@@ -126,7 +125,7 @@ class _ServerPage:
     def has_message_server_port_is_required(self) -> bool:
         try:
             self._get_input_error_element(self._rb.SERVER_PORT_IS_REQUIRED_TEXT).wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -137,7 +136,7 @@ class _ServerPage:
                 self._driver,
                 f'//nx-apply//div[contains(@class,"warning-text") and contains(text(),"{self._rb.PORT_TOO_LOW_TEXT}")]'
             ).wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -166,7 +165,7 @@ class _ServerPage:
         while True:
             try:
                 PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]').wait_until_visible()
-            except (ElementNotVisible, ElementNotInDOM):
+            except ElementNotVisible:
                 if time.monotonic() - started_at > timeout:
                     raise TimeoutError(f"Offline status does not appear after {timeout} seconds")
                 time.sleep(0.5)
@@ -178,7 +177,7 @@ class _ServerPage:
         while True:
             try:
                 PageText(self._driver, f'//nx-alert-block//div[contains(text(),"{self._rb.SERVER_OFFLINE_TEXT}")]').wait_until_visible()
-            except (ElementNotVisible, ElementNotInDOM):
+            except ElementNotVisible:
                 break
             else:
                 if time.monotonic() - started_at > timeout:
@@ -190,7 +189,7 @@ class _ServerPage:
         while True:
             try:
                 self._get_checking_banner().wait_until_visible()
-            except (ElementNotVisible, ElementNotInDOM):
+            except ElementNotVisible:
                 if time.monotonic() - started_at > timeout:
                     raise TimeoutError(f"Banner 'Checking' does not appear after {timeout} seconds")
                 time.sleep(0.5)
@@ -202,7 +201,7 @@ class _ServerPage:
         while True:
             try:
                 self._get_checking_banner().wait_until_visible()
-            except (ElementNotVisible, ElementNotInDOM):
+            except ElementNotVisible:
                 break
             else:
                 if time.monotonic() - started_at > timeout:
@@ -270,7 +269,7 @@ def _wait_element_until_not_visible(element_getter: Callable, timeout=5):
     try:
         element = element_getter()
         element.wait_until_visible(timeout=timeout)
-    except (ElementNotVisible, ElementNotInDOM):
+    except ElementNotVisible:
         return
     else:
         raise RuntimeError(f'Element "{element}" does not disappear after {timeout} seconds')

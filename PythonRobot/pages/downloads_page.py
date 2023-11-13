@@ -17,7 +17,7 @@ class DownloadsPage:
         self._wait_until_loaded()
 
     def _wait_until_loaded(self):
-        Page(self._driver, "//nx-download-component").wait_until_exists(40)
+        Page(self._driver, "//nx-download-component").wait_until_visible(40)
 
     def get_windows_client_installer_tab(self) -> '_Tab':
         return self._get_tab('//nx-download-component//*[@id="windows"]')

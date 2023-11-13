@@ -24,7 +24,7 @@ def should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(ser
         cloud_viewer = server.get_cloud_viewer()
         LoginDialog(driver).basic_cloud_login(cloud_viewer.email, cloud_viewer.password)
         left_menu = SystemAdmin(driver).get_left_menu()
-        left_menu.get_search_field().wait_until_does_not_exist()
+        left_menu.get_search_field().wait_until_not_visible()
         print("Pass")
 
 

@@ -272,7 +272,7 @@ class IVPDPage:
 
     def validate_landing_page_objects_not_visible(self):
         for element in [self.manufactures_pane(), self.and_more(), self.devices_pane()]:
-            element.wait_until_does_not_exist()
+            element.wait_until_not_visible()
 
     def validate_on_ipvd_page(self):
         self.search_bar().wait_until_visible(timeout=60)
@@ -282,7 +282,7 @@ class IVPDPage:
         self.landing_page_text().wait_until_visible(timeout=60)
         assert self.driver.title == self.rb.IPVD_TITLE_TEXT + ' - ' + self.rb.PRODUCT_NAME
         for element in [self.ipvd_table(), self.device_details(), self.pagination(), self.export_to_csv_link()]:
-            element.wait_until_does_not_exist()
+            element.wait_until_not_visible()
 
     def validate_privacy_policy(self):
         ff = FeedbackForm(self.driver)

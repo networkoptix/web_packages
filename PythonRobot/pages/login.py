@@ -2,7 +2,6 @@ from typing import Tuple
 
 from RobotVariables import RobotVariables
 from generic_elements import Button
-from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Image
 from generic_elements import PageText
@@ -178,14 +177,14 @@ class ResetPasswordForm:
         try:
             Image(self._driver, f'{self._locator}//svg-icon[contains(@data-src, "eye.svg")]').wait_until_visible(1)
             return True
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
 
     def is_password_eye_closed(self):
         try:
             Image(self._driver, f'{self._locator}//svg-icon[contains(@data-src, "eye_closed.svg")]').wait_until_visible(1)
             return True
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
 
     def toggle_password_mask(self):

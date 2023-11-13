@@ -6,7 +6,6 @@ from typing import NamedTuple
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
-from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Link
 from generic_elements import PageText
@@ -59,7 +58,7 @@ class TabInformation:
     def is_current_system_inaccessible(self) -> bool:
         try:
             PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_CANNOT_BE_ACCESSED_TEXT}")]').wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -82,7 +81,7 @@ class TabInformation:
                 self._driver,
                 f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]',
             ).wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -90,7 +89,7 @@ class TabInformation:
     def _is_system_online(self) -> bool:
         try:
             Link(self._driver, '//nx-menu//nx-level-1-item')
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -98,7 +97,7 @@ class TabInformation:
     def no_alerts(self) -> bool:
         try:
             PageText(self._driver, f'//h2[contains(text(),"{self._variables.NO_ALERTS_TEXT}")]').wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -106,7 +105,7 @@ class TabInformation:
     def system_is_doing_well(self) -> bool:
         try:
             PageText(self._driver, f'//div[contains(text(),"{self._variables.SYSTEM_DOING_WELL_TEXT}")]').wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -160,7 +159,7 @@ class _Section:
     def has_table(self) -> bool:
         try:
             Link(self._driver, '//div[@id="nx-table"]').wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -168,7 +167,7 @@ class _Section:
     def has_card(self) -> bool:
         try:
             Link(self._driver, '//nx-single-entity').wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         else:
             return True
@@ -252,7 +251,7 @@ class _AlertsSection(_Section):
         paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
         try:
             paginator.wait_until_visible()
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return 1
         else:
             return int(paginator.get_text())
@@ -261,11 +260,11 @@ class _AlertsSection(_Section):
         offline = online = True
         try:
             Link(self._driver, '//nx-system-health-component/g[@id="Cloud/Placeholders/Offline"]')
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             offline = False
         try:
             Link(self._driver, '//nx-system-health-component/g[@class="gridAlertsCards"]')
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             online = False
         return online or offline
 

@@ -5,7 +5,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
-from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Page
 from generic_elements import PageText
@@ -43,7 +42,7 @@ class SystemOwnership:
     def ensure_cancel_ownership_transfer_not_available(self):
         try:
             self._cancel_transfer_ownership_button().wait_until_visible(2)
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             _logger.debug("Cancel ownership button is not available. Continue")
         else:
             raise RuntimeError("Button 'cancel' [ownership transfer] should not be available")
@@ -59,7 +58,7 @@ class SystemOwnership:
     def ensure_change_ownership_not_available(self):
         try:
             self._change_ownership_button().wait_until_visible(2)
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             _logger.debug("Change ownership button is not available. Continue")
         else:
             raise RuntimeError("Button 'change' [ownership] should not be available")

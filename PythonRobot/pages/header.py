@@ -4,7 +4,6 @@ from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
 from generic_elements import Button
-from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import PageText
 from generic_elements import Pane
@@ -27,7 +26,7 @@ class HeaderNav:
     def is_logged_in(self) -> bool:
         try:
             self.account_dropdown().wait_until_visible(10)
-        except (ElementNotVisible, ElementNotInDOM):
+        except ElementNotVisible:
             return False
         return True
 
@@ -61,7 +60,7 @@ class HeaderNav:
             button = Button(self._driver, translated_xpath)
             try:
                 button.wait_until_visible()
-            except ElementNotInDOM:
+            except ElementNotVisible:
                 if attempt >= max_attempts:
                     raise
                 self._driver.refresh()

@@ -18,7 +18,7 @@ class HistoryPage:
         self._variables = variables
 
     def _wait_until_loaded(self):
-        Page(self._driver, "//nx-download-history").wait_until_exists(40)
+        Page(self._driver, "//nx-download-history").wait_until_visible(40)
 
     def get_download_links_for_last_version(self) -> Collection[str]:
         release_block = self._driver.find_element_by_xpath('//nx-release')

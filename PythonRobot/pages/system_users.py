@@ -48,7 +48,7 @@ class SystemUsers:
         return PageText(self.driver, f"//nx-apply//div[contains(text(), '{self.rb.NO_UNSAVED_CHANGES_TEXT}')]")
 
     def _wait_until_page_loaded(self):
-        Page(self.driver, "//nx-system-user-component").wait_until_exists(40)
+        Page(self.driver, "//nx-system-user-component").wait_until_visible(40)
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")

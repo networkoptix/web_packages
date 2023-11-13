@@ -115,7 +115,7 @@ class SystemLeftMenu:
         return Page(self.driver, self._locator)
 
     def _wait_until_page_loaded(self):
-        self._get_element().wait_until_exists(40)
+        self._get_element().wait_until_visible(40)
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
@@ -176,8 +176,8 @@ class SearchField:
     def _get_field(self):
         return TextField(self.driver, self._locator)
 
-    def wait_until_does_not_exist(self):
-        self._get_field().wait_until_does_not_exist()
+    def wait_until_not_visible(self):
+        self._get_field().wait_until_not_visible()
 
     def wait_until_visible(self):
         self._get_field().wait_until_visible()

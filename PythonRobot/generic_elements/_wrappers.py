@@ -8,7 +8,7 @@ from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
-from generic_elements import ElementNotInDOM
+from generic_elements import ElementNotVisible
 from generic_elements._generic_element import Element
 
 
@@ -23,8 +23,8 @@ class Button:
 
     def is_visible(self) -> bool:
         try:
-            self._element.wait_until_exists()
-        except ElementNotInDOM:
+            self._element.wait_until_visible()
+        except ElementNotVisible:
             return False
         return self._element.is_visible()
 
@@ -53,9 +53,6 @@ class Button:
 
     def wait_until_not_clickable(self, timeout: float = 5):
         self._element.wait_until_not_clickable(timeout)
-
-    def wait_until_does_not_exist(self):
-        self._element.wait_until_does_not_exist()
 
     def is_enabled(self) -> bool:
         self._element.wait_until_visible()
@@ -121,9 +118,6 @@ class PageText:
 
     def hover(self):
         self._element.hover()
-
-    def wait_until_does_not_exist(self, timeout: float = 5):
-        self._element.wait_until_does_not_exist(timeout)
 
     def should_contain(self, text: str):
         self._element.should_contain(text)
@@ -208,8 +202,8 @@ class TextField:
                 raise TextNotFound(f'Text field contains text "{self.get_text()}" instead of "{text}"')
             time.sleep(.1)
 
-    def wait_until_does_not_exist(self):
-        self._element.wait_until_does_not_exist()
+    def wait_until_not_visible(self):
+        self._element.wait_until_not_visible()
 
     def wait_until_has_style(self, style_name: str, expected_value: str, timeout_sec: float = 30):
         started_at = time.monotonic()
@@ -297,9 +291,6 @@ class Table:
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
 
-    def wait_until_does_not_exist(self, timeout: float = 5):
-        self._element.wait_until_does_not_exist(timeout)
-
     def get_data(self, locator="") -> Sequence[Sequence[Element]]:
         if not locator:
             locator = self.locator
@@ -361,9 +352,6 @@ class Pane:
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
 
-    def wait_until_does_not_exist(self, timeout: float = 5):
-        self._element.wait_until_does_not_exist(timeout)
-
     def find_element(self, locator, position) -> Element:
         return self._element.find_element(locator, position)
 
@@ -376,9 +364,6 @@ class Link:
 
     def wait_until_not_visible(self, timeout: float = 5):
         self._element.wait_until_not_visible(timeout)
-
-    def wait_until_does_not_exist(self, timeout: float = 5):
-        self._element.wait_until_does_not_exist(timeout)
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
@@ -456,9 +441,6 @@ class Page:
         self._driver = driver
         self._element = Element(self._driver, locator)
 
-    def wait_until_exists(self, timeout: float = 5):
-        self._element.wait_until_exists(timeout)
-
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
 
@@ -489,7 +471,7 @@ class NxCheckbox:
     def is_visible(self):
         try:
             return self._element.is_displayed()
-        except ElementNotInDOM:
+        except ElementNotVisible:
             return False
 
 

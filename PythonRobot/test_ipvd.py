@@ -76,12 +76,12 @@ def request_form_basic_validation():
         assert ff.feedback_email().get_outline_color() == after_color
         assert ff.feedback_message().get_outline_color() == after_color
         ff.feedback_cancel_button().click()
-        ff.feedback().wait_until_does_not_exist()
+        ff.feedback().wait_until_not_visible()
         ff.submit_a_request_button().click()
         ff.feedback().wait_until_visible()
         ff.feedback_close_button().wait_until_visible()
         ff.feedback_close_button().click()
-        ff.feedback().wait_until_does_not_exist()
+        ff.feedback().wait_until_not_visible()
 
 def feedback_form_basic_validations():
     """6. Feedback Form Basic Validations"""
@@ -103,11 +103,11 @@ def feedback_form_basic_validations():
         assert before_color != after_color
         assert ff.feedback_message().get_outline_color() == after_color
         ff.feedback_cancel_button().click()
-        ff.feedback().wait_until_does_not_exist()
+        ff.feedback().wait_until_not_visible()
         ff.send_device_feedback().click()
         ff.feedback().wait_until_visible()
         ff.feedback_cancel_button().click()
-        ff.feedback().wait_until_does_not_exist()
+        ff.feedback().wait_until_not_visible()
 
 if __name__ == "__main__":
     print("Running test_ipvd.py")

@@ -10,7 +10,6 @@ from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import Checkbox
-from generic_elements import ElementNotInDOM
 from generic_elements import ElementNotVisible
 from generic_elements import Image
 from generic_elements import NxCheckbox
@@ -118,7 +117,7 @@ class SystemAdmin:
                     self.driver,
                     f'//nx-modal-merge-content//p[text()="{error_message}"]',
                     ).wait_until_visible()
-            except (ElementNotVisible, ElementNotInDOM):
+            except ElementNotVisible:
                 break
             if time.monotonic() - started_at > timeout:
                 raise RuntimeError(f"System {system_name} is not ready for merge in {timeout} seconds")
@@ -257,7 +256,7 @@ class SystemAdmin:
                 break
             try:
                 PageText(self.driver, system_loaded_locator).wait_until_visible()
-            except (ElementNotInDOM, ElementNotVisible):
+            except ElementNotVisible:
                 self.driver.refresh()
                 if time.monotonic() - started_at > timeout_sec:
                     raise TimeoutError(f"{system_loaded_locator!r} is not visible after {timeout_sec} seconds")
@@ -445,7 +444,7 @@ class _BlockOne:
     def has_checkbox_with_id(self, checkbox_id: str):
         try:
             self._get_checkbox_by_id(checkbox_id)
-        except ElementNotInDOM:
+        except ElementNotVisible:
             return False
         return True
 
@@ -481,7 +480,7 @@ class _BlockOne:
     def has_arecont_rtsp_enabled_checkbox(self) -> bool:
         try:
             self.get_arecont_rtsp_enabled_checkbox().is_visible()
-        except ElementNotInDOM:
+        except ElementNotVisible:
             return False
 
     def get_arecont_rtsp_enabled_label(self):
@@ -494,7 +493,7 @@ class _BlockOne:
     def has_auto_discovery_response_enabled_checkbox(self) -> bool:
         try:
             self.get_auto_discovery_response_enabled_checkbox().is_visible()
-        except ElementNotInDOM:
+        except ElementNotVisible:
             return False
 
     def get_auto_discovery_response_enabled_label(self):
@@ -507,7 +506,7 @@ class _BlockOne:
     def has_auto_update_thumbnails_checkbox(self) -> bool:
         try:
             self.get_auto_update_thumbnails_checkbox().is_visible()
-        except ElementNotInDOM:
+        except ElementNotVisible:
             return False
 
     def get_auto_update_thumbnails_label(self):
@@ -520,7 +519,7 @@ class _BlockOne:
     def has_backup_new_cameras_by_default_checkbox(self) -> bool:
         try:
             self.get_backup_new_cameras_by_default_checkbox().is_visible()
-        except ElementNotInDOM:
+        except ElementNotVisible:
             return False
 
     def get_backup_new_cameras_by_default_label(self):
@@ -546,11 +545,11 @@ class _BlockOne:
         self.get_backup_new_cameras_by_default_label().wait_until_visible()
 
     def wait_until_elements_not_seen(self):
-        self.get_additional_local_fs_types_input().wait_until_does_not_exist()
+        self.get_additional_local_fs_types_input().wait_until_not_visible()
         self.get_additional_local_fs_types_label().wait_until_not_visible()
-        self.get_audit_trail_period_days_input().wait_until_does_not_exist()
+        self.get_audit_trail_period_days_input().wait_until_not_visible()
         self.get_audit_trail_period_days_label().wait_until_not_visible()
-        self.get_client_statistics_relative_url_input().wait_until_does_not_exist()
+        self.get_client_statistics_relative_url_input().wait_until_not_visible()
         self.get_client_statistics_relative_url_label().wait_until_not_visible()
         if self.has_arecont_rtsp_enabled_checkbox():
             raise RuntimeError("Arecont RTSP Enabled checkbox is visible")

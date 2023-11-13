@@ -10,7 +10,7 @@ class ResetPasswordDialog:
 
     def __init__(self, driver):
         self._driver = driver
-        Page(self._driver, "//nx-authorize-reset-request-component").wait_until_exists(40)
+        Page(self._driver, "//nx-authorize-reset-request-component").wait_until_visible(40)
 
     def input_email(self, email: str):
         text_field = TextField(

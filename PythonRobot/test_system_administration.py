@@ -170,7 +170,7 @@ def should_confirm_if_not_owner_deletes_system(server: Mediaserver):
         sys_admin.disconnect_from_account_button().click()
         sys_admin.disconnect_modal_warning().click()
         sys_admin.disconnect_from_account_cancel_button().click()
-        sys_admin.disconnect_from_account_cancel_button().wait_until_does_not_exist()
+        sys_admin.disconnect_from_account_cancel_button().wait_until_not_visible()
         print("pass")
 
 
@@ -261,8 +261,8 @@ def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, ro
         assert not left_menu.has_node_with_name('Cameras')
         assert not left_menu.has_node_with_name('Users')
         assert not left_menu.has_node_with_name('Servers')
-        left_menu.get_search_field().wait_until_does_not_exist()
-        system_page.merge_with_another_system_button().wait_until_does_not_exist()
+        left_menu.get_search_field().wait_until_not_visible()
+        system_page.merge_with_another_system_button().wait_until_not_visible()
         print("pass")
 
 
