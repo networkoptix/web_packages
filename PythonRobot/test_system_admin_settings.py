@@ -16,7 +16,7 @@ rb = RobotVariables("en_US")
 
 def system_settings_and_security_settings_should_match_settings_on_server(server: Mediaserver):
     """
-    [tags]    system    cloud    webadmin    system settings    C69736
+    [tags]    system    cloud    webadmin    system settings    C69736    C65697
     """
     with get_chrome() as driver:
         server.api.restore_default_general_settings()
@@ -53,9 +53,15 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert not settings.limit_session_duration_option().is_checked()
 
         # https://networkoptix.testrail.net/index.php?/cases/view/69736
+        # https://networkoptix.testrail.net/index.php?/cases/view/65697
         assert settings.autodiscovery_option().is_checked()
         assert settings.statistics_allowed_option().is_checked()
         assert settings.optimize_camera_settings_option().is_checked()
+        assert settings.audit_trail_option().is_checked()
+        assert not settings.force_encrypted_connections_option().is_checked()
+        assert not settings.video_traffic_encryption_option().is_checked()
+        assert not settings.limit_session_duration_option().is_checked()
+
         administrator = server.get_cloud_admin()
         HeaderNav(driver).log_out()
         LandingPage(driver)
@@ -65,6 +71,10 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert settings.autodiscovery_option().is_checked()
         assert settings.statistics_allowed_option().is_checked()
         assert settings.optimize_camera_settings_option().is_checked()
+        assert settings.audit_trail_option().is_checked()
+        assert not settings.force_encrypted_connections_option().is_checked()
+        assert not settings.video_traffic_encryption_option().is_checked()
+        assert not settings.limit_session_duration_option().is_checked()
 
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):

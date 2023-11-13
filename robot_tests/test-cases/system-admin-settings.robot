@@ -7,24 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-15. Security block is available for administrator or owner
-    [Tags]    C65697
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-
-    Log    Step 1, 2
-    FOR    ${user}    IN    ${system}[owner]    ${system}[cloud users][cloudAdmin]
-    Log in to user and system    ${user}    ${system}[cloud id]
-        Wait Until Settings Are Visible    timeout=60
-        Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-        # Element Attribute Value Should Be     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}${visible}//label    disabled    true
-        Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${True}
-        Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-        Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-        Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
-        Log Out
-    END
-
 16. System Settings block is not available when the system is offline
     [Tags]    C69744
     Remove Tags     webadmin
