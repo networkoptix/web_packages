@@ -258,9 +258,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             if (params.systemId) {
                 this.systemId = params.systemId;
                 this.content.base = menus.systemSettings.baseUrl + this.systemId;
-                if (!environment.isLocal && this.system) {
-                    this.system.stopPoll();
-                }
                 this.systemNoAccess = false;
                 this.menuVisible = false;
             } else {
