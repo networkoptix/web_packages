@@ -61,6 +61,13 @@ class Element:
         self.wait_until_clickable()
         return self._get_element() == self._driver.switch_to.active_element
 
+    def is_enabled(self) -> bool:
+        try:
+            element = self._get_element()
+        except ElementNotInDOM:
+            return False
+        return element.is_enabled()
+
     def is_visible(self):
         try:
             element = self._get_element()
@@ -152,10 +159,6 @@ class Element:
 
     def find_element(self, locator: str, position: int = 1) -> 'Element':
         return Element(self._driver, f'({self._locator}{locator})[{position}]')
-
-    def is_enabled(self, timeout: float = _DEFAULT_TIMEOUT) -> bool:
-        self.wait_until_visible(timeout)
-        return self._get_element().is_enabled()
 
     def find_element_by_partial_link_text(self, text: str):
         self.wait_until_visible()
