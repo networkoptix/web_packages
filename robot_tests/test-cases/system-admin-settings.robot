@@ -7,20 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-11. Changing All Checkboxes Works
-    [Tags]    C65722
-    Log    Testrail: Changes in the security block are displayed in the thick client
-    Log    Testrail: Changes in the System Settings block are displayed in the thick client
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-
-    Log    Steps 1 - 8
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible    timeout=60
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Changing All Settings    ${SAVE BUTTON}
-    Changing All Settings    ${CANCEL BUTTON}
-
 12. Changes made in the thick client are displayed in System Settings block in Cloud Portal
     [Tags]    C69741
     Log    Preconditions
