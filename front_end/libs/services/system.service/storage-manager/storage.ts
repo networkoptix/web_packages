@@ -1,6 +1,8 @@
+import { v4 as uuid } from 'uuid';
+
 import type { ec2Storage } from '@services/system-api.types';
 import { ServerManager } from '@services/system.service/server-manager/server-manager';
-import { cleanId } from '@utils/general';
+import { cleanId, isUUID } from '@utils/general';
 
 /**
  * TODO: Need to add better types to some of the system-api methods
@@ -216,7 +218,7 @@ export class StorageDataStructure {
             storageStatus: '',
             vmsSpace: 0,
             storageId: '',
-            canUpdate: null,
+            canUpdate: true,
             urlWithCredentials: '',
         };
         Object.assign(this, { ...defaults, ...inputs });
@@ -325,13 +327,13 @@ export class Storage extends StorageDataStructure {
                       name: 'space',
                       value: this.totalSpace.toString(),
                   },
-                  id: `{${this.storageId}}`,
+                  id: `{${isUUID(this.storageId) ? this.storageId : uuid()}}`,
                   isBackup: this.isBackup,
                   parentId: this.serverId,
                   spaceLimit: this.reservedSpace.toString(),
                   storageType: this.storageType,
                   typeId: this.#typeId,
-                  url: this.urlWithCredentials,
+                  url: this.urlWithCredentials || this.url,
                   usedForWriting: this.usedForWriting,
               }
             : null;

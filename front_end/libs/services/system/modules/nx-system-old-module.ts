@@ -1,6 +1,14 @@
 import { Injector } from '@angular/core';
 import { Router } from '@angular/router';
-import { BehaviorSubject, Subscription, Observable, forkJoin, firstValueFrom, Subject } from 'rxjs';
+import {
+    BehaviorSubject,
+    Subscription,
+    Observable,
+    forkJoin,
+    firstValueFrom,
+    Subject,
+    timer,
+} from 'rxjs';
 import { auditTime, catchError, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import stringify from 'safe-stable-stringify';
@@ -237,6 +245,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     private jsonRpc: WebSocketSubject<unknown>;
+    private systemReady$ = new Subject<this>();
     private useRpcOverPolling(): void {
         if (this.mediaserver instanceof NxSystemRestAPI3) {
             this.mediaserver.buildRpcUrl().subscribe(url => {
@@ -287,14 +296,27 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         id: '3',
                     },
                 ]);
-                this.getInfo(true, false, true);
-                if (!environment.isLocal) {
-                    this.getUsers(true, true)
-                        .then(() => this.proxied.cameraManager.updateSystemCameras())
-                        .then(() =>
-                            firstValueFrom(this.proxied.serverManager.getForceServers(false)),
-                        );
-                }
+
+                // Replicates the system poll w/o updates
+                timer(0, updateInterval)
+                    .pipe(takeUntil(this.killPoll$))
+                    .subscribe(() => {
+                        this.infoSubject.next(this);
+                    });
+
+                // Does the initial setup for the system
+                this.getInfo(true, false, true)
+                    .then(() =>
+                        this.isOnline
+                            ? this.proxied.cameraManager.updateSystemCameras()
+                            : Promise.reject({ offline: true }),
+                    )
+                    .then(() => firstValueFrom(this.proxied.serverManager.getForceServers(false)))
+                    .then(() => this.getUsers(true, true))
+                    .finally(() => {
+                        this.infoSubject.next(this);
+                        this.systemReady$.next(this);
+                    });
             });
         }
     }
@@ -633,7 +655,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
 
     update = (): Promise<any> => {
         if (this.mediaserver instanceof NxSystemRestAPI3) {
-            return Promise.resolve();
+            return firstValueFrom(this.systemReady$);
         }
         if (!this.updatePromise) {
             this.updatePromise = this.getInfo(true, false, true)
