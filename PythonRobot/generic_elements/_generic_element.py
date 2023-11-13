@@ -157,10 +157,6 @@ class Element:
         self.wait_until_visible()
         return self._get_element().find_element_by_partial_link_text(text)
 
-    def get_html_attribute(self, attribute_name: str):
-        self.wait_until_visible()
-        return self._get_element().get_attribute(attribute_name)
-
     def find_element_by_id(self, child_id: str):
         return self._get_element().find_element_by_id(child_id)
 

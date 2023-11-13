@@ -205,7 +205,7 @@ class SearchField:
         return self._get_field().is_focused()
 
     def get_placeholder_text(self):
-        return self._get_field().get_html_attribute('placeholder')
+        return self._get_field().get_attribute('placeholder')
 
 
 _logger = logging.getLogger(__name__)
