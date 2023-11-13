@@ -1,4 +1,4 @@
-import { CdkDrag, CdkDropList, DragDropModule } from '@angular/cdk/drag-drop';
+import { CdkDrag, CdkDropList, DragDropModule, Point } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -9,6 +9,7 @@ import {
     ChangeDetectorRef,
     Component,
     computed,
+    effect,
     ElementRef,
     EventEmitter,
     HostListener,
@@ -71,6 +72,7 @@ import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
@@ -98,7 +100,6 @@ import {
     ParsedLayoutItems,
     PlaceholderClasses,
     PlaceholderState,
-    Point,
     Position,
     ResourceNode,
     ResourceType,
@@ -153,8 +154,13 @@ const SETTINGS_CONFIG: Setting[] = [
 const DEFAULT_ASPECT_RATIO = 1.7777777910232544 as const;
 const DEFAULT_CELL_ASPECT_RATIO = DEFAULT_ASPECT_RATIO;
 
+const enum HighlightClasses {
+    SWAP = 'swap',
+}
+
 interface Transform {
-    transform: string;
+    transform?: string;
+    highlightClass?: HighlightClasses;
     transformOrigin: string;
 }
 
@@ -173,7 +179,7 @@ interface DragPosition extends Size {
 }
 
 interface Collisions {
-    moveTo?: unknown;
+    moveTo?: Partial<Position> | false;
     opacity?: number;
     background?: string;
 }
@@ -328,6 +334,13 @@ export class NxLayoutGridComponent {
         this.layoutStateService.gridSection = value.nativeElement;
     }
 
+    /**
+     * Configuration for grid cell spacing calculation.
+     *
+     * Set below 1 to lower the spacing between cells or above to increase.
+     */
+    readonly CELL_SPACE_RATIO = 0.5;
+
     ngOnDestroy(): void {
         this.layoutStateService.portal = null;
     }
@@ -437,6 +450,8 @@ export class NxLayoutGridComponent {
     );
 
     layout$$ = toSignal(this.layout$);
+
+    wrapperSize$$ = toSignal(this.#wrapperSize$);
 
     showTooltip$ = this.#wrapperSize$.pipe(
         filter(Boolean),
@@ -647,32 +662,6 @@ export class NxLayoutGridComponent {
         }),
     );
 
-    highlightState$: Observable<HighlightState> = this.#distinctDraggingPosition$.pipe(
-        map(
-            ({ move: { x, y }, resize, transformOrigin, id, width, height, origin }) =>
-                <HighlightState>{
-                    [id]: {
-                        // TODO: Use resize to determine scale,
-                        transform:
-                            this.getScale(id, resize) ||
-                            `translate(${(id === 'added' ? x - origin.x : x) * width}px, ${
-                                (id === 'added' ? y - origin.y : y) * height
-                            }px)`,
-                        transformOrigin,
-                    },
-                    x,
-                    y,
-                    resize,
-                    width,
-                    height,
-                },
-        ),
-        shareReplay({
-            bufferSize: 1,
-            refCount: true,
-        }),
-    );
-
     #collisions$ = this.#distinctDraggingPosition$.pipe(
         map(({ id, move, resize }) => {
             const currentlyDragging = this.layout.items.find(({ id: itemId }) => itemId === id);
@@ -716,8 +705,8 @@ export class NxLayoutGridComponent {
     );
 
     collisions$: Observable<Collisions> = combineLatest([this.#collisions$, this.layout$]).pipe(
-        map(([{ draggingItem, collisions }, { items }]) =>
-            Object.keys(collisions).reduce((collisions, currentId) => {
+        map(([{ draggingItem, collisions }, { items }]) => {
+            const reducedCollisions = Object.keys(collisions).reduce((collisions, currentId) => {
                 const current = items.find(({ id }) => id === currentId && id !== draggingItem.id);
                 if (!current) {
                     return collisions;
@@ -731,7 +720,70 @@ export class NxLayoutGridComponent {
                         background: 'var(--error)',
                     },
                 };
-            }, {}),
+            }, {} as Record<string, Collisions>);
+
+            const collisionInfo = Object.values(reducedCollisions);
+            if (collisionInfo.length === 2 && draggingItem.id) {
+                collisionInfo.forEach(collision => {
+                    collision.background = 'var(--success)';
+                });
+
+                collisionInfo[draggingItem.id] = {
+                    opacity: 0.25,
+                    background: 'var(--success)',
+                };
+            }
+
+            return reducedCollisions;
+        }),
+        shareReplay({
+            bufferSize: 1,
+            refCount: true,
+        }),
+    );
+
+    highlightState$: Observable<HighlightState> = combineLatest([
+        this.#distinctDraggingPosition$,
+        this.collisions$,
+    ]).pipe(
+        map(
+            ([
+                {
+                    move: { x, y },
+                    resize,
+                    transformOrigin,
+                    id,
+                    width,
+                    height,
+                    origin,
+                },
+                collisions,
+            ]) => {
+                const hidden = [x, y].every(val => val === Infinity);
+                const swap = Object.values(collisions).length === 2;
+                const transform = hidden
+                    ? 'translate(100000px, 100000px)'
+                    : this.getScale(id, resize) ||
+                      `translate(${(id === 'added' ? x - origin.x : x) * width}px, ${
+                          (id === 'added' ? y - origin.y : y) * height
+                      }px)`;
+
+                const styles = swap
+                    ? { highlightClass: HighlightClasses.SWAP }
+                    : { transform, background: 'var(--dragging-highlight)' };
+                return <HighlightState>{
+                    [id]: {
+                        // TODO: Use resize to determine scale,
+                        ...styles,
+                        transformOrigin,
+                    },
+                    x,
+                    y,
+                    resize,
+                    width,
+                    height,
+                };
+            },
         ),
         shareReplay({
             bufferSize: 1,
@@ -769,8 +821,29 @@ export class NxLayoutGridComponent {
             .subscribe(resourceNode => this.addItem(resourceNode));
         layoutGridService.moveAddedItem
             .pipe(untilDestroyed(this))
-            .subscribe(({ event, itemParent }) => this.moveAddedItem(event, itemParent));
+            .subscribe(({ event, itemParent, type }) =>
+                this.moveAddedItem(event, itemParent, type),
+            );
         // TODO - end -
+
+        effect(() => {
+            const layout = this.layout$$();
+            const { width = 0, height = 0 } = this.wrapperSize$$() || {};
+            if (!layout || !width || !height) {
+                // eslint-disable-next-line nx/ban-global-variables
+                document.documentElement.style.setProperty('--current-layout-gap', '0px');
+                return;
+            }
+            const cellWidth = width / layout.renderConfig.columns;
+            const cellHeight = height / layout.renderConfig.rows;
+            const constraint = Math.min(cellWidth, cellHeight);
+            const size = constraint * layout.cellSpacing;
+            // eslint-disable-next-line nx/ban-global-variables
+            document.documentElement.style.setProperty(
+                '--current-layout-gap',
+                `${(size / 2) * this.CELL_SPACE_RATIO}px`,
+            );
+        });
     }
 
     async ngOnChanges({ layout }: NgChanges<NxLayoutGridComponent>): Promise<void> {
@@ -1154,7 +1227,7 @@ export class NxLayoutGridComponent {
         fixedHeight,
     }: Layout): LayoutRenderConfig {
         const aspectRatio = cellAspectRatio || DEFAULT_ASPECT_RATIO;
-        const spacing = cellSpacing ?? 0.1;
+        const spacing = cellSpacing ?? 0;
         const { width, height, originX: x, originY: y } = this.calculateSize(items);
         const columns = items.length <= 1 ? 1 : fixedWidth || width;
         const rows = items.length <= 1 ? 1 : fixedHeight || height;
@@ -1185,7 +1258,7 @@ export class NxLayoutGridComponent {
 
     updateBackground = (
         { distance }: { distance: Point },
-        { id }: ParsedLayoutItem,
+        { id, ...other }: ParsedLayoutItem,
         action = 'move',
         alignment: NxLayoutGridComponent['alignments'][number] = [
             VerticalAlign.BOTTOM,
@@ -1198,6 +1271,7 @@ export class NxLayoutGridComponent {
     moveAddedItem = (
         { pointerPosition: move }: { pointerPosition: Point },
         itemParent?: HTMLElement,
+        nodeType?: ResourceType,
     ): void => {
         this.addingItem$$.set(true);
         if (itemParent) {
@@ -1209,7 +1283,14 @@ export class NxLayoutGridComponent {
 
             move.y += this.addOffset - 108;
         }
-        this.#draggingPosition$.next({ move, id: 'added' });
+
+        const ignorePosition = nodeType === ResourceType.LAYOUT;
+
+        if (ignorePosition) {
+            this.#draggingPosition$.next({ move: { x: Infinity, y: Infinity }, id: 'added' });
+        } else {
+            this.#draggingPosition$.next({ move, id: 'added' });
+        }
     };
 
     updateLayout = (): void => {
@@ -1222,7 +1303,7 @@ export class NxLayoutGridComponent {
             .pipe(take(1))
             .subscribe(([{ x, y, resize }, collisions]) => {
                 const unresolvedCollisions = Object.values(collisions).reduce(
-                    (prevCollision, { moveTo }) => prevCollision || !moveTo,
+                    (prevCollision, item) => item.moveTo === false,
                     false,
                 );
                 const notMoved = [x, y, resize.x, resize.y].every(change => !change);
@@ -1230,10 +1311,40 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
-                const items = this.layout.items.map(item => {
-                    item = structuredClone(item);
+                const [swapTarget = null] =
+                    Object.entries(collisions).find(([_, { moveTo }]) => moveTo) || [];
+
+                const swappedItems = this.layout.items.map(item => structuredClone(item));
+
+                if (swapTarget) {
+                    const movedItem = swappedItems.find(({ id: itemId }) => itemId === id);
+                    const swappedItem = swappedItems.find(({ id }) => id === swapTarget);
+                    if (movedItem && swappedItem) {
+                        [
+                            movedItem.top,
+                            movedItem.bottom,
+                            movedItem.left,
+                            movedItem.right,
+                            swappedItem.top,
+                            swappedItem.bottom,
+                            swappedItem.left,
+                            swappedItem.right,
+                        ] = [
+                            swappedItem.top,
+                            swappedItem.bottom,
+                            swappedItem.left,
+                            swappedItem.right,
+                            movedItem.top,
+                            movedItem.bottom,
+                            movedItem.left,
+                            movedItem.right,
+                        ];
+                    }
+                }
+
+                const items = swappedItems.map(item => {
                     const dragging = item.id === id;
-                    if (dragging) {
+                    if (dragging && !swapTarget) {
                         const { x: resizeX, y: resizeY } = this.getConstraint(item, resize);
                         item.top += y;
                         item.bottom += y + resizeY;
@@ -1477,7 +1588,12 @@ export class NxLayoutGridComponent {
                     return this.updateLayout();
                 }
 
-                const items = [...this.layout.items, this.generateLayoutItem(node, { x, y })];
+                const items = [
+                    ...this.layout.items,
+                    ...(assertResourceOfType.layout(node)
+                        ? createAddedItems(this.layout.items, node.details.items)
+                        : [this.generateLayoutItem(node, { x, y })]),
+                ];
                 if (assertResourceOfType.layout(this.layoutItemLookup[dirtyId(this.layout.id)])) {
                     const currentUser = this.system.permissionManager.currentUser$$();
 
@@ -1517,7 +1633,7 @@ export class NxLayoutGridComponent {
 
         if (collided) {
             return {
-                moveTo: null,
+                moveTo: dragging,
                 opacity: 0.5,
                 background: 'var(--error)',
             };

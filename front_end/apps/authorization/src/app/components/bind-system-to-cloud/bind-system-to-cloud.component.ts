@@ -185,7 +185,10 @@ export class BindSystemToCloudComponent implements OnInit {
             owner: ('ownerAccountEmail' in data && data.ownerAccountEmail) || '',
             organizationId: ('organizationId' in data && data.organizationId) || '',
         };
+        // This is needed for debugging purposes. Will clean in CLOUD-11794
+        this.bindInfo$$.set(bindInfo);
         this.fsmState = BindDialogStates.finished;
+
         // eslint-disable-next-line nx/ban-global-variables
         if (window.nativeClient) {
             nativeClient.setBindInfo(bindInfo);
@@ -202,8 +205,6 @@ export class BindSystemToCloudComponent implements OnInit {
             // eslint-disable-next-line nx/ban-global-variables
             window.location.href = url.toString();
         } else {
-            // This is needed for debugging purposes. Will clean in CLOUD-11794
-            this.bindInfo$$.set(bindInfo);
             // Todo: add error here
         }
     }

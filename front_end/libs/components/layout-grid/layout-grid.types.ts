@@ -1,3 +1,4 @@
+import { Point } from '@angular/cdk/drag-drop';
 import { Observable, ObservedValueOf } from 'rxjs';
 
 import type { Layout, LayoutItem, WebPage } from '@services/system-api.types';
@@ -14,11 +15,6 @@ export interface Setting {
     step?: number | 'any';
     min?: number;
     max?: number;
-}
-
-export interface Point {
-    x: number;
-    y: number;
 }
 
 export interface Size {
@@ -77,6 +73,7 @@ export interface ParsedLayoutItem extends LayoutItem {
 export type ParsedLayoutItems = ParsedLayoutItem[];
 
 export interface Position {
+    id?: string;
     top: number;
     bottom: number;
     left: number;

@@ -320,7 +320,8 @@
                             class="layout-item-wrapper"
                             [ngClass]="{
                                 'full-screen-wrapper':
-                                    layoutItemWrapper === window.document.fullscreenElement
+                                    layoutItemWrapper === window.document.fullscreenElement,
+                                'swap': (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
                             }"
                             (resize)="resizeItem($event, dragContainer)"
                         >
