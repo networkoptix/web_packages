@@ -7,44 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-13. Checking the dependency of system settings checkboxes
-    [Tags]    C69742
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-
-    Log    Step 1
-    Change Setting    ${ENABLE AUTO DISCOVERY CHECKBOX}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-
-    Log    Step 2
-    Change Setting    ${SEND ANONYMOUS USAGE CHECKBOX}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-
-    Log    Step 3
-    Change Setting    ${ALLOW SYSTEM OPTIMIZE CHECKBOX}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${False}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${False}
-
-    Log    Step 4
-    Reload Page
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    Checkbox Is Selected     ${SEND ANONYMOUS USAGE CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW SYSTEM OPTIMIZE CHECKBOX}    ${True}
-    
 14. Changes made in the thick client are displayed in the security block in Cloud Portal
     [Tags]    C65723
     Log    Preconditions

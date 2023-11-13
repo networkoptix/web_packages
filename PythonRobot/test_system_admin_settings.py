@@ -333,6 +333,38 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
         assert settings.optimize_camera_settings_option().is_checked()
 
 
+def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
+    """
+    [tags]    system    cloud    webadmin    system settings    C69742
+    """
+    with get_chrome() as driver:
+        server.api.restore_default_general_settings()
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+
+        settings.autodiscovery_option().unselect()
+        assert not settings.autodiscovery_option().is_checked()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        settings.statistics_allowed_option().unselect()
+        assert not settings.statistics_allowed_option().is_checked()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        settings.optimize_camera_settings_option().unselect()
+        assert not settings.optimize_camera_settings_option().is_checked()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+
+        driver.refresh()
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert settings.autodiscovery_option().is_checked()
+        assert settings.statistics_allowed_option().is_checked()
+        assert settings.optimize_camera_settings_option().is_checked()
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -350,3 +382,4 @@ if __name__ == '__main__':
         system_and_security_settings_block_is_not_available_for_other_users(cloud_server_first)
         changing_page_without_saving_changes(cloud_server_first)
         changes_made_in_the_thick_client_are_displayed_in_system_settings(cloud_server_first)
+        checking_the_dependency_of_system_settings_checkboxes(cloud_server_first)
