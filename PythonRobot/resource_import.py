@@ -42,7 +42,6 @@ def cloud_login(
         driver,
         email,
         password,
-        validate=True,
         button=rb.LOG_IN_NAV_BAR,
         exists=True,
         ):
@@ -68,8 +67,7 @@ def cloud_login(
         PageText(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
         PageText(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
     # TODO: Check if 2fa is true and there is no backup code
-    if validate:
-        DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
+    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
 
 
