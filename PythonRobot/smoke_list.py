@@ -72,9 +72,10 @@ if __name__ == "__main__":
         system_2fa_required(cloud_server_third)
         twofa_not_required_when_more_than_one_system(cloud_server_fourth)
 
-        test_changing_first_name_and_saving_maintains_that_setting()
-        test_changing_last_name_and_saving_maintains_that_setting()
-        test_can_access_account_page_from_dropdown()
+        dummy_account = suite.create_cloud_account()
+        test_changing_first_name_and_saving_maintains_that_setting(dummy_account)
+        test_changing_last_name_and_saving_maintains_that_setting(dummy_account)
+        test_can_access_account_page_from_dropdown(dummy_account)
         with CloudAccount(get_random_email(sendemail=True)) as user:
             user.activate()
             sets_new_password_and_successfully_logs_in(user)

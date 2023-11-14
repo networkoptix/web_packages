@@ -1,7 +1,10 @@
+import os
 import time
 
 import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from generic_elements import Button
 from generic_elements import DropDown
@@ -14,7 +17,6 @@ from pages.reset_password_dialog import ResetPasswordDialog
 from resource_import import get_lang_list
 from email_access import EmailClient
 from email_access import get_random_email
-from resource_import import register_and_activate_account
 
 password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"
@@ -50,13 +52,11 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
     time.sleep(0.5)
 
 
-def test_can_access_account_page_from_dropdown():
+def test_can_access_account_page_from_dropdown(cloud_user: CloudAccount):
     """1 Can access the account page from dropdown"""
     with resource_import.get_chrome() as driver:
-        email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(rb.ENV)
-        cloud_login(driver, email, password)
+        cloud_login(driver, cloud_user.email, cloud_user.password)
         time.sleep(3)
         Button(driver, rb.ACCOUNT_DROPDOWN).click()
         Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
@@ -88,14 +88,12 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
         verify_in_account_page(driver)
 
 
-def test_changing_first_name_and_saving_maintains_that_setting():
+def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
     """5 changing first name and saving maintains that setting"""
     with resource_import.get_chrome() as driver:
-        email = get_random_email()
-        register_and_activate_account(driver, "mark", "hamill", email, password)
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, email, password, button=None, api=False)
+        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
         TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
@@ -109,7 +107,7 @@ def test_changing_first_name_and_saving_maintains_that_setting():
     with resource_import.get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        cloud_login(driver, email, password, button=None, api=False)
+        cloud_login(driver, cloud_user.email, password, button=None, api=False)
         verify_in_account_page(driver)
         time.sleep(2)
         text = TextField(driver, rb.ACCOUNT_FIRST_NAME).get_text()
@@ -124,15 +122,13 @@ def test_changing_first_name_and_saving_maintains_that_setting():
         alert1.wait_until_not_visible(10)
 
 
-def test_changing_last_name_and_saving_maintains_that_setting():
+def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
     """6 changing last name and saving maintains that setting"""
     #todo: 
     with resource_import.get_chrome() as driver:
-        email = get_random_email()
-        register_and_activate_account(driver, "mark", "hamill", email, password)
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, email, password, button=None, api=False)
+        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
         Button(driver, rb.ACCOUNT_SAVE).click()
@@ -144,7 +140,7 @@ def test_changing_last_name_and_saving_maintains_that_setting():
     with resource_import.get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        cloud_login(driver, email, password, button=None, api=False)
+        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
@@ -255,36 +251,39 @@ def test_language_is_changeable_on_the_account_page():
 def test_language_change_affects_emails():
     """14 Language change affects emails"""
     with resource_import.get_chrome() as driver:
-        password = "theF0rc3"
-        random_email = get_random_email(sendemail=True)
-        register_and_activate_account(driver, "Darth", "Vader", random_email, password)
-        url = rb.ENV + "/account"
-        driver.get(url)
-        if rb.LANGUAGE != "ru_Ru":
-            cloud_login(driver, random_email, password, button=None, api=False)
-            verify_in_account_page(driver)
-            Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-            button = Button(
-                driver,
-                "//nx-language-select//span[@lang='ru_RU']/..",
-                )
-            button.click()
-            time.sleep(5)
-        driver.get(rb.ENV + "/authorize")
-        login = LoginDialog(driver, lang="ru_RU")
-        login.email_input().input_text(random_email)
-        login.russian_next_button().click()
-        login.russian_forgot_password_button().click()
-        reset_password_dialog = ResetPasswordDialog(driver)
-        reset_password_dialog.input_email(random_email)
-        reset_password_dialog.get_russian_reset_password_button().click()
-        with EmailClient(email_alias=random_email) as email_client:
-            email_message = email_client.wait_for_reset_password_email()
-            email_client.delete_email(email_message)
-            CloudPortalAPI().set_account_language(random_email, password, "en_US")
+        with CloudAccount(get_random_email(sendemail=True)) as cloud_user:
+            cloud_user.activate()
+            url = rb.ENV + "/account"
+            driver.get(url)
+            if rb.LANGUAGE != "ru_Ru":
+                cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+                verify_in_account_page(driver)
+                Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+                button = Button(
+                    driver,
+                    "//nx-language-select//span[@lang='ru_RU']/..",
+                    )
+                button.click()
+                time.sleep(5)
+            driver.get(rb.ENV + "/authorize")
+            login = LoginDialog(driver, lang="ru_RU")
+            login.email_input().input_text(cloud_user.email)
+            login.russian_next_button().click()
+            login.russian_forgot_password_button().click()
+            reset_password_dialog = ResetPasswordDialog(driver)
+            reset_password_dialog.input_email(cloud_user.email)
+            reset_password_dialog.get_russian_reset_password_button().click()
+            with EmailClient(email_alias=cloud_user.email) as email_client:
+                email_message = email_client.wait_for_reset_password_email()
+                email_client.delete_email(email_message)
+                CloudPortalAPI().set_account_language(
+                    cloud_user.email,
+                    cloud_user.password,
+                    "en_US",
+                    )
 
 
-def test_language_change_is_new_default():
+def test_language_change_is_new_default(cloud_user: CloudAccount):
     """15 Language change is new default"""
     lang_dict = resource_import.get_lang_list()
     japanese_code = 'ja_JP'
@@ -292,12 +291,9 @@ def test_language_change_is_new_default():
     ja_JP_account_info = lang_dict[japanese_code]['ACCOUNT INFORMATION']
     de_DE_account_info = lang_dict[german_code]['ACCOUNT INFORMATION']
     with resource_import.get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, email, password, button=None, api=False)
+        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
         verify_in_account_page(driver)
         Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
         japanese_button_locator = f"//following-sibling::ul//span[@id='{japanese_code}']"
@@ -313,16 +309,16 @@ def test_language_change_is_new_default():
         resource_import.logout_japanese(driver)
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        cloud_login(driver, email, password, button=None, api=False)
+        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
         api = CloudPortalAPI()
-        api.set_account_language(email, password, new_language=german_code)
+        api.set_account_language(cloud_user.email, cloud_user.password, new_language=german_code)
         time.sleep(5)
         driver.refresh()
         activeLang = drop_lang_element.text()
         assert activeLang.lower() in german_code.lower(), f"{activeLang.lower()} not found in {german_code.lower()}"
         info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
-        api.set_account_language(email, password, "en_US")
+        api.set_account_language(cloud_user.email, cloud_user.password, "en_US")
 
 
 def verify_in_account_page(driver):
@@ -338,16 +334,20 @@ def verify_in_account_page(driver):
 
 
 if __name__ == "__main__":
-    test_can_access_account_page_from_dropdown()
-    # test_can_access_account_page_from_direct_link()
-    # # #test_cannot_access_account_page_from_direct_link_closing_log()
-    # test_cannot_access_account_page_from_direct_link_on_valid_login()
-    # test_changing_first_name_and_saving_maintains_that_setting()
-    # test_changing_last_name_and_saving_maintains_that_setting()
-    test_first_name_is_required()
-    test_last_name_is_required()
-    test_space_for_first_name_is_not_valid()
-    test_space_for_last_name_is_not_valid()
-    test_language_is_changeable_on_the_account_page()
-    test_language_change_affects_emails()
-    test_language_change_is_new_default()
+    suite_name = os.path.basename(__file__)
+    suite_name = suite_name.replace("test_", "").replace(".py", "")
+    with Suite() as suite:
+        cloud_account = suite.create_cloud_account()
+        test_can_access_account_page_from_dropdown(cloud_account)
+        # test_can_access_account_page_from_direct_link()
+        # # #test_cannot_access_account_page_from_direct_link_closing_log()
+        # test_cannot_access_account_page_from_direct_link_on_valid_login()
+        # test_changing_first_name_and_saving_maintains_that_setting()
+        # test_changing_last_name_and_saving_maintains_that_setting()
+        test_first_name_is_required()
+        test_last_name_is_required()
+        test_space_for_first_name_is_not_valid()
+        test_space_for_last_name_is_not_valid()
+        test_language_is_changeable_on_the_account_page()
+        test_language_change_affects_emails()
+        test_language_change_is_new_default(cloud_account)
