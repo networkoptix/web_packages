@@ -45,18 +45,10 @@ def cloud_login(
         validate=True,
         button=rb.LOG_IN_NAV_BAR,
         exists=True,
-        two_FA=False,
         ):
     if button:
         Button(driver, button).wait_until_visible()
         Button(driver, button).click()
-
-    if validate and not two_FA:
-        # check language variable and set it to default. That is, set language before logging in
-        # TODO: check language
-        pass
-        # TODO: set user theme (ie, light or dark mode)
-        pass
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
     Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
     TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
