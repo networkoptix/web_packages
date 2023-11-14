@@ -503,17 +503,22 @@ export class NxHeaderComponent implements OnInit, OnDestroy {
         if (!this.systems) {
             return;
         }
+        const sessionVerified = this.accountService.account.sessionVerified || environment.isLocal;
+        let nextActiveSystem: NxSystemInfo;
         if (this.singleSystem || this.environment.isLocal) {
             // Special case for a single system - it always active
-            this.headerService.activeSystem = this.systems[0];
+            nextActiveSystem = this.systems[0];
         } else if (this.systemId) {
             // Will only have multiple systems on cloud
-            this.headerService.activeSystem = this.systems.find(system => {
+            nextActiveSystem = this.systems.find(system => {
                 return this.systemId === system.id;
             });
-        } else {
-            this.headerService.activeSystem = undefined;
         }
+
+        if (nextActiveSystem?.system2faEnabled && !sessionVerified) {
+            nextActiveSystem = undefined;
+        }
+        this.headerService.activeSystem = nextActiveSystem;
 
         if (!this.environment.isLocal) {
             if (this.headerService.activeSystem) {
