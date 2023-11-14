@@ -7,50 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    System Admin Suite Teardown
 Force Tags        system    cloud    webadmin    system settings
 
 *** Test Cases ***
-17. Cancel changes in Security block
-    [Tags]    C65724
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-
-    Log    Step 1
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Change Setting    ${ENABLE AUDIT TRAIL CHECKBOX}
-    Checkbox Is Selected     ${ENABLE AUDIT TRAIL CHECKBOX}    ${False}
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    
-    Log    Step 2
-    Click Button    ${CANCEL BUTTON}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}     ${True}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}         ${False}
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     ${False}
-    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
-    
-    Log    Step 3
-    Change Setting    ${ALLOW ONLY SECURE CHECKBOX}
-    Change Setting    ${ENCRYPT VIDEO TRAFFIC CHECKBOX}
-    Sleep    1
-    ${element_xpath}=       Replace String      ${LIMIT SESSION DURATION CHECKBOX}        \"  \\\"
-    Execute JavaScript  document.evaluate("${element_xpath}", document, null, XPathResult.ORDERED_NODE_SNAPSHOT_TYPE, null).snapshotItem(0).click();
-    #Change Setting    ${LIMIT SESSION DURATION CHECKBOX}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}         ${True}
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}     ${True}
-    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${True}
-    Element Should Be Visible    ${ENCRYPTING VIDEO WARNING}
-    Wait Until Elements Are Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}
-    
-    Log    Step 4
-    Click Button    ${CANCEL BUTTON}
-    Wait Until Elements Are Visible    ${NO UNSAVED CHANGES}
-    Elements Should Not Be Visible    ${SAVE BUTTON}    ${CANCEL BUTTON}    ${ENCRYPTING VIDEO WARNING}
-    Checkbox Is Selected     ${ENABLE AUTO DISCOVERY CHECKBOX}    ${True}
-    Checkbox Is Selected     ${ALLOW ONLY SECURE CHECKBOX}    ${False}
-    Checkbox Is Selected     ${ENCRYPT VIDEO TRAFFIC CHECKBOX}    ${False}
-    Checkbox Is Selected     ${LIMIT SESSION DURATION CHECKBOX}    ${False}
-
 18. Check Limit session duration
     [Tags]    C65703
     Log    Preconditions

@@ -79,7 +79,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
     """
-    [tags]    system    cloud    webadmin    system settings    C65722
+    [tags]    system    cloud    webadmin    system settings    C65722    C65724
     """
     with get_chrome() as driver:
         server.api.restore_default_general_settings()
@@ -98,6 +98,33 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings.optimize_camera_settings_option().unselect()
         settings.save()
         server.api.wait_until_server_setting_to_be('cameraSettingsOptimization', False)
+
+        # https://networkoptix.testrail.net/index.php?/cases/view/65724
+        settings.audit_trail_option().unselect()
+        settings.get_unsaved_changes_label().wait_until_not_visible()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        settings.cancel()
+        settings.get_unsaved_changes_label().wait_until_visible()
+        assert settings.audit_trail_option().is_checked()
+        settings.force_encrypted_connections_option().select()
+        settings.video_traffic_encryption_option().select()
+        # The limit session checkbox may be not in view. Scroll page to avoid this.
+        # TODO: Find a more accurate method to scroll the page to an element.
+        driver.scroll_to_bottom()
+        settings.limit_session_duration_option().select()
+        warning_message = settings.get_warning_message().get_text()
+        expected_warning_message = 'Encrypting video traffic may significantly increase CPU usage.'
+        assert warning_message == expected_warning_message
+        settings.get_unsaved_changes_label().wait_until_not_visible()
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+        settings.cancel()
+        assert settings.audit_trail_option().is_checked()
+        assert not settings.force_encrypted_connections_option().is_checked()
+        assert not settings.video_traffic_encryption_option().is_checked()
+        assert not settings.limit_session_duration_option().is_checked()
+
         settings.audit_trail_option().unselect()
         settings.save()
         server.api.wait_until_server_setting_to_be('auditTrailEnabled', False)

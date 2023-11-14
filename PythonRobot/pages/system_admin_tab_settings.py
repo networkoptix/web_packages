@@ -437,3 +437,6 @@ class _GeneralSettings:
             self._driver,
             '//nx-apply//div[contains(text(), "No unsaved changes")]',
             )
+
+    def get_warning_message(self):
+        return PageText(self._driver, '//*[contains(@class, "warning-text")]')
