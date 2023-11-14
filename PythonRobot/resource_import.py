@@ -43,7 +43,6 @@ def cloud_login(
         email,
         password,
         button=rb.LOG_IN_NAV_BAR,
-        exists=True,
         ):
     if button:
         Button(driver, button).wait_until_visible()
@@ -55,17 +54,12 @@ def cloud_login(
     TextField(driver, rb.EMAIL_INPUT).input_text(email)
     time.sleep(1)
     Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
-
-    if exists:
-        TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
-        TextField(driver, rb.PASSWORD_INPUT).input_text(password)
-        time.sleep(1)
-        log_in_button = Button(driver, rb.LOG_IN_BUTTON)
-        log_in_button.wait_until_visible()
-        log_in_button.click()
-    else:
-        PageText(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
-        PageText(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
+    TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
+    TextField(driver, rb.PASSWORD_INPUT).input_text(password)
+    time.sleep(1)
+    log_in_button = Button(driver, rb.LOG_IN_BUTTON)
+    log_in_button.wait_until_visible()
+    log_in_button.click()
     # TODO: Check if 2fa is true and there is no backup code
     DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
     time.sleep(0.5)
