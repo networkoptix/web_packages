@@ -359,7 +359,7 @@
     "Connect": "Подключиться",
     "Connect System to %CLOUD_NAME%": "Подключить систему к %CLOUD_NAME%",
     "Connect System you want to merge with this one to <strong>%CLOUD_NAME%</strong> or merge locally using <strong>%VMS_NAME%</strong> Client.": "Подключите систему, которую вы хотите объединить с этой, к <strong>%CLOUD_NAME%</strong> или выполните объединение локально, используя <strong>%VMS_NAME%</strong> Client.",
-    "Connect system to": "Connect system to",
+    "Connect system to": "Подключить систему к",
     "Connect the server to the existing System": "Подключить сервер к существующей системе",
     "Connect to %CLOUD_NAME%": "Подключиться к %CLOUD_NAME%",
     "Connected": "Подключено",
