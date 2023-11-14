@@ -79,7 +79,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
     """
-    [tags]    system    cloud    webadmin    system settings    C65722    C65724
+    [tags]    system    cloud    webadmin    system settings    C65722    C65724    C69740
     """
     with get_chrome() as driver:
         server.api.restore_default_general_settings()

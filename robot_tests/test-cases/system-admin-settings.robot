@@ -218,18 +218,3 @@ Force Tags        system    cloud    webadmin    system settings
     Should Be Equal As Strings    ${resp}    200
 
     Go To    ${ENV}
-
-20. Changes in System Settings block are displayed in thick client
-    [Tags]    C69740
-    Log    Preconditions
-    Reset Settings To Default    ${system['token']}    ${server url}
-    Log in to system    ${system}    ${system}[owner]
-    Wait Until Settings Are Visible
-
-    Log    Steps 1-6
-    FOR    ${setting}    IN    autoDiscoveryEnabled    statisticsAllowed    cameraSettingsOptimization
-        Repeat Keyword    2 times    Changing setting changes it on server     //*[@id="${setting}"]    ${setting}
-    END
-
-    Log    Step 7, 8
-    Repeat Keyword    2 times    Changing All Settings    ${SAVE BUTTON}
