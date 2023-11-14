@@ -69,6 +69,7 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
+    'partners.authentication.cloud_host_middleware',
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
@@ -119,11 +120,15 @@ else:
     REDIS_CACHE_LOCATION = 'redis://localhost:6379'
 
 CACHES = {
+    "local": {
+        'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
+        'LOCATION': 'local'
+    },
     'default': {
         "BACKEND": REDIS_CACHE_BACKEND,
         "LOCATION": REDIS_CACHE_LOCATION,
         "TIMEOUT": None
-    }
+    },
 }
 
 

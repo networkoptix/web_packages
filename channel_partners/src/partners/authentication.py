@@ -2,6 +2,7 @@ from hashlib import sha256
 
 import httpx
 from django.core.cache import caches
+from django.http import HttpRequest
 
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
 import requests
@@ -16,6 +17,29 @@ from django.utils.translation import gettext_lazy as _
 
 from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken
 
+
+def get_host(request: HttpRequest) -> str:
+    return request.get_host().split(':')[0]
+
+
+def get_cloud_host(cloud_host_name: str) -> CloudHost:
+    cache_key = f'cloud-host-{cloud_host_name}'
+    if cloud_host := caches['local'].get(cache_key):
+        if isinstance(cloud_host, CloudHost):
+            return cloud_host
+    if cloud_host := CloudHost.objects.filter(hostname=cloud_host_name).first():
+        caches['local'].set(cache_key, cloud_host, timeout=7200)
+    return cloud_host
+
+
+def cloud_host_middleware(get_response):
+    def middleware(request: HttpRequest):
+        cloud_host_name = request.headers.get('cloud-host', get_host(request))
+        request.cloud_host = get_cloud_host(cloud_host_name)
+        response = get_response(request)
+        return response
+
+    return middleware
 
 class TokenCache:
     timeout: int = 600
@@ -110,20 +134,17 @@ def check_user_can_administer_system(system_id, access_token, cloud_host, raise_
 class NxCloudSystemBasicAuthentication(BasicAuthentication):
     def authenticate_credentials(self, userid, password, request=None):
         cloud_system_id = userid
-        cloud_host_header = request.headers.get('cloud-host')
-        if not cloud_host_header:
-            raise exceptions.AuthenticationFailed('cloud-host header not provided.')
-        cloud_host = CloudHost.objects.filter(hostname=cloud_host_header).first()
-        if not cloud_host:
-            raise exceptions.AuthenticationFailed('Invalid cloud-host header.')
+        if not request.cloud_host:
+            raise exceptions.ParseError('Invalid cloud-host header or hostname.')
 
-        if check_system_credentials(system_id=userid, system_auth_key=password, cloud_host=cloud_host_header):
-            cloud_system = CloudSystemId.objects.get_or_create(system_id=cloud_system_id, cloud_host=cloud_host)[0]
+        if check_system_credentials(system_id=userid, system_auth_key=password,
+                                    cloud_host=request.cloud_host.hostname):
+            cloud_system = CloudSystemId.objects.get_or_create(
+                system_id=cloud_system_id, cloud_host=request.cloud_host)[0]
             if not cloud_system.activated:
                 cloud_system.activated = True
                 cloud_system.save()
             request.cloud_system = cloud_system
-            request.cloud_host = cloud_host
             return get_user_model()(), None
         else:
             raise exceptions.AuthenticationFailed('Invalid system id or auth key')
@@ -182,15 +203,10 @@ class NxCloudOauthTokenAuthentication(TokenAuthentication):
             msg = _('Invalid token header. Token string should not contain invalid characters.')
             raise exceptions.AuthenticationFailed(msg)
 
-        cloud_host_header = request.headers.get('cloud-host')
-        if not cloud_host_header:
-            raise exceptions.AuthenticationFailed('cloud-host header not provided.')
-        cloud_host = CloudHost.objects.filter(hostname=cloud_host_header).first()
-        if not cloud_host:
-            raise exceptions.AuthenticationFailed('Invalid cloud-host header.')
+        if not request.cloud_host:
+            raise exceptions.ParseError('Invalid cloud-host header or hostname.')
 
-        ret = self.authenticate_credentials(token, cloud_host_header)
-        request.cloud_host = cloud_host
+        ret = self.authenticate_credentials(token, request.cloud_host.hostname)
         return ret
 
     def authenticate_credentials(self, key, cloud_host_header):
