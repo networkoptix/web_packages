@@ -7,7 +7,9 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from pages.account_page import AccountPage
-from resource_import import cloud_login
+from pages.header import HeaderNav
+from pages.login import LoginDialog
+from pages.systems_page import SystemsPage
 from resource_import import get_chrome
 from variables import ENV
 
@@ -24,7 +26,9 @@ def delete_account_button_becomes_enabled(
     with get_chrome() as driver:
         cloud_owner = server_1.get_cloud_owner()
         driver.get(base_url)
-        cloud_login(driver, cloud_owner.email, cloud_owner.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(cloud_owner.email, cloud_owner.password)
+        SystemsPage(driver).wait_until_visible()
         driver.get(base_url + '/account')
         account_page = AccountPage(driver)
         account_page.wait_until_loaded()
