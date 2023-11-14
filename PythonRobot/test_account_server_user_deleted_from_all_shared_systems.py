@@ -1,3 +1,4 @@
+from contextlib import ExitStack
 from pathlib import Path
 
 from colorama import Fore
@@ -5,6 +6,7 @@ from colorama import Fore
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from email_access import get_random_email
 from pages.account_page import AccountPage
 from pages.account_page import SuccessToast
 from pages.header import HeaderNav
@@ -97,6 +99,40 @@ def owner_can_not_delete_themselves(
         account_page.get_can_not_delete_account_tooltip().wait_until_visible()
 
 
+def delete_account_button_is_enabled(
+        base_url: str,
+        user_with_shared_systems: CloudAccount,
+        ):
+    """
+    6. Delete account button is enabled
+    [Tags] C69854 delete account
+    """
+    with ExitStack() as stack:
+        user_without_shared_systems = stack.enter_context(CloudAccount(get_random_email()))
+        user_without_shared_systems.activate()
+        driver = stack.enter_context(get_chrome())
+        driver.get(base_url)
+        nav = HeaderNav(driver)
+        nav.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(
+            user_without_shared_systems.email, user_without_shared_systems.password)
+        SystemsPage(driver).wait_until_visible()
+        driver.get(base_url + '/account')
+        account_page = AccountPage(driver)
+        account_page.wait_until_loaded()
+        account_page.delete_account_button().wait_until_clickable()
+        nav.log_out()
+        driver.get(base_url)
+        nav.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(
+            user_with_shared_systems.email, user_with_shared_systems.password)
+        SystemsPage(driver).wait_until_visible()
+        driver.get(base_url + '/account')
+        account_page = AccountPage(driver)
+        account_page.wait_until_loaded()
+        account_page.delete_account_button().wait_until_clickable()
+
+
 def user_deleted_from_all_shared_systems(
         cloud_account: CloudAccount,
         base_url: str,
@@ -155,6 +191,10 @@ if __name__ == '__main__':
             f"{Fore.GREEN}| PASS |")
         cloud_server_2 = suite.create_cloud_server(
             cloud_owner=cloud_owner, suite_name=suite_name, cloud_users={'viewer': user})
+        delete_account_button_is_enabled(ENV, user)
+        print(
+            f"{Fore.WHITE}{delete_account_button_is_enabled.__doc__.strip()}\t\t\t"
+            f"{Fore.GREEN}| PASS |")
         cloud_server_3 = suite.create_cloud_server(
             cloud_owner=cloud_owner, suite_name=suite_name, cloud_users={'custom': user})
         user_deleted_from_all_shared_systems(

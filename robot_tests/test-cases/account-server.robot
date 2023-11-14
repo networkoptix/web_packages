@@ -7,20 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Account Server Suite Teardown
 Force Tags        account
 
 *** Test Cases ***
-6. Delete account button is enabled
-    [Tags]    C69854        delete account
-    Go To    ${url}/account
-    Log In    ${server 1}[cloudUsers][cloudAdmin]    ${password}    button=None   api=${False}
-    Verify in Account Page
-    Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
-
-    Log Out    api=${False}
-    Sleep   2
-    Go To    ${url}/account
-    Log In    ${server 1}[cloudUsers][viewer]    ${password}    button=None    api=${False}
-    Verify in Account Page
-    Wait Until Element is Enabled    ${DELETE ACCOUNT BUTTON}
-
 7. User who owns a system cannot remove themselves
     [Tags]    C69855        delete_account
     Go To    ${url}/account
