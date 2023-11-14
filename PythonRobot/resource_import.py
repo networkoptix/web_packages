@@ -38,14 +38,6 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
         api.activate_account_via_api(email, password)
 
 
-def check_language_logged_in(email, password, language="en_US"):
-    api = CloudPortalAPI()
-    current_lang = api.get_account_language(email, password)
-    if current_lang == language:
-        api.set_account_language(email, password, language)
-    time.sleep(2)
-
-
 def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,
                 api=False, reset=False, two_FA=False, twoFA_backup_code=""):
     if button:

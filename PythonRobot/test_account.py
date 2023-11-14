@@ -281,7 +281,9 @@ def test_language_change_affects_emails():
         with EmailClient(email_alias=random_email) as email_client:
             email_message = email_client.wait_for_reset_password_email()
             email_client.delete_email(email_message)
-            resource_import.check_language_logged_in(random_email, password)
+            api = CloudPortalAPI()
+            if api.get_account_language(random_email, password) == "en_US":
+                api.set_account_language(random_email, password, "en_US")
 
 
 def test_language_change_is_new_default():
@@ -322,7 +324,8 @@ def test_language_change_is_new_default():
         assert activeLang.lower() in german_code.lower(), f"{activeLang.lower()} not found in {german_code.lower()}"
         info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
-        resource_import.check_language_logged_in(email, password)
+        if api.get_account_language(email, password) == "en_US":
+            api.set_account_language(email, password, "en_US")
 
 
 def verify_in_account_page(driver):
