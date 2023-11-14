@@ -17,6 +17,7 @@ import {
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import FileSaver from 'file-saver';
@@ -35,6 +36,7 @@ import {
     sampleTime,
     merge,
     timer,
+    firstValueFrom,
 } from 'rxjs';
 
 import { NxContextMenu } from '@components/context-menu/context-menu';
@@ -62,6 +64,10 @@ import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { selectActiveLayoutState } from '@services/layout-state/store/active-layout/active-layout.selectors';
+import { selectCameraResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
+import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
@@ -166,6 +172,7 @@ export class NxLayoutGridItemOverlayComponent {
     temporaryManualDisplayInfoToggle$$: WritableSignal<boolean | null> = signal(null);
     allowDebugMode: boolean;
     layoutsEditable: boolean;
+    layoutsItemChangeResolution: boolean;
 
     displayInfo$$ = computed(() => {
         if (!this.cameraOnline$$()) {
@@ -185,13 +192,45 @@ export class NxLayoutGridItemOverlayComponent {
         const node = this.checkGetCameraNode();
         return node ? node.details.recordingStatus === RecordingStatus.Recording : null;
     });
-    cameraOnline$$ = computed(() => {
+    primaryStream$$ = computed(() => {
+        return this.cameraStreams$$() ? this.cameraStreams$$().primary : null;
+    });
+    secondaryStream$$ = computed(() => {
+        return this.cameraStreams$$() ? this.cameraStreams$$().secondary : null;
+    });
+    disableResolution$$ = computed(() => {
+        if (!this.cameraOnline$$()) {
+            return true;
+        }
+        const primary = this.primaryStream$$();
+        const secondary = this.secondaryStream$$();
+        return (primary && !secondary) || (!primary && secondary);
+    });
+    cameraStreams$$ = computed(() => {
         const node = this.checkGetCameraNode();
+        const result = {
+            primary: null,
+            secondary: null,
+        };
         if (node?.details.online) {
-            const primaryStream = (node.details.parameters.mediaStreams?.streams ?? []).find(
-                ({ encoderIndex }) => encoderIndex === 0,
+            return (node.details.parameters.mediaStreams?.streams ?? []).reduce(
+                (streams, stream) => {
+                    if (stream.encoderIndex === 0) {
+                        streams.primary = stream;
+                    }
+                    if (stream.encoderIndex === 1) {
+                        streams.secondary = stream;
+                    }
+                    return streams;
+                },
+                result,
             );
-
+        }
+        return result;
+    });
+    cameraOnline$$ = computed(() => {
+        const primaryStream = this.primaryStream$$();
+        if (primaryStream) {
             const nonWebRtcCodec = primaryStream && [7, 173].includes(primaryStream.codec);
             if (!nonWebRtcCodec || this.system.version >= 6) {
                 return true;
@@ -383,28 +422,47 @@ export class NxLayoutGridItemOverlayComponent {
             id: 'resolution',
             ...LANG.resolution,
             ...EMPTY_MENU_ACTION,
-            subMenu: (node: ResourceNode) => {
+            disabled$$: this.disableResolution$$,
+            subMenu: async (node: ResourceNode) => {
                 if (!assertResourceOfType.camera(node)) {
                     return;
                 }
-                return [
+                const menuItems = [
                     {
-                        id: 'auto',
-                        ...LANG.resolutionAuto,
-                        checked$$: signal(true),
-                        ...EMPTY_MENU_ACTION,
+                        resolution: Resolution.AUTO,
+                        lang: LANG.resolutionAuto,
                     },
                     {
-                        id: 'high',
-                        ...LANG.resolutionHigh,
-                        ...EMPTY_MENU_ACTION,
+                        resolution: Resolution.LOW,
+                        lang: LANG.resolutionLow,
                     },
                     {
-                        id: 'low',
-                        ...LANG.resolutionLow,
-                        ...EMPTY_MENU_ACTION,
+                        resolution: Resolution.HIGH,
+                        lang: LANG.resolutionHigh,
                     },
                 ];
+
+                const layoutId = await firstValueFrom(this.store.select(selectActiveLayoutState));
+
+                const cameraResolution = await firstValueFrom(
+                    this.store.select(selectCameraResolution(layoutId, node.details.id)),
+                );
+
+                return menuItems.reduce((menu: MenuItem<ResourceNode>[], menuItem) => {
+                    menu.push({
+                        id: menuItem.resolution,
+                        ...menuItem.lang,
+                        checked$$: signal(menuItem.resolution === cameraResolution),
+                        action: () => {
+                            this.layoutStateService.setCameraResolution({
+                                layoutId,
+                                cameraId: node.details.id,
+                                resolution: menuItem.resolution,
+                            });
+                        },
+                    });
+                    return menu;
+                }, []);
             },
         },
         screenshot: {
@@ -548,11 +606,11 @@ export class NxLayoutGridItemOverlayComponent {
             [
                 this.fullscreenAction$$(),
                 this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
-                this.allowDebugMode && this.MENU_ITEMS.resolution,
+                this.layoutsItemChangeResolution && this.MENU_ITEMS.resolution,
                 this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
                 this.MENU_ITEMS.screenshot,
-                this.allowDebugMode && this.MENU_ITEMS.divider,
-                this.allowDebugMode && this.MENU_ITEMS.showOnItem,
+                this.cameraOnline$$() && this.MENU_ITEMS.divider,
+                this.cameraOnline$$() && this.MENU_ITEMS.showOnItem,
                 this.removeAction$$() && this.MENU_ITEMS.divider,
                 this.removeAction$$(),
             ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>),
@@ -570,9 +628,13 @@ export class NxLayoutGridItemOverlayComponent {
         @Inject(LOCALE_ID) private locale: string,
         private resizeObserver: NxResizeObserver,
         configService: NxConfigService,
+        public layoutStateService: LayoutStateService,
+        private store: Store,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
-        this.layoutsEditable = configService.getConfig().featureFlags.layoutsEditable || false;
+        this.layoutsEditable = !!configService.getConfig().featureFlags.layoutsEditable;
+        this.layoutsItemChangeResolution =
+            !!configService.getConfig().featureFlags.layoutsItemChangeResolution;
     }
 
     handleIconClick(action: MenuItemAction<LayoutItem> | undefined, $event: MouseEvent): void {

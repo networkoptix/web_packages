@@ -6,6 +6,7 @@ import { LayoutStateEffects } from './layout-state.effects';
 import { LayoutStateService } from './layout-state.service';
 import { ActiveLayoutReducer } from './store/active-layout';
 import { ActiveLayoutSync } from './store/active-layout/active-layout.sync';
+import { LayoutsResolutionReducer } from './store/layouts-resolution';
 import { LocalLayoutsReducer, LocalLayoutsSync } from './store/local-layouts';
 import { UnsavedLayoutsReducer } from './store/unsaved-layouts';
 
@@ -14,6 +15,7 @@ import { UnsavedLayoutsReducer } from './store/unsaved-layouts';
         StoreModule.forFeature('localLayouts', LocalLayoutsReducer.reducer),
         StoreModule.forFeature('activeLayout', ActiveLayoutReducer.reducer),
         StoreModule.forFeature('unsavedLayouts', UnsavedLayoutsReducer.reducer),
+        StoreModule.forFeature('layoutsResolution', LayoutsResolutionReducer.reducer),
         EffectsModule.forFeature([LocalLayoutsSync, ActiveLayoutSync, LayoutStateEffects]),
     ],
     providers: [LayoutStateService],

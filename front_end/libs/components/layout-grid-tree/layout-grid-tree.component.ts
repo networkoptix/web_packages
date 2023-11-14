@@ -17,11 +17,20 @@ import { FormsModule } from '@angular/forms';
 import { MatDividerModule } from '@angular/material/divider';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { cloneDeep } from 'lodash-es';
 import { TourMatMenuModule, TourService } from 'ngx-ui-tour-md-menu';
-import { BehaviorSubject, Observable, Subject, combineLatest, of, timer } from 'rxjs';
+import {
+    BehaviorSubject,
+    Observable,
+    Subject,
+    combineLatest,
+    of,
+    timer,
+    firstValueFrom,
+} from 'rxjs';
 import {
     delay,
     distinctUntilChanged,
@@ -72,6 +81,8 @@ import { NxSystemServersComponent } from '@pages/systems/settings/servers/server
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { selectLayoutResolution } from '@services/layout-state/store/layouts-resolution/resolution.selectors';
+import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
@@ -236,7 +247,7 @@ export class NxLayoutGridTreeComponent {
 
     ServerStats: ServerStats;
     LANG = staticLang;
-    ACTIONS = staticLang.layouts.treeActions;
+    ACTIONS_LANG = staticLang.layouts.treeActions;
     CONFIG: IConfig = nxConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
     readonly RESOURCE_TYPE = ResourceType;
@@ -245,6 +256,7 @@ export class NxLayoutGridTreeComponent {
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
         private router: Router,
+        private store: Store,
         public tourService: TourService,
         @Inject(WINDOW) public window: Window,
     ) {
@@ -310,15 +322,85 @@ export class NxLayoutGridTreeComponent {
     readonly OPEN_WINDOW_ACTIONS = [
         {
             id: 'openNewTab',
-            name: this.ACTIONS.openNewTab.name,
+            name: this.ACTIONS_LANG.openNewTab.name,
             action: ($event, node) => this.openWindow(node.details.id, false),
         },
         {
             id: 'openNewWindow',
-            name: this.ACTIONS.openNewWindow.name,
+            name: this.ACTIONS_LANG.openNewWindow.name,
             action: ($event, node) => this.openWindow(node.details.id, true),
         },
     ];
+
+    getLayoutResolutionActions = (
+        node: ResourceNodeMap[ResourceType.LAYOUT],
+    ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
+        if (node.locked || !this.CONFIG.featureFlags.layoutsChangeResolution) {
+            return [];
+        }
+
+        return (
+            [
+                {
+                    id: 'divider',
+                    name: 'divider',
+                },
+                {
+                    id: 'resolution',
+                    name: this.ACTIONS_LANG.resolution.name,
+                    subMenu: async (node: ResourceNodeMap[ResourceType.LAYOUT]) => {
+                        const menuItems = [
+                            {
+                                resolution: Resolution.AUTO,
+                                lang: this.ACTIONS_LANG.resolutionAuto,
+                            },
+                            {
+                                resolution: Resolution.LOW,
+                                lang: this.ACTIONS_LANG.resolutionLow,
+                            },
+                            {
+                                resolution: Resolution.HIGH,
+                                lang: this.ACTIONS_LANG.resolutionHigh,
+                            },
+                            {
+                                resolution: Resolution.CUSTOM,
+                                lang: this.ACTIONS_LANG.resolutionCustom,
+                            },
+                        ];
+
+                        const layoutResolution = await firstValueFrom(
+                            this.store.select(selectLayoutResolution(node.details.id)),
+                        );
+
+                        return menuItems.reduce(
+                            (menu: MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[], menuItem) => {
+                                if (
+                                    menuItem.resolution !== layoutResolution &&
+                                    menuItem.resolution === Resolution.CUSTOM
+                                ) {
+                                    return menu;
+                                }
+
+                                menu.push({
+                                    id: menuItem.resolution,
+                                    ...menuItem.lang,
+                                    checked$$: signal(menuItem.resolution === layoutResolution),
+                                    action: () => {
+                                        this.layoutStateService.setLayoutResolution({
+                                            layoutId: node.details.id,
+                                            resolution: menuItem.resolution,
+                                        });
+                                    },
+                                });
+                                return menu;
+                            },
+                            [],
+                        );
+                    },
+                },
+            ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
+        ).filter(Boolean);
+    };
 
     getLayoutEditActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
@@ -335,18 +417,18 @@ export class NxLayoutGridTreeComponent {
                 },
                 node.owned && {
                     id: 'startRename',
-                    name: this.ACTIONS.rename.name,
+                    name: this.ACTIONS_LANG.rename.name,
                     action: () => this.layoutStateService.editedLayout$$.set(node.details.id),
                 },
                 {
                     id: 'duplicate',
-                    name: this.ACTIONS.duplicate.name,
+                    name: this.ACTIONS_LANG.duplicate.name,
                     action: () =>
                         this.layoutStateService.duplicateLayoutAsNewLocalLayout(node.details),
                 },
                 node.owned && {
                     id: 'delete',
-                    name: this.ACTIONS.delete.name,
+                    name: this.ACTIONS_LANG.delete.name,
                     action: () => this.layoutStateService.deleteLayout(node.details.id),
                 },
             ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
@@ -373,13 +455,13 @@ export class NxLayoutGridTreeComponent {
             {
                 id: 'save',
                 name: node.shared
-                    ? this.ACTIONS.publishChanges.name
-                    : this.ACTIONS.saveChanges.name,
+                    ? this.ACTIONS_LANG.publishChanges.name
+                    : this.ACTIONS_LANG.saveChanges.name,
                 action: () => this.layoutStateService.saveLayout(node.details.id),
             },
             {
                 id: 'discard',
-                name: this.ACTIONS.discardChanges.name,
+                name: this.ACTIONS_LANG.discardChanges.name,
                 action: () => this.layoutStateService.discardUnsavedLayout(node.details.id),
             },
         ];
@@ -489,12 +571,12 @@ export class NxLayoutGridTreeComponent {
             node.shared
                 ? {
                       id: 'unshareLayout',
-                      name: this.ACTIONS.unshareLayout.name,
+                      name: this.ACTIONS_LANG.unshareLayout.name,
                       action: () => this.layoutStateService.unshareLayout(node.details),
                   }
                 : {
                       id: 'shareLayout',
-                      name: this.ACTIONS.shareLayout.name,
+                      name: this.ACTIONS_LANG.shareLayout.name,
                       action: () => this.layoutStateService.shareLayout(node.details),
                   },
         ];
@@ -511,7 +593,7 @@ export class NxLayoutGridTreeComponent {
             ? [
                   {
                       id: 'lockLayout',
-                      name: this.ACTIONS.lockLayout.name,
+                      name: this.ACTIONS_LANG.lockLayout.name,
                       action: () => this.layoutStateService.lockLayout(node.details),
                   },
               ]
@@ -522,7 +604,7 @@ export class NxLayoutGridTreeComponent {
                   },
                   {
                       id: 'unlockLayout',
-                      name: this.ACTIONS.unlockLayout.name,
+                      name: this.ACTIONS_LANG.unlockLayout.name,
                       action: () => this.layoutStateService.unlockLayout(node.details),
                   },
               ];
@@ -541,8 +623,8 @@ export class NxLayoutGridTreeComponent {
                       id: 'toggleFullScreen',
                       // eslint-disable-next-line nx/ban-global-variables
                       name: document.fullscreenElement
-                          ? this.ACTIONS.exitFullScreen.name
-                          : this.ACTIONS.openFullScreen.name,
+                          ? this.ACTIONS_LANG.exitFullScreen.name
+                          : this.ACTIONS_LANG.openFullScreen.name,
                       action: () => this.layoutStateService.toggleLayoutFullScreen(),
                   },
               ]
@@ -556,8 +638,8 @@ export class NxLayoutGridTreeComponent {
             ? [
                   {
                       id: 'create',
-                      name: this.ACTIONS.create.name,
-                      tooltip: this.ACTIONS.create.tooltip,
+                      name: this.ACTIONS_LANG.create.name,
+                      tooltip: this.ACTIONS_LANG.create.tooltip,
                       action: ($event, node) => {
                           $event.preventDefault();
                           const newLayout = this.layoutStateService.createNewLocalLayout();
@@ -586,6 +668,7 @@ export class NxLayoutGridTreeComponent {
             [
                 ...this.OPEN_WINDOW_ACTIONS,
                 ...this.getLayoutEditActions(node),
+                ...this.getLayoutResolutionActions(node),
                 ...this.getLayoutUpdateActions(node),
                 ...this.getLayoutShareActions(node),
                 ...this.getLayoutLockActions(node),
@@ -602,7 +685,7 @@ export class NxLayoutGridTreeComponent {
                         },
                         {
                             id: 'settings',
-                            name: this.ACTIONS.cameraSettings.name,
+                            name: this.ACTIONS_LANG.cameraSettings.name,
                             action: ($event, node) =>
                                 this.layoutStateService.createPortal(NxCamerasComponent, {
                                     system: this.system,
@@ -622,7 +705,7 @@ export class NxLayoutGridTreeComponent {
                         },
                         {
                             id: 'settings',
-                            name: this.ACTIONS.serverSettings.name,
+                            name: this.ACTIONS_LANG.serverSettings.name,
                             action: ($event, node) =>
                                 this.layoutStateService.createPortal(NxSystemServersComponent, {
                                     system: this.system,

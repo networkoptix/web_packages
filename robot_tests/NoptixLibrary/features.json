@@ -28,6 +28,8 @@
     "layoutsTimeline": false,
     "layoutsPtz": false,
     "layoutsDemo": false,
+    "layoutsChangeResolution": false,
+    "layoutsItemChangeResolution": false,
     "useJsonRpc": false,
     "systemGroups": true,
     "channelPartners": false,

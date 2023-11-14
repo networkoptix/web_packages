@@ -102,6 +102,22 @@
                 "name": "Rename",
                 "tooltip": "Rename \"{name}\" layout"
             },
+            "resolution": {
+                "name": "Resolution",
+                "tooltip": "Change layout \"{name}\" resolution"
+            },
+            "resolutionAuto": {
+                "name": "Auto"
+            },
+            "resolutionHigh": {
+                "name": "High"
+            },
+            "resolutionLow": {
+                "name": "Low"
+            },
+            "resolutionCustom": {
+                "name": "Custom"
+            },
             "duplicate": {
                 "name": "Duplicate",
                 "tooltip": "Duplicate \"{name}\" layout"

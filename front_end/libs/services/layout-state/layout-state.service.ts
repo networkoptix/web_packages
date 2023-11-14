@@ -10,6 +10,7 @@ import { createPortalToken } from '@common/tokens';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
+import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
@@ -19,6 +20,7 @@ import { dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
+import { LayoutsResolutionActions } from './store/layouts-resolution';
 import { LocalLayoutsSelectors } from './store/local-layouts';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import {
@@ -230,6 +232,39 @@ export class LayoutStateService {
             ...layout,
             locked: true,
         });
+    }
+
+    setLayoutResolution({
+        layoutId,
+        resolution,
+    }: {
+        layoutId: string;
+        resolution: Resolution;
+    }): void {
+        this.store.dispatch(
+            LayoutsResolutionActions.updateLayoutResolution({
+                resolution,
+                layoutId,
+            }),
+        );
+    }
+
+    setCameraResolution({
+        cameraId,
+        layoutId,
+        resolution,
+    }: {
+        cameraId: string;
+        layoutId: string;
+        resolution: Resolution;
+    }): void {
+        this.store.dispatch(
+            LayoutsResolutionActions.updateCameraResolution({
+                resolution,
+                layoutId,
+                cameraId,
+            }),
+        );
     }
 
     updateLayout(layout: Layout): void;
