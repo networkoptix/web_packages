@@ -670,36 +670,49 @@ export class NxLayoutGridComponent {
 
             if (!currentlyDragging) {
                 const { y: top, x: left } = move;
-                return id
-                    ? {
-                          id: 'added',
-                          top,
-                          bottom: top + 1,
-                          left,
-                          right: left + 1,
-                      }
-                    : {};
+                return [
+                    false,
+                    id
+                        ? {
+                              id: 'added',
+                              top,
+                              bottom: top + 1,
+                              left,
+                              right: left + 1,
+                          }
+                        : {},
+                ] as const;
             }
             const constrainedResize = this.getConstraint(currentlyDragging, resize);
 
-            return {
-                ...currentlyDragging,
-                top: currentlyDragging.top + move.y,
-                bottom: currentlyDragging.bottom + move.y + constrainedResize.y,
-                left: currentlyDragging.left + move.x,
-                right: currentlyDragging.right + move.x + constrainedResize.x,
-            };
+            return [
+                true,
+                {
+                    ...currentlyDragging,
+                    top: currentlyDragging.top + move.y,
+                    bottom: currentlyDragging.bottom + move.y + constrainedResize.y,
+                    left: currentlyDragging.left + move.x,
+                    right: currentlyDragging.right + move.x + constrainedResize.x,
+                },
+            ] as const;
         }),
-        map(draggingItem => ({
-            draggingItem,
-            collisions: this.layout.items.reduce(
+        map(([resized, draggingItem]) => {
+            const collisions = this.layout.items.reduce(
                 (collided, item) =>
                     this.checkCollision(item, draggingItem)
                         ? { ...collided, [item.id]: item }
                         : collided,
                 {},
-            ),
-        })),
+            );
+
+            const swap = Object.values(collisions).length === 2 && !resized;
+
+            return {
+                swap,
+                draggingItem,
+                collisions,
+            };
+        }),
         shareReplay({
             bufferSize: 1,
             refCount: true,
@@ -707,7 +720,7 @@ export class NxLayoutGridComponent {
     );
 
     collisions$: Observable<Collisions> = combineLatest([this.#collisions$, this.layout$]).pipe(
-        map(([{ draggingItem, collisions }, { items }]) => {
+        map(([{ draggingItem, collisions, swap }, { items }]) => {
             const reducedCollisions = Object.keys(collisions).reduce((collisions, currentId) => {
                 const current = items.find(({ id }) => id === currentId && id !== draggingItem.id);
                 if (!current) {
@@ -725,7 +738,7 @@ export class NxLayoutGridComponent {
             }, {} as Record<string, Collisions>);
 
             const collisionInfo = Object.values(reducedCollisions);
-            if (collisionInfo.length === 2 && draggingItem.id) {
+            if (swap && draggingItem.id) {
                 collisionInfo.forEach(collision => {
                     collision.background = 'var(--success)';
                 });
@@ -762,7 +775,8 @@ export class NxLayoutGridComponent {
                 collisions,
             ]) => {
                 const hidden = [x, y].every(val => val === Infinity);
-                const swap = Object.values(collisions).length === 2;
+                const swap =
+                    Object.values(collisions).length === 2 && !Object.values(resize).some(Boolean);
                 const transform = hidden
                     ? 'translate(100000px, 100000px)'
                     : this.getScale(id, resize) ||
@@ -781,6 +795,7 @@ export class NxLayoutGridComponent {
                     },
                     x,
                     y,
+                    swap,
                     resize,
                     width,
                     height,
@@ -1302,18 +1317,18 @@ export class NxLayoutGridComponent {
     moveItem = ({ id }: LayoutItem): void => {
         combineLatest([this.highlightState$, this.collisions$])
             .pipe(take(1))
-            .subscribe(([{ x, y, resize }, collisions]) => {
+            .subscribe(([{ x, y, resize, swap }, collisions]) => {
                 const unresolvedCollisions = Object.values(collisions).reduce(
                     (prevCollision, item) => item.moveTo === false,
                     false,
                 );
                 const notMoved = [x, y, resize.x, resize.y].every(change => !change);
-                if (unresolvedCollisions || notMoved) {
-                    return this.updateLayout();
-                }
-
                 const [swapTarget = null] =
                     Object.entries(collisions).find(([_, { moveTo }]) => moveTo) || [];
+
+                if (unresolvedCollisions || notMoved || (swapTarget && !swap)) {
+                    return this.updateLayout();
+                }
 
                 const swappedItems = this.layout.items.map(item => structuredClone(item));
 
