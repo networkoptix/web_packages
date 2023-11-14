@@ -1,8 +1,11 @@
+import os
 import random
 import string
 import time
 
 import resource_import
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Suite
 from pages.change_pass_form import ChangePassForm
 from generic_elements import Button
 from generic_elements import TextField
@@ -14,24 +17,20 @@ from pages.register_form import RegisterForm
 from email_access import get_random_email
 from resource_import import get_chrome
 from resource_import import validate_log_out
-from resource_import import register_and_activate_account
 from pages.systems_page import SystemsPage
 from variables import ENV
 
 
-def allows_login_with_correct_credentials_and_log_out():
+def allows_login_with_correct_credentials_and_log_out(cloud_user: CloudAccount):
     """C24212    C24213    smoke    ci    C94717    C94719"""
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.login_button().click()
         SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
@@ -42,41 +41,35 @@ def allows_login_with_correct_credentials_and_log_out():
         print("pass")
 
 
-def allows_log_in_with_existing_email_in_uppercase():
+def allows_log_in_with_existing_email_in_uppercase(cloud_user: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email.upper())
+        login.email_input().input_text(cloud_user.email.upper())
         login.next_button().click()
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.login_button().click()
         SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
 
 
-def forgot_password_page_contains_prefilled_email():
+def forgot_password_page_contains_prefilled_email(cloud_user: CloudAccount):
     """
     Passes email from email input to Restore password page, even without clicking
     'Log in' button
     [Tags]    C41872
     """
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
         login.forgot_password_button().click()
-        login.reset_password_email_input().wait_until_text_is(email)
+        login.reset_password_email_input().wait_until_text_is(cloud_user.email)
         print("pass")
 
 
@@ -113,33 +106,28 @@ def not_activated_user_login_check():
         print("pass")
 
 
-def displays_password_masked():
+def displays_password_masked(cloud_user: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
         assert login.password_input().field_type() == 'password'
         print("pass")
 
 
-def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser():
+def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser(
+        cloud_user: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email.upper())
+        login.email_input().input_text(cloud_user.email.upper())
         login.next_button().click()
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.login_button().click()
         SystemsPage(driver).no_systems().wait_until_visible()
         header.account_dropdown().click()
@@ -152,12 +140,9 @@ def requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_b
         print("pass")
 
 
-def handles_more_than_255_symbols_email_and_password():
+def handles_more_than_255_symbols_email_and_password(cloud_user: CloudAccount):
     # Now is not working because of CLOUD-11071
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
@@ -165,7 +150,7 @@ def handles_more_than_255_symbols_email_and_password():
         three_hundred_chars = ''.join(random.choice(string.ascii_letters) for i in range(300))
         login.email_input().input_text(three_hundred_chars)
         assert len(login.email_input().get_text()) == 255
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
         login.password_input().input_text(three_hundred_chars)
         assert len(login.password_input().get_text()) == 255
@@ -187,18 +172,15 @@ def allows_copy_paste_in_input_fields():
         print("pass")
 
 
-def should_respond_to_enter_key_and_log_in():
+def should_respond_to_enter_key_and_log_in(cloud_user: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.password_input().press_enter()
         SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
@@ -217,7 +199,7 @@ def should_respond_to_tab_key():
         print("pass")
 
 
-def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
+def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first(cloud_user: CloudAccount):
     with get_chrome() as driver:
         driver.get(ENV + '/authorize?client_type=create')
         register_form = RegisterForm(driver)
@@ -225,16 +207,13 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
         driver.switch_to.window(driver.window_handles[1])
         driver.wait_until_number_of_tabs_are_open(2)
         assert driver.current_url == ENV + '/content/eula'
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.login_button().click()
         SystemsPage(driver).no_systems().wait_until_visible()
         driver.switch_to.window(driver.window_handles[0])
@@ -251,20 +230,17 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first():
         print("pass")
 
 
-def log_in_more_than_5_times():
+def log_in_more_than_5_times(cloud_user: CloudAccount):
     """
     [Tags]    C42075
     """
     with get_chrome() as driver:
-        email = get_random_email()
-        password = "qweasd 123"
         wrong_password = "wrong 123"
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
         for attempt in range(6):
             login.password_input().input_text(wrong_password)
@@ -272,27 +248,25 @@ def log_in_more_than_5_times():
             time.sleep(1)
         login.wait_until_has_too_many_attempts_error()
         time.sleep(65)
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.login_button().click()
         SystemsPage(driver).no_systems().wait_until_visible()
         print("pass")
 
 
-def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
+def user_is_logged_out_of_browser_after_a_password_change_in_another_browser(
+        cloud_user: CloudAccount):
     """
     [Tags]    C41837
     """
     with get_chrome() as driver1:
-        email = get_random_email()
-        password = "qweasd 123"
-        register_and_activate_account(driver1, "Mark", "Hamill", email, password)
         driver1.get(ENV)
         header = HeaderNav(driver1)
         header.log_in_button().click()
         login = LoginDialog(driver1)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
-        login.password_input().input_text(password)
+        login.password_input().input_text(cloud_user.password)
         login.login_button().click()
         SystemsPage(driver1).no_systems().wait_until_visible()
         with get_chrome() as driver2:
@@ -300,16 +274,16 @@ def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
             header = HeaderNav(driver2)
             header.log_in_button().click()
             login = LoginDialog(driver2)
-            login.email_input().input_text(email)
+            login.email_input().input_text(cloud_user.email)
             login.next_button().click()
-            login.password_input().input_text(password)
+            login.password_input().input_text(cloud_user.password)
             login.login_button().click()
             SystemsPage(driver2).no_systems().wait_until_visible()
             header.account_dropdown().click()
             header.change_password_option().click()
             change_pass_form = ChangePassForm(driver2)
             change_pass_form.verify_form_is_visible()
-            change_pass_form.current_password_input().input_text(password)
+            change_pass_form.current_password_input().input_text(cloud_user.password)
             new_password = "newpass 123"
             change_pass_form.new_password_input().input_text(new_password)
             change_pass_form.save_button().click()
@@ -320,16 +294,21 @@ def user_is_logged_out_of_browser_after_a_password_change_in_another_browser():
 
 
 if __name__ == "__main__":
-    allows_login_with_correct_credentials_and_log_out()
-    allows_log_in_with_existing_email_in_uppercase()
-    forgot_password_page_contains_prefilled_email()
-    not_activated_user_login_check()
-    displays_password_masked()
-    requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser()
-    handles_more_than_255_symbols_email_and_password()
-    allows_copy_paste_in_input_fields()
-    should_respond_to_enter_key_and_log_in()
-    should_respond_to_tab_key()
-    handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first()
-    log_in_more_than_5_times()
-    user_is_logged_out_of_browser_after_a_password_change_in_another_browser()
+    suite_name = os.path.basename(__file__)
+    suite_name = suite_name.replace("test_", "").replace(".py", "")
+    with Suite() as suite:
+        cloud_account = suite.create_cloud_account()
+        allows_login_with_correct_credentials_and_log_out(cloud_account)
+        allows_log_in_with_existing_email_in_uppercase(cloud_account)
+        forgot_password_page_contains_prefilled_email(cloud_account)
+        not_activated_user_login_check()
+        displays_password_masked(cloud_account)
+        requires_log_in_if_the_user_has_just_logged_out_and_pressed_back_button_in_browser(
+            cloud_account)
+        handles_more_than_255_symbols_email_and_password(cloud_account)
+        allows_copy_paste_in_input_fields()
+        should_respond_to_enter_key_and_log_in(cloud_account)
+        should_respond_to_tab_key()
+        handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first(cloud_account)
+        log_in_more_than_5_times(cloud_account)
+        user_is_logged_out_of_browser_after_a_password_change_in_another_browser(cloud_account)
