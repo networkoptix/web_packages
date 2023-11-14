@@ -9,6 +9,7 @@
     >
     </nx-checkbox>
 </div>
+
 <div class="nx-new-table-container">
     <nx-table
         class="CP-users"
@@ -19,6 +20,7 @@
         [set-arrange]="setHeaders"
         [set-row-expand]="subLevels"
         [set-selected-item-id]="selectedRecordId"
+        [set-id-prop-name]="idPropName"
         [data]="records"
         (onRowClick)="onRowClickAction($event)"
     >
@@ -70,11 +72,11 @@
             let-row
         >
             <div
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: userId"
             >
                 <nx-checkbox
-                    componentId="checkBox{{ row.email }}"
+                    componentId="checkBox{{ row[idPropName] }}"
                     (onClick)="selectRecord(row)"
                 >
                 </nx-checkbox>
@@ -90,7 +92,7 @@
 
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: email"
                 [ngClass]="row.userId === expandRowId ? 'expanded' : ''"
             >
@@ -98,7 +100,7 @@
             </div>
 
             <div
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: fullName"
             >
                 {{ row.fullName }}
@@ -106,7 +108,7 @@
 
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: accessLevel"
                 *ngIf="row.accessLevel.length === 1"
             >
@@ -114,7 +116,7 @@
             </div>
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: accessLevel"
                 *ngIf="row.accessLevel.length > 1"
             >
@@ -133,7 +135,7 @@
 
                 <div
                     class="div-container-wrapper"
-                    *ngIf="subLevels && row.userId === expandRowId"
+                    *ngIf="subLevels && row[idPropName] === expandRowId"
                 >
                     <div *ngFor="let level of row.accessLevel">
                         {{ level }}
@@ -143,7 +145,7 @@
 
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: roles"
                 *ngIf="row.roles.length === 1"
             >
@@ -153,7 +155,7 @@
             </div>
             <div
                 class="div-container-wrapper"
-                data-id="{{ row.userId }}"
+                data-id="{{ row[idPropName] }}"
                 style="grid-area: roles"
                 *ngIf="row.roles.length > 1"
             >
@@ -172,7 +174,7 @@
 
                 <div
                     class="div-container-wrapper"
-                    *ngIf="subLevels && row.userId === expandRowId"
+                    *ngIf="subLevels && row[idPropName] === expandRowId"
                 >
                     <div
                         class="div-container"
@@ -186,7 +188,7 @@
             <div class="div-container-wrapper">
                 <svg-icon
                     nx-add-svg-src
-                    (click)="onDeleteClick.emit(row.email)"
+                    (click)="onDeleteClick.emit(row[idPropName])"
                     [src]="icons.dir + 'delete.svg'"
                     [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                 ></svg-icon>
