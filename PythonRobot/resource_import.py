@@ -38,29 +38,6 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
         api.activate_account_via_api(email, password)
 
 
-def cloud_login(
-        driver,
-        email,
-        password,
-        ):
-    Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
-    TextField(driver, rb.EMAIL_INPUT).wait_until_visible()
-    time.sleep(1)
-    TextField(driver, rb.EMAIL_INPUT).input_text(email)
-    time.sleep(1)
-    Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
-    TextField(driver, rb.PASSWORD_INPUT).wait_until_visible()
-    TextField(driver, rb.PASSWORD_INPUT).input_text(password)
-    time.sleep(1)
-    log_in_button = Button(driver, rb.LOG_IN_BUTTON)
-    log_in_button.wait_until_visible()
-    log_in_button.click()
-    # TODO: Check if 2fa is true and there is no backup code
-    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    time.sleep(0.5)
-
-
 def get_email_link(recipient):
     with EmailClient(email_alias=recipient) as client:
         email_message = client.wait_for_activate_account_email()
