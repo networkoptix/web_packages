@@ -42,11 +42,7 @@ def cloud_login(
         driver,
         email,
         password,
-        button=rb.LOG_IN_NAV_BAR,
         ):
-    if button:
-        Button(driver, button).wait_until_visible()
-        Button(driver, button).click()
     Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
     Button(driver, rb.LOG_IN_NEXT_BUTTON).wait_until_visible()
     TextField(driver, rb.EMAIL_INPUT).wait_until_visible()

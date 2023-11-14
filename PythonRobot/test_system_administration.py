@@ -9,7 +9,6 @@ from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.information_page import InformationPage
 from pages.login import LoginDialog
-from resource_import import cloud_login
 from resource_import import get_chrome
 from resource_import import register_and_activate_account
 from pages.system_admin import FailedToAccessSystemPage
@@ -164,7 +163,8 @@ def should_confirm_if_not_owner_deletes_system(server: Mediaserver):
     with get_chrome() as driver:
         viewer_user = server.get_cloud_viewer()
         driver.get(ENV)
-        cloud_login(driver, viewer_user.email, viewer_user.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(viewer_user.email, viewer_user.password)
         driver.get(ENV + f"/systems/{server.id}")
         sys_admin = SystemAdmin(driver)
         sys_admin.disconnect_from_account_button().click()

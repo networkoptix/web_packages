@@ -9,7 +9,8 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from resource_import import cloud_login
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_chrome
 from pages.system_admin import SystemAdmin
 
@@ -22,7 +23,8 @@ def owner_admin_has_access_to_health_monitoring(server: Mediaserver, rb: RobotVa
     with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server.get_cloud_owner()
-        cloud_login(driver, owner.email, owner.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -44,7 +46,8 @@ def administrator_has_access_to_health_monitoring(server: Mediaserver, rb: Robot
         cloud_api.share(cloud_auth, server.id, 'cloudAdmin',  account.email, '')
         driver = exit_stack.enter_context(get_chrome())
         driver.get(rb.ENV)
-        cloud_login(driver, account.email, account.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(account.email, account.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -66,7 +69,8 @@ def user_does_not_have_access_to_health_monitor(server: Mediaserver, rb: RobotVa
         cloud_api.share(cloud_auth, server.id, role,  account.email, '')
         driver = exit_stack.enter_context(get_chrome())
         driver.get(rb.ENV)
-        cloud_login(driver, account.email, account.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(account.email, account.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         try:

@@ -8,7 +8,6 @@ from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
-from resource_import import cloud_login
 from resource_import import get_chrome
 from resource_import import register_and_activate_account
 from variables import ENV
@@ -49,7 +48,8 @@ def no_systems_header_button_text_is_correct():
         email = get_random_email()
         register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
-        cloud_login(driver, email, password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(email, password)
         SystemsPage(driver).no_systems().wait_until_visible()
         header = HeaderNav(driver)
         assert header.is_logged_in()
@@ -69,7 +69,8 @@ def no_systems_header_button_text_is_correct():
 def one_system_check_header(cloud_user: CloudAccount):
     with get_chrome() as driver:
         driver.get(ENV)
-        cloud_login(driver, cloud_user.email, cloud_user.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         system_administration = SystemAdmin(driver)
         header = HeaderNav(driver)
         assert header.is_logged_in()
@@ -88,9 +89,10 @@ def one_system_check_header(cloud_user: CloudAccount):
 def check_header_and_dropdown_content_for_not_admins(cloud_user: CloudAccount):
     with get_chrome() as driver:
         driver.get(ENV)
-        cloud_login(driver, cloud_user.email, cloud_user.password)
-        system_administration = SystemAdmin(driver)
         header = HeaderNav(driver)
+        header.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        system_administration = SystemAdmin(driver)
         assert header.is_logged_in()
         assert header.systems_link().is_visible()
         assert header.resouces_link().is_visible()
@@ -107,8 +109,9 @@ def check_header_and_dropdown_content_for_not_admins(cloud_user: CloudAccount):
 def check_header_for_many_systems_user(cloud_user: CloudAccount):
     with get_chrome() as driver:
         driver.get(ENV)
-        cloud_login(driver, cloud_user.email, cloud_user.password)
         header = HeaderNav(driver)
+        header.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         systems_page = SystemsPage(driver)
         header.my_systems_button().wait_until_visible()
         assert header.is_logged_in()

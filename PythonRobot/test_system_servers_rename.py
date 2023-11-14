@@ -6,7 +6,8 @@ from colorama import Fore
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from resource_import import cloud_login
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_chrome
 from pages.system_admin import SystemAdmin
 
@@ -19,7 +20,8 @@ def test_server_name_can_be_changed(server: Mediaserver, rb: RobotVariables):
     with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server.get_cloud_owner()
-        cloud_login(driver, owner.email, owner.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()
@@ -43,7 +45,8 @@ def test_server_name_can_be_changed_via_api(server: Mediaserver, rb: RobotVariab
     with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server.get_cloud_owner()
-        cloud_login(driver, owner.email, owner.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_settings = system.get_tab_settings()

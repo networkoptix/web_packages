@@ -2,8 +2,10 @@ import time
 
 import resource_import
 from RobotVariables import RobotVariables
+from pages.header import HeaderNav
 from pages.ipvd_page import IVPDPage
 from pages.ipvd_page import FeedbackForm
+from pages.login import LoginDialog
 
 rb = RobotVariables("en_US")
 password = "qweasd1234"
@@ -19,7 +21,8 @@ def ipvd_page_loads_while_logged_in():
     """2. IPVD Page loads while Logged in"""
     with resource_import.get_chrome() as driver:
         driver.get(rb.ENV)
-        resource_import.cloud_login(driver, login, password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(login, password)
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
 
@@ -87,7 +90,8 @@ def feedback_form_basic_validations():
     """6. Feedback Form Basic Validations"""
     with resource_import.get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
-        resource_import.cloud_login(driver, login, password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(login, password)
         ipvd_page.go_to_ipvd()
         ipvd_page.validate_on_ipvd_page()
         ipvd_page.search_text("Axis")

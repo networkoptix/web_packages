@@ -6,7 +6,8 @@ from colorama import Fore
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from resource_import import cloud_login
+from pages.header import HeaderNav
+from pages.login import LoginDialog
 from resource_import import get_chrome
 from pages.system_admin import SystemAdmin
 
@@ -19,7 +20,8 @@ def going_to_health_monitor_when_system_is_offline(server: Mediaserver, rb: Robo
     with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server.get_cloud_owner()
-        cloud_login(driver, owner.email, owner.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
@@ -35,7 +37,8 @@ def json_upload_works_on_offline_system(server: Mediaserver, rb: RobotVariables)
     with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server.get_cloud_owner()
-        cloud_login(driver, owner.email, owner.password)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
         system = SystemAdmin(driver, rb.language)
         tab_info = system.get_information_tab()
