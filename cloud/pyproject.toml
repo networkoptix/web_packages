@@ -70,6 +70,7 @@ requests = "~2.31.0"
 "ruamel.yaml.clib" = "0.2.6"
 uvicorn = "~0.22.0"
 zenpy = "2.0.40"
+etils = { version = "*", extras = ["edc"] }
 
 [tool.poetry.group.test]
 optional = true

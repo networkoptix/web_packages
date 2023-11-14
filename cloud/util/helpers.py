@@ -139,8 +139,8 @@ def substitute_branding(repl_dict, text):
 
 class HttpxAsyncRequest:
     @staticmethod
-    async def get(*args, **kwargs):
-        async with httpx.AsyncClient() as client:
+    async def get(*args, request_timeout=60, **kwargs):
+        async with httpx.AsyncClient(timeout=request_timeout) as client:
             response = await client.get(*args, **kwargs)
         return response
 
