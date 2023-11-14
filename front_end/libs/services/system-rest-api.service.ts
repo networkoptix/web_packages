@@ -45,7 +45,7 @@ import {
     type RestV1ServerCompat,
     ViewBaseCamera,
     ViewPreprocessServer,
-} from '@services/system.service/system-server-types';
+} from '@services/system.service/types/servers.types';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
@@ -93,8 +93,19 @@ import type {
     GetEndpoints,
     GetEndpointsFull,
 } from './system-api.endpoint-types';
-import * as t from './system-api.types';
-import { ChangedIdReturned, cameraKeyMapV1 } from './system-api.types';
+import { ChangedIdReturned, UnauthorizedCallback } from './system-api.types';
+import {
+    cameraKeyMapV1,
+    DeviceV1Full,
+    Bookmark,
+    BookmarksParams,
+    BookmarksTags,
+    BookmarksTagsParams,
+} from './system-api.types/devices.types';
+import { WebPages } from './system-api.types/layouts.types';
+import { RestartServer, TimeOfServers } from './system-api.types/servers.types';
+import { MergeSystems, Settings, SystemSettingsResp } from './system-api.types/system.types';
+import { CurrentUser, UserSession } from './system-api.types/users.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import {
     DeviceType,
@@ -139,7 +150,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: t.UnauthorizedCallback,
+        unauthorizedCallback: UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -174,7 +185,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public override get isSessionOauth() {
-        return !environment.isLocal || (this.currentUser as t.CurrentUser)?.type === 'cloud';
+        return !environment.isLocal || (this.currentUser as CurrentUser)?.type === 'cloud';
     }
 
     private get cloudAccessTokenName() {
@@ -237,7 +248,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         () => false,
         Infinity,
     )
-    public override setAccessTokenAsCookie(): Observable<true | t.UserSession> {
+    public override setAccessTokenAsCookie(): Observable<true | UserSession> {
         // Short circuit for new system, or if the token is already set as a cookie by the interceptor.
         if (
             this.CONFIG.newSystem ||
@@ -246,7 +257,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         ) {
             return of(true);
         }
-        return this.get<t.UserSession>(
+        return this.get<UserSession>(
             `/rest/v1/login/sessions/${this.accessToken}?setCookie=true`,
         ).pipe(
             catchError(e => {
@@ -632,7 +643,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
         if (!this.CONFIG.newSystem) {
             const endpoint = `/rest/v1/login/sessions/${this.accessToken || 'current'}`;
-            this.userRequest = this.get<t.UserSession>(endpoint, { headers })
+            this.userRequest = this.get<UserSession>(endpoint, { headers })
                 .toPromise()
                 .then(result => {
                     if (!this.accessToken) {
@@ -675,7 +686,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.CONFIG.newSystem || !this.accessToken) {
             return of(false);
         }
-        return this.get<t.UserSession>(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
+        return this.get<UserSession>(`/rest/v1/login/sessions/${this.accessToken}`).pipe(
             switchMap(res => {
                 return of(res.ageS < this.sessionFreshnessSec);
             }),
@@ -686,8 +697,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         username: string,
         password: string,
         remember: boolean,
-    ): Observable<t.UserSession> {
-        return this.post<t.UserSession>('/rest/v1/login/sessions', {
+    ): Observable<UserSession> {
+        return this.post<UserSession>('/rest/v1/login/sessions', {
             username,
             password,
             setCookie: remember,
@@ -820,7 +831,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.updateSystemSettings$.pipe(
             throttleTime(1000),
             switchMap(() =>
-                this.get<t.Settings>('/rest/v1/system/settings', {
+                this.get<Settings>('/rest/v1/system/settings', {
                     params: { _keepDefault: true },
                 }),
             ),
@@ -828,13 +839,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    override updateOrGetSettings(updateParams: Partial<t.Settings> = {}) {
+    override updateOrGetSettings(updateParams: Partial<Settings> = {}) {
         return (
             Object.keys(updateParams).length > 0
-                ? this.patch<t.Settings>('/rest/v1/system/settings', updateParams)
+                ? this.patch<Settings>('/rest/v1/system/settings', updateParams)
                 : this.getSystemSettingsHandler()
         ).pipe(
-            map<t.Settings, t.SystemSettingsResp>(data => ({
+            map<Settings, SystemSettingsResp>(data => ({
                 error: '0',
                 errorString: '',
                 reply: { settings: data },
@@ -850,7 +861,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     private patchCameraCompatibilityV1(
-        camera: NxRecursivePick<t.DeviceV1Full, typeof cameraKeyMapV1>,
+        camera: NxRecursivePick<DeviceV1Full, typeof cameraKeyMapV1>,
     ): RestV1CameraCompat {
         const { serverId, options, parameters: params = {}, motion, schedule, ...rest } = camera;
         const {
@@ -900,7 +911,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    getCameraCredentials(id: string): Observable<t.DeviceV1Full['credentials']> {
+    getCameraCredentials(id: string): Observable<DeviceV1Full['credentials']> {
         return this.getWith('/rest/v1/devices', ['credentials'], {
             params: { id },
         }).pipe(map(cameras => cameras[0].credentials));
@@ -929,7 +940,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 mediaStreams: true,
                 rotation: true,
             },
-        } satisfies NxRecursiveKeyMap<t.DeviceV1Full>;
+        } satisfies NxRecursiveKeyMap<DeviceV1Full>;
 
         return this.getWith('/rest/v1/devices', viewCamKeyMap).pipe(
             map(cameras =>
@@ -967,7 +978,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
     }
 
-    public override getServerTimes(): Observable<t.TimeOfServers> {
+    public override getServerTimes(): Observable<TimeOfServers> {
         return this.get('/ec2/getTimeOfServers');
     }
 
@@ -1007,7 +1018,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     override renameServer(serverId: string, name: string) {
-        return this.patch<t.ChangedIdReturned>(`/rest/v1/servers/${serverId || 'this'}`, {
+        return this.patch<ChangedIdReturned>(`/rest/v1/servers/${serverId || 'this'}`, {
             name,
         }).toPromise();
     }
@@ -1121,7 +1132,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     ignoreIncompatible: false,
                     ignoreOfflineServerDuplicates: true,
                 };
-                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, {
+                return this.post<MergeSystems>('/rest/v1/system/merge', data, {
                     headers: {
                         'Accept-Language': 'en-US',
                     },
@@ -1131,7 +1142,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     override restartServer(serverId?: string) {
-        return this.post<t.RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
+        return this.post<RestartServer>(`/rest/v1/servers/${serverId || 'this'}/restart `)
             .toPromise()
             .catch(err => Promise.reject(err));
     }
@@ -1153,17 +1164,17 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     override getBookmarks(
-        params: t.BookmarksParams = {
+        params: BookmarksParams = {
             order: 'desc',
             column: 'creationTime',
             _keepDefault: true,
             _orderBy: 'creationTimeMs',
         },
-    ): Observable<t.Bookmark[]> {
+    ): Observable<Bookmark[]> {
         return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
-    override getBookmarkTags(params: t.BookmarksTagsParams = {}): Observable<t.BookmarksTags> {
+    override getBookmarkTags(params: BookmarksTagsParams = {}): Observable<BookmarksTags> {
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
     }
 
@@ -1180,7 +1191,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.getWith('/rest/v1/devices', ['id', 'name']);
     }
 
-    override getWebPages(params = {}): Observable<t.WebPages> {
+    override getWebPages(params = {}): Observable<WebPages> {
         return this.get('/rest/v1/webPages', { params });
     }
 
@@ -1331,13 +1342,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             }
         }
 
-        return this.patch<t.ChangedIdReturned>(
+        return this.patch<ChangedIdReturned>(
             `/rest/v1/users/${user.id}`,
             this.cleanUserObject(user),
         );
     }
 
     override deleteUser(userId: string): Observable<ChangedIdReturned> {
-        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
+        return this.delete<ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
     }
 }

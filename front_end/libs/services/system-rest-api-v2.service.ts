@@ -20,8 +20,19 @@ import type {
     StorageAnalytics,
     ViewMediaServersAndCameras,
 } from './system-api.aggregated-types';
-import * as t from './system-api.types';
-import { cameraKeyMapV2 } from './system-api.types';
+import { NormalResponse, UnauthorizedCallback } from './system-api.types';
+import { cameraKeyMapV2 } from './system-api.types/devices.types';
+import type { DeviceV2Full } from './system-api.types/devices.types';
+import {
+    ConfigureParams,
+    LogLevel,
+    LogLevelReply,
+    ModuleInformationReply,
+    RebuildArchiveResponse,
+    ServerHardareIdsResp,
+    ServerTime,
+} from './system-api.types/servers.types';
+import { ValuesReply } from './system-api.types/system.types';
 import { NxSystemRestAPI } from './system-rest-api.service';
 import { type RestV2CameraCompat } from './system.service/camera-manager/camera-manager-types';
 import {
@@ -29,7 +40,7 @@ import {
     serverKeyMapV2,
     ViewBaseCamera,
     ViewPreprocessServer,
-} from './system.service/system-server-types';
+} from './system.service/types/servers.types';
 import { NxUriCacheService } from './uri-cache.service';
 
 interface CustomFilter {
@@ -95,10 +106,10 @@ interface RuntimeInfo {
 
 interface ServerTimes {
     serversRunTimeInfo: RuntimeInfo[];
-    serversInfo: t.ModuleInformationReply[];
+    serversInfo: ModuleInformationReply[];
 }
 
-interface ModuleInfoRest extends t.ModuleInformationReply {
+interface ModuleInfoRest extends ModuleInformationReply {
     osTimeMs: number;
     timeZoneOffsetMs: number;
 }
@@ -116,7 +127,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: t.UnauthorizedCallback,
+        unauthorizedCallback: UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -140,14 +151,14 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         this.version = NxSystemRestAPI2.VERSION;
     }
 
-    private responseWrapper = <D>(data: D): t.NormalResponse<D> => ({
+    private responseWrapper = <D>(data: D): NormalResponse<D> => ({
         error: '0',
         errorString: 'ok',
         reply: data,
     });
 
     // Logger functions
-    private parseLogData = (data: LogLevelV2Response): t.LogLevel =>
+    private parseLogData = (data: LogLevelV2Response): LogLevel =>
         this.responseWrapper(
             Object.entries(data)
                 .filter(([key, _]: [string, LogV2]) => key.includes('Log'))
@@ -155,10 +166,10 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                     const modifiedKey = key.replace(/Log/, '').toUpperCase();
                     levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
                     return levels;
-                }, <t.LogLevelReply>{}),
+                }, <LogLevelReply>{}),
         );
 
-    override logLevel(): Observable<t.LogLevel> {
+    override logLevel(): Observable<LogLevel> {
         return this.get<LogLevelV2Response>('/rest/v2/servers/this/logSettings').pipe(
             map(this.parseLogData),
         );
@@ -174,7 +185,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     }
     */
 
-    override updateLogLevel(logLevel: LogLevelV2Response): Observable<t.LogLevel> {
+    override updateLogLevel(logLevel: LogLevelV2Response): Observable<LogLevel> {
         const parsedLogLevels = Object.entries(logLevel).reduce(
             (data, [key, value]) => ({
                 ...data,
@@ -229,7 +240,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    override getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
+    override getHardwareIdsOfServers(): Observable<ServerHardareIdsResp> {
         return this.getRuntimeInfo('*').pipe(
             map(servers =>
                 this.responseWrapper(
@@ -242,7 +253,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    override getServerTimes(): Observable<t.NormalResponse<t.ServerTime[]>> {
+    override getServerTimes(): Observable<NormalResponse<ServerTime[]>> {
         const timeToString = time => time?.toString() || '0';
         return this.getServerTimesHelper().pipe(
             map(servers =>
@@ -258,17 +269,14 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         );
     }
 
-    override configureServer(configureParams: t.ConfigureParams): Promise<any> {
+    override configureServer(configureParams: ConfigureParams): Promise<any> {
         return this.patch(
             '/rest/v2/servers/this/runtimeInfo',
             configureParams as Record<string, string>,
         ).toPromise();
     }
 
-    override rebuildArchive(
-        location: number,
-        action?: string,
-    ): Observable<t.RebuildArchiveResponse> {
+    override rebuildArchive(location: number, action?: string): Observable<RebuildArchiveResponse> {
         let url = `/rest/v2/servers/this/rebuildArchive/${location ? 'main' : 'backup'}`;
         switch (action) {
             case 'start':
@@ -330,21 +338,13 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             params: {
                 _with: `cameras.${cameraId}.primaryStream,cameras.${cameraId}.secondaryStream`,
             },
-        }).pipe(
-            map(
-                (res: t.ValuesReply) =>
-                    res.cameras[cameraId] as Pick<
-                        t.CameraValue,
-                        'primaryStream' | 'secondaryStream'
-                    >,
-            ),
-        );
+        }).pipe(map((res: ValuesReply) => res.cameras[cameraId]));
     }
 
     /** End of Health Monitoring **/
 
     private patchCameraCompatibilityV2(
-        camera: NxRecursivePick<t.DeviceV2Full, typeof cameraKeyMapV2>,
+        camera: NxRecursivePick<DeviceV2Full, typeof cameraKeyMapV2>,
     ): RestV2CameraCompat {
         const { serverId, options, parameters = {}, motion, schedule, ...rest } = camera;
         const {
@@ -442,7 +442,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                 mediaStreams: true,
                 rotation: true,
             },
-        } satisfies NxRecursiveKeyMap<t.DeviceV2Full>;
+        } satisfies NxRecursiveKeyMap<DeviceV2Full>;
 
         return this.getWith('/rest/v2/devices', viewCamKeyMap).pipe(
             map(cameras =>

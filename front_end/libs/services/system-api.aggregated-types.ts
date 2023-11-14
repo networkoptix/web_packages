@@ -1,10 +1,12 @@
 import type { GetEndpoints } from './system-api.endpoint-types';
-import type * as t from './system-api.types';
+import type { NormalResponse } from './system-api.types';
+import type { Licence } from './system-api.types/licenses.types';
+import type { ServerTime } from './system-api.types/servers.types';
 import type { LegacyRole, PredefinedLegacyRole, SystemUser } from './system-user.types';
 import type { PreprocessCamera } from './system.service/camera-manager/camera-manager-types';
-import { ViewBaseCamera, ViewPreprocessServer } from './system.service/system-server-types';
+import type { ViewBaseCamera, ViewPreprocessServer } from './system.service/types/servers.types';
 
-export type AggregatedResp<K extends readonly (keyof GetEndpoints)[]> = t.NormalResponse<{
+export type AggregatedResp<K extends readonly (keyof GetEndpoints)[]> = NormalResponse<{
     [E in K[number]]: GetEndpoints[E];
 }>;
 
@@ -15,7 +17,7 @@ export interface StorageAnalytics {
 }
 
 export interface GetLicenses {
-    licenses: t.Licence[];
+    licenses: Licence[];
     hwids: string[];
 }
 
@@ -41,7 +43,7 @@ export type ViewMediaServersAndCameras = {
 
 export interface CamerasAndServerTimes {
     cameras: PreprocessCamera[];
-    serverTimes: t.ServerTime[];
+    serverTimes: ServerTime[];
 }
 
 export type HealthReport = AggregatedResp<

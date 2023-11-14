@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import { LayoutItem } from '@services/system-api.types';
+import { LayoutItem } from '@services/system-api.types/layouts.types';
 
 import { openSpotGenerator } from './open-spot-generator';
 

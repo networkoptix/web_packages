@@ -1,4 +1,4 @@
-import { SystemConfigSettings } from '@services/system-api.types';
+import { SystemConfigSettings } from '@services/system-api.types/system.types';
 
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 

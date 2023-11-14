@@ -75,7 +75,7 @@ import { createAddedItems } from '@services/layout-state/store/utils/create-adde
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { MutationType } from '@services/param-state/param-state.types';
-import { Layout, LayoutItem } from '@services/system-api.types';
+import { Layout, LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
 import { cleanId, dirtyId } from '@utils/general';

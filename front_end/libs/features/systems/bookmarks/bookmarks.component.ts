@@ -26,7 +26,7 @@ import type {
     BookmarksParams,
     BookmarksTags,
     Bookmark as SystemBookmark,
-} from '@services/system-api.types';
+} from '@services/system-api.types/devices.types';
 import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';

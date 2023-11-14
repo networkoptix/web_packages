@@ -16,7 +16,7 @@ import { ModalBase } from '@dialogs/modal-base';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
-import * as t from '@services/nx-cloud-api/nx-cloud-api.types';
+import type { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
@@ -37,7 +37,7 @@ interface Token {
 }
 
 type Connect = Omit<
-    t.System,
+    System,
     | 'accessRole'
     | 'capabilities'
     | 'lastLoginTime'

@@ -13,7 +13,7 @@ import { NxAccountService } from '@services/account.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
-import { LayoutItem, Layout } from '@services/system-api.types';
+import { LayoutItem, Layout } from '@services/system-api.types/layouts.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { dirtyId } from '@utils/general';
 

@@ -1,6 +1,7 @@
 import { Observable } from 'rxjs';
 
-import { ChangedIdReturned, RestV3SaveUser } from '@services/system-api.types';
+import { ChangedIdReturned } from '@services/system-api.types';
+import { RestV3SaveUser } from '@services/system-api.types/users.types';
 import { AddUser, BaseNewUser, RestNewUser } from '@services/system-user.types';
 
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';

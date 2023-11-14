@@ -7,7 +7,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import staticLang from '@language_static';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxToastService } from '@services/toast.service';
 import { NgChanges } from '@utils/ng-changes';
 import { transitionEnter, transitionLeave } from '@variables/animations';

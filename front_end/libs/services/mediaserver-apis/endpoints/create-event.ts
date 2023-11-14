@@ -1,4 +1,4 @@
-import { EventParams } from '@services/system-api.types';
+import { EventParams } from '@services/system-api.types/events.types';
 
 import { MediaserverLegacyConnection } from '../connections/adapters/adapter-target-types';
 

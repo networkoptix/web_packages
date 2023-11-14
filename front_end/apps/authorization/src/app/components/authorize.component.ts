@@ -31,7 +31,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { ModuleInformationReply } from '@services/system-api.types';
+import type { ModuleInformationReply } from '@services/system-api.types/servers.types';
 import { NxThemeService } from '@services/theme.service';
 import { NxToastService } from '@services/toast.service';
 import { oauthStore } from '@static-variables';

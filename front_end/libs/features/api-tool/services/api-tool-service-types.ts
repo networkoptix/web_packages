@@ -1,6 +1,6 @@
 import type { MenuNodeWithParent } from '@components/developers-menu/developers-menu-types';
 import type { ReadOnlyAPI } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 
 import type { APIDoc, APIInfo } from '../api-tool-types';
 

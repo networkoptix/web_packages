@@ -61,7 +61,7 @@ import staticLang from '@language_static';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { LayoutItem } from '@services/system-api.types';
+import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';

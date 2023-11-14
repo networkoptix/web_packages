@@ -4,7 +4,7 @@ import { v4 as uuid } from 'uuid';
 import type { NxConsoleService } from '@pages/developer-console/console/console.service';
 import { apiBase } from '@static-variables';
 
-import type * as t from './nx-cloud-api.types';
+import type { ContentManifest, CustomClient, PackageStatus } from './nx-cloud-api.types';
 
 export class CustomClientAPI {
     private readonly apiBase: string;
@@ -33,19 +33,19 @@ export class CustomClientAPI {
         if (baseVms) {
             body.base_vms = baseVms;
         }
-        return this.http.post<t.CustomClient>(this.apiBase, body);
+        return this.http.post<CustomClient>(this.apiBase, body);
     };
 
     retrieve = id => {
-        return this.http.get<t.CustomClient>(`${this.apiBase}${id}/`);
+        return this.http.get<CustomClient>(`${this.apiBase}${id}/`);
     };
 
     list = () => {
-        return this.http.get<t.CustomClient[]>(this.apiBase);
+        return this.http.get<CustomClient[]>(this.apiBase);
     };
 
     update = (id, name, values) => {
-        return this.http.put<t.CustomClient>(`${this.apiBase}${id}/`, { name, values });
+        return this.http.put<CustomClient>(`${this.apiBase}${id}/`, { name, values });
     };
 
     partialUpdate = (
@@ -58,7 +58,7 @@ export class CustomClientAPI {
             data.name = name;
         }
         data.values = { ...(data.values || {}), ...values };
-        return this.http.patch<t.CustomClient>(`${this.apiBase}${id}/`, data);
+        return this.http.patch<CustomClient>(`${this.apiBase}${id}/`, data);
     };
 
     destroy = id => {
@@ -66,7 +66,7 @@ export class CustomClientAPI {
     };
 
     getManifest = () => {
-        return this.http.get<t.ContentManifest>(`${this.apiBase}get_manifest/`);
+        return this.http.get<ContentManifest>(`${this.apiBase}get_manifest/`);
     };
 
     generatePackage = (id: string) => {
@@ -74,7 +74,7 @@ export class CustomClientAPI {
     };
 
     checkPackage = (id: string, downloadId: string) => {
-        return this.http.get<t.PackageStatus>(
+        return this.http.get<PackageStatus>(
             `${this.apiBase}${id}/check_package/?downloadId=${downloadId}`,
         );
     };

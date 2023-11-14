@@ -8,8 +8,20 @@ import type { APIDocType, MenuManifest } from '@services/nx-config/base-config';
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import { NxSystemBase } from '@services/system/system-base';
 import type { GetLicenses, StorageAnalytics } from '@services/system-api.aggregated-types';
-import type { LogLevel, RebuildArchiveResponse } from '@services/system-api.types';
-import * as t from '@services/system-api.types';
+import type {
+    ChangedIdReturned,
+    EmptyObjectReturned,
+    ResourceParam,
+} from '@services/system-api.types';
+import { EventParams } from '@services/system-api.types/events.types';
+import { Licence } from '@services/system-api.types/licenses.types';
+import type {
+    LogLevel,
+    RebuildArchiveResponse,
+    ModuleInformationReply,
+    ModuleInformation,
+    RestartServer,
+} from '@services/system-api.types/servers.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { alphabeticalSort, dirtyId } from '@utils/general';
@@ -19,7 +31,7 @@ import { setServerIpAndPort } from '@utils/nx';
 import { NxCloudApiService } from '../../nx-cloud-api';
 import { NxSystemAPIService } from '../../system-api.service';
 import { NxSystemAPI } from '../../system-legacy-api.service';
-import { NxSystemServer, ModuleInfo } from '../system-types';
+import { NxSystemServer } from '../types/servers.types';
 
 type PartialSystem = Pick<
     NxSystemOldModule,
@@ -54,7 +66,7 @@ export class ServerManager {
     }
 
     servers: NxSystemServer[] = [];
-    moduleInfo: ModuleInfo;
+    moduleInfo: ModuleInformationReply;
     serverSubscription: Observable<NxSystemServer[]>;
 
     public mediaserver: NxSystemAPI | NxSystemRestAPI | NxSystemRestAPI2;
@@ -175,14 +187,14 @@ export class ServerManager {
         serverId: string,
         id: string,
         params: Record<string, string>,
-    ): Promise<t.ChangedIdReturned> {
+    ): Promise<ChangedIdReturned> {
         return this.mediaserverConnections[serverId].saveCameraUserSettings(id, params);
     }
 
     setServerUserSettings(
         serverId: string,
         params: Record<string, string>,
-    ): Promise<t.ChangedIdReturned> {
+    ): Promise<ChangedIdReturned> {
         return this.mediaserverConnections[serverId].saveServerUserSettings(serverId, params);
     }
 
@@ -193,11 +205,11 @@ export class ServerManager {
     updateResource(
         resourceId: string,
         params: Record<string, string>,
-    ): Promise<t.EmptyObjectReturned> {
+    ): Promise<EmptyObjectReturned> {
         if (params.id) {
             params.id = dirtyId(params.id);
         }
-        const mappedParams = Object.entries(params).map<t.ResourceParam>(([name, value]) => ({
+        const mappedParams = Object.entries(params).map<ResourceParam>(([name, value]) => ({
             name,
             value,
             resourceId,
@@ -278,7 +290,7 @@ export class ServerManager {
         );
     }
 
-    getModuleInfo(serverId?: string): Observable<t.ModuleInformation> {
+    getModuleInfo(serverId?: string): Observable<ModuleInformation> {
         if (serverId) {
             return this.mediaserverConnections[serverId].getModuleInfo().pipe(
                 tap(moduleInfo => {
@@ -294,7 +306,7 @@ export class ServerManager {
         }
     }
 
-    getModuleInfoUsingUrl(url: string): Observable<t.ModuleInformation> {
+    getModuleInfoUsingUrl(url: string): Observable<ModuleInformation> {
         return this.mediaserver.getModuleInfoUsingUrl(url);
     }
 
@@ -349,12 +361,12 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].activateLicense(key).toPromise();
     }
 
-    renameServer(serverId: string, serverName: string): Promise<t.ChangedIdReturned> {
+    renameServer(serverId: string, serverName: string): Promise<ChangedIdReturned> {
         const cleanServerId = serverId.replace(/[{}]/g, '');
         return this.mediaserverConnections[serverId].renameServer(cleanServerId, serverName);
     }
 
-    restartServer(serverId: string): Promise<t.RestartServer> {
+    restartServer(serverId: string): Promise<RestartServer> {
         return this.mediaserverConnections[serverId]
             .restartServer(serverId)
             .catch(err => Promise.reject(err));
@@ -434,11 +446,11 @@ export class ServerManager {
         return this.mediaserverConnections[serverId].logUrl(params);
     }
 
-    createEvent(params: t.EventParams) {
+    createEvent(params: EventParams) {
         return this.mediaserver.createEvent(params);
     }
 
-    private parseLicense({ licenseBlock }: t.Licence): LicenseBlocks {
+    private parseLicense({ licenseBlock }: Licence): LicenseBlocks {
         return Object.fromEntries(
             licenseBlock.split('\n').map(block => block.split('=')),
         ) as LicenseBlocks;

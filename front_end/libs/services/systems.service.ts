@@ -36,7 +36,7 @@ import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import type { IConfig } from './nx-config/config-types';
 import { NxStorageService } from './storage.service';
-import type { MergeInfo } from './system-api.types';
+import type { MergeInfo } from './system-api.types/system.types';
 import type { NxSystem } from './system.service/system';
 import { NxSystemService } from './system.service/system.service';
 import type { NxSystemInfo } from './systems.service.types';

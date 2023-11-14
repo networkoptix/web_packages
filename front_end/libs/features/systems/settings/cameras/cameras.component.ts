@@ -31,7 +31,7 @@ import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { AlarmsReply } from '@services/system-api.types';
+import type { AlarmsReply } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import {
     CameraUpdate,

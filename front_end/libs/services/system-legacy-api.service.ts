@@ -68,14 +68,50 @@ import type {
 } from './system-api.aggregated-types';
 import { AggregatedRoles } from './system-api.aggregated-types';
 import type { GetEndpoints } from './system-api.endpoint-types';
-import * as t from './system-api.types';
+import {
+    ChangedIdReturned,
+    EmptyObjectReturned,
+    NormalResponse,
+    ResourceParam,
+    ServerDocumentation,
+    UnauthorizedCallback,
+} from './system-api.types';
+import {
+    Ec2CameraHistoryItems,
+    ec2CameraEx,
+    Ec2RecordedTimePeriodsResp,
+} from './system-api.types/devices.types';
+import { EventRule } from './system-api.types/events.types';
+import { PtzCommand } from './system-api.types/layouts.types';
+import {
+    ConfigureParams,
+    ModuleInformation,
+    RebuildArchiveResponse,
+    ServerHardareIdsResp,
+    TimeOfServers,
+    ec2Storage,
+    LogLevel,
+    RestartServer,
+} from './system-api.types/servers.types';
+import {
+    Alarms,
+    DiscoveredPeers,
+    Manifests,
+    MergeStatus,
+    MergeSystems,
+    Settings,
+    Statistics,
+    SystemSettingsResp,
+    Values,
+} from './system-api.types/system.types';
+import { ec2SaveUser } from './system-api.types/users.types';
 import type { MediaStreams } from './system.service/camera-manager/add-params.types';
 import type {
     PreprocessCamera,
     SaveCameraUserAttributes,
 } from './system.service/camera-manager/camera-manager-types';
 import type { SaveStoragePayload } from './system.service/storage-manager/storage';
-import type { PreprocessServer, ViewBaseCamera } from './system.service/system-types';
+import type { PreprocessServer, ViewBaseCamera } from './system.service/types/servers.types';
 import { NxUriCacheService } from './uri-cache.service';
 
 export class NxSystemAPI extends MediaserverLegacyConnection {
@@ -126,7 +162,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected currentUser: SystemUser;
     protected userEmail: string;
     protected userRequest: Promise<SystemUser>;
-    unauthorizedCallback: t.UnauthorizedCallback;
+    unauthorizedCallback: UnauthorizedCallback;
     cacheService: NxUriCacheService;
     cookieService: CookieService;
     healthService: NxHealthService;
@@ -140,7 +176,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         userEmail: string,
         systemId: string,
         serverId: string,
-        unauthorizedCallback: t.UnauthorizedCallback,
+        unauthorizedCallback: UnauthorizedCallback,
         cacheService: NxUriCacheService,
         cookieService: CookieService,
         healthService: NxHealthService,
@@ -559,7 +595,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return firstValueFrom(this.updateOrGetSettings({ systemName }));
     }
 
-    configureServer(configureParams: t.ConfigureParams) {
+    configureServer(configureParams: ConfigureParams) {
         return this.post<any>('/api/configure', configureParams).toPromise();
     }
 
@@ -589,7 +625,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncPersistent
-    getStatistics(salt: number): Observable<t.Statistics> {
+    getStatistics(salt: number): Observable<Statistics> {
         return this.get('/api/statistics', { params: { salt } });
     }
 
@@ -635,7 +671,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* End of Authentication  */
 
     /* Server settings */
-    public getServerTimes(): Observable<t.TimeOfServers> {
+    public getServerTimes(): Observable<TimeOfServers> {
         return this.get('/ec2/getTimeOfServers');
     }
 
@@ -646,22 +682,22 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     public settingsUpdater$ = new BehaviorSubject('');
 
     @memoizeAsyncPersistent
-    public getSettings(): Observable<t.SystemSettingsResp> {
+    public getSettings(): Observable<SystemSettingsResp> {
         return this.settingsUpdater$.pipe(switchMap(() => this.get('/api/systemSettings')));
     }
 
     // TODO: Split this into two
-    public updateOrGetSettings(params: Partial<t.Settings> = {}) {
+    public updateOrGetSettings(params: Partial<Settings> = {}) {
         const update = Object.keys(params).length > 0;
         return update
-            ? this.get<t.SystemSettingsResp>('/api/systemSettings', { params }).pipe(
+            ? this.get<SystemSettingsResp>('/api/systemSettings', { params }).pipe(
                   tap(() => this.settingsUpdater$.next('')),
               )
             : this.getSettings();
     }
 
     @memoizeAsyncPersistent
-    getSettingsDocumentation(): Promise<t.ServerDocumentation> {
+    getSettingsDocumentation(): Promise<ServerDocumentation> {
         return this.get('/api/settingsDocumentation').toPromise();
     }
 
@@ -669,7 +705,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
      * Start of Storage
      */
     public getStoragesInfo(params?) {
-        return this.get<t.ec2Storage[]>('/ec2/getStorages', { params });
+        return this.get<ec2Storage[]>('/ec2/getStorages', { params });
     }
 
     @memoizeAsyncLong
@@ -678,7 +714,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         const getCamerasEndpoint = '/ec2/getCamerasEx';
         const getServerEndpoint = '/ec2/getMediaServersEx';
         return this.getRequestAggregator<
-            t.NormalResponse<{
+            NormalResponse<{
                 [analyticsEndpoint]: unknown[];
                 [getCamerasEndpoint]: GetEndpoints[typeof getCamerasEndpoint];
                 [getServerEndpoint]: GetEndpoints[typeof getServerEndpoint];
@@ -699,14 +735,14 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     public getStorages(useCache = false, customTimeout = 8000) {
-        return this.get<t.NormalResponse<any>>('/api/storageSpace', {
+        return this.get<NormalResponse<any>>('/api/storageSpace', {
             headers: this.cacheHeader(useCache),
             timeout: customTimeout,
         });
     }
 
     public getStorageStatus(params) {
-        return this.get<t.NormalResponse<any>>('/api/storageStatus', {
+        return this.get<NormalResponse<any>>('/api/storageStatus', {
             params,
             timeout: 60000,
         });
@@ -720,7 +756,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.post<any>('/ec2/saveStorages', updateParams, { timeout: customTimeout });
     }
 
-    rebuildArchive(type: number, action?: string): Observable<t.RebuildArchiveResponse> {
+    rebuildArchive(type: number, action?: string): Observable<RebuildArchiveResponse> {
         let url = `/api/rebuildArchive?mainPool=${type}`;
         if (action) {
             url += `&action=${action}`;
@@ -740,13 +776,13 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     // End of storage
 
-    getCameraHistoryItems(): Observable<t.Ec2CameraHistoryItems> {
+    getCameraHistoryItems(): Observable<Ec2CameraHistoryItems> {
         return this.get('/ec2/getCameraHistoryItems');
     }
 
     @memoizeAsync(defaultHashFunction, useCache => !useCache, 10 * 1000)
     getServerStats(useCache = false) {
-        return this.get<t.NormalResponse<any>>('/api/metrics/values', {
+        return this.get<NormalResponse<any>>('/api/metrics/values', {
             headers: this.cacheHeader(useCache),
         });
     }
@@ -756,7 +792,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     renameServer(serverId: string, serverName: string) {
-        return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
+        return this.post<ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
             serverId,
             serverName,
         }).toPromise();
@@ -764,7 +800,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     saveServerUserSettings(serverId: string, param: { [key: string]: string }) {
         const [key, value] = Object.entries(param)[0];
-        return this.post<t.ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
+        return this.post<ChangedIdReturned>('/ec2/saveMediaServerUserAttributes', {
             serverId,
             [key]: value,
         }).toPromise();
@@ -777,30 +813,30 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     saveCameraUserSettings(cameraId: string, param: { [key: string]: string }) {
         const [key, value] = Object.entries(param)[0];
-        return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
+        return this.post<ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
             cameraId,
             [key]: value,
         }).toPromise();
     }
 
     restartServer(serverId?: string) {
-        return this.post<t.RestartServer>('/api/restart')
+        return this.post<RestartServer>('/api/restart')
             .toPromise()
             .catch(err => Promise.reject(err));
     }
 
     @memoizeAsyncMedium
-    getModuleInfo(): Observable<t.ModuleInformation> {
+    getModuleInfo(): Observable<ModuleInformation> {
         return this.get('/api/moduleInformation');
     }
 
     @memoizeAsyncMedium
-    getModuleInfoUsingUrl(url: string): Observable<t.ModuleInformation> {
-        return this.http.get<t.ModuleInformation>(`${url}/api/moduleInformation`);
+    getModuleInfoUsingUrl(url: string): Observable<ModuleInformation> {
+        return this.http.get<ModuleInformation>(`${url}/api/moduleInformation`);
     }
 
     detachFromSystem(currentPassword: string, serverId?: string) {
-        return this.post<t.NormalResponse<any>>('/api/detachFromSystem', {
+        return this.post<NormalResponse<any>>('/api/detachFromSystem', {
             currentPassword,
         });
     }
@@ -815,7 +851,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     @memoizeAsyncMedium
-    getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
+    getHardwareIdsOfServers(): Observable<ServerHardareIdsResp> {
         return this.get('/ec2/getHardwareIdsOfServers');
     }
 
@@ -835,7 +871,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.post('/api/activateLicense', { licenseKey: key }, { params });
     }
 
-    logLevel(logId?: string, name?: string, value?: string): Observable<t.LogLevel> {
+    logLevel(logId?: string, name?: string, value?: string): Observable<LogLevel> {
         const params = { id: logId, name, value };
         Object.keys(params).forEach(key => {
             if (params[key] === undefined) {
@@ -868,18 +904,18 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.getRequestAggregator(routes);
     }
 
-    saveUser(user: LegacyNewUser | LegacyUser): Observable<t.ChangedIdReturned> {
-        return this.post<t.ChangedIdReturned>('/ec2/saveUser', this.cleanUserObject(user));
+    saveUser(user: LegacyNewUser | LegacyUser): Observable<ChangedIdReturned> {
+        return this.post<ChangedIdReturned>('/ec2/saveUser', this.cleanUserObject(user));
     }
 
     deleteUser(userId: string) {
-        return this.post<t.ChangedIdReturned>('/ec2/removeUser', {
+        return this.post<ChangedIdReturned>('/ec2/removeUser', {
             id: userId,
         });
     }
 
     protected cleanUserObject(user: LegacyNewUser | LegacyUser): Partial<LegacyUser> {
-        const supportedFields: (keyof t.ec2SaveUser)[] = [
+        const supportedFields: (keyof ec2SaveUser)[] = [
             'id',
             'email',
             'name',
@@ -898,7 +934,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* Cameras and Servers */
     getCamera(id: string): Observable<PreprocessCamera> {
         const params = { id: this.cleanId(id) };
-        return this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx', { params }).pipe(
+        return this.get<ec2CameraEx[]>('/ec2/getCamerasEx', { params }).pipe(
             map(cameras => cameras[0]),
         );
     }
@@ -914,8 +950,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         );
     }
 
-    setResourceParams(params: t.ResourceParam[]) {
-        return this.post<t.EmptyObjectReturned>('/ec2/setResourceParams', params);
+    setResourceParams(params: ResourceParam[]) {
+        return this.post<EmptyObjectReturned>('/ec2/setResourceParams', params);
     }
 
     updateRecordingSettings({
@@ -923,7 +959,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         name: cameraName,
         ...params
     }: SaveCameraUserAttributes) {
-        return this.post<t.ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
+        return this.post<ChangedIdReturned>('/ec2/saveCameraUserAttributes', {
             cameraName,
             cameraId,
             ...params,
@@ -1097,7 +1133,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         limit?: number,
         label?: string,
         periodsType?: number,
-    ): Observable<t.Ec2RecordedTimePeriodsResp> {
+    ): Observable<Ec2RecordedTimePeriodsResp> {
         const date = new Date();
         if (typeof startTime === 'undefined') {
             startTime = date.getTime() - 30 * 24 * 60 * 60 * 1000;
@@ -1123,15 +1159,15 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             params.limit = limit;
         }
         // RecordedTimePeriods
-        return this.get<t.Ec2RecordedTimePeriodsResp>(
+        return this.get<Ec2RecordedTimePeriodsResp>(
             `/ec2/recordedTimePeriods?keepSmallChunks&${label || ''}`,
             { params },
         );
     }
 
     // TODO: param type
-    recordedTimePeriods(params: RequestParams): Observable<t.Ec2RecordedTimePeriodsResp['reply']> {
-        return this.get<t.Ec2RecordedTimePeriodsResp>('/ec2/recordedTimePeriods', { params }).pipe(
+    recordedTimePeriods(params: RequestParams): Observable<Ec2RecordedTimePeriodsResp['reply']> {
+        return this.get<Ec2RecordedTimePeriodsResp>('/ec2/recordedTimePeriods', { params }).pipe(
             map(({ reply }) => reply),
         );
     }
@@ -1147,17 +1183,17 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     );
 
     @NxSystemAPI.memoizeHM
-    getHealthManifest(): Observable<t.Manifests> {
+    getHealthManifest(): Observable<Manifests> {
         return this.get('/ec2/metrics/manifest');
     }
 
     @NxSystemAPI.memoizeHM
-    getHealthValues(): Observable<t.Values> {
+    getHealthValues(): Observable<Values> {
         return this.get('/ec2/metrics/values');
     }
 
     @NxSystemAPI.memoizeHM
-    getHealthAlarms(): Observable<t.Alarms> {
+    getHealthAlarms(): Observable<Alarms> {
         return this.get('/ec2/metrics/alarms');
     }
 
@@ -1251,7 +1287,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     /** Merge Systems */
-    getPeerSystems(showAddresses = true): Observable<t.DiscoveredPeers> {
+    getPeerSystems(showAddresses = true): Observable<DiscoveredPeers> {
         return this.get('/api/discoveredPeers', {
             params: {
                 showAddresses,
@@ -1280,10 +1316,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             takeRemoteSettings,
             dryRun,
         };
-        return this.post<t.MergeSystems>('/api/mergeSystems', data);
+        return this.post<MergeSystems>('/api/mergeSystems', data);
     }
 
-    checkMergeStatus(forceReload = true): Observable<t.MergeStatus> {
+    checkMergeStatus(forceReload = true): Observable<MergeStatus> {
         return this.get('/ec2/mergeStatus', {
             headers: this.cacheHeader(!forceReload),
         });
@@ -1348,15 +1384,15 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         throw new Error('should only be using rest version');
     }
 
-    getEventRules(): Observable<t.EventRule[]> {
+    getEventRules(): Observable<EventRule[]> {
         return this.get('/ec2/getEventRules');
     }
 
-    saveEventRule(eventRule: t.EventRule) {
+    saveEventRule(eventRule: EventRule) {
         return this.post('/ec2/saveEventRule', eventRule);
     }
 
-    ptz(ptzCommand: t.PtzCommand): Observable<unknown> {
+    ptz(ptzCommand: PtzCommand): Observable<unknown> {
         return this.post('/api/ptz', ptzCommand);
     }
 

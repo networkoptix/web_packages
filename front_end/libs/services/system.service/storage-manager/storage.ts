@@ -1,6 +1,6 @@
 import { v4 as uuid } from 'uuid';
 
-import type { ec2Storage } from '@services/system-api.types';
+import type { ec2Storage } from '@services/system-api.types/servers.types';
 import { ServerManager } from '@services/system.service/server-manager/server-manager';
 import { cleanId, isUUID } from '@utils/general';
 

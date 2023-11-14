@@ -39,7 +39,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
-import { Layout, LayoutItem, WebPage } from '@services/system-api.types';
+import { Layout, LayoutItem, WebPage } from '@services/system-api.types/layouts.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CurrentUser } from '@services/system-user.types';
 import {
@@ -47,8 +47,8 @@ import {
     NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
-import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemServer } from '@services/system.service/types/servers.types';
 import { selectResourcesValuesBySystemId } from '@store/system-resources/system-resources.selectors';
 import { alphaNumericSort, cleanId, dirtyId } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';

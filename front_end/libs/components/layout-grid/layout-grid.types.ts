@@ -1,12 +1,12 @@
 import { Point } from '@angular/cdk/drag-drop';
 import { Observable, ObservedValueOf } from 'rxjs';
 
-import type { Layout, LayoutItem, WebPage } from '@services/system-api.types';
+import type { Layout, LayoutItem, WebPage } from '@services/system-api.types/layouts.types';
 import {
     NxSystemCamera,
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
-import { NxSystemServer } from '@services/system.service/system-server-types';
+import { NxSystemServer } from '@services/system.service/types/servers.types';
 
 export interface Setting {
     label: string;

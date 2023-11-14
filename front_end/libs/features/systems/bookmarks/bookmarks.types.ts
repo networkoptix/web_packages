@@ -1,6 +1,9 @@
 import { Observable } from 'rxjs';
 
-import type { Bookmark as BookmarkResp, DeviceV1Full } from '@services/system-api.types';
+import type {
+    Bookmark as BookmarkResp,
+    DeviceV1Full,
+} from '@services/system-api.types/devices.types';
 
 export interface Bookmark extends BookmarkResp {
     tags: string[];

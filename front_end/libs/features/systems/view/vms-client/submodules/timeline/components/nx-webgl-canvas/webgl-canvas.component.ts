@@ -15,7 +15,7 @@ import * as fc from 'd3fc';
 import { animationFrameScheduler, interval, Subject, takeUntil, timer } from 'rxjs';
 
 import { nxConfig } from '@services/nx-config/config';
-import { Layout } from '@services/system-api.types';
+import { Layout } from '@services/system-api.types/layouts.types';
 import {
     NxSystemCamera,
     TimeDetail,

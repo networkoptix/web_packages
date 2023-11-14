@@ -1,8 +1,8 @@
 import { inject } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
 
-import type { NxSystemServer } from '@services/system.service/system-server-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { cleanId } from '@utils/general';
 
 const buildUpdatedPath = (path: string, systemId: string, serverId: string): string =>

@@ -14,7 +14,7 @@ import { BehaviorSubject, map, NEVER, switchMap } from 'rxjs';
 
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import staticLang from '@language_static';
-import { PtzCommands } from '@services/system-api.types';
+import { PtzCommands } from '@services/system-api.types/layouts.types';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 

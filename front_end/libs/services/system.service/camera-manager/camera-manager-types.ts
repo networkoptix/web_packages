@@ -1,6 +1,11 @@
 import type { Observable } from 'rxjs';
 
-import type { DeviceV2Full, Task, cameraKeyMapV2, ec2CameraEx } from '@services/system-api.types';
+import type {
+    DeviceV2Full,
+    Task,
+    cameraKeyMapV2,
+    ec2CameraEx,
+} from '@services/system-api.types/devices.types';
 import type { NxRecursivePick } from '@utils/nx';
 
 export interface Credentials {

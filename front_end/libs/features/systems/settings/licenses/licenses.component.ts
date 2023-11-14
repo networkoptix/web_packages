@@ -9,7 +9,8 @@ import { NxMenuService } from '@menu/menu.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
-import type { License, NxSystemServer } from '@services/system.service/system-types';
+import type { License } from '@services/system.service/types/licenses.types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { menus } from '@static-variables';
 import { cleanId } from '@utils/general';
 

@@ -16,7 +16,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxUrlValidatorDirective } from '@directives/nx-url-validator';
 import staticLang from '@language_static';
 import { Process } from '@services/process.service/process';
-import { ModuleInformation } from '@services/system-api.types';
+import { ModuleInformation } from '@services/system-api.types/servers.types';
 import { NxSystem } from '@services/system.service/system';
 import { NgChanges } from '@utils/ng-changes';
 

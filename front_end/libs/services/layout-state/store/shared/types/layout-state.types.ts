@@ -1,4 +1,4 @@
-import { Layout } from '@services/system-api.types';
+import { Layout } from '@services/system-api.types/layouts.types';
 
 // TODO: Need to figure out where this type should go
 export interface CrossSystemLayout {

@@ -9,7 +9,7 @@ import { tap, catchError } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxDbService } from '@services/db.service';
-import type { UserSession } from '@services/system-api.types';
+import type { UserSession } from '@services/system-api.types/users.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
 import { redirect } from '@variables/static-variables';

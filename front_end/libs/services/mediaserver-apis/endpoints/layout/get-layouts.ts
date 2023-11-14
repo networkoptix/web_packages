@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { Layouts } from '@services/system-api.types';
+import { Layouts } from '@services/system-api.types/layouts.types';
 
 import type {
     MediaserverRestConnection,

@@ -10,7 +10,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
-import { EventRule } from '@services/system-api.types';
+import { EventRule } from '@services/system-api.types/events.types';
 import { NxSystem } from '@services/system.service/system';
 import { delayInitial } from '@utils/general';
 

@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { Layout, LayoutItem } from '@services/system-api.types';
+import { Layout, LayoutItem } from '@services/system-api.types/layouts.types';
 
 import { UnsavedLayoutState } from '../shared/types/layout-state.types';
 

@@ -1,6 +1,6 @@
 import { Point } from '@angular/cdk/drag-drop';
 
-import { LayoutItem } from '@services/system-api.types';
+import { LayoutItem } from '@services/system-api.types/layouts.types';
 
 const enum Direction {
     RIGHT = 0,

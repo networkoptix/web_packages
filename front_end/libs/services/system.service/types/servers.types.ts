@@ -1,8 +1,11 @@
+import type {
+    OsInfo,
+    RestV1ServerFull,
+    ec2MediaServerEx,
+} from '@services/system-api.types/servers.types';
 import type { WithIpAndPort } from '@utils/nx';
 
-import type { OsInfo, RestV1ServerFull, ec2MediaServerEx } from '../system-api.types';
-
-import type { MediaStream } from './camera-manager/add-params.types';
+import type { MediaStream } from '../camera-manager/add-params.types';
 
 export type ec2MediaServerExCompat = Omit<ec2MediaServerEx, 'osInfo' | 'networkAddresses'> & {
     osInfo: OsInfo;

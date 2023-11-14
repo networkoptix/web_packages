@@ -4,7 +4,7 @@
     }
 }]  */
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
-import {
+import type {
     LegacyRole,
     LegacyUser,
     PredefinedLegacyRole,
@@ -13,19 +13,47 @@ import {
 import type { ArrayType, KeyFilter } from '@utils/general';
 
 import type { MenuManifest } from './nx-config/base-config';
-import type * as t from './system-api.types';
-import { NormalResponse } from './system-api.types';
+import { NormalResponse, Param, ServerDocumentation } from './system-api.types';
+import type {
+    Ec2CameraHistoryItems,
+    ec2CameraEx,
+    Ec2RecordedTimePeriodsResp,
+    DeviceV1Full,
+    DeviceV2Full,
+} from './system-api.types/devices.types';
+import type { EventRule } from './system-api.types/events.types';
+import type { Licence } from './system-api.types/licenses.types';
+import type {
+    ModuleInformation,
+    ServerHardareIdsResp,
+    ec2MediaServer,
+    ec2MediaServerEx,
+    ec2Storage,
+    TimeOfServers,
+    RestV1ServerFull,
+    RestV2ServerFull,
+} from './system-api.types/servers.types';
+import {
+    Alarms,
+    AlarmsReply,
+    Manifests,
+    MergeStatus,
+    SystemSettingsResp,
+    Values,
+    ValuesReply,
+} from './system-api.types/system.types';
+import { ec2User } from './system-api.types/users.types';
 
 export interface GetEndpointsFull {
     /* rest/v1 */
-    '/rest/v1/devices': t.DeviceV1Full[];
-    '/rest/v1/servers': t.RestV1ServerFull[];
+    '/rest/v1/devices': DeviceV1Full[];
+    '/rest/v1/servers': RestV1ServerFull[];
     '/rest/v1/users': RestV1User[];
     // TODO: Fix these to have defaults
 
     /* rest/v2 */
-    '/rest/v2/devices': t.DeviceV2Full[];
-    '/rest/v2/servers': t.RestV2ServerFull[];
+    '/rest/v2/devices': DeviceV2Full[];
+    '/rest/v2/servers': RestV2ServerFull[];
 }
 
 export type GetArrayTypesFull = {
@@ -36,38 +64,38 @@ export interface GetEndpoints {
     /* api */
     '/api/getCurrentUser': NormalResponse<LegacyUser>;
     '/api/getNonce': { nonce: string; realm: string };
-    '/api/moduleInformation': t.ModuleInformation;
-    '/api/settingsDocumentation': t.ServerDocumentation;
-    '/api/systemSettings': t.SystemSettingsResp;
+    '/api/moduleInformation': ModuleInformation;
+    '/api/settingsDocumentation': ServerDocumentation;
+    '/api/systemSettings': SystemSettingsResp;
 
     /* ec2 */
-    '/ec2/getCameraHistoryItems': t.Ec2CameraHistoryItems;
-    '/ec2/getCamerasEx': t.ec2CameraEx[];
-    '/ec2/getEventRules': t.EventRule[];
-    '/ec2/getHardwareIdsOfServers': t.ServerHardareIdsResp;
-    '/ec2/getLicenses': t.Licence[];
-    '/ec2/getMediaServers': t.ec2MediaServer[];
-    '/ec2/getMediaServersEx': t.ec2MediaServerEx[];
+    '/ec2/getCameraHistoryItems': Ec2CameraHistoryItems;
+    '/ec2/getCamerasEx': ec2CameraEx[];
+    '/ec2/getEventRules': EventRule[];
+    '/ec2/getHardwareIdsOfServers': ServerHardareIdsResp;
+    '/ec2/getLicenses': Licence[];
+    '/ec2/getMediaServers': ec2MediaServer[];
+    '/ec2/getMediaServersEx': ec2MediaServerEx[];
     '/ec2/getPredefinedRoles': PredefinedLegacyRole[];
-    '/ec2/getSettings': t.Param[];
-    '/ec2/getStorages': t.ec2Storage[];
-    '/ec2/getTimeOfServers': t.TimeOfServers;
+    '/ec2/getSettings': Param[];
+    '/ec2/getStorages': ec2Storage[];
+    '/ec2/getTimeOfServers': TimeOfServers;
     '/ec2/getUserRoles': LegacyRole[];
-    '/ec2/getUsers': t.ec2User[];
-    '/ec2/mergeStatus': t.MergeStatus;
-    '/ec2/metrics/alarms': t.Alarms;
-    '/ec2/metrics/manifest': t.Manifests;
-    '/ec2/metrics/values': t.Values;
-    '/ec2/recordedTimePeriods': t.Ec2RecordedTimePeriodsResp;
+    '/ec2/getUsers': ec2User[];
+    '/ec2/mergeStatus': MergeStatus;
+    '/ec2/metrics/alarms': Alarms;
+    '/ec2/metrics/manifest': Manifests;
+    '/ec2/metrics/values': Values;
+    '/ec2/recordedTimePeriods': Ec2RecordedTimePeriodsResp;
 
     /* rest/v1 */
-    '/rest/v1/system/merge': t.MergeStatus;
+    '/rest/v1/system/merge': MergeStatus;
     '/rest/v1/users': RestV1User[];
 
     /* rest/v2 */
-    '/rest/v2/system/metrics/alarms': t.AlarmsReply;
-    '/rest/v2/system/metrics/manifest': t.Manifests['reply'];
-    '/rest/v2/system/metrics/values': t.ValuesReply;
+    '/rest/v2/system/metrics/alarms': AlarmsReply;
+    '/rest/v2/system/metrics/manifest': Manifests['reply'];
+    '/rest/v2/system/metrics/values': ValuesReply;
 
     /* rest/v3 */
 

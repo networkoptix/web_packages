@@ -20,7 +20,7 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { ModuleInformation } from '@services/system-api.types';
+import { ModuleInformation } from '@services/system-api.types/servers.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { servers } from '@static-variables';

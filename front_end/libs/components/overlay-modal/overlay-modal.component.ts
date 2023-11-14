@@ -11,10 +11,10 @@ import { NxAccountService } from '@services/account.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { ModuleInformation } from '@services/system-api.types';
+import type { ModuleInformation } from '@services/system-api.types/servers.types';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 
 @UntilDestroy()
 @Component({

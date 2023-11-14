@@ -21,7 +21,7 @@ import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
 import { NxApplyService } from '@services/apply.service';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { icons } from '@static-variables';
 
 @UntilDestroy()

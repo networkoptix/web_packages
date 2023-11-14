@@ -8,7 +8,7 @@ import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { LogLevel, LogLevelReply } from '@services/system-api.types';
+import type { LogLevel, LogLevelReply } from '@services/system-api.types/servers.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { NgChanges } from '@utils/ng-changes';

@@ -28,7 +28,7 @@ import { Servers } from '@services/nx-config/base-config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';

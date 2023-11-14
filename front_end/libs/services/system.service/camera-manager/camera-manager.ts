@@ -2,12 +2,10 @@ import { flatten } from 'lodash-es';
 import { firstValueFrom, map, Observable } from 'rxjs';
 
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
-import type {
-    ec2CameraEx,
-    ServerTime,
-    ChangedIdReturned,
-    CameraValues,
-} from '@services/system-api.types';
+import type { ChangedIdReturned } from '@services/system-api.types';
+import type { ec2CameraEx } from '@services/system-api.types/devices.types';
+import type { ServerTime } from '@services/system-api.types/servers.types';
+import type { CameraValues } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { cleanId, KeyFilter, MS } from '@utils/general';
 

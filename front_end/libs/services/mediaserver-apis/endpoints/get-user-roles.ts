@@ -1,6 +1,6 @@
 import { Observable } from 'rxjs';
 
-import { RestUserRole } from '@services/system-api.types';
+import { RestUserRole } from '@services/system-api.types/users.types';
 
 import { MediaserverRestConnection } from '../connections/adapters/adapter-target-types';
 

@@ -32,7 +32,7 @@ import {
     CameraStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';

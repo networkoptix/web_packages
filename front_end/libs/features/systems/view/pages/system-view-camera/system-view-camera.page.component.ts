@@ -24,7 +24,7 @@ import { pollingTimeout } from '@pages/static-variables-features';
 import { FpsMeterService } from '@services/fps-meter.service';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import type { Ec2RecordedTimePeriodsResp } from '@services/system-api.types';
+import type { Ec2RecordedTimePeriodsResp } from '@services/system-api.types/devices.types';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';

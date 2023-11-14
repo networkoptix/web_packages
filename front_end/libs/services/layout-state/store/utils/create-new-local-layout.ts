@@ -3,7 +3,7 @@ import { inject } from '@angular/core';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { nxConfig } from '@services/nx-config/config';
-import { Layout, LayoutItem } from '@services/system-api.types';
+import { Layout, LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { dirtyId } from '@utils/general';
 

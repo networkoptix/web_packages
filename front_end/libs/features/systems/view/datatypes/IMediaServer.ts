@@ -1,4 +1,4 @@
-import { ViewBaseServer } from '@services/system.service/system-server-types';
+import { ViewBaseServer } from '@services/system.service/types/servers.types';
 
 import { ViewCamera } from './Camera';
 

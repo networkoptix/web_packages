@@ -34,7 +34,8 @@ import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { ChangedIdReturned, RebuildArchiveResponse } from '@services/system-api.types';
+import type { ChangedIdReturned } from '@services/system-api.types';
+import type { RebuildArchiveResponse } from '@services/system-api.types/servers.types';
 import {
     STORAGE_STATUS,
     Storage,

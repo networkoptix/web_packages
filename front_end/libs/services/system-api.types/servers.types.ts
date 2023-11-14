@@ -1,4 +1,4 @@
-import type { NormalResponse, Param } from './system-api.types';
+import type { NormalResponse, Param } from '.';
 
 export interface ec2Storage {
     addParams: Param[];
@@ -123,9 +123,40 @@ export type ServerHardareIdsResp = NormalResponse<ServerHardwareIds[]>;
 
 export interface RestartServer extends NormalResponse<null> {}
 
+// Duplicate from system-types, remove after checking module info endpoints
+// export interface ModuleInfo {
+//     brand: string;
+//     cloudHost: string;
+//     cloudOwnerId?: string;
+//     cloudSystemId: string;
+//     customization: string;
+//     ecDbReadOnly: boolean;
+//     hwPlatform: string;
+//     id: string;
+//     localSystemId: string;
+//     name: string;
+//     osInfo: {
+//         platform: string;
+//         variant: string;
+//         variantVersion: string;
+//     };
+//     port: number;
+//     protoVersion: number;
+//     realm?: string;
+//     remoteAddresses: string[];
+//     runtimeId: string;
+//     serverFlags: string;
+//     sslAllowed: boolean;
+//     status?: string;
+//     systemName: string;
+//     type: string;
+//     version: string;
+// }
+
 export interface ModuleInformationReply {
     brand: string;
     cloudHost: string;
+    cloudOwnerId?: string; // Added from above for merge refactor, needs to be checked
     cloudSystemId: string;
     customization: string;
     ecDbReadOnly: boolean;

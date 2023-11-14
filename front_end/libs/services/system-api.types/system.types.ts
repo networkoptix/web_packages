@@ -4,7 +4,7 @@ import {
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 
-import type { NormalResponse, Param } from './system-api.types';
+import type { NormalResponse, Param } from '.';
 
 export class SystemConfigSettings {
     cloudAccountName: string;

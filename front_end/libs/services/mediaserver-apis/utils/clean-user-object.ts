@@ -1,6 +1,6 @@
 import { pick } from 'lodash-es';
 
-import { RestV1SaveUser } from '@services/system-api.types';
+import { RestV1SaveUser } from '@services/system-api.types/users.types';
 
 export function cleanUserObjectRest<U extends RestV1SaveUser>(user: U): RestV1SaveUser {
     const supportedFields: (keyof RestV1SaveUser)[] = [

@@ -11,7 +11,7 @@ import staticLang from '@language_static';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
-import { License } from '@services/system.service/system-types';
+import { License } from '@services/system.service/types/licenses.types';
 import { NgChanges } from '@utils/ng-changes';
 
 @Component({

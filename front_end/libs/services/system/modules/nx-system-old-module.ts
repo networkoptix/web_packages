@@ -25,6 +25,15 @@ import { NxPollService } from '@services/poll.service';
 import { PermissionManagerModule } from '@services/system/modules/resource-managers/permission-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { NxSystemAPIService } from '@services/system-api.service';
+import {
+    EventRule,
+    EventTypes,
+    RawRule,
+    ActionParams,
+    EventCondition,
+} from '@services/system-api.types/events.types';
+import { PtzCommand } from '@services/system-api.types/layouts.types';
+import { SystemConfigSettings, MergeInfo } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -33,16 +42,6 @@ import { PermissionManager } from '@services/system.service/permission-manager/p
 import { updateInterval } from '@static-variables';
 import { memoizeAsyncPersistent, memoizeDecorator } from '@utils/memoize';
 
-import {
-    EventRule,
-    EventTypes,
-    PtzCommand,
-    RawRule,
-    SystemConfigSettings,
-    MergeInfo,
-    ActionParams,
-    EventCondition,
-} from '../../system-api.types';
 import { NxSystemAPI } from '../../system-legacy-api.service';
 import { CameraManager } from '../../system.service/camera-manager/camera-manager';
 import { CloudStorageManager } from '../../system.service/cloud-storage-manager/cloud-storage-manager';

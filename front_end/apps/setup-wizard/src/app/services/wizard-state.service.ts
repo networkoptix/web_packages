@@ -12,12 +12,10 @@ import staticLang from '@language_static';
 import { Setting, SettingsConfig } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
-import {
-    ModuleInformationReply,
-    NormalResponse,
-    SystemConfigSettings,
-    UserSession,
-} from '@services/system-api.types';
+import type { NormalResponse } from '@services/system-api.types';
+import type { ModuleInformationReply } from '@services/system-api.types/servers.types';
+import type { SystemConfigSettings } from '@services/system-api.types/system.types';
+import type { UserSession } from '@services/system-api.types/users.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { alertTimeout, apiBase, icons, settingsConfig, simpleURLRegex } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';

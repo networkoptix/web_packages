@@ -33,10 +33,10 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import {
-    DiscoveredPeersReply,
     ModuleInformation,
     ModuleInformationReply,
-} from '@services/system-api.types';
+} from '@services/system-api.types/servers.types';
+import { DiscoveredPeersReply } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';

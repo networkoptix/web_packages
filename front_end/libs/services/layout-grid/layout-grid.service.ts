@@ -6,7 +6,7 @@ import { Subject } from 'rxjs';
 import { ResourceNode, ResourceType } from '@components/layout-grid/layout-grid.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
-import { LayoutItem } from '@services/system-api.types';
+import { LayoutItem } from '@services/system-api.types/layouts.types';
 
 interface LayoutSettings {
     openMenu: 'left' | 'right' | 'both';

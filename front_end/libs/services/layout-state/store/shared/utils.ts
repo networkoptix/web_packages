@@ -1,7 +1,7 @@
 import md5 from 'md5';
 import stringify from 'safe-stable-stringify';
 
-import { Layout } from '@services/system-api.types';
+import { Layout } from '@services/system-api.types/layouts.types';
 
 import {
     CrossSystemLayout,

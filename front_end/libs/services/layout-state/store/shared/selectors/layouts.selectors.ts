@@ -1,6 +1,6 @@
 import { createSelector } from '@ngrx/store';
 
-import { Layout } from '@services/system-api.types';
+import { Layout } from '@services/system-api.types/layouts.types';
 import { alphabeticalSort } from '@utils/general';
 
 import { selectLocalLayoutsState } from '../../local-layouts/local-layouts.selectors';

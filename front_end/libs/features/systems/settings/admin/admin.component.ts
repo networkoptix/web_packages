@@ -34,18 +34,12 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import type { MergeInfo } from '@services/system-api.types';
-import * as t from '@services/system-api.types';
+import type { MergeInfo, Settings } from '@services/system-api.types/system.types';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { icons, menus, redirect } from '@static-variables';
-
-interface Settings {
-    disconnectDisabled: boolean;
-    renameDisabled: boolean;
-}
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -66,7 +60,10 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     mergeTargetSystems: NxSystemInfo[];
 
     currentlyMerging = false;
-    settings: Settings;
+    settings: {
+        disconnectDisabled: boolean;
+        renameDisabled: boolean;
+    };
     systemsSubscription: Subscription;
     systemSubscription: Subscription;
     currentMergeInfo: MergeInfo;
@@ -78,7 +75,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     disconnectProcess: Process;
     showNewText: boolean;
 
-    settingsForSystem$: Observable<t.Settings>;
+    settingsForSystem$: Observable<Settings>;
     systemName: string;
     systemNameFormWatcher: FormWatcher;
     systemNameProcess: Process;

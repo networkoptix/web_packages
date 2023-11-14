@@ -20,14 +20,14 @@ import type {
     TosInfo,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
 import type { Process } from '@services/process.service/process';
-import type { MergeInfo } from '@services/system-api.types';
+import type { MergeInfo } from '@services/system-api.types/system.types';
 import { NxUser } from '@services/system-user.types';
 import type { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import type { CloudStorageManager } from '@services/system.service/cloud-storage-manager/cloud-storage-manager';
 import type { LicenseManager } from '@services/system.service/license-manager/licence-manager';
 import type { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import type { NxSystem } from '@services/system.service/system';
-import type { NxSystemServer } from '@services/system.service/system-types';
+import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import type { NxSystemInfo } from '@services/systems.service.types';
 import type { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
 

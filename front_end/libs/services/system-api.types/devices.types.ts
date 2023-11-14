@@ -14,7 +14,7 @@ import {
 import type { MotionType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxRecursiveKeyMap } from '@utils/nx';
 
-import { HiddenParams, NormalResponse, Param } from './system-api.types';
+import { HiddenParams, NormalResponse, Param } from '.';
 
 export interface Task {
     bitrateKbps: number;
