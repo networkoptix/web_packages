@@ -57,7 +57,7 @@ export const SystemGuard: CanActivateFn = (
     const checkPermissionsFor = (system: NxSystem): boolean | Promise<boolean> => {
         const permissions = system.permissionManager.permissions$$();
         const isOwner = system.permissionManager.isOwner$$();
-        const isAdmin = permissions.isAdmin || isOwner;
+        const isAdmin = system.permissionManager.isAdmin$$() || isOwner;
         const canViewChecks = {
             users: permissions.editUsers,
             'cloud-storage': system.canUserViewCloudStorage(),
@@ -127,9 +127,11 @@ export const SystemGuard: CanActivateFn = (
             if (currSystem.isOnline && cookieLoginEnabledSystem(currSystem.mediaserver)) {
                 await firstValueFrom(currSystem.mediaserver.setAccessTokenAsCookie());
             }
-            await currSystem.update();
         }
 
+        if (!currSystem.permissionManager.currentUser$$()) {
+            await currSystem.update();
+        }
         menusService.currentUser = currSystem.permissionManager.currentUser$$();
         menusService.updateActiveSystemMenu(currSystem);
 

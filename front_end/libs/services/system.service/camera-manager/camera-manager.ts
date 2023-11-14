@@ -148,7 +148,7 @@ export class CameraManager {
         const currentUser = this.system?.permissionManager.currentUser$$();
         const canEditSpecificCamera =
             currentUser?.resourceAccessRights?.[camera.id]?.includes('edit');
-        const canEdit = canEditSpecificCamera || currentUser.isAdmin;
+        const canEdit = canEditSpecificCamera || currentUser?.isAdmin;
 
         const {
             name,
