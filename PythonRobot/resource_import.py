@@ -38,8 +38,15 @@ def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_
         api.activate_account_via_api(email, password)
 
 
-def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,
-                api=False, reset=False, two_FA=False, twoFA_backup_code=""):
+def cloud_login(
+        driver,
+        email,
+        password,
+        validate=True,
+        button=rb.LOG_IN_NAV_BAR,
+        exists=True,
+        two_FA=False,
+        ):
     if button:
         Button(driver, button).wait_until_visible()
         Button(driver, button).click()

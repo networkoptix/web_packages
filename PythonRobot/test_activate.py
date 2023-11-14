@@ -19,7 +19,7 @@ def register_and_activate():
         resource_import.register_and_activate_account(
             driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
         driver.get(rb.ENV + "/account")
-        resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False)
+        resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None)
 
 
 def register_and_activate_curly_text():
@@ -39,7 +39,7 @@ def register_and_activate_special_chars():
         resource_import.register_and_activate_account(
             driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
         driver.get(rb.ENV + "/account")
-        resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None, api=False)
+        resource_import.cloud_login(driver, random_email, rb.BASE_PASSWORD, button=None)
 
 
 def register_activate_with_leading_space():
@@ -69,8 +69,7 @@ def register_and_activate_with_special_chars_in_pw():
         resource_import.register_and_activate_account(
             driver, "#@!k", "Hamil", random_email, rb.SYMBOL_PASSWORD, from_email=False)
         driver.get(rb.ENV + "/account")
-        resource_import.cloud_login(
-            driver, random_email, rb.SYMBOL_PASSWORD, button=None, api=False)
+        resource_import.cloud_login(driver, random_email, rb.SYMBOL_PASSWORD, button=None)
 
 
 def activate_same_link_twice():
