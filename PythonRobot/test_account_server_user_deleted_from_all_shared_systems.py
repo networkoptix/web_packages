@@ -75,6 +75,28 @@ def name_change_shown_in_system(
         assert system_user.user_name_text().get_text() == f"{new_first_name} {new_last_name}"
 
 
+def owner_can_not_delete_themselves(
+        base_url: str,
+        server: Mediaserver,
+        ):
+    """
+    5. User who owns a system cannot remove themselves
+    [Tags] C69855 delete_account
+    """
+    owner = server.get_cloud_owner()
+    with get_chrome() as driver:
+        driver.get(base_url)
+        HeaderNav(driver).log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        SystemsPage(driver).wait_until_visible()
+        driver.get(base_url + '/account')
+        account_page = AccountPage(driver)
+        account_page.wait_until_loaded()
+        delete_button = account_page.delete_account_button()
+        delete_button.wait_until_not_clickable()
+        account_page.get_can_not_delete_account_tooltip().wait_until_visible()
+
+
 def user_deleted_from_all_shared_systems(
         cloud_account: CloudAccount,
         base_url: str,
@@ -126,6 +148,10 @@ if __name__ == '__main__':
         name_change_shown_in_system(ENV, cloud_server_1)
         print(
             f"{Fore.WHITE}{name_change_shown_in_system.__doc__.strip()}\t\t\t"
+            f"{Fore.GREEN}| PASS |")
+        owner_can_not_delete_themselves(ENV, cloud_server_1)
+        print(
+            f"{Fore.WHITE}{owner_can_not_delete_themselves.__doc__.strip()}\t\t\t"
             f"{Fore.GREEN}| PASS |")
         cloud_server_2 = suite.create_cloud_server(
             cloud_owner=cloud_owner, suite_name=suite_name, cloud_users={'viewer': user})

@@ -7,15 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Account Server Suite Teardown
 Force Tags        account
 
 *** Test Cases ***
-5. User who owns a system cannot remove themselves
-    [Tags]    C69855        delete_account
-    Go To    ${url}/account
-    Log In    ${server 1}[cloudOwner]    ${password}    button=None   api=${False}
-    Verify in Account Page
-    Wait Until Element is Visible    ${DELETE ACCOUNT DISABLED BUTTON}
-    Mouse Over    ${DELETE ACCOUNT BUTTON}
-    Wait Until Element Is Visible    ${CAN NOT DELETE ACCOUNT TOOLTIP}
-
 6. Delete account button is enabled
     [Tags]    C69854        delete account
     Go To    ${url}/account
