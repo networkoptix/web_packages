@@ -5,12 +5,10 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
-from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.information_page import InformationPage
 from pages.login import LoginDialog
 from resource_import import get_chrome
-from resource_import import register_and_activate_account
 from pages.system_admin import FailedToAccessSystemPage
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
@@ -61,16 +59,14 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
         print("pass")
 
 
-def non_owner_can_disconnect_account_from_system(server: Mediaserver):
+def non_owner_can_disconnect_account_from_system(server: Mediaserver, cloud_viewer: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         owner = server.get_cloud_owner()
         cloud_auth = (owner.email, owner.password)
-        CLOUD_API.share(cloud_auth, server.id, "viewer", email, viewer_permissions)
+        CLOUD_API.share(cloud_auth, server.id, "viewer", cloud_viewer.email, viewer_permissions)
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
-        LoginDialog(driver).basic_cloud_login(email, password)
+        LoginDialog(driver).basic_cloud_login(cloud_viewer.email, password)
         sys_admin = SystemAdmin(driver)
         time.sleep(2)
         sys_admin.disconnect_from_account_button().click()
@@ -91,7 +87,7 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver):
         left_menu.users_button().click()
         left_menu.update_users_list()
         for user in left_menu.users:
-            if user == email:
+            if user == cloud_viewer.email:
                 raise RuntimeError("User was still in the users list.")
         print("pass")
 
@@ -346,7 +342,8 @@ if __name__ == "__main__":
         # cloud_server_second = suite.create_cloud_server(cloud_owner_second)
         # can_log_in_to_system_from_direct_link(cloud_server_first)
         # owner_can_disconnect_system_from_cloud(cloud_server_second)
-        non_owner_can_disconnect_account_from_system(cloud_server_first)
+        cloud_account = suite.create_cloud_account()
+        non_owner_can_disconnect_account_from_system(cloud_server_first, cloud_account)
         user_without_permissions_cannot_see_system_admin_page(cloud_server_first)
         owner_can_rename_system_via_cloud_portal(cloud_server_first)
         system_name_change_is_shown_in_cloud_portal(cloud_server_first)
