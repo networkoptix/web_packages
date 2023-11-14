@@ -117,15 +117,14 @@ def filter_releases(releases):
 @permission_classes((AllowAny, ))
 async def visited_key(request):
     global_cache = caches['global']
+    value = None
     if request.method == 'GET':
         # Check cache value here
-        if 'key' not in request.query_params:
-            raise APIRequestException('Parameter key is missing', ErrorCodes.wrong_parameters,
-                                      error_data=request.query_params)
-        key = 'visited_key_' + request.query_params['key']
-        value = await global_cache.aget(key, False)
+        if 'key' in request.query_params:
+            key = 'visited_key_' + request.query_params['key']
+            value = await global_cache.aget(key, False)
 
-        logger.debug(f'check visited: {key}: {value}')
+            logger.debug(f'check visited: {key}: {value}')
 
     else:
         # Save cache value here

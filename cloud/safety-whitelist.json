@@ -161,5 +161,13 @@
   "60956": {
     "name": "Django",
     "note": "CVE-2023-41164: Potential denial of service vulnerability in django.utils.encoding.uri_to_iri().https://www.djangoproject.com/weblog/2023/sep/04/security-releases"
+  },
+  "61586": {
+    "name": "Django",
+    "note": "CVE-2023-43665: Denial-of-service possibility in django.utils.text.Truncator. https://www.djangoproject.com/weblog/2023/oct/04/security-releases CVE-2023-43665 For more information, please visit https://pyup.io/v/61586/f17"
+  },
+  "61601": {
+    "name": "Urllib3",
+    "note": "CVE-2023-43804: Urllib3 doesn't treat the 'Cookie' HTTP header special or provide any helpers for managing cookies over HTTP, that is the responsibility of the user. However, it is possible for a user to specify a 'Cookie' header and unknowingly leak information via HTTP redirects to a different origin if that user doesn't disable redirects explicitly.https://github.com/urllib3/urllib3/security/advisories/GHSA-v845-jxx5-vc9f CVE-2023-43804 For more information, please visit https://pyup.io/v/61601/f17"
   }
 }
