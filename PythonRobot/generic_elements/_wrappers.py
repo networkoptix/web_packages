@@ -23,10 +23,6 @@ class Button:
         self._element.click()
 
     def is_visible(self) -> bool:
-        try:
-            self._element.wait_until_visible()
-        except ElementNotVisible:
-            return False
         return self._element.is_visible()
 
     def is_focused(self) -> bool:
