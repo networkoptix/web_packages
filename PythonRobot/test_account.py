@@ -1,4 +1,6 @@
+import json
 import os
+import pathlib
 import time
 
 import resource_import
@@ -16,7 +18,6 @@ from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.reset_password_dialog import ResetPasswordDialog
-from resource_import import get_lang_list
 from email_access import EmailClient
 from email_access import get_random_email
 
@@ -231,7 +232,7 @@ def test_language_is_changeable_on_the_account_page():
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
         driver.refresh()
-        lang_dict = get_lang_list()
+        lang_dict = _get_lang_list()
         for lang in lang_dict:
             info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
             verify_in_account_page(driver)
@@ -287,7 +288,7 @@ def test_language_change_affects_emails():
 
 def test_language_change_is_new_default(cloud_user: CloudAccount):
     """15 Language change is new default"""
-    lang_dict = resource_import.get_lang_list()
+    lang_dict = _get_lang_list()
     japanese_code = 'ja_JP'
     german_code = 'de_DE'
     ja_JP_account_info = lang_dict[japanese_code]['ACCOUNT INFORMATION']
@@ -336,6 +337,12 @@ def verify_in_account_page(driver):
     Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_not_visible()
     Button(driver, rb.ACCOUNT_CANCEL).wait_until_not_visible()
     time.sleep(0.5)
+
+
+def _get_lang_list():
+    path = pathlib.Path(__file__).parent / 'customizations' / 'default_lang_list.json'
+    with open(path, encoding="utf-8") as langDict:
+        return json.load(langDict)
 
 
 if __name__ == "__main__":

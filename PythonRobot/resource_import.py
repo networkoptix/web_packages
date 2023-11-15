@@ -1,6 +1,4 @@
-import json
 import logging
-import pathlib
 from contextlib import contextmanager
 from typing import ContextManager
 
@@ -21,12 +19,6 @@ def get_chrome() -> ContextManager[ChromeBrowser]:
         yield driver
     finally:
         driver.quit()
-
-
-def get_lang_list():
-    path = pathlib.Path(__file__).parent / 'customizations' / 'default_lang_list.json'
-    with open(path, encoding="utf-8") as langDict:
-        return json.load(langDict)
 
 
 _logger = logging.getLogger(__name__)
