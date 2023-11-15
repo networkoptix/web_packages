@@ -411,14 +411,12 @@ class _GeneralSettings:
         self._get_session_limit_spin_box().set_value(str(value))
 
     def save(self):
-        button = self._get_save_button()
-        button.click()
-        button.wait_until_not_visible(1)
+        self._get_save_button().click()
+        self._get_save_and_cancel_buttons_container().wait_until_not_visible()
 
     def cancel(self):
-        button = self._get_cancel_button()
-        button.click()
-        button.wait_until_not_visible(1)
+        self._get_cancel_button().click()
+        self._get_save_and_cancel_buttons_container().wait_until_not_visible()
 
     def get_system_name(self) -> str:
         return TextField(self._driver, '//nx-text-editable').get_text()
@@ -440,3 +438,6 @@ class _GeneralSettings:
 
     def get_warning_message(self):
         return PageText(self._driver, '//*[contains(@class, "warning-text")]')
+
+    def _get_save_and_cancel_buttons_container(self) -> Pane:
+        return Pane(self._driver, '//div[contains(@class, "d-flex ng-star-inserted")]')
