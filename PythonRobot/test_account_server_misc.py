@@ -12,7 +12,7 @@ from pages.account_page import SuccessToast
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
-from pages.system_left_menu import SystemLeftMenu
+from pages.system_admin import SystemAdmin
 from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
 from resource_import import get_chrome
@@ -68,7 +68,7 @@ def name_change_shown_in_system(
         # TODO: Only works for English localization
         assert success_toast.get_text() == "Your account is successfully saved"
         driver.get(base_url + f'/systems/{server.id}')
-        left_menu = SystemLeftMenu(driver)
+        left_menu = SystemAdmin(driver).get_left_menu()
         left_menu.open_users_dropdown()
         owner_menu_option = left_menu.get_user_with_email(owner.email)
         owner_menu_option.click()
@@ -161,15 +161,15 @@ def user_deleted_from_all_shared_systems(
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         SystemsPage(driver).wait_until_visible()
         driver.get(base_url + f'/systems/{server_1.id}')
-        left_menu = SystemLeftMenu(driver)
+        left_menu = SystemAdmin(driver).get_left_menu()
         left_menu.open_users_dropdown()
         assert not left_menu.has_user_with_email(cloud_account.email)
         driver.get(base_url + f'/systems/{server_2.id}')
-        left_menu = SystemLeftMenu(driver)
+        left_menu = SystemAdmin(driver).get_left_menu()
         left_menu.open_users_dropdown()
         assert not left_menu.has_user_with_email(cloud_account.email)
         driver.get(base_url + f'/systems/{server_3.id}')
-        left_menu = SystemLeftMenu(driver)
+        left_menu = SystemAdmin(driver).get_left_menu()
         left_menu.open_users_dropdown()
         assert not left_menu.has_user_with_email(cloud_account.email)
 
