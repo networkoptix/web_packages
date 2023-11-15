@@ -64,7 +64,64 @@ def test_health_monitor_details_panel_errors_and_warnings(server: Mediaserver):
         cameras_section.click()
 
         cameras_section.get_table_problem("test error").click()
-        
+        camera_details1 = information_tab.get_details_pane()
+        camera_details1.get_pane_error_by_title("Camera test error is broken").wait_until_visible()
+
+        cameras_section.get_table_problem("test 2 errors").click()
+        camera_details2 = information_tab.get_details_pane()
+        errors = camera_details2.get_pane_error_by_title("Camera test 2 errors is broken")
+        errors.wait_until_visible()
+        assert camera_details2.get_pane_problem_count(errors) == 2
+
+        cameras_section.get_table_problem("test camera warning").click()
+        camera_details3 = information_tab.get_details_pane()
+        warning = camera_details3.get_pane_warning_by_title("Camera test camera warning is broken")
+        warning.wait_until_visible()
+
+        cameras_section.get_table_problem("test two warnings").click()
+        camera_details4 = information_tab.get_details_pane()
+        warnings = camera_details4.get_pane_warning_by_title("Camera test two warnings is broken")
+        warnings.wait_until_visible()
+        assert camera_details4.get_pane_problem_count(warnings) == 2
+
+        cameras_section.get_table_problem("test both").click()
+        camera_details5 = information_tab.get_details_pane()
+        issue1 = camera_details5.get_pane_error_by_title("Camera test both is broken")
+        issue1.wait_until_visible()
+        issue2 = camera_details5.get_pane_warning_by_title("Camera test both is broken")
+        issue2.wait_until_visible()
+
+        storage_section = information_tab.get_storages_section()
+        storage_section.click()
+
+        storage_section.get_table_problem("test storage error").click()
+        storage_details1 = information_tab.get_details_pane()
+        storage_details1.get_pane_error_by_title("Storage test storage error is broken").wait_until_visible()
+
+        storage_section.get_table_problem("test storage 2 errors").click()
+        storage_details2 = information_tab.get_details_pane()
+        errors = storage_details2.get_pane_error_by_title("Storage test storage 2 errors is broken")
+        errors.wait_until_visible()
+        assert storage_details2.get_pane_problem_count(errors) == 2
+
+        storage_section.get_table_problem("test storage warning").click()
+        storage_details3 = information_tab.get_details_pane()
+        warning = storage_details3.get_pane_warning_by_title("Storage test storage warning is broken")
+        warning.wait_until_visible()
+
+        storage_section.get_table_problem("test storage 2 warnings").click()
+        storage_details4 = information_tab.get_details_pane()
+        warnings = storage_details4.get_pane_warning_by_title("Storage test storage 2 warnings is broken")
+        warnings.wait_until_visible()
+        assert storage_details4.get_pane_problem_count(warnings) == 2
+
+        storage_section.get_table_problem("test storage both").click()
+        storage_details5 = information_tab.get_details_pane()
+        issue1 = storage_details5.get_pane_error_by_title("Storage test storage both is broken")
+        issue1.wait_until_visible()
+        issue2 = storage_details5.get_pane_warning_by_title("Storage test storage both is broken")
+        issue2.wait_until_visible()
+
 
 if __name__ == "__main__":
     with Suite() as suite:
