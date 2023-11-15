@@ -7,6 +7,7 @@ import {
     distinctUntilChanged,
     filter,
     firstValueFrom,
+    from,
     interval,
     map,
     of,
@@ -19,7 +20,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemService } from '@services/system.service/system.service';
 import { SystemResourcesActions, SystemResourcesSelectors } from '@store/system-resources';
-import { dirtyId } from '@utils/general';
+import { cleanId, dirtyId } from '@utils/general';
 
 import { LayoutStateService } from './layout-state.service';
 import { ActiveLayoutActions } from './store/active-layout';
@@ -28,7 +29,10 @@ import { SharedLayoutsActions } from './store/shared';
 import { selectLayouts } from './store/shared/selectors';
 import { LayoutTypes, UnsavedLocalLayoutState } from './store/shared/types/layout-state.types';
 import { UnsavedLayoutsActions } from './store/unsaved-layouts';
-import { selectUnsavedLayoutsState } from './store/unsaved-layouts/unsaved-layouts.selectors';
+import {
+    selectUnsavedLayoutsOverwrites,
+    selectUnsavedLayoutsState,
+} from './store/unsaved-layouts/unsaved-layouts.selectors';
 
 @Injectable()
 export class LayoutStateEffects {
@@ -104,11 +108,15 @@ export class LayoutStateEffects {
                         const mediaserver = this.systemService.getCurrentSystem()
                             .mediaserver as NxSystemRestAPI3;
 
+                        const overwriteLayouts = await firstValueFrom(
+                            this.store.select(selectUnsavedLayoutsOverwrites),
+                        );
+
                         const savingLocalLayouts = layouts
                             .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
-                            .map((layout: UnsavedLocalLayoutState) =>
+                            .map(({ layout: { id, ...layout } }: UnsavedLocalLayoutState) =>
                                 firstValueFrom(
-                                    mediaserver.putLayout(layout.id, layout.layout).pipe(
+                                    mediaserver.putLayout(overwriteLayouts[id] || id, layout).pipe(
                                         map(updatedLayout => updatedLayout),
                                         catchError(() => of(null)),
                                         filter(Boolean),
@@ -118,11 +126,33 @@ export class LayoutStateEffects {
 
                         const savedLayouts = await Promise.all(savingLocalLayouts);
 
-                        return LocalLayoutsActions.update({
-                            layouts: savedLayouts,
-                        });
+                        const toDelete = savedLayouts
+                            .map(
+                                ({ id }) =>
+                                    Object.entries(overwriteLayouts).find(
+                                        ([_, value]) => value === id,
+                                    )?.[0],
+                            )
+                            .filter(Boolean) as string[];
+
+                        const { params: { layoutId } = {} } =
+                            this.layoutStateService.paramStateHandler.state$$();
+
+                        if (layoutId && toDelete.map(cleanId).includes(layoutId)) {
+                            this.layoutStateService.paramStateHandler.state$$.set({
+                                params: { layoutId: cleanId(overwriteLayouts[dirtyId(layoutId)]) },
+                            });
+                        }
+
+                        return [
+                            LocalLayoutsActions.update({
+                                layouts: savedLayouts,
+                            }),
+                            SharedLayoutsActions.deleteLayout({ layoutIds: toDelete }),
+                        ];
                     }),
                     take(1),
+                    switchMap(actions => from(actions)),
                 );
             }),
         );
