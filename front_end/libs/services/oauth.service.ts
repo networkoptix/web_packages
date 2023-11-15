@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { Injectable, signal } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { tap } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -26,8 +26,6 @@ export class OauthService {
     get cloudApiRefreshToken() {
         return this.storage.cloudApiRefreshToken;
     }
-
-    temporaryAuthToken = signal<string>(null);
 
     logoutTokens(accessToken?: string, refreshToken?: string) {
         if (!accessToken) {
@@ -77,7 +75,7 @@ export class OauthService {
             disconnect: 'passwordDisconnect',
             detach: 'passwordDetach',
             merge: 'passwordMerge',
-            renew: 'renewWeb',
+            renewWeb: 'renewWeb',
             renew2FA: 'renewWeb2FA',
             reset: 'passwordReset',
             restart: 'passwordRestart',
@@ -85,7 +83,7 @@ export class OauthService {
             transfer: 'passwordTransfer',
         };
         const params = new URLSearchParams({
-            client_type: clientTypes[state] || clientTypes.login,
+            client_type: (state && clientTypes[state]) || clientTypes.login,
             view_type: 'web',
             redirect_uri: cleanRedirect(redirectTo),
             client_id: environment.isLocal ? 'webadmin' : 'cloud_portal',
