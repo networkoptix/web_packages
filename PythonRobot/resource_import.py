@@ -9,11 +9,8 @@ import urllib3
 
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
-from email_access import EmailClient
-from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
-from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import Pane
 
@@ -21,20 +18,6 @@ from generic_elements import Pane
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 
 rb = RobotVariables("en_US")
-
-
-def activate_from_email(driver, email):
-    link = get_email_link(email)
-    driver.get(link)
-    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible()
-    Image(driver, rb.ACTIVATION_SUCCESS_ICON).wait_until_visible()
-    Button(driver, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON).wait_until_visible()
-
-
-def get_email_link(recipient):
-    with EmailClient(email_alias=recipient) as client:
-        email_message = client.wait_for_activate_account_email()
-        return email_message.get_activate_account_link()
 
 
 def get_headless_chrome():
