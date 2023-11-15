@@ -1,25 +1,22 @@
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from pages.header import HeaderNav
-from pages.login import LoginDialog
-from email_access import get_random_email
-from resource_import import get_chrome
-from resource_import import register_and_activate_account
 from generic_elements import Button
 from generic_elements import PageText
+from pages.header import HeaderNav
+from pages.login import LoginDialog
+from resource_import import get_chrome
 
 rb = RobotVariables("en_US")
-password = "qweasd 123"
 
 
-def test_inaccessible_system_page():
+def test_inaccessible_system_page(cloud_user: CloudAccount):
     """Failed to access system page correctly shows when going to a non-existent system"""
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        email = get_random_email()
-        register_and_activate_account(driver, 'Mark', 'Hamill', email, password)
         nav = HeaderNav(driver)
         nav.log_in_button().click()
-        LoginDialog(driver).basic_cloud_login(email, password)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         nav.account_dropdown()
         nonexistent_system_url = f'{rb.ENV}systems/nonexistent_system_name'
         driver.get(nonexistent_system_url)
@@ -29,4 +26,6 @@ def test_inaccessible_system_page():
 
 
 if __name__ == '__main__':
-    test_inaccessible_system_page()
+    with Suite() as suite:
+        cloud_account = suite.create_cloud_account()
+        test_inaccessible_system_page(cloud_account)
