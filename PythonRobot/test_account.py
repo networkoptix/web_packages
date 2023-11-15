@@ -10,7 +10,6 @@ from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
 from generic_elements import Button
 from generic_elements import DropDown
-from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import TextField
 from pages.header import HeaderNav
@@ -32,10 +31,8 @@ def test_can_access_account_page_from_dropdown(cloud_user: CloudAccount):
         header = HeaderNav(driver)
         header.log_in_button().click()
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
-        header.account_dropdown().wait_until_visible()
-        time.sleep(3)
-        Button(driver, rb.ACCOUNT_DROPDOWN).click()
-        Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
+        header.account_dropdown().click()
+        header.account_settings_option().click()
         verify_in_account_page(driver)
 
 
