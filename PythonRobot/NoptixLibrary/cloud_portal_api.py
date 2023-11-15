@@ -62,8 +62,7 @@ class CloudPortalAPI(object):
             ) -> ContextManager[requests.Session]:
         with CloudSession(
                 self.env, email, password, backup_code, verification_code, logout,
-                verify_ssl_cert=_ssl_certs_path
-        ) as session:
+                verify_ssl_cert=_ssl_certs_path) as session:
             yield session
 
     def api_log_in(self, email, password, backup_code=None, verification_code=None):
@@ -262,11 +261,11 @@ class CloudPortalAPI(object):
 
     def delete_account(self, email, password, verification_code=None):
         with self._session(
-            email,
-            password,
-            verification_code=verification_code,
-            logout=False,
-            ) as s:
+                email,
+                password,
+                verification_code=verification_code,
+                logout=False,
+                ) as s:
             s.headers.update({"referer": f"{self.env}"})
             delete_account_response = s.post(
                 f'{self.env}/api/account/delete', json={'password': password})
@@ -428,9 +427,9 @@ class CloudPortalAPI(object):
                         "imageUrl": (
                             "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/"
                             "cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"),
+                        },
                     },
-                },
-            }
+                }
             systems_json.append(
                 {"authKey": auth_key, "id": id, "body": json.dumps(body), "title": title})
             sys_id += 1
