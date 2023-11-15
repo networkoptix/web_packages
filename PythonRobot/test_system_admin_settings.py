@@ -465,6 +465,74 @@ def system_settings_block_is_not_available_when_the_system_is_offline(server: Me
     server.start()
 
 
+def check_limit_session_duration(server: Mediaserver):
+    """
+    [tags]    C65703
+    """
+    with get_chrome() as driver:
+        server.api.restore_default_general_settings()
+        url = ENV + f'/systems/{server.id}'
+        driver.get(url)
+        owner = server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
+
+        limit_session_option = settings.limit_session_duration_option()
+        assert limit_session_option.is_checked()
+        default_session_limit_days = 30
+        assert settings.get_session_duration_limit() == default_session_limit_days
+        assert settings.get_limit_session_duration_unit_of_time() == 'days'
+
+        limit_session_option.unselect()
+        settings.get_session_limit_spin_box().wait_until_not_clickable()
+        settings.get_limit_session_duration_drop_down().wait_until_not_clickable()
+        expected_warning = 'Unlimited user session lifetime threatens overall system security'
+        assert settings.get_session_limit_warning().get_text() == expected_warning
+        assert settings.is_ok_button_visible()
+        assert settings.is_cancel_button_visible()
+
+        limit_session_option.select()
+        settings.get_unsaved_changes_label().wait_until_visible()
+        assert not settings.is_ok_button_visible()
+        assert not settings.is_cancel_button_visible()
+        settings.get_session_limit_warning().wait_until_not_visible()
+        settings.get_session_limit_spin_box().wait_until_clickable()
+        settings.get_limit_session_duration_drop_down().wait_until_clickable()
+
+        settings.set_limit_session_duration_unit_of_time('minutes')
+        settings.set_session_duration_limit(0)
+        minimum_session_limit = 1
+        assert settings.get_session_duration_limit() == minimum_session_limit
+
+        settings.get_session_limit_spin_box().input_value('hjkl')
+        assert settings.get_session_duration_limit() == minimum_session_limit
+        settings.get_session_limit_spin_box().input_value('&*(')
+        assert settings.get_session_duration_limit() == minimum_session_limit
+
+        new_session_limit = 654
+        settings.set_session_duration_limit(new_session_limit)
+        settings.save()
+        assert settings.get_session_duration_limit() == new_session_limit
+
+        settings.set_session_duration_limit(minimum_session_limit)
+        settings.save()
+        assert settings.get_session_duration_limit() == minimum_session_limit
+
+        settings.set_limit_session_duration_unit_of_time('days')
+        warning_page_text = settings.get_session_limit_warning()
+        new_session_limit_days = 600
+        settings.set_session_duration_limit(new_session_limit_days)
+        expected_warning_2 = 'The recommended maximum user session lifetime is 30 days.'
+        assert warning_page_text.get_text() == expected_warning_2
+
+        settings.set_limit_session_duration_unit_of_time('hours')
+        new_session_limit_hours = 600
+        settings.set_session_duration_limit(new_session_limit_hours)
+        settings.save()
+        assert settings.get_limit_session_duration_unit_of_time() == 'days'
+        assert settings.get_session_duration_limit() == new_session_limit_hours // 24
+
+
 if __name__ == '__main__':
     suite_name = os.path.basename(__file__)
     suite_name = suite_name.replace("test_", "").replace(".py", "")
@@ -486,3 +554,4 @@ if __name__ == '__main__':
         # cloud_owner_2 = suite.create_cloud_account()
         # cloud_server_2 = suite.create_cloud_server(cloud_owner_2, f"{suite_name}_1_",)
         # system_settings_block_is_not_available_when_the_system_is_offline(cloud_server_2)
+        check_limit_session_duration(cloud_server_first)

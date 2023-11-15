@@ -425,6 +425,12 @@ class DropDown:
     def find_element(self, locator: str, position: int = 1) -> Element:
         return self._element.find_element(locator, position)
 
+    def wait_until_not_clickable(self, timeout_sec: float = 5):
+        self._element.wait_until_not_clickable(timeout_sec)
+
+    def wait_until_clickable(self, timeout_sec: float = 5):
+        self._element.wait_until_clickable(timeout_sec)
+
 
 class DropDownOption:
 
@@ -584,3 +590,12 @@ class SpinBox:
     def set_value(self, value: str):
         self._element.clear_text()
         self._element.send_keys(value)
+
+    def wait_until_not_clickable(self, timeout_sec: float = 5):
+        self._element.wait_until_not_clickable(timeout_sec)
+
+    def wait_until_clickable(self, timeout_sec: float = 5):
+        self._element.wait_until_clickable(timeout_sec)
+
+    def input_value(self, text: str):
+        self._element.send_keys(text)

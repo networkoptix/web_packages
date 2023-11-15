@@ -7,6 +7,8 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from RobotVariables import RobotVariables
 from generic_elements import Button
 from generic_elements import Checkbox
+from generic_elements import DropDown
+from generic_elements import DropDownOption
 from generic_elements import ElementNotVisible
 from generic_elements import Image
 from generic_elements import Link
@@ -399,16 +401,16 @@ class _GeneralSettings:
             '//label[@for="sessionLimitMinutesToggle"]//span'
             ).get_text()
 
-    def _get_session_limit_spin_box(self) -> SpinBox:
+    def get_session_limit_spin_box(self) -> SpinBox:
         return SpinBox(self._driver, '//input[@id="generic-numeric"]')
 
     def get_session_duration_limit(self) -> int:
         # The default value is in days. Recalculation according to hours and
         # minutes are not implemented.
-        return int(self._get_session_limit_spin_box().get_value())
+        return int(self.get_session_limit_spin_box().get_value())
 
     def set_session_duration_limit(self, value: int):
-        self._get_session_limit_spin_box().set_value(str(value))
+        self.get_session_limit_spin_box().set_value(str(value))
 
     def save(self):
         self._get_save_button().click()
@@ -441,3 +443,28 @@ class _GeneralSettings:
 
     def _get_save_and_cancel_buttons_container(self) -> Pane:
         return Pane(self._driver, '//div[contains(@class, "d-flex ng-star-inserted")]')
+
+    def get_session_limit_warning(self) -> PageText:
+        return PageText(self._driver, '//*[contains(@class, "alert-block-text")]')
+
+    def get_limit_session_duration_drop_down(self) -> DropDown:
+        return DropDown(self._driver, '//button[@id="serverTimeUnitSelect"]')
+
+    def get_limit_session_duration_unit_of_time(self) -> str:
+        return self.get_limit_session_duration_drop_down().text()
+
+    def set_limit_session_duration_unit_of_time(self, value: str):
+        supported_values = ['days', 'hours', 'minutes']
+        if value not in supported_values:
+            raise RuntimeError(
+                f'Unsupported unit of time {value!r}. Supported values: {supported_values}',
+                )
+        self.get_limit_session_duration_drop_down().click()
+        pane_locator = '//div[@class="dropdown-menu"]'
+        dropdown_pane = Pane(self._driver, pane_locator)
+        dropdown_pane.wait_until_visible()
+        DropDownOption(
+            self._driver,
+            f'{pane_locator}//*[@id="serverTimeUnitSelect-{value}"]',
+            ).click()
+        dropdown_pane.wait_until_not_visible()
