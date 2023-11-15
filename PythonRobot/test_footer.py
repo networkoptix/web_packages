@@ -4,7 +4,7 @@ from colorama import Fore
 
 from RobotVariables import RobotVariables
 from pages.footer import Footer
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 
 rb = RobotVariables("en_US")
 

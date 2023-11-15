@@ -6,7 +6,7 @@ from generic_elements import PageText
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.systems_page import SystemsPage
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 
 rb = RobotVariables("en_US")
 

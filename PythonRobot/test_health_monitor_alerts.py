@@ -9,7 +9,7 @@ from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 

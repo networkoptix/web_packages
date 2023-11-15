@@ -1,7 +1,7 @@
 from generic_elements import Button
 from generic_elements import Link
 from generic_elements import PageText
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from resource_import import rb
 from variables import ENV
 

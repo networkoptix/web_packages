@@ -4,7 +4,6 @@ import time
 from selenium.webdriver.common.by import By
 from selenium.webdriver.remote.webdriver import WebDriver
 
-import resource_import
 from RobotVariables import RobotVariables
 from generic_elements import Button
 from generic_elements import Link

@@ -1,7 +1,7 @@
 import time
 
-import resource_import
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from pages.header import HeaderNav
 from pages.ipvd_page import IVPDPage
 from pages.ipvd_page import FeedbackForm
@@ -13,13 +13,13 @@ login = "noptixautoqa+owner@gmail.com"
 
 def ipvd_page_loads_without_login():
     """1. IPVD Page loads without Login"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
 
 def ipvd_page_loads_while_logged_in():
     """2. IPVD Page loads while Logged in"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         driver.get(rb.ENV)
         HeaderNav(driver).log_in_button().click()
         LoginDialog(driver).basic_cloud_login(login, password)
@@ -28,7 +28,7 @@ def ipvd_page_loads_while_logged_in():
 
 def ipvd_landing_page_actions():
     """3. IPVD landing page actions"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         ipvd_page.validate_on_ipvd_page()
         ipvd_page.placeholder_text()
@@ -55,7 +55,7 @@ def ipvd_landing_page_actions():
 
 def text_search_manufacturer():
     """4. Text search correctly finds Manufacturers"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
         ipvd_page.search_text("hanwha")
@@ -64,7 +64,7 @@ def text_search_manufacturer():
 
 def request_form_basic_validation():
     """5. Request Form Basic Validations"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
         ff = FeedbackForm(driver)
@@ -88,7 +88,7 @@ def request_form_basic_validation():
 
 def feedback_form_basic_validations():
     """6. Feedback Form Basic Validations"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         HeaderNav(driver).log_in_button().click()
         LoginDialog(driver).basic_cloud_login(login, password)

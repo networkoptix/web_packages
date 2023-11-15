@@ -7,7 +7,7 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from pages.security_form import SecurityForm
 from pages.system_admin import SystemAdmin
 from variables import ENV

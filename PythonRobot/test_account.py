@@ -3,11 +3,11 @@ import os
 import pathlib
 import time
 
-import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import Link
@@ -57,7 +57,7 @@ def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR
 
 def test_can_access_account_page_from_dropdown(cloud_user: CloudAccount):
     """1 Can access the account page from dropdown"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         driver.get(rb.ENV)
         cloud_login(driver, cloud_user.email, cloud_user.password)
         time.sleep(3)
@@ -68,7 +68,7 @@ def test_can_access_account_page_from_dropdown(cloud_user: CloudAccount):
 
 def test_can_access_account_page_from_direct_link():
     """2 can access the account page from direct link while logged in"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         driver.get(rb.env)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password)
         url = rb.env + "/account"
@@ -82,7 +82,7 @@ def test_can_access_account_page_from_direct_link():
 
 def test_cannot_access_account_page_from_direct_link_on_valid_login():
     """4 accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.env + "/account"
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none)
@@ -93,7 +93,7 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
 
 def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
     """5 changing first name and saving maintains that setting"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
@@ -107,7 +107,7 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
         alert = PageText(driver, xpath)
         alert.wait_until_visible(10)
         alert.wait_until_not_visible(10)
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
         cloud_login(driver, cloud_user.email, password, button=None, api=False)
@@ -128,7 +128,7 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
 def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
     """6 changing last name and saving maintains that setting"""
     #todo: 
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
@@ -140,7 +140,7 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
         alert = PageText(driver, xpath)
         alert.wait_until_visible(10)
         alert.wait_until_not_visible(10)
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
         cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
@@ -157,7 +157,7 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
 
 def test_first_name_is_required():
     """7 first name is required"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
@@ -176,7 +176,7 @@ def test_first_name_is_required():
 
 def test_last_name_is_required():
     """8 last name is required"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
@@ -196,7 +196,7 @@ def test_last_name_is_required():
 
 def test_space_for_first_name_is_not_valid():
     """9 space for first name is not valid"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
@@ -211,7 +211,7 @@ def test_space_for_first_name_is_not_valid():
 
 def test_space_for_last_name_is_not_valid():
     """10 space for last name is not valid"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
@@ -227,7 +227,7 @@ def test_space_for_last_name_is_not_valid():
 
 def test_language_is_changeable_on_the_account_page():
     """13 language is changeable on the account page"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
@@ -253,7 +253,7 @@ def test_language_is_changeable_on_the_account_page():
 
 def test_language_change_affects_emails():
     """14 Language change affects emails"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         with CloudAccount(get_random_email(sendemail=True)) as cloud_user:
             cloud_user.activate()
             url = rb.ENV + "/account"
@@ -293,7 +293,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
     german_code = 'de_DE'
     ja_JP_account_info = lang_dict[japanese_code]['ACCOUNT INFORMATION']
     de_DE_account_info = lang_dict[german_code]['ACCOUNT INFORMATION']
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
         cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)

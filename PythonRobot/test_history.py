@@ -4,7 +4,7 @@ from colorama import Fore
 from pages.downloads_page import DownloadsPage
 from pages.history_page import HistoryPage
 from RobotVariables import RobotVariables
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from test_account import cloud_login
 
 variables = RobotVariables("en_US")

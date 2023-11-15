@@ -8,7 +8,7 @@ from pages.system_admin import FailedToAccessSystemPage
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.systems_page import SystemsPage
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from variables import ENV
 
 

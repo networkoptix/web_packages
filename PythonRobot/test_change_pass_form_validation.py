@@ -4,7 +4,7 @@ from generic_elements import ToastNotification
 from pages.change_pass_form import ChangePassForm
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from NoptixLibrary.suite import Suite
 
 from variables import ENV

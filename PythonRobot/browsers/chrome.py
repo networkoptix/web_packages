@@ -1,4 +1,6 @@
 import time
+from contextlib import contextmanager
+from typing import ContextManager
 
 from selenium.webdriver import Chrome
 from selenium.webdriver.chrome.options import Options
@@ -46,3 +48,12 @@ class ChromeBrowser(Chrome):
             if time.monotonic() - start_time > timeout_sec:
                 raise AssertionError(f"Looking for {number} tabs, found {len(handles)} tabs.")
             time.sleep(.2)
+
+
+@contextmanager
+def get_chrome() -> ContextManager[ChromeBrowser]:
+    driver = ChromeBrowser()
+    try:
+        yield driver
+    finally:
+        driver.quit()

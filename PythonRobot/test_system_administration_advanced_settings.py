@@ -4,7 +4,7 @@ from NoptixLibrary.suite import Suite, Mediaserver, CloudAccount
 from nx_modal import SettingsSavedModalWindow
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from variables import ENV
 
 

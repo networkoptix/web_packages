@@ -5,7 +5,7 @@ from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
 import variables
 from pages.downloads_page import DownloadsPage
 from pages.footer import Footer
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 
 
 def download_link_is_in_the_footer():

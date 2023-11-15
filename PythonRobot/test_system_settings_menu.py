@@ -4,7 +4,7 @@ from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from pages.login import LoginDialog
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_users import SystemUsers

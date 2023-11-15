@@ -16,7 +16,7 @@ from pages.system_transfer import SystemOwnership
 from pages.system_transfer import SystemTransferOwnershipModal
 from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from variables import ENV
 
 

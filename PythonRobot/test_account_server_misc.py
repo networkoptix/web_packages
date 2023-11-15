@@ -16,7 +16,7 @@ from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from variables import ENV
 
 

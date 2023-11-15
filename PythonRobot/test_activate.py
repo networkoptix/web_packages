@@ -1,4 +1,3 @@
-import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
@@ -8,14 +7,14 @@ from pages.login import LoginDialog
 from pages.register_form import RegisterForm
 from generic_elements import Button
 from generic_elements import PageText
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 
 rb = RobotVariables("en_US")
 
 
 def register_and_activate():
     """1. Register and Activate"""
-    with resource_import.get_chrome() as driver:
+    with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
         with CloudAccount(random_email) as user:
             user.activate()

@@ -15,7 +15,7 @@ from pages.login import AccountActivatedPane
 from pages.login import LoginDialog
 from pages.register_form import RegisterForm
 from email_access import get_random_email
-from resource_import import get_chrome
+from browsers.chrome import get_chrome
 from pages.systems_page import SystemsPage
 from variables import ENV
 
