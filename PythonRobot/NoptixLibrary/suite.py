@@ -343,11 +343,12 @@ class CloudAccount:
         "custom": "NoGlobalPermissions",
         }
 
-    def __init__(self, email: str, first_name = "Mark", last_name = "Hamill"):
+    def __init__(
+            self, email: str, first_name="Mark", last_name="Hamill", password=DEFAULT_PASSWORD):
         self.email = email
         self.first_name = first_name
         self.last_name = last_name
-        self.password = DEFAULT_PASSWORD
+        self.password = password
         self._totp = None
         self._backup_codes = None
 

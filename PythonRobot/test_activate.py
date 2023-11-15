@@ -1,5 +1,6 @@
 import resource_import
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import CloudAccount
 from RobotVariables import RobotVariables
 from email_access import get_random_email
 from email_access import EmailClient
@@ -16,60 +17,57 @@ def register_and_activate():
     """1. Register and Activate"""
     with resource_import.get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(
-            driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
-        driver.get(rb.ENV + "/account")
-        LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
+        with CloudAccount(random_email) as user:
+            user.activate()
+            driver.get(rb.ENV + "/account")
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
 
 
 def register_and_activate_curly_text():
     """2. Allows register, activate, login with curly text in First and Last name fields"""
-    with get_chrome() as driver:
-        curly_names = [rb.CYRILLIC_TEXT, rb.SMILEY_TEXT, rb.GLYPH_TEXT, rb.SYMBOL_TEXT]
-        for name in curly_names:
-            random_email = get_random_email(sendemail=True)
-            resource_import.register_and_activate_account(
-                driver, name, name, random_email, rb.BASE_PASSWORD, from_email=False)
+    curly_names = [rb.CYRILLIC_TEXT, rb.SMILEY_TEXT, rb.GLYPH_TEXT, rb.SYMBOL_TEXT]
+    for name in curly_names:
+        random_email = get_random_email(sendemail=True)
+        with CloudAccount(random_email, name, name) as user:
+            user.activate()
 
 
 def register_and_activate_special_chars():
     """3. Allows register, activate, login with +!#$%'*-/=\?^_`{\|}~ in email field"""
     with get_chrome() as driver:
         random_email = get_random_email(rb.BASE_EMAIL, symbols=True)
-        resource_import.register_and_activate_account(
-            driver, "Mark", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
-        driver.get(rb.ENV + "/account")
-        LoginDialog(driver).basic_cloud_login(random_email, rb.BASE_PASSWORD)
+        with CloudAccount(random_email) as user:
+            user.activate()
+            driver.get(rb.ENV + "/account")
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
 
 
 def register_activate_with_leading_space():
     """4. Allows register, activate, login with leading space in email"""
     # TODO: doesn't work with space, does work without it
     # Bug: https://networkoptix.atlassian.net/browse/CQA-581
-    with get_chrome() as driver:
-        random_email = " " + get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(
-            driver, "bla", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
+    random_email = " " + get_random_email(sendemail=True)
+    with CloudAccount(random_email) as user:
+        user.activate()
 
 
 def register_activate_with_trailing_space():
     """5. Allows register, activate, login with trailing space in email"""
     # TODO: doesn't work with space, does work without it
     # Bug: https://networkoptix.atlassian.net/browse/CQA-581
-    with get_chrome() as driver:
-        random_email = get_random_email(sendemail=True) + " "
-        resource_import.register_and_activate_account(
-            driver, "barf", "Hamil", random_email, rb.BASE_PASSWORD, from_email=False)
+    random_email = get_random_email(sendemail=True) + " "
+    with CloudAccount(random_email) as user:
+        user.activate()
 
 
 def register_and_activate_with_special_chars_in_pw():
     """6. Allows register, activate, login with pass!@#$%^&*()_-+=;:'\"`~,./\|?[]{} password"""
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(
-            driver, "#@!k", "Hamil", random_email, rb.SYMBOL_PASSWORD, from_email=False)
-        driver.get(rb.ENV + "/account")
-        LoginDialog(driver).basic_cloud_login(random_email, rb.SYMBOL_PASSWORD)
+        with CloudAccount(random_email, "#@!k", "Hamil", password=rb.SYMBOL_PASSWORD) as user:
+            user.activate()
+            driver.get(rb.ENV + "/account")
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
 
 
 def activate_same_link_twice():
@@ -89,11 +87,10 @@ def activate_same_link_twice():
 
 def save_user_data_correctly():
     """8. Should save user data to user account correctly"""
-    with get_chrome() as driver:
-        random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(
-            driver, "Moo", "Cow", random_email, rb.BASE_PASSWORD, from_email=False)
-        user_data = CloudPortalAPI().get_account_data(random_email, rb.BASE_PASSWORD)
+    random_email = get_random_email(sendemail=True)
+    with CloudAccount(random_email, "Moo", "Cow") as user:
+        user.activate()
+        user_data = CloudPortalAPI().get_account_data(user.email, user.password)
         assert user_data['first_name'] == "Moo"
         assert user_data['last_name'] == "Cow"
 
@@ -101,19 +98,17 @@ def save_user_data_correctly():
 def truncate_long_names():
     """9. Should allow to enter more than 255 symbols in First and Last names and cut it to 255"""
     # Bug: https://networkoptix.atlassian.net/browse/CLOUD-11071
-    with get_chrome() as driver:
-        random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(
-            driver, "bla", "bla", random_email, rb.BASE_PASSWORD, from_email=False)
+    random_email = get_random_email(sendemail=True)
+    with CloudAccount(random_email, "bla", "bla") as user:
+        user.activate()
 
 
 def trim_leading_spaces():
     """10. Should trim leading spaces in First and Last names"""
-    with get_chrome() as driver:
-        random_email = get_random_email(sendemail=True)
-        resource_import.register_and_activate_account(
-            driver, "   fra ", "   frafra ", random_email, rb.BASE_PASSWORD, from_email=False)
-        user_data = CloudPortalAPI().get_account_data(random_email, rb.BASE_PASSWORD)
+    random_email = get_random_email(sendemail=True)
+    with CloudAccount(random_email, "   fra ", "   frafra ") as user:
+        user.activate()
+        user_data = CloudPortalAPI().get_account_data(user.email, user.password)
         assert user_data['first_name'] == "fra"
         assert user_data['last_name'] == "frafra"
 

@@ -75,14 +75,6 @@ def logout_japanese(driver):
     validate_log_out(driver)
 
 
-def register_and_activate_account(
-        driver, first_name, last_name, email, password, from_email=rb.FROM_EMAIL_DEFAULT):
-    api = CloudPortalAPI()
-    api.register_account(first_name, last_name, email, password)
-    time.sleep(1)
-    activate(driver, email, password, from_email=from_email)
-
-
 def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
     if view_type:
         url = rb.ENV + "/authorize?client_type=create&view_type=" + view_type
