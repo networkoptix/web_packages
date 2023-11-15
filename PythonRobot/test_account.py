@@ -78,7 +78,7 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
     with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        LoginDialog(driver).basic_cloud_login(cloud_user.email, password)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         time.sleep(2)
