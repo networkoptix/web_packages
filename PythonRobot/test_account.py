@@ -11,7 +11,7 @@ from browsers.chrome import get_chrome
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import PageText
-from generic_elements import TextField
+from pages.account_page import AccountPage
 from pages.account_page import SuccessToast
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
@@ -67,10 +67,10 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
+        account_page = AccountPage(driver)
+        account_page.first_name().input_text("namechanged")
         # todo: the save button doesn't appear.
-        Button(driver, rb.ACCOUNT_SAVE).click()
+        account_page.save_button().click()
         success_toast = SuccessToast(driver)
         success_toast.wait_until_visible()
         assert success_toast.get_text() == "Your account is successfully saved"
@@ -82,11 +82,11 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         time.sleep(2)
-        text = TextField(driver, rb.ACCOUNT_FIRST_NAME).get_text()
+        account_page = AccountPage(driver)
+        text = account_page.first_name().get_text()
         assert text == "namechanged", "Name was not 'namechanged'"
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
-        Button(driver, rb.ACCOUNT_SAVE).click()
+        account_page.first_name().input_text(rb.TEST_FIRST_NAME)
+        account_page.save_button().click()
         success_toast = SuccessToast(driver)
         success_toast.wait_until_visible()
         assert success_toast.get_text() == "Your account is successfully saved"
@@ -101,8 +101,9 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
-        Button(driver, rb.ACCOUNT_SAVE).click()
+        account_page = AccountPage(driver)
+        account_page.last_name().input_text("namechanged")
+        account_page.save_button().click()
         success_toast = SuccessToast(driver)
         success_toast.wait_until_visible()
         assert success_toast.get_text() == "Your account is successfully saved"
@@ -113,9 +114,10 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
-        TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
-        Button(driver, rb.ACCOUNT_SAVE).click()
+        account_page = AccountPage(driver)
+        assert account_page.last_name().get_text() == "namechanged"
+        account_page.last_name().input_text("hamill")
+        account_page.save_button().click()
         success_toast = SuccessToast(driver)
         success_toast.wait_until_visible()
         assert success_toast.get_text() == "Your account is successfully saved"
@@ -129,16 +131,18 @@ def test_first_name_is_required():
         LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
-        TextField(driver, rb.ACCOUNT_LAST_NAME).click()
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-        account_save = Button(driver, rb.ACCOUNT_SAVE)
+        account_page = AccountPage(driver)
+        first_name_field = account_page.first_name()
+        first_name_field.delete_all_text()
+        account_page.last_name().click()
+        first_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
+        first_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_save = account_page.save_button()
         account_save.wait_until_visible()
         account_save.wait_until_not_clickable()
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-        Button(driver, rb.ACCOUNT_CANCEL).click()
+        first_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
+        first_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_page.cancel_button().click()
 
 
 def test_last_name_is_required():
@@ -148,16 +152,19 @@ def test_last_name_is_required():
         LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).click()
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-        account_save = Button(driver, rb.ACCOUNT_SAVE)
+        account_page = AccountPage(driver)
+        last_name_field = account_page.last_name()
+        last_name_field.delete_all_text()
+        last_name_field.delete_all_text()
+        account_page.first_name().click()
+        last_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
+        last_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_save = account_page.save_button()
         account_save.wait_until_visible()
         account_save.wait_until_not_clickable()
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-        Button(driver, rb.ACCOUNT_CANCEL).click()
+        last_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
+        last_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_page.cancel_button().click()
 
 
 def test_space_for_first_name_is_not_valid():
@@ -167,12 +174,14 @@ def test_space_for_first_name_is_not_valid():
         LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(" ")
+        account_page = AccountPage(driver)
+        first_name_field = account_page.first_name()
+        first_name_field.input_text(" ")
         PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-        Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-        Button(driver, rb.ACCOUNT_CANCEL).click()
+        first_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
+        first_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_page.save_button().wait_until_not_clickable()
+        account_page.cancel_button().click()
 
 
 def test_space_for_last_name_is_not_valid():
@@ -182,13 +191,15 @@ def test_space_for_last_name_is_not_valid():
         LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("luke")
-        TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(" ")
+        account_page = AccountPage(driver)
+        account_page.first_name().input_text("luke")
+        last_name_field = account_page.last_name()
+        last_name_field.input_text(" ")
         PageText(driver,   f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
-        TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
-        Button(driver, rb.ACCOUNT_SAVE).wait_until_not_clickable()
-        Button(driver, rb.ACCOUNT_CANCEL).click()
+        last_name_field.wait_until_has_style("border-top-color", rb.ERROR_COLOR_WITH_OPACITY)
+        last_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
+        account_page.save_button().wait_until_not_clickable()
+        account_page.cancel_button().click()
 
 
 def test_language_is_changeable_on_the_account_page():
@@ -199,18 +210,19 @@ def test_language_is_changeable_on_the_account_page():
         HeaderNav(driver).account_dropdown().wait_until_visible()
         driver.refresh()
         lang_dict = _get_lang_list()
+        account_page = AccountPage(driver)
         for lang in lang_dict:
             info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
             verify_in_account_page(driver)
             if lang != rb.language:
-                Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+                account_page.language_dropdown().click()
                 language_button = Button(
                     driver,
                     f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
                     )
                 language_button.click()
                 PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-        Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+        account_page.language_dropdown().click()
         Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
         time.sleep(1)
         verify_in_account_page(driver)
@@ -227,7 +239,7 @@ def test_language_change_affects_emails():
                 LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
                 HeaderNav(driver).account_dropdown().wait_until_visible()
                 verify_in_account_page(driver)
-                Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
+                AccountPage(driver).language_dropdown().click()
                 button = Button(
                     driver,
                     "//nx-language-select//span[@lang='ru_RU']/..",
@@ -295,14 +307,15 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
 
 
 def verify_in_account_page(driver):
-    TextField(driver, rb.ACCOUNT_EMAIL).wait_until_visible()
-    TextField(driver, rb.ACCOUNT_FIRST_NAME).wait_until_visible()
-    TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_visible()
-    DropDown(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).wait_until_visible()
-    DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    Button(driver, rb.DELETE_ACCOUNT_BUTTON).wait_until_visible()
+    account_page = AccountPage(driver)
+    account_page.email().wait_until_visible()
+    account_page.first_name().wait_until_visible()
+    account_page.last_name().wait_until_visible()
+    account_page.language_dropdown().wait_until_visible()
+    HeaderNav(driver).account_dropdown().wait_until_visible()
+    account_page.delete_account_button().wait_until_visible()
     Button(driver, rb.ACCOUNT_SETTINGS_BUTTON).wait_until_not_visible()
-    Button(driver, rb.ACCOUNT_CANCEL).wait_until_not_visible()
+    account_page.cancel_button().wait_until_not_visible()
     time.sleep(0.5)
 
 
