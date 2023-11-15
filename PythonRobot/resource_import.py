@@ -17,7 +17,6 @@ from generic_elements import DropDownOption
 from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import Pane
-from generic_elements import TextField
 
 
 urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
@@ -72,17 +71,6 @@ def logout_japanese(driver):
     DropDownOption(driver, element).wait_until_visible()
     DropDownOption(driver, element).click()
     validate_log_out(driver)
-
-
-def send_restore_password_email(driver, email: str) -> None:
-    url = rb.ENV + "/authorize"
-    driver.get(url)
-    Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    TextField(driver, rb.EMAIL_INPUT).input_text(email)
-    Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
-    Button(driver, rb.FORGOT_PASSWORD_BUTTON).click()
-    TextField(driver, rb.RESTORE_PASSWORD_EMAIL_INPUT).input_text(email)
-    Button(driver, rb.RESET_PASSWORD_BUTTON).click()
 
 
 def validate_log_out(driver):
