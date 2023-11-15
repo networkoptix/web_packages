@@ -29,7 +29,7 @@ import type { ChannelPartnerUserExt } from '../users/channel-partner-users/chann
 export class NxUsersTableComponent {
     @Input() headers: HEADER_ITEM[];
     @Input() records: ChannelPartnerUserExt[];
-    @Input() selectedRecordId: string;
+    @Input() selectedRecordId: string = '';
 
     @Output() public onDeleteClick = new EventEmitter<string>();
     @Output() public onRowClick = new EventEmitter<ChannelPartnerUserExt>();
@@ -44,6 +44,8 @@ export class NxUsersTableComponent {
 
     setHeaders: Array<string>;
     rowsPerPage: Array<number>;
+
+    public idPropName = 'userId';
 
     // constructor() {}
 
