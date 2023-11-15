@@ -33,32 +33,31 @@ def test_health_monitor_details_panel_errors_and_warnings(server: Mediaserver):
         servers_section.click()
 
         servers_section.get_table_problem("testserver error").click()
-        servers_section.wait_until_visible()
-        details1 = information_tab.get_details_pane()
-        details1.get_pane_error_by_title("Server testserver error is broken").wait_until_visible()
+        server_details1 = information_tab.get_details_pane()
+        server_details1.get_pane_error_by_title("Server testserver error is broken").wait_until_visible()
 
         servers_section.get_table_problem("testserver 2 errors").click()
-        details2 = information_tab.get_details_pane()
-        error = details2.get_pane_error_by_title("Server testserver 2 errors is broken")
+        server_details2 = information_tab.get_details_pane()
+        error = server_details2.get_pane_error_by_title("Server testserver 2 errors is broken")
         error.wait_until_visible()
-        assert details2.get_pane_error_count(error) == 2
+        assert server_details2.get_pane_problem_count(error) == 2
 
         servers_section.get_table_problem("testserver warning").click()
-        details3 = information_tab.get_details_pane()
-        details3.get_pane_warning_by_title(
+        server_details3 = information_tab.get_details_pane()
+        server_details3.get_pane_warning_by_title(
             "Server testserver warning is broken").wait_until_visible()
 
         servers_section.get_table_problem("testserver 2 warnings").click()
-        details4 = information_tab.get_details_pane()
-        warning = details4.get_pane_warning_by_title("Server testserver 2 warnings is broken")
+        server_details4 = information_tab.get_details_pane()
+        warning = server_details4.get_pane_warning_by_title("Server testserver 2 warnings is broken")
         warning.wait_until_visible()
         assert warning.get_count() == 2
 
         servers_section.get_table_problem("testserver both").click()
-        details5 = information_tab.get_details_pane()
-        issue1 = details5.get_pane_error_by_title("Server testserver both is broken")
+        server_details5 = information_tab.get_details_pane()
+        issue1 = server_details5.get_pane_error_by_title("Server testserver both is broken")
         issue1.wait_until_visible()
-        issue2 = details5.get_pane_warning_by_title("Server testserver both is broken")
+        issue2 = server_details5.get_pane_warning_by_title("Server testserver both is broken")
         issue2.wait_until_visible()
 
         cameras_section = information_tab.get_cameras_section()

@@ -302,6 +302,5 @@ class _DetailsPane():
             f"{self._locator}//p[@title='{title}' and contains(@class, 'warning')]",
         )
 
-    def get_pane_error_count(self, error: PageText):
-        return error.get_count()
-    
+    def get_pane_problem_count(self, problem: PageText):
+        return problem.get_count()
