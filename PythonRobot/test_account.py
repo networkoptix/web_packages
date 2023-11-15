@@ -12,6 +12,7 @@ from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import PageText
 from generic_elements import TextField
+from pages.account_page import SuccessToast
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
@@ -70,11 +71,10 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
         TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
         # todo: the save button doesn't appear.
         Button(driver, rb.ACCOUNT_SAVE).click()
-        alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-        xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-        alert = PageText(driver, xpath)
-        alert.wait_until_visible(10)
-        alert.wait_until_not_visible(10)
+        success_toast = SuccessToast(driver)
+        success_toast.wait_until_visible()
+        assert success_toast.get_text() == "Your account is successfully saved"
+        success_toast.wait_until_not_visible()
     with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
@@ -87,11 +87,10 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
         TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
         TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(rb.TEST_FIRST_NAME)
         Button(driver, rb.ACCOUNT_SAVE).click()
-        alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-        xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-        alert1 = PageText(driver, xpath1)
-        alert1.wait_until_visible(10)
-        alert1.wait_until_not_visible(10)
+        success_toast = SuccessToast(driver)
+        success_toast.wait_until_visible()
+        assert success_toast.get_text() == "Your account is successfully saved"
+        success_toast.wait_until_not_visible()
 
 
 def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
@@ -104,11 +103,10 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
         Button(driver, rb.ACCOUNT_SAVE).click()
-        alert = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-        xpath = f"{alert}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-        alert = PageText(driver, xpath)
-        alert.wait_until_visible(10)
-        alert.wait_until_not_visible(10)
+        success_toast = SuccessToast(driver)
+        success_toast.wait_until_visible()
+        assert success_toast.get_text() == "Your account is successfully saved"
+        success_toast.wait_until_not_visible()
     with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
@@ -118,11 +116,10 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
         Button(driver, rb.ACCOUNT_SAVE).click()
-        alert1 = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
-        xpath1 = f"{alert1}/../span[contains(text(), '{rb.YOUR_ACCOUNT_IS_SUCCESSFULLY_SAVED}')]"
-        alert1 = PageText(driver, xpath1)
-        alert1.wait_until_visible(10)
-        alert1.wait_until_not_visible(10)
+        success_toast = SuccessToast(driver)
+        success_toast.wait_until_visible()
+        assert success_toast.get_text() == "Your account is successfully saved"
+        success_toast.wait_until_not_visible()
 
 
 def test_first_name_is_required():
