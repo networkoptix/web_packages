@@ -122,6 +122,37 @@ def test_health_monitor_details_panel_errors_and_warnings(server: Mediaserver):
         issue2 = storage_details5.get_pane_warning_by_title("Storage test storage both is broken")
         issue2.wait_until_visible()
 
+        network_section = information_tab.get_network_section()
+        network_section.click()
+
+        network_section.get_table_problem("test network error").click()
+        network_details1 = information_tab.get_details_pane()
+        network_details1.get_pane_error_by_title("Interface test network error is broken").wait_until_visible()
+
+        network_section.get_table_problem("test network 2 errors").click()
+        network_details2 = information_tab.get_details_pane()
+        errors = network_details2.get_pane_error_by_title("Interface test network 2 errors is broken")
+        errors.wait_until_visible()
+        assert network_details2.get_pane_problem_count(errors) == 2
+
+        network_section.get_table_problem("test network warning").click()
+        network_details3 = information_tab.get_details_pane()
+        warning = network_details3.get_pane_warning_by_title("Interface test network warning is broken")
+        warning.wait_until_visible()
+
+        network_section.get_table_problem("test network 2 warnings").click()
+        network_details4 = information_tab.get_details_pane()
+        warnings = network_details4.get_pane_warning_by_title("Interface test network 2 warnings is broken")
+        warnings.wait_until_visible()
+        assert network_details4.get_pane_problem_count(warnings) == 2
+
+        network_section.get_table_problem("test network both").click()
+        network_details5 = information_tab.get_details_pane()
+        issue1 = network_details5.get_pane_error_by_title("Interface test network both is broken")
+        issue1.wait_until_visible()
+        issue2 = network_details5.get_pane_warning_by_title("Interface test network both is broken")
+        issue2.wait_until_visible()
+
 
 if __name__ == "__main__":
     with Suite() as suite:
