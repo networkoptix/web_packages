@@ -1,23 +1,22 @@
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.reset_password_dialog import ResetPasswordDialog
-from email_access import get_random_email
 from resource_import import get_chrome
-from resource_import import register_and_activate_account
 from variables import ENV
+
 rb = RobotVariables("en_US")
 
 
-def test_email_validation():
+def test_email_validation(cloud_user: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email(sendemail=True)
-        register_and_activate_account(driver, "Mark", "Hamill", email, "qweasd 123")
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(email)
+        login.email_input().input_text(cloud_user.email)
         login.next_button().click()
         login.forgot_password_button().click()
         reset_password_dialog = ResetPasswordDialog(driver)
@@ -81,4 +80,6 @@ def test_email_validation():
 
 
 if __name__ == '__main__':
-    test_email_validation()
+    with Suite() as suite:
+        cloud_account = suite.create_cloud_account()
+        test_email_validation(cloud_account)
