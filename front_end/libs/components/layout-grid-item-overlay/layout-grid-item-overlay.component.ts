@@ -74,7 +74,6 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
-import { isDefinedOrTrue } from '@utils/array';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 const LANG = staticLang.layouts.overlay.menuActions;
@@ -603,23 +602,27 @@ export class NxLayoutGridItemOverlayComponent {
         [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
     }> = {
         [ResourceType.CAMERA]: (item): MenuItem<ResourceNode>[] =>
-            [
-                this.fullscreenAction$$(),
-                this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
-                this.layoutsItemChangeResolution && this.MENU_ITEMS.resolution,
-                this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
-                this.MENU_ITEMS.screenshot,
-                this.cameraOnline$$() && this.MENU_ITEMS.divider,
-                this.cameraOnline$$() && this.MENU_ITEMS.showOnItem,
-                this.removeAction$$() && this.MENU_ITEMS.divider,
-                this.removeAction$$(),
-            ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>),
+            (
+                [
+                    this.fullscreenAction$$(),
+                    this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
+                    this.layoutsItemChangeResolution && this.MENU_ITEMS.resolution,
+                    this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
+                    this.MENU_ITEMS.screenshot,
+                    this.cameraOnline$$() && this.MENU_ITEMS.divider,
+                    this.cameraOnline$$() && this.MENU_ITEMS.showOnItem,
+                    this.removeAction$$() && this.MENU_ITEMS.divider,
+                    this.removeAction$$(),
+                ] as MenuItem<ResourceNode>[]
+            ).filter(Boolean),
         [ResourceType.SERVER]: item =>
-            [
-                this.fullscreenAction$$(),
-                this.removeAction$$() && this.MENU_ITEMS.divider,
-                this.removeAction$$(),
-            ].filter(isDefinedOrTrue<MenuItem<ResourceNode>>),
+            (
+                [
+                    this.fullscreenAction$$(),
+                    this.removeAction$$() && this.MENU_ITEMS.divider,
+                    this.removeAction$$(),
+                ] as MenuItem<ResourceNode>[]
+            ).filter(Boolean),
     };
 
     constructor(
