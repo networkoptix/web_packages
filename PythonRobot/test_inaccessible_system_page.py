@@ -18,7 +18,7 @@ def test_inaccessible_system_page(cloud_user: CloudAccount):
         nav.log_in_button().click()
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         nav.account_dropdown()
-        nonexistent_system_url = f'{rb.ENV}systems/nonexistent_system_name'
+        nonexistent_system_url = f'{rb.ENV}/systems/nonexistent_system_name'
         driver.get(nonexistent_system_url)
         link_is_broken_xpath = rb.replace_nested_variables('//div[contains(text(), "{THIS_LINK_IS_BROKEN_TEXT}")]')
         PageText(driver, link_is_broken_xpath).wait_until_visible()
