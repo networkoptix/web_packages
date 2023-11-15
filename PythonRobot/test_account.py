@@ -165,7 +165,6 @@ def test_last_name_is_required():
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
         account_save = Button(driver, rb.ACCOUNT_SAVE)
-        cancel_button = Button(driver, rb.ACCOUNT_CANCEL)
         account_save.wait_until_visible()
         account_save.wait_until_not_clickable()
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_has_style("border-color", rb.ERROR_COLOR)
