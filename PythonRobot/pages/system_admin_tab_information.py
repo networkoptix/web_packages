@@ -290,12 +290,17 @@ class _DetailsPane():
         self._locator = locator
         self._element = Pane(self._driver, self._locator)
 
-    def get_pane_issue_by_title(self, title):
+    def get_pane_error_by_title(self, title):
         return PageText(
             self._driver,
             f"{self._locator}//p[@title='{title}' and contains(@class, 'error')]",
         )
 
+    def get_pane_warning_by_title(self, title):
+        return PageText(
+            self._driver,
+            f"{self._locator}//p[@title='{title}' and contains(@class, 'warning')]",
+        )
 
     def get_pane_error_count(self, error: PageText):
         return error.get_count()
