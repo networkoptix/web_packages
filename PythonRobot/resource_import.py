@@ -14,13 +14,9 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 rb = RobotVariables("en_US")
 
 
-def get_headless_chrome():
-    return ChromeBrowser()
-
-
 @contextmanager
 def get_chrome() -> ContextManager[ChromeBrowser]:
-    driver = get_headless_chrome()
+    driver = ChromeBrowser()
     try:
         yield driver
     finally:

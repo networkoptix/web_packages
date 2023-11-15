@@ -1,7 +1,7 @@
 import time
 
 from RobotVariables import RobotVariables
-from resource_import import get_headless_chrome
+from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import Checkbox
 from generic_elements import PageText
@@ -11,7 +11,7 @@ from generic_elements import Image
 
 
 rb = RobotVariables("en_US")
-driver = get_headless_chrome()
+driver = ChromeBrowser()
 driver.get(f'{rb.ENV}/authorize?client_type=create')
 
 
