@@ -70,10 +70,6 @@ def logout_japanese(driver):
     DropDown(driver, rb.ACCOUNT_DROPDOWN).click()
     DropDownOption(driver, element).wait_until_visible()
     DropDownOption(driver, element).click()
-    validate_log_out(driver)
-
-
-def validate_log_out(driver):
     Pane(driver, rb.BACKDROP).wait_until_not_visible(10)
     PageText(driver, rb.ANONYMOUS_BODY).wait_until_visible()
 

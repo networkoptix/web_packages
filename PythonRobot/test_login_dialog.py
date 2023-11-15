@@ -16,7 +16,6 @@ from pages.login import LoginDialog
 from pages.register_form import RegisterForm
 from email_access import get_random_email
 from resource_import import get_chrome
-from resource_import import validate_log_out
 from pages.systems_page import SystemsPage
 from variables import ENV
 
@@ -289,8 +288,7 @@ def user_is_logged_out_of_browser_after_a_password_change_in_another_browser(
             change_pass_form.new_password_input().input_text(new_password)
             change_pass_form.save_button().click()
             driver1.refresh()
-            validate_log_out(driver1)
-            LandingPage(driver1)
+            LandingPage(driver1).wait_until_loaded()
             print("pass")
 
 
