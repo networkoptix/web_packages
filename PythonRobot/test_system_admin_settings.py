@@ -49,8 +49,8 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert settings.force_encrypted_connections_option().is_checked() == server_settings['trafficEncryptionForced']
         assert settings.video_traffic_encryption_option().is_checked() == server_settings['videoTrafficEncryptionForced']
         session_limit_minutes = server_settings['sessionLimitMinutes']
-        assert session_limit_minutes == 0
-        assert not settings.limit_session_duration_option().is_checked()
+        assert session_limit_minutes == 43200
+        assert settings.limit_session_duration_option().is_checked()
 
         # https://networkoptix.testrail.net/index.php?/cases/view/69736
         # https://networkoptix.testrail.net/index.php?/cases/view/65697
@@ -58,9 +58,9 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert settings.statistics_allowed_option().is_checked()
         assert settings.optimize_camera_settings_option().is_checked()
         assert settings.audit_trail_option().is_checked()
-        assert not settings.force_encrypted_connections_option().is_checked()
+        assert settings.force_encrypted_connections_option().is_checked()
         assert not settings.video_traffic_encryption_option().is_checked()
-        assert not settings.limit_session_duration_option().is_checked()
+        assert settings.limit_session_duration_option().is_checked()
 
         administrator = server.get_cloud_admin()
         HeaderNav(driver).log_out()
@@ -72,9 +72,9 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert settings.statistics_allowed_option().is_checked()
         assert settings.optimize_camera_settings_option().is_checked()
         assert settings.audit_trail_option().is_checked()
-        assert not settings.force_encrypted_connections_option().is_checked()
+        assert settings.force_encrypted_connections_option().is_checked()
         assert not settings.video_traffic_encryption_option().is_checked()
-        assert not settings.limit_session_duration_option().is_checked()
+        assert settings.limit_session_duration_option().is_checked()
 
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
@@ -107,7 +107,7 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings.cancel()
         settings.get_unsaved_changes_label().wait_until_visible()
         assert settings.audit_trail_option().is_checked()
-        settings.force_encrypted_connections_option().select()
+        settings.force_encrypted_connections_option().unselect()
         settings.video_traffic_encryption_option().select()
         # The limit session checkbox may be not in view. Scroll page to avoid this.
         # TODO: Find a more accurate method to scroll the page to an element.
@@ -121,19 +121,22 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         assert settings.is_cancel_button_visible()
         settings.cancel()
         assert settings.audit_trail_option().is_checked()
-        assert not settings.force_encrypted_connections_option().is_checked()
+        assert settings.force_encrypted_connections_option().is_checked()
         assert not settings.video_traffic_encryption_option().is_checked()
-        assert not settings.limit_session_duration_option().is_checked()
+        assert settings.limit_session_duration_option().is_checked()
 
         settings.audit_trail_option().unselect()
         settings.save()
         server.api.wait_until_server_setting_to_be('auditTrailEnabled', False)
-        settings.force_encrypted_connections_option().select()
+        settings.force_encrypted_connections_option().unselect()
         settings.save()
-        server.api.wait_until_server_setting_to_be('trafficEncryptionForced', True)
+        server.api.wait_until_server_setting_to_be('trafficEncryptionForced', False)
         settings.video_traffic_encryption_option().select()
         settings.save()
         server.api.wait_until_server_setting_to_be('videoTrafficEncryptionForced', True)
+        settings.limit_session_duration_option().unselect()
+        settings.save()
+        server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
         settings.limit_session_duration_option().select()
         new_session_limit_value_days = 1
         settings.set_session_duration_limit(new_session_limit_value_days)
@@ -142,9 +145,6 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
             'sessionLimitMinutes',
             new_session_limit_value_days * 24 * 60,
             )
-        settings.limit_session_duration_option().unselect()
-        settings.save()
-        server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
 
 
 def changing_several_random_checkboxes_works(server: Mediaserver):

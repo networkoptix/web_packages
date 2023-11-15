@@ -259,8 +259,8 @@ class ServerApi:
             'statisticsAllowed': True,
             'cameraSettingsOptimization': True,
             'auditTrailEnabled': True,
-            'trafficEncryptionForced': False,
+            'trafficEncryptionForced': True,
             'videoTrafficEncryptionForced': False,
-            'sessionLimitMinutes': 0,
+            'sessionLimitMinutes': 43200,
             }
         self.set_system_settings(default_settings)
