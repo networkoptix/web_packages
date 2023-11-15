@@ -7,7 +7,6 @@ from typing import ContextManager
 
 import urllib3
 
-from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from email_access import EmailClient
@@ -24,16 +23,12 @@ urllib3.disable_warnings(urllib3.exceptions.InsecureRequestWarning)
 rb = RobotVariables("en_US")
 
 
-def activate(driver, email, password=rb.BASE_PASSWORD, from_email=rb.FROM_EMAIL_DEFAULT):
-    if from_email:
-        link = get_email_link(email)
-        driver.get(link)
-        PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible()
-        Image(driver, rb.ACTIVATION_SUCCESS_ICON).wait_until_visible()
-        Button(driver, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON).wait_until_visible()
-    else:
-        api = CloudPortalAPI()
-        api.activate_account_via_api(email, password)
+def activate_from_email(driver, email):
+    link = get_email_link(email)
+    driver.get(link)
+    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible()
+    Image(driver, rb.ACTIVATION_SUCCESS_ICON).wait_until_visible()
+    Button(driver, rb.ACTIVATION_SUCCESS_LOG_IN_BUTTON).wait_until_visible()
 
 
 def get_email_link(recipient):

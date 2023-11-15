@@ -3,7 +3,7 @@ import random
 import string
 import time
 
-import resource_import
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
 from pages.change_pass_form import ChangePassForm
@@ -83,7 +83,7 @@ def not_activated_user_login_check():
         url = ENV + "/authorize?client_type=create&view_type=desktop"
         driver.get(url)
         RegisterForm(driver).register_new_user("darth", "bye", email, password)
-        resource_import.activate(driver, email, password)
+        CloudPortalAPI().activate_account_via_api(email, password)
         account_activated = AccountActivatedPane(driver)
         account_activated.wait_until_visible()
         account_activated.get_log_in_button().click()

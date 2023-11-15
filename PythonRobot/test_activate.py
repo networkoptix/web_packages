@@ -119,7 +119,7 @@ def allow_activation_desktop():
         random_email = get_random_email(sendemail=True)
         driver.get(rb.ENV + "/authorize?client_type=create&view_type=desktop")
         RegisterForm(driver).register_new_user("darth", "bye", random_email, rb.BASE_PASSWORD)
-        resource_import.activate(driver, random_email, rb.BASE_PASSWORD)
+        CloudPortalAPI().activate_account_via_api(random_email, rb.BASE_PASSWORD)
 
 
 def allow_activation_mobile():
@@ -128,7 +128,7 @@ def allow_activation_mobile():
         random_email = get_random_email(sendemail=True)
         driver.get(rb.ENV + "/authorize?client_type=create&view_type=mobile")
         RegisterForm(driver).register_new_user("darth", "desktop", random_email, rb.BASE_PASSWORD)
-        resource_import.activate(driver, random_email, rb.BASE_PASSWORD)
+        CloudPortalAPI().activate_account_via_api(random_email, rb.BASE_PASSWORD)
 
 
 def link_works_logged_out():

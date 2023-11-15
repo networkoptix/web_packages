@@ -12,7 +12,7 @@ from email_access import get_random_email
 from generic_elements import Button
 from pages.header import HeaderNav
 from pages.register_form import RegisterForm
-from resource_import import activate
+from resource_import import activate_from_email
 from resource_import import get_chrome
 
 rb = RobotVariables("en_US")
@@ -42,7 +42,7 @@ def open_from_success_page():
         register_form = RegisterForm(driver)
         register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
         # Todo activate still needs email to work
-        activate(driver, email, from_email=True)
+        activate_from_email(driver, email)
         driver.get(rb.ENV)
         HeaderNav(driver).create_account().click()
         RegisterForm(driver)
