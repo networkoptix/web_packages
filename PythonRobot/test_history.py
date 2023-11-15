@@ -2,10 +2,11 @@
 from colorama import Fore
 
 from pages.downloads_page import DownloadsPage
+from pages.header import HeaderNav
 from pages.history_page import HistoryPage
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
-from test_account import cloud_login
+from pages.login import LoginDialog
 
 variables = RobotVariables("en_US")
 
@@ -15,7 +16,10 @@ def test_history_link_in_the_download_page():
     email = variables.replace_nested_variables(variables.BASE_EMAIL)
     with get_chrome() as driver:
         driver.get(variables.ENV)
-        cloud_login(driver, email, variables.BASE_PASSWORD)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(email, variables.BASE_PASSWORD)
+        header.account_dropdown().wait_until_visible()
         driver.get(variables.ENV + 'download')
         download_page = DownloadsPage(driver)
         download_page.get_windows_client_installer_tab().click()
@@ -29,7 +33,10 @@ def test_expandable_sections():
     email = variables.replace_nested_variables(variables.BASE_EMAIL)
     with get_chrome() as driver:
         driver.get(variables.ENV)
-        cloud_login(driver, email, variables.BASE_PASSWORD)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(email, variables.BASE_PASSWORD)
+        header.account_dropdown().wait_until_visible()
         driver.get(variables.ENV + 'downloads/releases')
         history_page = HistoryPage(driver, variables)
         tab_releases = history_page.get_releases_tab()

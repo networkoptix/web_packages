@@ -12,7 +12,6 @@ from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import Link
 from generic_elements import PageText
-from generic_elements import Pane
 from generic_elements import TextField
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
@@ -25,41 +24,15 @@ password = "qweasd1234"
 login = "noptixautoqa+owner@gmail.com"
 rb = RobotVariables("en_US")
 
-def cloud_login(driver, email, password, validate=True, button=rb.LOG_IN_NAV_BAR, exists=True,  api=False, reset=False, two_FA=False, twoFA_backup_code="" ):
-    if button:
-        button_element = Button(driver, button)
-        button_element.click()
-    if validate and not two_FA:
-        # check language variable and set it to default. That is, set language before logging in
-        # TODO: check language
-        pass
-        #TODO: set user theme (ie, light or dark mode)
-        pass
-    Pane(driver, rb.LOG_IN_MODAL).wait_until_visible()
-    time.sleep(1)
-    TextField(driver, rb.EMAIL_INPUT).input_text(email)
-    time.sleep(1)
-    Button(driver, rb.LOG_IN_NEXT_BUTTON).click()
-    if exists:
-        TextField(driver, rb.PASSWORD_INPUT).input_text(password)
-        time.sleep(1)
-        Button(driver, rb.LOG_IN_BUTTON).click()
-    else:
-        PageText(driver, rb.ACCOUNT_DOES_NOT_EXIST).wait_until_visible()
-        PageText(driver, rb.YOU_CAN_CREATE_AN_ACCOUNT).wait_until_visible()
-    # TODO: Check if 2fa is true and there is no backup code
-    if validate:
-        # todo: remove this
-        time.sleep(5)
-        DropDown(driver, rb.ACCOUNT_DROPDOWN).wait_until_visible()
-    time.sleep(0.5)
-
 
 def test_can_access_account_page_from_dropdown(cloud_user: CloudAccount):
     """1 Can access the account page from dropdown"""
     with get_chrome() as driver:
         driver.get(rb.ENV)
-        cloud_login(driver, cloud_user.email, cloud_user.password)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        header.account_dropdown().wait_until_visible()
         time.sleep(3)
         Button(driver, rb.ACCOUNT_DROPDOWN).click()
         Link(driver, rb.ACCOUNT_SETTINGS_BUTTON).click()
@@ -70,7 +43,10 @@ def test_can_access_account_page_from_direct_link():
     """2 can access the account page from direct link while logged in"""
     with get_chrome() as driver:
         driver.get(rb.env)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password)
+        header = HeaderNav(driver)
+        header.log_in_button().click()
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        header.account_dropdown().wait_until_visible()
         url = rb.env + "/account"
         driver.get(url)
         verify_in_account_page(driver)
@@ -85,7 +61,8 @@ def test_cannot_access_account_page_from_direct_link_on_valid_login():
     with get_chrome() as driver:
         url = rb.env + "/account"
         driver.get(url)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=none)
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         url1 = rb.env + "/account"
         driver.get(url1)
         verify_in_account_page(driver)
@@ -96,7 +73,8 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).clear()
         TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("namechanged")
@@ -110,7 +88,8 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
     with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        cloud_login(driver, cloud_user.email, password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         time.sleep(2)
         text = TextField(driver, rb.ACCOUNT_FIRST_NAME).get_text()
@@ -127,11 +106,12 @@ def test_changing_first_name_and_saving_maintains_that_setting(cloud_user: Cloud
 
 def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudAccount):
     """6 changing last name and saving maintains that setting"""
-    #todo: 
+    #todo:
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("namechanged")
         Button(driver, rb.ACCOUNT_SAVE).click()
@@ -143,7 +123,8 @@ def test_changing_last_name_and_saving_maintains_that_setting(cloud_user: CloudA
     with get_chrome() as driver:
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_LAST_NAME).wait_until_text_is("namechanged")
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text("hamill")
@@ -160,7 +141,8 @@ def test_first_name_is_required():
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).delete_all_text()
         TextField(driver, rb.ACCOUNT_LAST_NAME).click()
@@ -179,7 +161,8 @@ def test_last_name_is_required():
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_LAST_NAME).delete_all_text()
         TextField(driver, rb.ACCOUNT_FIRST_NAME).click()
@@ -199,7 +182,8 @@ def test_space_for_first_name_is_not_valid():
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text(" ")
         PageText(driver, f"//header/h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").click()
@@ -214,7 +198,8 @@ def test_space_for_last_name_is_not_valid():
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         TextField(driver, rb.ACCOUNT_FIRST_NAME).input_text("luke")
         TextField(driver, rb.ACCOUNT_LAST_NAME).input_text(" ")
@@ -230,7 +215,8 @@ def test_language_is_changeable_on_the_account_page():
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, "noptixautoqa+owner@gmail.com", password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         driver.refresh()
         lang_dict = _get_lang_list()
         for lang in lang_dict:
@@ -259,7 +245,8 @@ def test_language_change_affects_emails():
             url = rb.ENV + "/account"
             driver.get(url)
             if rb.LANGUAGE != "ru_Ru":
-                cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+                LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+                HeaderNav(driver).account_dropdown().wait_until_visible()
                 verify_in_account_page(driver)
                 Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
                 button = Button(
@@ -296,7 +283,8 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
     with get_chrome() as driver:
         url = rb.ENV + "/account"
         driver.get(url)
-        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
         Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
         japanese_button_locator = f"//following-sibling::ul//span[@id='{japanese_code}']"
@@ -315,7 +303,8 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         LandingPage(driver).wait_until_loaded()
         url1 = rb.ENV + "/account"
         driver.get(url1)
-        cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
+        HeaderNav(driver).account_dropdown().wait_until_visible()
         api = CloudPortalAPI()
         api.set_account_language(cloud_user.email, cloud_user.password, new_language=german_code)
         time.sleep(5)
