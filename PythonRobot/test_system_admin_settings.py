@@ -1,5 +1,3 @@
-import os
-
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
@@ -534,24 +532,21 @@ def check_limit_session_duration(server: Mediaserver):
 
 
 if __name__ == '__main__':
-    suite_name = os.path.basename(__file__)
-    suite_name = suite_name.replace("test_", "").replace(".py", "")
     with Suite() as suite:
-        cloud_owner_first = suite.create_cloud_account()
+        cloud_owner = suite.create_cloud_account()
         users = suite.create_cloud_accounts()
-        cloud_server_first = suite.create_cloud_server(
-            cloud_owner_first,
-            f"{suite_name}_1_",
+        cloud_server = suite.create_cloud_server(
+            cloud_owner,
             cloud_users=users,
             )
-        system_settings_and_security_settings_should_match_settings_on_server(cloud_server_first)
-        test_changing_settings_changes_it_on_server(cloud_server_first)
-        changing_several_random_checkboxes_works(cloud_server_first)
-        system_and_security_settings_block_is_not_available_for_other_users(cloud_server_first)
-        changing_page_without_saving_changes(cloud_server_first)
-        changes_made_in_the_thick_client_are_displayed_in_system_settings(cloud_server_first)
-        checking_the_dependency_of_system_settings_checkboxes(cloud_server_first)
+        system_settings_and_security_settings_should_match_settings_on_server(cloud_server)
+        test_changing_settings_changes_it_on_server(cloud_server)
+        changing_several_random_checkboxes_works(cloud_server)
+        system_and_security_settings_block_is_not_available_for_other_users(cloud_server)
+        changing_page_without_saving_changes(cloud_server)
+        changes_made_in_the_thick_client_are_displayed_in_system_settings(cloud_server)
+        checking_the_dependency_of_system_settings_checkboxes(cloud_server)
         # cloud_owner_2 = suite.create_cloud_account()
         # cloud_server_2 = suite.create_cloud_server(cloud_owner_2, f"{suite_name}_1_",)
         # system_settings_block_is_not_available_when_the_system_is_offline(cloud_server_2)
-        check_limit_session_duration(cloud_server_first)
+        check_limit_session_duration(cloud_server)
