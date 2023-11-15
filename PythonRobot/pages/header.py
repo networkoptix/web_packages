@@ -47,6 +47,11 @@ class HeaderNav:
             "//header//li//a/span[contains(text(),'{LOG_OUT_BUTTON_TEXT}')]/..")
         return Button(self._driver, translated_xpath)
 
+    def japanese_log_out_option(self):
+        locator = ("//header//li[contains(@class, 'dropdown-item-container')]//a"
+                   "/span[contains(text(),'ログアウト')]")
+        return Button(self._driver, locator)
+
     def administration_selection(self):
         pass
 

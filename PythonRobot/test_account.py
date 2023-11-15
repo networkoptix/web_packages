@@ -12,6 +12,8 @@ from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from pages.header import HeaderNav
+from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.reset_password_dialog import ResetPasswordDialog
 from resource_import import get_lang_list
@@ -306,7 +308,10 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         assert activeLang.lower() in japanese_code.lower(), f"{activeLang.lower()} not found in {japanese_code.lower}"
         info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
-        resource_import.logout_japanese(driver)
+        header = HeaderNav(driver)
+        header.account_dropdown().click()
+        header.japanese_log_out_option().click()
+        LandingPage(driver).wait_until_loaded()
         url1 = rb.ENV + "/account"
         driver.get(url1)
         cloud_login(driver, cloud_user.email, cloud_user.password, button=None, api=False)
