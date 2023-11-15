@@ -5,15 +5,15 @@ from selenium.webdriver.common.action_chains import ActionChains
 from selenium.webdriver.common.keys import Keys
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import Suite, CloudAccount
 from RobotVariables import RobotVariables
 from email_access import EmailClient
+from email_access import get_random_email
 from generic_elements import Button
 from pages.header import HeaderNav
 from pages.register_form import RegisterForm
-from email_access import get_random_email
 from resource_import import activate
 from resource_import import get_chrome
-from resource_import import register_and_activate_account
 
 rb = RobotVariables("en_US")
 CLOUD_API = CloudPortalAPI()
@@ -238,17 +238,20 @@ def cant_register_email_already_registered():
         register_form.account_already_exists_error()
 
 
-def cant_register_email_already_activated():
+def cant_register_email_already_activated(activated_cloud_user: CloudAccount):
     """
     20. Cannot register email that is already activated
     [tags]    C41563
     """
-    email = get_random_email()
     with get_chrome() as driver:
-        register_and_activate_account(driver, "mark", "hamill", email, rb.BASE_PASSWORD)
         driver.get(f'{rb.ENV}/authorize?client_type=create')
         register_form = RegisterForm(driver)
-        register_form.register_new_user("mark", "hamill", email, rb.BASE_PASSWORD)
+        register_form.register_new_user(
+            "mark",
+            "hamill",
+            activated_cloud_user.email,
+            activated_cloud_user.password,
+            )
         register_form.account_already_exists_error()
 
 
@@ -276,6 +279,11 @@ def check_register_email():
 
 
 if __name__ == "__main__":
+    with Suite() as suite:
+        cloud_account = suite.create_cloud_account()
+        cant_register_email_already_activated(cloud_account)
+        print(f'{Fore.WHITE}{cant_register_email_already_activated.__doc__}\t{Fore.GREEN}| PASS |')
+
     page_in_anonymous_state_register_header()
     print(f'{Fore.WHITE}{page_in_anonymous_state_register_header.__doc__}\t{Fore.GREEN}| PASS |')
 
@@ -311,9 +319,6 @@ if __name__ == "__main__":
 
     cant_register_email_already_registered()
     print(f'{Fore.WHITE}{cant_register_email_already_registered.__doc__}\t{Fore.GREEN}| PASS |')
-
-    cant_register_email_already_activated()
-    print(f'{Fore.WHITE}{cant_register_email_already_activated.__doc__}\t{Fore.GREEN}| PASS |')
 
     check_register_email()
     print(f'{Fore.WHITE}{check_register_email.__doc__}\t{Fore.GREEN}| PASS |')
