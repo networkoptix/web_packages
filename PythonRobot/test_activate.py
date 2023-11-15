@@ -117,8 +117,8 @@ def allow_activation_desktop():
     """11. Should allow activation, if user is registered by link /authorize?client_type=create&view_type=desktop"""
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register(
-            driver, "darth", "bye", random_email, rb.BASE_PASSWORD, view_type="desktop")
+        driver.get(rb.ENV + "/authorize?client_type=create&view_type=desktop")
+        RegisterForm(driver).register_new_user("darth", "bye", random_email, rb.BASE_PASSWORD)
         resource_import.activate(driver, random_email, rb.BASE_PASSWORD)
 
 
@@ -126,8 +126,8 @@ def allow_activation_mobile():
     """12. Should allow activation, if user is registered by link /authorize?client_type=create&view_type=mobile"""
     with get_chrome() as driver:
         random_email = get_random_email(sendemail=True)
-        resource_import.register(
-            driver, "darth", "desktop", random_email, rb.BASE_PASSWORD, view_type="mobile")
+        driver.get(rb.ENV + "/authorize?client_type=create&view_type=mobile")
+        RegisterForm(driver).register_new_user("darth", "desktop", random_email, rb.BASE_PASSWORD)
         resource_import.activate(driver, random_email, rb.BASE_PASSWORD)
 
 

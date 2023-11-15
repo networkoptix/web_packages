@@ -12,7 +12,6 @@ from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from email_access import EmailClient
 from generic_elements import Button
-from generic_elements import Checkbox
 from generic_elements import DropDown
 from generic_elements import DropDownOption
 from generic_elements import Image
@@ -75,24 +74,6 @@ def logout_japanese(driver):
     validate_log_out(driver)
 
 
-def register(driver, first_name, last_name, email, password, checked=False, view_type=""):
-    if view_type:
-        url = rb.ENV + "/authorize?client_type=create&view_type=" + view_type
-        driver.get(url)
-    else:
-        driver.get("https://cloud-test.hdw.mx/authorize?client_type=create")
-    validate_on_register_page(driver)
-
-    TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).input_text(first_name)
-    TextField(driver, rb.REGISTER_LAST_NAME_INPUT).input_text(last_name)
-    TextField(driver, rb.REGISTER_EMAIL_INPUT).input_text(email)
-    TextField(driver, rb.REGISTER_PASSWORD_INPUT).input_text(password)
-    if not checked:
-        # Workaround. Rework Checkbox wrapper to simplify arguments.
-        Checkbox(driver, rb.TERMS_AND_CONDITIONS_CHECKBOX_VISIBLE).click()
-    Button(driver, rb.CREATE_ACCOUNT_BUTTON).click()
-
-
 def send_restore_password_email(driver, email: str) -> None:
     url = rb.ENV + "/authorize"
     driver.get(url)
@@ -107,13 +88,6 @@ def send_restore_password_email(driver, email: str) -> None:
 def validate_log_out(driver):
     Pane(driver, rb.BACKDROP).wait_until_not_visible(10)
     PageText(driver, rb.ANONYMOUS_BODY).wait_until_visible()
-
-
-def validate_on_register_page(driver):
-    TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).wait_until_visible()
-    TextField(driver, rb.REGISTER_LAST_NAME_INPUT).wait_until_visible()
-    TextField(driver, rb.REGISTER_PASSWORD_INPUT).wait_until_visible()
-    Button(driver, rb.CREATE_ACCOUNT_BUTTON).wait_until_visible()
 
 
 _logger = logging.getLogger(__name__)

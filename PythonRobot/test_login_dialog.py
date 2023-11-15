@@ -81,8 +81,9 @@ def not_activated_user_login_check():
     with get_chrome() as driver:
         email = get_random_email()
         password = "qweasd 123"
-        driver.get(ENV + '/register')
-        resource_import.register(driver, "darth", "bye", email, password, view_type="desktop")
+        url = ENV + "/authorize?client_type=create&view_type=desktop"
+        driver.get(url)
+        RegisterForm(driver).register_new_user("darth", "bye", email, password)
         resource_import.activate(driver, email, password)
         account_activated = AccountActivatedPane(driver)
         account_activated.wait_until_visible()
