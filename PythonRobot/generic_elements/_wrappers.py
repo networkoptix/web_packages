@@ -130,6 +130,9 @@ class PageText:
     def get_attribute(self, attribute: str) -> Optional[str]:
         return self._element.get_attribute(attribute)
 
+    def get_count(self):
+        return self._element.count()
+
 
 class TextField:
 

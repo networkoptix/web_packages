@@ -6,6 +6,7 @@ from typing import NamedTuple
 from selenium.webdriver.remote.webdriver import WebDriver
 
 from RobotVariables import RobotVariables
+from generic_elements import Button
 from generic_elements import ElementNotVisible
 from generic_elements import FileInput
 from generic_elements import Link
@@ -133,6 +134,8 @@ class TabInformation:
     def get_network_section(self) -> '_Section':
         return _Section(self._driver, '//nx-menu//nx-level-1-item/a[@id="networkInterfaces"]', 'Network Interfaces')
 
+    def get_details_pane(self) -> '_DetailsPane':
+        return _DetailsPane(self._driver, "//nx-info-block")
 
 class _Section:
 
@@ -171,6 +174,9 @@ class _Section:
             return False
         else:
             return True
+
+    def get_table_problem(self, problem_name):
+        return Button(self._driver, f"//div[@id='nx-table']//tr//td/span[contains(text(), '{problem_name}')]")
 
     def _is_active(self) -> bool:
         return self.has_table() or self.has_card()
@@ -276,3 +282,21 @@ class _ServersSection(_Section):
         PageText(self._driver, '//nx-info-block//*[contains(text(), "Load")]').wait_until_visible(timeout)
         PageText(self._driver, '//nx-info-block//*[contains(text(), "Info")]').wait_until_visible(timeout)
         PageText(self._driver, '//nx-info-block//*[contains(text(), "Activity")]').wait_until_visible(timeout)
+
+
+class _DetailsPane():
+    def __init__(self, driver: WebDriver, locator: str):
+        self._driver = driver
+        self._locator = locator
+        self._element = Pane(self._driver, self._locator)
+
+    def get_pane_issue_by_title(self, title):
+        return PageText(
+            self._driver,
+            f"{self._locator}//p[@title='{title}' and contains(@class, 'error')]",
+        )
+
+
+    def get_pane_error_count(self, error: PageText):
+        return error.get_count()
+    

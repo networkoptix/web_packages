@@ -11,14 +11,14 @@ from pages.system_admin import SystemAdmin
 rb = RobotVariables("en_US")
 
 
-def test_health_monitor_warnings(server: Mediaserver):
+def test_health_monitor_details_panel_errors_and_warnings(server: Mediaserver):
     with get_chrome() as driver:
         driver.get(rb.ENV)
         owner = server.get_cloud_owner()
         HeaderNav(driver).log_in_button().click()
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         driver.get(rb.ENV + f"/systems/{server.id}")
-        system_administration = SystemAdmin(driver, rb.language)
+        system_administration = SystemAdmin(driver)
         tab_info = system_administration.get_information_tab()
         tab_info.click()
         tab_info.check_links()
@@ -27,10 +27,36 @@ def test_health_monitor_warnings(server: Mediaserver):
         tab = system_administration.get_information_tab()
         tab.get_servers_section().click()
 
+        information_tab = system_administration.get_information_tab()
+        servers_section = information_tab.get_servers_section()
+        servers_section.click()
+
+        servers_section.get_table_problem("testserver error").click()
+        servers_section.wait_until_visible()
+        details1 = information_tab.get_details_pane()
+        details1.get_pane_issue_by_title("Server testserver error is broken").wait_until_visible()
+
+        servers_section.get_table_problem("testserver 2 errors").click()
+        details2 = information_tab.get_details_pane()
+        error = details2.get_pane_issue_by_title("Server testserver 2 errors is broken")
+        error.wait_until_visible()
+        assert details2.get_pane_error_count(error) == 2
+
+        servers_section.get_table_problem("testserver warning").click()
+        details3 = information_tab.get_details_pane()
+        details3.get_pane_issue_by_title(
+            "Server testserver warning is broken").wait_until_visible()
+
+        servers_section.get_table_problem("testserver 2 warnings").click()
+        details4 = information_tab.get_details_pane()
+        warning = details4.get_pane_issue_by_title("Server testserver 2 warnings is broken")
+        warning.wait_until_visible()
+        assert warning.get_count() == 2
+
 
 if __name__ == "__main__":
     with Suite() as suite:
         user = suite.create_cloud_account()
         server = suite.create_cloud_server(user, "HM_Details")
 
-        test_health_monitor_warnings(server)
+        test_health_monitor_details_panel_errors_and_warnings(server)
