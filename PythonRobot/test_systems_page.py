@@ -1,16 +1,15 @@
 import time
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
+from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from resource_import import get_chrome
-from resource_import import register_and_activate_account
 from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
+from resource_import import get_chrome
 from variables import ENV
 
 password = "qweasd 123"
@@ -39,13 +38,11 @@ def system_tiles_represent_actual_information(server: Mediaserver):
         print("pass")
 
 
-def no_systems_connected():
+def no_systems_connected(cloud_user: CloudAccount):
     with get_chrome() as driver:
-        email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         HeaderNav(driver).log_in_button().click()
-        LoginDialog(driver).basic_cloud_login(email, password)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         systems_page = SystemsPage(driver)
         systems_page.no_systems().wait_until_visible()
         print("pass")
@@ -202,7 +199,8 @@ if __name__ == "__main__":
             viewer_permissions,
             )
         system_tiles_represent_actual_information(cloud_server_first)
-        no_systems_connected()
+        dummy_account = suite.create_cloud_account()
+        no_systems_connected(dummy_account)
         one_system_directs_you_to_system_admin(cloud_server_second)
         opens_system_admin_when_tile_is_clicked(cloud_server_first)
         search_highlights_system_name(cloud_server_first)
