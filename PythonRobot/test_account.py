@@ -52,10 +52,6 @@ def test_can_access_account_page_from_direct_link():
         verify_in_account_page(driver)
 
 
-# def test_cannot_access_account_page_from_direct_link_closing_log():
-#     """3 accessing the account page from a direct link while logged out asks for login, closing log in takes you to main page"""
-#    this test is skipped in account.robot
-
 def test_cannot_access_account_page_from_direct_link_on_valid_login():
     """4 accessing the account page from a direct link while logged out asks for login, on valid login takes you to account page"""
     with get_chrome() as driver:
@@ -341,7 +337,6 @@ if __name__ == "__main__":
         cloud_account = suite.create_cloud_account()
         test_can_access_account_page_from_dropdown(cloud_account)
         # test_can_access_account_page_from_direct_link()
-        # # #test_cannot_access_account_page_from_direct_link_closing_log()
         # test_cannot_access_account_page_from_direct_link_on_valid_login()
         # test_changing_first_name_and_saving_maintains_that_setting()
         # test_changing_last_name_and_saving_maintains_that_setting()
