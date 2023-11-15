@@ -3,6 +3,7 @@ from pathlib import Path
 
 from colorama import Fore
 
+from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
@@ -134,7 +135,6 @@ def delete_account_button_is_enabled(
 
 
 def user_deleted_from_all_shared_systems(
-        cloud_account: CloudAccount,
         base_url: str,
         *servers: Mediaserver,
         ):
@@ -143,6 +143,43 @@ def user_deleted_from_all_shared_systems(
     [Tags] C69862 delete_account
     """
     [server_1, server_2, server_3] = servers
+    owner = server_1.get_cloud_owner()
+    cloud_account = CloudAccount(get_random_email())
+    cloud_api = CloudPortalAPI(
+        env=base_url,
+        password=owner.password,
+        email=owner.email,
+        )
+    # Not using CloudAccount context manager to avoid __exit__() call in the end: it tries to delete
+    # the account that was already removed during the test
+    cloud_api.register_account(
+        cloud_account.first_name,
+        cloud_account.last_name,
+        cloud_account.email,
+        cloud_account.password,
+        )
+    cloud_account.activate()
+    cloud_api.add_user_to_cloud(
+        server_1.id,
+        'cloudAdmin',
+        cloud_account.email,
+        [owner.email, owner.password],
+        CloudAccount.PERMISSIONS['cloudAdmin'],
+        )
+    cloud_api.add_user_to_cloud(
+        server_2.id,
+        'viewer',
+        cloud_account.email,
+        [owner.email, owner.password],
+        CloudAccount.PERMISSIONS['viewer'],
+        )
+    cloud_api.add_user_to_cloud(
+        server_3.id,
+        'custom',
+        cloud_account.email,
+        [owner.email, owner.password],
+        CloudAccount.PERMISSIONS['custom'],
+        )
     with get_chrome() as driver:
         driver.get(base_url)
         HeaderNav(driver).log_in_button().click()
@@ -157,7 +194,6 @@ def user_deleted_from_all_shared_systems(
         LandingPage(driver).wait_until_loaded()
         driver.get(base_url)
         HeaderNav(driver).log_in_button().click()
-        owner = cloud_server_1.get_cloud_owner()
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         SystemsPage(driver).wait_until_visible()
         driver.get(base_url + f'/systems/{server_1.id}')
@@ -196,9 +232,9 @@ if __name__ == '__main__':
             f"{Fore.WHITE}{delete_account_button_is_enabled.__doc__.strip()}\t\t\t"
             f"{Fore.GREEN}| PASS |")
         cloud_server_3 = suite.create_cloud_server(
-            cloud_owner=cloud_owner, suite_name=suite_name, cloud_users={'custom': user})
+            cloud_owner=cloud_owner, suite_name=suite_name)
         user_deleted_from_all_shared_systems(
-            user, ENV, cloud_server_1, cloud_server_2, cloud_server_3)
+            ENV, cloud_server_1, cloud_server_2, cloud_server_3)
         print(
             f"{Fore.WHITE}{user_deleted_from_all_shared_systems.__doc__.strip()}\t\t\t"
             f"{Fore.GREEN}| PASS |")
