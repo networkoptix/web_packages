@@ -334,12 +334,8 @@ export class NxLayoutGridTreeComponent {
 
     getLayoutResolutionActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
-    ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (node.locked || !this.CONFIG.featureFlags.layoutsChangeResolution) {
-            return [];
-        }
-
-        return (
+    ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] =>
+        (
             [
                 {
                     id: 'divider',
@@ -400,7 +396,6 @@ export class NxLayoutGridTreeComponent {
                 },
             ] as MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[]
         ).filter(Boolean);
-    };
 
     getLayoutEditActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],

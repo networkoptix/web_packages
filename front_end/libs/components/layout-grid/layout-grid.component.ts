@@ -534,8 +534,7 @@ export class NxLayoutGridComponent {
         };
         wrapperWidth = wrapperWidth - this.EDGE_GAP;
         wrapperHeight = wrapperHeight - this.EDGE_GAP;
-        cellAspectRatio ||=
-            items.length === 1 ? wrapperWidth / wrapperHeight : findCommonAspectRatio(items);
+        cellAspectRatio ||= findCommonAspectRatio(items);
         const aspect = wrapperWidth / columns / (wrapperHeight / rows);
         const tooWide = aspect > cellAspectRatio;
         const calcWidth = tooWide
