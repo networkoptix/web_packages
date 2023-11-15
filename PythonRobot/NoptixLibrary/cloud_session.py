@@ -89,7 +89,7 @@ class CloudSession:
                     self._verify_with_backup(code)
             except requests.exceptions.HTTPError as e:
                 print(e)
-        login_response = self._request_wrapper(
+        self._request_wrapper(
             "/api/account/loginCode",
             method='post',
             data={"code": code},
