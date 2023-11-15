@@ -2,14 +2,12 @@ from pathlib import Path
 
 from NoptixLibrary.suite import Mediaserver, CloudAccount
 from NoptixLibrary.suite import Suite
-from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
 from resource_import import get_chrome
-from resource_import import register_and_activate_account
 from variables import ENV
 
 
@@ -42,14 +40,11 @@ def logged_in_header_correct(server: Mediaserver):
         print("PASS")
 
 
-def no_systems_header_button_text_is_correct():
+def no_systems_header_button_text_is_correct(cloud_user: CloudAccount):
     with get_chrome() as driver:
-        password = 'qweasd 123'
-        email = get_random_email()
-        register_and_activate_account(driver, "Mark", "Hamill", email, password)
         driver.get(ENV)
         HeaderNav(driver).log_in_button().click()
-        LoginDialog(driver).basic_cloud_login(email, password)
+        LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         SystemsPage(driver).no_systems().wait_until_visible()
         header = HeaderNav(driver)
         assert header.is_logged_in()
@@ -144,7 +139,8 @@ if __name__ == "__main__":
         cloud_server = suite.create_cloud_server(cloud_owner, f'{suite_name}_1_', cloud_users)
         anon_header_correct()
         logged_in_header_correct(cloud_server)
-        no_systems_header_button_text_is_correct()
+        dummy_account = suite.create_cloud_account()
+        no_systems_header_button_text_is_correct(dummy_account)
         one_system_check_header(cloud_owner)
         check_header_and_dropdown_content_for_not_admins(cloud_server.get_cloud_viewer())
         check_header_and_dropdown_content_for_not_admins(cloud_server.get_cloud_live_viewer())
