@@ -40,8 +40,9 @@ class SystemLeftMenu:
 
     def open_users_dropdown(self):
         self._users_button().click()
-        # Currently it takes 30+ seconds to load the dropdown
-        self.add_user_button().wait_until_clickable(timeout=45)
+        dropdown = UsersDropdown(self.driver)
+        dropdown.wait_for_open()
+        return dropdown
 
     def update_users_list(self):
         locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
@@ -91,9 +92,6 @@ class SystemLeftMenu:
     def add_user_modal(self):
         return Pane(self.driver, "//form[@name='addUserForm']")
 
-    def add_user_button(self):
-        return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
-
     def add_user_email_input(self):
         return TextField(
             self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
@@ -136,7 +134,7 @@ class SystemLeftMenu:
             self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
 
     def share_system_with_user(self, email, permissions):
-        self.add_user_button().click()
+        UsersDropdown(self.driver).add_user_button().click()
         self.add_user_email_input().input_text(email)
         self.add_user_permissions_dropdown().click()
         self.permissions_dropdown_option(permissions).click()
@@ -255,15 +253,16 @@ class UsersDropdown(DropDown):
             self._locator + '//a[@id="users"]',
             )
 
-    def _add_user_button(self):
+    def add_user_button(self):
         return Button(
             self._driver,
             self._locator + '//nx-menu-button[@data-testid="addUserBtn"]/button'
             )
 
-    def _wait_for_open(self):
-        self._add_user_button().is_visible()
+    def wait_for_open(self, timeout=45):
+        # Currently it takes 30+ seconds to load the dropdown
+        self.add_user_button().wait_until_clickable(timeout=timeout)
 
     def open(self):
         self._users_button().click()
-        self._wait_for_open()
+        self.wait_for_open()
