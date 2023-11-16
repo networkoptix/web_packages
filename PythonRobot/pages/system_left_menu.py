@@ -18,8 +18,11 @@ from generic_elements import Pane
 from generic_elements import TextField
 from variables import ENV
 
+_logger = logging.getLogger(__name__)
+
 
 class SystemLeftMenu:
+
     def __init__(self, driver, lang="en_US"):
         self._locator = "//nx-menu"
         self.driver = driver
@@ -46,7 +49,11 @@ class SystemLeftMenu:
         users = self.driver.find_elements(By.XPATH, locator)
         self.users = []
         for user in users:
-            self.users.append(Button(self.driver, f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]"))
+            self.users.append(
+                Button(
+                    self.driver,
+                    f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]",
+                    ))
 
     def get_user_with_email(self, email: str):
         self.update_users_list()
@@ -78,7 +85,8 @@ class SystemLeftMenu:
         return Button(self.driver, translated_xpath)
 
     def update_servers_list(self):
-        self.servers = self.driver.find_elements(By.XPATH, "//div[@id='level3servers']//nx-level-3-item")
+        self.servers = self.driver.find_elements(
+            By.XPATH, "//div[@id='level3servers']//nx-level-3-item")
 
     def add_user_modal(self):
         return Pane(self.driver, "//form[@name='addUserForm']")
@@ -87,31 +95,45 @@ class SystemLeftMenu:
         return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
 
     def add_user_email_input(self):
-        return TextField(self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
+        return TextField(
+            self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
 
     def add_user_modal_button(self):
-        return Button(self.driver, "//form[@name='addUserForm']//nx-process-button[@data-testid='addUserBtn']")
+        return Button(
+            self.driver,
+            "//form[@name='addUserForm']//nx-process-button[@data-testid='addUserBtn']")
 
     def add_user_permissions_dropdown(self):
-        return DropDown(self.driver, "//form[@name='addUserForm']//nx-permissions-select[@id='permissionsSelect']//button")
+        return DropDown(
+            self.driver,
+            "//form[@name='addUserForm']//nx-permissions-select[@id='permissionsSelect']//button")
 
     def permissions_dropdown_option(self, permissions):
-        option = DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
+        option = DropDownOption(
+            self.driver,
+            f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
         option.wait_until_visible()
-        return DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']/..")
+        return DropDownOption(
+            self.driver,
+            f"//form[@name='addUserForm']//nx-permissions-select//"
+            f"li//span[text()='{permissions}']/..")
 
     def permissions_dropdown_unavailable(self, permissions):
-        option = DropDownOption(self.driver, f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
+        option = DropDownOption(
+            self.driver,
+            f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
         option.wait_until_not_visible()
 
     def add_user_modal_close_button(self):
-        return Button(self.driver, "//form[@name='addUserForm']//button[@data-testid='closeAddUser']")
+        return Button(
+            self.driver, "//form[@name='addUserForm']//button[@data-testid='closeAddUser']")
 
     def add_user_modal_cancel_button(self):
         return Button(self.driver, "//nx-cancel-button[@data-testid='cancelAddUserBtn']/button")
 
     def add_user_permissions_hint(self):
-        return PageText(self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
+        return PageText(
+            self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
 
     def share_system_with_user(self, email, permissions):
         self.add_users_button().click()
@@ -181,6 +203,7 @@ class _UserNotFoundError(Exception):
 
 
 class SearchField:
+
     def __init__(self, driver: ChromeBrowser, locator: str):
         self._locator = locator
         self.driver = driver
@@ -218,9 +241,6 @@ class SearchField:
 
     def get_placeholder_text(self):
         return self._get_field().get_attribute('placeholder')
-
-
-_logger = logging.getLogger(__name__)
 
 
 class UsersDropdown(DropDown):
