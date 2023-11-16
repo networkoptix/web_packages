@@ -28,7 +28,6 @@ class SystemLeftMenu:
         self.driver = driver
         self.rb = RobotVariables(lang)
         self._wait_until_page_loaded()
-        self.servers = []
         # Todo: find way to pass id in
         # self._location_is_correct()
 
@@ -85,9 +84,9 @@ class SystemLeftMenu:
             "//span[contains(text(), '{SERVERS}')]")
         return Button(self.driver, translated_xpath)
 
-    def update_servers_list(self):
-        self.servers = self.driver.find_elements(
-            By.XPATH, "//div[@id='level3servers']//nx-level-3-item")
+    def servers_count(self):
+        return len(self.driver.find_elements(
+            By.XPATH, "//div[@id='level3servers']//nx-level-3-item"))
 
     def add_user_modal(self):
         return Pane(self.driver, "//form[@name='addUserForm']")

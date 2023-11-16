@@ -29,8 +29,7 @@ def merge_from_primary_system(first_server: Mediaserver, second_server: Mediaser
         driver.refresh()
         left_menu = SystemLeftMenu(driver)
         left_menu.servers_button().click()
-        left_menu.update_servers_list()
-        assert len(left_menu.servers) == 2, f"Len was {len(left_menu.servers)}"
+        assert left_menu.servers_count() == 2, f"Len was {left_menu.servers_count()}"
 
 
 if __name__ == "__main__":
