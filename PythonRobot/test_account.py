@@ -265,8 +265,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         account_page.set_language_in_dropdown(japanese_code)
         time.sleep(5)
         driver.refresh()
-        activeLang = account_page.get_active_language()
-        assert activeLang.lower() in japanese_code.lower()
+        assert account_page.get_active_language() == '日本'
         info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
         header = HeaderNav(driver)
