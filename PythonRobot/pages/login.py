@@ -50,6 +50,9 @@ class LoginDialog:
     def russian_next_button(self):
         return Button(self.driver, "//button[contains(text(), 'Далее')]")
 
+    def japanese_next_button(self):
+        return Button(self._driver, "//button[contains(text(), '次へ')]")
+
     def login_button(self):
         return Button(self._driver, "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']")
 
