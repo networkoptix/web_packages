@@ -255,8 +255,7 @@ def disconnect_should_remove_system(server: Mediaserver):
                 login_dialog.basic_cloud_login(owner.email, owner.password)
                 system_left_menu = SystemLeftMenu(driver)
                 system_left_menu.open_users_dropdown()
-                system_left_menu.update_users_list()
-                assert tmp_user.email not in system_left_menu.users
+                assert not system_left_menu.has_user_with_email(tmp_user.email)
             except Exception:
                 print("FAIL")
                 driver.save_screenshot('error.png')
@@ -555,8 +554,7 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
                 LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
                 system_left_menu = SystemLeftMenu(driver)
                 system_left_menu.open_users_dropdown()
-                system_left_menu.update_users_list()
-                assert tmp_user.email not in system_left_menu.users
+                assert not system_left_menu.has_user_with_email(tmp_user.email)
             except Exception:
                 print("FAIL")
                 driver.save_screenshot('error.png')

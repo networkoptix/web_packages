@@ -85,10 +85,8 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver, cloud_view
         LoginDialog(driver).basic_cloud_login(owner.email, password)
         left_menu = SystemLeftMenu(driver)
         left_menu.open_users_dropdown()
-        left_menu.update_users_list()
-        for user in left_menu.users:
-            if user == cloud_viewer.email:
-                raise RuntimeError("User was still in the users list.")
+        assert not left_menu.has_user_with_email(cloud_viewer.email), (
+            "User was still in the users list.")
         print("pass")
 
 
