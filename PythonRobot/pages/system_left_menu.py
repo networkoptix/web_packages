@@ -41,7 +41,7 @@ class SystemLeftMenu:
     def open_users_dropdown(self):
         self._users_button().click()
         # Currently it takes 30+ seconds to load the dropdown
-        self.add_users_button().wait_until_clickable(timeout=45)
+        self.add_user_button().wait_until_clickable(timeout=45)
 
     def update_users_list(self):
         locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
@@ -91,7 +91,7 @@ class SystemLeftMenu:
     def add_user_modal(self):
         return Pane(self.driver, "//form[@name='addUserForm']")
 
-    def add_users_button(self):
+    def add_user_button(self):
         return Button(self.driver, '//nx-menu-button[@data-testid="addUserBtn"]//button')
 
     def add_user_email_input(self):
@@ -136,7 +136,7 @@ class SystemLeftMenu:
             self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
 
     def share_system_with_user(self, email, permissions):
-        self.add_users_button().click()
+        self.add_user_button().click()
         self.add_user_email_input().input_text(email)
         self.add_user_permissions_dropdown().click()
         self.permissions_dropdown_option(permissions).click()
