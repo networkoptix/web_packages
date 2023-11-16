@@ -56,7 +56,7 @@ def no_systems_header_button_text_is_correct(cloud_user: CloudAccount):
         # Now fails because of bug https://networkoptix.atlassian.net/browse/CLOUD-11719
         landing_page = LandingPage(driver)
         landing_page.wait_until_loaded()
-        landing_page.location_is_correct(url="https://metavms.cloud-test.hdw.mx/")
+        landing_page.location_is_correct(url="https://metavms.test.ft-cloud.hdw.mx/")
         landing_page.get_label().should_contain('Nx Meta Cloud')
         print("PASS")
 

@@ -11,7 +11,7 @@ variables_dict = {
     "ACCOUNT_CREATION_EMAIL_SUCCESS": "//nx-authorize-component//nx-authorize-activate-account-component//main//h3",
     "MODAL_DIALOG": "//nx-modal-generic-content",
     "LOGGED_IN_CLOSE_BUTTON": "//nx-modal-generic-content//button//span[@class='close-icon']/../..",
-    "ENV": "https://cloud-test.hdw.mx",
+    "ENV": "https://test.ft-cloud.hdw.mx",
     "LOG_IN_MODAL": "//nx-authorize-component/div[@class='authorize-main main-w']",
     "LOG_IN_NEXT_BUTTON": "//nx-authorize-component//nx-process-button[@data-testid='btnLogin']",
     "EMAIL_INPUT": "//nx-authorize-component//input[@id='authorizeEmail']",

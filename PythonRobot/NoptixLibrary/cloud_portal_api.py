@@ -41,7 +41,7 @@ class CloudPortalAPI(object):
 
     def __init__(
             self,
-            env='https://cloud-test.hdw.mx',
+            env='https://test.ft-cloud.hdw.mx',
             password='qweasd 123',
             email='noptixautoqa@gmail.com',
             ):

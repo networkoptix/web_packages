@@ -1,5 +1,5 @@
 {
-    "PRODUCT_NAME"               :    "Nx Cloud",
+    "PRODUCT_NAME"               :    "VMS Demo Cloud",
     "VMS_NAME"                   :    "Nx Witness",
     "TEST EMAIL"                 :    "noptixautoqa",
     "AUTO SYS IP"                :    "https://10.1.5.126:7002",

@@ -282,7 +282,7 @@ class Mediaserver:
         self._primary_port = primary_port
         self._secondary_port = secondary_port
         docker_configuration = ContainerConfiguration("5.1", "latest").\
-            with_env({'CLOUD_HOST': 'cloud-test.hdw.mx'}).\
+            with_env({'CLOUD_HOST': 'test.ft-cloud.hdw.mx'}).\
             with_exposed(tcp_ports=[primary_port, secondary_port])
         self._container = docker_configuration.create(_DOCKER_API, self.name)
         self.start()

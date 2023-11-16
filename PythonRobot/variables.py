@@ -17,7 +17,7 @@ MODAL_DIALOG = f"//nx-modal-generic-content"
 LOGGED_IN_CLOSE_BUTTON = f"{MODAL_DIALOG}//button//span[@class=close-icon]/../.."
 
 
-ENV="https://cloud-test.hdw.mx"
+ENV="https://test.ft-cloud.hdw.mx"
 
 
 #Log In Elements
