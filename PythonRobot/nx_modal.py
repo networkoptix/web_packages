@@ -1,8 +1,8 @@
 from selenium.webdriver.remote.webdriver import WebDriver
 
-from PythonRobot.generic_elements import Button
-from PythonRobot.generic_elements import ModalWindow
-from PythonRobot.generic_elements import PageText
+from generic_elements import Button
+from generic_elements import ModalWindow
+from generic_elements import PageText
 
 
 class NxModalWindow(ModalWindow):
