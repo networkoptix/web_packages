@@ -825,6 +825,43 @@ def test_email_validation(server: Mediaserver):
         system_left_menu.get_error().wait_until_not_visible()
 
 
+def users_can_disconnect_themselves(server: Mediaserver):
+    """
+    21. Users should be able to disconnect themselves from cloud
+    This test fails on a custom user because the system's name is not present in
+    the toast.
+    https://networkoptix.atlassian.net/browse/CLOUD-11867
+    """
+    role_names = {
+        "cloudAdmin": rb.ADMIN_TEXT,
+        "viewer": rb.VIEWER_TEXT,
+        "liveViewer": rb.LIVE_VIEWER_TEXT,
+        "advancedViewer": rb.ADV_VIEWER_TEXT,
+        "custom": rb.CUSTOM_TEXT}
+    url = ENV + f"/systems/{server.id}"
+    for role in role_names:
+        with get_chrome() as driver:
+            with CloudAccount(get_random_email(), "firstname", "lastname") as tmp_user:
+                tmp_user.activate()
+                server.share_with_user(tmp_user, role, permissions[role])
+                try:
+                    driver.get(url)
+                    LoginDialog(driver).basic_cloud_login(tmp_user.email, tmp_user.password)
+                    system_admin = SystemAdmin(driver)
+                    system_admin.disconnect_from_account_button().click()
+                    system_admin.disconnect_modal_warning().wait_until_visible()
+                    system_admin.disconnect_modal_generic_button().click()
+                    message = system_admin.disconnect_from_account_toast_notification(server.name)
+                    message.wait_until_visible()
+                    message.wait_until_not_visible(10)
+                except Exception:
+                    print("FAIL")
+                    driver.save_screenshot('error.png')
+                    raise
+                else:
+                    print(f"PASS {role}")
+
+
 def _wait_for_system_administration_elements_clickable(driver: ChromeBrowser, owner_email: str):
     # This method is needed as it takes a lot of time to wait until buttons become active
     # just after system setup. The button to add users is quite tricky as when we try to
@@ -868,3 +905,4 @@ if __name__ == "__main__":
         edit_permission_works_for_owner(cloud_server)
         edit_permission_works_for_cloud_admin(cloud_server)
         test_email_validation(cloud_server)
+        users_can_disconnect_themselves(cloud_server)

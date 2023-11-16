@@ -48,6 +48,11 @@ class SystemAdmin:
             "//nx-modal-disconnect-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
         return Button(self.driver, translated_xpath)
 
+    def disconnect_modal_generic_button(self):
+        translated_xpath = self.rb.replace_nested_variables(
+            "//nx-modal-generic-content//button[contains(text(), '{DISCONNECT_BUTTON_TEXT}')]")
+        return Button(self.driver, translated_xpath)
+
     def disconnect_modal_cancel_button(self):
         locator = "//nx-modal-disconnect-content/form//nx-cancel-button/button"
         return Button(self.driver, locator)
