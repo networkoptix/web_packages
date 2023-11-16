@@ -137,7 +137,7 @@
             <ng-template #notMine>
                 <nx-section>
                     <span
-                        *ngIf="userRole()"
+                        *ngIf="userRole$$()"
                         class="system-owner"
                     >
                         <ng-container *ngIf="!showNewText; else newText">
@@ -159,16 +159,16 @@
                             <span
                                 class="group-count-container"
                                 [nxTooltip]="userGroups"
-                                horizontal
+                                topBottom
                                 alternateSecondary
                             >
                                 <ng-template #userGroups>
                                     <nx-ml-ellipsis
-                                        [viewHeight]="126"
+                                        [viewHeight]="viewHeight"
                                         [viewLineHeight]="21"
-                                        [viewLines]="6"
+                                        [viewLines]="viewLines"
                                     >
-                                        {{ userRole() }}
+                                        {{ userRole$$() | translate }}
                                     </nx-ml-ellipsis>
                                 </ng-template>
                                 <span
@@ -181,7 +181,7 @@
                         <ng-template #oneGroup>
                             <span
                                 class="name"
-                                [innerText]="userRole() | translate"
+                                [innerText]="userRole$$() | translate"
                             ></span>
                         </ng-template>
                     </span>
