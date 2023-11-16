@@ -48,7 +48,7 @@ class LoginDialog:
         return Button(self._driver, translated_xpath)
 
     def russian_next_button(self):
-        return Button(self.driver, "//button[contains(text(), 'Далее')]")
+        return Button(self._driver, "//button[contains(text(), 'Далее')]")
 
     def japanese_next_button(self):
         return Button(self._driver, "//button[contains(text(), '次へ')]")
@@ -83,7 +83,7 @@ class LoginDialog:
         return Button(self._driver, translated_xpath)
 
     def russian_forgot_password_button(self):
-        return Button(self.driver, "//button//span[contains(text(),'Забыли пароль?')]")
+        return Button(self._driver, "//button//span[contains(text(),'Забыли пароль?')]")
 
     def reset_password_email_input(self):
         return TextField(self._driver, "//input[@id='resetPasswordEmail']")
