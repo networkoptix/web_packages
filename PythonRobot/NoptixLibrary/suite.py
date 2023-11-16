@@ -287,6 +287,7 @@ class Mediaserver:
         self._container = docker_configuration.create(_DOCKER_API, self.name)
         self.start()
         # Set up a local system.
+        time.sleep(2) # avoids connection errors
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         self._local_users = self.create_local_users()
         return self
