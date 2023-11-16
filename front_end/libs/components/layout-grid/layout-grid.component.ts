@@ -374,6 +374,8 @@ export class NxLayoutGridComponent {
         shareReplay({ bufferSize: 1, refCount: false }),
     );
 
+    mouseMoving$$ = toSignal(this.mouseMoving$, { initialValue: true });
+
     @HostListener('window:resize', ['$event'])
     onResize({ target: { innerWidth: width } }: { target: Window }): void {
         const closeOnResize =

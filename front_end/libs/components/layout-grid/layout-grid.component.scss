@@ -218,16 +218,22 @@ h2.auto-save-overlay {
     background: var(--body-bg);
 }
 
-.unsaved-ribbon {
-    padding: 6px 16px;
-    background-color: #0d3959;
-    display: flex;
-    align-items: center;
-    gap: 8px;
+.resolution-ribbon {
+    background-color: #594c0d;
+}
 
+.unsaved-ribbon {
+    background-color: #0d3959;
     &.diverged {
         background-color: #594c0d;
     }
+}
+
+.unsaved-ribbon, .resolution-ribbon {
+    padding: 6px 16px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
 
     .info-svg {
         fill: #208fdf;

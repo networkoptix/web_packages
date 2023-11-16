@@ -3,6 +3,8 @@ import { memoize } from 'lodash-es';
 
 import { dirtyId } from '@utils/general';
 
+import { selectActiveLayoutState } from '../active-layout/active-layout.selectors';
+
 import { layoutsResolutionFeature } from './layoutsResolutionFeature';
 import { LayoutsResolutionState, Resolution } from './resolution.types';
 
@@ -37,4 +39,37 @@ export const selectCameraResolution = memoize(
         );
     },
     (layoutId: string, cameraId: string) => `${dirtyId(layoutId)}-${dirtyId(cameraId)}`,
+);
+
+export const selectCurrentLayoutCamerasLookup = createSelector(
+    selectActiveLayoutState,
+    selectLayoutsResolutionState,
+    (layoutId, resolution: LayoutsResolutionState) => {
+        const layoutState = layoutId
+            ? resolution[dirtyId(layoutId)]
+            : { cameras: {}, resolution: Resolution.AUTO };
+
+        return new Proxy(layoutState?.cameras || {}, {
+            get(target, prop: string) {
+                return (
+                    target[dirtyId(prop)] || {
+                        resolution: layoutState?.resolution,
+                    }
+                );
+            },
+        });
+    },
+);
+
+export const selectCurrentLayoutResolution = createSelector(
+    selectActiveLayoutState,
+    selectLayoutsResolutionState,
+    (layoutId, resolution: LayoutsResolutionState) =>
+        (layoutId && resolution[dirtyId(layoutId)]?.resolution) || Resolution.AUTO,
+);
+
+export const selectCurrentLayoutHighResolution = createSelector(
+    selectCurrentLayoutResolution,
+    (resolution: Resolution) =>
+        resolution && ![Resolution.AUTO, Resolution.LOW].includes(resolution),
 );

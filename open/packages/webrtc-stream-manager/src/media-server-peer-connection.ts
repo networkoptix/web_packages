@@ -5,6 +5,7 @@ import { BufferHandler, SignalingMessage, StreamHandler } from './types';
 import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
+    remoteDataChannel: RTCDataChannel;
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (event.candidate) {
             this.wsConnection.next({ ice: event.candidate });
@@ -57,6 +58,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
                     bufferHandler(new Uint8Array(data));
                 }
             })
+            this.remoteDataChannel = channel;
         });
     }
 }
