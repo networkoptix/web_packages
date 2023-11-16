@@ -14,7 +14,7 @@ class AccountPage:
         self._driver = driver
 
     def wait_until_loaded(self):
-        self.email().wait_until_visible()
+        self.email().wait_until_visible(timeout=15)
         self.first_name().wait_until_visible()
         self.last_name().wait_until_visible()
         self.get_language_dropdown().get_dropdown_button().wait_until_visible()
