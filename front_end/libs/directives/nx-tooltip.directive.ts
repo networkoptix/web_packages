@@ -36,6 +36,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     @Input() alternativeTargetRef: Element;
 
     @Input({ transform: booleanAttribute }) horizontal: boolean;
+    @Input({ transform: booleanAttribute }) topBottom: boolean;
     @Input({ transform: booleanAttribute }) alternateStyle: boolean;
     @Input({ transform: booleanAttribute }) alternateSecondary: boolean;
     @Input({ transform: booleanAttribute }) forceDark: boolean;
@@ -49,44 +50,58 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     ) {}
 
     ngOnInit(): void {
-        const positions: ConnectedPosition[] = this.horizontal
-            ? [
-                  {
-                      originX: 'end',
-                      originY: 'center',
-                      overlayX: 'start',
-                      overlayY: 'center',
-                      offsetX: 6,
-                      panelClass: ['center', 'right'],
-                  },
-                  {
-                      originX: 'start',
-                      originY: 'center',
-                      overlayX: 'end',
-                      overlayY: 'center',
-                      offsetX: -6,
-                      panelClass: ['center', 'left'],
-                  },
-              ]
-            : [
-                  {
-                      originX: 'center',
-                      originY: 'top',
-                      overlayX: 'center',
-                      overlayY: 'bottom',
-                      offsetY: -6,
-                      panelClass: ['top', 'center'],
-                  },
-                  {
-                      originX: 'center',
-                      originY: 'bottom',
-                      overlayX: 'center',
-                      overlayY: 'top',
-                      offsetY: 6,
-                      panelClass: ['bottom', 'center'],
-                  },
-              ];
+        let positions: ConnectedPosition[];
 
+        if (this.topBottom) {
+            positions = [
+                {
+                    originX: 'end',
+                    originY: 'top',
+                    overlayX: 'start',
+                    overlayY: 'top',
+                    offsetX: 6,
+                    panelClass: ['top', 'right'],
+                },
+            ];
+        } else if (this.horizontal) {
+            positions = [
+                {
+                    originX: 'end',
+                    originY: 'center',
+                    overlayX: 'start',
+                    overlayY: 'center',
+                    offsetX: 6,
+                    panelClass: ['center', 'right'],
+                },
+                {
+                    originX: 'start',
+                    originY: 'center',
+                    overlayX: 'end',
+                    overlayY: 'center',
+                    offsetX: -6,
+                    panelClass: ['center', 'left'],
+                },
+            ];
+        } else {
+            positions = [
+                {
+                    originX: 'center',
+                    originY: 'top',
+                    overlayX: 'center',
+                    overlayY: 'bottom',
+                    offsetY: -6,
+                    panelClass: ['top', 'center'],
+                },
+                {
+                    originX: 'center',
+                    originY: 'bottom',
+                    overlayX: 'center',
+                    overlayY: 'top',
+                    offsetY: 6,
+                    panelClass: ['bottom', 'center'],
+                },
+            ];
+        }
         this.positionStrategy = this.overlayPositionBuilder
             .flexibleConnectedTo(this.alternativeTargetRef || this.elementRef)
             .withPositions(positions);

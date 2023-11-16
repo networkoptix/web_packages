@@ -17,6 +17,7 @@
     "NofM": "{n} of {m}",
     "downloadBookmark": "Download {title}",
     "groupCount": "{count} Groups",
+    "listString": "{listItems} and {singleItem}",
     "exclude": {
         "nested": "{start}{end}"
     },
