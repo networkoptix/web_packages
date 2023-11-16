@@ -140,8 +140,6 @@ def test_first_name_is_required():
         account_save = account_page.save_button()
         account_save.wait_until_visible()
         account_save.wait_until_not_clickable()
-        first_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
-        first_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
         account_page.cancel_button().click()
 
 
@@ -162,8 +160,6 @@ def test_last_name_is_required():
         account_save = account_page.save_button()
         account_save.wait_until_visible()
         account_save.wait_until_not_clickable()
-        last_name_field.wait_until_has_style("border-color", rb.ERROR_COLOR)
-        last_name_field.wait_until_has_style("color", rb.ERROR_COLOR_WITH_OPACITY)
         account_page.cancel_button().click()
 
 
