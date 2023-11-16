@@ -73,6 +73,14 @@ class AccountPage:
         dialog = DeleteCloudAccountDialog(self._driver)
         return dialog
 
+    def set_language_in_dropdown(self, language_code: str):
+        self.language_dropdown().click()
+        language_button = Button(
+            self._driver,
+            f"//nx-language-select//span[@lang='{language_code}']/..",
+            )
+        language_button.click()
+
 
 class DeleteCloudAccountDialog(NxModalDialog):
 

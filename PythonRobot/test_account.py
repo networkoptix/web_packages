@@ -211,15 +211,9 @@ def test_language_is_changeable_on_the_account_page():
             info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
             verify_in_account_page(driver)
             if lang != rb.language:
-                account_page.language_dropdown().click()
-                language_button = Button(
-                    driver,
-                    f"//nx-language-select//button/following-sibling::ul//span[@lang='{lang}']/..",
-                    )
-                language_button.click()
+                account_page.set_language_in_dropdown(lang)
                 PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-        account_page.language_dropdown().click()
-        Button(driver, f"//nx-language-select//button/following-sibling::ul//span[@lang='{rb.LANGUAGE}']").click()
+        account_page.set_language_in_dropdown(rb.LANGUAGE)
         time.sleep(1)
         verify_in_account_page(driver)
         PageText(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
@@ -235,12 +229,7 @@ def test_language_change_affects_emails():
                 LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
                 HeaderNav(driver).account_dropdown().wait_until_visible()
                 verify_in_account_page(driver)
-                AccountPage(driver).language_dropdown().click()
-                button = Button(
-                    driver,
-                    "//nx-language-select//span[@lang='ru_RU']/..",
-                    )
-                button.click()
+                AccountPage(driver).set_language_in_dropdown('ru_RU')
                 time.sleep(5)
             driver.get(rb.ENV + "/authorize")
             login = LoginDialog(driver, lang="ru_RU")
@@ -273,9 +262,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        Button(driver, rb.ACCOUNT_LANGUAGE_DROPDOWN).click()
-        japanese_button_locator = f"//following-sibling::ul//span[@id='{japanese_code}']"
-        DropDown(driver, japanese_button_locator).click()
+        AccountPage(driver).set_language_in_dropdown(japanese_code)
         time.sleep(5)
         driver.refresh()
         dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
