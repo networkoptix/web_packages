@@ -1,4 +1,4 @@
-from django.db.models import Q, Subquery
+from django.db.models import Q, Subquery, Prefetch
 from time import sleep
 from uuid import uuid4
 
@@ -6,7 +6,7 @@ from django.core.cache import caches
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
-from drf_spectacular.utils import extend_schema_view
+from drf_spectacular.utils import extend_schema_view, OpenApiParameter
 # from drf_spectacular.views import extend_schema
 
 
@@ -512,6 +512,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage))
         if self.action in ('service_changes_history',):
             perms.append(CanPerformChannelPartnerAction(Organization.can_view_service_reports))
+        if self.action == 'groups_structure':
+            perms.append(CanPerformChannelPartnerAction(Organization.can_access))
         return perms
 
     def get_queryset(self):
@@ -562,6 +564,17 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         serializer = OrganizationAggDataSerializer(instance=self.get_object())
         return Response(serializer.data)
 
+    @extend_schema(summary='Get groups structure of organization (that currrent user can access)',
+                   methods=['GET'],
+                   responses=GroupsStructureSerializer,
+                   extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'})
+    @action(methods=['get'], detail=True)
+    def groups_structure(self, request, pk=None):
+        organization: Organization = self.get_object()
+        serializer = GroupsStructureSerializer(data=organization.get_groups_structure_for_user(request.user), many=True)
+        serializer.is_valid()
+        return Response(serializer.data)
+
 
 @extend_schema(tags=['Channel Partners - Organization Users'])
 @extend_schema_view(
@@ -576,19 +589,22 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = OrganizationUserSerializer
     http_method_names = ['get', 'post', 'delete']
-    lookup_field = 'user__email'
+    lookup_field = 'email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
-    queryset = OrganizationToUser.objects.all().order_by('created_ts').select_related('user')
+    queryset = CloudUser.objects.all().prefetch_related(Prefetch('organizationtouser_set', queryset=OrganizationToUser.objects.all(), to_attr='organization_relations')).distinct()
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.UserFilter
+    _organization = None
+
+    def get_queryset(self):
+        organization = self.get_organization()
+        return self.queryset.filter(organizations=organization)
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
-        if self.action in ('create', 'list'):
+        if self.action in ('create', 'list', 'destroy', 'retrieve'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage_users))
-        if self.action in ('retrieve', 'destroy'):
-            perms.append(CanPerformChannelPartnerAction(OrganizationToUser.can_manage))
         return perms
 
     @extend_schema(summary='Get user record for the current user', methods=['GET'])
@@ -597,38 +613,52 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
         self.kwargs['email'] = request.user.email
         return self.retrieve(request, *args, **kwargs)
 
+    def get_organization(self):
+        if self._organization:
+            return self._organization
+        m2m_key, val = self.get_related_pair()
+        self._organization = get_object_or_404(Organization, pk=val)
+        return self._organization
+
     def check_permissions(self, request):
         super().check_permissions(request)
         if self.action == 'list':
-            m2m_key, val = self.get_related_pair()
-            organization = get_object_or_404(Organization, pk=val)
-            self.check_object_permissions(request, organization)
+            self.check_object_permissions(request, None)
+
+    def check_object_permissions(self, request, obj):
+        if self.action == 'retrieve' and self.kwargs.get('email', '').lower() == request.user.email.lower():
+            return
+        organization = self.get_organization()
+        return super().check_object_permissions(request, obj=organization)
 
     # Only create a user if it does not exist, otherwise just sets the relevant group it belongs to
     def create(self, request, *args, **kwargs):
-        m2m_key, val = self.get_related_pair()
-        organization = get_object_or_404(Organization, pk=val)
+        organization = self.get_organization()
         self.check_object_permissions(request, organization)
 
-        serializer = self.get_serializer(data=request.data)
+        serializer = self.get_serializer(data=request.data, context={'organization': organization})
         serializer.is_valid(raise_exception=True)
         serializer.save(organization=organization)
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
-        instance = self.get_object()
-        org_admin_qs = self.queryset.filter(organization=instance.organization, roles__contains="Organization Administrator")
-        if not org_admin_qs.exists() or org_admin_qs.exclude(pk=instance.pk).exists():
-            data = instance.update_user_systems_data(None)
-            make_batch_request(request, data)
+        instance: CloudUser = self.get_object()
+        organization = self.get_organization()
+        org_admin_qs = OrganizationToUser.objects.filter(organization=organization, roles__contains="Organization Administrator")
+        if not org_admin_qs.exists() or org_admin_qs.exclude(user=instance).exists():
+            # data = instance.update_user_systems_data(None)
+            # make_batch_request(request, data)
             return super().destroy(request, *args, **kwargs)
-        raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
+        raise Conflict(f'User {instance.email} is the only Administrator and may not be demoted or removed.')
 
 
 @extend_schema(
     tags=['Channel Partners - Systems'],
     summary='Get list of Systems for an Organization',
-    extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'}
+    extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'},
+    parameters=[
+        OpenApiParameter('rootOnly', OpenApiTypes.BOOL, default=False)
+    ]
 )
 class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.ListModelMixin, GenericViewSet):
     http_method_names = ['get']
@@ -640,6 +670,9 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     filterset_class = filters.CreatedTsAndIdAndNameFilter
 
     def get_queryset(self):
+        root_only = self.request.query_params.get('rootOnly', False)
+        if root_only:
+            return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host, activated=True, system_group=None)
         return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host, activated=True)
 
     def get_permissions(self):
@@ -653,6 +686,53 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
 
 
 @extend_schema_view(
+    # list=extend_schema(summary='Get list of user\'s Systems'),
+    retrieve=extend_schema(summary='Get a Group', extensions={'x-permission': f'Membership in organization, ancestor group, or the group itself'}),
+    create=extend_schema(summary='Create a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
+    partial_update=extend_schema(summary='Update a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
+    destroy=extend_schema(summary='Update a group', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
+)
+@extend_schema(tags=['Groups'])
+class SystemGroupViewSet(NestedViewSetMixin,
+                         mixins.CreateModelMixin,
+                         mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
+                         # mixins.ListModelMixin,
+                         GenericViewSet):
+    http_method_names = ['get', 'post', 'patch']
+    serializer_class = GroupSerializer
+    authentication_classes = (NxCloudOauthTokenAuthentication,)
+    # pagination_class = DefaultPagination
+    queryset = SystemGroup.objects.all()
+    # filter_backends = [DjangoFilterBackend]
+    # filterset_class = filters.CreatedTsAndIdAndNameFilter
+
+    def get_queryset(self):
+        return super().get_queryset().filter(
+            organization_id__in=Subquery(
+                OrganizationToUser.objects.filter(user=self.request.user).values('organization_id')
+            )
+        )
+
+    def get_permissions(self):
+        perms = [IsAuthenticated()]
+        if self.action == 'retrieve':
+            perms.append(CanPerformChannelPartnerAction(SystemGroup.can_access))
+
+        if self.action in ('update', 'partial_update', 'destroy'):
+            perms.append(CanPerformChannelPartnerAction(SystemGroup.can_manage))
+        return perms
+
+    @extend_schema(request=CreateGroupSerializer, responses=GroupSerializer)
+    def create(self, request, *args, **kwargs):
+        serializer = CreateGroupSerializer(data=request.data, context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        system_group = serializer.save()
+        response_serializer = GroupSerializer(system_group)
+        return Response(response_serializer.data)
+
+
+@extend_schema_view(
     list=extend_schema(summary='Get list of user\'s Systems'),
     retrieve=extend_schema(summary='Get a System', extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'}),
     create=extend_schema(summary='Bind a local system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
@@ -662,16 +742,18 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
 class CloudSystemViewSet(NestedViewSetMixin,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
+                         mixins.UpdateModelMixin,
                          mixins.ListModelMixin,
                          GenericViewSet):
     http_method_names = ['get', 'post', 'patch']
     serializer_class = CloudSystemSerializer
-    lookup_field = 'system_id'
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
     queryset = CloudSystemId.objects.all().order_by('created_ts')
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
+    lookup_field = 'system_id'
+    lookup_url_kwarg = 'id'
 
     @staticmethod
     def get_service_quantity_lock(obj):
@@ -740,7 +822,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
     @extend_schema(auth=[{'Cloud Oauth Token': []}], request=SystemServiceQuantitySerializer,
                    responses=SystemServiceQuantitySerializer)
     @action(methods=['get', 'patch'], detail=True)
-    def service_quantity(self, request, system_id):
+    def service_quantity(self, request, id):
         system: CloudSystemId = self.get_object()
         if request.method == 'GET':
             serializer = SystemServiceQuantitySerializer(system)
@@ -770,7 +852,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
     @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['get'], detail=True)
-    def services(self, request, system_id):
+    def services(self, request, id):
         system: CloudSystemId = self.get_object()
         services = system.organization.all_services
         serializer = ServiceSerializer(services, many=True)
@@ -778,7 +860,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
     @extend_schema(request=SystemUsageReportSerializer, responses=SystemUsageReportSerializer)
     @action(methods=['post'], detail=True)
-    def system_usage_report(self, request, system_id):
+    def system_usage_report(self, request, id):
         serializer = SystemUsageReportSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save_security_metrics(cloud_system=request.cloud_system)
@@ -841,14 +923,82 @@ def all_services(request):
     return Response(ServiceSerializer(services, many=True).data)
 
 
+@extend_schema(
+    responses=SystemSerializer(many=True),
+    description='All services for a particular cloud instance',
+    summary='All services for a particular cloud instance',
+    tags=['Internal'],
+)
+@api_view(['GET'])
+@authentication_classes([NxTokenAuthentication])
+@permission_classes([IsAuthenticated, IsInternalToken])
+def user_systems(request, email):
+    user: CloudUser = CloudUser.objects.filter(email__iexact=email).first()
+    if not user:
+        raise exceptions.NotFound('User not found')
+
+    systems = user.all_systems()
+    serializer = SystemSerializer(systems, many=True)
+    return Response(serializer.data)
 
 
-# @extend_schema(
-#     tags=['Channel Partners']
-# )
-# class CloudSystemViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
-#     http_method_names = ['get', 'post', 'put', 'delete']
-#     # queryset = CloudSystemId.objects.all()
-#     serializer_class = CloudSystemSerializer
-#     authentication_classes = (NxCloudOauthTokenAuthentication,)
-#     permission_classes = (IsAuthenticated,)
+@extend_schema(
+    responses=SystemUserSerializer,
+    summary='Get a specific user for a system',
+    tags=['Internal'],
+)
+@api_view(['GET'])
+@authentication_classes([NxTokenAuthentication])
+@permission_classes([IsAuthenticated, IsInternalToken])
+def system_user(request, system_id, email):
+    system = CloudSystemId.objects.filter(system_id=system_id).first()
+    if not system:
+        raise exceptions.NotFound('System not found')
+
+    user_rel = system.get_user_role_by_email(email=email)
+    if not user_rel:
+        raise exceptions.NotFound('User not found in system')
+    # TODO: Use cache
+    roles = OrganizationRole.objects.all().values()
+    serializer = SystemUserSerializer(user_rel, context={'roles': roles})
+
+    return Response(serializer.data)
+
+
+@extend_schema(
+    responses=SystemUserSerializer(many=True),
+    summary='Get users for a system',
+    tags=['Internal'],
+)
+@api_view(['GET'])
+@authentication_classes([NxTokenAuthentication])
+@permission_classes([IsAuthenticated, IsInternalToken])
+def system_users(request, system_id, email=None):
+    system = CloudSystemId.objects.filter(system_id=system_id).first()
+    if not system:
+        raise exceptions.NotFound('System not found')
+    # TODO: Use cache
+
+    all_user_role_rels = system.get_all_users()
+    if all_user_role_rels:
+        roles = OrganizationRole.objects.all().values()
+    else:
+        roles = []
+    serializer = SystemUserSerializer(all_user_role_rels, many=True, context={'roles': roles})
+    return Response(serializer.data)
+
+
+@extend_schema(
+    responses=UserListSerializer,
+    summary='Get all users that have access to some channel partner or organization',
+    tags=['Internal'],
+)
+@api_view(['GET'])
+@authentication_classes([NxTokenAuthentication])
+@permission_classes([IsAuthenticated, IsInternalToken])
+def all_org_users(request):
+    users_dict = {
+        'users': CloudUser.objects.filter(Q(organizations__isnull=False) | Q(channel_partners__isnull=False)).distinct().values_list('email', flat=True)
+    }
+    serializer = UserListSerializer(users_dict)
+    return Response(serializer.data)

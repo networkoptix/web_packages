@@ -3,6 +3,7 @@ from datetime import timedelta
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
+import queue
 from typing import Dict, List
 import uuid
 
@@ -95,6 +96,35 @@ class CloudUser(models.Model):
     def is_authenticated(self):
         return True
 
+    def all_systems(self):
+        def find_all_nested_group_ids(group_ids):
+            group_id_set = set()
+            for sub_group_id in group_ids:
+                group_id_set.add(sub_group_id)
+                group_id_set.union(find_all_nested_group_ids(group_map[sub_group_id]['children']))
+            return group_id_set
+
+        organization_membership_ids = OrganizationToUser.objects.filter(user=self, system_group__isnull=True).values_list(
+            'organization_id', flat=True)
+        group_memberships = OrganizationToUser.objects.filter(user=self, system_group__isnull=False).values_list('organization_id', 'system_group_id')
+        if group_memberships:
+            group_membership_organization_ids, group_membership_ids = zip(*group_memberships)
+            group_membership_organization_ids = set(group_membership_organization_ids)
+            groups_in_same_organizations = SystemGroup.objects.filter(organization_id__in=group_membership_organization_ids).values()
+            group_map = {group['id']: {'children': [], **group} for group in groups_in_same_organizations}
+
+            for group in groups_in_same_organizations:
+                if group['parent_id']:
+                    group_map[group['parent_id']]['children'].append(group['id'])
+
+            all_group_ids = find_all_nested_group_ids(group_membership_ids)
+        else:
+            all_group_ids = []
+
+        return CloudSystemId.objects.filter(
+            Q(organization_id__in=organization_membership_ids) | Q(system_group_id__in=all_group_ids)
+        )
+
 
 class CloudInstance(models.Model):
     name = models.CharField(max_length=50)
@@ -121,6 +151,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     organization = models.ForeignKey('Organization', null=True, blank=True, on_delete=models.CASCADE,
                                      related_name='cloud_systems')
+    system_group = models.ForeignKey('SystemGroup', null=True, blank=True, on_delete=models.PROTECT, related_name='cloud_systems')
     name = models.CharField(max_length=150, blank=True)
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False,
                                 default=ChannelPartnerStates.ACTIVE)
@@ -247,46 +278,59 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         else:
             return {}
 
-    def add_system_users_data(self):
-        roles = OrganizationRole.objects \
-            .exclude(system_role__isnull=True) \
-            .exclude(system_role='') \
-            .values('system_role', 'name')
-        org_to_user_rels = OrganizationToUser.objects \
-            .filter(organization=self.organization, roles__0__in=[r['name'] for r in roles]) \
-            .values('roles__0', 'user__email')
-        roles_users = {r['name']: {"system_role": r["system_role"], "users": []} for r in roles}
-        for rel in org_to_user_rels:
-            roles_users[rel['roles__0']]["users"].append(rel['user__email'])
+    # def add_system_users_data(self):
+    #     roles = OrganizationRole.objects \
+    #         .exclude(system_role__isnull=True) \
+    #         .exclude(system_role='') \
+    #         .values('system_role', 'name')
+    #     org_to_user_rels = OrganizationToUser.objects \
+    #         .filter(organization=self.organization, roles__0__in=[r['name'] for r in roles]) \
+    #         .values('roles__0', 'user__email')
+    #     roles_users = {r['name']: {"system_role": r["system_role"], "users": []} for r in roles}
+    #     for rel in org_to_user_rels:
+    #         roles_users[rel['roles__0']]["users"].append(rel['user__email'])
+    #
+    #     data = BatchRequestItems(
+    #         items=[
+    #             BatchRequestItem(
+    #                 systems=[str(self.system_id)],
+    #                 users=users["users"],
+    #                 accessRole=users["system_role"],
+    #                 attributes={}
+    #             ) for role, users in roles_users.items() if users["users"]
+    #         ]
+    #     )
+    #     return data
 
-        data = BatchRequestItems(
-            items=[
-                BatchRequestItem(
-                    systems=[str(self.system_id)],
-                    users=users["users"],
-                    accessRole=users["system_role"],
-                    attributes={}
-                ) for role, users in roles_users.items() if users["users"]
-            ]
-        )
-        return data
+    # def remove_system_users_data(self, user: CloudUser) -> dict:
+    #     users = OrganizationToUser.objects \
+    #         .exclude(user__email=user.email) \
+    #         .filter(organization=self.organization) \
+    #         .values_list('user__email', flat=True)
+    #     data = BatchRequestItems(
+    #         items=[
+    #             BatchRequestItem(
+    #                 systems=[str(self.system_id)],
+    #                 users=list(users),
+    #                 accessRole='none',
+    #                 attributes={}
+    #             )
+    #         ]
+    #     )
+    #     return data
 
-    def remove_system_users_data(self, user: CloudUser) -> dict:
-        users = OrganizationToUser.objects \
-            .exclude(user__email=user.email) \
-            .filter(organization=self.organization) \
-            .values_list('user__email', flat=True)
-        data = BatchRequestItems(
-            items=[
-                BatchRequestItem(
-                    systems=[str(self.system_id)],
-                    users=list(users),
-                    accessRole='none',
-                    attributes={}
-                )
-            ]
-        )
-        return data
+    @property
+    def group_ids_to_root(self):
+        if self.system_group_id:
+            return self.system_group.ids_to_root
+        return set()
+
+    def get_all_users(self):
+        group_ids = [*self.group_ids_to_root, None]
+        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+
+    def get_user_role_by_email(self, email: str):
+        return self.get_all_users().filter(user__email__iexact=email).first()
 
 
 class LocalRecordingUsage(models.Model):
@@ -877,7 +921,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def has_perm(self, user: CloudUser, perm: str):
         allowed_role_names = self.allowed_role_names(perm)
-        if self.users.filter(pk=user.pk, organizationtouser__roles__has_any_keys=allowed_role_names).exists():
+        if self.users.filter(pk=user.pk, organizationtouser__roles__has_any_keys=allowed_role_names, organizationtouser__system_group=None).exists():
             return True
         channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner,
                                                                       roles__has_any_keys=['Administrator',
@@ -921,7 +965,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.has_perm(user, OrganizationPermissions.view_health_monitoring)
 
     def can_access_systems(self, user: CloudUser):
-        return self.has_perm(user, OrganizationPermissions.access_systems) or self.channel_partner.can_access(user)
+        return self.has_perm(user, OrganizationPermissions.access_systems)
 
     @property
     def all_services(self):
@@ -961,38 +1005,147 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             return
         self.update_systems_effective_states(organization_effective_state=self.effective_state)
 
+    def system_group_member_dict(self, user: CloudUser):
+        return {rel['system_group_id']: rel for rel in
+                OrganizationToUser.objects.filter(organization=self, user=user).values('system_group_id', 'roles')}
+
+    @property
+    def groups_map(self):
+        org_groups = self.groups.all().values()
+        return {group['id']: group for group in org_groups}
+
+    @property
+    def groups_tree(self):
+        org_groups = self.groups.all().values()
+        tree_roots = []
+        groups_map = {}
+
+        for group in org_groups:
+            groups_map[group['id']] = group
+            group['children'] = []
+
+        for group in org_groups:
+            if group['parent_id']:
+                groups_map[group['parent_id']]['children'].append(group)
+            else:
+                tree_roots.append(group)
+
+        return tree_roots
+
+    def get_groups_structure_for_user(self, user: CloudUser):
+        def find_matching_nodes_in_tree(nodes):
+            trimmed_tree = []
+            for node in nodes:
+                if node['id'] in system_group_member_dict:
+                    trimmed_tree.append(node)
+                    node['roles'] = system_group_member_dict[node['id']]['roles']
+                else:
+                    trimmed_tree.extend(find_matching_nodes_in_tree(node['children']))
+            return trimmed_tree
+
+        system_group_member_dict = self.system_group_member_dict(user)
+        groups_tree = self.groups_tree
+        if None not in system_group_member_dict:
+            groups_tree = find_matching_nodes_in_tree(groups_tree)
+        return groups_tree
+
+    @property
+    def user_list(self):
+        return self.users.all().distinct()
+
+    @property
+    def direct_users(self):
+        return self.users.filter(organizationtouser__system_group=None)
+
+
+class SystemGroup(models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=1024)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='groups')
+    parent = models.ForeignKey('SystemGroup', on_delete=models.PROTECT, blank=True, null=True, related_name='groups')
+    created_ts = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f'<Group {self.name}>'
+
+    def is_root(self):
+        return not self.parent
+
+    @property
+    def ids_to_root(self):
+        ids = {self.id}
+        current = self
+        while current.parent_id:
+            ids.add(current.parent_id)
+            current = current.parent
+        return ids
+
+    def get_all_users(self):
+        group_ids = [*self.ids_to_root, None]
+        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+
+    @staticmethod
+    def has_cycle(root):
+        if not root:
+            return False
+        q = queue.SimpleQueue()
+        q.put(root)
+        visited = set()
+        while not q.empty():
+            current = q.get()
+            if current.id in visited:
+                return True
+            visited.add(current.id)
+            for child in current.groups:
+                q.put(child)
+        return False
+
+    def can_access(self, user: CloudUser):
+        relations = self.organization.system_group_member_dict(user)
+        # system_group = None means direct organization user
+        if None in relations:
+            return True
+
+        return bool(self.ids_to_root.intersection(relations))
+
+    def can_manage(self, user: CloudUser):
+        return self.organization.can_manage_systems(user)
+
 
 class OrganizationToUser(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    system_group = models.ForeignKey('SystemGroup', blank=True, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
     roles = models.JSONField(default=list)
     title = models.CharField(max_length=100, blank=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
+    membership_type = 'organization'
+
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['organization', 'user'], name='unique_organization_user')
+            models.constraints.UniqueConstraint(fields=['organization', 'user', 'system_group'], name='unique_organization_user')
         ]
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_users(user)
 
-    def update_user_systems_data(self, role: OrganizationRole | None) -> dict:
-        systems = CloudSystemId.objects \
-            .filter(organization=self.organization) \
-            .exclude(state=ChannelPartnerStates.SHUTDOWN)
-        systems = systems.values_list('system_id', flat=True)
-        data = BatchRequestItems(
-            items=[
-                BatchRequestItem(
-                    systems=[str(system) for system in systems],
-                    users=[self.user.email],
-                    accessRole=getattr(role, 'system_role', 'none') or 'none',
-                    attributes={}
-                )
-            ]
-        )
-        return data
+    # def update_user_systems_data(self, role: OrganizationRole | None) -> dict:
+    #     systems = CloudSystemId.objects \
+    #         .filter(organization=self.organization) \
+    #         .exclude(state=ChannelPartnerStates.SHUTDOWN)
+    #     systems = systems.values_list('system_id', flat=True)
+    #     data = BatchRequestItems(
+    #         items=[
+    #             BatchRequestItem(
+    #                 systems=[str(system) for system in systems],
+    #                 users=[self.user.email],
+    #                 accessRole=getattr(role, 'system_role', 'none') or 'none',
+    #                 attributes={}
+    #             )
+    #         ]
+    #     )
+    #     return data
 
 
 class ChannelPartnerService(models.Model):
@@ -1368,3 +1521,21 @@ class BillingModel(models.Model):
     regular_period_type = models.IntegerField(choices=RegularPeriodTypes.TYPES)
     invoice_type = models.IntegerField(choices=InvoiceTypes.TYPES)
     fixed_invoice_date = models.DateField(help_text='If invoice_type is "Fixed Date"', blank=True, null=True)
+
+
+
+
+
+# class SystemGroupToUser(models.Model):
+#     system_group = models.ForeignKey(SystemGroup, on_delete=models.CASCADE)
+#     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
+#     roles = models.JSONField(default=list)
+#     created_ts = models.DateTimeField(auto_now_add=True)
+#
+#     class Meta:
+#         constraints = [
+#             models.constraints.UniqueConstraint(fields=['system_group', 'user'], name='unique_systemgroup_user')
+#         ]
+#
+#     def can_manage(self, user: CloudUser):
+#         return self.system_group.organization.can_manage_users(user)
