@@ -5,9 +5,11 @@ import { filter, shareReplay, switchMap, take, map, delay, takeUntil, skip, pair
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FrameTracker, FocusTracker, MosScoreTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, StreamOrUrl } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, StreamOrUrl, AvailableStreams, ApiVersions } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey } from './utils';
+import { WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey } from './utils';
+
+type StreamsConfig = AvailableStreams | AvailableStreams[];
 
 /**
  * Manages connection negotation using websockets as well as webRTC peer connections to mediaservers.
@@ -33,7 +35,7 @@ export class WebRTCStreamManager {
     static position = 0;
 
     /** Default Stream for new streams. Dependent on MOS score. */
-    static INITIAL_STREAM: 0 | 1 = null;
+    static INITIAL_STREAM: AvailableStreams = null;
 
     /** Used to trigger sync events such as performance tuning and connection cleanup */
     static sync$ = WebRTCStreamManager.forceSync$.pipe(
@@ -125,11 +127,11 @@ export class WebRTCStreamManager {
      * @param videoElement - Video element to calculate focus score.
      * @returns stream - 0 for primary high quality, 1 for secondary low quality
      */
-    static getInitialStream(videoElement: HTMLVideoElement): 0 | 1 {
+    static getInitialStream(videoElement: HTMLVideoElement): AvailableStreams {
         /** Calculate initial stream if it hasn't been set */
-        WebRTCStreamManager.INITIAL_STREAM ??= WebRTCStreamManager.calculateAdequateMosScore() ? 0 : 1
+        WebRTCStreamManager.INITIAL_STREAM ??= WebRTCStreamManager.calculateAdequateMosScore() ? AvailableStreams.PRIMARY : AvailableStreams.SECONDARY;
         const addequateFocus = calculateElementFocus(videoElement) >= WebRTCStreamManager.HIGH_QUALITY_FOCUS_THRESHOLD;
-        return addequateFocus ? WebRTCStreamManager.INITIAL_STREAM : 1
+        return addequateFocus ? WebRTCStreamManager.INITIAL_STREAM : AvailableStreams.SECONDARY;
     }
 
     /** Playback details for use in either logging during development or for performance tuning */
@@ -196,7 +198,10 @@ export class WebRTCStreamManager {
         tap(({ targetStream, shouldUpdateStream, details }) => {
             WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD = calculateWindowFocusThreshold(WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_BASELINE);
             console.info(`Focus threshold: ${WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD}`)
-            const getCameraId = (connection: WebRTCStreamManager) => connection.webRtcUrlFactory().split('camera_id=')[1].split('&')[0];
+            const getCameraId = (connection: WebRTCStreamManager) => {
+                const webRtcUrl = connection.webRtcUrlFactory();
+                return getConnectionKey(webRtcUrl)
+            };
 
             const coolOff = (fn: (param: typeof details[number]) => boolean) => (cooloffSeconds?: number) => (param: typeof details[number]) => {
                 if (param.connection.cooldownLock || !fn(param)) {
@@ -210,13 +215,13 @@ export class WebRTCStreamManager {
 
             const canUpgrade = ({ stream, priority, mos }: typeof details[number]) => stream === 1 && priority > WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD && mos > WebRTCStreamManager.HIGH_QUALITY_MOS_THRESHOLD;
 
-            const canDowngrade = ({ stream, connection }: typeof details[number]) => connection.hasSecondary && stream === 0;
+            const canDowngrade = ({ stream, connection }: typeof details[number]) => connection.availableStreams.includes(AvailableStreams.SECONDARY) && stream === 0;
 
             const downgradeLowPriority = () => details.filter(coolOff(canDowngrade)()).forEach(({ priority, connection }) => {
                 if (priority < WebRTCStreamManager.HIGH_QUALITY_FOCUS_SCORE_THRESHOLD) {
                     console.info(`Downgrading camera ${getCameraId(connection)} due to low priority/focus`)
                     connection.aquireLock(5);
-                    connection.updateStream(1)
+                    connection.updateStream(AvailableStreams.SECONDARY)
                 }
             })
 
@@ -224,7 +229,7 @@ export class WebRTCStreamManager {
                 if (mos < WebRTCStreamManager.LOW_QUALITY_MOS_THRESHOLD) {
                     console.info(`Downgrading camera ${getCameraId(connection)} due to low connection quality`)
                     connection.aquireLock(90);
-                    connection.updateStream(1)
+                    connection.updateStream(AvailableStreams.SECONDARY)
                 }
             })
 
@@ -309,22 +314,36 @@ export class WebRTCStreamManager {
      *
      * @param webRtcUrlFactory () => string
      * @param videoElement HTMLVideoElement
-     * @param hasSecondary boolean - if the camera has a secondary stream available
+     * @param availableStreamsOrHasSecondary StreamsConfig | boolean - A boolean if secondary stream is available,
+     * an array of available streams, or a single stream.
      * @param accessToken string
      * @returns Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
      */
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
-        hasSecondary = true,
+        availableStreams?: StreamsConfig,
+        accessToken?: string
+    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
+    static connect(
+        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
+        videoElement?: HTMLVideoElement,
+        hasSecondary?: boolean,
+        accessToken?: string
+    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
+    static connect(
+        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
+        videoElement?: HTMLVideoElement,
+        availableStreamsOrHasSecondary: StreamsConfig | boolean = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
         accessToken: string = null
     ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]> {
         const connectionKey = getConnectionKey(webRtcUrlFactory());
+        const availableStreams = Array.isArray(availableStreamsOrHasSecondary) ? availableStreamsOrHasSecondary : availableStreamsOrHasSecondary ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY];
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey] ||= new WebRTCStreamManager(
             webRtcUrlFactory,
             videoElement,
-            hasSecondary,
+            availableStreams,
             accessToken
         );
 
@@ -349,8 +368,9 @@ export class WebRTCStreamManager {
         });
     }
 
-    private position$ = new BehaviorSubject(0);
-    private stream$ = new BehaviorSubject<0 | 1>(0);
+    private position$ = new BehaviorSubject(new WithSkip(0));
+    private stream$ = new BehaviorSubject(new WithSkip(AvailableStreams.PRIMARY));
+    public readonly apiVersion: ApiVersions;
 
     /**
      * Updates the position for stream for WebRtcStreamManager instance.
@@ -362,7 +382,11 @@ export class WebRTCStreamManager {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
         }
-        this.position$.next(position);
+        const useDataChannelUpdate = this.peerConnection?.remoteDataChannel?.readyState === 'open';
+        if (useDataChannelUpdate) {
+            this.peerConnection.remoteDataChannel.send(JSON.stringify({ position }));
+        }
+        this.position$.next(new WithSkip(position, useDataChannelUpdate));
     }
 
     /** Internal */
@@ -391,7 +415,7 @@ export class WebRTCStreamManager {
      * @returns number - 0 or 1
      */
     public currentStream(): 0 | 1 {
-        return this.hasSecondary ? this.stream$.value : 0;
+        return this.stream$.value.value
     }
 
     /**
@@ -516,7 +540,7 @@ export class WebRTCStreamManager {
             }
         });
         observer.observe(root, { childList: true, subtree: true });
-        this.updatePosition(this.position$.value);
+        this.updatePosition(this.position$.value.value);
     };
 
     /** Subject ot trigger closing open websocket observables */
@@ -559,8 +583,27 @@ export class WebRTCStreamManager {
      *
      * @param stream - 0 | 1
      */
-    public updateStream(stream: 0 | 1): void {
-        this.stream$.next(this.hasSecondary ? stream : 0);
+    public updateStream(stream: AvailableStreams): void {
+        const updateToStream = stream ? AvailableStreams.SECONDARY : AvailableStreams.PRIMARY;
+        const useDataChannelUpdate = this.peerConnection?.remoteDataChannel?.readyState === 'open';
+        if (this.availableStreams.includes(updateToStream)) {
+            if (useDataChannelUpdate) {
+                this.peerConnection.remoteDataChannel.send(JSON.stringify({ stream: updateToStream }));
+            }
+            this.stream$.next(new WithSkip(stream ? AvailableStreams.SECONDARY : AvailableStreams.PRIMARY, useDataChannelUpdate));
+        }
+    }
+
+    /**
+     * Updates the stream used for connection.
+     *
+     * @param stream - 0 | 1
+     */
+    public updateAvailableStreams(streams: AvailableStreams[]): void {
+        this.availableStreams = streams?.length ? streams: [AvailableStreams.PRIMARY];
+        if (!this.availableStreams.includes(this.currentStream())) {
+            this.updateStream(this.availableStreams[0])
+        }
     }
 
     private mediaSource: MediaSource = null;
@@ -729,8 +772,8 @@ export class WebRTCStreamManager {
                 this.close();
                 if (this.reconnecting) {
                     return;
-                } else if (this.currentStream() && this.hasSecondary) {
-                    this.hasSecondary = false;
+                } else if (this.currentStream() && this.availableStreams.includes(AvailableStreams.SECONDARY)) {
+                    this.availableStreams = [AvailableStreams.PRIMARY];
                     this.start();
                 } else if (retriesOrLostConnection) {
                     this.start(--retries);
@@ -801,13 +844,16 @@ export class WebRTCStreamManager {
     private constructor(
         public webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
-        private hasSecondary = true,
+        private availableStreams: AvailableStreams[] = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
         accessToken = ''
     ) {
         const relayUrlObject = new URL(webRtcUrlFactory());
         const serverId = relayUrlObject.searchParams.get('x-server-guid');
+        const version = relayUrlObject.searchParams.get('version') || ApiVersions.v1;
+        this.apiVersion = Object.values(ApiVersions).find(apiVersion => apiVersion === version) || ApiVersions.v1;
+        console.info(`Using API version ${this.apiVersion}`)
         const relayHost = relayUrlObject.host;
-        this.updateStream(WebRTCStreamManager.getInitialStream(videoElement));
+        this.updateStream(availableStreams.length === 1 ? availableStreams[0] : WebRTCStreamManager.getInitialStream(videoElement));
 
         WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost] ||= accessToken ? fetch(
             `https://${relayHost}/rest/v2/login/sessions/${accessToken}?setCookie=true&x-server-guid=${serverId}`,
@@ -815,8 +861,8 @@ export class WebRTCStreamManager {
         ).then(() => true).catch(() => false) : Promise.resolve(true);
 
         from(WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost]).pipe(switchMap(() => combineLatest([
-            this.position$,
-            this.stream$
+            this.position$.pipe(filter(({ skip }) => !skip), map(({ value }) => value)),
+            this.stream$.pipe(filter(({ skip }) => !skip), map(({ value }) => value))
         ])),
             distinctUntilChanged((prev, cur) => prev.every((val, i) => val === cur[i])),
             debounceTime(50)

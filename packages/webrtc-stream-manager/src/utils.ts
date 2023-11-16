@@ -52,7 +52,11 @@ export const calculateWindowFocusThreshold = (baseline: number): number => {
 }
 
 export const getConnectionKey = (webRtcUrl: string): string => {
-    return new URL(webRtcUrl).searchParams.get('camera_id');
+    if (webRtcUrl.includes('devices')) {
+        return webRtcUrl.split('devices/')[1].split('/')[0]
+    }
+
+    return webRtcUrl.split('camera_id=')[1].split('&')[0]
 }
 
 export const generateWebRtcUrlFactory = (relayUrl: string, camera_id: string, serverId: string, version: number) => (additionalParams: Record<string, unknown> = {}) => {
@@ -62,4 +66,8 @@ export const generateWebRtcUrlFactory = (relayUrl: string, camera_id: string, se
     const v1Endpoint = `webrtc-tracker/`
     const v2Endpoint = `rest/v3/devices/${camera_id}/webrtc?api`
     return `wss://${relayUrl}/${useV2 ? v2Endpoint : v1Endpoint}?${queryParams}`
+}
+
+export class WithSkip<T> {
+    constructor(public value: T, public skip: boolean = false) {}
 }
