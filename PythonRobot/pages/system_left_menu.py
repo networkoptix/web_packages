@@ -247,12 +247,6 @@ class UsersDropdown(DropDown):
         self._locator = '//nx-menu//div[@class=level-1-container]'
         super().__init__(driver, self._locator)
 
-    def _users_button(self):
-        return Button(
-            self._driver,
-            self._locator + '//a[@id="users"]',
-            )
-
     def add_user_button(self):
         return Button(
             self._driver,
@@ -262,7 +256,3 @@ class UsersDropdown(DropDown):
     def wait_for_open(self, timeout=45):
         # Currently it takes 30+ seconds to load the dropdown
         self.add_user_button().wait_until_clickable(timeout=timeout)
-
-    def open(self):
-        self._users_button().click()
-        self.wait_for_open()
