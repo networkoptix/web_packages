@@ -151,7 +151,7 @@ def test_initiate_transfer_delete_user(server: Mediaserver):
         system_ownership_admin = SystemOwnership(driver_admin)
         system_ownership_admin.wait_until_accept_reject_transfer_visible()
         left_menu_owner = SystemLeftMenu(driver_owner)
-        left_menu_owner.users_button().click()
+        left_menu_owner.open_users_dropdown()
         left_menu_owner.get_user_with_email(admin.email).click()
         system_users_owner = SystemUsers(driver_owner)
         system_users_owner.remove_user_button().click()

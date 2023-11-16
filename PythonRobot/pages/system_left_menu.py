@@ -33,13 +33,13 @@ class SystemLeftMenu:
         # Todo: find way to pass id in
         # self._location_is_correct()
 
-    def users_button(self):
+    def _users_button(self):
         translated_xpath = self.rb.replace_nested_variables(
             "//span[contains(text(), '{USERS}')]")
         return Button(self.driver, translated_xpath)
 
     def open_users_dropdown(self):
-        self.users_button().click()
+        self._users_button().click()
         # Currently it takes 30+ seconds to load the dropdown
         self.add_users_button().wait_until_clickable(timeout=45)
 

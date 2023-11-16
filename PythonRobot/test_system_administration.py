@@ -84,7 +84,7 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver, cloud_view
         driver.get(url1)
         LoginDialog(driver).basic_cloud_login(owner.email, password)
         left_menu = SystemLeftMenu(driver)
-        left_menu.users_button().click()
+        left_menu.open_users_dropdown()
         left_menu.update_users_list()
         for user in left_menu.users:
             if user == cloud_viewer.email:
@@ -189,12 +189,11 @@ def correct_items_are_shown_for_owner(server: Mediaserver):
         left_menu = system_page.get_left_menu()
         left_menu.get_node_by_name_within_timeout('Licenses')
         left_menu.get_node_by_name_within_timeout('Cameras')
-        users_node = left_menu.get_node_by_name_within_timeout('Users')
+        left_menu.get_node_by_name_within_timeout('Users')
         left_menu.get_node_by_name_within_timeout('Servers')
         system_page.wait_for_security_form()
         assert header.get_system_name() == server.name
-        users_node.click()
-        left_menu.add_users_button().wait_until_visible()
+        left_menu.open_users_dropdown()
         left_menu.get_user_with_email(owner.email).wait_until_visible()
         print("pass")
 
@@ -222,12 +221,11 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
         left_menu = system_page.get_left_menu()
         left_menu.get_node_by_name_within_timeout('Licenses')
         left_menu.get_node_by_name_within_timeout('Cameras')
-        users_node = left_menu.get_node_by_name_within_timeout('Users')
+        left_menu.get_node_by_name_within_timeout('Users')
         left_menu.get_node_by_name_within_timeout('Servers')
         system_page.wait_for_security_form()
         assert header.get_system_name() == server.name
-        users_node.click()
-        left_menu.add_users_button().wait_until_visible()
+        left_menu.open_users_dropdown()
         left_menu.get_user_with_email(owner.email).wait_until_visible()
         print("pass")
 
@@ -278,7 +276,7 @@ def left_menu_search_position_and_style(server: Mediaserver):
         left_menu.get_node_by_name_within_timeout('Cameras').click()
         search_input.wait_for_loupe_icon()
         assert search_input.get_placeholder_text() == "Search"
-        left_menu.get_node_by_name_within_timeout('Users').click()
+        left_menu.open_users_dropdown()
         search_input.wait_for_loupe_icon()
         assert search_input.get_placeholder_text() == "Search"
         left_menu.get_node_by_name_within_timeout('Servers').click()
@@ -310,7 +308,7 @@ def left_menu_search_search_menu_for_offline_system(server: Mediaserver):
         assert driver.current_url == base_system_url + "/cameras"
         search_input.wait_for_loupe_icon()
         assert search_input.get_placeholder_text() == "Search"
-        left_menu.get_node_by_name_within_timeout('Users').click()
+        left_menu.open_users_dropdown()
         search_input.wait_for_loupe_icon()
         assert search_input.get_placeholder_text() == "Search"
         left_menu.get_node_by_name_within_timeout('Servers').click()

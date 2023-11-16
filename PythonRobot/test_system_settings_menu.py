@@ -38,7 +38,7 @@ def selected_node_has_different_color(server: Mediaserver):
         left_menu = SystemLeftMenu(driver)
         users_node = left_menu.get_node_by_name_within_timeout("Users")
         assert users_node.value_of_css_property('background-color') == variables.COLOR_TRANSPARENT_RGB
-        users_node.click()
+        left_menu.open_users_dropdown()
         assert users_node.value_of_css_property('background-color') == variables.COLOR_LIGHT5_RGB
         print("Pass")
 
@@ -54,7 +54,7 @@ def users_are_seen_when_main_node_is_selected(server: Mediaserver):
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         SystemAdmin(driver)
         left_menu = SystemLeftMenu(driver)
-        left_menu.get_node_by_name_within_timeout("Users").click()
+        left_menu.open_users_dropdown()
         left_menu = SystemLeftMenu(driver)
         assert left_menu.get_node_by_name_within_timeout(owner.email)
         assert left_menu.get_node_by_name_within_timeout(server.get_cloud_viewer().email)
