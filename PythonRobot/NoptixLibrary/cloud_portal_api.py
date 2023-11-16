@@ -637,10 +637,20 @@ class CloudPortalAPI(object):
                 time.sleep(1)
         return register_response.json()
 
+    def _wait_for_activation_code(self, email, timeout=5):
+        started_at = time.monotonic()
+        while True:
+            code = self.get_code_from_api(email, "activate_account")
+            if code != "Does not exist":
+                code = re.sub(r'%3D', '=', code)
+                code = re.sub(r'%2B', '+', code)
+                return code
+            if time.monotonic() - started_at > timeout:
+                raise TimeoutError("Failed to retrieve activation code after %dsec", timeout)
+            time.sleep(0.5)
+
     def activate_account_via_api(self, email, password):
-        code = self.get_code_from_api(email, "activate_account")
-        code = re.sub(r'%3D', '=', code)
-        code = re.sub(r'%2B', '+', code)
+        code = self._wait_for_activation_code(email)
         activate_response = requests.post(
             url=f'{self.env}/api/account/activate',
             auth=HTTPBasicAuth(email, password),
