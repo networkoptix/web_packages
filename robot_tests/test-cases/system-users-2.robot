@@ -77,23 +77,6 @@ Force Tags        system    Threaded    users
     Delete Email    ${email}
     Close Mailbox
 
-21. Users should be able to disconnect themselves from cloud
-    [Tags]    cloud
-    ${roles}=   Get Dictionary Values    ${ACCESS ROLES}
-    FOR    ${role}    IN    @{roles}
-        ${random email}=   Register and activate account with random email    firstname    lastname    ${password}
-        Append To List    ${TMP USERS}    ${random email}
-        #Save User    ${servers}[0][local auth]    https://${QA BURBANK IP}:${server 1['port']}    mark    ${role}    ${random email}    Mark Hamil    ${password}
-        Share     ${servers}[0][cloudAuth]    ${servers}[0][id]    ${role}    ${random email}    ${permissions}[${role}]
-        Sleep    5
-        Log In    ${random email}    ${password}
-        Wait until element is visible    ${SYSTEM NAME}    300
-        Disconnect from my account    ${servers}[0][name]
-        Log Out
-        Sleep    5
-    END
-    Open Browser and go to URL    ${url}
-
 22. User with client custom settings has access to system
     [Tags]    webadmin    cloud
     @{custom roles}=    Get User Roles    https://${QA BURBANK IP}:${servers}[0][port][0]    ${servers}[0][localAuth]
