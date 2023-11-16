@@ -81,6 +81,10 @@ class AccountPage:
             )
         language_button.click()
 
+    def get_active_language(self) -> str:
+        active_lang_element = self.language_dropdown().find_element("/span[@id='activeLang']")
+        return active_lang_element.text()
+
 
 class DeleteCloudAccountDialog(NxModalDialog):
 

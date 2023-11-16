@@ -393,6 +393,9 @@ class DropDown:
     def text(self) -> str:
         return self._element.text()
 
+    def find_element(self, locator: str, position: int = 1) -> Element:
+        return self._element.find_element(locator, position)
+
 
 class DropDownOption:
 

@@ -9,7 +9,6 @@ from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
 from generic_elements import Button
-from generic_elements import DropDown
 from generic_elements import PageText
 from pages.account_page import AccountPage
 from pages.account_page import SuccessToast
@@ -262,12 +261,11 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         LoginDialog(driver).basic_cloud_login(cloud_user.email, cloud_user.password)
         HeaderNav(driver).account_dropdown().wait_until_visible()
         verify_in_account_page(driver)
-        AccountPage(driver).set_language_in_dropdown(japanese_code)
+        account_page = AccountPage(driver)
+        account_page.set_language_in_dropdown(japanese_code)
         time.sleep(5)
         driver.refresh()
-        dropLang2 = rb.ACCOUNT_LANGUAGE_DROPDOWN + "/span[@id='activeLang']"
-        drop_lang_element = DropDown(driver, dropLang2)
-        activeLang = drop_lang_element.text()
+        activeLang = account_page.get_active_language()
         assert activeLang.lower() in japanese_code.lower(), f"{activeLang.lower()} not found in {japanese_code.lower}"
         info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
@@ -282,7 +280,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         api.set_account_language(cloud_user.email, cloud_user.password, new_language=german_code)
         time.sleep(5)
         driver.refresh()
-        activeLang = drop_lang_element.text()
+        activeLang = account_page.get_active_language()
         assert activeLang.lower() in german_code.lower(), f"{activeLang.lower()} not found in {german_code.lower()}"
         info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
