@@ -100,35 +100,3 @@ class CloudSession:
     def logout_session(self):
         self.session.headers.update({'Referer': self.instance})
         self._request_wrapper("/api/account/logout", method='post')
-
-#  Below is an example of use of the CloudSession class above.
-# class CloudAuth:
-#     def __init__(self, instance="https://cloud-test.hdw.mx"):
-#         self.instance = instance
-#
-#     def _request_wrapper(self, session, url, method='get', query=None, data=None):
-#         if method == 'get':
-#             request = session.get
-#         elif method == 'post':
-#             request = session.post
-#         elif method == 'put':
-#             request = session.put
-#         elif method == 'delete':
-#             request = session.delete
-#         else:
-#             raise ValueError(f"method must be get, post, put, or delete not {method}")
-#
-#         res = request(f"{self.instance}{url}", params=query, json=data)
-#         res.raise_for_status()
-#         return res.json()
-#
-#     def get_systems(self, username, password, backup_code=None, verification_code=None):
-#         with CloudSession(self.instance, username, password, backup_code, verification_code) as s:
-#             return self._request_wrapper(s, "/api/systems")
-#
-#
-#
-# if __name__ == "__main__":
-#     auth = CloudAuth()
-#     systems = auth.get_systems(USERNAME, PASSWORD, backup_code=BACKUP_CODE, verification_code=VERIFICATION_CODE)
-#     print(json.dumps(systems, indent=4))
