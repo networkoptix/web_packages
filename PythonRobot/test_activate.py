@@ -75,13 +75,13 @@ def activate_same_link_twice():
     with get_chrome() as driver:
         driver.get(f'{rb.ENV}/authorize?client_type=create')
         RegisterForm(driver).register_new_user("Acti", "Vader", random_email, rb.BASE_PASSWORD)
-    with EmailClient(email_alias=random_email) as client:
-        email_message = client.wait_for_activate_account_email()
-        link = email_message.get_activate_account_link()
-    driver.get(link)
-    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
-    driver.get(link)
-    PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+        with EmailClient(email_alias=random_email) as client:
+            email_message = client.wait_for_activate_account_email()
+            link = email_message.get_activate_account_link()
+        driver.get(link)
+        PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
+        driver.get(link)
+        PageText(driver, rb.ACTIVATION_SUCCESS).wait_until_visible(timeout=10)
 
 
 def save_user_data_correctly():
