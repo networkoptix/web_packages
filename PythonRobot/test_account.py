@@ -266,7 +266,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         time.sleep(5)
         driver.refresh()
         activeLang = account_page.get_active_language()
-        assert activeLang.lower() in japanese_code.lower(), f"{activeLang.lower()} not found in {japanese_code.lower}"
+        assert activeLang.lower() in japanese_code.lower()
         info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
         header = HeaderNav(driver)
@@ -281,7 +281,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         time.sleep(5)
         driver.refresh()
         activeLang = account_page.get_active_language()
-        assert activeLang.lower() in german_code.lower(), f"{activeLang.lower()} not found in {german_code.lower()}"
+        assert activeLang.lower() in german_code.lower()
         info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
         api.set_account_language(cloud_user.email, cloud_user.password, "en_US")
