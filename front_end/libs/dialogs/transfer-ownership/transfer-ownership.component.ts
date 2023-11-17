@@ -84,7 +84,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     selectedOrg: OrgItem;
     isOrgMember$$ = computed<boolean>(() => !!this.orgItems$$()?.length);
 
-    newOwner: string;
+    newOwner: string = '';
     isOrgAdmin: boolean;
 
     transferTargetType$$ = signal<'user' | 'org'>('user');

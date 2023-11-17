@@ -14,7 +14,7 @@
             <span
                 id="search-input"
                 #searchInput
-                contentEditable="true"
+                contentEditable="plaintext-only"
                 [ngStyle]="{ display: _selectedItem.value ? 'initial' : 'block' }"
                 (input)="onSearchInput($event)"
                 (blur)="onBlur()"
