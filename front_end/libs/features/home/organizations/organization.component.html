@@ -22,12 +22,16 @@
         </ng-container>
     </div>
     <nx-tabs
-        [onLoadTab]="currentTab"
-        (tabClick)="onTabClick($event)"
+        animated
+        [(currentTabIndex)]="currentTabIndex"
     >
-        <ng-container *ngFor="let tab of tabs">
-            <div *tab="tab"></div>
-        </ng-container>
+        <nx-base-tab
+            *ngFor="let tab of tabs"
+            [displayName]="tab.displayName"
+            (tabClick)="onTabClick($event)"
+        >
+            {{ tab.displayName }}
+        </nx-base-tab>
     </nx-tabs>
 </ng-template>
 

@@ -13,7 +13,6 @@ import { Subject, debounceTime, map } from 'rxjs';
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
 import { NxSearchComponent } from '@components/search/search.component';
-import { NxTabsDirective } from '@components/tabs/tabs.directive';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
@@ -47,7 +46,6 @@ import { NxCardComponent } from '../card/card.component';
         CommonModule,
         NxButtonComponent,
         TranslateModule,
-        NxTabsDirective,
         NxAddSvgSrcDirective,
         NxCardComponent,
     ],

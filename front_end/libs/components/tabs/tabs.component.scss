@@ -1,19 +1,45 @@
 .tabs-component{
-  display: flex;
-  flex-direction: column;
 
   .row{
-    width: 100%;
     border-bottom: 1px solid var(--tabs-border-color);
-  }
+    height: 50%;
 
-  .tab{
-    background-color: var(--body-bg);
-    color: var(--tabs-color); 
+    .tab {
+      width: 10rem;
+      background-color: var(--body-bg);
+      color: var(--tabs-color);
+      padding: 0 !important;
+    }
 
-    &.selected {
-      border-bottom: 2px solid var(--tabs-active-color);
-      color: var(--tabs-active-color);
+    input {
+      display: none;
+    }
+    
+    .content {
+      width: 10rem;
+      justify-content: center;
+      cursor: pointer;
+      height: 100%;
+      padding: 0.5rem 1.5rem;
+      display: flex;
+      align-items: center;
     }
   }
+
+  .slider {
+    background-color: transparent;
+    position: absolute;
+    border-bottom: 3px solid var(--tabs-active-color);
+    margin-top: 31px;
+    width: 10rem;
+  }
+ 
+}
+
+label, .slider {
+  display: inline-block;
+  font-weight: bold;
+  text-align: center;
+  width: 10rem;
+  height: auto;
 }

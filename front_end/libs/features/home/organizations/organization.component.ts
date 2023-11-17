@@ -8,8 +8,8 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
-import { NxTabsDirective } from '@components/tabs/tabs.directive';
-import { Tab, TabEmit } from '@components/tabs/tabs.types';
+import { NxTabsModule } from '@components/tabs/tabs.module';
+import { Tab } from '@components/tabs/tabs.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
@@ -23,7 +23,6 @@ import { nxConfig } from '@services/nx-config/config';
 import { IConfig } from '@services/nx-config/config-types';
 import { icons } from '@static-variables';
 
-import { NxTabsComponent } from '../../../components/tabs/tabs.component';
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
 import { GroupsItem, Crumb, OpenGroups, GroupPath } from '../home.types';
 import { NxSystemGroupsService } from '../services/system-groups.service';
@@ -61,10 +60,9 @@ interface SidebarSettings {
         AngularSvgIconModule,
         NxSystemGroupsSidebarComponent,
         NxOrganizationCardContainerComponent,
-        NxTabsComponent,
-        NxTabsDirective,
         NxAddSvgSrcDirective,
         DragDropModule,
+        NxTabsModule,
     ],
 })
 export class NxOrganizationsComponent implements OnInit {
@@ -79,7 +77,7 @@ export class NxOrganizationsComponent implements OnInit {
         },
     ];
 
-    currentTab: Tab;
+    currentTabIndex: number;
     isLoading = true;
     userEmail: string;
     @Input() inChannelPartner: boolean;
@@ -141,7 +139,13 @@ export class NxOrganizationsComponent implements OnInit {
             ];
             this.tabs.push(...adminTabs);
         }
-        this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
+        for (const [index, tab] of this.tabs.entries()) {
+            if (tab.route === this.currentTabRoute) {
+                this.currentTabIndex = index;
+                break;
+            }
+        }
+
         this.groupsService.paramStateHandler.state$.subscribe(({ params: { organizationId } }) => {
             if (!organizationId) {
                 return;
@@ -174,9 +178,8 @@ export class NxOrganizationsComponent implements OnInit {
         }, true);
     }
 
-    onTabClick(tab: TabEmit): void {
-        this.currentTab = this.tabs[tab.index];
-        this.router.navigate([tab.route], { relativeTo: this.route });
+    onTabClick(newIndex: number): void {
+        this.router.navigate([this.tabs[this.currentTabIndex].route], { relativeTo: this.route });
     }
 
     trackItem(_index: number, item: Crumb): string {
