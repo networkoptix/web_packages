@@ -20,7 +20,6 @@ from generic_elements import ToastNotification
 from pages.system_admin_tab_information import TabInformation
 from pages.system_admin_tab_settings import TabSettings
 from pages.system_left_menu import SystemLeftMenu
-
 from variables import ENV
 
 _logger = logging.getLogger(__name__)
@@ -219,7 +218,6 @@ class SystemAdmin:
                    f' | //header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]')
         self._wait_for_tab_loaded(locator)
         return TabSettings(self.driver, locator, self.rb)
-
 
     def get_active_tab_by_name(self, name: str) -> Button:
         return Button(
