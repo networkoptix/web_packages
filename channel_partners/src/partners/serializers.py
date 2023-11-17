@@ -1,13 +1,15 @@
 from collections import defaultdict
 import datetime
 import json
-from typing import List, Optional
+from typing import List, Optional, Set
 import uuid
 
 import httpx
 import llutil
 import rest_framework.exceptions
 from django.conf import settings
+from django.contrib.auth.models import Permission
+from django.core.cache import caches
 from django.db.models import Sum, QuerySet, Prefetch
 from django.utils import timezone
 from django.utils.functional import cached_property
@@ -34,6 +36,38 @@ STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STA
 STATE_CHOICES_STR_MAP = {choice[1]: choice[0] for choice in ChannelPartnerStates.STATE_CHOICES}
 
 
+def get_channel_partner_roles() -> dict:
+    if roles := caches['local'].get('channel_partner_roles', {}):
+        return roles
+    for role in ChannelPartnerRole.objects.all().prefetch_related('permissions'):
+        if not role.permissions:
+            continue
+        roles[str(role.id)] = roles[role.name] = {
+            'permissions': [p.codename for p in role.permissions.all()],
+            'name': role.name,
+            'id': role.id
+        }
+    caches['local'].set('channel_partner_roles', roles)
+    return roles
+
+
+def get_organization_roles() -> dict:
+    if roles := caches['local'].get('organization_roles', {}):
+        return roles
+    for role in OrganizationRole.objects.all().prefetch_related('permissions'):
+        if not role.permissions:
+            continue
+        roles[str(role.id)] = roles[role.name] = {
+            'permissions': [p.codename for p in role.permissions.all()],
+            'name': role.name,
+            'id': role.id,
+            'system_role': role.system_role,
+            'system_role_uuid': role.system_role_uuid
+        }
+    caches['local'].set('organization_roles', roles)
+    return roles
+
+
 def get_to_user_relation(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
                          instance: ChannelPartner | Organization,
                          instance_lookup: str) -> Optional[OrganizationToUser | ChannelPartnerToUser]:
@@ -43,33 +77,35 @@ def get_to_user_relation(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[Ch
     return next(filter(lambda rel: getattr(rel, instance_lookup, None) == instance.id, to_user_rel), None)
 
 
-def get_instance_permissions_list(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
-                                  roles: QuerySet[OrganizationRole] | QuerySet[ChannelPartnerRole],
-                                  instance: ChannelPartner | Organization,
-                                  instance_lookup: str) -> List[str]:
-    if not all([to_user_rel, roles, instance]):
-        return []
-    instance_to_user = get_to_user_relation(to_user_rel=to_user_rel, instance=instance, instance_lookup=instance_lookup)
-    if not instance_to_user:
-        return []
-    permissions = set()
-    for role in filter(lambda r: r.name in instance_to_user.roles, roles):
-        permissions.update({p.codename for p in role.permissions.all()})
-    return sorted(list(permissions))
-
-
 def get_organization_permissions_list(to_user_rel: QuerySet[OrganizationToUser],
-                                      roles: QuerySet[OrganizationRole],
-                                      instance: Organization) -> List[str]:
-    return get_instance_permissions_list(to_user_rel=to_user_rel, roles=roles,
-                                         instance=instance, instance_lookup='organization_id')
+                                      roles: dict,
+                                      instance: Organization) -> Set[str]:
+    if not all([to_user_rel, roles, instance]):
+        return set()
+    permissions = set()
+    for instance_to_user in to_user_rel:
+        if not instance_to_user.organization_id == instance.id or instance_to_user.system_group_id is not None:
+            continue
+        for role_name in instance_to_user.roles:
+            permissions = permissions.union(roles.get(role_name, {}).get('permissions', set()))
+        # there is still only one OrganizationToUser that have organization permissions
+        return permissions
+    return permissions
 
 
 def get_channel_partner_permissions_list(to_user_rel: QuerySet[ChannelPartnerToUser],
-                                         roles: QuerySet[ChannelPartnerRole],
-                                         instance: ChannelPartner) -> List[str]:
-    return get_instance_permissions_list(to_user_rel=to_user_rel, roles=roles,
-                                         instance=instance, instance_lookup='channel_partner_id')
+                                         roles: dict,
+                                         instance: ChannelPartner) -> Set[str]:
+    if not all([to_user_rel, roles, instance]):
+        return set()
+    for instance_to_user in to_user_rel:
+        if not instance_to_user.channel_partner_id == instance.id:
+            continue
+        permissions = set()
+        for role_name in instance_to_user.roles:
+            permissions = permissions.union(roles.get(role_name, {}).get('permissions', set()))
+        return permissions
+    return set()
 
 
 class CodeChoiceField(serializers.ChoiceField):
@@ -194,9 +230,9 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
 
     def get_permissions_list(self, instance):
         perms = get_channel_partner_permissions_list(to_user_rel=self.context.get('channel_partner_to_user'),
-                                                     roles=self.context.get('channel_partner_roles'),
+                                                     roles=get_channel_partner_roles(),
                                                      instance=instance)
-        return perms
+        return list(perms)
 
     def get_roles_list(self, instance):
         rels = get_to_user_relation(to_user_rel=self.context.get('channel_partner_to_user'),
@@ -276,16 +312,34 @@ class OrganizationSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data_filtered)
 
     def get_permissions_list(self, instance):
+        org_roles = get_organization_roles()
         perms = get_organization_permissions_list(to_user_rel=self.context.get('organizations_to_user'),
-                                                  roles=self.context.get('organization_roles'),
+                                                  roles=org_roles,
                                                   instance=instance)
-        return perms
+        if instance.channel_partner_access_level_id:
+            for partner_to_user in self.context.get('channel_partner_to_user', []):
+                if instance.channel_partner_id == partner_to_user.channel_partner_id:
+                    if partner_to_user.roles:
+                        perms = perms.union(
+                            org_roles
+                            .get(str(instance.channel_partner_access_level_id), {})
+                            .get('permissions', set())
+                        )
+                        break
+        return list(perms)
 
-    def get_roles_list(self, instance):
+    def get_roles_list(self, instance: Organization):
         rels = get_to_user_relation(to_user_rel=self.context.get('organizations_to_user'),
                                     instance=instance,
                                     instance_lookup='organization_id')
-        return rels.roles if rels else []
+        own_roles = rels.roles if rels else []
+        if instance.channel_partner_access_level_id:
+            for partner_to_user in self.context.get('channel_partner_to_user', []):
+                if instance.channel_partner_id == partner_to_user.channel_partner_id:
+                    if partner_to_user.roles:
+                        org_roles = get_organization_roles()
+                        own_roles += [org_roles[str(instance.channel_partner_access_level_id)]['name']]
+        return list(set(own_roles))
 
 
 class CreateOrganizationSerializer(serializers.ModelSerializer):

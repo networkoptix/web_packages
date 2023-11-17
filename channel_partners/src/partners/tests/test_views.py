@@ -541,7 +541,7 @@ class TestChannelPartnerViewSet:
             response = view(request)
             for data in response.data['results']:
                 if str(partner.id) == data['id']:
-                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
                     assert data['ownRoles'] == user.roles
                 else:
                     assert data['ownPermissions'] == []
@@ -640,7 +640,7 @@ class TestOrganizationViewSet:
             response = view(request)
             for data in response.data['results']:
                 if str(org.id) == data['id']:
-                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
                     assert data['ownRoles'] == user.roles
                 else:
                     assert data['ownPermissions'] == []

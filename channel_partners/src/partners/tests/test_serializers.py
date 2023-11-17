@@ -295,7 +295,7 @@ class TestChannelPartnerSerializer:
             serializer = ChannelPartnerSerializer(partners, many=True, context=context(user.user))
             for data in serializer.data:
                 if str(partner.id) == data['id']:
-                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
                     assert data['ownRoles'] == user.roles
                 else:
                     assert data['ownPermissions'] == []
@@ -331,8 +331,10 @@ class TestOrganizationSerializer:
             assert current_services[str(service.id)]["quantity"] == (1 + i) * (len(systems) - i)
             assert current_services[str(service.id)]["total"] == (1 + i) * (10 - i) * (len(systems) - i)
 
-    def test_ownPermissions(self, channel_partner_factory, organization_factory, org_user_factory, arf):
+    def test_ownPermissions(self, channel_partner_factory, organization_factory,
+                            cp_user_factory, org_user_factory, arf):
         cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
         roles = OrganizationRole.objects.all()
         orgs = []
         users = []
@@ -346,6 +348,7 @@ class TestOrganizationSerializer:
             context = {}
             context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
             context['organizations_to_user'] = OrganizationToUser.objects.filter(user=cloud_user)
+            context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
             context['request'] = arf.get('/')
             context['request'].user = cloud_user
             return context
@@ -354,8 +357,16 @@ class TestOrganizationSerializer:
             serializer = OrganizationSerializer(orgs, many=True, context=context(user.user))
             for data in serializer.data:
                 if str(org.id) == data['id']:
-                    assert data['ownPermissions'] == sorted([p.codename for p in role.permissions.all()])
+                    assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
                     assert data['ownRoles'] == user.roles
                 else:
                     assert data['ownPermissions'] == []
                     assert data['ownRoles'] == []
+        organization = orgs[0]
+        org_admin_role = roles.get(id=OrganizationRole.ORGANIZATION_ADMINISTRATOR)
+        organization.channel_partner_access_level = org_admin_role
+        organization.save()
+        serializer = OrganizationSerializer(organization, context=context(cp_user.user))
+        assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
+        assert serializer.data['ownRoles'] == [org_admin_role.name]
+

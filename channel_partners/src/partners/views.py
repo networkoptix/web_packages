@@ -366,7 +366,6 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['channel_partner_roles'] = ChannelPartnerRole.objects.all().prefetch_related('permissions')
         context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
         return context
 
@@ -456,7 +455,6 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
         context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user)
         return context
 
@@ -499,9 +497,11 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             return OrganizationSerializer
 
     def get_serializer_context(self):
+        # todo. remove when access matrix is ready
         context = super().get_serializer_context()
-        context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
-        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user)
+        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user,
+                                                                             system_group_id__isnull=True)
+        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
         return context
 
     def get_permissions(self):

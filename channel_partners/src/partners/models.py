@@ -804,12 +804,6 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
                                           blank=False, default=ChannelPartnerStates.ACTIVE)
     channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
-                                                     limit_choices_to={
-                                                         "id__in": [
-                                                             OrganizationRole.ORGANIZATION_ADMINISTRATOR,
-                                                             OrganizationRole.SYSTEM_HEALTH_VIEWER
-                                                         ]
-                                                     },
                                                      default=OrganizationRole.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
