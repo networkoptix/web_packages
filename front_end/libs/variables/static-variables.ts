@@ -80,8 +80,7 @@ export const clientMode = {
 };
 
 export const credentialsValidation = {
-    emailRegex:
-        "^[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$",
+    emailRegex: '^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$',
     passwordRequirements: {
         maxLength: 255,
         minClassesCount: 2,
