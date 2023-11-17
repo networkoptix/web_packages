@@ -17,7 +17,7 @@ class AccountPage:
         self.email().wait_until_visible()
         self.first_name().wait_until_visible()
         self.last_name().wait_until_visible()
-        self.language_dropdown().wait_until_visible()
+        self.get_language_dropdown().get_dropdown_button().wait_until_visible()
         self.delete_account_button().wait_until_visible()
         self.save_button().wait_until_not_visible()
         self.cancel_button().wait_until_not_visible()
@@ -28,11 +28,8 @@ class AccountPage:
             "//nx-account-settings-component//nx-block//button[@id=\"accountSettingsDeleteButton\"]",
             )
 
-    def language_dropdown(self):
-        return DropDown(
-            self._driver,
-            "//nx-language-select//button[@id='dropdownMenuButton']",
-            )
+    def get_language_dropdown(self):
+        return _LanguageDropdown(self._driver)
 
     def last_name(self):
         return TextField(
@@ -73,18 +70,6 @@ class AccountPage:
         dialog = DeleteCloudAccountDialog(self._driver)
         return dialog
 
-    def set_language_in_dropdown(self, language_code: str):
-        self.language_dropdown().click()
-        language_button = Button(
-            self._driver,
-            f"//nx-language-select//span[@lang='{language_code}']/..",
-            )
-        language_button.click()
-
-    def get_active_language(self) -> str:
-        active_lang_element = self.language_dropdown().find_element("/span[@id='activeLang']")
-        return active_lang_element.text()
-
 
 class DeleteCloudAccountDialog(NxModalDialog):
 
@@ -119,3 +104,19 @@ class SuccessToast(ToastNotification):
 
     def __init__(self, driver):
         super().__init__(driver, '//nx-app-toasts//div[@class="alert alert-success toast"]')
+
+
+class _LanguageDropdown(DropDown):
+
+    def __init__(self, driver: ChromeBrowser):
+        super().__init__(driver=driver, locator='//nx-language-select')
+
+    def get_dropdown_button(self):
+        return self.find_element("//button[@id='dropdownMenuButton']")
+
+    def set_language(self, language_code: str):
+        self.get_dropdown_button().click()
+        self.find_element(f"//span[@lang='{language_code}']/..").click()
+
+    def get_active_language(self) -> str:
+        return self.find_element("//span[@id='activeLang']").text()

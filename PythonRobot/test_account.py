@@ -208,9 +208,9 @@ def test_language_is_changeable_on_the_account_page():
             info_text = lang_dict[lang]["ACCOUNT INFORMATION"]
             account_page.wait_until_loaded()
             if lang != rb.language:
-                account_page.set_language_in_dropdown(lang)
+                account_page.get_language_dropdown().set_language(lang)
                 PageText(driver, f"//header//h4[contains(text(),'{info_text}')]").wait_until_visible()
-        account_page.set_language_in_dropdown(rb.LANGUAGE)
+        account_page.get_language_dropdown().set_language(rb.LANGUAGE)
         time.sleep(1)
         account_page.wait_until_loaded()
         PageText(driver, f"//header//h4[contains(text(),'{rb.ACCOUNT_INFORMATION}')]").wait_until_visible()
@@ -227,7 +227,7 @@ def test_language_change_affects_emails():
                 HeaderNav(driver).account_dropdown().wait_until_visible()
                 account_page = AccountPage(driver)
                 account_page.wait_until_loaded()
-                account_page.set_language_in_dropdown('ru_RU')
+                account_page.get_language_dropdown().set_language('ru_RU')
                 time.sleep(5)
             driver.get(rb.ENV + "/authorize")
             login = LoginDialog(driver, lang="ru_RU")
@@ -261,10 +261,10 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         HeaderNav(driver).account_dropdown().wait_until_visible()
         account_page = AccountPage(driver)
         account_page.wait_until_loaded()
-        account_page.set_language_in_dropdown(japanese_code)
+        account_page.get_language_dropdown().set_language(japanese_code)
         time.sleep(5)
         driver.refresh()
-        assert account_page.get_active_language() == '日本'
+        assert account_page.get_language_dropdown().get_active_language() == '日本'
         info_element = PageText(driver, f"//header//h4[contains(text(),'{ja_JP_account_info}')]")
         info_element.wait_until_visible()
         header = HeaderNav(driver)
@@ -282,7 +282,7 @@ def test_language_change_is_new_default(cloud_user: CloudAccount):
         api.set_account_language(cloud_user.email, cloud_user.password, new_language=german_code)
         time.sleep(5)
         driver.refresh()
-        activeLang = account_page.get_active_language()
+        activeLang = account_page.get_language_dropdown().get_active_language()
         assert activeLang.lower() in german_code.lower()
         info_element = PageText(driver, f"//header//h4[contains(text(),'{de_DE_account_info}')]")
         info_element.wait_until_visible()
