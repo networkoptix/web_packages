@@ -758,7 +758,7 @@ class OrganizationRole(models.Model):
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     system_role = models.CharField(max_length=100, blank=True, default='')
-    system_role_uuid = models.CharField(max_length=100, blank=True, default='')
+    system_role_uuid = models.UUIDField(blank=True, null=True)
     permissions = models.ManyToManyField(Permission)
 
     def __str__(self):
