@@ -249,7 +249,7 @@ class UsersDropdown(DropDown):
     def add_user_button(self):
         return Button(
             self._driver,
-            self._locator + '//nx-menu-button[@data-testid="addUserBtn"]/button'
+            '//nx-menu-button[@data-testid="addUserBtn"]/button'
             )
 
     def wait_for_open(self, timeout=45):
