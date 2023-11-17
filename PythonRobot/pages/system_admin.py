@@ -214,12 +214,12 @@ class SystemAdmin:
         return TabInformation(self.driver, locator, self.rb)
 
     def get_tab_settings(self) -> TabSettings:
-        self._wait_for_tab_loaded(f'//header//a[contains(text(),"{self.rb.SETTINGS_TEXT}")]')
-        return TabSettings(
-            self.driver,
-            f'//header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]',
-            self.rb,
-            )
+        # There are two variants of the locator, one for the active tab and another for the inactive tab
+        locator = (f'//header//nx-header-level-two//a[contains(text(),"{self.rb.SETTINGS_TEXT}")]'
+                   f' | //header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]')
+        self._wait_for_tab_loaded(locator)
+        return TabSettings(self.driver, locator, self.rb)
+
 
     def get_active_tab_by_name(self, name: str) -> Button:
         return Button(
