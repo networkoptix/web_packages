@@ -67,9 +67,7 @@
     <div class="modal-footer">
         <a
             class="view-recording-button btn btn-primary"
-            href="systems/{{ bookmark.systemId }}/view/{{ bookmark.deviceId }}?time={{
-                bookmark.startTimeMs
-            }}"
+            [href]="fullRecordingUrl"
             target="_blank"
             translate
         >
