@@ -6,16 +6,14 @@ import {
     EventEmitter,
     ViewChild,
     ElementRef,
-    Inject,
     OnChanges,
 } from '@angular/core';
 import { escapeRegExp } from 'lodash-es';
 import type { BehaviorSubject } from 'rxjs';
 
-import { WINDOW } from '@services/window-provider';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { MS } from '@utils/general';
 import type { NgChanges } from '@utils/ng-changes';
-import { getSysLang } from '@utils/nx';
 import { icons } from '@variables/static-variables';
 
 const oneToTwelve = '((0?[1-9])|(1[0-2]))';
@@ -134,10 +132,10 @@ export class NxTimeSelectorComponent implements OnInit, OnChanges {
     lastValidValue: string | null = null;
     postPeriod: boolean = true;
 
-    constructor(@Inject(WINDOW) private window: Window) {}
+    constructor(private language: NxLanguageProviderService) {}
 
     ngOnInit(): void {
-        const dtFormat = Intl.DateTimeFormat(getSysLang(this.window), {
+        const dtFormat = Intl.DateTimeFormat(this.language.currentLocale, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn', // Avoid Arabic/other non-latin numbers
