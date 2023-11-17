@@ -2,7 +2,6 @@ import logging
 import time
 
 from selenium.common.exceptions import ElementClickInterceptedException
-from selenium.webdriver.common.by import By
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
 
@@ -235,36 +234,31 @@ class SystemAdmin:
             )
 
     def _wait_for_tab_loaded(self, locator: str):
-        """
-        Problem: the Information tab and another couldn't appear without switching to another tab or refreshing the page.
-        To be removed after resolving CLOUD-11437.
-        See: https://networkoptix.atlassian.net/browse/CLOUD-11437
-        """
         started_at = time.monotonic()
         timeout_sec = 30
         while True:
-            if len(self.driver.find_elements_by_xpath(locator)) > 0:
-                break
             try:
                 TabItem(self.driver, locator).wait_until_visible(timeout=10)
             except ElementNotVisible:
                 if time.monotonic() - started_at > timeout_sec:
                     raise TimeoutError(f"{locator!r} is not visible after {timeout_sec} seconds")
-                self.driver.refresh()
+                time.sleep(3)
+            else:
+                break
 
     def _wait_until_page_loaded(self):
         system_loaded_locator = "//nx-system-settings-component"
         started_at = time.monotonic()
         timeout_sec = 90
         while True:
-            if len(self.driver.find_elements(By.XPATH, system_loaded_locator)) > 0:
-                break
             try:
                 PageText(self.driver, system_loaded_locator).wait_until_visible()
             except ElementNotVisible:
-                self.driver.refresh()
                 if time.monotonic() - started_at > timeout_sec:
                     raise TimeoutError(f"{system_loaded_locator!r} is not visible after {timeout_sec} seconds")
+                time.sleep(3)
+            else:
+                break
 
     def _location_is_correct(self):
         self.driver.location_should_be(f"{ENV}systems/")
