@@ -624,7 +624,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ]);
         }
 
-        if (this.editCameras()) {
+        if (this.system.cameraManager.cameras.some(({ canEdit }) => canEdit)) {
             let camerasNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.cameras.id,
             );

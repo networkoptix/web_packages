@@ -427,10 +427,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 const archiveRanges: Record<string, BaseTimeRange> = {};
 
                 await this.findCamerasWithArchive(mediaServers, archiveRanges);
-
+                const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
                 const processedMediaServers = mediaServers.map(ms => ({
                     ...ms,
-                    cameras: ms.cameras.map(c => this.processCameras(c, ms, archiveRanges)),
+                    cameras: ms.cameras
+                        .filter(({ id }) => canViewDevice(id) || canViewDeviceArchive(id))
+                        .map(c => this.processCameras(c, ms, archiveRanges)),
                 }));
 
                 this.vms.setMediaServers(this.systemId, processedMediaServers);
