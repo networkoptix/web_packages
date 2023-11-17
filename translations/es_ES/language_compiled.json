@@ -1883,6 +1883,7 @@
     "{hex} - green {label}": "{hex} - verde {label}",
     "{hex} - light{number}": "{hex} - claro{number}",
     "{hex} - yellow {label}": "{hex} - amarillo {label}",
+    "{listItems} and {singleItem}": "{listItems} and {singleItem}",
     "{name} (Offline)": "{name} (sin conexión)",
     "{name} (copy)": "{name} (copy)",
     "{name} Requirements": "{name} Requisitos",
