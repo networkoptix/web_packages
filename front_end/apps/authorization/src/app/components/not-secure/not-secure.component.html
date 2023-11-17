@@ -32,7 +32,8 @@
         >
         <span
             class="fs-mask for-account"
-            (click)="setCurrentState.emit('email')"
+            [ngClass]="{ 'span-disabled': emailLocked }"
+            (click)="!emailLocked && setCurrentState.emit('email')"
             >{{ loginEmail }}</span
         >
     </div>

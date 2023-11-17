@@ -290,6 +290,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 skipTo2FaClientTypes.includes(this.clientType) &&
                 (access_token || access_code || code)
             ) {
+                this.emailLocked = true;
                 this.loginEmail = email;
                 this.loginCode = access_token || access_code || code;
                 this.redirectLink = redirect_uri;
@@ -324,6 +325,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         : AuthorizeState.notSecure;
             } else {
                 if (email) {
+                    this.emailLocked = true;
                     this.loginEmail = email;
                     this.checkEmailProcess.run();
                 }

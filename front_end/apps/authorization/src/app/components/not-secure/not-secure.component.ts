@@ -1,4 +1,4 @@
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { booleanAttribute, Component, EventEmitter, Input, Output } from '@angular/core';
 
 import { environment } from '@environments/environment';
 import * as staticLang from '@language_static';
@@ -17,6 +17,7 @@ export class NxAuthorizeNotSecureComponent {
     readonly environment = environment;
 
     @Input() viewType: string;
+    @Input({ transform: booleanAttribute }) emailLocked: boolean = false;
     @Input() smallView: boolean;
     @Input() loginEmail: string;
     @Input() redirectUrl: string;

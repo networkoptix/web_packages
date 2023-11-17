@@ -26,6 +26,7 @@
         <nx-authorize-not-secure-component
             *ngSwitchCase="AuthorizeState.notSecure"
             [viewType]="viewType"
+            [emailLocked]="emailLocked"
             [loginEmail]="loginEmail"
             [redirectUrl]="initialData.redirect_uri"
             (setCurrentState)="setCurrentState($event)"
