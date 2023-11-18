@@ -8,6 +8,7 @@ import {
     Input,
     OnChanges,
     Optional,
+    signal,
 } from '@angular/core';
 import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -84,8 +85,13 @@ class Alert {
     styleUrls: ['cameras.component.scss'],
 })
 export class NxCamerasComponent implements OnInit, OnChanges {
+    camera: NxSystemCamera;
+    cameraId$$ = signal<string>('');
     @Input() system: NxSystem;
-    @Input() camera: NxSystemCamera;
+    @Input({ alias: 'camera' }) set routeCamera(camera: NxSystemCamera) {
+        this.camera = camera;
+        this.cameraId$$.set(camera.id);
+    }
 
     LANG = staticLang;
     defaultAspectRatio: number | null = null;
@@ -142,23 +148,25 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     motionEnabledWatcher = new Watcher<MotionType>();
     motionMaskWatcher = new Watcher<string>();
 
-    editCameras = computed<boolean>(
-        () => this.system.permissionManager.permissions$$().editCameras,
+    editCameras = computed<boolean>(() =>
+        this.system.permissionManager.canEditDevice(this.cameraId$$()),
     );
     cameraViewPath: string;
     fullInfoPath: string;
     canSeeInfo = computed<boolean>(() => {
+        const permissions = this.system.permissionManager.permissions$$();
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
-        return this.system.permissionManager.permissions$$()?.systemHealth;
+        return permissions?.systemHealth;
     });
     canSeeView = computed<boolean>(() => {
+        const cameraId = this.cameraId$$();
         if (!this.system.isOnline || !this.system.isAvailable) {
             return false;
         }
         const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
-        return canViewDevice(this.camera.id) || canViewDeviceArchive(this.camera.id);
+        return canViewDevice(cameraId) || canViewDeviceArchive(cameraId);
     });
 
     private get cameraName(): string {

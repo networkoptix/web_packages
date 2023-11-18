@@ -121,6 +121,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const builtInGroup: UserPermissionDescription[] = [];
         const customGroup: UserPermissionDescription[] = [];
         const ldapGroup: UserPermissionDescription[] = [];
+        let ldapDefault: UserPermissionDescription | undefined;
         Object.values((this.system.userManager as UserWithGroupsManager).userGroups).forEach(
             ({ id, name, description, attributes, type }) => {
                 if (!newList.includes(id)) {
@@ -133,10 +134,14 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                         description,
                     });
                 } else if (type === 'ldap') {
-                    ldapGroup.push({
-                        name,
-                        description,
-                    });
+                    if (id === '{00000000-0000-0000-0000-100100000000}') {
+                        ldapDefault = { name, description };
+                    } else {
+                        ldapGroup.push({
+                            name,
+                            description,
+                        });
+                    }
                 } else {
                     customGroup.push({
                         name,
@@ -150,6 +155,9 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         // Each Permission option needs to be in alphabetical order in their respective category, builtInGroup is an exception
         customGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
         ldapGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
+        if (ldapDefault) {
+            ldapGroup.unshift(ldapDefault);
+        }
         this.selectedGroupsList = builtInGroup.concat(customGroup, ldapGroup);
     }
 

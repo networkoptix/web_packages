@@ -1,6 +1,7 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { RouterModule } from '@angular/router';
+import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -23,7 +24,13 @@ import type { ViewCamera } from '@vms-client/submodules/vms/datatypes/Camera';
     templateUrl: 'player-placeholder.component.html',
     styleUrls: ['player-placeholder.component.scss'],
     standalone: true,
-    imports: [CommonModule, RouterModule, AngularSvgIconModule, NxAddSvgSrcDirective],
+    imports: [
+        CommonModule,
+        TranslateModule,
+        RouterModule,
+        AngularSvgIconModule,
+        NxAddSvgSrcDirective,
+    ],
 })
 export class NxPlayerPlaceholderComponent implements OnInit {
     @Input() svgFileName: string;
@@ -43,7 +50,7 @@ export class NxPlayerPlaceholderComponent implements OnInit {
         this.isUrl = !this.description.includes(' ');
     }
 
-    public get settingsLinkFragment(): string {
+    public get settingsLinkFragment(): string | undefined {
         // surprisingly, `double-hashing` works in webadmin
         return this.svgFileName === 'placeholder_camera_unauthorized' ? 'authorize' : undefined;
     }

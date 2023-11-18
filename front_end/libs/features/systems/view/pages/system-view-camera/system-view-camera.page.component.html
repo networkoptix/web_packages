@@ -160,12 +160,23 @@
             ></nx-player>
             <ng-template #noPlayer>
                 <div class="offline-message">
-                    <nx-player-placeholder
+                    <ng-container
                         *ngIf="cameraError; else unreachable"
-                        svgFileName="placeholder_camera_alert"
-                        [heading]="LANG.common.cameraStates.error"
-                        [description]="cameraError"
-                    ></nx-player-placeholder>
+                        [ngSwitch]="cameraError"
+                    >
+                        <nx-player-placeholder
+                            *ngSwitchCase="PLAYBACK_ERROR.NO_ACCESS"
+                            svgFileName="placeholder_camera_alert"
+                            [heading]="LANG.common.cameraStates.noAccess"
+                            [description]="''"
+                        ></nx-player-placeholder>
+                        <nx-player-placeholder
+                            *ngSwitchDefault
+                            svgFileName="placeholder_camera_alert"
+                            [heading]="LANG.common.cameraStates.error"
+                            [description]="cameraError"
+                        ></nx-player-placeholder>
+                    </ng-container>
                     <ng-template #unreachable>
                         <nx-player-placeholder
                             *ngIf="!camera.isOffline && !camera.isUnauthorized && camera.isVirtual"
