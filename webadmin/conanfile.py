@@ -16,7 +16,7 @@ class WebadminConan(ConanFile):
     no_copy_source = True
 
     def set_version(self):
-        git = Git(self)
+        git = Git(self, folder="..")
         self.version = git.get_commit()
 
     def source(self):
