@@ -1883,7 +1883,7 @@
     "{hex} - green {label}": "{hex} - 緑 {label}",
     "{hex} - light{number}": "{hex} - ライト{number}",
     "{hex} - yellow {label}": "{hex} - 黄色 {label}",
-    "{listItems} and {singleItem}": "{listItems} and {singleItem}",
+    "{listItems} and {singleItem}": "{listItems} および {singleItem}",
     "{name} (Offline)": "{name} (オフライン)",
     "{name} (copy)": "{name} (コピー)",
     "{name} Requirements": "{name} 要件",

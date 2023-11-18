@@ -1883,7 +1883,7 @@
     "{hex} - green {label}": "{hex} - grön {label}",
     "{hex} - light{number}": "{hex} - ljus{number}",
     "{hex} - yellow {label}": "{hex} - gul {label}",
-    "{listItems} and {singleItem}": "{listItems} and {singleItem}",
+    "{listItems} and {singleItem}": "{listItems} och {singleItem}",
     "{name} (Offline)": "{name} (offline)",
     "{name} (copy)": "{name} (kopia)",
     "{name} Requirements": "{name} Krav",

@@ -1883,7 +1883,7 @@
     "{hex} - green {label}": "{hex} - yeşil {label}",
     "{hex} - light{number}": "{hex} - aydınlık{number}",
     "{hex} - yellow {label}": "{hex} - sarı {label}",
-    "{listItems} and {singleItem}": "{listItems} and {singleItem}",
+    "{listItems} and {singleItem}": "{listItems} ve {singleItem}",
     "{name} (Offline)": "{name} (Çevrimdışı)",
     "{name} (copy)": "{name} (kopyala)",
     "{name} Requirements": "{name} Gereksinimler",
