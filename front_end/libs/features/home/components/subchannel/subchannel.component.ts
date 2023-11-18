@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { switchMap } from 'rxjs';
@@ -20,7 +20,7 @@ export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
 
     inSubChannel = this.route.params;
-    currentTabIndex: number;
+    currentTabIndex$$ = signal(0);
     tabs: Tab[] = [
         {
             displayName: this.LANG.channelPartners.tabNames.information,
@@ -45,7 +45,7 @@ export class NxSubchannelComponent implements OnInit {
     ngOnInit(): void {
         for (const [index, tab] of this.tabs.entries()) {
             if (tab.route === this.currentTabRoute) {
-                this.currentTabIndex = index;
+                this.currentTabIndex$$.set(index);
                 break;
             }
         }
@@ -56,11 +56,10 @@ export class NxSubchannelComponent implements OnInit {
     }
 
     onTabClick(newIndex: number): void {
-        const currentTab = this.tabs[newIndex];
-        if (currentTab.route !== '') {
-            this.router.navigate([currentTab.route], { relativeTo: this.route });
-        } else {
-            this.router.navigate(['./'], { relativeTo: this.route });
-        }
+        const newTab = this.tabs[newIndex];
+        const route = newTab.route ? [newTab.route] : ['./'];
+        this.router
+            .navigate(route, { relativeTo: this.route })
+            .then(() => this.currentTabIndex$$.set(newIndex));
     }
 }

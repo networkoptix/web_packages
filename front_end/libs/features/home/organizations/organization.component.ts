@@ -1,6 +1,6 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, signal } from '@angular/core';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -77,7 +77,7 @@ export class NxOrganizationsComponent implements OnInit {
         },
     ];
 
-    currentTabIndex: number;
+    currentTabIndex$$ = signal(0);
     isLoading = true;
     userEmail: string;
     @Input() inChannelPartner: boolean;
@@ -141,7 +141,7 @@ export class NxOrganizationsComponent implements OnInit {
         }
         for (const [index, tab] of this.tabs.entries()) {
             if (tab.route === this.currentTabRoute) {
-                this.currentTabIndex = index;
+                this.currentTabIndex$$.set(index);
                 break;
             }
         }
@@ -179,7 +179,9 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     onTabClick(newIndex: number): void {
-        this.router.navigate([this.tabs[this.currentTabIndex].route], { relativeTo: this.route });
+        this.router
+            .navigate([this.tabs[this.currentTabIndex$$()].route], { relativeTo: this.route })
+            .then(() => this.currentTabIndex$$.set(newIndex));
     }
 
     trackItem(_index: number, item: Crumb): string {

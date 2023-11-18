@@ -10,7 +10,7 @@
     </div>
     <nx-tabs
         animated
-        [(currentTabIndex)]="currentTabIndex"
+        [currentTabIndex]="currentTabIndex$$()"
     >
         <nx-base-tab
             *ngFor="let tab of tabs"
