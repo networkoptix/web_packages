@@ -11,13 +11,13 @@
     <span
         *ngIf="heading"
         class="heading"
-        [textContent]="heading"
+        [textContent]="heading | translate"
     ></span>
     <span
         class="description"
         *ngIf="!!description"
         [ngStyle]="{ 'line-break': isUrl ? 'anywhere' : undefined }"
-        [textContent]="description"
+        [textContent]="description | translate"
     ></span>
     <a
         class="description settingsLink"

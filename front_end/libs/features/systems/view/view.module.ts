@@ -14,6 +14,7 @@ import { AuthGuard } from '@guards/authGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
+import { currentSystemResolver } from '@resolvers/current-system-resolver';
 
 import { NxCameraDetailsComponent } from './components/camera-details/camera-details.component';
 import { NxSystemViewCameraPageComponent } from './pages/system-view-camera/system-view-camera.page.component';
@@ -36,8 +37,14 @@ import { VmsClientModule } from './vms-client/vms-client.module';
                     {
                         path: ':cameraId',
                         component: NxSystemViewCameraPageComponent,
+                        resolve: {
+                            system: currentSystemResolver,
+                        },
                     },
                 ],
+                resolve: {
+                    system: currentSystemResolver,
+                },
             },
         ]),
         TranslateModule,
