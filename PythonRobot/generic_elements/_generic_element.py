@@ -46,7 +46,7 @@ class Element:
         action.move_to_element(self._get_element()).perform()
 
     def get_attribute(self, attribute: str):
-        self.wait_until_visible()
+        self.wait_until_in_dom()
         return self._get_element().get_attribute(attribute)
 
     def get_property(self, name: str):
@@ -94,6 +94,19 @@ class Element:
     def value_of_css_property(self, style_property: str):
         self.wait_until_visible()
         return self._get_element().value_of_css_property(style_property)
+
+    def wait_until_in_dom(self, timeout: float = _DEFAULT_TIMEOUT):
+        started_at = time.monotonic()
+        while True:
+            try:
+                self._get_element()
+            except ElementNotInDOM as e:
+                _logger.debug(e)
+            else:
+                return
+            if time.monotonic() - started_at > timeout:
+                raise ElementNotInDOM(f'Element locator: {self._locator} after waiting {timeout}')
+            time.sleep(.1)
 
     def wait_until_clickable(self, timeout: float = _DEFAULT_TIMEOUT):
         started_at = time.monotonic()

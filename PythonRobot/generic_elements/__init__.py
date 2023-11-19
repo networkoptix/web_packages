@@ -21,6 +21,7 @@ from ._wrappers import PageText
 from ._wrappers import Pane
 from ._wrappers import SearchBar
 from ._wrappers import SpinBox
+from ._wrappers import Switch
 from ._wrappers import TabItem
 from ._wrappers import Table
 from ._wrappers import TextField
@@ -51,6 +52,7 @@ __all__ = [
     'Pane',
     'SearchBar',
     'SpinBox',
+    'Switch',
     'TabItem',
     'Table',
     'TextField',

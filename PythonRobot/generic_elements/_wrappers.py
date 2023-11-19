@@ -596,3 +596,20 @@ class SpinBox:
 
     def input_value(self, text: str):
         self._element.send_keys(text)
+
+
+class Switch:
+    def __init__(self, driver: WebDriver, locator):
+        self._driver = driver
+        self._locator = locator
+        self._element = Element(self._driver, self._locator)
+
+    def wait_until_clickable(self, timeout: float = 5):
+        self._element.wait_until_clickable(timeout)
+
+    def turn_off(self):
+        if self._element.get_attribute("class") == "selected":
+            interactable_locator = f"{self._locator}/.."
+            interactable_element = Element(self._driver, interactable_locator) 
+            interactable_element.click()
+
