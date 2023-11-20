@@ -253,7 +253,7 @@ class ServerApi:
                     f' Expected value: {expected_value}',
                     )
 
-    def restore_default_general_settings(self):
+    def reset_general_settings(self):
         default_settings = {
             'autoDiscoveryEnabled': True,
             'statisticsAllowed': True,

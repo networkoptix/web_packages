@@ -17,7 +17,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
     [tags]    system    cloud    webadmin    system settings    C69736    C65697
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -86,7 +86,7 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C65722    C65724    C69740
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -159,7 +159,7 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -215,7 +215,7 @@ def system_and_security_settings_block_is_not_available_for_other_users(server: 
     [tags]    system    cloud    webadmin    system settings    C69737    C65698
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         viewer = server.get_cloud_viewer()
@@ -266,7 +266,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C69739
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -323,7 +323,7 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
     [tags]    system    cloud    webadmin    system settings    C69741    C65723
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -438,7 +438,7 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C69742
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -473,7 +473,7 @@ def system_settings_block_is_not_available_when_the_system_is_offline(server: Me
     [tags]    system    cloud    webadmin    system settings    C69744
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -493,7 +493,7 @@ def check_limit_session_duration(server: Mediaserver):
     [tags]    C65703
     """
     with get_chrome() as driver:
-        server.api.restore_default_general_settings()
+        server.api.reset_general_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
