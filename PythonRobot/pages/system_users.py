@@ -4,6 +4,8 @@ from generic_elements import DropDown
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import DropDownOption
+from generic_elements import Switch
+from generic_elements import ToastNotification
 from variables import ENV
 
 
@@ -46,6 +48,20 @@ class SystemUsers:
 
     def no_unsaved_changes_text(self):
         return PageText(self.driver, f"//nx-apply//div[contains(text(), '{self.rb.NO_UNSAVED_CHANGES_TEXT}')]")
+
+    def failed_to_apply_changes(self):
+        return ToastNotification(self.driver, "//nx-toast//span[contains(text(),'Failed to apply changes')]")
+
+    def help_block(self):
+        return PageText(self.driver,
+            f"//nx-system-settings-component//nx-block/..//nx-section//span[contains(@class,'help-block')]")
+
+    def user_switch(self):
+        return Switch(self.driver, "//nx-switch[@id='user-active-status']//input")
+
+    def user_disabled_message(self):
+        return PageText(self.driver, f"//nx-system-settings-component//nx-block/.."
+            f"//span[contains(@class,'text-danger')]")
 
     def _wait_until_page_loaded(self):
         Page(self.driver, "//nx-system-user-component").wait_until_visible(40)
