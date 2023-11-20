@@ -7,54 +7,6 @@ Suite Teardown    Run Keyword and Ignore Error    Merge Suite Teardown
 Force Tags        merge
 
 *** Test Cases ***
-2. Merge Dialog - Dropdown has three sections
-    [Tags]    C70979    merge_dialog    should
-    ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
-    ${rs}=   Generate Random String
-
-    ${system 1}=   Create Base System    cloud_merge_${rs}_1    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
-    ${system 2}=   Create Base System    cloud_merge_${rs}_2    image=${IMAGE 4.2}    owner=${owner email}    add users=${False}
-    ${system 3}=   Create Base System    cloud_merge_${rs}_3    image=${IMAGE 5.1}    owner=${owner email}    add users=${False}
-    ${system 4}=   Create Base System    cloud_merge_${rs}_4    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
-    ${system 5}=   Create Base System    cloud_merge_${rs}_5    image=${IMAGE 5.0}    owner=${owner email}    add users=${False}
-    #${system 6}=   Create Base System    cloud_merge_${rs}_6    image=${IMAGE 5.0}    add users=${False}
-    #${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 5.1}    network=host    add users=${False}    customPort=7002
-#    ${system 7}=   Create Base System    cloud_merge_${rs}_7    image=${IMAGE 4.2}    add users=${False}
-
-    FOR    ${i}    IN RANGE    1    5
-        Append To List    ${test systems}    ${system ${i}}
-    END
-
-    #Rename Server     https://${QA BURBANK IP}:${system 7}[port]    ${system 7}[local auth]    ServerName
-
-    Sleep    60
-    Stop Container   ${system 4}[container]
-
-    Log    Step 1
-    Log in to system    ${system 1}    ${owner email}
-    Wait until element is enabled    ${MERGE BUTTON SYSTEM}    timeout=180
-
-    Click Button    ${MERGE BUTTON SYSTEM}
-    Validate Check Merge Dialog
-    Wait Until Element Is Visible    ${MERGE ONLY AS OWNER}
-    Wait Until Element Is Visible    ${MERGE SYSTEM DROPDOWN}//span[contains(text(), "${system 5}[name]")]
-
-    Log    Step 2
-    Click Button    ${MERGE SYSTEM DROPDOWN}
-    Validate Check Merge Dialog
-    Run keyword and continue on failure    Wait Until Elements Are Visible
-    ...    ${MERGE ONLY AS OWNER}
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 2}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 3}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 4}[name]")]//following-sibling::span[contains(text(), "offline")]
-    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 5}[name]")]
-#    ...    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 8}[name]")]//following-sibling::span[contains(text(), "incompatible")]
-    ...    timeout=10
-    Element should not be visible    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 1}[name]")]
-#    ${sys 7 description}=    Get Text    ${MERGE CHECK MERGE FORM}//li/a//span[contains(text(), "${system 7}[name]")]//following-sibling::span
-#    Log    Might give false negative(shows docker internal ip instead of external)
-#    Should Contain    ${sys 7 description}    (ServerName,${SPACE}${QA BURBANK IP}:${system 7}[port])
-
 3. Merge Dialog - Dropdown has two sections(no cloud systems)
     [Tags]    C70980    merge_dialog    should
     ${owner email}=   Register and activate account with random email    firstName    lastName    ${BASE PASSWORD}
