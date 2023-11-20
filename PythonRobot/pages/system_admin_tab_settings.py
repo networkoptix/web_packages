@@ -1,5 +1,8 @@
 import time
 from typing import Callable
+from typing import Literal
+from typing import Optional
+from typing import Union
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -299,118 +302,26 @@ class _GeneralSettings:
     def is_cancel_button_visible(self) -> bool:
         return self._get_cancel_button().is_visible()
 
-    def autodiscovery_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="autoDiscoveryEnabled"]/..',
-            )
+    def autodiscovery_option(self) -> '_AutoDiscoveryOption':
+        return _AutoDiscoveryOption(self._driver)
 
-    def get_autodiscovery_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="autoDiscoveryEnabled"]//span'
-            ).get_text()
+    def statistics_allowed_option(self) -> '_StatisticAllowedOption':
+        return _StatisticAllowedOption(self._driver)
 
-    def get_autodiscovery_description(self) -> str:
-        return PageText(self._driver, '//label[@id="autoDiscoveryEnabledHelpBlock"]').get_text()
+    def optimize_camera_settings_option(self) -> '_OptimizeCameraSettingsOption':
+        return _OptimizeCameraSettingsOption(self._driver)
 
-    def statistics_allowed_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="statisticsAllowed"]/..',
-            )
+    def audit_trail_option(self) -> '_AuditTrailOption':
+        return _AuditTrailOption(self._driver)
 
-    def get_statistics_allowed_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="statisticsAllowed"]//span'
-            ).get_text()
+    def force_encrypted_connections_option(self) -> '_TrafficEncryptionOption':
+        return _TrafficEncryptionOption(self._driver)
 
-    def get_statistics_allowed_description(self) -> str:
-        return PageText(self._driver, '//label[@id="statisticsAllowedHelpBlock"]').get_text()
+    def video_traffic_encryption_option(self) -> '_VideoTrafficEncryptionOption':
+        return _VideoTrafficEncryptionOption(self._driver)
 
-    def optimize_camera_settings_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="cameraSettingsOptimization"]/..',
-            )
-
-    def get_optimize_camera_settings_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="cameraSettingsOptimization"]//span'
-            ).get_text()
-
-    def audit_trail_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="auditTrailEnabled"]/..'
-            )
-
-    def get_audit_trail_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="auditTrailEnabled"]//span'
-            ).get_text()
-
-    def get_audit_trail_description(self) -> str:
-        return PageText(self._driver, '//label[@id="auditTrailEnabledHelpBlock"]').get_text()
-
-    def force_encrypted_connections_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="trafficEncryptionForced"]/..',
-            )
-
-    def get_force_encrypted_connections_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="trafficEncryptionForced"]//span'
-            ).get_text()
-
-    def force_encrypted_connections_description(self) -> str:
-        return PageText(self._driver, '//label[@id="trafficEncryptionForced"]').get_text()
-
-    def video_traffic_encryption_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="videoTrafficEncryptionForced"]/..',
-            )
-
-    def get_video_traffic_encryption_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="videoTrafficEncryptionForced"]//span'
-            ).get_text()
-
-    def video_traffic_encryption_description(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@id="videoTrafficEncryptionForcedHelpBlock"]',
-            ).get_text()
-
-    def limit_session_duration_option(self) -> Checkbox:
-        return Checkbox(
-            self._driver,
-            '//label[@class="nx-checkbox"]/*[@id="sessionLimitMinutesToggle"]/..',
-            )
-
-    def get_limit_session_duration_option_text(self) -> str:
-        return PageText(
-            self._driver,
-            '//label[@for="sessionLimitMinutesToggle"]//span'
-            ).get_text()
-
-    def get_session_limit_spin_box(self) -> SpinBox:
-        return SpinBox(self._driver, '//input[@id="generic-numeric"]')
-
-    def get_session_duration_limit(self) -> int:
-        # The default value is in days. Recalculation according to hours and
-        # minutes are not implemented.
-        return int(self.get_session_limit_spin_box().get_value())
-
-    def set_session_duration_limit(self, value: int):
-        self.get_session_limit_spin_box().set_value(str(value))
+    def limit_session_duration_option(self) -> '_LimitSessionOption':
+        return _LimitSessionOption(self._driver)
 
     def save(self):
         self._get_save_button().click()
@@ -444,22 +355,142 @@ class _GeneralSettings:
     def _get_save_and_cancel_buttons_container(self) -> Pane:
         return Pane(self._driver, '//div[contains(@class, "d-flex ng-star-inserted")]')
 
-    def get_session_limit_warning(self) -> PageText:
+
+class _GeneralSettingsOption:
+
+    def __init__(
+            self,
+            checkbox: Checkbox,
+            label: PageText,
+            description: Optional[PageText] = None,
+            ):
+        self._checkbox = checkbox
+        self._label = label
+        self._description = description
+
+    def click(self):
+        self._checkbox.click()
+
+    def enable(self):
+        self._checkbox.select()
+
+    def disable(self):
+        self._checkbox.unselect()
+
+    def is_enabled(self) -> bool:
+        return self._checkbox.is_checked()
+
+    def label_text(self) -> str:
+        return self._label.get_text()
+
+    def description_text(self) -> str:
+        if self._description is None:
+            raise RuntimeError(f'{self}: Description not found')
+        return self._description.get_text()
+
+
+class _AutoDiscoveryOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        checkbox = Checkbox(
+            driver,
+            '//label[@class="nx-checkbox"]/*[@id="autoDiscoveryEnabled"]/..',
+            )
+        label = PageText(driver, '//label[@for="autoDiscoveryEnabled"]//span')
+        description = PageText(driver, '//label[@id="autoDiscoveryEnabledHelpBlock"]')
+        super().__init__(checkbox, label, description)
+
+
+class _StatisticAllowedOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        checkbox = Checkbox(driver, '//label[@class="nx-checkbox"]/*[@id="statisticsAllowed"]/..')
+        label = PageText(driver, '//label[@for="statisticsAllowed"]//span')
+        description = PageText(driver, '//label[@id="statisticsAllowedHelpBlock"]')
+        super().__init__(checkbox, label, description)
+
+
+class _OptimizeCameraSettingsOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        checkbox = Checkbox(
+                driver,
+                '//label[@class="nx-checkbox"]/*[@id="cameraSettingsOptimization"]/..',
+                )
+        label = PageText(driver, '//label[@for="cameraSettingsOptimization"]//span')
+        super().__init__(checkbox, label)
+
+
+class _AuditTrailOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        checkbox = Checkbox(driver, '//label[@class="nx-checkbox"]/*[@id="auditTrailEnabled"]/..')
+        label = PageText(driver, '//label[@for="auditTrailEnabled"]//span')
+        description = PageText(driver, '//label[@id="auditTrailEnabledHelpBlock"]')
+        super().__init__(checkbox, label, description)
+
+
+class _TrafficEncryptionOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        checkbox = Checkbox(
+                driver,
+                '//label[@class="nx-checkbox"]/*[@id="trafficEncryptionForced"]/..',
+                )
+        label = PageText(driver, '//label[@for="trafficEncryptionForced"]//span')
+        description = PageText(driver, '//label[@id="trafficEncryptionForced"]')
+        super().__init__(checkbox, label, description)
+
+
+class _VideoTrafficEncryptionOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        checkbox = Checkbox(
+                driver,
+                '//label[@class="nx-checkbox"]/*[@id="videoTrafficEncryptionForced"]/..',
+                )
+        label = PageText(driver, '//label[@for="videoTrafficEncryptionForced"]//span')
+        description = PageText(driver, '//label[@id="videoTrafficEncryptionForcedHelpBlock"]')
+        super().__init__(checkbox, label, description)
+
+
+class _LimitSessionOption(_GeneralSettingsOption):
+
+    def __init__(self, driver: WebDriver):
+        self._driver = driver
+        checkbox = Checkbox(
+                self._driver,
+                '//label[@class="nx-checkbox"]/*[@id="sessionLimitMinutesToggle"]/..',
+                )
+        label = PageText(self._driver, '//label[@for="sessionLimitMinutesToggle"]//span')
+        super().__init__(checkbox, label)
+
+    def get_spin_box(self) -> SpinBox:
+        return SpinBox(self._driver, '//input[@id="generic-numeric"]')
+
+    def get_duration_limit_minutes(self) -> int:
+        multipliers = {
+            'days': 24 * 60,
+            'hours': 60,
+            'minutes': 1,
+            }
+        self.get_unit_of_time()
+        return multipliers.get(self.get_unit_of_time()) * int(self.get_spin_box().get_value())
+
+    def set_duration_limit(self, value: int):
+        self.get_spin_box().set_value(str(value))
+
+    def get_warning_message(self) -> PageText:
         return PageText(self._driver, '//*[contains(@class, "alert-block-text")]')
 
-    def get_limit_session_duration_drop_down(self) -> DropDown:
+    def get_drop_down(self) -> DropDown:
         return DropDown(self._driver, '//button[@id="serverTimeUnitSelect"]')
 
-    def get_limit_session_duration_unit_of_time(self) -> str:
-        return self.get_limit_session_duration_drop_down().text()
+    def get_unit_of_time(self) -> str:
+        return self.get_drop_down().text()
 
-    def set_limit_session_duration_unit_of_time(self, value: str):
-        supported_values = ['days', 'hours', 'minutes']
-        if value not in supported_values:
-            raise RuntimeError(
-                f'Unsupported unit of time {value!r}. Supported values: {supported_values}',
-                )
-        self.get_limit_session_duration_drop_down().click()
+    def set_unit_of_time(self, value: Literal['days', 'hours', 'minutes']):
+        self.get_drop_down().click()
         pane_locator = '//div[@class="dropdown-menu"]'
         dropdown_pane = Pane(self._driver, pane_locator)
         dropdown_pane.wait_until_visible()

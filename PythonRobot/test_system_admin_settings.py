@@ -26,53 +26,59 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         assert not settings.is_ok_button_visible()
         assert not settings.is_cancel_button_visible()
         # System settings block.
-        assert settings.get_autodiscovery_option_text() == rb.ENABLE_AUTO_DISCOVERY_TEXT
-        assert settings.get_autodiscovery_description() == rb.ENABLE_AUTO_DISCOVERY_DESCRIPTION_TEXT
-        assert settings.get_statistics_allowed_option_text() == rb.SEND_ANONYMOUS_USAGE_TEXT
-        assert settings.get_statistics_allowed_description() == rb.SEND_ANONYMOUS_USAGE_DESCRIPTION_TEXT
-        assert settings.get_optimize_camera_settings_option_text() == rb.ALLOW_SYSTEM_OPTIMIZE_TEXT
+        autodiscovery_option = settings.autodiscovery_option()
+        assert autodiscovery_option.label_text() == rb.ENABLE_AUTO_DISCOVERY_TEXT
+        assert autodiscovery_option.description_text() == rb.ENABLE_AUTO_DISCOVERY_DESCRIPTION_TEXT
+        statistics_allowed_option = settings.statistics_allowed_option()
+        assert statistics_allowed_option.label_text() == rb.SEND_ANONYMOUS_USAGE_TEXT
+        assert statistics_allowed_option.description_text() == rb.SEND_ANONYMOUS_USAGE_DESCRIPTION_TEXT
+        optimize_camera_settings_option = settings.optimize_camera_settings_option()
+        assert optimize_camera_settings_option.label_text() == rb.ALLOW_SYSTEM_OPTIMIZE_TEXT
         # Security block.
-        assert settings.get_audit_trail_option_text() == rb.ENABLE_AUDIT_TRAIL_TEXT
-        assert settings.get_audit_trail_description() == rb.ENABLE_AUDIT_TRAIL_DESCRIPTION_TEXT
-        assert settings.get_force_encrypted_connections_option_text() == rb.ALLOW_ONLY_SECURE_TEXT
-        assert settings.get_video_traffic_encryption_option_text() == rb.ENCRYPT_VIDEO_TRAFFIC_TEXT
-        assert settings.video_traffic_encryption_description() == rb.ENCRYPT_VIDEO_TRAFFIC_DESCRIPTION_TEXT
-        assert settings.get_limit_session_duration_option_text() == rb.LIMIT_SESSION_DURATION_TEXT
+        audit_trail_option = settings.audit_trail_option()
+        assert audit_trail_option.label_text() == rb.ENABLE_AUDIT_TRAIL_TEXT
+        assert audit_trail_option.description_text() == rb.ENABLE_AUDIT_TRAIL_DESCRIPTION_TEXT
+        force_encrypted_connections_option = settings.force_encrypted_connections_option()
+        assert force_encrypted_connections_option.label_text() == rb.ALLOW_ONLY_SECURE_TEXT
+        video_traffic_encryption_option = settings.video_traffic_encryption_option()
+        assert video_traffic_encryption_option.label_text() == rb.ENCRYPT_VIDEO_TRAFFIC_TEXT
+        assert video_traffic_encryption_option.description_text() == rb.ENCRYPT_VIDEO_TRAFFIC_DESCRIPTION_TEXT
+        limit_session_duration_option = settings.limit_session_duration_option()
+        assert limit_session_duration_option.label_text() == rb.LIMIT_SESSION_DURATION_TEXT
 
         server_settings = server.api.get_system_settings_from_server()
-        assert settings.autodiscovery_option().is_checked() == server_settings['autoDiscoveryEnabled']
-        assert settings.statistics_allowed_option().is_checked() == server_settings['statisticsAllowed']
-        assert settings.optimize_camera_settings_option().is_checked() == server_settings['cameraSettingsOptimization']
-        assert settings.audit_trail_option().is_checked() == server_settings['auditTrailEnabled']
-        assert settings.force_encrypted_connections_option().is_checked() == server_settings['trafficEncryptionForced']
-        assert settings.video_traffic_encryption_option().is_checked() == server_settings['videoTrafficEncryptionForced']
-        session_limit_minutes = server_settings['sessionLimitMinutes']
-        assert session_limit_minutes == 43200
-        assert settings.limit_session_duration_option().is_checked()
+        assert autodiscovery_option.is_enabled() == server_settings['autoDiscoveryEnabled']
+        assert statistics_allowed_option.is_enabled() == server_settings['statisticsAllowed']
+        assert optimize_camera_settings_option.is_enabled() == server_settings['cameraSettingsOptimization']
+        assert audit_trail_option.is_enabled() == server_settings['auditTrailEnabled']
+        assert force_encrypted_connections_option.is_enabled() == server_settings['trafficEncryptionForced']
+        assert video_traffic_encryption_option.is_enabled() == server_settings['videoTrafficEncryptionForced']
+        assert server_settings['sessionLimitMinutes'] == 43200
+        assert limit_session_duration_option.is_enabled()
 
         # https://networkoptix.testrail.net/index.php?/cases/view/69736
         # https://networkoptix.testrail.net/index.php?/cases/view/65697
-        assert settings.autodiscovery_option().is_checked()
-        assert settings.statistics_allowed_option().is_checked()
-        assert settings.optimize_camera_settings_option().is_checked()
-        assert settings.audit_trail_option().is_checked()
-        assert settings.force_encrypted_connections_option().is_checked()
-        assert not settings.video_traffic_encryption_option().is_checked()
-        assert settings.limit_session_duration_option().is_checked()
+        assert autodiscovery_option.is_enabled()
+        assert statistics_allowed_option.is_enabled()
+        assert optimize_camera_settings_option.is_enabled()
+        assert audit_trail_option.is_enabled()
+        assert force_encrypted_connections_option.is_enabled()
+        assert not video_traffic_encryption_option.is_enabled()
+        assert limit_session_duration_option.is_enabled()
 
         administrator = server.get_cloud_admin()
         HeaderNav(driver).log_out()
         LandingPage(driver)
         HeaderNav(driver).log_in_button().click()
         LoginDialog(driver).basic_cloud_login(administrator.email, administrator.password)
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.autodiscovery_option().is_checked()
-        assert settings.statistics_allowed_option().is_checked()
-        assert settings.optimize_camera_settings_option().is_checked()
-        assert settings.audit_trail_option().is_checked()
-        assert settings.force_encrypted_connections_option().is_checked()
-        assert not settings.video_traffic_encryption_option().is_checked()
-        assert settings.limit_session_duration_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert autodiscovery_option.is_enabled()
+        assert statistics_allowed_option.is_enabled()
+        assert optimize_camera_settings_option.is_enabled()
+        assert audit_trail_option.is_enabled()
+        assert force_encrypted_connections_option.is_enabled()
+        assert not video_traffic_encryption_option.is_enabled()
+        assert limit_session_duration_option.is_enabled()
 
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
@@ -87,57 +93,60 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
 
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        settings.autodiscovery_option().unselect()
+        settings.autodiscovery_option().disable()
         settings.save()
         server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', False)
-        settings.statistics_allowed_option().unselect()
+        settings.statistics_allowed_option().disable()
         settings.save()
         server.api.wait_until_server_setting_to_be('statisticsAllowed', False)
-        settings.optimize_camera_settings_option().unselect()
+        settings.optimize_camera_settings_option().disable()
         settings.save()
         server.api.wait_until_server_setting_to_be('cameraSettingsOptimization', False)
 
         # https://networkoptix.testrail.net/index.php?/cases/view/65724
-        settings.audit_trail_option().unselect()
+        audit_trail_option = settings.audit_trail_option()
+        audit_trail_option.disable()
         settings.get_unsaved_changes_label().wait_until_not_visible()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
         settings.cancel()
         settings.get_unsaved_changes_label().wait_until_visible()
-        assert settings.audit_trail_option().is_checked()
-        settings.force_encrypted_connections_option().unselect()
-        settings.video_traffic_encryption_option().select()
+        assert audit_trail_option.is_enabled()
+        force_encrypted_connections_option = settings.force_encrypted_connections_option()
+        force_encrypted_connections_option.disable()
+        video_traffic_encryption_option = settings.video_traffic_encryption_option()
+        video_traffic_encryption_option.enable()
         # The limit session checkbox may be not in view. Scroll page to avoid this.
         # TODO: Find a more accurate method to scroll the page to an element.
         driver.scroll_to_bottom()
-        settings.limit_session_duration_option().select()
-        warning_message = settings.get_warning_message().get_text()
+        limit_session_duration_option = settings.limit_session_duration_option()
+        limit_session_duration_option.enable()
         expected_warning_message = 'Encrypting video traffic may significantly increase CPU usage.'
-        assert warning_message == expected_warning_message
+        assert settings.get_warning_message().get_text() == expected_warning_message
         settings.get_unsaved_changes_label().wait_until_not_visible()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
         settings.cancel()
-        assert settings.audit_trail_option().is_checked()
-        assert settings.force_encrypted_connections_option().is_checked()
-        assert not settings.video_traffic_encryption_option().is_checked()
-        assert settings.limit_session_duration_option().is_checked()
+        assert audit_trail_option.is_enabled()
+        assert force_encrypted_connections_option.is_enabled()
+        assert not video_traffic_encryption_option.is_enabled()
+        assert limit_session_duration_option.is_enabled()
 
-        settings.audit_trail_option().unselect()
+        audit_trail_option.disable()
         settings.save()
         server.api.wait_until_server_setting_to_be('auditTrailEnabled', False)
-        settings.force_encrypted_connections_option().unselect()
+        force_encrypted_connections_option.disable()
         settings.save()
         server.api.wait_until_server_setting_to_be('trafficEncryptionForced', False)
-        settings.video_traffic_encryption_option().select()
+        video_traffic_encryption_option.enable()
         settings.save()
         server.api.wait_until_server_setting_to_be('videoTrafficEncryptionForced', True)
-        settings.limit_session_duration_option().unselect()
+        limit_session_duration_option.disable()
         settings.save()
         server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
-        settings.limit_session_duration_option().select()
+        limit_session_duration_option.enable()
         new_session_limit_value_days = 1
-        settings.set_session_duration_limit(new_session_limit_value_days)
+        limit_session_duration_option.set_duration_limit(new_session_limit_value_days)
         settings.save()
         server.api.wait_until_server_setting_to_be(
             'sessionLimitMinutes',
@@ -158,9 +167,12 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
 
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
         server_settings = server.api.get_system_settings_from_server()
-        settings.autodiscovery_option().click()
-        settings.statistics_allowed_option().click()
-        settings.optimize_camera_settings_option().click()
+        autodiscovery_option = settings.autodiscovery_option()
+        autodiscovery_option.click()
+        statistics_allowed_option = settings.statistics_allowed_option()
+        statistics_allowed_option.click()
+        optimize_camera_settings_option = settings.optimize_camera_settings_option()
+        optimize_camera_settings_option.click()
         settings.get_unsaved_changes_label().wait_until_not_visible(1)
         settings.save()
         server.api.wait_until_server_setting_to_be(
@@ -178,18 +190,18 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
 
         server_settings = server.api.get_system_settings_from_server()
         # https://networkoptix.testrail.net/index.php?/cases/view/69738
-        settings.autodiscovery_option().click()
-        settings.statistics_allowed_option().click()
-        settings.optimize_camera_settings_option().click()
+        autodiscovery_option.click()
+        statistics_allowed_option.click()
+        optimize_camera_settings_option.click()
         settings.get_unsaved_changes_label().wait_until_not_visible(1)
         settings.cancel()
         settings.get_unsaved_changes_label().wait_until_visible(1)
         auto_discovery_enabled = server_settings['autoDiscoveryEnabled']
         statistics_allowed = server_settings['statisticsAllowed']
         camera_settings_optimized = server_settings['cameraSettingsOptimization']
-        assert settings.autodiscovery_option().is_checked() == auto_discovery_enabled
-        assert settings.statistics_allowed_option().is_checked() == statistics_allowed
-        assert settings.optimize_camera_settings_option().is_checked() == camera_settings_optimized
+        assert autodiscovery_option.is_enabled() == auto_discovery_enabled
+        assert statistics_allowed_option.is_enabled() == statistics_allowed
+        assert optimize_camera_settings_option.is_enabled() == camera_settings_optimized
         server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', auto_discovery_enabled)
         server.api.wait_until_server_setting_to_be('statisticsAllowed', statistics_allowed)
         server.api.wait_until_server_setting_to_be(
@@ -260,9 +272,12 @@ def changing_page_without_saving_changes(server: Mediaserver):
         owner = server.get_cloud_owner()
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        settings.autodiscovery_option().unselect()
-        settings.statistics_allowed_option().unselect()
-        settings.optimize_camera_settings_option().unselect()
+        autodiscovery_option = settings.autodiscovery_option()
+        autodiscovery_option.disable()
+        statistics_allowed_option = settings.statistics_allowed_option()
+        statistics_allowed_option.disable()
+        optimize_camera_settings_option = settings.optimize_camera_settings_option()
+        optimize_camera_settings_option.disable()
         settings.get_unsaved_changes_label().wait_until_not_visible(1)
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
@@ -274,9 +289,9 @@ def changing_page_without_saving_changes(server: Mediaserver):
 
         HeaderNav(driver).click_tab_by_name('Settings')
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        settings.autodiscovery_option().unselect()
-        settings.statistics_allowed_option().unselect()
-        settings.optimize_camera_settings_option().unselect()
+        autodiscovery_option.disable()
+        statistics_allowed_option.disable()
+        optimize_camera_settings_option.disable()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
         SystemAdmin(driver).get_information_tab().click()
@@ -284,9 +299,9 @@ def changing_page_without_saving_changes(server: Mediaserver):
         modal_window.cancel()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
-        assert not settings.autodiscovery_option().is_checked()
-        assert not settings.statistics_allowed_option().is_checked()
-        assert not settings.optimize_camera_settings_option().is_checked()
+        assert not autodiscovery_option.is_enabled()
+        assert not statistics_allowed_option.is_enabled()
+        assert not optimize_camera_settings_option.is_enabled()
 
         SystemAdmin(driver).get_information_tab().click()
         modal_window.wait_until_visible()
@@ -298,9 +313,9 @@ def changing_page_without_saving_changes(server: Mediaserver):
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
         assert not settings.is_ok_button_visible()
         assert not settings.is_cancel_button_visible()
-        assert settings.autodiscovery_option().is_checked()
-        assert settings.statistics_allowed_option().is_checked()
-        assert settings.optimize_camera_settings_option().is_checked()
+        assert autodiscovery_option.is_enabled()
+        assert statistics_allowed_option.is_enabled()
+        assert optimize_camera_settings_option.is_enabled()
 
 
 def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Mediaserver):
@@ -318,32 +333,35 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
         server.api.set_system_settings({'autoDiscoveryEnabled': False})
         driver.refresh()
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.autodiscovery_option().is_checked()
+        autodiscovery_option = settings.autodiscovery_option()
+        assert not autodiscovery_option.is_enabled()
 
         server.api.set_system_settings({'autoDiscoveryEnabled': True})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.autodiscovery_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert autodiscovery_option.is_enabled()
 
         server.api.set_system_settings({'statisticsAllowed': False})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.statistics_allowed_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        statistics_allowed_option = settings.statistics_allowed_option()
+        assert not statistics_allowed_option.is_enabled()
 
         server.api.set_system_settings({'statisticsAllowed': True})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.statistics_allowed_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert statistics_allowed_option.is_enabled()
 
         server.api.set_system_settings({'cameraSettingsOptimization': False})
         driver.refresh()
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.optimize_camera_settings_option().is_checked()
+        optimize_camera_settings_option = settings.optimize_camera_settings_option()
+        assert not optimize_camera_settings_option.is_enabled()
 
         server.api.set_system_settings({'cameraSettingsOptimization': True})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.optimize_camera_settings_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert optimize_camera_settings_option.is_enabled()
 
         server.api.set_system_settings({
             'autoDiscoveryEnabled': False,
@@ -351,10 +369,10 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
             'cameraSettingsOptimization': False,
             })
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.autodiscovery_option().is_checked()
-        assert not settings.statistics_allowed_option().is_checked()
-        assert not settings.optimize_camera_settings_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert not autodiscovery_option.is_enabled()
+        assert not statistics_allowed_option.is_enabled()
+        assert not optimize_camera_settings_option.is_enabled()
 
         server.api.set_system_settings({
             'autoDiscoveryEnabled': True,
@@ -362,53 +380,57 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
             'cameraSettingsOptimization': True,
             })
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.autodiscovery_option().is_checked()
-        assert settings.statistics_allowed_option().is_checked()
-        assert settings.optimize_camera_settings_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert autodiscovery_option.is_enabled()
+        assert statistics_allowed_option.is_enabled()
+        assert optimize_camera_settings_option.is_enabled()
 
         # https://networkoptix.testrail.net/index.php?/cases/view/65723
         server.api.set_system_settings({'auditTrailEnabled': False})
         driver.refresh()
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.audit_trail_option().is_checked()
+        audit_trail_option = settings.audit_trail_option()
+        assert not audit_trail_option.is_enabled()
 
         server.api.set_system_settings({'auditTrailEnabled': True})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.audit_trail_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert audit_trail_option.is_enabled()
 
         server.api.set_system_settings({'trafficEncryptionForced': False})
         driver.refresh()
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.force_encrypted_connections_option().is_checked()
+        force_encrypted_connections_option = settings.force_encrypted_connections_option()
+        assert not force_encrypted_connections_option.is_enabled()
 
         server.api.set_system_settings({'trafficEncryptionForced': True})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.force_encrypted_connections_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert force_encrypted_connections_option.is_enabled()
 
         server.api.set_system_settings({'videoTrafficEncryptionForced': False})
         driver.refresh()
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.video_traffic_encryption_option().is_checked()
+        video_traffic_encryption_option = settings.video_traffic_encryption_option()
+        assert not video_traffic_encryption_option.is_enabled()
 
         server.api.set_system_settings({'videoTrafficEncryptionForced': True})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.video_traffic_encryption_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert video_traffic_encryption_option.is_enabled()
 
         server.api.set_system_settings({'sessionLimitMinutes': 0})
         driver.refresh()
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert not settings.limit_session_duration_option().is_checked()
+        limit_session_duration_option = settings.limit_session_duration_option()
+        assert not limit_session_duration_option.is_enabled()
 
-        new_session_limit_days = 1
-        server.api.set_system_settings({'sessionLimitMinutes': new_session_limit_days * 24 * 60})
+        new_session_limit_minutes = 24 * 60
+        server.api.set_system_settings({'sessionLimitMinutes': new_session_limit_minutes})
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.limit_session_duration_option().is_checked()
-        assert settings.get_session_duration_limit() == new_session_limit_days
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert limit_session_duration_option.is_enabled()
+        assert limit_session_duration_option.get_duration_limit_minutes() == new_session_limit_minutes
 
 
 def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
@@ -423,24 +445,27 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
 
-        settings.autodiscovery_option().unselect()
-        assert not settings.autodiscovery_option().is_checked()
+        autodiscovery_option = settings.autodiscovery_option()
+        autodiscovery_option.disable()
+        assert not autodiscovery_option.is_enabled()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
-        settings.statistics_allowed_option().unselect()
-        assert not settings.statistics_allowed_option().is_checked()
+        statistics_allowed_option = settings.statistics_allowed_option()
+        statistics_allowed_option.disable()
+        assert not statistics_allowed_option.is_enabled()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
-        settings.optimize_camera_settings_option().unselect()
-        assert not settings.optimize_camera_settings_option().is_checked()
+        optimize_camera_settings_option = settings.optimize_camera_settings_option()
+        optimize_camera_settings_option.disable()
+        assert not optimize_camera_settings_option.is_enabled()
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
 
         driver.refresh()
-        settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        assert settings.autodiscovery_option().is_checked()
-        assert settings.statistics_allowed_option().is_checked()
-        assert settings.optimize_camera_settings_option().is_checked()
+        SystemAdmin(driver).get_tab_settings().get_general_section()
+        assert autodiscovery_option.is_enabled()
+        assert statistics_allowed_option.is_enabled()
+        assert optimize_camera_settings_option.is_enabled()
 
 
 def system_settings_block_is_not_available_when_the_system_is_offline(server: Mediaserver):
@@ -476,59 +501,58 @@ def check_limit_session_duration(server: Mediaserver):
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
 
         limit_session_option = settings.limit_session_duration_option()
-        assert limit_session_option.is_checked()
-        default_session_limit_days = 30
-        assert settings.get_session_duration_limit() == default_session_limit_days
-        assert settings.get_limit_session_duration_unit_of_time() == 'days'
+        assert limit_session_option.is_enabled()
+        default_session_limit_minutes = 30 * 24 * 60
+        assert limit_session_option.get_duration_limit_minutes() == default_session_limit_minutes
+        assert limit_session_option.get_unit_of_time() == 'days'
 
-        limit_session_option.unselect()
-        settings.get_session_limit_spin_box().wait_until_not_clickable()
-        settings.get_limit_session_duration_drop_down().wait_until_not_clickable()
+        limit_session_option.disable()
+        limit_session_option.get_spin_box().wait_until_not_clickable()
+        limit_session_option.get_drop_down().wait_until_not_clickable()
         expected_warning = 'Unlimited user session lifetime threatens overall system security'
-        assert settings.get_session_limit_warning().get_text() == expected_warning
+        assert limit_session_option.get_warning_message().get_text() == expected_warning
         assert settings.is_ok_button_visible()
         assert settings.is_cancel_button_visible()
 
-        limit_session_option.select()
+        limit_session_option.enable()
         settings.get_unsaved_changes_label().wait_until_visible()
         assert not settings.is_ok_button_visible()
         assert not settings.is_cancel_button_visible()
-        settings.get_session_limit_warning().wait_until_not_visible()
-        settings.get_session_limit_spin_box().wait_until_clickable()
-        settings.get_limit_session_duration_drop_down().wait_until_clickable()
+        limit_session_option.get_warning_message().wait_until_not_visible()
+        limit_session_option.get_spin_box().wait_until_clickable()
+        limit_session_option.get_drop_down().wait_until_clickable()
 
-        settings.set_limit_session_duration_unit_of_time('minutes')
-        settings.set_session_duration_limit(0)
-        minimum_session_limit = 1
-        assert settings.get_session_duration_limit() == minimum_session_limit
+        limit_session_option.set_unit_of_time('minutes')
+        limit_session_option.set_duration_limit(0)
+        minimum_session_limit_minutes = 1
+        assert limit_session_option.get_duration_limit_minutes() == minimum_session_limit_minutes
 
-        settings.get_session_limit_spin_box().input_value('hjkl')
-        assert settings.get_session_duration_limit() == minimum_session_limit
-        settings.get_session_limit_spin_box().input_value('&*(')
-        assert settings.get_session_duration_limit() == minimum_session_limit
+        limit_session_option.get_spin_box().input_value('hjkl')
+        assert limit_session_option.get_duration_limit_minutes() == minimum_session_limit_minutes
+        limit_session_option.get_spin_box().input_value('&*(')
+        assert limit_session_option.get_duration_limit_minutes() == minimum_session_limit_minutes
 
-        new_session_limit = 654
-        settings.set_session_duration_limit(new_session_limit)
+        new_session_limit_minutes = 654
+        limit_session_option.set_duration_limit(new_session_limit_minutes)
         settings.save()
-        assert settings.get_session_duration_limit() == new_session_limit
+        assert limit_session_option.get_duration_limit_minutes() == new_session_limit_minutes
 
-        settings.set_session_duration_limit(minimum_session_limit)
+        limit_session_option.set_duration_limit(minimum_session_limit_minutes)
         settings.save()
-        assert settings.get_session_duration_limit() == minimum_session_limit
+        assert limit_session_option.get_duration_limit_minutes() == minimum_session_limit_minutes
 
-        settings.set_limit_session_duration_unit_of_time('days')
-        warning_page_text = settings.get_session_limit_warning()
+        limit_session_option.set_unit_of_time('days')
         new_session_limit_days = 600
-        settings.set_session_duration_limit(new_session_limit_days)
+        limit_session_option.set_duration_limit(new_session_limit_days)
         expected_warning_2 = 'The recommended maximum user session lifetime is 30 days.'
-        assert warning_page_text.get_text() == expected_warning_2
+        assert limit_session_option.get_warning_message().get_text() == expected_warning_2
 
-        settings.set_limit_session_duration_unit_of_time('hours')
+        limit_session_option.set_unit_of_time('hours')
         new_session_limit_hours = 600
-        settings.set_session_duration_limit(new_session_limit_hours)
+        limit_session_option.set_duration_limit(new_session_limit_hours)
         settings.save()
-        assert settings.get_limit_session_duration_unit_of_time() == 'days'
-        assert settings.get_session_duration_limit() == new_session_limit_hours // 24
+        assert limit_session_option.get_unit_of_time() == 'days'
+        assert limit_session_option.get_duration_limit_minutes() == new_session_limit_hours * 60
 
 
 if __name__ == '__main__':
