@@ -658,7 +658,6 @@ class CloudPortalAPI(object):
             verify=False,
             )
         activate_response.raise_for_status()
-        return f"{self.env}/authorize/activate/{activate_response.json()}"
 
     def disconnect_server_via_api(self, auth, system_id, password, email):
         body = {
