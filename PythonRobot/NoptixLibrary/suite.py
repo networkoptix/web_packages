@@ -158,6 +158,7 @@ class Mediaserver:
         self._container = None
         self._primary_port = None
         self._secondary_port = None
+        self._default_settings = None
 
     def stop(self):
         self._container.stop()
@@ -195,6 +196,7 @@ class Mediaserver:
         self.api.api_connect_to_cloud(bind_info)
         self.id = bind_info['systemId']
         self._cloud_owner = cloud_owner
+        self._default_settings = self.get_settings()
         # Wait while the cloud owner settings are applied.
         time.sleep(.1)
 
@@ -336,6 +338,26 @@ class Mediaserver:
         _auth = [self._cloud_owner.email, self._cloud_owner.password]
         _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
         print(f'MediaServer {self.name} shared with {user.email} as {access_role}.')
+
+    def reset_settings(self):
+        self.api.set_system_settings(self._default_settings)
+
+    def get_settings(self) -> dict:
+        return self.api.get_system_settings_from_server()
+
+    def wait_until_setting_is(self, setting: str, expected_value):
+        timeout_seconds = 5
+        started_at = time.monotonic()
+        while True:
+            current_setting_value = self.get_settings()[setting]
+            if current_setting_value == expected_value:
+                return
+            if time.monotonic() - started_at > timeout_seconds:
+                raise RuntimeError(
+                    f'Server setting {setting} value is {current_setting_value}.'
+                    f' Expected value: {expected_value}',
+                    )
+            time.sleep(1)
 
 
 class CloudAccount:

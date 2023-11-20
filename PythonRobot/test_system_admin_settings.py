@@ -17,7 +17,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
     [tags]    system    cloud    webadmin    system settings    C69736    C65697
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -46,7 +46,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         limit_session_duration_option = settings.limit_session_duration_option()
         assert limit_session_duration_option.label_text() == rb.LIMIT_SESSION_DURATION_TEXT
 
-        server_settings = server.api.get_system_settings_from_server()
+        server_settings = server.get_settings()
         assert autodiscovery_option.is_enabled() == server_settings['autoDiscoveryEnabled']
         assert statistics_allowed_option.is_enabled() == server_settings['statisticsAllowed']
         assert optimize_camera_settings_option.is_enabled() == server_settings['cameraSettingsOptimization']
@@ -59,10 +59,10 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         # https://networkoptix.testrail.net/index.php?/cases/view/69736
         # https://networkoptix.testrail.net/index.php?/cases/view/65697
         assert autodiscovery_option.is_enabled()
-        assert statistics_allowed_option.is_enabled()
+        assert not statistics_allowed_option.is_enabled()
         assert optimize_camera_settings_option.is_enabled()
         assert audit_trail_option.is_enabled()
-        assert force_encrypted_connections_option.is_enabled()
+        assert not force_encrypted_connections_option.is_enabled()
         assert not video_traffic_encryption_option.is_enabled()
         assert limit_session_duration_option.is_enabled()
 
@@ -73,10 +73,10 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
         LoginDialog(driver).basic_cloud_login(administrator.email, administrator.password)
         SystemAdmin(driver).get_tab_settings().get_general_section()
         assert autodiscovery_option.is_enabled()
-        assert statistics_allowed_option.is_enabled()
+        assert not statistics_allowed_option.is_enabled()
         assert optimize_camera_settings_option.is_enabled()
         assert audit_trail_option.is_enabled()
-        assert force_encrypted_connections_option.is_enabled()
+        assert not force_encrypted_connections_option.is_enabled()
         assert not video_traffic_encryption_option.is_enabled()
         assert limit_session_duration_option.is_enabled()
 
@@ -86,7 +86,7 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C65722    C65724    C69740
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -95,13 +95,13 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
         settings.autodiscovery_option().disable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', False)
-        settings.statistics_allowed_option().disable()
+        server.wait_until_setting_is('autoDiscoveryEnabled', False)
+        settings.statistics_allowed_option().enable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('statisticsAllowed', False)
+        server.wait_until_setting_is('statisticsAllowed', True)
         settings.optimize_camera_settings_option().disable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('cameraSettingsOptimization', False)
+        server.wait_until_setting_is('cameraSettingsOptimization', False)
 
         # https://networkoptix.testrail.net/index.php?/cases/view/65724
         audit_trail_option = settings.audit_trail_option()
@@ -113,7 +113,7 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         settings.get_unsaved_changes_label().wait_until_visible()
         assert audit_trail_option.is_enabled()
         force_encrypted_connections_option = settings.force_encrypted_connections_option()
-        force_encrypted_connections_option.disable()
+        force_encrypted_connections_option.enable()
         video_traffic_encryption_option = settings.video_traffic_encryption_option()
         video_traffic_encryption_option.enable()
         # The limit session checkbox may be not in view. Scroll page to avoid this.
@@ -128,27 +128,27 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
         assert settings.is_cancel_button_visible()
         settings.cancel()
         assert audit_trail_option.is_enabled()
-        assert force_encrypted_connections_option.is_enabled()
+        assert not force_encrypted_connections_option.is_enabled()
         assert not video_traffic_encryption_option.is_enabled()
         assert limit_session_duration_option.is_enabled()
 
         audit_trail_option.disable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('auditTrailEnabled', False)
-        force_encrypted_connections_option.disable()
+        server.wait_until_setting_is('auditTrailEnabled', False)
+        force_encrypted_connections_option.enable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('trafficEncryptionForced', False)
+        server.wait_until_setting_is('trafficEncryptionForced', True)
         video_traffic_encryption_option.enable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('videoTrafficEncryptionForced', True)
+        server.wait_until_setting_is('videoTrafficEncryptionForced', True)
         limit_session_duration_option.disable()
         settings.save()
-        server.api.wait_until_server_setting_to_be('sessionLimitMinutes', 0)
+        server.wait_until_setting_is('sessionLimitMinutes', 0)
         limit_session_duration_option.enable()
         new_session_limit_value_days = 1
         limit_session_duration_option.set_duration_limit(new_session_limit_value_days)
         settings.save()
-        server.api.wait_until_server_setting_to_be(
+        server.wait_until_setting_is(
             'sessionLimitMinutes',
             new_session_limit_value_days * 24 * 60,
             )
@@ -159,14 +159,14 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
 
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
-        server_settings = server.api.get_system_settings_from_server()
+        server_settings = server.get_settings()
         autodiscovery_option = settings.autodiscovery_option()
         autodiscovery_option.click()
         statistics_allowed_option = settings.statistics_allowed_option()
@@ -175,20 +175,20 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
         optimize_camera_settings_option.click()
         settings.get_unsaved_changes_label().wait_until_not_visible(1)
         settings.save()
-        server.api.wait_until_server_setting_to_be(
+        server.wait_until_setting_is(
             'autoDiscoveryEnabled',
             not server_settings['autoDiscoveryEnabled'],
             )
-        server.api.wait_until_server_setting_to_be(
+        server.wait_until_setting_is(
             'statisticsAllowed',
             not server_settings['statisticsAllowed'],
             )
-        server.api.wait_until_server_setting_to_be(
+        server.wait_until_setting_is(
             'cameraSettingsOptimization',
             not server_settings['cameraSettingsOptimization'],
             )
 
-        server_settings = server.api.get_system_settings_from_server()
+        server_settings = server.get_settings()
         # https://networkoptix.testrail.net/index.php?/cases/view/69738
         autodiscovery_option.click()
         statistics_allowed_option.click()
@@ -202,9 +202,9 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
         assert autodiscovery_option.is_enabled() == auto_discovery_enabled
         assert statistics_allowed_option.is_enabled() == statistics_allowed
         assert optimize_camera_settings_option.is_enabled() == camera_settings_optimized
-        server.api.wait_until_server_setting_to_be('autoDiscoveryEnabled', auto_discovery_enabled)
-        server.api.wait_until_server_setting_to_be('statisticsAllowed', statistics_allowed)
-        server.api.wait_until_server_setting_to_be(
+        server.wait_until_setting_is('autoDiscoveryEnabled', auto_discovery_enabled)
+        server.wait_until_setting_is('statisticsAllowed', statistics_allowed)
+        server.wait_until_setting_is(
             'cameraSettingsOptimization',
             camera_settings_optimized,
             )
@@ -215,7 +215,7 @@ def system_and_security_settings_block_is_not_available_for_other_users(server: 
     [tags]    system    cloud    webadmin    system settings    C69737    C65698
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         viewer = server.get_cloud_viewer()
@@ -266,7 +266,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C69739
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -275,7 +275,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
         autodiscovery_option = settings.autodiscovery_option()
         autodiscovery_option.disable()
         statistics_allowed_option = settings.statistics_allowed_option()
-        statistics_allowed_option.disable()
+        statistics_allowed_option.enable()
         optimize_camera_settings_option = settings.optimize_camera_settings_option()
         optimize_camera_settings_option.disable()
         settings.get_unsaved_changes_label().wait_until_not_visible(1)
@@ -290,7 +290,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
         HeaderNav(driver).click_tab_by_name('Settings')
         settings = SystemAdmin(driver).get_tab_settings().get_general_section()
         autodiscovery_option.disable()
-        statistics_allowed_option.disable()
+        statistics_allowed_option.enable()
         optimize_camera_settings_option.disable()
         assert settings.is_save_button_visible()
         assert settings.is_cancel_button_visible()
@@ -300,7 +300,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
         assert settings.is_save_button_visible()
         assert settings.is_cancel_button_visible()
         assert not autodiscovery_option.is_enabled()
-        assert not statistics_allowed_option.is_enabled()
+        assert statistics_allowed_option.is_enabled()
         assert not optimize_camera_settings_option.is_enabled()
 
         SystemAdmin(driver).get_information_tab().click()
@@ -314,7 +314,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
         assert not settings.is_save_button_visible()
         assert not settings.is_cancel_button_visible()
         assert autodiscovery_option.is_enabled()
-        assert statistics_allowed_option.is_enabled()
+        assert not statistics_allowed_option.is_enabled()
         assert optimize_camera_settings_option.is_enabled()
 
 
@@ -323,7 +323,7 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
     [tags]    system    cloud    webadmin    system settings    C69741    C65723
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -438,7 +438,7 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
     [tags]    system    cloud    webadmin    system settings    C69742
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -451,8 +451,8 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
         assert settings.is_save_button_visible()
         assert settings.is_cancel_button_visible()
         statistics_allowed_option = settings.statistics_allowed_option()
-        statistics_allowed_option.disable()
-        assert not statistics_allowed_option.is_enabled()
+        statistics_allowed_option.enable()
+        assert statistics_allowed_option.is_enabled()
         assert settings.is_save_button_visible()
         assert settings.is_cancel_button_visible()
         optimize_camera_settings_option = settings.optimize_camera_settings_option()
@@ -464,7 +464,7 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
         driver.refresh()
         SystemAdmin(driver).get_tab_settings().get_general_section()
         assert autodiscovery_option.is_enabled()
-        assert statistics_allowed_option.is_enabled()
+        assert not statistics_allowed_option.is_enabled()
         assert optimize_camera_settings_option.is_enabled()
 
 
@@ -473,7 +473,7 @@ def system_settings_block_is_not_available_when_the_system_is_offline(server: Me
     [tags]    system    cloud    webadmin    system settings    C69744
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()
@@ -493,7 +493,7 @@ def check_limit_session_duration(server: Mediaserver):
     [tags]    C65703
     """
     with get_chrome() as driver:
-        server.api.reset_general_settings()
+        server.reset_settings()
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
         owner = server.get_cloud_owner()

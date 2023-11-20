@@ -239,28 +239,3 @@ class ServerApi:
             )
         settings_response.raise_for_status()
         return settings_response.json()
-
-    def wait_until_server_setting_to_be(self, setting: str, expected_value):
-        timeout_seconds = 5
-        started_at = time.monotonic()
-        while True:
-            current_setting_value = self.get_system_settings_from_server()[setting]
-            if current_setting_value == expected_value:
-                return
-            if time.monotonic() - started_at > timeout_seconds:
-                raise RuntimeError(
-                    f'Server setting {setting} value is {current_setting_value}.'
-                    f' Expected value: {expected_value}',
-                    )
-
-    def reset_general_settings(self):
-        default_settings = {
-            'autoDiscoveryEnabled': True,
-            'statisticsAllowed': True,
-            'cameraSettingsOptimization': True,
-            'auditTrailEnabled': True,
-            'trafficEncryptionForced': True,
-            'videoTrafficEncryptionForced': False,
-            'sessionLimitMinutes': 43200,
-            }
-        self.set_system_settings(default_settings)
