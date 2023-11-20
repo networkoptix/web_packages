@@ -473,6 +473,39 @@ class MenuNode:
         self._element.click()
 
 
+class ListItem:
+    def __init__(self, driver: WebDriver, element: Element):
+        self._driver = driver
+        self._element = element
+
+    def text(self) -> str:
+        return self._element.text()
+
+    def get_attribute(self, attribute: str) -> str:
+        return self._element.get_attribute(attribute)
+
+    def get_child_own_text(self, child_locator: str) -> Optional[str]:
+        child = self._element.find_element(child_locator)
+        if child.is_exists():
+            return child.own_text().strip()
+        return None
+
+
+class ListWrapper:
+    def __init__(self, driver: WebDriver, locator):
+        self._driver = driver
+        self._locator = locator
+
+    def get_items(self) -> Sequence[ListItem]:
+        element = Element(self._driver, self._locator)
+        items = []
+        for position in range(1, 9999):
+            item = element.find_element("/li", position)
+            if not item.is_exists():
+                return items
+            items.append(ListItem(self._driver, item))
+
+
 class NxCheckbox:
 
     def __init__(self, driver: WebDriver, element: WebElement):

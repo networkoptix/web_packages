@@ -144,6 +144,10 @@ class LoginDialog:
         label = PageText(self._driver, translated_xpath)
         label.wait_until_visible()
 
+    def wait_until_login_finished(self):
+        PageText(
+            self._driver, '//nx-account-settings-select//*[contains(@class, "displayed-name")]').wait_until_visible()
+
 
 class AccountActivatedPane:
 

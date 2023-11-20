@@ -49,12 +49,13 @@ class Suite:
         cloud_account.activate()
         return cloud_account
 
-    def create_local_server(self, suite_name: Optional[str] = None):
+    def create_local_server(self, vms_version: str, suite_name: Optional[str] = None):
         if suite_name is None:
             suite_name = 'test_cloud_server_'
         self._server_count += 1
         suite_name = f"{suite_name}_{self._server_count}"
-        server = Mediaserver(suite_name, self.run_id).set_up(primary_port=7001, secondary_port=7002)
+        server = Mediaserver(suite_name, self.run_id).set_up(
+            vms_version=vms_version, primary_port=7001, secondary_port=7002)
         self._exit_stack.callback(server.tear_down)
         return server
 
@@ -63,8 +64,9 @@ class Suite:
             cloud_owner: 'CloudAccount',
             suite_name: Optional[str] = None,
             cloud_users: Mapping[str, 'CloudAccount'] = MappingProxyType({}),
+            vms_version: str = '5.1',
             ) -> 'Mediaserver':
-        server = self.create_local_server(suite_name)
+        server = self.create_local_server(vms_version, suite_name)
         server.connect_to_cloud(cloud_owner)
         for user in cloud_users:
             _CLOUD_API.add_user_to_cloud(
@@ -120,6 +122,7 @@ class Suite:
                                    f"System status is {system_status}, "
                                    f"System state of health is {state_of_health}",
                                    )
+            time.sleep(2)
 
     def create_cloud_accounts(self, permissions: Optional[Collection[str]] = None):
         cloud_users = {}
@@ -275,13 +278,13 @@ class Mediaserver:
                 slave.id = self.id
                 break
 
-    def set_up(self, primary_port: int, secondary_port: int):
+    def set_up(self, vms_version: str, primary_port: int, secondary_port: int):
         # Create a docker server.
         # Mimic configuration from JSON files.
         self.name = self.suite_name + str(self.run_id)
         self._primary_port = primary_port
         self._secondary_port = secondary_port
-        docker_configuration = ContainerConfiguration("5.1", "latest").\
+        docker_configuration = ContainerConfiguration(vms_version, "latest").\
             with_env({'CLOUD_HOST': 'test.ft-cloud.hdw.mx'}).\
             with_exposed(tcp_ports=[primary_port, secondary_port])
         self._container = docker_configuration.create(_DOCKER_API, self.name)

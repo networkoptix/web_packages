@@ -87,6 +87,11 @@ class Element:
         self.wait_until_visible()
         return self._get_element().text
 
+    def own_text(self):
+        self.wait_until_visible()
+        # Getting a text without sub elements
+        return self._driver.execute_script('return arguments[0].childNodes[0].textContent;', self._get_element())
+
     def value_of_css_property(self, style_property: str):
         self.wait_until_visible()
         return self._get_element().value_of_css_property(style_property)
@@ -172,6 +177,13 @@ class Element:
             return self._driver.find_element(By.XPATH, self._locator)
         except NoSuchElementException:
             raise ElementNotInDOM(f"Element with locator {self._locator!r} not in DOM")
+
+    def is_exists(self) -> bool:
+        try:
+            self._driver.find_element(By.XPATH, self._locator)
+        except NoSuchElementException:
+            return False
+        return True
 
 
 class ElementNotInDOM(Exception):

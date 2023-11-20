@@ -11,6 +11,7 @@ from ._wrappers import DropDown
 from ._wrappers import DropDownOption
 from ._wrappers import Image
 from ._wrappers import Link
+from ._wrappers import ListWrapper
 from ._wrappers import MenuNode
 from ._wrappers import ModalWindow
 from ._wrappers import NxCheckbox
@@ -38,6 +39,7 @@ __all__ = [
     'ElementVisible',
     'Image',
     'Link',
+    'ListWrapper',
     'MenuNode',
     'ModalWindow',
     'NxCheckbox',
