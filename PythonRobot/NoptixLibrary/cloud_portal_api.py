@@ -3,7 +3,6 @@ import json
 import logging
 import os
 import random
-import re
 import string
 import tempfile
 import time
@@ -16,6 +15,7 @@ from typing import Mapping
 import certifi
 import requests
 import urllib3
+from urllib.parse import unquote
 from requests import HTTPError
 from requests.auth import HTTPBasicAuth
 from requests.auth import HTTPDigestAuth
@@ -642,9 +642,7 @@ class CloudPortalAPI(object):
         while True:
             code = self.get_code_from_api(email, "activate_account")
             if code != "Does not exist":
-                code = re.sub(r'%3D', '=', code)
-                code = re.sub(r'%2B', '+', code)
-                return code
+                return unquote(code)
             if time.monotonic() - started_at > timeout:
                 raise TimeoutError("Failed to retrieve activation code after %dsec", timeout)
             time.sleep(0.5)
