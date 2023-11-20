@@ -1,4 +1,4 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { debounceTime } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
@@ -22,9 +22,13 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     roles: string[];
     selectedGroups: string[];
     selectedGroupsList: { name: string; description: string }[];
+    user$$ = signal<NxUser>({} as NxUser);
     filteredGroups$$ = computed<MultiSelectItem[]>(() => {
         const groups = this.system.userManager.groups$$() || [];
         const isLdap = this.isLdap$$();
+        // Use user$$ to trigger groups update on user change as LDAP to LDAP change will not trigger groups$$
+        this.user$$();
+
         return this.processLdapGroups([...groups], isLdap);
     });
     accountBlockFooterSettings$$ = computed(() => ({
@@ -82,6 +86,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     }
                 });
             this.userForm.emit(this.userGroupForm);
+            this.user$$.set(user);
         });
     }
 

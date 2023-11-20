@@ -95,7 +95,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.items = this.items.map(obj => ({ ...obj }));
         this.updateModel();
 
-        event.preventDefault();
+        event?.preventDefault();
     }
 
     change(item: MultiSelectItem): void {
@@ -184,7 +184,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     ngOnChanges({ itemsOrig }: NgChanges<NxMultiSelectDropdown>): void {
-        if (itemsOrig.currentValue) {
+        if (itemsOrig?.currentValue) {
             this.items = itemsOrig.currentValue.map(obj => ({ ...obj }));
             this.updateItems();
         }
