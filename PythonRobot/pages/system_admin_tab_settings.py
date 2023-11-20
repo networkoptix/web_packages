@@ -296,7 +296,7 @@ class _GeneralSettings:
     def _get_cancel_button(self) -> Button:
         return Button(self._driver, '//button[text()="Cancel"]')
 
-    def is_ok_button_visible(self) -> bool:
+    def is_save_button_visible(self) -> bool:
         return self._get_save_button().is_visible()
 
     def is_cancel_button_visible(self) -> bool:
