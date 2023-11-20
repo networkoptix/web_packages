@@ -9,6 +9,7 @@ from selenium.webdriver.remote.webdriver import WebDriver
 from selenium.webdriver.remote.webelement import WebElement
 
 from generic_elements import ElementNotVisible
+from generic_elements import ElementNotInDOM
 from generic_elements._generic_element import Element
 
 
@@ -16,8 +17,8 @@ class Button:
 
     def __init__(self, driver: WebDriver, locator):
         self.driver = driver
-        self._element = Element(self.driver, locator)
         self.locator = locator
+        self._element = Element(self.driver, self.locator)
 
     def click(self):
         self._element.click()
@@ -60,6 +61,13 @@ class Button:
     def hover(self):
         return self._element.hover()
 
+    def verify_not_stale_or_refresh(self):
+        try:
+            self._element.wait_until_in_dom(timeout=2)
+        except ElementNotInDOM:
+            self._element = Element(self.driver, self.locator)
+        else:
+            return True
 
 class Checkbox:
 
