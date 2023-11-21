@@ -637,6 +637,7 @@ export class NxLayoutGridTreeComponent {
                       tooltip: this.ACTIONS_LANG.create.tooltip,
                       action: ($event, node) => {
                           $event.preventDefault();
+                          $event.stopPropagation();
                           const newLayout = this.layoutStateService.createNewLocalLayout();
                           this.dataSource$
                               .pipe(
