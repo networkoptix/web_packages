@@ -146,7 +146,7 @@
     "EMAIL ALREADY REGISTERED TEXT": "アカウントは既に存在します",
     "EMAIL INVALID TEXT": "無効なメールアドレス",
     "CURRENT PASSWORD IS REQUIRED TEXT": "現在のパスワードが必要です",
-    "PASSWORD SPECIAL CHARS TEXT": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けてください",
+    "PASSWORD SPECIAL CHARS TEXT": "英数字とキーボードの記号のみを使用し、先頭と末尾の空白を避けてください",
     "PASSWORD TOO SHORT TEXT": "パスワードは8文字以上必要です",
     "PASSWORD TOO COMMON TEXT": "このパスワードは世界で最も一般的なパスワードです",
     "PASSWORD IS WEAK TEXT": "パスワードをより強力にするために、数字、大文字、小文字、特殊記号を使用してください",
