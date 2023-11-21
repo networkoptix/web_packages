@@ -17,6 +17,7 @@ class Button:
     def __init__(self, driver: WebDriver, locator):
         self.driver = driver
         self._element = Element(self.driver, locator)
+        self.locator = locator
 
     def click(self):
         self._element.click()
@@ -106,6 +107,7 @@ class PageText:
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
+        self.locator = locator
 
     def get_text(self) -> str:
         return self._element.text()
@@ -262,6 +264,9 @@ class SearchBar:
 
     def get_attribute(self, attribute: str):
         return self._element.get_attribute(attribute)
+
+    def input_text(self, text: str):
+        self._element.send_keys(text)
 
 
 class Table:

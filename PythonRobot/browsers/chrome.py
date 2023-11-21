@@ -18,7 +18,7 @@ class ChromeBrowser(Chrome):
         self._options.add_argument("--log-level=3")
 
     def location_should_be(self, url: str):
-        timeout_sec = 1
+        timeout_sec = 10
         started_at = time.monotonic()
         while True:
             current_url = self.current_url
