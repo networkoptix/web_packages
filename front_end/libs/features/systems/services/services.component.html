@@ -1,0 +1,102 @@
+@if(debugMode) {
+<div>
+    <h1>{{ 'Testing section(Will not exist later)' }}</h1>
+    <button (click)="this.systemId$.next(this.systemId$.value)">
+        {{ 'Refresh Page' }}
+    </button>
+</div>
+<div>
+    <h1>{{ 'System Info' }}</h1>
+    <pre>{{ systemInfo$ | async | json }}</pre>
+</div>
+}
+<!--    Putting this as a spacer prettier does weird things with no control syntax   -->
+@if (systemSassReport$ | async; as sassReport) {
+<div>
+    <h1>{{ 'System Sass Report' }}</h1>
+    <pre>{{ sassReport | json }}</pre>
+</div>
+}
+<div>
+    <nx-table
+        class="services-table"
+        [set-id-prop-name]="'serviceId'"
+        [data]="servicesForTable$$()"
+        (onRowClick)="openChangeDialog($event)"
+    >
+        <ng-template #header>
+            <div
+                *ngFor="let head of headers"
+                [attr.id]="head.name"
+                [attr.data-sort]="head.sort"
+                [style.justify-content]="head.align || 'flex-start'"
+            >
+                <span
+                    class="head-title ellipsis caption"
+                    title="{{ head.value }}"
+                    >{{ head.value }}</span
+                >
+            </div>
+        </ng-template>
+        <ng-template
+            #rows
+            let-row
+        >
+            <div>{{ row.displayName }}</div>
+            <div>{{ row.quantity }}</div>
+            <div>{{ row.remaining }}</div>
+        </ng-template>
+    </nx-table>
+</div>
+<div class="fake-dialog">
+    <h1>{{ 'Change Service' }}</h1>
+    <form [formGroup]="serviceForm">
+        <div class="form-group">
+            <label
+                for="service"
+                class=""
+                >{{ 'Service Name' }}</label
+            >
+            <nx-dropdown
+                id="service"
+                [selected]="serviceForm.controls.service.value"
+                (selectedChange)="serviceForm.controls.service.setValue($event)"
+                [placeholder]="'Select a service'"
+            >
+                @for (service of availableServices$$(); track service.id) {
+                <nx-simple-dropdown-item [value]="service.id"
+                    >{{ service.displayName }}
+                </nx-simple-dropdown-item>
+                } @empty {
+                <nx-simple-dropdown-item [disabled]="true"
+                    >No Services Available
+                </nx-simple-dropdown-item>
+                }
+            </nx-dropdown>
+        </div>
+        <div class="form-group">
+            <label for="servicesCount">{{ 'Total' }}</label>
+            <input
+                class="w-100"
+                formControlName="quantity"
+                id="servicesCount"
+                type="number"
+            />
+        </div>
+        <div class="d-flex justify-content-end">
+            <button
+                class="btn btn-secondary mr-2"
+                (click)="resetForm()"
+            >
+                {{ 'Cancel' }}
+            </button>
+            <button
+                class="btn btn-primary"
+                (click)="updateService()"
+                [disabled]="!serviceForm.controls.service.value"
+            >
+                {{ 'Update service' }}
+            </button>
+        </div>
+    </form>
+</div>

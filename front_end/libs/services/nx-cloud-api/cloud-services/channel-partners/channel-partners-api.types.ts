@@ -160,3 +160,22 @@ export interface CreateOrganizationUser {
 }
 
 export type UpdateOrganizationUser = CreateOrganizationUser;
+
+/* System Services */
+export interface Service {
+    quantity: number;
+}
+
+export interface SystemServices {
+    services: Record<string, Service>;
+}
+export interface ServiceData {
+    id: string;
+    type: string;
+    state: string;
+    displayName: string;
+    description: string;
+    createdByChannelPartner: string;
+    parameters: Record<string, string | number>;
+    created: string;
+}

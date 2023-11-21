@@ -203,7 +203,7 @@ export class NxSystemsService {
         if (system.ownerFullName && system.ownerFullName.trim() !== '') {
             return system.ownerFullName;
         }
-        return system.ownerAccountEmail;
+        return system?.ownerAccountEmail || '';
     }
 
     getSystem(

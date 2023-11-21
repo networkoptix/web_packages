@@ -303,6 +303,17 @@
     }
 }
 
+.services-table {
+    .nx-new-table {
+        .header {
+            grid-template-columns: 542px 368px 178px;
+        }
+        .big-row {
+            grid-template-columns: 542px 368px 178px;
+        }
+    }
+}
+
 .table-wrapper {
     overflow-x: scroll;
     box-shadow: none;

@@ -10,7 +10,7 @@ import {
     implementsCloudServiceApi,
 } from '../base-cloud-service-api';
 
-import type {
+import {
     ChannelPartner,
     ChannelPartnerRole,
     ChannelPartnerUser,
@@ -31,6 +31,8 @@ import type {
     PaginatedOrganizationList,
     PaginatedCloudSystemList,
     Page,
+    ServiceData,
+    SystemServices,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -92,6 +94,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     private orgUrl(parts: (string | number)[], trailing: boolean = true): string {
         return slashJoin(['organizations', ...parts], { leading: true, trailing });
+    }
+
+    private cloudSystemUrl(parts: (string | number)[], trailing: boolean = true): string {
+        return slashJoin(['cloud_systems', ...parts], { leading: true, trailing });
     }
 
     /* Channel Partners */
@@ -228,6 +234,25 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
             getResults(),
         );
     };
+
+    /* System Services */
+    getSystem(id: string): Observable<unknown> {
+        return this.get(this.cloudSystemUrl([id]));
+    }
+    getSystemSassReport(id: string): Observable<unknown> {
+        return this.get(this.cloudSystemUrl([id, 'saas_report']));
+    }
+
+    getSystemServiceQuantity(id: string): Observable<SystemServices> {
+        return this.get(this.cloudSystemUrl([id, 'service_quantity']));
+    }
+    getSystemServices(id: string): Observable<ServiceData[]> {
+        return this.get(this.cloudSystemUrl([id, 'services']));
+    }
+
+    updateSystemServiceQuantity(id: string, data: SystemServices): Observable<SystemServices> {
+        return this.patch(this.cloudSystemUrl([id, 'service_quantity']), { body: data });
+    }
 
     /* Internal */
 }
