@@ -10,6 +10,7 @@ import uuid
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, Permission
+from django.contrib.postgres.fields import ArrayField
 from django.core.cache import caches
 from django.db import models
 from django.db.models.functions import Concat, Greatest
@@ -372,8 +373,13 @@ class LocalRecordingUsage(models.Model):
             cloud_system.usage_issue_detected = False
         cloud_system.save()
 
+class ChannelPartnerRoles:
+    ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
+    MANAGER = uuid.UUID('00000000-0000-4000-8000-000000000002')
+    ACCOUNTANT = uuid.UUID('00000000-0000-4000-8000-000000000003')
 
 class ChannelPartnerRole(models.Model):
+
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     permissions = models.ManyToManyField(Permission)
@@ -460,9 +466,14 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def allowed_role_names(self, perm: str):
         return [role.name for role in ChannelPartnerRole.objects.filter(permissions__codename=perm)]
 
+    def allowed_role_uuid(self, perm: str) -> list:
+        roles = get_channel_partner_roles()
+        ids = {r['id'] for _, r in roles.items() if perm in r['permissions']}
+        return list(ids)
+
     def has_perm(self, user: CloudUser, perm: str):
-        allowed_role_names = self.allowed_role_names(perm)
-        return self.users.filter(pk=user.pk, channelpartnertouser__roles__has_any_keys=allowed_role_names).exists()
+        allowed_role_uuid = self.allowed_role_uuid(perm)
+        return self.users.filter(pk=user.pk, channelpartnertouser__roles__overlap=allowed_role_uuid).exists()
 
     def can_access(self, user: CloudUser):
         return ((self.users.filter(pk=user.pk).exists()
@@ -482,7 +493,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, ChannelPartnerPermissions.manage_users):
             return True
-        elif (self.users.filter(channelpartnertouser__roles__has_any_keys=self.allowed_role_names(
+        elif (self.users.filter(channelpartnertouser__roles__overlap=self.allowed_role_uuid(
             ChannelPartnerPermissions.manage_users)).count() == 0
               and self.parent_channel_partner
               and self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user)):
@@ -738,7 +749,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 class ChannelPartnerToUser(models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE)
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
-    roles = models.JSONField(default=list)
+    roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
@@ -750,10 +761,23 @@ class ChannelPartnerToUser(models.Model):
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
 
+    @property
+    def roles_name(self):
+        roles = get_channel_partner_roles()
+        return [roles[r]['name'] for r in self.roles]
+
+class OrganizationRoles:
+    ORGANIZATION_ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
+    ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000002')
+    POWER_USER = uuid.UUID('00000000-0000-4000-8000-000000000003')
+    SYSTEM_HEALTH_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000004')
+    ADVANCED_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000005')
+    VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000006')
+    LIVE_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000007')
+    SYSTEM_GROUPS = uuid.UUID('00000000-0000-4000-8000-000000000008')
+
 
 class OrganizationRole(models.Model):
-    ORGANIZATION_ADMINISTRATOR = uuid.UUID(int=1, version=4)
-    SYSTEM_HEALTH_VIEWER = uuid.UUID(int=4, version=4)
 
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
@@ -776,8 +800,8 @@ class OrganizationPermissions:
 
 class ChannelPartnerAccessLevel:
     # leave empty spaces for additional levels
-    FULL = OrganizationRole.ORGANIZATION_ADMINISTRATOR
-    PRIVACY_MODE = OrganizationRole.SYSTEM_HEALTH_VIEWER
+    FULL = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+    PRIVACY_MODE = OrganizationRoles.SYSTEM_HEALTH_VIEWER
     NO_ACCESS = Empty
 
     LEVEL_CHOICES = [
@@ -804,7 +828,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
                                           blank=False, default=ChannelPartnerStates.ACTIVE)
     channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
-                                                     default=OrganizationRole.ORGANIZATION_ADMINISTRATOR,
+                                                     default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
     attributes = models.JSONField(default=dict)
@@ -913,19 +937,27 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def allowed_role_names(self, perm: str):
         return [role.name for role in OrganizationRole.objects.filter(permissions__codename=perm)]
 
+    def allowed_role_uuid(self, perm: str) -> list:
+        roles = get_organization_roles()
+        ids = {r['id'] for _, r in roles.items() if perm in r['permissions']}
+        return list(ids)
+
     def has_perm(self, user: CloudUser, perm: str):
-        allowed_role_names = self.allowed_role_names(perm)
-        if self.users.filter(pk=user.pk, organizationtouser__roles__has_any_keys=allowed_role_names, organizationtouser__system_group=None).exists():
+        allowed_role_uuid = self.allowed_role_uuid(perm)
+        if self.users.filter(pk=user.pk,
+                             organizationtouser__roles__overlap=allowed_role_uuid,
+                             organizationtouser__system_group=None).exists():
             return True
-        channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner,
-                                                                      roles__has_any_keys=['Administrator',
-                                                                                           'Manager']).exists()
+        channel_partner_manager = ChannelPartnerToUser.objects.filter(
+            user=user, channel_partner=self.channel_partner,
+            roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        ).exists()
         if channel_partner_manager:
-            if self.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR:
-                role = 'Organization Administrator'
+            if self.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR:
+                role = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
             else:
-                role = 'System Health Viewer'
-            return role in allowed_role_names
+                role = OrganizationRoles.SYSTEM_HEALTH_VIEWER
+            return role in allowed_role_uuid
         return False
 
     def can_access(self, user: CloudUser):
@@ -946,7 +978,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, OrganizationPermissions.manage_users):
             return True
-        elif self.users.filter(organizationtouser__roles__has_any_keys=self.allowed_role_names(
+        elif self.users.filter(organizationtouser__roles__overlap=self.allowed_role_uuid(
                 OrganizationPermissions.manage_users)
         ).count() == 0 and self.channel_partner.can_add_or_remove_organizations(user):
             return True
@@ -1110,7 +1142,7 @@ class OrganizationToUser(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
     system_group = models.ForeignKey('SystemGroup', blank=True, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
-    roles = models.JSONField(default=list)
+    roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
@@ -1140,6 +1172,11 @@ class OrganizationToUser(models.Model):
     #         ]
     #     )
     #     return data
+
+    @property
+    def roles_name(self):
+        roles = get_organization_roles()
+        return [roles[r]['name'] for r in self.roles]
 
 
 class ChannelPartnerService(models.Model):
@@ -1533,3 +1570,33 @@ class BillingModel(models.Model):
 #
 #     def can_manage(self, user: CloudUser):
 #         return self.system_group.organization.can_manage_users(user)
+def get_channel_partner_roles() -> Dict[uuid.UUID | str, dict]:
+    if roles := caches['local'].get('channel_partner_roles', {}):
+        return roles
+    for role in ChannelPartnerRole.objects.all().prefetch_related('permissions'):
+        if not role.permissions:
+            continue
+        roles[role.id] = roles[role.name] = {
+            'permissions': [p.codename for p in role.permissions.all()],
+            'name': role.name,
+            'id': role.id
+        }
+    caches['local'].set('channel_partner_roles', roles)
+    return roles
+
+
+def get_organization_roles() -> Dict[uuid.UUID | str, dict]:
+    if roles := caches['local'].get('organization_roles', {}):
+        return roles
+    for role in OrganizationRole.objects.all().prefetch_related('permissions'):
+        if not role.permissions:
+            continue
+        roles[role.id] = roles[role.name] = {
+            'permissions': [p.codename for p in role.permissions.all()],
+            'name': role.name,
+            'id': role.id,
+            'system_role': role.system_role,
+            'system_role_uuid': role.system_role_uuid
+        }
+    caches['local'].set('organization_roles', roles)
+    return roles

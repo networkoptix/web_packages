@@ -8,13 +8,14 @@ users = [
 
 def add_users_or_channel_partner(channel_partner: ChannelPartner):
     for user in users:
-        ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner, roles=['Administrator'])
+        ChannelPartnerToUser.objects.get_or_create(
+            user=user, channel_partner=channel_partner, roles=[ChannelPartnerRoles.ADMINISTRATOR])
 
 
 def add_users_to_organization(organization: Organization):
     for user in users:
         OrganizationToUser.objects.get_or_create(user=user, organization=organization,
-                                                 roles=['Organization Administrator'])
+                                                 roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
 
 
 def run(instance_name, host_name):

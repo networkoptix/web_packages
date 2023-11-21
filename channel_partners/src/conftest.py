@@ -1,15 +1,18 @@
 import random
 import typing
-from uuid import uuid4
+import uuid
+from uuid import uuid4, UUID
 
 import pytest
+from django.db.models import Q
 from model_bakery import baker
 
 from rest_framework.test import APIRequestFactory
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
     ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
     ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
-    ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates
+    ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole, \
+    OrganizationRoles, SystemGroup
 
 
 @pytest.fixture()
@@ -58,14 +61,14 @@ def default_channel_partner(cloud_test_host, cloud_test_nx_channel_partner):
 @pytest.fixture()
 def default_organization(default_channel_partner):
     return Organization.objects.create(name="Default Organization", channel_partner=default_channel_partner,
-                                       channel_partner_access_level_id=OrganizationRole.ORGANIZATION_ADMINISTRATOR)
+                                       channel_partner_access_level_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
 
 
 @pytest.fixture()
 def organization_factory(default_channel_partner):
 
     def factory(name=None, channel_partner=default_channel_partner,
-                channel_partner_access_level_id=OrganizationRole.ORGANIZATION_ADMINISTRATOR) -> Organization:
+                channel_partner_access_level_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR) -> Organization:
         return Organization.objects.create(
             name=name or f"Organization {uuid4()}",
             channel_partner=channel_partner,
@@ -92,15 +95,17 @@ def channel_partner_factory(default_channel_partner, cloud_test_host):
 def default_org_admin(cloud_user_factory, default_organization):
     user = cloud_user_factory(email='default_org_admin@networkoptix.com')
     return OrganizationToUser.objects.get_or_create(
-        user=user, organization=default_organization, roles=['Organization Administrator'])[0]
+        user=user, organization=default_organization, roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])[0]
 
 
 @pytest.fixture()
 def org_user_factory(cloud_user_factory, default_organization):
-    def factory(email=None, role='Organization Administrator', organization=default_organization) -> OrganizationToUser:
+    def factory(email=None, role: UUID | str = 'Organization Administrator', organization=default_organization) -> OrganizationToUser:
         if not email:
             email = f'u-{uuid4()}@networkoptix.com'
         user = cloud_user_factory(email=email)
+        if not isinstance(role, UUID):
+            role = OrganizationRole.objects.get(name=role).id
         return OrganizationToUser.objects.get_or_create(
             user=user, organization=organization, roles=[role])[0]
 
@@ -109,10 +114,12 @@ def org_user_factory(cloud_user_factory, default_organization):
 
 @pytest.fixture()
 def cp_user_factory(cloud_user_factory, default_channel_partner):
-    def factory(email=None, role='Administrator', channel_partner=default_channel_partner) -> ChannelPartnerToUser:
+    def factory(email=None, role: UUID | str = 'Administrator', channel_partner=default_channel_partner) -> ChannelPartnerToUser:
         if not email:
             email = f'u-{uuid4()}@networkoptix.com'
         user = cloud_user_factory(email=email)
+        if not isinstance(role, UUID):
+            role = ChannelPartnerRole.objects.get(name=role).id
         return ChannelPartnerToUser.objects.get_or_create(
             user=user, channel_partner=channel_partner, roles=[role])[0]
 
@@ -123,7 +130,7 @@ def cp_user_factory(cloud_user_factory, default_channel_partner):
 def default_cp_admin(cloud_user_factory, default_channel_partner):
     user = cloud_user_factory(email='default_cp_admin@networkoptix.com')
     return ChannelPartnerToUser.objects.get_or_create(
-        user=user, channel_partner=default_channel_partner, roles=['Administrator'])[0]
+        user=user, channel_partner=default_channel_partner, roles=[uuid.UUID(int=1, version=4)])[0]
 
 
 @pytest.fixture()
@@ -255,3 +262,10 @@ def service_record_factory():
 
     return factory
 
+
+@pytest.fixture()
+def system_group_factory():
+    def factory(organization, parent=None):
+        return baker.make(SystemGroup, organization=organization, parent=parent)
+
+    return factory

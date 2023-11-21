@@ -4,13 +4,14 @@ from datetime import timedelta
 import pytest
 from dateutil import relativedelta
 from django.core.cache import caches
+from django.db.models import Prefetch
 from model_bakery import baker
 
 from partners.models import ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser, \
-    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates
+    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser
 from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, \
     OrganizationAggDataSerializer, \
-    SystemServiceQuantitySerializer, OrganizationSerializer
+    SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer
 from partners.views import ChannelPartnerViewSet
 from tools.helpers import get_period_start
 
@@ -285,7 +286,6 @@ class TestChannelPartnerSerializer:
 
         def context(cloud_user):
             context = {}
-            context['channel_partner_roles'] = ChannelPartnerRole.objects.all().prefetch_related('permissions')
             context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
             context['request'] = arf.get('/')
             context['request'].user = cloud_user
@@ -296,7 +296,7 @@ class TestChannelPartnerSerializer:
             for data in serializer.data:
                 if str(partner.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
-                    assert data['ownRoles'] == user.roles
+                    assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
                     assert data['ownRoles'] == []
@@ -346,7 +346,6 @@ class TestOrganizationSerializer:
 
         def context(cloud_user):
             context = {}
-            context['organization_roles'] = OrganizationRole.objects.all().prefetch_related('permissions')
             context['organizations_to_user'] = OrganizationToUser.objects.filter(user=cloud_user)
             context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
             context['request'] = arf.get('/')
@@ -358,15 +357,90 @@ class TestOrganizationSerializer:
             for data in serializer.data:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
-                    assert data['ownRoles'] == user.roles
+                    assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
                     assert data['ownRoles'] == []
         organization = orgs[0]
-        org_admin_role = roles.get(id=OrganizationRole.ORGANIZATION_ADMINISTRATOR)
+        org_admin_role = roles.get(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
         organization.channel_partner_access_level = org_admin_role
         organization.save()
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
         assert serializer.data['ownRoles'] == [org_admin_role.name]
+
+
+class TestOrganizationUserSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory,
+              cloud_user_factory, org_user_factory, system_group_factory):
+        self.cp = channel_partner_factory()
+        self.org = organization_factory(channel_partner=self.cp)
+        self.roles = [
+            OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
+            OrganizationRoles.POWER_USER,
+            OrganizationRoles.SYSTEM_HEALTH_VIEWER,
+            OrganizationRoles.VIEWER
+        ]
+        self.groups = [system_group_factory(organization=self.org) for _ in self.roles]
+        self.user = cloud_user_factory(email='test@networkoptix.com')
+        self.other_org = organization_factory(channel_partner=self.cp)
+        self.other_group = system_group_factory(organization=self.other_org)
+
+    def test_create_valid(self):
+        data = {
+            'email': self.user.email,
+            'groupRoles': [
+                {'groupId': self.groups[0].id, 'role': 'Organization Administrator'},
+                {'groupId': self.groups[1].id, 'role': 'Power User'},
+            ]
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        serializer.is_valid()
+        assert not serializer.errors
+
+        serializer.save()
+
+        relations = OrganizationToUser.objects.filter(organization=self.org, user=self.user)
+        assert relations.count() == len(data['groupRoles'])
+        assert relations.filter(system_group=self.groups[0], roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
+        assert relations.filter(system_group=self.groups[1], roles=[OrganizationRoles.POWER_USER])
+
+
+        user = (
+            CloudUser.objects.all().
+            prefetch_related(
+                Prefetch(
+                    'organizationtouser_set',
+                    queryset=OrganizationToUser.objects.all(),
+                    to_attr='organization_relations'
+                )
+            ).distinct().get(email=self.user.email))
+
+        serializer = OrganizationUserSerializer(instance=user)
+
+        assert serializer.data['email'] == self.user.email
+        assert len(serializer.data['groupRoles']) == 2
+        assert all([g_r['roles'] in [['Organization Administrator'], ['Power User']]
+                    for g_r in serializer.data['groupRoles']])
+
+
+    def test_create_invalid_system_group(self):
+        data = {
+            'email': self.user.email,
+            'groupRoles': [
+                {'groupId': self.groups[0].id, 'role': 'Organization Administrator'},
+                {'groupId': self.other_group.id, 'role': 'Power User'},
+            ]
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        serializer.is_valid()
+        assert serializer.errors
+        assert not serializer.errors['groupRoles'][0]
+        assert 'object does not exist' in serializer.errors['groupRoles'][1]['groupId'][0]
+
+
 

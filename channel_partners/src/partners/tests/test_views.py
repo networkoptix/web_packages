@@ -226,20 +226,16 @@ class TestOrganizationUserViewSet:
             "role": role.name
         }
         request = arf.post('/', data=new_user_data, format='json')
-        # httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
         mock_auth_with_user(admin_user)
-        view = OrganizationUserViewSet.as_view({'post': 'create'})
+        view = OrganizationUserViewSet.as_view(actions={'post': 'create'}, detail=True)
         response = view(request, parent_lookup_organization=org.id)
-        # batch_request = httpx_mock.get_request(url=self.batch_url)
-        # batch_data = json.loads(batch_request.content)
+
         assert response.status_code == 200
         assert OrganizationToUser.objects\
-            .filter(user__email=new_user_data["email"], organization=org, roles=[role.name]).exists()
+            .filter(user__email=new_user_data["email"], organization=org, roles__contains=[role.id]).exists()
         assert response.data["email"] == new_user_data["email"]
-        # assert batch_data["items"].__len__() == 1
-        # assert batch_data["items"][0]["users"] == [new_user_data["email"]]
-        # assert batch_data["items"][0]["accessRole"] == role.system_role
-        # assert set(batch_data["items"][0]["systems"]) == {str(s.system_id) for s in systems}
+        assert response.data["roles"] == [role.name]
+
 
     def test_update_200(self, organization_factory, org_user_factory, system_factory,
                     mock_auth_with_user, arf, httpx_mock, mocker):
@@ -256,7 +252,7 @@ class TestOrganizationUserViewSet:
         request = arf.post('/', data=user_data, format='json')
         # httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
         mock_auth_with_user(admin_user)
-        view = OrganizationUserViewSet.as_view({'post': 'create'})
+        view = OrganizationUserViewSet.as_view(actions={'post': 'create'}, detail=True)
         response = view(request, parent_lookup_organization=org.id)
 #         batch_request = httpx_mock.get_request(url=self.batch_url)
 #         batch_data = json.loads(batch_request.content)
@@ -542,7 +538,7 @@ class TestChannelPartnerViewSet:
             for data in response.data['results']:
                 if str(partner.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
-                    assert data['ownRoles'] == user.roles
+                    assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
                     assert data['ownRoles'] == []
@@ -641,7 +637,7 @@ class TestOrganizationViewSet:
             for data in response.data['results']:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
-                    assert data['ownRoles'] == user.roles
+                    assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
                     assert data['ownRoles'] == []

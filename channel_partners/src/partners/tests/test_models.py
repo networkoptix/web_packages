@@ -8,7 +8,7 @@ from model_bakery import baker
 from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser,
     Organization, OrganizationPermissions, ChannelPartnerStates,
-    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent
+    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles
 )
 
 
@@ -241,7 +241,7 @@ class TestOrganization:
 
         # test ORGANIZATION_ADMINISTRATOR
 
-        assert org.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR
+        assert org.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is True
         assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.configure_organization) is True
@@ -250,7 +250,7 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
         #  test SYSTEM_HEALTH_VIEWER
-        org.channel_partner_access_level_id = OrganizationRole.SYSTEM_HEALTH_VIEWER
+        org.channel_partner_access_level_id = OrganizationRoles.SYSTEM_HEALTH_VIEWER
         org.save()
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
         assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is False
@@ -260,7 +260,7 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
 
         #  test SYSTEM_HEALTH_VIEWER.
-        org.channel_partner_access_level_id = OrganizationRole.SYSTEM_HEALTH_VIEWER
+        org.channel_partner_access_level_id = OrganizationRoles.SYSTEM_HEALTH_VIEWER
         org.save()
         assert org.has_perm(admin.user, OrganizationPermissions.manage_users) is False
         assert org.has_perm(admin.user, OrganizationPermissions.manage_systems) is False

@@ -21,6 +21,7 @@ from tools.exception import Conflict
 from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from partners import filters
+from .models import OrganizationRoles, ChannelPartnerRoles
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, IsInternalToken
 from .serializers import *
 # from channel_partners.utils import nx_extend_schema as extend_schema
@@ -138,7 +139,9 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
 
     def destroy(self, request, *args, **kwargs):
         instance = self.get_object()
-        cp_admin_qs = self.queryset.filter(channel_partner=instance.channel_partner, roles__contains="Administrator")
+        cp_admin_qs = self.queryset.filter(
+            channel_partner=instance.channel_partner,
+            roles__contains=[ChannelPartnerRoles.ADMINISTRATOR])
         if not cp_admin_qs.exists() or cp_admin_qs.exclude(pk=instance.pk).exists():
             return super().destroy(request, *args, **kwargs)
         raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
@@ -160,7 +163,6 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        context['channel_partner_roles'] = ChannelPartnerRole.objects.all().prefetch_related('permissions')
         context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
         return context
 
@@ -607,6 +609,12 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage_users))
         return perms
 
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        if self.detail:
+            context['organization'] = self.get_organization()
+        return context
+
     @extend_schema(summary='Get user record for the current user', methods=['GET'])
     @action(methods=['get'], detail=False)
     def self(self, request, *args, **kwargs):
@@ -636,7 +644,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
         organization = self.get_organization()
         self.check_object_permissions(request, organization)
 
-        serializer = self.get_serializer(data=request.data, context={'organization': organization})
+        serializer = self.get_serializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         serializer.save(organization=organization)
         return Response(serializer.data)
@@ -644,7 +652,10 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     def destroy(self, request, *args, **kwargs):
         instance: CloudUser = self.get_object()
         organization = self.get_organization()
-        org_admin_qs = OrganizationToUser.objects.filter(organization=organization, roles__contains="Organization Administrator")
+        org_admin_qs = OrganizationToUser.objects.filter(
+            organization=organization,
+            roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
+        )
         if not org_admin_qs.exists() or org_admin_qs.exclude(user=instance).exists():
             # data = instance.update_user_systems_data(None)
             # make_batch_request(request, data)
@@ -958,9 +969,7 @@ def system_user(request, system_id, email):
     user_rel = system.get_user_role_by_email(email=email)
     if not user_rel:
         raise exceptions.NotFound('User not found in system')
-    # TODO: Use cache
-    roles = OrganizationRole.objects.all().values()
-    serializer = SystemUserSerializer(user_rel, context={'roles': roles})
+    serializer = SystemUserSerializer(user_rel)
 
     return Response(serializer.data)
 
@@ -977,14 +986,8 @@ def system_users(request, system_id, email=None):
     system = CloudSystemId.objects.filter(system_id=system_id).first()
     if not system:
         raise exceptions.NotFound('System not found')
-    # TODO: Use cache
-
     all_user_role_rels = system.get_all_users()
-    if all_user_role_rels:
-        roles = OrganizationRole.objects.all().values()
-    else:
-        roles = []
-    serializer = SystemUserSerializer(all_user_role_rels, many=True, context={'roles': roles})
+    serializer = SystemUserSerializer(all_user_role_rels, many=True)
     return Response(serializer.data)
 
 
