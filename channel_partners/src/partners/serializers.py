@@ -161,8 +161,7 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
     parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', read_only=True)
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False, help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
-    canCreateSubChannels = serializers.BooleanField(source='can_create_sub_channels', default=True, required=False)
-    allowChangingServices = serializers.BooleanField(source='allow_changing_services', default=False, required=False)
+    # allowChangingServices = serializers.BooleanField(source='allow_changing_services', default=False, required=False)
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
@@ -170,7 +169,7 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelPartner
-        exclude = ['cloud_host', 'parent_channel_partner', 'can_create_sub_channels', 'monthly_additional_service_limit', 'support_information']
+        exclude = ['cloud_host', 'parent_channel_partner', 'monthly_additional_service_limit', 'support_information']
         read_only_fields = ['users', 'parentChannelPartner']
 
     @cached_property
@@ -183,11 +182,11 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
             raise exceptions.PermissionDenied(detail=f'User does not have {ChannelPartner.permissions.add_remove_sub_channel_partners} permission for {value.id}.')
         return value
 
-    def validate_allowChangingServices(self, value):
-        if self.instance and self.instance.parent_channel_partner is not None \
-                and not getattr(self.instance.parent_channel_partner, 'allow_changing_services'):
-            raise exceptions.ValidationError(detail='Parent Channel Partner does not allow changing services.')
-        return value
+    # def validate_allowChangingServices(self, value):
+    #     if self.instance and self.instance.parent_channel_partner is not None \
+    #             and not getattr(self.instance.parent_channel_partner, 'allow_changing_services'):
+    #         raise exceptions.ValidationError(detail='Parent Channel Partner does not allow changing services.')
+    #     return value
 
     def update(self, instance: ChannelPartner, validated_data):
         instance.set_attributes(validated_data.get('attributes', {}), partial=self.partial)
@@ -212,7 +211,6 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
     parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', required=True, queryset=ChannelPartner.objects.all())
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
-    canCreateSubChannels = serializers.BooleanField(source='can_create_sub_channels', default=True, required=False)
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit', required=False)
 
     class Meta:

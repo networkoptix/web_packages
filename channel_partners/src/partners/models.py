@@ -412,8 +412,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
-    can_create_sub_channels = models.BooleanField(default=True)
-    allow_changing_services = models.BooleanField(default=False)
+    # allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
 
@@ -501,8 +500,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return False
 
     def can_add_or_remove_sub_chanel_partners(self, user: CloudUser):
-        return self.can_create_sub_channels and self.has_perm(user,
-                                                              ChannelPartnerPermissions.add_remove_sub_channel_partners)
+        return self.has_perm(user, ChannelPartnerPermissions.add_remove_sub_channel_partners)
 
     def can_add_or_remove_organizations(self, user: CloudUser):
         return self.has_perm(user, ChannelPartnerPermissions.add_remove_organizations)
@@ -520,8 +518,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.has_perm(user, ChannelPartnerPermissions.view_service_reports)
 
     def can_modify_organization_service_quantities(self, user: CloudUser):
-        return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)\
-            and self.allow_changing_services
+        # return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities) \
+        #     and self.allow_changing_services
+        return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)
 
 
     # @property
@@ -554,14 +553,14 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 copy.parent_service = service
                 copy.save()
 
-        if not self.allow_changing_services and not new:
-            self.disable_successors_acs()
+        # if not self.allow_changing_services and not new:
+        #     self.disable_successors_acs()
 
-    def disable_successors_acs(self):
-        successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
-        for successor in successors:
-            successor.allow_changing_services = False
-        ChannelPartner.objects.bulk_update(successors, fields=['allow_changing_services'])
+    # def disable_successors_acs(self):
+    #     successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
+    #     for successor in successors:
+    #         successor.allow_changing_services = False
+    #     ChannelPartner.objects.bulk_update(successors, fields=['allow_changing_services'])
 
     def parent_channel_partner_args(self, base_arg='service', secondary_arg='parent_service', suffix_arg='', value=None) -> models.Q:
         """Returns Q object of parent channel partner condtions"""

@@ -80,12 +80,16 @@ def organization_factory(default_channel_partner):
 
 @pytest.fixture()
 def channel_partner_factory(default_channel_partner, cloud_test_host):
-    def factory(name=None, parent_channel_partner=default_channel_partner, cloud_host=cloud_test_host, acs=False) -> ChannelPartner:
+    def factory(name=None,
+                parent_channel_partner=default_channel_partner,
+                cloud_host=cloud_test_host,
+                # acs=False
+                ) -> ChannelPartner:
         return ChannelPartner.objects.create(
             name=name or f"Channel Partner {uuid4()}",
             parent_channel_partner=parent_channel_partner,
             cloud_host=cloud_host,
-            allow_changing_services=acs,
+            # allow_changing_services=acs,
         )
 
     return factory
