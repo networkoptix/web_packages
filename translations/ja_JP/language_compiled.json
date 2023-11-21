@@ -1613,7 +1613,7 @@
     "Use light theme": "ライトテーマを使用する",
     "Use new activation key or one of the inactive keys.": "新しいアクティベーションキーまたはいずれかの非アクティブキーを使用してください。",
     "Use numbers, upper and lower case letters and special characters to make your password stronger": "大文字と小文字の文字、特殊記号を使用して、強固なパスワードを作る",
-    "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces": "英数字とキーボードの記号のみを使用して、先頭と末尾の空白を避けます",
+    "Use only latin letters, numbers and keyboard symbols, avoid leading and trailing spaces": "英数字とキーボードの記号のみを使用し、先頭と末尾の空白を避けてください",
     "Use sequential Flir Onvif searcher": "シーケンシャルFlir Onvifサーチャーを使用する",
     "Use the %VMS_NAME% Client application to set up custom permissions": "カスタム権限の調整を行うには、 %VMS_NAME% クライアントアプリケーションを使用してください",
     "Use this system with Alexa": "このシステムでAlexaを使用する",
