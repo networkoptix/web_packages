@@ -296,11 +296,13 @@ class _GeneralSettings:
     def _get_cancel_button(self) -> Button:
         return Button(self._driver, '//button[text()="Cancel"]')
 
-    def is_save_button_visible(self) -> bool:
-        return self._get_save_button().is_visible()
+    def changes_can_be_applied(self):
+        self._get_save_button().wait_until_visible()
+        self._get_cancel_button().wait_until_visible()
 
-    def is_cancel_button_visible(self) -> bool:
-        return self._get_cancel_button().is_visible()
+    def changes_can_not_be_applied(self):
+        self._get_save_button().wait_until_not_visible()
+        self._get_cancel_button().wait_until_not_visible()
 
     def autodiscovery_option(self) -> '_AutoDiscoveryOption':
         return _AutoDiscoveryOption(self._driver)
