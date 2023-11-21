@@ -14,8 +14,8 @@ from generic_elements import Link
 from generic_elements import MenuNode
 from generic_elements import Page
 from generic_elements import PageText
-from generic_elements import Pane
 from generic_elements import TextField
+from nx_modal import NxModalDialog
 from variables import ENV
 
 _logger = logging.getLogger(__name__)
@@ -87,9 +87,6 @@ class SystemLeftMenu:
     def servers_count(self):
         return len(self.driver.find_elements(
             By.XPATH, "//div[@id='level3servers']//nx-level-3-item"))
-
-    def add_user_modal(self):
-        return Pane(self.driver, "//form[@name='addUserForm']")
 
     def add_user_email_input(self):
         return TextField(
@@ -255,3 +252,15 @@ class UsersDropdown(DropDown):
     def wait_for_open(self, timeout=45):
         # Currently it takes 30+ seconds to load the dropdown
         self.add_user_button().wait_until_clickable(timeout=timeout)
+
+    def open_add_user_dialog(self):
+        self.add_user_button().click()
+        dialog = AddUserModalDialog(self._driver)
+        dialog.wait_until_visible()
+        return dialog
+
+
+class AddUserModalDialog(NxModalDialog):
+
+    def __init__(self, driver):
+        super().__init__(driver, '//form[@name="addUserForm"]')
