@@ -118,10 +118,6 @@ class SystemLeftMenu:
             f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
         option.wait_until_not_visible()
 
-    def add_user_modal_close_button(self):
-        return Button(
-            self.driver, "//form[@name='addUserForm']//button[@data-testid='closeAddUser']")
-
     def add_user_modal_cancel_button(self):
         return Button(self.driver, "//nx-cancel-button[@data-testid='cancelAddUserBtn']/button")
 
@@ -264,3 +260,9 @@ class AddUserModalDialog(NxModalDialog):
 
     def __init__(self, driver):
         super().__init__(driver, '//form[@name="addUserForm"]')
+
+    def _close_button(self):
+        return Button(
+            self._driver,
+            self._locator + '//button[@data-testid="closeAddUser"]'
+            )

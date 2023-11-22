@@ -13,6 +13,7 @@ from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.register_form import RegisterForm
 from pages.system_admin import SystemAdmin
+from pages.system_left_menu import AddUserModalDialog
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
@@ -297,22 +298,23 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
             error_msg = f"This email has already been registered in the {server.name} system"
             system_left_menu.share_system_with_user(owner.email, rb.CUSTOM_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal = AddUserModalDialog(driver)
+            add_user_modal.close()
             system_left_menu.share_system_with_user(admin.email, rb.LIVE_VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(viewer.email, rb.ADV_VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(advanced_viewer.email, rb.CUSTOM_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(live_viewer.email, rb.CUSTOM_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(custom.email, rb.VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -347,22 +349,23 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
             error_msg = f"This email has already been registered in the {server.name} system"
             system_left_menu.share_system_with_user(owner.email, rb.CUSTOM_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal = AddUserModalDialog(driver)
+            add_user_modal.close()
             system_left_menu.share_system_with_user(admin.email, rb.LIVE_VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(viewer.email, rb.ADV_VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(advanced_viewer.email, rb.CUSTOM_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(live_viewer.email, rb.CUSTOM_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
             system_left_menu.share_system_with_user(custom.email, rb.VIEWER_TEXT)
             system_left_menu.add_user_modal_error(error_msg).wait_until_visible()
-            system_left_menu.add_user_modal_close_button().click()
+            add_user_modal.close()
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')

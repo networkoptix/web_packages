@@ -12,6 +12,7 @@ from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.system_admin import FailedToAccessSystemPage
 from pages.system_admin import SystemAdmin
+from pages.system_left_menu import AddUserModalDialog
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_transfer import SystemOwnership
 from pages.system_transfer import SystemTransferOwnershipModal
@@ -198,8 +199,7 @@ def test_transfer_no_users(server: Mediaserver):
         transfer_ownership_modal = system_ownership.open_ownership_transfer_dialog()
         _check_no_users(transfer_ownership_modal)
         transfer_ownership_modal.click_add_user()
-        left_menu = SystemLeftMenu(driver)
-        left_menu.add_user_modal_close_button().click()
+        AddUserModalDialog(driver).close()
 
 
 def test_initiate_transfer_then_accept_and_check_email(
