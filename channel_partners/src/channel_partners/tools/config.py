@@ -1,3 +1,4 @@
+import os
 import yaml
 from pathlib import Path
 from dataclasses import dataclass, field
@@ -14,13 +15,27 @@ class PostgresConfig:
 
 @dataclass
 class InstanceConfig:
+    env_name: str
     postgres: PostgresConfig
     default_host: str
     debug: bool = False
+    redis_host: str = None
 
     def __post_init__(self):
         self.postgres = PostgresConfig(**self.postgres)
+        if self.is_local_docker:
+            self.postgres.host = 'postgres_cp'
+            self.redis_host = 'redis_cp'
 
+    @property
+    def queue_broker_uri(self):
+        if self.env_name == 'prod':
+            return os.getenv('QUEUE_CELERY_BROKER_URL', None) or 'sqs://'
+        return f'redis://{self.redis_host}:6379/15'
+
+    @property
+    def is_local_docker(self):
+        return bool(os.getenv('LOCAL_DOCKER', False))
 
 def get_config(env_name: str):
     conf_dir = Path(__file__).resolve().parent.parent.parent.joinpath('config')
@@ -30,4 +45,4 @@ def get_config(env_name: str):
     with open(conf_name, 'r') as f:
         conf_dict = yaml.safe_load(f)
 
-    return InstanceConfig(**conf_dict)
+    return InstanceConfig(env_name=env_name, **conf_dict)

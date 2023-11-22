@@ -15,6 +15,7 @@ from channel_partners.tools.config import get_config
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 LOCAL_ENV = 'runserver' in sys.argv or os.getenv('LOCAL_ENV', False)
+LOCAL_DOCKER = os.getenv('LOCAL_DOCKER', False)
 CI = os.getenv('CI', False)
 TESTING = sys.argv[1:2] == ['test'] or os.getenv('TESTING', False)
 USE_SQLITE = os.getenv('USE_SQLITE', False)
@@ -58,7 +59,9 @@ INSTALLED_APPS = [
     'accounts',
     'utils',
     'drf_spectacular',
-    'partners'
+    'partners',
+    'django_celery_beat',
+    'django_celery_results',
 ]
 
 AUTH_USER_MODEL = 'accounts.account'
@@ -113,11 +116,8 @@ DATABASES = {
 # Cache
 
 REDIS_CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
-if not LOCAL_ENV:
-    redis_host = os.getenv('REDIS_HOST', 'redis')
-    REDIS_CACHE_LOCATION = f'redis://{redis_host}:6379'
-else:
-    REDIS_CACHE_LOCATION = 'redis://localhost:6379'
+REDIS_CACHE_LOCATION = f'redis://{INSTANCE_CONFIG.redis_host}:6379'
+
 
 CACHES = {
     "local": {
@@ -127,6 +127,12 @@ CACHES = {
     'default': {
         "BACKEND": REDIS_CACHE_BACKEND,
         "LOCATION": REDIS_CACHE_LOCATION,
+        "TIMEOUT": None
+    },
+    'celery': {
+        # RESERVED FOR CELERY
+        "BACKEND": REDIS_CACHE_BACKEND,
+        "LOCATION": REDIS_CACHE_LOCATION + '/15',
         "TIMEOUT": None
     },
 }
@@ -217,3 +223,30 @@ RSA_KEY3 = open(os.path.join(KEYS_PATH, 'vms3.nop.pvt')).read()
 if SILK_ENABLED:
     INSTALLED_APPS.append('silk')
     MIDDLEWARE.append('silk.middleware.SilkyMiddleware')
+
+# Celery config
+
+# CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
+CELERY_BROKER_URL = INSTANCE_CONFIG.queue_broker_uri
+CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
+
+if not LOCAL_ENV:
+    CELERY_BROKER_TRANSPORT_OPTIONS = {
+        'queue_name_prefix': 'celery_queue_',
+        'region': os.getenv('AWS_REGION', 'us-east-1')
+    }
+
+CELERY_RESULT_PERSISTENT = True
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_WORKER_SEND_TASK_EVENTS = False
+# Allows worker to consume as many messages as it wants
+CELERY_WORKER_PREFETCH_MULTIPLIER = 0
+CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
+
+# Run celery tasks locally if set to true
+CELERY_TASK_ALWAYS_EAGER = False
+# IMPORTANT!!! This is useful to test celery task
+if (LOCAL_ENV and os.environ.get('RUN_CELERY_LOCALLY')) or CI:
+    CELERY_TASK_ALWAYS_EAGER = True
+
+DJANGO_CELERY_BEAT_TZ_AWARE = False

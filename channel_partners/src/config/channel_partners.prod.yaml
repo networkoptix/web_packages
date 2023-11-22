@@ -7,4 +7,5 @@ postgres:
     password: '$DB_PASSWORD'
     database: '$DB_NAME'
 
+# Redis host is always `sqs://` for prod
 default_host: 'cloud-test.hdw.mx'
