@@ -92,11 +92,6 @@ class SystemLeftMenu:
         return TextField(
             self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
 
-    def add_user_modal_button(self):
-        return Button(
-            self.driver,
-            "//form[@name='addUserForm']//nx-process-button[@data-testid='addUserBtn']")
-
     def add_user_permissions_dropdown(self):
         return DropDown(
             self.driver,
@@ -123,11 +118,11 @@ class SystemLeftMenu:
             self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
 
     def share_system_with_user(self, email, permissions):
-        UsersDropdown(self.driver).add_user_button().click()
+        add_user_dialog = UsersDropdown(self.driver).open_add_user_dialog()
         self.add_user_email_input().input_text(email)
         self.add_user_permissions_dropdown().click()
         self.permissions_dropdown_option(permissions).click()
-        self.add_user_modal_button().click()
+        add_user_dialog.submit()
 
     def add_user_modal_error(self, text):
         return PageText(self.driver, f"//span[contains(text(),'{text}')]")
@@ -263,3 +258,8 @@ class AddUserModalDialog(NxModalDialog):
             self._driver,
             self._locator + '//button[@data-testid="closeAddUser"]'
             )
+
+    def _submit_button(self):
+        return Button(
+            self._driver,
+            self._locator + '//nx-process-button[@data-testid="addUserBtn"]')

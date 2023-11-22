@@ -754,55 +754,55 @@ def test_email_validation(server: Mediaserver):
         system_admin.merge_with_another_system_button().wait_until_clickable(90)
         system_left_menu = SystemLeftMenu(driver)
         users_dropdown = system_left_menu.open_users_dropdown()
-        users_dropdown.open_add_user_dialog()
+        add_user_dialog = users_dropdown.open_add_user_dialog()
         email_field = system_left_menu.add_user_email_input()
         email_field.input_text('')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Email is required'
         email_field.input_text('noptixqagmail.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('@gmail.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('noptixqa@gmail..com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('noptixqa@192.168.1.1.0')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('noptixqa.@gmail.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('noptixq..a@gmail.c')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('noptixqa@-gmail.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('myemail')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('myemail@')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('myemail@gmail')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('myemail@.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('my@email@gmail.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('myemail@ gmail.com')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text('myemail@gmail.com;')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
         email_field.input_text(' ')
-        system_left_menu.add_user_modal_button().click()
+        add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Email is required'
         email_field.input_text(' myemail@gmail.com')
         email_field.press_tab()
