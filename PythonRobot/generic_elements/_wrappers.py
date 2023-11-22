@@ -67,7 +67,6 @@ class Checkbox:
         self._driver = driver
         self._element = Element(self._driver, locator)
         self._checked_xpath = f'{locator}//span[@class="tick checked"]'
-        self._unchecked_xpath = f'{locator}//span[contains(@class,"unchecked")]'
 
     def click(self):
         self._element.click()
@@ -81,16 +80,6 @@ class Checkbox:
         self.wait_until_visible()
         if self.is_checked():
             self._element.click()
-
-    def checked(self):
-        # TODO: Use the is_checked() method instead of this.
-        self.wait_until_visible()
-        return self._driver.find_element(By.XPATH, self._checked_xpath)
-
-    def unchecked(self):
-        # TODO: Use the is_checked() method instead of this.
-        self.wait_until_visible()
-        return self._driver.find_element(By.XPATH, self._unchecked_xpath)
 
     def is_focused(self):
         self.wait_until_visible()

@@ -173,10 +173,10 @@ def should_respond_to_tab_key():
         assert register_form.terms_and_conditions_checkbox().is_focused, "Terms and conditions not focused after TAB"
         ActionChains(driver).send_keys(Keys.SPACE).perform()
         time.sleep(1)
-        assert register_form.terms_and_conditions_checkbox().checked(), "Terms and conditions not checked"
+        assert register_form.terms_and_conditions_checkbox().is_checked(), "Terms and conditions not checked"
         ActionChains(driver).send_keys(Keys.SPACE).perform()
         time.sleep(2)
-        assert register_form.terms_and_conditions_checkbox().unchecked(), "Terms and conditions checked"
+        assert not register_form.terms_and_conditions_checkbox().is_checked(), "Terms and conditions checked"
         ActionChains(driver).send_keys(Keys.TAB).perform()
         time.sleep(1)
         ActionChains(driver).send_keys(Keys.ENTER).perform()
