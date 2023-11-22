@@ -5,7 +5,6 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from browsers.chrome import ChromeBrowser
 from browsers.chrome import get_chrome
 from email_access import EmailClient
 from email_access import get_random_email
@@ -762,8 +761,10 @@ def test_email_validation(server: Mediaserver):
     with get_chrome() as driver:
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        _wait_for_system_administration_elements_clickable(driver)
+        system_admin = SystemAdmin(driver)
+        system_admin.merge_with_another_system_button().wait_until_clickable(90)
         system_left_menu = SystemLeftMenu(driver)
+        system_left_menu.open_users_dropdown()
         system_left_menu.add_users_button().click()
         system_left_menu.add_user_modal().wait_until_visible()
         email_field = system_left_menu.add_user_email_input()
@@ -861,12 +862,6 @@ def users_can_disconnect_themselves(server: Mediaserver):
                     raise
                 else:
                     print(f"PASS {role}")
-
-
-def _wait_for_system_administration_elements_clickable(driver: ChromeBrowser):
-    system_admin = SystemAdmin(driver)
-    system_admin.merge_with_another_system_button().wait_until_clickable(90)
-    SystemLeftMenu(driver).open_users_dropdown()
 
 
 if __name__ == "__main__":
