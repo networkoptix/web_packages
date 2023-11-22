@@ -4,9 +4,13 @@ from uuid import uuid4
 
 from django.core.cache import caches
 from django.shortcuts import get_object_or_404
+from django.utils.encoding import force_str
+from drf_spectacular.openapi import OpenApiParameter, OpenApiTypes
+from drf_spectacular.utils import extend_schema_view, inline_serializer
 from django_filters.rest_framework import DjangoFilterBackend
+from rest_framework.filters import OrderingFilter
+# from drf_spectacular.views import extend_schema
 from rest_framework import status
-from drf_spectacular.utils import extend_schema_view
 
 
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
@@ -33,6 +37,33 @@ class DefaultPagination(PageNumberPagination):
     page_size = 100
     page_size_query_param = 'page_size'
     max_page_size = 1000
+
+    def get_schema_operation_parameters(self, view):
+        parameters = [
+            {
+                'name': self.page_query_param,
+                'required': False,
+                'in': 'query',
+                'description': force_str(self.page_query_description),
+                'schema': {
+                    'type': 'integer',
+                },
+            },
+        ]
+        if self.page_size_query_param is not None:
+            parameters.append(
+                {
+                    'name': self.page_size_query_param,
+                    'required': False,
+                    'in': 'query',
+                    'description': f'{force_str(self.page_size_query_description)}{f" Maximum {self.max_page_size}." if self.max_page_size else ""}',
+                    'schema': {
+                        'type': 'integer',
+                        'maximum': self.max_page_size
+                    },
+                },
+            )
+        return parameters
 
 
 @extend_schema(
