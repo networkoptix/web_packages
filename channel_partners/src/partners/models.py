@@ -1136,6 +1136,17 @@ class SystemGroup(models.Model):
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_systems(user)
 
+    def has_overlaps(self, user: CloudUser):
+        group_map = self.organization.groups_map
+        for group in SystemGroup.objects.filter(Q(organizationtouser__user=user) | Q(id=self.id), organization=self.organization).distinct():
+            current_id = group.id
+            while current_id:
+                popped_group = group_map.pop(current_id, None)
+                if not popped_group:
+                    return True
+                current_id = popped_group.get('parent_id')
+        return False
+
 
 class OrganizationToUser(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
@@ -1177,6 +1188,10 @@ class OrganizationToUser(models.Model):
         roles = get_organization_roles()
         return [roles[r]['name'] for r in self.roles]
 
+    @property
+    def system_roles_name(self):
+        roles = get_organization_roles()
+        return [roles[r]['system_role'] for r in self.roles if roles[r]['system_role']]
 
 class ChannelPartnerService(models.Model):
     # Service Types

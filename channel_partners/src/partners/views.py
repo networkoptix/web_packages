@@ -5,9 +5,8 @@ from uuid import uuid4
 from django.core.cache import caches
 from django.shortcuts import get_object_or_404
 from django_filters.rest_framework import DjangoFilterBackend
-from rest_framework.filters import OrderingFilter
-from drf_spectacular.utils import extend_schema_view, OpenApiParameter
-# from drf_spectacular.views import extend_schema
+from rest_framework import status
+from drf_spectacular.utils import extend_schema_view
 
 
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
@@ -24,7 +23,6 @@ from partners import filters
 from .models import OrganizationRoles, ChannelPartnerRoles
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, IsInternalToken
 from .serializers import *
-# from channel_partners.utils import nx_extend_schema as extend_schema
 from drf_spectacular.utils import extend_schema
 
 
@@ -590,7 +588,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
 class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     authentication_classes = (NxCloudOauthTokenAuthentication,)
     serializer_class = OrganizationUserSerializer
-    http_method_names = ['get', 'post', 'delete']
+    http_method_names = ['get', 'delete', 'post']
     lookup_field = 'email'
     lookup_value_regex = '[^/]*'
     lookup_url_kwarg = 'email'
@@ -605,7 +603,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
-        if self.action in ('create', 'list', 'destroy', 'retrieve'):
+        if self.action in ('create', 'list', 'destroy', 'retrieve', 'bulk_delete'):
             perms.append(CanPerformChannelPartnerAction(Organization.can_manage_users))
         return perms
 
@@ -643,7 +641,6 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     def create(self, request, *args, **kwargs):
         organization = self.get_organization()
         self.check_object_permissions(request, organization)
-
         serializer = self.get_serializer(data=request.data, context=self.get_serializer_context())
         serializer.is_valid(raise_exception=True)
         serializer.save(organization=organization)
@@ -657,10 +654,51 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
             roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
         )
         if not org_admin_qs.exists() or org_admin_qs.exclude(user=instance).exists():
-            # data = instance.update_user_systems_data(None)
-            # make_batch_request(request, data)
             return super().destroy(request, *args, **kwargs)
         raise Conflict(f'User {instance.email} is the only Administrator and may not be demoted or removed.')
+
+    @extend_schema(summary='Remove multiple users form an organization.',
+                   methods=['post'],
+                   request=serializers.ListSerializer(child=serializers.EmailField()),
+                   extensions={'x-permission': f'{ChannelPartner.permissions.manage_users} for Organization'})
+    @action(name='bulk_delete', methods=['post'], detail=False)
+    def bulk_delete(self, request, *args, **kwargs):
+        organization = self.get_organization()
+        self.check_object_permissions(request, obj=organization)
+        serializer = serializers.ListSerializer(
+            data=request.data,
+            child=serializers.EmailField()
+        )
+        serializer.is_valid(raise_exception=True)
+        org_admin_qs = OrganizationToUser.objects.filter(
+            organization=organization,
+            roles__contains=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
+        )
+        if org_admin_qs.exists() and not org_admin_qs.exclude(user__email__in=serializer.validated_data).exists():
+            raise Conflict(f'You are trying to remove all organization administrators.')
+
+        OrganizationToUser.objects.filter(
+            organization=organization, user__email__in=serializer.validated_data).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(summary='Remove a user form multiple groups belonging to an organization.',
+                   methods=['post'],
+                   request=serializers.ListSerializer(child=serializers.UUIDField()),
+                   extensions={'x-permission': f'{ChannelPartner.permissions.manage_users} for Organization'})
+    @action(name='remove_groups', methods=['post'], detail=True)
+    def remove_groups(self, request, *args, **kwargs):
+        organization = self.get_organization()
+        self.check_object_permissions(request, obj=organization)
+        user = self.get_object()
+        serializer = serializers.ListSerializer(
+            data=request.data,
+            child=serializers.UUIDField()
+        )
+        serializer.is_valid(raise_exception=True)
+
+        OrganizationToUser.objects.filter(
+            organization=organization, system_group_id__in=serializer.validated_data, user=user).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema(
@@ -741,6 +779,71 @@ class SystemGroupViewSet(NestedViewSetMixin,
         system_group = serializer.save()
         response_serializer = GroupSerializer(system_group)
         return Response(response_serializer.data)
+
+@extend_schema(tags=['Group - Groups Users'])
+@extend_schema_view(
+    list=extend_schema(summary='Get list of users belonging to a group',
+                       description='Return a list of users for a group id', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
+    retrieve=extend_schema(summary='Get a user of a group',
+                           description='Get a user by group id and email', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
+    create=extend_schema(summary='Add/update user of a group', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
+    destroy=extend_schema(summary='Remove a user from a group', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
+)
+class SystemGroupUserViewSet(ParentLookUpMixin,
+                             NestedViewSetMixin,
+                             mixins.CreateModelMixin,
+                             mixins.RetrieveModelMixin,
+                             mixins.ListModelMixin,
+                             mixins.DestroyModelMixin,
+                             GenericViewSet):
+    http_method_names = ['get', 'post']
+    serializer_class = SystemGroupUserSerializer
+    authentication_classes = (NxCloudOauthTokenAuthentication,)
+    lookup_field = 'user__email'
+    lookup_value_regex = '[^/]*'
+    lookup_url_kwarg = 'email'
+    queryset = OrganizationToUser.objects.filter(system_group__isnull=False).order_by('created_ts')
+    _system_group = None
+
+    def get_system_group(self):
+        if self._system_group:
+            return self._system_group
+        m2m_key, val = self.get_related_pair()
+        self._system_group = get_object_or_404(SystemGroup, pk=val)
+        return self._system_group
+
+    def get_queryset(self):
+        system_group = self.get_system_group()
+        queryset = self.queryset.filter(organization=system_group.organization,
+                                        system_group=system_group)
+        return queryset
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['group'] = self.get_system_group()
+        return context
+
+    def get_permissions(self):
+        return IsAuthenticated(), CanPerformChannelPartnerAction(SystemGroup.can_manage)
+
+    def check_permissions(self, request):
+        super().check_permissions(request)
+        self.check_object_permissions(request, self.get_system_group())
+
+    @extend_schema(summary='Remove multiple users form a group.',
+                   methods=['post'],
+                   request=serializers.ListSerializer(child=serializers.EmailField()),
+                   extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
+    @action(name='bulk_delete', methods=['post'], detail=False)
+    def bulk_delete(self, request, *args, **kwargs):
+        self.check_object_permissions()
+        serializer = serializers.ListSerializer(
+            data=request.data,
+            child=serializers.EmailField()
+        )
+        serializer.is_valid(raise_exception=True)
+        self.get_queryset().filter(user__email__in=request.data).delete()
+        return Response(status=status.HTTP_204_NO_CONTENT)
 
 
 @extend_schema_view(

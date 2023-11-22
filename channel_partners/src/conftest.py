@@ -21,8 +21,10 @@ def assert_all_responses_were_requested() -> bool:
 
 
 @pytest.fixture()
-def cloud_user_factory(db):
+def cloud_user_factory(db, random_email):
     def user(email=None):
+        if not email:
+            email = random_email
         return CloudUser.objects.get_or_create(email=email)[0]
 
     return user
@@ -270,6 +272,24 @@ def service_record_factory():
 @pytest.fixture()
 def system_group_factory():
     def factory(organization, parent=None):
-        return baker.make(SystemGroup, organization=organization, parent=parent)
+        uid = uuid4()
+        return baker.make(SystemGroup, id=uid, name=str(uid), organization=organization, parent=parent)
 
     return factory
+
+@pytest.fixture()
+def sys_group_user_factory(system_group_factory, cloud_user_factory):
+    def factory(organization, group=None, cloud_user=None, role_id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR):
+        if not group:
+            group = system_group_factory(organization=organization)
+        if not cloud_user:
+            cloud_user = cloud_user_factory(email=f'{uuid4()}@networkoptix.com')
+        return baker.make(OrganizationToUser, organization=organization, user=cloud_user,
+                          system_group=group, roles=[role_id])
+
+    return factory
+
+
+@pytest.fixture()
+def random_email():
+    return f'{uuid4()}@networkoptix.com'

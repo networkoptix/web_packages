@@ -32,11 +32,12 @@ channel_partners_routes.register('sub_channel_partners', ChannelPartnerNestedVie
 channel_partners_routes.register('organizations', OrganizationNesetedViewSet, basename='channelpartners-organization', parents_query_lookups=['channel_partner'])
 
 organization_routes = channel_partners_router.register('organizations', OrganizationViewSet, basename='organization')
-organization_routes.register('users', OrganizationUserViewSet, basename='organizations-user', parents_query_lookups=['organizations'])
+organization_users_routes = organization_routes.register('users', OrganizationUserViewSet, basename='organizations-user', parents_query_lookups=['organizations'])
 organization_routes.register('cloud_systems', CloudSystemNestedViewSet, basename='organizations-cloudsystem', parents_query_lookups=['organization'])
 organization_routes.register('services', OrganizationServiceViewset, basename='channelpartners-owned-service', parents_query_lookups=['organization'])
 
 group_routes = channel_partners_router.register('groups', SystemGroupViewSet, basename='group')
+group_routes.register('users', SystemGroupUserViewSet, basename='group-user', parents_query_lookups=['system_group'])
 
 channel_partners_router.register(
     'cloud_systems', CloudSystemViewSet, basename='cloudsystem'

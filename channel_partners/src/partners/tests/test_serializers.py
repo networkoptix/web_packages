@@ -4,16 +4,18 @@ from datetime import timedelta
 import pytest
 from dateutil import relativedelta
 from django.core.cache import caches
-from django.db.models import Prefetch
+from django.db.models import Prefetch, Q
 from model_bakery import baker
 
-from partners.models import ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser, \
+from partners.models import (
+    ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser,
     ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser
-from partners.serializers import ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, \
-    OrganizationAggDataSerializer, \
-    SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer
-from partners.views import ChannelPartnerViewSet
-from tools.helpers import get_period_start
+)
+from partners.serializers import (
+    ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
+    SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer,
+    SystemGroupUserSerializer
+)
 
 
 class TestChannelPartnerAggDataSerializer:
@@ -377,24 +379,17 @@ class TestOrganizationUserSerializer:
               cloud_user_factory, org_user_factory, system_group_factory):
         self.cp = channel_partner_factory()
         self.org = organization_factory(channel_partner=self.cp)
-        self.roles = [
-            OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
-            OrganizationRoles.POWER_USER,
-            OrganizationRoles.SYSTEM_HEALTH_VIEWER,
-            OrganizationRoles.VIEWER
-        ]
-        self.groups = [system_group_factory(organization=self.org) for _ in self.roles]
+        self.groups = [system_group_factory(organization=self.org) for _ in range(4)]
         self.user = cloud_user_factory(email='test@networkoptix.com')
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
+        self.org_adm_name = 'Organization Administrator'
+        self.org_power_user_name = 'Power User'
 
-    def test_create_valid(self):
+    def test_create_valid(self, sys_group_user_factory):
         data = {
             'email': self.user.email,
-            'groupRoles': [
-                {'groupId': self.groups[0].id, 'role': 'Organization Administrator'},
-                {'groupId': self.groups[1].id, 'role': 'Power User'},
-            ]
+            'role': self.org_adm_name
         }
         serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
 
@@ -403,11 +398,12 @@ class TestOrganizationUserSerializer:
 
         serializer.save()
 
-        relations = OrganizationToUser.objects.filter(organization=self.org, user=self.user)
-        assert relations.count() == len(data['groupRoles'])
-        assert relations.filter(system_group=self.groups[0], roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
-        assert relations.filter(system_group=self.groups[1], roles=[OrganizationRoles.POWER_USER])
+        assert serializer.data['roles'] == [self.org_adm_name]
 
+        relations = OrganizationToUser.objects.filter(organization=self.org, user=self.user)
+        assert relations.count() == 1
+        assert relations.first().system_group is None
+        assert relations.first().roles == [OrganizationRoles.ORGANIZATION_ADMINISTRATOR]
 
         user = (
             CloudUser.objects.all().
@@ -422,25 +418,108 @@ class TestOrganizationUserSerializer:
         serializer = OrganizationUserSerializer(instance=user)
 
         assert serializer.data['email'] == self.user.email
-        assert len(serializer.data['groupRoles']) == 2
-        assert all([g_r['roles'] in [['Organization Administrator'], ['Power User']]
-                    for g_r in serializer.data['groupRoles']])
+        assert len(serializer.data['groupRoles']) == 0
+        assert serializer.data['roles'] == [self.org_adm_name]
 
+        group_user = sys_group_user_factory(organization=self.org)
+        user = (
+            CloudUser.objects.all().
+            prefetch_related(
+                Prefetch(
+                    'organizationtouser_set',
+                    queryset=OrganizationToUser.objects.all(),
+                    to_attr='organization_relations'
+                )
+            ).distinct().get(email=group_user.user.email))
+        serializer = OrganizationUserSerializer(instance=user)
+        assert serializer.data['email'] == group_user.user.email
+        assert serializer.data['groupRoles'][0] == {
+            'groupId': str(group_user.system_group_id), 'roles': [self.org_adm_name],
+            'rolesIds': [str(OrganizationRoles.ORGANIZATION_ADMINISTRATOR)]
+        }
+        assert serializer.data['roles'] == []
+
+        user = group_user.user
+        data = {
+            'email': user.email,
+            'role': self.org_adm_name
+        }
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+
+        serializer.is_valid()
+        serializer.save()
+        assert not serializer.errors
+        assert serializer.data['email'] == user.email
+        assert len(serializer.data['groupRoles']) == 0
+        assert serializer.data['roles'] == [self.org_adm_name]
+        assert not OrganizationToUser.objects.filter(user=user, organization=self.org, system_group__isnull=False).exists()
 
     def test_create_invalid_system_group(self):
         data = {
             'email': self.user.email,
-            'groupRoles': [
-                {'groupId': self.groups[0].id, 'role': 'Organization Administrator'},
-                {'groupId': self.other_group.id, 'role': 'Power User'},
-            ]
+            'role': 'invalid'
         }
         serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
 
         serializer.is_valid()
         assert serializer.errors
-        assert not serializer.errors['groupRoles'][0]
-        assert 'object does not exist' in serializer.errors['groupRoles'][1]['groupId'][0]
+        assert serializer.errors['role'][0]
 
 
+class TestSystemGroupUserSerializer:
 
+    @pytest.fixture(autouse=True)
+    def setup(self, channel_partner_factory, organization_factory, sys_group_user_factory,
+              cloud_user_factory, org_user_factory, system_group_factory):
+        self.cp = channel_partner_factory()
+        self.org = organization_factory(channel_partner=self.cp)
+        self.group = system_group_factory(organization=self.org)
+        self.org_user = org_user_factory(email='test@networkoptix.com')
+        self.users = [sys_group_user_factory(organization=self.org, group=self.group) for _ in range(5)]
+        self.other_org = organization_factory(channel_partner=self.cp)
+        self.other_group = system_group_factory(organization=self.other_org)
+        self.org_adm_name = 'Organization Administrator'
+        self.org_power_user_name = 'Power User'
+
+    def test_data(self):
+        serializer = SystemGroupUserSerializer(instance=self.users[0])
+
+        assert serializer.data
+        assert serializer.data['email'] == self.users[0].user.email
+        assert serializer.data['roles'] == self.users[0].roles_name
+
+        serializer = SystemGroupUserSerializer(instance=self.users, many=True)
+
+        assert serializer.data
+        for i, data in enumerate(serializer.data):
+            assert data['email'] == self.users[i].user.email
+            assert data['roles'] == self.users[i].roles_name
+
+    def test_create(self):
+        user = self.org_user.user
+        data = {
+            'email': self.org_user.user.email,
+            'role': 'Administrator'
+        }
+
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group})
+        assert serializer.is_valid()
+
+        group_rel = serializer.save()
+        assert group_rel.roles == [OrganizationRoles.ADMINISTRATOR]
+        assert group_rel.user == user
+        user_rels = OrganizationToUser.objects.filter(organization=self.org, user=user)
+        assert user_rels.count() == 1
+
+    def test_groups_overlap(self, sys_group_user_factory, system_group_factory):
+        child_group = system_group_factory(organization=self.org, parent=self.group)
+        child_group_rel = sys_group_user_factory(organization=self.org, group=child_group, cloud_user=self.org_user.user)
+        user = self.org_user.user
+        data = {
+            'email': self.org_user.user.email,
+            'role': 'Administrator'
+        }
+
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group})
+        assert serializer.is_valid() is False
+        assert 'overlap' in serializer.errors['email'][0]

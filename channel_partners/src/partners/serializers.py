@@ -10,7 +10,8 @@ from django.db.models import Sum, QuerySet, Prefetch
 from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
-from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, inline_serializer, OpenApiExample
+from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, inline_serializer, OpenApiExample, \
+    OpenApiParameter
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -215,7 +216,7 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelPartner
-        fields = ['name', 'parentChannelPartner', 'attributes', 'canCreateSubChannels', 'monthlyAdditionalServiceLimit']
+        fields = ['name', 'parentChannelPartner', 'attributes', 'monthlyAdditionalServiceLimit']
 
     def validate_parent_channel_partner(self, value: ChannelPartner):
         req = self.context.get('request')
@@ -359,21 +360,24 @@ class CloudSystemSerializer(serializers.ModelSerializer):
 class ChannelPartnerUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', required=True)
     roles = serializers.ListField(source='roles_name', read_only=True, default=[], child=serializers.CharField())
-    roles = serializers.ListField(read_only=True, default=[], child=serializers.UUIDField())
-    role = serializers.SlugRelatedField(slug_field='name', queryset=ChannelPartnerRole.objects.all(), write_only=True)
+    rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
+    role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
+        slug_field='name', write_only=True, required=False, queryset=ChannelPartnerRole.objects.all()))
+    roleId = serializers.PrimaryKeyRelatedField(
+        queryset=OrganizationRole.objects.all(), write_only=True, required=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     title = serializers.CharField(required=False, default='', allow_blank=True)
 
     class Meta:
         model = ChannelPartnerToUser
-        fields = ['email', 'roles', 'role', 'title', 'created']
+        fields = ['email', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId']
 
     def validate_email(self, value: str):
         return CloudUser.objects.get_or_create(email=value)[0]
 
     def create(self, validated_data):
         user = validated_data.get('user').get('email')
-        role = validated_data.get('role')
+        role = validated_data.get('roleId') or validated_data.get('role')
         title = validated_data.get('title')
         channel_partner = validated_data.get('channel_partner')
 
@@ -426,18 +430,22 @@ class ReadWriteSerializerMethodField(serializers.Field):
 
 # TODO: This serializer looks like spaghetti code. Need to consider how we store and generate this data.
 class OrganizationUserSerializer(serializers.ModelSerializer):
-    email = serializers.CharField(required=True)
-    roles = ReadWriteSerializerMethodField(default=[])
-    groupRoles = ReadWriteSerializerMethodField(default={})
-    role = serializers.SlugRelatedField(slug_field='name', queryset=OrganizationRole.objects.all(),
-                                        write_only=True, allow_null=True, required=False)
+    email = serializers.EmailField(required=True)
+    roles = serializers.SerializerMethodField(method_name='get_roles', read_only=True)
+    rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
+    groupRoles = serializers.SerializerMethodField(method_name='get_groupRoles', default=True, read_only=True)
+    role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
+        slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all()))
+    # role = serializers.SlugRelatedField(slug_field='name', queryset=OrganizationRole.objects.all(),
+    #                                     write_only=True, allow_null=True)
+    roleId = serializers.PrimaryKeyRelatedField(
+        queryset=OrganizationRole.objects.all(), write_only=True, required=False)
     created = serializers.SerializerMethodField(source='created_ts')
     title = ReadWriteSerializerMethodField(required=False, default='')
 
     class Meta:
         model = CloudUser
-        fields = ['email', 'roles', 'role', 'title', 'created', 'groupRoles']
-
+        fields = ['email', 'roles', 'role', 'rolesIds', 'roleId', 'title', 'created', 'groupRoles']
     def get_roles(self, obj: CloudUser):
         relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
         if relation:
@@ -449,22 +457,13 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         return CloudUser.objects.get_or_create(email=value)[0]
 
     def get_groupRoles(self, obj: CloudUser):
-        roles = []
-        for relation in filter(lambda rel: rel.system_group is not None, obj.organization_relations):
-            roles.append({'groupId': relation.system_group_id, 'roles': relation.roles_name})
-        return roles
+        class GroupRolesSerializer(serializers.Serializer):
+            groupId = serializers.UUIDField(source='system_group_id')
+            roles = serializers.ListField(source='roles_name', child=serializers.CharField())
+            rolesIds = serializers.ListField(source='roles', child=serializers.UUIDField())
+        relations = filter(lambda rel: rel.system_group is not None, obj.organization_relations)
 
-    def validate_groupRoles(self, value):
-        # todo. as soon as serializer is created dynamically,
-        #  groupId field can be changed to FK related with limited queryset
-
-        class GroupRole(serializers.Serializer):
-            groupId = serializers.PrimaryKeyRelatedField(
-                queryset=SystemGroup.objects.filter(organization=self.context['organization']))
-            role = serializers.SlugRelatedField(slug_field='name', queryset=OrganizationRole.objects.all())
-        serializer = GroupRole(data=value.get('groupRoles', []), many=True)
-        serializer.is_valid(raise_exception=True)
-        return {'groupRoles': serializer.validated_data}
+        return GroupRolesSerializer(instance=relations, many=True).data
 
     def get_created(self, obj: CloudUser):
         # Todo. replace wit CloudUser created date or creation date in exact organization
@@ -475,105 +474,29 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         relation = sorted(obj.organization_relations, key=lambda rel: rel.created_ts)[0]
         return relation.title
 
-    def validate(self, attrs):
-        group_roles = attrs.get('groupRoles')
-        if attrs.get('role') and group_roles:
-            raise serializers.ValidationError("May not set roles for organization and for groups. Must be one or the other.")
-        if not attrs.get('role') and not group_roles:
-            raise serializers.ValidationError('One of "role" or "groupRoles" is required')
-
-        if group_roles:
-            organization: Organization = self.context.get('organization')
-            group_map = organization.groups_map
-
-            # Check if any group overlaps with any other group
-            for group_role in group_roles:
-                current_id = group_role['groupId'].id
-                while current_id:
-                    current_id = current_id
-                    popped_group = group_map.pop(current_id)
-                    if not popped_group:
-                        raise serializers.ValidationError({'groupRoles': 'Combination of groups is not valid, there is some '})
-                    current_id = popped_group.get('parent_id')
-        return attrs
-
     def create(self, validated_data):
-        email = validated_data.get('email')
-        user = CloudUser.objects.get_or_create(email=email)[0]
-        role = validated_data.get('role')
+        role = validated_data.get('roleId') or validated_data.get('role')
+        user, _ = CloudUser.objects.get_or_create(email=validated_data['email'])
         title = validated_data.get('title', '')
         organization = self.context.get('organization')
-        group_roles = validated_data.get('groupRoles')
+        try:
+            relation, created = OrganizationToUser.objects.get_or_create(
+                user=user, organization=organization, system_group=None)
+        except OrganizationToUser.MultipleObjectsReturned:
+            relations = (OrganizationToUser.objects
+                         .filter(user=user, organization=organization, system_group=None)
+                         .order_by('created_ts'))
+            relation = relations.first()
 
-        relations = OrganizationToUser.objects.filter(user=user, organization=organization).order_by('created_ts')
-        relation = relations.first()
-        if relation:
-            created_ts = relation.created_ts
-        else:
-            created_ts = None
-
-        current_relation_ids = []
-
-        if role:
-            try:
-                relation, created = OrganizationToUser.objects.get_or_create(user=user, organization=organization, system_group=None)
-            except OrganizationToUser.MultipleObjectsReturned:
-                relations = OrganizationToUser.objects.filter(user=user, organization=organization).order_by('created_ts')
-                relation = relations.first()
-
-            relation.title = title
-            relation.roles = [role.id] if role else []
-            if created_ts:
-                relation.created_ts = created_ts
-            relation.save()
-            current_relation_ids.append(relation.id)
-
-        elif group_roles:
-            for group_role in group_roles:
-                group = group_role['groupId']
-                try:
-                    relation, created = OrganizationToUser.objects.get_or_create(user=user, organization=organization,
-                                                                                 system_group=group)
-                except OrganizationToUser.MultipleObjectsReturned:
-                    relations = (
-                        OrganizationToUser.objects
-                        .filter(user=user, organization=organization, system_group=group)
-                        .order_by('created_ts')
-                    )
-                    relation = relations.first()
-
-                relation.title = title
-                relation.roles = [group_role['role'].id]
-                if created_ts:
-                    relation.created_ts = created_ts
-                relation.save()
-                current_relation_ids.append(relation.id)
-
-        OrganizationToUser.objects.filter(user=user).exclude(id__in=current_relation_ids).delete()
-        user = (
-            CloudUser.objects
-            .prefetch_related(
-                Prefetch('organizationtouser_set',
-                         queryset=OrganizationToUser.objects.all(),
-                         to_attr='organization_relations')
-            ).distinct().get(email=email))
+        relation.title = title
+        relation.roles = [role.id] if role else []
+        relation.save()
+        OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=False).delete()
+        user = CloudUser.objects.prefetch_related(
+            Prefetch('organizationtouser_set',
+                     queryset=OrganizationToUser.objects.all(),
+                     to_attr='organization_relations')).distinct().get_or_create(email=user.email)[0]
         return user
-
-    def update(self, instance, validated_data):
-        role_changed = False
-        if "role" in validated_data:
-            role = validated_data['role']
-            roles = [role.id] if role else []
-            if set(roles) != set(instance.roles):
-                role_changed = True
-                instance.roles = roles
-        if 'title' in validated_data:
-            instance.title = validated_data['title']
-        instance.save()
-        # if role_changed:
-        #     data = instance.update_user_systems_data(role)
-        #     make_batch_request(self.context['request'], data)
-        return instance
 
 
 class SignSerializerMixin:
@@ -1274,3 +1197,63 @@ class SystemSerializer(serializers.ModelSerializer):
 
 class UserListSerializer(serializers.Serializer):
     users = serializers.ListField()
+
+
+class SystemGroupUserSerializer(serializers.ModelSerializer):
+    email = serializers.EmailField(source='user.email', required=True)
+    roles = serializers.ListField(source='roles_name', allow_empty=True, allow_null=True, read_only=True)
+    rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
+    # todo. cache queryset. should we limit it to only roles containing system_role only
+    role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
+        slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all()))
+    # role = serializers.SlugRelatedField(
+    #     queryset=OrganizationRole.objects.all(),
+    #     slug_field='name', write_only=True, required=True)
+    roleId = serializers.PrimaryKeyRelatedField(
+        queryset=OrganizationRole.objects.all(), write_only=True, required=False)
+
+    class Meta:
+        model = OrganizationToUser
+        fields = [
+            'email',
+            'roles',
+            'role',
+            'roleId',
+            'rolesIds',
+        ]
+
+    def validate(self, attrs):
+        if not attrs.get('role') and not attrs.getz('roleId'):
+            msg = "One of 'role' or 'roleId' must be set."
+            raise exceptions.ValidationError(detail={'role': [msg], 'roleId': [msg]})
+        email = attrs.get('user', {}).get('email')
+        user, _ = CloudUser.objects.get_or_create(email=email)
+        group: SystemGroup = self.context.get('group')
+        if group.has_overlaps(user):
+            raise exceptions.ValidationError({'email': [f'User {user.email} cannot add group'
+                                                        f' {group} because overlap occurs.']})
+        attrs['user'] = user
+        return attrs
+
+    def create(self, validated_data):
+        role = validated_data.get('roleId') or validated_data['role']
+        group = self.context.get('group')
+        organization = group.organization
+        user = validated_data['user']
+        relations = OrganizationToUser.objects.filter(user=user, organization=organization,
+                                                      system_group=group).order_by('created_ts')
+        relation = relations.first()
+        if not relation:
+            relation = OrganizationToUser(user=user, organization=organization, system_group=group)
+            first_relation = (
+                OrganizationToUser.objects
+                .filter(organization=organization, user=user)
+                .order_by('created_ts').first()
+            )
+            if first_relation:
+                relation.created_ts = first_relation.created_ts
+        relation.roles = [role.id]
+        relation.save()
+        # Delete User's Organization Roles
+        OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=True).delete()
+        return relation
