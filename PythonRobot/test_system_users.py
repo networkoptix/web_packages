@@ -5,7 +5,8 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from browsers.chrome import ChromeBrowser, get_chrome
+from browsers.chrome import ChromeBrowser
+from browsers.chrome import get_chrome
 from email_access import EmailClient
 from email_access import get_random_email
 from pages.header import HeaderNav
