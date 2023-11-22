@@ -1172,16 +1172,14 @@ class SystemUserSerializer(serializers.ModelSerializer):
     def organization_roles(self):
         return get_organization_roles()
 
-    @extend_schema_field(inline_serializer(name='VMSRolesSerializer', fields={'name': serializers.CharField(), 'id': serializers.UUIDField()}))
+    @extend_schema_field(serializers.ListField(child=serializers.UUIDField()))
     def get_vmsRoles(self, obj: OrganizationToUser):
         roles = self.organization_roles
         vms_roles = []
         for role_uuid in obj.roles:
             matching_role = roles[role_uuid]
             if matching_role['system_role_uuid']:
-                vms_roles.append(
-                    {'name': matching_role['system_role'] or '', 'id': matching_role['system_role_uuid']}
-                )
+                vms_roles.append(matching_role['system_role_uuid'])
         return vms_roles
 
     class Meta:
