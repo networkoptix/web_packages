@@ -118,9 +118,6 @@ class SystemLeftMenu:
             f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
         option.wait_until_not_visible()
 
-    def add_user_modal_cancel_button(self):
-        return Button(self.driver, "//nx-cancel-button[@data-testid='cancelAddUserBtn']/button")
-
     def add_user_permissions_hint(self):
         return PageText(
             self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
