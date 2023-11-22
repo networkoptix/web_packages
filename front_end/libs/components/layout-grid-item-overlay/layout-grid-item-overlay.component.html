@@ -117,7 +117,7 @@
 
     <div
         class="status"
-        *ngIf="!!statusText$$()"
+        *ngIf="layoutsItemStatus && !!statusText$$()"
     >
         {{ statusText$$().toUpperCase() | translate }}
     </div>

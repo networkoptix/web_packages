@@ -171,6 +171,7 @@ export class NxLayoutGridItemOverlayComponent {
     temporaryManualDisplayInfoToggle$$: WritableSignal<boolean | null> = signal(null);
     allowDebugMode: boolean;
     layoutsEditable: boolean;
+    layoutsItemStatus: boolean;
     layoutsItemChangeResolution: boolean;
 
     displayInfo$$ = computed(() => {
@@ -635,6 +636,7 @@ export class NxLayoutGridItemOverlayComponent {
         private store: Store,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
+        this.layoutsItemStatus = configService.getConfig().featureFlags.layoutsItemStatus;
         this.layoutsEditable = !!configService.getConfig().featureFlags.layoutsEditable;
         this.layoutsItemChangeResolution =
             !!configService.getConfig().featureFlags.layoutsItemChangeResolution;

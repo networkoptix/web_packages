@@ -82,6 +82,7 @@ class FLAGS(metaclass=_FlagType):
     layouts_remove_item_dialog = ('Show dialog on removing item from layout', 'layoutsRemoveItemDialog', '%LAYOUTS_REMOVE_ITEM_DIALOG%')
     layouts_change_resolution = ('Show resolution menu item for layouts', 'layoutsChangeResolution', '%LAYOUTS_CHANGE_RESOLUTION%')
     layouts_item_change_resolution = ('Show resolution menu item for layout items', 'layoutsItemChangeResolution', '%LAYOUTS_ITEM_CHANGE_RESOLUTION%')
+    layouts_item_status = ('Show show status in the bottom right of the layout element', 'layoutsItemStatus', '%LAYOUTS_ITEM_STATUS%')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

@@ -187,6 +187,7 @@ const FeatureFlagKeys = [
     'layoutsTimeline',
     'layoutsPtz',
     'layoutsDemo',
+    'layoutsItemStatus',
     'layoutsChangeResolution',
     'layoutsItemChangeResolution',
     'channelPartners',
