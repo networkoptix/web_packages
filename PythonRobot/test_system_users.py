@@ -762,7 +762,7 @@ def test_email_validation(server: Mediaserver):
     with get_chrome() as driver:
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-        _wait_for_system_administration_elements_clickable(driver, owner.email)
+        _wait_for_system_administration_elements_clickable(driver)
         system_left_menu = SystemLeftMenu(driver)
         system_left_menu.add_users_button().click()
         system_left_menu.add_user_modal().wait_until_visible()
@@ -863,16 +863,10 @@ def users_can_disconnect_themselves(server: Mediaserver):
                     print(f"PASS {role}")
 
 
-def _wait_for_system_administration_elements_clickable(driver: ChromeBrowser, owner_email: str):
-    # This method is needed as it takes a lot of time to wait until buttons become active
-    # just after system setup. The button to add users is quite tricky as when we try to
-    # wait_until_clickable() for it can raise StaleElementReferenceException when it is changing its
-    # state. This has to be fixed in the future.
+def _wait_for_system_administration_elements_clickable(driver: ChromeBrowser):
     system_admin = SystemAdmin(driver)
-    system_left_menu = SystemLeftMenu(driver)
-    system_left_menu.users_button().click()
     system_admin.merge_with_another_system_button().wait_until_clickable(90)
-    system_left_menu.wait_for_user_with_email(owner_email)
+    SystemLeftMenu(driver).open_users_dropdown()
 
 
 if __name__ == "__main__":
