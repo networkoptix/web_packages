@@ -117,9 +117,6 @@ class SystemLeftMenu:
         self.permissions_dropdown_option(permissions).click()
         add_user_dialog.submit()
 
-    def add_user_modal_error(self, text):
-        return PageText(self.driver, f"//span[contains(text(),'{text}')]")
-
     def _get_element(self):
         return Page(self.driver, self._locator)
 
@@ -257,6 +254,11 @@ class AddUserModalDialog(NxModalDialog):
             self._driver,
             self._locator + '//nx-process-button[@data-testid="addUserBtn"]')
 
+    def _error_message(self):
+        return PageText(
+            self._driver,
+            self._locator + '//span[contains(@class, "input-error")]')
+
     def email_input(self):
         return TextField(
             self._driver,
@@ -266,6 +268,10 @@ class AddUserModalDialog(NxModalDialog):
         return PermissionsDropDown(
             self._driver,
             self._locator + "//nx-permissions-select//button")
+
+    def has_error_with_text(self, text: str):
+        error = self._error_message()
+        return error.get_text() == text
 
 
 class PermissionsDropDown(DropDown):
