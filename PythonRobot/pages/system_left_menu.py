@@ -88,10 +88,6 @@ class SystemLeftMenu:
         return len(self.driver.find_elements(
             By.XPATH, "//div[@id='level3servers']//nx-level-3-item"))
 
-    def add_user_email_input(self):
-        return TextField(
-            self.driver, "//form[@name='addUserForm']//input[@id='addUserDialogEmail']")
-
     def add_user_permissions_dropdown(self):
         return DropDown(
             self.driver,
@@ -119,7 +115,7 @@ class SystemLeftMenu:
 
     def share_system_with_user(self, email, permissions):
         add_user_dialog = UsersDropdown(self.driver).open_add_user_dialog()
-        self.add_user_email_input().input_text(email)
+        add_user_dialog.email_input().input_text(email)
         self.add_user_permissions_dropdown().click()
         self.permissions_dropdown_option(permissions).click()
         add_user_dialog.submit()
@@ -263,3 +259,8 @@ class AddUserModalDialog(NxModalDialog):
         return Button(
             self._driver,
             self._locator + '//nx-process-button[@data-testid="addUserBtn"]')
+
+    def email_input(self):
+        return TextField(
+            self._driver,
+            self._locator + "//input[@id='addUserDialogEmail']")

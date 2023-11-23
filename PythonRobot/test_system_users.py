@@ -755,7 +755,7 @@ def test_email_validation(server: Mediaserver):
         system_left_menu = SystemLeftMenu(driver)
         users_dropdown = system_left_menu.open_users_dropdown()
         add_user_dialog = users_dropdown.open_add_user_dialog()
-        email_field = system_left_menu.add_user_email_input()
+        email_field = add_user_dialog.email_input()
         email_field.input_text('')
         add_user_dialog.submit()
         assert system_left_menu.get_error().get_text() == 'Email is required'
