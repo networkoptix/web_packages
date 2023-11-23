@@ -758,52 +758,52 @@ def test_email_validation(server: Mediaserver):
         email_field = add_user_dialog.email_input()
         email_field.input_text('')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Email is required'
+        assert add_user_dialog.has_error_with_text('Email is required')
         email_field.input_text('noptixqagmail.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('@gmail.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('noptixqa@gmail..com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('noptixqa@192.168.1.1.0')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('noptixqa.@gmail.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('noptixq..a@gmail.c')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('noptixqa@-gmail.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('myemail')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('myemail@')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('myemail@gmail')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('myemail@.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('my@email@gmail.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('myemail@ gmail.com')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text('myemail@gmail.com;')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Please enter a valid Email'
+        assert add_user_dialog.has_error_with_text('Please enter a valid Email')
         email_field.input_text(' ')
         add_user_dialog.submit()
-        assert system_left_menu.get_error().get_text() == 'Email is required'
+        assert add_user_dialog.has_error_with_text('Email is required')
         email_field.input_text(' myemail@gmail.com')
         email_field.press_tab()
         system_left_menu.get_error().wait_until_not_visible()
