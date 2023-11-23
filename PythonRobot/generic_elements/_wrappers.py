@@ -440,6 +440,9 @@ class DropDownOption:
     def click(self):
         self._element.click()
 
+    def is_visible(self):
+        return self._element.is_visible()
+
 
 class Tooltip:
 

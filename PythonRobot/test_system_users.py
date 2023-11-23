@@ -457,9 +457,9 @@ def cloud_admin_cannot_invite_admin(server: Mediaserver):
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.open_users_dropdown()
             add_user_dialog = users_dropdown.open_add_user_dialog()
-            add_user_dialog.permissions_dropdown().open()
-            system_left_menu.permissions_dropdown_option(rb.VIEWER_TEXT).wait_until_visible()
-            system_left_menu.permissions_dropdown_unavailable(rb.ADMIN_TEXT)
+            permissions_dropdown = add_user_dialog.permissions_dropdown()
+            assert permissions_dropdown.has_option_with_label(rb.VIEWER_TEXT)
+            assert not permissions_dropdown.has_option_with_label(rb.ADMIN_TEXT)
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')

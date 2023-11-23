@@ -99,12 +99,6 @@ class SystemLeftMenu:
             f"//form[@name='addUserForm']//nx-permissions-select//"
             f"li//span[text()='{permissions}']/..")
 
-    def permissions_dropdown_unavailable(self, permissions):
-        option = DropDownOption(
-            self.driver,
-            f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
-        option.wait_until_not_visible()
-
     def share_system_with_user(self, email, permissions):
         add_user_dialog = UsersDropdown(self.driver).open_add_user_dialog()
         add_user_dialog.email_input().input_text(email)
@@ -293,3 +287,14 @@ class PermissionsDropDown(DropDown):
             return
         self.click()
         self._opened_options().wait_until_visible()
+
+    def _option_with_label(self, label: str):
+        return DropDownOption(
+            self._driver,
+            self._locator + f"//span[text()='{label}']"
+            )
+
+    def has_option_with_label(self, label: str):
+        self.open()
+        option = self._option_with_label(label)
+        return option.is_visible()
