@@ -10,7 +10,6 @@ from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
 from generic_elements import Image
-from generic_elements import Link
 from generic_elements import MenuNode
 from generic_elements import Page
 from generic_elements import PageText
@@ -42,43 +41,6 @@ class SystemLeftMenu:
         dropdown = UsersDropdown(self.driver)
         dropdown.wait_for_open()
         return dropdown
-
-    def _get_users_list(self):
-        locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
-        Link(self.driver, locator).wait_until_visible()
-        users = self.driver.find_elements(By.XPATH, locator)
-        result = []
-        for user in users:
-            result.append(
-                Button(
-                    self.driver,
-                    f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]",
-                    ))
-        return result
-
-    def get_user_with_email(self, email: str):
-        self._get_users_list()
-        for user in self._get_users_list():
-            if user.get_text() == email:
-                return user
-        raise _UserNotFoundError(email)
-
-    def has_user_with_email(self, email: str):
-        try:
-            self.get_user_with_email(email)
-        except _UserNotFoundError:
-            return False
-        return True
-
-    def wait_for_user_with_email(self, email: str):
-        started_at = time.monotonic()
-        while True:
-            try:
-                return self.get_user_with_email(email)
-            except _UserNotFoundError:
-                _logger.info(f"Waiting for user with email {email} in users list")
-            if time.monotonic() - started_at > 5:
-                raise _UserNotFoundError(email)
 
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
@@ -209,6 +171,41 @@ class UsersDropdown(DropDown):
         dialog = AddUserModalDialog(self._driver)
         dialog.wait_until_visible()
         return dialog
+
+    def _list_user_options(self):
+        locator = (
+            "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight")
+        elements = self._driver.find_elements(By.XPATH, locator)
+        return [
+            _UserOption(self._driver, locator + f"[contains(text(), '{e.text}')]") for e in elements]
+
+    def get_user_with_email(self, email: str):
+        for user in self._list_user_options():
+            if user.label() == email:
+                return user
+        raise _UserNotFoundError(email)
+
+    def has_user_with_email(self, email: str):
+        try:
+            self.get_user_with_email(email)
+        except _UserNotFoundError:
+            return False
+        return True
+
+    def wait_for_user_with_email(self, email: str):
+        started_at = time.monotonic()
+        while True:
+            try:
+                return self.get_user_with_email(email)
+            except _UserNotFoundError:
+                _logger.info(f"Waiting for user with email {email} in users list")
+            if time.monotonic() - started_at > 5:
+                raise _UserNotFoundError(email)
+
+
+class _UserOption(DropDownOption):
+
+    pass
 
 
 class AddUserModalDialog(NxModalDialog):

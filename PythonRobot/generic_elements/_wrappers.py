@@ -443,6 +443,9 @@ class DropDownOption:
     def is_visible(self):
         return self._element.is_visible()
 
+    def label(self):
+        return self._element.text()
+
 
 class Tooltip:
 

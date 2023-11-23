@@ -23,7 +23,8 @@ def page_is_opened_and_shows_the_user_list_to_owner(server: Mediaserver):
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         # Falls down because of CLOUD-11715 and CLOUD-11629
         SystemAdmin(driver).system_offline_text().wait_until_visible(timeout=65)
-        SystemLeftMenu(driver).wait_for_user_with_email(server.get_cloud_viewer().email)
+        users_dropdown = SystemLeftMenu(driver).open_users_dropdown()
+        users_dropdown.wait_for_user_with_email(server.get_cloud_viewer().email)
         # TODO: Add check on CLOUD-6615 when blocking bugs are fixed and test is ready
 
 
