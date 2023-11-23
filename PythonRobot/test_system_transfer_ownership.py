@@ -1,3 +1,4 @@
+from contextlib import ExitStack
 from pathlib import Path
 from time import sleep
 
@@ -254,8 +255,11 @@ def can_not_transfer_to_user_that_is_not_in_system(server: Mediaserver):
     owner = server.get_cloud_owner()
     user_email = get_random_email()
     user_password = 'qweasd 123!'
-    with get_chrome() as driver:
-        register_and_activate_account(driver, "Mark", "Hamill", user_email, user_password)
+    with ExitStack() as stack:
+        user_account = stack.enter_context(
+            CloudAccount(user_email, "Mark", "Hamill", user_password))
+        user_account.activate()
+        driver = stack.enter_context(get_chrome())
         driver.get(f"{ENV}/systems/{server.id}")
         login_dialog = LoginDialog(driver)
         login_dialog.basic_cloud_login(owner.email, owner.password)
