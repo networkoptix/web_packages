@@ -1,5 +1,7 @@
 import time
 
+from colorama import Fore
+
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from generic_elements import Button
