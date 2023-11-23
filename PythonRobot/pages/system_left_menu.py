@@ -105,10 +105,6 @@ class SystemLeftMenu:
             f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
         option.wait_until_not_visible()
 
-    def add_user_permissions_hint(self):
-        return PageText(
-            self.driver, "//form[@name='addUserForm']//span[@data-testid='addUserHelpBlock']")
-
     def share_system_with_user(self, email, permissions):
         add_user_dialog = UsersDropdown(self.driver).open_add_user_dialog()
         add_user_dialog.email_input().input_text(email)
@@ -268,6 +264,13 @@ class AddUserModalDialog(NxModalDialog):
     def has_error_with_text(self, text: str):
         error = self._error_message()
         return error.get_text() == text
+
+    def hint_text(self) -> str:
+        hint = PageText(
+            self._driver,
+            self._locator + "//span[@data-testid='addUserHelpBlock']")
+        hint.wait_until_visible()
+        return hint.get_text()
 
 
 class PermissionsDropDown(DropDown):

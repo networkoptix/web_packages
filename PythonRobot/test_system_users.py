@@ -609,11 +609,10 @@ def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.open_users_dropdown()
             add_user_dialog = users_dropdown.open_add_user_dialog()
-            viewer_hint = system_left_menu.add_user_permissions_hint()
-            viewer_hint.wait_until_visible()
             default_permission = add_user_dialog.permissions_dropdown().text()
             assert rb.VIEWER_TEXT in default_permission, "Viewer was not visible in the Dropdown element"
-            assert rb.ADD_USER_PERMISSIONS_HINT_VIEWER in viewer_hint.get_text(), "Hint text did not match Viewer hint"
+            assert rb.ADD_USER_PERMISSIONS_HINT_VIEWER in add_user_dialog.hint_text(), (
+                "Hint text did not match Viewer hint")
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
