@@ -128,6 +128,9 @@ class PageText:
     def get_count(self):
         return self._element.count()
 
+    def is_visible(self):
+        return self._element.is_visible()
+
 
 class TextField:
 

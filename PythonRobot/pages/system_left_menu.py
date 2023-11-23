@@ -9,7 +9,6 @@ from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
-from generic_elements import ElementNotVisible
 from generic_elements import Image
 from generic_elements import Link
 from generic_elements import MenuNode
@@ -158,12 +157,6 @@ class SystemLeftMenu:
                 )
         return placeholder.get_text() == 'Nothing found'
 
-    def get_error(self) -> PageText:
-        return PageText(
-            self.driver,
-            '//nx-modal-add-user-content//span[contains(@class, "input-error")]',
-            )
-
 
 class _UserNotFoundError(Exception):
 
@@ -268,6 +261,9 @@ class AddUserModalDialog(NxModalDialog):
         return PermissionsDropDown(
             self._driver,
             self._locator + "//nx-permissions-select//button")
+
+    def has_error(self):
+        return self._error_message().is_visible()
 
     def has_error_with_text(self, text: str):
         error = self._error_message()

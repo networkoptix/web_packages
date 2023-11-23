@@ -806,13 +806,13 @@ def test_email_validation(server: Mediaserver):
         assert add_user_dialog.has_error_with_text('Email is required')
         email_field.input_text(' myemail@gmail.com')
         email_field.press_tab()
-        system_left_menu.get_error().wait_until_not_visible()
+        assert not add_user_dialog.has_error()
         email_field.input_text('myemail@gmail.com ')
         email_field.press_tab()
-        system_left_menu.get_error().wait_until_not_visible()
+        assert not add_user_dialog.has_error()
         email_field.input_text('myemail@gmail.com')
         email_field.press_tab()
-        system_left_menu.get_error().wait_until_not_visible()
+        assert not add_user_dialog.has_error()
 
 
 def users_can_disconnect_themselves(server: Mediaserver):
