@@ -89,21 +89,11 @@ class SystemLeftMenu:
         return len(self.driver.find_elements(
             By.XPATH, "//div[@id='level3servers']//nx-level-3-item"))
 
-    def permissions_dropdown_option(self, permissions):
-        option = DropDownOption(
-            self.driver,
-            f"//form[@name='addUserForm']//nx-permissions-select//li//span[text()='{permissions}']")
-        option.wait_until_visible()
-        return DropDownOption(
-            self.driver,
-            f"//form[@name='addUserForm']//nx-permissions-select//"
-            f"li//span[text()='{permissions}']/..")
-
     def share_system_with_user(self, email, permissions):
         add_user_dialog = UsersDropdown(self.driver).open_add_user_dialog()
         add_user_dialog.email_input().input_text(email)
-        add_user_dialog.permissions_dropdown().open()
-        self.permissions_dropdown_option(permissions).click()
+        permissions_dropdown = add_user_dialog.permissions_dropdown()
+        permissions_dropdown.select_option_with_label(permissions)
         add_user_dialog.submit()
 
     def _get_element(self):
@@ -298,3 +288,8 @@ class PermissionsDropDown(DropDown):
         self.open()
         option = self._option_with_label(label)
         return option.is_visible()
+
+    def select_option_with_label(self, label: str):
+        self.open()
+        option = self._option_with_label(label)
+        option.click()
