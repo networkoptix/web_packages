@@ -9,11 +9,13 @@ from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import DropDown
 from generic_elements import DropDownOption
+from generic_elements import ElementNotVisible
 from generic_elements import Image
 from generic_elements import Link
 from generic_elements import MenuNode
 from generic_elements import Page
 from generic_elements import PageText
+from generic_elements import Pane
 from generic_elements import TextField
 from nx_modal import NxModalDialog
 from variables import ENV
@@ -88,11 +90,6 @@ class SystemLeftMenu:
         return len(self.driver.find_elements(
             By.XPATH, "//div[@id='level3servers']//nx-level-3-item"))
 
-    def add_user_permissions_dropdown(self):
-        return DropDown(
-            self.driver,
-            "//form[@name='addUserForm']//nx-permissions-select[@id='permissionsSelect']//button")
-
     def permissions_dropdown_option(self, permissions):
         option = DropDownOption(
             self.driver,
@@ -116,7 +113,7 @@ class SystemLeftMenu:
     def share_system_with_user(self, email, permissions):
         add_user_dialog = UsersDropdown(self.driver).open_add_user_dialog()
         add_user_dialog.email_input().input_text(email)
-        self.add_user_permissions_dropdown().click()
+        add_user_dialog.permissions_dropdown().open()
         self.permissions_dropdown_option(permissions).click()
         add_user_dialog.submit()
 
@@ -264,3 +261,30 @@ class AddUserModalDialog(NxModalDialog):
         return TextField(
             self._driver,
             self._locator + "//input[@id='addUserDialogEmail']")
+
+    def permissions_dropdown(self):
+        return PermissionsDropDown(
+            self._driver,
+            self._locator + "//nx-permissions-select//button")
+
+
+class PermissionsDropDown(DropDown):
+
+    def __init__(self, driver, button_locator):
+        super().__init__(driver, button_locator)
+        # TODO: Rework base class to accept locator of a dropdown in __init__(), not button locator
+        self._locator, _ = button_locator.split('//button')
+
+    def _opened_options(self):
+        return Pane(
+            self._driver,
+            self._locator + "/div[@class='dropdown permissions-show']")
+
+    def _is_open(self):
+        return self._opened_options().is_visible()
+
+    def open(self):
+        if self._is_open():
+            return
+        self.click()
+        self._opened_options().wait_until_visible()

@@ -369,6 +369,9 @@ class Pane:
     def find_element(self, locator, position) -> Element:
         return self._element.find_element(locator, position)
 
+    def is_visible(self):
+        return self._element.is_visible()
+
 
 class Link:
 

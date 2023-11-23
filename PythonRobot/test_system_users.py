@@ -456,8 +456,8 @@ def cloud_admin_cannot_invite_admin(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.open_users_dropdown()
-            users_dropdown.add_user_button().click()
-            system_left_menu.add_user_permissions_dropdown().click()
+            add_user_dialog = users_dropdown.open_add_user_dialog()
+            add_user_dialog.permissions_dropdown().open()
             system_left_menu.permissions_dropdown_option(rb.VIEWER_TEXT).wait_until_visible()
             system_left_menu.permissions_dropdown_unavailable(rb.ADMIN_TEXT)
         except Exception:
@@ -608,10 +608,10 @@ def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.open_users_dropdown()
-            users_dropdown.open_add_user_dialog()
+            add_user_dialog = users_dropdown.open_add_user_dialog()
             viewer_hint = system_left_menu.add_user_permissions_hint()
             viewer_hint.wait_until_visible()
-            default_permission = system_left_menu.add_user_permissions_dropdown().text()
+            default_permission = add_user_dialog.permissions_dropdown().text()
             assert rb.VIEWER_TEXT in default_permission, "Viewer was not visible in the Dropdown element"
             assert rb.ADD_USER_PERMISSIONS_HINT_VIEWER in viewer_hint.get_text(), "Hint text did not match Viewer hint"
         except Exception:
