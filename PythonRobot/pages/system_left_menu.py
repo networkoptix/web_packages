@@ -31,16 +31,8 @@ class SystemLeftMenu:
         # Todo: find way to pass id in
         # self._location_is_correct()
 
-    def _users_button(self):
-        translated_xpath = self.rb.replace_nested_variables(
-            "//span[contains(text(), '{USERS}')]")
-        return Button(self.driver, translated_xpath)
-
-    def open_users_dropdown(self):
-        self._users_button().click()
-        dropdown = UsersDropdown(self.driver)
-        dropdown.wait_for_open()
-        return dropdown
+    def users_dropdown(self):
+        return UsersDropdown(self.driver)
 
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
@@ -156,23 +148,39 @@ class UsersDropdown(DropDown):
         self._locator = '//nx-menu//a[@id="users"]/..'
         super().__init__(driver, self._locator)
 
-    def add_user_button(self):
+    def _add_user_button(self):
         return Button(
             self._driver,
             '//nx-menu-button[@data-testid="addUserBtn"]/button'
             )
 
-    def wait_for_open(self, timeout=45):
+    def _is_open(self):
+        return self._add_user_button().is_visible()
+
+    def _is_loaded(self):
+        if not self._is_open():
+            return False
+        return self._add_user_button().is_enabled()
+
+    def _wait_for_loaded(self, timeout=45):
         # Currently it takes 30+ seconds to load the dropdown
-        self.add_user_button().wait_until_clickable(timeout=timeout)
+        self._add_user_button().wait_until_clickable(timeout=timeout)
+
+    def open(self):
+        if self._is_loaded():
+            return
+        self.click()
+        self._wait_for_loaded()
 
     def open_add_user_dialog(self):
-        self.add_user_button().click()
+        self.open()
+        self._add_user_button().click()
         dialog = AddUserModalDialog(self._driver)
         dialog.wait_until_visible()
         return dialog
 
     def _list_user_options(self):
+        self.open()
         locator = (
             "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight")
         elements = self._driver.find_elements(By.XPATH, locator)

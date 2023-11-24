@@ -7,6 +7,7 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
 from email_access import get_random_email
 from pages.account_page import AccountPage
 from pages.account_page import SuccessToast
@@ -15,8 +16,6 @@ from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.system_users import SystemUsers
-from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
@@ -70,7 +69,7 @@ def name_change_shown_in_system(
         assert success_toast.get_text() == "Your account is successfully saved"
         driver.get(base_url + f'/systems/{server.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
-        users_dropdown = left_menu.open_users_dropdown()
+        users_dropdown = left_menu.users_dropdown()
         owner_menu_option = users_dropdown.get_user_with_email(owner.email)
         owner_menu_option.click()
         system_user = SystemUsers(driver)
@@ -198,15 +197,15 @@ def user_deleted_from_all_shared_systems(
         assert HeaderNav(driver).is_logged_in()
         driver.get(base_url + f'/systems/{server_1.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
-        users_dropdown = left_menu.open_users_dropdown()
+        users_dropdown = left_menu.users_dropdown()
         assert not users_dropdown.has_user_with_email(cloud_account.email)
         driver.get(base_url + f'/systems/{server_2.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
-        left_menu.open_users_dropdown()
+        users_dropdown = left_menu.users_dropdown()
         assert not users_dropdown.has_user_with_email(cloud_account.email)
         driver.get(base_url + f'/systems/{server_3.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
-        left_menu.open_users_dropdown()
+        users_dropdown = left_menu.users_dropdown()
         assert not users_dropdown.has_user_with_email(cloud_account.email)
 
 
