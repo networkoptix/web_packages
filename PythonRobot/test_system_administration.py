@@ -192,7 +192,7 @@ def correct_items_are_shown_for_owner(server: Mediaserver):
         system_page.wait_for_security_form()
         assert header.get_system_name() == server.name
         users_dropdown = left_menu.open_users_dropdown()
-        users_dropdown.get_user_with_email(owner.email).wait_until_visible()
+        users_dropdown.wait_for_user_with_email(owner.email)
         print("pass")
 
 
@@ -224,7 +224,7 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
         system_page.wait_for_security_form()
         assert header.get_system_name() == server.name
         users_dropdown = left_menu.open_users_dropdown()
-        users_dropdown.get_user_with_email(owner.email).wait_until_visible()
+        users_dropdown.wait_for_user_with_email(owner.email)
         print("pass")
 
 
