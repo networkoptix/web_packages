@@ -1,5 +1,5 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, booleanAttribute, effect, runInInjectionContext, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, effect, runInInjectionContext, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import type { IConfig } from '@services/nx-config/config-types';
@@ -7,7 +7,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager, StreamOrUrl, AvailableStreams, ApiVersions } from '@openLibs/webrtc-stream-manager';
-import { BehaviorSubject, firstValueFrom, Observable, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timer, scan, takeUntil, filter, timeout, catchError } from 'rxjs';
+import { firstValueFrom, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timeout, catchError } from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -42,15 +42,6 @@ class FpsTracker {
 export class NxVideoPlayerComponent {
     @Input() camera: NxSystemCamera;
     @Input() rotation: number;
-    /**
-     * Pings the server to allow NxCurrentRelayInterceptor to map to resolved relay instance.
-     */
-    @Input() pingServer: () => Observable<unknown>;
-    @Input({ transform: booleanAttribute }) controls: boolean = false;
-    @Input({ transform: booleanAttribute }) autoplay: boolean = false;
-    @Input({ transform: booleanAttribute }) autopause: boolean = false;
-    @Input() fullScreenTarget: HTMLElement;
-    @Input() showFullScreenButton: boolean = true;
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
@@ -68,9 +59,6 @@ export class NxVideoPlayerComponent {
     @ViewChild('originalStream') originalStream: ElementRef<HTMLVideoElement>;
     @ViewChild('webRtcStream') webRtcStreamRef: ElementRef<HTMLVideoElement>;
     @HostBinding('class') get class() {
-        if (document.fullscreenElement === this.fullScreenTarget) {
-            return 'fullscreen'
-        }
         const { paused, currentTime } = this.webRtcStreamRef?.nativeElement || { paused: true, currentTime: 0 };
         this.connectionEstablished ||= !paused && currentTime > 1000;
         return this.connectionEstablished ? 'playing' : '';
@@ -107,52 +95,13 @@ export class NxVideoPlayerComponent {
 
     document = document;
 
-    toggleFullScreen(): void {
-        if (document.fullscreenElement) {
-            document.exitFullscreen();
-        } else {
-            const aspect = this.elRef.nativeElement.scrollWidth / this.elRef.nativeElement.scrollHeight;
-            this.elRef.nativeElement.style.maxHeight = `${100 / aspect}vw`
-            this.elRef.nativeElement.style.maxWidth = `${100 * aspect}vh`
-            this.fullScreenTarget.requestFullscreen({ navigationUI: 'hide' })
-        }
-    }
-
     constructor(
         configService: NxConfigService,
         private appStateService: NxAppStateService,
-        private elRef: ElementRef,
         private injector: Injector,
     ) {
         this.CONFIG = configService.config;
         this.playerId = uuid();
-    }
-
-    reconnect$ = new BehaviorSubject<void | null>(null);
-
-    _queuedReconnect: Promise<void> | null;
-
-    async queueReconnect() {
-        const serverOffline = () => firstValueFrom(this.pingServer().pipe(
-            switchMap(async res => {
-                await new Promise(resolve => setTimeout(resolve, 5000));
-                return !res;
-            })
-        ));
-
-        if (!this._queuedReconnect) {
-            this._queuedReconnect = (async () => {
-                let timesPinged = 0;
-                while (await serverOffline()) {
-                    console.info(`Unavailable server pinged ${++timesPinged} time(s), waiting for 5 seconds before trying again.`);
-                }
-                this.connectionEstablished = false;
-                this.reconnect$.next();
-                this._queuedReconnect = null;
-            })()
-        }
-
-        return this._queuedReconnect;
     }
 
     calculateCropParams = (drawParams: DrawImagePartialTuple): DrawImagePartialTuple => {
@@ -189,6 +138,8 @@ export class NxVideoPlayerComponent {
             if (typeof stream !== 'string' && 'getTracks' in stream) {
                 stream.getTracks().forEach(track => track.stop())
             }
+            video.src = '';
+            video.srcObject = null;
         }
 
         await new Promise(resolve => {
@@ -227,40 +178,7 @@ export class NxVideoPlayerComponent {
         return newStream;
     }
 
-    cancelMonitoringFps$ = new Subject<void>();
-
-    stopMonitoringFps(): void {
-        this.connection = null;
-        this.cancelMonitoringFps$.next();
-    }
-
     fpsTracker = new FpsTracker(5);
-
-    monitorFps(connection: WebRTCStreamManager): void {
-        const monitoringStarted = !!this.connection;
-        this.connection = connection;
-
-        if (!monitoringStarted) {
-            const bufferSize = 60;
-            timer(5000, 1000).pipe(
-                map(() => this.fpsTracker.currentFps),
-                scan((acc, curr) => [...acc, curr].slice(-bufferSize), []),
-                filter(buffer => buffer.length > bufferSize / 4),
-                takeUntil(this.cancelMonitoringFps$),
-                untilDestroyed(this),
-            ).subscribe(fps => {
-                const lastFramesFrozen = (lastNumFrames: number = fps.length) => !fps.slice(-lastNumFrames).some(Boolean)
-                this.lostConnection = lastFramesFrozen(bufferSize / 2);
-                this.loading = !this.lostConnection && lastFramesFrozen(bufferSize / 10);
-
-                console.log(`FPS for ${this.camera.name}`, fps)
-
-                if (lastFramesFrozen() && fps.length === bufferSize) {
-                    this.queueReconnect();
-                }
-            })
-        }
-    }
 
     syncAvailableStreams(connection: WebRTCStreamManager, hasSecondary: boolean): void {
         runInInjectionContext(this.injector, () => {
@@ -298,12 +216,10 @@ export class NxVideoPlayerComponent {
             return this.showError.emit(ConnectionError.mjpegDisabled)
         }
 
-        const stream$ = this.reconnect$.pipe(
-            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, hasSecondary ? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY] : [AvailableStreams.PRIMARY], this.accessToken)),
+        const stream$ = WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, hasSecondary ? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY] : [AvailableStreams.PRIMARY], this.accessToken).pipe(
             tap(async ([stream, error, connection]) => {
                 this.syncAvailableStreams(connection, hasSecondary)
                 if (stream) {
-                    this.monitorFps(connection);
                     this.webRtcStreamRef.nativeElement.srcObject = await this.zoomStream(stream);
                     // Checks if user has interacted to unmute
                     this.webRtcStreamRef.nativeElement.muted = await firstValueFrom(
@@ -321,7 +237,7 @@ export class NxVideoPlayerComponent {
 
                     if (this.webRtcStreamRef.nativeElement.muted) {
                         // Unmute and autoplay when user interacts with the page
-                        this.appStateService.userInteracted$.pipe(takeUntil(this.cancelMonitoringFps$), untilDestroyed(this)).subscribe(() => {
+                        this.appStateService.userInteracted$.pipe(untilDestroyed(this)).subscribe(() => {
                             this.webRtcStreamRef.nativeElement.muted = false;
                             this.webRtcStreamRef.nativeElement.autoplay = true;
                         })
@@ -347,11 +263,9 @@ export class NxVideoPlayerComponent {
                 }
 
                 if (error) {
-                    this.stopMonitoringFps();
                     if (error === ConnectionError.lostConnection) {
                         if (!this.lostConnection) {
                             this.lostConnection = true;
-                            this.queueReconnect();
                             if (!this.lostConnectionPlaceholder) {
                                 this.ribbon$.next({
                                     message: { value: staticLang.layouts.toasts.connectionLost, params: { name: this.camera.name } },
@@ -370,11 +284,6 @@ export class NxVideoPlayerComponent {
             untilDestroyed(this),
         );
 
-        if (this.skipCredentialsCheck) {
-            stream$.subscribe();
-            return;
-        }
-
         /**
          * Checks for authorization issues by fetching the preview image. Specifically for default password error.
          */
@@ -392,6 +301,6 @@ export class NxVideoPlayerComponent {
                     return Promise.resolve();
                 }),
                 untilDestroyed(this)
-            ).subscribe();
+            ).subscribe({ complete: () => this.zoomStreamCleanup()});
     }
 }

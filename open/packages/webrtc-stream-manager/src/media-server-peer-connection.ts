@@ -19,6 +19,9 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         } else if (this.iceConnectionState === 'disconnected') {
             console.log('peerConnection disconnected, reconnecting websocket');
             this.reconnectionHandler(true);
+        } else if (this.iceConnectionState === 'failed') {
+            console.log('peerConnection failed, reconnecting websocket');
+            this.reconnectionHandler(true);
         } else {
             console.log('peerConnection ice state ' + this.iceConnectionState);
         }
@@ -31,7 +34,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     constructor(
         private getWebSocket: () => WebSocketSubject<SignalingMessage>,
         private closeWebsocket: () => void,
-        private reconnectionHandler: (lostConnection: number | true) => void,
+        private reconnectionHandler: (lostConnection: true) => void,
         trackHandler: StreamHandler,
         bufferHandler: BufferHandler,
     ) {

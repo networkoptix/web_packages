@@ -1,5 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
+import { Observable, Subject, defer, mergeMap, scan, take, takeUntil, timer } from "rxjs";
 import { IntRange } from "./types";
 
 /**
@@ -70,4 +71,56 @@ export const generateWebRtcUrlFactory = (relayUrl: string, camera_id: string, se
 
 export class WithSkip<T> {
     constructor(public value: T, public skip: boolean = false) {}
+}
+
+export class ConnectionQueue {
+    static GROUP: Record<string, ConnectionQueue> = {};
+    #queue$ = new Subject<Observable<unknown>>();
+    #concurrencyUpdater$ = new Subject<number>();
+    #runningTasks$ = this.#concurrencyUpdater$.pipe(scan((acc, curr) => acc + curr, 0));
+
+    static runTask(task: Parameters<ConnectionQueue['runTask']>[0], groupName: string = 'common', requeueDelay = 500, taskTimeout = 10000): void {
+        ConnectionQueue.GROUP[groupName] ||= new ConnectionQueue(groupName);
+        ConnectionQueue.GROUP[groupName].runTask(task, requeueDelay, taskTimeout);
+    }
+
+     private runTask(task: (complete: () => void, requeue: () => void | Promise<void>) => unknown, requeueDelay = 500, taskTimeout = 10000): void {
+        this.#queue$.next(defer(() => new Promise<void>(async resolve => {
+            this.#concurrencyUpdater$.next(1);
+            const cancelTimedOut$ = new Subject<string>();
+            const completed$ = new Subject<string>();
+
+            const complete = () => {
+                completed$.next('completed')
+            }
+
+            const requeue = () => {
+                complete();
+                setTimeout(() => this.runTask(task), requeueDelay)
+            };
+
+            timer(taskTimeout).pipe(takeUntil(cancelTimedOut$)).subscribe(() => {
+                console.info(`[${this.origin}] Running tasks: Timeout`)
+                requeue();
+            });
+
+            completed$.pipe(take(1)).subscribe(() => {
+                cancelTimedOut$.next('cancel');
+                resolve();
+                this.#concurrencyUpdater$.next(-1);
+            })
+
+            try {
+                await task(complete, requeue)
+            } catch(e) {
+                console.error(e);
+                requeue();
+            }
+        })));
+    }
+
+    private constructor(private origin: string) {
+        this.#queue$.pipe(mergeMap(notifier => notifier, 4)).subscribe(state => console.info(state));
+        this.#runningTasks$.subscribe(count => console.info(`[${this.origin}] Running tasks: ${count}`));
+    }
 }

@@ -582,11 +582,6 @@
                                                 >
                                                     <nx-video-player
                                                         [camera]="itemDetail.details"
-                                                        [fullScreenTarget]="layoutItemWrapper"
-                                                        [pingServer]="
-                                                            pingServer(itemDetail.details)
-                                                        "
-                                                        [showFullScreenButton]="false"
                                                         [rotation]="item.rotation"
                                                         (showError)="
                                                             handleVideoError(itemDetail, $event)
