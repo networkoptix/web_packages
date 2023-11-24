@@ -269,7 +269,7 @@ class PermissionsDropDown(DropDown):
     def _is_open(self):
         return self._opened_options().is_visible()
 
-    def open(self):
+    def _open(self):
         if self._is_open():
             return
         self.click()
@@ -282,11 +282,11 @@ class PermissionsDropDown(DropDown):
             )
 
     def has_option_with_label(self, label: str):
-        self.open()
+        self._open()
         option = self._option_with_label(label)
         return option.is_visible()
 
     def select_option_with_label(self, label: str):
-        self.open()
+        self._open()
         option = self._option_with_label(label)
         option.click()
