@@ -11,21 +11,20 @@ from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, Permission
 from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
 from django.core.cache import caches
 from django.db import models
-from django.db.models.functions import Concat, Greatest
-from django.db.models import Sum, F, QuerySet, FilteredRelation, Q
+from django.db.models.functions import Greatest
+from django.db.models import Sum, F, QuerySet, Q, Subquery
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django_cte import CTEManager, With
+from django_cte import CTEManager
 
 from channel_partners.utils import FieldOriginalMixin
-from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
 
-from tools.helpers import get_period_start
-
+from tools.helpers import get_period_start, get_path_from_parent
 
 
 class Empty:
@@ -167,8 +166,9 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
     activated = models.BooleanField(default=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
-    observed_fields = ('organization_id', 'state', 'effective_state')
+    observed_fields = ('organization_id', 'state', 'effective_state', 'system_group_id')
 
     def __str__(self):
         return self.name or str(self.system_id)
@@ -176,6 +176,9 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['system_id', 'cloud_host'], name='unique_cloud_system')
+        ]
+        indexes = [
+            GinIndex(name="cloudsystemid_path_gin", fields=['path'], opclasses=['array_ops'])
         ]
 
     def get_security_statuses(self):
@@ -211,7 +214,16 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.organization and self.organization.can_modify_service_quantities(user)
 
     def save(self, *args, **kwargs):
+        new = self._state.adding
         self.system_id = models.UUIDField().to_python(self.system_id)
+        if (new or self.organization_id != self._original_organization_id
+                or self.system_group_id != self._original_system_group_id):
+            if self.organization_id and self.system_group_id:
+                self.path = get_path_from_parent(self.system_group)
+            elif self.organization_id:
+                self.path = get_path_from_parent(self.organization)
+            else:
+                self.path = None
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -415,6 +427,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     # allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -441,6 +454,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
              'Ability to view how many services are consumed by direct children of the CP. With a breakdown for each organization by services, by systems and system groups, for each Sub-CP by services.'),
             (ChannelPartnerPermissions.add_remove_service_quantities,
              'Change the quantity of services for child organizations')
+        ]
+        indexes = [
+            GinIndex(name="channelpartner_path_gin", fields=['path'], opclasses=['array_ops'])
         ]
 
     permissions = ChannelPartnerPermissions
@@ -538,8 +554,10 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         # and for second level of channel partners (direct children of Nx Channel Partner) only
         if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
             self.cloud_host = self.parent_channel_partner.cloud_host
-
-        original_state = self._original_state
+        if new:
+            self.id = self.id or uuid.uuid4()
+            if self.parent_channel_partner_id:
+                self.path = get_path_from_parent(self.parent_channel_partner)
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -642,71 +660,31 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             for s_type, _ in ChannelPartnerService.SERVICE_TYPES
         }
 
-
-
     @classmethod
-    def get_successors(cls, ancestor_id: str, include_ancestor: bool = True):
+    def get_successors(cls, ancestor_id: str = None,
+                       include_ancestor: bool = True) -> 'QuerySet[ChannelPartner]':
+        query = Q(path__contains=[ancestor_id])
         if include_ancestor:
-            filter_kwargs = {'id': ancestor_id}
-        else:
-            filter_kwargs = {'parent_channel_partner': ancestor_id}
-
-        def make_partners_cte(cte):
-            # non-recursive: get top parent(s) with respect to `include_parent`
-            return cls.tree.filter(
-                **filter_kwargs
-            ).values(
-                # Note. django-cte somehow annotates columns in raw SQL query with "col{col mun}"
-                # alias, and it breaks query. So we need to create alias of ID column for further
-                # using.
-                cte_id=F("id"),
-            ).union(
-                # recursive union: get descendants
-                cte.join(cls.tree.all(), parent_channel_partner_id=cte.col.cte_id).values(
-                    cte_id=F("id"),
-                ),
-                all=True,
-            )
-
-        recursive_query = With.recursive(make_partners_cte)
-
-        partners_tree = (
-            recursive_query.join(cls.tree.all(), id=recursive_query.col.cte_id)
-            .with_cte(recursive_query)
-        )
-        return partners_tree
+            query |= Q(pk=ancestor_id)
+        return cls.objects.filter(query)
 
     @classmethod
     def get_ancestors(cls, successor_id: str):
-        def make_partners_cte(cte):
-            # non-recursive: get successor which branch will be searched above from
-            return cls.tree.filter(id=successor_id).values(
-                # Note. django-cte somehow annotates columns in raw SQL query with "col{col mun}"
-                # alias, and it breaks query. So we need to create alias of ID column for further
-                # using.
-                cte_id=F("id"),
-                cte_parent_channel_partner_id=F("parent_channel_partner_id")
-            ).union(
-                # recursive union: get descendants
-                cte.join(cls.tree.all(), id=cte.col.cte_parent_channel_partner_id).values(
-                    cte_id=F("id"),
-                    cte_parent_channel_partner_id=F("parent_channel_partner_id")
-                ),
-                all=True,
-            )
-
-        recursive_query = With.recursive(make_partners_cte)
-
         partners_tree = (
-            recursive_query.join(cls.tree.all(), id=recursive_query.col.cte_id)
-            .with_cte(recursive_query)
+            cls.objects
+            .filter(id__in=Subquery(
+                cls.objects
+                .filter(id=successor_id)
+                # unnest ( anyarray ) → setof anyelement
+                # Expands an array into a set of rows. The array's elements are read out in storage order.
+                .annotate(parents=models.Func('path', function='unnest'))
+                .values('parents'))
+            )
         )
         return partners_tree
 
-
-    @cached_property
-    def successors(self):
-        return self.get_successors(ancestor_id=self.id)
+    def successors(self) -> 'QuerySet[CahnnelPartner]':
+        return ChannelPartner.objects.filter(path__contains=[self.id])
 
     @classmethod
     def update_effective_states(cls, queryset, parent_effective_state):
@@ -831,6 +809,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
     attributes = models.JSONField(default=dict)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -850,10 +829,18 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             (OrganizationPermissions.access_systems, 'Access Organization’s systems with system role\'s permissions')
 
         ]
+        indexes = [
+            GinIndex(name="organization_path_gin", fields=['path'], opclasses=['array_ops'])
+        ]
 
     permissions = OrganizationPermissions
 
     def save(self, *args, **kwargs):
+        new = self._state.adding
+        if new:
+            self.id = self.id or uuid.uuid4()
+            if self.channel_partner_id:
+                self.path = get_path_from_parent(self.channel_partner)
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -1083,12 +1070,36 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.users.filter(organizationtouser__system_group=None)
 
 
-class SystemGroup(models.Model):
+class SystemGroup(FieldOriginalMixin, models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
     name = models.CharField(max_length=1024)
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='groups')
-    parent = models.ForeignKey('SystemGroup', on_delete=models.PROTECT, blank=True, null=True, related_name='groups')
+    parent = models.ForeignKey('SystemGroup', on_delete=models.PROTECT,
+                               blank=True, null=True, related_name='groups')
     created_ts = models.DateTimeField(auto_now_add=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
+
+    observed_fields = ('organization_id', 'parent_id')
+
+    class Meta:
+        indexes = [
+            GinIndex(name="systemgroup_path_gin", fields=['path'], opclasses=['array_ops'])
+        ]
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        new = self._state.adding
+        if new or self.organization_id != self._original_organization_id or self.parent_id != self._original_parent_id:
+            if self.parent_id:
+                self.path = get_path_from_parent(self.parent)
+            elif self.organization_id:
+                self.path = get_path_from_parent(self.organization)
+            else:
+                self.path = None
+        super().save(force_insert=force_insert, force_update=force_update,
+                     using=using, update_fields=update_fields)
+
 
     def __str__(self):
         return f'<Group {self.name}>'
@@ -1111,6 +1122,7 @@ class SystemGroup(models.Model):
 
     @staticmethod
     def has_cycle(root):
+        # Not used
         if not root:
             return False
         q = queue.SimpleQueue()
@@ -1137,15 +1149,15 @@ class SystemGroup(models.Model):
         return self.organization.can_manage_systems(user)
 
     def has_overlaps(self, user: CloudUser):
-        group_map = self.organization.groups_map
-        for group in SystemGroup.objects.filter(Q(organizationtouser__user=user) | Q(id=self.id), organization=self.organization).distinct():
-            current_id = group.id
-            while current_id:
-                popped_group = group_map.pop(current_id, None)
-                if not popped_group:
-                    return True
-                current_id = popped_group.get('parent_id')
-        return False
+        def user_groups():
+            return (
+                SystemGroup.objects
+                .filter(Q(organizationtouser__user=user) | Q(id=self.id), organization=self.organization)
+                .distinct()
+            )
+        ids_arr = user_groups().annotate(ids=models.Func('id', function='array_agg')).values('ids')
+        overlaps = user_groups().filter(path__overlap=Subquery(ids_arr))
+        return overlaps.exists()
 
 
 class OrganizationToUser(models.Model):

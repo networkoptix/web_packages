@@ -135,9 +135,30 @@ class TestChannelPartner:
 
         ancestors = ChannelPartner.get_ancestors(successor_id=partners[4].id)
 
-        assert ancestors.count() == 5
+        assert ancestors.count() == 4
         partners_ids = [channel_partner.id for channel_partner in ancestors]
-        assert set(partners_ids) == set([p.id for p in partners[:5]])
+        assert set(partners_ids) == set([p.id for p in partners[:4]])
+
+    def test_get_successors(self, channel_partner_factory):
+        count = 10
+        partners = []
+        parent = None
+        for _ in range(count):
+            parent = channel_partner_factory(parent_channel_partner=parent)
+            partners.append(parent)
+
+        successors = ChannelPartner.get_successors(ancestor_id=partners[5].id)
+
+        assert successors.count() == 5
+        partners_ids = [channel_partner.id for channel_partner in successors]
+        assert set(partners_ids) == set([p.id for p in partners[5:]])
+
+        successors = ChannelPartner.get_successors(ancestor_id=partners[5].id, include_ancestor=False)
+
+        assert successors.count() == 4
+        partners_ids = [channel_partner.id for channel_partner in successors]
+        assert set(partners_ids) == set([p.id for p in partners[6:]])
+        assert set(partners_ids) == {cp.id for cp in partners[5].successors()}
 
     def test_can_modify_organization_service_quantities(self, channel_partner_factory, cp_user_factory):
         root = channel_partner_factory(parent_channel_partner=None)
@@ -473,3 +494,27 @@ class TestEffectiveStates:
         assert first_org.cloud_systems.first().effective_state == ChannelPartnerStates.SHUTDOWN
         assert last_org.cloud_systems.first().effective_state == ChannelPartnerStates.SHUTDOWN
         self.ensure_unchanged()
+
+
+class TestSystemGroup:
+
+    def test_has_overlap(self, organization_factory, system_group_factory, sys_group_user_factory, cloud_user_factory):
+        organization = organization_factory()
+        user = cloud_user_factory()
+        group_0 = system_group_factory(organization=organization)
+        group_1 = system_group_factory(organization=organization)
+        group_0_0 = system_group_factory(organization=organization, parent=group_0)
+        group_1_1 = system_group_factory(organization=organization, parent=group_1)
+        group_0_1 = system_group_factory(organization=organization, parent=group_0)
+        group_1_1 = system_group_factory(organization=organization, parent=group_1)
+        rel_0_0 = sys_group_user_factory(organization=organization, group=group_0_0, cloud_user=user)
+        rel_1_0 = sys_group_user_factory(organization=organization, group=group_1_1, cloud_user=user)
+
+        has_overlap = group_0_1.has_overlaps(user)
+        assert has_overlap is False
+        has_overlap = group_1_1.has_overlaps(user)
+        assert has_overlap is False
+        has_overlap = group_0.has_overlaps(user)
+        assert has_overlap is True
+        has_overlap = group_1.has_overlaps(user)
+        assert has_overlap is True

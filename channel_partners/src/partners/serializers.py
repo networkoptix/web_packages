@@ -6,7 +6,9 @@ import uuid
 
 import llutil
 from django.conf import settings
-from django.db.models import Sum, QuerySet, Prefetch
+from django.contrib.auth.models import Permission
+from django.core.cache import caches
+from django.db.models import Sum, QuerySet, Prefetch, Q
 from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
@@ -18,12 +20,15 @@ from rest_framework.reverse import reverse
 from rest_framework.utils.encoders import JSONEncoder
 
 from channel_partners.utils import NonPartialCharfield
-from partners.models import ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates, \
-    LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService, \
-    ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent, \
-    CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId, \
-    ServiceToSubChannelProperties, ServiceToOrganizationProperties, ChannelPartnerAccessLevel, SystemGroup, \
+from partners.models import (
+    ChannelPartner, Organization, CloudSystemId, CloudUser, ChannelPartnerStates,
+    LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService,
+    ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent,
+    CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId,
+    ServiceToSubChannelProperties, ServiceToOrganizationProperties, ChannelPartnerAccessLevel, SystemGroup,
     get_channel_partner_roles, get_organization_roles
+ )
+from tools.helpers import get_path_from_parent
 from tools.utils import bind_system_to_cdb_organization
 from .authentication import check_user_can_administer_system
 
@@ -446,6 +451,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
     class Meta:
         model = CloudUser
         fields = ['email', 'roles', 'role', 'rolesIds', 'roleId', 'title', 'created', 'groupRoles']
+
     def get_roles(self, obj: CloudUser):
         relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
         if relation:
@@ -1150,6 +1156,9 @@ class GroupSerializer(serializers.ModelSerializer):
         if value:
             if value.organization_id != self.instance.organization_id:
                 raise serializers.ValidationError('Parent group must be from the same organization')
+            if self.instance and self.instance.id in get_path_from_parent(value):
+                raise serializers.ValidationError(f'Groups tree for group {value.id} '
+                                                  f'already contains group {self.instance.id}')
         return value
 
     def update(self, instance, validated_data):

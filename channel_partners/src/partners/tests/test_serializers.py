@@ -1,4 +1,5 @@
 import random
+import uuid
 from datetime import timedelta
 
 import pytest
@@ -14,9 +15,8 @@ from partners.models import (
 from partners.serializers import (
     ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
     SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer,
-    SystemGroupUserSerializer
+    SystemGroupUserSerializer, GroupSerializer
 )
-
 
 class TestChannelPartnerAggDataSerializer:
 
@@ -370,6 +370,46 @@ class TestOrganizationSerializer:
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
         assert serializer.data['ownRoles'] == [org_admin_role.name]
+
+
+
+class TestGroupSerializer:
+    @pytest.fixture(autouse=True)
+    def setup(self, organization_factory, system_group_factory):
+        self.organization = organization_factory()
+        self.groups = []
+        parent_group = None
+        for _ in range(5):
+            parent_group = system_group_factory(organization=self.organization, parent=parent_group)
+            self.groups.append(parent_group)
+        self.other_org = organization_factory()
+        self.other_group = system_group_factory(organization=self.other_org)
+
+    def test_validate_parentId(self):
+        common_data = {
+            "name": f'{uuid.uuid4()}',
+            "organizationId": self.organization.id
+        }
+
+        # test different organizations
+        serializer = GroupSerializer(
+            self.groups[-1], data={"parentId": self.other_group.id, **common_data}
+        )
+        assert serializer.is_valid() is False
+        assert serializer.errors["parentId"][0] == 'Parent group must be from the same organization'
+
+        # test cycle
+        serializer = GroupSerializer(
+            self.groups[2], data={"parentId": self.groups[-1].id, **common_data}
+        )
+        assert serializer.is_valid() is False
+        assert 'Groups tree for group ' in serializer.errors["parentId"][0]
+
+        # test valid
+        serializer = GroupSerializer(
+            self.groups[-1], data={"parentId": self.groups[2].id, **common_data}
+        )
+        assert serializer.is_valid() is True
 
 
 class TestOrganizationUserSerializer:
