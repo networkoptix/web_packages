@@ -566,25 +566,23 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                 .then(() => (environment.isLocal ? Promise.resolve() : this.getUsers(true, true)))
                 .catch(error => {
                     if (error?.offline) {
-                        firstValueFrom(this.mediaserver.ping()).catch(() => {
-                            this.isOnline = false;
-                            const { url } = this.router;
-                            if (
-                                ['view', 'layouts', 'bookmarks', 'health', 'monitoring'].every(
-                                    route => !url.includes(route),
-                                )
-                            ) {
-                                this.ribbonService.show(
-                                    this.LANG.ribbon.systemOffline,
-                                    [],
-                                    'alert',
-                                    undefined,
-                                    true,
-                                );
-                            }
-                            this.isAvailable = false;
-                            this.systemInfo = this;
-                        });
+                        this.isOnline = false;
+                        const { url } = this.router;
+                        if (
+                            ['view', 'layouts', 'bookmarks', 'health', 'monitoring'].every(
+                                route => !url.includes(route),
+                            )
+                        ) {
+                            this.ribbonService.show(
+                                this.LANG.ribbon.systemOffline,
+                                [],
+                                'alert',
+                                undefined,
+                                true,
+                            );
+                        }
+                        this.isAvailable = false;
+                        this.systemInfo = this;
                     }
                     this.lostConnection = error?.data && error.data.resultCode === 'forbidden';
                 })
