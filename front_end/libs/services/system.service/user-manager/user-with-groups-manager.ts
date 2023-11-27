@@ -17,15 +17,6 @@ import { alphabeticalSort, cleanId } from '@utils/general';
 
 import { UserManager } from './user-manager';
 
-interface UserPerms {
-    groupIds?: string[];
-    permissions: string;
-}
-
-interface GroupIdToPermissions {
-    [id: string]: Set<string>;
-}
-
 interface IdToGroup {
     [id: string]: UserGroup;
 }
@@ -35,7 +26,6 @@ export class UserWithGroupsManager extends UserManager {
 
     protected override mediaserver: NxSystemRestAPI3;
     userGroups: IdToGroup;
-    protected groupsToPermissions: GroupIdToPermissions;
     private powerUserGroups = new Set<string>([AdminGroups.powerUserGroup]);
     protected override _ownerEmail: string;
     // isMySystem: boolean;
@@ -125,13 +115,10 @@ export class UserWithGroupsManager extends UserManager {
 
     processGroups(userGroups: UserGroup[]): void {
         const idToGroup: IdToGroup = {};
-        const groupIdToPermissions: GroupIdToPermissions = {};
         userGroups.forEach(group => {
             idToGroup[group.id] = group;
-            groupIdToPermissions[group.id] = new Set(group.permissions?.split('|') ?? '');
         });
         this.userGroups = idToGroup;
-        this.groupsToPermissions = groupIdToPermissions;
         try {
             userGroups.forEach(group => {
                 this.buildPowerUserGroupsSet(group);
@@ -251,21 +238,6 @@ export class UserWithGroupsManager extends UserManager {
         this.groups$$.set(this.groups);
     }
 
-    getPermissionsFromUserGroups({ groupIds, permissions }: UserPerms): Set<string> {
-        const initialPermissionSet = new Set<string>(
-            permissions && permissions.includes('|') ? permissions.split('|') : [permissions],
-        );
-        // cloud owner currently has no userGroupIds, but instead has permissions set on the user object permissions field
-        const calculatedPermissions = (groupIds || []).reduce(
-            (perms, id) => new Set([...perms, ...this.groupsToPermissions[id]]),
-            initialPermissionSet,
-        );
-        // sometimes a user can have 'NoGlobalPermissions' set in their permissions field
-        // but have a userGroupId with permissions --> so removing in such cases (mainly Cloud Owner)
-        calculatedPermissions.delete('NoGlobalPermissions');
-        return calculatedPermissions;
-    }
-
     override processUsers(usersWithGroups: NxUser[]): NxUser[] {
         if (!Array.isArray(usersWithGroups)) {
             return [];
@@ -284,13 +256,11 @@ export class UserWithGroupsManager extends UserManager {
                 // if (!user.fullName && user.name) {
                 //     user.fullName = user.name;
                 // }
-                const permissionsSet = this.getPermissionsFromUserGroups(user);
+
                 if (user.groupIds === undefined) {
                     user.groupIds = [];
                 }
-                user.permissions = this.normalizePermissionString(
-                    [user.permissions, Array.from(permissionsSet).join('|')].join('|'),
-                );
+
                 // should we add a list of user group names?
                 // user.userGroupNames = [];
                 // allMediaPermissionFlag exists if the all camera permission option selected...this still true?

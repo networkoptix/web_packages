@@ -7,6 +7,7 @@ import {
     Renderer2,
     HostBinding,
     effect,
+    Input,
 } from '@angular/core';
 import { ActivatedRoute, NavigationEnd, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
@@ -22,12 +23,11 @@ import staticLang from '@language_static';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
-import { NxSystemService } from '@services/system.service/system.service';
 import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/types/servers.types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
-import { cleanId, dirtyId } from '@utils/general';
+import { cleanId } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import type { ms } from '@view/datatypes/type-aliases';
 import { VideoManagementSystemService } from '@view/services/vms.service';
@@ -53,7 +53,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     @HostBinding('class.new-header') newHeader: boolean;
 
     systemId: string;
-    private system: NxSystem;
+    @Input({ required: true }) system: NxSystem;
     selectedCameraId: string;
     mediaservers: ViewMediaServer[];
 
@@ -105,7 +105,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private router: Router,
         private route: ActivatedRoute,
         private cookieService: CookieService,
-        private systemService: NxSystemService,
         private systemsService: NxSystemsService,
         private vms: VideoManagementSystemService,
         private timeline: TimelineService,
@@ -118,10 +117,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
-
+        this.newHeader = this.CONFIG.featureFlags.newHeader ?? false;
         effect(() => {
-            const state = this.vms.state();
+            const state = this.vms.state$$();
             if (state.mode === VMS_MODE.CAMERA_SELECTED) {
                 const cookieName = `nx_last_accessed_camera_for_system_${this.systemId}`;
                 this.cookieService.set(cookieName, state.selectedCameraId, 365, '/');
@@ -133,28 +131,20 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     ngOnInit(): void {
+        this.systemId = this.system.id || '';
         this.vms.reset();
-
-        this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
-            // cancel pool for the previous system
-            this.cancelPoll$.next('cancel');
-            this.systemId = params.systemId || null;
-            this.system = this.systemService.getCurrentSystem();
-            this.hasCameras = false;
-            if (!environment.isLocal) {
-                const systemInfoFromCDB = this.systemsService.systems.find(
-                    s => s.id === this.systemId,
-                );
-                if (systemInfoFromCDB?.stateOfHealth === this.CONFIG.system.status.online) {
-                    this.setInitializationState(false, false);
-                    this.ribbonService.hide();
-                } else {
-                    this.setInitializationState(true, true);
-                }
+        this.hasCameras = false;
+        if (!environment.isLocal) {
+            const systemInfoFromCDB = this.systemsService.systems.find(s => s.id === this.systemId);
+            if (systemInfoFromCDB?.stateOfHealth === this.CONFIG.system.status.online) {
+                this.setInitializationState(false, false);
+                this.ribbonService.hide();
+            } else {
+                this.setInitializationState(true, true);
             }
-            this.vms.reset();
-            this.initSystem();
-        });
+        }
+        this.vms.reset();
+        this.initSystem();
 
         this.ux.subject.pipe(untilDestroyed(this)).subscribe(state => {
             if (state.isSidebarShown) {
@@ -283,10 +273,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         archiveRanges: Record<string, BaseTimeRange>,
     ): ViewCamera {
         this.hasCameras = true;
-        const currentUser = this.system?.permissionManager.currentUser$$();
-        const canEditSpecificCamera =
-            currentUser?.resourceAccessRights?.[dirtyId(c.id)]?.includes('edit');
-        const canEdit = canEditSpecificCamera || currentUser.isAdmin;
+        const { canEditDevice } = this.system?.permissionManager;
         const result = new ViewCamera(
             c.id,
             c.parentId,
@@ -313,7 +300,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
             this.system.info?.system2faEnabled,
             c.mediaStreams,
             c.rotation,
-            canEdit,
+            canEditDevice(c.id),
         );
         return result;
     }
@@ -400,7 +387,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             };
                         });
                     });
-                this.vms.serverTimes.set(serverTimeInfos);
+                this.vms.serverTimes$$.set(serverTimeInfos);
                 serverTimeInfos.forEach(sti => {
                     const mediaServer = mediaServers?.find(ms => ms.id === sti.serverId);
                     if (mediaServer) {
@@ -424,10 +411,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 const archiveRanges: Record<string, BaseTimeRange> = {};
 
                 await this.findCamerasWithArchive(mediaServers, archiveRanges);
-
+                const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
                 const processedMediaServers = mediaServers.map(ms => ({
                     ...ms,
-                    cameras: ms.cameras.map(c => this.processCameras(c, ms, archiveRanges)),
+                    cameras: ms.cameras
+                        .filter(({ id }) => canViewDevice(id) || canViewDeviceArchive(id))
+                        .map(c => this.processCameras(c, ms, archiveRanges)),
                 }));
 
                 this.vms.setMediaServers(this.systemId, processedMediaServers);

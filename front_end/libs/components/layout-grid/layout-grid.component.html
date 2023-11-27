@@ -110,7 +110,37 @@
     [ngStyle]="cursorStyle$$()"
 >
     <div
-        *ngIf="layout?.id && layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved"
+        *ngIf="mouseMoving$$() && layoutStateService.resolutionRibbonShown$$() as secondsLeft"
+        class="resolution-ribbon"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            [src]="icons.dirNonStandard + 'warning.svg'"
+        ></svg-icon>
+        <span
+            class="ribbon-message"
+            translate
+        >
+            Set layout resolution to 'Auto' to increase performance
+        </span>
+        <button
+            class="ribbon-button"
+            (click)="layoutStateService.showResolutionRibbon$.next(0)"
+        >
+            <span translate>Dismiss</span>
+            <span class="countdown">
+                {{ secondsLeft }}
+            </span>
+        </button>
+    </div>
+    <div
+        *ngIf="
+            !layoutStateService.resolutionRibbonShown$$() &&
+            mouseMoving$$() &&
+            layout?.id &&
+            layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved
+        "
         class="unsaved-ribbon"
         [ngClass]="{
             diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(unsaved)
@@ -552,11 +582,6 @@
                                                 >
                                                     <nx-video-player
                                                         [camera]="itemDetail.details"
-                                                        [fullScreenTarget]="layoutItemWrapper"
-                                                        [pingServer]="
-                                                            pingServer(itemDetail.details)
-                                                        "
-                                                        [showFullScreenButton]="false"
                                                         [rotation]="item.rotation"
                                                         (showError)="
                                                             handleVideoError(itemDetail, $event)
@@ -570,6 +595,11 @@
                                                             skipDefaultCredentialsCheck[
                                                                 itemDetail.details.id
                                                             ]
+                                                        "
+                                                        [resolution]="
+                                                            layoutStateService.cameraResolutionLookup$$()[
+                                                                itemDetail.details.id
+                                                            ].resolution
                                                         "
                                                     >
                                                     </nx-video-player>

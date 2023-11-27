@@ -1,12 +1,32 @@
 <div class="tabs-component">
     <div class="row">
-        <button
-            class="tab"
-            *ngFor="let tab of tabs; index as i"
-            (click)="handleClick(tab, i)"
-            [ngClass]="{ selected: tab.data.displayName === selectedTab }"
-        >
-            {{ tab.data.displayName | translate }}
-        </button>
+        <ng-container *ngFor="let tab of tabItems; index as i">
+            <input
+                class="tab"
+                [id]="'t' + i"
+                (click)="handleTabClick(tab, i)"
+                type="radio"
+                [disabled]="tab.disabled"
+                [ngClass]="{ selected: tab.selected }"
+            />
+            <label
+                class="content"
+                [for]="'t' + i"
+            >
+                {{ tab.displayName }}
+            </label>
+        </ng-container>
+        <div
+            class="slider"
+            [ngStyle]="{
+                transition:
+                    animated || animationSpeed
+                        ? animationSpeed
+                            ? 'transform ' + animationSpeed
+                            : 'transform 0.5s'
+                        : '',
+                transform: 'translate(' + currTabTranslate + 'rem, 0)'
+            }"
+        ></div>
     </div>
 </div>

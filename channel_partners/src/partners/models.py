@@ -3,27 +3,28 @@ from datetime import timedelta
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
+import queue
 from typing import Dict, List
 import uuid
 
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, Permission
+from django.contrib.postgres.fields import ArrayField
+from django.contrib.postgres.indexes import GinIndex
 from django.core.cache import caches
 from django.db import models
-from django.db.models.functions import Concat, Greatest
-from django.db.models import Sum, F, QuerySet, FilteredRelation, Q
+from django.db.models.functions import Greatest
+from django.db.models import Sum, F, QuerySet, Q, Subquery
 from django.utils import timezone
 from django.utils.functional import cached_property
-from django_cte import CTEManager, With
+from django_cte import CTEManager
 
 from channel_partners.utils import FieldOriginalMixin
-from nx_cloud_api_client.apis import BatchRequestItems, BatchRequestItem
 
 from rest_framework.authtoken.models import Token
 
-from tools.helpers import get_period_start
-
+from tools.helpers import get_period_start, get_path_from_parent
 
 
 class Empty:
@@ -95,6 +96,35 @@ class CloudUser(models.Model):
     def is_authenticated(self):
         return True
 
+    def all_systems(self):
+        def find_all_nested_group_ids(group_ids):
+            group_id_set = set()
+            for sub_group_id in group_ids:
+                group_id_set.add(sub_group_id)
+                group_id_set.union(find_all_nested_group_ids(group_map[sub_group_id]['children']))
+            return group_id_set
+
+        organization_membership_ids = OrganizationToUser.objects.filter(user=self, system_group__isnull=True).values_list(
+            'organization_id', flat=True)
+        group_memberships = OrganizationToUser.objects.filter(user=self, system_group__isnull=False).values_list('organization_id', 'system_group_id')
+        if group_memberships:
+            group_membership_organization_ids, group_membership_ids = zip(*group_memberships)
+            group_membership_organization_ids = set(group_membership_organization_ids)
+            groups_in_same_organizations = SystemGroup.objects.filter(organization_id__in=group_membership_organization_ids).values()
+            group_map = {group['id']: {'children': [], **group} for group in groups_in_same_organizations}
+
+            for group in groups_in_same_organizations:
+                if group['parent_id']:
+                    group_map[group['parent_id']]['children'].append(group['id'])
+
+            all_group_ids = find_all_nested_group_ids(group_membership_ids)
+        else:
+            all_group_ids = []
+
+        return CloudSystemId.objects.filter(
+            Q(organization_id__in=organization_membership_ids) | Q(system_group_id__in=all_group_ids)
+        )
+
 
 class CloudInstance(models.Model):
     name = models.CharField(max_length=50)
@@ -121,6 +151,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     organization = models.ForeignKey('Organization', null=True, blank=True, on_delete=models.CASCADE,
                                      related_name='cloud_systems')
+    system_group = models.ForeignKey('SystemGroup', null=True, blank=True, on_delete=models.PROTECT, related_name='cloud_systems')
     name = models.CharField(max_length=150, blank=True)
     state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES, blank=False,
                                 default=ChannelPartnerStates.ACTIVE)
@@ -135,8 +166,9 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
     activated = models.BooleanField(default=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
-    observed_fields = ('organization_id', 'state', 'effective_state')
+    observed_fields = ('organization_id', 'state', 'effective_state', 'system_group_id')
 
     def __str__(self):
         return self.name or str(self.system_id)
@@ -144,6 +176,9 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     class Meta:
         constraints = [
             models.UniqueConstraint(fields=['system_id', 'cloud_host'], name='unique_cloud_system')
+        ]
+        indexes = [
+            GinIndex(name="cloudsystemid_path_gin", fields=['path'], opclasses=['array_ops'])
         ]
 
     def get_security_statuses(self):
@@ -179,7 +214,16 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.organization and self.organization.can_modify_service_quantities(user)
 
     def save(self, *args, **kwargs):
+        new = self._state.adding
         self.system_id = models.UUIDField().to_python(self.system_id)
+        if (new or self.organization_id != self._original_organization_id
+                or self.system_group_id != self._original_system_group_id):
+            if self.organization_id and self.system_group_id:
+                self.path = get_path_from_parent(self.system_group)
+            elif self.organization_id:
+                self.path = get_path_from_parent(self.organization)
+            else:
+                self.path = None
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -247,46 +291,59 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         else:
             return {}
 
-    def add_system_users_data(self):
-        roles = OrganizationRole.objects \
-            .exclude(system_role__isnull=True) \
-            .exclude(system_role='') \
-            .values('system_role', 'name')
-        org_to_user_rels = OrganizationToUser.objects \
-            .filter(organization=self.organization, roles__0__in=[r['name'] for r in roles]) \
-            .values('roles__0', 'user__email')
-        roles_users = {r['name']: {"system_role": r["system_role"], "users": []} for r in roles}
-        for rel in org_to_user_rels:
-            roles_users[rel['roles__0']]["users"].append(rel['user__email'])
+    # def add_system_users_data(self):
+    #     roles = OrganizationRole.objects \
+    #         .exclude(system_role__isnull=True) \
+    #         .exclude(system_role='') \
+    #         .values('system_role', 'name')
+    #     org_to_user_rels = OrganizationToUser.objects \
+    #         .filter(organization=self.organization, roles__0__in=[r['name'] for r in roles]) \
+    #         .values('roles__0', 'user__email')
+    #     roles_users = {r['name']: {"system_role": r["system_role"], "users": []} for r in roles}
+    #     for rel in org_to_user_rels:
+    #         roles_users[rel['roles__0']]["users"].append(rel['user__email'])
+    #
+    #     data = BatchRequestItems(
+    #         items=[
+    #             BatchRequestItem(
+    #                 systems=[str(self.system_id)],
+    #                 users=users["users"],
+    #                 accessRole=users["system_role"],
+    #                 attributes={}
+    #             ) for role, users in roles_users.items() if users["users"]
+    #         ]
+    #     )
+    #     return data
 
-        data = BatchRequestItems(
-            items=[
-                BatchRequestItem(
-                    systems=[str(self.system_id)],
-                    users=users["users"],
-                    accessRole=users["system_role"],
-                    attributes={}
-                ) for role, users in roles_users.items() if users["users"]
-            ]
-        )
-        return data
+    # def remove_system_users_data(self, user: CloudUser) -> dict:
+    #     users = OrganizationToUser.objects \
+    #         .exclude(user__email=user.email) \
+    #         .filter(organization=self.organization) \
+    #         .values_list('user__email', flat=True)
+    #     data = BatchRequestItems(
+    #         items=[
+    #             BatchRequestItem(
+    #                 systems=[str(self.system_id)],
+    #                 users=list(users),
+    #                 accessRole='none',
+    #                 attributes={}
+    #             )
+    #         ]
+    #     )
+    #     return data
 
-    def remove_system_users_data(self, user: CloudUser) -> dict:
-        users = OrganizationToUser.objects \
-            .exclude(user__email=user.email) \
-            .filter(organization=self.organization) \
-            .values_list('user__email', flat=True)
-        data = BatchRequestItems(
-            items=[
-                BatchRequestItem(
-                    systems=[str(self.system_id)],
-                    users=list(users),
-                    accessRole='none',
-                    attributes={}
-                )
-            ]
-        )
-        return data
+    @property
+    def group_ids_to_root(self):
+        if self.system_group_id:
+            return self.system_group.ids_to_root
+        return set()
+
+    def get_all_users(self):
+        group_ids = [*self.group_ids_to_root, None]
+        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+
+    def get_user_role_by_email(self, email: str):
+        return self.get_all_users().filter(user__email__iexact=email).first()
 
 
 class LocalRecordingUsage(models.Model):
@@ -328,8 +385,13 @@ class LocalRecordingUsage(models.Model):
             cloud_system.usage_issue_detected = False
         cloud_system.save()
 
+class ChannelPartnerRoles:
+    ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
+    MANAGER = uuid.UUID('00000000-0000-4000-8000-000000000002')
+    ACCOUNTANT = uuid.UUID('00000000-0000-4000-8000-000000000003')
 
 class ChannelPartnerRole(models.Model):
+
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     permissions = models.ManyToManyField(Permission)
@@ -362,10 +424,10 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
     attributes = models.JSONField(default=dict)
-    can_create_sub_channels = models.BooleanField(default=True)
-    allow_changing_services = models.BooleanField(default=False)
+    # allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -393,6 +455,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             (ChannelPartnerPermissions.add_remove_service_quantities,
              'Change the quantity of services for child organizations')
         ]
+        indexes = [
+            GinIndex(name="channelpartner_path_gin", fields=['path'], opclasses=['array_ops'])
+        ]
 
     permissions = ChannelPartnerPermissions
 
@@ -416,9 +481,14 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def allowed_role_names(self, perm: str):
         return [role.name for role in ChannelPartnerRole.objects.filter(permissions__codename=perm)]
 
+    def allowed_role_uuid(self, perm: str) -> list:
+        roles = get_channel_partner_roles()
+        ids = {r['id'] for _, r in roles.items() if perm in r['permissions']}
+        return list(ids)
+
     def has_perm(self, user: CloudUser, perm: str):
-        allowed_role_names = self.allowed_role_names(perm)
-        return self.users.filter(pk=user.pk, channelpartnertouser__roles__has_any_keys=allowed_role_names).exists()
+        allowed_role_uuid = self.allowed_role_uuid(perm)
+        return self.users.filter(pk=user.pk, channelpartnertouser__roles__overlap=allowed_role_uuid).exists()
 
     def can_access(self, user: CloudUser):
         return ((self.users.filter(pk=user.pk).exists()
@@ -438,7 +508,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, ChannelPartnerPermissions.manage_users):
             return True
-        elif (self.users.filter(channelpartnertouser__roles__has_any_keys=self.allowed_role_names(
+        elif (self.users.filter(channelpartnertouser__roles__overlap=self.allowed_role_uuid(
             ChannelPartnerPermissions.manage_users)).count() == 0
               and self.parent_channel_partner
               and self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user)):
@@ -446,8 +516,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return False
 
     def can_add_or_remove_sub_chanel_partners(self, user: CloudUser):
-        return self.can_create_sub_channels and self.has_perm(user,
-                                                              ChannelPartnerPermissions.add_remove_sub_channel_partners)
+        return self.has_perm(user, ChannelPartnerPermissions.add_remove_sub_channel_partners)
 
     def can_add_or_remove_organizations(self, user: CloudUser):
         return self.has_perm(user, ChannelPartnerPermissions.add_remove_organizations)
@@ -465,8 +534,9 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         return self.has_perm(user, ChannelPartnerPermissions.view_service_reports)
 
     def can_modify_organization_service_quantities(self, user: CloudUser):
-        return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)\
-            and self.allow_changing_services
+        # return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities) \
+        #     and self.allow_changing_services
+        return self.has_perm(user, ChannelPartnerPermissions.add_remove_service_quantities)
 
 
     # @property
@@ -484,8 +554,10 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         # and for second level of channel partners (direct children of Nx Channel Partner) only
         if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
             self.cloud_host = self.parent_channel_partner.cloud_host
-
-        original_state = self._original_state
+        if new:
+            self.id = self.id or uuid.uuid4()
+            if self.parent_channel_partner_id:
+                self.path = get_path_from_parent(self.parent_channel_partner)
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -499,14 +571,14 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 copy.parent_service = service
                 copy.save()
 
-        if not self.allow_changing_services and not new:
-            self.disable_successors_acs()
+        # if not self.allow_changing_services and not new:
+        #     self.disable_successors_acs()
 
-    def disable_successors_acs(self):
-        successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
-        for successor in successors:
-            successor.allow_changing_services = False
-        ChannelPartner.objects.bulk_update(successors, fields=['allow_changing_services'])
+    # def disable_successors_acs(self):
+    #     successors = self.get_successors(ancestor_id=self.id, include_ancestor=False)
+    #     for successor in successors:
+    #         successor.allow_changing_services = False
+    #     ChannelPartner.objects.bulk_update(successors, fields=['allow_changing_services'])
 
     def parent_channel_partner_args(self, base_arg='service', secondary_arg='parent_service', suffix_arg='', value=None) -> models.Q:
         """Returns Q object of parent channel partner condtions"""
@@ -588,71 +660,31 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             for s_type, _ in ChannelPartnerService.SERVICE_TYPES
         }
 
-
-
     @classmethod
-    def get_successors(cls, ancestor_id: str, include_ancestor: bool = True):
+    def get_successors(cls, ancestor_id: str = None,
+                       include_ancestor: bool = True) -> 'QuerySet[ChannelPartner]':
+        query = Q(path__contains=[ancestor_id])
         if include_ancestor:
-            filter_kwargs = {'id': ancestor_id}
-        else:
-            filter_kwargs = {'parent_channel_partner': ancestor_id}
-
-        def make_partners_cte(cte):
-            # non-recursive: get top parent(s) with respect to `include_parent`
-            return cls.tree.filter(
-                **filter_kwargs
-            ).values(
-                # Note. django-cte somehow annotates columns in raw SQL query with "col{col mun}"
-                # alias, and it breaks query. So we need to create alias of ID column for further
-                # using.
-                cte_id=F("id"),
-            ).union(
-                # recursive union: get descendants
-                cte.join(cls.tree.all(), parent_channel_partner_id=cte.col.cte_id).values(
-                    cte_id=F("id"),
-                ),
-                all=True,
-            )
-
-        recursive_query = With.recursive(make_partners_cte)
-
-        partners_tree = (
-            recursive_query.join(cls.tree.all(), id=recursive_query.col.cte_id)
-            .with_cte(recursive_query)
-        )
-        return partners_tree
+            query |= Q(pk=ancestor_id)
+        return cls.objects.filter(query)
 
     @classmethod
     def get_ancestors(cls, successor_id: str):
-        def make_partners_cte(cte):
-            # non-recursive: get successor which branch will be searched above from
-            return cls.tree.filter(id=successor_id).values(
-                # Note. django-cte somehow annotates columns in raw SQL query with "col{col mun}"
-                # alias, and it breaks query. So we need to create alias of ID column for further
-                # using.
-                cte_id=F("id"),
-                cte_parent_channel_partner_id=F("parent_channel_partner_id")
-            ).union(
-                # recursive union: get descendants
-                cte.join(cls.tree.all(), id=cte.col.cte_parent_channel_partner_id).values(
-                    cte_id=F("id"),
-                    cte_parent_channel_partner_id=F("parent_channel_partner_id")
-                ),
-                all=True,
-            )
-
-        recursive_query = With.recursive(make_partners_cte)
-
         partners_tree = (
-            recursive_query.join(cls.tree.all(), id=recursive_query.col.cte_id)
-            .with_cte(recursive_query)
+            cls.objects
+            .filter(id__in=Subquery(
+                cls.objects
+                .filter(id=successor_id)
+                # unnest ( anyarray ) → setof anyelement
+                # Expands an array into a set of rows. The array's elements are read out in storage order.
+                .annotate(parents=models.Func('path', function='unnest'))
+                .values('parents'))
+            )
         )
         return partners_tree
 
-
-    @cached_property
-    def successors(self):
-        return self.get_successors(ancestor_id=self.id)
+    def successors(self) -> 'QuerySet[CahnnelPartner]':
+        return ChannelPartner.objects.filter(path__contains=[self.id])
 
     @classmethod
     def update_effective_states(cls, queryset, parent_effective_state):
@@ -694,7 +726,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 class ChannelPartnerToUser(models.Model):
     channel_partner = models.ForeignKey(ChannelPartner, on_delete=models.CASCADE)
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
-    roles = models.JSONField(default=list)
+    roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
@@ -706,15 +738,28 @@ class ChannelPartnerToUser(models.Model):
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
 
+    @property
+    def roles_name(self):
+        roles = get_channel_partner_roles()
+        return [roles[r]['name'] for r in self.roles]
+
+class OrganizationRoles:
+    ORGANIZATION_ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
+    ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000002')
+    POWER_USER = uuid.UUID('00000000-0000-4000-8000-000000000003')
+    SYSTEM_HEALTH_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000004')
+    ADVANCED_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000005')
+    VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000006')
+    LIVE_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000007')
+    SYSTEM_GROUPS = uuid.UUID('00000000-0000-4000-8000-000000000008')
+
 
 class OrganizationRole(models.Model):
-    ORGANIZATION_ADMINISTRATOR = uuid.UUID(int=1, version=4)
-    SYSTEM_HEALTH_VIEWER = uuid.UUID(int=4, version=4)
 
     id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
     name = models.CharField(max_length=100, unique=True)
     system_role = models.CharField(max_length=100, blank=True, default='')
-    system_role_uuid = models.CharField(max_length=100, blank=True, default='')
+    system_role_uuid = models.UUIDField(blank=True, null=True)
     permissions = models.ManyToManyField(Permission)
 
     def __str__(self):
@@ -732,8 +777,8 @@ class OrganizationPermissions:
 
 class ChannelPartnerAccessLevel:
     # leave empty spaces for additional levels
-    FULL = OrganizationRole.ORGANIZATION_ADMINISTRATOR
-    PRIVACY_MODE = OrganizationRole.SYSTEM_HEALTH_VIEWER
+    FULL = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+    PRIVACY_MODE = OrganizationRoles.SYSTEM_HEALTH_VIEWER
     NO_ACCESS = Empty
 
     LEVEL_CHOICES = [
@@ -760,16 +805,11 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     effective_state = models.IntegerField(choices=ChannelPartnerStates.STATE_CHOICES,
                                           blank=False, default=ChannelPartnerStates.ACTIVE)
     channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
-                                                     limit_choices_to={
-                                                         "id__in": [
-                                                             OrganizationRole.ORGANIZATION_ADMINISTRATOR,
-                                                             OrganizationRole.SYSTEM_HEALTH_VIEWER
-                                                         ]
-                                                     },
-                                                     default=OrganizationRole.ORGANIZATION_ADMINISTRATOR,
+                                                     default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
     attributes = models.JSONField(default=dict)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'id'  # Field that is checked for possible external id usage
@@ -789,10 +829,18 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             (OrganizationPermissions.access_systems, 'Access Organization’s systems with system role\'s permissions')
 
         ]
+        indexes = [
+            GinIndex(name="organization_path_gin", fields=['path'], opclasses=['array_ops'])
+        ]
 
     permissions = OrganizationPermissions
 
     def save(self, *args, **kwargs):
+        new = self._state.adding
+        if new:
+            self.id = self.id or uuid.uuid4()
+            if self.channel_partner_id:
+                self.path = get_path_from_parent(self.channel_partner)
         self.update_state()
         super().save(*args, **kwargs)
 
@@ -875,19 +923,27 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def allowed_role_names(self, perm: str):
         return [role.name for role in OrganizationRole.objects.filter(permissions__codename=perm)]
 
+    def allowed_role_uuid(self, perm: str) -> list:
+        roles = get_organization_roles()
+        ids = {r['id'] for _, r in roles.items() if perm in r['permissions']}
+        return list(ids)
+
     def has_perm(self, user: CloudUser, perm: str):
-        allowed_role_names = self.allowed_role_names(perm)
-        if self.users.filter(pk=user.pk, organizationtouser__roles__has_any_keys=allowed_role_names).exists():
+        allowed_role_uuid = self.allowed_role_uuid(perm)
+        if self.users.filter(pk=user.pk,
+                             organizationtouser__roles__overlap=allowed_role_uuid,
+                             organizationtouser__system_group=None).exists():
             return True
-        channel_partner_manager = ChannelPartnerToUser.objects.filter(user=user, channel_partner=self.channel_partner,
-                                                                      roles__has_any_keys=['Administrator',
-                                                                                           'Manager']).exists()
+        channel_partner_manager = ChannelPartnerToUser.objects.filter(
+            user=user, channel_partner=self.channel_partner,
+            roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        ).exists()
         if channel_partner_manager:
-            if self.channel_partner_access_level_id == OrganizationRole.ORGANIZATION_ADMINISTRATOR:
-                role = 'Organization Administrator'
+            if self.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR:
+                role = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
             else:
-                role = 'System Health Viewer'
-            return role in allowed_role_names
+                role = OrganizationRoles.SYSTEM_HEALTH_VIEWER
+            return role in allowed_role_uuid
         return False
 
     def can_access(self, user: CloudUser):
@@ -908,7 +964,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, OrganizationPermissions.manage_users):
             return True
-        elif self.users.filter(organizationtouser__roles__has_any_keys=self.allowed_role_names(
+        elif self.users.filter(organizationtouser__roles__overlap=self.allowed_role_uuid(
                 OrganizationPermissions.manage_users)
         ).count() == 0 and self.channel_partner.can_add_or_remove_organizations(user):
             return True
@@ -921,7 +977,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return self.has_perm(user, OrganizationPermissions.view_health_monitoring)
 
     def can_access_systems(self, user: CloudUser):
-        return self.has_perm(user, OrganizationPermissions.access_systems) or self.channel_partner.can_access(user)
+        return self.has_perm(user, OrganizationPermissions.access_systems)
 
     @property
     def all_services(self):
@@ -961,39 +1017,193 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             return
         self.update_systems_effective_states(organization_effective_state=self.effective_state)
 
+    def system_group_member_dict(self, user: CloudUser):
+        return {rel['system_group_id']: rel for rel in
+                OrganizationToUser.objects.filter(organization=self, user=user).values('system_group_id', 'roles')}
+
+    @property
+    def groups_map(self):
+        org_groups = self.groups.all().values()
+        return {group['id']: group for group in org_groups}
+
+    @property
+    def groups_tree(self):
+        org_groups = self.groups.all().values()
+        tree_roots = []
+        groups_map = {}
+
+        for group in org_groups:
+            groups_map[group['id']] = group
+            group['children'] = []
+
+        for group in org_groups:
+            if group['parent_id']:
+                groups_map[group['parent_id']]['children'].append(group)
+            else:
+                tree_roots.append(group)
+
+        return tree_roots
+
+    def get_groups_structure_for_user(self, user: CloudUser):
+        def find_matching_nodes_in_tree(nodes):
+            trimmed_tree = []
+            for node in nodes:
+                if node['id'] in system_group_member_dict:
+                    trimmed_tree.append(node)
+                    node['roles'] = system_group_member_dict[node['id']]['roles']
+                else:
+                    trimmed_tree.extend(find_matching_nodes_in_tree(node['children']))
+            return trimmed_tree
+
+        system_group_member_dict = self.system_group_member_dict(user)
+        groups_tree = self.groups_tree
+        if None not in system_group_member_dict:
+            groups_tree = find_matching_nodes_in_tree(groups_tree)
+        return groups_tree
+
+    @property
+    def user_list(self):
+        return self.users.all().distinct()
+
+    @property
+    def direct_users(self):
+        return self.users.filter(organizationtouser__system_group=None)
+
+
+class SystemGroup(FieldOriginalMixin, models.Model):
+    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    name = models.CharField(max_length=1024)
+    organization = models.ForeignKey(Organization, on_delete=models.CASCADE, related_name='groups')
+    parent = models.ForeignKey('SystemGroup', on_delete=models.PROTECT,
+                               blank=True, null=True, related_name='groups')
+    created_ts = models.DateTimeField(auto_now_add=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
+
+    observed_fields = ('organization_id', 'parent_id')
+
+    class Meta:
+        indexes = [
+            GinIndex(name="systemgroup_path_gin", fields=['path'], opclasses=['array_ops'])
+        ]
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        new = self._state.adding
+        if new or self.organization_id != self._original_organization_id or self.parent_id != self._original_parent_id:
+            if self.parent_id:
+                self.path = get_path_from_parent(self.parent)
+            elif self.organization_id:
+                self.path = get_path_from_parent(self.organization)
+            else:
+                self.path = None
+        super().save(force_insert=force_insert, force_update=force_update,
+                     using=using, update_fields=update_fields)
+
+
+    def __str__(self):
+        return f'<Group {self.name}>'
+
+    def is_root(self):
+        return not self.parent
+
+    @property
+    def ids_to_root(self):
+        ids = {self.id}
+        current = self
+        while current.parent_id:
+            ids.add(current.parent_id)
+            current = current.parent
+        return ids
+
+    def get_all_users(self):
+        group_ids = [*self.ids_to_root, None]
+        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+
+    @staticmethod
+    def has_cycle(root):
+        # Not used
+        if not root:
+            return False
+        q = queue.SimpleQueue()
+        q.put(root)
+        visited = set()
+        while not q.empty():
+            current = q.get()
+            if current.id in visited:
+                return True
+            visited.add(current.id)
+            for child in current.groups:
+                q.put(child)
+        return False
+
+    def can_access(self, user: CloudUser):
+        relations = self.organization.system_group_member_dict(user)
+        # system_group = None means direct organization user
+        if None in relations:
+            return True
+
+        return bool(self.ids_to_root.intersection(relations))
+
+    def can_manage(self, user: CloudUser):
+        return self.organization.can_manage_systems(user)
+
+    def has_overlaps(self, user: CloudUser):
+        def user_groups():
+            return (
+                SystemGroup.objects
+                .filter(Q(organizationtouser__user=user) | Q(id=self.id), organization=self.organization)
+                .distinct()
+            )
+        ids_arr = user_groups().annotate(ids=models.Func('id', function='array_agg')).values('ids')
+        overlaps = user_groups().filter(path__overlap=Subquery(ids_arr))
+        return overlaps.exists()
+
 
 class OrganizationToUser(models.Model):
     organization = models.ForeignKey(Organization, on_delete=models.CASCADE)
+    system_group = models.ForeignKey('SystemGroup', blank=True, null=True, on_delete=models.CASCADE)
     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
-    roles = models.JSONField(default=list)
+    roles = ArrayField(base_field=models.UUIDField(), default=list)
     title = models.CharField(max_length=100, blank=True)
     created_ts = models.DateTimeField(auto_now_add=True)
 
+    membership_type = 'organization'
+
     class Meta:
         constraints = [
-            models.constraints.UniqueConstraint(fields=['organization', 'user'], name='unique_organization_user')
+            models.constraints.UniqueConstraint(fields=['organization', 'user', 'system_group'], name='unique_organization_user')
         ]
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_users(user)
 
-    def update_user_systems_data(self, role: OrganizationRole | None) -> dict:
-        systems = CloudSystemId.objects \
-            .filter(organization=self.organization) \
-            .exclude(state=ChannelPartnerStates.SHUTDOWN)
-        systems = systems.values_list('system_id', flat=True)
-        data = BatchRequestItems(
-            items=[
-                BatchRequestItem(
-                    systems=[str(system) for system in systems],
-                    users=[self.user.email],
-                    accessRole=getattr(role, 'system_role', 'none') or 'none',
-                    attributes={}
-                )
-            ]
-        )
-        return data
+    # def update_user_systems_data(self, role: OrganizationRole | None) -> dict:
+    #     systems = CloudSystemId.objects \
+    #         .filter(organization=self.organization) \
+    #         .exclude(state=ChannelPartnerStates.SHUTDOWN)
+    #     systems = systems.values_list('system_id', flat=True)
+    #     data = BatchRequestItems(
+    #         items=[
+    #             BatchRequestItem(
+    #                 systems=[str(system) for system in systems],
+    #                 users=[self.user.email],
+    #                 accessRole=getattr(role, 'system_role', 'none') or 'none',
+    #                 attributes={}
+    #             )
+    #         ]
+    #     )
+    #     return data
 
+    @property
+    def roles_name(self):
+        roles = get_organization_roles()
+        return [roles[r]['name'] for r in self.roles]
+
+    @property
+    def system_roles_name(self):
+        roles = get_organization_roles()
+        return [roles[r]['system_role'] for r in self.roles if roles[r]['system_role']]
 
 class ChannelPartnerService(models.Model):
     # Service Types
@@ -1368,3 +1578,51 @@ class BillingModel(models.Model):
     regular_period_type = models.IntegerField(choices=RegularPeriodTypes.TYPES)
     invoice_type = models.IntegerField(choices=InvoiceTypes.TYPES)
     fixed_invoice_date = models.DateField(help_text='If invoice_type is "Fixed Date"', blank=True, null=True)
+
+
+
+
+
+# class SystemGroupToUser(models.Model):
+#     system_group = models.ForeignKey(SystemGroup, on_delete=models.CASCADE)
+#     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
+#     roles = models.JSONField(default=list)
+#     created_ts = models.DateTimeField(auto_now_add=True)
+#
+#     class Meta:
+#         constraints = [
+#             models.constraints.UniqueConstraint(fields=['system_group', 'user'], name='unique_systemgroup_user')
+#         ]
+#
+#     def can_manage(self, user: CloudUser):
+#         return self.system_group.organization.can_manage_users(user)
+def get_channel_partner_roles() -> Dict[uuid.UUID | str, dict]:
+    if roles := caches['local'].get('channel_partner_roles', {}):
+        return roles
+    for role in ChannelPartnerRole.objects.all().prefetch_related('permissions'):
+        if not role.permissions:
+            continue
+        roles[role.id] = roles[role.name] = {
+            'permissions': [p.codename for p in role.permissions.all()],
+            'name': role.name,
+            'id': role.id
+        }
+    caches['local'].set('channel_partner_roles', roles)
+    return roles
+
+
+def get_organization_roles() -> Dict[uuid.UUID | str, dict]:
+    if roles := caches['local'].get('organization_roles', {}):
+        return roles
+    for role in OrganizationRole.objects.all().prefetch_related('permissions'):
+        if not role.permissions:
+            continue
+        roles[role.id] = roles[role.name] = {
+            'permissions': [p.codename for p in role.permissions.all()],
+            'name': role.name,
+            'id': role.id,
+            'system_role': role.system_role,
+            'system_role_uuid': role.system_role_uuid
+        }
+    caches['local'].set('organization_roles', roles)
+    return roles

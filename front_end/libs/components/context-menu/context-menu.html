@@ -1,11 +1,11 @@
 <div
     cdkMenu
-    [ngClass]="subMenu ? 'sub-menu' : ''"
+    [ngClass]="isSubMenu ? 'sub-menu' : ''"
 >
     <ng-container *ngFor="let item of menu">
         <mat-divider *ngIf="item.name === 'divider'" />
 
-        <ng-container *ngIf="!!item.subMenu">
+        <ng-container *ngIf="!!item.subMenu && !item.disabled$$?.()">
             <button
                 cdkMenuItem
                 [cdkMenuTriggerFor]="subMenu"
@@ -23,18 +23,20 @@
             </button>
             <ng-template #subMenu>
                 <nx-context-menu
+                    *ngIf="!!item.subMenu"
                     [menuItems]="item.subMenu"
                     [context]="context"
-                    [subMenu]="true"
+                    [isSubMenu]="true"
                 />
             </ng-template>
         </ng-container>
 
-        <ng-container *ngIf="!item.subMenu && !!item.action && !!item.name">
+        <ng-container *ngIf="!item.subMenu && !!item.action && !!item.name && !item.disabled$$?.()">
             <button
                 cdkMenuItem
                 (click)="item.action($event, context); $event.stopPropagation()"
                 [ngClass]="{checked: item.checked$$?.()}"
+                [disabled]="item.disabled$$?.()"
             >
                 {{ item.name | translate }}
                 <svg-icon
@@ -47,6 +49,15 @@
                     [src]="icons.dirLayouts + 'yes.svg'"
                 >
                 </svg-icon>
+            </button>
+        </ng-container>
+
+        <ng-container *ngIf="item.disabled$$?.()">
+            <button
+                cdkMenuItem
+                [disabled]="item.disabled$$?.()"
+            >
+                {{ item.name | translate }}
             </button>
         </ng-container>
     </ng-container>

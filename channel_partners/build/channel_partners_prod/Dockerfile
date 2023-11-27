@@ -10,7 +10,7 @@ WORKDIR /app
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
-        bash netcat jq curl tini pkg-config libpq5 \
+        bash netcat jq curl  libcurl4-openssl-dev tini pkg-config libpq5 libssl-dev \
     # TODO: !! REMOVE AFTER llutil published
     && apt-get install --no-install-suggests --no-install-recommends -y gcc build-essential libssl-dev \
     && python -m pip install --upgrade --no-cache-dir pip==23.2.1 \

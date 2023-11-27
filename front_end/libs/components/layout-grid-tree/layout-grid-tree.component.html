@@ -88,7 +88,12 @@
             >
                 <div
                     cdkDrag
-                    [cdkDragDisabled]="!node.details || layout.locked || !node.type"
+                    [cdkDragDisabled]="
+                        !node.details ||
+                        layout.locked ||
+                        !node.type ||
+                        node.details?.id === layout.id
+                    "
                     (click)="handleSingleClick(node)"
                     (dblclick)="handleDoubleClick(node)"
                     (cdkDragMoved)="

@@ -8,6 +8,7 @@ import { RedirectAuthGuard } from '@guards/redirectAuthGuard';
 import { SystemGuard } from '@guards/systemGuard';
 import { TwofaGuard } from '@guards/twofaGuard';
 import { PipesModule } from '@pipes/pipes.module';
+import { SystemTitleResolver } from '@resolvers/system-title-resolver';
 import { NxPageTitleStrategy } from '@resolvers/title-resolver';
 import { FeatureFlagStrings } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
@@ -45,6 +46,18 @@ const lazyRoutes: Routes = [
         data: {
             flags: FeatureFlagStrings.layouts,
         },
+    },
+    {
+        path: 'systems/:systemId/services',
+        loadComponent: () =>
+            import('@pages/systems/services/services.component').then(c => c.NxServicesComponent),
+        canActivate: [
+            AuthGuard,
+            SystemGuard,
+            TwofaGuard,
+            () => nxConfig.featureFlags.channelPartners,
+        ],
+        title: SystemTitleResolver,
     },
     {
         path: 'theme-generator',

@@ -17,6 +17,7 @@
     "NofM": "{n} of {m}",
     "downloadBookmark": "Download {title}",
     "groupCount": "{count} Groups",
+    "listString": "{listItems} and {singleItem}",
     "exclude": {
         "nested": "{start}{end}"
     },
@@ -102,6 +103,22 @@
                 "name": "Rename",
                 "tooltip": "Rename \"{name}\" layout"
             },
+            "resolution": {
+                "name": "Resolution",
+                "tooltip": "Change layout \"{name}\" resolution"
+            },
+            "resolutionAuto": {
+                "name": "Auto"
+            },
+            "resolutionHigh": {
+                "name": "High"
+            },
+            "resolutionLow": {
+                "name": "Low"
+            },
+            "resolutionCustom": {
+                "name": "Custom"
+            },
             "duplicate": {
                 "name": "Duplicate",
                 "tooltip": "Duplicate \"{name}\" layout"
@@ -183,7 +200,7 @@
                 "layouts": "Layouts",
                 "servers": "Servers",
                 "server": "Server",
-                "cameras": "Cameras",
+                "cameras": "Cameras & Devices",
                 "camera": "Camera",
                 "webpages": "Web Pages"
             }
@@ -579,6 +596,7 @@
             "iOSVideoTooLarge": "iOS does not support video larger than fullHD (2MP: 1920x1080).",
             "ieNoWebm": "Please, install <a href='https://tools.google.com/dlpage/webmmf/' target='_blank'>WebM codec</a> for Internet Explorer.",
             "ieWin10": "Please, use Microsoft Edge or Google Chrome browsers.",
+            "noAccess": "No Access",
             "noArmSupport": "This browser or device does not support video playback from ARM-based servers.",
             "noData": "No data",
             "noFormat": "This browser does not support video playback from this camera.",
@@ -1450,7 +1468,8 @@
         "Information": "Information",
         "Bookmarks": "Bookmarks",
         "Layouts": "Layouts",
-        "Monitoring": "Monitoring"
+        "Monitoring": "Monitoring",
+        "Services": "Services"
     },
     "setupWizard": {
         "title": {

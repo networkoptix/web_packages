@@ -48,6 +48,29 @@ export interface ChannelPartner {
     attributes: Record<string, unknown>;
     canCreateSubChannels: boolean;
     name: string;
+    supportInformation: SupportInformation;
+}
+
+export interface SupportInformation {
+    sites: string[];
+    phones: Phone[];
+    emails: Email[];
+    custom: Custom[];
+}
+
+interface Phone {
+    phone: string;
+    description: string;
+}
+
+interface Email {
+    email: string;
+    description: string;
+}
+
+interface Custom {
+    label: string;
+    value: string;
 }
 
 export type PaginatedChannelPartnerList = Page<ChannelPartner>;
@@ -137,3 +160,22 @@ export interface CreateOrganizationUser {
 }
 
 export type UpdateOrganizationUser = CreateOrganizationUser;
+
+/* System Services */
+export interface Service {
+    quantity: number;
+}
+
+export interface SystemServices {
+    services: Record<string, Service>;
+}
+export interface ServiceData {
+    id: string;
+    type: string;
+    state: string;
+    displayName: string;
+    description: string;
+    createdByChannelPartner: string;
+    parameters: Record<string, string | number>;
+    created: string;
+}

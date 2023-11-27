@@ -5,7 +5,7 @@ import { GUID, ms } from '@view/datatypes/type-aliases';
 import { ViewCamera } from '../datatypes/Camera';
 import { ViewMediaServer } from '../datatypes/IMediaServer';
 import type { BaseTimeRange } from '../datatypes/TimeRange';
-import { VMS_MODE, VmsState, VmsServerTimeInfo } from '../datatypes/VmsState';
+import { VMS_MODE, VmsServerTimeInfo, VmsState } from '../datatypes/VmsState';
 // import testMediaServers from '../testMediaServers'
 
 // these two types allow separation of
@@ -28,9 +28,9 @@ const initializeVmsState = (): VmsState => ({
 })
 export class VideoManagementSystemService {
     static readonly statusRefreshInterval = 15000;
-    state = signal<VmsState>(initializeVmsState());
-    serverTimes = signal<Array<VmsServerTimeInfo>>([]);
-    systemId = computed<string>(() => this.state().systemId);
+    state$$ = signal<VmsState>(initializeVmsState());
+    serverTimes$$ = signal<Array<VmsServerTimeInfo>>([]);
+    systemId$$ = computed<string>(() => this.state$$().systemId);
 
     constructor() {
         this.reset();
@@ -38,12 +38,12 @@ export class VideoManagementSystemService {
 
     reset(): void {
         // console.log('reset');
-        this.state.set(initializeVmsState());
-        this.serverTimes.set([]);
+        this.state$$.set(initializeVmsState());
+        this.serverTimes$$.set([]);
     }
 
-    get selectedCamera(): ViewCamera {
-        return this.state().selectedCamera;
+    get selectedCamera(): ViewCamera | undefined {
+        return this.state$$().selectedCamera;
     }
 
     /*
@@ -82,14 +82,14 @@ export class VideoManagementSystemService {
     */
 
     get timeZoneOffset(): ms {
-        const serverTimes = this.serverTimes();
+        const serverTimes = this.serverTimes$$();
         let result = 0;
         if (serverTimes?.length) {
             // console.warn('TZO no server times data');
-        } else if (this.state().mode !== VMS_MODE.CAMERA_SELECTED) {
+        } else if (this.state$$().mode !== VMS_MODE.CAMERA_SELECTED) {
             // console.warn('TZO no camera selected');
         } else {
-            const { parentServerId, preferredServerId } = this.selectedCamera;
+            const { parentServerId, preferredServerId } = this.selectedCamera ?? {};
             const targetServerIds = [parentServerId, preferredServerId];
             const preferredServerTime =
                 serverTimes.find(st => targetServerIds.includes(st.serverId)) || serverTimes[0];
@@ -114,22 +114,28 @@ export class VideoManagementSystemService {
 
     setMediaServers(systemId: string, mediaServers: ViewMediaServer[]): void {
         // console.log('setMediaServers', systemId, mediaServers, updateCamerasOnly);
-        this.state.update(state => {
-            state.systemId = systemId;
-            state.mediaServers = mediaServers;
-            state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
-            state.cameras = mediaServers.reduce<Record<string, ViewCamera>>((acc, ms) => {
+        this.state$$.update(state => {
+            const prevSelectedCameraId = state.selectedCameraId;
+            const cameras = mediaServers.reduce<Record<string, ViewCamera>>((acc, ms) => {
                 ms.cameras.forEach(c => {
                     acc[c.id] = c;
                 });
                 return acc;
             }, {});
-            const prevSelectedCameraId = state.selectedCameraId;
-            if (prevSelectedCameraId && prevSelectedCameraId in state.cameras) {
-                state.mode = VMS_MODE.CAMERA_SELECTED;
-                state.selectedCamera = state.cameras[prevSelectedCameraId];
+            let mode = VMS_MODE.CAMERA_NOT_SELECTED;
+            let selectedCamera = state.selectedCamera;
+            if (prevSelectedCameraId && prevSelectedCameraId in cameras) {
+                mode = VMS_MODE.CAMERA_SELECTED;
+                selectedCamera = cameras[prevSelectedCameraId];
             }
-            return state;
+            return {
+                ...state,
+                systemId,
+                mediaServers,
+                mode,
+                cameras,
+                selectedCamera,
+            };
         });
     }
 
@@ -138,8 +144,8 @@ export class VideoManagementSystemService {
     }
 
     addRecordsToSelectedCamera(records: BaseTimeRange[]): void {
-        if (this.state().mode !== VMS_MODE.NOT_INITIALIZED) {
-            this.selectedCamera.pushRecordedChunks(records);
+        if (this.state$$().mode !== VMS_MODE.NOT_INITIALIZED) {
+            this.selectedCamera?.pushRecordedChunks(records);
         } else {
             // console.warn(
             //     'attempt to set camera newly recorded records while in NOT_INITIALIZED state',
@@ -150,7 +156,7 @@ export class VideoManagementSystemService {
     }
 
     selectCamera(cameraId: GUID): void {
-        const state = this.state();
+        const state = this.state$$();
         if (
             !state ||
             state.mode === VMS_MODE.NOT_INITIALIZED ||
@@ -160,26 +166,24 @@ export class VideoManagementSystemService {
             // console.warn('attempt to select camera while VMS is not initialized yet');
             return;
         }
-        this.state.update(state => {
-            if (cameraId in state.cameras) {
-                state.mode = VMS_MODE.CAMERA_SELECTED;
-                state.selectedCamera = state.cameras[cameraId];
-                state.selectedCameraId = cameraId;
-            }
-            return state;
-        });
+        this.state$$.update(state => ({
+            ...state,
+            mode: VMS_MODE.CAMERA_SELECTED,
+            selectedCamera: state.cameras[cameraId],
+            selectedCameraId: cameraId,
+        }));
     }
 
     clearCameraSelection(): void {
-        if (this.state().mode === VMS_MODE.NOT_INITIALIZED) {
+        if (this.state$$().mode === VMS_MODE.NOT_INITIALIZED) {
             // console.warn('attempt to clear camera selection while VMS is not initialized yet');
             return;
         }
-        this.state.update(state => {
-            state.mode = VMS_MODE.CAMERA_NOT_SELECTED;
-            state.selectedCamera = undefined;
-            state.selectedCameraId = '';
-            return state;
-        });
+        this.state$$.update(state => ({
+            ...state,
+            mode: VMS_MODE.CAMERA_NOT_SELECTED,
+            selectedCamera: undefined,
+            selectedCameraId: '',
+        }));
     }
 }

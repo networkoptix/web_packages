@@ -9,6 +9,15 @@ channe_partner_urls = [
     path('services', all_services, name='services')
 ]
 
+channel_partner_internal_urls = [
+    path('events', partner_events, name='events'),
+    path('services', all_services, name='services'),
+    path('systems/<uuid:system_id>/users', system_users, name='system_users'),
+    path('systems/<uuid:system_id>/users/<str:email>', system_user, name='system_user'),
+    path('users/<str:email>/systems', user_systems, name='user_systems'),
+    path('users/all', all_org_users, name='all_org_users')
+]
+
 channel_partners_router = ExtendedSimpleRouter()
 channel_partners_router.register(rf'^channel_partners/(?P<channel_partner_id>{converters.UUIDConverter.regex})/external_ids', ChannelPartnerExternalIdViewset, basename='channelpartner-externalid')
 channel_partners_router.register(rf'^organizations/(?P<channel_partner_id>{converters.UUIDConverter.regex})/external_ids', OrganizationrExternalIdViewset, basename='organization-externalid')
@@ -23,9 +32,12 @@ channel_partners_routes.register('sub_channel_partners', ChannelPartnerNestedVie
 channel_partners_routes.register('organizations', OrganizationNesetedViewSet, basename='channelpartners-organization', parents_query_lookups=['channel_partner'])
 
 organization_routes = channel_partners_router.register('organizations', OrganizationViewSet, basename='organization')
-organization_routes.register('users', OrganizationUserViewSet, basename='organizations-user', parents_query_lookups=['organization'])
+organization_users_routes = organization_routes.register('users', OrganizationUserViewSet, basename='organizations-user', parents_query_lookups=['organizations'])
 organization_routes.register('cloud_systems', CloudSystemNestedViewSet, basename='organizations-cloudsystem', parents_query_lookups=['organization'])
 organization_routes.register('services', OrganizationServiceViewset, basename='channelpartners-owned-service', parents_query_lookups=['organization'])
+
+group_routes = channel_partners_router.register('groups', SystemGroupViewSet, basename='group')
+group_routes.register('users', SystemGroupUserViewSet, basename='group-user', parents_query_lookups=['system_group'])
 
 channel_partners_router.register(
     'cloud_systems', CloudSystemViewSet, basename='cloudsystem'
@@ -33,5 +45,6 @@ channel_partners_router.register(
 
 urlpatterns = [
     re_path(r'^partners/', include(channel_partners_router.urls)),
-    re_path(r'^partners/', include(channe_partner_urls))
+    re_path(r'^partners/', include(channe_partner_urls)),
+    re_path(r'^internal/partners/', include(channel_partner_internal_urls)),
 ]

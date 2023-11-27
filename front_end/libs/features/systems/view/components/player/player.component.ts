@@ -102,12 +102,12 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         );
 
         effect(() => {
-            this.rotateDeg = this.vms.state().selectedCamera?.rotation || 0;
+            this.rotateDeg = this.vms.state$$().selectedCamera?.rotation || 0;
         });
     }
 
     fetchRuntime(): string {
-        return this.sessionStorage.retrieve(`${this.vms.systemId()}-${this.xRuntimeGuid}`);
+        return this.sessionStorage.retrieve(`${this.vms.systemId$$()}-${this.xRuntimeGuid}`);
     }
 
     ngOnInit(): void {

@@ -13,7 +13,7 @@ interface MappingCallbackFn<T> {
 export class CustomAccountProperty<T> {
     static INSTANCES: Record<string, CustomAccountProperty<unknown>> = {};
     #endpoint: string;
-    #value$ = new BehaviorSubject<T>(null);
+    #value$ = new BehaviorSubject<T | null>(null);
 
     value$: Observable<T>;
     signal$$: Signal<T>;

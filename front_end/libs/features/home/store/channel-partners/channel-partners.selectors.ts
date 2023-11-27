@@ -47,6 +47,11 @@ export const selectCurrentPartner = createSelector(
     (partners, id) => partners.find(partner => partner.id === id),
 );
 
+export const selectCurrentPartnerInfo = createSelector(
+    selectCurrentPartner,
+    partner => partner?.supportInformation,
+);
+
 export const selectCurrentOrganization = createSelector(
     selectRootOrganizations,
     selectCurrentOrgId,

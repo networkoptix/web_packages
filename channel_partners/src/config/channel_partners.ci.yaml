@@ -7,5 +7,6 @@ postgres:
     password: 'partners'
     database: 'channel_partners'
 
+redis_host: 'localhost'
 default_host: 'cloud-test.hdw.mx'
 

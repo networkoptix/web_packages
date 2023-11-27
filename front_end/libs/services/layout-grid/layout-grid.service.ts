@@ -9,8 +9,8 @@ import { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-pro
 import { LayoutItem } from '@services/system-api.types/layouts.types';
 
 interface LayoutSettings {
-    openMenu: 'left' | 'right' | 'both';
-    previousOpenMenu: 'left' | 'right' | 'both';
+    openMenu: 'left' | 'right' | 'both' | null;
+    previousOpenMenu: 'left' | 'right' | 'both' | null;
 }
 
 @Injectable({
@@ -37,9 +37,11 @@ export class NxLayoutGridService {
         });
     }
 
-    isLeftMenuOpen$$ = computed<boolean>(() => this.layoutSettings.signal$$()?.openMenu === 'left');
+    isLeftMenuOpen$$ = computed(() => {
+        return this.layoutSettings.signal$$()?.openMenu === 'left';
+    });
 
-    toggleMenu(menu: 'left' | 'right' | 'both' = null, force = false): void {
+    toggleMenu(menu: 'left' | 'right' | 'both' | null = null, force = false): void {
         this.layoutSettings.update(curr => {
             menu ||= curr.previousOpenMenu;
             if (!curr.openMenu || force) {
@@ -49,7 +51,7 @@ export class NxLayoutGridService {
                 curr.openMenu = curr.openMenu === menu ? null : menu;
             }
 
-            return curr;
+            return { ...curr };
         }, true);
     }
 

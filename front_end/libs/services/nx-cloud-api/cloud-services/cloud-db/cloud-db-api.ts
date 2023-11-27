@@ -3,7 +3,6 @@ import md5 from 'md5';
 import { iif, Observable, zip } from 'rxjs';
 import { map, switchMap } from 'rxjs/operators';
 
-import { environment } from '@environments/environment';
 import { memoizeAsyncMedium, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
 
 import { CloudResponse, CloudUser, System, WithFreshSession } from '../../nx-cloud-api.types';
@@ -74,11 +73,9 @@ export class CloudDbAPI extends BaseCloudServiceAPI {
     }
 
     public systems(systemId = ''): Observable<System[]> {
-        const params: Record<string, string> = environment.production
-            ? {
-                  customization: this.hostOrCustomization(),
-              }
-            : {};
+        const params: Record<string, string> = {
+            customization: this.hostOrCustomization(),
+        };
         const fetchSystems = this.get(this.systemEndpoint(systemId), { params });
         // If we get a singular system cdb returns a system object.
         // Otherwise, cdb returns an object { systems: System[] }.

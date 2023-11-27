@@ -2,9 +2,9 @@ from django.contrib import admin
 from django.apps import apps
 
 from partners.models import Organization, ChannelPartner, CloudSystemId, \
-    CloudHost, ChannelPartnerService
+    CloudHost, ChannelPartnerService, SystemGroup
 
-excluded = [Organization, ChannelPartner, CloudSystemId, CloudHost, ChannelPartnerService]
+excluded = [Organization, ChannelPartner, CloudSystemId, CloudHost, ChannelPartnerService, SystemGroup]
 app = apps.get_app_config('partners')
 
 for model_name, model in app.models.items():
@@ -84,6 +84,15 @@ class OrganizationAdmin(admin.ModelAdmin):
         CloudSystemInline
     ]
     exclude = ('users',)
+
+@admin.register(SystemGroup)
+class SystemGroupAdmin(admin.ModelAdmin):
+    list_display = ('name', 'organization')
+    inlines = [
+        OrganizationUserInline,
+    ]
+    exclude = ('users',)
+
 
 
 @admin.register(CloudSystemId)

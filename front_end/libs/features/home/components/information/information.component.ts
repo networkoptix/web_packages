@@ -1,7 +1,9 @@
 import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { selectCurrentPartnerInfo } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import { icons } from '@static-variables';
 // import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 
@@ -37,4 +39,7 @@ export class NxChannelPartnerInformationComponent {
     systems = mockSystems;
     information = mockData;
     icons = icons;
+    currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
+
+    constructor(private store: Store) {}
 }

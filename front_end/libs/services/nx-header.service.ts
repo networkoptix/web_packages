@@ -157,6 +157,7 @@ export class NxHeaderService {
             const bookmarkUrl = environment.isLocal ? '/bookmarks' : systemUrl + '/bookmarks';
             const monitoringUrl = environment.isLocal ? '/monitoring' : systemUrl + '/monitoring';
             const layoutsUrl = environment.isLocal ? '/layouts' : systemUrl + '/layouts';
+            const servicesUrl = environment.isLocal ? '/services' : systemUrl + '/services';
 
             if (url.startsWith(viewUrl)) {
                 this.menusService.endpoint = { view: true };
@@ -173,6 +174,9 @@ export class NxHeaderService {
             } else if (url.startsWith(layoutsUrl)) {
                 this.menusService.endpoint = { layouts: true };
                 bestMatch.path = layoutsUrl;
+            } else if (url.startsWith(servicesUrl)) {
+                this.menusService.endpoint = { services: true };
+                bestMatch.path = servicesUrl;
             } else if (url.startsWith(systemUrl)) {
                 this.menusService.endpoint = { settings: true };
                 bestMatch.path = systemUrl;

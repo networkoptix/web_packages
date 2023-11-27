@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, DestroyRef, inject } from '@angular/core';
+import { Component, Input, OnInit, DestroyRef, inject, signal } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -20,9 +20,8 @@ import {
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSearchComponent } from '@components/search/search.component';
-import { NxTabsComponent } from '@components/tabs/tabs.component';
-import { NxTabsDirective } from '@components/tabs/tabs.directive';
-import { Tab, TabEmit } from '@components/tabs/tabs.types';
+import { NxTabsModule } from '@components/tabs/tabs.module';
+import { Tab } from '@components/tabs/tabs.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import {
@@ -51,16 +50,15 @@ import {
     standalone: true,
     imports: [
         NxSearchComponent,
-        NxTabsComponent,
         NxPreLoaderComponent,
         CommonModule,
         FormsModule,
         TranslateModule,
         RouterModule,
         CdkMenuModule,
-        NxTabsDirective,
         AngularSvgIconModule,
         NxCardComponent,
+        NxTabsModule,
     ],
 })
 export class NxChannelPartnersComponent implements OnInit {
@@ -68,6 +66,7 @@ export class NxChannelPartnersComponent implements OnInit {
     LANG = staticLang;
 
     isLoading = true;
+    currentPartnerId: string;
     currentPartnerOrgs: Organization[];
     routeData$ = this.route.data;
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
@@ -78,7 +77,7 @@ export class NxChannelPartnersComponent implements OnInit {
     @Input() isAdmin: boolean;
     @Input() currentTabRoute: string;
     @Input() partnerId: string;
-    currentTab: Tab;
+    currentTabIndex$$ = signal<number>(0);
     tabs: Tab[] = [
         {
             displayName: this.LANG.channelPartners.tabNames.organizations,
@@ -121,7 +120,12 @@ export class NxChannelPartnersComponent implements OnInit {
                 ],
             );
         }
-        this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);
+        for (const [index, tab] of this.tabs.entries()) {
+            if (tab.route === this.currentTabRoute) {
+                this.currentTabIndex$$.set(index);
+                break;
+            }
+        }
         this.CPService.paramStateHandler.state$
             .pipe(
                 map(({ params }) => params.partnerId),
@@ -129,6 +133,7 @@ export class NxChannelPartnersComponent implements OnInit {
                 takeUntilDestroyed(this.destroyRef),
                 combineLatestWith(this.channelPartners$),
                 switchMap(([id, partners]) => {
+                    this.currentPartnerId = id;
                     if (partners.length && !partners.find(p => p.id === id)) {
                         return throwError(() => 'Partner not found');
                     }
@@ -160,6 +165,10 @@ export class NxChannelPartnersComponent implements OnInit {
         this.searchSystems();
     }
 
+    get showOrganizations(): boolean {
+        return !this.tabs[this.currentTabIndex$$()].route;
+    }
+
     newOrgDialog(): void {
         this.dialogsService.createOrganization(this.partnerId).then((org: Organization) => {
             this.store.dispatch(
@@ -171,13 +180,13 @@ export class NxChannelPartnersComponent implements OnInit {
         });
     }
 
-    onTabClick(tab: TabEmit): void {
-        this.currentTab = this.tabs[tab.index];
-        if (tab.route) {
-            this.router.navigate(['home', 'channelPartners', this.partnerId, tab.route]);
-        } else {
-            this.router.navigate(['home', 'channelPartners', this.partnerId]);
+    onTabClick(newIndex: number): void {
+        const newTab = this.tabs[newIndex];
+        const route = ['home', 'channelPartners', this.currentPartnerId];
+        if (newTab.route) {
+            route.push(newTab.route);
         }
+        this.router.navigate(route).then(() => this.currentTabIndex$$.set(newIndex));
     }
 
     handleOrgClick(id: string): void {

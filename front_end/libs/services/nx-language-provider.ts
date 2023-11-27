@@ -135,6 +135,11 @@ export class NxLanguageProviderService {
         this.swCacheService.clearAllCache().catch(err => console.error(err));
     }
 
+    /** e.g. en_US => en-US */
+    get currentLocale(): string {
+        return this.currentLang.replace('_', '-');
+    }
+
     private processLanguage(translations: Language): Language {
         const customStrings = {
             '%CLOUD_NAME%': this.CONFIG.cloudName,

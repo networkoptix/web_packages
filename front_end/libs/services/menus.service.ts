@@ -49,6 +49,7 @@ export class NxMenusService {
         bookmarks: boolean;
         monitoring: boolean;
         layouts: boolean;
+        services: boolean;
     }> = {};
 
     constructor(
@@ -266,6 +267,10 @@ export class NxMenusService {
             segment = '/layouts';
         }
 
+        if (endpoint.services) {
+            segment = '/services';
+        }
+
         return !environment.isLocal && systemId ? url + segment : segment;
     }
 
@@ -394,6 +399,17 @@ export class NxMenusService {
                 this.endpoint.layouts || false,
             );
             nodes.splice(1, 0, layoutsNode);
+        }
+
+        // Services
+        if (nxConfig.featureFlags.channelPartners && 'organizationId' in activeSystem.info) {
+            const servicesNode = new MenuNode(
+                'Services',
+                this.getUrl(activeSystem.id, { services: true }),
+                this.LANG?.serverTabTitles.Services,
+                this.endpoint.settings || false,
+            );
+            nodes.push(servicesNode);
         }
 
         const activeSystemMenu = new MenuNode(

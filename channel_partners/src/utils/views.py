@@ -1,4 +1,6 @@
+import asyncio
 import logging
+from time import sleep
 
 import httpx
 from django.db import connections, DEFAULT_DB_ALIAS
@@ -48,3 +50,14 @@ class HealthCheckAsyncImports(AsyncAPIView):
             resp = await client.get('https://1.1.1.1/')
 
         return JsonResponse({'is_ok': not resp.is_error}, status=resp.status_code)
+
+
+class HealthCheckCelery(View):
+
+    def get(self, request):
+        from channel_partners.celery import app as celery_app
+        resp = celery_app.control.inspect().stats()
+        if not resp:
+            return JsonResponse(data={"status": "failed"}, status=500)
+        else:
+            return JsonResponse(data={"status": "ok"}, status=200)

@@ -30,14 +30,14 @@ export class ZoomControlsComponent implements OnInit {
         private playback: PlaybackService,
     ) {
         effect(() => {
-            this.updateEnabledDisabled(this.vms.state());
+            this.updateEnabledDisabled(this.vms.state$$());
         });
     }
 
     ngOnInit(): void {
         this.timeline.subject.pipe(untilDestroyed(this)).subscribe(timelineStatus => {
             this.timelineStatus = timelineStatus;
-            this.updateEnabledDisabled(this.vms.state());
+            this.updateEnabledDisabled(this.vms.state$$());
         });
 
         interval(0, animationFrameScheduler)

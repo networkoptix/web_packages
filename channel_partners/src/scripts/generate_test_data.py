@@ -22,18 +22,20 @@ many_users = [
 
 def add_users_or_channel_partner(channel_partner: ChannelPartner):
     for user in users:
-        ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner, roles=['Administrator'])
+        ChannelPartnerToUser.objects.get_or_create(
+            user=user, channel_partner=channel_partner, roles=[ChannelPartnerRoles.ADMINISTRATOR])
 
 
 def add_users_to_organization(organization: Organization):
     for user in users:
-        OrganizationToUser.objects.get_or_create(user=user, organization=organization, roles=['Organization Administrator'])
+        OrganizationToUser.objects.get_or_create(
+            user=user, organization=organization, roles=[OrganizationRoles.ORGANIZATION_ADMINISTRATOR])
 
 
 def add_random_users_to_organization(organization: Organization):
     roles = OrganizationRole.objects.all()[:]
     for user in many_users:
-        OrganizationToUser.objects.get_or_create(user=user, organization=organization, roles=[random.choice(roles).name])
+        OrganizationToUser.objects.get_or_create(user=user, organization=organization, roles=[random.choice(roles).id])
 
 
 def run():
@@ -54,11 +56,29 @@ def run():
                 organization = Organization.objects.create(name=f'Test Org {j+1}', channel_partner=channel_partner)
                 OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization, created_by=channel_partner)
                 add_users_to_organization(organization)
+                systems = []
                 for k in range(25):
                     sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}', organization=organization, cloud_host=cloud_test_host)
                     CloudSystemExternalId.objects.create(custom_id=uuid.uuid4(), cloud_system=sys, created_by=channel_partner)
                     for service in services:
                         ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys, quantity=random.randint(1, 10))
+                    systems.append(sys)
+                root_group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}')
+                for sys in systems[:10]:
+                    sys.system_group = root_group
+                CloudSystemId.objects.bulk_update(systems[:10], fields=['system_group'])
+                group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}', parent=root_group)
+                for sys in systems[10:15]:
+                    sys.system_group = group
+                CloudSystemId.objects.bulk_update(systems[10:15], fields=['system_group'])
+                group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}', parent=root_group)
+                for sys in systems[15:20]:
+                    sys.system_group = group
+                CloudSystemId.objects.bulk_update(systems[15:20], fields=['system_group'])
+                group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}', parent=group)
+                for sys in systems[20:]:
+                    sys.system_group = group
+                CloudSystemId.objects.bulk_update(systems[20:], fields=['system_group'])
             if i % 5 == 0:
                 sub_channel_partner = ChannelPartner.objects.create(name=f'Test CP {i + 1}',
                                                                 parent_channel_partner=channel_partner,
@@ -77,6 +97,7 @@ def run():
                                                           created_by=channel_partner)
                     add_users_to_organization(organization)
                     add_random_users_to_organization(organization)
+                    systems = []
                     for k in range(25):
                         sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k + 1}', organization=organization,
                                                               cloud_host=cloud_test_host)
@@ -85,5 +106,23 @@ def run():
                         for service in services:
                             ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys,
                                                         quantity=random.randint(1, 10))
-
+                        systems.append(sys)
+                    root_group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}')
+                    for sys in systems[:10]:
+                        sys.system_group = root_group
+                    CloudSystemId.objects.bulk_update(systems[:10], fields=['system_group'])
+                    group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}',
+                                                       parent=root_group)
+                    for sys in systems[10:15]:
+                        sys.system_group = group
+                    CloudSystemId.objects.bulk_update(systems[10:15], fields=['system_group'])
+                    group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}',
+                                                       parent=root_group)
+                    for sys in systems[15:20]:
+                        sys.system_group = group
+                    CloudSystemId.objects.bulk_update(systems[15:20], fields=['system_group'])
+                    group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}', parent=group)
+                    for sys in systems[20:]:
+                        sys.system_group = group
+                    CloudSystemId.objects.bulk_update(systems[20:], fields=['system_group'])
 

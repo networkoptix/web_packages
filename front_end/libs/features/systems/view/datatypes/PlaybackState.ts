@@ -10,6 +10,7 @@ export enum PLAYBACK_MODE {
 }
 export enum PLAYBACK_ERROR {
     DEMUXER_ERROR_COULD_NOT_OPEN = 'DEMUXER_ERROR_COULD_NOT_OPEN',
+    NO_ACCESS = 'NO_ACCESS',
 }
 
 export interface AbstractPlaybackState {

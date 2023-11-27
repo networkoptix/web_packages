@@ -1,30 +1,48 @@
 import { inject } from '@angular/core';
 import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from '@angular/router';
 
+import { environment } from '@environments/environment';
 import { NxSystemService } from '@services/system.service/system.service';
 import type { NxSystemServer } from '@services/system.service/types/servers.types';
 import { cleanId } from '@utils/general';
 
-const buildUpdatedPath = (path: string, systemId: string, serverId: string): string =>
-    `/systems/${systemId}/${path.replace(':serverId', serverId)}`;
+const buildUpdatedPath = (path: string, systemId: string, serverId: string): string => {
+    let base = `/systems/${systemId}`;
+    if (environment.isLocal) {
+        base = '/settings';
+    }
+    return `${base}/${path.replace(':serverId', serverId)}`;
+};
 
-export const serverResolver: ResolveFn<NxSystemServer> = async (route: ActivatedRouteSnapshot) => {
+export const serverResolver: ResolveFn<NxSystemServer | undefined> = async (
+    route: ActivatedRouteSnapshot,
+) => {
     const activateRoute = inject(ActivatedRoute);
     const router = inject(Router);
     const currentSystem = inject(NxSystemService).getCurrentSystem();
 
     const { serverId } = route.params;
-    const servers = currentSystem.serverManager.servers;
-    let server = servers.find(({ id }) => id.includes(serverId));
 
-    if (!server || !serverId) {
-        server = servers[0];
-        await router.navigate(
-            [buildUpdatedPath(route.routeConfig.path, currentSystem.id, cleanId(server.id))],
-            {
-                relativeTo: activateRoute,
-            },
+    const server = await currentSystem.serverManager
+        .getForceServers(false)
+        .toPromise()
+        .then(servers => {
+            if (servers?.length) {
+                return servers.find(({ id }) => id.includes(serverId)) || servers[0];
+            }
+        });
+
+    if (!server) {
+        const path = buildUpdatedPath(
+            route.routeConfig.path,
+            cleanId(currentSystem.id),
+            cleanId(serverId),
         );
+
+        await router.navigate([path], {
+            relativeTo: activateRoute,
+        });
+    } else {
+        return server;
     }
-    return server;
 };

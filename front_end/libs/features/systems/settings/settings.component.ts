@@ -3,7 +3,7 @@ import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
 import { firstValueFrom, Subject, Subscription } from 'rxjs';
-import { debounceTime, filter, takeUntil, tap } from 'rxjs/operators';
+import { debounceTime, filter, take, takeUntil, tap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -111,7 +111,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     private cancelPrevious$ = new Subject();
 
     private connectionSubscription: Subscription;
-    private systemSubscription: Subscription;
     private systemInfoSubscription: Subscription;
     private checkMergeSubscription: Subscription;
 
@@ -261,7 +260,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 // (ex. health monitor will trigger system update)
                 // and orphan metrics request in systemInfoSubscription
                 this.systemInfoSubscription?.unsubscribe();
-                this.systemSubscription?.unsubscribe();
             }
 
             if (route instanceof NavigationStart) {
@@ -374,102 +372,94 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     private getCloudSystemInfo(): void {
-        if (this.systemSubscription) {
-            this.systemInfoSubscription?.unsubscribe();
-            this.systemSubscription.unsubscribe();
+        if (this.systemInfoSubscription) {
+            this.systemInfoSubscription.unsubscribe();
         }
-        this.systemSubscription = this.systemsService.systemsSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(async systems => {
-                if (this.systemsService.userDisconnectSystem) {
-                    // don't trigger this.systemNoAccess
-                    this.systemsService.userDisconnectSystem = false;
+        this.systemsService.systemsSubject.pipe(take(1)).subscribe(async systems => {
+            if (this.systemsService.userDisconnectSystem) {
+                // don't trigger this.systemNoAccess
+                this.systemsService.userDisconnectSystem = false;
+                return;
+            }
+            const system = systems.find(system => system.id === this.systemId);
+            if (system === undefined) {
+                this.systemNoAccess = true;
+                return;
+            }
+            if (system.system2faEnabled && !this.account.sessionVerified) {
+                this.account = await this.accountService.get(true);
+                if (!this.account.sessionVerified) {
+                    this.show2faRequired = true;
                     return;
                 }
-                const system = systems.find(system => system.id === this.systemId);
-                if (system === undefined) {
-                    this.systemNoAccess = true;
-                    return;
-                }
-                if (system.system2faEnabled && !this.account.sessionVerified) {
-                    this.account = await this.accountService.get(true);
-                    if (!this.account.sessionVerified) {
-                        this.show2faRequired = true;
-                        return;
+            }
+            this.system.show404 = false;
+            this.gettingSystem.run();
+
+            if (this.systemInfoSubscription) {
+                this.systemInfoSubscription.unsubscribe();
+            }
+            this.systemInfoSubscription = this.system.infoSubject
+                .pipe(
+                    untilDestroyed(this),
+                    filter(system => system?.id === this.route.snapshot.params.systemId),
+                    tap(({ isOnline }) => {
+                        this.applyService.isOnline$.next(!!isOnline);
+                        if (isOnline) {
+                            this.ribbonService.hide();
+                        } else {
+                            firstValueFrom(this.system.mediaserver.ping()).catch(() => {
+                                this.ribbonService.show(
+                                    this.LANG.ribbon.systemOffline,
+                                    [],
+                                    'alert',
+                                    undefined,
+                                    true,
+                                );
+                            });
+                        }
+                    }),
+                )
+                .subscribe(() => {
+                    // if system is removed while on page, redirects to systems page
+                    if (
+                        this.system &&
+                        this.systemsService.systems &&
+                        !this.systemsService.systems.some(system => system.id === this.system.id) &&
+                        !environment.isLocal
+                    ) {
+                        this.uriService.updateURI(
+                            this.CONFIG.featureFlags.dashboardRedirect ||
+                                'beta' in this.route.snapshot.queryParams
+                                ? '/dashboard'
+                                : '/systems',
+                        );
                     }
-                }
-                if (this.systemId === this.system?.id) {
-                    return;
-                }
-                this.system.show404 = false;
-                this.gettingSystem.run();
+                    if (this.system.isAvailable) {
+                        this.updateAlert();
+                    }
+                    if (this.system.permissionManager.isAdmin$$()) {
+                        // Makes request to get health, this is used to cache request.
+                        this.system.mediaserver
+                            .getAggregateHealthReport()
+                            .pipe(untilDestroyed(this))
+                            .subscribe();
+                    }
 
-                if (this.systemInfoSubscription) {
-                    this.systemInfoSubscription.unsubscribe();
-                }
-                this.systemInfoSubscription = this.system.infoSubject
-                    .pipe(
-                        untilDestroyed(this),
-                        filter(system => system?.id === this.route.snapshot.params.systemId),
-                        tap(({ isOnline }) => {
-                            this.applyService.isOnline$.next(!!isOnline);
-                            if (isOnline) {
-                                this.ribbonService.hide();
-                            } else {
-                                firstValueFrom(this.system.mediaserver.ping()).catch(() => {
-                                    this.ribbonService.show(
-                                        this.LANG.ribbon.systemOffline,
-                                        [],
-                                        'alert',
-                                        undefined,
-                                        true,
-                                    );
-                                });
-                            }
-                        }),
-                    )
-                    .subscribe(() => {
-                        // if system is removed while on page, redirects to systems page
-                        if (
-                            this.system &&
-                            this.systemsService.systems &&
-                            !this.systemsService.systems.some(
-                                system => system.id === this.system.id,
-                            ) &&
-                            !environment.isLocal
-                        ) {
-                            this.uriService.updateURI(
-                                this.CONFIG.featureFlags.dashboardRedirect ||
-                                    'beta' in this.route.snapshot.queryParams
-                                    ? '/dashboard'
-                                    : '/systems',
-                            );
-                        }
-                        if (this.system.isAvailable) {
-                            this.updateAlert();
-                        }
-                        if (this.system.permissionManager.isAdmin$$()) {
-                            // Makes request to get health, this is used to cache request.
-                            this.system.mediaserver
-                                .getAggregateHealthReport()
-                                .pipe(untilDestroyed(this))
-                                .subscribe();
-                        }
-
-                        this.updateMenu();
-                    });
-                if (this.connectionSubscription) {
-                    this.connectionSubscription.unsubscribe();
-                }
-                this.connectionSubscription = this.system.connectionSubject
-                    .pipe(
-                        filter((connectionLost: boolean) => connectionLost),
-                        untilDestroyed(this),
-                    )
-                    .subscribe(_ => {
-                        this.connectionLost();
-                    });
-            });
+                    this.updateMenu();
+                });
+            if (this.connectionSubscription) {
+                this.connectionSubscription.unsubscribe();
+            }
+            this.connectionSubscription = this.system.connectionSubject
+                .pipe(
+                    filter((connectionLost: boolean) => connectionLost),
+                    untilDestroyed(this),
+                )
+                .subscribe(_ => {
+                    this.connectionLost();
+                });
+        });
     }
 
     getSystemInfo(): void {
@@ -623,7 +613,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ]);
         }
 
-        if (this.editCameras()) {
+        if (this.system.cameraManager.cameras.some(({ canEdit }) => canEdit)) {
             let camerasNode = this.content.level1.find(
                 node => node.id === menus.systemSettings.cameras.id,
             );

@@ -10,7 +10,7 @@ WORKDIR /app
 RUN set -ex \
     && apt-get update \
     && apt-get install --no-install-suggests --no-install-recommends -y  \
-        bash netcat jq curl tini pkg-config libpq5 g++ libssl-dev \
+        bash netcat jq curl libcurl4-openssl-dev tini pkg-config libpq5 g++ libssl-dev \
     && python -m pip install --prefer-binary --no-cache-dir --upgrade pip==23.2.1 \
     && python -m pip install --prefer-binary --no-cache-dir poetry==1.5.1 \
     && poetry config virtualenvs.create false --local \

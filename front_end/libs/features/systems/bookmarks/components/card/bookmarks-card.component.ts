@@ -1,6 +1,7 @@
 import { Component, Input, OnInit, ViewEncapsulation } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { icons } from '@static-variables';
 import { msToParts } from '@utils/general';
 
@@ -23,19 +24,18 @@ export class NxBookmarksCardComponent implements OnInit {
     enableTooltip: boolean;
     thumbnailError: boolean;
 
-    constructor(private dialogs: NxDialogsService) {}
+    constructor(private dialogs: NxDialogsService, private language: NxLanguageProviderService) {}
 
     ngOnInit(): void {
+        const currentLocale = this.language.currentLocale;
         const startDate = new Date(this.bookmark.startTimeMs + this.bookmark.timeZoneOffset);
-        const timeFormat = Intl.DateTimeFormat(navigator.language, {
+        const timeFormat = Intl.DateTimeFormat(currentLocale, {
             hour: 'numeric',
             minute: 'numeric',
             numberingSystem: 'latn',
         });
         this.startTime = timeFormat.format(startDate);
-        this.startDate = startDate.toLocaleString(navigator.language, {
-            dateStyle: 'medium',
-        });
+        this.startDate = startDate.toLocaleString(currentLocale, { dateStyle: 'medium' });
 
         const { s: seconds, min: minutes, hr: hours } = msToParts(this.bookmark.durationMs);
         const includeHours = hours !== 0 ? hours.toString().padStart(2, '0') + ':' : '';

@@ -452,11 +452,15 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     canViewBookmarks(isMobile?: boolean) {
-        return (
-            !isMobile &&
-            this.CONFIG.featureFlags.bookmarks &&
-            this.version >= 5 &&
-            this.permissionManager.permissions$$()?.viewBookmarks
+        const bookmarksEnabled =
+            !isMobile && this.CONFIG.featureFlags.bookmarks && this.version >= 5;
+        if (!bookmarksEnabled) {
+            return false;
+        }
+        const { cameras } = this.cameraManager;
+        const { canManageDeviceBookmarks, canViewDeviceBookmarks } = this.permissionManager;
+        return (cameras || [{ id: '' }]).some(
+            ({ id }) => canManageDeviceBookmarks(id) || canViewDeviceBookmarks(id),
         );
     }
 

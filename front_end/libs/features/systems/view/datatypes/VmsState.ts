@@ -15,7 +15,7 @@ export interface VmsState {
     mediaServers: Array<ViewMediaServer>;
     cameras: Record<string, ViewCamera>;
     selectedCameraId: GUID;
-    selectedCamera: ViewCamera;
+    selectedCamera: ViewCamera | undefined;
 }
 
 export interface VmsServerTimeInfo {

@@ -132,14 +132,25 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
         }
     }
 
-    onSearchInput(_event: Event): void {
+    onSearchInput(event: Event): void {
+        // Template says (input) event is Event and not InputEvent, but haven't seen otherwise
+        if (
+            event instanceof InputEvent &&
+            event.inputType === 'insertLineBreak' &&
+            this._items.length === 1
+        ) {
+            this.selectItem(this._items[0]);
+            this.searchInput.nativeElement.blur();
+            return;
+        }
+
         this.form?.form.get(this.componentId)?.markAsUntouched();
 
         const input = this.searchInput.nativeElement.innerText;
         const filter = input.replace(/\s+/g, ' ').trim();
 
         if (input !== filter) {
-            _event.preventDefault();
+            event.preventDefault();
             this.searchInput.nativeElement.innerText = filter;
             return;
         }
@@ -179,6 +190,9 @@ export class NxSearchableDropdown extends BaseDropdown implements Validator {
     }
 
     onBlur(): void {
+        if (this._items.length === 1 && this._selectedItem !== this._items[0]) {
+            this.selectItem(this._items[0]);
+        }
         this.onSelected.emit(this._selectedItem);
         this.onChangeCallback(this._selectedItem);
     }

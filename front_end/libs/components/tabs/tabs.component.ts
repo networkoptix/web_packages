@@ -7,11 +7,26 @@ import {
     OnInit,
     Output,
     QueryList,
+    booleanAttribute,
 } from '@angular/core';
 import { TranslateModule } from '@ngx-translate/core';
 
-import { NxTabsDirective } from './tabs.directive';
-import { Tab, TabEmit } from './tabs.types';
+import { NxBaseTabComponent } from './tab/tab.component';
+
+const tabWidth = 10;
+
+/*
+Usage:
+<nx-tabs (animated OR animationSpeed="2s") [(currentTabIndex)]="currTabIndex">
+    <nx-base-tab
+        [displayName]="tab.displayName"
+        (tabClick)="handleTabClick($event)"
+        disabled
+    >
+        {{tab.displayName}}
+    </nx-base-tab>
+</nx-tabs>
+*/
 
 @Component({
     selector: 'nx-tabs',
@@ -21,22 +36,25 @@ import { Tab, TabEmit } from './tabs.types';
     imports: [TranslateModule, CommonModule],
 })
 export class NxTabsComponent implements OnInit {
-    @Input() onLoadTab: Tab;
-    @Output() tabClick = new EventEmitter<TabEmit>();
-    @ContentChildren(NxTabsDirective)
-    tabs: QueryList<NxTabsDirective>;
-    selectedTab: string;
+    @Input({ transform: booleanAttribute }) animated: boolean = false;
+    @Input() animationSpeed: string;
+    @Input() currentTabIndex: number = 0;
+    @Output() currentTabIndexChange = new EventEmitter<number>();
+    @ContentChildren(NxBaseTabComponent, { descendants: true })
+    tabItems: QueryList<NxBaseTabComponent>;
+    currTabTranslate = 0;
 
     ngOnInit(): void {
-        this.selectedTab = this.onLoadTab.displayName;
+        this.currTabTranslate = this.currentTabIndex * tabWidth;
     }
 
-    handleClick(tab: NxTabsDirective, index: number): void {
-        this.selectedTab = tab.data.displayName;
-        const response: TabEmit = {
-            route: tab.data.route,
-            index,
-        };
-        this.tabClick.emit(response);
-    }
+    handleTabClick = (tab: NxBaseTabComponent, index: number): void => {
+        const childTabs = this.tabItems.toArray();
+        childTabs[this.currentTabIndex].selected = false;
+        childTabs[index].selected = true;
+        this.currentTabIndex = index;
+        this.currTabTranslate = this.currentTabIndex * tabWidth;
+        tab.tabClick.emit(index);
+        this.currentTabIndexChange.emit(index);
+    };
 }

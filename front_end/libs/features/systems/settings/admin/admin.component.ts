@@ -80,16 +80,32 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     systemNameFormWatcher: FormWatcher;
     systemNameProcess: Process;
     icons = icons;
+    viewLines: number;
+    viewHeight: number;
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
 
     transferInfo: SystemTransferInfo;
 
-    userRole: Signal<string> = computed(() => {
-        const accessRole = this.system.permissionManager.currentUser$$()?.accessRole;
+    userRole$$: Signal<string> = computed(() => {
+        let accessRole = this.system.permissionManager.currentUser$$().accessRole;
+        const accessRoles = accessRole?.split(', ');
+        if (accessRoles && accessRoles.length > 1) {
+            const singleItem = accessRoles?.pop();
+            accessRole = this.translateService.instant(this.LANG.listString, {
+                listItems: accessRoles.join(', '),
+                singleItem,
+            });
+        }
         if (Object.keys(this.LANG.accessRoles).includes(accessRole)) {
             return this.LANG.accessRoles[accessRole].label;
+        }
+
+        if (accessRole) {
+            const lineCalc = Math.ceil(accessRole.length / 38);
+            this.viewLines = lineCalc < 6 ? lineCalc : 6;
+            this.viewHeight = this.viewLines * 21;
         }
         return accessRole;
     });

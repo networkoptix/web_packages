@@ -20,12 +20,12 @@ $tag-gap: 0.5rem;
             font-family: typography.$font-family-regular !important;
 
             &:hover {
-                background-color: var(--btn-default-hover-bg);
+                background-color: var(--bookmarks-text-highlight-bg);
             }
 
             &.selected {
                 background-color: var(--brand-core);
-                color: var(--btn-default-active-color);
+                color: var(--bookmarks-filter-filled-text);
             }
 
             span {

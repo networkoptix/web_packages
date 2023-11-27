@@ -714,13 +714,30 @@ fail-on-python-license-check:
   before_script:
     - poetry -C /builds/dev/cloud_portal/channel_partners export --with test --without-hashes --without-urls -o /app/requirements.txt
     - pip install --upgrade --no-cache-dir -r /app/requirements.txt
+    - >
+      for i in {1..60}; do
+        if ! nc 0.0.0.0 5432
+        then
+          if [ $i == 60 ]
+          then
+            echo "Could not connect to postgres server after 60 attempts"
+            exit 1
+          else
+            echo "Attempt $i to connect to postgres server failed"
+          fi
+        else
+          echo "Attempt $i Successfully connected to postgres server"
+          break
+        fi
+      
+        sleep 5
+      done
 
 cp-checks:
-  extends: .cp-backend-changes
+  extends: .cp-django-python
   image: ${CP_DJANGO_PYTHON_IMAGE}:${CP_DJANGO_PYTHON_IMAGE_TAG}
   stage: check
   variables:
-    USE_SQLITE: "true"
     PYTHONPATH: "/builds/dev/cloud_portal/common/python"
   script:
     - cd channel_partners/src

@@ -33,7 +33,7 @@ export class NxContextMenu<Context> implements OnInit {
         default: [{ originX: 'end', originY: 'bottom', overlayX: 'end', overlayY: 'top' }],
     };
 
-    @Input() subMenu: boolean = false;
+    @Input() isSubMenu: boolean = false;
     @Input() context: Context;
     @Input() menuItems: MenuItemsFactoryCallback<Context> | MenuItem<Context>[];
 
@@ -45,9 +45,14 @@ export class NxContextMenu<Context> implements OnInit {
     menu: MenuItem<Context>[] | undefined;
     protected readonly icons = icons;
 
-    ngOnInit(): void {
+    async ngOnInit(): Promise<void> {
         if (typeof this.menuItems === 'function') {
-            this.menu = this.menuItems(this.context);
+            const menu = this.menuItems(this.context);
+            if (Array.isArray(menu)) {
+                this.menu = menu;
+            } else {
+                this.menu = await menu;
+            }
         } else {
             this.menu = this.menuItems;
         }

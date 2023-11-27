@@ -40,14 +40,6 @@ video {
     cursor: pointer;
 }
 
-.full-screen {
-    @extend .overlay;
-    bottom: 0;
-    left: 0;
-    background: var(--dark3);
-    color: var(--light9);
-}
-
 .ptz {
     @extend .overlay;
     bottom: 0;

@@ -6,6 +6,7 @@ import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { CookieService } from 'ngx-cookie-service';
 import { combineLatest, map } from 'rxjs';
+import { filter, switchMap } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -80,6 +81,15 @@ export class NxHeaderLogoAreaComponent implements OnInit {
                 }
             }
         });
+
+        this.headerService.activeSystem$
+            .pipe(
+                filter(Boolean),
+                switchMap(system => system.infoSubject),
+            )
+            .subscribe(system => {
+                this.activeSystemName$$.set(system?.info?.name || '');
+            });
     }
 
     getMainUrl(isAuthenticated: boolean, activeSystem: NxSystem): string {

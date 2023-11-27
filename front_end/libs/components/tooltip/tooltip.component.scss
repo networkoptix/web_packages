@@ -114,3 +114,9 @@
     right: -4px;
     transform: rotate(180deg) translateY(-4px);
 }
+
+:host-context(.top.right) .tooltip-arrow {
+    top: 14%;
+    left: -5px;
+}
+

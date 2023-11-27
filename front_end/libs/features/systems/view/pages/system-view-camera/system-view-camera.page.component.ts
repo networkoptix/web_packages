@@ -2,20 +2,22 @@ import { Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
+    computed,
     effect,
     ElementRef,
     HostListener,
+    Input,
     OnDestroy,
     OnInit,
     Renderer2,
-    signal,
 } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { LocalStorageService } from 'ngx-webstorage';
-import { animationFrameScheduler, BehaviorSubject, interval, Subject, timer } from 'rxjs';
+import { animationFrameScheduler, BehaviorSubject, interval, map, Subject, timer } from 'rxjs';
 import { filter, takeUntil, throttleTime } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -27,10 +29,9 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { Ec2RecordedTimePeriodsResp } from '@services/system-api.types/devices.types';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
-import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
 import { accountSelectors } from '@store/account';
-import { PLAYBACK_MODE, PlaybackState } from '@view/datatypes/PlaybackState';
+import { PLAYBACK_ERROR, PLAYBACK_MODE, PlaybackState } from '@view/datatypes/PlaybackState';
 import { PlaybackService } from '@view/services/playback.service';
 import { VideoManagementSystemService } from '@view/services/vms.service';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
@@ -60,10 +61,15 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private readonly isMobile: boolean;
     private readonly isChrome: boolean;
     readonly isMobileSafari: boolean;
+    readonly PLAYBACK_ERROR = PLAYBACK_ERROR;
 
+    private cameraId$$ = toSignal(this.route.params.pipe(map(({ cameraId }) => cameraId ?? '')), {
+        initialValue: '',
+    });
     private id: string;
+
     camera: ViewCamera;
-    system: NxSystem;
+    @Input({ required: true }) system: NxSystem;
 
     CONFIG: IConfig;
     LANG = staticLang;
@@ -93,8 +99,18 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     isLocal: boolean = false;
     cameraDetailsShown: boolean = false;
     isNvr: boolean = false;
-    canViewArchive$$ = signal(false);
-    canExportArchive$$ = signal(false);
+    canViewDevice$$ = computed(() => {
+        this.system.permissionManager.permissions$$();
+        return this.system.permissionManager.canViewDevice(this.cameraId$$());
+    });
+    canViewArchive$$ = computed(() => {
+        this.system.permissionManager.permissions$$();
+        return this.system.permissionManager.canViewDeviceArchive(this.cameraId$$());
+    });
+    canExportArchive$$ = computed(() => {
+        this.system.permissionManager.permissions$$();
+        return this.system.permissionManager.canExportDeviceArchive(this.cameraId$$());
+    });
 
     private user$$ = this.store.selectSignal(accountSelectors.selectCurrentUser);
     get user(): string {
@@ -133,7 +149,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         private selection: TimelineSelectionService,
         private timeUnderMouse: TimelineTimeUnderMouseService,
         private fpsMeter: FpsMeterService,
-        private systemService: NxSystemService,
         public ux: WebClientUxService,
         private store: Store,
         private localStorageService: LocalStorageService,
@@ -150,7 +165,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
         this.isLocal = environment.isLocal;
         effect(() => {
-            const state = this.vms.state();
+            const state = this.vms.state$$();
             switch (state.mode) {
                 case VMS_MODE.NOT_INITIALIZED:
                 case VMS_MODE.CAMERA_NOT_SELECTED:
@@ -176,6 +191,14 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     }
             }
         });
+        effect(() => {
+            const canViewArchive = this.canViewArchive$$();
+            const canViewDevice = this.canViewDevice$$();
+            const { mode } = this.playback.state;
+            if (mode !== PLAYBACK_MODE.STOPPED && (canViewArchive || canViewDevice)) {
+                this.restorePlayback(this.camera.hasArchive);
+            }
+        });
     }
 
     ngOnInit(): void {
@@ -185,8 +208,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.updateAvailableTransportsAndResolutions();
 
         this.$self.classList.add('animated');
-
-        this.system = this.systemService.getCurrentSystem();
         this.getRecords();
     }
 
@@ -538,29 +559,29 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     private getQueryParam(q: string): string {
         // return (this.location.path().match(new RegExp('[?&]' + q + '=([^&]+)')) || [, null])[1];
-        return new URLSearchParams(this.location.path().split('?')[1] || '').get(q);
+        return new URLSearchParams(this.location.path().split('?')[1] || '').get(q) ?? '';
     }
 
     private restorePlayback(archiveAvailable: boolean = false): void {
-        if (this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
+        const canViewArchive = this.canViewArchive$$();
+        const canViewLive = this.canViewDevice$$();
+
+        if (canViewArchive && this.playback.state.mode === PLAYBACK_MODE.ARCHIVE) {
             this.playback.restore(archiveAvailable);
             return;
         }
 
         const time = this.getQueryParam('time');
-
-        if (time) {
-            if (time === 'live') {
-                this.playback.playLive();
+        if (canViewLive && (!canViewArchive || !archiveAvailable || time === 'live' || !time)) {
+            this.playback.playLive();
+        } else if (canViewArchive && archiveAvailable) {
+            if (time) {
+                this.playback.playArchive(parseInt(time));
             } else {
-                if (archiveAvailable) {
-                    this.playback.playArchive(parseInt(time));
-                } else {
-                    this.playback.playLive();
-                }
+                this.playback.restore(archiveAvailable);
             }
         } else {
-            this.playback.restore(archiveAvailable);
+            this.playback.stop(this.PLAYBACK_ERROR.NO_ACCESS);
         }
     }
 
@@ -574,9 +595,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         const camera = this.system.cameraManager.cameras?.find(({ id }) => id?.includes(this.id));
         this.isNvr = camera?.deviceType === DeviceType.Nvr;
         this.system.userManager.getUsersDataFromTheSystem().then(_ => {
-            const { canViewDeviceArchive, canExportDeviceArchive } = this.system.permissionManager;
-            this.canViewArchive$$.set(canViewDeviceArchive(this.camera.id));
-            this.canExportArchive$$.set(canExportDeviceArchive(this.camera.id));
             if (!this.vms.selectedCamera.hasArchive && !this.vms.selectedCamera.isScheduleEnabled) {
                 this.getRecordsInProgress = undefined;
                 this.initSelectedCamera();

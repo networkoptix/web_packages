@@ -1,4 +1,7 @@
 import asyncio
+import contextvars
+import dataclasses
+import inspect
 import random
 import threading
 import typing
@@ -6,6 +9,7 @@ import types
 import pickle
 import weakref
 from logging import getLogger
+from random import randint
 
 import redis.exceptions
 from asgiref.sync import sync_to_async
@@ -13,13 +17,121 @@ from django.utils.module_loading import import_string
 from django.utils.functional import cached_property
 from django.core.cache.backends.redis import RedisCacheClient, RedisCache
 from django.core.cache.backends.base import DEFAULT_TIMEOUT
+from etils import edc
 from redis.asyncio import Redis as AsyncRedis, ConnectionPool as AsyncConnectionPool
 from redis.asyncio.connection import DefaultParser
 from redis.backoff import ConstantBackoff, NoBackoff
 from redis.asyncio.retry import Retry
 
+from cloud import settings
+
 logger = getLogger(__name__)
-thread_local = threading.local()
+
+
+def get_loop_id(loop=None):
+    try:
+        return id(loop or asyncio.get_event_loop())
+    except RuntimeError:
+        return None
+
+@edc.dataclass
+@dataclasses.dataclass
+class ContextConnectionPoolStorage:
+    """
+    Manage Redis ConnectionPool object for AsyncCacheClient.
+    Class responsible for creating, acquiring and removing connection pools based on where they are used.
+    `edc.ContextVar` usage allows to use different contexts for different threads, pools as stored in
+    WeakKeyDictionary where key is running loop. It allows to break reference between `AsyncConnectionClient`
+    and `ConnectionPool`. ConnectionPool assigned to EventLoop will be deleted when strong reference on
+    Loop is lost (e.g. on loop/thread closing) this allows to reuse connection in this context (identified
+    by thread and loop, because same loop can be used in different threads) with proper removing and closing.
+    `ContextConnectionPoolStorage` object itself will be deleted withing thread.
+    `edc` is a part of google unofficial package Etils. Decoration and datatype `edc.dataclass`
+    and `edc.ContextVar` allows to use ContextVar as dataclass field, if variable is empty for
+    current context, new one will be created.
+    https://github.com/google/etils/blob/main/etils/edc/README.md#wrap-fields-around-contextvar
+    Attributes:
+        thread_id: native id (os id) of a thread of current context, for information purpose
+        loop_id: id of asyncio Loop in current context, for information purpose
+        _pools: WeakKeyDictionary[AbstractEventLoop, redis.asyncio.ConnectionPool] storing pools depending on loop
+    """
+    thread_id: edc.ContextVar[int] = dataclasses.field(
+        default_factory=threading.get_native_id
+    )
+    loop_id: edc.ContextVar[int] = dataclasses.field(
+        default_factory=get_loop_id
+    )
+    _pools: edc.ContextVar[weakref.WeakKeyDictionary] = dataclasses.field(
+        default_factory=weakref.WeakKeyDictionary
+    )
+
+    def print_state(self):
+        logger.debug(f'self {id(self)} || thread {self.thread_id}={threading.get_native_id()} '
+                       f'|| {self.loop_id}={get_loop_id()}, pools: {self._pools.__len__()}')
+
+    def print_pools(self):
+        # Use this on debug only, because `self._pools` can be changed concurrently
+        for k, v in self._pools.items():
+            logger.debug(f'Pool: {k}={v}')
+
+    def _create_pool(self, server, **pool_options):
+        pool = AsyncConnectionPool.from_url(
+            server,
+            **pool_options
+        )
+        return pool
+
+    @staticmethod
+    def get_loop_id(loop=None):
+        return id(loop or asyncio.get_running_loop())
+
+    def get_connection_pool(self, loop, server, **pool_options):
+        self.sanitize_loops()
+        loop_id = self.get_loop_id(loop=loop)
+        if not (pool := self._pools.get(loop)):
+            # adding connection name for debugging
+            pool_options["client_name"] = f'async_{threading.get_native_id()}_{id(loop)}'
+            pool = self._create_pool(server=server, **pool_options)
+            if not getattr(loop, 'is_wrapped', False):
+                # wrapping loop to ensure that all assigned pools is deleted from storage on closure.
+                _wrap_close(loop)
+            self._pools[loop] = pool
+            logger.debug(f"New pool {id(pool)} in loop {loop_id} "
+                         f"and thread {threading.get_native_id()}")
+        return pool
+
+    @staticmethod
+    async def _disconnect_pool(pool):
+        try:
+            await pool.disconnect()
+        except Exception as ex:
+            logger.debug(f"Got exception during pool {id(pool)} disconnection: {ex}")
+
+    def close_on_loop(self, loop):
+        loop_id = self.get_loop_id(loop)
+        if pool := self._pools.pop(loop, None):
+            logger.debug(f"Pool {id(pool)} removed from loop {loop_id}.")
+            if not loop.is_closed():
+                logger.debug(f"Disconnecting pool {id(pool)} in loop {loop_id}.")
+                try:
+                    loop.run_until_complete(self._disconnect_pool(pool))
+                except Exception as ex:
+                    logger.warning(f"Error occurred during pool closing. {ex}")
+            return
+        logger.debug(f"There is no pool on loop {loop_id}.")
+
+    def sanitize_loops(self):
+        """
+        Removes pools in closed loops from storage.
+        """
+        loops = [item for item in self._pools.items()]
+        for loop, pool in loops:
+            if loop.is_closed():
+                logger.debug(f"Loop {get_loop_id(loop)} is closed, removing from storage.")
+                del self._pools[loop]
+
+
+context_pools = ContextConnectionPoolStorage()
 
 
 def _wrap_close(loop):
@@ -29,17 +141,12 @@ def _wrap_close(loop):
 
     def _wrapper(self, *args, **kwargs):
         """
-        Looking for pools in weak reference stored thread local.
-        If pool for loop exists close all connections.
+        Looking for pools in ContextConnectionPoolStorage.
         """
+        context_pools.print_state()
         self.close = orig_close
-        if not (pools_ref := getattr(thread_local, 'pools_ref', None)) or not pools_ref():
-            return self.close(*args, **kwargs)
-        if pool := pools_ref().pop(loop, None):
-            logger.debug(f"Loop {id(loop)} is closing. Close pool {id(pool)}")
-            if not self.is_closed():
-                # self.run_until_complete(pool.disconnect())
-                pass
+        context_pools.close_on_loop(loop=self)
+        logger.debug(f"Loop {id(self)} is almost closed.")
         return self.close(*args, **kwargs)
 
     setattr(loop, 'is_wrapped', True)
@@ -75,11 +182,8 @@ class AsyncRedisSerializer(RedisSerializer):
         return await sync_to_async(self.loads)(obj)
 
 
-class Pools(dict):
-    pass
-
-
 class AsyncCacheClient:
+
     def __init__(
         self,
         servers,
@@ -93,21 +197,10 @@ class AsyncCacheClient:
         self._servers = servers
         self._new_pool_lock = asyncio.Lock()
 
-        # Initialize _pools dictionary and create weak reference on it or use existing one.
-        # Motivation to use weak reference is that redis requests usually go in a bunch within request/response
-        # life cycle. So, on a short period we can delete AsyncCacheClient instance but pools wer assigned to it
-        # will be still alive. Concurrent instance will use reference to the same object which means the pool will
-        # be shared by clients on a one thread. When weak reference expired pools dictionary, pools and all child
-        # connections will be deleted and closed. This reference is saved in thread local which is thread-safe
-        # by default. Even if AsyncCacheClient runs in case when a same loop used in different threads, there
-        # will be different storage for pools and different pools.
-        if getattr(thread_local, 'pools_ref', None) is None or not thread_local.pools_ref():
-            logger.debug(f"No references on pool.")
-            self._pools = Pools()
-        else:
-            logger.debug(f"References on pool exists.")
-            self._pools = thread_local.pools_ref()
-        thread_local.pools_ref = weakref.ref(self._pools)
+        # Pools creation, acquiring and removing is now handled by `ContextConnectionPoolStorage`.
+        # No polls are stored in this object anymore, That eliminate possibility of stalling
+        # objects (and connections) here.
+        # self._pools = None
 
         self._client = AsyncRedis
 
@@ -123,7 +216,6 @@ class AsyncCacheClient:
         # Serializer methods 'loads' and 'dumps' must be decorated by sync_to_async.
         # Serializers method 'aloads' and 'adumps' must be async.
         self._serializer = serializer or AsyncRedisSerializer()
-
         if isinstance(parser_class, str):
             parser_class = import_string(parser_class)
         parser_class = parser_class or DefaultParser
@@ -150,22 +242,17 @@ class AsyncCacheClient:
                 del self._pools[loop]
 
     async def _get_connection_pool(self, write):
-        self.sanitize_pools()
         # connection pool must be assigned to loop where it was initialized
         loop = asyncio.get_running_loop()
         async with self._new_pool_lock:
-            if loop not in self._pools:
-                pool = self._pool_class.from_url(
-                    self._servers[self._get_connection_server_index(write)],
-                    **self._pool_options,
-                )
-                if not getattr(loop, 'is_wrapped', False):
-                    # This is no more required, probably. Tests needed,
-                    _wrap_close(loop)
-                self._pools[loop] = pool
-                logger.debug(f"New pool {id(pool)} on client {id(self)} in loop {id(loop)} "
-                             f"and thread {threading.get_native_id()}:{threading.get_ident()}")
-        return self._pools[loop]
+            pool = context_pools.get_connection_pool(
+                loop=loop,
+                server=self._servers[self._get_connection_server_index(write)],
+                **self._pool_options,
+            )
+            logger.debug(f"New pool {id(pool)} on client {id(self)} in loop {id(loop)} "
+                         f"and thread {threading.get_native_id()}")
+        return pool
 
     async def get_client(self, key=None, *, write=False) -> AsyncRedis:
         pool = await self._get_connection_pool(write)
@@ -409,6 +496,17 @@ class CustomRedisClient(RedisCacheClient):
             **options
         )
 
+    def _get_connection_pool(self, write):
+        index = self._get_connection_pool_index(write)
+        if index not in self._pools:
+            options = dict(**self._pool_options)
+            options["client_name"] = f'sync_{threading.get_native_id()}'
+            self._pools[index] = self._pool_class.from_url(
+                self._servers[index],
+                **options,
+            )
+        return self._pools[index]
+
     def keys(self, pattern):
         client = self.get_client(None, write=False)
         return client.keys(pattern=pattern)
@@ -583,23 +681,25 @@ class CustomRedisCache(RedisCache):
         self._class = CustomRedisClient
         self._async_class = AsyncCacheClient
 
-    @cached_property
+    @property
     def _async_cache(self):
         """
         It's kind of counterintuitive thing. `django.core.cache.caches` stores connections
         (read as cache backend class) in asgiref.Local, which is suggested to work fine with
         threads and coroutines. In fact, it creates new instances almost each time when used
         some threading or concurrency. `@cached_property` saves values in instance. These cause
-        creation a new pool almost on all calls and as soon as pool created clean all connections
-        are being created from scratch too. I'm not sure why, but it works fine within single
-        request/response cycle. Probably, it is suggested that objects in `asgiref.Local` are
-        released within dieing of thread/loop, but it's obviously not true.
+        creation a new pool almost on all calls and as soon as pool created all connections
+        are being created from scratch too. Most important is that Local() can be still alive
+        and as soon as AsyncCacheClient is bound to instanse all its attribute including pools
+        will live as long as this Local() object. Probably, it is suggested that objects in
+        `asgiref.Local` are released within dieing of thread/loop, but it's obviously not true.
         See `AsyncCacheClient.__ini__` for solution description.
         """
         return self._async_class(self._servers, **self._options)
 
     @cached_property
     def _cache(self):
+
         return self._class(self._servers, **self._options)
 
     def clean_keys(self, *keys, version=None):

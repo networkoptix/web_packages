@@ -3,13 +3,29 @@ import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { Observable, firstValueFrom, of, switchMap, take, tap } from 'rxjs';
+import {
+    Observable,
+    Subject,
+    firstValueFrom,
+    map,
+    of,
+    shareReplay,
+    switchMap,
+    take,
+    takeWhile,
+    tap,
+    timer,
+} from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { createPortalToken } from '@common/tokens';
 import { ResourceNode } from '@components/layout-grid/layout-grid.types';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
+import {
+    CamerasResolution,
+    Resolution,
+} from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
@@ -19,6 +35,11 @@ import { dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
+import { LayoutsResolutionActions } from './store/layouts-resolution';
+import {
+    selectCurrentLayoutCamerasLookup,
+    selectCurrentLayoutHighResolution,
+} from './store/layouts-resolution/resolution.selectors';
 import { LocalLayoutsSelectors } from './store/local-layouts';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import {
@@ -232,6 +253,39 @@ export class LayoutStateService {
         });
     }
 
+    setLayoutResolution({
+        layoutId,
+        resolution,
+    }: {
+        layoutId: string;
+        resolution: Resolution;
+    }): void {
+        this.store.dispatch(
+            LayoutsResolutionActions.updateLayoutResolution({
+                resolution,
+                layoutId,
+            }),
+        );
+    }
+
+    setCameraResolution({
+        cameraId,
+        layoutId,
+        resolution,
+    }: {
+        cameraId: string;
+        layoutId: string;
+        resolution: Resolution;
+    }): void {
+        this.store.dispatch(
+            LayoutsResolutionActions.updateCameraResolution({
+                resolution,
+                layoutId,
+                cameraId,
+            }),
+        );
+    }
+
     updateLayout(layout: Layout): void;
     updateLayout(layouts: Layout[]): void;
     updateLayout(layouts: Layout | Layout[]): void {
@@ -277,6 +331,32 @@ export class LayoutStateService {
     }
 
     unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));
+
+    showResolutionRibbon$ = new Subject<number>();
+
+    resolutionRibbonCountdown$ = this.showResolutionRibbon$.pipe(
+        switchMap(showTime =>
+            timer(0, 1000).pipe(
+                map(time => showTime - time),
+                takeWhile(time => time >= 0),
+            ),
+        ),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
+    resolutionRibbonShown$$ = toSignal(
+        this.store.select(selectCurrentLayoutHighResolution).pipe(
+            switchMap(resolutionHigh => {
+                this.showResolutionRibbon$.next(resolutionHigh ? 15 : 0);
+                return this.resolutionRibbonCountdown$;
+            }),
+        ),
+        { initialValue: 0 },
+    );
+
+    cameraResolutionLookup$$ = toSignal(this.store.select(selectCurrentLayoutCamerasLookup), {
+        initialValue: {} as CamerasResolution,
+    });
 
     paramStateHandler = this.paramStateService.getStateHandler(({ params, queryParams }) => ({
         params: {
