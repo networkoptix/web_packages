@@ -851,55 +851,6 @@ def users_can_disconnect_themselves(server: Mediaserver):
                     print(f"PASS {role}")
 
 
-def disable_enable_correctly_affects_user(server: Mediaserver):
-    """
-    24. Disable enable User correctly affects the User
-    [Tags]    C63390    C76245    webadmin    cloud
-    """
-    owner = server.get_cloud_owner()
-    viewer = server.get_cloud_viewer()
-    url = ENV + f"/systems/{server.id}"
-    with get_chrome() as driver:
-        try:
-            driver.get(url)
-            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
-            SystemAdmin(driver)
-            system_left_menu = SystemLeftMenu(driver)
-            system_left_menu.users_button().click()
-            system_left_menu.get_user_with_email(viewer.email).click()
-            system_user = SystemUsers(driver)
-            access_level_dropdown = system_user.access_level_dropdown()
-            access_level_dropdown.wait_until_visible()
-            assert access_level_dropdown.text() == rb.VIEWER_TEXT
-            help_block = system_user.help_block()
-            assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
-            system_user.user_switch().turn_off()
-            # Fails due to https://networkoptix.atlassian.net/browse/CLOUD-11901
-            # test case not completely ported yet due to bug
-            system_user.no_unsaved_changes_text().wait_until_visible()
-            assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
-            assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
-        except Exception:
-            print("FAIL")
-            driver.save_screenshot('error.png')
-            raise
-        else:
-            print(f"PASS")
-
-
-def _wait_for_system_administration_elements_clickable(driver: ChromeBrowser, owner_email: str):
-    # This method is needed as it takes a lot of time to wait until buttons become active
-    # just after system setup. The button to add users is quite tricky as when we try to
-    # wait_until_clickable() for it can raise StaleElementReferenceException when it is changing its
-    # state. This has to be fixed in the future.
-    system_admin = SystemAdmin(driver)
-    system_left_menu = SystemLeftMenu(driver)
-    system_left_menu.users_button().click()
-    system_admin.merge_with_another_system_button().wait_until_clickable(90)
-    system_left_menu.wait_for_user_with_email(owner_email)
-
-
->>>>>>> 2cc62b7718 (Partially ported robot test to test_system_users.)
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
