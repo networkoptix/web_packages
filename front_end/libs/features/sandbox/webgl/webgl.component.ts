@@ -7,6 +7,7 @@ import { NxAccountService } from '@services/account.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
+import { NxWebGLCanvasComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
 
 // SOFIA
 const SERVER_ID = '5231712d-503a-41fc-bc51-96f3ab13567c';
@@ -23,6 +24,8 @@ const CAMERA_ID = '28211a91-4d61-e6b9-da49-172c127da68b?time=live';
     selector: 'webgl',
     templateUrl: 'webgl.component.html',
     styleUrls: ['webgl.component.scss'],
+    standalone: true,
+    imports: [NxWebGLCanvasComponent],
 })
 export class WebglComponent {
     end: number;

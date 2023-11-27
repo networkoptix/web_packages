@@ -1,0 +1,77 @@
+<div>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionBookmarks)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'bookmarks.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionChunkMode)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'chunk_mode.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionSync)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'sync.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular padded"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionLive)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'live.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionVolume)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'volume.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+</div>

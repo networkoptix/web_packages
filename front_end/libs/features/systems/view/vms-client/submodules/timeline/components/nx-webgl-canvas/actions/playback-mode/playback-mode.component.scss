@@ -1,0 +1,18 @@
+:host {
+    height: 100%;
+
+    & > div {
+        display: flex;
+        flex-wrap: wrap;
+        justify-items: flex-start;
+        align-content: center;
+
+        div {
+            border: 1px solid transparent;
+
+            .active {
+                border-color: var(--brand-core);
+            }
+        }
+    }
+}

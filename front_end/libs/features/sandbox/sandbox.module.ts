@@ -19,6 +19,7 @@ import { NxMatLikeGenericDropdownModule } from '@components/mat-like-components/
 import { NxMatLikeInputComponent } from '@components/mat-like-components/mat-like-input/input.component';
 import { NxMatLikePasswordComponent } from '@components/mat-like-components/mat-like-password-input/password.component';
 import { NxMatLikeTypeAheadDropdown } from '@components/mat-like-components/mat-like-type-ahead-select/searchable.component';
+import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
 import { PrimaryButtonModule } from '@components/primary-button/primary-button.module';
 import { NxRadioComponent } from '@components/radio/radio.component';
 import { NxSearchComponent } from '@components/search/search.component';
@@ -27,19 +28,17 @@ import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxTagComponent } from '@components/tag/tag.component';
 import { NxThemeGeneratorComponent } from '@components/theme-generator/theme-colors.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { ApplyGuard } from '@guards/applyGuard';
 import { AuthGuard } from '@guards/authGuard';
 import { MenuModule } from '@menu/menu.module';
 import { NxUsersTableComponent } from '@pages/home/components/users-table/users-table.component';
 import { NxHSLThemeColorsComponent } from '@pages/sandbox/hsl-theme-colors/theme-colors.component';
-import { SimpleWebglComponent } from '@pages/sandbox/simple-webgl/webgl.component';
 import { SandboxTableComponent } from '@pages/sandbox/table/sandbox-table.component';
 import { _NxTestBoxComponent } from '@pages/sandbox/test-box.component';
 import { WebglComponent } from '@pages/sandbox/webgl/webgl.component';
 import { PipesModule } from '@pipes/pipes.module';
-import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
-import { SimpleWebGLTimelineModule } from '@vms-client/submodules/timeline/components/simple-chart/webgl-timeline.module';
 import { VmsClientTimelineModule } from '@vms-client/submodules/timeline/timeline.module';
 
 import { NxAccountSettingsModule } from '../account/settings/settings.module';
@@ -86,10 +85,6 @@ const appRoutes: Routes = [
             {
                 path: 'webgl',
                 component: WebglComponent,
-            },
-            {
-                path: 'simple-webgl',
-                component: SimpleWebglComponent,
             },
             {
                 path: 'custom-colors',
@@ -196,9 +191,7 @@ const appRoutes: Routes = [
         PipesModule,
         NxSearchComponent,
         NxSearchableDropdown,
-        SimpleWebGLTimelineModule,
         VmsClientTimelineModule,
-        WebGLTimelineModule,
         NxThemeGeneratorComponent,
         NxGenericDropdownModule,
         NxMatLikeGenericDropdownModule,
@@ -215,7 +208,11 @@ const appRoutes: Routes = [
         NxResizeObserver,
         LanguageModule,
         NxDropdownModule,
+        NxTooltipDirective,
+        NxMultiLineEllipsisComponent,
+        WebglComponent,
         NxAddSvgSrcDirective,
+        NxButtonsExampleComponent,
         NxButtonsExampleComponent,
     ],
     providers: [],
@@ -238,8 +235,6 @@ const appRoutes: Routes = [
         NxCustomColorsComponent,
         NxThemeColorsComponent,
         NxHSLThemeColorsComponent,
-        WebglComponent,
-        SimpleWebglComponent,
     ],
     bootstrap: [],
     exports: [NxSandboxComponent],

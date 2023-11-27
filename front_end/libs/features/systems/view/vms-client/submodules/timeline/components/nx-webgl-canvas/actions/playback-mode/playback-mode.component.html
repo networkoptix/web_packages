@@ -1,0 +1,106 @@
+<div>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionSkipPrev)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'skip.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionRewindBackward)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'rewind.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionPlay)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'play_arrow.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular stacked"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionSpeed)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'play_speed.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionSRewindForward)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'rewind.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        class="regular"
+        [type]="ButtonType.action"
+        (click)="handleActionClick(ButtonAction.actionSkipNext)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'skip.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+    <nx-button
+        [type]="ButtonType.action"
+        [active]="mode === MODE.SELECTION"
+        (click)="handleActionClick(ButtonAction.actionMode)"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [src]="icons.dirActions + 'selection.svg'"
+            [svgStyle]="{
+                'width.px': '20',
+                'height.px': '20'
+            }"
+            [applyClass]="true"
+        ></svg-icon>
+    </nx-button>
+</div>

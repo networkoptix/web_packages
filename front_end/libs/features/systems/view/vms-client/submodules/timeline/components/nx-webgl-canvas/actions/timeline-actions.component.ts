@@ -1,26 +1,44 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
+import { timeDays } from 'd3';
 
-import {
-    ACTIONS,
-    MODE,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.types';
+import { WebGlTimelineActionsSoundComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/actions-sound/actions-sound.component';
+import { WebGlTimelinePlaybackModeComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/playback-mode/playback-mode.component';
+import { WebGlTimelineTimeNavComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/time-nav/time-nav.component';
+import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 
 @UntilDestroy()
 @Component({
     selector: 'nx-timeline-actions',
     templateUrl: './timeline-actions.component.html',
     styleUrls: ['./timeline-actions.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        WebGlTimelinePlaybackModeComponent,
+        WebGlTimelineActionsSoundComponent,
+        WebGlTimelineTimeNavComponent,
+    ],
 })
 export class WebGlTimelineActionsComponent {
-    @Output() onActions = new EventEmitter<ACTIONS>();
+    @Output() onActions = new EventEmitter<Record<string, unknown>>();
 
-    timelineActions: ACTIONS = {
-        mode: MODE.DRAG,
-    };
+    overallDays: number;
+    time: string;
 
-    changeMode(event: MODE): void {
-        this.timelineActions.mode = event;
-        this.onActions.emit(this.timelineActions);
+    constructor(webglService: NxWebGLService) {
+        webglService.xScaleOriginal$.subscribe(xScale => {
+            // use overallDays to limit time nav options
+            this.overallDays = timeDays(xScale.domain()[0], xScale.domain()[1]).length;
+        });
+    }
+
+    // changeMode(event: MODE): void {
+    //     this.onActions.emit({ action: ButtonAction.actionMode, param: event });
+    // }
+
+    handleActionClick(e: Record<string, unknown>): void {
+        this.onActions.emit({ actin: e.action, param: e.param });
     }
 }

@@ -5,4 +5,5 @@ export enum MODE {
 
 export interface ACTIONS {
     mode: MODE;
+    jumpTo: number;
 }

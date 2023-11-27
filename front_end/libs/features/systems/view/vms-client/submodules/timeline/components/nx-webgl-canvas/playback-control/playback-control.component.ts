@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Subscription } from 'rxjs';
@@ -11,6 +12,8 @@ type BtnClassesEnum = 'play' | 'pause';
     selector: 'nx-playback-control',
     templateUrl: './playback-control.component.html',
     styleUrls: ['./playback-control.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class WebGlPlaybackControlComponent implements OnInit {
     @Input() enabled: boolean;

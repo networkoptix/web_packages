@@ -148,7 +148,6 @@
             <span>{{ 'BarWidth' | translate }}</span> : {{ scrollBarWidth$$() }} <br />
             <span>{{ 'Sel' | translate }}</span> : {{ this.webglService.selectionDrag$.value }} /
             {{ this.webglService.selection$.value.drag }} <br />
-            <!--    tPos : {{ timeLabelPosition }} <br />-->
         </div>
         <div class="col-9">
             <span>{{ 'px/60s' | translate }}</span> :
@@ -165,6 +164,8 @@
             {{ webglService.selection$.value.startDisplay }}<br />
             <span>{{ 'Selection end' | translate }}</span> :
             {{ webglService.selection$.value.endDisplay }}<br />
+            <span>{{ 'Overall days' | translate }}</span> : {{ overallDays }} <br />
+            <span>{{ 'Domain' | translate }}</span> : {{ xScale?.domain()[0] }} <br />
         </div>
     </div>
 </div>

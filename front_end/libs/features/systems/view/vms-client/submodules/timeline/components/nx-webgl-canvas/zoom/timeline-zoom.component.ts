@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Output } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -9,6 +10,8 @@ import { ZOOM_DIRECTION } from '@vms-client/submodules/timeline/components/nx-we
     selector: 'nx-timeline-zoom',
     templateUrl: './timeline-zoom.component.html',
     styleUrls: ['./timeline-zoom.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class WebGlTimelineZoomComponent {
     @Output() onZoom = new EventEmitter<ZOOM_DIRECTION>();

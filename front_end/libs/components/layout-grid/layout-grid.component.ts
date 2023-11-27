@@ -89,7 +89,7 @@ import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
-import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
+import { NxWebGLCanvasComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-canvas.component';
 
 import { assertResourceOfType, assertResourceParentNode } from './layout-grid.type-guards';
 import {
@@ -305,13 +305,13 @@ const calculateResize = (
         TourMatMenuModule,
         TranslateModule,
         VideoPlayerModule,
-        WebGLTimelineModule,
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxClickElsewhereDirective,
         PortalModule,
         NxLayoutGridItemOverlayComponent,
         CdkContextMenuTrigger,
+        NxWebGLCanvasComponent,
     ],
 })
 export class NxLayoutGridComponent {

@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
@@ -20,9 +21,11 @@ const DATE_FORMAT = 'ddd mmm dd yyyy';
     selector: 'nx-webgl-timeline-playback-indicator',
     templateUrl: './timeline-playback-indicator.component.html',
     styleUrls: ['./timeline-playback-indicator.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
-    @Input() position: number;
+    @Input() position: number | undefined;
 
     playbackTime: Date;
     public date: string = '';

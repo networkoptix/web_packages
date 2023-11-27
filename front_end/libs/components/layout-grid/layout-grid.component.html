@@ -709,7 +709,7 @@
         </div>
 
         <nx-webgl-canvas
-            *ngIf="CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo"
+            *ngIf="true || CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo"
             [cameras]="cameras"
             [system]="system"
             [selectedLayout]="layout"

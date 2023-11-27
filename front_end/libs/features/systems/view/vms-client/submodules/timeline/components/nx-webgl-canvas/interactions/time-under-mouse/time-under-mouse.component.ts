@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, Input, OnChanges, ViewChild } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import dateFormat from 'dateformat';
@@ -19,9 +20,11 @@ const PRIMARY_WIDTH = 140;
     selector: 'nx-webgl-time-under-mouse',
     templateUrl: './time-under-mouse.component.html',
     styleUrls: ['./time-under-mouse.component.scss'],
+    standalone: true,
+    imports: [CommonModule],
 })
 export class WebGlTimeUnderMouseComponent implements OnChanges {
-    @Input() position: number;
+    @Input() position: number | undefined;
 
     public date: string = '';
     public time: string = '';
@@ -73,35 +76,38 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
     }
 
     public svgArrowPoints(): string {
-        const offset = this.position - PRIMARY_WIDTH / 2;
-        let tl = Math.round((PRIMARY_WIDTH - ARROW_WIDTH) / 2); // top left vertex
-        let tr = Math.round((PRIMARY_WIDTH + ARROW_WIDTH) / 2); // top right vertex
-        let b = Math.round(PRIMARY_WIDTH / 2); // bottom vertex
+        if (this.position !== undefined) {
+            const offset = this.position - PRIMARY_WIDTH / 2;
+            let tl = Math.round((PRIMARY_WIDTH - ARROW_WIDTH) / 2); // top left vertex
+            let tr = Math.round((PRIMARY_WIDTH + ARROW_WIDTH) / 2); // top right vertex
+            let b = Math.round(PRIMARY_WIDTH / 2); // bottom vertex
 
-        if (offset < 0) {
-            if (this.position < ARROW_WIDTH) {
-                tl = 0;
-                tr = ARROW_WIDTH;
-                b = this.position;
-            } else {
-                tl += offset;
-                tr += offset;
-                b += offset;
+            if (offset < 0) {
+                if (this.position < ARROW_WIDTH) {
+                    tl = 0;
+                    tr = ARROW_WIDTH;
+                    b = this.position;
+                } else {
+                    tl += offset;
+                    tr += offset;
+                    b += offset;
+                }
+            } else if (this.webglService.canvasWidth$.value - this.position < PRIMARY_WIDTH / 2) {
+                if (this.webglService.canvasWidth$.value - this.position < ARROW_WIDTH) {
+                    tl = PRIMARY_WIDTH - ARROW_WIDTH;
+                    tr = PRIMARY_WIDTH;
+                    b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.position);
+                } else {
+                    const padding =
+                        this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
+                    tl -= padding;
+                    tr -= padding;
+                    b -= padding;
+                }
             }
-        } else if (this.webglService.canvasWidth$.value - this.position < PRIMARY_WIDTH / 2) {
-            if (this.webglService.canvasWidth$.value - this.position < ARROW_WIDTH) {
-                tl = PRIMARY_WIDTH - ARROW_WIDTH;
-                tr = PRIMARY_WIDTH;
-                b = PRIMARY_WIDTH - (this.webglService.canvasWidth$.value - this.position);
-            } else {
-                const padding =
-                    this.webglService.canvasWidth$.value - this.position - PRIMARY_WIDTH / 2;
-                tl -= padding;
-                tr -= padding;
-                b -= padding;
-            }
+
+            return `${tl},0 ${tr},0 ${b},5`;
         }
-
-        return `${tl},0 ${tr},0 ${b},5`;
+        return '';
     }
 }

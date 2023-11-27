@@ -1,24 +1,29 @@
+import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, HostBinding, Input, OnChanges, Output } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 
-// import * as d3 from 'd3';
 import { NgChanges } from '@utils/ng-changes';
-import {
-    ACTIONS,
-    MODE,
-} from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.types';
-import { SCROLL_DIRECTION } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
-import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
-// import {
-//     ZOOM_DURATION,
-//     ZOOM_FACTOR,
-// } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/zoom/zoom.types';
+
+import { ACTIONS, MODE } from '../actions/timeline-actions.types';
+import { SCROLL_DIRECTION } from '../scroll/scroll.types';
+import { NxWebGLService } from '../services/webgl.service';
+
+import { WebGlTimelinePlaybackIndicatorComponent } from './playback-indicator/timeline-playback-indicator.component';
+import { WebGlTimelineSelectionComponent } from './selection/timeline-selection.component';
+import { WebGlTimeUnderMouseComponent } from './time-under-mouse/time-under-mouse.component';
 
 @UntilDestroy()
 @Component({
     selector: 'nx-timeline-interactions',
     templateUrl: './timeline-interactions.component.html',
     styleUrls: ['./timeline-interactions.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        WebGlTimeUnderMouseComponent,
+        WebGlTimelinePlaybackIndicatorComponent,
+        WebGlTimelineSelectionComponent,
+    ],
 })
 export class WebGlTimelineInteractionsComponent implements OnChanges {
     // eslint-disable-next-line nx/explicit-angular-boundary-types
@@ -81,18 +86,18 @@ export class WebGlTimelineInteractionsComponent implements OnChanges {
         this.selectionHover = status;
     }
 
-    handleMouseClick(event: MouseEvent): void {
+    handleMouseClick(event: Event): void {
         if (!this.webglService.selectionDrag$.value && this.actions.mode === MODE.DRAG) {
             this.playbackPosition = this.cursorPosition;
         }
     }
 
-    handleMouseHold(event: MouseEvent, hold: boolean): void {
+    handleMouseHold(event: Event, hold: boolean): void {
         event.preventDefault();
         if (hold) {
             this.scrollToPos.emit({
                 direction: SCROLL_DIRECTION.scrollTo,
-                position: event.offsetX,
+                position: (event as MouseEvent).offsetX,
             });
         }
     }

@@ -1,0 +1,38 @@
+<div>
+    <!--    <nx-time></nx-time>-->
+
+    <div id="calendar-nav">
+        <nx-button
+            [type]="ButtonType.action"
+            (click)="handleCalendarClick()"
+        >
+            <svg-icon
+                nx-add-svg-src
+                [src]="icons.dirActions + 'calendar.svg'"
+                [svgStyle]="{
+                    'width.px': '20',
+                    'height.px': '20'
+                }"
+                [applyClass]="true"
+            ></svg-icon>
+        </nx-button>
+    </div>
+    <div id="jump-to-nav">
+        <nx-dropdown
+            [placeholder]="'Jump to...' | translate"
+            [(selected)]="selectedJumpTarget"
+            (onChange)="
+                handleActionClick({ action: ButtonAction.actionJumpTo, param: selectedJumpTarget })
+            "
+        >
+            <nx-simple-dropdown-item
+                class="text-action"
+                *ngFor="let jump of jumpLabels | keyvalue"
+                [value]="jump.value"
+                [selected]="jump.value === selectedJumpTarget"
+            >
+                {{ jump.key }}
+            </nx-simple-dropdown-item>
+        </nx-dropdown>
+    </div>
+</div>

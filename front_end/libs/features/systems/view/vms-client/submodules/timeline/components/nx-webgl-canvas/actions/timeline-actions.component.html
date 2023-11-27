@@ -1,3 +1,13 @@
+<div id="time-nav">
+    <nx-webgl-timeline-time-nav (onChange)="handleActionClick($event)"></nx-webgl-timeline-time-nav>
+</div>
 <div id="playback-and-mode">
-    <nx-webgl-timeline-mode (onChange)="changeMode($event)"></nx-webgl-timeline-mode>
+    <nx-webgl-timeline-playback-mode
+        (onChange)="handleActionClick($event)"
+    ></nx-webgl-timeline-playback-mode>
+</div>
+<div id="actions-and-sound">
+    <nx-webgl-timeline-actions-sound
+        (onChange)="handleActionClick($event)"
+    ></nx-webgl-timeline-actions-sound>
 </div>

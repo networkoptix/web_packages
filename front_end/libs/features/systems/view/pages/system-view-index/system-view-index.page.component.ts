@@ -119,6 +119,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.newHeader = this.CONFIG.featureFlags.newHeader;
+
         effect(() => {
             const state = this.vms.state();
             if (state.mode === VMS_MODE.CAMERA_SELECTED) {

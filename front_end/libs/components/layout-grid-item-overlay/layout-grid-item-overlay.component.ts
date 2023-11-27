@@ -67,7 +67,6 @@ import { RecordingStatus } from '@services/system.service/camera-manager/camera-
 import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
 import { isDefinedOrTrue } from '@utils/array';
-import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 const LANG = staticLang.layouts.overlay.menuActions;
 
@@ -100,7 +99,6 @@ const EMPTY_MENU_ACTION = {
         TourMatMenuModule,
         TranslateModule,
         VideoPlayerModule,
-        WebGLTimelineModule,
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxTooltipDirective,

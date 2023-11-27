@@ -1,20 +1,20 @@
 // import { ComponentFixture, TestBed, waitForAsync } from '@angular/core/testing';
 
-// import { TimelineScrollbarComponent } from './timeline-scrollbar.component';
+// import { WebGlTimelineSelectionComponent } from './timeline-selection.component';
 
-// xdescribe('TimelineScrollbarComponent', () => {
-//     let component: TimelineScrollbarComponent;
-//     let fixture: ComponentFixture<TimelineScrollbarComponent>;
+// xdescribe('WebGlTimelineSelectionComponent', () => {
+//     let component: WebGlTimelineSelectionComponent;
+//     let fixture: ComponentFixture<WebGlTimelineSelectionComponent>;
 
 //     beforeEach(waitForAsync(() => {
 //         TestBed.configureTestingModule({
-//             declarations: [TimelineScrollbarComponent]
+//             declarations: [WebGlTimelineSelectionComponent]
 //         })
 //             .compileComponents();
 //     }));
 
 //     beforeEach(() => {
-//         fixture = TestBed.createComponent(TimelineScrollbarComponent);
+//         fixture = TestBed.createComponent(WebGlTimelineSelectionComponent);
 //         component = fixture.componentInstance;
 //         fixture.detectChanges();
 //     });

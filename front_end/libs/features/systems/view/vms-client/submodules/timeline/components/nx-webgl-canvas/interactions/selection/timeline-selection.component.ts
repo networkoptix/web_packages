@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     Component,
     ElementRef,
@@ -8,6 +9,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { AngularSvgIconModule } from 'angular-svg-icon';
 import dateFormat from 'dateformat';
 import { distinctUntilChanged } from 'rxjs';
 
@@ -49,6 +51,8 @@ const SHORT_WIDTH = 36;
     selector: 'nx-webgl-timeline-selection',
     templateUrl: './timeline-selection.component.html',
     styleUrls: ['./timeline-selection.component.scss'],
+    standalone: true,
+    imports: [CommonModule, AngularSvgIconModule],
 })
 export class WebGlTimelineSelectionComponent implements OnChanges {
     @Input() enabled: boolean = false;
@@ -174,7 +178,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         this.hideRightEar = true;
     }
 
-    selectionHandler(event: MouseEvent): void {
+    selectionHandler(event: Event): void {
         if (this.selection.startDisplay && this.selection.endDisplay) {
             this.webglService.selectionReset();
             this.hideLeftEar = true;
@@ -183,12 +187,12 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
         // const offsetX = event.pageX - this.webglService.canvasRect$.value.left;
 
-        const dateUnder = this.webglService.xScale$.value.invert(event.offsetX);
+        const dateUnder = this.webglService.xScale$.value.invert((event as MouseEvent).offsetX);
         const time = dateFormat(dateUnder, TIME_FORMAT);
         const date = dateFormat(dateUnder, DATE_FORMAT);
         let swap = false;
 
-        if (this.selection.startDisplay > event.offsetX) {
+        if (this.selection.startDisplay > (event as MouseEvent).offsetX) {
             swap = true;
             this.selection.endDisplay = this.selection.startDisplay;
             this.selection.rightDate = this.selection.leftDate;
@@ -199,7 +203,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
         if (!this.selection.active || swap) {
             this.selection.active = true;
-            this.selection.startDisplay = event.offsetX;
+            this.selection.startDisplay = (event as MouseEvent).offsetX;
             if (this.selection.endDisplay) {
                 this.selection.widthInPx = this.selection.endDisplay - this.selection.startDisplay;
             }
@@ -209,7 +213,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
             this.leftEarPosition();
             // this.posChange.emit(offsetX);
         } else if (!this.selection.endDisplay) {
-            this.selection.endDisplay = event.offsetX;
+            this.selection.endDisplay = (event as MouseEvent).offsetX;
             this.selection.widthInPx = this.selection.endDisplay - this.selection.startDisplay;
             this.selection.rightDate = date;
             this.selection.rightTime = time;

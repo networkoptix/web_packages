@@ -1,4 +1,5 @@
 import { CdkDrag, CdkDragStart } from '@angular/cdk/drag-drop';
+import { CommonModule } from '@angular/common';
 import { Component, ElementRef, EventEmitter, Output, Input, ViewChild } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 
@@ -12,11 +13,13 @@ import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-we
     selector: 'nx-timeline-scroll',
     templateUrl: './timeline-scroll.component.html',
     styleUrls: ['./timeline-scroll.component.scss'],
+    standalone: true,
+    imports: [CommonModule, CdkDrag],
 })
 export class TimelineScrollComponent {
     @Input() barWidth: number;
     @Input() barPos: number;
-    @Input() playbackPos: number;
+    @Input() playbackPos: number | undefined;
 
     @Output() singleScroll = new EventEmitter<SCROLL_DIRECTION>();
     @Output() constantScroll = new EventEmitter<{

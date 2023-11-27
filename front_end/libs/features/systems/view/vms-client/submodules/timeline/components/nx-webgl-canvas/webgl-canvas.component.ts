@@ -1,3 +1,4 @@
+import { CommonModule } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -9,11 +10,15 @@ import {
 } from '@angular/core';
 import { chartCartesian } from '@d3fc/d3fc-chart';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { TranslateModule } from '@ngx-translate/core';
 import * as d3 from 'd3';
 import { D3ZoomEvent, ScaleTime } from 'd3';
 import * as fc from 'd3fc';
+import isEqual from 'lodash-es/isEqual';
 import { animationFrameScheduler, interval, Subject, takeUntil, timer } from 'rxjs';
 
+import { ButtonAction } from '@components/button/button.component.types';
+import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { nxConfig } from '@services/nx-config/config';
 import { Layout } from '@services/system-api.types/layouts.types';
 import {
@@ -23,15 +28,18 @@ import {
 import { NxSystem } from '@services/system.service/system';
 import { cleanId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
+import { WebGlTimelineActionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.component';
 import {
     ACTIONS,
     MODE,
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.types';
+import { WebGlTimelineInteractionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/timeline-interactions.component';
 import {
     CONSTANT_SCROLL_FACTOR_PX,
     SCROLL_DIRECTION,
     SCROLL_FACTOR_PX,
 } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/scroll.types';
+import { TimelineScrollComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/scroll/timeline-scroll.component';
 import { NxWebGLService } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.service';
 import {
     CHUNK_TYPE,
@@ -50,13 +58,23 @@ import {
 const ZOOM_WINDOW_TO_ANIMATE_MS = 30 * 60 * 1000;
 const LAST_MINUTE_LENGTH = 1.5 * 60 * 1000; // 1.5 minutes
 const TEN_SEC_IN_MS = 10 * 1000;
+// const DAYS7_IN_MS = 604800000;
 
 @UntilDestroy()
 @Component({
     selector: 'nx-webgl-canvas',
     templateUrl: 'webgl-canvas.component.html',
     styleUrls: ['webgl-canvas.component.scss'],
+    standalone: true,
     encapsulation: ViewEncapsulation.None,
+    imports: [
+        CommonModule,
+        NxPreLoaderComponent,
+        WebGlTimelineInteractionsComponent,
+        TimelineScrollComponent,
+        WebGlTimelineActionsComponent,
+        TranslateModule,
+    ],
 })
 export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     @Input() selectedCameraId: string;
@@ -164,9 +182,11 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
     // default actions if timeline actions component is not used -- TT
     timelineActions: ACTIONS = {
         mode: MODE.DRAG,
+        jumpTo: 0,
     };
 
     // Test data *********************
+    overallDays: number;
     nowDate: Date;
     nowDateDomain: Date;
     nowDateOrigDomain: Date;
@@ -266,8 +286,10 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         //         camera => camera.id === this.selectedCameraId,
         //     );
         // }
-
-        if (changes.cameras?.currentValue) {
+        if (
+            changes.cameras?.currentValue &&
+            !isEqual(changes.cameras.currentValue, changes.cameras.previousValue)
+        ) {
             this.resetChart();
 
             if (changes.cameras.currentValue.length) {
@@ -533,6 +555,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             .domain([this.start, this.nowMs])
             .range([0, this.container.clientWidth]);
 
+        // TODO: test var  *********************** REMOVE
+        this.overallDays = d3.timeDays(this.xScale.domain()[0], this.xScale.domain()[1]).length;
+        // ***************************************
         this.xScaleOriginal = this.xScale.copy();
         this.webglService.xScale$.next(this.xScale);
     }
@@ -593,7 +618,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                     this.formatTime = this.formatDay;
                     this.periodMinorModifier = d3.timeMinute;
                     this.formatMinorTime = this.formatMinorMinute;
-                } else if (periodDays === 0) {
+                } else if (this.overallDays === 0) {
                     const periodMinutes = d3.timeMinutes(
                         this.xScale.domain()[0],
                         this.xScale.domain()[1],
@@ -792,6 +817,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                 ) {
                     return;
                 }
+
                 this.xPos = Math.trunc(event.transform.x);
                 this.zoomEvent = event;
 
@@ -1142,8 +1168,31 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         this.timeLabelPosition = undefined;
     }
 
-    onActions(actions: ACTIONS): void {
-        this.timelineActions = { ...actions };
+    onActions(actionParam: Record<string, unknown>): void {
+        const { action, param } = actionParam;
+        switch (action) {
+            case ButtonAction.actionJumpTo:
+                let intervalZoomK: number;
+
+                if (param === 0) {
+                    intervalZoomK = 1;
+                } else {
+                    intervalZoomK = this.overallDays / (actionParam.param as number);
+                }
+                const virtualWidth = Math.trunc(
+                    this.webglService.canvasWidth$.value * intervalZoomK,
+                );
+
+                this.canvas
+                    .transition()
+                    .duration(1000)
+                    .call(
+                        this.zoom.transform,
+                        d3.zoomIdentity
+                            .translate(this.webglService.canvasWidth$.value - virtualWidth, 0)
+                            .scale(intervalZoomK),
+                    );
+        }
     }
 
     protected readonly nxConfig = nxConfig;
