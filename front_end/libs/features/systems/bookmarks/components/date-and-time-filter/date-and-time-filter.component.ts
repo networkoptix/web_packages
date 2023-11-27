@@ -77,10 +77,7 @@ export class NxDateAndTimeFilterComponent {
         return new Date(now.getFullYear(), now.getMonth(), now.getDate());
     }
 
-    constructor(
-        dateAdapter: DateAdapter<Date>,
-        language: NxLanguageProviderService,
-    ) {
+    constructor(dateAdapter: DateAdapter<Date>, language: NxLanguageProviderService) {
         dateAdapter.setLocale(language.currentLocale);
         this.updateFixedDates();
         timer(MS.min, MS.min)

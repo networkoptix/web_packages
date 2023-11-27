@@ -4,6 +4,8 @@ import {
     Component,
     effect,
     ElementRef,
+    Inject,
+    LOCALE_ID,
     OnDestroy,
     OnInit,
     ViewChild,
@@ -91,6 +93,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
         private menuService: NxMenuService,
         private uriService: NxUriService,
         private scrollMechanicsService: NxScrollMechanicsService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         pageService.pageTitle(this.LANG.pageTitles.information);
 
@@ -403,7 +406,7 @@ export class NxSystemAlertsComponent implements OnInit, AfterViewInit, OnDestroy
 
                         return { count, level, name };
                     })
-                    .sort(alphabeticalSort(a => a.level)),
+                    .sort(alphabeticalSort(this.locale, a => a.level)),
                 name: this.LANG.alarmTypes[alarmType.name] || alarmType.name,
             };
         });

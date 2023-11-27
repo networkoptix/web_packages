@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges } from '@angular/core';
+import { Component, Inject, Input, LOCALE_ID, OnChanges } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -68,7 +68,11 @@ export class MediaServerListComponent implements OnChanges {
         [serverId: string]: boolean;
     } = {};
 
-    constructor(private localStorage: LocalStorageService, configService: NxConfigService) {
+    constructor(
+        private localStorage: LocalStorageService,
+        configService: NxConfigService,
+        @Inject(LOCALE_ID) private locale: string,
+    ) {
         this.CONFIG = configService.config;
     }
 
@@ -76,9 +80,9 @@ export class MediaServerListComponent implements OnChanges {
         if (changes._mediaservers?.previousValue !== changes._mediaservers?.currentValue) {
             this.previewLoaded = {};
             this.processedMediaservers = this._mediaservers || [];
-            this.processedMediaservers.sort(alphabeticalSort(ms => ms.name));
+            this.processedMediaservers.sort(alphabeticalSort(this.locale, ms => ms.name));
             this.processedMediaservers.forEach(ms => {
-                ms.cameras.sort(alphabeticalSort(cam => cam.name));
+                ms.cameras.sort(alphabeticalSort(this.locale, cam => cam.name));
             });
         }
 

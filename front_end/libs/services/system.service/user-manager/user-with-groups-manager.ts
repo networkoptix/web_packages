@@ -1,8 +1,10 @@
+import { LOCALE_ID } from '@angular/core';
 import { firstValueFrom, lastValueFrom } from 'rxjs';
 
 import staticLang from '@language_static';
 import { AdminGroups } from '@libs/services/system.service/permission-manager/permission-manager';
 import { nxConfig } from '@services/nx-config/config';
+import { NxSystemBase } from '@services/system/system-base';
 import { ChangedIdReturned } from '@services/system-api.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import {
@@ -28,6 +30,7 @@ export class UserWithGroupsManager extends UserManager {
     userGroups: IdToGroup;
     private powerUserGroups = new Set<string>([AdminGroups.powerUserGroup]);
     protected override _ownerEmail: string;
+    protected locale: string;
     // isMySystem: boolean;
     override currentUser: NxUser;
     override currentUserEmail: string;
@@ -39,6 +42,7 @@ export class UserWithGroupsManager extends UserManager {
         super(mediaserver, currentUserEmail, userId);
         this.mediaserver = mediaserver;
         this.currentUserEmail = currentUserEmail;
+        this.locale = NxSystemBase.INJECTOR.get(LOCALE_ID);
 
         this._ownerEmail = '';
     }
@@ -220,15 +224,20 @@ export class UserWithGroupsManager extends UserManager {
                 }
             });
 
+        const sortByGroupName = alphabeticalSort<UserGroupDropdown>(
+            this.locale,
+            ({ label }) => label?.toLocaleLowerCase() ?? '',
+        );
+
         // Used to insert the group title and horizontal divider for the mult-select dropdown
         if (customGroup.length > 0) {
-            customGroup.sort(alphabeticalSort(({ label }) => label.toLowerCase()));
+            customGroup.sort(sortByGroupName);
             customGroup.unshift({ id: 'title', label: customUserGroupText });
             customGroup.unshift({ id: 'horizontal', label: 'horizontal' });
         }
         if (ldapGroup.length > 0) {
             const defaultLdapGroup = ldapGroup.shift();
-            ldapGroup.sort(alphabeticalSort(({ label }) => label.toLowerCase()));
+            ldapGroup.sort(sortByGroupName);
             ldapGroup.unshift(defaultLdapGroup);
             ldapGroup.unshift({ id: 'title', label: ldapUserGroupText });
             ldapGroup.unshift({ id: 'horizontal', label: 'horizontal' });
@@ -289,9 +298,9 @@ export class UserWithGroupsManager extends UserManager {
                 // sorts local before cloud users --> then by email for cloud & name for local
                 if (userA.type === userB.type) {
                     if (userA.type === 'cloud') {
-                        return userA.email.localeCompare(userB.email, navigator.language);
+                        return userA.email.localeCompare(userB.email, this.locale);
                     } else {
-                        return userA.name.localeCompare(userB.name, navigator.language);
+                        return userA.name.localeCompare(userB.name, this.locale);
                     }
                 }
                 return userA.type === 'cloud' ? 1 : -1;

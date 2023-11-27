@@ -1,5 +1,7 @@
+import { inject, LOCALE_ID } from '@angular/core';
 import { createSelector } from '@ngrx/store';
 
+import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { Layout } from '@services/system-api.types/layouts.types';
 import { alphabeticalSort } from '@utils/general';
 
@@ -20,7 +22,10 @@ export const selectLayouts = createSelector(
             .filter(({ id }) => !unsaved.includes(id))
             .map(toLocalLayoutState);
         return [...unsavedLayouts, ...savedLocalLayouts].sort(
-            alphabeticalSort(({ layout }) => layout.name),
+            alphabeticalSort(
+                LayoutStateService.runInInjectionContext(() => inject(LOCALE_ID)),
+                ({ layout }) => layout.name,
+            ),
         );
     },
 );

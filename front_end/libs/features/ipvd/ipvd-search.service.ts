@@ -1,4 +1,4 @@
-import { Injectable } from '@angular/core';
+import { Inject, Injectable, LOCALE_ID } from '@angular/core';
 
 import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
 import type { SearchFilter } from '@components/search/search.component.types';
@@ -19,6 +19,8 @@ export class IpvdSearchService {
     set showAnalytics(show: boolean) {
         this._showAnalytics = show;
     }
+
+    constructor(@Inject(LOCALE_ID) private locale: string) {}
 
     ipvdSearch(camerasData: Cameras[], filter: SearchFilter): Cameras[] {
         const query = filter.query.toLowerCase();
@@ -121,6 +123,6 @@ export class IpvdSearchService {
                     ? queryTerms.every(term => filterCamera(camera, term))
                     : true;
             })
-            .sort(alphabeticalSort(cam => cam.id));
+            .sort(alphabeticalSort(this.locale, cam => cam.id));
     }
 }

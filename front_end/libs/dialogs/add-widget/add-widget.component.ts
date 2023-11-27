@@ -1,7 +1,7 @@
 import { DIALOG_DATA, DialogRef } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
 import { HttpClient } from '@angular/common/http';
-import { ChangeDetectorRef, Component, Inject, Input } from '@angular/core';
+import { ChangeDetectorRef, Component, Inject, Input, LOCALE_ID } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
@@ -101,6 +101,7 @@ export class AddWidgetModalContent {
         private dialogRef: DialogRef,
         @Inject(DIALOG_DATA) private dialogData: any,
         private cookieService: CookieService,
+        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.config;
     }
@@ -150,7 +151,7 @@ export class AddWidgetModalContent {
         const { widgetUrl, devServer = this.cookieService.get('devServer') } =
             this.route.snapshot.queryParams;
         this.widgetDropdownOptions = this.widgets
-            .sort(alphabeticalSort(w => w.title))
+            .sort(alphabeticalSort(this.locale, w => w.title))
             .map(widget => ({ name: widget.title, value: { ...widget, editMode: true } }));
         if (widgetUrl || devServer) {
             this.selectedWidget = cloneDeep(
