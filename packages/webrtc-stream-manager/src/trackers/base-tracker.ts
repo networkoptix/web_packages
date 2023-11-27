@@ -18,7 +18,7 @@ export abstract class BaseTracker<Metric> {
     protected metricValues: MetricWrapper<Metric>[] = [];
     protected checkPlayers = false;
 
-    protected connection: MediaServerPeerConnection;
+    public connection: MediaServerPeerConnection;
 
     public abstract weight: number;
 

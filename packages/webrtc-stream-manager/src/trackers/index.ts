@@ -5,3 +5,4 @@ export * from './frame-tracker';
 export * from './mos-score-tracker';
 export * from './base-tracker';
 export * from './base-connection-tracker';
+export * from './bytes-received-tracker';

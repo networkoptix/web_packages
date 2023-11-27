@@ -5,6 +5,7 @@ import { BufferHandler, SignalingMessage, StreamHandler } from './types';
 import { iceServers } from './config_check_excluded';
 
 export class MediaServerPeerConnection extends RTCPeerConnection {
+    remoteDataChannel: RTCDataChannel;
     onicecandidate = (event: RTCPeerConnectionIceEvent): void => {
         if (event.candidate) {
             this.wsConnection.next({ ice: event.candidate });
@@ -18,6 +19,9 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         } else if (this.iceConnectionState === 'disconnected') {
             console.log('peerConnection disconnected, reconnecting websocket');
             this.reconnectionHandler(true);
+        } else if (this.iceConnectionState === 'failed') {
+            console.log('peerConnection failed, reconnecting websocket');
+            this.reconnectionHandler(true);
         } else {
             console.log('peerConnection ice state ' + this.iceConnectionState);
         }
@@ -30,7 +34,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
     constructor(
         private getWebSocket: () => WebSocketSubject<SignalingMessage>,
         private closeWebsocket: () => void,
-        private reconnectionHandler: (lostConnection: number | true) => void,
+        private reconnectionHandler: (lostConnection: true) => void,
         trackHandler: StreamHandler,
         bufferHandler: BufferHandler,
     ) {
@@ -57,6 +61,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
                     bufferHandler(new Uint8Array(data));
                 }
             })
+            this.remoteDataChannel = channel;
         });
     }
 }
