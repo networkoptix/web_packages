@@ -517,7 +517,11 @@ export class NxLayoutGridTreeComponent {
     };
 
     handleDoubleClick = (node: ResourceNode): void => {
-        if (!this.CONFIG.featureFlags.layoutsEditable) {
+        if (
+            !this.CONFIG.featureFlags.layoutsEditable ||
+            this.layout.locked ||
+            node.details?.id === this.layout.id
+        ) {
             return;
         }
         this.doubleClick$.next(true);
