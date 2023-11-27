@@ -11,7 +11,6 @@ from generic_elements import DropDown
 from generic_elements import DropDownOption
 from generic_elements import Image
 from generic_elements import MenuNode
-from generic_elements import Link
 from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import Pane
@@ -34,49 +33,6 @@ class SystemLeftMenu:
 
     def users_dropdown(self):
         return UsersDropdown(self.driver)
-
-    def users_button(self):
-        translated_xpath = self.rb.replace_nested_variables(
-            "//span[contains(text(), '{USERS}')]")
-        return Button(self.driver, translated_xpath)
-
-    def open_users_dropdown(self):
-        self.users_button().click()
-        # Currently it takes 30+ seconds to load the dropdown
-        self.add_users_button().wait_until_clickable(timeout=45)
-
-    def update_users_list(self):
-        locator = "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight"
-        Link(self.driver, locator).wait_until_visible()
-        users = self.driver.find_elements(By.XPATH, locator)
-        self.users = []
-        for user in users:
-            self.users.append(Button(self.driver, f"//nx-level-3-item//nx-search-highlight[contains(text(), '{user.text}')]"))
-
-    def get_user_with_email(self, email: str):
-        self.update_users_list()
-        for user in self.users:
-            user.verify_not_stale_or_refresh()
-            if user.get_text() == email:
-                return user
-        raise _UserNotFoundError(email)
-
-    def has_user_with_email(self, email: str):
-        try:
-            self.get_user_with_email(email)
-        except _UserNotFoundError:
-            return False
-        return True
-
-    def wait_for_user_with_email(self, email: str):
-        started_at = time.monotonic()
-        while True:
-            try:
-                return self.get_user_with_email(email)
-            except _UserNotFoundError:
-                _logger.info(f"Waiting for user with email {email} in users list")
-            if time.monotonic() - started_at > 5:
-                raise _UserNotFoundError(email)
 
     def servers_button(self):
         translated_xpath = self.rb.replace_nested_variables(
