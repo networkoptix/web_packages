@@ -30,10 +30,6 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
-import {
-    bookmarksDeviceKeys,
-    type BookmarksDevice,
-} from '@pages/systems/bookmarks/bookmarks.types';
 import { addUserRestV1 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/get-predefined-roles';
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
@@ -95,7 +91,7 @@ import type {
     GetEndpointsFull,
 } from './system-api.endpoint-types';
 import * as t from './system-api.types';
-import { ChangedIdReturned, cameraKeyMapV1 } from './system-api.types';
+import { ChangedIdReturned, cameraKeyMapV1, DeviceV1Full } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import {
     DeviceType,
@@ -1157,9 +1153,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncMedium
-    getBookmarkTags(
-        params: t.BookmarksTagsParams = {}
-    ): Observable<t.BookmarksTags> {
+    getBookmarkTags(params: t.BookmarksTagsParams = {}): Observable<t.BookmarksTags> {
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
     }
 
@@ -1168,10 +1162,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncMedium
-    getDevices(
-        params: t.DevicesParams = {}
-    ): Observable<t.Device[]> {
-        return this.get('/rest/v1/devices', params);
+    getDevices(params: t.DevicesParams = {}): Observable<DeviceV1Full[]> {
+        return this.get('/rest/v1/devices', { params: params as RequestParams });
+    }
 
     // Widgets aren't being used at the moment, but making this so the base getDevices() can be removed
     _getHmWidgetDevices(): Observable<{ id: string; name: string }[]> {

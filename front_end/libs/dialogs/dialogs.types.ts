@@ -3,7 +3,7 @@ import type { DialogRef } from '@angular/cdk/dialog';
 import type { EventEmitter, TemplateRef } from '@angular/core';
 import type { Observable } from 'rxjs';
 
-import type { Bookmark, DeviceFilter } from '@pages/systems/bookmarks/bookmarks.types';
+import type { Bookmark, BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
 import type { SELECTION_DATE_RANGE } from '@pages/systems/view/vms-client/submodules/timeline/components/nx-webgl-canvas/services/webgl.types';
 import type { TimelineSelectionService } from '@pages/systems/view/vms-client/submodules/timeline/services/timeline.selection.service';
 import type { Translatable } from '@pipes/nx-translate.types';
@@ -236,7 +236,7 @@ export type ReserveSpaceWarning = DialogType<void, true>;
 /* Bookmarks */
 export type MoreDevices = DialogType<
     {
-        devices: DeviceFilter[];
+        devices: BookmarksDevice[];
         selection: SelectionModel<string>;
         emitter: EventEmitter<void>;
     },

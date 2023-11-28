@@ -7,7 +7,19 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager, StreamOrUrl, AvailableStreams, ApiVersions } from '@openLibs/webrtc-stream-manager';
-import { firstValueFrom, of, shareReplay, Subject, switchMap, tap, interval, startWith, map, timeout, catchError } from 'rxjs';
+import {
+    firstValueFrom,
+    of,
+    shareReplay,
+    Subject,
+    switchMap,
+    tap,
+    interval,
+    startWith,
+    map,
+    timeout,
+    catchError
+} from 'rxjs';
 import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
@@ -42,7 +54,6 @@ class FpsTracker {
 export class NxVideoPlayerComponent {
     @Input() camera: NxSystemCamera;
     @Input() rotation: number;
-    @Input() getRelayHost: () => Observable<string>;
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
@@ -217,9 +228,7 @@ export class NxVideoPlayerComponent {
             return this.showError.emit(ConnectionError.mjpegDisabled)
         }
 
-        const stream$ = this.reconnect$.pipe(
-            switchMap(this.getRelayHost),
-            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params, resolvedRelay), this.originalStream.nativeElement, hasSecondary ? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY] : [AvailableStreams.PRIMARY], this.accessToken)),
+        const stream$ = WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, hasSecondary ? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY] : [AvailableStreams.PRIMARY], this.accessToken).pipe(
             tap(async ([stream, error, connection]) => {
                 this.syncAvailableStreams(connection, hasSecondary)
                 if (stream) {

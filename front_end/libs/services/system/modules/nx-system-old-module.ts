@@ -690,9 +690,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
                         this.isAvailable = false;
                         this.systemInfo = this;
                         if (!environment.isLocal) {
-                            this.permissionManager.ownerEmail$$.set(
-                                this.info.ownerAccountEmail,
-                            );
+                            this.permissionManager.ownerEmail$$.set(this.info.ownerAccountEmail);
                             this.getUsersCachedInCloud().then(users => {
                                 return this.userManager.processUsers(users);
                             });

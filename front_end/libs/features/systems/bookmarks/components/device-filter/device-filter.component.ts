@@ -2,7 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, EventEmitter, inject, Input, Output } from '@angular/core';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { DeviceFilter } from '@pages/systems/bookmarks/bookmarks.types';
+import { BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 
@@ -13,7 +13,7 @@ import { SearchBaseComponent } from '../search-base.component';
     templateUrl: 'device-filter.component.html',
     styleUrls: ['device-filter.component.scss'],
 })
-export class NxDeviceFilterComponent extends SearchBaseComponent<DeviceFilter> {
+export class NxDeviceFilterComponent extends SearchBaseComponent<BookmarksDevice> {
     @Input() selection: SelectionModel<string>;
     @Output() selectionChange = new EventEmitter<void>();
 
@@ -22,7 +22,7 @@ export class NxDeviceFilterComponent extends SearchBaseComponent<DeviceFilter> {
     icons = icons;
     displayLimit = 7;
 
-    get searchMatches(): DeviceFilter[] {
+    get searchMatches(): BookmarksDevice[] {
         const searches = this.search.trim().split(/\s+/);
         return !this.search
             ? this.items
@@ -31,7 +31,7 @@ export class NxDeviceFilterComponent extends SearchBaseComponent<DeviceFilter> {
               );
     }
 
-    updateSelection(device: DeviceFilter, state: boolean): void {
+    updateSelection(device: BookmarksDevice, state: boolean): void {
         // Don't emit change for setting initial values
         if (state === this.selection.isSelected(device.id)) {
             return;

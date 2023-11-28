@@ -7,7 +7,7 @@ import { TranslateModule } from '@ngx-translate/core';
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import staticLang from '@language_static';
-import { DeviceFilter } from '@pages/systems/bookmarks/bookmarks.types';
+import { BookmarksDevice } from '@pages/systems/bookmarks/bookmarks.types';
 import { caseInsenstiveSearch } from '@utils/general';
 
 import type { MoreDevices as DT } from '../../dialogs.types';
@@ -29,15 +29,15 @@ import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters
         NxSimpleSearchComponent,
     ],
 })
-export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT, DeviceFilter> {
+export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT, BookmarksDevice> {
     LANG = staticLang;
-    override get searchMatches(): DeviceFilter[] {
+    override get searchMatches(): BookmarksDevice[] {
         const searches = this.search.trim().split(/\s+/);
         return !this.search
             ? this.items
             : this.items.filter(({ name }) =>
-                searches.some(search => caseInsenstiveSearch(name, search)),
-            );
+                  searches.some(search => caseInsenstiveSearch(name, search)),
+              );
     }
 
     constructor(
@@ -48,7 +48,7 @@ export class NxMoreDevicesModalContent extends NxMoreFiltersBaseModalContent<DT,
         this.items = dialogData.devices;
     }
 
-    selectionChange(device: DeviceFilter, state: boolean): void {
+    selectionChange(device: BookmarksDevice, state: boolean): void {
         if (state) {
             this.dialogData.selection.select(device.id);
         } else {

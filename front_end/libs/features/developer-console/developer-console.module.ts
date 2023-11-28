@@ -66,7 +66,7 @@ const appRoutes: Routes = [
         NxProcessCancelButtonComponent,
         NxAddSvgSrcDirective,
         NxTooltipDirective,
-        HtmlInputModule
+        HtmlInputModule,
     ],
     providers: [],
     declarations: [NxDevConsoleComponent, NxDevConsoleMenuComponent, NxDevConsoleEditComponent],

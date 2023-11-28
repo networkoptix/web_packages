@@ -544,8 +544,9 @@ export class NxHeaderComponent implements OnInit {
                 return this.systemId === system.id;
             });
         }
-
-        this.headerService.activeSystem = nextActiveSystem?.system2faEnabled && !sessionVerified ? undefined : this.systemService.getCurrentSystem();
+        const system = this.systemService.getCurrentSystem();
+        this.headerService.activeSystem =
+            nextActiveSystem?.system2faEnabled && !sessionVerified ? undefined : system;
 
         if (!this.environment.isLocal) {
             if (system) {

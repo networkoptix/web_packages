@@ -31,10 +31,11 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
+import { icons } from '@static-variables';
 import { alphabeticalSort, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
-import { Bookmark, BookmarksDevice, DeviceFilter, TimeRange } from './bookmarks.types';
+import { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
 
 interface BookmarkParams {
@@ -122,7 +123,7 @@ export class NxBookmarksComponent implements OnInit {
                 .map(({ id, name }) => ({ id, name }))
                 .sort(alphabeticalSort(this.locale, ({ name }) => name)),
         ),
-        startWith<DeviceFilter[]>([]),
+        startWith<BookmarksDevice[]>([]),
     );
     tagNames$ = this.tags$.pipe(
         map(tags => Object.keys(tags).sort(alphabeticalSort(this.locale, t => t))),
@@ -273,7 +274,7 @@ export class NxBookmarksComponent implements OnInit {
                 zip([
                     mediaserver.getBookmarks(pollParams),
                     mediaserver.getBookmarkTags(),
-                    mediaserver.getBookmarksDevices(),
+                    mediaserver.getDevices(),
                     mediaserver.getServerTimes(),
                 ]),
             ),

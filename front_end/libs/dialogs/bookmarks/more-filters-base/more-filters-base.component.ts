@@ -13,7 +13,10 @@ import { type DialogType } from '../../dialogs.types';
     standalone: true,
     imports: [CommonModule],
 })
-export class NxMoreFiltersBaseModalContent<DT extends DialogType, T> extends SearchBaseComponent<T> {
+export class NxMoreFiltersBaseModalContent<
+    DT extends DialogType,
+    T,
+> extends SearchBaseComponent<T> {
     constructor(public dialogRef: DialogRef<DT['return']>) {
         super();
     }

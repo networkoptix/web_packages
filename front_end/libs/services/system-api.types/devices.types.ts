@@ -305,6 +305,7 @@ export type Ec2CameraHistoryItems = {
 
 export type BookmarksParams = HiddenParams &
     Partial<{
+        deviceId: string[];
         startTimeMs: number;
         endTimeMs: number;
         text: string;

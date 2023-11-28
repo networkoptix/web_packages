@@ -4,6 +4,7 @@ import { Component, Inject } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 
+import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import staticLang from '@language_static';
 import { spaceSplitSearch } from '@utils/general';
 

@@ -1687,16 +1687,4 @@ export class NxLayoutGridComponent {
             this.layoutStateService.updateLayout({ ...this.layout, items });
         }
     };
-
-    pingServer =
-        ({ parentId: serverId }: { parentId: string }) =>
-        (): Observable<unknown> =>
-            this.system.serverManager.mediaserverConnections[serverId]
-                .ping()
-                .pipe(catchError(() => Promise.resolve()));
-
-    getRelayHost =
-        ({ parentId: serverId }: { parentId: string }) =>
-        (): Observable<string> =>
-            this.system.serverManager.mediaserverConnections[serverId].getRelayHost();
 }

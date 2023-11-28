@@ -62,11 +62,14 @@
                             [src]="noBksImgSrc"
                         >
                         </svg-icon>
-                        <div *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText" class="no-bookmarks-content">
+                        <div
+                            *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText"
+                            class="no-bookmarks-content"
+                        >
                             <nx-page-placeholder
-                                    type="NO_BOOKMARKS"
-                                    placeholderTitle="{{ 'No matching results.' | translate }}"
-                                    class="page-placeholder"
+                                type="NO_BOOKMARKS"
+                                placeholderTitle="{{ 'No matching results.' | translate }}"
+                                class="page-placeholder"
                             ></nx-page-placeholder>
                             <button
                                 (click)="clearAllFilters()"
@@ -79,11 +82,11 @@
                         </div>
                         <ng-template #noBookmarksText>
                             <nx-page-placeholder
-                                    type="NO_BOOKMARKS"
-                                    placeholderTitle="{{
-                            'You don\'t have any Bookmarks yet.' | translate
-                        }}"
-                                    class="page-placeholder"
+                                type="NO_BOOKMARKS"
+                                placeholderTitle="{{
+                                    'You don\'t have any Bookmarks yet.' | translate
+                                }}"
+                                class="page-placeholder"
                             ></nx-page-placeholder>
                         </ng-template>
                     </ng-container>
