@@ -126,13 +126,14 @@ export class NxSystemsListComponent implements OnInit {
                     // established, and we'll get into a loop. It's safer not to open the system.
                     const [system] = this.systems;
                     if (
-                        system.stateOfHealth === 'online' &&
+                        this.hasOneSystem &&
                         (!system.system2faEnabled || account.sessionVerified)
                     ) {
                         this.openSystem(system);
+                    } else {
+                        this.showList = true;
                     }
-                } else {
-                    this.showList = true;
+
                     this.showSearch = this.systems.length >= search.minSystems;
                     this.searchSystems();
                 }

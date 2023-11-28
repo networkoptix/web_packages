@@ -533,8 +533,19 @@ export class NxHeaderComponent implements OnInit {
         if (!this.systems) {
             return;
         }
-        const system = this.systemService.getCurrentSystem();
-        this.headerService.activeSystem = system;
+        const sessionVerified = this.accountService.account.sessionVerified || environment.isLocal;
+        let nextActiveSystem: NxSystemInfo;
+        if (this.singleSystem || this.environment.isLocal) {
+            // Special case for a single system - it always active
+            nextActiveSystem = this.systems[0];
+        } else if (this.systemId) {
+            // Will only have multiple systems on cloud
+            nextActiveSystem = this.systems.find(system => {
+                return this.systemId === system.id;
+            });
+        }
+
+        this.headerService.activeSystem = nextActiveSystem?.system2faEnabled && !sessionVerified ? undefined : this.systemService.getCurrentSystem();
 
         if (!this.environment.isLocal) {
             if (system) {

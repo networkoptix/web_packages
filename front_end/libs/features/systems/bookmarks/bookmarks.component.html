@@ -16,7 +16,7 @@
                 (timeRangeChange)="updateParam('time')"
             ></nx-date-and-time-filter>
             <nx-device-filter
-                [items]="deviceNames$ | async"
+                [items]="selectedDevices$ | async"
                 [selection]="deviceFilter"
                 (selectionChange)="updateParam('devices')"
             ></nx-device-filter>
@@ -28,7 +28,7 @@
         </div>
         <div class="body">
             <nx-alert-block
-                *ngIf="(newCreationCutOffTimeMS$ | async) !== (creationCutOffTimeMS$ | async)"
+                *ngIf="(newCreationCutOffTimeMS$ | async) > (creationCutOffTimeMS$ | async)"
                 type="info"
                 [iconSrc]="icons.dirNonStandard + 'info' + '.svg'"
                 [line1]="'New Bookmarks available' | translate"
@@ -46,67 +46,70 @@
             <ng-template #stillLoading>
                 <nx-pre-loader class="bookmarks-preloader"></nx-pre-loader>
             </ng-template>
-            <div
-                #bookmarksContainer
-                [class]="bookmarks.length ? 'bookmarks' : 'no-bookmarks'"
-                *ngIf="bookmarks$ | async as bookmarks; else stillLoading"
-                [style]="{
-                    '--grid-padding': css.gridPadding + 'px',
-                    '--bookmark-card-width': css.bookmarkWidth + 'px'
-                }"
-            >
-                <ng-container *ngIf="!bookmarks.length">
-                    <div
-                        *ngIf="creationCutOffTimeMS$ | async; else noBookmarksYet"
-                        class="no-bookmarks-content"
-                    >
-                        <nx-page-placeholder
-                            type="NO_BOOKMARKS"
-                            placeholderTitle="{{ 'No matching results.' | translate }}"
-                            class="page-placeholder"
-                        ></nx-page-placeholder>
-                        <button
-                            (click)="clearAllFilters()"
-                            class="clear-filters"
-                            type="button"
-                            translate
-                        >
-                            Clear Filters
-                        </button>
-                    </div>
-
-                    <ng-template #noBookmarksYet>
-                        <nx-page-placeholder
-                            type="NO_BOOKMARKS"
-                            placeholderTitle="{{
-                                'You don\'t have any Bookmarks yet.' | translate
-                            }}"
-                            class="page-placeholder"
-                        ></nx-page-placeholder>
-                    </ng-template>
-                </ng-container>
+            <ng-container *ngIf="bookmarks$ | async as bookmarks; else stillLoading">
                 <div
-                    *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
-                    class="bookmarks-container"
+                    #bookmarksContainer
+                    [class]="bookmarks.length ? 'bookmarks' : 'no-bookmarks'"
+                    *ngIf="!(loading$ | async); else stillLoading"
+                    [style]="{
+                        '--grid-padding': css.gridPadding + 'px',
+                        '--bookmark-card-width': css.bookmarkWidth + 'px'
+                    }"
                 >
+                    <ng-container *ngIf="!bookmarks.length">
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="noBksImgSrc"
+                        >
+                        </svg-icon>
+                        <div *ngIf="creationCutOffTimeMS$ | async; else noBookmarksText" class="no-bookmarks-content">
+                            <nx-page-placeholder
+                                    type="NO_BOOKMARKS"
+                                    placeholderTitle="{{ 'No matching results.' | translate }}"
+                                    class="page-placeholder"
+                            ></nx-page-placeholder>
+                            <button
+                                (click)="clearAllFilters()"
+                                class="clear-filters"
+                                type="button"
+                                translate
+                            >
+                                Clear Filters
+                            </button>
+                        </div>
+                        <ng-template #noBookmarksText>
+                            <nx-page-placeholder
+                                    type="NO_BOOKMARKS"
+                                    placeholderTitle="{{
+                            'You don\'t have any Bookmarks yet.' | translate
+                        }}"
+                                    class="page-placeholder"
+                            ></nx-page-placeholder>
+                        </ng-template>
+                    </ng-container>
                     <div
-                        #targetThis
-                        class="bookmarks-tooltip"
-                    ></div>
-                    <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
-                </div>
-                <ng-container *ngIf="loading$ | async">
-                    <div *ngFor="let _ of [].constructor(loadingBuffer$ | async)">
-                        <nx-dummy-bookmark></nx-dummy-bookmark>
+                        *ngFor="let bookmark of bookmarks; trackBy: trackBookmarkById"
+                        class="bookmarks-container"
+                    >
+                        <div
+                            #targetThis
+                            class="bookmarks-tooltip"
+                        ></div>
+                        <nx-bookmarks-card [bookmark]="bookmark"></nx-bookmarks-card>
                     </div>
-                </ng-container>
-                <div
-                    *ngIf="!(loading$ | async) && bookmarks.length"
-                    class="bookmarks-container"
-                    (nxOnIntersect)="loadMore$.next($event === 'Visible')"
-                    [intersectionThreshold]="0.1"
-                ></div>
-            </div>
+                    <ng-container *ngIf="infLoading$ | async">
+                        <div *ngFor="let _ of [].constructor(loadingBuffer$ | async)">
+                            <nx-dummy-bookmark></nx-dummy-bookmark>
+                        </div>
+                    </ng-container>
+                    <div
+                        *ngIf="!(infLoading$ | async) && bookmarks.length"
+                        class="bookmarks-container"
+                        (nxOnIntersect)="loadMore$.next($event === 'Visible')"
+                        [intersectionThreshold]="0.1"
+                    ></div>
+                </div>
+            </ng-container>
         </div>
     </div>
 </ng-template>

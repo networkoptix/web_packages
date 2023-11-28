@@ -173,13 +173,6 @@ export class DownloadHistoryComponent implements OnInit {
                         this.injector.get(NxPageService).redirect404();
                     }
                 });
-            } else if (this.appStateService.ready) {
-                this.canViewRelease = true;
-                if (this.build === undefined) {
-                    this.getData();
-                } else {
-                    this.getDataAuthorized();
-                }
             } else {
                 this.appStateService.readySubject
                     .pipe(
@@ -188,7 +181,11 @@ export class DownloadHistoryComponent implements OnInit {
                     )
                     .subscribe(() => {
                         this.canViewRelease = true;
-                        this.getDataAuthorized();
+                        if (this.build === undefined) {
+                            this.getData();
+                        } else {
+                            this.getDataAuthorized();
+                        }
                     });
             }
         });

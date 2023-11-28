@@ -10,6 +10,7 @@ import { NxProcessButtonComponent } from '@components/process-button/process-but
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
+import { cleanId } from '@utils/general';
 import { icons } from '@variables/static-variables';
 
 import { BookmarkDetails as DT } from '../../dialogs.types';
@@ -36,6 +37,7 @@ export class NxBookmarksCardModalComponent {
     time: string;
     date: string;
     videoError: boolean;
+    fullRecordingUrl: string;
 
     constructor(
         public dialogRef: DialogRef<DT['return']>,
@@ -46,6 +48,9 @@ export class NxBookmarksCardModalComponent {
         this.exportName = `${bookmark.deviceId}.mkv`; // Will switch to mp4 in the future
         this.time = startTime;
         this.date = startDate;
+        this.fullRecordingUrl = `systems/${cleanId(bookmark.systemId)}/view/${cleanId(
+            bookmark.deviceId,
+        )}?time=${bookmark.startTimeMs}`;
     }
 
     openDownloadDialog(): void {

@@ -1156,17 +1156,22 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
-    getBookmarkTags(params: t.BookmarksTagsParams = {}): Observable<t.BookmarksTags> {
+    @memoizeAsyncMedium
+    getBookmarkTags(
+        params: t.BookmarksTagsParams = {}
+    ): Observable<t.BookmarksTags> {
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
-    }
-
-    getBookmarksDevices(): Observable<BookmarksDevice[]> {
-        return this.getWith('/rest/v1/devices', bookmarksDeviceKeys);
     }
 
     changePassword(cameraId: string, user: string, password: string): Observable<unknown> {
         return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
     }
+
+    @memoizeAsyncMedium
+    getDevices(
+        params: t.DevicesParams = {}
+    ): Observable<t.Device[]> {
+        return this.get('/rest/v1/devices', params);
 
     // Widgets aren't being used at the moment, but making this so the base getDevices() can be removed
     _getHmWidgetDevices(): Observable<{ id: string; name: string }[]> {

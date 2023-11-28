@@ -582,6 +582,21 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     private relayHost$ = this.updateRelayHost$.pipe(
         startWith(null),
         throttleTime(5000),
+        switchMap(() => fetch(
+            `${this.urlBase}/api/ping?x-server-guid=${this.cleanId(this.serverId)}`).then(
+            response => new URL(response.url).host)),
+        shareReplay({ bufferSize: 1, refCount: false })
+    );
+
+    public getRelayHost(): Observable<string> {
+        this.updateRelayHost$.next(null);
+        return this.relayHost$;
+    }
+
+    private updateRelayHost$ = new Subject<null>();
+    private relayHost$ = this.updateRelayHost$.pipe(
+        startWith(null),
+        throttleTime(5000),
         switchMap(() =>
             fetch(`${this.urlBase}/api/ping?x-server-guid=${this.cleanId(this.serverId)}`).then(
                 response => new URL(response.url).host,

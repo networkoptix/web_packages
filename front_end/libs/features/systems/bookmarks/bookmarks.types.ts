@@ -21,3 +21,5 @@ export interface TimeRange {
 
 export const bookmarksDeviceKeys = ['id', 'name', 'serverId'] as const;
 export type BookmarksDevice = Pick<DeviceV1Full, (typeof bookmarksDeviceKeys)[number]>;
+// Clean up after merge
+export type DeviceFilter = BookmarksDevice;

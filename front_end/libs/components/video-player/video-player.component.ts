@@ -42,6 +42,7 @@ class FpsTracker {
 export class NxVideoPlayerComponent {
     @Input() camera: NxSystemCamera;
     @Input() rotation: number;
+    @Input() getRelayHost: () => Observable<string>;
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
@@ -216,7 +217,9 @@ export class NxVideoPlayerComponent {
             return this.showError.emit(ConnectionError.mjpegDisabled)
         }
 
-        const stream$ = WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, hasSecondary ? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY] : [AvailableStreams.PRIMARY], this.accessToken).pipe(
+        const stream$ = this.reconnect$.pipe(
+            switchMap(this.getRelayHost),
+            switchMap((resolvedRelay) => WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params, resolvedRelay), this.originalStream.nativeElement, hasSecondary ? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY] : [AvailableStreams.PRIMARY], this.accessToken)),
             tap(async ([stream, error, connection]) => {
                 this.syncAvailableStreams(connection, hasSecondary)
                 if (stream) {

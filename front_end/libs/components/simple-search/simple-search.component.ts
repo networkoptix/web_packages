@@ -237,6 +237,7 @@ export class NxSimpleSearchComponent implements ControlValueAccessor, OnInit, On
     }
 
     keyboardSelect(): void {
+        this.dropdownOpen = false;
         if (!this.matchIndexes) {
             return;
         }

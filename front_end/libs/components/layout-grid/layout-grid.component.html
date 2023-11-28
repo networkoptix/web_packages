@@ -583,6 +583,7 @@
                                                     <nx-video-player
                                                         [camera]="itemDetail.details"
                                                         [rotation]="item.rotation"
+                                                        [getRelayHost]="getRelayHost(itemDetail.details)"
                                                         (showError)="
                                                             handleVideoError(itemDetail, $event)
                                                         "

@@ -14,7 +14,7 @@ import {
     of,
     Subject,
 } from 'rxjs';
-import { distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
+import { debounceTime, distinctUntilChanged, map, startWith, take, tap } from 'rxjs/operators';
 
 import type { SuggestionSections } from '@components/simple-search/simple-search.types';
 import staticLang from '@language_static';
@@ -31,19 +31,10 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { WINDOW } from '@services/window-provider';
-import { icons } from '@static-variables';
-import {
-    alphabeticalSort,
-    caseInsenstiveSearch,
-    cleanId,
-    MS,
-    msToParts,
-    offsetDate,
-    paramSortFunc,
-} from '@utils/general';
+import { alphabeticalSort, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
 import { getSysLang } from '@utils/nx';
 
-import type { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
+import { Bookmark, BookmarksDevice, DeviceFilter, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
 
 interface BookmarkParams {
@@ -52,7 +43,7 @@ interface BookmarkParams {
     endDate?: string;
     startTime?: string;
     endTime?: string;
-    devices?: string;
+    deviceId?: string[];
     tags?: string;
 }
 
@@ -121,21 +112,31 @@ export class NxBookmarksComponent implements OnInit {
     search: string = '';
     loadMore$ = new Subject<boolean>();
     loading$ = new Subject<boolean>();
+    infLoading$ = new Subject<boolean>();
     loadingBuffer$ = new BehaviorSubject<number>(0);
     devices$ = new ReplaySubject<BookmarksDevice[]>(1);
     tags$ = new ReplaySubject<BookmarksTags>(1);
-    deviceNames$ = this.devices$.pipe(
-        map(devices => devices.map(d => d.name).sort(alphabeticalSort(this.locale, t => t))),
-        startWith<string[]>([]),
+    selectedDevices$ = this.devices$.pipe(
+        map(devices =>
+            devices
+                .map(({ id, name }) => ({ id, name }))
+                .sort(alphabeticalSort(this.locale, ({ name }) => name)),
+        ),
+        startWith<DeviceFilter[]>([]),
     );
     tagNames$ = this.tags$.pipe(
         map(tags => Object.keys(tags).sort(alphabeticalSort(this.locale, t => t))),
         startWith<string[]>([]),
     );
-    suggestions$ = combineLatest([this.deviceNames$, this.tagNames$]).pipe(
-        map(([devices, tags]): SuggestionSections => ({ DEVICE: devices, TAGS: tags })),
+    suggestions$ = combineLatest([this.selectedDevices$, this.tagNames$]).pipe(
+        map(
+            ([devices, tags]): SuggestionSections => ({
+                // DEVICE: devices.map(({ name }) => name),
+                TAGS: tags,
+            }),
+        ),
         startWith({
-            DEVICE: [],
+            // DEVICE: [],
             TAGS: [],
         }),
     );
@@ -188,8 +189,12 @@ export class NxBookmarksComponent implements OnInit {
                 if (queryParams.endTime) {
                     this.timeFilter.end = Number(queryParams.endTime);
                 }
-                if (queryParams.devices) {
-                    this.deviceFilter.select(...cssaToStrArray(queryParams.devices));
+                if (queryParams.deviceId) {
+                    const devices =
+                        typeof queryParams.deviceId === 'string'
+                            ? [queryParams.deviceId]
+                            : queryParams.deviceId || [];
+                    this.deviceFilter.select(...devices);
                 }
                 if (queryParams.tags) {
                     this.tagFilter.select(...cssaToStrArray(queryParams.tags));
@@ -210,10 +215,59 @@ export class NxBookmarksComponent implements OnInit {
         });
     }
 
+    buildSearch(): Pick<BookmarksParams, 'text' | 'startTimeMs' | 'endTimeMs'> {
+        const search = this.queryParams.search || '';
+        const tags = this.queryParams.tags || '';
+        let startDatetime = 0;
+        let endDatetime = 0;
+        if (this.queryParams.startDate) {
+            startDatetime = Number(this.queryParams.startDate);
+            endDatetime = Number(this.queryParams.endDate);
+            if (this.queryParams.startTime) {
+                const startTime = Number(this.queryParams.startTime);
+                const endTime = Number(this.queryParams.endTime);
+                startDatetime = offsetDate(startDatetime, msToParts(startTime)).getTime();
+                endDatetime = offsetDate(endDatetime, msToParts(endTime)).getTime();
+            } else {
+                endDatetime = offsetDate(endDatetime, { day: 1 }).getTime();
+            }
+        }
+
+        const searchParams: ReturnType<NxBookmarksComponent['buildSearch']> = {};
+
+        if (search || tags) {
+            searchParams.text = tags && search ? `${search} ${tags}` : search || tags;
+        }
+        if (startDatetime) {
+            searchParams.startTimeMs = startDatetime;
+        }
+        if (endDatetime) {
+            searchParams.endTimeMs = endDatetime;
+        }
+        return searchParams;
+    }
+
     bookmarksPoll(): void {
         const mediaserver = this.system.mediaserver as NxSystemRestAPI;
-        const pollParams = { ...this.bookmarksQuery };
-        const bookmarksPoll$: Observable<SystemBookmark[]> = timer(0, pollingTimeout).pipe(
+        let pollParams = { ...this.bookmarksQuery };
+        const bookmarksPoll$: Observable<SystemBookmark[]> = combineLatest([
+            timer(0, pollingTimeout),
+            this.route.queryParams.pipe(
+                tap(() => {
+                    pollParams = {
+                        ...this.bookmarksQuery,
+                        ...this.buildSearch(),
+                        deviceId: this.queryParams.deviceId || [],
+                    };
+                    this.loading$.next(true);
+                    this.infLoading$.next(false);
+                    this.creationCutOffTimeMS$.next(0);
+                    this.newCreationCutOffTimeMS$.next(0);
+                    this._bookmarks = [];
+                }),
+                debounceTime(500),
+            ),
+        ]).pipe(
             // Promise.all for Observables.
             switchMap(() =>
                 zip([
@@ -234,6 +288,7 @@ export class NxBookmarksComponent implements OnInit {
                     ]),
                 );
                 this.deviceMap = new Map(devices.map(device => [device.id, device]));
+                this.loading$.next(false);
                 return bks;
             }),
         );
@@ -259,12 +314,16 @@ export class NxBookmarksComponent implements OnInit {
                 if (!fetch) {
                     return of([]);
                 }
-                this.loading$.next(true);
-                const fetchParams = { ...this.bookmarksQuery };
+                this.infLoading$.next(true);
+                const fetchParams = {
+                    ...this.bookmarksQuery,
+                    ...this.buildSearch(),
+                    deviceId: this.queryParams.deviceId || [],
+                };
                 fetchParams.endTimeMs = this.findOldestBookmark(this._bookmarks)?.startTimeMs - 1;
                 return mediaserver
                     .getBookmarks(fetchParams)
-                    .pipe(tap(() => this.loading$.next(false)));
+                    .pipe(tap(() => this.infLoading$.next(false)));
             }),
         );
 
@@ -280,61 +339,19 @@ export class NxBookmarksComponent implements OnInit {
                         this.creationCutOffTimeMS$.next(pollParams.creationStartTimeMs);
                     }
                     this.newCreationCutOffTimeMS$.next(pollParams.creationStartTimeMs);
+                } else if (!this.creationCutOffTimeMS$.value) {
+                    this.creationCutOffTimeMS$.next(1);
                 }
                 return this._bookmarks;
             }),
         );
-        this.bookmarks$ = combineLatest([
-            this.creationCutOffTimeMS$,
-            fetchedBookmarks$,
-            this.route.queryParams,
-        ]).pipe(
-            map(([creationCutOffTimeMS, bks, _]) =>
+
+        this.bookmarks$ = combineLatest([this.creationCutOffTimeMS$, fetchedBookmarks$]).pipe(
+            map(([creationCutOffTimeMS, bks]) =>
                 bks.filter(bk => creationCutOffTimeMS > bk.creationTimeMs),
             ),
             map(bks => {
-                if (this.queryParams.devices) {
-                    bks = bks.filter(bk => this.queryParams.devices.includes(bk.deviceName));
-                }
-
-                if (this.queryParams.tags) {
-                    const tags = this.queryParams.tags.split(',');
-                    bks = bks.filter(
-                        bk => bk.tags.length && tags.some(tag => bk.tags.includes(tag)),
-                    );
-                }
-
-                if (this.queryParams.startDate) {
-                    let startDatetime = Number(this.queryParams.startDate);
-                    let endDatetime = Number(this.queryParams.endDate);
-
-                    if (this.queryParams.startTime) {
-                        const startTime = Number(this.queryParams.startTime);
-                        const endTime = Number(this.queryParams.endTime);
-                        startDatetime = offsetDate(startDatetime, msToParts(startTime)).getTime();
-                        endDatetime = offsetDate(endDatetime, msToParts(endTime)).getTime();
-                    } else {
-                        endDatetime = offsetDate(endDatetime, { day: 1 }).getTime();
-                    }
-
-                    bks = bks.filter(bk => {
-                        const bkStartTime = bk.startTimeMs + bk.timeZoneOffset;
-                        return bkStartTime >= startDatetime && bkStartTime < endDatetime;
-                    });
-                }
-
-                if (this.queryParams.search) {
-                    const searches = this.queryParams.search.trim().split(/\s+/);
-                    bks = bks.filter(bk =>
-                        searches.some(
-                            s =>
-                                caseInsenstiveSearch(bk.deviceName, s) ||
-                                bk.tags.some(t => caseInsenstiveSearch(t, s)),
-                        ),
-                    );
-                }
                 this.visibleBookmarksCount = bks.length;
-
                 return bks;
             }),
             distinctUntilChanged(),
@@ -373,7 +390,7 @@ export class NxBookmarksComponent implements OnInit {
                     ),
                     isVisible: false,
                     deviceName,
-                    deviceId: cleanId(bk.deviceId),
+                    deviceId: bk.deviceId,
                     systemId: this.system.id,
                     timeZoneOffset,
                 };
@@ -432,6 +449,9 @@ export class NxBookmarksComponent implements OnInit {
     }
 
     updateParam(key: 'search' | 'date' | 'time' | 'devices' | 'tags'): void {
+        if (!this.queryParams) {
+            return;
+        }
         if (key === 'search') {
             this.queryParams.search = this.search || undefined;
         } else if (key === 'date') {
@@ -442,8 +462,8 @@ export class NxBookmarksComponent implements OnInit {
             this.queryParams.startTime = this.timeFilter.start?.toString();
             this.queryParams.endTime = this.timeFilter.end?.toString();
         } else if (key === 'devices') {
-            this.queryParams.devices = this.deviceFilter.hasValue()
-                ? strArrayToCssa(this.deviceFilter.selected)
+            this.queryParams.deviceId = this.deviceFilter.hasValue()
+                ? this.deviceFilter.selected
                 : undefined;
         } else if (key === 'tags') {
             this.queryParams.tags = this.tagFilter.hasValue()
