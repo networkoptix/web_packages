@@ -851,6 +851,44 @@ def users_can_disconnect_themselves(server: Mediaserver):
                     print(f"PASS {role}")
 
 
+def disable_enable_correctly_affects_user(server: Mediaserver):
+    """
+    24. Disable enable User correctly affects the User
+    [Tags]    C63390    C76245    webadmin    cloud
+    """
+    owner = server.get_cloud_owner()
+    viewer = server.get_cloud_viewer()
+    url = ENV + f"/systems/{server.id}"
+    with get_chrome() as driver:
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            SystemAdmin(driver)
+            system_left_menu = SystemLeftMenu(driver)
+            users_dropdown = system_left_menu.users_dropdown()
+            users_dropdown.get_user_with_email(viewer.email).click()
+            system_user = SystemUsers(driver)
+            access_level_dropdown = system_user.access_level_dropdown()
+            access_level_dropdown.wait_until_visible()
+            assert access_level_dropdown.text() == rb.VIEWER_TEXT
+            help_block = system_user.help_block()
+            assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
+            system_user.user_switch().turn_off()
+            system_user.save_button().click()
+            # Fails due to https://networkoptix.atlassian.net/browse/CLOUD-11901
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
+            assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
+            # TODO this test continues to verify enabling a user but due to above must be completed later
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print(f"PASS")
+
+
+
 if __name__ == "__main__":
     suite_name = Path(__file__).stem
     suite_name = suite_name.removeprefix("test_")
@@ -883,3 +921,4 @@ if __name__ == "__main__":
         edit_permission_works_for_cloud_admin(cloud_server)
         test_email_validation(cloud_server)
         users_can_disconnect_themselves(cloud_server)
+        disable_enable_correctly_affects_user(cloud_server)
