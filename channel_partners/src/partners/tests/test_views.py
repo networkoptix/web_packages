@@ -376,6 +376,23 @@ class TestOrganizationUserViewSet:
         response = view(request, parent_lookup_organization=org.id)
         assert response.status_code == 204
 
+    def test_remove_groups(self, channel_partner_factory, organization_factory, org_user_factory,
+                           sys_group_user_factory, arf, mock_auth_with_user, cloud_user_factory):
+        cloud_user = cloud_user_factory()
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org_admin = org_user_factory(organization=org)
+        other_org = organization_factory(channel_partner=cp)
+        groups_users = [sys_group_user_factory(organization=org, cloud_user=cloud_user) for _ in range(5)]
+        other_group = sys_group_user_factory(organization=other_org)
+        view = OrganizationUserViewSet.as_view({'post': 'remove_groups'})
+        mock_auth_with_user(org_admin)
+        data = [str(u.system_group_id) for u in groups_users[:-1]]
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_organization=org.id, email=cloud_user.email)
+        assert response.status_code == 204
+
+
 class TestChannelPartnerUserViewSet:
 
     def test_destroy_last_admin(self, channel_partner_factory, cp_user_factory, default_channel_partner,
@@ -787,41 +804,58 @@ class TestSystemGroupUserViewSet:
         data = emails + [self.other_user.user.email]
         request = arf.post('/', json=data)
         mock_auth_with_user(self.other_user)
-        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
-        response = view(request, parent_lookup_organization=self.org.id)
+        view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
+        response = view(request, parent_lookup_system_group=self.group.id)
         assert response.status_code == 403
 
     def test_bulk_delete_400(self, channel_partner_factory, organization_factory, org_user_factory,
                          mock_auth_with_user, arf):
         emails = [u.user.email for u in self.users]
-        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
+        view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
         # test other organization user deletion
         data = emails + ['invalid_email']
         request = arf.post('/', data=data, format='json')
         mock_auth_with_user(self.org_user)
-        response = view(request, parent_lookup_organization=self.org.id)
+        response = view(request, parent_lookup_system_group=self.group.id)
         assert response.status_code == 400
 
     def test_bulk_delete(self, channel_partner_factory, organization_factory, org_user_factory,
                          mock_auth_with_user, arf):
         emails = [u.user.email for u in self.users]
-        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
+        view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
         # test all admins
         data = emails
         request = arf.post('/', data=data, format='json')
         mock_auth_with_user(self.org_user)
-        response = view(request, parent_lookup_organization=self.org.id)
+        response = view(request, parent_lookup_system_group=self.group.id)
         assert response.status_code == 204
 
-    def test_remove_groups(self, channel_partner_factory, organization_factory, org_user_factory,
-                           sys_group_user_factory, arf, mock_auth_with_user, cloud_user_factory):
-        cloud_user = cloud_user_factory()
-        org_admin = org_user_factory(organization=self.org)
-        groups_users = [sys_group_user_factory(organization=self.org, cloud_user=cloud_user) for _ in range(5)]
-        other_group = sys_group_user_factory(organization=self.other_org)
-        view = OrganizationUserViewSet.as_view({'post': 'remove_groups'})
-        mock_auth_with_user(org_admin)
-        data = [str(u.system_group_id) for u in groups_users[:-1]]
-        request = arf.post('/', data=data, format='json')
-        response = view(request, parent_lookup_organization=self.org.id, email=cloud_user.email)
-        assert response.status_code == 204
+    def test_can_access(self, system_group_factory, sys_group_user_factory, arf, mock_auth_with_user):
+        self.group_1 = system_group_factory(organization=self.org, parent=self.group)
+        self.group_2 = system_group_factory(organization=self.org, parent=self.group_1)
+        self.group_3 = system_group_factory(organization=self.org, parent=self.group_2)
+
+        users = [sys_group_user_factory(organization=self.org, group=g)
+                 for g in [self.group_1, self.group_2, self.group_3]]
+
+        view = SystemGroupUserViewSet.as_view({'get': 'can_access'})
+        request = arf.get('/')
+        mock_auth_with_user(self.org_user)
+
+        response = view(request, parent_lookup_system_group=self.group.id)
+
+        assert response.status_code == 200
+        assert len(response.data) == len(self.users + [self.org_user])
+        assert response.data[0]['hasAccessTo']
+        assert response.data[0]['hasAccessTo']['name'] == self.org.name
+        assert response.data[0]['hasAccessTo']['id'] == str(self.org.id)
+        assert response.data[0]['hasAccessTo']['membershipType'] == 'organization'
+
+        response = view(request, parent_lookup_system_group=self.group_2.id)
+
+        assert response.status_code == 200
+        assert len(response.data) == len(self.users + [self.org_user]) + 2
+        assert response.data[-1]['hasAccessTo']
+        assert response.data[-1]['hasAccessTo']['name'] == self.group_2.name
+        assert response.data[-1]['hasAccessTo']['id'] == str(self.group_2.id)
+        assert response.data[-1]['hasAccessTo']['membershipType'] == 'systemgroup'

@@ -1147,10 +1147,11 @@ class GroupSerializer(serializers.ModelSerializer):
     children = ChildGroupSerializer(source='groups', read_only=True, many=True)
     parentId = serializers.PrimaryKeyRelatedField(source='parent', queryset=SystemGroup.objects.all(), allow_null=True)
     organizationId = serializers.UUIDField(source='organization_id', read_only=True)
+    path = serializers.ListField(child=serializers.UUIDField(), source='visible_path', default=list)
 
     class Meta:
         model = SystemGroup
-        fields = ['id', 'name', 'systems', 'children', 'parentId', 'organizationId']
+        fields = ['id', 'name', 'systems', 'children', 'parentId', 'organizationId', 'path']
 
     def validate_parentId(self, value: SystemGroup):
         if value:
@@ -1207,6 +1208,14 @@ class UserListSerializer(serializers.Serializer):
 
 
 class SystemGroupUserSerializer(serializers.ModelSerializer):
+
+    class MembershipSerializer(serializers.Serializer):
+
+        id = serializers.UUIDField(read_only=True)
+        name = serializers.CharField(read_only=True)
+        membershipType = serializers.ChoiceField(source='_meta.model_name', read_only=True,
+                                       choices=[Organization._meta.model_name, SystemGroup._meta.model_name])
+
     email = serializers.EmailField(source='user.email', required=True)
     roles = serializers.ListField(source='roles_name', allow_empty=True, allow_null=True, read_only=True)
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
@@ -1218,6 +1227,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
     #     slug_field='name', write_only=True, required=True)
     roleId = serializers.PrimaryKeyRelatedField(
         queryset=OrganizationRole.objects.all(), write_only=True, required=False)
+    hasAccessTo = MembershipSerializer(source='has_access_to', read_only=True)
 
     class Meta:
         model = OrganizationToUser
@@ -1227,6 +1237,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
             'role',
             'roleId',
             'rolesIds',
+            'hasAccessTo',
         ]
 
     def validate(self, attrs):

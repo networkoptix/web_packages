@@ -333,14 +333,14 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     #     return data
 
     @property
-    def group_ids_to_root(self):
-        if self.system_group_id:
-            return self.system_group.ids_to_root
-        return set()
+    def groups_path(self):
+        if not self.system_group or not self.organization:
+            return []
+        return self.path[:self.path.index(self.organization_id)]
 
     def get_all_users(self):
-        group_ids = [*self.group_ids_to_root, None]
-        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+        return OrganizationToUser.objects.filter(
+            Q(system_group__in=self.groups_path) | Q(system_group=None), organization=self.organization)
 
     def get_user_role_by_email(self, email: str):
         return self.get_all_users().filter(user__email__iexact=email).first()
@@ -1108,17 +1108,23 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         return not self.parent
 
     @property
-    def ids_to_root(self):
-        ids = {self.id}
-        current = self
-        while current.parent_id:
-            ids.add(current.parent_id)
-            current = current.parent
-        return ids
+    def groups_path(self) -> List[uuid.UUID]:
+        if not self.parent:
+            return []
+        return self.path[:self.path.index(self.organization_id)]
+
+    @property
+    def visible_path(self) -> List[uuid.UUID]:
+        """
+        Returns path up to organization's parent channel partner
+        """
+        return self.path[:self.path.index(self.organization_id) + 2]
 
     def get_all_users(self):
-        group_ids = [*self.ids_to_root, None]
-        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+        return OrganizationToUser.objects.filter(
+            Q(system_group__in=self.groups_path) | Q(system_group=None),
+            organization=self.organization
+        )
 
     @staticmethod
     def has_cycle(root):
@@ -1143,7 +1149,7 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         if None in relations:
             return True
 
-        return bool(self.ids_to_root.intersection(relations))
+        return bool(self.groups_path.intersection(relations))
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_systems(user)
@@ -1204,6 +1210,12 @@ class OrganizationToUser(models.Model):
     def system_roles_name(self):
         roles = get_organization_roles()
         return [roles[r]['system_role'] for r in self.roles if roles[r]['system_role']]
+
+    @property
+    def has_access_to(self):
+        return self.system_group or self.organization
+
+
 
 class ChannelPartnerService(models.Model):
     # Service Types
@@ -1579,10 +1591,6 @@ class BillingModel(models.Model):
     invoice_type = models.IntegerField(choices=InvoiceTypes.TYPES)
     fixed_invoice_date = models.DateField(help_text='If invoice_type is "Fixed Date"', blank=True, null=True)
 
-
-
-
-
 # class SystemGroupToUser(models.Model):
 #     system_group = models.ForeignKey(SystemGroup, on_delete=models.CASCADE)
 #     user = models.ForeignKey(CloudUser, on_delete=models.CASCADE)
@@ -1596,6 +1604,8 @@ class BillingModel(models.Model):
 #
 #     def can_manage(self, user: CloudUser):
 #         return self.system_group.organization.can_manage_users(user)
+
+
 def get_channel_partner_roles() -> Dict[uuid.UUID | str, dict]:
     if roles := caches['local'].get('channel_partner_roles', {}):
         return roles

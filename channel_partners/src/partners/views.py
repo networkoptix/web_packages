@@ -867,7 +867,6 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
                    extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
     @action(name='bulk_delete', methods=['post'], detail=False)
     def bulk_delete(self, request, *args, **kwargs):
-        self.check_object_permissions()
         serializer = serializers.ListSerializer(
             data=request.data,
             child=serializers.EmailField()
@@ -875,6 +874,21 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
         serializer.is_valid(raise_exception=True)
         self.get_queryset().filter(user__email__in=request.data).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
+
+    @extend_schema(summary='Return list of users with access to a group.',
+                   methods=['get'],
+                   responses=SystemGroupUserSerializer,
+                   extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
+    @action(name='can_access', methods=['get'], detail=False)
+    def can_access(self, request, *args, **kwargs):
+        system_group = self.get_system_group()
+        queryset = (
+            OrganizationToUser.objects.filter(organization_id=system_group.organization_id)
+            .filter(Q(system_group__isnull=True) | Q(system_group_id__in=[*system_group.groups_path, system_group.id]))
+            .select_related('organization', 'system_group')
+        )
+        serializer = SystemGroupUserSerializer(queryset, many=True)
+        return Response(serializer.data)
 
 
 @extend_schema_view(
