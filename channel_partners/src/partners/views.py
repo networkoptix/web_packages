@@ -966,7 +966,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
     @extend_schema(responses=SaaSReportSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['GET'], detail=True)
-    def saas_report(self, request, system_id):
+    def saas_report(self, request, id):
         system: CloudSystemId = self.get_object()
         serializer = SaaSReportSerializer(system)
         return Response(serializer.data)
