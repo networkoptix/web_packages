@@ -20,7 +20,7 @@ from partners.models import (
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet
+    SystemGroupUserViewSet, system_user, system_users
 )
 
 
@@ -859,3 +859,58 @@ class TestSystemGroupUserViewSet:
         assert response.data[-1]['hasAccessTo']['name'] == self.group_2.name
         assert response.data[-1]['hasAccessTo']['id'] == str(self.group_2.id)
         assert response.data[-1]['hasAccessTo']['membershipType'] == 'systemgroup'
+
+
+def test_system_user(channel_partner_factory, cp_user_factory, organization_factory,
+                     org_user_factory, system_group_factory, system_factory,
+                     sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+        org.save()
+        org_sys = system_factory(organization=org)
+        group = system_group_factory(organization=org)
+        group_sys = system_factory(organization=org, system_group=group)
+        cp_admin = cp_user_factory(channel_partner=cp)
+        org_admin = org_user_factory(organization=org)
+        group_user = sys_group_user_factory(organization=org, group=group,
+                                            role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+
+        request = arf.get('/')
+        mock_internal_token_auth()
+
+        response = system_user(request, str(group_sys.system_id), email=cp_admin.user.email)
+        assert response.status_code == 200
+        assert response.data['vmsRoles'][0] == OrganizationRole.objects.get(pk=org.channel_partner_access_level_id).system_role_uuid
+
+        response = system_user(request, str(group_sys.system_id), email=group_user.user.email)
+        assert response.status_code == 200
+        assert response.data['vmsRoles'][0] == OrganizationRole.objects.get(pk=group_user.roles[0]).system_role_uuid
+
+
+def test_system_users(channel_partner_factory, cp_user_factory, organization_factory,
+                     org_user_factory, system_group_factory, system_factory,
+                     sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+    cp = channel_partner_factory()
+    org = organization_factory(channel_partner=cp)
+    org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+    org.save()
+    org_sys = system_factory(organization=org)
+    group = system_group_factory(organization=org)
+    group_sys = system_factory(organization=org, system_group=group)
+    cp_admin = cp_user_factory(channel_partner=cp)
+    org_admin = org_user_factory(organization=org)
+    group_user = sys_group_user_factory(organization=org, group=group,
+                                        role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+
+    request = arf.get('/')
+    mock_internal_token_auth()
+
+    response = system_users(request, str(group_sys.system_id))
+    assert response.status_code == 200
+    assert len(response.data) == 3
+
+
+    response = system_users(request, str(org_sys.system_id))
+    assert response.status_code == 200
+    assert len(response.data) == 2

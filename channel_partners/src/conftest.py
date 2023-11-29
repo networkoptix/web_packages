@@ -4,6 +4,7 @@ import uuid
 from uuid import uuid4, UUID
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from model_bakery import baker
 
@@ -12,7 +13,7 @@ from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner,
     ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
     ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
     ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole, \
-    OrganizationRoles, SystemGroup
+    OrganizationRoles, SystemGroup, AuthToken
 
 
 @pytest.fixture()
@@ -191,6 +192,16 @@ def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker):
 
     return mock
 
+@pytest.fixture()
+def mock_internal_token_auth(mocker):
+    def mock():
+        token = AuthToken.objects.create(key=f'{uuid4()}', internal=True)
+        mock_auth = mocker.patch('partners.authentication.NxTokenAuthentication.authenticate',
+                                 return_value=(get_user_model()(), token))
+        return mock_auth
+
+    return mock
+
 class RequestFactory(APIRequestFactory):
     def request(self, **kwargs):
         request = super().request(**kwargs)
@@ -232,8 +243,8 @@ def deny_user_administer_system(mocker):
 def system_factory(cloud_test_host, default_organization):
 
     def factory(organization=default_organization, cloud_host=cloud_test_host,
-                system_id=None, state=ChannelPartnerStates.ACTIVE):
-        return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}',
+                system_id=None, state=ChannelPartnerStates.ACTIVE, system_group=None):
+        return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}', system_group=system_group,
                           organization=organization, cloud_host=cloud_host, state=state)
 
     return factory

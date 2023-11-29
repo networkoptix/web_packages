@@ -1172,28 +1172,27 @@ class GroupSerializer(serializers.ModelSerializer):
         return instance
 
 
-class SystemUserSerializer(serializers.ModelSerializer):
-    email = serializers.EmailField(source='user.email')
+class SystemUserSerializer(serializers.Serializer):
+    email = serializers.EmailField(source='user__email')
     vmsRoles = serializers.SerializerMethodField(allow_null=True)
     roles = serializers.ListField(allow_empty=True, allow_null=True)
-    type = serializers.ChoiceField(source='membership_type', choices=('organization', 'channel_partner'))
+    type = serializers.ChoiceField(choices=('organization', 'channel_partner'))
 
     @cached_property
     def organization_roles(self):
         return get_organization_roles()
 
     @extend_schema_field(serializers.ListField(child=serializers.UUIDField()))
-    def get_vmsRoles(self, obj: OrganizationToUser):
+    def get_vmsRoles(self, obj: dict):
         roles = self.organization_roles
         vms_roles = []
-        for role_uuid in obj.roles:
+        for role_uuid in obj.get('roles', []):
             matching_role = roles[role_uuid]
             if matching_role['system_role_uuid']:
                 vms_roles.append(matching_role['system_role_uuid'])
         return vms_roles
 
     class Meta:
-        model = OrganizationToUser
         fields = ['email', 'roles', 'vmsRoles', 'type']
 
 

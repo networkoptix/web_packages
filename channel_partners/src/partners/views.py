@@ -1108,7 +1108,7 @@ def user_systems(request, email):
 @api_view(['GET'])
 # TODO: CLOUD-11974
 def system_user(request, system_id, email):
-    system = CloudSystemId.objects.filter(system_id=system_id).first()
+    system = CloudSystemId.objects.filter(system_id=system_id).select_related('organization').first()
     if not system:
         raise exceptions.NotFound('System not found')
 
@@ -1128,7 +1128,8 @@ def system_user(request, system_id, email):
 @api_view(['GET'])
 # TODO: CLOUD-11974
 def system_users(request, system_id, email=None):
-    system = CloudSystemId.objects.filter(system_id=system_id).first()
+    system = (CloudSystemId.objects.filter(system_id=system_id)
+              .select_related('organization').first())
     if not system:
         raise exceptions.NotFound('System not found')
     all_user_role_rels = system.get_all_users()
