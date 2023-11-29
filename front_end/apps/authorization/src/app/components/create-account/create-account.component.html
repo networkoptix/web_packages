@@ -82,6 +82,7 @@
                     componentId="email"
                     class="fs-mask form-component"
                     [(ngModel)]="createEmail"
+                    [pattern]="credentialsValidation.emailRegex"
                     [lockEmail]="fromInvite"
                     [readonly]="fromInvite || createAccountProcess?.processing"
                     [form]="createAccountForm"

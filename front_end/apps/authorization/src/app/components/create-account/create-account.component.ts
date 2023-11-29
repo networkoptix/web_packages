@@ -24,7 +24,7 @@ import { NxPasswordValidationComponent } from '@components/password-input-valida
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
 import { Process } from '@services/process.service/process';
-import { icons } from '@static-variables';
+import { credentialsValidation, icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { AuthorizeStateType } from '../authorize.component.types';
@@ -85,6 +85,7 @@ export class NxAuthorizeCreateAccountComponent implements OnInit, OnChanges, OnD
     hideErrors: boolean;
     weakPassword: boolean = null;
     termsAndConditions = false;
+    credentialsValidation = credentialsValidation;
 
     @Input() createAccountProcess: Process;
     onCreateSubmit: () => void;
