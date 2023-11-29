@@ -71,7 +71,7 @@ export class NxSystemLicensesComponent implements OnInit {
 
         effect(() => {
             if (this.showNewLicense$$()) {
-                this.licenseSummary.getLicenses();
+                this.licenseSummary.getLicenses(true);
             }
         });
     }

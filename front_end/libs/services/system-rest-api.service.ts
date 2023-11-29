@@ -1202,6 +1202,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/licenseSummaries', { params });
     }
 
+    getLicenseSummariesOnActivation(): Observable<any> {
+        const params = {
+            _keepDefault: true,
+        };
+        return this.get('/rest/v1/licenseSummaries', { params });
+    }
+
     previewUrl(
         cameraId: string,
         time?: number | string,

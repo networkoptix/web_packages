@@ -1377,6 +1377,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         throw new Error('should only be using rest');
     }
 
+    getLicenseSummariesOnActivation(): Observable<unknown> {
+        throw new Error('should only be using rest');
+    }
+
     updateLogLevel(logLevel: unknown): Observable<unknown> {
         throw new Error('should only be using rest v2 version');
     }
