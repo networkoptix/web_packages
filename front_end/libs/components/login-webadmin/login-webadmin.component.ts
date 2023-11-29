@@ -331,7 +331,7 @@ export class LoginWebadminModalContent implements OnInit {
     }
 
     oauthLogin(code: string): void {
-        this.account.mediaServerApi.loginOauth(code).subscribe((res: Record<string, string>) => {
+        this.account.mediaServerApi.loginOauth(code).subscribe(res => {
             this.accountNotOnSystem = res.scope === '';
 
             if (!this.accountNotOnSystem && res.error === 'second_factor_required') {

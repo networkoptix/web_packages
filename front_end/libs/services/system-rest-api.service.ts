@@ -66,6 +66,13 @@ import { NxSystemAPI } from './system-legacy-api.service';
 import type { IParams, ServerPreprocess } from './system.service/system-types';
 import { NxUriCacheService } from './uri-cache.service';
 
+interface TokenResponse {
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+    error?: string;
+}
+
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
  *
@@ -197,7 +204,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.post('/rest/v1/system/setup', config);
     }
 
-    private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
+    private refreshTokens(
+        refreshToken: string,
+        isSystem?: boolean,
+        remoteSystemId?: string,
+    ): Observable<TokenResponse> {
         const params: any = {
             grant_type: 'refresh_token',
             response_type: 'token',
@@ -208,7 +219,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             params.scope = `cloudSystemId=${remoteSystemId ?? this.CONFIG.cloudSystemId}`;
         }
 
-        return this.http.post(`${this.CONFIG.cloudHost}/oauth/token/`, params);
+        return this.http.post<TokenResponse>(`${this.CONFIG.cloudHost}/oauth/token/`, params);
     }
 
     private getTokens() {
@@ -314,7 +325,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                                     this.clearTokens();
                                     return throwError(error);
                                 }),
-                                switchMap(res => this.setTokens(res, true))
+                                switchMap(res => {
+                                    // In webadmin if the token response has an error allow it to go to be handled by the login dialog.
+                                    if (res.error) {
+                                        return of(res);
+                                    }
+                                    return this.setTokens(res, true);
+                                }),
                             );
                         }
                     }
@@ -618,22 +635,24 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             grant_type: 'authorization_code',
             response_type: 'token'
         };
-        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
+        return this.http
+            .get<TokenResponse>(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
             .pipe(
                 switchMap(tokens => {
                     if (skipSetting) {
                         return of(tokens);
                     }
                     return this.setTokens(tokens, false).pipe(
-                        switchMap(() =>
-                            // @ts-expect-error
-                            this.refreshTokens(tokens.refresh_token, true)
-                        )
+                        switchMap(() => this.refreshTokens(tokens.refresh_token, true)),
                     );
                 }),
-                tap(systemTokens => {
-                    !skipSetting && this.setTokens(systemTokens, true).subscribe(() => { });
-                })
+                switchMap(systemTokens => {
+                    // In webadmin if the token response has an error allow it to go to be handled by the login dialog.
+                    if (!skipSetting && !systemTokens.error) {
+                        return this.setTokens(systemTokens, true).pipe(map(() => systemTokens));
+                    }
+                    return of(systemTokens);
+                }),
             );
     }
 
@@ -657,12 +676,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.CONFIG.cloudSystemId && refreshToken) {
             // Generate new tokens if they are missing
             if (!accessToken) {
+                const res = await firstValueFrom(this.refreshTokens(refreshToken, true));
                 // eslint-disable-next-line camelcase
-                accessToken = await this.refreshTokens(refreshToken, true).toPromise()?.access_token;
+                accessToken = res.access_token;
             }
             if (!cloudAccessToken) {
+                const res = await firstValueFrom(this.refreshTokens(refreshToken, false));
                 // eslint-disable-next-line camelcase
-                cloudAccessToken = await this.refreshTokens(refreshToken, false).toPromise()?.access_token;
+                cloudAccessToken = res.access_token;
             }
             cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken });
         }
