@@ -1089,8 +1089,7 @@ def all_services(request):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def user_systems(request, email):
     user: CloudUser = CloudUser.objects.filter(email__iexact=email).first()
     if not user:
@@ -1107,8 +1106,7 @@ def user_systems(request, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def system_user(request, system_id, email):
     system = CloudSystemId.objects.filter(system_id=system_id).first()
     if not system:
@@ -1128,8 +1126,7 @@ def system_user(request, system_id, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def system_users(request, system_id, email=None):
     system = CloudSystemId.objects.filter(system_id=system_id).first()
     if not system:
@@ -1145,8 +1142,7 @@ def system_users(request, system_id, email=None):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def all_org_users(request):
     users_dict = {
         'users': CloudUser.objects.filter(Q(organizations__isnull=False) | Q(channel_partners__isnull=False)).distinct().values_list('email', flat=True)
