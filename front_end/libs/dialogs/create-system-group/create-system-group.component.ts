@@ -4,13 +4,15 @@ import { Component, Inject, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
+import { firstValueFrom } from 'rxjs';
 
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import type { CreateSystemGroup as DT } from '@dialogs/dialogs.types';
 import { ModalBase } from '@dialogs/modal-base';
 import staticLang from '@language_static';
-import { NxSystemGroupsService } from '@pages/home/services/system-groups.service';
+import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { CreateGroup } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import { assignFrom } from '@utils/general';
@@ -35,14 +37,9 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
 
     @ViewChild('createSystemGroupForm') form: NgForm;
 
-    newGroupName: string;
-    // groupNames: string[];
-    // parentOptions: GroupNameOption[];
-    // selectedParent: GroupNameOption;
-
-    targetId: string | undefined;
+    name: string;
+    hasGroups: boolean;
     parentGroup: string | undefined;
-    hasGroups: boolean | undefined;
     orgId: string | undefined;
 
     createSystemGroupProcess: Process;
@@ -50,14 +47,18 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     constructor(
         private processService: NxProcessService,
         protected dialogRef: DialogRef<DT['return']>,
-        private groupsService: NxSystemGroupsService,
+        private cpService: NxChannelPartnersService,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
     ) {
         super(dialogRef);
         this.createSystemGroupProcess = this.processService.createProcess(
             () => {
-                this.groupsService.createGroup(this.newGroupName, this.orgId, this.targetId);
-                return Promise.resolve();
+                const data: CreateGroup = {
+                    name: this.name,
+                    parentId: this.parentGroup ?? null,
+                    organizationId: this.orgId,
+                };
+                return firstValueFrom(this.cpService.createGroup(data));
             },
             {},
             () => this.close(),
@@ -65,6 +66,6 @@ export class CreateSystemGroupModalContent extends ModalBase<DT['return']> {
     }
 
     ngOnInit(): void {
-        assignFrom(this.dialogData, ['targetId', 'parentGroup', 'hasGroups', 'orgId'], this);
+        assignFrom(this.dialogData, ['hasGroups', 'parentGroup', 'orgId'], this);
     }
 }

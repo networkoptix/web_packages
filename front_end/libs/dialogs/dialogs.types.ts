@@ -148,10 +148,9 @@ export type ChangeCpState = DialogType<
 /* Groups */
 export type CreateSystemGroup = DialogType<
     {
-        targetId: string;
+        hasGroups: boolean;
         orgId: string;
         parentGroup: string;
-        hasGroups: boolean;
     },
     void
 >;

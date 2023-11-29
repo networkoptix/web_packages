@@ -9,7 +9,6 @@ import { NxOrganizationUsersComponent } from '../components/users/org-users/org-
 import { CPResovler } from '../resolvers/CP-resolver';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
 import { RoleResolver } from '../resolvers/role-resolver';
-import { SystemGroupsConnectedResolver } from '../resolvers/system-groups-connected-resolver';
 import { TabGuard } from '../resolvers/tab-guard';
 import { TabResolver } from '../resolvers/tab-resolver';
 
@@ -25,13 +24,13 @@ const orgRoutes: Routes = [
             parentData: WithParentDataResolver,
             isAdmin: RoleResolver,
             inChannelPartner: CPResovler,
-            groupsServiceConnected: SystemGroupsConnectedResolver,
         },
         runGuardsAndResolvers: 'always',
         children: [
             {
                 path: 'systems',
                 component: NxOrganizationCardContainerComponent,
+                data: { inRoot: true },
             },
             {
                 path: 'reports',
@@ -54,6 +53,7 @@ const orgRoutes: Routes = [
             {
                 path: 'group/:groupId',
                 component: NxOrganizationCardContainerComponent,
+                data: { inRoot: false },
             },
             {
                 path: '**',

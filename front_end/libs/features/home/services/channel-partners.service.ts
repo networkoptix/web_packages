@@ -70,4 +70,9 @@ export class NxChannelPartnersService {
     getUserSystems = this.cpApi.getUserSystems;
     getOrgSystems = this.cpApi.getOrgSystems;
     bindSystemToOrg = this.cpApi.bindSystemToOrg;
+
+    /* Groups */
+    getOrgGroups = this.cpApi.getOrgGroups;
+    createGroup = this.cpApi.createGroup;
+    getGroup = this.cpApi.getGroup;
 }
