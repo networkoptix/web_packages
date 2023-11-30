@@ -454,7 +454,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = channel_partner.service_changes(start_ts).select_related('created_by')
+        end_ts = param_serializer.validated_data.get('endTs')
+        service_changes = channel_partner.service_changes(start_ts, end_ts).select_related('created_by')
         context = self.get_serializer_context()
         context['channel_partner'] = channel_partner
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceRecordSerializer,
@@ -469,7 +470,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = channel_partner.service_changes_summary(start_ts)
+        end_ts = param_serializer.validated_data.get('startTs')
+        service_changes = channel_partner.service_changes_summary(start_ts, end_ts)
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceSummarySerializer)
 
     @extend_schema(summary='Get aggregated usage data.',
@@ -582,7 +584,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = org.service_changes(start_ts).select_related('service', 'created_by', 'cloud_system')
+        end_ts = param_serializer.validated_data.get('endTs')
+        service_changes = org.service_changes(start_ts, end_ts).select_related('service', 'created_by', 'cloud_system')
         return paginated_response(self, service_changes, serializer_class=OrganizationServiceRecordSerializer)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
@@ -594,7 +597,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = org.service_changes_summary(start_ts)
+        end_ts = param_serializer.validated_data.get('endTs')
+        service_changes = org.service_changes_summary(start_ts, end_ts)
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceSummarySerializer)
 
     @extend_schema(summary='Get aggregated usage data.',

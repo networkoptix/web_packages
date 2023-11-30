@@ -5,6 +5,8 @@ from typing import Optional, Set, Iterable
 import uuid
 
 import llutil
+import rest_framework.exceptions
+from dateutil.relativedelta import relativedelta
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.core.cache import caches
@@ -972,12 +974,23 @@ class ChannelPartnerServiceExternalIdSerializer(ExternalIdSerializerBase, serial
         req = self.context.get('request')
         if not value.created_by_channel_partner.can_access(req.user):
             raise exceptions.PermissionDenied(
-                detail=f'User does not have access permission for {value.organization_id}.')
+                detail=f'User does not have access permission for {value.id}.')
         return value
 
 
 class ChannelPartnerRecordsParamSerializer(serializers.Serializer):
     startTs = serializers.DateField(required=False)
+    endTs = serializers.DateField(required=False)
+
+    def validate(self, attrs):
+        if not attrs.get('startTs'):
+            attrs["startTs"] = attrs.get("endTs", timezone.now().date()) - relativedelta(months=1)
+        if not attrs.get('endTs'):
+            attrs["endTs"] = attrs.get("startTs", timezone.now().date()) + relativedelta(months=1)
+        if attrs["startTs"] > attrs.get('endTs'):
+            raise ValidationError({'startTs': '"startTs" cannot be greater than "endTs".',
+                                   'endTs': '"startTs" cannot be greater than "endTs".'})
+        return attrs
 
 
 class OrganizationServiceRecordSerializer(serializers.ModelSerializer):

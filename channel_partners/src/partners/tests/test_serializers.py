@@ -1,3 +1,4 @@
+import datetime
 import random
 import uuid
 from datetime import timedelta
@@ -15,8 +16,9 @@ from partners.models import (
 from partners.serializers import (
     ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
     SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer,
-    SystemGroupUserSerializer, GroupSerializer
+    SystemGroupUserSerializer, ChannelPartnerRecordsParamSerializer, GroupSerializer
 )
+from tools.helpers import get_period_start
 
 class TestChannelPartnerAggDataSerializer:
 
@@ -370,6 +372,42 @@ class TestOrganizationSerializer:
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
         assert serializer.data['ownRoles'] == [org_admin_role.name]
+
+
+
+class TestChannelPartnerRecordsParamSerializer:
+
+    def setup(self):
+        self.ts = datetime.date(2023, 8, 31)
+
+    def test_no_end_ts(self):
+         params = {"startTs": self.ts}
+         ser = ChannelPartnerRecordsParamSerializer(data=params)
+         assert ser.is_valid()
+         assert ser.validated_data["endTs"] == self.ts + relativedelta.relativedelta(months=1)
+         assert ser.validated_data["startTs"] == self.ts
+
+    def test_no_start_ts(self):
+         params = {"endTs": self.ts}
+         ser = ChannelPartnerRecordsParamSerializer(data=params)
+         assert ser.is_valid()
+         assert ser.validated_data["startTs"] == (self.ts - relativedelta.relativedelta(months=1))
+         assert ser.validated_data["endTs"] == self.ts
+
+    def test_no_params(self):
+        today = datetime.date.today()
+        params = {}
+        ser = ChannelPartnerRecordsParamSerializer(data=params)
+        assert ser.is_valid()
+        assert ser.validated_data["startTs"] == (today - relativedelta.relativedelta(months=1))
+        assert ser.validated_data["endTs"] == today
+
+    def test_invalid_period(self):
+        params = {"endTs": self.ts, "startTs": datetime.date.today()}
+        ser = ChannelPartnerRecordsParamSerializer(data=params)
+        assert ser.is_valid() is False
+        assert ser.errors["endTs"][0] == '"startTs" cannot be greater than "endTs".'
+        assert ser.errors["startTs"][0] == '"startTs" cannot be greater than "endTs".'
 
 
 

@@ -635,11 +635,11 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 **{base_arg + f'__{secondary_arg}' * (i + 1) + (f'__{suffix_arg}' if suffix_arg else ''): value})
         return parent_conditions
 
-    def service_changes_summary(self, start_ts: datetime.date = None):
+    def service_changes_summary(self, start_ts: datetime.date, end_ts: datetime.date):
         channel_partner_condition = self.parent_channel_partner_args('service', 'parent_service',
                                                                      value=models.OuterRef('pk'))
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         start_calc = {
             str(service.id): service
             for service in self.services.filter().annotate(quantity=models.Subquery(
@@ -654,7 +654,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         end_calc = list(self.services.filter().annotate(quantity=models.Subquery(
             queryset=ChannelPartnerServiceRecord.objects.filter(
                 channel_partner_condition,
-                created_ts__lt=start_ts + relativedelta(months=1)
+                created_ts__lt=end_ts
             ).annotate(sum=models.Func(F('quantity'), function='SUM')).values('sum'),
             output_field=models.IntegerField()
         )))
@@ -669,13 +669,14 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date = None) -> 'QuerySet[ChannelPartnerServiceRecord]':
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+    def service_changes(self, start_ts: datetime.date,
+                        end_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         qs = ChannelPartnerServiceRecord.objects.filter(
             self.parent_channel_partner_args(base_arg='service', secondary_arg='parent_service',
                                              suffix_arg='created_by_channel_partner', value=self),
-            created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
+            created_ts__gte=start_ts, created_ts__lt=end_ts
         ).select_related('organization', 'created_by',
                          f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
@@ -920,9 +921,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         obj.save()
         self.refresh_from_db()
 
-    def service_changes_summary(self, start_ts: datetime.date):
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+    def service_changes_summary(self, start_ts: datetime.date, end_ts: datetime.date):
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         start_calc = {str(service.id): service
                       for service in ChannelPartnerService.objects.filter(
                 channelpartnerservicerecord__organization=self,
@@ -931,7 +932,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
         end_calc = list(ChannelPartnerService.objects.filter(
             channelpartnerservicerecord__organization=self,
-            channelpartnerservicerecord__created_ts__lt=start_ts + relativedelta(months=1)
+            channelpartnerservicerecord__created_ts__lt=end_ts
         ).annotate(quantity=Sum('channelpartnerservicerecord__quantity')))
 
         summary = []
@@ -944,11 +945,11 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+    def service_changes(self, start_ts: datetime.date, end_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         return ChannelPartnerServiceRecord.objects.filter(
-            organization=self, created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
+            organization=self, created_ts__gte=start_ts, created_ts__lt=end_ts
         ).order_by('created_ts')
 
     def current_services(self) -> dict:
