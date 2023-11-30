@@ -620,6 +620,24 @@ export class NxLayoutGridComponent {
 
     cursorStyle$$ = computed(() => ({ cursor: this.getCursor() }));
 
+    unsavedLayoutState$$ = computed(() => {
+        const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
+        const layout = this.layout$$();
+        const state = (unsavedLayouts && layout && unsavedLayouts[layout.id]) || undefined;
+        return state !== this.unsavedStates.saving && state;
+    });
+
+    layoutSaving$$ = computed(() => {
+        const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
+        return (
+            (unsavedLayouts &&
+                Object.values(unsavedLayouts).some(
+                    layoutState => layoutState === this.unsavedStates.saving,
+                )) ||
+            undefined
+        );
+    });
+
     #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
         this.#draggingPosition$,
         this.aspectHandler$,

@@ -135,24 +135,49 @@
         </button>
     </div>
     <div
+        class="saving-ribbon"
+        [ngClass]="{
+            show: layoutSaving$$(),
+            hide: !layoutSaving$$()
+        }"
+    >
+        <div class="animated">
+            <svg-icon
+                nx-add-svg-src
+                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                [src]="icons.dirNonStandard + 'info.svg'"
+            ></svg-icon>
+            <span
+                class="ribbon-message"
+                translate
+            >
+                Saving layout...
+            </span>
+        </div>
+    </div>
+    <div
         *ngIf="
             !layoutStateService.resolutionRibbonShown$$() &&
             mouseMoving$$() &&
             layout?.id &&
-            layoutStateService.unsavedLayoutsIds$$()[layout.id] as unsaved
+            unsavedLayoutState$$()
         "
         class="unsaved-ribbon"
         [ngClass]="{
-            diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(unsaved)
+            diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(
+                unsavedLayoutState$$()
+            )
         }"
     >
-        <ng-container [ngSwitch]="unsaved">
+        <ng-container [ngSwitch]="unsavedLayoutState$$()">
             <svg-icon
                 nx-add-svg-src
                 [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
                 [src]="
                     icons.dirNonStandard +
-                    ([unsavedStates.diverged, unsavedStates.overwrite].includes(unsaved)
+                    ([unsavedStates.diverged, unsavedStates.overwrite].includes(
+                        unsavedLayoutState$$()
+                    )
                         ? 'warning.svg'
                         : 'info.svg')
                 "
@@ -190,13 +215,6 @@
                 There is a another layout with the same name. Overwrite existing layout?
             </span>
             <span
-                *ngSwitchCase="unsavedStates.saving"
-                class="ribbon-message"
-                translate
-            >
-                Saving layout...
-            </span>
-            <span
                 *ngSwitchDefault
                 class="ribbon-message"
                 translate
@@ -204,7 +222,7 @@
                 There are unsaved changes on the layout
             </span>
             <button
-                *ngIf="unsaved !== unsavedStates.saving"
+                *ngIf="unsavedLayoutState$$() !== unsavedStates.saving"
                 class="ribbon-button"
                 (click)="layoutStateService.saveLayout(layout.id)"
             >
@@ -217,14 +235,14 @@
                     [src]="icons.dirLayouts + 'save.svg'"
                 ></svg-icon>
                 <span>{{
-                    (unsaved === unsavedStates.overwrite
+                    (unsavedLayoutState$$() === unsavedStates.overwrite
                         ? unsavedStates.overwrite
                         : unsavedStates.save
                     ) | translate
                 }}</span>
             </button>
         </ng-container>
-        <ng-container [ngSwitch]="unsaved">
+        <ng-container [ngSwitch]="unsavedLayoutState$$()">
             <button
                 *ngSwitchCase="unsavedStates.diverged"
                 class="ribbon-button"
@@ -240,10 +258,9 @@
                 ></svg-icon>
                 <span translate>Reload</span>
             </button>
-            <ng-container *ngSwitchCase="unsavedStates.saving"></ng-container>
             <ng-container *ngSwitchDefault>
                 <button
-                    *ngIf="unsaved === unsavedStates.overwrite"
+                    *ngIf="unsavedLayoutState$$() === unsavedStates.overwrite"
                     class="ribbon-button"
                     (click)="layoutStateService.editedLayout$$.set(layout.id)"
                     translate

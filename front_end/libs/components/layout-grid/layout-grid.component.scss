@@ -222,14 +222,9 @@ h2.auto-save-overlay {
     background-color: #594c0d;
 }
 
-.unsaved-ribbon {
-    background-color: #0d3959;
-    &.diverged {
-        background-color: #594c0d;
-    }
-}
-
-.unsaved-ribbon, .resolution-ribbon {
+.unsaved-ribbon,
+.resolution-ribbon,
+.saving-ribbon .animated {
     padding: 6px 16px;
     display: flex;
     align-items: center;
@@ -262,6 +257,46 @@ h2.auto-save-overlay {
         .reload-icon {
             fill: var(--light1);
         }
+    }
+}
+
+.unsaved-ribbon {
+    background-color: #0d3959;
+    &.diverged {
+        background-color: #594c0d;
+    }
+}
+
+@keyframes slide-up-fade-out {
+    from {
+        display: flex;
+    }
+    to {
+        opacity: 0;
+        transform: translate(0px, -40px);
+    }
+}
+
+.saving-ribbon {
+    position: relative;
+    .animated {
+        background-color: #0d3959;
+        position: absolute;
+        left: 0;
+        top: 0;
+        width: 100%;
+        line-height: 30px;
+    }
+
+    &.hide {
+        .animated {
+            animation-duration: 1.5s;
+            animation-name: slide-up-fade-out;
+            display: none;
+        }
+    }
+    &.show .animated {
+        display: flex;
     }
 }
 

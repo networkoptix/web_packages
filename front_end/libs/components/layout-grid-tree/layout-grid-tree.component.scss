@@ -57,6 +57,11 @@ nx-search {
         }
     }
 
+    .locked-icon {
+        path {
+            fill: var(--tree-locked-icon);
+        }
+    }
     & > .cdk-tree-node {
         font-size: 14px;
         font-weight: 600;

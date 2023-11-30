@@ -761,6 +761,8 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --sidebar-tab-hover: var(--dark6);
     --sidebar-tab-closed: var(--dark8);
 
+    --tree-locked-icon: var(--light4);
+
     --context-menu-bg: var(--drop-menu-navigation-bg); // $dark7
     --context-menu-shadow: rgba(var(--dark1--rgb), 0.4);
     --context-menu-hr: var(--dark10);
