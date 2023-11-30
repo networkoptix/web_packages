@@ -135,3 +135,16 @@ export enum ApiVersions {
     v1 = 'v1',
     v2 = 'v2',
 }
+
+export enum RequiresTranscoding {
+    H265=173,
+    MJPEG=7,
+}
+
+export const isRequiresTranscoding = (codec: string | number): codec is RequiresTranscoding => typeof codec === 'number' && Object.values(RequiresTranscoding).includes(codec);
+
+
+export interface Stream {
+    codec: number,
+    encoderIndex: AvailableStreams
+}
