@@ -332,8 +332,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private initSystem(): void {
         let processingMediaServers = false;
-        let cachedMediaServers: ViewBaseServer[] = [];
+        let cachedData: { mediaServers: ViewBaseServer[]; canViewArchive: boolean } = {
+            mediaServers: [],
+            canViewArchive: false,
+        };
         const firstLoad = new Subject();
+        const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
 
         firstLoad.pipe(take(1)).subscribe(() => {
             this.setInitializationState(true, !this.system.isOnline);
@@ -349,13 +353,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 if (!this.system.isOnline || processingMediaServers) {
                     return;
                 }
-
+                let canViewArchive = false;
                 const mediaServers = await this.system.mediaserver
                     .getViewMediaServersAndCameras()
                     .pipe(
                         map(({ mediaServers, cameras }) => {
                             mediaServers.forEach(cleanIds);
-                            cameras.forEach(cleanIds);
+                            cameras.forEach(camera => {
+                                cleanIds(camera);
+                                canViewArchive ||= canViewDeviceArchive(camera?.id);
+                            });
 
                             return mediaServers.map(ms => ({
                                 ...setServerIpAndPort(ms),
@@ -367,11 +374,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 if (
                     this.initialized &&
-                    !this.mediaServerChanged(mediaServers, cachedMediaServers)
+                    !this.mediaServerChanged(mediaServers, cachedData.mediaServers) &&
+                    // If archive permissions change we should update cameras + servers.
+                    cachedData.canViewArchive === canViewArchive
                 ) {
                     return;
                 }
-                cachedMediaServers = mediaServers;
+                cachedData = { mediaServers, canViewArchive };
 
                 processingMediaServers = true;
                 const serverTimeInfos = await this.system.mediaserver
@@ -415,7 +424,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 const archiveRanges: Record<string, BaseTimeRange> = {};
 
                 await this.findCamerasWithArchive(mediaServers, archiveRanges);
-                const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
                 const processedMediaServers = mediaServers.map(ms => ({
                     ...ms,
                     cameras: ms.cameras
