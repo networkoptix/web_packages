@@ -887,7 +887,7 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
 
     @extend_schema(summary='Return list of users with access to a group.',
                    methods=['get'],
-                   responses=SystemGroupUserSerializer,
+                   responses=SystemGroupUserSerializer(many=True),
                    extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
     @action(name='can_access', methods=['get'], detail=False)
     def can_access(self, request, *args, **kwargs):
