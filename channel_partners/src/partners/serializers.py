@@ -262,8 +262,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
-    channelPartnerAccessLevel = CodeChoiceField(source='channel_partner_access_level_code',
-                                                choices=ChannelPartnerAccessLevel.LEVEL_CODES)
+    channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(queryset=OrganizationRole.objects.all(),
+                                                                   required=False)
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
