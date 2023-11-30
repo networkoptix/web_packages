@@ -182,7 +182,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'nxlicensed.utils.custom_exception_handler',
-    'DEFAULT_SCHEMA_CLASS': 'channel_partners.utils.NxAutoSchema'
+    'DEFAULT_SCHEMA_CLASS': 'channel_partners.utils.NxAutoSchema',
+    'DEFAULT_AUTHENTICATION_CLASSES': []
 }
 
 
