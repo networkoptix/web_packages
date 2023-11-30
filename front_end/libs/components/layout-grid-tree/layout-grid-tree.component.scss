@@ -261,9 +261,12 @@ cdk-tree {
 }
 
 .offline:not(.selected) {
-    span,
+    div,
     svg-icon {
         opacity: 0.5;
+    }
+    button svg-icon {
+        opacity: 1;
     }
 }
 
@@ -326,10 +329,6 @@ cdk-tree {
                 stroke: var(--btn-text-color);
             }
         }
-    }
-
-    svg {
-        padding-bottom: 2px;
     }
 }
 
