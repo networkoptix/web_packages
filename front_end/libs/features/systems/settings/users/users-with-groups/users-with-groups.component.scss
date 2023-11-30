@@ -75,27 +75,35 @@
 }
 
 .group-list-item {
-    margin-bottom: 0.25em;
+    margin-bottom: 1.25em;
       @include typography.medium20nocolor;
             color: var(--body-text-color);
 
     .group-name {
         @include mixins.ellipsis;
+            font-size: 16px;
+            font-style: normal;
+            line-height: normal;
+            padding-bottom: 16px;
     }
 
     &.edit {
-        .multiple-groups {
-            @include mixins.ellipsis;
+        @include mixins.ellipsis;
+        margin-bottom: 0;
+        font-size: 0.875rem !important;
+        padding-bottom: unset;
 
-            .group-name {
-                @include typography.medium13nocolor;
-                color: var(--body-text-color);
-                margin-right: 5px;
-            }
+        .group-name {
+            font-family: theme_vars.$font-family-medium;
+            font-weight: 500 !important;
+            color: var(--body-text-color);
+            margin-right: 5px;
+            font-size: 0.875rem;
+        }
 
-            .help-block {
-                display: unset;
-            }
+        .help-block {
+            display: unset;
+            font-family: theme_vars.$font-family-light;
         }
     }
 }
@@ -104,8 +112,11 @@
     display: block;
     background-color: transparent;
     color: var(--light16);
-    font-size: 0.825rem;
-    line-height: 18px;
+    font-size: 0.875rem;
+    font-family: theme_vars.$font-family-base;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
 }
 
 .user-settings-form {
