@@ -175,7 +175,9 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelPartner
-        exclude = ['cloud_host', 'parent_channel_partner', 'monthly_additional_service_limit', 'support_information']
+        exclude = ['cloud_host', 'parent_channel_partner',
+                   'monthly_additional_service_limit',
+                   'support_information', 'path']
         read_only_fields = ['users', 'parentChannelPartner']
 
     @cached_property
@@ -272,7 +274,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Organization
-        exclude = ['channel_partner_access_level', 'channel_partner', 'created_ts']
+        exclude = ['channel_partner_access_level', 'channel_partner', 'created_ts', 'path']
         read_only_fields = ['channelPartner', 'users', 'currentServices', 'created']
 
     @cached_property
