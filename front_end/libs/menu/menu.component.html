@@ -82,13 +82,11 @@
                     </nx-level-2-item>
 
                     <div class="level-3-items">
-                        <div *ngFor="let details of subItem.level3; trackBy: trackItem">
-                            <nx-level-3-inf-scroll
-                                [routerBase]="content.base"
-                                [items]="item.level3"
-                                [selectedId]="selectedLevel3"
-                            ></nx-level-3-inf-scroll>
-                        </div>
+                        <nx-level-3-inf-scroll
+                            [routerBase]="content.base"
+                            [items]="subItem.level3"
+                            [selectedId]="selectedLevel3"
+                        ></nx-level-3-inf-scroll>
                     </div>
                 </div>
             </div>
