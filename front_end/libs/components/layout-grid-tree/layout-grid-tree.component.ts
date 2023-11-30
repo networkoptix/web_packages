@@ -206,6 +206,7 @@ export class NxLayoutGridTreeComponent {
         map(({ queryParams: { search } }) => search?.[0] || ''),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: false }),
+        untilDestroyed(this),
     );
 
     initialDataSource$ = new BehaviorSubject<BaseResourceNode[]>([]);
@@ -232,6 +233,7 @@ export class NxLayoutGridTreeComponent {
                 (node, matched) => matched || !!node.children?.length,
             ),
         ),
+        untilDestroyed(this),
     );
 
     icons = icons;
@@ -791,5 +793,6 @@ export class NxLayoutGridTreeComponent {
                 takeUntil(this.unsubTooltip$),
             ),
         ),
+        untilDestroyed(this),
     );
 }

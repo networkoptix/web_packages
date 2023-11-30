@@ -16,7 +16,7 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -153,6 +153,7 @@ export class NxLayoutGridItemOverlayComponent {
             return round(Math.max(scaleWidth, scaleHeight, scaleClamp), 2);
         }),
         distinctUntilChanged(),
+        untilDestroyed(this),
     );
 
     scaled$$ = toSignal(this.scale$.pipe(map(scale => scale !== 1)), { initialValue: false });
@@ -164,6 +165,7 @@ export class NxLayoutGridItemOverlayComponent {
             transform: `scale(${1 / scale})`,
             'transform-origin': 'top left',
         })),
+        untilDestroyed(this),
     );
 
     // TODO remove when Action Dispatcher for displayInfo is implemented
@@ -343,6 +345,7 @@ export class NxLayoutGridItemOverlayComponent {
                 return EMPTY;
             }
         }),
+        untilDestroyed(this),
     );
 
     @HostListener('document:fullscreenchange')

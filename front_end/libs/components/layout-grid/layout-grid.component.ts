@@ -67,12 +67,17 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
-import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
+import {
+    ConnectionError,
+    WebRTCStreamManager,
+    isRequiresTranscoding,
+} from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
@@ -879,14 +884,69 @@ export class NxLayoutGridComponent {
                 `${(size / 2) * this.CELL_SPACE_RATIO}px`,
             );
         });
+
+        effect(() => {
+            const resolutions = this.layoutStateService.cameraResolutionLookup$$();
+            const transcodingDisabled = this.cameraTranscodingDisabled$$();
+            for (const { id, primary, secondary } of transcodingDisabled) {
+                if (
+                    ![ConnectionError.mjpegDisabled, ConnectionError.transcodingDisabled].includes(
+                        this.errors[id] as ConnectionError,
+                    )
+                ) {
+                    continue;
+                }
+                const currentResolution = resolutions[id].resolution;
+                const useSecondary = currentResolution === Resolution.LOW && !secondary;
+                const usePrimary = currentResolution === Resolution.HIGH && !primary;
+
+                if (usePrimary || useSecondary || ![primary, secondary].some(Boolean)) {
+                    delete this.errors[id];
+                    delete this.errorIcons[id];
+                    delete this.additionalErrorMessages[id];
+                }
+            }
+        });
     }
 
-    async ngOnChanges({ layout }: NgChanges<NxLayoutGridComponent>): Promise<void> {
+    cameraTranscodingDisabled$$ = signal<{ id: string; primary: boolean; secondary: boolean }[]>(
+        [],
+    );
+
+    async ngOnChanges({
+        layout,
+        layoutItemLookup,
+    }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
             // this.openMenu = false;
             this.initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
             this.updateLayout();
+        }
+
+        if (
+            layoutItemLookup?.currentValue &&
+            !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)
+        ) {
+            const cameras = Object.values(layoutItemLookup.currentValue).filter(
+                assertResourceOfType.camera,
+            );
+
+            const cameraTranscodingDisabled = cameras.map(({ details: { id, parameters } }) => {
+                const streams = parameters.mediaStreams?.streams ?? [];
+
+                const streamRequiresTranscoding = (stream: number): boolean =>
+                    isRequiresTranscoding(
+                        streams.find(({ encoderIndex }) => encoderIndex === stream)?.codec,
+                    );
+
+                const primary = streamRequiresTranscoding(0);
+                const secondary = streamRequiresTranscoding(1);
+
+                return { id, primary, secondary };
+            });
+
+            this.cameraTranscodingDisabled$$.set(cameraTranscodingDisabled);
         }
     }
 

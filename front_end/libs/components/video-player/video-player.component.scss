@@ -106,7 +106,7 @@ img.poster {
     z-index: 100;
 }
 
-.original-stream {
+.original-stream, canvas {
     position: absolute;
     width: 100%;
     height: 100%;
