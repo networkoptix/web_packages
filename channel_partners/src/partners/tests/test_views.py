@@ -392,11 +392,30 @@ class TestOrganizationUserViewSet:
         response = view(request, parent_lookup_organization=org.id, email=cloud_user.email)
         assert response.status_code == 204
 
+    def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
+                             mock_auth_with_user, arf, org_user_factory):
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': cp_admin.user.email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = OrganizationUserViewSet.as_view(actions={'post': 'create'})
+        mock_auth_with_user(cp_admin)
+
+        organization = organization_factory(channel_partner=cp)
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_organization=organization.id)
+        assert response.status_code == 400
+        assert (f"User {cp_admin.user.email} has a role in the organization parent channel partner"
+                in response.data['email'][0])
+
 
 class TestChannelPartnerUserViewSet:
 
     def test_destroy_last_admin(self, channel_partner_factory, cp_user_factory, default_channel_partner,
-                                mock_auth_with_user, arf, httpx_mock, default_cp_admin):
+                                mock_auth_with_user, arf, default_cp_admin):
         # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2844524545/Channel+Partners+Orgs+access+matrix#Users
         cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
         user = cp_user_factory(channel_partner=cp)
@@ -420,6 +439,42 @@ class TestChannelPartnerUserViewSet:
         assert response.status_code == 409
         assert response.data['detail']
         assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
+
+    def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email):
+        email = random_email
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(cp_admin)
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 200
+
+    def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
+                             mock_auth_with_user, arf, org_user_factory, random_email):
+        email = random_email
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        mock_auth_with_user(cp_admin)
+
+        organization = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(email=email, organization=organization)
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 400
+        assert f"User {email} has a role in the channel partner child organization" in response.data['email'][0]
+
 
 
 class TestChannelPartnerNestedViewSet:

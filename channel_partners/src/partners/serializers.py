@@ -378,13 +378,21 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         fields = ['email', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId']
 
     def validate_email(self, value: str):
-        return CloudUser.objects.get_or_create(email=value)[0]
+        user, created = CloudUser.objects.get_or_create(email=value)
+        if created:
+            return user
+        channel_partner = self.context.get('channel_partner')
+        if OrganizationToUser.objects.filter(user=user, organization__channel_partner_id=channel_partner.id).exists():
+            raise exceptions.ValidationError(f"User {user.email} has a role in the channel partner child organization"
+                                             f" and cannot be added to channel partner {channel_partner.name}.")
+        return user
+
 
     def create(self, validated_data):
         user = validated_data.get('user').get('email')
         role = validated_data.get('roleId') or validated_data.get('role')
         title = validated_data.get('title')
-        channel_partner = validated_data.get('channel_partner')
+        channel_partner = self.context.get('channel_partner')
 
         # In case of some situation with multiple user records for same entity
         try:
@@ -460,7 +468,16 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
             return []
 
     def validate_email(self, value: str):
-        return CloudUser.objects.get_or_create(email=value)[0]
+        user, created = CloudUser.objects.get_or_create(email=value)
+        if created:
+            return user
+        organization = self.context.get('organization')
+        if ChannelPartnerToUser.objects.filter(
+                user=user, channel_partner_id=organization.channel_partner_id).exists():
+            raise exceptions.ValidationError(f"User {user.email} has a role in the organization parent "
+                                             f"channel partner and cannot be added to organization "
+                                             f"{organization.name}.")
+        return user
 
     def get_groupRoles(self, obj: CloudUser):
         class GroupRolesSerializer(serializers.Serializer):

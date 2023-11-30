@@ -110,7 +110,7 @@ def org_user_factory(cloud_user_factory, default_organization):
     def factory(email=None, role: UUID | str = 'Organization Administrator', organization=default_organization) -> OrganizationToUser:
         if not email:
             email = f'u-{uuid4()}@networkoptix.com'
-        user = cloud_user_factory(email=email)
+        user = CloudUser.objects.get_or_create(email=email)[0]
         if not isinstance(role, UUID):
             role = OrganizationRole.objects.get(name=role).id
         return OrganizationToUser.objects.get_or_create(

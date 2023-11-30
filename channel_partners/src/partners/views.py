@@ -123,6 +123,7 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     queryset = ChannelPartnerToUser.objects.all().select_related('user').order_by('created_ts')
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.UserFilter
+    _channel_partner = None
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
@@ -138,6 +139,18 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         self.kwargs['email'] = request.user.email
         return self.retrieve(request, *args, **kwargs)
 
+    def get_channel_partner(self):
+        if self._channel_partner:
+            return self._channel_partner
+        m2m_key, val = self.get_related_pair()
+        self._channel_partner = get_object_or_404(ChannelPartner, pk=val)
+        return self._channel_partner
+
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['channel_partner'] = self.get_channel_partner()
+        return context
 
     # def get_object(self):
     #     queryset = self.filter_queryset(self.get_queryset())
@@ -151,19 +164,17 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     def check_permissions(self, request):
         super().check_permissions(request)
         if self.action == 'list':
-            m2m_key, val = self.get_related_pair()
-            channel_partner = get_object_or_404(ChannelPartner, pk=val)
+            channel_partner = self.get_channel_partner()
             self.check_object_permissions(request, channel_partner)
 
     # Only create a user if it does not exist, otherwise just sets the relevant group it belongs to
     def create(self, request, *args, **kwargs):
-        m2m_key, val = self.get_related_pair()
-        channel_partner = get_object_or_404(ChannelPartner, pk=val)
+        channel_partner = self.get_channel_partner()
         self.check_object_permissions(request, channel_partner)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(channel_partner=channel_partner)
+        serializer.save()
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
@@ -640,8 +651,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        if self.detail:
-            context['organization'] = self.get_organization()
+        context['organization'] = self.get_organization()
         return context
 
     @extend_schema(summary='Get user record for the current user', methods=['GET'])
@@ -672,7 +682,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     def create(self, request, *args, **kwargs):
         organization = self.get_organization()
         self.check_object_permissions(request, organization)
-        serializer = self.get_serializer(data=request.data, context=self.get_serializer_context())
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(organization=organization)
         return Response(serializer.data)
