@@ -20,6 +20,7 @@
     "tosRequired": false,
     "layouts": true,
     "layoutsEditable": false,
+    "layoutsAuthorizeCamera": false,
     "layoutsHelper": false,
     "layoutsServers": false,
     "layoutsWebpages": false,

@@ -1406,7 +1406,10 @@ export class NxLayoutGridComponent {
             this.changingLayout = id;
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
-            if (!this.system.permissionManager.permissions$$().editCameras) {
+            if (
+                !this.system.permissionManager.permissions$$().editCameras ||
+                !this.CONFIG.featureFlags.layoutsAuthorizeCamera
+            ) {
                 delete this.additionalErrorMessages.defaultPassword;
                 delete this.additionalErrorMessages.unauthorized;
             }
@@ -1482,7 +1485,10 @@ export class NxLayoutGridComponent {
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
         // TODO: Need to update once granular permissions by camera/resource are setup.
-        if (!system.permissionManager.permissions$$().editCameras) {
+        if (
+            !this.CONFIG.featureFlags.layoutsAuthorizeCamera ||
+            !system.permissionManager.permissions$$().editCameras
+        ) {
             return;
         }
         const defaultPassword = camera.status !== CameraStatus.Unauthorized;

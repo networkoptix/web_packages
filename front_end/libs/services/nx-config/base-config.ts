@@ -190,6 +190,7 @@ const FeatureFlagKeys = [
     'layoutsItemStatus',
     'layoutsChangeResolution',
     'layoutsItemChangeResolution',
+    'layoutsAuthorizeCamera',
     'channelPartners',
     'requestCaching',
     'requestCachingRemoteSync',
