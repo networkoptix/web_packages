@@ -564,8 +564,12 @@ export class NxLayoutGridItemOverlayComponent {
         return this.MENU_ITEMS[this.isRecording$$() ? 'recordingOn' : 'recordingOff'];
     });
 
-    menu$$ = computed(() => {
-        return this.MENU_ITEMS.menu;
+    quickActionsMenu$$ = computed(() => {
+        const type = this.node$$()?.type;
+        if (type && this.menuItemsByType[type]) {
+            return this.MENU_ITEMS.menu;
+        }
+        return undefined;
     });
 
     fullscreenAction$$ = computed(() => {
@@ -636,7 +640,7 @@ export class NxLayoutGridItemOverlayComponent {
         private store: Store,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
-        this.layoutsItemStatus = configService.getConfig().featureFlags.layoutsItemStatus;
+        this.layoutsItemStatus = !!configService.getConfig().featureFlags.layoutsItemStatus;
         this.layoutsEditable = !!configService.getConfig().featureFlags.layoutsEditable;
         this.layoutsItemChangeResolution =
             !!configService.getConfig().featureFlags.layoutsItemChangeResolution;
