@@ -82,8 +82,7 @@ class EmailMessage:
         return match.group(1)
 
     def is_cloud_name_present(self, cloud_name) -> bool:
-        cloud_name = re.escape(cloud_name)
-        pattern = rf'<p.*?>[^<]*{cloud_name}[^<]*</p>'
+        pattern = rf'<p.*?>[^<]*({cloud_name}).*<\/p>'
         return re.search(pattern, self.get_body()) is not None
 
     def _get_links(self):

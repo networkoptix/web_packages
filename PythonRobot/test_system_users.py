@@ -114,27 +114,57 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
 
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
     """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
-    with CloudAccount(get_random_email(sendemail=True)) as tmp_user:
-        tmp_user.activate()
+    tmp_user = CloudAccount(get_random_email(sendemail=True))
+    server.share_with_user(tmp_user, 'viewer', viewer_permissions)
+    owner = server.get_cloud_owner()
+    subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
+    subject = rb.replace_nested_variables(subject)
+    with EmailClient(email_alias=tmp_user.email) as client:
+        email_message = client.wait_for_email_subject(subject)
+    assert email_message.get_button_color(ENV) == rb.THEME_COLOR
+    assert email_message.is_cloud_name_present(rb.PRODUCT_NAME)
+    expected_links = [
+        f'mailto:{owner.email}',
+        rb.SUPPORT_URL,
+        rb.WEBSITE_URL,
+        rb.ENV,
+        f'{rb.ENV}/authorize/register',
+        ]
+    email_message.find_links_in_body(expected_links)
+    # User cannot be deleted unless activated
+    registration_link = email_message.get_register_account_link()
+    with get_chrome() as driver:
+        driver.get(registration_link)
+        register_form = RegisterForm(driver)
+        register_form.first_name_input().input_text("Mark")
+        register_form.last_name_input().input_text("Hamill")
+        register_form.password_input().input_text(password)
+        register_form.terms_and_conditions_checkbox().select()
+        register_form.create_account_button().click()
+        print("PASS")
+    tmp_user.delete_account()
+
+
+def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
+    """email    C41889    cloud    CLOUD-8643    smoke    ci"""
+    with get_chrome() as driver:
+        tmp_user = CloudAccount(get_random_email(sendemail=True))
         server.share_with_user(tmp_user, 'viewer', viewer_permissions)
-        owner = server.get_cloud_owner()
         subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
         subject = rb.replace_nested_variables(subject)
         with EmailClient(email_alias=tmp_user.email) as client:
             email_message = client.wait_for_email_subject(subject)
-        assert email_message.get_button_color(ENV) == rb.THEME_COLOR
-        email_message.is_cloud_name_present(rb.PRODUCT_NAME)
-        expected_links = [
-            f'mailto:{owner.email}',
-            rb.SUPPORT_URL,
-            rb.WEBSITE_URL,
-            rb.ENV,
-            f'{rb.ENV}/authorize/register',
-        ]
-        email_message.find_links_in_body(expected_links)
-        # User cannot be deleted unless activated
-        registration_link = email_message.get_register_account_link()
-        with get_chrome() as driver:
+        link = email_message.get_register_account_link()
+        driver.get(link)
+        try:
+            RegisterForm(driver).email_input_locked().wait_until_visible()
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            # User cannot be deleted unless activated
+            registration_link = email_message.get_register_account_link()
             driver.get(registration_link)
             register_form = RegisterForm(driver)
             register_form.first_name_input().input_text("Mark")
@@ -142,38 +172,8 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
             register_form.password_input().input_text(password)
             register_form.terms_and_conditions_checkbox().select()
             register_form.create_account_button().click()
-        print("PASS")
-
-
-def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
-    """email    C41889    cloud    CLOUD-8643    smoke    ci"""
-    with get_chrome() as driver:
-        with CloudAccount(get_random_email(sendemail=True)) as tmp_user:
-            tmp_user.activate()
-            server.share_with_user(tmp_user, 'viewer', viewer_permissions)
-            subject = rb.INVITED_TO_SYSTEM_EMAIL_SUBJECT_UNREGISTERED.replace("{{message.sharer_name}}", "Mark Hamill")
-            subject = rb.replace_nested_variables(subject)
-            with EmailClient(email_alias=tmp_user.email) as client:
-                email_message = client.wait_for_email_subject(subject)
-            links = email_message.get_register_account_link()
-            driver.get(links)
-            try:
-                RegisterForm(driver).email_input_locked()
-            except Exception:
-                print("FAIL")
-                driver.save_screenshot('error.png')
-                raise
-            else:
-                # User cannot be deleted unless activated
-                registration_link = email_message.get_register_account_link()
-                driver.get(registration_link)
-                register_form = RegisterForm(driver)
-                register_form.first_name_input().input_text("Mark")
-                register_form.last_name_input().input_text("Hamill")
-                register_form.password_input().input_text(password)
-                register_form.terms_and_conditions_checkbox().select()
-                register_form.create_account_button().click()
-                print("PASS")
+            print("PASS")
+        tmp_user.delete_account()
 
 
 def share_with_registered_user_works(server: Mediaserver):

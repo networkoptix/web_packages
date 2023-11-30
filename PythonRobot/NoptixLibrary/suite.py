@@ -334,7 +334,7 @@ class Mediaserver:
             self._container.delete()
 
 
-    def share_with_user(self, user: 'CloudAccount', access_role, permissions):
+    def share_with_user(self, user: 'CloudAccount', access_role: str, permissions: str):
         _auth = [self._cloud_owner.email, self._cloud_owner.password]
         _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
         print(f'MediaServer {self.name} shared with {user.email} as {access_role}.')
@@ -413,9 +413,11 @@ class CloudAccount:
     def activate(self):
         _CLOUD_API.activate_account_via_api(self.email, self.password)
 
-    def _tear_down(self):
+    def delete_account(self):
         _CLOUD_API.delete_account(self.email, self.password, self.get_otp())
 
+    def _tear_down(self):
+        self.delete_account()
 
 class PortNotMapped(Exception):
     def __init__(self, port: int):

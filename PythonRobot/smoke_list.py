@@ -81,7 +81,7 @@ if __name__ == "__main__":
             sets_new_password_and_successfully_logs_in(user)
             check_restore_password_email(user)
 
-        password_is_actually_changed_and_login_works_with_new_password()
+        password_is_actually_changed_and_login_works_with_new_password(cloud_owner)
 
         support_link()
         copyright_link()
