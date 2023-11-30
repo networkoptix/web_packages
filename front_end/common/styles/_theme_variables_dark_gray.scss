@@ -726,7 +726,8 @@ html[data-theme="dark-gray"], .theme-override[data-theme="dark-gray"] {
     --svg-toggle-arrow-color: var(--light17);
     --svg-tab-arrow-color: var(--light5);
     --placeholder-background: var(--dark5);
-    --placeholder-color: #B21A1A;
+    --placeholder-error-color: var(--attention-red_dark);
+    --placeholder-info-color: var(--dark11);
     --no-camera-placeholder-color: var(--light10);
     --sidebar-background: var(--dark4);
     --sidebar-tab-hover: var(--dark6);

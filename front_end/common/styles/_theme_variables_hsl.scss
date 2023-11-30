@@ -212,6 +212,23 @@ html[data-theme-mode="light"][data-theme="hsl"] {
 }
 
 html[data-theme="hsl"] {
+    --new-attention-yellow: hsl(45, 97%, 50%);
+    --new-attention-yellow_light: hsl(45, 97%, 55%);
+    --new-attention-yellow_dark: hsl(45, 100%, 44%);
+    --new-attention-yellow_bg: hsl(50, 75%, 20%);
+    --new-attention-red: hsl(0, 67%, 45%);
+    --new-attention-red_light: hsl(0, 70%, 51%);
+    --new-attention-red_dark: hsl(0, 70%, 39%);
+    --new-attention-red_bg: hsl(0, 68%, 21%);
+    --new-attention-blue: hsl(205, 75%, 50%);
+    --new-attention-blue_light: hsl(205, 75%, 60%);
+    --new-attention-blue_dark: hsl(205, 75%, 40%);
+    --new-attention-blue_bg: hsl(205, 75%, 20%);
+    --new-attention-green: hsl(105, 66%, 34%);
+    --new-attention-green_light: hsl(105, 64%, 40%);
+    --new-attention-green_dark: hsl(106, 59%, 28%);
+    --new-attention-green_bg: hsl(105, 66%, 21%);
+
     body {
         background-color: var(--new-body-bg);
         color : #A5B7C0;
@@ -897,6 +914,8 @@ html[data-theme="hsl"] {
     --no-systems-description-color: var(--dark17);
 
     /* Layouts */
+    --placeholder-error-color: var(--new-attention-red_dark);
+    --placeholder-info-color: var(--new-dark11);
 
     --tree-locked-icon: var(--new-light4);
 

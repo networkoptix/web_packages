@@ -118,4 +118,21 @@
 	@include generateVarAndRgb(--yellow-d1, native.$yellow_d1);
 	@include generateVarAndRgb(--yellow-d2-lighter, native.$yellow_d2_lighter);
 	@include generateVarAndRgb(--yellow-d2, native.$yellow_d2);
+
+	@include generateVarAndRgb(--attention-yellow, native.$attention-yellow);
+	@include generateVarAndRgb(--attention-yellow_light, native.$attention-yellow_light);
+	@include generateVarAndRgb(--attention-yellow_dark, native.$attention-yellow_dark);
+	@include generateVarAndRgb(--attention-yellow_bg, native.$attention-yellow_bg);
+	@include generateVarAndRgb(--attention-red, native.$attention-red);
+	@include generateVarAndRgb(--attention-red_light, native.$attention-red_light);
+	@include generateVarAndRgb(--attention-red_dark, native.$attention-red_dark);
+	@include generateVarAndRgb(--attention-red_bg, native.$attention-red_bg);
+	@include generateVarAndRgb(--attention-blue, native.$attention-blue);
+	@include generateVarAndRgb(--attention-blue_light, native.$attention-blue_light);
+	@include generateVarAndRgb(--attention-blue_dark, native.$attention-blue_dark);
+	@include generateVarAndRgb(--attention-blue_bg, native.$attention-blue_bg);
+	@include generateVarAndRgb(--attention-green, native.$attention-green);
+	@include generateVarAndRgb(--attention-green_light, native.$attention-green_light);
+	@include generateVarAndRgb(--attention-green_dark, native.$attention-green_dark);
+	@include generateVarAndRgb(--attention-green_bg, native.$attention-green_bg);
 }

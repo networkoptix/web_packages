@@ -461,13 +461,23 @@ h2.auto-save-overlay {
 
         h3 {
             text-align: center;
-            color: var(--placeholder-color) !important;
+            color: var(--placeholder-error-color) !important;
         }
 
         h4 {
             text-align: center;
             width: 100%;
-            color: var(--placeholder-color) !important;
+            color: var(--placeholder-error-color) !important;
+        }
+
+        &.not-supported {
+            h3,
+            h4 {
+                color: var(--placeholder-info-color) !important;
+            }
+            svg path {
+                fill: var(--placeholder-info-color);
+            }
         }
     }
 }

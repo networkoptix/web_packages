@@ -461,6 +461,9 @@
                                                         )
                                                 "
                                                 [ngClass]="{
+                                                    'not-supported':
+                                                        assertResourceOfType.webpage(itemDetail) ||
+                                                        assertResourceOfType.iodevice(itemDetail),
                                                     'has-action':
                                                         assertResourceOfType.camera(itemDetail) &&
                                                         editItems$$() &&
