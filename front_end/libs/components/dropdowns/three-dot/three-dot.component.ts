@@ -3,7 +3,6 @@ import { Component, Input, forwardRef } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -35,8 +34,8 @@ export class NxThreeDotDropdown extends BaseDropdown {
     @Input() name: string;
     @Input() componentId: string = 'three-dot-menu';
 
-    constructor(configService: NxConfigService) {
-        super(configService);
+    constructor() {
+        super();
     }
 
     change(item: ActionItems): void {

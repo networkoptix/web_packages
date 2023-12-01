@@ -57,7 +57,6 @@ import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import { MutationType } from '@services/param-state/param-state.types';
 import { Layout } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
@@ -214,7 +213,6 @@ export class NxLayoutGridTreeComponent {
     ServerStats: ServerStats;
     LANG = staticLang;
     ACTIONS = staticLang.layouts.treeActions;
-    CONFIG: IConfig = nxConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
     readonly RESOURCE_TYPE = ResourceType;
 
@@ -225,7 +223,7 @@ export class NxLayoutGridTreeComponent {
         public tourService: TourService,
         @Inject(WINDOW) public window: Window,
     ) {
-        if (this.CONFIG.featureFlags.layoutsTimeline) {
+        if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
     }
@@ -282,7 +280,7 @@ export class NxLayoutGridTreeComponent {
             | MenuItem<ResourceNodeMap[key]>[]
             | MenuItemsFactoryCallback<ResourceNodeMap[key]>;
     }> = {
-        [ResourceType.LAYOUTS]: !this.CONFIG.featureFlags.layoutsEditable
+        [ResourceType.LAYOUTS]: !nxConfig.featureFlags.layoutsEditable
             ? []
             : [
                   {
@@ -313,7 +311,7 @@ export class NxLayoutGridTreeComponent {
                   },
               ],
         [ResourceType.LAYOUT]: node =>
-            !this.CONFIG.featureFlags.layoutsEditable
+            !nxConfig.featureFlags.layoutsEditable
                 ? this.OPEN_WINDOW_ACTIONS
                 : [
                       ...this.OPEN_WINDOW_ACTIONS,
@@ -377,7 +375,7 @@ export class NxLayoutGridTreeComponent {
                                 action: () => this.layoutStateService.shareLayout(node.details),
                             },
                   ].filter(i => i),
-        [ResourceType.CAMERA]: !this.CONFIG.featureFlags.layoutsEditable
+        [ResourceType.CAMERA]: !nxConfig.featureFlags.layoutsEditable
             ? this.OPEN_WINDOW_ACTIONS
             : [
                   ...this.OPEN_WINDOW_ACTIONS,
@@ -399,7 +397,7 @@ export class NxLayoutGridTreeComponent {
                         ]
                       : []),
               ].filter(Boolean),
-        [ResourceType.SERVER]: !this.CONFIG.featureFlags.layoutsEditable
+        [ResourceType.SERVER]: !nxConfig.featureFlags.layoutsEditable
             ? this.OPEN_WINDOW_ACTIONS
             : [
                   ...this.OPEN_WINDOW_ACTIONS,

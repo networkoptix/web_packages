@@ -4,7 +4,6 @@ import { Router, RouterModule } from '@angular/router';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
@@ -28,8 +27,8 @@ export class NxActiveSystemDropdown extends BaseDropdown {
         view: false,
     };
 
-    constructor(configService: NxConfigService, private router: Router) {
-        super(configService);
+    constructor(private router: Router) {
+        super();
     }
 
     updateActiveByUri(): void {

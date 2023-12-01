@@ -14,7 +14,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
-import type { IConfig } from '@services/nx-config/config-types';
 import { OauthService } from '@services/oauth.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
@@ -40,7 +39,7 @@ import { Account } from './account';
  */
 @Injectable()
 export abstract class BaseAccount {
-    protected CONFIG: IConfig = nxConfig;
+    protected CONFIG = nxConfig;
     protected window: Window = windowFactory();
     protected document: Document = this.window.document;
     protected LANG = staticLang;

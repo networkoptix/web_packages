@@ -82,7 +82,7 @@ import { useJsonRpc } from './mediaserver-apis/utils/use-json-rpc';
 import { withSystemBusUpdates } from './mediaserver-apis/utils/with-system-bus-updates';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
-import type { IConfig } from './nx-config/config-types';
+import { nxConfig } from './nx-config/config';
 import type {
     AggregatedUsers,
     ViewMediaServersAndCameras,
@@ -125,7 +125,6 @@ interface TokenResponse {
 export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConnection {
     readonly version: number;
     public readonly requiresPassword: boolean = false;
-    private readonly cookieLoginSupport: boolean;
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
@@ -142,7 +141,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     constructor(
         http: HttpClient,
-        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -156,7 +154,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     ) {
         super(
             http,
-            configService,
             location,
             userEmail,
             systemId,
@@ -170,7 +167,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
         this.version = 5.0;
         this.injector = injector;
-        this.cookieLoginSupport = this.CONFIG.featureFlags.restCookieLogin;
     }
 
     private get storageService() {
@@ -190,7 +186,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public get accessToken(): string {
-        return this.CONFIG.featureFlags.useAuthenticationInterceptor
+        return nxConfig.featureFlags.useAuthenticationInterceptor
             ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true`
             : this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
@@ -422,7 +418,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             headers = headers.set(this.token, accessToken || this._vmsToken || '');
         }
         if (!environment.isLocal && accessToken) {
-            if (!this.cookieLoginSupport) {
+            if (!nxConfig.featureFlags.restCookieLogin) {
                 headers = headers.set('x-runtime-guid', accessToken); // Adding this for CLOUD-10535. Safari keeps removing the auth headers.
             }
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
@@ -503,7 +499,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             url = `/web${url}`;
         }
         const withCredentials =
-            this.cookieLoginSupport &&
+            nxConfig.featureFlags.restCookieLogin &&
             url.includes('/rest/v1/login/sessions') &&
             url.includes('?setCookie=true');
         const fullUrl = `${this.urlBase}${url}`;

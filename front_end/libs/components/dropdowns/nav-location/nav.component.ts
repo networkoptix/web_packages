@@ -3,7 +3,6 @@ import { Component, Input } from '@angular/core';
 
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 
 import { BaseDropdown } from '../injDropdown';
 
@@ -17,8 +16,8 @@ import { BaseDropdown } from '../injDropdown';
 export class NxNavLocationDropdown extends BaseDropdown {
     @Input() location: any = {};
 
-    constructor(configService: NxConfigService) {
-        super(configService);
+    constructor() {
+        super();
     }
 
     hide() {

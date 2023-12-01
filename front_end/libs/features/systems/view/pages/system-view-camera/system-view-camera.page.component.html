@@ -209,7 +209,11 @@
                 </div>
             </ng-template>
             <nx-timeline-selection-action-panel
-                *ngIf="archiveSelectionEnabled && ux.state.isTimelineShown && canExportArchive$$()"
+                *ngIf="
+                    CONFIG.featureFlags.archiveSelection &&
+                    ux.state.isTimelineShown &&
+                    canExportArchive$$()
+                "
             ></nx-timeline-selection-action-panel>
         </div>
 

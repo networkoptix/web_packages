@@ -78,7 +78,7 @@ require('what-input');
                 <ng-template #cookieBanner></ng-template>
                 <router-outlet></router-outlet>
             </div>
-            <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
+            <nx-nav-footer *ngIf="CONFIG.featureFlags.newHeader"></nx-nav-footer>
         </div>
         <ng-container *ngIf="!reauthorizing">
             <nx-pre-loader
@@ -97,7 +97,6 @@ export class AppComponent implements OnInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
     newSystem: boolean;
-    newHeader: boolean = false;
     loading: boolean;
     reauthorizing: boolean;
     headerHeight: number;
@@ -134,7 +133,7 @@ export class AppComponent implements OnInit {
         const { NxToastsContainer } = await import('@components/toast-container/toast.component');
         this.appToast.createComponent(NxToastsContainer);
 
-        if (this.CONFIG.featureFlags.cookieBanner) {
+        if (nxConfig.featureFlags.cookieBanner) {
             await idle();
             const { NxCookieBannerComponent } = await import(
                 '@components/cookie-banner/cookie-banner.component'
@@ -163,7 +162,6 @@ export class AppComponent implements OnInit {
         private sessionService: NxSessionService,
     ) {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
 
         const url = new URL(this.window.location.href.replace('#/', ''));
         const auth = url.searchParams.get('auth');
@@ -267,7 +265,7 @@ export class AppComponent implements OnInit {
             this.localStorageService.store('resetServer', false);
             this.dialogsService.wizard();
             return;
-        } else if (this.CONFIG.featureFlags.newHeader) {
+        } else if (nxConfig.featureFlags.newHeader) {
             router.events.subscribe(event => {
                 if (event instanceof NavigationEnd) {
                     this.appStateService.footerVisibility =
@@ -292,7 +290,7 @@ export class AppComponent implements OnInit {
         }
 
         if (!environment.isLocal && !this.CONFIG.isInIframe && !this.window.navigator.webdriver) {
-            if (this.CONFIG.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
+            if (nxConfig.featureFlags.fullStory && this.CONFIG.cloudMonitoring.fullStory) {
                 try {
                     FullStory.init({ orgId: this.CONFIG.cloudMonitoring.fullStory });
                     // eslint-disable-next-line dot-notation,@typescript-eslint/dot-notation

@@ -4,8 +4,7 @@ import { ActivatedRoute, RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { BehaviorSubject } from 'rxjs';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NgChanges } from '@utils/ng-changes';
 
 @UntilDestroy()
@@ -24,15 +23,12 @@ export class NxPaginatorComponent {
 
     @Output() onChange = new EventEmitter<number>();
 
-    CONFIG: IConfig;
     showExperimental: boolean = false;
     page$ = new BehaviorSubject(1);
     pages$ = new BehaviorSubject<number[]>([]);
     numPages$ = new BehaviorSubject(0);
 
-    constructor(configService: NxConfigService, private route: ActivatedRoute) {
-        this.CONFIG = configService.config;
-
+    constructor(private route: ActivatedRoute) {
         this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.page$.next(parseInt(params.page) || 1);
         });
@@ -99,9 +95,9 @@ export class NxPaginatorComponent {
     ngOnChanges(changes: NgChanges<NxPaginatorComponent>): void {
         if (changes.numPages && changes.numPages.previousValue !== changes.numPages.currentValue) {
             // TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
-            if (this.CONFIG?.featureFlags.paginatorExperimental) {
+            if (nxConfig.featureFlags.paginatorExperimental) {
                 this.showExperimental =
-                    this.CONFIG.featureFlags.paginatorExperimental &&
+                    nxConfig.featureFlags.paginatorExperimental &&
                     changes.numPages.currentValue === 5;
             }
             // *************************************************************************************

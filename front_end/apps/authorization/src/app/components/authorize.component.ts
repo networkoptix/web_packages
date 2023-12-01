@@ -28,8 +28,7 @@ import {
     AuthorizeParams,
     AuthenticateResp,
 } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ModuleInformationReply } from '@services/system-api.types';
@@ -54,10 +53,9 @@ const AUTH_WINDOW_HEIGHT = 480;
     encapsulation: ViewEncapsulation.None,
 })
 export class NxAuthorizeComponent implements OnInit, OnDestroy {
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     AuthorizeState = AuthorizeState;
-    newHeader = false;
 
     // content = {};
     footerItems: { name: string; url: string }[];
@@ -146,7 +144,6 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         private httpClient: HttpClient,
         private route: ActivatedRoute,
         private authService: AuthService,
@@ -160,10 +157,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
         private themeService: NxThemeService,
         private cookieService: CookieService,
         @Inject(WINDOW) public window: Window,
-    ) {
-        this.CONFIG = configService.getConfig();
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
-    }
+    ) {}
 
     private verifyRedirectUrlHelper(systemId: string): Observable<boolean> {
         const systemUrl = this.CONFIG.trafficRelayHost.replace('{systemId}', systemId);

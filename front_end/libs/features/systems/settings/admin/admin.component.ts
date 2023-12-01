@@ -30,8 +30,7 @@ import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { MergeInfo } from '@services/system-api.types';
@@ -57,11 +56,9 @@ interface Settings {
 export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input({ transform: booleanAttribute }) advanced: boolean;
     @Input() system: NxSystem;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     readonly environment = environment;
     LANG = staticLang;
-
-    ownershipTransferEnabled: boolean = false;
 
     user: Account;
     mergeTargetSystems: NxSystemInfo[];
@@ -121,7 +118,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     /** Owner (current user) can send a new ownership transfer request */
     get canSendTransferRequest(): boolean {
         return (
-            this.ownershipTransferEnabled &&
+            nxConfig.featureFlags.cloudOwnershipTransfer &&
             this.system.permissionManager.isOwner$$() &&
             this.system.useRest &&
             !this.transferInfo
@@ -183,7 +180,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     constructor(
-        configService: NxConfigService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
@@ -199,10 +195,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         @Inject(WINDOW) private window: Window,
         private applyService: NxApplyService,
     ) {
-        this.CONFIG = configService.getConfig();
-
-        this.ownershipTransferEnabled = configService.flagsEnabled('cloudOwnershipTransfer');
-
         /* Going directly to another system does not trigger lifecyle methods or destroy the
         apply component, so we hide the component when detecting navigation and the other system
         restores the component when it finishes loading. */
@@ -268,7 +260,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
 
                 // TODO: In develop add a store for transfers.
-                if (this.ownershipTransferEnabled && !environment.isLocal) {
+                if (nxConfig.featureFlags.cloudOwnershipTransfer && !environment.isLocal) {
                     this.cloudApiService.getTransfers().subscribe(res => {
                         this.transferInfo = res.find(
                             transfer => transfer.systemId === this.system.id,
@@ -338,7 +330,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         this.checkCloudProcess = this.processService.createProcess(
             () => {
                 const startUrl = this.router.url;
-                return this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable
+                return nxConfig.featureFlags.cloudStorage && this.system.cloudStorageCapable
                     ? this.cloudApiService
                           .getCloudStorageUsage(this.system.id)
                           .then(_ => Promise.reject())
@@ -507,7 +499,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         );
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
-        const mergeDialog = this.CONFIG.featureFlags.mergeRefactorEnabled
+        const mergeDialog = nxConfig.featureFlags.mergeRefactorEnabled
             ? this.dialogs.mergeRefactored
             : this.dialogs.merge;
         return mergeDialog({

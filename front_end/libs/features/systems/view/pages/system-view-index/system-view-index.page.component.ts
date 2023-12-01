@@ -21,8 +21,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import type { NxSystem } from '@services/system.service/system';
 import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
@@ -53,14 +52,14 @@ const MAX_OUT_OF_SYNC_TIME = 60000; // ms
     styleUrls: ['system-view-index.page.component.scss'],
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
-    @HostBinding('class.new-header') newHeader: boolean;
+    @HostBinding('class.new-header') newHeaderFlag = nxConfig.featureFlags.newHeader;
 
     systemId: string;
     @Input({ required: true }) system: NxSystem;
     selectedCameraId: string;
     mediaservers: ViewMediaServer[];
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     private fullscreenMode: boolean;
     private fullscreenToggle: boolean;
@@ -102,7 +101,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         private self: ElementRef<HTMLElement>,
         private renderer: Renderer2,
         private router: Router,
@@ -117,11 +115,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         @Inject(WINDOW) private window: Window,
         private toastService: NxToastService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
-        this.newHeader = this.CONFIG.featureFlags.newHeader ?? false;
         effect(() => {
             const state = this.vms.state$$();
             if (state.mode === VMS_MODE.CAMERA_SELECTED) {

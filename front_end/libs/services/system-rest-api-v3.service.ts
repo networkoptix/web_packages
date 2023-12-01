@@ -19,7 +19,6 @@ import {
 import { defaultHashFunction, memoizeAsync } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
-import { IConfig } from './nx-config/config-types';
 import type { AggregatedUsers } from './system-api.aggregated-types';
 import { ChangedIdReturned, UnauthorizedCallback } from './system-api.types';
 import { NxSystemRestAPI2 } from './system-rest-api-v2.service';
@@ -30,7 +29,6 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
 
     constructor(
         http: HttpClient,
-        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -44,7 +42,6 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
     ) {
         super(
             http,
-            configService,
             location,
             userEmail,
             systemId,

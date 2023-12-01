@@ -21,11 +21,15 @@
         </button>
     </ng-template>
 
-    <ng-template *ngIf="inHeader && newHeader; then newHeaderLangDropdown"></ng-template>
-    <ng-template *ngIf="inFooter && newHeader; then newFooterLangDropdown"></ng-template>
+    <ng-template
+        *ngIf="inHeader && CONFIG.featureFlags.newHeader; then newHeaderLangDropdown"
+    ></ng-template>
+    <ng-template
+        *ngIf="inFooter && CONFIG.featureFlags.newHeader; then newFooterLangDropdown"
+    ></ng-template>
     <div *ngIf="!isLoading$$() || short || inHeader || inFooter; else loadingButton">
         <button
-            *ngIf="!newHeader || (!inHeader && !inFooter)"
+            *ngIf="!CONFIG.featureFlags.newHeader || (!inHeader && !inFooter)"
             class="btn btn-dropdown-toggle dropdown-toggle"
             (click)="show = !show"
             type="button"
@@ -33,13 +37,13 @@
             data-toggle="dropdown"
         >
             <span
-                *ngIf="!newHeader"
+                *ngIf="!CONFIG.featureFlags.newHeader"
                 class="lang-sm"
                 data-testid="activeLang"
                 lang="{{ activeLanguage?.language }}"
             ></span>
             <span
-                *ngIf="newHeader"
+                *ngIf="CONFIG.featureFlags.newHeader"
                 id="activeLang"
                 class="lang-code"
                 >{{ activeLanguage?.name.slice(0, 2) | uppercase }}</span
@@ -55,7 +59,7 @@
     </div>
     <ul
         class="dropdown-menu"
-        [ngClass]="{ 'new-header': newHeader }"
+        [ngClass]="{ 'new-header': CONFIG.featureFlags.newHeader }"
         *ngIf="languages?.length <= 12"
         [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
@@ -71,7 +75,7 @@
                 (click)="show = false; change(lang.language)"
                 [ngClass]="{ selected: lang.language === activeLanguage.language }"
             >
-                <span *ngIf="!newHeader">
+                <span *ngIf="!CONFIG.featureFlags.newHeader">
                     <span
                         class="lang-sm"
                         attr.data-testid="{{ lang.name }}"
@@ -79,7 +83,7 @@
                     ></span>
                     <span>{{ lang.name }}</span>
                 </span>
-                <span *ngIf="newHeader">
+                <span *ngIf="CONFIG.featureFlags.newHeader">
                     <span class="lang-code">{{ lang.name.slice(0, 2) | uppercase }}</span>
                     <span>{{ lang.name }}</span>
                 </span>
@@ -89,7 +93,7 @@
 
     <ul
         class="dropdown-menu multi-column columns-2"
-        [ngClass]="{ 'new-header': newHeader, 'in-footer': inFooter }"
+        [ngClass]="{ 'new-header': CONFIG.featureFlags.newHeader, 'in-footer': inFooter }"
         *ngIf="languages?.length > 12"
         [nxArrowNav]="show"
         [style.display]="show ? 'inline-block' : 'none'"
@@ -130,7 +134,7 @@
     #langItem
     let-lang="lang"
 >
-    <span *ngIf="!newHeader">
+    <span *ngIf="!CONFIG.featureFlags.newHeader">
         <span
             class="lang-sm"
             attr.data-testid="{{ lang.language }}"
@@ -139,7 +143,7 @@
         <span>{{ lang.name }}</span>
     </span>
     <span
-        *ngIf="newHeader"
+        *ngIf="CONFIG.featureFlags.newHeader"
         id="{{ lang.language }}"
         lang="{{ lang.language }}"
     >

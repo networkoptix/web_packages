@@ -25,8 +25,7 @@ import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { FpsMeterService } from '@services/fps-meter.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import type { Ec2RecordedTimePeriodsResp } from '@services/system-api.types';
 import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
@@ -78,7 +77,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     camera: ViewCamera;
     @Input({ required: true }) system: NxSystem;
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     fullscreenMode: boolean;
     showElementsInFSM: boolean;
@@ -144,7 +143,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     }
 
     constructor(
-        configService: NxConfigService,
         deviceService: DeviceDetectorService,
         private renderer: Renderer2,
         private location: Location,
@@ -162,15 +160,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) private window: Window & typeof globalThis,
     ) {
-        this.CONFIG = configService.getConfig();
-
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.isMobile = deviceService.isMobile() || deviceService.isTablet();
         this.isChrome = deviceService.browser === 'Chrome';
         this.isMobileSafari = deviceService.browser === 'Safari' && deviceService.isMobile();
-
-        this.archiveSelectionEnabled = configService.flagsEnabled('archiveSelection');
 
         this.isLocal = environment.isLocal;
         effect(() => {
@@ -378,8 +372,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     toggleCameraDetails(newValue: boolean = !this.cameraDetailsShown): void {
         this.cameraDetailsShown = newValue;
     }
-
-    readonly archiveSelectionEnabled: boolean;
 
     private unListenMouseMove: () => void;
     private unListenTouch: () => void;

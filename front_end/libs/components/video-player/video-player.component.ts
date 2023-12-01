@@ -2,8 +2,6 @@
 import { Component, ElementRef, EventEmitter, HostBinding, Input, Output, TemplateRef, ViewChild, booleanAttribute } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager, StreamOrUrl } from '@openLibs/webrtc-stream-manager';
@@ -12,6 +10,7 @@ import staticLang from '@language_static';
 import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
+import { nxConfig } from '@services/nx-config/config';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -73,7 +72,7 @@ export class NxVideoPlayerComponent {
     static POSTER_RETRIES = 5
     static POSTER_INTERVAL = 5
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     playerId: string;
     offset = 0;
 
@@ -113,11 +112,9 @@ export class NxVideoPlayerComponent {
     }
 
     constructor(
-        configService: NxConfigService,
         private appStateService: NxAppStateService,
         private elRef: ElementRef,
     ) {
-        this.CONFIG = configService.config;
         this.playerId = uuid();
     }
 

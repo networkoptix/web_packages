@@ -162,7 +162,7 @@
         class="auth-footer"
     >
         <nx-footer
-            *ngIf="!newHeader; else newFooter"
+            *ngIf="!CONFIG.featureFlags.newHeader; else newFooter"
             [oauth]="true"
             [center]="true"
         ></nx-footer>

@@ -68,8 +68,7 @@ import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import {
@@ -687,11 +686,10 @@ export class NxLayoutGridComponent {
     );
 
     LANG = staticLang;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
 
     constructor(
-        configService: NxConfigService,
         private cd: ChangeDetectorRef,
         private dialogsService: NxDialogsService,
         private toastService: NxToastService,
@@ -702,8 +700,7 @@ export class NxLayoutGridComponent {
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
     ) {
-        this.CONFIG = configService.config;
-        if (this.CONFIG.featureFlags.layoutsTimeline) {
+        if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
 
@@ -1118,7 +1115,7 @@ export class NxLayoutGridComponent {
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
         locked:
-            (!this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo) ||
+            (!nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo) ||
             layout.locked,
         renderConfig: this.generateRenderConfig(layout),
         settings: this.SETTINGS_CONFIG,
@@ -1453,7 +1450,7 @@ export class NxLayoutGridComponent {
         if (item) {
             const { title, message, footer } = this.LANG.layouts.removeItem;
             update =
-                !this.CONFIG.featureFlags.layoutsRemoveItemDialog ||
+                !nxConfig.featureFlags.layoutsRemoveItemDialog ||
                 (await this.dialogsService.confirm({
                     title,
                     message: {

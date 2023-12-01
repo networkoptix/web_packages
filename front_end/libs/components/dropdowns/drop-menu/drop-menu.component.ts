@@ -14,7 +14,6 @@ import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxUriService } from '@services/uri.service';
 import { NgChanges } from '@utils/ng-changes';
@@ -57,13 +56,12 @@ export class NxDropMenu extends BaseDropdown {
 
     constructor(
         translateService: TranslateService,
-        configService: NxConfigService,
         private router: Router,
         private uriService: NxUriService,
         public headerService: NxHeaderService,
         private menusService: NxMenusService,
     ) {
-        super(configService);
+        super();
         this.menuNodes$ = combineLatest([
             this.menusService.currentSystemNode$,
             this.headerService.nodes$,

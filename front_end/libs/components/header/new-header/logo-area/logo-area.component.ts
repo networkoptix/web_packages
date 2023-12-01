@@ -13,8 +13,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
@@ -43,7 +42,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
     readonly environment = environment;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     loggedIn: boolean;
     LANG = staticLang;
     logoState = logoAreaState.LOGO;
@@ -60,11 +59,9 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     constructor(
         public headerService: NxHeaderService,
         systemsService: NxSystemsService,
-        configService: NxConfigService,
         private store: Store,
         private cookieService: CookieService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.headerService.currentLocation$
             .pipe(untilDestroyed(this))
             .subscribe(currentLocation => {
@@ -97,7 +94,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         }
 
-        return this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
+        return nxConfig.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
             ? '/dashboard'
             : '/';
     }

@@ -28,8 +28,7 @@ import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { NxDbService } from '@services/db.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -77,7 +76,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         () => this.system.permissionManager.permissions$$().editUsers,
     );
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     plugin;
     content: Content = { base: '', selectedSection: '', level1: [] };
@@ -196,7 +195,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         private route: ActivatedRoute,
         private accountService: NxAccountService,
         private pageService: NxPageService,
@@ -214,8 +212,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         @Inject(LOCALE_ID) private locale: string,
         private db: NxDbService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         this.setupDefaults();
 
         effect(() => {
@@ -444,7 +440,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         !environment.isLocal
                     ) {
                         this.uriService.updateURI(
-                            this.CONFIG.featureFlags.dashboardRedirect ||
+                            nxConfig.featureFlags.dashboardRedirect ||
                                 'beta' in this.route.snapshot.queryParams
                                 ? '/dashboard'
                                 : '/systems',
@@ -863,7 +859,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     getUserMenuAdditionalLabel(user: NxUser): Translatable {
         let additionalLabel: Translatable = this.LANG.accessRoles.Custom.label;
-        if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
+        if (this.system.version > 5.1 && nxConfig.featureFlags.usersWithGroups) {
             if (user.groupIds.length === 0 && user.attributes === 'readonly') {
                 additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
             } else if (user.groupIds.length === 1) {

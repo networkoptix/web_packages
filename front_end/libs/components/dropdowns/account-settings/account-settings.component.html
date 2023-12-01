@@ -1,12 +1,12 @@
 <div
     class="dropdown"
     #dropdown
-    [ngClass]="{ show: show, 'new-header': newHeader }"
+    [ngClass]="{ show: show, 'new-header': CONFIG.featureFlags.newHeader }"
     (nxClickElsewhere)="show = false"
 >
     <button
         class="inset btn btn-dropdown-toggle dropdown-toggle-transparent dropdown-toggle"
-        *ngIf="!newHeader; else newHeaderButton"
+        *ngIf="!CONFIG.featureFlags.newHeader; else newHeaderButton"
         [ngClass]="{ 'small-icon-overrides': small }"
         (resize)="buttonWidth.next($event.width)"
         (click)="show = !show"

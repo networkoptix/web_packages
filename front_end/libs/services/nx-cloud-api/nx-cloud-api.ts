@@ -23,7 +23,6 @@ import { startWithCache } from '@utils/start-with-cached';
 
 import { Account, CloudAccount } from '../account.service/account';
 import { nxConfig } from '../nx-config/config';
-import type { IConfig } from '../nx-config/config-types';
 import { NxUriCacheService } from '../uri-cache.service';
 
 import { ChannelPartnersApi } from './cloud-services/channel-partners/channel-partners-api';
@@ -125,7 +124,8 @@ const swClear =
     providedIn: 'root',
 })
 export class NxCloudApiService {
-    private CONFIG: IConfig = nxConfig;
+    private CONFIG = nxConfig;
+    private kbInstantSearchFlag = nxConfig.featureFlags.kbInstantSearch;
     public currentAccount: Account; // Used by staffSWBypass decorator
     public swBypass = false;
     public swBypassTimeout: ReturnType<typeof setTimeout>;
@@ -1018,7 +1018,7 @@ export class NxCloudApiService {
 
     @staffSWBypass
     documentationInstantSearch(name, query, options?: Partial<t.InstantSearchOptions>) {
-        if (!this.CONFIG.featureFlags.kbInstantSearch) {
+        if (!this.kbInstantSearchFlag) {
             return throwError(new Error('Instant search feature not enabled'));
         }
         const params = mapValuesToStrings({ query, ...options });

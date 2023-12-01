@@ -43,7 +43,7 @@ const lazyRoutes: Routes = [
         canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard, SystemGuard, TwofaGuard],
         data: {
-            flags: FeatureFlagStrings.layouts,
+            flag: FeatureFlagStrings.layouts,
         },
     },
     {
@@ -55,7 +55,7 @@ const lazyRoutes: Routes = [
         canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard],
         data: {
-            flags: FeatureFlagStrings.themeGenerator,
+            flag: FeatureFlagStrings.themeGenerator,
         },
     },
     {
@@ -84,7 +84,7 @@ const lazyRoutes: Routes = [
         canActivate: [() => nxConfig.featureFlags.channelPartners],
         canLoad: [FeatureGuardMatch],
         data: {
-            flags: FeatureFlagStrings.systemGroups,
+            flag: FeatureFlagStrings.systemGroups,
         },
     },
     {
@@ -156,7 +156,7 @@ const lazyRoutes: Routes = [
         canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard],
         data: {
-            flags: FeatureFlagStrings.customClients,
+            flag: FeatureFlagStrings.customClients,
         },
     },
     {
@@ -248,8 +248,7 @@ const lazyRoutes: Routes = [
         canLoad: [FeatureGuardMatch],
         canActivate: [AuthGuard],
         data: {
-            flags: FeatureFlagStrings.dashboard,
-            override: 'devServer',
+            flag: FeatureFlagStrings.dashboard,
         },
         loadChildren: () =>
             import('@pages/dashboard/dashboard.module').then(m => m.NxDashboardModule),

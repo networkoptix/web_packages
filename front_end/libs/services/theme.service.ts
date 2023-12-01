@@ -7,13 +7,13 @@ import { SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
-import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
 import { AuthorizeParams } from './nx-cloud-api/nx-cloud-api.types';
+import { nxConfig } from './nx-config/config';
 
 enum AvailableThemes {
     auto = 'auto',
@@ -27,7 +27,7 @@ enum AvailableThemes {
     providedIn: 'root',
 })
 export class NxThemeService {
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     darkThemeMq: MediaQueryList;
     themeSelected: string;
     userTheme: string;
@@ -38,7 +38,6 @@ export class NxThemeService {
     public availThemes = AvailableThemes;
 
     constructor(
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private sessionStorage: SessionStorageService,
         private sessionService: NxSessionService,
@@ -47,9 +46,8 @@ export class NxThemeService {
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) protected document: Document,
     ) {
-        this.CONFIG = configService.getConfig();
         this.viewType = this.route.snapshot.queryParams.view_type || 'web';
-        if (!this.CONFIG.featureFlags.themesEnabled) {
+        if (!nxConfig.featureFlags.themesEnabled) {
             return;
         }
         this.themeCustomProperty = this.cloudApi.customAccountPropertyFactory('theme', {
@@ -91,7 +89,7 @@ export class NxThemeService {
             .subscribe(async (loginState: string) => {
                 if (this.viewType !== 'web') {
                     this.themeSelected = this.CONFIG.themeConfig.dark;
-                } else if (loginState && this.CONFIG.featureFlags.themesEnabled) {
+                } else if (loginState && nxConfig.featureFlags.themesEnabled) {
                     await this.themeCustomProperty.get(false, true).then(
                         result => {
                             this.themeSelected = result.theme || this.CONFIG.themeConfig.default;
@@ -135,7 +133,7 @@ export class NxThemeService {
             return;
         }
 
-        if (!this.CONFIG.featureFlags.themesEnabled) {
+        if (!nxConfig.featureFlags.themesEnabled) {
             this.themeSelected = 'light';
             await this.setTheme(this.themeSelected, undefined);
             return;
@@ -183,7 +181,7 @@ export class NxThemeService {
             this.darkThemeMq = this.window.matchMedia('(prefers-color-scheme: dark)');
         }
         const docTheme = this.window.document.documentElement.getAttribute('data-theme');
-        let { themesEnabled } = this.CONFIG.featureFlags;
+        let { themesEnabled } = nxConfig.featureFlags;
         if (username === 'setup' || this.viewType !== 'web') {
             themesEnabled = true;
         }

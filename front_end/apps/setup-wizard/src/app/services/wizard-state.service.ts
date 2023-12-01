@@ -11,7 +11,6 @@ import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-intercept
 import staticLang from '@language_static';
 import { Setting, SettingsConfig } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import {
     ModuleInformationReply,
     NormalResponse,
@@ -129,7 +128,6 @@ export class WizardStateService {
         return this.wizardFSM[this.currentState].title || '';
     }
 
-    CONFIG: IConfig;
     LANG = staticLang;
     server: NxSystemRestAPI3;
 
@@ -948,7 +946,6 @@ export class WizardStateService {
         const unauthorizedCallback = (): Promise<string> => Promise.resolve('');
         const serverApi = new NxSystemRestAPI3(
             this.http,
-            nxConfig,
             null,
             null,
             null,

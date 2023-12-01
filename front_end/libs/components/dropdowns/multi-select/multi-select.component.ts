@@ -11,7 +11,6 @@ import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -74,8 +73,8 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
     private innerValue: MultiSelectItem['id'][] = [];
 
-    constructor(configService: NxConfigService) {
-        super(configService);
+    constructor() {
+        super();
     }
 
     clearSelected(): void {

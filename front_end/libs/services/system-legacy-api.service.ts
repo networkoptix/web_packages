@@ -56,7 +56,7 @@ import { removeStorageLegacyV1 } from './mediaserver-apis/endpoints/remove-stora
 import { saveStorageLegacyV1 } from './mediaserver-apis/endpoints/save-storage';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
-import type { IConfig } from './nx-config/config-types';
+import { nxConfig } from './nx-config/config';
 import type {
     AggregatedUsers,
     ViewMediaServersAndCameras,
@@ -118,7 +118,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected readonly notImplementedMsg = 'Not implemented in the legacy api.';
     public readonly requiresPassword: boolean = true;
 
-    protected CONFIG: IConfig;
+    protected CONFIG = nxConfig;
     protected http: HttpClient;
     protected location: Location;
 
@@ -136,7 +136,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     constructor(
         http: HttpClient,
-        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -151,7 +150,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         super();
         this.version = 0;
         this.http = http;
-        this.CONFIG = configService;
         this.location = location;
         this.cacheService = cacheService;
         this.cookieService = cookieService;
@@ -1248,7 +1246,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 )}.${transport}?resolution=${resolution || ''}&`;
         }
 
-        if (this.authGet && (this.version < 5.0 || !this.CONFIG.featureFlags.restCookieLogin)) {
+        if (this.authGet && (this.version < 5.0 || !nxConfig.featureFlags.restCookieLogin)) {
             url += `auth=${this.authGet}&`;
         }
         if (position) {

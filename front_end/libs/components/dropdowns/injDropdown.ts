@@ -4,8 +4,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 
 import staticLang from '@language_static';
 import { Watcher } from '@services/apply.service/watcher';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NgChanges } from '@utils/ng-changes';
 
 const noop = () => {};
@@ -13,7 +12,7 @@ const noop = () => {};
 @UntilDestroy()
 @Injectable()
 export abstract class BaseDropdown implements OnInit, OnChanges, ControlValueAccessor {
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     message: string;
     show: boolean;
@@ -26,8 +25,7 @@ export abstract class BaseDropdown implements OnInit, OnChanges, ControlValueAcc
     public onTouchedCallback: () => void = noop;
     public onChangeCallback: (_: any) => void = noop;
 
-    constructor(configService: NxConfigService) {
-        this.CONFIG = configService.getConfig();
+    constructor() {
         this.message = this.LANG.pleaseSelect;
         this.show = false;
     }
