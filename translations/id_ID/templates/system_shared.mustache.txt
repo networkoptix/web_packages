@@ -1,11 +1,11 @@
-Hello, {{message.userFullName}}
+Halo, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) has shared access to video management system "{{message.system_name}}" with you.
+{{message.sharer_name}} ({{message.sharer_email}}) telah berbagi akses ke sistem manajemen video "{{message.system_name}}" dengan Anda.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You have been granted access to video management system "{{message.system_name}}".
+Anda telah diberikan akses ke sistem manajemen video "{{message.system_name}}".
 {{/message.sharer_name}}
 
-View in %CLOUD_NAME% Portal: {{config.portal_url}}/systems/{{message.system_id}}
+Lihat di %CLOUD_NAME% Portal: {{config.portal_url}}/sistem/{{message.system_id}}

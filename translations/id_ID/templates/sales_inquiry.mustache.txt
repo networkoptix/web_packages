@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the following sales question about the {{ message.asset }}:
+Halo, {{ message.userFullName }}
+{{ message.sender_name}} ({{ message.sender_email }}) memiliki pertanyaan penjualan berikut tentang {{ message.asset }}:
 <pre>{{ message.message }}</pre>
