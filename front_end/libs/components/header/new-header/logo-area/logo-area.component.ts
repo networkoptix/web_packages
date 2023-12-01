@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -17,7 +18,6 @@ import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystem } from '@services/system.service/system';
-import { NxSystemsService } from '@services/systems.service';
 import { icons, images } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
@@ -55,11 +55,16 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         this.headerService.activeSystem$,
     ]).pipe(map(info => this.getMainUrl(...info)));
 
-    activeSystemName$$ = signal<string>('');
+    activeSystemName$$ = toSignal(
+        this.headerService.activeSystem$.pipe(
+            filter(Boolean),
+            switchMap(system => system.infoSubject),
+            map(system => system?.info?.name || ''),
+        ),
+    );
 
     constructor(
         public headerService: NxHeaderService,
-        systemsService: NxSystemsService,
         configService: NxConfigService,
         private store: Store,
         private cookieService: CookieService,
@@ -70,35 +75,11 @@ export class NxHeaderLogoAreaComponent implements OnInit {
             .subscribe(currentLocation => {
                 this.checkLogoState(currentLocation);
             });
-        systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
-            this.singleSystem = systems.length === 1;
-            if (headerService.activeSystem$.getValue()) {
-                const updatedSystem = systems.find(
-                    system => system.id === this.headerService.activeSystem$.getValue().id,
-                );
-                if (updatedSystem) {
-                    this.activeSystemName$$.set(updatedSystem.name);
-                }
-            }
-        });
-
-        this.headerService.activeSystem$
-            .pipe(
-                filter(Boolean),
-                switchMap(system => system.infoSubject),
-            )
-            .subscribe(system => {
-                this.activeSystemName$$.set(system?.info?.name || '');
-            });
     }
 
     getMainUrl(isAuthenticated: boolean, activeSystem: NxSystem): string {
         if (!isAuthenticated) {
             return '/';
-        }
-
-        if (activeSystem) {
-            this.activeSystemName$$.set(activeSystem?.info?.name || '');
         }
 
         if (this.singleSystem && activeSystem?.id) {

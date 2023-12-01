@@ -1,5 +1,5 @@
 import { HttpClient } from '@angular/common/http';
-import { effect, Injectable } from '@angular/core';
+import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -37,12 +37,15 @@ export class NxMenusService {
     currentUser: CurrentUser;
     activeSystem$ = new Subject<NxSystem>();
     activeSystem$$ = toSignal(this.activeSystem$);
-    updateMenuByPermissions = effect(() => {
-        const activeSystem = this.activeSystem$$();
-        if (activeSystem?.permissionManager.permissions$$()) {
+    updateSystem$ = this.activeSystem$
+        .pipe(
+            filter(Boolean),
+            switchMap(system => system.infoSubject),
+        )
+        .subscribe(() => {
+            const activeSystem = this.activeSystem$$();
             this.updateSystemMenu(activeSystem);
-        }
-    });
+        });
 
     endpoint: Partial<{
         view: boolean;
