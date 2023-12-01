@@ -1,8 +1,7 @@
-from collections import defaultdict
 import datetime
 import json
-from typing import Optional, Set, Iterable
-import uuid
+from collections import defaultdict
+from typing import Optional, Set, List
 
 import llutil
 import rest_framework.exceptions
@@ -14,8 +13,7 @@ from django.db.models import Sum, QuerySet, Prefetch, Q
 from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
-from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, inline_serializer, OpenApiExample, \
-    OpenApiParameter
+from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, OpenApiExample
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -204,13 +202,13 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
         validated_data_filtered.pop('attributes', None)
         return super().update(instance, validated_data_filtered)
 
-    def get_permissions_list(self, instance):
+    def get_permissions_list(self, instance) -> List[str]:
         perms = get_channel_partner_permissions_list(to_user_rel=self.context.get('channel_partner_to_user'),
                                                      roles=self.channel_partner_roles,
                                                      instance=instance)
         return list(perms)
 
-    def get_roles_list(self, instance):
+    def get_roles_list(self, instance) -> List[str]:
         rels = get_to_user_relation(to_user_rel=self.context.get('channel_partner_to_user'),
                                     instance=instance,
                                     instance_lookup='channel_partner_id')
@@ -289,7 +287,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
         validated_data_filtered.pop('attributes', None)
         return super().update(instance, validated_data_filtered)
 
-    def get_permissions_list(self, instance):
+    def get_permissions_list(self, instance) -> List[str]:
         perms = get_organization_permissions_list(to_user_rel=self.context.get('organizations_to_user'),
                                                   roles=self.organization_roles,
                                                   instance=instance)
@@ -305,7 +303,7 @@ class OrganizationSerializer(serializers.ModelSerializer):
                         break
         return list(perms)
 
-    def get_roles_list(self, instance: Organization):
+    def get_roles_list(self, instance: Organization) -> List[str]:
         rels = get_to_user_relation(to_user_rel=self.context.get('organizations_to_user'),
                                     instance=instance,
                                     instance_lookup='organization_id')
@@ -445,12 +443,24 @@ class ReadWriteSerializerMethodField(serializers.Field):
         return { self.field_name: data }
 
 
+class GroupRolesSerializer(serializers.Serializer):
+    groupId = serializers.UUIDField(source='system_group_id')
+    roles = serializers.ListField(source='roles_name', child=serializers.CharField())
+    rolesIds = serializers.ListField(source='roles', child=serializers.UUIDField())
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        if not instance.system_group:
+            return None
+        return data
+
+
 # TODO: This serializer looks like spaghetti code. Need to consider how we store and generate this data.
 class OrganizationUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     roles = serializers.SerializerMethodField(method_name='get_roles', read_only=True)
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
-    groupRoles = serializers.SerializerMethodField(method_name='get_groupRoles', default=True, read_only=True)
+    groupRoles = GroupRolesSerializer(source="organization_relations", many=True, read_only=True)
     role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
         slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all()))
     # role = serializers.SlugRelatedField(slug_field='name', queryset=OrganizationRole.objects.all(),
@@ -464,12 +474,18 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         model = CloudUser
         fields = ['email', 'roles', 'role', 'rolesIds', 'roleId', 'title', 'created', 'groupRoles']
 
-    def get_roles(self, obj: CloudUser):
+    def get_roles(self, obj: CloudUser) -> List[str]:
         relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
         if relation:
             return relation.roles_name
         else:
             return []
+
+    def to_representation(self, instance):
+        data = super().to_representation(instance)
+        group_roles = data['groupRoles']
+        data['groupRoles'] = [rel for rel in group_roles if rel is not None] or []
+        return data
 
     def validate_email(self, value: str):
         user, created = CloudUser.objects.get_or_create(email=value)
@@ -483,16 +499,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
                                              f"{organization.name}.")
         return user
 
-    def get_groupRoles(self, obj: CloudUser):
-        class GroupRolesSerializer(serializers.Serializer):
-            groupId = serializers.UUIDField(source='system_group_id')
-            roles = serializers.ListField(source='roles_name', child=serializers.CharField())
-            rolesIds = serializers.ListField(source='roles', child=serializers.UUIDField())
-        relations = filter(lambda rel: rel.system_group is not None, obj.organization_relations)
-
-        return GroupRolesSerializer(instance=relations, many=True).data
-
-    def get_created(self, obj: CloudUser):
+    def get_created(self, obj: CloudUser) -> datetime.datetime:
         # Todo. replace wit CloudUser created date or creation date in exact organization
         relation = sorted(obj.organization_relations, key=lambda rel: rel.created_ts)[0]
         return relation.created_ts
@@ -540,7 +547,7 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
         tmpExpirationDate = serializers.SerializerMethodField()
         status = serializers.DictField(source='get_security_statuses')
 
-        def get_tmpExpirationDate(self, obj: CloudSystemId):
+        def get_tmpExpirationDate(self, obj: CloudSystemId) -> str:
             ret_ts = obj.last_usage_report + datetime.timedelta(seconds=LocalRecordingUsage.CHECK_PERIOD * 30)
             return ret_ts.strftime('%Y-%m-%d %H:%M:%S')
 

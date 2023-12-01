@@ -2,7 +2,7 @@ from django.urls import path, re_path, include, converters
 from rest_framework_extensions.routers import ExtendedSimpleRouter
 from .views import *
 
-channe_partner_urls = [
+channel_partner_urls = [
     path('channel_partner_roles', channel_partner_roles, name='channel_partner_roles'),
     path('organization_roles', organization_roles, name='organization_roles'),
     path('events', partner_events, name='events'),
@@ -45,6 +45,6 @@ channel_partners_router.register(
 
 urlpatterns = [
     re_path(r'^partners/', include(channel_partners_router.urls)),
-    re_path(r'^partners/', include(channe_partner_urls)),
+    re_path(r'^partners/', include(channel_partner_urls)),
     re_path(r'^internal/partners/', include(channel_partner_internal_urls)),
 ]
