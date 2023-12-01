@@ -1,11 +1,11 @@
-<h1>Hello, {{message.userFullName}}</h1>
+<h1>Halo, {{message.userFullName}}</h1>
 
 {{#message.sharer_name}}
-<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> has shared access to video management system "{{message.system_name}}" with you.</p>
+<p><a href="mailto:{{message.sharer_email}}">{{message.sharer_name}}</a> telah berbagi akses ke sistem manajemen video "{{message.system_name}}" dengan Anda.</p>
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-<p>You have been granted access to video management system "{{message.system_name}}".</p>
+<p>Anda telah diberikan akses ke sistem manajemen video "{{message.system_name}}".</p>
 {{/message.sharer_name}}
 
-<a class="btn" href="{{config.portal_url}}/systems/{{message.system_id}}">View in %CLOUD_NAME% Portal</a>
+<a class="btn" href="{{config.portal_url}}/systems/{{message.system_id}}">Lihat di %CLOUD_NAME% Portal</a>
