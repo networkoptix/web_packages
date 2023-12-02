@@ -200,6 +200,19 @@ class UsersDropdown(DropDown):
             return False
         return True
 
+    def get_local_user_with_username(self, user_name: str) -> DropDownOption:
+        for user in self._list_user_options():
+            if user.label() == user_name:
+                return user
+        raise _UserNotFoundError(user_name)
+
+    def has_local_user_with_username(self, user_name: str):
+        try:
+            self.get_local_user_with_username(user_name)
+        except _UserNotFoundError:
+            return False
+        return True
+
     def wait_for_user_with_email(self, email: str):
         started_at = time.monotonic()
         while True:

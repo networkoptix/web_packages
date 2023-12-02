@@ -98,6 +98,12 @@ class ServerApi:
             if user['email'] == email:
                 return user
 
+    def get_user_id_by_name(self, name):
+        users = self.get_users()
+        for user in users:
+            if user['name'] == name:
+                return user['id']
+
     def get_storages_via_api(self):
         return self._get('rest/v1/servers/this/storages?_format=JSON')
 
