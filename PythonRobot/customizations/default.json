@@ -81,5 +81,6 @@
 
     "MENU L3 FONT SIZE"          :    "13px",
     "MENU L3 PLEFT"              :    "12px",
-    "MENU L3 PRIGHT"             :    "12px"
+    "MENU L3 PRIGHT"             :    "12px",
+    "SYSTEM"                     :    "server.name"
 }

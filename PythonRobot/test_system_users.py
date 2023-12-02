@@ -294,8 +294,7 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
             assert system_user.user_header_text().get_text() == owner.email
             # ---
             # Each registered user is tested to make sure you can't share the system with them
-            # hacking the string. Ideally should call rb.EMAIL_IS_ALREADY_REGISTERED_TEXT, but thats broken
-            error_msg = f"This email has already been registered in the {server.name} system"
+            error_msg = rb.EMAIL_IS_ALREADY_REGISTERED_TEXT.replace("server.name", server.name)
             system_left_menu.share_system_with_user(owner.email, rb.CUSTOM_TEXT)
             add_user_modal = AddUserModalDialog(driver)
             assert add_user_modal.has_error_with_text(error_msg)
@@ -345,8 +344,7 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
             system_user = SystemUsers(driver)
             assert system_user.user_header_text().get_text() == admin.email
             # Each registered user is tested to make sure you can't share the system with them
-            # hacking the string. Ideally should call rb.EMAIL_IS_ALREADY_REGISTERED_TEXT, but thats broken
-            error_msg = f"This email has already been registered in the {server.name} system"
+            error_msg = rb.EMAIL_IS_ALREADY_REGISTERED_TEXT.replace("server.name", server.name)
             system_left_menu.share_system_with_user(owner.email, rb.CUSTOM_TEXT)
             add_user_modal = AddUserModalDialog(driver)
             assert add_user_modal.has_error_with_text(error_msg)
