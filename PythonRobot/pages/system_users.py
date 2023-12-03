@@ -63,6 +63,12 @@ class SystemUsers:
         return PageText(self.driver, f"//nx-system-settings-component//nx-block/.."
             f"//span[contains(@class,'text-danger')]")
 
+    def local_user_delete_button(self):
+        return Button(self.driver, f"//button[contains(text(),'{self.rb.DELETE_USER_TEXT}')]")
+
+    def local_user_delete_confirm_button(self):
+        return Button(self.driver, "//div[@class='process-button']/button")
+
     def _wait_until_page_loaded(self):
         Page(self.driver, "//nx-system-user-component").wait_until_visible(40)
 

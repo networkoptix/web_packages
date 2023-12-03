@@ -9,6 +9,7 @@ from pages.login import LoginDialog
 from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
+from pages.system_users import SystemUsers
 from variables import ENV
 
 _logger = logging.getLogger(__name__)
@@ -61,6 +62,43 @@ def local_user_deleted_on_server_gone_from_ui(server: Mediaserver):
             raise
         else:
             print("PASS")
+
+
+def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver):
+    """
+    33. Verify Local Users Deleted On Server
+    [Tags]    local_user    C76242    webadmin    cloud
+    """
+    _reset_local_users(server)
+    owner = server.get_cloud_owner()
+    url = ENV + f"/systems/{server.id}"
+    deleted_user = "Local+viewer"
+    deleted_user_id = server.api.get_user_id_by_name(deleted_user)
+    with get_chrome() as driver:
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            SystemAdmin(driver)
+            users_menu = SystemLeftMenu(driver).users_dropdown()
+            users_menu.open()
+            users_menu.get_local_user_with_username(deleted_user).click()
+            user_screen = SystemUsers(driver)
+            user_screen.local_user_delete_button().click()
+            user_screen.local_user_delete_confirm_button().click()
+            driver.get(url)
+            SystemAdmin(driver)
+            _verify_user_not_on_server(server, deleted_user_id)
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print("PASS")
+
+
+def _verify_user_not_on_server(server, user_id):
+    for user in server.api.get_users():
+        assert not user["id"] == user_id
 
 
 def _reset_local_users(server: Mediaserver, local_user='ocal+'):
@@ -139,3 +177,4 @@ if __name__ == "__main__":
         cloud_users = suite.create_cloud_accounts()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         local_user_deleted_on_server_gone_from_ui(cloud_server)
+        local_user_deleted_in_ui_deleted_from_server(cloud_server)
