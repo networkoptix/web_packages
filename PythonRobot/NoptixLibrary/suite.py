@@ -318,6 +318,17 @@ class Mediaserver:
             )
         return local_users
 
+    def create_new_local_user(self, permission):
+        new_local_user = self.api.save_user(
+            "Local+" + permission + "_new",
+            CloudAccount.PERMISSIONS[permission],
+            f"noptixautoqa+local_{permission}_new@gmail.com",
+            "Local User",
+            DEFAULT_PASSWORD,
+            is_cloud=False,
+            )
+        return new_local_user
+
     def disconnect_from_cloud(self):
         _CLOUD_API.disconnect(
             self._cloud_owner.email,

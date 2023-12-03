@@ -96,6 +96,31 @@ def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver):
             print("PASS")
 
 
+def new_local_user_appears_in_cloud_portal(server: Mediaserver):
+    """
+    34. Adding New Local User Appears on Cloud Portal
+    [Tags]    C76237    local_user    webadmin    cloud
+    """
+    _reset_local_users(server)
+    owner = server.get_cloud_owner()
+    url = ENV + f"/systems/{server.id}"
+    new_local_user = server.create_new_local_user("viewer")
+    with get_chrome() as driver:
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            SystemAdmin(driver)
+            users_menu = SystemLeftMenu(driver).users_dropdown()
+            users_menu.open()
+            users_menu.get_local_user_with_username(new_local_user['name']).click()
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+        else:
+            print("PASS")
+
+
 def _verify_user_not_on_server(server, user_id):
     for user in server.api.get_users():
         assert not user["id"] == user_id
@@ -178,3 +203,4 @@ if __name__ == "__main__":
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         local_user_deleted_on_server_gone_from_ui(cloud_server)
         local_user_deleted_in_ui_deleted_from_server(cloud_server)
+        new_local_user_appears_in_cloud_portal(cloud_server)
