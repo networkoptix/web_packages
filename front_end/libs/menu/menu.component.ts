@@ -190,11 +190,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
             const filtered = this.menuService.cleanMenuContent(
                 this.menuService.filterItemsBy(this.menuModel),
             );
-            const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
-            if (
-                filtered.length !== this.menuContent.length ||
-                !isEqual(filtered, cleanMenuContent)
-            ) {
+            if (filtered.length !== this.menuContent.length) {
                 const scroll = this.scrollArea?.nativeElement.scrollTop || 0;
                 this.menuContent = filtered;
                 setTimeout(() => {

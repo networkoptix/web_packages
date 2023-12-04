@@ -63,7 +63,7 @@ export class LayoutStateEffects {
 
     updateLayouts$ = createEffect(() => {
         return this.systemService.currentSystem$.pipe(
-            filter(system => system && nxConfig.featureFlags.layouts),
+            filter(system => system && !!nxConfig.featureFlags.layouts),
             switchMap(system =>
                 this.store.select(SystemResourcesSelectors.selectLayoutsBySystemId(system.id)),
             ),

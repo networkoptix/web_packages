@@ -25,8 +25,7 @@ export const cloudPartnersRoutes: Routes = [
         component: NxChannelPartnersComponent,
         canActivate: [FeatureGuardActivate, TwofaGuard],
         data: {
-            flags: FeatureFlagStrings.channelPartners,
-            override: FeatureFlagStrings.channelPartners,
+            flag: FeatureFlagStrings.channelPartners,
         },
         children: [
             {

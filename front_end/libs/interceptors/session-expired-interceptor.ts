@@ -53,8 +53,12 @@ export class SessionExpiredInterceptor implements HttpInterceptor {
             } else if (url.includes('restart')) {
                 sessionState = SessionState.Restart;
             }
-        } else if (url.includes('/rest/v*/system/merge')) {
-            sessionState = SessionState.Merge;
+        } else if (url.includes('/rest/v*/system')) {
+            if (url.includes('merge')) {
+                sessionState = SessionState.Merge;
+            } else if (url.includes('cloudUnbind')) {
+                sessionState = SessionState.Disconnect;
+            }
         }
         return sessionState;
     }

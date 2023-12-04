@@ -7,7 +7,10 @@ import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject } from 'rxjs';
 
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
-import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+import {
+    DATA_TYPE,
+    MultiSelectItem,
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
@@ -187,4 +190,6 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             },
         );
     }
+
+    protected readonly DATA_TYPE = DATA_TYPE;
 }

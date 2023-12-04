@@ -29,8 +29,7 @@ import { environment } from '@environments/environment';
 import { NxApplyService } from '@services/apply.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
@@ -64,7 +63,7 @@ require('what-input');
             >
                 <nx-tour-step-component></nx-tour-step-component>
                 <router-outlet></router-outlet>
-                <nx-nav-footer *ngIf="newHeader"></nx-nav-footer>
+                <nx-nav-footer *ngIf="CONFIG.featureFlags.newHeader"></nx-nav-footer>
             </div>
         </div>
         <ng-container *ngIf="!reauthorizing">
@@ -82,11 +81,10 @@ export class AppComponent implements AfterViewInit {
     deviceInfo: DeviceInfo;
     browserBlacklist: Record<string, number>;
     newSystem: boolean;
-    newHeader: boolean = false;
     loading: boolean = false;
     reauthorizing: boolean;
     headerHeight: number;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     readonly environment = environment;
 
     @ViewChild('mainContainer') mainContainer: ElementRef<HTMLDivElement>;
@@ -129,7 +127,6 @@ export class AppComponent implements AfterViewInit {
     };
 
     constructor(
-        configService: NxConfigService,
         public appStateService: NxAppStateService,
         private cookieService: CookieService,
         private deviceService: DeviceDetectorService,
@@ -142,10 +139,7 @@ export class AppComponent implements AfterViewInit {
         private themeService: NxThemeService,
         @Inject(WINDOW) private window: Window,
     ) {
-        this.CONFIG = configService.getConfig();
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
-
         if (!this.CONFIG.browserNotSupported) {
             if (environment.isLocal || this.appStateService.ready) {
                 this.lazyLoadHeader();
@@ -277,7 +271,7 @@ export class AppComponent implements AfterViewInit {
                 },
             );
 
-        if (this.CONFIG.featureFlags.themesEnabled) {
+        if (nxConfig.featureFlags.themesEnabled) {
             this.themeService.initTheme().then(
                 () => {}, // weird Safari 12
                 () => {},

@@ -85,7 +85,6 @@ import { selectLayoutResolution } from '@services/layout-state/store/layouts-res
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import { MutationType } from '@services/param-state/param-state.types';
 import { Layout, LayoutItem } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
@@ -250,7 +249,6 @@ export class NxLayoutGridTreeComponent {
     ServerStats: ServerStats;
     LANG = staticLang;
     ACTIONS_LANG = staticLang.layouts.treeActions;
-    CONFIG: IConfig = nxConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
     readonly RESOURCE_TYPE = ResourceType;
 
@@ -262,7 +260,7 @@ export class NxLayoutGridTreeComponent {
         public tourService: TourService,
         @Inject(WINDOW) public window: Window,
     ) {
-        if (this.CONFIG.featureFlags.layoutsTimeline) {
+        if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
         effect(() => {
@@ -402,7 +400,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutEditActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): [] | MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (node.locked || !this.CONFIG.featureFlags.layoutsEditable) {
+        if (node.locked || !nxConfig.featureFlags.layoutsEditable) {
             return [];
         }
 
@@ -438,7 +436,7 @@ export class NxLayoutGridTreeComponent {
         const unsaved = this.layoutStateService.unsavedLayoutsIds$$();
         if (
             !node.owned ||
-            !this.CONFIG.featureFlags.layoutsEditable ||
+            !nxConfig.featureFlags.layoutsEditable ||
             (unsaved && !unsaved[node.details.id])
         ) {
             return [];
@@ -520,7 +518,7 @@ export class NxLayoutGridTreeComponent {
 
     handleDoubleClick = (node: ResourceNode): void => {
         if (
-            !this.CONFIG.featureFlags.layoutsEditable ||
+            !nxConfig.featureFlags.layoutsEditable ||
             this.layout.locked ||
             node.details?.id === this.layout.id
         ) {
@@ -560,7 +558,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutShareActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (!node.owned || node.locked || !this.CONFIG.featureFlags.layoutsEditable) {
+        if (!node.owned || node.locked || !nxConfig.featureFlags.layoutsEditable) {
             return [];
         }
 
@@ -586,7 +584,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutLockActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (!node.owned || !this.CONFIG.featureFlags.layoutsEditable) {
+        if (!node.owned || !nxConfig.featureFlags.layoutsEditable) {
             return [];
         }
 
@@ -635,7 +633,7 @@ export class NxLayoutGridTreeComponent {
     menuItemsByType: Partial<{
         [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
     }> = {
-        [ResourceType.LAYOUTS]: this.CONFIG.featureFlags.layoutsEditable
+        [ResourceType.LAYOUTS]: nxConfig.featureFlags.layoutsEditable
             ? [
                   {
                       id: 'create',
@@ -679,8 +677,8 @@ export class NxLayoutGridTreeComponent {
         [ResourceType.CAMERA]: [
             ...this.OPEN_WINDOW_ACTIONS,
             ...([] ||
-                (this.CONFIG.featureFlags.layoutsEditable &&
-                    this.CONFIG.featureFlags.layoutsDeviceSettings && [
+                (nxConfig.featureFlags.layoutsEditable &&
+                    nxConfig.featureFlags.layoutsDeviceSettings && [
                         {
                             id: 'divider',
                             name: 'divider',
@@ -699,8 +697,8 @@ export class NxLayoutGridTreeComponent {
         [ResourceType.SERVER]: [
             ...this.OPEN_WINDOW_ACTIONS,
             ...([] ||
-                (this.CONFIG.featureFlags.layoutsEditable &&
-                    this.CONFIG.featureFlags.layoutsDeviceSettings && [
+                (nxConfig.featureFlags.layoutsEditable &&
+                    nxConfig.featureFlags.layoutsDeviceSettings && [
                         {
                             id: 'divider',
                             name: 'divider',

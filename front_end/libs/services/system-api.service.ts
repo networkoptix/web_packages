@@ -11,7 +11,6 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
 import { nxConfig } from './nx-config/config';
-import type { IConfig } from './nx-config/config-types';
 import type { UnauthorizedCallback } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import { NxSystemRestAPI3 } from './system-rest-api-v3.service';
@@ -22,7 +21,6 @@ import { NxUriCacheService } from './uri-cache.service';
     providedIn: 'root',
 })
 export class NxSystemAPIService {
-    CONFIG: IConfig = nxConfig;
     localApi: NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
 
     constructor(
@@ -57,7 +55,6 @@ export class NxSystemAPIService {
 
         const args = [
             this.http,
-            this.CONFIG,
             this.location,
             user,
             systemId,
@@ -72,7 +69,7 @@ export class NxSystemAPIService {
 
         if (useRest || environment.isLocal) {
             let restApi: NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
-            if (version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
+            if (version > 5.1 && nxConfig.featureFlags.usersWithGroups) {
                 restApi = new NxSystemRestAPI3(...args);
             } else if (version > 5.0) {
                 restApi = new NxSystemRestAPI2(...args);

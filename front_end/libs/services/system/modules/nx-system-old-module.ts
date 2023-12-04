@@ -20,7 +20,6 @@ import staticLang from '@language_static';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { CloudStorageAPI } from '@services/nx-cloud-api/cloud-services/cloud-storage/cloud-storage-api';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import { NxPollService } from '@services/poll.service';
 import { PermissionManagerModule } from '@services/system/modules/resource-managers/permission-manager';
 import { NxSystemModuleBase } from '@services/system/system-module';
@@ -100,7 +99,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     cloudStorageSystemEnabled: boolean = false;
     cloudStorageCapable: boolean = false;
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
 
     /**
@@ -223,7 +222,6 @@ export class NxSystemOldModule extends NxSystemModuleBase {
         this.ribbonService = injector.get(NxRibbonService);
         this.router = injector.get(Router);
 
-        this.CONFIG = nxConfig;
         // Sometimes newly connected systems don't report version correctly
         this.version = version;
         this.useRest = Math.floor(this.version) > 4;
@@ -442,20 +440,19 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     canUserViewCloudStorage() {
-        if (!this.CONFIG.featureFlags.cloudStorage || environment.isLocal) {
+        if (!nxConfig.featureFlags.cloudStorage || environment.isLocal) {
             return false;
         }
         const isOwner = this.permissionManager.isOwner$$();
         return (
-            (this.CONFIG.featureFlags.cloudStorage && isOwner) ||
+            (nxConfig.featureFlags.cloudStorage && isOwner) ||
             (this.permissionManager.isAdmin$$() && this.systemInfo?.cloudStorageSystemEnabled) ||
             (this.systemInfo?.cloudStorageCapable && isOwner)
         );
     }
 
     canViewBookmarks(isMobile?: boolean) {
-        const bookmarksEnabled =
-            !isMobile && this.CONFIG.featureFlags.bookmarks && this.version >= 5;
+        const bookmarksEnabled = !isMobile && nxConfig.featureFlags.bookmarks && this.version >= 5;
         if (!bookmarksEnabled) {
             return false;
         }

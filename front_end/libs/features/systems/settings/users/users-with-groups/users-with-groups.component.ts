@@ -1,9 +1,12 @@
-import { Component, computed } from '@angular/core';
+import { Component, computed, signal } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { debounceTime } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+import {
+    DATA_TYPE,
+    MultiSelectItem,
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxUser, UserPermissionDescription } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { alphabeticalSort } from '@utils/general';
@@ -22,10 +25,20 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
     roles: string[];
     selectedGroups: string[];
     selectedGroupsList: { name: string; description: string }[];
+    user$$ = signal<NxUser>({} as NxUser);
     filteredGroups$$ = computed<MultiSelectItem[]>(() => {
         const groups = this.system.userManager.groups$$() || [];
         const isLdap = this.isLdap$$();
-        return this.processLdapGroups([...groups], isLdap);
+        // Use user$$ to trigger groups update on user change as LDAP to LDAP change will not trigger groups$$
+        this.user$$();
+
+        const userManager = this.system.userManager as UserWithGroupsManager;
+        const isOwner = this.system.permissionManager.isOwner$$();
+
+        return this.processLdapGroups(
+            [...groups.filter(group => isOwner || userManager.isGroupPowerUser(group))],
+            isLdap,
+        );
     });
     accountBlockFooterSettings$$ = computed(() => ({
         cloudAccountSettings: !this.environment.isLocal && this.isCloud$$() && this.isMe$$(),
@@ -82,6 +95,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     }
                 });
             this.userForm.emit(this.userGroupForm);
+            this.user$$.set(user);
         });
     }
 
@@ -187,4 +201,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         }
         return groups;
     }
+
+    protected readonly DATA_TYPE = DATA_TYPE;
 }

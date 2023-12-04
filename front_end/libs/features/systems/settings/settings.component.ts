@@ -28,8 +28,7 @@ import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
 import { NxDbService } from '@services/db.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -77,7 +76,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         () => this.system.permissionManager.permissions$$().editUsers,
     );
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     plugin;
     content: Content = { base: '', selectedSection: '', level1: [] };
@@ -145,8 +144,12 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             .then(response => {
                 this.archivesPresent.clear();
                 response.forEach(server => {
-                    server.archivedCameras.forEach(cam => this.archivesPresent.add(cam));
+                    server.archivedCameras
+                        .map(cleanId)
+                        .forEach(cam => this.archivesPresent.add(cam));
                 });
+                this.updateCameraSettingsMenu();
+                this.updateContent();
             });
     }
 
@@ -192,7 +195,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         private route: ActivatedRoute,
         private accountService: NxAccountService,
         private pageService: NxPageService,
@@ -210,8 +212,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         @Inject(LOCALE_ID) private locale: string,
         private db: NxDbService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         this.setupDefaults();
 
         effect(() => {
@@ -440,7 +440,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         !environment.isLocal
                     ) {
                         this.uriService.updateURI(
-                            this.CONFIG.featureFlags.dashboardRedirect ||
+                            nxConfig.featureFlags.dashboardRedirect ||
                                 'beta' in this.route.snapshot.queryParams
                                 ? '/dashboard'
                                 : '/systems',
@@ -624,48 +624,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ]);
         }
 
-        if (this.system.cameraManager.cameras.some(({ canEdit }) => canEdit)) {
-            let camerasNode = this.content.level1.find(
-                node => node.id === menus.systemSettings.cameras.id,
-            );
-            if (!camerasNode) {
-                camerasNode = {
-                    id: menus.systemSettings.cameras.id,
-                    svg: menus.systemSettings.cameras.icon,
-                    label: this.LANG.menu.titles.cameras,
-                    path: menus.systemSettings.cameras.path,
-                    level3: [],
-                };
-                this.content.level1.push(camerasNode);
-            }
-            if (this.system.cameraManager.cameras) {
-                this.system.cameraManager.cameras.sort(
-                    alphabeticalSort(this.locale, camera => camera.name),
-                );
-                const camerasInMenu = this.system.cameraManager.cameras.filter(
-                    camera => camera.canEdit,
-                );
-                const getCameraIP = cameraUrl =>
-                    cameraUrl.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)?.[0];
-                camerasNode.level3 = camerasInMenu.map<Level3Item>(camera => ({
-                    id: camera.id.replace(/\s|\{|\}/g, ''),
-                    svgIcon: this.getCameraStatusIcon(camera),
-                    disabled:
-                        camera.status === CameraStatus.Offline ||
-                        camera.status === CameraStatus.Unauthorized,
-                    label: camera.name,
-                    indent: true,
-                    path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
-                    additionalLabel: getCameraIP(camera.url),
-                }));
-            } else {
-                camerasNode.level3 = [];
-            }
-        } else {
-            this.content.level1 = this.content.level1.filter(
-                node => node.id !== menus.systemSettings.cameras.id,
-            );
-        }
+        this.updateCameraSettingsMenu();
 
         if (this.editUsers()) {
             let usersNode = this.content.level1.find(
@@ -853,9 +812,54 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         this.updateContent();
     }
 
+    updateCameraSettingsMenu(): void {
+        if (this.system.cameraManager.cameras.some(({ canEdit }) => canEdit)) {
+            let camerasNode = this.content.level1.find(
+                node => node.id === menus.systemSettings.cameras.id,
+            );
+            if (!camerasNode) {
+                camerasNode = {
+                    id: menus.systemSettings.cameras.id,
+                    svg: menus.systemSettings.cameras.icon,
+                    label: this.LANG.menu.titles.cameras,
+                    path: menus.systemSettings.cameras.path,
+                    level3: [],
+                };
+                this.content.level1.push(camerasNode);
+            }
+            if (this.system.cameraManager.cameras) {
+                this.system.cameraManager.cameras.sort(
+                    alphabeticalSort(this.locale, camera => camera.name),
+                );
+                const camerasInMenu = this.system.cameraManager.cameras.filter(
+                    camera => camera.canEdit,
+                );
+                const getCameraIP = cameraUrl =>
+                    cameraUrl.match(/\b\d{1,3}\.\d{1,3}\.\d{1,3}\.\d{1,3}\b/)?.[0];
+                camerasNode.level3 = camerasInMenu.map<Level3Item>(camera => ({
+                    id: camera.id.replace(/\s|\{|\}/g, ''),
+                    svgIcon: this.getCameraStatusIcon(camera),
+                    disabled:
+                        camera.status === CameraStatus.Offline ||
+                        camera.status === CameraStatus.Unauthorized,
+                    label: camera.name,
+                    indent: true,
+                    path: `cameras/${camera.id.replace(/\s|\{|\}/g, '')}`,
+                    additionalLabel: getCameraIP(camera.url),
+                }));
+            } else {
+                camerasNode.level3 = [];
+            }
+        } else {
+            this.content.level1 = this.content.level1.filter(
+                node => node.id !== menus.systemSettings.cameras.id,
+            );
+        }
+    }
+
     getUserMenuAdditionalLabel(user: NxUser): Translatable {
         let additionalLabel: Translatable = this.LANG.accessRoles.Custom.label;
-        if (this.system.version > 5.1 && this.CONFIG.featureFlags.usersWithGroups) {
+        if (this.system.version > 5.1 && nxConfig.featureFlags.usersWithGroups) {
             if (user.groupIds.length === 0 && user.attributes === 'readonly') {
                 additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
             } else if (user.groupIds.length === 1) {

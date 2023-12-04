@@ -6,8 +6,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
@@ -19,9 +18,7 @@ import { WINDOW } from '@services/window-provider';
     styleUrls: ['landing.component.scss'],
 })
 export class NxLandingComponent implements OnInit {
-    CONFIG: IConfig;
     LANG = staticLang;
-
     params;
     userEmail;
     login;
@@ -31,12 +28,7 @@ export class NxLandingComponent implements OnInit {
     startParams;
     startUrl;
 
-    private setupDefaults(configService): void {
-        this.CONFIG = configService.getConfig();
-    }
-
     constructor(
-        private configService: NxConfigService,
         private accountService: NxAccountService,
         private sessionService: NxSessionService,
         private pageService: NxPageService,
@@ -44,13 +36,12 @@ export class NxLandingComponent implements OnInit {
         private router: Router,
         private cookieService: CookieService,
     ) {
-        this.setupDefaults(this.configService);
         this.startUrl = this.router.url;
         this.startParams = this.router.parseUrl(this.router.url).queryParams;
 
         if (this.cookieService.get('devServer')) {
             this.router.navigateByUrl('dashboard');
-        } else if (this.configService.flagsEnabled('landingPage')) {
+        } else if (nxConfig.featureFlags.landingPage) {
             this.router.navigateByUrl('new-landing', { skipLocationChange: true });
         }
 

@@ -17,7 +17,6 @@ import { apiBase } from '../variables/static-variables';
 
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
-import type { IConfig } from './nx-config/config-types';
 import { NxSessionService } from './session.service';
 import { windowFactory } from './window-provider';
 
@@ -27,7 +26,7 @@ import { windowFactory } from './window-provider';
 })
 export class NxMenusService {
     private menusStructure: MenusStructure;
-    public CONFIG: IConfig = nxConfig;
+    public CONFIG = nxConfig;
     private window: Window = windowFactory();
     private LANG = staticLang;
     private languageChanged$ = new BehaviorSubject('');
@@ -118,7 +117,7 @@ export class NxMenusService {
             !environment.isLocal &&
             withCurrentSystem &&
             this.currentSystemNode$.value &&
-            !this.CONFIG.featureFlags.newHeader
+            !nxConfig.featureFlags.newHeader
         ) {
             menu.nodes = menu?.nodes?.length
                 ? [this.currentSystemNode$.value, ...menu.nodes]
@@ -391,11 +390,11 @@ export class NxMenusService {
         // Layouts only usable with webRTC and rest cookie login
         const layoutsEnabled =
             activeSystem.version >= 5.1 &&
-            this.CONFIG.featureFlags.layouts &&
-            (this.CONFIG.featureFlags.restCookieLogin || !activeSystem.system2faEnabled);
+            nxConfig.featureFlags.layouts &&
+            (nxConfig.featureFlags.restCookieLogin || !activeSystem.system2faEnabled);
         const layoutsEnabledForBrowser =
             // @ts-expect-error window.chrome only in Chromium browsers
-            this.CONFIG.featureFlags.layoutsNonChrome || !!this.window.chrome;
+            nxConfig.featureFlags.layoutsNonChrome || !!this.window.chrome;
         if (activeSystem.canViewADevice() && layoutsEnabled && layoutsEnabledForBrowser) {
             const layoutsNode = new MenuNode(
                 'Layouts',

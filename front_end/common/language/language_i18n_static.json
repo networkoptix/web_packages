@@ -1428,6 +1428,7 @@
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selectOptions": "Select options",
+        "userPermissions": "User permissions",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Manufacturer",
         "vendors": "Manufacturers",

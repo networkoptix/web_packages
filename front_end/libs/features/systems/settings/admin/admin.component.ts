@@ -5,6 +5,7 @@ import {
     computed,
     Inject,
     Input,
+    LOCALE_ID,
     OnDestroy,
     OnInit,
     Signal,
@@ -30,18 +31,20 @@ import { NxApplyService } from '@services/apply.service';
 import { FormWatcher } from '@services/apply.service/watcher';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { MergeInfo } from '@services/system-api.types';
 import * as t from '@services/system-api.types';
+import { UserGroup } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons, menus, redirect } from '@static-variables';
+import { alphabeticalSort } from '@utils/general';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -57,11 +60,9 @@ interface Settings {
 export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit {
     @Input({ transform: booleanAttribute }) advanced: boolean;
     @Input() system: NxSystem;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     readonly environment = environment;
     LANG = staticLang;
-
-    ownershipTransferEnabled: boolean = false;
 
     user: Account;
     mergeTargetSystems: NxSystemInfo[];
@@ -93,13 +94,38 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     transferInfo: SystemTransferInfo;
 
     userRole$$: Signal<string> = computed(() => {
-        let accessRole = this.system.permissionManager.currentUser$$().accessRole;
-        const accessRoles = accessRole?.split(', ');
-        if (accessRoles && accessRoles.length > 1) {
-            const singleItem = accessRoles?.pop();
+        let { accessRole = '', groupIds = [] } = this.system.permissionManager.currentUser$$();
+        if (groupIds.length > 1) {
+            const groups = (this.system.userManager as UserWithGroupsManager).userGroups;
+            const builtInGroup: UserGroup[] = [];
+            const customGroup: UserGroup[] = [];
+            const ldapGroup: UserGroup[] = [];
+            Object.values(groups).forEach(group => {
+                if (group.attributes && group.attributes === 'readonly') {
+                    builtInGroup.push(group);
+                } else if (group.type && group.type === 'ldap') {
+                    ldapGroup.push(group);
+                } else {
+                    customGroup.push(group);
+                }
+            });
+
+            if (customGroup.length > 0) {
+                customGroup.sort(alphabeticalSort(this.locale, group => group.name));
+            }
+            if (ldapGroup.length > 0) {
+                ldapGroup.sort(alphabeticalSort(this.locale, group => group.name));
+            }
+
+            const sortedGroups = builtInGroup
+                .concat(customGroup, ldapGroup)
+                .filter(group => groupIds.includes(group.id))
+                .map(group => group.name);
+
+            const lastGroup = sortedGroups.pop();
             accessRole = this.translateService.instant(this.LANG.listString, {
-                listItems: accessRoles.join(', '),
-                singleItem,
+                listItems: sortedGroups.join(', '),
+                singleItem: lastGroup,
             });
         }
         if (Object.keys(this.LANG.accessRoles).includes(accessRole)) {
@@ -107,7 +133,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         }
 
         if (accessRole) {
-            const lineCalc = Math.ceil(accessRole.length / 38);
+            const lineCalc = Math.ceil(accessRole.length / 26);
             this.viewLines = lineCalc < 6 ? lineCalc : 6;
             this.viewHeight = this.viewLines * 21;
         }
@@ -121,7 +147,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     /** Owner (current user) can send a new ownership transfer request */
     get canSendTransferRequest(): boolean {
         return (
-            this.ownershipTransferEnabled &&
+            nxConfig.featureFlags.cloudOwnershipTransfer &&
             this.system.permissionManager.isOwner$$() &&
             this.system.useRest &&
             !this.transferInfo
@@ -183,7 +209,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     }
 
     constructor(
-        configService: NxConfigService,
         private accountService: NxAccountService,
         private processService: NxProcessService,
         private dialogs: NxDialogsService,
@@ -197,12 +222,9 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         private translateService: TranslateService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         @Inject(WINDOW) private window: Window,
+        @Inject(LOCALE_ID) private locale: string,
         private applyService: NxApplyService,
     ) {
-        this.CONFIG = configService.getConfig();
-
-        this.ownershipTransferEnabled = configService.flagsEnabled('cloudOwnershipTransfer');
-
         /* Going directly to another system does not trigger lifecyle methods or destroy the
         apply component, so we hide the component when detecting navigation and the other system
         restores the component when it finishes loading. */
@@ -268,7 +290,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
                 }
 
                 // TODO: In develop add a store for transfers.
-                if (this.ownershipTransferEnabled && !environment.isLocal) {
+                if (nxConfig.featureFlags.cloudOwnershipTransfer && !environment.isLocal) {
                     this.cloudApiService.getTransfers().subscribe(res => {
                         this.transferInfo = res.find(
                             transfer => transfer.systemId === this.system.id,
@@ -338,7 +360,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         this.checkCloudProcess = this.processService.createProcess(
             () => {
                 const startUrl = this.router.url;
-                return this.CONFIG.featureFlags.cloudStorage && this.system.cloudStorageCapable
+                return nxConfig.featureFlags.cloudStorage && this.system.cloudStorageCapable
                     ? this.cloudApiService
                           .getCloudStorageUsage(this.system.id)
                           .then(_ => Promise.reject())
@@ -507,7 +529,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         );
         this.currentlyMerging = true;
         this.updateSettings(this.currentlyMerging);
-        const mergeDialog = this.CONFIG.featureFlags.mergeRefactorEnabled
+        const mergeDialog = nxConfig.featureFlags.mergeRefactorEnabled
             ? this.dialogs.mergeRefactored
             : this.dialogs.merge;
         return mergeDialog({

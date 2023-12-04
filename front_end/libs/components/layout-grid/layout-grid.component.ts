@@ -79,8 +79,7 @@ import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types';
 import {
@@ -348,6 +347,9 @@ export class NxLayoutGridComponent {
      */
     readonly CELL_SPACE_RATIO = 0.5;
 
+    LANG = staticLang;
+    CONFIG = nxConfig;
+
     ngOnDestroy(): void {
         this.layoutStateService.portal = null;
     }
@@ -416,7 +418,6 @@ export class NxLayoutGridComponent {
     errors: Record<string, string> = {};
     skipDefaultCredentialsCheck: Record<string, true> = {};
     errorIcons: Record<string, string> = {};
-    LANG = staticLang;
     additionalErrorMessages: Record<string, Translatable> =
         this.LANG.layouts.additionalErrorMessages;
     icons = icons;
@@ -831,12 +832,9 @@ export class NxLayoutGridComponent {
             refCount: true,
         }),
     );
-
-    CONFIG: IConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
 
     constructor(
-        configService: NxConfigService,
         private cd: ChangeDetectorRef,
         private dialogsService: NxDialogsService,
         private toastService: NxToastService,
@@ -847,8 +845,7 @@ export class NxLayoutGridComponent {
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
     ) {
-        this.CONFIG = configService.config;
-        if (this.CONFIG.featureFlags.layoutsTimeline) {
+        if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
 
@@ -1345,7 +1342,7 @@ export class NxLayoutGridComponent {
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
         locked:
-            (!this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo) ||
+            (!nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo) ||
             layout.locked,
         renderConfig: this.generateRenderConfig(layout),
         settings: this.SETTINGS_CONFIG,
@@ -1755,7 +1752,7 @@ export class NxLayoutGridComponent {
         if (item) {
             const { title, message, footer } = this.LANG.layouts.removeItem;
             update =
-                !this.CONFIG.featureFlags.layoutsRemoveItemDialog ||
+                !nxConfig.featureFlags.layoutsRemoveItemDialog ||
                 (await this.dialogsService.confirm({
                     title,
                     message: {

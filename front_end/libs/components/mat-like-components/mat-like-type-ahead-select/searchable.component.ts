@@ -24,7 +24,6 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxFocusMeDirective } from '@directives/nx-focus-me';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -115,8 +114,8 @@ export class NxMatLikeTypeAheadDropdown extends BaseDropdown implements Validato
         return null; // valid
     }
 
-    constructor(configService: NxConfigService) {
-        super(configService);
+    constructor() {
+        super();
         this.noMatchMsg ??= this.LANG.search.noMatches || '';
     }
 

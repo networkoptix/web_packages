@@ -11,7 +11,6 @@ import {
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
@@ -78,8 +77,8 @@ export class NxMatLikeGenericDropdown<
     // Used in merge.component.ts
     @ViewChild('dropdownButtonFocus') dropdownToggleButton: HTMLButtonElement;
 
-    constructor(configService: NxConfigService, public ref: ElementRef<HTMLElement>) {
-        super(configService);
+    constructor(public ref: ElementRef<HTMLElement>) {
+        super();
         this.noMatchMsg ??= this.LANG.search.noMatches || 'No matches';
     }
 

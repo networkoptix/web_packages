@@ -2,8 +2,6 @@
 import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, computed, effect, runInInjectionContext, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { ConnectionError, WebRTCStreamManager, AvailableStreams, ApiVersions, RequiresTranscoding, isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
@@ -25,6 +23,7 @@ import { LayoutItem } from '@services/system-api.types';
 import { Translatable } from '@pipes/nx-translate.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
+import { nxConfig } from '@services/nx-config/config';
 
 type DrawImagePartialTuple = [number, number, number, number];
 
@@ -88,7 +87,7 @@ export class NxVideoPlayerComponent {
     static POSTER_RETRIES = 5
     static POSTER_INTERVAL = 5
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     playerId: string;
     offset = 0;
 
@@ -118,11 +117,9 @@ export class NxVideoPlayerComponent {
     document = document;
 
     constructor(
-        configService: NxConfigService,
         private appStateService: NxAppStateService,
         private injector: Injector,
     ) {
-        this.CONFIG = configService.config;
         this.playerId = uuid();
     }
 

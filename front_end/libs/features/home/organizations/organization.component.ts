@@ -21,7 +21,6 @@ import {
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import { icons } from '@static-variables';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
@@ -68,7 +67,6 @@ interface SidebarSettings {
 })
 export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
-    CONFIG: IConfig = nxConfig;
     icons = icons;
     State = State;
     tabs: Tab[] = [
@@ -124,7 +122,7 @@ export class NxOrganizationsComponent implements OnInit {
                     displayName: this.LANG.channelPartners.tabNames.users,
                     route: 'users',
                 },
-                ...(this.CONFIG.featureFlags.channelPartnersReports
+                ...(nxConfig.featureFlags.channelPartnersReports
                     ? [
                           {
                               displayName: this.LANG.channelPartners.tabNames.reports,

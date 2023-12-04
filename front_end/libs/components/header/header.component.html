@@ -118,7 +118,7 @@
 <!-- This is used to calculate all possible component view states -->
 <!-- Most (resize) directives for updating adaptive views should be on these hidden elements -->
 <nav
-    *ngIf="!newHeader"
+    *ngIf="!CONFIG.featureFlags.newHeader"
     class="navbar navbar-default nav-override hidden-menu"
 >
     <div class="container-fluid flex-no-wrap">
@@ -190,7 +190,7 @@
 >
     <ng-template #newHeaderRef></ng-template>
     <nav
-        *ngIf="!newHeader"
+        *ngIf="!CONFIG.featureFlags.newHeader"
         class="navbar navbar-default nav-override"
     >
         <div class="container-fluid flex-no-wrap">

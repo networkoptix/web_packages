@@ -14,8 +14,7 @@ import { NxSearchComponent } from '@components/search/search.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { PipesModule } from '@pipes/pipes.module';
 import { MenuNode } from '@services/menus.service.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxUriService } from '@services/uri.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
@@ -57,7 +56,6 @@ export class NxDevelopersMenuComponent implements OnInit {
     @Input() offsetHeight = 0;
     @Input() additionalSearchNodes: MenuNodeWithParent[] = [];
 
-    CONFIG: IConfig;
     displayedMenuNodes: MenuNodeWithParent[] = [];
     menuNodes: MenuNodeWithParent[] = [];
     activeRouteNodes: string[] = [];
@@ -69,14 +67,11 @@ export class NxDevelopersMenuComponent implements OnInit {
     icons = icons;
 
     constructor(
-        configService: NxConfigService,
         public location: Location,
         public ribbonService: NxRibbonService,
         private uriService: NxUriService,
         @Inject(WINDOW) private window: Window,
-    ) {
-        this.CONFIG = configService.getConfig();
-    }
+    ) {}
 
     updateActive = (activeAssetId, activeAssetState): void => {
         this.activeRouteNodes = [];
@@ -202,7 +197,7 @@ export class NxDevelopersMenuComponent implements OnInit {
 
     prefetchAsset(assetId, state, version): void {
         if (assetId) {
-            timer(this.CONFIG.featureFlags.kbInstantSearch ? 50 : 250)
+            timer(nxConfig.featureFlags.kbInstantSearch ? 50 : 250)
                 .pipe(untilDestroyed(this), takeUntil(this.mouseLeave$))
                 .subscribe(() => {
                     this.handlePrefetch.emit({ assetId, state, version });

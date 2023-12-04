@@ -15,7 +15,6 @@ import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
 import { NxAppStateService } from './nx-app-state.service';
-import { IConfig } from './nx-config/config-types';
 import type {
     HealthReport,
     StorageAnalytics,
@@ -112,7 +111,6 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     constructor(
         http: HttpClient,
-        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -126,7 +124,6 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     ) {
         super(
             http,
-            configService,
             location,
             userEmail,
             systemId,

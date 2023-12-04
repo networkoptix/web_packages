@@ -7,7 +7,6 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { Role } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
@@ -54,8 +53,8 @@ export class NxPermissionsDropdown extends BaseDropdown {
 
     private selected: AccessLevelItem;
 
-    constructor(configService: NxConfigService) {
-        super(configService);
+    constructor() {
+        super();
     }
 
     /**

@@ -42,8 +42,6 @@ import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layou
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, WebPage } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -97,7 +95,7 @@ interface ResourceLookup<T = { id: string }> {
 })
 export class NxLayoutViewComponent {
     LANG = staticLang;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     ptzControlTarget: NxSystemCamera;
 
     selectedSystem$ = this.systemService.currentSystem$;
@@ -271,7 +269,7 @@ export class NxLayoutViewComponent {
                     .sort(byName)
                     .filter(
                         ({ type }) =>
-                            this.CONFIG.featureFlags.layoutsIoDevices ||
+                            nxConfig.featureFlags.layoutsIoDevices ||
                             type !== ResourceType.IO_DEVICE,
                     );
 
@@ -285,8 +283,8 @@ export class NxLayoutViewComponent {
                             type: ResourceType.LAYOUTS,
                             children: layoutsForTree,
                         },
-                        (this.CONFIG.featureFlags.layoutsServers ||
-                            this.CONFIG.featureFlags.layoutsDemo) && {
+                        (nxConfig.featureFlags.layoutsServers ||
+                            nxConfig.featureFlags.layoutsDemo) && {
                             name: staticLang.layouts.titles.resourceTypes[ResourceType.SERVERS],
                             details: { id: ResourceType.SERVERS },
                             type: ResourceType.SERVERS,
@@ -302,8 +300,8 @@ export class NxLayoutViewComponent {
                             type: ResourceType.CAMERAS,
                             children: camerasForTree,
                         },
-                        (this.CONFIG.featureFlags.layoutsWebpages ||
-                            this.CONFIG.featureFlags.layoutsDemo) && {
+                        (nxConfig.featureFlags.layoutsWebpages ||
+                            nxConfig.featureFlags.layoutsDemo) && {
                             name: staticLang.layouts.titles.resourceTypes[ResourceType.WEB_PAGES],
                             details: { id: ResourceType.WEB_PAGES },
                             type: ResourceType.WEB_PAGES,
@@ -437,7 +435,6 @@ export class NxLayoutViewComponent {
         private accountService: NxAccountService,
         private cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
-        configService: NxConfigService,
         private dialogsService: NxDialogsService,
         layoutGridService: NxLayoutGridService,
         // private location: Location,
@@ -447,9 +444,7 @@ export class NxLayoutViewComponent {
         private translate: TranslateService,
         private store: Store,
         public layoutStateService: LayoutStateService,
-    ) {
-        this.CONFIG = configService.config;
-    }
+    ) {}
 
     ngOnInit(): void {
         this.selectedSystem$
@@ -464,7 +459,7 @@ export class NxLayoutViewComponent {
     }
 
     initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {
-        if (!this.CONFIG.featureFlags.layoutsTour && !this.CONFIG.featureFlags.layoutsDemo) {
+        if (!nxConfig.featureFlags.layoutsTour && !nxConfig.featureFlags.layoutsDemo) {
             return;
         }
         this.tourService.initialize(
@@ -518,7 +513,7 @@ export class NxLayoutViewComponent {
         fixedWidth: 0,
         id: null,
         items,
-        locked: !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
+        locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
         logicalId: 0,
         name,
         systemId,
@@ -591,8 +586,7 @@ export class NxLayoutViewComponent {
                     zoomTop: 0,
                 },
             ],
-            locked:
-                !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
+            locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
             logicalId: 0,
             name: this.layoutStateService.focusViewToken,
             systemId,

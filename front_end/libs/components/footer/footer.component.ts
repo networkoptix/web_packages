@@ -11,7 +11,6 @@ import { NxMenusService } from '@services/menus.service';
 import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { nxConfig } from '@services/nx-config/config';
-import type { IConfig } from '@services/nx-config/config-types';
 
 @UntilDestroy()
 @Component({
@@ -22,7 +21,7 @@ import type { IConfig } from '@services/nx-config/config-types';
     imports: [CommonModule, FormsModule, RouterModule, TranslateModule, PipesModule],
 })
 export class NxFooterComponent implements OnInit {
-    CONFIG: IConfig = nxConfig;
+    CONFIG = nxConfig;
     companyLink: string;
     companyName: string;
     copyrightYear: string;
@@ -48,7 +47,7 @@ export class NxFooterComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        this.visible = this.oauth || !this.CONFIG.featureFlags.newHeader;
+        this.visible = this.oauth || !nxConfig.featureFlags.newHeader;
         this.companyLink = this.CONFIG.company.links.website;
         this.companyName = this.CONFIG.company.name;
         this.copyrightYear = this.CONFIG.company.copyrightYear;
