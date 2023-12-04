@@ -198,9 +198,11 @@ export class NxSystemLicensesComponent implements OnInit {
                     : {};
 
                 if (Object.keys(server).length) {
-                    item.info.serverTime = serversTime.find(time => {
-                        return cleanId(server.id) === time.serverId;
-                    }).vmsTime;
+                    if (serversTime.length) {
+                        item.info.serverTime = serversTime.find(time => {
+                            return cleanId(server.id) === time.serverId;
+                        }).vmsTime;
+                    }
 
                     // format date to standard format ... Safari doesn't recognize "yyyy-MM-dd HH:mm:ss"
                     item.info.expiration = new Date(
