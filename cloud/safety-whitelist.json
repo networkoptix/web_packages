@@ -176,5 +176,9 @@
   },
   "62044": {
     "name": "pip"
+  },
+  "62126": {
+    "name": "Django",
+    "note": "CVE-2023-46695: Potential denial of service vulnerability in UsernameField on Windows.https://www.djangoproject.com/weblog/2023/nov/01/security-releases"
   }
 }
