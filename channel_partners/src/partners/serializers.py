@@ -1,7 +1,8 @@
 import datetime
 import json
 from collections import defaultdict
-from typing import Optional, Set, List
+from typing import Optional, Set, Iterable, List
+import uuid
 
 import llutil
 import rest_framework.exceptions
@@ -28,8 +29,10 @@ from partners.models import (
     ServiceToSubChannelProperties, ServiceToOrganizationProperties, ChannelPartnerAccessLevel, SystemGroup,
     get_channel_partner_roles, get_organization_roles
  )
+from tools.serializers import FieldAccessModelSerializer, AccessMatrixMixin
 from tools.helpers import get_path_from_parent
-from tools.utils import bind_system_to_cdb_organization
+from tools.serializers import FieldAccessModelSerializer
+from tools.utils import make_batch_request, bind_system_to_cdb_organization
 from .authentication import check_user_can_administer_system
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
@@ -37,44 +40,44 @@ STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STA
 STATE_CHOICES_STR_MAP = {choice[1]: choice[0] for choice in ChannelPartnerStates.STATE_CHOICES}
 
 
-def get_to_user_relation(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
-                         instance: ChannelPartner | Organization,
-                         instance_lookup: str) -> Optional[OrganizationToUser | ChannelPartnerToUser]:
-    # todo. move it serializer and use with @cached_property decoration
-    if not all([to_user_rel, instance]):
-        return
-    return next(filter(lambda rel: getattr(rel, instance_lookup, None) == instance.id, to_user_rel), None)
-
-
-def get_organization_permissions_list(to_user_rel: QuerySet[OrganizationToUser],
-                                      roles: dict,
-                                      instance: Organization) -> Set[str]:
-    if not all([to_user_rel, roles, instance]):
-        return set()
-    permissions = set()
-    for instance_to_user in to_user_rel:
-        if not instance_to_user.organization_id == instance.id or instance_to_user.system_group_id is not None:
-            continue
-        for role_uuid in instance_to_user.roles:
-            permissions = permissions.union(roles.get(role_uuid, {}).get('permissions', set()))
-        # there is still only one OrganizationToUser that have organization permissions
-        return permissions
-    return permissions
-
-
-def get_channel_partner_permissions_list(to_user_rel: QuerySet[ChannelPartnerToUser],
-                                         roles: dict,
-                                         instance: ChannelPartner) -> Set[str]:
-    if not all([to_user_rel, roles, instance]):
-        return set()
-    for instance_to_user in to_user_rel:
-        if not instance_to_user.channel_partner_id == instance.id:
-            continue
-        permissions = set()
-        for role_uuid in instance_to_user.roles:
-            permissions = permissions.union(roles.get(role_uuid, {}).get('permissions', set()))
-        return permissions
-    return set()
+# def get_to_user_relation(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
+#                          instance: ChannelPartner | Organization,
+#                          instance_lookup: str) -> Optional[OrganizationToUser | ChannelPartnerToUser]:
+#     # todo. move it serializer and use with @cached_property decoration
+#     if not all([to_user_rel, instance]):
+#         return
+#     return next(filter(lambda rel: getattr(rel, instance_lookup, None) == instance.id, to_user_rel), None)
+#
+#
+# def get_organization_permissions_list(to_user_rel: QuerySet[OrganizationToUser],
+#                                       roles: dict,
+#                                       instance: Organization) -> Set[str]:
+#     if not all([to_user_rel, roles, instance]):
+#         return set()
+#     permissions = set()
+#     for instance_to_user in to_user_rel:
+#         if not instance_to_user.organization_id == instance.id or instance_to_user.system_group_id is not None:
+#             continue
+#         for role_uuid in instance_to_user.roles:
+#             permissions = permissions.union(roles.get(role_uuid, {}).get('permissions', set()))
+#         # there is still only one OrganizationToUser that have organization permissions
+#         return permissions
+#     return permissions
+#
+#
+# def get_channel_partner_permissions_list(to_user_rel: QuerySet[ChannelPartnerToUser],
+#                                          roles: dict,
+#                                          instance: ChannelPartner) -> Set[str]:
+#     if not all([to_user_rel, roles, instance]):
+#         return set()
+#     for instance_to_user in to_user_rel:
+#         if not instance_to_user.channel_partner_id == instance.id:
+#             continue
+#         permissions = set()
+#         for role_uuid in instance_to_user.roles:
+#             permissions = permissions.union(roles.get(role_uuid, {}).get('permissions', set()))
+#         return permissions
+#     return set()
 
 
 class CodeChoiceField(serializers.ChoiceField):
@@ -141,7 +144,9 @@ class ErrorMessageSerializer(serializers.Serializer):
     message = serializers.CharField()
 
 
-class ChannelPartnerSerializer(serializers.ModelSerializer):
+class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
+    CONTENT_TYPE = 'channelpartner'
+
     class UsersField(serializers.HyperlinkedRelatedField):
         view_name = 'channelpartners-user-list'
 
@@ -171,7 +176,8 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
     supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
-    ownRoles = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
+    ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
+    ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
 
     class Meta:
         model = ChannelPartner
@@ -203,16 +209,18 @@ class ChannelPartnerSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data_filtered)
 
     def get_permissions_list(self, instance) -> List[str]:
-        perms = get_channel_partner_permissions_list(to_user_rel=self.context.get('channel_partner_to_user'),
-                                                     roles=self.channel_partner_roles,
-                                                     instance=instance)
-        return list(perms)
+        rel = self.user_access_matrix.get_cp_to_user_rel(instance.id)
+        if rel:
+            return list(self.user_access_matrix.get_cp_permissions(rel.roles or [], filtered=False))
+        return []
 
-    def get_roles_list(self, instance) -> List[str]:
-        rels = get_to_user_relation(to_user_rel=self.context.get('channel_partner_to_user'),
-                                    instance=instance,
-                                    instance_lookup='channel_partner_id')
-        return rels.roles_name if rels else []
+    def get_roles_list(self, instance) -> List[uuid.UUID]:
+        rel = self.user_access_matrix.get_cp_to_user_rel(instance.id)
+        return rel.roles if rel else []
+
+    def get_roles_names(self, instance: Organization) -> List[str]:
+        rel = self.user_access_matrix.get_cp_to_user_rel(instance.id)
+        return rel.roles_name if rel else []
 
 
 class CreateChannelPartnerSerializer(serializers.ModelSerializer):
@@ -239,7 +247,9 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
         return instance
 
 
-class OrganizationSerializer(serializers.ModelSerializer):
+class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
+    CONTENT_TYPE = 'organization'
+
     class UsersField(serializers.HyperlinkedRelatedField):
         view_name = 'organizations-user-list'
 
@@ -270,7 +280,8 @@ class OrganizationSerializer(serializers.ModelSerializer):
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
-    ownRoles = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
+    ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
+    ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
 
     class Meta:
         model = Organization
@@ -288,32 +299,22 @@ class OrganizationSerializer(serializers.ModelSerializer):
         return super().update(instance, validated_data_filtered)
 
     def get_permissions_list(self, instance) -> List[str]:
-        perms = get_organization_permissions_list(to_user_rel=self.context.get('organizations_to_user'),
-                                                  roles=self.organization_roles,
-                                                  instance=instance)
-        if instance.channel_partner_access_level_id:
-            for partner_to_user in self.context.get('channel_partner_to_user', []):
-                if instance.channel_partner_id == partner_to_user.channel_partner_id:
-                    if partner_to_user.roles:
-                        perms = perms.union(
-                            self.organization_roles
-                            .get(instance.channel_partner_access_level_id, {})
-                            .get('permissions', set())
-                        )
-                        break
+        perms = self.user_access_matrix.get_org_permissions(
+            self.get_roles_list(instance), filtered=False)
         return list(perms)
 
-    def get_roles_list(self, instance: Organization) -> List[str]:
-        rels = get_to_user_relation(to_user_rel=self.context.get('organizations_to_user'),
-                                    instance=instance,
-                                    instance_lookup='organization_id')
-        own_roles = rels.roles_name if rels else []
+    def get_roles_list(self, instance: Organization) -> List[uuid.UUID]:
+        own_roles = self.user_access_matrix.get_user_instance_roles(instance)
         if instance.channel_partner_access_level_id:
-            for partner_to_user in self.context.get('channel_partner_to_user', []):
-                if instance.channel_partner_id == partner_to_user.channel_partner_id:
-                    if partner_to_user.roles:
-                        own_roles += [self.organization_roles[instance.channel_partner_access_level_id]['name']]
-        return list(set(own_roles))
+            if rel := self.user_access_matrix.get_cp_to_user_rel(instance.channel_partner_id):
+                if rel.roles:
+                    own_roles |= {self.organization_roles[instance.channel_partner_access_level_id]['name']}
+        return list(own_roles)
+
+    def get_roles_names(self, instance: Organization) -> List[str]:
+        own_roles = self.get_roles_list(instance=instance)
+        roles = self.user_access_matrix.access_matrix.organization_roles
+        return [roles[r]['name'] for r in own_roles if roles[r]['name']]
 
 
 class CreateOrganizationSerializer(serializers.ModelSerializer):
@@ -338,7 +339,8 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
         return instance
 
 
-class CloudSystemSerializer(serializers.ModelSerializer):
+class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
+    CONTENT_TYPE = "cloudsystemid"
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     effectiveState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     systemId = serializers.UUIDField(source='system_id', read_only=True)
@@ -409,11 +411,11 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         relation.save()
         return relation
 
+
 class ReadWriteSerializerMethodField(serializers.Field):
     def __init__(self, method_name=None, **kwargs):
         self.method_name = method_name
         kwargs['source'] = '*'
-        #kwargs['read_only'] = True
         super(ReadWriteSerializerMethodField, self).__init__(**kwargs)
 
     def bind(self, field_name, parent):

@@ -3,19 +3,30 @@ from datetime import timedelta
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
+from enum import Enum, StrEnum
+from itertools import chain
+from typing import Dict, Union, Literal, List
+import random
+import string
+import time
+import llutil
 import queue
 from typing import Dict, List, Optional
 import uuid
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import User, PermissionsMixin, Permission
+from django.contrib.auth.models import User, PermissionsMixin, BaseUserManager, Permission
+from django.contrib.contenttypes.models import ContentType
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
+from django.core.exceptions import ValidationError
 from django.core.cache import caches
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.functions import Greatest
-from django.db.models import Sum, F, QuerySet, Q, Subquery, Func
+from django.db.models import Sum, F, QuerySet, Q, Subquery, FilteredRelation, Func
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django_cte import CTEManager
@@ -165,12 +176,11 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     last_usage_report = models.DateTimeField(default=timezone.now)
     security_statuses = models.JSONField(default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
+    activated = models.BooleanField(default=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
-    activated = models.BooleanField(default=True)
-    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
-
     observed_fields = ('organization_id', 'state', 'effective_state', 'system_group_id')
 
     def __str__(self):
@@ -600,7 +610,6 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
             self.cloud_host = self.parent_channel_partner.cloud_host
         if new:
-            self.id = self.id or uuid.uuid4()
             if self.parent_channel_partner_id:
                 self.path = get_path_from_parent(self.parent_channel_partner)
         self.update_state()
@@ -729,7 +738,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         )
         return partners_tree
 
-    def successors(self) -> 'QuerySet[CahnnelPartner]':
+    def successors(self) -> 'QuerySet[ChannelPartner]':
         return ChannelPartner.objects.filter(path__contains=[self.id])
 
     @classmethod
@@ -1646,6 +1655,16 @@ class BillingModel(models.Model):
     regular_period_type = models.IntegerField(choices=RegularPeriodTypes.TYPES)
     invoice_type = models.IntegerField(choices=InvoiceTypes.TYPES)
     fixed_invoice_date = models.DateField(help_text='If invoice_type is "Fixed Date"', blank=True, null=True)
+
+
+class FieldAccessPermissions(StrEnum):
+    field_access_cp_admin = "field_access_cp_admin"
+    field_access_cp_manager = "field_access_cp_manager"
+    field_access_cp_accountant = "field_access_cp_accountant"
+    field_access_org_admin = "field_access_org_admin"
+    field_access_org_power_user = "field_access_org_power_user"
+    field_access_org_other = "field_access_org_other"
+
 
 # class SystemGroupToUser(models.Model):
 #     system_group = models.ForeignKey(SystemGroup, on_delete=models.CASCADE)

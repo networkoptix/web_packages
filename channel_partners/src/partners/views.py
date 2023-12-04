@@ -205,11 +205,6 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ChannelPartnerFilter
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
-        return context
-
     def get_queryset(self):
         query = Q(
             Q(cloud_host=self.request.cloud_host) |
@@ -449,11 +444,6 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         else:
             return ChannelPartnerSerializer
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
-        return context
-
     def get_queryset(self):
         # common case with filtering by cloud_host
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
@@ -474,7 +464,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
                 .values('channel_partner')
             )
             query |= Q(parent_channel_partner__in=Subquery(parent_channel_partners_query))
-
+            return self.queryset.filter(query)
         return self.queryset.filter(query)
 
 
@@ -541,11 +531,6 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.OrganizationFilter
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user)
-        return context
-
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
 
@@ -583,14 +568,6 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             return CreateOrganizationSerializer
         else:
             return OrganizationSerializer
-
-    def get_serializer_context(self):
-        # todo. remove when access matrix is ready
-        context = super().get_serializer_context()
-        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user,
-                                                                             system_group_id__isnull=True)
-        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
-        return context
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
@@ -808,7 +785,7 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     http_method_names = ['get']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = CloudSystemId.objects.all().order_by('created_ts')
+    queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
@@ -976,7 +953,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
-    queryset = CloudSystemId.objects.all().order_by('created_ts')
+    queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
     lookup_field = 'system_id'
@@ -990,7 +967,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.detail:
             return self.queryset.filter(cloud_host=self.request.cloud_host)
         else:
-            return self.queryset.filter(cloud_host=self.request.cloud_host, organization__users=self.request.user, activated=True)
+            return self.queryset.filter(cloud_host=self.request.cloud_host,
+                                        organization__users=self.request.user, activated=True)
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -1005,7 +983,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
             return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_field)]
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action in ('retrieve', 'services', 'saas_report'):
-            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access, system_allowed=True, direct_access_allowed=True))
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
+                                                        system_allowed=True, direct_access_allowed=True))
         if self.action == 'service_quantity':
             if self.request.method == 'PATCH':
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
@@ -1029,7 +1008,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
         serializer.is_valid(raise_exception=True)
         system = serializer.save(cloud_host=request.cloud_host)
 
-        response_serializer = CloudSystemSerializer(system)
+        response_serializer = CloudSystemSerializer(system, context=self.get_serializer_context())
         return Response(response_serializer.data)
 
     @extend_schema(responses=SaaSReportSerializer,

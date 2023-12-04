@@ -301,8 +301,10 @@ class TestChannelPartnerSerializer:
                 if str(partner.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
                     assert data['ownRoles'] == user.roles_name
+                    assert data['ownRolesIds'] == user.roles
                 else:
                     assert data['ownPermissions'] == []
+                    assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
 
@@ -312,7 +314,7 @@ class TestOrganizationSerializer:
                               cp_service_factory, org_service_factory, service_record_factory, arf,
                               default_cp_admin):
         request = arf.get('/')
-        request.user = default_cp_admin
+        request.user = default_cp_admin.user
         org = organization_factory()
         systems = [system_factory(organization=org) for _ in range(5)]
         disabled_system = system_factory(organization=org)
@@ -361,17 +363,20 @@ class TestOrganizationSerializer:
             for data in serializer.data:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
+                    assert data['ownRolesIds'] == user.roles
                     assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
+                    assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
+
         organization = orgs[0]
         org_admin_role = roles.get(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
         organization.channel_partner_access_level = org_admin_role
         organization.save()
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
-        assert serializer.data['ownRoles'] == [org_admin_role.name]
+        assert serializer.data['ownRolesIds'] == [org_admin_role.name]
 
 
 

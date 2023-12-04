@@ -22,6 +22,7 @@ from partners.views import (
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
     SystemGroupUserViewSet, system_user, system_users
 )
+from tools.serializers import VALUE_REPLACEMENT
 
 
 class TestCloudSystemViewSet:
@@ -566,7 +567,8 @@ class TestChannelPartnerViewSet:
         response = view(request, pk=str(sub_cp.id))
         assert response.status_code == 200
         assert response.data['id'] == str(sub_cp.id)
-        assert response.data['parentChannelPartner'] == root_cp.id
+        # Organizations users have no access to their parent's parent cp id
+        assert response.data['parentChannelPartner'] == VALUE_REPLACEMENT
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
                        system_factory, arf, mock_auth_with_user, cp_user_factory):
@@ -660,9 +662,11 @@ class TestChannelPartnerViewSet:
             for data in response.data['results']:
                 if str(partner.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
+                    assert data['ownRolesIds'] == user.roles
                     assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
+                    assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
 
@@ -759,9 +763,11 @@ class TestOrganizationViewSet:
             for data in response.data['results']:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
+                    assert data['ownRolesIds'] == user.roles
                     assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
+                    assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
 

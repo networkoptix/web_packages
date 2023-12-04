@@ -9,6 +9,7 @@ from django.db.models import Q
 from model_bakery import baker
 
 from rest_framework.test import APIRequestFactory
+
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
     ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
     ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
@@ -279,6 +280,10 @@ def service_record_factory():
 
     return factory
 
+
+@pytest.fixture()
+def with_access_levels(db):
+    setup_levels()
 
 @pytest.fixture()
 def system_group_factory():

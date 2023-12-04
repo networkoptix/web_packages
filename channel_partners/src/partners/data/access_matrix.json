@@ -1,0 +1,786 @@
+[
+  {
+    "target_content": "channelpartner",
+    "fields": [
+      {
+        "target_field": "name",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": true},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "state",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "effectiveState",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "parentChannelPartner",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": true, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "monthlyAdditionalServiceLimit",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "attributes",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": true},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  {
+    "target_content": "organization",
+    "fields": [
+      {
+        "target_field": "name",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": true},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "state",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "channelPartnerAccessLevel",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": true},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "attributes",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "currentServices",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": true, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      }
+    ]
+  },
+    {
+    "target_content": "cloudsystemid",
+    "fields": [
+      {
+        "target_field": "name",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": true},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      },
+      {
+        "target_field": "state",
+        "permissions": [
+          {
+            "permission": "field_access_cp_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_manager",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": true},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_cp_accountant",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": false, "can_write": false},
+              {"owning_level": 1, "can_read": true, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_admin",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_power_user",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          },
+          {
+            "permission": "field_access_org_other",
+            "access_levels": [
+              {"owning_level": -1, "can_read": false, "can_write": false},
+              {"owning_level": 0, "can_read": true, "can_write": false},
+              {"owning_level": 1, "can_read": false, "can_write": false},
+              {"owning_level": null, "can_read": false, "can_write": false}
+            ]
+          }
+        ]
+      }
+    ]
+  }
+
+
+]

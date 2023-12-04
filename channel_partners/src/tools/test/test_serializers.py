@@ -32,12 +32,7 @@ class TestFieldAccessSerializer:
                                                          required=True)
             uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
 
-            camelCase = serializers.CharField(source='snake_case', required=False)
-
             def can_write_uuid_cannot_be_written(self):
-                return False
-
-            def can_write_snake_case(self):
                 return False
 
         data = {
@@ -77,7 +72,6 @@ class TestFieldAccessSerializer:
         assert ser.errors["email_can_be_written"][0].code == 'invalid'
         assert "User is not allowed to modify this field" in ser.errors["uuid_cannot_be_written"][0]
         assert ser.errors["uuid_cannot_be_written"][0].code == 'forbidden'
-        assert ser.errors["camelCase"][0].code == 'forbidden'
 
     def test_can_read(self):
 
@@ -93,28 +87,22 @@ class TestFieldAccessSerializer:
             email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
             uuid_cannot_be_written = serializers.CharField(max_length=64, required=True)
 
-            def can_read_uuid_cannot_be_written(self):
+            def can_read_uuid_cannot_be_written(self, instance=None):
                 return True
 
         class CanNotWriteSerializer(FieldAccessSerializer):
             email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()],
                                                          required=True)
             uuid_cannot_be_written = serializers.CharField(max_length=64, required=True)
-
-            camelCase = serializers.CharField(source="snake_case", required=False)
-
             methodField = serializers.SerializerMethodField(method_name='get_string')
 
             def get_string(self, instance):
                 return f"{uuid4()}"
 
-            def can_read_uuid_cannot_be_written(self):
+            def can_read_uuid_cannot_be_written(self, instance=None):
                 return False
 
-            def can_read_snake_case(self):
-                return False
-
-            def can_read_methodField(self):
+            def can_read_methodField(self, instance=None):
                 return False
 
 
@@ -140,7 +128,6 @@ class TestFieldAccessSerializer:
 
         assert ser.data != data
         assert ser.data["uuid_cannot_be_written"] == VALUE_REPLACEMENT
-        assert ser.data["camelCase"] == VALUE_REPLACEMENT
         assert ser.data["methodField"] == VALUE_REPLACEMENT
 
 
@@ -166,7 +153,7 @@ class TestFieldAccessModelSerializer:
                 model = CloudSystemId
                 fields = ['cloudSystemId', 'organization']
 
-            def can_write_cloudSystemId(self):
+            def can_write_cloudSystemId(self, instance=None):
                 return True
 
         class CanNotWriteSerializer(FieldAccessModelSerializer):
@@ -175,7 +162,7 @@ class TestFieldAccessModelSerializer:
                 model = CloudSystemId
                 fields = ['cloudSystemId', 'organization']
 
-            def can_write_cloudSystemId(self):
+            def can_write_cloudSystemId(self, instance=None):
                 return False
 
         data = {
@@ -234,7 +221,7 @@ class TestFieldAccessModelSerializer:
                 model = CloudSystemId
                 fields = ['cloudSystemId', 'organization']
 
-            def can_read_cloudSystemId(self):
+            def can_read_cloudSystemId(self, instance=None):
                 return True
 
         class CanNotWriteSerializer(FieldAccessModelSerializer):
@@ -243,7 +230,7 @@ class TestFieldAccessModelSerializer:
                 model = CloudSystemId
                 fields = ['cloudSystemId', 'organization']
 
-            def can_read_cloudSystemId(self):
+            def can_read_cloudSystemId(self, instance=None):
                 return False
 
 

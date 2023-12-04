@@ -1,12 +1,17 @@
+import typing as t
 from collections import OrderedDict
 from collections.abc import Mapping
 
 from django.core.exceptions import ValidationError as DjangoValidationError
+from django.utils.functional import cached_property
 from rest_framework.exceptions import ErrorDetail, ValidationError
 from rest_framework.fields import get_error_detail, set_value, SkipField, empty
 from rest_framework.settings import api_settings
 from rest_framework import serializers
 
+from partners.models import CloudUser, CloudHost, ChannelPartner, Organization, ChannelPartnerRole, OrganizationRole, \
+    ChannelPartnerToUser
+from tools.access_matrix import UserAccessMatrix, AccessTypes
 
 VALUE_REPLACEMENT = "**REDACTED**"
 
@@ -17,6 +22,12 @@ class FieldAccessMixin:
     fields permission checks. Data required for permissions check must be passed in
     serializer context.
     """
+
+    def get_write_perm_method(self, field):
+        return getattr(self, f'can_write_{field.field_name}', None)
+
+    def get_read_perm_method(self, field):
+        return getattr(self, f'can_read_{field.field_name}', None)
 
     def to_internal_value(self, data):
         """
@@ -36,9 +47,7 @@ class FieldAccessMixin:
 
         for field in fields:
             validate_method = getattr(self, 'validate_' + field.field_name, None)
-            has_write_perm_method = getattr(self, 'can_write_' + field.field_name, None)
-            if has_write_perm_method is None and isinstance(field.source, str):
-                has_write_perm_method = getattr(self, 'can_write_' + field.source, None)
+            has_write_perm_method = self.get_write_perm_method(field)
 
             primitive_value = field.get_value(data)
 
@@ -70,11 +79,10 @@ class FieldAccessMixin:
     def to_representation(self, instance):
         ret = super().to_representation(instance=instance)
         for field_name in ret:
-            field_source = self.fields[field_name].source
-            has_read_permission_method = getattr(self, 'can_read_' + field_name, None) or getattr(self, 'can_read_' + field_source, None)
+            has_read_permission_method = self.get_read_perm_method(self.fields[field_name])
             if not has_read_permission_method:
                 continue
-            if not has_read_permission_method():
+            if not has_read_permission_method(instance=instance):
                 ret[field_name] = VALUE_REPLACEMENT
         return ret
 
@@ -85,3 +93,50 @@ class FieldAccessSerializer(FieldAccessMixin, serializers.Serializer):
 
 class FieldAccessModelSerializer(FieldAccessMixin, serializers.ModelSerializer):
     pass
+
+
+def field_perm_method_wrapper(serializer, field, access_type: AccessTypes):
+    if not serializer.user_access_matrix.access_matrix.fields.get(field.field_name):
+        return None
+
+    def method(instance=None):
+        return serializer.user_access_matrix.check_permission(
+            field_name=field.field_name, access_type=access_type, target_instance=instance)
+
+    return method
+
+
+class AccessMatrixMixin:
+    CONTENT_TYPE = None
+
+    @property
+    def _content_type(self):
+        if not self.CONTENT_TYPE:
+            raise ValueError(f"CONTENT_TYPE must be set for using field access level with serializer.")
+        return self.CONTENT_TYPE
+
+    @property
+    def request_user(self) -> CloudUser:
+        return self.context['request'].user
+
+    @property
+    def request_cloud_host(self) -> CloudHost:
+        return self.context['cloud_host']
+
+    @cached_property
+    def user_access_matrix(self):
+        return UserAccessMatrix(cloud_user=self.request_user, content_type=self._content_type)
+
+    def get_write_perm_method(self, field):
+        explicit_method = getattr(self, f'can_write_{field.field_name}', None)
+        if explicit_method:
+            return explicit_method
+        
+        return field_perm_method_wrapper(self, field, AccessTypes.write)
+
+    def get_read_perm_method(self, field):
+        explicit_method = getattr(self, f'can_read_{field.field_name}', None)
+        if explicit_method:
+            return explicit_method
+
+        return field_perm_method_wrapper(self, field, AccessTypes.read)
