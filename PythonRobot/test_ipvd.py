@@ -261,7 +261,12 @@ def text_search_filter(login, password):
         ipvd_page.select_device_from_table_randomly()
         assert  ipvd_page.get_device_manufacturer() == manufacturer
 
-
+        # step 2
+        ipvd_page.advanced_search_button().click()
+        filter_text = ipvd_page.search_bar().get_attribute('value')
+        assert filter_text == manufacturer
+        ipvd_page.select_device_from_table_randomly()
+        assert ipvd_page.get_device_manufacturer() == manufacturer
 
 if __name__ == "__main__":
     with Suite() as suite:
@@ -275,4 +280,3 @@ if __name__ == "__main__":
         feedback_form_basic_validations(cloud_user.email, cloud_user.password)
         test_text_search(cloud_user.email, cloud_user.password)
         text_search_filter(cloud_user.email, cloud_user.password)
-
