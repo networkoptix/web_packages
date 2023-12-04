@@ -1,6 +1,5 @@
 import time
 
-import resource_import
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
@@ -238,6 +237,32 @@ def test_text_search(login, password):
         assert make1 == make2
         assert make2 < make3
 
+def text_search_filter(login, password):
+    """8 Text in Search Input is kept after clicking X on
+    Applied Features filter indicator"""
+    with get_chrome() as driver:
+        # step 1
+        manufacturer = 'Axis'
+        ipvd_page = IVPDPage(driver)
+        ipvd_page.go_to_ipvd()
+        assert ipvd_page.validate_on_ipvd_page()
+        ipvd_page.ptz_camera_filter_button().click()
+        ipvd_page.ipvd_table().wait_until_visible()
+        ipvd_page.search_text(manufacturer)
+        time.sleep(2)
+        ipvd_page.filters_applied_button().wait_until_visible()
+        button_text = '2 ' + rb.IPVD_FILTERS_APPLIED_TEXT
+        ipvd_page.filters_applied_button().should_contain(button_text)
+
+        ipvd_page.select_device_from_table_by_row(1)
+        assert  ipvd_page.get_device_manufacturer() == manufacturer
+        ipvd_page.select_device_from_table_randomly()
+        assert  ipvd_page.get_device_manufacturer() == manufacturer
+        ipvd_page.select_device_from_table_randomly()
+        assert  ipvd_page.get_device_manufacturer() == manufacturer
+
+
+
 if __name__ == "__main__":
     with Suite() as suite:
         cloud_user = suite.create_cloud_account()
@@ -249,3 +274,5 @@ if __name__ == "__main__":
         request_form_basic_validation()
         feedback_form_basic_validations(cloud_user.email, cloud_user.password)
         test_text_search(cloud_user.email, cloud_user.password)
+        text_search_filter(cloud_user.email, cloud_user.password)
+

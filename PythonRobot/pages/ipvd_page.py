@@ -206,6 +206,10 @@ class IVPDPage:
         filter_button = '//nx-search//span[@class="filter-label"]'
         return Button(self.driver, filter_button)
 
+    def filters_applied_button(self) -> Button:
+        xpath = "//nx-ipvd//nx-search/div/div/div[1]//span[contains(@class,'filter-label')]"
+        return Button(self.driver, xpath)
+
     def first_page_button(self) -> Button:
         xpath = '//*[@id="paginator-tile-first"]'
         return Button(self.driver, xpath)
@@ -269,6 +273,12 @@ class IVPDPage:
 
     def previous_page_button(self) -> Button:
         xpath = '//*[@id="paginator-prev"]'
+        return Button(self.driver, xpath)
+
+    def ptz_camera_filter_button(self) -> Button:
+        xpath = (self.devices_pane().locator +
+                 self.rb.replace_nested_variables(
+                     '//nx-tag/a[contains(text(),"{IPVD_DEV_FILTER_PTZ_CAMERAS}")] /..'))
         return Button(self.driver, xpath)
 
     def search_bar(self) -> SearchBar:
