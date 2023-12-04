@@ -259,7 +259,6 @@ export class NxLayoutGridItemOverlayComponent {
 
             if (mediaserver instanceof NxSystemRestAPI2) {
                 const {
-                    fps,
                     loading,
                     streamType: { primary, secondary, stream },
                     resolution: { high, low },
@@ -268,7 +267,6 @@ export class NxLayoutGridItemOverlayComponent {
 
                 const sampleRateSeconds = 0.33;
                 let sampleSizeSeconds = 0;
-                const minSampleSizeSeconds = 0.66;
                 const maxBufferSeconds = 6;
 
                 const videoElement =
@@ -298,10 +296,6 @@ export class NxLayoutGridItemOverlayComponent {
                             sampleSizeSeconds += sampleRateSeconds;
                         }
 
-                        const actualFps =
-                            sampleSizeSeconds < minSampleSizeSeconds
-                                ? 0
-                                : frames.length / sampleSizeSeconds;
                         const currentResolution = `${videoElement.videoWidth}x${videoElement.videoHeight}`;
                         const currentStream = mediaStreams.find(
                             ({ resolution }) => resolution === currentResolution,
@@ -324,14 +318,9 @@ export class NxLayoutGridItemOverlayComponent {
                             value: isPrimary ? high : low,
                             params: { codec: codecLookup[currentStream.codec] },
                         };
-                        const fpsText = actualFps && {
-                            value: fps,
-                            params: { fps: actualFps.toFixed(2) },
-                        };
+
                         return videoLoaded
-                            ? [streamTitle, fpsText, currentResolution, streamDescription].filter(
-                                  Boolean,
-                              )
+                            ? [streamTitle, currentResolution, streamDescription].filter(Boolean)
                             : [streamTitle, loading];
                     }),
                     tap(() => {

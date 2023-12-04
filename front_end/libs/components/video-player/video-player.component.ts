@@ -6,7 +6,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ConnectionError, WebRTCStreamManager, StreamOrUrl, AvailableStreams, ApiVersions, RequiresTranscoding, isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
+import { ConnectionError, WebRTCStreamManager, AvailableStreams, ApiVersions, RequiresTranscoding, isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
 import {
     firstValueFrom,
     of,
@@ -30,20 +30,21 @@ type DrawImagePartialTuple = [number, number, number, number];
 
 type DrawImageFullTuple = [number, number, number, number, number, number, number, number];
 
-class FpsTracker {
-    private frames: number[] = [];
+// Not using for now.
+// class FpsTracker {
+//     private frames: number[] = [];
 
-    public reportFrame() {
-        this.frames.push(Date.now())
-    }
+//     public reportFrame() {
+//         this.frames.push(Date.now())
+//     }
 
-    public get currentFps(): number {
-        this.frames = this.frames.filter(frame => frame > Date.now() - 1000 * this.sampleSizeSeconds);
-        return this.frames.length / this.sampleSizeSeconds;
-    }
+//     public get currentFps(): number {
+//         this.frames = this.frames.filter(frame => frame > Date.now() - 1000 * this.sampleSizeSeconds);
+//         return this.frames.length / this.sampleSizeSeconds;
+//     }
 
-    constructor(private sampleSizeSeconds: number = 10) { }
-}
+//     constructor(private sampleSizeSeconds: number = 10) { }
+// }
 
 @UntilDestroy()
 @Component({
@@ -140,17 +141,16 @@ export class NxVideoPlayerComponent {
         return drawParams;
     }
 
-    zoomStream = async (stream: StreamOrUrl): Promise<MediaStream> => {
+    zoomStream = async (stream: MediaStream): Promise<MediaStream> => {
+        if ((['zoomTop', 'zoomBottom', 'zoomRight', 'zoomLeft'] as const).every(key => !this.zoom?.[key])) {
+            return stream;
+        }
 
         const video = this.originalStream.nativeElement;
         const canvas = this.zoomCanvas.nativeElement;
         video.autoplay = true;
         video.muted = true;
-        if (typeof stream === 'string') {
-            video.src = stream;
-        } else {
-            video.srcObject = stream;
-        }
+        video.srcObject = stream;
 
         await new Promise(resolve => {
             const startHandlingStream = () => {
@@ -170,7 +170,6 @@ export class NxVideoPlayerComponent {
                         ctx && ctx.drawImage(video, ...drawImageParams);
                         resolve(null);
                     }
-                    this.fpsTracker.reportFrame();
 
                     video.requestVideoFrameCallback(updateFrame);
                 }
@@ -188,7 +187,6 @@ export class NxVideoPlayerComponent {
         return newStream;
     }
 
-    fpsTracker = new FpsTracker(5);
 
     autoResStreams$$ = computed(() => {
         const camera = this.camera$$();

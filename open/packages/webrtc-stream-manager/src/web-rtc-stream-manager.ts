@@ -1,11 +1,11 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval } from 'rxjs';
+import { Observable, BehaviorSubject, timer, Subject, combineLatest, firstValueFrom, from, NEVER, interval, fromEvent } from 'rxjs';
 import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, distinctUntilChanged, debounceTime, bufferCount, timeout } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, StreamOrUrl, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding } from './types';
 import { BaseTracker } from './trackers/base-tracker';
 import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey } from './utils';
 
@@ -51,11 +51,16 @@ export class WebRTCStreamManager {
         map(() => Object.entries(WebRTCStreamManager.EXISTING_CONNECTIONS))
     )
 
+    static userInteracted$ = fromEvent(document, 'click').pipe(
+        take(1),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
+
     /** Whether to log current playback performance details */
     static SHOW_STATS = true;
 
     /** Default stats handler, could be overriden */
-    static STATS_HANDLER: (frameInfo: PlaybackDetails) => void = console.info;
+    static STATS_HANDLER: (frameInfo: PlaybackDetails) => void = () => {}
 
     /**
      * Factory static method that accepts method selector and returns an observable of the current
@@ -332,7 +337,7 @@ export class WebRTCStreamManager {
      * @param availableStreamsOrHasSecondary StreamsConfig | boolean - A boolean if secondary stream is available,
      * an array of available streams, or a single stream.
      * @param accessToken string
-     * @returns Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
+     * @returns Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
      */
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
@@ -340,21 +345,21 @@ export class WebRTCStreamManager {
         targetStreams?: StreamsConfig,
         accessToken?: string,
         allowTranscoding?: boolean,
-    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
+    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
         hasSecondary?: boolean,
         accessToken?: string,
         allowTranscoding?: boolean,
-    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>
+    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
     static connect(
         webRtcUrlFactory: (params?: Record<string, unknown>) => string,
         videoElement?: HTMLVideoElement,
         targetStreamsOrHasSecondary: StreamsConfig | boolean = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
         accessToken: string = null,
         allowTranscoding: boolean = false,
-    ): Observable<[StreamOrUrl, ConnectionError, WebRTCStreamManager]> {
+    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
         const connectionKey = getConnectionKey(webRtcUrlFactory());
         const availableStreams = Array.isArray(targetStreamsOrHasSecondary) ? targetStreamsOrHasSecondary : targetStreamsOrHasSecondary ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY];
 
@@ -400,6 +405,7 @@ export class WebRTCStreamManager {
     private position$ = new BehaviorSubject(new WithSkip(0));
     private stream$ = new BehaviorSubject(new WithSkip(AvailableStreams.PRIMARY));
     public readonly apiVersion: ApiVersions;
+    private initialPositionSent = false;
 
     /**
      * Updates the position for stream for WebRtcStreamManager instance.
@@ -411,22 +417,24 @@ export class WebRTCStreamManager {
             this.stopCurrentStream();
             this.mediaStream$.next([null, null, this]);
         }
-        const useDataChannelUpdate = this.peerConnection?.remoteDataChannel?.readyState === 'open';
+        const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!this.peerConnection?.remoteDataChannel && this.initialPositionSent;
+
         if (useDataChannelUpdate) {
-            this.peerConnection.remoteDataChannel.send(JSON.stringify({ position }));
+            this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ position }));
         }
+
+        this.initialPositionSent = true;
         this.position$.next(new WithSkip(position, useDataChannelUpdate));
     }
 
     /** Internal */
     private peerConnection: MediaServerPeerConnection;
-    private wsConnectionUrl = '';
     private wsConnection: WebSocketSubject<SignalingMessage>;
     private videoElements: HTMLVideoElement[] = [];
 
     /** Public methods and properties */
     /** Updates whenever the mediasserver sends a new stream */
-    mediaStream$ = new BehaviorSubject<[StreamOrUrl, ConnectionError, WebRTCStreamManager]>(null);
+    mediaStream$ = new BehaviorSubject<[MediaStream, ConnectionError, WebRTCStreamManager]>(null);
 
     /**
      * Get current count of players connected to stream.
@@ -577,7 +585,6 @@ export class WebRTCStreamManager {
     private closeWsConnection = (): void => {
         this.closeWsConnectionNotifier$.next('close');
         this.wsConnection = null;
-        this.wsConnectionUrl = '';
     }
 
     public closeNotifier$ = new Subject();
@@ -609,6 +616,11 @@ export class WebRTCStreamManager {
             tracker.connection = null;
         })
 
+        this.videoRef?.remove();
+        this.videoRef = null;
+        this.mediaSource = null;
+        this.sourceBuffer = null;
+
         if (retryAfterSeconds) {
             setTimeout(this.start, retryAfterSeconds * 1000)
         } else {
@@ -617,6 +629,8 @@ export class WebRTCStreamManager {
         }
     };
 
+    private initialStreamSent = false;
+
     /**
      * Updates the stream used for connection.
      *
@@ -624,10 +638,10 @@ export class WebRTCStreamManager {
      */
     public updateStream(stream: AvailableStreams): void {
         const updateToStream = stream ? AvailableStreams.SECONDARY : AvailableStreams.PRIMARY;
-        const useDataChannelUpdate = this.peerConnection?.remoteDataChannel?.readyState === 'open';
+        const useDataChannelUpdate = this.apiVersion === ApiVersions.v2 && !!this.peerConnection?.remoteDataChannel || this.initialStreamSent;
         if (this.availableStreams.includes(updateToStream)) {
             if (useDataChannelUpdate) {
-                this.peerConnection.remoteDataChannel.send(JSON.stringify({ stream: updateToStream }));
+                this.peerConnection?.remoteDataChannel?.send(JSON.stringify({ stream: updateToStream }));
             }
             this.stream$.next(new WithSkip(stream ? AvailableStreams.SECONDARY : AvailableStreams.PRIMARY, useDataChannelUpdate));
         }
@@ -647,20 +661,47 @@ export class WebRTCStreamManager {
 
     private mediaSource: MediaSource = null;
     private sourceBuffer: SourceBuffer = null;
-    private mseDataBuffer: BufferSource[] = [];
 
-    private appendBuffer = () => {
+    private appendBuffer = (buffer: BufferSource) => {
         if (this.sourceBuffer.updating) {
             return;
         }
-        const nextSource = this.mseDataBuffer.shift();
-        if (nextSource) {
-            console.log('appending buffer')
-            this.sourceBuffer.appendBuffer(nextSource);
+        try {
+            this.sourceBuffer.appendBuffer(buffer);
+        } catch(e) {
+            this.close(1);
         }
     }
 
-    private initializeMse = (mimeType: string): void => {
+    private videoRef: HTMLVideoElement & { captureStream: () => MediaStream }
+
+    private get video() {
+        if (!this.videoRef) {
+            this.videoRef = document.createElement('video') as typeof this.videoRef;
+
+            this.videoRef.style.position = 'absolute';
+            this.videoRef.style.top = '0px';
+
+            this.videoRef.style.width = '1px';
+            this.videoRef.style.height = '1px';
+            this.videoRef.style.visibility = 'hidden';
+            this.videoRef.muted = true;
+            this.videoRef.autoplay = true;
+            document.body.appendChild(this.videoRef);
+
+            this.startUnmuteHandler();
+        }
+        return this.videoRef;
+    }
+
+    private async startUnmuteHandler() {
+        await firstValueFrom(WebRTCStreamManager.userInteracted$)
+        if (this.videoRef) {
+            this.videoRef.muted = false;
+        }
+    }
+
+    private initializeMse = async (mimeType: string): Promise<void> => {
         if (!MediaSource || !MediaSource.isTypeSupported(mimeType)) {
             this.mediaStream$.next([null, ConnectionError.transcodingDisabled, this]);
             return;
@@ -668,11 +709,36 @@ export class WebRTCStreamManager {
 
         if (!this.mediaSource) {
             this.mediaSource = new MediaSource();
-            this.mediaStream$.next([URL.createObjectURL(this.mediaSource), null, this]);
+
+            this.video.src = URL.createObjectURL(this.mediaSource)
+
+            const newStream = this.video.captureStream();
+            this.mediaStream$.next([newStream, null, this]);
             this.mediaSource.onsourceopen = () => {
                 console.log(`ms is opened: ${mimeType}`);
-                this.sourceBuffer = this.mediaSource.addSourceBuffer(mimeType);
-                this.sourceBuffer.onupdateend = this.appendBuffer;
+                if (!this.sourceBuffer) {
+                    this.sourceBuffer = this.mediaSource.addSourceBuffer(mimeType);
+                    this.sourceBuffer.onupdateend = () => {
+                        if (!this.sourceBuffer.buffered.length) {
+                            return;
+                        }
+
+                        const bufferEnd = this.sourceBuffer.buffered.end(0);
+                        const bufferStart = this.sourceBuffer.buffered.start(0);
+                        const currentTime = this.video.currentTime;
+
+                        const start = Math.min(bufferStart, currentTime);
+                        const end = Math.max(bufferEnd - 5, bufferStart);
+                        if (end > start) {
+                            try {
+                                this.sourceBuffer.remove(start, end);
+                                this.mediaSource.setLiveSeekableRange(start, end);
+                            } catch(e) {
+                                this.close(1)
+                            }
+                        }
+                    }
+                }
             }
         }
 
@@ -814,12 +880,13 @@ export class WebRTCStreamManager {
                 this.peerConnection = null;
             }
 
-            const { parameters: { mediaStreams: { streams }}} = await fetchStreams;
+            const streamsRes = await fetchStreams
+            const streams = streamsRes?.parameters?.mediaStreams?.streams || fallback.parameters.mediaStreams.streams;
 
             const targetStream = streams.find(({ encoderIndex }) => encoderIndex === stream);
             const requiresTranscoding = Object.values(RequiresTranscoding).filter(isRequiresTranscoding);
 
-            if (requiresTranscoding && this.apiVersion !== ApiVersions.v1) {
+            if (requiresTranscoding.includes(targetStream.codec) && this.apiVersion !== ApiVersions.v1) {
                 const mse = 'deliveryMethod=mse';
                 if (webRtcUrl.includes('deliveryMethod=srtp')) {
                     webRtcUrl = webRtcUrl.replace('deliveryMethod=srtp', mse)
@@ -841,7 +908,6 @@ export class WebRTCStreamManager {
                   return this.close(15);
             }
 
-            this.wsConnectionUrl = webRtcUrl;
             this.closeWsConnection();
 
             this.wsConnection = webSocket(
@@ -889,13 +955,11 @@ export class WebRTCStreamManager {
                 this.stopCurrentStream();
                 this.mediaStream$.next([stream, null, this]);
             },
-            buffer => {
-                this.mseDataBuffer.push(buffer)
-                if (!this.sourceBuffer.updating) {
-                    console.log('updating buffer')
-                    this.appendBuffer();
-                }
-            }
+            this.appendBuffer,
+            () => ({
+                stream: this.currentStream(),
+                position: this.position$.value.value
+            })
         );
 
         this.updateTrackerConnections();
@@ -916,8 +980,7 @@ export class WebRTCStreamManager {
     ) {
         const relayUrlObject = new URL(webRtcUrlFactory());
         const serverId = relayUrlObject.searchParams.get('x-server-guid');
-        const version = relayUrlObject.searchParams.get('version') || ApiVersions.v1;
-        this.apiVersion = Object.values(ApiVersions).find(apiVersion => apiVersion === version) || ApiVersions.v1;
+        this.apiVersion = relayUrlObject.pathname.includes('/rest/v3') ? ApiVersions.v2 : ApiVersions.v1
         console.info(`Using API version ${this.apiVersion}`)
         const relayHost = relayUrlObject.host;
         this.updateStream(availableStreams.length === 1 ? availableStreams[0] : WebRTCStreamManager.getInitialStream(videoElement));
