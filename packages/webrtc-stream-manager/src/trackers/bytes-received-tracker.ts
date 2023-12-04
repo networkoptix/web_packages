@@ -1,18 +1,20 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { InboundRtpReport } from "../types";
+import { CandidatePairReport, RTCStatReportTypes } from "../types";
 import { BaseConnectionTracker } from "./base-connection-tracker";
 
 /**
  * Track FPS for use in tuning webRTC streams
  */
-export class BytesReceivedTracker extends BaseConnectionTracker {
+export class BytesReceivedTracker extends BaseConnectionTracker<CandidatePairReport> {
     override metricName = 'bytesReceived';
     weight = 1;
     priorityWeight = 0;
 
-    override processInboundReport(report: InboundRtpReport): number {
-        return report?.bytesReceived ?? 0;
+    override targetReport = RTCStatReportTypes.candidatePair;
+
+    override processInboundReport(report: CandidatePairReport): number {
+        return report?.bytesReceived ?? (this.connection?.connectionState === 'connected' ? 0 : 1000)
     }
 
     protected getAverage() {

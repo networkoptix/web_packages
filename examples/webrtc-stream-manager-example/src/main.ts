@@ -138,11 +138,7 @@ const startStream = (relayUrl: string, cameraId: string, serverId: string, enabl
     .pipe(takeUntil(newStream$))
     .subscribe(([stream, error]) => {
       if (stream) {
-        if (typeof stream === 'string') {
-          videoElement.src = stream;
-        } else {
-          videoElement.srcObject = stream;
-        }
+        videoElement.srcObject = stream;
         videoElement.muted = true;
         videoElement.autoplay = true;
 
