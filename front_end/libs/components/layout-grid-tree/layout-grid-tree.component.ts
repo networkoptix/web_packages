@@ -199,6 +199,8 @@ export class NxLayoutGridTreeComponent {
         this.layoutStateService.contextMenu = value;
     }
 
+    CONFIG = nxConfig;
+
     currentNode: ResourceNode;
 
     query$ = this.layoutStateService.paramStateHandler.state$.pipe(
