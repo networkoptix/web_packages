@@ -58,7 +58,7 @@
         <nx-pre-loader *ngIf="isLoading; else sidebar"></nx-pre-loader>
         <ng-template #sidebar>
             <nx-groups-sidebar
-                [currentGroupId]="currentGroupId$ | async"
+                [currentGroupId]="currentGroupId$$()"
                 [userEmail]="userEmail"
                 [hasGroups]="hasGroups$ | async"
                 [openGroups]="openGroups$ | async"

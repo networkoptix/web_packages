@@ -153,6 +153,13 @@ export interface OrganizationUser {
     roles: string[];
     title: string;
     created: string;
+    groupRoles: GroupRole[];
+}
+
+export interface GroupRole {
+    groupId: string;
+    roles: string[];
+    roleIds: string[];
 }
 
 export interface CreateOrganizationUser {
@@ -203,4 +210,24 @@ export interface CreateGroup {
 export interface PatchGroup {
     name: string;
     parentId: string;
+}
+
+/* Group Users */
+export interface GroupUser {
+    email: string;
+    roles: string[];
+    roleIds: string[];
+}
+
+export interface UpdateGroupUser {
+    email: string;
+    roleId: string;
+}
+
+export interface GroupUserCanAccess extends GroupUser {
+    hasAccessTo?: {
+        id: string;
+        name: string;
+        membershipType: string;
+    };
 }

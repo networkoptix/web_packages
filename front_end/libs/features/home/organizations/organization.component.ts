@@ -95,7 +95,7 @@ export class NxOrganizationsComponent implements OnInit {
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
-    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentOrganization$ = this.store.select(selectCurrentOrganization);
 
     constructor(
@@ -199,8 +199,11 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     onTabClick(newIndex: number): void {
+        const currentGroupId = this.currentGroupId$$();
+        const tabRoute = this.tabs[newIndex].route;
+        const route = currentGroupId ? ['group', currentGroupId, tabRoute] : [tabRoute];
         this.router
-            .navigate([this.tabs[this.currentTabIndex$$()].route], { relativeTo: this.route })
+            .navigate(route, { relativeTo: this.route })
             .then(() => this.currentTabIndex$$.set(newIndex));
     }
 

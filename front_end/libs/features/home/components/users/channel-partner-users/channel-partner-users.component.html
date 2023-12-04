@@ -21,6 +21,7 @@
 >
     <div [style.display]="'block'">
         <nx-users-table
+            [userType]="UserType.CHANNEL_PARTNER"
             [headers]="headers"
             [records]="records$ | async"
             [selectedRecordId]="selectedUserEmail"

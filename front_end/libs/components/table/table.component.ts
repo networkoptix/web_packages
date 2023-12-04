@@ -187,7 +187,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     ngOnChanges({ additionalClasses, data }: NgChanges<NxBaseTableComponent<T>>): void {
         if (
-            data?.currentValue &&
+            data?.currentValue?.length &&
             (data.firstChange || !isEqual(data.currentValue, data?.previousValue))
         ) {
             this._headers = <Prop>Object.keys(this.data[0]);

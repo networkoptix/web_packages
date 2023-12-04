@@ -12,7 +12,8 @@ import { NxChannelPartnersService } from '@pages/home/services/channel-partners.
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 
-import type { ChannelPartnerUserExt } from './channel-partner-users.types';
+import type { UserRecord } from './channel-partner-users.types';
+import { UserType } from './channel-partner-users.types';
 
 @Component({
     selector: 'nx-channel-partner-users',
@@ -33,10 +34,11 @@ import type { ChannelPartnerUserExt } from './channel-partner-users.types';
 })
 export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;
+    UserType = UserType;
 
     currentPartnerId$: Observable<string>;
     headers: HEADER_ITEM[];
-    records$: Observable<ChannelPartnerUserExt[]>;
+    records$: Observable<UserRecord[]>;
     selectedUserEmail: string;
 
     constructor(
@@ -55,7 +57,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                     ...user,
                     userId: user.email,
                     fullName: 'N/A',
-                    accessLevel: ['N/A'],
+                    userType: UserType.CHANNEL_PARTNER,
                 })),
             ),
         );
@@ -73,7 +75,6 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 value: this.LANG.channelPartners.usersTableHeaders.fullName,
                 sort: 'string',
             },
-            { name: 'accessLevel', value: this.LANG.channelPartners.usersTableHeaders.accessLevel },
             { name: 'groups', value: this.LANG.channelPartners.usersTableHeaders.groups },
         ];
     }
@@ -82,8 +83,8 @@ export class NxChannelPartnerUsersComponent implements OnInit {
         this.dialogsService.addPartnerUser(partnerId);
     }
 
-    selectUser(rec: ChannelPartnerUserExt): void {
-        this.selectedUserEmail = rec.email;
+    selectUser(rec: UserRecord): void {
+        this.selectedUserEmail = rec.userId;
     }
 
     deleteChannelPartnerUser(email: string): void {

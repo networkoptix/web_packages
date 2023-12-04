@@ -37,6 +37,9 @@ import {
     CreateGroup,
     PatchGroup,
     GetGroupItem,
+    GroupUser,
+    UpdateGroupUser,
+    GroupUserCanAccess,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -277,5 +280,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     patchGroup = (body: PatchGroup): Observable<GroupItem> => {
         return this.patch('/groups/', { body });
+    };
+
+    /* Group Users */
+    getGroupUsers = (groupId: string): Observable<GroupUser[]> => {
+        return this.get(this.makeUrl(urlBases.GROUPS, [groupId, 'users']));
+    };
+
+    updateGroupUser = (groupId: string, body: UpdateGroupUser): Observable<GroupUser> => {
+        return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users']), { body });
+    };
+
+    deleteGroupUsers = (groupId: string, emails: string[]): Observable<GroupUser[]> => {
+        return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'bulk_delete']));
+    };
+
+    getGroupUsersWithAccess = (groupId: string): Observable<GroupUserCanAccess[]> => {
+        return this.get(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'can_access']));
     };
 }

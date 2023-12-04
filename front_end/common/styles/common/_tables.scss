@@ -286,14 +286,36 @@
 .CP-users {
     .nx-new-table {
         .header {
-            grid-template-columns: 42px auto repeat(3, 150px) 50px;
+            grid-template-columns: 42px 245px 150px 308px 42px;
         }
         .big-row {
-            grid-template-columns: 42px auto repeat(3, 150px) 42px;
+            grid-template-columns: 42px 245px 150px 308px 42px;
             grid-template-rows: 40px;
 
             & > div:last-child {
                 padding-left: 8px;
+            }
+        }
+
+        .header, .body {
+            width: 100% !important;
+        }
+    }
+}
+
+.org-users {
+    .nx-new-table {
+        .header {
+            grid-template-columns: 42px auto repeat(3, 150px) 50px;
+        }
+        .big-row {
+            grid-template-columns: 42px auto repeat(3, 150px) 50px;
+            grid-template-rows: 40px;
+
+            div {
+                align-items: center;
+                display: flex;
+                gap: 0.25rem;
             }
         }
 

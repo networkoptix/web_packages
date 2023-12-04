@@ -2,11 +2,11 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, Input, booleanAttribute, effect } from '@angular/core';
-import { ActivatedRoute, Router } from '@angular/router';
+import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, map } from 'rxjs';
+import { Observable, distinctUntilChanged, map } from 'rxjs';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -50,6 +50,7 @@ interface SystemInfo {
         NxCardComponent,
         AngularSvgIconModule,
         NxPreLoaderComponent,
+        RouterOutlet,
     ],
 })
 export class NxOrganizationCardContainerComponent {
@@ -73,9 +74,11 @@ export class NxOrganizationCardContainerComponent {
         private cpService: NxChannelPartnersService,
         private systemsService: NxSystemsService,
     ) {
-        this.route.params.subscribe(({ groupId }) => {
-            this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
-        });
+        this.cpService.paramStateHandler.state$
+            .pipe(distinctUntilChanged())
+            .subscribe(({ params: { groupId } }) => {
+                this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
+            });
 
         effect(() => {
             this.currentSystems$ = this.inRoot
@@ -122,7 +125,8 @@ export class NxOrganizationCardContainerComponent {
     }
 
     handleGroupClick(group: GroupItem): void {
-        this.router.navigate(['group', group.id], { relativeTo: this.route.parent });
+        const route = this.inRoot ? ['group', group.id] : [group.id];
+        this.router.navigate(route, { relativeTo: this.inRoot ? this.route.parent : this.route });
     }
 
     handleSystemClick(system: CloudSystem | SystemInfo): void {

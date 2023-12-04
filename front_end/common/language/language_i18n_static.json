@@ -1245,8 +1245,8 @@
         "usersTableHeaders": {
             "login": "Login",
             "fullName": "Full Name",
-            "accessLevel": "Access Level",
-            "groups": "Groups"
+            "accessLevel": "Has access to",
+            "groups": "Permission Groups"
         },
         "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization"
     },

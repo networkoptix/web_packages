@@ -56,6 +56,11 @@ const orgRoutes: Routes = [
                 data: { inRoot: false },
             },
             {
+                path: 'group/:groupId/users',
+                component: NxOrganizationUsersComponent,
+                data: { inGroup: true },
+            },
+            {
                 path: '**',
                 redirectTo: 'systems',
             },

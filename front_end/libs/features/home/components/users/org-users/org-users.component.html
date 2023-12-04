@@ -1,6 +1,6 @@
 <div class="actions p-3">
     <button
-        *ngIf="currentOrgId$ | async as id"
+        *ngIf="currentItemId$$() as id"
         class="btn btn-default"
         translate
         (click)="newUserDialog(id)"
@@ -16,7 +16,9 @@
     </div>
 </div>
 <nx-users-table
+    [userType]="inGroup ? UserType.GROUP : UserType.ORGANIZATION"
+    [inGroup]="inGroup"
     [headers]="headers"
     [records]="records$ | async"
-    (onDeleteClick)="deleteOrgUser($event)"
+    (onDeleteClick)="deleteSingleUser($event)"
 ></nx-users-table>
