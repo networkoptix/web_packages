@@ -27,8 +27,8 @@ from partners.models import (
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent,
     CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId,
     ServiceToSubChannelProperties, ServiceToOrganizationProperties, ChannelPartnerAccessLevel, SystemGroup,
-    get_channel_partner_roles, get_organization_roles
- )
+    get_channel_partner_roles, get_organization_roles, OrganizationRoles
+)
 from tools.serializers import FieldAccessModelSerializer, AccessMatrixMixin
 from tools.helpers import get_path_from_parent
 from tools.serializers import FieldAccessModelSerializer
@@ -1261,12 +1261,11 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
     # todo. cache queryset. should we limit it to only roles containing system_role only
     role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
-        slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all()))
-    # role = serializers.SlugRelatedField(
-    #     queryset=OrganizationRole.objects.all(),
-    #     slug_field='name', write_only=True, required=True)
+        slug_field='name', write_only=True, required=False,
+        queryset=OrganizationRole.objects.exclude(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)))
     roleId = serializers.PrimaryKeyRelatedField(
-        queryset=OrganizationRole.objects.all(), write_only=True, required=False)
+        queryset=OrganizationRole.objects.exclude(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR),
+        write_only=True, required=False)
     hasAccessTo = MembershipSerializer(source='has_access_to', read_only=True)
 
     class Meta:
@@ -1285,8 +1284,8 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
             msg = "One of 'role' or 'roleId' must be set."
             raise exceptions.ValidationError(detail={'role': [msg], 'roleId': [msg]})
         email = attrs.get('user', {}).get('email')
-        user, _ = CloudUser.objects.get_or_create(email=email)
         group: SystemGroup = self.context.get('group')
+        user, _ = CloudUser.objects.get_or_create(email=email)
         if group.has_overlaps(user):
             raise exceptions.ValidationError({'email': [f'User {user.email} cannot add group'
                                                         f' {group} because overlap occurs.']})
