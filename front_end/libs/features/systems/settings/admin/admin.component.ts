@@ -5,6 +5,7 @@ import {
     computed,
     Inject,
     Input,
+    LOCALE_ID,
     OnDestroy,
     OnInit,
     Signal,
@@ -35,12 +36,15 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { MergeInfo } from '@services/system-api.types';
 import * as t from '@services/system-api.types';
+import { UserGroup } from '@services/system-user.types';
 import type { NxSystem } from '@services/system.service/system';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons, menus, redirect } from '@static-variables';
+import { alphabeticalSort } from '@utils/general';
 
 interface Settings {
     disconnectDisabled: boolean;
@@ -90,13 +94,38 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     transferInfo: SystemTransferInfo;
 
     userRole$$: Signal<string> = computed(() => {
-        let accessRole = this.system.permissionManager.currentUser$$().accessRole;
-        const accessRoles = accessRole?.split(', ');
-        if (accessRoles && accessRoles.length > 1) {
-            const singleItem = accessRoles?.pop();
+        let { accessRole = '', groupIds = [] } = this.system.permissionManager.currentUser$$();
+        if (groupIds.length > 1) {
+            const groups = (this.system.userManager as UserWithGroupsManager).userGroups;
+            const builtInGroup: UserGroup[] = [];
+            const customGroup: UserGroup[] = [];
+            const ldapGroup: UserGroup[] = [];
+            Object.values(groups).forEach(group => {
+                if (group.attributes && group.attributes === 'readonly') {
+                    builtInGroup.push(group);
+                } else if (group.type && group.type === 'ldap') {
+                    ldapGroup.push(group);
+                } else {
+                    customGroup.push(group);
+                }
+            });
+
+            if (customGroup.length > 0) {
+                customGroup.sort(alphabeticalSort(this.locale, group => group.name));
+            }
+            if (ldapGroup.length > 0) {
+                ldapGroup.sort(alphabeticalSort(this.locale, group => group.name));
+            }
+
+            const sortedGroups = builtInGroup
+                .concat(customGroup, ldapGroup)
+                .filter(group => groupIds.includes(group.id))
+                .map(group => group.name);
+
+            const lastGroup = sortedGroups.pop();
             accessRole = this.translateService.instant(this.LANG.listString, {
-                listItems: accessRoles.join(', '),
-                singleItem,
+                listItems: sortedGroups.join(', '),
+                singleItem: lastGroup,
             });
         }
         if (Object.keys(this.LANG.accessRoles).includes(accessRole)) {
@@ -104,7 +133,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         }
 
         if (accessRole) {
-            const lineCalc = Math.ceil(accessRole.length / 38);
+            const lineCalc = Math.ceil(accessRole.length / 26);
             this.viewLines = lineCalc < 6 ? lineCalc : 6;
             this.viewHeight = this.viewLines * 21;
         }
@@ -193,6 +222,7 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         private translateService: TranslateService,
         @Inject(ViewContainerRef) public applyContainerRef: ViewContainerRef,
         @Inject(WINDOW) private window: Window,
+        @Inject(LOCALE_ID) private locale: string,
         private applyService: NxApplyService,
     ) {
         /* Going directly to another system does not trigger lifecyle methods or destroy the

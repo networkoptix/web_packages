@@ -35,7 +35,7 @@
         
         cursor             : pointer;
 
-        background-color: var(--ellipsis-gradient);
+        background: var(--ellipsis-gradient);
         
         // if different is needed for different screen sizes
         //@include respond-to(xs) {

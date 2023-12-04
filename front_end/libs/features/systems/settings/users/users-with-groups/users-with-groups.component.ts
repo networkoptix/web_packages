@@ -32,7 +32,13 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         // Use user$$ to trigger groups update on user change as LDAP to LDAP change will not trigger groups$$
         this.user$$();
 
-        return this.processLdapGroups([...groups], isLdap);
+        const userManager = this.system.userManager as UserWithGroupsManager;
+        const isOwner = this.system.permissionManager.isOwner$$();
+
+        return this.processLdapGroups(
+            [...groups.filter(group => isOwner || userManager.isGroupPowerUser(group))],
+            isLdap,
+        );
     });
     accountBlockFooterSettings$$ = computed(() => ({
         cloudAccountSettings: !this.environment.isLocal && this.isCloud$$() && this.isMe$$(),
