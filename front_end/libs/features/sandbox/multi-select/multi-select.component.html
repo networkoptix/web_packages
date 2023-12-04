@@ -54,6 +54,21 @@
             </nx-simple-dropdown-item>
         </nx-dropdown>
     </div>
+
+    <div class="col-4 dropdownPadding">
+        <nx-multi-select
+            [componentId]="'sandboxDropdownsTooManyMultiSelect'"
+            name="ddTooManyMultiSelect"
+            [dataType]="DATA_TYPE.PERMISSIONS"
+            [items]="tooManyItems"
+            [ngModel]="itemsSelectedTooMany"
+            (ngModelChange)="modelChangedTooMany($event)"
+        >
+        </nx-multi-select>
+    </div>
+    <div class="col-4 dropdownPadding">
+        <div>Selected: {{ itemsSelectedTooMany | json }}</div>
+    </div>
 </div>
 <div
     class="mb-3 row m-0 p-3"

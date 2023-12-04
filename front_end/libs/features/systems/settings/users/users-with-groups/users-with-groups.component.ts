@@ -3,7 +3,10 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { debounceTime } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
-import { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+import {
+    DATA_TYPE,
+    MultiSelectItem,
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxUser, UserPermissionDescription } from '@services/system-user.types';
 import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { alphabeticalSort } from '@utils/general';
@@ -192,4 +195,6 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         }
         return groups;
     }
+
+    protected readonly DATA_TYPE = DATA_TYPE;
 }

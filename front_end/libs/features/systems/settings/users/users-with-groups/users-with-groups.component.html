@@ -63,6 +63,7 @@
                         *ngIf="editPermissions$$().changePermissions"
                         [componentId]="'edit-user-groups'"
                         name="userGroupsSelect"
+                        [dataType]="DATA_TYPE.GROUPS"
                         [canSelectAll]="false"
                         [canSearch]="false"
                         [tooltipAlternateSecondary]="true"

@@ -162,6 +162,14 @@ header {
             padding: 0;
             list-style-type: none;
             margin-bottom: 0;
+
+            .vsv-viewport {
+                height: 267px;
+
+                .cdk-virtual-scroll-content-wrapper {
+                    height: 500px;
+                }
+            }
         }
 
         &--header {
@@ -183,7 +191,7 @@ header {
 
         .dropdown-item-container {
             position: relative;
-            height: auto;
+            height: 26px;
 
             .dropdown-item {
                 @include typography.medium13nocolor;

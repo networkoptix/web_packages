@@ -66,48 +66,78 @@
         </ul>
 
         <ul class="dropdown-menu--list">
-            <li
-                class="dropdown-item-container"
-                *ngFor="let item of items; trackBy: trackItem; last as isLast"
+            <cdk-virtual-scroll-viewport
+                *ngIf="items.length > 50; else normalLengthItems"
+                [itemSize]="16"
+                class="vsv-viewport"
             >
-                <div
-                    class="dropdown-item inset"
-                    [nxTooltip]="item.tooltip"
-                    [alternateSecondary]="tooltipAlternateSecondary"
-                    [horizontal]="tooltipHorizontal"
-                    [ngClass]="{
-                        'default-cursor': ['horizontal', 'title'].includes(item.id),
-                        'mb-1': isLast
-                    }"
-                    [ngSwitch]="item.id"
+                <li
+                    class="dropdown-item-container"
+                    *cdkVirtualFor="let item of items; last as isLast"
                 >
-                    <hr *ngSwitchCase="'horizontal'" />
-                    <h4
-                        class="pl-3"
-                        *ngSwitchCase="'title'"
-                    >
-                        {{ item.label | translate }}
-                    </h4>
-                    <ng-container *ngSwitchDefault>
-                        <nx-checkbox
-                            [disabled]="item.disabled"
-                            componentId="{{ componentId + '-' + item.id }}"
-                            [checked]="item.selected"
-                            (click)="change(item)"
-                        ></nx-checkbox>
-                        <label
-                            class="ellipsis"
-                            [ngClass]="{
-                                'more-left-padding': moreLeftPadding,
-                                'text-muted': item.disabled
-                            }"
-                            [style.pointer-events]="item.disabled ? 'none' : ''"
-                            [htmlFor]="componentId + '-' + item.id"
-                            >{{ item.label | translate }}</label
-                        >
-                    </ng-container>
-                </div>
-            </li>
+                    <ng-container
+                        *ngTemplateOutlet="
+                            defaultItemTemplate;
+                            context: { $implicit: item, isLast: isLast }
+                        "
+                    ></ng-container>
+                </li>
+            </cdk-virtual-scroll-viewport>
         </ul>
     </div>
 </div>
+
+<ng-template #normalLengthItems>
+    <li
+        class="dropdown-item-container"
+        *ngFor="let item of items; trackBy: trackItem; last as isLast"
+    >
+        <ng-container
+            *ngTemplateOutlet="defaultItemTemplate; context: { $implicit: item, isLast: isLast }"
+        ></ng-container>
+    </li>
+</ng-template>
+
+<ng-template
+    #defaultItemTemplate
+    let-item
+    let-isLast
+>
+    <div
+        class="dropdown-item inset"
+        [nxTooltip]="item.tooltip"
+        [alternateSecondary]="tooltipAlternateSecondary"
+        [horizontal]="tooltipHorizontal"
+        [ngClass]="{
+            'default-cursor': ['horizontal', 'title'].includes(item.id),
+            'mb-1': isLast
+        }"
+        [ngSwitch]="item.id"
+    >
+        <hr *ngSwitchCase="'horizontal'" />
+        <h4
+            class="pl-3"
+            *ngSwitchCase="'title'"
+        >
+            {{ item.label | translate }}
+        </h4>
+        <ng-container *ngSwitchDefault>
+            <nx-checkbox
+                [disabled]="item.disabled"
+                componentId="{{ componentId + '-' + item.id }}"
+                [checked]="item.selected"
+                (click)="change(item)"
+            ></nx-checkbox>
+            <label
+                class="ellipsis"
+                [ngClass]="{
+                    'more-left-padding': moreLeftPadding,
+                    'text-muted': item.disabled
+                }"
+                [style.pointer-events]="item.disabled ? 'none' : ''"
+                [htmlFor]="componentId + '-' + item.id"
+                >{{ item.label | translate }}</label
+            >
+        </ng-container>
+    </div>
+</ng-template>
