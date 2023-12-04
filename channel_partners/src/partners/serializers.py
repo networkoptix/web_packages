@@ -275,7 +275,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(queryset=OrganizationRole.objects.all(),
-                                                                   required=False)
+                                                                   required=False, allow_null=True)
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
@@ -1243,6 +1243,19 @@ class SystemSerializer(serializers.ModelSerializer):
         fields = ['system_id']
 
 
+class SystemMembershipSerializer(serializers.Serializer):
+    system_id = serializers.UUIDField()
+    vmsRoles = serializers.SerializerMethodField(method_name='get_vms_roles')
+    membership_type = serializers.CharField()
+
+    @cached_property
+    def organization_roles(self):
+        return get_organization_roles()
+
+    def get_vms_roles(self, value: dict) -> List[uuid.UUID]:
+        return [self.organization_roles[role]['system_role_uuid'] for role in value['org_roles']]
+
+
 class UserListSerializer(serializers.Serializer):
     users = serializers.ListField()
 
@@ -1280,7 +1293,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         ]
 
     def validate(self, attrs):
-        if not attrs.get('role') and not attrs.getz('roleId'):
+        if not attrs.get('role') and not attrs.get('roleId'):
             msg = "One of 'role' or 'roleId' must be set."
             raise exceptions.ValidationError(detail={'role': [msg], 'roleId': [msg]})
         email = attrs.get('user', {}).get('email')

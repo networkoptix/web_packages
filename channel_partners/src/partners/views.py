@@ -1135,7 +1135,7 @@ def all_services(request):
 
 
 @extend_schema(
-    responses=SystemSerializer(many=True),
+    responses=SystemMembershipSerializer(many=True),
     description='Retrieves all systems associated with a specified user email',
     summary='Get Systems By User Email',
     tags=['Internal'],
@@ -1147,8 +1147,8 @@ def user_systems(request, email):
     if not user:
         raise exceptions.NotFound('User not found')
 
-    systems = user.all_systems()
-    serializer = SystemSerializer(systems, many=True)
+    systems = user.systems_memberships()
+    serializer = SystemMembershipSerializer(systems, many=True)
     return Response(serializer.data)
 
 

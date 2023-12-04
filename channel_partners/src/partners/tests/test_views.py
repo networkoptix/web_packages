@@ -20,7 +20,7 @@ from partners.models import (
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet, system_user, system_users
+    SystemGroupUserViewSet, system_user, system_users, user_systems
 )
 from tools.serializers import VALUE_REPLACEMENT
 
@@ -971,7 +971,32 @@ def test_system_users(channel_partner_factory, cp_user_factory, organization_fac
     assert response.status_code == 200
     assert len(response.data) == 3
 
+def test_user_systems(channel_partner_factory, cp_user_factory, organization_factory,
+                      org_user_factory, system_group_factory, system_factory,
+                      sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+    cp = channel_partner_factory()
+    org = organization_factory(channel_partner=cp)
+    org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+    org.save()
+    org_sys = system_factory(organization=org)
+    group = system_group_factory(organization=org)
+    group_sys = system_factory(organization=org, system_group=group)
+    cp_admin = cp_user_factory(channel_partner=cp)
+    org_admin = org_user_factory(organization=org)
+    group_user = sys_group_user_factory(organization=org, group=group,
+                                        role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
 
-    response = system_users(request, str(org_sys.system_id))
+    request = arf.get('/')
+    mock_internal_token_auth()
+
+    response = user_systems(request, cp_admin.user.email)
     assert response.status_code == 200
     assert len(response.data) == 2
+
+    response = user_systems(request, org_admin.user.email)
+    assert response.status_code == 200
+    assert len(response.data) == 2
+
+    response = user_systems(request, group_user.user.email)
+    assert response.status_code == 200
+    assert len(response.data) == 1

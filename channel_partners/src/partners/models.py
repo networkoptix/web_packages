@@ -19,6 +19,7 @@ from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
 from django.contrib.auth.models import User, PermissionsMixin, BaseUserManager, Permission
 from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
 from django.core.exceptions import ValidationError
@@ -26,7 +27,7 @@ from django.core.cache import caches
 from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.functions import Greatest
-from django.db.models import Sum, F, QuerySet, Q, Subquery, FilteredRelation, Func
+from django.db.models import Sum, F, QuerySet, Q, Subquery, FilteredRelation, Func, Value
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django_cte import CTEManager
@@ -106,6 +107,45 @@ class CloudUser(models.Model):
 
     def is_authenticated(self):
         return True
+
+    def systems_memberships(self):
+        roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
+        cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        organization_sys = (
+            OrganizationToUser.objects
+            .filter(user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=True)
+            .annotate(
+                org_id=F('organization_id'),
+                system_id=F('organization__cloud_systems__system_id'),
+                membership_type=Value('organization'),
+                org_roles=F('roles')
+            )
+            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+        )
+        group_sys = (
+            OrganizationToUser.objects
+            .filter(user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=False)
+            .annotate(
+                org_id=F('organization_id'),
+                system_id=F('system_group__cloud_systems__system_id'),
+                membership_type=Value('organization'),
+                org_roles=F('roles'))
+            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+        )
+        channel_partner_sys = (
+            Organization.objects.filter(
+                channel_partner_access_level__in=roles_with_sys_perm,
+                channel_partner__channelpartnertouser__user=self,
+                channel_partner__channelpartnertouser__roles__overlap=cp_roles,
+            ).annotate(
+                org_id=F('id'),
+                system_id=F('cloud_systems__system_id'),
+                membership_type=Value('channel_partner')
+            )
+            .annotate(org_roles=ArrayAgg('channel_partner_access_level_id'))
+            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+        )
+        return organization_sys.union(group_sys).union(channel_partner_sys)
 
     def all_systems(self):
         roles_with_sys_perm = list(get_roles_with_vms_perms().keys())

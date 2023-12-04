@@ -683,3 +683,71 @@ class TestCloudUser:
         assert systems.count() == 2
 
 
+    def test_systems_memberships(self, channel_partner_factory, cp_user_factory, organization_factory,
+                                    org_user_factory, system_group_factory, system_factory,
+                                    sys_group_user_factory, cloud_user_factory):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+
+        org = organization_factory(channel_partner=cp, channel_partner_access_level_id=None)
+
+        org_sys = system_factory(organization=org)
+        group = system_group_factory(organization=org)
+        group_sys = system_factory(organization=org, system_group=group)
+        group_1 = system_group_factory(organization=org)
+        group_1_sys = system_factory(organization=org, system_group=group_1)
+        cp_admin = cp_user_factory(channel_partner=cp)
+        org_admin = org_user_factory(organization=org)
+        group_user = sys_group_user_factory(organization=org, group=group,
+                                            role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+        org_sys_ids = {org_sys.system_id, group_sys.system_id, group_1_sys.system_id}
+        systems = cp_admin.user.systems_memberships()
+        # no CPAl - no system
+        assert len(systems) == 0
+
+        org.channel_partner_access_level_id = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        org.save()
+
+        systems = cp_admin.user.systems_memberships()
+        # with cpal
+        assert len(systems) == 3
+        systems_ids = {system['system_id'] for system in systems}
+        assert systems_ids == org_sys_ids
+        assert all([system['membership_type'] == 'channel_partner'
+                    and system['org_roles'] == [org.channel_partner_access_level_id]
+                    for system in systems])
+        # two orgs with cpal
+        other_org = organization_factory(channel_partner=cp)
+        other_sys = system_factory(organization=other_org)
+        other_group = system_group_factory(organization=other_org)
+        other_group_sys = system_factory(organization=other_org, system_group=other_group)
+        all_sys_ids = {org_sys.system_id, group_sys.system_id, group_1_sys.system_id,
+                       other_sys.system_id, other_group_sys.system_id}
+
+        systems = cp_admin.user.systems_memberships()
+
+        assert systems.count() == 5
+        systems_ids = {system['system_id'] for system in systems}
+        assert systems_ids == all_sys_ids
+        # group membership
+        systems = group_user.user.systems_memberships()
+
+        assert systems.count() == 1
+        assert systems[0]['system_id'] == group_sys.system_id
+        assert systems[0]['org_roles'] == group_user.roles
+
+        # org membership
+        systems = org_admin.user.systems_memberships()
+        systems_ids = {system['system_id'] for system in systems}
+
+        assert len(systems) == 3
+        assert systems_ids == org_sys_ids
+
+        org.channel_partner_access_level = None
+        org.save()
+        cp_admin.refresh_from_db()
+        org.refresh_from_db()
+        systems = cp_admin.user.systems_memberships()
+        # only other org systems must be in the list
+        assert systems.count() == 2
+
