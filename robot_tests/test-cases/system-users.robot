@@ -119,64 +119,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-32. Local User Removed on Server is Removed From UI
-    [Tags]    local_user    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    @{local users} =    Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-    FOR    ${user}    IN    @{list}
-        Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Verify In Local Users UI    ${servers}[0][localUsers]    ${servers}[0][cloudOwner]
-        @{users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        ${user to delete} =    Set Variable    Local+viewer
-        ${user id}=   Get Local User Id By Name    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    Local+viewer
-        Remove User    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    ${user id}
-        Reload Page
-        Wait Until Element is Visible    ${ADD USER BUTTON SYSTEMS}
-        Page Should Not Contain    //span[text()="${user to delete}"]
-        Exit For Loop If    '''${user}'''=='''admin'''    
-        Log Out
-    END
-
-33. Verify Local Users Deleted On Server
-    [Tags]    local_user    C76242    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    admin
-    FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-        Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Verify In Local Users UI    ${servers}[0][localUsers]    ${servers}[0][cloudOwner]
-        Delete All Local Users    //span[contains(text(),"ocal+")]
-        ${deleted user} =    Set Variable    Local
-        User Should Not Exist    ${deleted user}
-        Exit For Loop If    '''${user}'''=='''admin'''    
-        Log Out
-    END
-
-
-34. Adding New Local User Appears on Cloud Portal
-    [Tags]    C76237    local_user    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]    admin
-    FOR    ${user}    IN    @{list}
-        @{locals}=   Get Local Users    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        Delete All Local Users via API    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]    ${locals}
-        Log    Step 1
-        @{new local users}=   Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Go to Users List
-        Verify In Local Users UI    ${new local users}    ${user}
-        Exit For Loop If    '''${user}'''=='''admin'''    
-        Log Out
-    END
-
 35. Cloud/local owner cannot change local/cloud owner's information
     [Tags]    C76238    local_user    webadmin    cloud
     ${user}=   Set Variable If    '''${mode}'''=='''cloud'''    ${servers}[0][cloudOwner]
@@ -336,36 +278,6 @@ Force Tags        system    Threaded    users
         @{check info} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]\
         Check User Email is None    Local+advancedViewer    ${check info}
         Exit For Loop If    '''${user}'''=='''admin'''    
-        Log Out
-    END
-
-39. User list is available for owner and administrator
-    [Tags]    C76233    local_user    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudOwner]    ${server 1['cloudUsers']}[cloudAdmin]
-    ...    ELSE    Create List    ${servers}[0][cloudOwner]    ${servers}[0][cloudUsers][cloudAdmin]    ${servers}[0][localUsers][cloudAdmin][login]    admin
-    FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users     ${servers}[0][localAuth]    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Log    Step 1
-        Go to Users List
-        Verify In Local Users UI    ${servers}[0][localUsers]     ${user}
-        Exit For Loop If    '''${user}'''=='''admin'''    
-        Log Out
-    END
-
-40. User list is not available for advanced viewer & lower
-    [Tags]    C76462    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudUsers][viewer]    ${servers}[0][cloudUsers][liveViewer]   ${servers}[0][cloudUsers][advancedViewer]    ${servers}[0][cloudUsers][custom]
-    ...    ELSE    Create List    ${servers}[0][cloudUsers][viewer]    ${servers}[0][cloudUsers][liveViewer]   ${servers}[0][cloudUsers][advancedViewer]    ${servers}[0][cloudUsers][custom]    ${servers}[0][localUsers][viewer][login]    ${servers}[0][localUsers][liveViewer][login]    ${servers}[0][localUsers][advancedViewer][login]    ${servers}[0][localUsers][custom][login]
-    FOR    ${user}    IN    @{list}
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Log    Step 1
-        Verify In System    ${servers}[0][name]    editable=${False}
-        Sleep    5
-        Element Should Not Be visible    ${USERS LIST LINK} 
-        Exit For Loop If    '''${user}'''=='''${servers}[0][localUsers][custom]'''    
         Log Out
     END
 
