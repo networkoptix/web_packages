@@ -422,6 +422,9 @@ class DropDown:
     def wait_until_clickable(self, timeout_sec: float = 5):
         self._element.wait_until_clickable(timeout_sec)
 
+    def is_visible(self):
+        self._element.is_visible()
+
 
 class DropDownOption:
 

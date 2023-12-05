@@ -10,6 +10,7 @@ from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_users import SystemUsers
+from generic_elements import ElementVisible
 from variables import ENV
 
 _logger = logging.getLogger(__name__)
@@ -121,6 +122,51 @@ def new_local_user_appears_in_cloud_portal(server: Mediaserver):
             print("PASS")
 
 
+def owner_and_admin_see_local_users(server: Mediaserver, user: CloudAccount):
+    """
+    39. User list is available for owner and administrator
+    [Tags]    C76233    local_user    webadmin    cloud
+    """
+    _reset_local_users(server)
+    url = ENV + f"/systems/{server.id}"
+    with (get_chrome() as driver):
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
+            SystemAdmin(driver)
+            users_menu = SystemLeftMenu(driver).users_dropdown()
+            users_menu.open()
+            for permission in permissions:
+                assert users_menu.get_local_user_with_username(
+                    server.get_local_users()[permission]['login']).is_visible(), \
+                f"{user.email} is not able to see local {permission}"
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+    print("PASS")
+
+def non_admins_cant_see_local_users(server: Mediaserver, user: CloudAccount):
+    """
+    40. User list is not available for advanced viewer & lower
+    [Tags]    C76462    webadmin    cloud
+    """
+    _reset_local_users(server)
+    url = ENV + f"/systems/{server.id}"
+    with get_chrome() as driver:
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
+            SystemAdmin(driver)
+            assert not SystemLeftMenu(driver).users_dropdown().is_visible(), \
+            f"{user.email} is able to see users"
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+    print("PASS")
+
+
 def _verify_user_not_on_server(server, user_id):
     for user in server.api.get_users():
         assert not user["id"] == user_id
@@ -204,3 +250,9 @@ if __name__ == "__main__":
         local_user_deleted_on_server_gone_from_ui(cloud_server)
         local_user_deleted_in_ui_deleted_from_server(cloud_server)
         new_local_user_appears_in_cloud_portal(cloud_server)
+        owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_owner())
+        owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_admin())
+        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_viewer())
+        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_live_viewer())
+        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_advanced_viewer())
+        non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_custom_user())
