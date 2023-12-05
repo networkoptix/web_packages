@@ -373,7 +373,6 @@ export class NxMenusService {
         }
 
         if (
-            permissions.viewBookmarks &&
             activeSystem.canViewBookmarks(
                 this.deviceService.isMobile() || this.deviceService.isTablet(),
             )
