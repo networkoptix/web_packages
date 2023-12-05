@@ -126,7 +126,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     template: string = '';
     _headers: Prop = [];
-    // headers: Prop = [];
 
     tableClasses: string;
 
@@ -483,6 +482,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     rowClick(selected: T): void {
-        this.onRowClick.emit(selected);
+        this.onRowClick.emit({ ...selected });
     }
 }

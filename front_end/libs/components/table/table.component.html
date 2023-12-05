@@ -1,139 +1,132 @@
-<ng-template #noData>
-    <nx-pre-loader></nx-pre-loader>
-</ng-template>
-
-<ng-container *ngIf="data?.length; else noData">
-    <div
-        class="controls"
-        *ngIf="setRearrange"
+@if (data?.length === 0) {
+<span translate>No data found.</span>
+} @else {
+<div
+    class="controls"
+    *ngIf="setRearrange"
+>
+    <button
+        class="btn btn-default"
+        (click)="restore()"
+        translate
     >
-        <button
-            class="btn btn-default"
-            (click)="restore()"
-            translate
-        >
-            Restore
-        </button>
+        Restore
+    </button>
+    <div
+        cdkDropList
+        [style.margin]="'20px 0'"
+        (cdkDropListDropped)="drop($event)"
+        [style.display]="'flex'"
+        [style.flex-direction]="'row'"
+        [style.justifyContent]="'space-between'"
+    >
         <div
-            cdkDropList
-            [style.margin]="'20px 0'"
-            (cdkDropListDropped)="drop($event)"
-            [style.display]="'flex'"
-            [style.flex-direction]="'row'"
-            [style.justifyContent]="'space-between'"
+            *ngFor="let head of headers | keyvalue; index as i"
+            class="drag-item"
+            cdkDrag
         >
-            <div
-                *ngFor="let head of headers | keyvalue; index as i"
-                class="drag-item"
-                cdkDrag
+            <button
+                class="btn btn-default-clear mr-2"
+                (click)="removeKey(i)"
+                translate
             >
-                <button
-                    class="btn btn-default-clear mr-2"
-                    (click)="removeKey(i)"
-                    translate
-                >
-                    X
-                </button>
-                <span>{{ head.value }}</span>
-            </div>
+                X
+            </button>
+            <span>{{ head.value }}</span>
         </div>
     </div>
+</div>
 
-    <div class="nx-new-table">
-        <div class="nx-new-table-horizontal-wrapper">
+<div class="nx-new-table">
+    <div class="nx-new-table-horizontal-wrapper">
+        <div
+            class="nx-new-table-wrapper"
+            (resize)="onResize($event)"
+        >
             <div
-                class="nx-new-table-wrapper"
-                (resize)="onResize($event)"
+                class="header"
+                [ngClass]="tableClasses"
+                [style.display]="'grid'"
+                [style.gridTemplateAreas]="template"
             >
-                <div
-                    class="header"
-                    [ngClass]="tableClasses"
-                    [style.display]="'grid'"
-                    [style.gridTemplateAreas]="template"
-                >
-                    <ng-container
-                        *ngTemplateOutlet="
-                            header || defaultHeaderTemplate;
-                            context: { $implicit: data }
-                        "
-                    ></ng-container>
-                </div>
-
-                <div
-                    class="body"
-                    #tableBodyContainer
-                >
-                    <div class="content">
-                        <div
-                            *ngFor="let row of pagedItems"
-                            class="big-row {{ tableClasses }}"
-                            id="{{ row[idPropName] }}"
-                            [ngClass]="selectedItemId === row[idPropName] ? 'selected' : ''"
-                            [style.display]="'grid'"
-                            [style.gridTemplateAreas]="template"
-                            (mouseup)="rowClick(row)"
-                        >
-                            <ng-container
-                                *ngTemplateOutlet="
-                                    rows || defaultRowTemplate;
-                                    context: { $implicit: row }
-                                "
-                            ></ng-container>
-                        </div>
-                    </div>
-                    <!--        <div class="grid-background">-->
-                    <!--            <div *ngFor="let _ of [].constructor(30 * 6)"></div>-->
-                    <!--        </div>-->
-                </div>
+                <ng-container
+                    *ngTemplateOutlet="
+                        header || defaultHeaderTemplate;
+                        context: { $implicit: data }
+                    "
+                ></ng-container>
             </div>
-        </div>
 
-        <div class="footer">
             <div
-                *ngIf="setPagination"
-                class="paginator-wrapper"
+                class="body"
+                #tableBodyContainer
             >
-                <div
-                    [innerText]="'{n} of {m}' | translate : { n: nDisplayed, m: data?.length }"
-                ></div>
-                <div class="d-flex">
+                <div class="content">
                     <div
-                        class="rows-selector"
-                        *ngIf="setRows"
+                        *ngFor="let row of pagedItems"
+                        class="big-row {{ tableClasses }}"
+                        id="{{ row['id'] }}"
+                        [ngClass]="selectedItemId === row[idPropName] ? 'selected' : ''"
+                        [style.display]="'grid'"
+                        [style.gridTemplateAreas]="template"
+                        (mouseup)="rowClick(row)"
                     >
-                        <span translate>Rows per page</span>
-                        <nx-select
-                            [componentId]="'rowPerPageSelect'"
-                            type="transparent-button"
-                            [forcePosition]="{ top: 'auto', bottom: 32 }"
-                            [selected]="perPageSelectedOption"
-                            [items]="perPageOptions"
-                            (onSelected)="setRowsPerPage($event)"
-                        ></nx-select>
+                        <ng-container
+                            *ngTemplateOutlet="
+                                rows || defaultRowTemplate;
+                                context: { $implicit: row }
+                            "
+                        ></ng-container>
                     </div>
-
-                    <nx-paginator
-                        showPrevNext
-                        [numPages]="numPages"
-                        [pagesToShow]="4"
-                        (onChange)="setPage($event)"
-                    ></nx-paginator>
                 </div>
             </div>
         </div>
-
-        <ng-template
-            #defaultHeaderTemplate
-            let-data
-        >
-            <th *ngFor="let header of data[0] | keyvalue">{{ header.key }}</th>
-        </ng-template>
-
-        <ng-template
-            #defaultRowTemplate
-            let-row
-        >
-            <td *ngFor="let row of row | keyvalue">{{ row.value }}</td>
-        </ng-template>
     </div>
-</ng-container>
+
+    <div class="footer">
+        <div
+            *ngIf="setPagination"
+            class="paginator-wrapper"
+        >
+            <div [innerText]="LANG.NofM | translate : { n: nDisplayed, m: data?.length }"></div>
+            <div class="d-flex">
+                <div
+                    class="rows-selector"
+                    *ngIf="setRows"
+                >
+                    <span translate>Rows per page</span>
+                    <nx-select
+                        [componentId]="'rowPerPageSelect'"
+                        type="transparent-button"
+                        [forcePosition]="{ top: 'auto', bottom: 32 }"
+                        [selected]="perPageSelectedOption"
+                        [items]="perPageOptions"
+                        (onSelected)="setRowsPerPage($event)"
+                    ></nx-select>
+                </div>
+
+                <nx-paginator
+                    showPrevNext
+                    [numPages]="numPages"
+                    [pagesToShow]="4"
+                    (onChange)="setPage($event)"
+                ></nx-paginator>
+            </div>
+        </div>
+    </div>
+
+    <ng-template
+        #defaultHeaderTemplate
+        let-data
+    >
+        <th *ngFor="let header of data[0] | keyvalue">{{ header.key }}</th>
+    </ng-template>
+
+    <ng-template
+        #defaultRowTemplate
+        let-row
+    >
+        <td *ngFor="let row of row | keyvalue">{{ row.value }}</td>
+    </ng-template>
+</div>
+}

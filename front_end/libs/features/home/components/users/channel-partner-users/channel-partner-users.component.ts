@@ -1,14 +1,20 @@
 import { AsyncPipe, CommonModule } from '@angular/common';
-import { Component, OnInit } from '@angular/core';
+import { Component, effect, OnInit, Signal, signal } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { catchError, distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
+import { distinctUntilChanged, map, Observable, switchMap } from 'rxjs';
+import { catchError } from 'rxjs/operators';
 
+import { NxSearchComponent } from '@components/search/search.component';
+import type { SearchFilter } from '@components/search/search.component.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
+import { caseInsenstiveSearch } from '@utils/general';
 
 import { NxUsersTableComponent } from '../../users-table/users-table.component';
 
@@ -25,22 +31,27 @@ import { UserType } from './channel-partner-users.types';
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
         AsyncPipe,
         NxUsersTableComponent,
         TranslateModule,
         AngularSvgIconModule,
         NxResizeObserver,
+        NxSearchComponent,
     ],
 })
 export class NxChannelPartnerUsersComponent implements OnInit {
     LANG = staticLang;
     UserType = UserType;
 
+    searchModel: SearchFilter = { query: '' };
     currentPartnerId$: Observable<string>;
-    headers: HEADER_ITEM[];
+    headers: HEADER_ITEM[] | undefined;
     records$: Observable<UserRecord[]>;
-    selectedUserEmail: string;
-
+    records$$: Signal<UserRecord[] | undefined>;
+    searchQuery$$ = signal<string>('');
+    filteredRecords: UserRecord[] | undefined = undefined;
+    selectedUserEmail: string | undefined;
     constructor(
         private dialogsService: NxDialogsService,
         private CPService: NxChannelPartnersService,
@@ -61,7 +72,47 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 })),
             ),
         );
+
+        this.records$$ = toSignal(this.records$);
+        this.searchQuery$$.set(this.searchModel.query);
+
+        effect(() => {
+            const records = this.records$$();
+            const searchQuery = this.searchQuery$$();
+
+            if (!records) {
+                this.filteredRecords = undefined; // avoid showing "No data" msg.
+            } else if (searchQuery?.length) {
+                this.filteredRecords = this.getUsersByModel(records, searchQuery);
+            } else {
+                this.filteredRecords = records;
+            }
+        });
     }
+
+    getUsersByModel(records: UserRecord[] | undefined, query: string): UserRecord[] {
+        if (records) {
+            return records.filter(user => caseInsenstiveSearch(user.email, query));
+        }
+        return [];
+    }
+
+    setQuery(model: SearchFilter): void {
+        this.searchQuery$$.set(model.query);
+    }
+
+    // filteredRecords$$ = computed(() => {
+    //     const records = this.records$$();
+    //     const searchQuery = this.searchQuery$$();
+    //
+    //     if (!records) {
+    //         return undefined; // avoid showing "No data" msg.
+    //     } else if (searchQuery?.length) {
+    //         return records.filter(user => caseInsenstiveSearch(user.email, searchQuery));
+    //     } else {
+    //         return records;
+    //     }
+    // });
 
     ngOnInit(): void {
         this.headers = [
