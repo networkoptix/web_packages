@@ -15,10 +15,9 @@
             >
                 <h2 [innerHTML]="this.swaggerMenuDescription.title | safe : 'html'"></h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
-                    <p
-                        class="description-path"
-                        [innerHTML]="this.singleRoutePath | safe : 'html'"
-                    ></p>
+                    <p class="description-path">
+                        <markdown [data]="this.swaggerMenuDescription.description"></markdown>
+                    </p>
                     <div
                         class="opblock-method"
                         [ngClass]="this.singleRouteMethod"
