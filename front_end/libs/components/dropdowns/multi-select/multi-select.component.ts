@@ -203,7 +203,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     /**
      * Overwrite
      */
-    override (value: string[]): void {
+    override(value: string[]): void {
         if (value !== null && value !== undefined) {
             this.innerValue = value;
             this.updateLabel();

@@ -11,7 +11,6 @@ import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-intercept
 import staticLang from '@language_static';
 import { Setting, SettingsConfig } from '@services/nx-config/base-config';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import type { NormalResponse } from '@services/system-api.types';
 import type { ModuleInformationReply } from '@services/system-api.types/servers.types';
 import type { SystemConfigSettings } from '@services/system-api.types/system.types';

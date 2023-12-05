@@ -67,7 +67,6 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     buttonWidth = new BehaviorSubject(0);
     isAccountRoute = false;
     displayedFullName = '';
-    CONFIG = nxConfig;
 
     icons = icons;
 

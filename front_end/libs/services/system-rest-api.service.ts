@@ -1186,7 +1186,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncMedium
-    override (params: BookmarksTagsParams = {}): Observable<BookmarksTags> {
+    override getBookmarkTags(params: BookmarksTagsParams = {}): Observable<BookmarksTags> {
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
     }
 
@@ -1195,7 +1195,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     @memoizeAsyncMedium
-    getDevices(params: DevicesParams = {}): Observable<DeviceV1Full[]> {
+    override getDevices(params: DevicesParams = {}): Observable<DeviceV1Full[]> {
         return this.get('/rest/v1/devices', { params: params as RequestParams });
     }
 
@@ -1233,7 +1233,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/licenseSummaries', { params });
     }
 
-    getLicenseSummariesOnActivation(): Observable<any> {
+    override getLicenseSummariesOnActivation(): Observable<any> {
         const params = {
             _keepDefault: true,
         };

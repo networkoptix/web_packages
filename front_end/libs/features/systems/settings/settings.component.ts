@@ -810,9 +810,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.content.level1.push(camerasNode);
             }
             if (this.system.cameraManager.cameras) {
-                this.system.cameraManager.cameras.sort(
-                    alphabeticalSort(camera => camera.name),
-                );
+                this.system.cameraManager.cameras.sort(alphabeticalSort(camera => camera.name));
                 const camerasInMenu = this.system.cameraManager.cameras.filter(
                     camera => camera.canEdit,
                 );

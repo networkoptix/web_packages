@@ -5,7 +5,6 @@ import {
     computed,
     Inject,
     Input,
-    LOCALE_ID,
     OnDestroy,
     OnInit,
     Signal,

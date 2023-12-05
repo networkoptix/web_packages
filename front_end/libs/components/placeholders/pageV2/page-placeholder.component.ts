@@ -40,6 +40,7 @@ import { icons } from '@static-variables';
         NxAddSvgSrcDirective,
         NxPagePlaceholderGenericV2Component,
         NxButtonComponent,
+        TranslateModule,
     ],
 })
 export class NxPagePlaceholderV2Component implements OnInit {
