@@ -1,7 +1,22 @@
-import { ChannelPartnerUser } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-export interface ChannelPartnerUserExt extends ChannelPartnerUser {
+export interface UserRecord {
+    email: string;
     userId: string;
     fullName: string;
-    accessLevel: string[];
+    userType: UserType;
+    roles?: string[];
+    groupRoles?: GroupRole[];
+    showOrg?: boolean;
+    accessLevel?: {
+        id: string;
+        name: string;
+        membershipType: string;
+    };
+}
+
+export enum UserType {
+    CHANNEL_PARTNER = 'channelPartner',
+    ORGANIZATION = 'organization',
+    GROUP = 'group',
 }

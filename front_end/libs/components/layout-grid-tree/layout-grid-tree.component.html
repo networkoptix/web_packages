@@ -257,12 +257,17 @@
                 nx-add-svg-src
                 [svgStyle]="{
                     'width.px': '20',
-                    'height.px': '24',
-                    opacity: layoutStateService.unsavedLayoutsIds$$()[node.id] ? '1' : '0'
+                    'height.px': '20',
+                    opacity:
+                        layoutStateService.unsavedLayoutsIds$$()[node.id] || node.locked ? '1' : '0'
                 }"
-                [nxTooltip]="layoutStateService.unsavedLayoutsIds$$()[node.id] | translate"
-                svgClass="recording-icon"
-                [src]="icons.dirLayouts + 'unsaved.svg'"
+                [nxTooltip]="
+                    node.locked
+                        ? 'Layout locked'
+                        : (layoutStateService.unsavedLayoutsIds$$()[node.id] | translate)
+                "
+                svgClass="recording-icon  {{ node.locked ? 'locked-icon' : '' }}"
+                [src]="icons.dirLayouts + (node.locked ? 'locked.svg' : 'unsaved.svg')"
             >
             </svg-icon>
             <ng-container *ngTemplateOutlet="nodeTypeIcon" />
@@ -359,9 +364,7 @@
                     nx-add-svg-src
                     [svgStyle]="{
                         'width.px': '20',
-                        'height.px': '24',
-                        'margin-left.px': '6',
-                        'margin-right.px': '-6',
+                        'height.px': '20',
                         opacity: opacity,
                         display: opacity === '0' && preview && 'none'
                     }"
@@ -375,8 +378,7 @@
                     nx-add-svg-src
                     [svgStyle]="{
                 'width.px': '20',
-                'height.px': '24',
-                'padding-bottom.px': '4',
+                'height.px': '20',
                 fill: 'none !important',
                 opacity: expandable ? '1' : '0',
                 }"
@@ -390,7 +392,7 @@
                     nx-add-svg-src
                     [svgStyle]="{
                 'width.px': '20',
-                'height.px': '24',
+                'height.px': '20',
                 }"
                     [src]="
                         icons.dirLayouts +
@@ -411,7 +413,6 @@
                                   : 'offline')
                             : '') +
                         (node.shared ? '_shared' : '') +
-                        (node.details.locked ? '_locked' : '') +
                         '.svg'
                     "
                 />

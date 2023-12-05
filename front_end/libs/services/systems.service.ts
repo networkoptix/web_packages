@@ -34,7 +34,6 @@ import type { Account } from './account.service/account';
 import { NxDbService } from './db.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from './nx-config/config-types';
 import { NxStorageService } from './storage.service';
 import type { MergeInfo } from './system-api.types/system.types';
 import type { NxSystem } from './system.service/system';
@@ -47,7 +46,6 @@ import { NxUriService } from './uri.service';
     providedIn: 'root',
 })
 export class NxSystemsService {
-    CONFIG: IConfig = nxConfig;
     LANG = staticLang;
     private currentUser$ = this.store.select(selectCurrentUser).pipe(
         // Ignore preloaded account on cloud
@@ -277,11 +275,10 @@ export class NxSystemsService {
     }
 
     private sortSystems(systems: System[]): System[] {
-        // Priority: alphabetical => system owner => usage frequency
+        // Priority: name => status
         // Note: JS sort has been stable since ECMAScript 2019
         return systems
-            .sort(alphabeticalSort(sys => this.getSystemOwnerName(sys)))
-            .sort(paramSortFunc(sys => Number(sys.ownerAccountEmail === this.userEmail)))
-            .sort(paramSortFunc(sys => sys.usageFrequency, false));
+            .sort(alphabeticalSort(sys => sys.name))
+            .sort(paramSortFunc(sys => Number(sys.stateOfHealth !== 'online')));
     }
 }

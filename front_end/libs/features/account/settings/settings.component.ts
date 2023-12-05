@@ -16,8 +16,7 @@ import { NxApplyService } from '@services/apply.service';
 import { NxDbService } from '@services/db.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { AccountEdit } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
@@ -36,7 +35,7 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     private pageApply: ViewContainerRef;
     @ViewChild('accountForm', { read: NgForm }) private accountForm: NgForm;
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
 
     account: Account;
@@ -50,7 +49,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
     private saveAccount: Process;
 
     constructor(
-        configService: NxConfigService,
         translateService: TranslateService,
         private processService: NxProcessService,
         private cloudApiService: NxCloudApiService,
@@ -64,7 +62,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private store: Store,
         private db: NxDbService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.menuService.navItemId.set('settings');
         this.icons = icons;
 

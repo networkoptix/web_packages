@@ -30,10 +30,6 @@ import {
 import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
-import {
-    bookmarksDeviceKeys,
-    type BookmarksDevice,
-} from '@pages/systems/bookmarks/bookmarks.types';
 import { addUserRestV1 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getPredefinedRolesLegacy } from '@services/mediaserver-apis/endpoints/get-predefined-roles';
 import { getUserRolesRestV1 } from '@services/mediaserver-apis/endpoints/get-user-roles';
@@ -81,7 +77,7 @@ import { useJsonRpc } from './mediaserver-apis/utils/use-json-rpc';
 import { withSystemBusUpdates } from './mediaserver-apis/utils/with-system-bus-updates';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
-import type { IConfig } from './nx-config/config-types';
+import { nxConfig } from './nx-config/config';
 import type {
     AggregatedUsers,
     ViewMediaServersAndCameras,
@@ -97,6 +93,7 @@ import { ChangedIdReturned, UnauthorizedCallback } from './system-api.types';
 import {
     cameraKeyMapV1,
     DeviceV1Full,
+    DevicesParams,
     Bookmark,
     BookmarksParams,
     BookmarksTags,
@@ -113,6 +110,13 @@ import {
 } from './system.service/camera-manager/camera-manager-types';
 import { NxUriCacheService } from './uri-cache.service';
 
+interface TokenResponse {
+    access_token: string;
+    refresh_token: string;
+    scope: string;
+    error?: string;
+}
+
 /**
  * The NxSystemRestAPI service follow the adapter pattern and shadows methods from NxSystemAPI that are changed in newer systems.
  *
@@ -128,7 +132,6 @@ import { NxUriCacheService } from './uri-cache.service';
 export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConnection {
     override readonly version: number;
     public override readonly requiresPassword: boolean = false;
-    private readonly cookieLoginSupport: boolean;
     private readonly cloudToken = 'cloudAccessToken';
     private readonly token = 'x-runtime-guid';
     private readonly refreshToken = 'refreshToken';
@@ -145,7 +148,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     constructor(
         http: HttpClient,
-        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -159,7 +161,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     ) {
         super(
             http,
-            configService,
             location,
             userEmail,
             systemId,
@@ -173,7 +174,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         );
         this.version = 5.0;
         this.injector = injector;
-        this.cookieLoginSupport = this.CONFIG.featureFlags.restCookieLogin;
     }
 
     private get storageService() {
@@ -193,7 +193,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     public get accessToken(): string {
-        return this.CONFIG.featureFlags.useAuthenticationInterceptor
+        return nxConfig.featureFlags.useAuthenticationInterceptor
             ? `${InterceptorManager.USE_SYSTEM_TOKEN}|${this.systemId}|${this.urlBase}/rest/v1/login/sessions/{accessToken}?setCookie=true`
             : this.sessionStorage.retrieve(this.cloudAccessTokenName);
     }
@@ -219,7 +219,11 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this._vmsToken;
     }
 
-    private refreshTokens(refreshToken: string, isSystem?: boolean, remoteSystemId?: string): any {
+    private refreshTokens(
+        refreshToken: string,
+        isSystem?: boolean,
+        remoteSystemId?: string,
+    ): Observable<TokenResponse> {
         const params: any = {
             grant_type: 'refresh_token',
             response_type: 'token',
@@ -230,7 +234,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             params.scope = `cloudSystemId=${remoteSystemId ?? this.CONFIG.cloudSystemId}`;
         }
 
-        return this.http.post(`${this.CONFIG.cloudHost}/oauth/token/`, params);
+        return this.http.post<TokenResponse>(`${this.CONFIG.cloudHost}/oauth/token/`, params);
     }
 
     private getTokens() {
@@ -355,7 +359,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                                     this.clearTokens();
                                     return throwError(error);
                                 }),
-                                switchMap(res => this.setTokens(res, true)),
+                                switchMap(res => {
+                                    // In webadmin if the token response has an error allow it to go to be handled by the login dialog.
+                                    if (res.error) {
+                                        return of(res);
+                                    }
+                                    return this.setTokens(res, true);
+                                }),
                             );
                         }
                     }
@@ -415,7 +425,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             headers = headers.set(this.token, accessToken || this._vmsToken || '');
         }
         if (!environment.isLocal && accessToken) {
-            if (!this.cookieLoginSupport) {
+            if (!nxConfig.featureFlags.restCookieLogin) {
                 headers = headers.set('x-runtime-guid', accessToken); // Adding this for CLOUD-10535. Safari keeps removing the auth headers.
             }
             headers = headers.set('Authorization', `Bearer ${accessToken}`);
@@ -496,7 +506,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             url = `/web${url}`;
         }
         const withCredentials =
-            this.cookieLoginSupport &&
+            nxConfig.featureFlags.restCookieLogin &&
             url.includes('/rest/v1/login/sessions') &&
             url.includes('?setCookie=true');
         const fullUrl = `${this.urlBase}${url}`;
@@ -722,24 +732,25 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             grant_type: 'authorization_code',
             response_type: 'token',
         };
-        return this.http.get(`${this.CONFIG.cloudHost}/oauth/token/`, { params }).pipe(
-            switchMap(tokens => {
-                if (skipSetting) {
-                    return of(tokens);
-                }
-                return this.setTokens(tokens, false).pipe(
-                    switchMap(() =>
-                        // @ts-expect-error
-                        this.refreshTokens(tokens.refresh_token, true),
-                    ),
-                );
-            }),
-            tap(systemTokens => {
-                if (!skipSetting) {
-                    this.setTokens(systemTokens, true).subscribe(() => {});
-                }
-            }),
-        );
+        return this.http
+            .get<TokenResponse>(`${this.CONFIG.cloudHost}/oauth/token/`, { params })
+            .pipe(
+                switchMap(tokens => {
+                    if (skipSetting) {
+                        return of(tokens);
+                    }
+                    return this.setTokens(tokens, false).pipe(
+                        switchMap(() => this.refreshTokens(tokens.refresh_token, true)),
+                    );
+                }),
+                switchMap(systemTokens => {
+                    // In webadmin if the token response has an error allow it to go to be handled by the login dialog.
+                    if (!skipSetting && !systemTokens.error) {
+                        return this.setTokens(systemTokens, true).pipe(map(() => systemTokens));
+                    }
+                    return of(systemTokens);
+                }),
+            );
     }
 
     async redirectOauth(allSystems?: boolean): Promise<void> {
@@ -765,14 +776,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         if (this.CONFIG.cloudSystemId && refreshToken) {
             // Generate new tokens if they are missing
             if (!accessToken) {
+                const res = await firstValueFrom(this.refreshTokens(refreshToken, true));
                 // eslint-disable-next-line camelcase
-                accessToken = await this.refreshTokens(refreshToken, true).toPromise()
-                    ?.access_token;
+                accessToken = res.access_token;
             }
             if (!cloudAccessToken) {
+                const res = await firstValueFrom(this.refreshTokens(refreshToken, false));
                 // eslint-disable-next-line camelcase
-                cloudAccessToken = await this.refreshTokens(refreshToken, false).toPromise()
-                    ?.access_token;
+                cloudAccessToken = res.access_token;
             }
             cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
                 accessToken,
@@ -1174,16 +1185,18 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.get('/rest/v1/devices/*/bookmarks', { params });
     }
 
-    override getBookmarkTags(params: BookmarksTagsParams = {}): Observable<BookmarksTags> {
+    @memoizeAsyncMedium
+    override (params: BookmarksTagsParams = {}): Observable<BookmarksTags> {
         return this.get('/rest/v1/devices/*/bookmarks/*/tags', { params: params as RequestParams });
-    }
-
-    getBookmarksDevices(): Observable<BookmarksDevice[]> {
-        return this.getWith('/rest/v1/devices', bookmarksDeviceKeys);
     }
 
     changePassword(cameraId: string, user: string, password: string): Observable<unknown> {
         return this.post(`/rest/v1/devices/${cameraId}/changePassword`, { user, password });
+    }
+
+    @memoizeAsyncMedium
+    getDevices(params: DevicesParams = {}): Observable<DeviceV1Full[]> {
+        return this.get('/rest/v1/devices', { params: params as RequestParams });
     }
 
     // Widgets aren't being used at the moment, but making this so the base getDevices() can be removed
@@ -1214,6 +1227,13 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     @memoizeAsyncMedium
     override getLicenseSummaries(): Observable<any> {
+        const params = {
+            _keepDefault: true,
+        };
+        return this.get('/rest/v1/licenseSummaries', { params });
+    }
+
+    getLicenseSummariesOnActivation(): Observable<any> {
         const params = {
             _keepDefault: true,
         };
@@ -1261,7 +1281,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         }
 
         return this.get(endpoint, { params: data, responseType: 'blob' }).pipe(
-            catchError(e => of(new Blob(['unauthorized']))),
+            catchError(e => of(new Blob([401, 403].includes(e.status) ? ['unauthorized'] : []))),
             map(blob => URL.createObjectURL(blob || new Blob())),
             share(),
         );

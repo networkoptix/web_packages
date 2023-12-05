@@ -4,15 +4,17 @@ import uuid
 from uuid import uuid4, UUID
 
 import pytest
+from django.contrib.auth import get_user_model
 from django.db.models import Q
 from model_bakery import baker
 
 from rest_framework.test import APIRequestFactory
+
 from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner, Organization, OrganizationToUser, \
     ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
     ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
     ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole, \
-    OrganizationRoles, SystemGroup
+    OrganizationRoles, SystemGroup, AuthToken
 
 
 @pytest.fixture()
@@ -109,7 +111,7 @@ def org_user_factory(cloud_user_factory, default_organization):
     def factory(email=None, role: UUID | str = 'Organization Administrator', organization=default_organization) -> OrganizationToUser:
         if not email:
             email = f'u-{uuid4()}@networkoptix.com'
-        user = cloud_user_factory(email=email)
+        user = CloudUser.objects.get_or_create(email=email)[0]
         if not isinstance(role, UUID):
             role = OrganizationRole.objects.get(name=role).id
         return OrganizationToUser.objects.get_or_create(
@@ -191,6 +193,16 @@ def mock_auth_with_user(default_cp_admin, cloud_test_host, mocker):
 
     return mock
 
+@pytest.fixture()
+def mock_internal_token_auth(mocker):
+    def mock():
+        token = AuthToken.objects.create(key=f'{uuid4()}', internal=True)
+        mock_auth = mocker.patch('partners.authentication.NxTokenAuthentication.authenticate',
+                                 return_value=(get_user_model()(), token))
+        return mock_auth
+
+    return mock
+
 class RequestFactory(APIRequestFactory):
     def request(self, **kwargs):
         request = super().request(**kwargs)
@@ -232,8 +244,8 @@ def deny_user_administer_system(mocker):
 def system_factory(cloud_test_host, default_organization):
 
     def factory(organization=default_organization, cloud_host=cloud_test_host,
-                system_id=None, state=ChannelPartnerStates.ACTIVE):
-        return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}',
+                system_id=None, state=ChannelPartnerStates.ACTIVE, system_group=None):
+        return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}', system_group=system_group,
                           organization=organization, cloud_host=cloud_host, state=state)
 
     return factory
@@ -268,6 +280,10 @@ def service_record_factory():
 
     return factory
 
+
+@pytest.fixture()
+def with_access_levels(db):
+    setup_levels()
 
 @pytest.fixture()
 def system_group_factory():

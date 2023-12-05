@@ -54,6 +54,7 @@
     }
 
     &.active {
+        cursor: default !important;
         color: var(--header-level-one-active-color);
         background-color: var(--header-level-one-active-bg);
     }

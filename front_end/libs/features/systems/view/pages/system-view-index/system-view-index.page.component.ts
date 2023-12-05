@@ -20,8 +20,7 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import type { NxSystem } from '@services/system.service/system';
 import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/types/servers.types';
 import { NxSystemsService } from '@services/systems.service';
@@ -50,14 +49,14 @@ const MAX_OUT_OF_SYNC_TIME = 60000; // ms
     styleUrls: ['system-view-index.page.component.scss'],
 })
 export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
-    @HostBinding('class.new-header') newHeader: boolean;
+    @HostBinding('class.new-header') newHeaderFlag = nxConfig.featureFlags.newHeader;
 
     systemId: string;
     @Input({ required: true }) system: NxSystem;
     selectedCameraId: string;
     mediaservers: ViewMediaServer[];
 
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     private fullscreenMode: boolean;
     private fullscreenToggle: boolean;
@@ -99,7 +98,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
     }
 
     constructor(
-        configService: NxConfigService,
         private self: ElementRef<HTMLElement>,
         private renderer: Renderer2,
         private router: Router,
@@ -113,11 +111,8 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
         private ribbonService: NxRibbonService,
         private toastService: NxToastService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
-        this.newHeader = this.CONFIG.featureFlags.newHeader ?? false;
         effect(() => {
             const state = this.vms.state$$();
             if (state.mode === VMS_MODE.CAMERA_SELECTED) {
@@ -328,8 +323,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
     private initSystem(): void {
         let processingMediaServers = false;
-        let cachedMediaServers: ViewBaseServer[] = [];
+        let cachedData: { mediaServers: ViewBaseServer[]; canViewArchive: boolean } = {
+            mediaServers: [],
+            canViewArchive: false,
+        };
         const firstLoad = new Subject();
+        const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
 
         firstLoad.pipe(take(1)).subscribe(() => {
             this.setInitializationState(true, !this.system.isOnline);
@@ -345,13 +344,16 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 if (!this.system.isOnline || processingMediaServers) {
                     return;
                 }
-
+                let canViewArchive = false;
                 const mediaServers = await this.system.mediaserver
                     .getViewMediaServersAndCameras()
                     .pipe(
                         map(({ mediaServers, cameras }) => {
                             mediaServers.forEach(cleanIds);
-                            cameras.forEach(cleanIds);
+                            cameras.forEach(camera => {
+                                cleanIds(camera);
+                                canViewArchive ||= canViewDeviceArchive(camera?.id);
+                            });
 
                             return mediaServers.map(ms => ({
                                 ...setServerIpAndPort(ms),
@@ -363,11 +365,13 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                 if (
                     this.initialized &&
-                    !this.mediaServerChanged(mediaServers, cachedMediaServers)
+                    !this.mediaServerChanged(mediaServers, cachedData.mediaServers) &&
+                    // If archive permissions change we should update cameras + servers.
+                    cachedData.canViewArchive === canViewArchive
                 ) {
                     return;
                 }
-                cachedMediaServers = mediaServers;
+                cachedData = { mediaServers, canViewArchive };
 
                 processingMediaServers = true;
                 const serverTimeInfos = await this.system.mediaserver
@@ -411,7 +415,6 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                 const archiveRanges: Record<string, BaseTimeRange> = {};
 
                 await this.findCamerasWithArchive(mediaServers, archiveRanges);
-                const { canViewDevice, canViewDeviceArchive } = this.system.permissionManager;
                 const processedMediaServers = mediaServers.map(ms => ({
                     ...ms,
                     cameras: ms.cameras

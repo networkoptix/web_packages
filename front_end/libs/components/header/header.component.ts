@@ -21,7 +21,7 @@ import { NxLoginService } from '@services/login.service';
 import { NxMenusService } from '@services/menus.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
-import type { IConfig } from '@services/nx-config/config-types';
+import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSessionService } from '@services/session.service';
@@ -58,7 +58,7 @@ enum sizes {
     styleUrls: [environment.isLocal ? 'header-webadmin.component.scss' : 'header.component.scss'],
 })
 export class NxHeaderComponent implements OnInit {
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     readonly environment = environment;
     LANG = staticLang;
 
@@ -76,7 +76,6 @@ export class NxHeaderComponent implements OnInit {
     systemCounter: number;
     loginState: boolean | undefined = undefined;
     hideWebAdmin = false;
-    newHeader = false;
     logoSrc: string;
     icons = icons;
     readonly showHeaderAndFooter: boolean = true;
@@ -106,7 +105,6 @@ export class NxHeaderComponent implements OnInit {
     untilHaveID;
 
     constructor(
-        configService: NxConfigService,
         translateService: TranslateService,
         private renderer: Renderer2,
         public appState: NxAppStateService,
@@ -123,16 +121,13 @@ export class NxHeaderComponent implements OnInit {
         private cookieService: CookieService,
         public loginService: NxLoginService,
     ) {
-        this.CONFIG = configService.getConfig();
-
         translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
             setTimeout(() => {
                 this.getMenu();
             });
         });
 
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
-        if (this.newHeader) {
+        if (nxConfig.featureFlags.newHeader) {
             this.lazyLoadNewHeader();
         }
         setTimeout(() => {
@@ -270,7 +265,7 @@ export class NxHeaderComponent implements OnInit {
 
     private getMenu(): void {
         this.menusService
-            .getMenu(this.newHeader ? 'new header' : 'header', true)
+            .getMenu(nxConfig.featureFlags.newHeader ? 'new header' : 'header', true)
             .pipe(untilDestroyed(this))
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
@@ -293,7 +288,7 @@ export class NxHeaderComponent implements OnInit {
                     }
                 }
                 this.headerService.setLocation(window.location.pathname);
-                if (this.newHeader) {
+                if (nxConfig.featureFlags.newHeader) {
                     if (!this.loginState) {
                         nodes.unshift(this.menusService.makeWelcomeNode());
                     } else {
@@ -397,7 +392,7 @@ export class NxHeaderComponent implements OnInit {
                     this.loginState = true;
                     this.renderer.removeClass(document.body, 'anonymous');
                     this.renderer.addClass(document.body, 'authorized');
-                    if (this.newHeader) {
+                    if (nxConfig.featureFlags.newHeader) {
                         const welcomeLang = this.LANG.appHeader.headerMenuNodes.welcome;
                         const systemLang = this.LANG.appHeader.headerMenuNodes.system;
                         const headerName = this.headerService?.nodes[0]?.name;
@@ -520,8 +515,20 @@ export class NxHeaderComponent implements OnInit {
         if (!this.systems) {
             return;
         }
+        const sessionVerified = this.accountService.account.sessionVerified || environment.isLocal;
+        let nextActiveSystem: NxSystemInfo;
+        if (this.singleSystem || this.environment.isLocal) {
+            // Special case for a single system - it always active
+            nextActiveSystem = this.systems[0];
+        } else if (this.systemId) {
+            // Will only have multiple systems on cloud
+            nextActiveSystem = this.systems.find(system => {
+                return this.systemId === system.id;
+            });
+        }
         const system = this.systemService.getCurrentSystem();
-        this.headerService.activeSystem = system;
+        this.headerService.activeSystem =
+            nextActiveSystem?.system2faEnabled && !sessionVerified ? undefined : system;
 
         if (!this.environment.isLocal) {
             if (system) {
@@ -577,7 +584,7 @@ export class NxHeaderComponent implements OnInit {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         }
 
-        return this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
+        return nxConfig.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
             ? '/dashboard'
             : '/';
     }

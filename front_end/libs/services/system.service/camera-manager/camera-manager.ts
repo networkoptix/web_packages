@@ -94,10 +94,6 @@ export class CameraManager {
         const { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled } =
             this.parseParameters(camera);
 
-        const nonWebRtcCodec = [7, 173].includes(
-            (parameters.mediaStreams?.streams ?? [])[0]?.codec,
-        );
-
         const backupQuality = (camera as ec2CameraEx).backupType || camera.backupQuality;
 
         const webRtcUrl =
@@ -111,7 +107,6 @@ export class CameraManager {
                           'low',
                           position,
                           resolvedRelay,
-                          nonWebRtcCodec ? 'mse' : 'srtp',
                       );
                   }
                 : null;

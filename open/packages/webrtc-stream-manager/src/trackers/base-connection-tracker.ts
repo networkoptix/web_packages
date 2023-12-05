@@ -10,6 +10,7 @@ import { BaseTracker } from "./base-tracker";
  * This is for trackers the require data from the WebRTC peer connection.
  */
 export abstract class BaseConnectionTracker<RTCReportType = InboundRtpReport> extends BaseTracker<number> {
+    public targetReport = RTCStatReportTypes.inboundRtp
     /**
      * Report filter to only include certain report types.
      *
@@ -21,7 +22,7 @@ export abstract class BaseConnectionTracker<RTCReportType = InboundRtpReport> ex
      * @returns boolean
      */
     public isTargetReport(report: RTCStats): boolean {
-        return RTCStatReportTypes.inboundRtp === report.type
+        return this.targetReport === report.type
     };
 
     /**
@@ -38,8 +39,8 @@ export abstract class BaseConnectionTracker<RTCReportType = InboundRtpReport> ex
      */
     private getScoreFromConnection = async (): Promise<number> => {
         const track = this.connection?.getReceivers?.()?.[0]?.track
-        if (!this.connection?.getStats || this.connection?.connectionState !== 'connected' || !track) {
-            this.processInboundReport();
+        if (!this.connection?.getStats || this.connection?.connectionState !== 'connected') {
+            return this.processInboundReport()
         }
 
         const stats = await this.connection?.getStats(track)

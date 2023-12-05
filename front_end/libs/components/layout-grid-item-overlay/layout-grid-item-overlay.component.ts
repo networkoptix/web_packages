@@ -14,7 +14,7 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
-import { UntilDestroy } from '@ngneat/until-destroy';
+import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -149,6 +149,7 @@ export class NxLayoutGridItemOverlayComponent {
             return round(Math.max(scaleWidth, scaleHeight, scaleClamp), 2);
         }),
         distinctUntilChanged(),
+        untilDestroyed(this),
     );
 
     scaled$$ = toSignal(this.scale$.pipe(map(scale => scale !== 1)), { initialValue: false });
@@ -160,6 +161,7 @@ export class NxLayoutGridItemOverlayComponent {
             transform: `scale(${1 / scale})`,
             'transform-origin': 'top left',
         })),
+        untilDestroyed(this),
     );
 
     // TODO remove when Action Dispatcher for displayInfo is implemented
@@ -253,7 +255,6 @@ export class NxLayoutGridItemOverlayComponent {
 
             if (mediaserver instanceof NxSystemRestAPI2) {
                 const {
-                    fps,
                     loading,
                     streamType: { primary, secondary, stream },
                     resolution: { high, low },
@@ -262,7 +263,6 @@ export class NxLayoutGridItemOverlayComponent {
 
                 const sampleRateSeconds = 0.33;
                 let sampleSizeSeconds = 0;
-                const minSampleSizeSeconds = 0.66;
                 const maxBufferSeconds = 6;
 
                 const videoElement =
@@ -292,10 +292,6 @@ export class NxLayoutGridItemOverlayComponent {
                             sampleSizeSeconds += sampleRateSeconds;
                         }
 
-                        const actualFps =
-                            sampleSizeSeconds < minSampleSizeSeconds
-                                ? 0
-                                : frames.length / sampleSizeSeconds;
                         const currentResolution = `${videoElement.videoWidth}x${videoElement.videoHeight}`;
                         const currentStream = mediaStreams.find(
                             ({ resolution }) => resolution === currentResolution,
@@ -318,14 +314,9 @@ export class NxLayoutGridItemOverlayComponent {
                             value: isPrimary ? high : low,
                             params: { codec: codecLookup[currentStream.codec] },
                         };
-                        const fpsText = actualFps && {
-                            value: fps,
-                            params: { fps: actualFps.toFixed(2) },
-                        };
+
                         return videoLoaded
-                            ? [streamTitle, fpsText, currentResolution, streamDescription].filter(
-                                  Boolean,
-                              )
+                            ? [streamTitle, currentResolution, streamDescription].filter(Boolean)
                             : [streamTitle, loading];
                     }),
                     tap(() => {
@@ -339,6 +330,7 @@ export class NxLayoutGridItemOverlayComponent {
                 return EMPTY;
             }
         }),
+        untilDestroyed(this),
     );
 
     @HostListener('document:fullscreenchange')
@@ -560,8 +552,12 @@ export class NxLayoutGridItemOverlayComponent {
         return this.MENU_ITEMS[this.isRecording$$() ? 'recordingOn' : 'recordingOff'];
     });
 
-    menu$$ = computed(() => {
-        return this.MENU_ITEMS.menu;
+    quickActionsMenu$$ = computed(() => {
+        const type = this.node$$()?.type;
+        if (type && this.menuItemsByType[type]) {
+            return this.MENU_ITEMS.menu;
+        }
+        return undefined;
     });
 
     fullscreenAction$$ = computed(() => {
@@ -630,7 +626,7 @@ export class NxLayoutGridItemOverlayComponent {
         private store: Store,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
-        this.layoutsItemStatus = configService.getConfig().featureFlags.layoutsItemStatus;
+        this.layoutsItemStatus = !!configService.getConfig().featureFlags.layoutsItemStatus;
         this.layoutsEditable = !!configService.getConfig().featureFlags.layoutsEditable;
         this.layoutsItemChangeResolution =
             !!configService.getConfig().featureFlags.layoutsItemChangeResolution;

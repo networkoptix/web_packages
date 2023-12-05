@@ -43,6 +43,10 @@
         &.alternateSecondary {
             max-width: 272px;
         }
+
+        &.tooltipMediumFont {
+            font-family: $font-family-medium;
+        }
     }
 
     .tooltip-arrow {

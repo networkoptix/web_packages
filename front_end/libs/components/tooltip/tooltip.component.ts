@@ -23,6 +23,7 @@ export class NxTooltipComponent extends BasePortalOutlet {
         alternateSecondary: false,
         forceDark: false,
         forceLight: false,
+        tooltipMediumFont: false,
     };
 
     @ViewChild(CdkPortalOutlet) portalOutlet: CdkPortalOutlet;
@@ -35,12 +36,14 @@ export class NxTooltipComponent extends BasePortalOutlet {
         alternateSecondary = false,
         forceDark = false,
         forceLight = false,
+        tooltipMediumFont = false,
     ): void {
         this.template = portal;
         this.tooltipClasses.alternate = alternateStyle;
         this.tooltipClasses.alternateSecondary = alternateSecondary;
         this.tooltipClasses.forceDark = forceDark;
         this.tooltipClasses.forceLight = forceLight;
+        this.tooltipClasses.tooltipMediumFont = tooltipMediumFont;
     }
 
     attachText(
@@ -49,12 +52,14 @@ export class NxTooltipComponent extends BasePortalOutlet {
         alternateSecondary = false,
         forceDark = false,
         forceLight = false,
+        tooltipMediumFont = false,
     ): void {
         this._text = text;
         this.tooltipClasses.alternate = alternateStyle;
         this.tooltipClasses.alternateSecondary = alternateSecondary;
         this.tooltipClasses.forceDark = forceDark;
         this.tooltipClasses.forceLight = forceLight;
+        this.tooltipClasses.tooltipMediumFont = tooltipMediumFont;
     }
 
     attachComponentPortal<T>(componentPortal: ComponentPortal<T>): ComponentRef<T> {

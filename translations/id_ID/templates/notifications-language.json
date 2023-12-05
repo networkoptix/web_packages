@@ -1,41 +1,41 @@
 {
   "activate_account": {
-    "emailSubject": "Activate your account"
+    "emailSubject": "Aktifkan akun Anda"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Anda telah diundang ke %CLOUD_NAME%"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Pertanyaan penjualan untuk {{{message.asset}}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Pertanyaan teknis untuk {{{message.asset}}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "Masukan untuk {{{message.asset}}}"
   },
   "ipvd_feedback": {
-    "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
+    "emailSubject": "Feedback Halaman Kamera{{#message.asset}} untuk {{{message.asset}}}{{/message.asset}}"
   },
   "ownership_transfer_invite": {
-    "emailSubject": "Ownership transfer for {{message.system_name}}"
+    "emailSubject": "Peralihan kepemilikan untuk {{message.system_name}}"
   },
   "ownership_transfer_response": {
-    "emailSubject": "Ownership transfer for {{message.system_name}} - {{message.status}}"
+    "emailSubject": "Peralihan kepemilikan untuk {{message.system_name}} - {{message.status}}"
   },
   "review_version": {
-    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
+    "emailSubject": "{{message.asset_type}}: {{{message.asset}}} memiliki versi baru untuk ditinjau"
   },
   "restore_password": {
-    "emailSubject": "Reset your password"
+    "emailSubject": "Reset password Anda"
   },
   "system_invite": {
-    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
+    "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} mengundang Anda ke %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Sistem video {{{message.system_name}}} dibagikan kepada Anda{{/message.sharer_name}}"
   },
   "system_shared": {
-    "emailSubject": "Video system {{{message.system_name}}} was shared with you"
+    "emailSubject": "Sistem video {{{message.system_name}}} dibagikan kepada Anda"
   }
 }

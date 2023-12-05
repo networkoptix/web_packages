@@ -5,16 +5,14 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { filter } from 'rxjs/operators';
 
 import { accountActions, accountSelectors } from '@common/store/account';
 import { ToastType } from '@components/toast-container/toast.types';
-import { UnstructuredTable } from '@db/models/unstructured';
+// import { UnstructuredTable } from '@db/models/unstructured';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
-import type { IConfig } from '@services/nx-config/config-types';
 import { OauthService } from '@services/oauth.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
@@ -39,7 +37,7 @@ import { Account } from './account';
  */
 @Injectable()
 export abstract class BaseAccount {
-    protected CONFIG: IConfig = nxConfig;
+    protected CONFIG = nxConfig;
     protected LANG = staticLang;
     protected location: Location;
     protected requestingLogin: any;
@@ -133,14 +131,21 @@ export abstract class BaseAccount {
     // Methods shared between local and cloud versions of account service.
     @memoizeAsyncPersistent
     private initStoreUpdater(account: Account) {
-        this.db.updatePersonal(account);
-        this.db.personal.unstructured.put({ key: 'account', value: account });
-        this.db.personal.unstructured.$.get('account')
-            .pipe(filter(({ value }) => !!value))
-            .subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
-                this._account = currentUser;
-                this.store.dispatch(accountActions.setCurrentUser({ currentUser }));
-            });
+        // Dexie is having a weird interaction and causing a memory leak
+        // this.db.updatePersonal(account);
+        // this.db.personal.unstructured.put({ key: 'account', value: account });
+        // return this.db.personal.unstructured.$.get('account')
+        //     .pipe(
+        //         tap(d => console.log(d)),
+        //         filter(({ value }) => !!value),
+        //     )
+        //     .subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
+        //         console.log('observe the db update store');
+        //         this._account = currentUser;
+        //         this.store.dispatch(accountActions.setCurrentUser({ currentUser }));
+        //     });
+        this._account = account;
+        this.store.dispatch(accountActions.setCurrentUser({ currentUser: account }));
     }
 
     get account(): Account {

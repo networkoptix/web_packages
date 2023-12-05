@@ -27,7 +27,7 @@ import {
 } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
-import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
+import { WebRTCStreamManager, isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
@@ -36,8 +36,6 @@ import { ActiveLayoutSelectors } from '@services/layout-state/store/active-layou
 import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, WebPage } from '@services/system-api.types/layouts.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
@@ -91,7 +89,7 @@ interface ResourceLookup<T = { id: string }> {
 })
 export class NxLayoutViewComponent {
     LANG = staticLang;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     ptzControlTarget: NxSystemCamera;
 
     selectedSystem$ = this.systemService.currentSystem$;
@@ -111,6 +109,7 @@ export class NxLayoutViewComponent {
         catchError(() => Promise.resolve(false)),
         startWith(true),
         shareReplay({ bufferSize: 1, refCount: true }),
+        untilDestroyed(this),
     );
 
     layoutItemLookup$ = this.systemService.currentSystem$.pipe(
@@ -157,11 +156,12 @@ export class NxLayoutViewComponent {
                         }
                     }
 
-                    const primaryStream = (camera.parameters.mediaStreams?.streams ?? []).find(
-                        ({ encoderIndex }) => encoderIndex === 0,
-                    );
+                    const nonWebRtcCodec = (camera.parameters.mediaStreams?.streams ?? [])
+                        .filter(({ encoderIndex }) => encoderIndex !== -1)
+                        .every(({ codec }) => isRequiresTranscoding(codec));
 
-                    const nonWebRtcCodec = [7, 173].includes(primaryStream?.codec);
+                    const requiresTranscoding = nonWebRtcCodec && !this.useV2api;
+
                     return {
                         ...cameras,
                         [camera.id]: {
@@ -172,7 +172,7 @@ export class NxLayoutViewComponent {
                                 ...camera,
                                 online,
                                 unauthorized,
-                                requiresTranscoding: nonWebRtcCodec && !this.useV2api,
+                                requiresTranscoding,
                                 resourceType:
                                     this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
                                 status: (camera.recordingStatus || camera.status).toLowerCase(),
@@ -260,7 +260,7 @@ export class NxLayoutViewComponent {
                     .sort(byName)
                     .filter(
                         ({ type }) =>
-                            this.CONFIG.featureFlags.layoutsIoDevices ||
+                            nxConfig.featureFlags.layoutsIoDevices ||
                             type !== ResourceType.IO_DEVICE,
                     );
 
@@ -274,8 +274,8 @@ export class NxLayoutViewComponent {
                             type: ResourceType.LAYOUTS,
                             children: layoutsForTree,
                         },
-                        (this.CONFIG.featureFlags.layoutsServers ||
-                            this.CONFIG.featureFlags.layoutsDemo) && {
+                        (nxConfig.featureFlags.layoutsServers ||
+                            nxConfig.featureFlags.layoutsDemo) && {
                             name: staticLang.layouts.titles.resourceTypes[ResourceType.SERVERS],
                             details: { id: ResourceType.SERVERS },
                             type: ResourceType.SERVERS,
@@ -291,8 +291,8 @@ export class NxLayoutViewComponent {
                             type: ResourceType.CAMERAS,
                             children: camerasForTree,
                         },
-                        (this.CONFIG.featureFlags.layoutsWebpages ||
-                            this.CONFIG.featureFlags.layoutsDemo) && {
+                        (nxConfig.featureFlags.layoutsWebpages ||
+                            nxConfig.featureFlags.layoutsDemo) && {
                             name: staticLang.layouts.titles.resourceTypes[ResourceType.WEB_PAGES],
                             details: { id: ResourceType.WEB_PAGES },
                             type: ResourceType.WEB_PAGES,
@@ -330,6 +330,7 @@ export class NxLayoutViewComponent {
             return layoutId || '';
         }),
         distinctUntilChanged(),
+        untilDestroyed(this),
     );
 
     #layoutId$ = this.store.select(ActiveLayoutSelectors.selectActiveLayoutState).pipe(
@@ -352,6 +353,7 @@ export class NxLayoutViewComponent {
 
             return layoutId;
         }),
+        untilDestroyed(this),
     );
 
     #selectedLayout$ = combineLatest([
@@ -424,7 +426,6 @@ export class NxLayoutViewComponent {
         private accountService: NxAccountService,
         private cd: ChangeDetectorRef,
         private cloudApi: NxCloudApiService,
-        configService: NxConfigService,
         private dialogsService: NxDialogsService,
         layoutGridService: NxLayoutGridService,
         // private location: Location,
@@ -434,9 +435,7 @@ export class NxLayoutViewComponent {
         private translate: TranslateService,
         private store: Store,
         public layoutStateService: LayoutStateService,
-    ) {
-        this.CONFIG = configService.config;
-    }
+    ) {}
 
     ngOnInit(): void {
         this.selectedSystem$
@@ -451,7 +450,7 @@ export class NxLayoutViewComponent {
     }
 
     initTour = (tourGroup: CloudLayoutTours = CloudLayoutTours.DEFAULT): void => {
-        if (!this.CONFIG.featureFlags.layoutsTour && !this.CONFIG.featureFlags.layoutsDemo) {
+        if (!nxConfig.featureFlags.layoutsTour && !nxConfig.featureFlags.layoutsDemo) {
             return;
         }
         this.tourService.initialize(
@@ -505,7 +504,7 @@ export class NxLayoutViewComponent {
         fixedWidth: 0,
         id: null,
         items,
-        locked: !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
+        locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
         logicalId: 0,
         name,
         systemId,
@@ -578,8 +577,7 @@ export class NxLayoutViewComponent {
                     zoomTop: 0,
                 },
             ],
-            locked:
-                !this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo,
+            locked: !nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo,
             logicalId: 0,
             name: this.layoutStateService.focusViewToken,
             systemId,

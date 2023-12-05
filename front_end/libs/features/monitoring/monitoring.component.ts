@@ -49,7 +49,7 @@ export class NxMonitoringComponent implements OnInit {
             const permissions = this.system.permissionManager.permissions$$();
             this.content = {
                 base: '',
-                selectedSection: 'graphs',
+                selectedSection: this.content?.selectedSection || 'graphs',
                 selectedSubSection: '',
                 level1: [
                     {

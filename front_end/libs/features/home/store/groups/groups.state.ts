@@ -1,8 +1,10 @@
-import type { BaseGroupsItem, OpenGroups, SystemInfo } from '../../home.types';
+import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
+import type { OpenGroups } from '../../home.types';
 
 export interface GroupsState {
-    items: BaseGroupsItem[] | null;
-    orgSystems: SystemInfo[] | null;
+    groups: GroupItem[] | null;
+    groupsMap: GroupItem[] | null;
     currentGroupId: string;
     openGroups: OpenGroups;
 }

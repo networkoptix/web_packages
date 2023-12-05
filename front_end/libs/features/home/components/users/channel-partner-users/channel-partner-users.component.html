@@ -7,22 +7,23 @@
     >
         Add User
     </button>
-    <div class="input px-2">
-        <span class="glyphicon web-icon-search icon-search"></span>
-        <input
-            class="pl-2"
-            [placeholder]="'Search' | translate"
-        />
-    </div>
+
+    <nx-search
+        [(ngModel)]="searchModel"
+        (ngModelChange)="setQuery($event)"
+        layout="search"
+        instant
+    ></nx-search>
 </div>
 <div
     #tableContainer
-    class="m-0 table-grid"
+    class="m-0 px-3 table-grid"
 >
     <div [style.display]="'block'">
         <nx-users-table
+            [userType]="UserType.CHANNEL_PARTNER"
             [headers]="headers"
-            [records]="records$ | async"
+            [records]="filteredRecords"
             [selectedRecordId]="selectedUserEmail"
             (onDeleteClick)="deleteChannelPartnerUser($event)"
             (onRowClick)="selectUser($event)"

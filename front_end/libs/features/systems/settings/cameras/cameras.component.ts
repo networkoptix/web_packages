@@ -84,13 +84,10 @@ class Alert {
     styleUrls: ['cameras.component.scss'],
 })
 export class NxCamerasComponent implements OnInit, OnChanges {
-    camera: NxSystemCamera;
-    cameraId$$ = signal<string>('');
     @Input() system: NxSystem;
-    @Input({ alias: 'camera' }) set routeCamera(camera: NxSystemCamera) {
-        this.camera = camera;
-        this.cameraId$$.set(camera.id);
-    }
+    @Input() camera: NxSystemCamera;
+
+    cameraId$$ = signal<string>('');
 
     LANG = staticLang;
     defaultAspectRatio: number | null = null;
@@ -117,7 +114,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     private recordingSettingsComponent!: NxRecordingSettingsComponent;
 
     private viewContainerRef: ViewContainerRef;
-    enableEdit: boolean;
     private alerts: Alert[] = [];
     warnings: string[] = [];
     errors: string[] = [];
@@ -147,9 +143,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     motionEnabledWatcher = new Watcher<MotionType>();
     motionMaskWatcher = new Watcher<string>();
 
-    editCameras = computed<boolean>(() =>
-        this.system.permissionManager.canEditDevice(this.cameraId$$()),
-    );
     cameraViewPath: string;
     fullInfoPath: string;
     canSeeInfo = computed<boolean>(() => {
@@ -461,8 +454,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     }
 
     private setCamera = async (): Promise<void> => {
-        this.enableEdit = this.system.permissionManager.isAdmin$$() || this.editCameras();
-
         this.menuService.selectedDetailsSection.set(this.camera.id);
 
         const {
@@ -478,6 +469,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             motionType,
             motionMask,
         } = this.camera;
+        this.cameraId$$.set(this.camera.id);
+
         this.settingsDisabled = deviceType !== DeviceType.Camera || !vendor;
         this.settingsRecordingDisabled =
             environment.isLocal || deviceType !== DeviceType.Camera || !vendor;

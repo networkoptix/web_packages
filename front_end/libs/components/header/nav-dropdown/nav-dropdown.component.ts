@@ -7,7 +7,6 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxArrowNavDirective } from '@directives/nx-arrow-nav';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { environment } from '@environments/environment';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
 import { icons } from '@static-variables';
 
@@ -62,8 +61,8 @@ export class NxNavDropdownComponent extends BaseDropdown {
         return nodes;
     }
 
-    constructor(configService: NxConfigService, public headerService: NxHeaderService) {
-        super(configService);
+    constructor(public headerService: NxHeaderService) {
+        super();
     }
 
     hide() {

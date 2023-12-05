@@ -176,7 +176,7 @@ export class UserWithGroupsManager extends UserManager {
         return false;
     }
 
-    private isGroupPowerUser(group: UserGroup): boolean {
+    isGroupPowerUser(group: Pick<UserGroup, 'id'>): boolean {
         return this.powerUserGroups.has(group.id);
     }
 
@@ -186,49 +186,48 @@ export class UserWithGroupsManager extends UserManager {
         const builtInGroup: UserGroupDropdown[] = [{ id: 'title', label: defaultUserGroupText }];
         const customGroup: UserGroupDropdown[] = [];
         const ldapGroup: UserGroupDropdown[] = [];
-        const currentUserIsOwner = this.currentUser.isOwner;
-        Object.values(this.userGroups)
-            .filter(group => currentUserIsOwner || !this.isGroupPowerUser(group)) // Remove all power user groups if user isn't owner;
-            .forEach(({ id, name, description, attributes, type }) => {
-                if (!description && attributes?.includes('readonly')) {
-                    this.userGroups[id].description =
-                        this.LANG.accessRoles[name].description || name;
-                }
-                // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
-                if (id === AdminGroups.administratorGroup) {
-                    return;
-                }
-                // Organize Built-In, LDAP, and Custom groups into smaller groups to combine later for the mult-select dropdown
-                if (attributes && attributes === 'readonly') {
-                    builtInGroup.push({
-                        id,
-                        label: name,
-                        tooltip: description,
-                    });
-                } else if (type && type === 'ldap') {
-                    ldapGroup.push({
-                        id,
-                        label: name,
-                        tooltip: description,
-                    });
-                } else {
-                    customGroup.push({
-                        id,
-                        label: name,
-                        tooltip: description,
-                    });
-                }
-            });
+        Object.values(this.userGroups).forEach(({ id, name, description, attributes, type }) => {
+            if (!description && attributes?.includes('readonly')) {
+                this.userGroups[id].description = this.LANG.accessRoles[name].description || name;
+            }
+            // Do not allow Administrator to be in the dropdowns. Only Channel partners can use this group.
+            if (id === AdminGroups.administratorGroup) {
+                return;
+            }
+            // Organize Built-In, LDAP, and Custom groups into smaller groups to combine later for the mult-select dropdown
+            if (attributes && attributes === 'readonly') {
+                builtInGroup.push({
+                    id,
+                    label: name,
+                    tooltip: description,
+                });
+            } else if (type && type === 'ldap') {
+                ldapGroup.push({
+                    id,
+                    label: name,
+                    tooltip: description,
+                });
+            } else {
+                customGroup.push({
+                    id,
+                    label: name,
+                    tooltip: description,
+                });
+            }
+        });
+        const sortByGroupName = alphabeticalSort<UserGroupDropdown>(
+            ({ label }) => label,
+        );
 
         // Used to insert the group title and horizontal divider for the mult-select dropdown
         if (customGroup.length > 0) {
-            customGroup.sort(alphabeticalSort(({ label }) => label));
+            customGroup.sort(sortByGroupName);
             customGroup.unshift({ id: 'title', label: customUserGroupText });
             customGroup.unshift({ id: 'horizontal', label: 'horizontal' });
         }
         if (ldapGroup.length > 0) {
             const defaultLdapGroup = ldapGroup.shift();
-            ldapGroup.sort(alphabeticalSort(({ label }) => label));
+            ldapGroup.sort(sortByGroupName);
             ldapGroup.unshift(defaultLdapGroup);
             ldapGroup.unshift({ id: 'title', label: ldapUserGroupText });
             ldapGroup.unshift({ id: 'horizontal', label: 'horizontal' });

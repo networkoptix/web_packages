@@ -3,31 +3,20 @@ import {
     Route,
     UrlSegment,
     ActivatedRouteSnapshot,
-    RouterStateSnapshot,
     UrlTree,
     Router,
     CanActivateFn,
     CanMatchFn,
 } from '@angular/router';
-import { CookieService } from 'ngx-cookie-service';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 
 function enabled(route: Route | ActivatedRouteSnapshot): boolean {
-    const configService: NxConfigService = inject(NxConfigService);
-    const cookieService: CookieService = inject(CookieService);
-    const { flags, override } = route.data;
-    const flagEnabled = configService.flagsEnabled(flags);
-    const hasOverride = override && cookieService.get(override);
-    return flagEnabled || !!hasOverride;
+    return !!route.data?.flag && !!nxConfig.featureFlags[route.data.flag];
 }
 
-export const FeatureGuardActivate: CanActivateFn = (
-    route: ActivatedRouteSnapshot,
-    state: RouterStateSnapshot,
-): boolean => {
-    return enabled(route);
-};
+export const FeatureGuardActivate: CanActivateFn = (route: ActivatedRouteSnapshot): boolean =>
+    enabled(route);
 
 export const FeatureGuardMatch: CanMatchFn = (
     route: Route,
@@ -36,6 +25,7 @@ export const FeatureGuardMatch: CanMatchFn = (
     const router: Router = inject(Router);
     const enable = enabled(route);
 
+    // If the feature is not enabled and we are on a system, redirect to the system settings page
     if (!enable && segments[0].path === 'systems') {
         return Promise.resolve(router.parseUrl(segments.slice(0, 2).join('/')));
     }

@@ -1,7 +1,10 @@
 import { Component } from '@angular/core';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
-import type { MultiSelectItem } from '@components/dropdowns/multi-select/multi-select.component.types';
+import {
+    DATA_TYPE,
+    MultiSelectItem,
+} from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxMenuService } from '@menu/menu.service';
 
 import { DropdownConfiguration, ComplicatedObject } from './multy-select.component.types';
@@ -14,6 +17,8 @@ import { DropdownConfiguration, ComplicatedObject } from './multy-select.compone
 export class MultiSelectComponent {
     items: MultiSelectItem[] = [];
     itemsSelected: string[];
+    tooManyItems: MultiSelectItem[] = [];
+    itemsSelectedTooMany: string[];
     itemsOther: MultiSelectItem[] = [];
     itemsSelectedOther: string[];
     mode: DropdownItem<string>[];
@@ -177,7 +182,7 @@ export class MultiSelectComponent {
             created: '2023-08-24T19:14:46.748Z',
         },
     ];
-    selectedComplicatedObject: ComplicatedObject | undefined = undefined;
+    selectedComplicatedObject: ComplicatedObject | undefined = {} as ComplicatedObject;
     selectedComplicatedObjects: ComplicatedObject[] = [];
     isSelected(item: ComplicatedObject): boolean {
         return this.selectedComplicatedObjects?.some(i => i.userId === item.userId);
@@ -241,6 +246,7 @@ export class MultiSelectComponent {
             { label: 'Live Viewer', id: '24' },
         ];
 
+        this.itemsSelectedTooMany = [];
         this.itemsSelected = ['qwerty2', 'qwerty3'];
         this.itemsSelectedOther = ['3'];
 
@@ -341,6 +347,13 @@ export class MultiSelectComponent {
 
         this.modeSelected = this.mode[2];
 
+        this.tooManyItems = Array.from({ length: 100000 }).map((_, i): MultiSelectItem => {
+            return {
+                id: '' + i,
+                label: '' + i,
+            };
+        });
+
         // calculate dd size
         const btn = document.createElement('span');
         btn.style.visibility = 'hidden';
@@ -348,6 +361,11 @@ export class MultiSelectComponent {
         document.body.appendChild(btn);
         // add button's left and right padding and space for info icon
         this.ddWidth = Math.round(btn.getBoundingClientRect().width + 100);
+    }
+
+    modelChangedTooMany(result: string[]): void {
+        // ensure 'change' will be triggered
+        this.itemsSelectedTooMany = [...result];
     }
 
     modelChanged(result: string[]): void {
@@ -374,4 +392,6 @@ export class MultiSelectComponent {
         // ensure 'change' will be triggered
         this.selectedSearchableDDItem = { ...result };
     }
+
+    protected readonly DATA_TYPE = DATA_TYPE;
 }

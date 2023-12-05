@@ -20,8 +20,9 @@ from partners.models import (
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet
+    SystemGroupUserViewSet, system_user, system_users, user_systems
 )
+from tools.serializers import VALUE_REPLACEMENT
 
 
 class TestCloudSystemViewSet:
@@ -376,10 +377,46 @@ class TestOrganizationUserViewSet:
         response = view(request, parent_lookup_organization=org.id)
         assert response.status_code == 204
 
+    def test_remove_groups(self, channel_partner_factory, organization_factory, org_user_factory,
+                           sys_group_user_factory, arf, mock_auth_with_user, cloud_user_factory):
+        cloud_user = cloud_user_factory()
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org_admin = org_user_factory(organization=org)
+        other_org = organization_factory(channel_partner=cp)
+        groups_users = [sys_group_user_factory(organization=org, cloud_user=cloud_user) for _ in range(5)]
+        other_group = sys_group_user_factory(organization=other_org)
+        view = OrganizationUserViewSet.as_view({'post': 'remove_groups'})
+        mock_auth_with_user(org_admin)
+        data = [str(u.system_group_id) for u in groups_users[:-1]]
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_organization=org.id, email=cloud_user.email)
+        assert response.status_code == 204
+
+    def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
+                             mock_auth_with_user, arf, org_user_factory):
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': cp_admin.user.email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = OrganizationUserViewSet.as_view(actions={'post': 'create'})
+        mock_auth_with_user(cp_admin)
+
+        organization = organization_factory(channel_partner=cp)
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_organization=organization.id)
+        assert response.status_code == 400
+        assert (f"User {cp_admin.user.email} has a role in the organization parent channel partner"
+                in response.data['email'][0])
+
+
 class TestChannelPartnerUserViewSet:
 
     def test_destroy_last_admin(self, channel_partner_factory, cp_user_factory, default_channel_partner,
-                                mock_auth_with_user, arf, httpx_mock, default_cp_admin):
+                                mock_auth_with_user, arf, default_cp_admin):
         # https://networkoptix.atlassian.net/wiki/spaces/FS/pages/2844524545/Channel+Partners+Orgs+access+matrix#Users
         cp = channel_partner_factory(parent_channel_partner=default_channel_partner)
         user = cp_user_factory(channel_partner=cp)
@@ -403,6 +440,42 @@ class TestChannelPartnerUserViewSet:
         assert response.status_code == 409
         assert response.data['detail']
         assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
+
+    def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email):
+        email = random_email
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        request = arf.post('/', data=data, format='json')
+        mock_auth_with_user(cp_admin)
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 200
+
+    def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
+                             mock_auth_with_user, arf, org_user_factory, random_email):
+        email = random_email
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+        data = {
+            'email': email,
+            'role': 'Administrator',
+            'title': 'cp user'
+        }
+        view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
+        mock_auth_with_user(cp_admin)
+
+        organization = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(email=email, organization=organization)
+        request = arf.post('/', data=data, format='json')
+        response = view(request, parent_lookup_channel_partner=cp.id)
+        assert response.status_code == 400
+        assert f"User {email} has a role in the channel partner child organization" in response.data['email'][0]
+
 
 
 class TestChannelPartnerNestedViewSet:
@@ -494,7 +567,8 @@ class TestChannelPartnerViewSet:
         response = view(request, pk=str(sub_cp.id))
         assert response.status_code == 200
         assert response.data['id'] == str(sub_cp.id)
-        assert response.data['parentChannelPartner'] == root_cp.id
+        # Organizations users have no access to their parent's parent cp id
+        assert response.data['parentChannelPartner'] == VALUE_REPLACEMENT
 
     def test_aggregate(self, default_channel_partner, channel_partner_factory, organization_factory,
                        system_factory, arf, mock_auth_with_user, cp_user_factory):
@@ -588,9 +662,11 @@ class TestChannelPartnerViewSet:
             for data in response.data['results']:
                 if str(partner.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
+                    assert data['ownRolesIds'] == user.roles
                     assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
+                    assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
 
@@ -687,9 +763,11 @@ class TestOrganizationViewSet:
             for data in response.data['results']:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
+                    assert data['ownRolesIds'] == user.roles
                     assert data['ownRoles'] == user.roles_name
                 else:
                     assert data['ownPermissions'] == []
+                    assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
 
@@ -787,41 +865,138 @@ class TestSystemGroupUserViewSet:
         data = emails + [self.other_user.user.email]
         request = arf.post('/', json=data)
         mock_auth_with_user(self.other_user)
-        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
-        response = view(request, parent_lookup_organization=self.org.id)
+        view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
+        response = view(request, parent_lookup_system_group=self.group.id)
         assert response.status_code == 403
 
     def test_bulk_delete_400(self, channel_partner_factory, organization_factory, org_user_factory,
                          mock_auth_with_user, arf):
         emails = [u.user.email for u in self.users]
-        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
+        view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
         # test other organization user deletion
         data = emails + ['invalid_email']
         request = arf.post('/', data=data, format='json')
         mock_auth_with_user(self.org_user)
-        response = view(request, parent_lookup_organization=self.org.id)
+        response = view(request, parent_lookup_system_group=self.group.id)
         assert response.status_code == 400
 
     def test_bulk_delete(self, channel_partner_factory, organization_factory, org_user_factory,
                          mock_auth_with_user, arf):
         emails = [u.user.email for u in self.users]
-        view = OrganizationUserViewSet.as_view({'post': 'bulk_delete'})
+        view = SystemGroupUserViewSet.as_view({'post': 'bulk_delete'})
         # test all admins
         data = emails
         request = arf.post('/', data=data, format='json')
         mock_auth_with_user(self.org_user)
-        response = view(request, parent_lookup_organization=self.org.id)
+        response = view(request, parent_lookup_system_group=self.group.id)
         assert response.status_code == 204
 
-    def test_remove_groups(self, channel_partner_factory, organization_factory, org_user_factory,
-                           sys_group_user_factory, arf, mock_auth_with_user, cloud_user_factory):
-        cloud_user = cloud_user_factory()
-        org_admin = org_user_factory(organization=self.org)
-        groups_users = [sys_group_user_factory(organization=self.org, cloud_user=cloud_user) for _ in range(5)]
-        other_group = sys_group_user_factory(organization=self.other_org)
-        view = OrganizationUserViewSet.as_view({'post': 'remove_groups'})
-        mock_auth_with_user(org_admin)
-        data = [str(u.system_group_id) for u in groups_users[:-1]]
-        request = arf.post('/', data=data, format='json')
-        response = view(request, parent_lookup_organization=self.org.id, email=cloud_user.email)
-        assert response.status_code == 204
+    def test_can_access(self, system_group_factory, sys_group_user_factory, arf, mock_auth_with_user):
+        self.group_1 = system_group_factory(organization=self.org, parent=self.group)
+        self.group_2 = system_group_factory(organization=self.org, parent=self.group_1)
+        self.group_3 = system_group_factory(organization=self.org, parent=self.group_2)
+
+        users = [sys_group_user_factory(organization=self.org, group=g)
+                 for g in [self.group_1, self.group_2, self.group_3]]
+
+        view = SystemGroupUserViewSet.as_view({'get': 'can_access'})
+        request = arf.get('/')
+        mock_auth_with_user(self.org_user)
+
+        response = view(request, parent_lookup_system_group=self.group.id)
+
+        assert response.status_code == 200
+        assert len(response.data) == len(self.users + [self.org_user])
+        assert response.data[0]['hasAccessTo']
+        assert response.data[0]['hasAccessTo']['name'] == self.org.name
+        assert response.data[0]['hasAccessTo']['id'] == str(self.org.id)
+        assert response.data[0]['hasAccessTo']['membershipType'] == 'organization'
+
+        response = view(request, parent_lookup_system_group=self.group_2.id)
+
+        assert response.status_code == 200
+        assert len(response.data) == len(self.users + [self.org_user]) + 2
+        assert response.data[-1]['hasAccessTo']
+        assert response.data[-1]['hasAccessTo']['name'] == self.group_2.name
+        assert response.data[-1]['hasAccessTo']['id'] == str(self.group_2.id)
+        assert response.data[-1]['hasAccessTo']['membershipType'] == 'systemgroup'
+
+
+def test_system_user(channel_partner_factory, cp_user_factory, organization_factory,
+                     org_user_factory, system_group_factory, system_factory,
+                     sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+        org.save()
+        org_sys = system_factory(organization=org)
+        group = system_group_factory(organization=org)
+        group_sys = system_factory(organization=org, system_group=group)
+        cp_admin = cp_user_factory(channel_partner=cp)
+        org_admin = org_user_factory(organization=org)
+        group_user = sys_group_user_factory(organization=org, group=group,
+                                            role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+
+        request = arf.get('/')
+        mock_internal_token_auth()
+
+        response = system_user(request, str(group_sys.system_id), email=cp_admin.user.email)
+        assert response.status_code == 200
+        assert response.data['vmsRoles'][0] == OrganizationRole.objects.get(pk=org.channel_partner_access_level_id).system_role_uuid
+
+        response = system_user(request, str(group_sys.system_id), email=group_user.user.email)
+        assert response.status_code == 200
+        assert response.data['vmsRoles'][0] == OrganizationRole.objects.get(pk=group_user.roles[0]).system_role_uuid
+
+
+def test_system_users(channel_partner_factory, cp_user_factory, organization_factory,
+                     org_user_factory, system_group_factory, system_factory,
+                     sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+    cp = channel_partner_factory()
+    org = organization_factory(channel_partner=cp)
+    org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+    org.save()
+    org_sys = system_factory(organization=org)
+    group = system_group_factory(organization=org)
+    group_sys = system_factory(organization=org, system_group=group)
+    cp_admin = cp_user_factory(channel_partner=cp)
+    org_admin = org_user_factory(organization=org)
+    group_user = sys_group_user_factory(organization=org, group=group,
+                                        role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+
+    request = arf.get('/')
+    mock_internal_token_auth()
+
+    response = system_users(request, str(group_sys.system_id))
+    assert response.status_code == 200
+    assert len(response.data) == 3
+
+def test_user_systems(channel_partner_factory, cp_user_factory, organization_factory,
+                      org_user_factory, system_group_factory, system_factory,
+                      sys_group_user_factory, cloud_user_factory, arf, mock_internal_token_auth):
+    cp = channel_partner_factory()
+    org = organization_factory(channel_partner=cp)
+    org.channel_partner_access_level_id = OrganizationRoles.POWER_USER
+    org.save()
+    org_sys = system_factory(organization=org)
+    group = system_group_factory(organization=org)
+    group_sys = system_factory(organization=org, system_group=group)
+    cp_admin = cp_user_factory(channel_partner=cp)
+    org_admin = org_user_factory(organization=org)
+    group_user = sys_group_user_factory(organization=org, group=group,
+                                        role_id=OrganizationRoles.SYSTEM_HEALTH_VIEWER)
+
+    request = arf.get('/')
+    mock_internal_token_auth()
+
+    response = user_systems(request, cp_admin.user.email)
+    assert response.status_code == 200
+    assert len(response.data) == 2
+
+    response = user_systems(request, org_admin.user.email)
+    assert response.status_code == 200
+    assert len(response.data) == 2
+
+    response = user_systems(request, group_user.user.email)
+    assert response.status_code == 200
+    assert len(response.data) == 1

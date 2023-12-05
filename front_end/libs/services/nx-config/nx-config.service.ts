@@ -1,9 +1,6 @@
-import { coerceArray } from '@angular/cdk/coercion';
 import { Injectable, inject } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
-
-import { FeatureFlagType } from '@services/nx-config/base-config';
 
 import { nxConfig } from './config';
 import { IConfig } from './config-types';
@@ -130,17 +127,6 @@ export class NxConfigService {
 
     getConfig(): IConfig {
         return this.config;
-    }
-
-    flagsEnabled(flags: boolean | FeatureFlagType | (FeatureFlagType | boolean)[]): boolean {
-        return coerceArray(flags).every(key => {
-            if (typeof key === 'boolean') {
-                return key;
-            } else if (key) {
-                return !!this.config.featureFlags[key];
-            }
-            return false;
-        });
     }
 
     static get isDarkTheme(): boolean {

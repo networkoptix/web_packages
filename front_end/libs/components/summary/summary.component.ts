@@ -42,12 +42,12 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
     }
 
     ngOnInit(): void {
-        this.getLicenses();
+        this.getLicenses(false);
     }
 
     ngOnChanges(changes: NgChanges<NxLicenseSummaryComponent>): void {
         if (changes.update && changes.update.previousValue !== changes.update.currentValue) {
-            this.getLicenses();
+            this.getLicenses(false);
         }
 
         if (
@@ -58,13 +58,18 @@ export class NxLicenseSummaryComponent implements OnInit, OnChanges {
                 changes.licensesLegacyInfo.previousValue,
             )
         ) {
-            this.getLicenses();
+            this.getLicenses(false);
         }
     }
 
-    getLicenses(): void {
+    getLicenses(activation: boolean): void {
         if (this.system.useRest) {
-            firstValueFrom(this.system.mediaserver.getLicenseSummaries()).then(
+            // These 2 getLicense functions are the same thing, except getLicenseSummariesOnActivation does not have a decorator/memoize
+            const licenseSummary = activation
+                ? this.system.mediaserver.getLicenseSummariesOnActivation()
+                : this.system.mediaserver.getLicenseSummaries();
+
+            firstValueFrom(licenseSummary).then(
                 response => {
                     if (response && Object.keys(response).length) {
                         this.setLicenses(response);

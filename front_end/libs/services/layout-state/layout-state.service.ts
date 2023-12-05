@@ -242,6 +242,8 @@ export class LayoutStateService {
             ...layout,
             locked: false,
         });
+
+        this.saveLayout(layout.id);
     }
 
     lockLayout(layout: Layout): void {
@@ -249,6 +251,8 @@ export class LayoutStateService {
             ...layout,
             locked: true,
         });
+
+        this.saveLayout(layout.id);
     }
 
     setLayoutResolution({

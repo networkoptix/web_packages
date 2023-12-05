@@ -219,6 +219,7 @@ class AsyncCacheClient:
         if isinstance(parser_class, str):
             parser_class = import_string(parser_class)
         parser_class = parser_class or DefaultParser
+
         self._pool_options = {
             "parser_class": parser_class,
             "client_name": "async",

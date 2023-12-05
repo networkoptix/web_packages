@@ -1,6 +1,6 @@
 // Copyright 2018-present Network Optix, Inc. Licensed under MPL 2.0: www.mozilla.org/MPL/2.0/
 
-import { StreamQuality, RTCStatReportTypes, CandidatePairReport, InboundRtpReport } from "../types";
+import { RTCStatReportTypes, CandidatePairReport, InboundRtpReport } from "../types";
 import { BaseConnectionTracker } from "./base-connection-tracker";
 
 type CombinedReport = Omit<CandidatePairReport, 'type'> & Omit<InboundRtpReport, 'type'>;

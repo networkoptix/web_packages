@@ -124,7 +124,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     template: string = '';
     _headers: Prop = [];
-    // headers: Prop = [];
 
     tableClasses: string;
 
@@ -180,7 +179,7 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     ngOnChanges({ additionalClasses, data }: NgChanges<NxBaseTableComponent<T>>): void {
         if (
-            data?.currentValue &&
+            data?.currentValue?.length &&
             (data.firstChange || !isEqual(data.currentValue, data?.previousValue))
         ) {
             this._headers = <Prop>Object.keys(this.data[0]);
@@ -476,6 +475,6 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
     }
 
     rowClick(selected: T): void {
-        this.onRowClick.emit(selected);
+        this.onRowClick.emit({ ...selected });
     }
 }

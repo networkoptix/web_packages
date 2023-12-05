@@ -9,11 +9,13 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
-import { Organization } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    GroupItem,
+    Organization,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
-import { GroupItem, GroupsItem, OpenGroups } from '../../home.types';
-import { NxSystemGroupsService } from '../../services/system-groups.service';
+import { OpenGroups } from '../../home.types';
 import * as GroupActions from '../../store/groups/groups.actions';
 import { selectCurrentGroupId } from '../../store/groups/groups.selectors';
 
@@ -42,25 +44,19 @@ export class NxGroupsSidebarLevelComponent {
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
     icons = icons;
-    constructor(
-        private store: Store,
-        private router: Router,
-        private route: ActivatedRoute,
-        private groupsService: NxSystemGroupsService,
-    ) {}
+    constructor(private store: Store, private router: Router, private route: ActivatedRoute) {}
 
-    trackItem(_index: number, item: GroupsItem): string {
+    trackItem(_index: number, item: GroupItem): string {
         return item.id;
     }
 
-    onDrop(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
-        const dragged = event.item.data;
-        const droppedOn = event.container.data;
-        if (!event.isPointerOverContainer) {
-            return;
-        }
-
-        this.groupsService.onDrop(dragged, droppedOn);
+    onDrop(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
+        // const dragged = event.item.data;
+        // const droppedOn = event.container.data;
+        // if (!event.isPointerOverContainer) {
+        //     return;
+        // }
+        // Todo: Update group from service
     }
 
     toggleOpenState(groupId?: string): boolean | void {

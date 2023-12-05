@@ -15,28 +15,28 @@ import staticLang from '@language_static';
 import { Account } from '@services/account.service/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import {
+    GroupItem,
     Organization,
     State,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
-import { IConfig } from '@services/nx-config/config-types';
 import { icons } from '@static-variables';
 
 import { NxSystemGroupsSidebarComponent } from '../components/sidebar/sidebar.component';
-import { GroupsItem, Crumb, OpenGroups, GroupPath } from '../home.types';
-import { NxSystemGroupsService } from '../services/system-groups.service';
+import { GroupsItem, Crumb, OpenGroups } from '../home.types';
+import { NxChannelPartnersService } from '../services/channel-partners.service';
 import * as CPActions from '../store/channel-partners/channel-partners.actions';
 import {
+    selectCurrentOrgId,
     selectCurrentOrganization,
     selectCurrentPartnerId,
     selectCurrentPartnerOrgs,
     selectRootOrganizations,
 } from '../store/channel-partners/channel-partners.selectors';
+import * as groupActions from '../store/groups/groups.actions';
 import {
     selectCurrentGroupId,
-    selectCurrentPath,
-    selectCurrentRootGroup,
     selectHasGroups,
     selectOpenGroups,
 } from '../store/groups/groups.selectors';
@@ -67,7 +67,6 @@ interface SidebarSettings {
 })
 export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
-    CONFIG: IConfig = nxConfig;
     icons = icons;
     State = State;
     tabs: Tab[] = [
@@ -89,21 +88,20 @@ export class NxOrganizationsComponent implements OnInit {
     currentPartnerOrganizations$$ =
         this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
     currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
+    currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
 
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
-    currentPath$ = this.store.select<GroupPath[]>(selectCurrentPath);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
-    currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+    currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentOrganization$ = this.store.select(selectCurrentOrganization);
-    rootGroup$ = this.store.select<Crumb>(selectCurrentRootGroup);
 
     constructor(
         private store: Store,
         private route: ActivatedRoute,
         private router: Router,
         private cloudApi: NxCloudApiService,
-        private groupsService: NxSystemGroupsService,
+        private cpService: NxChannelPartnersService,
     ) {
         const { email } = this.account();
         this.userEmail = email;
@@ -124,7 +122,7 @@ export class NxOrganizationsComponent implements OnInit {
                     displayName: this.LANG.channelPartners.tabNames.users,
                     route: 'users',
                 },
-                ...(this.CONFIG.featureFlags.channelPartnersReports
+                ...(nxConfig.featureFlags.channelPartnersReports
                     ? [
                           {
                               displayName: this.LANG.channelPartners.tabNames.reports,
@@ -146,11 +144,10 @@ export class NxOrganizationsComponent implements OnInit {
             }
         }
 
-        this.groupsService.paramStateHandler.state$.subscribe(({ params: { organizationId } }) => {
+        this.cpService.paramStateHandler.state$.subscribe(({ params: { organizationId } }) => {
             if (!organizationId) {
                 return;
             }
-            this.groupsService.getGroups(organizationId);
             this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: organizationId }));
             const orgs = this.organizations$$();
             const partnerOrgs = this.currentPartnerOrganizations$$();
@@ -162,6 +159,12 @@ export class NxOrganizationsComponent implements OnInit {
             }
             this.isLoading = false;
         });
+
+        this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
+            this.store.dispatch(
+                groupActions.setGroups({ groupsMap: groups, groups: this.flattenGroups(groups) }),
+            );
+        });
     }
 
     public handleSidebarTogglingEarClick(): void {
@@ -171,6 +174,21 @@ export class NxOrganizationsComponent implements OnInit {
         }, true);
     }
 
+    flattenGroups = (orgGroups: GroupItem[]): GroupItem[] => {
+        const res: GroupItem[] = [];
+        const getChildren = (group: GroupItem): void => {
+            for (const child of group.children) {
+                res.push(child);
+                getChildren(child);
+            }
+        };
+        for (const group of orgGroups) {
+            res.push(group);
+            getChildren(group);
+        }
+        return res;
+    };
+
     dismiss(): void {
         this.sidebarSettings.update(curr => {
             curr.showSidebarState = false;
@@ -179,8 +197,11 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     onTabClick(newIndex: number): void {
+        const currentGroupId = this.currentGroupId$$();
+        const tabRoute = this.tabs[newIndex].route;
+        const route = currentGroupId ? ['group', currentGroupId, tabRoute] : [tabRoute];
         this.router
-            .navigate([this.tabs[this.currentTabIndex$$()].route], { relativeTo: this.route })
+            .navigate(route, { relativeTo: this.route })
             .then(() => this.currentTabIndex$$.set(newIndex));
     }
 
@@ -189,12 +210,11 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     moveToRoot(event: CdkDragDrop<GroupsItem, GroupsItem, GroupsItem>): void {
-        this.groupsService.onDrop(event.item.data, null);
+        // Placeholder function
     }
 
     __crash(): void {
-        // @ts-expect-error Deliberately crash the backend for testing
-        this.groupsService.moveGroup(['foo'], ['bar']);
+        // Placeholder function
     }
 
     toRoot(): void {

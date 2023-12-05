@@ -1245,8 +1245,8 @@
         "usersTableHeaders": {
             "login": "Login",
             "fullName": "Full Name",
-            "accessLevel": "Access Level",
-            "groups": "Groups"
+            "accessLevel": "Has access to",
+            "groups": "Permission Groups"
         },
         "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization"
     },
@@ -1357,6 +1357,12 @@
         "weak": "weak",
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
+    "placeholderV2Texts": {
+        "noInfo": {
+            "title": "No Information",
+            "message": "You have not yet added any information."
+        }
+    },
     "placeholderTexts": {
         "noSettings": {
             "title": "This page cannot be loaded",
@@ -1428,6 +1434,7 @@
         "minResolution": "Minimum Resolution",
         "search_ipvd": "Search by model or manufacturer",
         "selectOptions": "Select options",
+        "userPermissions": "User permissions",
         "selected": "{count, plural, =0{# selected} one{# selected} other{# selected}}",
         "vendor": "Manufacturer",
         "vendors": "Manufacturers",

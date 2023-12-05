@@ -37,6 +37,7 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
         private reconnectionHandler: (lostConnection: true) => void,
         trackHandler: StreamHandler,
         bufferHandler: BufferHandler,
+        private getCurrentStreamAndPosition: () => { stream: 0 | 1, position: number}
     ) {
         super({
             iceServers,
@@ -62,6 +63,9 @@ export class MediaServerPeerConnection extends RTCPeerConnection {
                 }
             })
             this.remoteDataChannel = channel;
+            this.remoteDataChannel.onopen = () => {
+                this.remoteDataChannel.send(JSON.stringify(this.getCurrentStreamAndPosition()))
+            }
         });
     }
 }

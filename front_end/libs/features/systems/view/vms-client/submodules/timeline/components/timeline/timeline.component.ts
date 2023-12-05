@@ -13,7 +13,7 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { fromEvent, Subject } from 'rxjs';
 import { debounceTime, startWith } from 'rxjs/operators';
 
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxSystemService } from '@services/system.service/system.service';
 import { px, ms } from '@view/datatypes/type-aliases';
 import { PlaybackService } from '@view/services/playback.service';
@@ -67,7 +67,6 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     constructor(
         deviceService: DeviceDetectorService,
         systemService: NxSystemService,
-        private configService: NxConfigService,
         private timeline: TimelineService,
         private playback: PlaybackService,
         private canvasRenderer: TimelineCanvasRendererService,
@@ -78,7 +77,7 @@ export class TimelineComponent implements OnInit, AfterViewInit, OnDestroy {
     ) {
         const device = deviceService.getDeviceInfo();
         this.archiveSelectionEnabled =
-            this.configService.flagsEnabled('archiveSelection') &&
+            !!nxConfig.featureFlags.archiveSelection &&
             device.deviceType !== 'mobile' &&
             systemService.getCurrentSystem().version >= VMS_VERSION_TIMELINE_ENABLED;
 

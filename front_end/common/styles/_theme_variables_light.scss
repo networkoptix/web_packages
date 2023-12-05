@@ -160,6 +160,10 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --placeholder-description-text: #{$light10};
     --placeholder-bookmarks-bg-color: #{$light4};
 
+    --placehoder-v2-title-color   : #{$dark9};
+    --placehoder-v2-message-color    : #{$dark9};
+    --placeholder-v2-description-color: #{$dark9};
+
     --progress-bar-color : #{$light4};
     --progress-bar-border-color : #{$light6};
     --progress-bar-reindex-color : var(--brand-core);
@@ -730,6 +734,7 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --bookmarks-filter-button-bg: var(--light4);
     --bookmarks-filter-button-text: var(--dark12);
     --bookmarks-filter-filled-text: var(--light2);
+    --bookmarks-filter-tag-color: var(--btn-default-bg);
     --bookmarks-text-highlight-bg: var(--light3);
     --bookmarks-duration-bg: rgba(0, 0, 0, 0.5);
     --bookmarks-card-background-color: var(--light1);
@@ -753,17 +758,20 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --system-admin-info-text: #2B383F; //$dark9;
 
     /* Ellipsis */
-    --ellipsis-gradient: linear-gradient(to right, rgba(255, 0, 0, 0), rgba(255, 255, 255, 1));
+    --ellipsis-gradient: linear-gradient(to right, rgba(255, 0, 0, 0), rgba(255, 255, 255, 1) 85%);
 
     /* Layouts */
     --svg-toggle-arrow-color: var(--dark17);
     --svg-tab-arrow-color: var(--dark5);
     --placeholder-background: var(--light5);
-    --placeholder-color: #B21A1A;
+    --placeholder-error-color: var(--attention-red_dark);
+    --placeholder-info-color: var(--dark11);
     --no-camera-placeholder-color: var(--dark17);
     --sidebar-background: var(--light4);
     --sidebar-tab-hover: var(--light6);
     --sidebar-tab-closed: var(--light8);
+
+    --tree-locked-icon: var(--dark4);
 
     --context-menu-bg: var(--drop-menu-navigation-bg);
     --context-menu-shadow: rgba(var(--dark15-rgb), 0.2);

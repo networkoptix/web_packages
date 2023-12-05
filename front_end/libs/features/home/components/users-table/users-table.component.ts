@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, Output } from '@angular/core';
+import { Component, EventEmitter, Input, Output, booleanAttribute } from '@angular/core';
+import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -8,9 +9,12 @@ import { NxBaseTableComponent } from '@components/table/table.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import staticLang from '@language/language_i18n_static.json';
 import { HEADER_ITEM } from '@pages/home/home.types';
+import { selectCurrentOrganization } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { selectCurrentGroupId } from '@pages/home/store/groups/groups.selectors';
+import { GroupRole } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
-import type { ChannelPartnerUserExt } from '../users/channel-partner-users/channel-partner-users.types';
+import { UserRecord, UserType } from '../users/channel-partner-users/channel-partner-users.types';
 
 @Component({
     selector: 'nx-users-table',
@@ -27,12 +31,18 @@ import type { ChannelPartnerUserExt } from '../users/channel-partner-users/chann
     ],
 })
 export class NxUsersTableComponent {
+    UserType = UserType;
+    currentGroupId$$ = this.store.selectSignal(selectCurrentGroupId);
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+
+    @Input({ transform: booleanAttribute }) inGroup: boolean;
+    @Input({ required: true }) userType: UserType;
     @Input() headers: HEADER_ITEM[];
-    @Input() records: ChannelPartnerUserExt[];
+    @Input() records: UserRecord[];
     @Input() selectedRecordId: string = '';
 
     @Output() public onDeleteClick = new EventEmitter<string>();
-    @Output() public onRowClick = new EventEmitter<ChannelPartnerUserExt>();
+    @Output() public onRowClick = new EventEmitter<UserRecord>();
 
     LANG = staticLang;
 
@@ -47,11 +57,14 @@ export class NxUsersTableComponent {
 
     public idPropName = 'userId';
 
-    // constructor() {}
+    constructor(private store: Store) {}
 
     ngOnInit(): void {
         this.rowsPerPage = [5, 10, 20, 50];
-        this.setHeaders = ['userId', 'email', 'fullName', 'accessLevel', 'roles'];
+        this.setHeaders = ['userId', 'email', 'fullName', 'accessLevel', 'roles', 'delete'];
+        if (this.userType === UserType.CHANNEL_PARTNER) {
+            this.setHeaders.splice(3, 1);
+        }
     }
 
     expandRow(id: string): void {
@@ -70,9 +83,20 @@ export class NxUsersTableComponent {
 
     selectAll(): void {}
 
-    selectRecord(rec: ChannelPartnerUserExt): void {}
+    selectRecord(rec: UserRecord): void {}
 
-    onRowClickAction(rec: ChannelPartnerUserExt): void {
+    onRowClickAction(rec: UserRecord): void {
         this.onRowClick.emit({ ...rec });
+    }
+
+    getRoles(groupRoles: GroupRole[]): string {
+        const roles: { [key: string]: boolean } = {};
+        for (const group of groupRoles) {
+            for (const role of group.roles) {
+                roles[role] = true;
+            }
+        }
+        const rolesList = Object.keys(roles);
+        return rolesList.length > 1 ? 'Multiple' : rolesList[0];
     }
 }

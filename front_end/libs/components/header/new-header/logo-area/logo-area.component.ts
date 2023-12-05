@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
-import { Component, EventEmitter, Input, OnInit, Output, signal } from '@angular/core';
+import { Component, EventEmitter, Input, OnInit, Output } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { RouterModule } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
@@ -13,8 +14,7 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
@@ -43,7 +43,7 @@ export class NxHeaderLogoAreaComponent implements OnInit {
     @Input() isProfile = false;
     @Output() logoClick = new EventEmitter<'system' | 'systems-list'>();
     readonly environment = environment;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     loggedIn: boolean;
     LANG = staticLang;
     logoState = logoAreaState.LOGO;
@@ -55,40 +55,24 @@ export class NxHeaderLogoAreaComponent implements OnInit {
         this.headerService.activeSystem$,
     ]).pipe(map(info => this.getMainUrl(...info)));
 
-    activeSystemName$$ = signal<string>('');
+    activeSystemName$$ = toSignal(
+        this.headerService.activeSystem$.pipe(
+            filter(Boolean),
+            switchMap(system => system.infoSubject),
+            map(system => system?.info?.name || ''),
+        ),
+    );
 
     constructor(
         public headerService: NxHeaderService,
         systemsService: NxSystemsService,
-        configService: NxConfigService,
         private store: Store,
         private cookieService: CookieService,
     ) {
-        this.CONFIG = configService.getConfig();
         this.headerService.currentLocation$
             .pipe(untilDestroyed(this))
             .subscribe(currentLocation => {
                 this.checkLogoState(currentLocation);
-            });
-        systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
-            this.singleSystem = systems.length === 1;
-            if (headerService.activeSystem$.getValue()) {
-                const updatedSystem = systems.find(
-                    system => system.id === this.headerService.activeSystem$.getValue().id,
-                );
-                if (updatedSystem) {
-                    this.activeSystemName$$.set(updatedSystem.name);
-                }
-            }
-        });
-
-        this.headerService.activeSystem$
-            .pipe(
-                filter(Boolean),
-                switchMap(system => system.infoSubject),
-            )
-            .subscribe(system => {
-                this.activeSystemName$$.set(system?.info?.name || '');
             });
     }
 
@@ -97,15 +81,11 @@ export class NxHeaderLogoAreaComponent implements OnInit {
             return '/';
         }
 
-        if (activeSystem) {
-            this.activeSystemName$$.set(activeSystem?.info?.name || '');
-        }
-
         if (this.singleSystem && activeSystem?.id) {
             return `/systems/${this.headerService.activeSystem.id}/view`;
         }
 
-        return this.CONFIG.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
+        return nxConfig.featureFlags.dashboardRedirect || this.cookieService.get('devServer')
             ? '/dashboard'
             : '/';
     }

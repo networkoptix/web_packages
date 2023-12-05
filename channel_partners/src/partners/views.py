@@ -11,6 +11,7 @@ from django_filters.rest_framework import DjangoFilterBackend
 from rest_framework.filters import OrderingFilter
 # from drf_spectacular.views import extend_schema
 from rest_framework import status
+from drf_spectacular.utils import extend_schema_view, OpenApiParameter
 
 
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
@@ -67,7 +68,7 @@ class DefaultPagination(PageNumberPagination):
 
 
 @extend_schema(
-    tags=['Channel Partners - Channel Partner Users'], responses=ChannelPartnerRoleSerializer,
+    tags=['Channel Partner Users'], responses=ChannelPartnerRoleSerializer,
     summary='Get roles for Channel Partners',
     description='Returns list of available roles that can be assigned for a user of a Channel Partner'
 )
@@ -79,7 +80,7 @@ def channel_partner_roles(request):
 
 
 @extend_schema(
-    tags=['Channel Partners - Organization Users'], responses=OrganizationRoleSerializer,
+    tags=['Organization Users'], responses=OrganizationRoleSerializer,
     summary='Get roles for Organizations',
     description='Returns list of available roles that can be assigned for a user of an Organization'
 )
@@ -98,7 +99,9 @@ class ParentLookUpMixin:
 
 
 @extend_schema(
-    tags=['Channel Partners - Channel Partner Users'],
+    tags=['Channel Partner Users'],
+    parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID, description='The primary key of the channel partner')]
+
 )
 @extend_schema_view(
     create=extend_schema(summary='Add/update user to Channel Partner',
@@ -123,6 +126,7 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     queryset = ChannelPartnerToUser.objects.all().select_related('user').order_by('created_ts')
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.UserFilter
+    _channel_partner = None
 
     def get_permissions(self):
         perms = [IsAuthenticated()]
@@ -138,6 +142,18 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         self.kwargs['email'] = request.user.email
         return self.retrieve(request, *args, **kwargs)
 
+    def get_channel_partner(self):
+        if self._channel_partner:
+            return self._channel_partner
+        m2m_key, val = self.get_related_pair()
+        self._channel_partner = get_object_or_404(ChannelPartner, pk=val)
+        return self._channel_partner
+
+
+    def get_serializer_context(self):
+        context = super().get_serializer_context()
+        context['channel_partner'] = self.get_channel_partner()
+        return context
 
     # def get_object(self):
     #     queryset = self.filter_queryset(self.get_queryset())
@@ -151,19 +167,17 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
     def check_permissions(self, request):
         super().check_permissions(request)
         if self.action == 'list':
-            m2m_key, val = self.get_related_pair()
-            channel_partner = get_object_or_404(ChannelPartner, pk=val)
+            channel_partner = self.get_channel_partner()
             self.check_object_permissions(request, channel_partner)
 
     # Only create a user if it does not exist, otherwise just sets the relevant group it belongs to
     def create(self, request, *args, **kwargs):
-        m2m_key, val = self.get_related_pair()
-        channel_partner = get_object_or_404(ChannelPartner, pk=val)
+        channel_partner = self.get_channel_partner()
         self.check_object_permissions(request, channel_partner)
 
         serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
-        serializer.save(channel_partner=channel_partner)
+        serializer.save()
         return Response(serializer.data)
 
     def destroy(self, request, *args, **kwargs):
@@ -176,9 +190,10 @@ class ChannelPartnerUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelView
         raise Conflict(f'User {instance.user.email} is the only Administrator and may not be demoted or removed.')
 
 @extend_schema(
-    tags=['Channel Partners - Channel Partners'],
+    tags=['Channel Partners'],
     summary='Get sub Channel Partners',
-    description='Returns list of sub Channel Partners of a Channel Partner by id'
+    description='Returns list of sub Channel Partners of a Channel Partner by id',
+    parameters=[OpenApiParameter('parent_lookup_parent_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
 class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, ParentLookUpMixin, GenericViewSet):
     http_method_names = ['get']
@@ -189,11 +204,6 @@ class ChannelPartnerNestedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Par
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.ChannelPartnerFilter
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
-        return context
 
     def get_queryset(self):
         query = Q(
@@ -244,7 +254,15 @@ class ExternalIdBase:
 
 
 @extend_schema(
-    tags=['Channel Partners - Channel Partners External Ids'],
+    tags=['Channel Partners External Ids'],
+)
+@extend_schema_view(
+    create=extend_schema(summary='Create a new external id'),
+    list=extend_schema(summary='Get all external ids for a channel partner'),
+    retrieve=extend_schema(summary='Get details for a single external id'),
+    destroy=extend_schema(summary='Delete an external id'),
+    partial_update=extend_schema(summary='Update an external id partially'),
+    update=extend_schema(summary='Update an external id fully')
 )
 class ChannelPartnerExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = ChannelPartnerExternalIdSerializer
@@ -254,7 +272,15 @@ class ChannelPartnerExternalIdViewset(ExternalIdBase, ModelViewSet):
 
 
 @extend_schema(
-    tags=['Channel Partners - Service External Ids'],
+    tags=['Service External Ids'],
+)
+@extend_schema_view(
+    create=extend_schema(summary='Create a new external id'),
+    list=extend_schema(summary='Get all external ids for a cloud system'),
+    retrieve=extend_schema(summary='Get details for a single external id'),
+    destroy=extend_schema(summary='Delete an external id'),
+    partial_update=extend_schema(summary='Update an external id partially'),
+    update=extend_schema(summary='Update an external id fully')
 )
 class ChannelPartnerServiceExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = ChannelPartnerServiceExternalIdSerializer
@@ -264,7 +290,15 @@ class ChannelPartnerServiceExternalIdViewset(ExternalIdBase, ModelViewSet):
 
 
 @extend_schema(
-    tags=['Channel Partners - Organization External Ids'],
+    tags=['Organization External Ids'],
+)
+@extend_schema_view(
+    create=extend_schema(summary='Create a new external id'),
+    list=extend_schema(summary='Get all external ids for an organization'),
+    retrieve=extend_schema(summary='Get details for a single external id'),
+    destroy=extend_schema(summary='Delete an external id'),
+    partial_update=extend_schema(summary='Update an external id partially'),
+    update=extend_schema(summary='Update an external id fully')
 )
 class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = OrganizationExternalIdSerializer
@@ -274,7 +308,15 @@ class OrganizationrExternalIdViewset(ExternalIdBase, ModelViewSet):
 
 
 @extend_schema(
-    tags=['Channel Partners - Cloud System External Ids'],
+    tags=['Cloud System External Ids'],
+)
+@extend_schema_view(
+    create=extend_schema(summary='Create a new external id'),
+    list=extend_schema(summary='Get all external ids for a cloud system'),
+    retrieve=extend_schema(summary='Get details for a single external id'),
+    destroy=extend_schema(summary='Delete an external id'),
+    partial_update=extend_schema(summary='Update an external id partially'),
+    update=extend_schema(summary='Update an external id fully')
 )
 class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
     serializer_class = CloudSystemIdExternalIdSerializer
@@ -284,8 +326,9 @@ class CloudSystemExternalIdViewset(ExternalIdBase, ModelViewSet):
 
 
 @extend_schema(
-    tags=['Channel Partners - Service Management'],
-    summary='Services that belong to channel partner queried'
+    tags=['Service Management'],
+    summary='Services that belong to channel partner queried',
+    parameters=[OpenApiParameter('parent_lookup_created_by_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
 class ChannelPartnerOwnedServiceViewset(NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get']
@@ -304,8 +347,9 @@ class ChannelPartnerOwnedServiceViewset(NestedViewSetMixin, ModelViewSet):
         return perms
 
 @extend_schema(
-    tags=['Channel Partners - Service Management'],
-    summary='These are services that are available to inherit/extend from the parent Channel Partner including properties that are specific for each channel partner.'
+    tags=['Service Management'],
+    summary='These are services that are available to inherit/extend from the parent Channel Partner including properties that are specific for each channel partner.',
+    parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
 class ChannelPartnerAvailableServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
@@ -331,9 +375,14 @@ class ChannelPartnerAvailableServiceViewset(ParentLookUpMixin, NestedViewSetMixi
 
 
 @extend_schema(
-    tags=['Channel Partners - Service Management'],
+    tags=['Service Management'],
     summary='These are services that are available to this organization from its '
-            'Channel Partner including properties that are specific to the organization'
+            'Channel Partner including properties that are specific to the organization',
+    parameters=[OpenApiParameter(
+        'parent_lookup_organization',
+        location='path',
+        type=OpenApiTypes.UUID)
+    ]
 )
 class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get', 'patch']
@@ -359,7 +408,7 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
 
 
 @extend_schema(
-    tags=['Channel Partners - Channel Partners']
+    tags=['Channel Partners']
 )
 @extend_schema_view(
     list=extend_schema(summary='Get list of channel partners',
@@ -395,11 +444,6 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         else:
             return ChannelPartnerSerializer
 
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
-        return context
-
     def get_queryset(self):
         # common case with filtering by cloud_host
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
@@ -420,7 +464,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
                 .values('channel_partner')
             )
             query |= Q(parent_channel_partner__in=Subquery(parent_channel_partners_query))
-
+            return self.queryset.filter(query)
         return self.queryset.filter(query)
 
 
@@ -443,7 +487,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = channel_partner.service_changes(start_ts).select_related('created_by')
+        end_ts = param_serializer.validated_data.get('endTs')
+        service_changes = channel_partner.service_changes(start_ts, end_ts).select_related('created_by')
         context = self.get_serializer_context()
         context['channel_partner'] = channel_partner
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceRecordSerializer,
@@ -458,7 +503,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = channel_partner.service_changes_summary(start_ts)
+        end_ts = param_serializer.validated_data.get('startTs')
+        service_changes = channel_partner.service_changes_summary(start_ts, end_ts)
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceSummarySerializer)
 
     @extend_schema(summary='Get aggregated usage data.',
@@ -472,8 +518,9 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
 
 
 @extend_schema(
-    tags=['Channel Partners - Organizations'],
-    summary='Get a list of organizations belonging to a Channel Partner'
+    tags=['Organizations'],
+    summary='Get a list of organizations belonging to a Channel Partner',
+    parameters=[OpenApiParameter('parent_lookup_channel_partner', location='path', type=OpenApiTypes.UUID)]
 )
 class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, ParentLookUpMixin, GenericViewSet):
     http_method_names = ['get']
@@ -483,11 +530,6 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.OrganizationFilter
-
-    def get_serializer_context(self):
-        context = super().get_serializer_context()
-        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user)
-        return context
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(ChannelPartner.can_access)
@@ -503,7 +545,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
 
 
 @extend_schema(
-    tags=['Channel Partners - Organizations'],
+    tags=['Organizations'],
 )
 @extend_schema_view(
     list=extend_schema(summary='Get list of user\'s Organizations'),
@@ -526,14 +568,6 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             return CreateOrganizationSerializer
         else:
             return OrganizationSerializer
-
-    def get_serializer_context(self):
-        # todo. remove when access matrix is ready
-        context = super().get_serializer_context()
-        context['organizations_to_user'] = OrganizationToUser.objects.filter(user=self.request.user,
-                                                                             system_group_id__isnull=True)
-        context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=self.request.user)
-        return context
 
     def get_permissions(self):
         perms = [IsAuthenticatedCloudUserOrSystem()]
@@ -563,7 +597,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         return Response(response_serializer.data)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
-        responses=OrganizationServiceRecordSerializer(many=True),
+                   summary='Get individual records of service changes in a single period',
+                   responses=OrganizationServiceRecordSerializer(many=True),
                    extensions={'x-permission': f'{Organization.permissions.view_service_reports} for Organization'})
     @action(methods=['GET'], detail=True)
     def service_changes_history(self, request, pk=None):
@@ -571,10 +606,12 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = org.service_changes(start_ts).select_related('service', 'created_by', 'cloud_system')
+        end_ts = param_serializer.validated_data.get('endTs')
+        service_changes = org.service_changes(start_ts, end_ts).select_related('service', 'created_by', 'cloud_system')
         return paginated_response(self, service_changes, serializer_class=OrganizationServiceRecordSerializer)
 
     @extend_schema(parameters=[ChannelPartnerRecordsParamSerializer],
+                   summary='Get summary of service changes in a single period',
                    responses=ChannelPartnerServiceSummarySerializer(many=True),
                    extensions={'x-permission': f'{Organization.permissions.view_service_reports} for Organization'})
     @action(methods=['GET'], detail=True)
@@ -583,7 +620,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         param_serializer = ChannelPartnerRecordsParamSerializer(data=request.query_params)
         param_serializer.is_valid(raise_exception=True)
         start_ts = param_serializer.validated_data.get('startTs')
-        service_changes = org.service_changes_summary(start_ts)
+        end_ts = param_serializer.validated_data.get('endTs')
+        service_changes = org.service_changes_summary(start_ts, end_ts)
         return paginated_response(self, service_changes, serializer_class=ChannelPartnerServiceSummarySerializer)
 
     @extend_schema(summary='Get aggregated usage data.',
@@ -607,7 +645,10 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         return Response(serializer.data)
 
 
-@extend_schema(tags=['Channel Partners - Organization Users'])
+@extend_schema(
+    tags=['Organization Users'],
+    parameters=[OpenApiParameter('parent_lookup_organizations', location='path', type=OpenApiTypes.UUID)]
+)
 @extend_schema_view(
     list=extend_schema(summary='Get list of users belonging to an organization',
                        description='Return a list of users for an organization id', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
@@ -640,8 +681,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
 
     def get_serializer_context(self):
         context = super().get_serializer_context()
-        if self.detail:
-            context['organization'] = self.get_organization()
+        context['organization'] = self.get_organization()
         return context
 
     @extend_schema(summary='Get user record for the current user', methods=['GET'])
@@ -672,7 +712,7 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
     def create(self, request, *args, **kwargs):
         organization = self.get_organization()
         self.check_object_permissions(request, organization)
-        serializer = self.get_serializer(data=request.data, context=self.get_serializer_context())
+        serializer = self.get_serializer(data=request.data)
         serializer.is_valid(raise_exception=True)
         serializer.save(organization=organization)
         return Response(serializer.data)
@@ -733,18 +773,19 @@ class OrganizationUserViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSe
 
 
 @extend_schema(
-    tags=['Channel Partners - Systems'],
+    tags=['Systems'],
     summary='Get list of Systems for an Organization',
     extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'},
     parameters=[
-        OpenApiParameter('rootOnly', OpenApiTypes.BOOL, default=False)
+        OpenApiParameter('rootOnly', OpenApiTypes.BOOL, default=False),
+        OpenApiParameter('parent_lookup_organization', location='path', type=OpenApiTypes.UUID)
     ]
 )
 class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.ListModelMixin, GenericViewSet):
     http_method_names = ['get']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = CloudSystemId.objects.all().order_by('created_ts')
+    queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
@@ -811,7 +852,11 @@ class SystemGroupViewSet(NestedViewSetMixin,
         response_serializer = GroupSerializer(system_group)
         return Response(response_serializer.data)
 
-@extend_schema(tags=['Group - Groups Users'])
+
+@extend_schema(
+    tags=['Group - Groups Users'],
+    parameters=[OpenApiParameter('parent_lookup_system_group', location='path', type=OpenApiTypes.UUID)]
+               )
 @extend_schema_view(
     list=extend_schema(summary='Get list of users belonging to a group',
                        description='Return a list of users for a group id', extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'}),
@@ -867,7 +912,6 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
                    extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
     @action(name='bulk_delete', methods=['post'], detail=False)
     def bulk_delete(self, request, *args, **kwargs):
-        self.check_object_permissions()
         serializer = serializers.ListSerializer(
             data=request.data,
             child=serializers.EmailField()
@@ -876,6 +920,21 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
         self.get_queryset().filter(user__email__in=request.data).delete()
         return Response(status=status.HTTP_204_NO_CONTENT)
 
+    @extend_schema(summary='Return list of users with access to a group.',
+                   methods=['get'],
+                   responses=SystemGroupUserSerializer(many=True),
+                   extensions={'x-permission': f'{Organization.permissions.manage_users} for Organization'})
+    @action(name='can_access', methods=['get'], detail=False)
+    def can_access(self, request, *args, **kwargs):
+        system_group = self.get_system_group()
+        queryset = (
+            OrganizationToUser.objects.filter(organization_id=system_group.organization_id)
+            .filter(Q(system_group__isnull=True) | Q(system_group_id__in=[*system_group.groups_path, system_group.id]))
+            .select_related('organization', 'system_group')
+        )
+        serializer = SystemGroupUserSerializer(queryset, many=True)
+        return Response(serializer.data)
+
 
 @extend_schema_view(
     list=extend_schema(summary='Get list of user\'s Systems'),
@@ -883,7 +942,7 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
     create=extend_schema(summary='Bind a local system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
     bind_existing=extend_schema(summary='Bind an existing cloud system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
 )
-@extend_schema(tags=['Channel Partners - Systems'])
+@extend_schema(tags=['Systems'])
 class CloudSystemViewSet(NestedViewSetMixin,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin,
@@ -894,7 +953,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
-    queryset = CloudSystemId.objects.all().order_by('created_ts')
+    queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
     lookup_field = 'system_id'
@@ -908,7 +967,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.detail:
             return self.queryset.filter(cloud_host=self.request.cloud_host)
         else:
-            return self.queryset.filter(cloud_host=self.request.cloud_host, organization__users=self.request.user, activated=True)
+            return self.queryset.filter(cloud_host=self.request.cloud_host,
+                                        organization__users=self.request.user, activated=True)
 
     def get_serializer_class(self):
         if self.action == 'create':
@@ -923,7 +983,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
             return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_field)]
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action in ('retrieve', 'services', 'saas_report'):
-            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access, system_allowed=True, direct_access_allowed=True))
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
+                                                        system_allowed=True, direct_access_allowed=True))
         if self.action == 'service_quantity':
             if self.request.method == 'PATCH':
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
@@ -947,12 +1008,15 @@ class CloudSystemViewSet(NestedViewSetMixin,
         serializer.is_valid(raise_exception=True)
         system = serializer.save(cloud_host=request.cloud_host)
 
-        response_serializer = CloudSystemSerializer(system)
+        response_serializer = CloudSystemSerializer(system, context=self.get_serializer_context())
         return Response(response_serializer.data)
 
-    @extend_schema(responses=SaaSReportSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
+    @extend_schema(responses=SaaSReportSerializer,
+                   summary='Get SaaS report',
+                   description="Retrieves a SaaS report for a specific cloud system",
+                   extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['GET'], detail=True)
-    def saas_report(self, request, system_id):
+    def saas_report(self, request, id):
         system: CloudSystemId = self.get_object()
         serializer = SaaSReportSerializer(system)
         return Response(serializer.data)
@@ -1003,7 +1067,10 @@ class CloudSystemViewSet(NestedViewSetMixin,
         serializer = ServiceSerializer(services, many=True)
         return Response(serializer.data)
 
-    @extend_schema(request=SystemUsageReportSerializer, responses=SystemUsageReportSerializer)
+    @extend_schema(
+        summary='Submit a system usage report',
+        request=SystemUsageReportSerializer,
+        responses=SystemUsageReportSerializer)
     @action(methods=['post'], detail=True)
     def system_usage_report(self, request, id):
         serializer = SystemUsageReportSerializer(data=request.data)
@@ -1013,7 +1080,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
 
 @extend_schema(
-    tags=['Channel Partners - Services Management']
+    tags=['Services Management']
 )
 class ServiceRecordsViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     http_method_names = ['get']
@@ -1041,8 +1108,7 @@ def partner_events(request):
     cloud_host: CloudHost = data.get('cloudHost')
     if data.get('cloudHost'):
         event_records = event_records.filter(cloud_host=cloud_host)
-    event_records = event_records.select_related('cloud_system', 'service'
-    ).order_by('id')[:limit]
+    event_records = event_records.select_related('cloud_system', 'service').order_by('id')[:limit]
 
     return Response(ChannelPartnerEventSerializer(event_records, many=True).data)
 
@@ -1069,21 +1135,20 @@ def all_services(request):
 
 
 @extend_schema(
-    responses=SystemSerializer(many=True),
-    description='All services for a particular cloud instance',
-    summary='All services for a particular cloud instance',
+    responses=SystemMembershipSerializer(many=True),
+    description='Retrieves all systems associated with a specified user email',
+    summary='Get Systems By User Email',
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def user_systems(request, email):
     user: CloudUser = CloudUser.objects.filter(email__iexact=email).first()
     if not user:
         raise exceptions.NotFound('User not found')
 
-    systems = user.all_systems()
-    serializer = SystemSerializer(systems, many=True)
+    systems = user.systems_memberships()
+    serializer = SystemMembershipSerializer(systems, many=True)
     return Response(serializer.data)
 
 
@@ -1093,10 +1158,9 @@ def user_systems(request, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def system_user(request, system_id, email):
-    system = CloudSystemId.objects.filter(system_id=system_id).first()
+    system = CloudSystemId.objects.filter(system_id=system_id).select_related('organization').first()
     if not system:
         raise exceptions.NotFound('System not found')
 
@@ -1114,10 +1178,10 @@ def system_user(request, system_id, email):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def system_users(request, system_id, email=None):
-    system = CloudSystemId.objects.filter(system_id=system_id).first()
+    system = (CloudSystemId.objects.filter(system_id=system_id)
+              .select_related('organization').first())
     if not system:
         raise exceptions.NotFound('System not found')
     all_user_role_rels = system.get_all_users()
@@ -1131,8 +1195,7 @@ def system_users(request, system_id, email=None):
     tags=['Internal'],
 )
 @api_view(['GET'])
-@authentication_classes([NxTokenAuthentication])
-@permission_classes([IsAuthenticated, IsInternalToken])
+# TODO: CLOUD-11974
 def all_org_users(request):
     users_dict = {
         'users': CloudUser.objects.filter(Q(organizations__isnull=False) | Q(channel_partners__isnull=False)).distinct().values_list('email', flat=True)

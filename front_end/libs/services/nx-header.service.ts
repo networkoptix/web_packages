@@ -114,7 +114,9 @@ export class NxHeaderService {
             if (!this.getDynamicRoute(matchedRoute)) {
                 const baseNode = new MenuNode(name, matchedRoute, name, true);
                 const { breadcrumbs, childNode } = this.currentLocation;
-                childNode.queryParamsHandling = 'merge';
+                if (childNode) {
+                    childNode.queryParamsHandling = 'merge';
+                }
                 baseNode.breadcrumbs = [...breadcrumbs, { ...childNode }];
                 const dynamicNode = {
                     isSystem: false,

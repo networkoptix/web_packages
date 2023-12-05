@@ -66,15 +66,19 @@ import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxResizeObserver } from '@directives/resize/nx-resize.directive';
 import staticLang from '@language_static';
-import { ConnectionError, WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
+import {
+    ConnectionError,
+    WebRTCStreamManager,
+    isRequiresTranscoding,
+} from '@openLibs/webrtc-stream-manager';
 import { NxImageComponent } from '@pages/health/table-components/image/image.component';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
 import { LayoutStateService } from '@services/layout-state/layout-state.service';
+import { Resolution } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { createAddedItems } from '@services/layout-state/store/utils/create-added-items';
-import { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
 import { Layout, LayoutItem, LayoutItems } from '@services/system-api.types/layouts.types';
 import {
@@ -341,6 +345,9 @@ export class NxLayoutGridComponent {
      */
     readonly CELL_SPACE_RATIO = 0.5;
 
+    LANG = staticLang;
+    CONFIG = nxConfig;
+
     ngOnDestroy(): void {
         this.layoutStateService.portal = null;
     }
@@ -409,7 +416,6 @@ export class NxLayoutGridComponent {
     errors: Record<string, string> = {};
     skipDefaultCredentialsCheck: Record<string, true> = {};
     errorIcons: Record<string, string> = {};
-    LANG = staticLang;
     additionalErrorMessages: Record<string, Translatable> =
         this.LANG.layouts.additionalErrorMessages;
     icons = icons;
@@ -618,6 +624,24 @@ export class NxLayoutGridComponent {
 
     cursorStyle$$ = computed(() => ({ cursor: this.getCursor() }));
 
+    unsavedLayoutState$$ = computed(() => {
+        const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
+        const layout = this.layout$$();
+        const state = (unsavedLayouts && layout && unsavedLayouts[layout.id]) || undefined;
+        return state !== this.unsavedStates.saving && state;
+    });
+
+    layoutSaving$$ = computed(() => {
+        const unsavedLayouts = this.layoutStateService.unsavedLayoutsIds$$();
+        return (
+            (unsavedLayouts &&
+                Object.values(unsavedLayouts).some(
+                    layoutState => layoutState === this.unsavedStates.saving,
+                )) ||
+            undefined
+        );
+    });
+
     #distinctDraggingPosition$: Observable<DragPosition> = combineLatest([
         this.#draggingPosition$,
         this.aspectHandler$,
@@ -806,14 +830,11 @@ export class NxLayoutGridComponent {
             refCount: true,
         }),
     );
-
-    CONFIG: IConfig;
     playable: string[] = ['online', 'recording', 'scheduled'];
 
     window = window;
 
     constructor(
-        configService: NxConfigService,
         private cd: ChangeDetectorRef,
         private dialogsService: NxDialogsService,
         private toastService: NxToastService,
@@ -823,8 +844,7 @@ export class NxLayoutGridComponent {
         public layoutGridService: NxLayoutGridService,
         public layoutStateService: LayoutStateService,
     ) {
-        this.CONFIG = configService.config;
-        if (this.CONFIG.featureFlags.layoutsTimeline) {
+        if (nxConfig.featureFlags.layoutsTimeline) {
             this.playable.push('archive');
         }
 
@@ -858,14 +878,69 @@ export class NxLayoutGridComponent {
                 `${(size / 2) * this.CELL_SPACE_RATIO}px`,
             );
         });
+
+        effect(() => {
+            const resolutions = this.layoutStateService.cameraResolutionLookup$$();
+            const transcodingDisabled = this.cameraTranscodingDisabled$$();
+            for (const { id, primary, secondary } of transcodingDisabled) {
+                if (
+                    ![ConnectionError.mjpegDisabled, ConnectionError.transcodingDisabled].includes(
+                        this.errors[id] as ConnectionError,
+                    )
+                ) {
+                    continue;
+                }
+                const currentResolution = resolutions[id].resolution;
+                const useSecondary = currentResolution === Resolution.LOW && !secondary;
+                const usePrimary = currentResolution === Resolution.HIGH && !primary;
+
+                if (usePrimary || useSecondary || ![primary, secondary].some(Boolean)) {
+                    delete this.errors[id];
+                    delete this.errorIcons[id];
+                    delete this.additionalErrorMessages[id];
+                }
+            }
+        });
     }
 
-    async ngOnChanges({ layout }: NgChanges<NxLayoutGridComponent>): Promise<void> {
+    cameraTranscodingDisabled$$ = signal<{ id: string; primary: boolean; secondary: boolean }[]>(
+        [],
+    );
+
+    async ngOnChanges({
+        layout,
+        layoutItemLookup,
+    }: NgChanges<NxLayoutGridComponent>): Promise<void> {
         if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
             // this.openMenu = false;
             this.initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
             this.updateLayout();
+        }
+
+        if (
+            layoutItemLookup?.currentValue &&
+            !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)
+        ) {
+            const cameras = Object.values(layoutItemLookup.currentValue).filter(
+                assertResourceOfType.camera,
+            );
+
+            const cameraTranscodingDisabled = cameras.map(({ details: { id, parameters } }) => {
+                const streams = parameters.mediaStreams?.streams ?? [];
+
+                const streamRequiresTranscoding = (stream: number): boolean =>
+                    isRequiresTranscoding(
+                        streams.find(({ encoderIndex }) => encoderIndex === stream)?.codec,
+                    );
+
+                const primary = streamRequiresTranscoding(0);
+                const secondary = streamRequiresTranscoding(1);
+
+                return { id, primary, secondary };
+            });
+
+            this.cameraTranscodingDisabled$$.set(cameraTranscodingDisabled);
         }
     }
 
@@ -1264,7 +1339,7 @@ export class NxLayoutGridComponent {
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
         locked:
-            (!this.CONFIG.featureFlags.layoutsEditable && !this.CONFIG.featureFlags.layoutsDemo) ||
+            (!nxConfig.featureFlags.layoutsEditable && !nxConfig.featureFlags.layoutsDemo) ||
             layout.locked,
         renderConfig: this.generateRenderConfig(layout),
         settings: this.SETTINGS_CONFIG,
@@ -1385,7 +1460,10 @@ export class NxLayoutGridComponent {
             this.changingLayout = id;
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
-            if (!this.system.permissionManager.permissions$$().editCameras) {
+            if (
+                !this.system.permissionManager.permissions$$().editCameras ||
+                !this.CONFIG.featureFlags.layoutsAuthorizeCamera
+            ) {
                 delete this.additionalErrorMessages.defaultPassword;
                 delete this.additionalErrorMessages.unauthorized;
             }
@@ -1461,7 +1539,10 @@ export class NxLayoutGridComponent {
 
     updateCameraCredentials(system: NxSystem, camera: NxSystemCamera): void {
         // TODO: Need to update once granular permissions by camera/resource are setup.
-        if (!system.permissionManager.permissions$$().editCameras) {
+        if (
+            !this.CONFIG.featureFlags.layoutsAuthorizeCamera ||
+            !system.permissionManager.permissions$$().editCameras
+        ) {
             return;
         }
         const defaultPassword = camera.status !== CameraStatus.Unauthorized;
@@ -1668,7 +1749,7 @@ export class NxLayoutGridComponent {
         if (item) {
             const { title, message, footer } = this.LANG.layouts.removeItem;
             update =
-                !this.CONFIG.featureFlags.layoutsRemoveItemDialog ||
+                !nxConfig.featureFlags.layoutsRemoveItemDialog ||
                 (await this.dialogsService.confirm({
                     title,
                     message: {
@@ -1684,11 +1765,4 @@ export class NxLayoutGridComponent {
             this.layoutStateService.updateLayout({ ...this.layout, items });
         }
     };
-
-    pingServer =
-        ({ parentId: serverId }: { parentId: string }) =>
-        (): Observable<unknown> =>
-            this.system.serverManager.mediaserverConnections[serverId]
-                .ping()
-                .pipe(catchError(() => Promise.resolve()));
 }

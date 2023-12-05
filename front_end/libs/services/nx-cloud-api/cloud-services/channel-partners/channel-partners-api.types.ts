@@ -122,13 +122,15 @@ export type UpdateOrganization = Partial<{
 
 /* Systems */
 export interface CloudSystem {
+    activated: boolean;
+    created: string;
     id: number;
-    state: string;
-    effectiveState: string;
-    systemId: string;
+    groupId: string | null;
     name: string;
     organization: string;
     services: Record<string, unknown>;
+    state: string;
+    systemId: string;
 }
 
 export type PaginatedCloudSystemList = Page<CloudSystem>;
@@ -151,6 +153,13 @@ export interface OrganizationUser {
     roles: string[];
     title: string;
     created: string;
+    groupRoles: GroupRole[];
+}
+
+export interface GroupRole {
+    groupId: string;
+    roles: string[];
+    roleIds: string[];
 }
 
 export interface CreateOrganizationUser {
@@ -178,4 +187,47 @@ export interface ServiceData {
     createdByChannelPartner: string;
     parameters: Record<string, string | number>;
     created: string;
+}
+/* Groups */
+export interface GroupItem {
+    id: string;
+    roles: string[];
+    name: string;
+    parentId: string;
+    children: GroupItem[];
+}
+
+export interface GetGroupItem extends GroupItem {
+    systems: string[];
+}
+
+export interface CreateGroup {
+    name: string;
+    parentId: string;
+    organizationId: string;
+}
+
+export interface PatchGroup {
+    name: string;
+    parentId: string;
+}
+
+/* Group Users */
+export interface GroupUser {
+    email: string;
+    roles: string[];
+    roleIds: string[];
+}
+
+export interface UpdateGroupUser {
+    email: string;
+    roleId: string;
+}
+
+export interface GroupUserCanAccess extends GroupUser {
+    hasAccessTo?: {
+        id: string;
+        name: string;
+        membershipType: string;
+    };
 }

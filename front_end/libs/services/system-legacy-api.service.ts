@@ -56,7 +56,7 @@ import { removeStorageLegacyV1 } from './mediaserver-apis/endpoints/remove-stora
 import { saveStorageLegacyV1 } from './mediaserver-apis/endpoints/save-storage';
 import { NxAppStateService } from './nx-app-state.service';
 import type { APIDocType, MenuManifest } from './nx-config/base-config';
-import type { IConfig } from './nx-config/config-types';
+import { nxConfig } from './nx-config/config';
 import type {
     AggregatedUsers,
     ViewMediaServersAndCameras,
@@ -153,7 +153,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     protected override readonly notImplementedMsg = 'Not implemented in the legacy api.';
     public readonly requiresPassword: boolean = true;
 
-    protected CONFIG: IConfig;
+    protected CONFIG = nxConfig;
     protected http: HttpClient;
     protected location: Location;
 
@@ -171,7 +171,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     constructor(
         http: HttpClient,
-        configService: IConfig,
         location: Location,
         userEmail: string,
         systemId: string,
@@ -186,7 +185,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         super();
         this.version = 0;
         this.http = http;
-        this.CONFIG = configService;
         this.location = location;
         this.cacheService = cacheService;
         this.cookieService = cookieService;
@@ -1227,7 +1225,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         resolution = 'low',
         position = undefined,
         resolvedRelay = '',
-        deliveryMethod = '',
     ): string {
         let url;
         function hlsResolutionOrEmpty(res) {
@@ -1249,7 +1246,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                     resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
                 }/rest/v3/devices/${this.cleanId(cameraId)}/webrtc?x-server-guid=${this.cleanId(
                     this.serverId,
-                )}&api=v2&deliveryMethod=${deliveryMethod || 'srtp'}&`;
+                )}&`;
                 break;
             case 'hls':
                 url = `${this.getUrlBase()}/web/hls/${this.cleanId(
@@ -1277,7 +1274,11 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 )}.${transport}?resolution=${resolution || ''}&`;
         }
 
-        if (this.authGet && (this.version < 5.0 || !this.CONFIG.featureFlags.restCookieLogin)) {
+        if (
+            this.authGet &&
+            (this.version < 5.0 ||
+                (!nxConfig.featureFlags.restCookieLogin && !transport.includes('webRtc')))
+        ) {
             url += `auth=${this.authGet}&`;
         }
         if (position) {
@@ -1403,6 +1404,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
     /** Not Implemented functions **/
     getLicenseSummaries(): Observable<unknown> {
+        throw new Error('should only be using rest');
+    }
+
+    getLicenseSummariesOnActivation(): Observable<unknown> {
         throw new Error('should only be using rest');
     }
 

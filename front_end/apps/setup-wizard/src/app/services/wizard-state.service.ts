@@ -126,7 +126,6 @@ export class WizardStateService {
         return this.wizardFSM[this.currentState].title || '';
     }
 
-    CONFIG: IConfig;
     LANG = staticLang;
     server: NxSystemRestAPI3;
 
@@ -943,7 +942,6 @@ export class WizardStateService {
         const unauthorizedCallback = (): Promise<string> => Promise.resolve('');
         const serverApi = new NxSystemRestAPI3(
             this.http,
-            nxConfig,
             null,
             null,
             null,

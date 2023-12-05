@@ -1,19 +1,14 @@
 import { createAction, props } from '@ngrx/store';
 
-import type { System } from '@services/nx-cloud-api/nx-cloud-api.types';
+import { GroupItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
-import type { BaseGroupsItem, OpenGroups } from '../../home.types';
+import type { OpenGroups } from '../../home.types';
 
 export const reset = createAction('[System Groups] Reset');
 
-export const setItems = createAction(
-    '[System Groups] Set Items',
-    props<{ items: BaseGroupsItem[] }>(),
-);
-
-export const setSystemInfo = createAction(
-    '[System Groups] Set System Info',
-    props<{ orgSystems: System[] }>(),
+export const setGroups = createAction(
+    '[System Groups] Set groups',
+    props<{ groups: GroupItem[]; groupsMap: GroupItem[] }>(),
 );
 
 export const setCurrentGroupId = createAction(

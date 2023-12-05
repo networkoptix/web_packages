@@ -8,6 +8,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NxConsoleTableComponent } from '@components/console-table/console-table.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { HtmlInputModule } from '@components/html-input/html-input.module';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
@@ -65,6 +66,7 @@ const appRoutes: Routes = [
         NxProcessCancelButtonComponent,
         NxAddSvgSrcDirective,
         NxTooltipDirective,
+        HtmlInputModule,
     ],
     providers: [],
     declarations: [NxDevConsoleComponent, NxDevConsoleMenuComponent, NxDevConsoleEditComponent],

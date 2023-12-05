@@ -33,6 +33,13 @@ import {
     Page,
     ServiceData,
     SystemServices,
+    GroupItem,
+    CreateGroup,
+    PatchGroup,
+    GetGroupItem,
+    GroupUser,
+    UpdateGroupUser,
+    GroupUserCanAccess,
 } from './channel-partners-api.types';
 
 // function updateCachedLicenseServer(targetProperty: string) {
@@ -48,6 +55,13 @@ import {
 function getResults<T>(): OperatorFunction<Page<T>, T[]> {
     return map(page => page.results);
 }
+
+const urlBases = {
+    CHANNEL_PARTNERS: 'channel_partners',
+    ORGANIZATIONS: 'organizations',
+    GROUPS: 'groups',
+    CLOUD_SYSTEMS: 'cloud_systems',
+};
 
 @implementsCloudServiceApi
 export class ChannelPartnersApi extends BaseCloudServiceAPI {
@@ -88,16 +102,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         super(serverUrl, ChannelPartnersApi.API_BASE, cloudHost, http, withFreshSession);
     }
 
-    private cpUrl(parts: (string | number)[], trailing: boolean = true): string {
-        return slashJoin(['channel_partners', ...parts], { leading: true, trailing });
-    }
-
-    private orgUrl(parts: (string | number)[], trailing: boolean = true): string {
-        return slashJoin(['organizations', ...parts], { leading: true, trailing });
-    }
-
-    private cloudSystemUrl(parts: (string | number)[], trailing: boolean = true): string {
-        return slashJoin(['cloud_systems', ...parts], { leading: true, trailing });
+    private makeUrl(base: string, parts: (string | number)[], trailing: boolean = true): string {
+        return slashJoin([base, ...parts], { leading: true, trailing });
     }
 
     /* Channel Partners */
@@ -111,23 +117,23 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
 
     getSubChannelPartners = (parentPartnerId: string): Observable<ChannelPartner[]> => {
         return this.get<PaginatedChannelPartnerList>(
-            this.cpUrl([parentPartnerId, 'sub_channel_partners']),
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [parentPartnerId, 'sub_channel_partners']),
         ).pipe(getResults());
     };
 
     getChannelPartner = (partnerId: string): Observable<ChannelPartner> => {
-        return this.get(this.cpUrl([partnerId]));
+        return this.get(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]));
     };
 
     updateChannelPartner = (
         partnerId: string,
         body: UpdateChannelPartner,
     ): Observable<ChannelPartner> => {
-        return this.patch(this.cpUrl([partnerId]), { body });
+        return this.patch(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]), { body });
     };
 
     removeChannelPartner = (partnerId: string): Observable<void> => {
-        return this.delete(this.cpUrl([partnerId]));
+        return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId]));
     };
 
     /* Channel Partner Users */
@@ -136,14 +142,14 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     getChannelPartnerUsers = (partnerId: string): Observable<ChannelPartnerUser[]> => {
-        return this.get(this.cpUrl([partnerId, 'users']));
+        return this.get(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users']));
     };
 
     createChannelPartnerUser = (
         partnerId: string,
         body: CreateChannelPartnerUser,
     ): Observable<ChannelPartnerUser> => {
-        return this.post(this.cpUrl([partnerId, 'users']), { body });
+        return this.post(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users']), { body });
     };
 
     // Updates role
@@ -151,22 +157,22 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         partnerId: string,
         body: UpdateChannelPartnerUser,
     ): Observable<ChannelPartnerUser> => {
-        return this.post(this.cpUrl([partnerId, 'users']), { body });
+        return this.post(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users']), { body });
     };
 
     getChannelPartnerUser = (partnerId: string, email: string): Observable<ChannelPartnerUser> => {
-        return this.get(this.cpUrl([partnerId, 'users', email]));
+        return this.get(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users', email]));
     };
 
     deleteChannelPartnerUser = (partnerId: string, email: string): Observable<void> => {
-        return this.delete(this.cpUrl([partnerId, 'users', email]));
+        return this.delete(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users', email]));
     };
 
     /* Organizations */
     public getPartnerOrganizations = (partnerId: string): Observable<Organization[]> => {
-        return this.get<PaginatedOrganizationList>(this.cpUrl([partnerId, 'organizations'])).pipe(
-            getResults(),
-        );
+        return this.get<PaginatedOrganizationList>(
+            this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'organizations']),
+        ).pipe(getResults());
     };
 
     getOrganizations = (): Observable<Organization[]> => {
@@ -178,15 +184,15 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     getOrganization = (orgId: string): Observable<Organization> => {
-        return this.get(this.orgUrl([orgId]));
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId]));
     };
 
     updateOrganization = (orgId: string, body: UpdateOrganization): Observable<Organization> => {
-        return this.patch(this.orgUrl([orgId]), { body });
+        return this.patch(this.makeUrl(urlBases.ORGANIZATIONS, [orgId]), { body });
     };
 
     removeOrganization = (orgId: string): Observable<void> => {
-        return this.delete(this.orgUrl([orgId]));
+        return this.delete(this.makeUrl(urlBases.ORGANIZATIONS, [orgId]));
     };
 
     /* Organization Users */
@@ -195,29 +201,29 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     getOrganizationUsers = (orgId: string): Observable<OrganizationUser[]> => {
-        return this.get(this.orgUrl([orgId, 'users']));
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users']));
     };
 
     createOrganizationUser = (
         orgId: string,
         body: CreateOrganizationUser,
     ): Observable<OrganizationUser> => {
-        return this.post(this.orgUrl([orgId, 'users']), { body });
+        return this.post(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users']), { body });
     };
 
     updateOrganizationUser = (
         orgId: string,
         body: UpdateOrganizationUser,
     ): Observable<OrganizationUser> => {
-        return this.post(this.orgUrl([orgId, 'users']), { body });
+        return this.post(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users']), { body });
     };
 
     getOrganizationUser = (orgId: string, email: string): Observable<OrganizationUser> => {
-        return this.get(this.orgUrl([orgId, 'users', email]));
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', email]));
     };
 
     deleteOrganizationUser = (orgId: string, email: string): Observable<void> => {
-        return this.delete(this.orgUrl([orgId, 'users', email]));
+        return this.delete(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'users', email]));
     };
 
     /* Systems */
@@ -229,30 +235,67 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.post('/cloud_systems/', { body });
     };
 
-    getOrgSystems = (orgId: string): Observable<CloudSystem[]> => {
-        return this.get<PaginatedCloudSystemList>(this.orgUrl([orgId, 'cloud_systems'])).pipe(
-            getResults(),
-        );
+    getOrgSystems = (orgId: string, rootOnly = false): Observable<CloudSystem[]> => {
+        return this.get<PaginatedCloudSystemList>(
+            this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'cloud_systems']),
+            { params: { rootOnly } },
+        ).pipe(getResults());
     };
 
     /* System Services */
     getSystem(id: string): Observable<unknown> {
-        return this.get(this.cloudSystemUrl([id]));
+        return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]));
     }
     getSystemSassReport(id: string): Observable<unknown> {
-        return this.get(this.cloudSystemUrl([id, 'saas_report']));
+        return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'saas_report']));
     }
 
     getSystemServiceQuantity(id: string): Observable<SystemServices> {
-        return this.get(this.cloudSystemUrl([id, 'service_quantity']));
+        return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']));
     }
     getSystemServices(id: string): Observable<ServiceData[]> {
-        return this.get(this.cloudSystemUrl([id, 'services']));
+        return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'services']));
     }
 
     updateSystemServiceQuantity(id: string, data: SystemServices): Observable<SystemServices> {
-        return this.patch(this.cloudSystemUrl([id, 'service_quantity']), { body: data });
+        return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']), {
+            body: data,
+        });
     }
 
     /* Internal */
+
+    /* Groups */
+    getOrgGroups = (orgId: string): Observable<GroupItem[]> => {
+        return this.get(this.makeUrl(urlBases.ORGANIZATIONS, [orgId, 'groups_structure']));
+    };
+
+    getGroup = (groupId: string): Observable<GetGroupItem> => {
+        return this.get(this.makeUrl(urlBases.GROUPS, [groupId]));
+    };
+
+    createGroup = (body: CreateGroup): Observable<GroupItem> => {
+        return this.post('/groups/', { body });
+    };
+
+    patchGroup = (body: PatchGroup): Observable<GroupItem> => {
+        return this.patch('/groups/', { body });
+    };
+
+    /* Group Users */
+    getGroupUsers = (groupId: string): Observable<GroupUser[]> => {
+        return this.get(this.makeUrl(urlBases.GROUPS, [groupId, 'users']));
+    };
+
+    updateGroupUser = (groupId: string, body: UpdateGroupUser): Observable<GroupUser> => {
+        return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users']), { body });
+    };
+
+    deleteGroupUsers = (groupId: string, emails: string[]): Observable<GroupUser[]> => {
+        return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'bulk_delete']));
+    };
+
+    getGroupUsersWithAccess = (groupId: string): Observable<GroupUserCanAccess[]> => {
+        return this.get(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'can_access']));
+    };
 }

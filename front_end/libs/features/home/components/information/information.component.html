@@ -1,4 +1,12 @@
 <div class="information">
+    <nx-page-placeholder-v2
+        *ngIf="!systems; else info"
+        [type]="PAGE_PLACEHOLDER.NO_INFO"
+    >
+    </nx-page-placeholder-v2>
+</div>
+
+<ng-template #info>
     <div
         class="systems pane"
         *ngIf="systems"
@@ -32,29 +40,4 @@
             </div>
         </div>
     </div>
-    <div class="description pane">
-        <div class="header">
-            <h4 translate>About</h4>
-            <svg-icon [src]="icons.dir + 'edit.svg'"></svg-icon>
-        </div>
-        <div class="body">
-            {{ information.description }}
-        </div>
-    </div>
-
-    <div class="contact pane">
-        <div class="header">
-            <h4 translate>Support</h4>
-            <svg-icon [src]="icons.dir + 'edit.svg'"></svg-icon>
-        </div>
-        <div class="body">
-            <div
-                class="data-row"
-                *ngFor="let contact of information.contactInfo"
-            >
-                <span>{{ contact.name }}</span
-                ><span>{{ contact.email || contact.number }}</span>
-            </div>
-        </div>
-    </div>
-</div>
+</ng-template>

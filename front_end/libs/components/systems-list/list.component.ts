@@ -123,10 +123,7 @@ export class NxSystemsListComponent implements OnInit {
                     // Even we can open offline system for viewing sometimes connection to the system cannot be
                     // established, and we'll get into a loop. It's safer not to open the system.
                     const [system] = this.systems;
-                    if (
-                        system.stateOfHealth === 'online' &&
-                        (!system.system2faEnabled || account.sessionVerified)
-                    ) {
+                    if (!system.system2faEnabled || account.sessionVerified) {
                         this.openSystem(system);
                     }
                 } else {

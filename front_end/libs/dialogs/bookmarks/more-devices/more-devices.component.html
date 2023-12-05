@@ -8,10 +8,10 @@
         <div class="devices">
             <label *ngFor="let device of searchMatches">
                 <nx-checkbox
-                    [ngModel]="dialogData.selection.isSelected(device)"
+                    [ngModel]="dialogData.selection.isSelected(device.id)"
                     (ngModelChange)="selectionChange(device, $event)"
                 ></nx-checkbox>
-                <span>{{ device }}</span>
+                <span>{{ device.name }}</span>
             </label>
         </div>
     </ng-container>

@@ -44,7 +44,7 @@
                 class="group-drop-list"
                 [ngClass]="{
                     selected: (currentGroupId$ | async) === group.id,
-                    'no-nested-groups': !group.groups.length
+                    'no-nested-groups': !group.children.length
                 }"
                 cdkDropList
                 cdkDropListSortingDisabled
@@ -53,7 +53,7 @@
             >
                 <svg-icon
                     (click)="toggleOpenState(group.id)"
-                    *ngIf="group.groups.length"
+                    *ngIf="group.children.length"
                     nx-add-svg-src
                     [src]="
                         icons.dirTextButtons +
@@ -88,8 +88,8 @@
                 </div>
             </div>
             <nx-sidebar-level
-                *ngIf="group.groups.length"
-                [groups]="group.groups"
+                *ngIf="group.children.length"
+                [groups]="group.children"
                 [groupId]="group.id"
                 [openGroups]="openGroups"
             ></nx-sidebar-level>

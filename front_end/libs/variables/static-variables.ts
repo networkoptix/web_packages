@@ -191,6 +191,7 @@ export const icons = {
     dirNonStandardTriangle: `/${staticBase}/images/icons/triangle/`,
     dirNonStandardView: `/${staticBase}/images/icons/view/`,
     dirPagePlaceholder: `/${staticBase}/images/placeholders/page/`,
+    dirPageV2Placeholder: `/${staticBase}/images/placeholders/pageV2/`,
     dirSectionPlaceholder: `/${staticBase}/images/placeholders/section/`,
     dirConfirmations: `/${staticBase}/images/confirmations/`,
     dirDevCapabilities: `/${staticBase}/images/icons/dev_capabilities/`,

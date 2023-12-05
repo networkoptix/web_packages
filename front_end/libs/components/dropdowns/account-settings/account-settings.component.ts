@@ -26,7 +26,7 @@ import { environment } from '@environments/environment';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { AccountDropdown } from '@services/nx-config/base-config';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { UserType } from '@services/system-user.types';
 import { icons } from '@static-variables';
@@ -65,9 +65,9 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     @ViewChild('dropdown') dropdown: ElementRef<HTMLDivElement>;
     dropdownWidth$ = new BehaviorSubject(0);
     buttonWidth = new BehaviorSubject(0);
-    newHeader = false;
     isAccountRoute = false;
     displayedFullName = '';
+    CONFIG = nxConfig;
 
     icons = icons;
 
@@ -99,18 +99,16 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     accountDropdownStaff: AccountDropdown[];
 
     constructor(
-        configService: NxConfigService,
         headerService: NxHeaderService,
         private accountService: NxAccountService,
         private store: Store,
     ) {
-        super(configService);
+        super();
         this.accountDropdown = accountDropdown;
-        const channelPartners = this.CONFIG.featureFlags.channelPartners;
         this.accountDropdownStaff = this._accountDropdownStaff.filter(
-            ({ name }) => channelPartners || !name.includes('Channel partners'),
+            ({ name }) =>
+                nxConfig.featureFlags.channelPartners || !name.includes('Channel partners'),
         );
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
         headerService.currentLocation$.pipe(untilDestroyed(this)).subscribe(location => {
             this.isAccountRoute = location?.path?.includes('/account');
         });

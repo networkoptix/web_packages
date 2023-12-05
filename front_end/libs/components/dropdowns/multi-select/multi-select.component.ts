@@ -1,5 +1,6 @@
+import { ScrollingModule } from '@angular/cdk/scrolling';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute, forwardRef } from '@angular/core';
+import { booleanAttribute, Component, forwardRef, Input } from '@angular/core';
 import { FormsModule, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -11,13 +12,12 @@ import { NxClickElsewhereDirective } from '@directives/nx-click-elsewhere';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
 import { Translatable } from '@pipes/nx-translate.types';
 import { PipesModule } from '@pipes/pipes.module';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
 
 import { BaseDropdown } from '../injDropdown';
 
-import type { MultiSelectItem } from './multi-select.component.types';
+import { DATA_TYPE, MultiSelectItem } from './multi-select.component.types';
 
 /* Usage
  <nx-multi-select
@@ -55,6 +55,7 @@ import type { MultiSelectItem } from './multi-select.component.types';
         NxArrowNavDirective,
         NxClickElsewhereDirective,
         NxTooltipDirective,
+        ScrollingModule,
     ],
     standalone: true,
 })
@@ -66,6 +67,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     @Input({ transform: booleanAttribute }) moreLeftPadding: boolean;
     @Input() tooltipAlternateSecondary: boolean;
     @Input() tooltipHorizontal: boolean;
+    @Input() dataType: DATA_TYPE = DATA_TYPE.ANY;
 
     icons = icons;
     public items: MultiSelectItem[] = [];
@@ -74,8 +76,8 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
     private innerValue: MultiSelectItem['id'][] = [];
 
-    constructor(configService: NxConfigService) {
-        super(configService);
+    constructor() {
+        super();
     }
 
     clearSelected(): void {
@@ -95,7 +97,7 @@ export class NxMultiSelectDropdown extends BaseDropdown {
         this.items = this.items.map(obj => ({ ...obj }));
         this.updateModel();
 
-        event.preventDefault();
+        event?.preventDefault();
     }
 
     change(item: MultiSelectItem): void {
@@ -133,9 +135,6 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     updateLabel(): void {
-        const isUserGroup =
-            this.componentId.includes('user-groups') ||
-            this.componentId.includes('addUserDialogGroupsSelect');
         switch (this.innerValue.length) {
             case 1: {
                 const selectedItem = this.items.find(item => item.id === this.innerValue[0]);
@@ -143,36 +142,47 @@ export class NxMultiSelectDropdown extends BaseDropdown {
                 break;
             }
             case 0:
-                this.textSelected = isUserGroup
-                    ? this.LANG.search.selectOptions
-                    : this.LANG.search.Any;
+                switch (this.dataType) {
+                    case DATA_TYPE.GROUPS:
+                        this.textSelected = this.LANG.search.selectOptions;
+                        break;
+                    case DATA_TYPE.PERMISSIONS:
+                        this.textSelected = this.LANG.search.userPermissions;
+                        break;
+                    default:
+                        this.textSelected = this.LANG.search.Any;
+                        break;
+                }
                 break;
             case this.items.length: {
-                this.textSelected = isUserGroup
-                    ? {
-                          value: this.LANG.userGroups.multiple,
-                          params: {
-                              number: this.innerValue.length.toString(),
-                          },
-                      }
-                    : this.LANG.search.Any;
+                if (this.dataType !== DATA_TYPE.ANY) {
+                    this.textSelected = {
+                        value: this.LANG.userGroups.multiple,
+                        params: {
+                            number: this.innerValue.length.toString(),
+                        },
+                    };
+                } else {
+                    this.textSelected = this.LANG.search.Any;
+                }
                 break;
             }
             default: {
-                this.textSelected = isUserGroup
-                    ? {
-                          value: this.LANG.userGroups.multiple,
-                          params: {
-                              number: this.innerValue.length.toString(),
-                          },
-                      }
-                    : {
-                          value: this.LANG.search.selected,
-                          params: {
-                              count: this.innerValue.length.toString(),
-                          },
-                      };
-                break;
+                if (this.dataType !== DATA_TYPE.ANY) {
+                    this.textSelected = {
+                        value: this.LANG.userGroups.multiple,
+                        params: {
+                            number: this.innerValue.length.toString(),
+                        },
+                    };
+                } else {
+                    this.textSelected = {
+                        value: this.LANG.search.selected,
+                        params: {
+                            count: this.innerValue.length.toString(),
+                        },
+                    };
+                }
             }
         }
     }
@@ -184,17 +194,22 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     }
 
     ngOnChanges({ itemsOrig }: NgChanges<NxMultiSelectDropdown>): void {
-        if (itemsOrig.currentValue) {
+        if (itemsOrig?.currentValue) {
             this.items = itemsOrig.currentValue.map(obj => ({ ...obj }));
             this.updateItems();
         }
     }
 
-    override writeValue(value: string[]): void {
-        if (value !== null) {
+    /**
+     * Overwrite
+     */
+    override (value: string[]): void {
+        if (value !== null && value !== undefined) {
             this.innerValue = value;
             this.updateLabel();
             this.updateItems();
+        } else {
+            this.innerValue = [];
         }
     }
 }

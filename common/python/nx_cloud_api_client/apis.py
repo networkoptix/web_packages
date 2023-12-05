@@ -1567,7 +1567,7 @@ class CdbOrganizationAPIBase(CdbAPIModuleBase):
 
         """
         data = {
-            # "id": '',
+            "id": id or '',
             "name": name,
             "customization": customization,
             "opaque": opaque

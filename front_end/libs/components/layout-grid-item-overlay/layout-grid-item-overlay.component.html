@@ -67,12 +67,14 @@
     <div class="quick-actions">
         <div
             class="action-icon"
-            *ngIf="menu$$()"
+            *ngIf="quickActionsMenu$$()"
             [cdkMenuTriggerFor]="!scaled$$() ? nodeActionMenu : null"
             (cdkMenuOpened)="isMenuOpened$$.set(true)"
             (cdkMenuClosed)="isMenuOpened$$.set(false)"
         >
-            <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: menu$$() }" />
+            <ng-container
+                *ngTemplateOutlet="svgIcon; context: { menuItem: quickActionsMenu$$() }"
+            />
         </div>
         <ng-container *ngIf="quickActions$$()">
             <div

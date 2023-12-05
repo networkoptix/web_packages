@@ -41,6 +41,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
     @Input({ transform: booleanAttribute }) alternateSecondary: boolean;
     @Input({ transform: booleanAttribute }) forceDark: boolean;
     @Input({ transform: booleanAttribute }) forceLight: boolean;
+    @Input({ transform: booleanAttribute }) tooltipMediumFont: boolean;
 
     constructor(
         private overlayPositionBuilder: OverlayPositionBuilder,
@@ -152,6 +153,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         !!this.alternateSecondary,
                         !!this.forceDark,
                         !!this.forceLight,
+                        !!this.tooltipMediumFont,
                     );
                 } else {
                     tooltipRef.attachText(
@@ -160,6 +162,7 @@ export class NxTooltipDirective implements OnInit, OnChanges, OnDestroy {
                         !!this.alternateSecondary,
                         !!this.forceDark,
                         !!this.forceLight,
+                        !!this.tooltipMediumFont,
                     );
                 }
             });

@@ -28,8 +28,7 @@ import { MenuNode } from '@services/menus.service.types';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { DOC_TYPES } from '@services/nx-cloud-api/nx-cloud-api.types';
-import type { IConfig } from '@services/nx-config/config-types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxHeaderService } from '@services/nx-header.service';
 import { NxPageService } from '@services/page.service';
 import { NxProcessService } from '@services/process.service';
@@ -125,7 +124,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
     @ViewChild('scriptDiv', { read: ElementRef }) private scriptDiv: ElementRef;
 
     injector: Injector;
-    CONFIG: IConfig;
+    CONFIG = nxConfig;
     LANG = staticLang;
     currentSearchResultPage = 0;
     totalSearchResultPages = 0;
@@ -257,7 +256,6 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
 
     constructor(
         injector: Injector,
-        configService: NxConfigService,
         public cloudApi: NxCloudApiService,
         private headerService: NxHeaderService,
         private route: ActivatedRoute,
@@ -270,7 +268,6 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
         private appStateService: NxAppStateService,
         public kbService: NxKnowledgebaseService,
     ) {
-        this.CONFIG = configService.config;
         this.searchConfig = search;
         this.injector = injector;
     }
@@ -476,7 +473,7 @@ export class NxKnowledgeBaseComponent implements OnInit, OnDestroy {
             this.ribbonService.hide();
         }
 
-        if (!this.CONFIG.featureFlags.kbInstantSearch) {
+        if (!nxConfig.featureFlags.kbInstantSearch) {
             this.clearSearch();
         }
 

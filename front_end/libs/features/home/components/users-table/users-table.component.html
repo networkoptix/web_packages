@@ -12,7 +12,7 @@
 
 <div class="nx-new-table-container">
     <nx-table
-        class="CP-users"
+        [ngClass]="userType === UserType.CHANNEL_PARTNER ? 'CP-users' : 'org-users'"
         [style.height]="'calc(100% - 12px)'"
         set-pagination
         set-sorting
@@ -110,15 +110,41 @@
                 class="div-container-wrapper"
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: accessLevel"
-                *ngIf="row.accessLevel.length === 1"
+                *ngIf="userType !== UserType.CHANNEL_PARTNER"
             >
-                {{ row.accessLevel[0] }}
+                <ng-container *ngIf="userType === UserType.ORGANIZATION; else group">
+                    <ng-container *ngIf="row.showOrg; else showFolder">
+                        <svg-icon
+                            [src]="icons.dir + 'organization_2.svg'"
+                            [svgStyle]="{ 'width.px': '20px' }"
+                        ></svg-icon>
+                        {{ currentOrg$$().name }}
+                    </ng-container>
+                    <ng-template #showFolder>
+                        <svg-icon
+                            [src]="icons.dir + 'folder2.svg'"
+                            [svgStyle]="{ 'width.px': '20px' }"
+                        ></svg-icon>
+                        {{
+                            row.groupRoles?.length > 1
+                                ? row.groupRoles.length + ' folders'
+                                : row.groupRoles[0]?.groupId
+                        }}
+                    </ng-template>
+                </ng-container>
+                <ng-template #group>
+                    <svg-icon
+                        [src]="icons.dir + (row.showOrg ? 'organization_2.svg' : 'folder2.svg')"
+                    ></svg-icon>
+                    {{ row.accessLevel.name }}
+                </ng-template>
             </div>
+
             <div
                 class="div-container-wrapper"
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: accessLevel"
-                *ngIf="row.accessLevel.length > 1"
+                *ngIf="row.accessLevel?.length > 1"
             >
                 <div
                     class="div-container"
@@ -147,17 +173,17 @@
                 class="div-container-wrapper"
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: roles"
-                *ngIf="row.roles.length === 1"
+                *ngIf="row.roles?.length || row.groupRoles?.length"
             >
                 <div class="div-container">
-                    {{ row.roles[0].name }}
+                    {{ row.roles[0] || getRoles(row.groupRoles) }}
                 </div>
             </div>
             <div
                 class="div-container-wrapper"
                 data-id="{{ row[idPropName] }}"
                 style="grid-area: roles"
-                *ngIf="row.roles.length > 1"
+                *ngIf="row.roles?.length > 1"
             >
                 <div
                     class="div-container"
@@ -185,13 +211,24 @@
                 </div>
             </div>
 
-            <div class="div-container-wrapper">
+            <div
+                class="div-container-wrapper"
+                style="grid-area: delete"
+            >
                 <svg-icon
+                    *ngIf="
+                        row.accessLevel?.id === currentGroupId$$() ||
+                            userType === UserType.CHANNEL_PARTNER;
+                        else info
+                    "
                     nx-add-svg-src
                     (click)="onDeleteClick.emit(row[idPropName])"
                     [src]="icons.dir + 'delete.svg'"
                     [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                 ></svg-icon>
+                <ng-template #info>
+                    <svg-icon [src]="icons.dirTextButtons + 'info.svg'"></svg-icon>
+                </ng-template>
             </div>
         </ng-template>
     </nx-table>

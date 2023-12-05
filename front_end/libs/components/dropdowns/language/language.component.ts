@@ -15,7 +15,7 @@ import { take } from 'rxjs';
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types';
-import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { nxConfig } from '@services/nx-config/config';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxSessionService } from '@services/session.service';
 import { icons, images } from '@static-variables';
@@ -41,7 +41,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     };
     icons = icons;
     images = images;
-    newHeader = false;
+    CONFIG = nxConfig;
 
     languages: ILanguages = [];
     langColumns = [];
@@ -49,14 +49,12 @@ class BaseLanguageDropdown extends BaseDropdown {
     isLoading$$ = signal(false);
 
     constructor(
-        configService: NxConfigService,
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
         private sessionService: NxSessionService,
     ) {
-        super(configService);
+        super();
         this.currentLang = languageService.currentLang;
-        this.newHeader = this.CONFIG.featureFlags.newHeader;
     }
 
     private splitLanguages(): void {

@@ -6,6 +6,7 @@ import { TranslateModule } from '@ngx-translate/core';
 
 import { NxSimpleSearchComponent } from '@components/simple-search/simple-search.component';
 import staticLang from '@language_static';
+import { spaceSplitSearch } from '@utils/general';
 
 import type { MoreTags as DT } from '../../dialogs.types';
 import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters-base.component';
@@ -25,8 +26,12 @@ import { NxMoreFiltersBaseModalContent } from '../more-filters-base/more-filters
         NxSimpleSearchComponent,
     ],
 })
-export class NxMoreTagsModalContent extends NxMoreFiltersBaseModalContent<DT> {
+export class NxMoreTagsModalContent extends NxMoreFiltersBaseModalContent<DT, string> {
     LANG = staticLang;
+
+    override get searchMatches(): string[] {
+        return !this.search ? this.items : spaceSplitSearch(this.items, this.search);
+    }
 
     constructor(
         dialogRef: DialogRef<DT['return']>,

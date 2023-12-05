@@ -311,7 +311,7 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
     oauthLogin(code: string): void {
         this.loginWebAdminService.processingToken = true;
-        this.account.mediaServerApi.loginOauth(code).subscribe((res: Record<string, string>) => {
+        this.account.mediaServerApi.loginOauth(code).subscribe(res => {
             this.storageService.system2faEnabled = false;
             this.accountNotOnSystem = res.scope === '';
 

@@ -3,19 +3,31 @@ from datetime import timedelta
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
+from enum import Enum, StrEnum
+from itertools import chain
+from typing import Dict, Union, Literal, List
+import random
+import string
+import time
+import llutil
 import queue
-from typing import Dict, List
+from typing import Dict, List, Optional
 import uuid
 
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import User, PermissionsMixin, Permission
+from django.contrib.auth.models import User, PermissionsMixin, BaseUserManager, Permission
+from django.contrib.contenttypes.models import ContentType
+from django.contrib.postgres.aggregates import ArrayAgg
 from django.contrib.postgres.fields import ArrayField
 from django.contrib.postgres.indexes import GinIndex
+from django.core.exceptions import ValidationError
 from django.core.cache import caches
+from django.core.validators import MinValueValidator
 from django.db import models
 from django.db.models.functions import Greatest
-from django.db.models import Sum, F, QuerySet, Q, Subquery
+from django.db.models import Sum, F, QuerySet, Q, Subquery, FilteredRelation, Func, Value
 from django.utils import timezone
 from django.utils.functional import cached_property
 from django_cte import CTEManager
@@ -96,34 +108,76 @@ class CloudUser(models.Model):
     def is_authenticated(self):
         return True
 
-    def all_systems(self):
-        def find_all_nested_group_ids(group_ids):
-            group_id_set = set()
-            for sub_group_id in group_ids:
-                group_id_set.add(sub_group_id)
-                group_id_set.union(find_all_nested_group_ids(group_map[sub_group_id]['children']))
-            return group_id_set
-
-        organization_membership_ids = OrganizationToUser.objects.filter(user=self, system_group__isnull=True).values_list(
-            'organization_id', flat=True)
-        group_memberships = OrganizationToUser.objects.filter(user=self, system_group__isnull=False).values_list('organization_id', 'system_group_id')
-        if group_memberships:
-            group_membership_organization_ids, group_membership_ids = zip(*group_memberships)
-            group_membership_organization_ids = set(group_membership_organization_ids)
-            groups_in_same_organizations = SystemGroup.objects.filter(organization_id__in=group_membership_organization_ids).values()
-            group_map = {group['id']: {'children': [], **group} for group in groups_in_same_organizations}
-
-            for group in groups_in_same_organizations:
-                if group['parent_id']:
-                    group_map[group['parent_id']]['children'].append(group['id'])
-
-            all_group_ids = find_all_nested_group_ids(group_membership_ids)
-        else:
-            all_group_ids = []
-
-        return CloudSystemId.objects.filter(
-            Q(organization_id__in=organization_membership_ids) | Q(system_group_id__in=all_group_ids)
+    def systems_memberships(self):
+        roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
+        cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        organization_sys = (
+            OrganizationToUser.objects
+            .filter(user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=True)
+            .annotate(
+                org_id=F('organization_id'),
+                system_id=F('organization__cloud_systems__system_id'),
+                membership_type=Value('organization'),
+                org_roles=F('roles')
+            )
+            .values('org_id', 'system_id', 'membership_type', 'org_roles')
         )
+        group_sys = (
+            OrganizationToUser.objects
+            .filter(user=self, roles__overlap=roles_with_sys_perm, system_group__isnull=False)
+            .annotate(
+                org_id=F('organization_id'),
+                system_id=F('system_group__cloud_systems__system_id'),
+                membership_type=Value('organization'),
+                org_roles=F('roles'))
+            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+        )
+        channel_partner_sys = (
+            Organization.objects.filter(
+                channel_partner_access_level__in=roles_with_sys_perm,
+                channel_partner__channelpartnertouser__user=self,
+                channel_partner__channelpartnertouser__roles__overlap=cp_roles,
+            ).annotate(
+                org_id=F('id'),
+                system_id=F('cloud_systems__system_id'),
+                membership_type=Value('channel_partner')
+            )
+            .annotate(org_roles=ArrayAgg('channel_partner_access_level_id'))
+            .values('org_id', 'system_id', 'membership_type', 'org_roles')
+        )
+        return organization_sys.union(group_sys).union(channel_partner_sys)
+
+    def all_systems(self):
+        roles_with_sys_perm = list(get_roles_with_vms_perms().keys())
+        cp_roles = [ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
+        channel_partner_membership_ids = Organization.objects.filter(
+            channel_partner_access_level__in=roles_with_sys_perm,
+            channel_partner__channelpartnertouser__user=self,
+            channel_partner__channelpartnertouser__roles__overlap=cp_roles,
+        ).values('id')
+
+        organization_membership_ids = (
+            OrganizationToUser.with_vms_roles()
+            .filter(user=self, system_group__isnull=True)
+            .values('organization_id')
+        )
+
+        group_memberships_ids = (
+            OrganizationToUser.with_vms_roles()
+            .filter(user=self, system_group__isnull=False)
+            .annotate(system_group_ids=Func('system_group_id', function='array_agg'))
+            .values('system_group_ids')
+        )
+        # Todo. Find a way to optimize this.
+        return CloudSystemId.objects.filter(
+            # Organization user systems
+            Q(organization_id__in=Subquery(organization_membership_ids))
+            # Parent channel partner user with CPAL enabled
+            | Q(organization_id__in=Subquery(channel_partner_membership_ids))
+            # User groups systems
+            | Q(path__overlap=Subquery(group_memberships_ids)
+            )
+        ).distinct()
 
 
 class CloudInstance(models.Model):
@@ -162,12 +216,11 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     last_usage_report = models.DateTimeField(default=timezone.now)
     security_statuses = models.JSONField(default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
+    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
+    activated = models.BooleanField(default=True)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
-    activated = models.BooleanField(default=True)
-    path = ArrayField(base_field=models.UUIDField(null=False), null=True)
-
     observed_fields = ('organization_id', 'state', 'effective_state', 'system_group_id')
 
     def __str__(self):
@@ -314,7 +367,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     #         ]
     #     )
     #     return data
-
+    #
     # def remove_system_users_data(self, user: CloudUser) -> dict:
     #     users = OrganizationToUser.objects \
     #         .exclude(user__email=user.email) \
@@ -333,17 +386,57 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     #     return data
 
     @property
-    def group_ids_to_root(self):
-        if self.system_group_id:
-            return self.system_group.ids_to_root
-        return set()
+    def groups_path(self):
+        if not self.system_group or not self.organization:
+            return []
+        return self.path[:self.path.index(self.organization_id)]
 
-    def get_all_users(self):
-        group_ids = [*self.group_ids_to_root, None]
-        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+    def get_organization_users(self, email=None) -> QuerySet[dict]:
+        vms_roles = list(get_roles_with_vms_perms().keys())
+        users = OrganizationToUser.objects.filter(organization=self.organization, roles__overlap=vms_roles)
+        if email:
+            users = users.filter(user__email=email)
+        users = (
+            users.filter(organization=self.organization, roles__overlap=vms_roles)
+            .filter(Q(system_group__in=self.groups_path) | Q(system_group=None))
+            .values('user__email', 'roles')
+            .annotate(type=models.Value('organization', output_field=models.CharField()))
+        )
 
-    def get_user_role_by_email(self, email: str):
-        return self.get_all_users().filter(user__email__iexact=email).first()
+        return users
+
+    def get_channel_partner_users(self, email=None) -> QuerySet[dict]:
+        vms_roles = list(get_roles_with_vms_perms().keys())
+        cpal_role = self.organization.channel_partner_access_level_id
+        if cpal_role not in vms_roles:
+            return ChannelPartnerToUser.objects.none()
+        users = ChannelPartnerToUser.objects.filter(
+            channel_partner_id=self.organization.channel_partner_id, roles__overlap=vms_roles)
+        if email:
+            users = users.filter(user__email=email)
+        users = (
+            users.filter(channel_partner_id=self.organization.channel_partner_id, roles__overlap=vms_roles)
+            .values('user__email')
+            .distinct()
+            .annotate(
+                roles=models.Value([cpal_role], output_field=ArrayField(base_field=models.UUIDField())),
+                type=models.Value('channel_partner', output_field=models.CharField())
+            )
+        )
+        return users
+
+    def get_all_users(self, email=None) -> QuerySet[dict]:
+        users = self.get_organization_users(email=email)
+        vms_roles = list(get_roles_with_vms_perms().keys())
+        if self.organization.channel_partner_access_level_id in vms_roles:
+            users = users.union(self.get_channel_partner_users(email=email))
+        return users
+
+    def get_user_role_by_email(self, email: str) -> dict:
+        # It is supposed that user have the only relation in a branch
+        # without any overlap. So, the first entry is the only one
+        for user in self.get_all_users(email=email):
+            return user
 
 
 class LocalRecordingUsage(models.Model):
@@ -385,10 +478,12 @@ class LocalRecordingUsage(models.Model):
             cloud_system.usage_issue_detected = False
         cloud_system.save()
 
+
 class ChannelPartnerRoles:
     ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
     MANAGER = uuid.UUID('00000000-0000-4000-8000-000000000002')
     ACCOUNTANT = uuid.UUID('00000000-0000-4000-8000-000000000003')
+
 
 class ChannelPartnerRole(models.Model):
 
@@ -555,7 +650,6 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         if self.parent_channel_partner and (self.parent_channel_partner.parent_channel_partner or not self.cloud_host):
             self.cloud_host = self.parent_channel_partner.cloud_host
         if new:
-            self.id = self.id or uuid.uuid4()
             if self.parent_channel_partner_id:
                 self.path = get_path_from_parent(self.parent_channel_partner)
         self.update_state()
@@ -590,11 +684,11 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
                 **{base_arg + f'__{secondary_arg}' * (i + 1) + (f'__{suffix_arg}' if suffix_arg else ''): value})
         return parent_conditions
 
-    def service_changes_summary(self, start_ts: datetime.date = None):
+    def service_changes_summary(self, start_ts: datetime.date, end_ts: datetime.date):
         channel_partner_condition = self.parent_channel_partner_args('service', 'parent_service',
                                                                      value=models.OuterRef('pk'))
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         start_calc = {
             str(service.id): service
             for service in self.services.filter().annotate(quantity=models.Subquery(
@@ -609,7 +703,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         end_calc = list(self.services.filter().annotate(quantity=models.Subquery(
             queryset=ChannelPartnerServiceRecord.objects.filter(
                 channel_partner_condition,
-                created_ts__lt=start_ts + relativedelta(months=1)
+                created_ts__lt=end_ts
             ).annotate(sum=models.Func(F('quantity'), function='SUM')).values('sum'),
             output_field=models.IntegerField()
         )))
@@ -624,13 +718,14 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date = None) -> 'QuerySet[ChannelPartnerServiceRecord]':
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+    def service_changes(self, start_ts: datetime.date,
+                        end_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         qs = ChannelPartnerServiceRecord.objects.filter(
             self.parent_channel_partner_args(base_arg='service', secondary_arg='parent_service',
                                              suffix_arg='created_by_channel_partner', value=self),
-            created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
+            created_ts__gte=start_ts, created_ts__lt=end_ts
         ).select_related('organization', 'created_by',
                          f'service{"__parent_service" * (self.MAX_DEPTH - 1)}')
 
@@ -683,7 +778,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         )
         return partners_tree
 
-    def successors(self) -> 'QuerySet[CahnnelPartner]':
+    def successors(self) -> 'QuerySet[ChannelPartner]':
         return ChannelPartner.objects.filter(path__contains=[self.id])
 
     @classmethod
@@ -734,6 +829,9 @@ class ChannelPartnerToUser(models.Model):
         constraints = [
             models.constraints.UniqueConstraint(fields=['channel_partner', 'user'], name='unique_channel_partner_user')
         ]
+        indexes = [
+            GinIndex(name="channelpartnertouser_roles_gin", fields=['roles'], opclasses=['array_ops'])
+        ]
 
     def can_manage(self, user: CloudUser):
         return self.channel_partner.can_manage_users(user)
@@ -743,6 +841,7 @@ class ChannelPartnerToUser(models.Model):
         roles = get_channel_partner_roles()
         return [roles[r]['name'] for r in self.roles]
 
+
 class OrganizationRoles:
     ORGANIZATION_ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
     ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000002')
@@ -751,7 +850,6 @@ class OrganizationRoles:
     ADVANCED_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000005')
     VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000006')
     LIVE_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000007')
-    SYSTEM_GROUPS = uuid.UUID('00000000-0000-4000-8000-000000000008')
 
 
 class OrganizationRole(models.Model):
@@ -872,9 +970,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         obj.save()
         self.refresh_from_db()
 
-    def service_changes_summary(self, start_ts: datetime.date):
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+    def service_changes_summary(self, start_ts: datetime.date, end_ts: datetime.date):
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         start_calc = {str(service.id): service
                       for service in ChannelPartnerService.objects.filter(
                 channelpartnerservicerecord__organization=self,
@@ -883,7 +981,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
         end_calc = list(ChannelPartnerService.objects.filter(
             channelpartnerservicerecord__organization=self,
-            channelpartnerservicerecord__created_ts__lt=start_ts + relativedelta(months=1)
+            channelpartnerservicerecord__created_ts__lt=end_ts
         ).annotate(quantity=Sum('channelpartnerservicerecord__quantity')))
 
         summary = []
@@ -896,11 +994,11 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
             })
         return summary
 
-    def service_changes(self, start_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
-        if start_ts is None:
-            start_ts = timezone.now() - relativedelta(months=1)
+    def service_changes(self, start_ts: datetime.date, end_ts: datetime.date) -> 'QuerySet[ChannelPartnerServiceRecord]':
+        if start_ts is None or end_ts is None:
+            raise ValueError("Filter timestamps must be passed.")
         return ChannelPartnerServiceRecord.objects.filter(
-            organization=self, created_ts__gte=start_ts, created_ts__lt=start_ts + relativedelta(months=1)
+            organization=self, created_ts__gte=start_ts, created_ts__lt=end_ts
         ).order_by('created_ts')
 
     def current_services(self) -> dict:
@@ -1108,17 +1206,23 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         return not self.parent
 
     @property
-    def ids_to_root(self):
-        ids = {self.id}
-        current = self
-        while current.parent_id:
-            ids.add(current.parent_id)
-            current = current.parent
-        return ids
+    def groups_path(self) -> List[uuid.UUID]:
+        if not self.parent:
+            return []
+        return self.path[:self.path.index(self.organization_id)]
+
+    @property
+    def visible_path(self) -> List[uuid.UUID]:
+        """
+        Returns path up to organization's parent channel partner
+        """
+        return self.path[:self.path.index(self.organization_id) + 2]
 
     def get_all_users(self):
-        group_ids = [*self.ids_to_root, None]
-        return OrganizationToUser.objects.filter(Q(system_group__in=group_ids) | Q(system_group=None), organization=self.organization)
+        return OrganizationToUser.objects.filter(
+            Q(system_group__in=self.groups_path) | Q(system_group=None),
+            organization=self.organization
+        )
 
     @staticmethod
     def has_cycle(root):
@@ -1143,7 +1247,7 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         if None in relations:
             return True
 
-        return bool(self.ids_to_root.intersection(relations))
+        return bool(self.groups_path.intersection(relations))
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_systems(user)
@@ -1173,6 +1277,9 @@ class OrganizationToUser(models.Model):
     class Meta:
         constraints = [
             models.constraints.UniqueConstraint(fields=['organization', 'user', 'system_group'], name='unique_organization_user')
+        ]
+        indexes = [
+            GinIndex(name="organizationtouser_roles_gin", fields=['roles'], opclasses=['array_ops'])
         ]
 
     def can_manage(self, user: CloudUser):
@@ -1204,6 +1311,16 @@ class OrganizationToUser(models.Model):
     def system_roles_name(self):
         roles = get_organization_roles()
         return [roles[r]['system_role'] for r in self.roles if roles[r]['system_role']]
+
+    @classmethod
+    def with_vms_roles(cls) -> 'QuerySet[OrganizationToUser]':
+        sys_roles = list(get_roles_with_vms_perms().keys())
+        return cls.objects.filter(roles__overlap=sys_roles)
+
+    @property
+    def has_access_to(self):
+        return self.system_group or self.organization
+
 
 class ChannelPartnerService(models.Model):
     # Service Types
@@ -1580,7 +1697,13 @@ class BillingModel(models.Model):
     fixed_invoice_date = models.DateField(help_text='If invoice_type is "Fixed Date"', blank=True, null=True)
 
 
-
+class FieldAccessPermissions(StrEnum):
+    field_access_cp_admin = "field_access_cp_admin"
+    field_access_cp_manager = "field_access_cp_manager"
+    field_access_cp_accountant = "field_access_cp_accountant"
+    field_access_org_admin = "field_access_org_admin"
+    field_access_org_power_user = "field_access_org_power_user"
+    field_access_org_other = "field_access_org_other"
 
 
 # class SystemGroupToUser(models.Model):
@@ -1596,6 +1719,8 @@ class BillingModel(models.Model):
 #
 #     def can_manage(self, user: CloudUser):
 #         return self.system_group.organization.can_manage_users(user)
+
+
 def get_channel_partner_roles() -> Dict[uuid.UUID | str, dict]:
     if roles := caches['local'].get('channel_partner_roles', {}):
         return roles
@@ -1626,3 +1751,10 @@ def get_organization_roles() -> Dict[uuid.UUID | str, dict]:
         }
     caches['local'].set('organization_roles', roles)
     return roles
+
+
+def get_roles_with_vms_perms() -> Dict[uuid.UUID | str, dict]:
+    return {
+        uid: role for uid, role in get_organization_roles().items()
+        if isinstance(uid, uuid.UUID) and role.get('system_role_uuid')
+    }

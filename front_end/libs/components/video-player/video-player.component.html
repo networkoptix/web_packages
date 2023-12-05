@@ -12,6 +12,8 @@
     <ng-container *ngTemplateOutlet="lostConnectionPlaceholder"></ng-container>
 </div>
 
+<canvas #zoomCanvas></canvas>
+
 <video
     #originalStream
     autoplay
@@ -29,9 +31,7 @@
 ></video>
 
 <nx-pre-loader
-    *ngIf="
-        !error && (loading || lostConnection || webRtcStream.paused || !webRtcStream.currentTime)
-    "
+    *ngIf="!error && (loading || lostConnection || !webRtcStream.currentTime)"
 ></nx-pre-loader>
 
 <ng-container *ngIf="webRtcStream.paused && error">

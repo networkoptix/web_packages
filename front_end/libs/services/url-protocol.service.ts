@@ -1,5 +1,6 @@
 import { Injectable, signal } from '@angular/core';
 import { Router } from '@angular/router';
+import { firstValueFrom } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
@@ -90,26 +91,25 @@ export class NxUrlProtocolService {
             });
         } else {
             return this.getLinkOauth(systemId).then(({ code, link }) => {
+                /* If user has previously checked "Always allow {location.host} to open {protocol} links"
+                in the browser dialog, the dialog will not appear and cause the page to blur
+                when the client is opened
+
+                In that case, we try to get cloud tokens using the access code. If this fails,
+                then the code has already been used (by the installed client). Otherwise, invalidate
+                the tokens and reject. */
                 return new Promise<void>((resolve, reject) => {
                     protocolCheck(
                         link,
+                        resolve,
                         () => {
-                            setTimeout(() => {
-                                this.cloudApiService
-                                    .getTokensFromCloud(code)
-                                    .toPromise()
-                                    .then(res => {
-                                        this.cloudApiService
-                                            .logoutTokens(res.access_token, res.refresh_token)
-                                            .finally(() => {
-                                                reject({ resultCode: openClientError });
-                                            });
-                                    })
-                                    .catch(() => resolve());
-                            }, openClientTimeout);
-                        },
-                        () => {
-                            reject({ resultCode: openClientError });
+                            firstValueFrom(this.cloudApiService.getTokensFromCloud(code))
+                                .then(res => {
+                                    this.cloudApiService
+                                        .logoutTokens(res.access_token, res.refresh_token)
+                                        .finally(() => reject());
+                                })
+                                .catch(() => resolve());
                         },
                         openClientTimeout,
                         openMobileClientTimeout,

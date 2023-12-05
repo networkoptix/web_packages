@@ -55,7 +55,6 @@ def run():
             for j in range(25):
                 organization = Organization.objects.create(name=f'Test Org {j+1}', channel_partner=channel_partner)
                 OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization, created_by=channel_partner)
-                add_users_to_organization(organization)
                 systems = []
                 for k in range(25):
                     sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}', organization=organization, cloud_host=cloud_test_host)
@@ -95,7 +94,6 @@ def run():
                                                                channel_partner=sub_channel_partner)
                     OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization,
                                                           created_by=channel_partner)
-                    add_users_to_organization(organization)
                     add_random_users_to_organization(organization)
                     systems = []
                     for k in range(25):

@@ -5,3 +5,9 @@ export interface MultiSelectItem {
     tooltip?: string;
     disabled?: boolean;
 }
+
+export enum DATA_TYPE {
+    ANY,
+    GROUPS,
+    PERMISSIONS,
+}

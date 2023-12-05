@@ -1,12 +1,12 @@
 <nx-pre-loader
     *ngIf="
-        (!system?.show404 && showPreloader && !editCameras()) ||
+        (!system?.show404 && showPreloader && !camera.canEdit) ||
         (system.isOnline && !system.isAvailable)
     "
 >
 </nx-pre-loader>
 <div
-    *ngIf="system && !system.show404 && editCameras()"
+    *ngIf="system && !system.show404 && camera.canEdit"
     class="row auth-visible"
 >
     <ng-container>
@@ -55,7 +55,7 @@
                             name="cameraName"
                             [(editMode)]="editMode"
                             [(nameWatcherValue)]="cameraNameWatcher.value"
-                            [editEnabled]="enableEdit"
+                            [editEnabled]="camera.canEdit"
                         >
                         </nx-editable-heading>
                         <div

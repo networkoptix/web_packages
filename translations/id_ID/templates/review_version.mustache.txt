@@ -1,10 +1,10 @@
-There is a new version for {{ message.asset }}({{message.asset_type}}) to review.
+Ada versi baru untuk {{ message.asset }}({{message.asset_type}}) untuk ditinjau.
 
-Click on the link to review draft {{ message.id }} for {{ message.asset }}
+Klik link untuk meninjau draft {{ message.id }} untuk {{ message.asset }}
 
-Link to review: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
+Link ke ulasan: {{ config.portal_url }}/admin/cms/assetcustomizationreview/{{ message.id }}/change/
 
-On this page you can
-1) Create a preview to see the most recent changes.
-2) Publish this version which will update all content.
-3) Edit contexts by clicking on the edit record button. To see those changes you will need to create a new version.
+Di halaman ini Anda bisa
+1) Buat pratinjau untuk melihat perubahan terbaru.
+2) Publikasikan versi ini yang akan memperbaharui semua konten.
+3) Edit konteks dengan mengklik tombol edit rekaman. Untuk melihat perubahan tersebut, Anda perlu membuat versi baru.

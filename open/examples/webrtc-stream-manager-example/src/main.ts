@@ -129,26 +129,34 @@ const videoElement = document.querySelector('video');
 
 const clean = (id: string): string => id.replace('{', '').replace('}', '');
 
-const startStream = (relayUrl: string, cameraId: string, serverId: string) => {
+const startStream = (relayUrl: string, cameraId: string, serverId: string, enableTranscoding = false) => {
+  newStream$.next();
+  WebRTCStreamManager.closeAll();
   const version = parseFloat(systemsInfo.find(({ id }) => id === systemSelect.value ).version);
 
-WebRTCStreamManager.connect(generateWebRtcUrlFactory(relayUrl, cameraId, serverId, version), videoElement, true, systemToken.access_token)
-  .pipe(takeUntil(newStream$))
-  .subscribe(([stream, error]) => {
-    if (stream) {
-      if (typeof stream === 'string') {
-        videoElement.src = stream;
-      } else {
+  WebRTCStreamManager.connect(generateWebRtcUrlFactory(relayUrl, cameraId, serverId, version), videoElement, true, systemToken.access_token, enableTranscoding)
+    .pipe(takeUntil(newStream$))
+    .subscribe(([stream, error]) => {
+      if (stream) {
         videoElement.srcObject = stream;
-      }
-      videoElement.muted = true;
-      videoElement.autoplay = true;
-    }
+        videoElement.muted = true;
+        videoElement.autoplay = true;
 
-    if (error) {
-      alert('Error playing back stream');
-    }
-  });
+        document.querySelector('h2').style.display = WebRTCStreamManager.getInstance(cameraId).allowTranscoding ? 'block' : 'none';
+      }
+
+      if (error) {
+
+        if (error === 'transcodingDisabled') {
+          if (confirm('Transcoding is disabled. Do you want to enable it?')) {
+            startStream(relayUrl, cameraId, serverId, true);
+          }
+        } else {
+          alert(`Error playing back stream: ${error}}`);
+        }
+
+      }
+    });
 }
 
 const startStreamHandler = async (event: SubmitEvent) => {

@@ -24,7 +24,7 @@
         </div>
     </div>
     <div
-        *ngIf="!currentGroups$$()?.length && !currentSystems$$()?.length; else showGroups"
+        *ngIf="!currentGroups$$()?.length && !(currentSystems$ | async).length; else showGroups"
         class="no-systems"
     >
         <nx-no-systems-cards></nx-no-systems-cards>
@@ -38,7 +38,7 @@
 >
     <div class="px-3 cards-container">
         <div
-            *ngFor="let group of currentGroups$$(); trackBy: trackItem"
+            *ngFor="let group of currentGroups$$(); trackBy: trackGroup"
             class="group-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -63,7 +63,7 @@
             </div>
         </div>
         <div
-            *ngFor="let system of inRoot ? [] : currentSystems$$(); trackBy: trackItem"
+            *ngFor="let system of currentSystems$ | async; trackBy: trackSystem"
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -75,7 +75,10 @@
                 [cdkDragData]="system"
             >
                 <div *cdkDragPlaceholder></div>
-                <nx-card class="card-content">
+                <nx-card
+                    class="card-content"
+                    (click)="handleSystemClick(system)"
+                >
                     <h3>{{ system.name }}</h3>
                     <div>12</div>
                 </nx-card>
