@@ -1621,6 +1621,7 @@
     "User does not exist in group": "User does not exist in group",
     "User is disabled and cannot log in to System": "ผู้ใช้ถูกปิดใช้งานและไม่สามารถเข้าสู่ระบบได้",
     "User not found": "User not found",
+    "User permissions": "User permissions",
     "Users": "ผู้ใช้งาน",
     "Users list is unavailable": "รายการผู้ใช้ไม่พร้อมใช้งาน",
     "VMAX": "VMAX",

@@ -1621,6 +1621,7 @@
     "User does not exist in group": "グループ内にユーザーが存在しません",
     "User is disabled and cannot log in to System": "ユーザーが無効の為にシステムにログインできません",
     "User not found": "ユーザーが見つかりません",
+    "User permissions": "ユーザー権限",
     "Users": "ユーザー",
     "Users list is unavailable": "ユーザーのリストは使用できません",
     "VMAX": "VMAX",
