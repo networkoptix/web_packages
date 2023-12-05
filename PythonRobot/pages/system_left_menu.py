@@ -2,6 +2,7 @@ import logging
 import time
 
 from selenium.common.exceptions import NoSuchElementException
+from selenium.common.exceptions import StaleElementReferenceException
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
@@ -184,8 +185,15 @@ class UsersDropdown(DropDown):
         locator = (
             "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight")
         elements = self._driver.find_elements(By.XPATH, locator)
-        return [
-            _UserOption(self._driver, locator + f"[contains(text(), '{e.text}')]") for e in elements]
+        try:
+            return [
+                _UserOption(self._driver, locator + f"[contains(text(), '{e.text}')]") for e in elements]
+        except StaleElementReferenceException:
+            time.sleep(2)
+            _logger.debug(f"StaleElementReferenceException caught on {self._locator}")
+            elements = self._driver.find_elements(By.XPATH, locator)
+            return [
+                _UserOption(self._driver, locator + f"[contains(text(), '{e.text}')]") for e in elements]
 
     def get_user_with_email(self, email: str):
         for user in self._list_user_options():

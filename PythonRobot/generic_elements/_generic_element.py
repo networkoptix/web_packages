@@ -73,7 +73,12 @@ class Element:
             element = self._get_element()
         except ElementNotInDOM:
             return False
-        return element.is_displayed()
+        try:
+            return element.is_displayed()
+        except StaleElementReferenceException:
+            time.sleep(2)
+            element = self._get_element()
+            return element.is_displayed()
 
     def send_keys(self, text: str):
         self._get_element().send_keys(text)
