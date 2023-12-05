@@ -153,8 +153,8 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         );
 
         // Each Permission option needs to be in alphabetical order in their respective category, builtInGroup is an exception
-        customGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
-        ldapGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
+        customGroup.sort(alphabeticalSort(groups => groups.name));
+        ldapGroup.sort(alphabeticalSort(groups => groups.name));
         if (ldapDefault) {
             ldapGroup.unshift(ldapDefault);
         }

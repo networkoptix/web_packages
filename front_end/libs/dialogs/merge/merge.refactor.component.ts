@@ -11,7 +11,6 @@ import {
     signal,
     effect,
     computed,
-    LOCALE_ID,
 } from '@angular/core';
 import { Title } from '@angular/platform-browser';
 import { UntilDestroy } from '@ngneat/until-destroy';
@@ -234,7 +233,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         private elem: ElementRef<HTMLElement>,
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA) private dialogData: DT['data'],
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         super(dialogRef);
         this.CONFIG = configService.getConfig();
@@ -402,7 +400,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                     this.CONFIG.system.flags.newSystem,
                 ),
             )
-            .sort(alphabeticalSort(this.locale, sys => sys.name));
+            .sort(alphabeticalSort(sys => sys.name));
 
         if (this.mergeSystems.length === 0) {
             this.otherSystem = true;

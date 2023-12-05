@@ -10,7 +10,7 @@ export class NumberParser {
     private numeral: RegExp;
     private index: (d: string) => string;
 
-    constructor(locale = navigator.language) {
+    constructor(locale: string) {
         const parts = new Intl.NumberFormat(locale).formatToParts(12345.6);
         const numerals = [
             ...new Intl.NumberFormat(locale, { useGrouping: false }).format(9876543210),

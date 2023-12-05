@@ -21,7 +21,6 @@ import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxPageService } from '@services/page.service';
 import type {
     BookmarksParams,
@@ -124,13 +123,11 @@ export class NxBookmarksComponent implements OnInit {
     devices$ = new ReplaySubject<BookmarksDevice[]>(1);
     tags$ = new ReplaySubject<BookmarksTags>(1);
     deviceNames$ = this.devices$.pipe(
-        map(devices =>
-            devices.map(d => d.name).sort(alphabeticalSort(this.language.currentLocale, t => t)),
-        ),
+        map(devices => devices.map(d => d.name).sort(alphabeticalSort(t => t))),
         startWith<string[]>([]),
     );
     tagNames$ = this.tags$.pipe(
-        map(tags => Object.keys(tags).sort(alphabeticalSort(this.language.currentLocale, t => t))),
+        map(tags => Object.keys(tags).sort(alphabeticalSort(t => t))),
         startWith<string[]>([]),
     );
     suggestions$ = combineLatest([this.deviceNames$, this.tagNames$]).pipe(
@@ -157,7 +154,6 @@ export class NxBookmarksComponent implements OnInit {
         private route: ActivatedRoute,
         public router: Router,
         private pageService: NxPageService,
-        private language: NxLanguageProviderService,
     ) {
         this.CONFIG = configService.getConfig();
     }

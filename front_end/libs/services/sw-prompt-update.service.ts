@@ -40,7 +40,6 @@ export class NxSwPromptUpdateService {
                     ]);
                 });
 
-            // eslint-disable-next-line nx/ban-global-variables
             session.observe(this.RELOAD_KEY).subscribe(() => window.location.reload());
         }
     }

@@ -4,7 +4,6 @@ import {
     Component,
     ElementRef,
     Inject,
-    LOCALE_ID,
     OnDestroy,
     OnInit,
     PLATFORM_ID,
@@ -141,7 +140,6 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         private breakpointObserver: BreakpointObserver,
         private router: Router,
         @Inject(PLATFORM_ID) private platformId: object,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -448,7 +446,7 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
                     this.addFilterTags();
 
                     this.vendors = data.vendors;
-                    this.vendors.sort(alphabeticalSort(this.locale, elm => elm.name));
+                    this.vendors.sort(alphabeticalSort(elm => elm.name));
 
                     // reformat vendors to fit the multiselect component
                     this.filterModel.multiselects.unshift({

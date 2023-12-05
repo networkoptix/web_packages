@@ -88,7 +88,6 @@ export class TosService {
         try {
             await this.cloudApiService.logout();
         } finally {
-            // eslint-disable-next-line nx/ban-global-variables
             window.location.reload();
         }
     }

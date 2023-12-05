@@ -69,9 +69,7 @@ export class LayoutStateService {
     gridSection: HTMLElement;
 
     toggleLayoutFullScreen(): void {
-        // eslint-disable-next-line nx/ban-global-variables
         if (document.fullscreenElement === this.gridSection) {
-            // eslint-disable-next-line nx/ban-global-variables
             document.exitFullscreen();
         } else {
             this.gridSection.requestFullscreen({ navigationUI: 'hide' });

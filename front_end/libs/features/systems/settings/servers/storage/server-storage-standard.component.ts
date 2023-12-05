@@ -1,4 +1,4 @@
-import { Component, Inject, ViewContainerRef, Input, OnInit } from '@angular/core';
+import { Component, Inject, ViewContainerRef, Input, OnInit, inject } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     combineLatest,
@@ -32,6 +32,7 @@ import staticLang from '@language_static';
 import { pollingTimeout } from '@pages/static-variables-features';
 import { NxApplyService } from '@services/apply.service';
 import { Watcher } from '@services/apply.service/watcher';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
@@ -121,7 +122,7 @@ export class NxSystemStorageComponent implements OnInit {
     STATUS = STORAGE_STATUS;
 
     cleanSmbUrl = cleanSmbUrl;
-    locale = navigator.language;
+    locale = inject(NxLanguageProviderService).currentLocale;
 
     constructor(
         @Inject(ViewContainerRef) viewContainerRef: ViewContainerRef,

@@ -1,6 +1,7 @@
 import {
     AfterViewInit,
     Component,
+    inject,
     Input,
     OnChanges,
     OnDestroy,
@@ -13,6 +14,7 @@ import { pick } from 'lodash-es';
 import { POS_STRATEGY } from '@components/popover/popover-config';
 import { NxPopoverService } from '@components/popover/popover.service';
 import staticLang from '@language_static';
+import { NxLanguageProviderService } from '@services/nx-language-provider';
 import { Storage, STORAGE_STATUS } from '@services/system.service/storage-manager/storage';
 import { bitsToString } from '@utils/bits-to-string';
 import { NgChanges } from '@utils/ng-changes';
@@ -31,6 +33,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     @Input() cachedSizes: CachedSizes = {};
 
     LANG = staticLang;
+    locale = inject(NxLanguageProviderService).currentLocale;
 
     totalSpace: string;
     reserved: string;
@@ -168,6 +171,6 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             GB: 1,
             TB: 2,
         };
-        return `${new NumberParser().parse(size).toFixed(fixed[units])} ${units}`;
+        return `${new NumberParser(this.locale).parse(size).toFixed(fixed[units])} ${units}`;
     }
 }

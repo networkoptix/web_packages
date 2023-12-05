@@ -1,4 +1,4 @@
-import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
@@ -100,7 +100,6 @@ export class NxSystemsService {
         private injector: Injector,
         private store: Store,
         private db: NxDbService,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.systemsSubject.subscribe(systems => {
             this.#systems = systems;
@@ -281,7 +280,7 @@ export class NxSystemsService {
         // Priority: alphabetical => system owner => usage frequency
         // Note: JS sort has been stable since ECMAScript 2019
         return systems
-            .sort(alphabeticalSort(this.locale, sys => this.getSystemOwnerName(sys)))
+            .sort(alphabeticalSort(sys => this.getSystemOwnerName(sys)))
             .sort(paramSortFunc(sys => Number(sys.ownerAccountEmail === this.userEmail)))
             .sort(paramSortFunc(sys => sys.usageFrequency, false));
     }

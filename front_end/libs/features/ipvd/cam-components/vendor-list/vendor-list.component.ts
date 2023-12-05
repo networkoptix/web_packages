@@ -1,9 +1,7 @@
 import {
     Component,
     forwardRef,
-    Inject,
     Input,
-    LOCALE_ID,
     OnChanges,
     OnInit,
     Renderer2,
@@ -74,7 +72,6 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         private uri: NxUriService,
         private router: Router,
         private renderer: Renderer2,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         this.CONFIG = configService.getConfig();
 
@@ -177,12 +174,12 @@ export class NxVendorListComponent implements OnInit, OnChanges {
         this.vendors = vendors
             .sort(paramSortFunc(elm => elm.count, false)) // Desc count
             .slice(0, this.CONFIG.ipvd.vendorsShown)
-            .sort(alphabeticalSort(this.locale, elm => elm.name)); // Asc name
+            .sort(alphabeticalSort(elm => elm.name)); // Asc name
     }
 
     toggleVendorsShown(element: HTMLButtonElement): void {
         if (this.vendors.length !== this.allVendors.length) {
-            this.vendors = this.allVendors.sort(alphabeticalSort(this.locale, elm => elm.name));
+            this.vendors = this.allVendors.sort(alphabeticalSort(elm => elm.name));
             this.renderer.setProperty(
                 element,
                 'innerText',

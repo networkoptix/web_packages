@@ -3,9 +3,7 @@ import {
     Component,
     computed,
     EventEmitter,
-    Inject,
     Input,
-    LOCALE_ID,
     OnChanges,
     OnInit,
     Output,
@@ -115,7 +113,6 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         protected processService: NxProcessService,
         protected uriService: NxUriService,
         protected toastService: NxToastService,
-        @Inject(LOCALE_ID) protected locale: string,
     ) {
         this.menuService.selectedSection.set('users');
     }

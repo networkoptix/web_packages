@@ -617,7 +617,6 @@ export class NxLayoutGridTreeComponent {
                   },
                   {
                       id: 'toggleFullScreen',
-                      // eslint-disable-next-line nx/ban-global-variables
                       name: document.fullscreenElement
                           ? this.ACTIONS_LANG.exitFullScreen.name
                           : this.ACTIONS_LANG.openFullScreen.name,

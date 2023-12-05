@@ -32,10 +32,7 @@ export class BindToCloudService {
         headers = headers.set('Authorization', `Bearer ${this.tokens$$().access_token}`);
         headers = headers.set(
             'cloud-host',
-            environment.production
-                ? // eslint-disable-next-line nx/ban-global-variables
-                  window.location.host
-                : 'cloud-test.hdw.mx',
+            environment.production ? window.location.host : 'cloud-test.hdw.mx',
         );
         return headers;
     }

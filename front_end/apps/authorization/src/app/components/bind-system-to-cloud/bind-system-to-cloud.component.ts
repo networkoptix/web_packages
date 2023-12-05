@@ -189,7 +189,6 @@ export class BindSystemToCloudComponent implements OnInit {
         this.bindInfo$$.set(bindInfo);
         this.fsmState = BindDialogStates.finished;
 
-        // eslint-disable-next-line nx/ban-global-variables
         if (window.nativeClient) {
             nativeClient.setBindInfo(bindInfo);
         } else if (this.redirectUri?.includes('https')) {
@@ -202,7 +201,6 @@ export class BindSystemToCloudComponent implements OnInit {
             } else {
                 url.search = bindQs;
             }
-            // eslint-disable-next-line nx/ban-global-variables
             window.location.href = url.toString();
         } else {
             // Todo: add error here

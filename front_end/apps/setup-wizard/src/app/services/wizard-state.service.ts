@@ -1,5 +1,5 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
-import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
 import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { TranslateService } from '@ngx-translate/core';
@@ -205,7 +205,6 @@ export class WizardStateService {
         private router: Router,
         private translate: TranslateService,
         private injector: Injector,
-        @Inject(LOCALE_ID) private locale: string,
     ) {
         const [host, port] = window.location.host.split(':');
         this.networkInfo = {
@@ -858,7 +857,7 @@ export class WizardStateService {
                         system.hint = `${system.url} (${system.name})`;
                         return system;
                     })
-                    .sort(alphabeticalSort(this.locale, sys => sys.visibleName));
+                    .sort(alphabeticalSort(sys => sys.visibleName));
             });
     }
 
