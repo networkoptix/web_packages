@@ -10,6 +10,11 @@ svg {
         fill: var(--svg-std-icon-fill);
         stroke: none;
     }
+
+    .icon-with-stroke {
+        fill: none;
+        stroke: var(--svg-std-icon-fill);
+    }
 }
 
 .outerContainer {

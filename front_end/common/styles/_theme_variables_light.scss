@@ -160,6 +160,10 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --placeholder-description-text: #{$light10};
     --placeholder-bookmarks-bg-color: #{$light4};
 
+    --placehoder-v2-title-color   : #{$dark9};
+    --placehoder-v2-message-color    : #{$dark9};
+    --placeholder-v2-description-color: #{$dark9};
+
     --progress-bar-color : #{$light4};
     --progress-bar-border-color : #{$light6};
     --progress-bar-reindex-color : var(--brand-core);

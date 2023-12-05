@@ -161,6 +161,10 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --placeholder-description-text: #{$light10};
     --placeholder-bookmarks-bg-color: #A5B6C0;
 
+    --placehoder-v2-title-color   : #53707F; //$dark17;
+    --placehoder-v2-message-color    : #53707F; //$dark17;
+    --placeholder-v2-description-color: #53707F; //$dark17;
+
     --progress-bar-color                  : #4E6977; //$dark16
     --progress-bar-border-color           : #4E6977; //$dark16
     --progress-bar-reindex-color          : var(--brand-d1);

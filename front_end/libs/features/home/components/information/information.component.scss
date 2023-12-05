@@ -1,57 +1,50 @@
+:host {
+    height: 100%;
 
-.information {
-  display: grid;
-  grid-template-columns: 50% 1fr;
-  grid-template-areas: 'description' 'contact';
-  min-height: 20rem;
-  padding: 1rem;
-  gap: 1rem;
+    .information {
+        display: block;
+        height: 100%;
 
-  .systems {
-    grid-area: systems;
-  }
+        .systems {
+        }
 
-  .description {
-    grid-area: description;
-  }
+        .description {
+        }
 
-  .contact {
-    grid-area: contact;
-  }
-}
+        .contact {
 
-.information:has(div.systems) {
-  grid-template-areas: 'systems description' 'systems contact';
-}
+        }
 
-.pane{
-  display: flex;
-  flex-direction: column;
-  background-color: var(--CP-pane-background);
-  border: 1px solid var(--CP-pane-border);
-  border-radius: 4px;
+        .pane {
+            display: flex;
+            flex-direction: column;
+            background-color: var(--CP-pane-background);
+            border: 1px solid var(--CP-pane-border);
+            border-radius: 4px;
 
-  .header {
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    padding: .75rem 1rem .75rem 1rem;
-    background-color: var(--CP-pane-header-background);
-    border: 1px solid var(--CP-pane-header-border);
-    
-    h4{
-      margin: 0;
+            .header {
+                width: 100%;
+                display: flex;
+                justify-content: space-between;
+                padding: .75rem 1rem .75rem 1rem;
+                background-color: var(--CP-pane-header-background);
+                border: 1px solid var(--CP-pane-header-border);
+
+                h4 {
+                    margin: 0;
+                }
+            }
+
+            .body {
+                padding: 1rem;
+                display: flex;
+                flex-direction: column;
+            }
+
+            .data-row {
+                display: flex;
+                justify-content: space-between;
+            }
+        }
     }
-  }
-
-  .body {
-    padding: 1rem;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .data-row {
-    display: flex;
-    justify-content: space-between;
-  }
 }

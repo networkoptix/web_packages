@@ -212,6 +212,7 @@ export function setupConfig(): IConfig {
             dirNonStandardTriangle: '/static/images/icons/triangle/',
             dirNonStandardView: '/static/images/icons/view/',
             dirPagePlaceholder: '/static/images/placeholders/page/',
+            dirPageV2Placeholder: '/static/images/placeholders/pageV2/',
             dirSectionPlaceholder: '/static/images/placeholders/section/',
             dirDevCapabilities: '/static/images/icons/dev_capabilities/',
             dirLandingIcons: '/static/images/landing/block_icons/',

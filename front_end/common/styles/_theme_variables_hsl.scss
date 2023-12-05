@@ -373,6 +373,10 @@ html[data-theme="hsl"] {
     --placehoder-title-color   : var(--new-light4);
     --placehoder-body-color    : var(--new-light10);
 
+    --placehoder-v2-title-color   : #{--new_dark_17};
+    --placehoder-v2-message-color    : #{--new_dark_17};
+    --placeholder-v2-description-color: #{--new_dark_17};
+
     --progress-bar-color                  : var(--new-dark16);
     --progress-bar-border-color           : var(--new-dark16);
     --progress-bar-reindex-color          : var(--new-brand-d1);

@@ -3,8 +3,15 @@ import { Component } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
+import { NxButtonComponent } from '@components/button/button.component';
+import { ButtonType } from '@components/button/button.component.types';
+import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { selectCurrentPartnerInfo } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { NxSystem } from '@services/system.service/system';
 import { icons } from '@static-variables';
+
 // import { System } from '@services/nx-cloud-api/nx-cloud-api.types';
 
 const mockData = {
@@ -26,20 +33,30 @@ const mockData = {
     ],
 };
 
-const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
+// const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
 
 @Component({
     selector: 'nx-channel-partner-information',
     templateUrl: 'information.component.html',
     styleUrls: ['information.component.scss'],
     standalone: true,
-    imports: [CommonModule, AngularSvgIconModule],
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        NxPagePlaceholderV2Component,
+        NxAddSvgSrcDirective,
+        NxButtonComponent,
+        NxPagePlaceholderV2Component,
+    ],
 })
 export class NxChannelPartnerInformationComponent {
-    systems = mockSystems;
+    systems: NxSystem[] = [];
     information = mockData;
     icons = icons;
+
     currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
 
     constructor(private store: Store) {}
+    protected readonly ButtonType = ButtonType;
+    protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 }

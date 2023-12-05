@@ -1357,6 +1357,12 @@
         "weak": "weak",
         "weakMessage": "Use numbers, upper and lower case letters and special characters to make your password stronger"
     },
+    "placeholderV2Texts": {
+        "noInfo": {
+            "title": "No Information",
+            "message": "You have not yet added any information."
+        }
+    },
     "placeholderTexts": {
         "noSettings": {
             "title": "This page cannot be loaded",

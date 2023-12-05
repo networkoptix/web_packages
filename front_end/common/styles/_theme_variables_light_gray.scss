@@ -140,6 +140,10 @@ html[data-theme="light-gray"], .theme-override[data-theme="light-gray"] {
     --placeholder-description-text: #{$light10};
     --placeholder-bookmarks-bg-color: #{$light4};
 
+    --placehoder-v2-title-color   : #{$dark_gray_9};
+    --placehoder-v2-message-color    : #{$dark_gray_9};
+    --placeholder-v2-description-color: #{$dark_gray_9};
+
     --progress-bar-color: #{$light_gray_4};
     --progress-bar-border-color: #{$light_gray_6};
     --progress-bar-reindex-color: var(--brand-core);

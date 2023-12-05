@@ -501,6 +501,7 @@ export interface Icons {
     dirNonStandardTriangle: string;
     dirNonStandardView: string;
     dirPagePlaceholder: string;
+    dirPageV2Placeholder: string;
     dirSectionPlaceholder: string;
     dirDevCapabilities: string;
     dirLandingIcons: string;
