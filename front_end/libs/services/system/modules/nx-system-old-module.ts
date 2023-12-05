@@ -8,6 +8,7 @@ import {
     firstValueFrom,
     Subject,
     timer,
+    ReplaySubject,
 } from 'rxjs';
 import { auditTime, catchError, map, shareReplay, switchMap, takeUntil } from 'rxjs/operators';
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
@@ -243,7 +244,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     }
 
     private jsonRpc: WebSocketSubject<unknown>;
-    private systemReady$ = new Subject<this>();
+    private systemReady$ = new ReplaySubject<this>(1);
     private useRpcOverPolling(): void {
         if (this.mediaserver instanceof NxSystemRestAPI3) {
             this.mediaserver.buildRpcUrl().subscribe(url => {
