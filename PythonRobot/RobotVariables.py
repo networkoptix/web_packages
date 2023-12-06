@@ -43,8 +43,8 @@ class RobotVariables:
         return None
 
     def replace_nested_variables(self, value):
-        # Regex pattern to find strings like {VARIABLE_NAME} or %VARIABLE_NAME%
-        patterns = [r'{([A-Z_]+)}', r'%([A-Z_]+)%']
+        # Regex pattern to find strings like {VARIABLE_NAME}
+        patterns = [r'{([A-Z_]+)}']
         for pattern in patterns:
             matches = re.findall(pattern, value)
             for match in matches:

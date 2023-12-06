@@ -6,12 +6,25 @@ from typing import Sequence
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from generic_elements import Button
+from generic_elements import DropDown
 from generic_elements import Checkbox
 from generic_elements import DropDown
 from generic_elements import ElementNotVisible
 from generic_elements import ListWrapper
 from generic_elements import PageText
 from generic_elements import Pane
+
+
+class _SystemSelectDropdown(DropDown):
+    def get_dropdown_button(self, server_name) -> Button:
+        return Button(self._driver, f'//nx-select//button/span[contains(text(), "{server_name}")]/..')
+
+    def select_server(self, name: str):
+        server_in_list = Button(
+            self._driver,
+            f"//form[@name='checkMergeForm']//nx-select//li//span[contains(text(),'{name}')]"
+            )
+        server_in_list.click()
 
 
 class MergeDialog:
@@ -58,6 +71,11 @@ class MergeDialog:
             )
         return Button(self._driver, translated_xpath)
 
+    def get_back_button(self):
+        xpath = "//button[contains(text(),'{BACK_TEXT}')]"
+        translated_xpath = self._rb.replace_nested_variables(xpath)
+        return Button(self._driver, translated_xpath)
+
     def ensure_system_online(self, system_name: str, timeout=10.0):
         error_message = f"System {system_name} is offline and cannot be merged with the current one"
         started_at = time.monotonic()
@@ -84,8 +102,8 @@ class MergeDialog:
     def get_close_button(self) -> Button:
         return Button(self._driver, "//button[contains(@class,'close')]")
 
-    def get_system_select_dropdown(self) -> DropDown:
-        return DropDown(self._driver, "//nx-select")
+    def get_system_select_dropdown(self) -> _SystemSelectDropdown:
+        return _SystemSelectDropdown(self._driver, "//nx-select")
 
     def get_first_server_radio_select(self) -> Button:
         return Button(self._driver, '//nx-radio[@name="firstSystem"]')
