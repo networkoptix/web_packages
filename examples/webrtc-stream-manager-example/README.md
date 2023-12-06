@@ -47,7 +47,7 @@ Click `Start WebRTC Connection` to begin playback.
 
 The relevant part of the source code related to the `@networkoptix/webrtc-stream-manager` package is in `startStream` function in the [main.ts](./src/main.ts) file.
 
-We pass in the `webRtcUrlFactory` and `videoElement` into the `WebRTCStreamManager.connect` static method.
+We pass in the `webRtcUrlConfig` and `videoElement` into the `WebRTCStreamManager.connect` static method.
 
 Then we subscribe to the returned observable and handle the `stream` or `error` that is emitted.
 

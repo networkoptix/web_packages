@@ -5,6 +5,7 @@ import './style.css';
 import { description } from '../package.json';
 import { Subject, takeUntil } from 'rxjs';
 import { WebRTCStreamManager, generateWebRtcUrlFactory } from './open_check_excluded';
+import { TargetStream } from '@networkoptix/webrtc-stream-manager';
 
 const newStream$ = new Subject<void>();
 
@@ -58,6 +59,7 @@ let systemToken: TokenInfo;
 let systemsInfo: BasicSystemInfo[];
 let cameras: BasicCameraInfo[];
 let systemRelay: string;
+let systemId: string;
 
 const show = (formName: (typeof forms)[number] = 'cloud-data') => {
   document.querySelector<HTMLFormElement>(
@@ -129,12 +131,12 @@ const videoElement = document.querySelector('video');
 
 const clean = (id: string): string => id.replace('{', '').replace('}', '');
 
-const startStream = (relayUrl: string, cameraId: string, serverId: string, enableTranscoding = false) => {
+const startStream = (systemId: string, cameraId: string, serverId: string, allowTranscoding = false) => {
   newStream$.next();
   WebRTCStreamManager.closeAll();
   const version = parseFloat(systemsInfo.find(({ id }) => id === systemSelect.value ).version);
-
-  WebRTCStreamManager.connect(generateWebRtcUrlFactory(relayUrl, cameraId, serverId, version), videoElement, true, systemToken.access_token, enableTranscoding)
+  const webRtcUrlConfig = { accessToken: systemToken.access_token, allowTranscoding, systemId, cameraId, targetStream: TargetStream.AUTO };
+  WebRTCStreamManager.connect(webRtcUrlConfig, videoElement)
     .pipe(takeUntil(newStream$))
     .subscribe(([stream, error]) => {
       if (stream) {
@@ -149,7 +151,7 @@ const startStream = (relayUrl: string, cameraId: string, serverId: string, enabl
 
         if (error === 'transcodingDisabled') {
           if (confirm('Transcoding is disabled. Do you want to enable it?')) {
-            startStream(relayUrl, cameraId, serverId, true);
+            startStream(systemId, cameraId, serverId, true);
           }
         } else {
           alert(`Error playing back stream: ${error}}`);
@@ -169,7 +171,7 @@ const startStreamHandler = async (event: SubmitEvent) => {
     cameras.find((camera) => clean(camera.id) === selectedCamera).serverId
   );
 
-  startStream(systemRelay, selectedCamera, targetServer)
+  startStream(systemId, selectedCamera, targetServer)
 };
 
 const redirectOauth = (event: SubmitEvent) => {
@@ -208,7 +210,9 @@ const systemSelected = async () => {
         defaultTrafficHRelayHost
       )
     );
+  WebRTCStreamManager.RELAY_URL = trafficRelayHost;
   systemRelay = `${trafficRelayHost.replace('{systemId}', systemSelect.value)}`;
+  systemId = systemSelect.value;
   systemToken = await getSystemToken(systemSelect.value);
 
   await fetch(
