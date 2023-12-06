@@ -10,12 +10,10 @@ from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_users import SystemUsers
-from generic_elements import ElementVisible
 from variables import ENV
 
 _logger = logging.getLogger(__name__)
 
-password = "qweasd 123"
 rb = RobotVariables("en_US")
 permissions = CloudAccount.PERMISSIONS
 role_names = {
@@ -23,7 +21,8 @@ role_names = {
     "viewer": rb.VIEWER_TEXT,
     "liveViewer": rb.LIVE_VIEWER_TEXT,
     "advancedViewer": rb.ADV_VIEWER_TEXT,
-    "custom": rb.CUSTOM_TEXT}
+    "custom": rb.CUSTOM_TEXT,
+    }
 
 def cloud_owner_can_change_local_user_full_name(server: Mediaserver):
     """
@@ -88,7 +87,8 @@ def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver):
             user_screen.local_user_delete_confirm_button().click()
             driver.get(url)
             SystemAdmin(driver)
-            _verify_user_not_on_server(server, deleted_user_id)
+            for user in server.api.get_users():
+                assert not user["id"] == deleted_user_id
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -167,11 +167,6 @@ def non_admins_cant_see_local_users(server: Mediaserver, user: CloudAccount):
     print("PASS")
 
 
-def _verify_user_not_on_server(server, user_id):
-    for user in server.api.get_users():
-        assert not user["id"] == user_id
-
-
 def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     """
     In order to correspond with our naming conventions for user permissions, camel case is used in the user names
@@ -220,19 +215,17 @@ def _reset_local_users_api(locals, server):
             permissions[user_type],
             f"noptixautoqa+local_{user_type}@gmail.com",
             "Local User",
-            password,
+            "qweasd 123",
             user_id=user['id'],
             is_cloud=False,
-            patch=True
+            patch=True,
         )
 
 
 def _create_new_local_users(count, server: Mediaserver, locals_list):
-    if count == 0:
-        server.create_local_users()
-    else:
+    if count != 0:
         _delete_all_local_users_via_api(server, locals_list)
-        server.create_local_users()
+    server.create_local_users()
 
 
 def _delete_all_local_users_via_api(server, locals_list):

@@ -76,6 +76,7 @@ class Element:
         try:
             return element.is_displayed()
         except StaleElementReferenceException:
+            _logger.debug(f"StaleElementReferenceException caught on {self._locator}")
             time.sleep(2)
             element = self._get_element()
             return element.is_displayed()
