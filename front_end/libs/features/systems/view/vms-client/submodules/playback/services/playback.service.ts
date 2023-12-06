@@ -1,7 +1,15 @@
 import { Injectable } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { animationFrameScheduler, BehaviorSubject, interval } from 'rxjs';
+import {
+    animationFrameScheduler,
+    BehaviorSubject,
+    distinctUntilChanged,
+    interval,
+    NEVER,
+    switchMap,
+} from 'rxjs';
 
+import { NxParamStateService } from '@services/param-state/param-state.service';
 import { PlaybackQuality, PlaybackTransport } from '@view/view.types';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { VideoManagementSystemService } from '@vms-client/submodules/vms/services/vms.service';
@@ -53,11 +61,38 @@ export class PlaybackService {
         return [parseInt(width), parseInt(height)];
     }
 
-    constructor(private vms: VideoManagementSystemService, private timeline: TimelineService) {
+    constructor(
+        private vms: VideoManagementSystemService,
+        private timeline: TimelineService,
+        paramStateService: NxParamStateService,
+    ) {
         interval(0, animationFrameScheduler)
             .pipe(untilDestroyed(this))
             .subscribe(() => this.onAnimationFrame());
+        this.viewTabActive$
+            .pipe(
+                switchMap(active =>
+                    active
+                        ? paramStateService
+                              .getStateHandler(state => state?.params?.cameraId)
+                              .state$.pipe(distinctUntilChanged())
+                        : NEVER,
+                ),
+            )
+            .subscribe(this.cleanUp);
     }
+
+    viewTabActive$ = new BehaviorSubject<boolean>(false);
+
+    /**
+     * There seems to be some state artifacts leftover between switching cameras.
+     *
+     * Any additional cleanup before switching to a new camera should be done here.
+     */
+    private cleanUp = (): void => {
+        this.setError('');
+        (<ArchivePlaybackState>this.state).encrypted = false;
+    };
 
     private onAnimationFrame(): void {
         const thisFrameTime = Date.now();
