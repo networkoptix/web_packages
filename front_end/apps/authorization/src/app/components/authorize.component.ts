@@ -63,7 +63,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     companyName: string;
 
     // shared
-    currentState: AuthorizeState;
+    currentState: AuthorizeState = AuthorizeState.email;
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
     windowLargeEnough = false;
