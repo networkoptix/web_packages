@@ -319,7 +319,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         : AuthorizeState.notSecure;
             } else {
                 if (email) {
-                    this.emailLocked = true;
+                    this.emailLocked = !this.clientType.includes('login');
                     this.loginEmail = email;
                     this.checkEmailProcess.run();
                 }

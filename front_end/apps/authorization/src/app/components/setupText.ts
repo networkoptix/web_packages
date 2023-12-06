@@ -19,9 +19,10 @@ export function setupText(type?: string): TemplateText {
         header: auth.connectHeader,
         subHeader: auth.toAccountSubheader,
     };
-    const renew = {
-        header: auth.expiredHeader,
-        subHeader: auth.expiredAccountSubheader,
+    const passwordApply = {
+        header: auth.loginCloudHeader,
+        subHeader,
+        subHeaderSuffix: auth.passwordApply,
     };
     const login = {
         header: auth.loginCloudHeader,
@@ -30,19 +31,14 @@ export function setupText(type?: string): TemplateText {
 
     if (type === 'email') {
         connect.subHeader = auth.connectSubheader;
-        renew.subHeader = auth.expiredSubheader;
-        delete login.subHeader;
+        login.subHeader = '';
     }
 
     return {
         loginToCloud: login,
         loginToWebadmin: login,
         system2faAuth: login,
-        confirmPasswordApplyChanges: {
-            header: auth.loginCloudHeader,
-            subHeader,
-            subHeaderSuffix: auth.passwordApply,
-        },
+        confirmPasswordApplyChanges: passwordApply,
         confirmPasswordDisconnect: {
             header: auth.loginCloudHeader,
             subHeader,
@@ -85,7 +81,7 @@ export function setupText(type?: string): TemplateText {
         },
         connectSystemToCloud: connect,
         setupWizard: connect,
-        renewSessionDesktop: renew,
-        renewSessionWeb: renew,
+        renewSessionDesktop: passwordApply,
+        renewSessionWeb: passwordApply,
     };
 }

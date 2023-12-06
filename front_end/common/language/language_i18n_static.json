@@ -474,7 +474,6 @@
     "authorize": {
         "loginCloudHeader": "Log in to %CLOUD_NAME%",
         "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
@@ -493,7 +492,6 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "passwordTransfer": "to transfer system",
-        "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Create %CLOUD_NAME% Account",
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Account Created!",

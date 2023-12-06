@@ -157,6 +157,7 @@ async def register(request):
                                       error_data=serializer.errors)
         logger.debug('/api/account/register calling serializer.save')
         await sync_to_async(serializer.save)()
+        account = await models.Account.objects.filter(email=data['email']).afirst()
     elif account.is_active:
         raise APILogicException('User already registered',
                                 ErrorCodes.account_exists)
