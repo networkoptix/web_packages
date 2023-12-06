@@ -336,6 +336,10 @@ export class NxLayoutGridComponent {
         this.layoutStateService.portal = null;
     }
 
+    @HostListener('document:fullscreenchange', ['$event']) onFullscreenChange(event: Event): void {
+        this.#fullscreenElement$.next(event.target as Element);
+    }
+
     @ViewChild('gridSection') set gridSection(value: ElementRef) {
         this.layoutStateService.gridSection = value.nativeElement;
     }
@@ -433,10 +437,15 @@ export class NxLayoutGridComponent {
 
     initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
+    #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
     // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
-    layout$ = combineLatest([this.initialLayout$, this.#wrapperSize$]).pipe(
+    layout$ = combineLatest([
+        this.initialLayout$,
+        this.#wrapperSize$,
+        this.#fullscreenElement$,
+    ]).pipe(
         filter(([layout]) => !!layout),
         map(
             ([layout, wrapperSize]) =>
@@ -493,7 +502,7 @@ export class NxLayoutGridComponent {
         };
     };
 
-    resizeItem = ($event: Size, dragContainer: HTMLElement): void => {
+    checkUpdateAspectRatio = ($event: Size, dragContainer: HTMLElement): void => {
         const aspectRatio = parseFloat(dragContainer.style?.aspectRatio.split('/')[0]);
 
         if (!aspectRatio) {
@@ -1226,9 +1235,16 @@ export class NxLayoutGridComponent {
 
             if (
                 itemSize &&
-                (assertResourceOfType.camera(node) || assertResourceOfType.server(node))
+                (assertResourceOfType.camera(node) ||
+                    assertResourceOfType.server(node) ||
+                    assertResourceOfType.webpage(node) ||
+                    assertResourceOfType.iodevice(node))
             ) {
-                this.updatePlaceholderConfig(itemSize, updatedItem, node?.details.status);
+                this.updatePlaceholderConfig(
+                    itemSize,
+                    updatedItem,
+                    'status' in node?.details ? node?.details?.status : '',
+                );
             }
             return updatedItem;
         };
@@ -1281,13 +1297,15 @@ export class NxLayoutGridComponent {
             return size;
         }
 
-        const { height, width } = this.window.document.fullscreenElement
-            ? size
-            : this.calculateAspect([size, layout]).cellSize;
+        const { height, width } =
+            this.window.document.fullscreenElement &&
+            this.window.document.fullscreenElement !== this.layoutStateService.gridSection
+                ? size
+                : this.calculateAspect([size, layout]).cellSize;
         const { renderConfig, rotation } = item;
 
         renderConfig.showTooltip = width < 360;
-        if (assertResourceOfType.camera(node) && node.details.online) {
+        if (assertResourceOfType.camera(node)) {
             const initialAspect = node.aspectRatio || renderConfig.aspect || 1;
 
             const isRotated = Boolean((Math.round(rotation / 90) * 90) % 180);

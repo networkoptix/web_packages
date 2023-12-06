@@ -370,7 +370,7 @@
                                     layoutItemWrapper === window.document.fullscreenElement,
                                 'swap': (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
                             }"
-                            (resize)="resizeItem($event, dragContainer)"
+                            (resize)="checkUpdateAspectRatio($event, dragContainer)"
                         >
                             <div
                                 cdkDrag
