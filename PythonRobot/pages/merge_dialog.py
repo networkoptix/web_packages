@@ -7,6 +7,7 @@ from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from generic_elements import Button
 from generic_elements import Checkbox
+from generic_elements import DropDown
 from generic_elements import ElementNotVisible
 from generic_elements import ListWrapper
 from generic_elements import PageText
@@ -83,8 +84,14 @@ class MergeDialog:
     def get_close_button(self) -> Button:
         return Button(self._driver, "//button[contains(@class,'close')]")
 
-    def get_system_select_button(self) -> Button:
-        return Button(self._driver, '//nx-modal-merge-content//button[@id="mergeSystemSelect"]')
+    def get_system_select_dropdown(self) -> DropDown:
+        return DropDown(self._driver, "//nx-select")
+
+    def get_first_server_radio_select(self) -> Button:
+        return Button(self._driver, '//nx-radio[@name="firstSystem"]')
+
+    def get_second_server_radio_select(self) -> Button:
+        return Button(self._driver, '//nx-radio[@name="secondSystem"]')
 
     def get_available_systems(self) -> Sequence['System']:
         systems_list = ListWrapper(
@@ -105,6 +112,9 @@ class MergeDialog:
             f'//nx-modal-merge-content//button[@id="mergeSystemSelect"]//span[contains(text(), "{system_name}")]',
             )
         item.wait_until_visible(30)
+
+    def get_about_to_merge_text(self) -> PageText:
+        return PageText(self._driver, "//form[@name='confirmMergeForm']/div/p")
 
 
 class System(NamedTuple):

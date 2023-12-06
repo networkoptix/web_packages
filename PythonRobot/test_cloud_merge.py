@@ -24,8 +24,37 @@ def merge_from_primary_system(first_server: Mediaserver, second_server: Mediaser
         merge_dialog.primary_second_system().wait_until_visible()
         merge_dialog.get_next_button().click()
         merge_dialog.merge_systems_button().click()
-        sys_admin.system_is_being_merged().wait_until_visible()
+        sys_admin.system_is_being_merged_header().wait_until_visible()
         message = sys_admin.systems_merged_success_toast_notification(first_server.name, second_server.name)
+        message.wait_until_visible(90)
+        message.wait_until_not_visible(10)
+        driver.refresh()
+        left_menu = SystemLeftMenu(driver)
+        left_menu.servers_button().click()
+        assert left_menu.servers_count() == 2, f"Len was {left_menu.servers_count()}"
+
+def merge_from_secondary_system(first_server: Mediaserver, second_server: Mediaserver):
+    '''
+    9. Positive scenario with selected cloud system (selected system is primary)
+
+    [Tags]    C70931    pos    must
+    '''
+    with get_chrome() as driver:
+        url = ENV + f"/systems/{first_server.id}"
+        driver.get(url)
+        first_server_owner = first_server.get_cloud_owner()
+        LoginDialog(driver).basic_cloud_login(first_server_owner.email, first_server_owner.password)
+        sys_admin = SystemAdmin(driver)
+        sys_admin.merge_with_another_system_button().click()
+        merge_dialog = MergeDialog(driver)
+        merge_dialog.ensure_system_online(second_server.name, timeout=20)
+        merge_dialog.primary_first_system().wait_until_visible()
+        merge_dialog.primary_second_system().wait_until_visible()
+        merge_dialog.get_second_server_radio_select().click()
+        merge_dialog.get_next_button().click()
+        merge_dialog.merge_systems_button().click()
+        sys_admin.system_is_being_merged_page().wait_until_visible()
+        message = sys_admin.systems_merged_success_toast_notification(second_server.name, first_server.name)
         message.wait_until_visible(90)
         message.wait_until_not_visible(10)
         driver.refresh()
@@ -71,4 +100,8 @@ if __name__ == "__main__":
         server_3 = suite.create_cloud_server(cloud_owner_2, f'{suite_name}_3_')
         server_4 = suite.create_cloud_server(cloud_owner_2, f'{suite_name}_4_')
         test_cloud_merge_X_button(server_3)
-        
+
+        cloud_owner_3 = suite.create_cloud_account()
+        server_5 = suite.create_cloud_server(cloud_owner_3, f'{suite_name}_5_')
+        server_6 = suite.create_cloud_server(cloud_owner_3, f'{suite_name}_6_')
+        merge_from_secondary_system(server_5, server_6)

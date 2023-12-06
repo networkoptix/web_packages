@@ -110,9 +110,12 @@ class SystemAdmin:
     def system_offline_text(self):
         return PageText(self.driver, f"//div[contains(text(),'{self.rb.SYSTEM_IS_OFFLINE_TEXT}')]")
 
-    def system_is_being_merged(self):
+    def system_is_being_merged_header(self) -> PageText:
         translated_xpath = self.rb.replace_nested_variables("//div[contains(text(), '{SYSTEM_IS_BEING_MERGED_TEXT}')]")
         return PageText(self.driver, translated_xpath)
+
+    def system_is_being_merged_page(self) -> PageText:
+        return PageText(self.driver, "//nx-page-placeholder[@type='MERGE']")
 
     def systems_merged_success_toast_notification(self, primary_system_name, secondary_system_name):
         alert_text = self.rb.__getattr__("SYSTEM_MERGE_COMPLETED_TEXT", get_replacements=False)
