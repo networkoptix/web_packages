@@ -5,9 +5,9 @@ import { filter, shareReplay, switchMap, take, map, delay, takeUntil, tap, disti
 import { webSocket, WebSocketSubject } from 'rxjs/webSocket';
 import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } from './trackers';
 import { MediaServerPeerConnection } from './media-server-peer-connection';
-import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding } from './types';
+import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey } from './utils';
+import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -18,6 +18,8 @@ type StreamsConfig = AvailableStreams | AvailableStreams[];
  */
 
 export class WebRTCStreamManager {
+    static RELAY_URL = '{systemId}.relay.vmsproxy.com'
+
     /** Time series to average */
     static PERFORMANCE_SAMPLE_SIZE = 5000
 
@@ -328,11 +330,33 @@ export class WebRTCStreamManager {
     /**
      * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance.
      *
-     * If accessToken is passed in it will attempt to login to the mediaserver using cookie authentication before connecting.
+     * Relay redirects are automatically resolved to ensure that the connection is made to the correct relay.
+     *
+     * Authentication is handled automatically.
+     *
+     * Reconnections on lost connection are handled automatically.
+     *
+     * @param webRtcUrlConfig WebRtcUrlConfig
+     * @param videoElement HTMLVideoElement
+     * @returns Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
+     */
+    static connect(
+        webRtcUrlConfig: WebRtcUrlConfig,
+        videoElement?: HTMLVideoElement,
+    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
+    /**
+     * @deprecated Use WebRtcUrlConfig instead of WebRtcUrlFactory for first argument.
+     *
+     * WebRTCStreamManager factory to either return existing instance to reuse exiting connection or instantiates instance.
      *
      * Relay redirects are automatically resolved to ensure that the connection is made to the correct host.
      *
-     * @param webRtcUrlFactory () => string
+     * If accessToken is passed then authentication will be handled automatically. If accessToken isn't passed then
+     * session should be created using cookie authentication before calling connect.
+     *
+     * Reconnections on lost connection are handled automatically.
+     *
+     * @param webRtcUrlFactory WebRtcUrlFactory
      * @param videoElement HTMLVideoElement
      * @param availableStreamsOrHasSecondary StreamsConfig | boolean - A boolean if secondary stream is available,
      * an array of available streams, or a single stream.
@@ -340,31 +364,41 @@ export class WebRTCStreamManager {
      * @returns Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
      */
     static connect(
-        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
+        webRtcUrlFactory: WebRtcUrlFactory,
         videoElement?: HTMLVideoElement,
         targetStreams?: StreamsConfig,
         accessToken?: string,
         allowTranscoding?: boolean,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
     static connect(
-        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
+        webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
         videoElement?: HTMLVideoElement,
-        hasSecondary?: boolean,
-        accessToken?: string,
-        allowTranscoding?: boolean,
-    ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]>
-    static connect(
-        webRtcUrlFactory: (params?: Record<string, unknown>) => string,
-        videoElement?: HTMLVideoElement,
-        targetStreamsOrHasSecondary: StreamsConfig | boolean = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
+        targetStreams: StreamsConfig = null,
         accessToken: string = null,
         allowTranscoding: boolean = false,
     ): Observable<[MediaStream, ConnectionError, WebRTCStreamManager]> {
-        const connectionKey = getConnectionKey(webRtcUrlFactory());
-        const availableStreams = Array.isArray(targetStreamsOrHasSecondary) ? targetStreamsOrHasSecondary : targetStreamsOrHasSecondary ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY];
+        const connectionKey = typeof webRtcUrlFactoryOrConfig === 'function' ? getConnectionKey(webRtcUrlFactoryOrConfig()) : cleanId(webRtcUrlFactoryOrConfig.cameraId);
+        if (!targetStreams && 'targetStream' in webRtcUrlFactoryOrConfig) {
+            const streams = webRtcUrlFactoryOrConfig.targetStream;
+            targetStreams = streams === TargetStream.AUTO ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [streams === TargetStream.HIGH ? AvailableStreams.PRIMARY : AvailableStreams.SECONDARY]
+        }
+
+        if ('allowTranscoding' in webRtcUrlFactoryOrConfig) {
+            allowTranscoding = webRtcUrlFactoryOrConfig.allowTranscoding;
+        }
+
+        if (!targetStreams) {
+            targetStreams = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY];
+        }
+
+        const availableStreams = Array.isArray(targetStreams) ? targetStreams : targetStreams ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY];
+
+        if (!accessToken && 'accessToken' in webRtcUrlFactoryOrConfig) {
+            accessToken = webRtcUrlFactoryOrConfig.accessToken;
+        }
 
         WebRTCStreamManager.EXISTING_CONNECTIONS[connectionKey] ||= new WebRTCStreamManager(
-            webRtcUrlFactory,
+            webRtcUrlFactoryOrConfig,
             videoElement,
             availableStreams,
             accessToken,
@@ -404,7 +438,7 @@ export class WebRTCStreamManager {
 
     private position$ = new BehaviorSubject(new WithSkip(0));
     private stream$ = new BehaviorSubject(new WithSkip(AvailableStreams.PRIMARY));
-    public readonly apiVersion: ApiVersions;
+    public apiVersion: ApiVersions;
     private initialPositionSent = false;
 
     /**
@@ -817,6 +851,22 @@ export class WebRTCStreamManager {
         return this.wsConnection;
     };
 
+    private async getApiVersion(): Promise<ApiVersions> {
+        const relayHost = new URL(this.webRtcUrlFactory({ position: 0 })).host;
+        const endpoint = `https://${relayHost}/rest/v2/system/info?_with=version`;
+        const fallback = { version: '5.1' }
+        const version = await fetch(
+            endpoint,
+            { headers: { authorization: `Bearer ${this.accessToken}` }}
+        ).then(
+            response => response.json() as Promise<typeof fallback>
+        ).catch(
+            () => fallback).then(({ version }) => parseFloat(version)
+        );
+
+        return isNaN(version) || version < 6 ? ApiVersions.v1 : ApiVersions.v2
+    }
+
     /** Initialization helpers */
     /**
      * Initializes websocket connection for negotating peer connection.
@@ -838,6 +888,8 @@ export class WebRTCStreamManager {
                 return this.close(false);
             }
 
+            this.apiVersion ||= await this.getApiVersion();
+
             if (lostConnection) {
                 this.mediaStream$.next([null, ConnectionError.lostConnection, this]);
                 complete();
@@ -858,16 +910,24 @@ export class WebRTCStreamManager {
             // console.table({ webRtcUrl, stream, position })
             const webRtcUrlObject = new URL(webRtcUrl);
             const relayHost = webRtcUrlObject.host;
-            const serverId = webRtcUrlObject.searchParams.get('x-server-guid');
+            let serverId = webRtcUrlObject.searchParams.get('x-server-guid');
 
-            const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } } }) as const;
+            const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId }) as const;
             const streamInfoEndpoint =
-                `https://${relayHost}/rest/v2/devices/${this.cameraId}?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex`;
+                `https://${relayHost}/rest/v2/devices/${this.cameraId}?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId`;
             const fetchStreams = fetch(
                 streamInfoEndpoint,
                 { headers: { authorization: `Bearer ${this.accessToken}` }}
                 ).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback);
-            const resolvedHost = await fetch(`https://${relayHost}/api/ping?x-server-guid=${serverId}`).then(response => new URL(response.url).host).catch(() => false as const)
+
+            if (!serverId && this.apiVersion === ApiVersions.v1) {
+                serverId = cleanId((await fetchStreams).serverId);
+                if (serverId) {
+                    webRtcUrl += `x-server-guid=${serverId}&`
+                }
+            }
+
+            const resolvedHost = await fetch(`https://${relayHost}/api/ping?${serverId ? `x-server-guid=${serverId}` : ''}`).then(response => new URL(response.url).host).catch(() => false as const)
 
             if (resolvedHost) {
                 webRtcUrl = webRtcUrl.replace(relayHost, resolvedHost);
@@ -886,7 +946,7 @@ export class WebRTCStreamManager {
             const targetStream = streams.find(({ encoderIndex }) => encoderIndex === stream);
             const requiresTranscoding = Object.values(RequiresTranscoding).filter(isRequiresTranscoding);
 
-            if (requiresTranscoding.includes(targetStream.codec) && this.apiVersion !== ApiVersions.v1) {
+            if (targetStream?.codec && requiresTranscoding.includes(targetStream.codec) && this.apiVersion !== ApiVersions.v1) {
                 const mse = 'deliveryMethod=mse';
                 if (webRtcUrl.includes('deliveryMethod=srtp')) {
                     webRtcUrl = webRtcUrl.replace('deliveryMethod=srtp', mse)
@@ -965,28 +1025,57 @@ export class WebRTCStreamManager {
         this.updateTrackerConnections();
     };
 
+    private generateWebRtcUrl = (config: WebRtcUrlConfig): WebRtcUrlFactory => {
+        if('apiVersion' in config && config.apiVersion) {
+            this.apiVersion = config.apiVersion;
+        }
+
+        const systemId = cleanId(config.systemId);
+        const cameraId = cleanId(config.cameraId);
+
+        const host = WebRTCStreamManager.RELAY_URL.replace('{systemId}', systemId);
+        const endpoint = this.apiVersion === ApiVersions.v2 ? `/rest/v3/devices/${cameraId}/webrtc?` : `/webrtc-tracker/?camera_id=${cameraId}&`
+
+        const positionParam = (position: unknown): string => {
+            if (typeof position !== 'string' && typeof position !== 'number') {
+                return ''
+            }
+
+            const parsedPosition = typeof position === 'string' ? parseFloat(position) : position;
+            return `position=${parsedPosition && !isNaN(parsedPosition) ? position : 0}$`
+        };
+
+        return (params) => `wss://${host}${endpoint}${positionParam(params?.position)}`
+    }
+
+    private webRtcUrlFactory: WebRtcUrlFactory = (params: Record<string, unknown>) => {
+        if (typeof this.webRtcUrlFactoryOrConfig === 'function') {
+            return this.webRtcUrlFactoryOrConfig(params);
+        }
+
+        return this.generateWebRtcUrl(this.webRtcUrlFactoryOrConfig)(params);
+    }
+
     /**
      * Do not use directly use factory WebRTCStreamManager.connect(webRtcUrlFactory) instead.
      *
      * @param webRtcUrlFactory (params: Record<string, unknown>) => string
      */
     private constructor(
-        public webRtcUrlFactory: (params?: Record<string, unknown>) => string,
+        private webRtcUrlFactoryOrConfig: WebRtcUrlFactoryOrConfig,
         videoElement?: HTMLVideoElement,
         private availableStreams: AvailableStreams[] = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY],
         private accessToken = '',
         public allowTranscoding = false,
         private cameraId = '',
     ) {
-        const relayUrlObject = new URL(webRtcUrlFactory());
+        const relayUrlObject = new URL(this.webRtcUrlFactory());
         const serverId = relayUrlObject.searchParams.get('x-server-guid');
-        this.apiVersion = relayUrlObject.pathname.includes('/rest/v3') ? ApiVersions.v2 : ApiVersions.v1
-        console.info(`Using API version ${this.apiVersion}`)
         const relayHost = relayUrlObject.host;
         this.updateStream(availableStreams.length === 1 ? availableStreams[0] : WebRTCStreamManager.getInitialStream(videoElement));
 
         WebRTCStreamManager.AUTHENTICATED_HOSTS[serverId || relayHost] ||= this.accessToken ? fetch(
-            `https://${relayHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&x-server-guid=${serverId}`,
+            `https://${relayHost}/rest/v2/login/sessions/${this.accessToken}?setCookie=true&${serverId ? `x-server-guid=${serverId}` : ''}`,
             { credentials: 'include' }
         ).then(() => true).catch(() => false) : Promise.resolve(true);
 

@@ -146,3 +146,33 @@ export interface Stream {
     codec: number,
     encoderIndex: AvailableStreams
 }
+
+export type WebRtcUrlFactory = (params?: Record<string, unknown>) => string;
+
+export enum TargetStream {
+    AUTO = 'AUTO',
+    HIGH = 'HIGH',
+    LOW = 'LOW',
+}
+
+export interface WebRtcUrlConfigUnknown {
+    systemId: string;
+    cameraId: string;
+    accessToken: string;
+    targetStream: TargetStream;
+    position?: never;
+}
+
+export interface WebRtcUrlConfigV1 extends WebRtcUrlConfigUnknown {
+    serverId?: string;
+    allowTranscoding?: boolean;
+    apiVersion: ApiVersions.v1;
+}
+
+export interface WebRtcUrlConfigV2 extends WebRtcUrlConfigUnknown {
+    apiVersion: ApiVersions.v2;
+}
+
+export type WebRtcUrlConfig = WebRtcUrlConfigV1 | WebRtcUrlConfigV2 | WebRtcUrlConfigUnknown
+
+export type WebRtcUrlFactoryOrConfig = WebRtcUrlFactory | WebRtcUrlConfig
