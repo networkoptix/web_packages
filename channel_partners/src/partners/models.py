@@ -518,7 +518,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     # instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
-    attributes = models.JSONField(default=dict)
+    attributes = models.JSONField(blank=True, default=dict)
     # allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
@@ -906,7 +906,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                      default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
-    attributes = models.JSONField(default=dict)
+    attributes = models.JSONField(default=dict, blank=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()

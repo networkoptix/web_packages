@@ -43,7 +43,7 @@ class ChannelPartnerOrganizationInline(admin.TabularInline):
 @admin.register(ChannelPartner)
 class ChannelPartnerAdmin(admin.ModelAdmin):
     list_display = ('name', 'cloud_host', 'parent_channel_partner')
-
+    readonly_fields = ('path',)
     inlines = [
         ChannelPartnerUserInline,
         ChannelPartnerOrganizationInline,
@@ -79,6 +79,7 @@ class CloudSystemInline(admin.TabularInline):
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
     list_display = ('name', 'channel_partner')
+    readonly_fields = ('path',)
     inlines = [
         OrganizationUserInline,
         CloudSystemInline
