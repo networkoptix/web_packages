@@ -1,4 +1,4 @@
-<h1>Hello, {{ message.userFullName }}</h1>
+<h1>Сайн байна уу, {{ message.userFullName }}</h1>
 
-<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>gave the following feedback{{#message.asset}} for {{ message.asset }}{{/message.asset}}:
+<a href="mailto:{{ message.sender_email }}">{{ message.sender_name }}</a>-с: {{ message.asset }}{{/message.asset}}-д {{#message.asset}} хариу илгээсэн байна.
 <div>{{ message.message }}</div>
