@@ -8,6 +8,7 @@ import {
     ViewChild,
 } from '@angular/core';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { isEqual } from 'lodash-es';
 import { animationFrameScheduler, distinctUntilChanged, interval, Subject, takeUntil } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -87,7 +88,7 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
         languageService.loadTimelineTranslations();
 
         this.webglService.selection$
-            .pipe(untilDestroyed(this), distinctUntilChanged())
+            .pipe(untilDestroyed(this), distinctUntilChanged(isEqual))
             .subscribe((selection: ExportSelection) => {
                 this.selection = selection;
                 this.leftEarPosition();

@@ -1,0 +1,13 @@
+diff --git a/node_modules/rxjs/dist/types/internal/operators/distinctUntilChanged.d.ts b/node_modules/rxjs/dist/types/internal/operators/distinctUntilChanged.d.ts
+index 8394fa6..d020917 100644
+--- a/node_modules/rxjs/dist/types/internal/operators/distinctUntilChanged.d.ts
++++ b/node_modules/rxjs/dist/types/internal/operators/distinctUntilChanged.d.ts
+@@ -1,4 +1,6 @@
+ import { MonoTypeOperatorFunction } from '../types';
+-export declare function distinctUntilChanged<T>(comparator?: (previous: T, current: T) => boolean): MonoTypeOperatorFunction<T>;
++type ImmutablePrimitive = undefined | null | boolean | string | number | Function;
++export declare function distinctUntilChanged<T extends ImmutablePrimitive>(): MonoTypeOperatorFunction<T>;
++export declare function distinctUntilChanged<T>(comparator: (previous: T, current: T) => boolean): MonoTypeOperatorFunction<T>;
+ export declare function distinctUntilChanged<T, K>(comparator: (previous: K, current: K) => boolean, keySelector: (value: T) => K): MonoTypeOperatorFunction<T>;
+ //# sourceMappingURL=distinctUntilChanged.d.ts.map
+\ No newline at end of file

@@ -7,6 +7,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { Observable, distinctUntilChanged, map } from 'rxjs';
+import stringify from 'safe-stable-stringify';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -75,7 +76,7 @@ export class NxOrganizationCardContainerComponent {
         private systemsService: NxSystemsService,
     ) {
         this.cpService.paramStateHandler.state$
-            .pipe(distinctUntilChanged())
+            .pipe(distinctUntilChanged((a, b) => stringify(a) === stringify(b)))
             .subscribe(({ params: { groupId } }) => {
                 this.store.dispatch(GroupActions.setCurrentGroupId({ currentGroupId: groupId }));
             });

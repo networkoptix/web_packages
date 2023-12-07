@@ -4,7 +4,8 @@ const { showOptionalWarnings } = require('./eslintrc-options.json');
 
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
 
-const onlyEditor = value => (lintTaskRunner || !showOptionalWarnings ? 'off' : value);
+const onlyEditor = (value, overrideShowOptional = false) =>
+    lintTaskRunner || ![showOptionalWarnings, overrideShowOptional].some(Boolean) ? 'off' : value;
 
 /**
  * https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/eslint-plugin#extension-rules
@@ -222,7 +223,6 @@ module.exports = {
                 'nx/no-untyped-arg': 'error',
                 'nx/no-untyped-init': 'error',
                 'nx/no-untyped-subject': 'error',
-
                 '@typescript-eslint/ban-types': [
                     'error',
                     {

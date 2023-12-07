@@ -46,6 +46,7 @@ import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
+import { makeProxy } from '@utils/signals';
 import { servers } from '@variables/static-variables';
 
 import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.component';
@@ -281,7 +282,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     updateStateHistory = (state?: MergeState): void => {
-        this.stateHistory.update(history => {
+        this.stateHistory.update(prev => {
+            const history = makeProxy(prev);
             if (state) {
                 history.push(state);
             } else {

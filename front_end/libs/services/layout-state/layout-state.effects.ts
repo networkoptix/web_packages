@@ -1,6 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
+import { isEqual } from 'lodash-es';
 import {
     EMPTY,
     catchError,
@@ -74,7 +75,7 @@ export class LayoutStateEffects {
     updateSystemResources$ = createEffect(() => {
         return this.layoutStateService.paramStateHandler.state$.pipe(
             map(({ params: { systemId, layoutId } }) => ({ systemId, layoutId })),
-            distinctUntilChanged(),
+            distinctUntilChanged(isEqual),
             switchMap(({ systemId, layoutId }) =>
                 layoutId
                     ? interval(5 * 1000).pipe(
@@ -100,7 +101,7 @@ export class LayoutStateEffects {
         return this.actions.pipe(
             ofType(SharedLayoutsActions.saveLayout),
             map(({ layoutIds }) => layoutIds),
-            distinctUntilChanged(),
+            distinctUntilChanged(isEqual),
             switchMap(layoutsToSave => {
                 return this.store.select(selectUnsavedLayoutsState).pipe(
                     map(layouts => layouts.filter(({ id }) => layoutsToSave.includes(id))),

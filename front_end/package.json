@@ -59,7 +59,7 @@
     "explore:js": "source-map-explorer ./dist/*.js",
     "explore:css": "source-map-explorer ./dist/*.css",
     "set-node-version": "npx n 18.15.0",
-    "postinstall": "node setSkin.mjs --skin blue && node ./decorate-angular-cli.js",
+    "postinstall": "npx patch-package && node setSkin.mjs --skin blue && node ./decorate-angular-cli.js",
     "node-modules": "rm -rf node_modules && npm i --legacy-peer-deps",
     "link-local-libs": "node packages/link-libs.js",
     "publish-public-libraries": "node packages/publish-public-libs.js",

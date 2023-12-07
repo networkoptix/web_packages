@@ -67,6 +67,7 @@ export class NxMenusService {
         translate.onTranslationChange
             .pipe(
                 filter(lang => lang !== null),
+                map(({ lang }) => lang),
                 distinctUntilChanged(),
                 untilDestroyed(this),
             )
