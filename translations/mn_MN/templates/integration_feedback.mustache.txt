@@ -1,3 +1,3 @@
-Hello, {{ message.userFullName }}
-{{ message.sender_name}} ({{ message.sender_email }}) has the feedback about the {{ message.asset }}:
+Сайн байна уу, {{ message.userFullName }}
+{{ message.sender_name}} {{ message.sender_email }}-с: {{ message.asset }} санал хүсэлт ирсэн байна
 <pre>{{ message.message }}</pre>

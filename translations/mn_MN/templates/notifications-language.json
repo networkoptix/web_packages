@@ -1,21 +1,21 @@
 {
   "activate_account": {
-    "emailSubject": "Activate your account"
+    "emailSubject": "Бүртгэлээ идэвхжүүлнэ үү"
   },
   "cloud_invite": {
-    "emailSubject": "You have been invited to %CLOUD_NAME%"
+    "emailSubject": "Таныг %CLOUD_NAME%-д урьж байна"
   },
   "cloud_notification": {
     "emailSubject": "{{{message.subject}}}"
   },
   "sales_inquiry": {
-    "emailSubject": "Sales inquiry for {{{message.asset}}}"
+    "emailSubject": "Үнийн санал авах бол {{{message.asset}}"
   },
   "technical_inquiry": {
-    "emailSubject": "Technical inquiry for {{{message.asset}}}"
+    "emailSubject": "Техникийн талаар лавлах бол {{{message.asset}}"
   },
   "integration_feedback": {
-    "emailSubject": "Feedback for {{{message.asset}}}"
+    "emailSubject": "Санал хүсэлт өгөх бол {{{message.asset}}"
   },
   "ipvd_feedback": {
     "emailSubject": "Camera Page Feedback{{#message.asset}} for {{{message.asset}}}{{/message.asset}}"
@@ -30,7 +30,7 @@
     "emailSubject": "{{message.asset_type}}: {{{message.asset}}} has a new version to review"
   },
   "restore_password": {
-    "emailSubject": "Reset your password"
+    "emailSubject": "Нууц үгээ сэргээх"
   },
   "system_invite": {
     "emailSubject": "{{#message.sharer_name}}{{message.sharer_name}} invites you to %CLOUD_NAME%{{/message.sharer_name}}{{^message.sharer_name}}Video system {{{message.system_name}}} was shared with you{{/message.sharer_name}}"
