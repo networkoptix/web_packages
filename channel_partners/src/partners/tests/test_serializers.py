@@ -376,13 +376,12 @@ class TestOrganizationSerializer:
         organization.save()
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
-        assert serializer.data['ownRolesIds'] == [org_admin_role.name]
-
+        assert serializer.data['ownRolesIds'] == [org_admin_role.id]
 
 
 class TestChannelPartnerRecordsParamSerializer:
 
-    def setup(self):
+    def setup_method(self):
         self.ts = datetime.date(2023, 8, 31)
 
     def test_no_end_ts(self):

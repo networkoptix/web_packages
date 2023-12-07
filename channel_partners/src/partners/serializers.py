@@ -275,7 +275,8 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(queryset=OrganizationRole.objects.all(),
-                                                                   required=False, allow_null=True)
+                                                                   required=False, allow_null=True,
+                                                                   source='channel_partner_access_level')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
@@ -308,7 +309,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         if instance.channel_partner_access_level_id:
             if rel := self.user_access_matrix.get_cp_to_user_rel(instance.channel_partner_id):
                 if rel.roles:
-                    own_roles |= {self.organization_roles[instance.channel_partner_access_level_id]['name']}
+                    own_roles |= {instance.channel_partner_access_level_id}
         return list(own_roles)
 
     def get_roles_names(self, instance: Organization) -> List[str]:

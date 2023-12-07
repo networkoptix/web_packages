@@ -830,8 +830,16 @@ class SystemGroupViewSet(NestedViewSetMixin,
 
     def get_queryset(self):
         return super().get_queryset().filter(
-            organization_id__in=Subquery(
-                OrganizationToUser.objects.filter(user=self.request.user).values('organization_id')
+            Q(
+                organization_id__in=Subquery(
+                    OrganizationToUser.objects.filter(user=self.request.user)
+                    .exclude(roles__isnull=True).exclude(roles=[]).values('organization_id')
+                )
+            ) | Q(
+                organization__channel_partner_id__in=Subquery(
+                    ChannelPartnerToUser.objects.filter(user=self.request.user)
+                    .exclude(roles__isnull=True).exclude(roles=[]).values('channel_partner_id')
+                )
             )
         )
 
@@ -930,7 +938,7 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
         queryset = (
             OrganizationToUser.objects.filter(organization_id=system_group.organization_id)
             .filter(Q(system_group__isnull=True) | Q(system_group_id__in=[*system_group.groups_path, system_group.id]))
-            .select_related('organization', 'system_group')
+            .select_related('organization', 'system_group').order_by('created_ts')
         )
         serializer = SystemGroupUserSerializer(queryset, many=True)
         return Response(serializer.data)

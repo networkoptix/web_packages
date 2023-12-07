@@ -1143,21 +1143,38 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return tree_roots
 
     def get_groups_structure_for_user(self, user: CloudUser):
-        def find_matching_nodes_in_tree(nodes):
-            trimmed_tree = []
-            for node in nodes:
-                if node['id'] in system_group_member_dict:
-                    trimmed_tree.append(node)
-                    node['roles'] = system_group_member_dict[node['id']]['roles']
-                else:
-                    trimmed_tree.extend(find_matching_nodes_in_tree(node['children']))
-            return trimmed_tree
+        # Todo. Where all duplicated roles will be deleted. Channel partner check
+        #  can be removed from here as soon as has been done in view early and absence
+        #  of organization roles means user has channel partner one.
+        groups_membership = [None]
+        if not (ChannelPartnerToUser.objects
+                .filter(channel_partner_id=self.channel_partner_id, user=user).exists()):
+            groups_membership = (
+                OrganizationToUser.objects
+                .filter(organization_id=self, user=user)
+                .values_list('system_group_id', flat=True)
+            )
+            groups_membership = list(groups_membership)
+            if len(groups_membership) == 0:
+                return []
+        user_groups = SystemGroup.objects.filter(organization=self)
+        if None not in groups_membership:
+            user_groups = SystemGroup.objects.filter(
+                Q(path__overlap=groups_membership) | Q(id__in=groups_membership),
+                organization=self
+            )
 
-        system_group_member_dict = self.system_group_member_dict(user)
-        groups_tree = self.groups_tree
-        if None not in system_group_member_dict:
-            groups_tree = find_matching_nodes_in_tree(groups_tree)
-        return groups_tree
+        sorter_groups = sorted(user_groups.values(), key=lambda x: len(x['path']))
+        trees = []
+        added = {}
+        for group in sorter_groups:
+            group['children'] = []
+            added[group['id']] = group
+            if parent := added.get(group['parent_id']):
+                parent['children'].append(group)
+            else:
+                trees.append(group)
+        return trees
 
     @property
     def user_list(self):
@@ -1242,12 +1259,24 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         return False
 
     def can_access(self, user: CloudUser):
-        relations = self.organization.system_group_member_dict(user)
-        # system_group = None means direct organization user
-        if None in relations:
+        # check organization or groups
+        if (
+            OrganizationToUser.objects
+            .filter(user=user)
+            .filter(
+                Q(organization_id=self.organization_id, system_group__isnull=True)
+                | Q(system_group_id__in=self.visible_path)
+            ).exists()
+        ):
+            return True
+        if (
+            ChannelPartnerToUser.objects
+            .filter(user=user, channel_partner_id=self.visible_path[-1])
+            .exists()
+        ):
             return True
 
-        return bool(self.groups_path.intersection(relations))
+        return False
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_systems(user)
