@@ -1,3 +1,5 @@
+import uuid
+
 import pytest
 import httpx
 from uuid import uuid4
@@ -347,12 +349,16 @@ class TestCdbSystemAPIBase:
     @pytest.mark.asyncio
     async def test_bind(self, mock_request):
         request_mock = mock_request(self.sync_client.client, method="POST")
-        resp = self.sync_client.bind(name="sys name", opaque="12345", customization=self.customization,
+        organization_id = str(uuid.uuid4())
+        id = str(uuid.uuid4())
+        resp = self.sync_client.bind(organization_id=organization_id, id=id, name="sys name", opaque="12345", customization=self.customization,
                                      auth=self.bearer_auth)
         assert resp.is_success
         args = request_mock.call_args
         assert args.args == ("POST", f'{self.api_base_path}/bind')
         assert args.kwargs["json"] == {
+            "organizationId": organization_id,
+            "id": id,
             "opaque": '12345',
             "name": "sys name",
             "customization": self.customization,
@@ -360,12 +366,14 @@ class TestCdbSystemAPIBase:
         assert args.kwargs["auth"].token == self.bearer_auth.token
 
         request_mock = mock_request(self.async_client.client, method="POST")
-        resp = await self.async_client.bind(name="sys name", opaque="12345", customization=self.customization,
+        resp = await self.async_client.bind(organization_id=organization_id, id=id, name="sys name", opaque="12345", customization=self.customization,
                                             auth=self.basic_auth)
         assert resp.is_success
         args = request_mock.call_args
         assert args.args == ("POST", f'{self.api_base_path}/bind')
         assert args.kwargs["json"] == {
+            "organizationId": organization_id,
+            "id": id,
             "opaque": '12345',
             "name": "sys name",
             "customization": self.customization,

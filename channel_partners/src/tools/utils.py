@@ -6,6 +6,7 @@ from logging import getLogger
 import httpx
 from django.conf import settings
 from django.http import HttpRequest
+import json
 from nx_cloud_api_client.apis import BatchRequestItems, CdbSystemAPIBase
 from nx_cloud_api_client.base_auth import BearerTokenAuth
 from nx_cloud_api_client.client import NxCloudAPISyncClient
@@ -21,13 +22,14 @@ def get_auth_header(request: HttpRequest) -> dict:
 
 def bind_system_to_cdb_organization(cloud_host, access_token, organization_id, system_id, name, customization, opaque):
     with NxCloudAPISyncClient(host=cloud_host) as cdb_client:
-        response = cdb_client.organizations.bind(organization_id=organization_id, id=system_id, name=name, customization=customization, opaque=opaque, auth=BearerTokenAuth(token=access_token))
+        response = cdb_client.system.bind(organization_id=organization_id, id=system_id, name=name, customization=customization, opaque=opaque, auth=BearerTokenAuth(token=access_token))
         try:
             system_response = response.json()
-        except httpx.DecodingError as exception:
+        except (httpx.DecodingError, json.JSONDecodeError) as exception:
             logger.error(f'Error binding system to CDB:\n'
                          f'Request Headers: {response.request.headers}\n'
                          f'Request Content: {response.request.content}\n'
+                         f'Response Status: {response.status_code}\n'
                          f'Response Headers: {response.headers}\n'
                          f'Response Content: {response.content}')
             raise exception

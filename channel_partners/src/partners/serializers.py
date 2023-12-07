@@ -780,14 +780,14 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
     def bind_system(self):
         validated_data = self.validated_data
         request = self.context.get('request')
-        system_id = validated_data.get('id')
+        system_id = validated_data.get('id', '')
         organization = validated_data.get('organization')
         name = validated_data.get('name')
         customization = validated_data.get('customization')
         opaque = validated_data.get('opaque')
 
         system_bind_response, status_code = bind_system_to_cdb_organization(
-            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=organization.id, system_id=system_id,
+            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=str(organization.id), system_id=str(system_id),
             name=name, customization=customization, opaque=opaque
         )
 
