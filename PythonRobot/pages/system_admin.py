@@ -110,40 +110,6 @@ class SystemAdmin:
     def system_offline_text(self):
         return PageText(self.driver, f"//div[contains(text(),'{self.rb.SYSTEM_IS_OFFLINE_TEXT}')]")
 
-    def ensure_system_online(self, system_name: str, timeout=10.0):
-        error_message = f"System {system_name} is offline and cannot be merged with the current one"
-        started_at = time.monotonic()
-        clicked_next_button = False
-        while True:
-            try:
-                PageText(
-                    self.driver,
-                    f'//nx-modal-merge-content//p[text()="{error_message}"]',
-                    ).wait_until_visible()
-            except ElementNotVisible:
-                break
-            if time.monotonic() - started_at > timeout:
-                raise RuntimeError(f"System {system_name} is not ready for merge in {timeout} seconds")
-            self.merge_next_button().click()
-            clicked_next_button = True
-            time.sleep(0.5)
-        if not clicked_next_button:
-            self.merge_next_button().click()
-
-    def merge_next_button(self):
-        translated_xpath = self.rb.replace_nested_variables("//button[contains(text(),'{NEXT_TEXT}')]")
-        return Button(self.driver, translated_xpath)
-
-    def merge_systems_button(self):
-        translated_xpath = self.rb.replace_nested_variables("//button[text()='{MERGE_SYSTEMS_TEXT}']")
-        return Button(self.driver, translated_xpath)
-
-    def primary_first_system(self):
-        return Checkbox(self.driver, "//label[@for='firstSystem']")
-
-    def primary_second_system(self):
-        return Checkbox(self.driver, "//label[@for='secondSystem']")
-
     def system_is_being_merged(self):
         translated_xpath = self.rb.replace_nested_variables("//div[contains(text(), '{SYSTEM_IS_BEING_MERGED_TEXT}')]")
         return PageText(self.driver, translated_xpath)
