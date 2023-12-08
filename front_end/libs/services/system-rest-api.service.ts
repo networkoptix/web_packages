@@ -867,7 +867,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const {
             isAudioEnabled: audioEnabled,
             isControlEnabled: controlEnabled,
-            isDualStreamingEnabled,
+            isDualStreamingDisabled,
             ...backupOpts
         } = options;
         const { deviceType = DeviceType.Camera, ...parameters } = params;
@@ -879,7 +879,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             audioEnabled,
             controlEnabled,
             deviceType,
-            disableDualStreaming: !isDualStreamingEnabled,
+            disableDualStreaming: isDualStreamingDisabled,
             ...backupOpts,
             parameters,
             motionType,
@@ -925,7 +925,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const viewCamKeyMap = {
             ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
             options: {
-                isDualStreamingEnabled: true,
+                isDualStreamingDisabled: true,
                 preferredServerId: true,
             },
             schedule: {
@@ -941,7 +941,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             map(cameras =>
                 cameras.map(
                     ({
-                        options: { isDualStreamingEnabled, preferredServerId },
+                        options: { isDualStreamingDisabled, preferredServerId },
                         schedule: { isEnabled: scheduleEnabled },
                         serverId,
                         parameters = {},
@@ -951,7 +951,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                             ...camera,
                             scheduleEnabled,
                             parentId: serverId,
-                            disableDualStreaming: !isDualStreamingEnabled,
+                            disableDualStreaming: isDualStreamingDisabled,
                             preferredServerId:
                                 preferredServerId !== ZERO_ID ? preferredServerId : serverId,
                             rotation: parameters.rotation || 0,
