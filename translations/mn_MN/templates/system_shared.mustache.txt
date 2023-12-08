@@ -1,11 +1,12 @@
-Hello, {{message.userFullName}}
+Сайн байна уу, {{message.userFullName}}
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) has shared access to video management system "{{message.system_name}}" with you.
+{{message.sharer_name}} ({{message.sharer_email}}) танд "{{message.system_name}}" видео удирдлагын системд хандах эрхийг хуваалцаж байна.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You have been granted access to video management system "{{message.system_name}}".
+Танд "{{message.system_name}}" видео удирдлагын системд хандах эрх олгосон байна.
 {{/message.sharer_name}}
 
-View in %CLOUD_NAME% Portal: {{config.portal_url}}/systems/{{message.system_id}}
+%CLOUD_NAME%-тай танилцах:
+{{config.portal_url}}/систем/{{message.system_id}}

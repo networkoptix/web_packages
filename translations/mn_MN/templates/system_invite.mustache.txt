@@ -1,13 +1,13 @@
-Welcome to %CLOUD_NAME%
+%CLOUD_NAME%-д тавтай морилно уу
 
 {{#message.sharer_name}}
-{{message.sharer_name}} ({{message.sharer_email}}) is inviting you to join %CLOUD_NAME% and shared the system {{message.system_name}} with you.
+{{message.sharer_name}} ({{message.sharer_email}}) таныг %CLOUD_NAME%-д урьж байгаа ба {{message.system_name}} системийг тантай хуваалцаж байна.
 {{/message.sharer_name}}
 
 {{^message.sharer_name}}
-You are invited you to join %CLOUD_NAME%.
-You have been granted access to {{message.system_name}}.
+Таныг %CLOUD_NAME%-д урьж байна.
+Танд {{message.system_name}}-д хандах эрх олголоо.
 {{/message.sharer_name}}
 
-Register and view the system: {{config.portal_url}}/authorize/register/{{message.code}}
+Үргэлжлүүлэх: {{config.portal_url}}/зөвшөөрөх/бүртгүүлэх/{{message.code}}
 
