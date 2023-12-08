@@ -33,7 +33,8 @@ from cloud import settings
 from cloud.helpers.exceptions import api_success, handle_exceptions, require_params, \
     APIRequestException, APIForbiddenException, APINotFoundException, ErrorCodes, APIInternalException
 from nx_drf.drf_async import async_api_view as api_view, async_api_view
-from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras
+from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras, \
+    CustomizationNameSerializer
 from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
     cloud_portal_customization_cache_async, global_version_key
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
@@ -500,21 +501,20 @@ async def get_settings(request):
     global_cache = caches['customization']
     user = request.query_params.get('cached')
     user_key = getattr(request.user, 'email', 'anonymous_user')
-    current_user = await cache.aget(user_key)
+    current_user = str(uuid4())
+    if not (await cache.aadd(user_key, current_user)):
+        current_user = await cache.aget(user_key)
     user_changed = not user or not current_user or user != current_user
     version = request.query_params.get('version')
     current_version = await global_cache.aget(global_version_key(customization))
+
     version_changed = version != str(current_version)
     features = request.query_params.get('features')
     current_features = str(uuid4())
-    added = await global_cache.aadd('features_cache_key', current_features)
-    if not added:
+    if not (await global_cache.aadd('features_cache_key', current_features)):
         current_features = await global_cache.aget('features_cache_key')
     features_changed = features != current_features
     if user_changed or version_changed or features_changed:
-        if not current_user:
-            current_user = str(uuid4())
-            await cache.aset(user_key, current_user)
         return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}&features={current_features}')
 
     data = await get_settings_from_cache(customization=customization)
@@ -620,6 +620,18 @@ async def get_customizations(request):
         raise APIForbiddenException(CUSTOMIZATIONS_STAFF_ONLY)
     customizations = await sync_to_async(Customization.objects.filter(enabled=True).values_list)('name', flat=True)
     return Response(customizations)
+
+
+@swagger_auto_schema(method="GET",
+                     operation_description="Returns customization name.",
+                     responses={
+                         '200': CustomizationNameSerializer(),
+                     })
+@api_view(['GET'])
+@handle_exceptions
+async def get_customization(request):
+    customization_name = getattr(request, 'CUSTOMIZATION', None)
+    return Response(CustomizationNameSerializer(instance={'name': customization_name}).data)
 
 
 PY_LICENSES = 'requirements-license.json'
