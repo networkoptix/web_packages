@@ -15,7 +15,7 @@ import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { cloneDeep } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, fromEvent, lastValueFrom, Observable, of } from 'rxjs';
 import { catchError, debounceTime, map } from 'rxjs/operators';
 
 import { AuthService } from '@authorization/src/app/auth.service';
@@ -63,7 +63,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
     companyName: string;
 
     // shared
-    currentState: AuthorizeState = AuthorizeState.email;
+    currentState: AuthorizeState;
     clientType: ClientType;
     viewType: 'desktop' | 'mobile' | 'web';
     windowLargeEnough = false;
@@ -190,7 +190,7 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                 verifiedCheck = this.verifyRedirectUrlHelper(findId.groups.systemId);
             }
         }
-        return verifiedCheck.toPromise();
+        return firstValueFrom(verifiedCheck);
     }
 
     // method only used by child components to transition between child components
@@ -318,18 +318,25 @@ export class NxAuthorizeComponent implements OnInit, OnDestroy {
                         ? AuthorizeState.password
                         : AuthorizeState.notSecure;
             } else {
-                if (email) {
-                    this.emailLocked = !this.clientType.includes('login');
-                    this.loginEmail = email;
-                    this.checkEmailProcess.run();
-                }
+                let currentState: AuthorizeState;
                 if (isWeb && this.clientType === ClientType.connect) {
-                    this.currentState = AuthorizeState.notSecure;
+                    currentState = AuthorizeState.notSecure;
                 } else {
-                    this.currentState =
+                    currentState =
                         !isWeb || (await this.checkRedirectUrl())
                             ? AuthorizeState.email
                             : AuthorizeState.notSecure;
+                }
+
+                if (email) {
+                    this.emailLocked = !this.clientType.includes('login');
+                    this.loginEmail = email;
+                    this.checkEmailProcess.run(() => {
+                        this.currentState = currentState;
+                        return null;
+                    });
+                } else {
+                    this.currentState = currentState;
                 }
             }
         });
