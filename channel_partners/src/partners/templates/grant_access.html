@@ -1,0 +1,84 @@
+<style>
+    .form-container {
+        width: 50%;
+        margin: auto;
+        padding: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .form-input {
+        width: 100%;
+        height: 32px;
+        margin-bottom: 8px;
+        padding: 0 8px;
+        font-size: 16px;
+        border: 1px solid #ddd;
+        border-radius: 4px;
+    }
+
+    .form-button {
+        width: 100%;
+        height: 32px;
+        background-color: #007BFF;
+        color: white;
+        font-size: 16px;
+        border: none;
+        border-radius: 4px;
+        cursor: pointer;
+    }
+
+    .form-button:hover {
+        background-color: #0056b3;
+    }
+
+    .title {
+        text-align: center;
+        font-size: 24px;
+        margin-bottom: 16px;
+    }
+</style>
+
+<div class="form-container">
+    <h2 class="title">Form to Grant Access</h2>
+    <form method="post">
+        {% csrf_token %}
+        <input type="email"
+               name="email"
+               required pattern=".+@networkoptix.com"
+               class="form-input"
+               placeholder="Enter your email address">
+        <button type="submit" class="form-button">Submit</button>
+    </form>
+</div>
+
+{% if nx_admin and cp_admin and org_admin and nx_cp and cp and org %}
+<table style="width: 100%; border-collapse: collapse;">
+    <thead>
+    <tr style="background-color: #f2f2f2; text-align: left;">
+        <th style="padding: 8px;">User Email</th>
+        <th style="padding: 8px;">Channel Partner Name (Added to)</th>
+        <th style="padding: 8px;">Channel Partner ID</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+        <td style="padding: 8px;">{{nx_admin.email}}</td>
+        <td style="padding: 8px;">{{nx_cp.name}}</td>
+        <td style="padding: 8px;">{{nx_cp.id}}</td>
+    </tr>
+
+    <tr style="background-color: #f2f2f2; border-bottom: 1px solid #ddd;">
+        <td style="padding: 8px;">{{cp_admin.email}}</td>
+        <td style="padding: 8px;">{{cp.name}}</td>
+        <td style="padding: 8px;">{{cp.id}}</td>
+    </tr>
+
+    <tr style="background-color: #e6f2ff; border-bottom: 1px solid #ddd;">
+        <td style="padding: 8px;">{{org_admin.email}}</td>
+        <td style="padding: 8px;">{{org.name}}</td>
+        <td style="padding: 8px;">{{org.id}}</td>
+    </tr>
+    </tbody>
+</table>
+{% endif %}
