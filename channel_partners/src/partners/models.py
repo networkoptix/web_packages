@@ -1,5 +1,6 @@
 import datetime
 from datetime import timedelta
+from math import ceil
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
@@ -11,7 +12,7 @@ import string
 import time
 import llutil
 import queue
-from typing import Dict, List, Optional
+from typing import Dict, List, TypedDict, Optional
 import uuid
 
 from django.apps import apps
@@ -199,6 +200,11 @@ class CloudHost(models.Model):
         return f'https://{self.hostname}'
 
 
+class ServiceUsageDict(TypedDict):
+    used: float
+    quantity: int
+
+
 class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     system_id = models.UUIDField()
     usage_issue_detected = models.BooleanField(default=False)
@@ -336,13 +342,32 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             self.save()
         return self.current_services
 
-    @property
-    def services(self):
+    def get_current_services(self):
         current_services = self.current_services or self.calculate_current_services()
         if current_services:
-            return current_services.get('services', [])
+            return current_services.get('services', {})
         else:
             return {}
+
+    @property
+    def services(self) -> Dict[uuid.UUID, ServiceUsageDict]:
+        last_usage = self.service_usages.all().order_by('to_ts').last()
+        if not last_usage:
+            return {service: {'used': 0, **quantity} for service, quantity in self.get_current_services().items()}
+        service_usages = (self.service_usages.filter(from_ts=last_usage.from_ts, to_ts=last_usage.to_ts)
+                          .values('service').annotate(usage=Sum('usage')))
+
+        services = self.get_current_services()
+        usage = {
+            service_usage['service']: ServiceUsageDict(
+                used=ceil((service_usage['usage'] or 0) / ServiceUsage.CHECK_PERIOD),
+                quantity=services.get(str(service_usage['service']), {}).get('quantity', 0)
+            )
+            for service_usage in service_usages
+        }
+
+        return usage
+
 
     # def add_system_users_data(self):
     #     roles = OrganizationRole.objects \
@@ -1482,7 +1507,7 @@ class ServiceUsage(models.Model):
                 to_ts=last_usage.to_ts, from_ts=last_usage.from_ts
             ).values('service').annotate(usage=Sum('usage'))
         }
-        current_services = cloud_system.services
+        current_services = cloud_system.get_current_services()
 
         # Check if any service usage is greater than the allowed usage
         cloud_system.usage_issue_detected = False
@@ -1495,6 +1520,7 @@ class ServiceUsage(models.Model):
         else:
             cloud_system.set_security_statuses(statuses={ChannelPartnerService.LOCAL_RECORDING: 'ok'})
         cloud_system.save()
+        return service_usages
 
 
 class ServiceToSubChannelProperties(models.Model):

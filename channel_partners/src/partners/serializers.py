@@ -633,27 +633,40 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         cloud_system.save()
 
 
+class ServiceQuantitySerializer(serializers.Serializer):
+    quantity = serializers.IntegerField(required=True)
+    used = serializers.IntegerField(required=False, read_only=True)
+
+
 @extend_schema_serializer(
     examples=[
          OpenApiExample(
             'Services Example',
             value={
                 'services': {'3fa85f64-5717-4562-b3fc-2c963f66afa6': {
-                    'quantity': 10
+                    'quantity': 10,
+                    'used': 5
                 }},
             },
+            response_only=True
+        ),
+        OpenApiExample(
+            'Services Example',
+            value={
+                'services': {'3fa85f64-5717-4562-b3fc-2c963f66afa6': {
+                    'quantity': 10,
+                }},
+            },
+            request_only=True
         ),
     ]
 )
 class SystemServiceQuantitySerializer(serializers.ModelSerializer):
-    services = serializers.DictField()
+    services = serializers.DictField(child=ServiceQuantitySerializer())
 
     class Meta:
         model = CloudSystemId
         fields = ['services']
-
-    class ServiceQuantitySerializer(serializers.Serializer):
-        quantity = serializers.IntegerField(required=True)
 
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
@@ -683,7 +696,7 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
             err = ''
             if not ChannelPartnerService.objects.filter(id=service_id).exists():
                 err += f'Service {service_id} does not exist'
-            ser = self.ServiceQuantitySerializer(data=service_qty)
+            ser = ServiceQuantitySerializer(data=service_qty)
             if not ser.is_valid():
                 err += ', Quantity is invalid:' + ' '.join(ser.errors['quantity'])
                 err += '.'

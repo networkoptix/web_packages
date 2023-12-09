@@ -991,6 +991,10 @@ class CloudSystemViewSet(NestedViewSetMixin,
     def get_service_quantity_lock(obj):
         return f'views-locks-cloud_system-service_quantity-{obj.id}'
 
+    @staticmethod
+    def get_service_quantity_cache_key(obj):
+        return f'views-cloud_system-service_quantity-{obj.id}'
+
     def get_queryset(self):
         if self.detail:
             return self.queryset.filter(cloud_host=self.request.cloud_host)
@@ -1062,8 +1066,11 @@ class CloudSystemViewSet(NestedViewSetMixin,
     def service_quantity(self, request, id):
         system: CloudSystemId = self.get_object()
         if request.method == 'GET':
-            serializer = SystemServiceQuantitySerializer(system)
-            return Response(serializer.data)
+            if not (data := caches['default'].get(self.get_service_quantity_cache_key(system))):
+                serializer = SystemServiceQuantitySerializer(system)
+                data = serializer.data
+                caches['default'].set(self.get_service_quantity_cache_key(system), data, timeout=86400)
+            return Response(data)
         elif request.method == 'PATCH':
             return self.update_service_quantity(request, system=system)
 
@@ -1078,6 +1085,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
                                                      f"quantity was being modified during request."},
                                     status=429, headers={'Retry-After': 2})
             return self.update_service_quantity(request, system=system)
+
         serializer = SystemServiceQuantitySerializer(system, data=request.data)
         if serializer.is_valid(raise_exception=False):
             serializer.save(user=request.user)
@@ -1085,7 +1093,9 @@ class CloudSystemViewSet(NestedViewSetMixin,
         else:
             caches['default'].delete(self.get_service_quantity_lock(system))
             serializer.is_valid(raise_exception=True)
-        return Response(serializer.data)
+        data = serializer.data
+        caches['default'].set(self.get_service_quantity_cache_key(system), data, timeout=86400)
+        return Response(data)
 
     @extend_schema(responses=ServiceSerializer, extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'})
     @action(methods=['get'], detail=True)
@@ -1103,6 +1113,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
     def system_usage_report(self, request, id):
         serializer = SystemUsageReportSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
+        caches['default'].delete(self.get_service_quantity_cache_key(request.cloud_system))
         serializer.save_security_metrics(cloud_system=request.cloud_system)
         return Response(serializer.data)
 

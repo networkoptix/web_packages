@@ -59,8 +59,12 @@ def run():
                 for k in range(25):
                     sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}', organization=organization, cloud_host=cloud_test_host)
                     CloudSystemExternalId.objects.create(custom_id=uuid.uuid4(), cloud_system=sys, created_by=channel_partner)
+                    from_ts = timezone.now() - timedelta(hours=4)
+                    to_ts = timezone.now() - timedelta(hours=3)
                     for service in services:
-                        ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys, quantity=random.randint(1, 10))
+                        ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys,
+                                                    quantity=random.randint(1, 10), effective_ts=from_ts).save()
+                        ServiceUsage.objects.create(service=service, cloud_system=sys, usage=1, from_ts=from_ts, to_ts=to_ts)
                     systems.append(sys)
                 root_group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}')
                 for sys in systems[:10]:
@@ -103,7 +107,7 @@ def run():
                                                              created_by=channel_partner)
                         for service in services:
                             ChannelPartnerServiceRecord(service=service, organization=organization, cloud_system=sys,
-                                                        quantity=random.randint(1, 10))
+                                                        quantity=random.randint(1, 10), effective_ts=from_ts).save()
                         systems.append(sys)
                     root_group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}')
                     for sys in systems[:10]:
