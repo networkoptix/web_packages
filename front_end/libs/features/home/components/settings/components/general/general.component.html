@@ -9,7 +9,7 @@
             >
             <input
                 id="name"
-                [placeholder]="item.name"
+                [placeholder]="item?.name"
                 [(ngModel)]="name"
                 (change)="updateName.emit(name)"
             />
@@ -29,19 +29,6 @@
                 [selected]="currAccess"
                 (onSelected)="updateAccess.emit($event.value)"
             ></nx-select>
-        </div>
-        <div class="input">
-            <label
-                for="id"
-                translate
-                >External Id</label
-            >
-            <input
-                id="id"
-                [placeholder]="item.id"
-                [(ngModel)]="extId"
-                (change)="updateExtId.emit(extId)"
-            />
         </div>
     </div>
 </div>

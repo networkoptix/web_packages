@@ -1,31 +1,42 @@
-<ng-template #channelPartnersView>
+<ng-template
+    #channelPartnersView
+    let-state
+>
     <nx-settings-general
         [view]="settingsViews.CHANNEL_PARTNERS"
-        [item]="currentItem"
+        [item]="state.item"
         (updateName)="handleUpdate(updatedName, $event)"
     ></nx-settings-general>
 </ng-template>
 
-<ng-template #extendedView>
+<ng-template
+    #extendedView
+    let-state
+>
     <nx-settings-general
-        [view]="currentView"
-        [item]="currentItem"
+        [view]="state.view"
+        [item]="state.item"
         (updateName)="handleUpdate(updatedName, $event)"
-        (updateExtId)="handleUpdate(updatedExtId, $event)"
         (updateAccess)="handleUpdate(updatedPartnerAccess, $event)"
     ></nx-settings-general>
     <nx-settings-state
         (updateState)="handleUpdate(updatedState, $event)"
         [currState]="State.Active"
-        [canChange]="canUpdateStatus"
+        [canChange]="state.canUpdateStatus"
     ></nx-settings-state>
 </ng-template>
 
-<div class="settings">
+<div
+    class="settings"
+    *ngIf="currentState$$() as state"
+>
     <ng-container
-        *ngIf="currentView === settingsViews.CHANNEL_PARTNERS; else extendedView"
-        [ngTemplateOutlet]="channelPartnersView"
-    ></ng-container>
+        *ngTemplateOutlet="
+            state.view === settingsViews.CHANNEL_PARTNERS ? channelPartnersView : extendedView;
+            context: { $implicit: state }
+        "
+    >
+    </ng-container>
     <div
         class="footer"
         *ngIf="hasUpdate"

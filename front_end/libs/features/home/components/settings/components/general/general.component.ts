@@ -34,10 +34,9 @@ export class NxSettingsGeneralComponent implements OnInit {
     settingsViews = settingsViews;
     @Input() canAccess: string;
     @Input() view: string;
-    @Input() item: Organization | ChannelPartner;
+    @Input() item: Organization | ChannelPartner | undefined;
     @Output() updateName = new EventEmitter<string>();
     @Output() updateAccess = new EventEmitter<boolean>();
-    @Output() updateExtId = new EventEmitter<string>();
     extId: string;
     name: string;
     currAccess: DropdownItem<boolean>;

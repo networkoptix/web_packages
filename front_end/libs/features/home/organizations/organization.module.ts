@@ -8,8 +8,7 @@ import { NxOrganizationSettingsComponent } from '../components/settings/settings
 import { NxOrganizationUsersComponent } from '../components/users/org-users/org-users.component';
 import { CPResovler } from '../resolvers/CP-resolver';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
-import { RoleResolver } from '../resolvers/role-resolver';
-import { TabGuard } from '../resolvers/tab-guard';
+import { orgTabGuard } from '../resolvers/org-tab-guard';
 import { TabResolver } from '../resolvers/tab-resolver';
 
 import { NxOrganizationCardContainerComponent } from './cards-container/org-cards-container.component';
@@ -22,7 +21,6 @@ const orgRoutes: Routes = [
         resolve: {
             currentTabRoute: TabResolver,
             parentData: WithParentDataResolver,
-            isAdmin: RoleResolver,
             inChannelPartner: CPResovler,
         },
         runGuardsAndResolvers: 'always',
@@ -34,17 +32,17 @@ const orgRoutes: Routes = [
             },
             {
                 path: 'reports',
-                canActivate: [() => nxConfig.featureFlags.channelPartnersReports, TabGuard],
+                canActivate: [() => nxConfig.featureFlags.channelPartnersReports, orgTabGuard],
                 component: NxOrganizationReportsComponent,
             },
             {
                 path: 'users',
-                canActivate: [TabGuard],
+                canActivate: [orgTabGuard],
                 component: NxOrganizationUsersComponent,
             },
             {
                 path: 'settings',
-                canActivate: [TabGuard],
+                canActivate: [orgTabGuard],
                 data: {
                     orgSettings: true,
                 },
@@ -58,6 +56,7 @@ const orgRoutes: Routes = [
             {
                 path: 'group/:groupId/users',
                 component: NxOrganizationUsersComponent,
+                canActivate: [orgTabGuard],
                 data: { inGroup: true },
             },
             {

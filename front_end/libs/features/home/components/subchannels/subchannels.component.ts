@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, DestroyRef, signal, inject } from '@angular/core';
+import { Component, DestroyRef, signal, inject, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
@@ -8,7 +8,7 @@ import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Subject, debounceTime, map } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged, filter, map, switchMap } from 'rxjs';
 
 import { NxButtonComponent } from '@components/button/button.component';
 import { ButtonType } from '@components/button/button.component.types';
@@ -17,10 +17,14 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
+    selectCurrentPartner,
     selectCurrentPartnerId,
     selectCurrentSubchannelPartners,
 } from '@pages/home/store/channel-partners/channel-partners.selectors';
-import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartner,
+    ChannelPartnerPermissions,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig } from '@variables/static-variables';
@@ -53,8 +57,14 @@ import { NxCardComponent } from '../card/card.component';
 export class NxSubchannelsComponent {
     buttonType = ButtonType.brand;
     icons = icons;
-    isAdmin = true;
-    currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
+    canCreatePartners$$ = computed(() => {
+        const currPartner = this.store.selectSignal(selectCurrentPartner);
+        return currPartner()?.ownPermissions.includes(
+            ChannelPartnerPermissions.ADD_REMOVE_SUB_CHANNEL_PARTNERS,
+        );
+    });
+    currentPartnerId$ = this.store.select<string>(selectCurrentPartnerId);
+    currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
     subchannels$$ = this.store.selectSignal(selectCurrentSubchannelPartners);
     filteredSubchannels$$ = signal<ChannelPartner[]>([]);
     inSubchannels$ = this.route.parent.data.pipe(map(data => data.parentData.inSubchannel));
@@ -71,13 +81,21 @@ export class NxSubchannelsComponent {
         private router: Router,
         private route: ActivatedRoute,
     ) {
-        this.CPService.getSubChannelPartners(this.currentPartnerId()).subscribe(partners => {
-            this.store.dispatch(
-                CPActions.setCurrentSubchannelPartners({ currentSubchannels: partners }),
-            );
-            this.subchannelsStoresLoaded = true;
-            this.displayPartners();
-        });
+        this.currentPartnerId$
+            .pipe(
+                distinctUntilChanged(),
+                filter(id => id !== undefined),
+                switchMap(id => {
+                    return this.CPService.getSubChannelPartners(id);
+                }),
+            )
+            .subscribe(partners => {
+                this.store.dispatch(
+                    CPActions.setCurrentSubchannelPartners({ currentSubchannels: partners }),
+                );
+                this.subchannelsStoresLoaded = true;
+                this.displayPartners();
+            });
 
         this.searchChanged
             .pipe(debounceTime(searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
@@ -90,7 +108,7 @@ export class NxSubchannelsComponent {
     }
 
     newPartnerDialog(): void {
-        this.dialogsService.createChannelPartner(this.currentPartnerId()).then(newSubchannel => {
+        this.dialogsService.createChannelPartner(this.currentPartnerId$$()).then(newSubchannel => {
             if (!newSubchannel) {
                 return;
             }

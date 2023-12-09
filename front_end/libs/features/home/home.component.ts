@@ -37,11 +37,10 @@ export class NxHomeComponent implements OnInit {
         private systemsService: NxSystemsService,
         private headerService: NxHeaderService,
         private CPService: NxChannelPartnersService,
-    ) {
-        this.initChannelPartners();
-    }
+    ) {}
 
     ngOnInit(): void {
+        this.initChannelPartners();
         const redirect = !this.route.snapshot.children[0].routeConfig.path;
         const systems$ = this.systemsService.systemsSubject.pipe(
             distinctUntilChanged((prev, curr) => isEqual(prev, curr)),

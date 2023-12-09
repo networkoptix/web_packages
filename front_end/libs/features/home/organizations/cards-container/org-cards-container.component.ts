@@ -1,7 +1,7 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute, effect } from '@angular/core';
+import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -14,10 +14,14 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import {
+    selectCurrentOrgId,
+    selectCurrentOrganization,
+} from '@pages/home/store/channel-partners/channel-partners.selectors';
 import {
     CloudSystem,
     GroupItem,
+    OrgPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@variables/static-variables';
@@ -58,6 +62,10 @@ export class NxOrganizationCardContainerComponent {
     LANG = staticLang;
     icons = icons;
     @Input({ transform: booleanAttribute }) inRoot: boolean;
+    canCreateGroups$$ = computed(() => {
+        const currOrg = this.store.selectSignal(selectCurrentOrganization);
+        return currOrg()?.ownPermissions.includes(OrgPermissions.MANAGE_SYSTEMS);
+    });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentGroup$$ = this.store.selectSignal<GroupItem>(selectCurrentGroup);
@@ -65,7 +73,6 @@ export class NxOrganizationCardContainerComponent {
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     currentSystems$: Observable<SystemInfo[]>;
 
-    isAdmin = true;
     isLoading = true;
     constructor(
         private store: Store,
@@ -126,8 +133,8 @@ export class NxOrganizationCardContainerComponent {
     }
 
     handleGroupClick(group: GroupItem): void {
-        const route = this.inRoot ? ['group', group.id] : [group.id];
-        this.router.navigate(route, { relativeTo: this.inRoot ? this.route.parent : this.route });
+        const route = ['group', group.id];
+        this.router.navigate(route, { relativeTo: this.route.parent });
     }
 
     handleSystemClick(system: CloudSystem | SystemInfo): void {

@@ -41,7 +41,6 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
     state: DropdownItem<State>;
     channelPartners: DropdownItem<string>[] = [];
     selectedPartner: DropdownItem<string>;
-    channelPartnerCanAdminister: boolean;
     name: string;
 
     editOrgProcess: Process;
@@ -49,7 +48,7 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
     constructor(
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA)
-        { state, channelPartner, channelPartnerCanAdminister, name, id }: DT['data'],
+        { state, channelPartner, name, id }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
@@ -68,7 +67,6 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
             }));
             this.selectedPartner = this.channelPartners.find(p => p.value === channelPartner);
         });
-        this.channelPartnerCanAdminister = channelPartnerCanAdminister;
         this.name = name;
 
         this.editOrgProcess = processService.createProcess(
@@ -78,7 +76,6 @@ export class NxEditOrganizationModalContent extends ModalBase<DT['return']> impl
                     cpService.updateOrganization(id, {
                         state: this.state.value,
                         channelPartner: this.selectedPartner.value,
-                        channelPartnerCanAdminister: this.channelPartnerCanAdminister,
                         name: this.name,
                     }),
                 );
