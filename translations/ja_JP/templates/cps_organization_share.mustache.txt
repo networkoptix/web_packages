@@ -1,0 +1,5 @@
+Hello, {{message.userFullName}}
+
+{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
+
+View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}

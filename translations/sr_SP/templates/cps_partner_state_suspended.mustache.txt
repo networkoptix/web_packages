@@ -1,0 +1,5 @@
+Hello, {{message.userFullName}}
+
+The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
+
+Please contact your partner for more details.
