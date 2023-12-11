@@ -42,7 +42,7 @@ export class CameraManager {
     private serverManager: ServerManager;
     private serverTimes: ServerTime[];
 
-    cameras: NxSystemCamera[];
+    cameras: NxSystemCamera[] = [];
 
     constructor(private system: PartialSystem) {
         this.serverManager = this.system.serverManager;
