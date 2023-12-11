@@ -184,7 +184,8 @@
             "saving": "Saving",
             "diverged": "Diverged",
             "overwrite": "Overwrite",
-            "save": "Save"
+            "save": "Save",
+            "error": "Repeat"
         },
         "additionalErrorMessages": {
             "UNAVAILABLE": "can't connect to the camera",

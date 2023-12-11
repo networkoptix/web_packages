@@ -166,7 +166,8 @@
         [ngClass]="{
             diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(
                 unsavedLayoutState$$()
-            )
+            ),
+            error: unsavedLayoutState$$() === unsavedStates.error
         }"
     >
         <ng-container [ngSwitch]="unsavedLayoutState$$()">
@@ -179,6 +180,8 @@
                         unsavedLayoutState$$()
                     )
                         ? 'warning.svg'
+                        : unsavedLayoutState$$() === unsavedStates.error
+                        ? 'error.svg'
                         : 'info.svg')
                 "
             ></svg-icon>
@@ -215,6 +218,13 @@
                 There is a another layout with the same name. Overwrite existing layout?
             </span>
             <span
+                *ngSwitchCase="unsavedStates.error"
+                class="ribbon-message"
+                translate
+            >
+                Failed to save layout. Try again.
+            </span>
+            <span
                 *ngSwitchDefault
                 class="ribbon-message"
                 translate
@@ -232,11 +242,16 @@
                         'width.px': '20',
                         'height.px': '20'
                     }"
-                    [src]="icons.dirLayouts + 'save.svg'"
+                    [src]="
+                        icons.dirLayouts +
+                        (unsavedLayoutState$$() === unsavedStates.error ? 'reload.svg' : 'save.svg')
+                    "
                 ></svg-icon>
                 <span>{{
                     (unsavedLayoutState$$() === unsavedStates.overwrite
                         ? unsavedStates.overwrite
+                        : unsavedLayoutState$$() === unsavedStates.error
+                        ? unsavedStates.error
                         : unsavedStates.save
                     ) | translate
                 }}</span>
@@ -257,6 +272,14 @@
                     [src]="icons.dirLayouts + 'reload.svg'"
                 ></svg-icon>
                 <span translate>Reload</span>
+            </button>
+            <button
+                *ngSwitchCase="unsavedStates.error"
+                class="ribbon-button"
+                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                translate
+            >
+                Cancel
             </button>
             <ng-container *ngSwitchDefault>
                 <button

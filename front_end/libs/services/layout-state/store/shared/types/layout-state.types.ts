@@ -15,6 +15,7 @@ export const enum UnsavedState {
     SAVED = 0,
     PENDING = 1,
     UNSAVED = 2,
+    ERROR = 3,
 }
 
 interface BaseLayoutState<LayoutTypeName, LayoutType, Unsaved> {
@@ -38,17 +39,13 @@ export interface SavedCrossSystemLayoutState
     extends BaseLayoutState<LayoutTypes.CROSS_SYSTEM, CrossSystemLayout, UnsavedState.SAVED> {}
 
 export interface UnsavedLocalLayoutState
-    extends BaseLayoutState<
-        LayoutTypes.LOCAL,
-        Layout,
-        UnsavedState.UNSAVED | UnsavedState.PENDING
-    > {}
+    extends BaseLayoutState<LayoutTypes.LOCAL, Layout, Exclude<UnsavedState, UnsavedState.SAVED>> {}
 
 export interface UnsavedCrossSystemLayoutState
     extends BaseLayoutState<
         LayoutTypes.CROSS_SYSTEM,
         CrossSystemLayout,
-        UnsavedState.UNSAVED | UnsavedState.PENDING
+        Exclude<UnsavedState, UnsavedState.SAVED>
     > {}
 
 export type LayoutState = LocalLayoutState | CrossSystemLayoutState;

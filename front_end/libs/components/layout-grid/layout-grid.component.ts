@@ -380,7 +380,7 @@ export class NxLayoutGridComponent {
     unsavedStates = staticLang.layouts.unsavedStates;
 
     mouseMoving$ = fromEvent(this.window.document, 'mousemove').pipe(
-        switchMap(() => of(false).pipe(delay(5000), startWith(true))),
+        switchMap(() => of(false).pipe(delay(10000), startWith(true))),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: false }),
     );

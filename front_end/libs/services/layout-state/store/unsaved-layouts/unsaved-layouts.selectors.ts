@@ -36,7 +36,9 @@ export const selectUnsavedLayoutsInfo = createSelector(
                 }
 
                 unsavedLayouts.states[layoutId] =
-                    layout.unsaved === UnsavedState.PENDING
+                    layout.unsaved === UnsavedState.ERROR
+                        ? unsavedStates.error
+                        : layout.unsaved === UnsavedState.PENDING
                         ? unsavedStates.saving
                         : existingWithSameName
                         ? unsavedStates.overwrite

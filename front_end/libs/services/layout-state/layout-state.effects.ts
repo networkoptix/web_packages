@@ -28,7 +28,11 @@ import { ActiveLayoutActions } from './store/active-layout';
 import { LocalLayoutsActions } from './store/local-layouts';
 import { SharedLayoutsActions } from './store/shared';
 import { selectLayouts } from './store/shared/selectors';
-import { LayoutTypes, UnsavedLocalLayoutState } from './store/shared/types/layout-state.types';
+import {
+    LayoutTypes,
+    UnsavedLocalLayoutState,
+    UnsavedState,
+} from './store/shared/types/layout-state.types';
 import { UnsavedLayoutsActions } from './store/unsaved-layouts';
 import {
     selectUnsavedLayoutsOverwrites,
@@ -113,19 +117,30 @@ export class LayoutStateEffects {
                             this.store.select(selectUnsavedLayoutsOverwrites),
                         );
 
+                        const errorLayouts: UnsavedLocalLayoutState[] = [];
+
                         const savingLocalLayouts = layouts
                             .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
-                            .map(({ layout: { id, ...layout } }: UnsavedLocalLayoutState) =>
-                                firstValueFrom(
+                            .map((unsavedLocalLayoutState: UnsavedLocalLayoutState) => {
+                                const {
+                                    layout: { id, ...layout },
+                                } = unsavedLocalLayoutState;
+                                return firstValueFrom(
                                     mediaserver.putLayout(overwriteLayouts[id] || id, layout).pipe(
-                                        map(updatedLayout => updatedLayout),
-                                        catchError(() => of(null)),
-                                        filter(Boolean),
+                                        catchError(() => {
+                                            errorLayouts.push({
+                                                ...unsavedLocalLayoutState,
+                                                unsaved: UnsavedState.ERROR,
+                                            });
+                                            return of(null);
+                                        }),
                                     ),
-                                ),
-                            );
+                                );
+                            });
 
-                        const savedLayouts = await Promise.all(savingLocalLayouts);
+                        const savedLayouts = (await Promise.all(savingLocalLayouts)).filter(
+                            Boolean,
+                        );
 
                         const toDelete = savedLayouts
                             .map(
@@ -150,6 +165,7 @@ export class LayoutStateEffects {
                                 layouts: savedLayouts,
                             }),
                             SharedLayoutsActions.deleteLayout({ layoutIds: toDelete }),
+                            UnsavedLayoutsActions.update({ layouts: errorLayouts }),
                         ];
                     }),
                     take(1),

@@ -265,6 +265,10 @@ h2.auto-save-overlay {
     &.diverged {
         background-color: #594c0d;
     }
+
+    &.error {
+        background-color: #AA1E1E;
+    }
 }
 
 @keyframes slide-up-fade-out {
