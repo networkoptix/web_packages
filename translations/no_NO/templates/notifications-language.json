@@ -39,33 +39,33 @@
     "emailSubject": "Videosystem {{{message.system_name}}} ble delt med deg"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{message.sharer_name}} inviterer deg til %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{message.organization_name}} was shared with you"
+    "emailSubject": "Organisasjon {{message.organization_name}} ble delt med deg"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "Status for organisasjon {{message.organization_name}} endres til {{message.status_name}}"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{message.organization_name}} to the status {{message.status_name}}"
+    "emailSubject": "Bekreft overføringen av organisasjon {{message.organization_name}} til status {{message.status_name}}"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "Status for organisasjon {{message.organization_name}} endres til {{message.status_name}}"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{message.sharer_name}} inviterer deg til %CLOUD_NAME%"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{message.partner_name}} was shared with you"
+    "emailSubject": "Partner {{message.partner_name}} ble delt med deg"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "Statusen til partner {{message.partner_name}} endres til {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{message.partner_name}} to status {{message.status_name}} "
+    "emailSubject": "Bekreft overføringen av partner {{message.partner_name}} til status {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "Statusen til partner {{message.partner_name}} endres til {{message.status_name}} "
   }
 }

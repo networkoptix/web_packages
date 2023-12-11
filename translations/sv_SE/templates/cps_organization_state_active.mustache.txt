@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Hej, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
-Functionality is now fully available.
+{{message.sharer_name}} har delat åtkomst till organisation "{{message.organization_name}}" med dig.
+Funktionalitet är nu fullt tillgänglig.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Visa i %CLOUD_NAME% -portalen med denna länk: {{ config.portal_url }}

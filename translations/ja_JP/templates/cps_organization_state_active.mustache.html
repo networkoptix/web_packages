@@ -1,5 +1,5 @@
-<h1>Hello, {{message.userFullName}}</h1>
+<h1>{{message.userFullName}} さん、こんにちは。</h1>
 
-<p>The status of the {{message.organization_name}} organization is changed to {{message.status_name}}.</p>
-<p>Functionality is now fully available.</p>
-<a class="btn" href="{{ config.portal_url }}">View in %CLOUD_NAME% Portal</a>
+<p>組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました.</p>
+<p>すべての機能が利用可能になりました。</p>
+<a class="btn" href="{{ config.portal_url }}">%CLOUD_NAME% ポータルで表示</a>

@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Hej, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Visa i %CLOUD_NAME% Portal med denna länk: {{ config.portal_url }}

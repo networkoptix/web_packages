@@ -1,7 +1,7 @@
-Hello, {{message.userFullName}}
+Hej, {{message.userFullName}}
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig.
 
-To view and manage it, please create account on %CLOUD_NAME% using your current email address and follow further instructions.
+För att se och hantera det, skapa ett konto på %CLOUD_NAME% med din nuvarande e-postadress och följ ytterligare instruktioner.
 
-Create Account using this link: {{ config.portal_url }}/authorize/register/
+Registrera ditt konto med den här länken: {{ config.portal_url }}/ register /{}

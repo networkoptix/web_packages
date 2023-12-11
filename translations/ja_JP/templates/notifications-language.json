@@ -39,33 +39,33 @@
     "emailSubject": "ビデオシステム{{{message.system_name}}が共有されました。"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{message.sharer_name}} さんがあなたを %CLOUD_NAME%に招待しています"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{message.organization_name}} was shared with you"
+    "emailSubject": "組織 {{message.organization_name}} が共有されました"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{message.organization_name}} to the status {{message.status_name}}"
+    "emailSubject": "組織 {{message.organization_name}} のステータス {{message.status_name}} への遷移について確認してください"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{message.sharer_name}} さんがあなたを %CLOUD_NAME%に招待しています"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{message.partner_name}} was shared with you"
+    "emailSubject": "パートナー {{message.partner_name}} が共有されました"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{message.partner_name}} to status {{message.status_name}} "
+    "emailSubject": "パートナー {{message.partner_name}} のステータス {{message.status_name}} への遷移について確認してください "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました "
   }
 }

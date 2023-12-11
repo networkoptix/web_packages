@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+Hei, {{message.userFullName}}
 
-The status of the {{message.organization_name}} organization is changed to {{message.status_name}}.
+Status for {{message.organization_name}} -organisasjonen endres til {{message.status_name}}.
 
-Please contact your partner for more details.
+Ta kontakt med partneren din for mer informasjon.

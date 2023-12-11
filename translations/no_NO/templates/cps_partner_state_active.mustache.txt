@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Hei, {{message.userFullName}}
 
-The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
-Functionality is now fully available.
+Statusen til partner {{message.partner_name}} endres til {{message.status_name}}.
+Funksjonalitet er nå fullt tilgjengelig.
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+Se i %CLOUD_NAME% portalen ved å bruke denne lenken: {{ config.portal_url }}

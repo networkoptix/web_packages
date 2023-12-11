@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+{{message.userFullName}} さん、こんにちは。
 
-The status of the {{message.organization_name}} organization is changed to {{message.status_name}}.
+組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました.
 
-Please contact your partner for more details.
+詳細については、パートナーにお問い合わせください。

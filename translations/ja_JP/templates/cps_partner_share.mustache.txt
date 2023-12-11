@@ -1,5 +1,5 @@
-Hello, {{message.userFullName}}
+{{message.userFullName}} さん、こんにちは。
 
-{{message.sharer_name}} has shared access to channel partner "{{message.partner_name}}" with you.
+{{message.sharer_name}} が、チャネルパートナー "{{message.partner_name}}" へのアクセス権を共有しました。
 
-View in %CLOUD_NAME% Portal using this link: {{ config.portal_url }}
+このリンクを使用して %CLOUD_NAME% ポータルで表示: {{ config.portal_url }}

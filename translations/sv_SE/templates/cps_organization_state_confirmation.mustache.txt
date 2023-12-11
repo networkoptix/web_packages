@@ -1,6 +1,6 @@
-Hello, {{message.userFullName}}
+Hej, {{message.userFullName}}
 
-Use the verification code below to complete status change of {{message.organization_name}} to {{message.status_name}}.
+Använd verifieringskoden nedan för att slutföra statusändringen från {{message.organization_name}} till {{message.status_name}}.
 
-Verification code:
+Verifieringskod:
 {{message.code}}
