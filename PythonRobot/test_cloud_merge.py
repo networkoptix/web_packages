@@ -107,6 +107,7 @@ def test_cloud_merge_back_button(
         system_dropdown.get_dropdown_button(second_server.name).click()
         system_dropdown.select_server(second_server.name)
         merge_dialog.ensure_system_online(second_server.name)
+        merge_dialog.get_back_button().wait_until_visible()
         merge_dialog.get_back_button().click()
         system_dropdown.get_dropdown_button(second_server.name).click()
         system_dropdown.select_server(third_server.name)
@@ -141,6 +142,7 @@ if __name__ == "__main__":
         server_5 = suite.create_cloud_server(cloud_owner_3, f'{suite_name}_5_')
         server_6 = suite.create_cloud_server(cloud_owner_3, f'{suite_name}_6_')
         merge_from_secondary_system(server_5, server_6)
+        print("PASS")
 
         cloud_owner_4 = suite.create_cloud_account()
         server_7 = suite.create_cloud_server(cloud_owner_4, f'{suite_name}_7_')

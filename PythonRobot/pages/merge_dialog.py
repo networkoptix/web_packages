@@ -75,17 +75,18 @@ class MergeDialog:
         translated_xpath = self._rb.replace_nested_variables(xpath)
         return Button(self._driver, translated_xpath)
 
+    def get_system_offline_message(self, system_name) -> PageText:
+        text = self._rb.CANNOT_MERGE_WITH_OFFLINE_SYSTEM_TEXT
+        replaced_text = text.replace('%SYSTEM NAME%', system_name)
+        xpath = f'//nx-modal-merge-content//p[text()={replaced_text!r}]'
+        return PageText(self._driver, xpath)
+
     def ensure_system_online(self, system_name: str, timeout=10.0):
-        error_message = f"System {system_name} is offline and cannot be merged with the current one"
         started_at = time.monotonic()
         clicked_next_button = False
         while True:
             try:
-                (PageText(
-                    self._driver,
-                    f'//nx-modal-merge-content//p[text()={error_message!r}]',
-                    ).wait_until_visible()
-                 )
+                self.get_system_offline_message(system_name).wait_until_visible()
             except ElementNotVisible:
                 break
             if time.monotonic() - started_at > timeout:
