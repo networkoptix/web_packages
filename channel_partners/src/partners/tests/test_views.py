@@ -669,6 +669,19 @@ class TestChannelPartnerViewSet:
                     assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
+    def test_partial_update(self, channel_partner_factory, cp_user_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        cp_user = cp_user_factory(channel_partner=cp)
+        view = ChannelPartnerViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
+        data = {'name': f'{uuid4()}'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=cp.id)
+        assert response.status_code == 200
+        cp.refresh_from_db()
+        assert cp.name == data['name']
+
 
 class TestOrganizationViewSet:
 
@@ -771,9 +784,8 @@ class TestOrganizationViewSet:
                     assert data['ownRoles'] == []
 
     def test_groups_structure(self, channel_partner_factory, cp_user_factory, organization_factory,
-                              org_user_factory,
-                              system_group_factory, sys_group_user_factory, system_factory, arf,
-                              mock_auth_with_user):
+                              org_user_factory, system_group_factory, sys_group_user_factory,
+                              system_factory, arf, mock_auth_with_user):
         root = channel_partner_factory()
         cp = channel_partner_factory(parent_channel_partner=root)
         cp_user = cp_user_factory(channel_partner=cp)
@@ -807,6 +819,21 @@ class TestOrganizationViewSet:
         assert len(response.data) == 1
         assert response.data[0]['id'] == str(org_groups[-2][-1].id)
         assert len(response.data[0]['children']) == 3
+
+    def test_partial_update(self, channel_partner_factory, cp_user_factory, organization_factory,
+                            org_user_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        org = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(organization=org)
+        view = OrganizationViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
+        data = {'name': f'{uuid4()}'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(org_user)
+        response = view(request, pk=org.id)
+        assert response.status_code == 200
+        org.refresh_from_db()
+        assert org.name == data['name']
 
 
 class TestSystemGroupUserViewSet:

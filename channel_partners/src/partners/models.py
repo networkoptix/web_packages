@@ -623,7 +623,10 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             return self.can_configure(user)
 
     def can_configure(self, user: CloudUser):
-        return self.has_perm(user, ChannelPartnerPermissions.configure_channel_partner)
+        if self.has_perm(user, ChannelPartnerPermissions.configure_channel_partner):
+            return True
+        return (self.parent_channel_partner and
+                self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user))
 
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, ChannelPartnerPermissions.manage_users):
@@ -1053,9 +1056,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def has_perm(self, user: CloudUser, perm: str):
         allowed_role_uuid = self.allowed_role_uuid(perm)
-        if self.users.filter(pk=user.pk,
-                             organizationtouser__roles__overlap=allowed_role_uuid,
-                             organizationtouser__system_group=None).exists():
+        if allowed_role_uuid and self.users.filter(pk=user.pk,
+                                                   organizationtouser__roles__overlap=allowed_role_uuid,
+                                                   organizationtouser__system_group=None).exists():
             return True
         channel_partner_manager = ChannelPartnerToUser.objects.filter(
             user=user, channel_partner=self.channel_partner,
@@ -1072,7 +1075,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def can_access(self, user: CloudUser):
         return self.users.filter(pk=user.pk).exists() or self.channel_partner.can_access(user)
 
-    def can_manage(self, user: CloudUser):
+    def can_add_or_remove(self, user: CloudUser):
         return self.channel_partner.can_add_or_remove_organizations(user)
 
     def can_modify_service_quantities(self, user: CloudUser):

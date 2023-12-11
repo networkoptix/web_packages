@@ -54,7 +54,7 @@ class FieldAccessMixin:
             try:
                 # field permission check must be run before any validation
                 if primitive_value != empty:
-                    if has_write_perm_method and not has_write_perm_method():
+                    if has_write_perm_method and not has_write_perm_method(instance=self.instance):
                         raise ValidationError(
                             f"User is not allowed to modify this field. Field: {field.field_name}.",
                             code="forbidden"

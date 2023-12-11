@@ -436,7 +436,9 @@ class OrganizationServiceViewset(ParentLookUpMixin, NestedViewSetMixin, ModelVie
     create=extend_schema(summary='Create a new Channel Partner',
                          extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_sub_channel_partners} for parentChannelPartner'}),
     retrieve=extend_schema(summary='Get a channel partner', description='Return a channel partner\'s details by id'),
-    partial_update=extend_schema(summary='Update Channel Partner properties', description='Update Channel Partner properties', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_sub_channel_partners} for parentChannelPartner'}),
+    partial_update=extend_schema(summary='Update Channel Partner properties',
+                                 description='Update Channel Partner properties',
+                                 extensions={'x-permission': f'{ChannelPartner.permissions.configure_channel_partner} for parentChannelPartner'}),
     service_changes_summary=extend_schema(summary='Get summary of service changes in a single period'),
     service_changes_history=extend_schema(summary='Get individual records of service changes in a single period')
 )
@@ -453,7 +455,7 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
         if self.action == 'retrieve':
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_access))
         if self.action in ('partial_update'):
-            perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_manage))
+            perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_configure))
         if self.action in ('service_changes_history', 'service_changes_summary'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_view_service_reports))
         return perms
@@ -571,7 +573,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     list=extend_schema(summary='Get list of user\'s Organizations'),
     retrieve=extend_schema(summary='Get an Organization'),
     create=extend_schema(summary='Create an Organization', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_organizations} for channelPartner'}),
-    partial_update=extend_schema(summary='Update properties of an Organization', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_organizations} for channelPartner'}),
+    partial_update=extend_schema(summary='Update properties of an Organization', extensions={'x-permission': f'{Organization.permissions.configure_organization} for Organization'}),
     service_changes_history=extend_schema()
 )
 class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
@@ -594,7 +596,7 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         if self.action == 'retrieve':
             perms.append(CanPerformChannelPartnerAction(Organization.can_access))
         if self.action in ('update'):
-            perms.append(CanPerformChannelPartnerAction(Organization.can_manage))
+            perms.append(CanPerformChannelPartnerAction(Organization.can_configure))
         if self.action in ('service_changes_history',):
             perms.append(CanPerformChannelPartnerAction(Organization.can_view_service_reports))
         if self.action == 'groups_structure':
