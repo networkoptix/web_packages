@@ -84,7 +84,11 @@
                 visibilityMargin="32px"
                 scrollBehavior="instant"
                 class="tree-node cdk-tree-node"
-                [ngClass]="{ 'hidden-node': node.hidden }"
+                [ngClass]="{
+                    'hidden-node': node.hidden,
+                    'renaming-layout': layoutStateService.editedLayout$$()?.id === node.details.id,
+                    'new-layout': layoutStateService.editedLayout$$()?.isNew
+                }"
             >
                 <div
                     cdkDrag
@@ -316,12 +320,19 @@
                         </ng-template>
                         <nx-text-editable
                             *ngIf="
-                                layoutStateService.editedLayout$$() === node.id;
+                                layoutStateService.editedLayout$$()?.id === node.id;
                                 else searchHighlight
                             "
                             class="node-name"
                             [(ngModel)]="node.name"
                             [allowUserFocus]="false"
+                            [overrideSelectionClass]="
+                                layoutStateService.editedLayout$$()?.isNew
+                                    ? 'override-selection'
+                                    : ''
+                            "
+                            [selectAllOnFocus]="layoutStateService.editedLayout$$()?.isNew || false"
+                            [overrideSelectionClassOnce]="true"
                             [editEnabled]="true"
                             [required]="true"
                             (onFocusChanged)="!$event && handleRename(node)"

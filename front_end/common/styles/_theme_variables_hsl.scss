@@ -922,6 +922,9 @@ html[data-theme="hsl"] {
     --placeholder-info-color: var(--new-dark11);
 
     --tree-locked-icon: var(--new-light4);
+    --tree-editable-selection-override: var(--new-dark9);
+    --tree-renaming-layout-background: var(--new-dark6);
+    --tree-new-layout-background: var(--new-dark4);
 
     --context-menu-bg: var(--drop-menu-navigation-bg);
     --context-menu-shadow: var(--new-dark1-t20);
@@ -939,4 +942,5 @@ html[data-theme="hsl"] {
     --overlay-action-text: var(--new-light1);
     --overlay-text: var(--new-light1);
     --overlay-status-title: var(--new-light10);
+    --tree-editable-selection-override: var(--new-light10);
 }

@@ -415,7 +415,7 @@ export class NxLayoutGridTreeComponent {
                 node.owned && {
                     id: 'startRename',
                     name: this.ACTIONS_LANG.rename.name,
-                    action: () => this.layoutStateService.editedLayout$$.set(node.details.id),
+                    action: () => this.layoutStateService.editedLayout$$.set(node.details),
                 },
                 {
                     id: 'duplicate',
@@ -660,7 +660,10 @@ export class NxLayoutGridTreeComponent {
                                   if (layoutsNode) {
                                       this.treeControl.expand(layoutsNode);
                                   }
-                                  this.layoutStateService.editedLayout$$.set(dirtyId(newLayout));
+                                  this.layoutStateService.editedLayout$$.set({
+                                      id: dirtyId(newLayout),
+                                      isNew: true,
+                                  });
                               });
                       },
                   },
