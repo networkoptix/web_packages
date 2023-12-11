@@ -819,12 +819,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.post('/api/restoreState', { currentPassword });
     }
 
-    @memoizeAsyncMedium
     getHardwareIdsOfServers(): Observable<t.ServerHardareIdsResp> {
         return this.get('/ec2/getHardwareIdsOfServers');
     }
 
-    @memoizeAsyncMedium
     getLicenses(): Observable<GetLicenses> {
         const routes = ['/ec2/getLicenses', '/ec2/getHardwareIdsOfServers'] as const;
         return this.getRequestAggregator(routes).pipe(
