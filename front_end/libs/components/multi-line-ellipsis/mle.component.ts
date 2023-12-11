@@ -26,6 +26,7 @@ export class NxMultiLineEllipsisComponent implements OnChanges {
     @Input() viewHeight: number;
     @Input() viewLineHeight: number;
     @Input() viewLines: number;
+    @Input() fitContent: boolean = false;
     @Output() longText = new EventEmitter<boolean>();
 
     more: boolean | string = false;
