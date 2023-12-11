@@ -193,7 +193,7 @@
             "iodevice": "expect in future versions",
             "defaultPassword": "click to set up",
             "unauthorized": "click to set credentials",
-            "transcodingDisabled": "transcoding for H265 streams disabled for 5.1 systems",
+            "transcodingDisabled": "transcoding for H265 streams not supported",
             "mjpegDisabled": "transcoding for MJPEG streams not supported"
         },
         "titles": {
@@ -605,7 +605,7 @@
             "defaultPassword": "PASSWORD REQUIRED",
             "websocket": "Can't connect to the camera",
             "unavailable": "UNAVAILABLE",
-            "transcodingDisabled": "DISABLED",
+            "transcodingDisabled": "NOT SUPPORTED",
             "mjpegDisabled": "NOT SUPPORTED"
         },
         "serverStates": {

@@ -1847,7 +1847,7 @@
     "to transfer system": "to transfer system",
     "too common": "too common",
     "too short": "too short",
-    "transcoding for H265 streams disabled for 5.1 systems": "transcoding for H265 streams disabled for 5.1 systems",
+    "transcoding for H265 streams not supported": "transcoding for H265 streams not supported",
     "transcoding for MJPEG streams not supported": "transcoding for MJPEG streams not supported",
     "unavailable": "unavailable",
     "view + [camera name]": "view + [camera name]",
