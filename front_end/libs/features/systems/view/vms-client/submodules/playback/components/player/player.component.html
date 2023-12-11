@@ -26,7 +26,7 @@
         <nx-pre-loader></nx-pre-loader>
     </div>
     <nx-player-js
-        *ngIf="playback.subject | async | as : PlaybackStateTemp as playbackState"
+        *ngIf="playback.subject | async | as: PlaybackStateTemp as playbackState"
         (click)="handleClick($event)"
         (videoEnded)="videoEnded($event)"
         (videoError)="videoErrorEventHandler($event)"

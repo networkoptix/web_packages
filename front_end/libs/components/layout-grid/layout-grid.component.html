@@ -10,12 +10,12 @@
             !layout || !layoutItemLookup
                 ? ''
                 : !layout.items.length
-                ? 'empty'
-                : !layout.id
-                ? 'unsaved'
-                : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
-                ? 'focus'
-                : layout.name as message
+                  ? 'empty'
+                  : !layout.id
+                    ? 'unsaved'
+                    : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
+                      ? 'focus'
+                      : layout.name as message
         "
         class="help-text"
     >
@@ -240,8 +240,12 @@
                             [cdkDropListEnterPredicate]="preventDrop"
                             [cdkDropListData]="item"
                             [ngStyle]="item.renderConfig"
-                            [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
-                            [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
+                            [style.transform]="
+                                (highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'
+                            "
+                            [style.transform-origin]="
+                                (highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'
+                            "
                             class="layout-item-wrapper"
                             [ngClass]="{
                                 'full-screen-wrapper':
@@ -261,16 +265,18 @@
                                 class="layout-item"
                                 [ngClass]="{
                                     'camera-layout-item':
-                                        layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.CAMERA,
+                                        layoutItemLookup[item.resourceId].type ===
+                                        RESOURCE_TYPE.CAMERA,
                                     'server-layout-item':
-                                        layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.SERVER,
+                                        layoutItemLookup[item.resourceId].type ===
+                                        RESOURCE_TYPE.SERVER,
                                     'full-screen-override':
                                         layoutItemWrapper === window.document.fullscreenElement,
-                                    'collided': (collisions$ | async)[item.id],
+                                    collided: (collisions$ | async)[item.id]
                                 }"
                                 [ngStyle]="
                                     (collisions$ | async)[item.id]
-                                        | mergeObjects : item.renderConfig.child
+                                        | mergeObjects: item.renderConfig.child
                                 "
                                 (dblclick)="focusToggle(item.id)"
                                 (nxClickElsewhere)="removeFocus()"
@@ -302,30 +308,31 @@
                                                     itemDetail.details.unauthorized
                                                         ? 'unauthorized'
                                                         : !(
-                                                              (assertResourceOfType.camera(
+                                                                (assertResourceOfType.camera(
+                                                                    itemDetail
+                                                                ) ||
+                                                                    assertResourceOfType.server(
+                                                                        itemDetail
+                                                                    )) &&
+                                                                itemDetail.details.online
+                                                            )
+                                                          ? 'offline'
+                                                          : (assertResourceOfType.camera(
                                                                   itemDetail
                                                               ) ||
                                                                   assertResourceOfType.server(
                                                                       itemDetail
                                                                   )) &&
-                                                              itemDetail.details.online
-                                                          )
-                                                        ? 'offline'
-                                                        : (assertResourceOfType.camera(
-                                                              itemDetail
-                                                          ) ||
-                                                              assertResourceOfType.server(
+                                                              itemDetail.details.status !==
+                                                                  'archive'
+                                                            ? (assertResourceOfType.camera(
                                                                   itemDetail
-                                                              )) &&
-                                                          itemDetail.details.status !== 'archive'
-                                                        ? (assertResourceOfType.camera(
-                                                              itemDetail
-                                                          ) ||
-                                                              assertResourceOfType.server(
-                                                                  itemDetail
-                                                              )) &&
-                                                          itemDetail.details.status
-                                                        : 'offline') as status
+                                                              ) ||
+                                                                  assertResourceOfType.server(
+                                                                      itemDetail
+                                                                  )) &&
+                                                              itemDetail.details.status
+                                                            : 'offline') as status
                                                 "
                                                 (click)="
                                                     assertResourceOfType.camera(itemDetail) &&
@@ -388,14 +395,14 @@
                                                                       'disabled'
                                                                   )
                                                             : [
-                                                                  RESOURCE_TYPE.WEB_PAGE,
-                                                                  RESOURCE_TYPE.IO_DEVICE
-                                                              ].includes(itemDetail.type)
-                                                            ? status
-                                                            : itemDetail.type ===
-                                                              RESOURCE_TYPE.SERVER
-                                                            ? 'unavailable'
-                                                            : 'offline') +
+                                                                    RESOURCE_TYPE.WEB_PAGE,
+                                                                    RESOURCE_TYPE.IO_DEVICE
+                                                                ].includes(itemDetail.type)
+                                                              ? status
+                                                              : itemDetail.type ===
+                                                                  RESOURCE_TYPE.SERVER
+                                                                ? 'unavailable'
+                                                                : 'offline') +
                                                         '.svg'
                                                     "
                                                     [svgStyle]="{
@@ -558,7 +565,7 @@
                                                         "
                                                         [src]="
                                                             itemDetail.details.url
-                                                                | safe : 'resourceUrl'
+                                                                | safe: 'resourceUrl'
                                                         "
                                                         frameBorder="0"
                                                     ></iframe>
@@ -596,9 +603,9 @@
                                                 updateBackground($event, item, 'resize', alignment)
                                             "
                                             (cdkDragReleased)="moveItem(item)"
-                                            class="resize-handle {{
-                                                alignment[0]
-                                            }} {{ alignment?.[1] }}"
+                                            class="resize-handle {{ alignment[0] }} {{
+                                                alignment?.[1]
+                                            }}"
                                         ></div>
                                     </div>
                                 </ng-container>

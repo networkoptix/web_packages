@@ -81,7 +81,7 @@
     <ng-container
         *ngFor="
             let column of (singleColumn ? [sectionsOrColumns] : sectionsOrColumns)
-                | as : InfoBlockType;
+                | as: InfoBlockType;
             let columnIndex = index
         "
         [ngTemplateOutlet]="infoColumn"

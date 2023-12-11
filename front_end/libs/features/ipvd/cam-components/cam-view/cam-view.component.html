@@ -97,7 +97,7 @@
                     <div
                         class="analytics-label col-12"
                         *ngFor="
-                            let event of activeCamera.analyticsEvents | slice : 0 : analyticsToShow
+                            let event of activeCamera.analyticsEvents | slice: 0 : analyticsToShow
                         "
                         [innerText]="event"
                     ></div>
@@ -174,7 +174,7 @@
                         </div>
                     </div>
 
-                    <ng-container *ngFor="let firmware of firmwares | slice : 0 : firmwaresToShow">
+                    <ng-container *ngFor="let firmware of firmwares | slice: 0 : firmwaresToShow">
                         <div
                             class="row"
                             *ngIf="firmware.name"
@@ -263,7 +263,7 @@
                     >
                 </div>
                 <div class="info-label">
-                    <span translate>Updated</span> {{ activeCamera.timestamp | date : 'fullDate' }}
+                    <span translate>Updated</span> {{ activeCamera.timestamp | date: 'fullDate' }}
                 </div>
             </nx-section>
         </div>

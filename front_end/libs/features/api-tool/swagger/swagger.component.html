@@ -13,7 +13,7 @@
                 class="swagger-description"
                 *ngIf="!openAPIJSONService.isMarkdownNode"
             >
-                <h2 [innerHTML]="this.swaggerMenuDescription.title | safe : 'html'"></h2>
+                <h2 [innerHTML]="this.swaggerMenuDescription.title | safe: 'html'"></h2>
                 <ng-container *ngIf="this.singleAPIRouteShowing">
                     <p class="description-path">
                         <markdown [data]="this.swaggerMenuDescription.description"></markdown>
@@ -28,7 +28,7 @@
                 <p
                     class="mt-3"
                     *ngIf="this.swaggerMenuDescription.description"
-                    [innerHTML]="this.swaggerMenuDescription.description | safe : 'html'"
+                    [innerHTML]="this.swaggerMenuDescription.description | safe: 'html'"
                 ></p>
             </div>
             <nx-swagger-markdown

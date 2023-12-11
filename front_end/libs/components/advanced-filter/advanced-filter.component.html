@@ -38,7 +38,7 @@
             ></nx-checkbox>
             <label [for]="field + '-filter-' + selection.name">{{
                 filter.grouping && filter.grouping !== GROUPING_OPTIONS.TEXT
-                    ? (selection.name | date : dateFormats[filter.grouping || 'default'])
+                    ? (selection.name | date: dateFormats[filter.grouping || 'default'])
                     : selection.name
             }}</label>
         </div>

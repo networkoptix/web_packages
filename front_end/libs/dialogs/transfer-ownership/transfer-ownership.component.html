@@ -184,13 +184,13 @@
             <p
                 *ngrxLet="
                     LANG.dialogs.transferOwnership.aboutToTransfer
-                        | translate : { newOwner } as aboutToTransfer
+                        | translate: { newOwner } as aboutToTransfer
                 "
             >
-                <span>{{ aboutToTransfer | translateCut : 0 }}</span
+                <span>{{ aboutToTransfer | translateCut: 0 }}</span
                 ><span
-                    ><strong>{{ aboutToTransfer | translateCut : 1 }}</strong></span
-                ><span>{{ aboutToTransfer | translateCut : 2 }}</span>
+                    ><strong>{{ aboutToTransfer | translateCut: 1 }}</strong></span
+                ><span>{{ aboutToTransfer | translateCut: 2 }}</span>
             </p>
             <ng-template #content2>
                 <span

@@ -16,7 +16,7 @@
         <div *ngIf="tooManyServers">
             <p
                 class="error-label"
-                [innerHTML]="LANG.dialogs.merge.warning | translate : { maxServers: maxServers }"
+                [innerHTML]="LANG.dialogs.merge.warning | translate: { maxServers: maxServers }"
             ></p>
             <p
                 class="error-label"
@@ -26,13 +26,13 @@
                 synchronization.
             </p>
             <p class="mb-3">
-                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut : 0 }}
+                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 0 }}
                 <a
                     [href]="supportLink"
                     target="_blank"
-                    >{{ LANG.dialogs.merge.recommendSupport | translate | translateCut : 1 }}</a
+                    >{{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 1 }}</a
                 >
-                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut : 2 }}
+                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 2 }}
             </p>
         </div>
         <div

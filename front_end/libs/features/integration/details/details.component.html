@@ -307,7 +307,7 @@
                             <header class="add-ellipsis">
                                 {{
                                     LANG.integration.requirements
-                                        | translate : { name: plugin.information.name }
+                                        | translate: { name: plugin.information.name }
                                 }}
                             </header>
 
@@ -358,7 +358,7 @@
                                         >
                                             <label class="group-label">{{
                                                 LANG.integration.testedVersionLabel
-                                                    | translate : { vmsName: CONFIG.vmsName }
+                                                    | translate: { vmsName: CONFIG.vmsName }
                                             }}</label>
                                         </div>
                                         <div
@@ -369,14 +369,14 @@
                                         >
                                             <label class="group-label">{{
                                                 LANG.integration.testedVersionsLabel
-                                                    | translate : { vmsName: CONFIG.vmsName }
+                                                    | translate: { vmsName: CONFIG.vmsName }
                                             }}</label>
                                         </div>
                                         <div class="d-flex">
                                             <div
                                                 [innerHTML]="
                                                     plugin.requirementsAndCompatibility
-                                                        .testedVersionsStringFull | safe : 'html'
+                                                        .testedVersionsStringFull | safe: 'html'
                                                 "
                                             ></div>
                                             <svg-icon
@@ -411,7 +411,7 @@
                                         <div
                                             [innerHTML]="
                                                 plugin.requirementsAndCompatibility
-                                                    .additionalRequirements | safe : 'html'
+                                                    .additionalRequirements | safe: 'html'
                                             "
                                         ></div>
                                     </div>

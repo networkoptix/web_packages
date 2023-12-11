@@ -37,7 +37,7 @@
                 [queryParams]="{ state: node.state }"
             >
                 <ng-template #linkContent>
-                    <span [innerHTML]="node.display_name || node.name | safe : 'html'"></span>
+                    <span [innerHTML]="node.display_name || node.name | safe: 'html'"></span>
                     <span
                         *ngIf="node.state"
                         class="badge badge-{{ node.state === 'pending' ? 'warning' : 'info' }} ml-2"
@@ -72,7 +72,7 @@
                                 node.state === service.activeNode.state)
                     }"
                 >
-                    <span [innerHTML]="node.display_name || node.name | safe : 'html'"></span>
+                    <span [innerHTML]="node.display_name || node.name | safe: 'html'"></span>
                 </div>
             </ng-template>
             <div

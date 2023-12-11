@@ -34,7 +34,3 @@ libs/features/systems/view/vms-client/submodules/vms/testMediaServers.ts
 
 apps/**/*.d.ts
 **/*.example.ts
-
-# THIS IS TO STOP THE PIPELINE FROM AUTOMATICALLY APPLYING CHANGES
-# REMOVE THIS IN HTML CHANGES MR BEFORE MERGE
-*.html
