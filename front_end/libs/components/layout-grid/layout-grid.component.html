@@ -1,8 +1,15 @@
 <div
     *ngIf="layoutItemLookup && (layout$ | async) as layout"
     class="sidebar-wrapper left"
+    [ngStyle]="{
+        width:
+            layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+                ? (layoutStateService.menuResizePercentage$ | async)
+                : null
+    }"
     [ngClass]="{
-        'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+        'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
+        resizing: resizing,
     }"
 >
     <div
@@ -69,6 +76,13 @@
         >
         </svg-icon>
     </div>
+    <div
+        class="menu-resize"
+        cdkDrag
+        cdkDragLockAxis="x"
+        (cdkDragReleased)="resizeMenuComplete($event)"
+        (cdkDragMoved)="resizeMenu($event)"
+    ></div>
     <nx-layout-grid-tree
         [layout]="layout"
         [system]="system"

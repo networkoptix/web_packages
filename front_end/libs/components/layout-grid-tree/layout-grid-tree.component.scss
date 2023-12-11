@@ -21,7 +21,7 @@ nx-search {
 }
 
 .cdk-tree {
-    width: calc(max(var(--sidebar-width), var(--min-sidebar-width)) - 48px);
+    width: calc(max(var(--sidebar-width), var(--min-sidebar-width)) - 48px + var(--sidebar-resize));
 
     .cdk-tree-node {
         display: flex;

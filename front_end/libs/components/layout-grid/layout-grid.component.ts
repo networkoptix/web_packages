@@ -1,4 +1,11 @@
-import { CdkDrag, CdkDropList, DragDropModule, Point } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragMove,
+    CdkDragRelease,
+    CdkDropList,
+    DragDropModule,
+    Point,
+} from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -1786,4 +1793,16 @@ export class NxLayoutGridComponent {
             this.layoutStateService.updateLayout({ ...this.layout, items });
         }
     };
+
+    resizing = false;
+
+    resizeMenuComplete(event: CdkDragRelease): void {
+        event.source._dragRef.reset();
+        this.resizing = false;
+    }
+
+    resizeMenu(event: CdkDragMove<unknown>): void {
+        this.layoutStateService.menuResizePixelUpdater$.next(event.pointerPosition.x);
+        this.resizing = true;
+    }
 }

@@ -1,3 +1,4 @@
+/* eslint-disable nx/ban-global-variables */
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
 import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
@@ -6,14 +7,20 @@ import { TranslateService } from '@ngx-translate/core';
 import {
     Observable,
     Subject,
+    animationFrameScheduler,
+    combineLatest,
+    distinctUntilChanged,
     firstValueFrom,
+    fromEvent,
     map,
     of,
     shareReplay,
+    startWith,
     switchMap,
     take,
     takeWhile,
     tap,
+    throttleTime,
     timer,
 } from 'rxjs';
 import { v4 as uuid } from 'uuid';
@@ -372,6 +379,27 @@ export class LayoutStateService {
             search: queryParams.search,
         },
     }));
+
+    menuResizePixelUpdater$ = new Subject<number>();
+
+    windowState$ = fromEvent(window, 'resize').pipe(
+        startWith(true),
+        map(() => window.innerWidth),
+        distinctUntilChanged(),
+        shareReplay({ bufferSize: 1, refCount: true }),
+    );
+
+    menuResizePercentage$ = combineLatest([this.menuResizePixelUpdater$, this.windowState$]).pipe(
+        map(
+            ([resizePixels, innerWidth]) =>
+                (Math.max(resizePixels, Math.min(innerWidth / 2, 216)) / innerWidth) * 100,
+        ),
+        map((percentage: number): number => Math.min(percentage, 50)),
+        map(vw => `${vw}vw`),
+        distinctUntilChanged(),
+        throttleTime(0, animationFrameScheduler),
+        shareReplay({ bufferSize: 1, refCount: false }),
+    );
 
     constructor(
         private cloudApi: NxCloudApiService,
