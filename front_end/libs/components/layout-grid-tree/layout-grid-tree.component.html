@@ -403,7 +403,10 @@
                               ['warning', 'unauthorized'].includes(
                                   errorIcons[node.details.id] || node.details.status
                               )
-                                  ? errorIcons[node.details.id] || node.details.status
+                                  ? (errorIcons[node.details.id] || node.details.status).replace(
+                                        'mismatchedCertificate',
+                                        'incompatible'
+                                    )
                                   : node.details.unauthorized
                                   ? 'unauthorized'
                                   : node.details.online && node.details.requiresTranscoding
