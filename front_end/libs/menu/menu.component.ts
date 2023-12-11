@@ -188,9 +188,13 @@ export class NxMenuComponent implements OnInit, OnChanges {
             }
             // Avoid unnecessary update and overwrite user choices
             const filtered = this.menuService.cleanMenuContent(
-                this.menuService.filterItemsBy(this.menuModel),
+                this.menuService.filterMenu(this.menuModel),
             );
-            if (filtered.length !== this.menuContent.length) {
+            const cleanMenuContent = this.menuService.cleanMenuContent(this.menuContent);
+            if (
+                filtered.length !== this.menuContent.length ||
+                !isEqual(filtered, cleanMenuContent)
+            ) {
                 const scroll = this.scrollArea?.nativeElement.scrollTop || 0;
                 this.menuContent = filtered;
                 setTimeout(() => {
@@ -229,8 +233,8 @@ export class NxMenuComponent implements OnInit, OnChanges {
 
             if (!this.applyService.locked) {
                 this.selectedLevel1 = currentContent.selectedSection;
-                this.selectedLevel2 = currentContent.selectedSubSection;
-                this.selectedLevel3 = currentContent.selectedDetailsSection;
+                this.selectedLevel2 = currentContent.selectedSubSection || '';
+                this.selectedLevel3 = currentContent.selectedDetailsSection || '';
             }
 
             this.transition = false;
@@ -279,7 +283,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
                 : 0;
 
             this.containerHeight = this.scrollArea
-                ? (this.scrollArea.nativeElement.parentNode.parentNode as HTMLDivElement)
+                ? (this.scrollArea.nativeElement.parentNode?.parentNode as HTMLDivElement)
                       // .scroll-area => .level-3-items => .level-1-container
                       .getBoundingClientRect().height
                 : 0;
@@ -384,7 +388,7 @@ export class NxMenuComponent implements OnInit, OnChanges {
         // and avoid unnecessary content update
         if (resetLayout) {
             this.menuContent.forEach(node => this.toggleItem(false, node.id));
-            this.menuContent = this.menuService.filterItemsBy(model);
+            this.menuContent = this.menuService.filterMenu(model);
         }
 
         this.navItemIdx = -1;
@@ -442,8 +446,11 @@ export class NxMenuComponent implements OnInit, OnChanges {
     toggleItem(state: boolean, nodeId: string): void {
         // menu have internal state but also is controlled by parent component
         // so we need to update both states
-        this.menuContent.find(node => node.id === nodeId).toggle = state;
-        this.contentToggle.emit({ nodeId, state });
+        const toggleNode = this.menuContent.find(node => node.id === nodeId);
+        if (toggleNode) {
+            toggleNode.toggle = state;
+            this.contentToggle.emit({ nodeId, state });
+        }
     }
 
     // *** Breadcrumb for usage of named (auxiliary) router outlet
