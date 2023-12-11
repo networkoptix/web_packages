@@ -6,7 +6,6 @@ from typing import Sequence
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
 from generic_elements import Button
-from generic_elements import DropDown
 from generic_elements import Checkbox
 from generic_elements import DropDown
 from generic_elements import ElementNotVisible
@@ -16,13 +15,14 @@ from generic_elements import Pane
 
 
 class _SystemSelectDropdown(DropDown):
+
     def get_dropdown_button(self, server_name) -> Button:
-        return Button(self._driver, f'//nx-select//button/span[contains(text(), "{server_name}")]/..')
+        return Button(self._driver, f'//nx-select//button/span[contains(text(), {server_name!r})]/..')
 
     def select_server(self, name: str):
         server_in_list = Button(
             self._driver,
-            f"//form[@name='checkMergeForm']//nx-select//li//span[contains(text(),'{name}')]"
+            f"//form[@name='checkMergeForm']//nx-select//li//span[contains(text(),{name!r})]",
             )
         server_in_list.click()
 
@@ -39,14 +39,14 @@ class MergeDialog:
 
     def verify(self):
         header_text = PageText(
-            self._driver, f'//nx-modal-merge-content//h1/span[contains(text(), "{self._rb.MERGE_SYSTEMS_TEXT}")]')
+            self._driver, f'//nx-modal-merge-content//h1/span[contains(text(), {self._rb.MERGE_SYSTEMS_TEXT}!r)]')
         header_text.wait_until_visible()
         close_button = Button(self._driver, '//nx-modal-merge-content//button[contains(@class,"close")]')
         close_button.wait_until_clickable()
         self.get_next_button().wait_until_clickable()
         merge_is_possible = PageText(
             self._driver,
-            f'//nx-modal-merge-content//p[contains(text(),"{self._rb.MERGE_CURRENT_SYSTEM_WITH_TEXT}")]',
+            f'//nx-modal-merge-content//p[contains(text(),{self._rb.MERGE_CURRENT_SYSTEM_WITH_TEXT!r})]',
             )
         merge_is_possible.wait_until_visible()
 
@@ -56,7 +56,7 @@ class MergeDialog:
     def get_next_button(self) -> Button:
         return Button(
             self._driver,
-            f'//nx-modal-merge-content//button[contains(@class,"btn btn-primary") and contains(text(),"{self._rb.NEXT_TEXT}")]',
+            f'//nx-modal-merge-content//button[contains(@class,"btn btn-primary") and contains(text(),{self._rb.NEXT_TEXT!r})]',
             )
 
     def primary_first_system(self):
@@ -66,9 +66,8 @@ class MergeDialog:
         return Checkbox(self._driver, "//label[@for='secondSystem']")
 
     def merge_systems_button(self):
-        translated_xpath = self._rb.replace_nested_variables(
-            "//button[text()='{MERGE_SYSTEMS_TEXT}']",
-            )
+        xpath = "//button[text()='{MERGE_SYSTEMS_TEXT}']"
+        translated_xpath = self._rb.replace_nested_variables(xpath)
         return Button(self._driver, translated_xpath)
 
     def get_back_button(self):
@@ -84,11 +83,9 @@ class MergeDialog:
             try:
                 (PageText(
                     self._driver,
-                    f'//nx-modal-merge-content//p[text()="{error_message}"]',
-                    )
-                 .wait_until_visible()
+                    f'//nx-modal-merge-content//p[text()={error_message!r}]',
+                    ).wait_until_visible()
                  )
-
             except ElementNotVisible:
                 break
             if time.monotonic() - started_at > timeout:
@@ -127,7 +124,7 @@ class MergeDialog:
     def wait_until_system_is_accessible(self, system_name: str):
         item = PageText(
             self._driver,
-            f'//nx-modal-merge-content//button[@id="mergeSystemSelect"]//span[contains(text(), "{system_name}")]',
+            f'//nx-modal-merge-content//button[@id="mergeSystemSelect"]//span[contains(text(), {system_name!r})]',
             )
         item.wait_until_visible(30)
 
