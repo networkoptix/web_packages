@@ -8,6 +8,10 @@
     border-color: var(--border-color);
     background-color: var(--card-body-bg);
 
+    .clickable {
+        cursor: pointer;
+    }
+
     .sticky1rem {
         box-shadow: 0 -14px 0 2px var(--body-bg);
         position: sticky;
@@ -301,6 +305,30 @@
     nx-section:first-of-type {
         .card--body {
             border-top: none;
+        }
+    }
+
+    &.tile {
+        background-color: var(--CP-pane-header-background);
+        border: 1px solid transparent;
+        border-bottom: none;
+
+        .card--header {
+            background-color: var(--CP-pane-header-background);
+            border-bottom-color: transparent;
+        }
+
+        .card--body {
+            background-color: var(--CP-pane-header-background);
+            border-top: 1px solid transparent;
+
+            a {
+                display: block;
+            }
+        }
+
+        .card--footer {
+            background-color: var(--CP-pane-header-background);
         }
     }
 

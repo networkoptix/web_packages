@@ -1,49 +1,25 @@
-:host {
-    height: 100%;
+@use 'typography' as typography;
 
-    .information {
-        display: block;
-        height: 100%;
+.information {
+    display: grid;
+    grid-template-columns: 50% 1fr;
+    grid-template-areas: 'description' 'contact';
+    min-height: 20rem;
+    padding: 1rem;
+    gap: 1rem;
 
-        .systems {
-        }
+    .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
 
-        .description {
-        }
+        &.in-edit-mode {
+            border-bottom: 1px solid var(--CP-pane-header-border);
+            margin-bottom: 8px;
 
-        .contact {
-
-        }
-
-        .pane {
-            display: flex;
-            flex-direction: column;
-            background-color: var(--CP-pane-background);
-            border: 1px solid var(--CP-pane-border);
-            border-radius: 4px;
-
-            .header {
-                width: 100%;
-                display: flex;
-                justify-content: space-between;
-                padding: .75rem 1rem .75rem 1rem;
-                background-color: var(--CP-pane-header-background);
-                border: 1px solid var(--CP-pane-header-border);
-
-                h4 {
-                    margin: 0;
-                }
-            }
-
-            .body {
-                padding: 1rem;
-                display: flex;
-                flex-direction: column;
-            }
-
-            .data-row {
-                display: flex;
-                justify-content: space-between;
+            .header-title {
+                @extend h4;
+                color: var(--card-header-text) !important;
             }
         }
     }
