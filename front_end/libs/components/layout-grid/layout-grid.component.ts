@@ -1805,4 +1805,11 @@ export class NxLayoutGridComponent {
         this.layoutStateService.menuResizePixelUpdater$.next(event.pointerPosition.x);
         this.resizing = true;
     }
+
+    setResolutionToAuto(): void {
+        this.layoutStateService.setLayoutResolution({
+            layoutId: this.layout.id,
+            resolution: Resolution.AUTO,
+        });
+    }
 }

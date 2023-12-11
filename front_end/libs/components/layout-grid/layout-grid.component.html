@@ -124,31 +124,6 @@
     [ngStyle]="cursorStyle$$()"
 >
     <div
-        *ngIf="mouseMoving$$() && layoutStateService.resolutionRibbonShown$$() as secondsLeft"
-        class="resolution-ribbon"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-            [src]="icons.dirNonStandard + 'warning.svg'"
-        ></svg-icon>
-        <span
-            class="ribbon-message"
-            translate
-        >
-            Set layout resolution to 'Auto' to increase performance
-        </span>
-        <button
-            class="ribbon-button"
-            (click)="layoutStateService.showResolutionRibbon$.next(0)"
-        >
-            <span translate>Dismiss</span>
-            <span class="countdown">
-                {{ secondsLeft }}
-            </span>
-        </button>
-    </div>
-    <div
         class="saving-ribbon"
         [ngClass]="{
             show: layoutSaving$$(),
@@ -170,12 +145,7 @@
         </div>
     </div>
     <div
-        *ngIf="
-            !layoutStateService.resolutionRibbonShown$$() &&
-            mouseMoving$$() &&
-            layout?.id &&
-            unsavedLayoutState$$()
-        "
+        *ngIf="mouseMoving$$() && layout?.id && unsavedLayoutState$$()"
         class="unsaved-ribbon"
         [ngClass]="{
             diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(
@@ -313,6 +283,34 @@
                 </button>
             </ng-container>
         </ng-container>
+    </div>
+    <div
+        *ngIf="mouseMoving$$() && layoutStateService.resolutionRibbonShown$$() as secondsLeft"
+        class="resolution-ribbon"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            [src]="icons.dirNonStandard + 'warning.svg'"
+        ></svg-icon>
+        <span
+            class="ribbon-message"
+            translate
+        >
+            Set layout resolution to 'Auto' to increase performance
+        </span>
+        <button
+            class="ribbon-button"
+            (click)="setResolutionToAuto()"
+        >
+            <span translate>Set to "Auto"</span>
+        </button>
+        <button
+            class="ribbon-button"
+            (click)="layoutStateService.showResolutionRibbon$.next(0)"
+        >
+            <span translate>Close</span>
+        </button>
     </div>
     <div
         *ngIf="layoutItemLookup && (layout$ | async) as layout; else preloader"

@@ -358,7 +358,8 @@ export class LayoutStateService {
     resolutionRibbonShown$$ = toSignal(
         this.store.select(selectCurrentLayoutHighResolution).pipe(
             switchMap(resolutionHigh => {
-                this.showResolutionRibbon$.next(resolutionHigh ? 15 : 0);
+                // Using large number instead of changing to boolean in case we ever add back auto dismiss.
+                this.showResolutionRibbon$.next(resolutionHigh ? Number.MAX_SAFE_INTEGER : 0);
                 return this.resolutionRibbonCountdown$;
             }),
         ),
