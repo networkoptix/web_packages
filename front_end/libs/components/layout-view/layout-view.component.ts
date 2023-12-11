@@ -144,47 +144,54 @@ export class NxLayoutViewComponent {
 
                 const isIoOnly = (camera: NxSystemCamera): boolean =>
                     !(!!camera.parameters.mediaStreams || !camera.parameters.ioSettings?.length);
-                const parsedCameras = cameras.reduce((cameras, camera) => {
-                    const parentServerOnline =
-                        servers.find(({ id }) => id === camera.parentId)?.status === 'Online';
-                    const online =
-                        isIoOnly(camera) ||
-                        (camera.status === CameraStatus.Online && parentServerOnline);
-                    const unauthorized =
-                        camera.status === CameraStatus.Unauthorized && parentServerOnline;
-                    if (!parentServerOnline) {
-                        if (camera.status === CameraStatus.Unauthorized) {
-                            camera.status = CameraStatus.Offline;
+                const parsedCameras = cameras.reduce(
+                    (cameras, camera) => {
+                        const parentServerOnline =
+                            servers.find(({ id }) => id === camera.parentId)?.status === 'Online';
+                        const online =
+                            isIoOnly(camera) ||
+                            (camera.status === CameraStatus.Online && parentServerOnline);
+                        const unauthorized =
+                            camera.status === CameraStatus.Unauthorized && parentServerOnline;
+                        if (!parentServerOnline) {
+                            if (camera.status === CameraStatus.Unauthorized) {
+                                camera.status = CameraStatus.Offline;
+                            }
+                            if (camera.recordingStatus === RecordingStatus.Recording) {
+                                camera.recordingStatus = RecordingStatus.Scheduled;
+                            }
                         }
-                        if (camera.recordingStatus === RecordingStatus.Recording) {
-                            camera.recordingStatus = RecordingStatus.Scheduled;
-                        }
-                    }
 
-                    const nonWebRtcCodec = [7, 173].includes(
-                        (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
-                    );
-                    return {
-                        ...cameras,
-                        [camera.id]: {
-                            id: camera.id,
-                            type: isIoOnly(camera) ? ResourceType.IO_DEVICE : ResourceType.CAMERA,
-                            name: camera.name,
-                            details: {
-                                ...camera,
-                                online,
-                                unauthorized,
-                                requiresTranscoding: nonWebRtcCodec && !this.useV2api,
-                                resourceType:
-                                    this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
-                                status: (camera.recordingStatus || camera.status).toLowerCase(),
-                                // Compatibility patch for status
+                        const nonWebRtcCodec = [7, 173].includes(
+                            (camera.parameters.mediaStreams?.streams ?? [])[0]?.codec,
+                        );
+                        return {
+                            ...cameras,
+                            [camera.id]: {
+                                id: camera.id,
+                                type: isIoOnly(camera)
+                                    ? ResourceType.IO_DEVICE
+                                    : ResourceType.CAMERA,
+                                name: camera.name,
+                                details: {
+                                    ...camera,
+                                    online,
+                                    unauthorized,
+                                    requiresTranscoding: nonWebRtcCodec && !this.useV2api,
+                                    resourceType:
+                                        this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
+                                    status: (camera.recordingStatus || camera.status).toLowerCase(),
+                                    // Compatibility patch for status
+                                },
+                                aspectRatio:
+                                    camera.parameters.overrideAr ||
+                                    camera.defaultRatio ||
+                                    aspectRatio,
                             },
-                            aspectRatio:
-                                camera.parameters.overrideAr || camera.defaultRatio || aspectRatio,
-                        },
-                    };
-                }, {} as ResourceLookup<(typeof cameras)[0]>);
+                        };
+                    },
+                    {} as ResourceLookup<(typeof cameras)[0]>,
+                );
 
                 const parsedServers = servers.reduce(
                     (servers, server) => ({
@@ -242,7 +249,7 @@ export class NxLayoutViewComponent {
                                 shared:
                                     details.parentId === '{00000000-0000-0000-0000-000000000000}',
                                 details,
-                            } as SharableResourceLeafNode<Layout>),
+                            }) as SharableResourceLeafNode<Layout>,
                     )
                     .sort((a, b) => (a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1));
 

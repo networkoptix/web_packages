@@ -3,7 +3,10 @@ import { Subject } from 'rxjs';
 import staticLang from '@language_static';
 
 export class HelperMockProvider<Provider, Value> {
-    constructor(public provide: Provider, public useValue?: Value) {
+    constructor(
+        public provide: Provider,
+        public useValue?: Value,
+    ) {
         if (!useValue) {
             this.useValue = <Value>{};
         }

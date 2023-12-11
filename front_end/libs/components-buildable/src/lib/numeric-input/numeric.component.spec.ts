@@ -157,7 +157,7 @@ describe('NumericComponent', () => {
             ({
                 key: char,
                 preventDefault,
-            } as unknown as KeyboardEvent);
+            }) as unknown as KeyboardEvent;
 
         Array.from('0123456789').map(char =>
             it(`should prevent event if a digit ${char} is received`, () => {

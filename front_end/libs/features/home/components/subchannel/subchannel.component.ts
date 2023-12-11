@@ -41,7 +41,11 @@ export class NxSubchannelComponent implements OnInit {
     currentSubchannel$ = this.route.params.pipe(
         switchMap(({ subchannelId }) => this.store.select(selectSubchannelPartner(subchannelId))),
     );
-    constructor(private route: ActivatedRoute, private router: Router, private store: Store) {}
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private store: Store,
+    ) {}
 
     ngOnInit(): void {
         this.currentTab = this.tabs.find(tab => tab.route === this.currentTabRoute);

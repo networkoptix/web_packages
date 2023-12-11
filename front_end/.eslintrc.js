@@ -47,11 +47,7 @@ module.exports = {
                 browser: true,
                 jasmine: true,
             },
-            plugins: [
-                'import',
-                // 'node',
-                // 'promise',
-            ],
+            plugins: ['import'],
             rules: {
                 'accessor-pairs': 'off',
                 camelcase: [

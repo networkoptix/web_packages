@@ -120,7 +120,10 @@ export class NxLicenseNewComponent implements OnChanges {
         );
     }
 
-    constructor(private processService: NxProcessService, private toastService: NxToastService) {}
+    constructor(
+        private processService: NxProcessService,
+        private toastService: NxToastService,
+    ) {}
 
     ngOnInit(): void {
         this.setupDefaults();

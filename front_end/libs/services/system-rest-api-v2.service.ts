@@ -149,11 +149,14 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         this.responseWrapper(
             Object.entries(data)
                 .filter(([key, _]: [string, LogV2]) => key.includes('Log'))
-                .reduce((levels, [key, logInfo]: [string, LogV2]) => {
-                    const modifiedKey = key.replace(/Log/, '').toUpperCase();
-                    levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
-                    return levels;
-                }, <t.LogLevelReply>{}),
+                .reduce(
+                    (levels, [key, logInfo]: [string, LogV2]) => {
+                        const modifiedKey = key.replace(/Log/, '').toUpperCase();
+                        levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
+                        return levels;
+                    },
+                    <t.LogLevelReply>{},
+                ),
         );
 
     logLevel(): Observable<t.LogLevel> {

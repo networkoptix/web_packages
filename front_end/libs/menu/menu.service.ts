@@ -40,21 +40,24 @@ export class NxMenuService {
             return content;
         }
         this.setHighlightPattern(model);
-        return content.reduce((menu, level1) => {
-            level1.level3 = level1.level3?.filter(item => {
-                const { additionalLabel } = item;
+        return content.reduce(
+            (menu, level1) => {
+                level1.level3 = level1.level3?.filter(item => {
+                    const { additionalLabel } = item;
 
-                let searchAggregate = item.label || '';
-                searchAggregate += additionalLabel ? ` ${additionalLabel}` : '';
-                searchAggregate += model.query.length > 10 && item.id ? ` ${item.id}` : '';
+                    let searchAggregate = item.label || '';
+                    searchAggregate += additionalLabel ? ` ${additionalLabel}` : '';
+                    searchAggregate += model.query.length > 10 && item.id ? ` ${item.id}` : '';
 
-                return this.searchService.findMatch(searchAggregate, model);
-            });
-            if (level1.level3?.length) {
-                menu.push(level1);
-            }
-            return menu;
-        }, <Level1Item[]>[]);
+                    return this.searchService.findMatch(searchAggregate, model);
+                });
+                if (level1.level3?.length) {
+                    menu.push(level1);
+                }
+                return menu;
+            },
+            <Level1Item[]>[],
+        );
     }
 
     /**

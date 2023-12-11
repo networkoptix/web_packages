@@ -66,8 +66,8 @@ export class IntegrationService implements OnDestroy {
                         plugin.state = plugin.pending
                             ? 'pending'
                             : plugin.draft
-                            ? 'draft'
-                            : undefined;
+                              ? 'draft'
+                              : undefined;
 
                         plugin.link = '/integrations/' + (plugin.urlified || plugin.id);
                         plugin.queryParams = plugin.state ? { state: plugin.state } : {};

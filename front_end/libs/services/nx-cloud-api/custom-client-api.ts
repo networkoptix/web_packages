@@ -9,7 +9,10 @@ import type * as t from './nx-cloud-api.types';
 export class CustomClientAPI {
     private readonly apiBase: string;
 
-    constructor(private http: HttpClient, private consoleService: NxConsoleService) {
+    constructor(
+        private http: HttpClient,
+        private consoleService: NxConsoleService,
+    ) {
         this.apiBase = apiBase + '/cms/custom_clients/';
     }
 

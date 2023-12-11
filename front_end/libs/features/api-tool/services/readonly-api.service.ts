@@ -44,7 +44,10 @@ export class NxReadonlyAPIService {
 
     queryParams: Params;
 
-    constructor(private api: NxCloudApiService, private _route: ActivatedRoute) {
+    constructor(
+        private api: NxCloudApiService,
+        private _route: ActivatedRoute,
+    ) {
         this._route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
             this.queryParams = params;
         });

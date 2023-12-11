@@ -98,7 +98,10 @@ export class NxAssetExplorerWidgetComponent extends FirstPartyWidget<
         this.updater$.next(0);
     }
 
-    constructor(cd: ChangeDetectorRef, private cloudApi: NxCloudApiService) {
+    constructor(
+        cd: ChangeDetectorRef,
+        private cloudApi: NxCloudApiService,
+    ) {
         super(cd);
         this.dataSource$ = this.updater$.pipe(
             map(maxAge => (maxAge === null ? this.card.config.maxAge : maxAge)),

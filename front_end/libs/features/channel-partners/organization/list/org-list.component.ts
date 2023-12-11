@@ -35,7 +35,10 @@ export class NxPartnerOrganizationsListComponent implements OnInit {
     //     name: 'Cool partner',
     // };
 
-    constructor(private uri: NxUriService, private partnersService: NxPartnersService) {}
+    constructor(
+        private uri: NxUriService,
+        private partnersService: NxPartnersService,
+    ) {}
 
     ngOnInit(): void {
         this.uri

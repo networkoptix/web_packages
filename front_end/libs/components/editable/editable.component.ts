@@ -140,7 +140,10 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
     private onTouchedCallback = (): void => {};
     private onChangeCallback = (_: any): void => {};
 
-    constructor(private el: ElementRef, @Inject(WINDOW) public window: Window) {}
+    constructor(
+        private el: ElementRef,
+        @Inject(WINDOW) public window: Window,
+    ) {}
 
     ngOnInit(): void {
         this.required = Boolean(this.required); // handle "undefined" and string values

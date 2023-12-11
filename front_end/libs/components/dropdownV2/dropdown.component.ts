@@ -57,7 +57,10 @@ export class NxDropdownComponent<T> implements AfterViewInit, OnChanges {
 
     private selectedOptionComponent: BaseDropdownItem<T> | undefined;
 
-    constructor(private overlay: Overlay, private domSanitizer: DomSanitizer) {}
+    constructor(
+        private overlay: Overlay,
+        private domSanitizer: DomSanitizer,
+    ) {}
     ngOnChanges(changes: NgChanges<NxDropdownComponent<unknown>>): void {
         if (changes.selected) {
             this.manuallySetSelectedOption();

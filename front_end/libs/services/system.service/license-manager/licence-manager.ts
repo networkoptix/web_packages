@@ -155,11 +155,11 @@ export class LicenseManager extends Destroyable {
             !licenses
                 ? CLOUD_STORAGE_STATES.LOADING
                 : licenses.length &&
-                  licenses.some(
-                      ({ state: { licenseState } }) => licenseState === LicenseState.ACTIVE,
-                  )
-                ? CLOUD_STORAGE_STATES.ACTIVATED
-                : CLOUD_STORAGE_STATES.DEFAULT,
+                    licenses.some(
+                        ({ state: { licenseState } }) => licenseState === LicenseState.ACTIVE,
+                    )
+                  ? CLOUD_STORAGE_STATES.ACTIVATED
+                  : CLOUD_STORAGE_STATES.DEFAULT,
         ),
         shareReplay({ bufferSize: 1, refCount: true }),
     );

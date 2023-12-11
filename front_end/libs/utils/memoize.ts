@@ -166,8 +166,8 @@ export function memoizeAsync(
                   seccondIsTtl ? defaultInvalidateFunction : invalidateFunctionOrTTL,
               )
             : ttl === Infinity
-            ? invalidateFunctionOrTTL
-            : invalidateByTtlFactory(ttl, invalidateFunctionOrTTL);
+              ? invalidateFunctionOrTTL
+              : invalidateByTtlFactory(ttl, invalidateFunctionOrTTL);
     return memoizeDecorator(hashFunction, invalidateFunction, asyncWrapperFunctionFactory);
 }
 

@@ -4,7 +4,10 @@ import { ServerManager } from '@services/system.service/server-manager/server-ma
 import { ReturnedObservableValueType } from '@utils/general';
 
 export class SystemResourceState<T> {
-    constructor(public value: T, public lastUpdated: number = 0) {}
+    constructor(
+        public value: T,
+        public lastUpdated: number = 0,
+    ) {}
 }
 
 export enum SystemResourceTypeEnums {

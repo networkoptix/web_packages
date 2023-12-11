@@ -62,7 +62,10 @@ export class NxNavDropdownComponent extends BaseDropdown {
         return nodes;
     }
 
-    constructor(public headerService: NxHeaderService, @Inject(WINDOW) private window: Window) {
+    constructor(
+        public headerService: NxHeaderService,
+        @Inject(WINDOW) private window: Window,
+    ) {
         super();
     }
 

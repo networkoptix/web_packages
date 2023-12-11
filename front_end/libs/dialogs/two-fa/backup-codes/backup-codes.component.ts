@@ -37,7 +37,10 @@ export class NxBackupCodesComponent {
     4. codeNo4  8. codeNo8
     */
 
-    constructor(private clipboardService: ClipboardService, toastService: NxToastService) {
+    constructor(
+        private clipboardService: ClipboardService,
+        toastService: NxToastService,
+    ) {
         clipboardService.copyResponse$.pipe(takeUntilDestroyed()).subscribe(res => {
             if (res.isSuccess) {
                 toastService.notify(staticLang.common.copiedToClipboard, ToastType.Success);

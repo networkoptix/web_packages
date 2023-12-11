@@ -23,7 +23,10 @@ export class TimelineService {
     subject = new Subject<TimelineServiceStatus>();
     canvasGeometryUpdateRequested: boolean = true;
 
-    constructor(private vms: VideoManagementSystemService, browserDetector: DeviceDetectorService) {
+    constructor(
+        private vms: VideoManagementSystemService,
+        browserDetector: DeviceDetectorService,
+    ) {
         // 1000 / [desired frames] = timeout between animation frames requests
         const _60fps = Math.ceil(1000 / 60); // ~17ms
         const _30fps = Math.ceil(1000 / 30); // ~34ms

@@ -616,8 +616,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                             <div class="larger"><strong>${
                                 this.secondaryName
                             }</strong> ${this.translateService.instant(
-                            this.LANG.ribbon.beingMerged.to,
-                        )}</div>
+                                this.LANG.ribbon.beingMerged.to,
+                            )}</div>
                             <div class="mt-2">${this.translateService.instant(
                                 this.LANG.ribbon.beingMerged.mayTake,
                             )}</div>

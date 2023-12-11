@@ -39,7 +39,10 @@ export class WebGlTimelinePlaybackIndicatorComponent implements OnChanges {
     @ViewChild('timePlaybackLine', { static: true })
     protected timePlaybackLine: ElementRef<HTMLDivElement>;
 
-    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
+    constructor(
+        languageService: NxLanguageProviderService,
+        private webglService: NxWebGLService,
+    ) {
         languageService.loadTimelineTranslations();
 
         this.webglService.xScale$.subscribe(scale => {

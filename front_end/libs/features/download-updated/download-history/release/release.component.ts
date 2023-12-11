@@ -26,8 +26,8 @@ export class ReleaseComponent implements OnInit {
         this.release.platforms.forEach(({ files }, i) => {
             this.release.platforms[i].files = files.filter(
                 ({ appType }) =>
-                    !['_debug', '_refs', '_update'].some(partialAppType =>
-                        appType?.includes(partialAppType),
+                    !['_debug', '_refs', '_update'].some(
+                        partialAppType => appType?.includes(partialAppType),
                     ),
             );
         });
