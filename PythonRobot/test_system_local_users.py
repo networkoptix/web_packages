@@ -202,14 +202,13 @@ def _reset_local_users_api(locals, server):
     """
     for user in locals:
         name = user['name'].replace("_changed", "")
-        if 'cloudadmin' in name:
+        user_type = name[6:]
+        if user_type == 'cloudadmin':
             user_type = 'cloudAdmin'
-        elif 'liveviewer' in name:
+        elif user_type == 'liveviewer':
             user_type = 'liveViewer'
-        elif 'advancedviewer' in name:
+        elif user_type == 'advancedviewer':
             user_type = 'advancedViewer'
-        else:
-            raise RuntimeError(f"Unknown role for user with name {name}")
         server.api.save_user(
             f"Local+{user_type}",
             permissions[user_type],
