@@ -90,6 +90,7 @@ const ResponseStrings = {
     timeoutError: 'TimeoutError',
     bothSystemsConnectedToCloud: 'bothSystemsConnectedToCloud',
     unknownTargetSystemConnectedToCloud: 'unknownTargetSystemConnectedToCloud',
+    incompatibleCloudToNonCloud: 'incompatibleCloudToNonCloud',
     systemOffline: 'systemOffline',
     systemOfflineUrl: 'systemOfflineUrl',
     secondarySystemUnavailable: 'secondarySystemUnavailable',
@@ -731,6 +732,12 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         ? ResponseStrings.unknownTargetSystemConnectedToCloud
                         : ResponseStrings.bothSystemsConnectedToCloud,
                 );
+            }
+            if (
+                !this.targetSystem.cloudOwnerId &&
+                this.system.serverManager.moduleInfo.cloudOwnerId
+            ) {
+                throw Error(ResponseStrings.incompatibleCloudToNonCloud);
             }
 
             if (!this.dryRunAvailable) {
