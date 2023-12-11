@@ -1,0 +1,14 @@
+diff --git a/node_modules/container-query-polyfill/package.json b/node_modules/container-query-polyfill/package.json
+index 9bcbfbe..f6ddae9 100644
+--- a/node_modules/container-query-polyfill/package.json
++++ b/node_modules/container-query-polyfill/package.json
+@@ -6,8 +6,7 @@
+     "type": "git",
+     "url": "https://github.com/GoogleChromeLabs/container-query-polyfill.git"
+   },
+-  "type": "module",
+-  "module": "dist/container-query-polyfill.modern.js",
++  "main": "dist/container-query-polyfill.modern.js",
+   "unpkg": "dist/container-query-polyfill.modern.js",
+   "publishConfig": {
+     "source": "src/index.ts"
