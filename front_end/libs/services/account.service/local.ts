@@ -5,6 +5,7 @@ import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { CookieService } from 'ngx-cookie-service';
+import { firstValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -98,28 +99,16 @@ export class LocalAccount extends BaseAccount {
         remember = false,
         _navigateHome = false,
     ): Promise<UserSession> {
-        return this.mediaServerApi
-            .loginToken(login, password, remember)
-            .pipe(
-                catchError((err: HttpErrorResponse) => {
-                    const errorLookup = {
-                        'Wrong password': 'notAuthorized',
-                        'Wrong username or password': 'notAuthorized',
-                        'This user on your IP is locked out due to many filed attempts. Please, try again later.':
-                            'accountBlocked',
-                        'The user is locked out due to several failed attempts. Please try again later.':
-                            'accountBlocked',
-                        'This user has been disabled by a system administrator.': 'userDisabled',
-                        'User not found.': 'notFound',
-                    };
-                    const resultCode = errorLookup[err.error.errorString];
-                    return Promise.reject({ resultCode });
-                }),
+        return firstValueFrom(
+            this.mediaServerApi.loginToken(login, password, remember).pipe(
+                catchError((err: HttpErrorResponse) =>
+                    Promise.reject({ resultCode: err.error.errorId }),
+                ),
                 tap(_ => {
                     this.sessionService.loginState = login;
                 }),
-            )
-            .toPromise();
+            ),
+        );
     }
 
     logoutHelper(doNotRedirect = false, skipReload = false): void {
