@@ -24,6 +24,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import { AddUser, Role } from '@services/system-user.types';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxToastService } from '@services/toast.service';
 
 import type { AddUser as DT } from '../dialogs.types';
@@ -135,8 +136,12 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         this.useGroups$$.set(this.system.version > 5.1);
 
         if (this.useGroups$$()) {
-            const groups = this.system.userManager.groups;
-            this.groups = this.removeLdapGroups([...groups]);
+            const userManager = this.system.userManager as UserWithGroupsManager;
+            const isOwner = this.system.permissionManager.isOwner$$();
+            const groups = userManager.groups;
+            this.groups = this.removeLdapGroups(
+                groups.filter(group => isOwner || !userManager.isGroupPowerUser(group)),
+            );
         }
 
         const defaultRole = this.system.userManager.accessRoles.find(
