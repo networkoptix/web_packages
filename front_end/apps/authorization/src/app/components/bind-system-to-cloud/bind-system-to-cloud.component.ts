@@ -78,12 +78,6 @@ export class BindSystemToCloudComponent implements OnInit {
 
     // Data
     code$$ = signal<string>('');
-    bindInfo$$ = signal<CloudBindData>({
-        authKey: '',
-        owner: '',
-        systemId: '',
-        organizationId: '',
-    });
     // State management
     state$$ = signal<BindState>({
         bindType: undefined,
@@ -185,27 +179,18 @@ export class BindSystemToCloudComponent implements OnInit {
             owner: ('ownerAccountEmail' in data && data.ownerAccountEmail) || '',
             organizationId: ('organizationId' in data && data.organizationId) || '',
         };
-        // This is needed for debugging purposes. Will clean in CLOUD-11794
-        this.bindInfo$$.set(bindInfo);
-        this.fsmState = BindDialogStates.finished;
 
         // eslint-disable-next-line nx/ban-global-variables
         if (window.nativeClient) {
             nativeClient.setBindInfo(bindInfo);
         } else if (this.redirectUri?.includes('https')) {
-            const url = new URL(this.redirectUri);
             const params = new URLSearchParams();
             Object.entries(bindInfo).forEach(([k, v]) => params.set(k, v));
             const bindQs = params.toString();
-            if (url.search) {
-                url.search = url.search + '&' + bindQs;
-            } else {
-                url.search = bindQs;
-            }
             // eslint-disable-next-line nx/ban-global-variables
-            window.location.href = url.toString();
-        } else {
-            // Todo: add error here
+            window.location.href = `${this.redirectUri}${
+                this.redirectUri?.includes('?') ? '&' : '?'
+            }${bindQs}`;
         }
     }
 }
