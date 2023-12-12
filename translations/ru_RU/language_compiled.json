@@ -272,6 +272,7 @@
     "Cannot initialize System": "Не удаётся инициализировать систему",
     "Cannot load preview": "Не удается загрузить предпросмотр",
     "Cannot merge Systems": "Невозможно объединить системы",
+    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Невозможно объединить системы, привязанные к облаку",
     "Cannot merge two Cloud Systems with different owners": "Невозможно объединить две облачные системы с разными владельцами",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Невозможно объединить две системы, подключенные к облаку. Пожалуйста, перейдите к %CLOUD_NAME%, чтобы объединить эти системы.",

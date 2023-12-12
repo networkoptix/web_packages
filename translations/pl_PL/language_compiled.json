@@ -272,6 +272,7 @@
     "Cannot initialize System": "Nie można zainicjować systemu",
     "Cannot load preview": "Nie można załadować podglądu",
     "Cannot merge Systems": "Nie można złączyć systemów",
+    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Nie można złączyć systemów powiązanych z chmurą",
     "Cannot merge two Cloud Systems with different owners": "Nie można połączyć dwóch systemów w chmurze z różnymi właścicielami",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Nie można złączyć dwóch systemów połączonych z chmurą. Przejdź do %CLOUD_NAME% aby złączyć te systemy.",
