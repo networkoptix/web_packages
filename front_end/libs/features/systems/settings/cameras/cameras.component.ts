@@ -109,7 +109,8 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             !this.isMobile &&
             !!this.camera &&
             !!this.motionMask &&
-            this.camera.status !== CameraStatus.Offline
+            this.camera.status !== CameraStatus.Offline &&
+            this.camera.status !== CameraStatus.Unauthorized
         );
     };
 
