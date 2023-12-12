@@ -26,7 +26,7 @@ export class NxBookmarksCardComponent implements OnInit {
 
     constructor(
         private dialogs: NxDialogsService,
-        private language: NxLanguageProviderService
+        private language: NxLanguageProviderService,
     ) {}
 
     ngOnInit(): void {

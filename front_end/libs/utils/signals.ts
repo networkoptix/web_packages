@@ -34,12 +34,12 @@ type ImmutablePrimitive = undefined | null | boolean | string | number | Functio
 export type Immutable<T> = T extends ImmutablePrimitive
     ? T
     : T extends Array<infer U>
-    ? ImmutableArray<U>
-    : T extends Map<infer K, infer V>
-    ? ImmutableMap<K, V>
-    : T extends Set<infer M>
-    ? ImmutableSet<M>
-    : ImmutableObject<T>;
+      ? ImmutableArray<U>
+      : T extends Map<infer K, infer V>
+        ? ImmutableMap<K, V>
+        : T extends Set<infer M>
+          ? ImmutableSet<M>
+          : ImmutableObject<T>;
 
 export type ImmutableArray<T> = ReadonlyArray<Immutable<T>>;
 export type ImmutableMap<K, V> = ReadonlyMap<Immutable<K>, Immutable<V>>;
@@ -49,12 +49,12 @@ export type ImmutableObject<T> = { readonly [K in keyof T]: Immutable<T[K]> };
 export type Mutable<T> = T extends ImmutablePrimitive
     ? T
     : T extends ImmutableArray<infer U>
-    ? MutableArray<U>
-    : T extends ImmutableMap<infer K, infer V>
-    ? MutableMap<K, V>
-    : T extends ImmutableSet<infer M>
-    ? MutableSet<M>
-    : MutableObject<T>;
+      ? MutableArray<U>
+      : T extends ImmutableMap<infer K, infer V>
+        ? MutableMap<K, V>
+        : T extends ImmutableSet<infer M>
+          ? MutableSet<M>
+          : MutableObject<T>;
 
 export type MutableArray<T> = Array<Mutable<T>>;
 export type MutableMap<K, V> = Map<Mutable<K>, Mutable<V>>;

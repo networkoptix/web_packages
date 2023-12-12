@@ -762,21 +762,26 @@ export class NxLayoutGridComponent {
 
     collisions$: Observable<Collisions> = combineLatest([this.#collisions$, this.layout$]).pipe(
         map(([{ draggingItem, collisions, swap }, { items }]) => {
-            const reducedCollisions = Object.keys(collisions).reduce((collisions, currentId) => {
-                const current = items.find(({ id }) => id === currentId && id !== draggingItem.id);
-                if (!current) {
-                    return collisions;
-                }
+            const reducedCollisions = Object.keys(collisions).reduce(
+                (collisions, currentId) => {
+                    const current = items.find(
+                        ({ id }) => id === currentId && id !== draggingItem.id,
+                    );
+                    if (!current) {
+                        return collisions;
+                    }
 
-                return {
-                    ...collisions,
-                    [currentId]: this.getCollisionStyle(current, draggingItem, items),
-                    [draggingItem.id || '']: {
-                        opacity: 0.25,
-                        background: 'var(--error)',
-                    },
-                };
-            }, {} as Record<string, Collisions>);
+                    return {
+                        ...collisions,
+                        [currentId]: this.getCollisionStyle(current, draggingItem, items),
+                        [draggingItem.id || '']: {
+                            opacity: 0.25,
+                            background: 'var(--error)',
+                        },
+                    };
+                },
+                {} as Record<string, Collisions>,
+            );
 
             const collisionInfo = Object.values(reducedCollisions);
             if (swap && draggingItem.id) {

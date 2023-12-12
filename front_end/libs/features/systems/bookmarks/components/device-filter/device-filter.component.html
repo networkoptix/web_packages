@@ -16,7 +16,7 @@
     <nx-simple-search [(ngModel)]="search"></nx-simple-search>
     <div class="devices">
         <label
-            *ngFor="let device of searchMatches | slice : 0 : displayLimit"
+            *ngFor="let device of searchMatches | slice: 0 : displayLimit"
             [ngClass]="{ selected: selection.isSelected(device.id) }"
         >
             <nx-checkbox

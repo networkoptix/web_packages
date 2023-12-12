@@ -194,7 +194,7 @@ export class NxLayoutViewComponent {
                             },
                         };
                     },
-                    {} as ResourceLookup<(typeof cameras)[0]>
+                    {} as ResourceLookup<(typeof cameras)[0]>,
                 );
 
                 const parsedServers = servers.reduce(
@@ -383,8 +383,8 @@ export class NxLayoutViewComponent {
         switchMap(async ([system, layoutId, layouts, layoutItems]): Promise<Layout> => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
                 const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
-                const isResourceId = Object.values(layoutItems).some(items =>
-                    items?.some(({ id }) => id === layoutId),
+                const isResourceId = Object.values(layoutItems).some(
+                    items => items?.some(({ id }) => id === layoutId),
                 );
 
                 // Prevent showing a layout that was accidentally saved with the same ID as a resource.

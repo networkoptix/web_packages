@@ -9,7 +9,7 @@
     }"
     [ngClass]="{
         'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
-        resizing: resizing,
+        resizing: resizing
     }"
 >
     <div
@@ -165,8 +165,8 @@
                     )
                         ? 'warning.svg'
                         : unsavedLayoutState$$() === unsavedStates.error
-                        ? 'error.svg'
-                        : 'info.svg')
+                          ? 'error.svg'
+                          : 'info.svg')
                 "
             ></svg-icon>
             <ng-container *ngSwitchCase="unsavedStates.unsaved">
@@ -235,8 +235,8 @@
                     (unsavedLayoutState$$() === unsavedStates.overwrite
                         ? unsavedStates.overwrite
                         : unsavedLayoutState$$() === unsavedStates.error
-                        ? unsavedStates.error
-                        : unsavedStates.save
+                          ? unsavedStates.error
+                          : unsavedStates.save
                     ) | translate
                 }}</span>
             </button>
@@ -407,7 +407,8 @@
                             [ngClass]="{
                                 'full-screen-wrapper':
                                     layoutItemWrapper === window.document.fullscreenElement,
-                                'swap': (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
+                                swap:
+                                    (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
                             }"
                             (resize)="checkUpdateAspectRatio($event, dragContainer)"
                         >
