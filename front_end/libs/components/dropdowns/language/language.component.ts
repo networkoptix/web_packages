@@ -111,8 +111,8 @@ class BaseLanguageDropdown extends BaseDropdown {
             this.languages =
                 this.CONFIG?.supportedLanguages?.length === 0
                     ? data
-                    : data.filter(language =>
-                          this.CONFIG.supportedLanguages?.includes(language.language),
+                    : data.filter(
+                          language => this.CONFIG.supportedLanguages?.includes(language.language),
                       );
             this.languages.sort(alphabeticalSort(lang => lang.language));
 

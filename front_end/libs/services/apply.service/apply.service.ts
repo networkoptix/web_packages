@@ -126,18 +126,21 @@ export class NxApplyService {
      * The other thing that still needs to be done are processes that trigger dialogs, need to find a way to only show the last.
      */
     runProcesses = () =>
-        this.applyFunctions.reduce((prevPromise, process, _) => {
-            return prevPromise
-                .then(prevRes => {
-                    return new Promise((resolve, reject) => {
-                        process.run(
-                            res => resolve(res || prevRes),
-                            res => reject(res || prevRes),
-                        );
-                    }).catch(res => Promise.reject(res));
-                })
-                .catch(res => Promise.reject(res));
-        }, Promise.resolve({ result: 'ok' }));
+        this.applyFunctions.reduce(
+            (prevPromise, process, _) => {
+                return prevPromise
+                    .then(prevRes => {
+                        return new Promise((resolve, reject) => {
+                            process.run(
+                                res => resolve(res || prevRes),
+                                res => reject(res || prevRes),
+                            );
+                        }).catch(res => Promise.reject(res));
+                    })
+                    .catch(res => Promise.reject(res));
+            },
+            Promise.resolve({ result: 'ok' }),
+        );
 
     /**
      * Creates the NxApplyComponent for the current page and sets the watchers.
@@ -304,18 +307,21 @@ export class NxApplyService {
                 }
             }
 
-            return this.applyFormFunctions.reduce((prevPromise, process, _) => {
-                return prevPromise
-                    .then(prevRes => {
-                        return new Promise((resolve, reject) => {
-                            process.run(
-                                res => resolve(res || prevRes),
-                                res => reject(res || prevRes),
-                            );
-                        }).catch(res => Promise.reject(res));
-                    })
-                    .catch(res => Promise.reject(res));
-            }, Promise.resolve({ result: 'ok' }));
+            return this.applyFormFunctions.reduce(
+                (prevPromise, process, _) => {
+                    return prevPromise
+                        .then(prevRes => {
+                            return new Promise((resolve, reject) => {
+                                process.run(
+                                    res => resolve(res || prevRes),
+                                    res => reject(res || prevRes),
+                                );
+                            }).catch(res => Promise.reject(res));
+                        })
+                        .catch(res => Promise.reject(res));
+                },
+                Promise.resolve({ result: 'ok' }),
+            );
         };
 
         this.nonSystem$.next(nonSystem);

@@ -75,9 +75,7 @@ export class NxAuthorizePasswordComponent implements OnInit, OnChanges, OnDestro
     setText(): void {
         this.header = this.templateText[this.clientType]?.header;
         this.subHeader = this.templateText[this.clientType]?.subHeader;
-        if (this.clientType.includes('Password')) {
-            this.subHeaderSuffix = this.templateText[this.clientType]?.subHeaderSuffix;
-        }
+        this.subHeaderSuffix = this.templateText[this.clientType]?.subHeaderSuffix;
     }
 
     ngOnDestroy(): void {}

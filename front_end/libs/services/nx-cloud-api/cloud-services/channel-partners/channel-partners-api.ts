@@ -152,6 +152,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.post(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users']), { body });
     };
 
+    getSelfChannelPartnerUser = (partnerId: string): Observable<ChannelPartnerUser> => {
+        return this.get(this.makeUrl(urlBases.CHANNEL_PARTNERS, [partnerId, 'users', 'self']));
+    };
+
     // Updates role
     updateChannelPartnerUser = (
         partnerId: string,

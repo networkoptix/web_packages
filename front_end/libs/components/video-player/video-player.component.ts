@@ -1,10 +1,10 @@
 /* eslint-disable */
-import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, computed, effect, runInInjectionContext, signal } from '@angular/core';
+import { Component, ElementRef, EventEmitter, HostBinding, Injector, Input, Output, TemplateRef, ViewChild, effect, runInInjectionContext, signal } from '@angular/core';
 import { v4 as uuid } from 'uuid';
 
 import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
-import { ConnectionError, WebRTCStreamManager, AvailableStreams, ApiVersions, RequiresTranscoding, isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
+import { ConnectionError, WebRTCStreamManager, AvailableStreams, TargetStream } from '@openLibs/webrtc-stream-manager';
 import {
     firstValueFrom,
     of,
@@ -53,7 +53,7 @@ type DrawImageFullTuple = [number, number, number, number, number, number, numbe
 })
 export class NxVideoPlayerComponent {
     camera$$ = signal<NxSystemCamera | null>(null)
-    @Input() set camera(camera: NxSystemCamera) {
+    @Input({ required: true }) set camera(camera: NxSystemCamera) {
         this.camera$$.set(camera);
     };
 
@@ -64,7 +64,6 @@ export class NxVideoPlayerComponent {
     @Input() zoom: Pick<LayoutItem, 'zoomTop' | 'zoomRight' | 'zoomBottom' | 'zoomLeft'>;
     @Input() lostConnectionPlaceholder: TemplateRef<any>;
     @Input() skipCredentialsCheck: boolean = false;
-    @Input() accessToken: string;
 
     resolution$$ = signal(Resolution.AUTO)
     @Input() set resolution(resolution: Resolution) {
@@ -121,6 +120,7 @@ export class NxVideoPlayerComponent {
         private injector: Injector,
     ) {
         this.playerId = uuid();
+        WebRTCStreamManager.RELAY_URL = this.CONFIG.trafficRelayHost;
     }
 
     calculateCropParams = (drawParams: DrawImagePartialTuple): DrawImagePartialTuple => {
@@ -139,15 +139,15 @@ export class NxVideoPlayerComponent {
     }
 
     zoomStream = async (stream: MediaStream): Promise<MediaStream> => {
-        if ((['zoomTop', 'zoomBottom', 'zoomRight', 'zoomLeft'] as const).every(key => !this.zoom?.[key])) {
-            return stream;
-        }
-
-        const video = this.originalStream.nativeElement;
+        const video = this.originalStream.nativeElement as HTMLVideoElement & { captureStream: () => MediaStream };
         const canvas = this.zoomCanvas.nativeElement;
         video.autoplay = true;
         video.muted = true;
         video.srcObject = stream;
+
+        if ((['zoomTop', 'zoomBottom', 'zoomRight', 'zoomLeft'] as const).every(key => !this.zoom?.[key])) {
+            return video.captureStream();
+        }
 
         await new Promise(resolve => {
             const startHandlingStream = () => {
@@ -177,35 +177,16 @@ export class NxVideoPlayerComponent {
         })
 
         const newStream = canvas.captureStream();
-        if (typeof stream !== 'string') {
-            stream.getAudioTracks().forEach(track => newStream.addTrack(track));
-        }
+        stream.getAudioTracks().forEach(track => newStream.addTrack(track));
 
         return newStream;
     }
-
-
-    autoResStreams$$ = computed(() => {
-        const camera = this.camera$$();
-        const codecAllowed = (codec: number): boolean => {
-            const connection = WebRTCStreamManager.getInstance(camera.id);
-            if (!!connection?.allowTranscoding || connection?.apiVersion !== ApiVersions.v1) {
-                return true;
-            }
-
-            return !isRequiresTranscoding(codec)
-        }
-
-        return camera.parameters.mediaStreams.streams
-        ?.filter(({ encoderIndex, codec}) => encoderIndex !== -1 && codecAllowed(codec))
-        .map(({ encoderIndex }) => encoderIndex).sort()
-    })
 
     syncAvailableStreams(connection: WebRTCStreamManager, hasSecondary: boolean): void {
         runInInjectionContext(this.injector, () => {
             effect(() => {
                 const resolution = this.resolution$$() || Resolution.AUTO;
-                const autoResStreams = this.autoResStreams$$() || (hasSecondary ? [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY] : [AvailableStreams.PRIMARY]);
+                const autoResStreams = [AvailableStreams.PRIMARY, AvailableStreams.SECONDARY]
 
                 const streamLookup: Record<Resolution, AvailableStreams[]> = {
                     [Resolution.AUTO]: autoResStreams,
@@ -214,23 +195,21 @@ export class NxVideoPlayerComponent {
                     [Resolution.CUSTOM]: autoResStreams
                 }
 
-                if (!streamLookup[resolution].length) {
-                    const camera = this.camera$$();
-                    const { codec } = camera?.parameters.mediaStreams.streams.find(({ encoderIndex }) => encoderIndex === 0);
-                    this.showError.emit(codec === RequiresTranscoding.H265 ? ConnectionError.transcodingDisabled : ConnectionError.mjpegDisabled);
-                } else {
-                    connection.updateAvailableStreams(streamLookup[resolution])
-                }
-
+                connection.updateAvailableStreams(streamLookup[resolution])
             })
         });
     }
 
     ngAfterViewInit(): void {
+        if (!this.camera) {
+            return;
+        }
+
         const availableStreams: AvailableStreams[] = this.camera.parameters.mediaStreams?.streams?.map(({ encoderIndex }) => encoderIndex).filter(stream => stream !== -1) ?? [AvailableStreams.SECONDARY, AvailableStreams.PRIMARY];
         const hasSecondary = availableStreams.includes(AvailableStreams.SECONDARY);
+        const targetStream = availableStreams.length ? TargetStream.AUTO : hasSecondary ? TargetStream.LOW : TargetStream.HIGH
 
-        const stream$ = WebRTCStreamManager.connect((params: {position: string }) => this.camera.webRtcUrl(params), this.originalStream.nativeElement, availableStreams, this.accessToken).pipe(
+        const stream$ = WebRTCStreamManager.connect({ cameraId: this.camera.id, systemId: this.camera.systemId, accessToken: this.camera.accessToken, targetStream }, this.originalStream.nativeElement).pipe(
             tap(async ([stream, error, connection]) => {
                 this.syncAvailableStreams(connection, hasSecondary)
                 if (stream) {

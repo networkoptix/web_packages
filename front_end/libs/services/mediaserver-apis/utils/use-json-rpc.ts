@@ -47,14 +47,17 @@ function mapAggregatedJsonRpcCalls(
         .split('?')
         .pop()
         .split('&')
-        .reduce((acc, param) => {
-            const [key, _value] = param.split('=');
-            if (key === 'exec_cmd') {
-                const endpoint = decodeURIComponent(_value);
-                acc[endpoint] = callback(endpoint.startsWith('/') ? endpoint : `/${endpoint}`);
-            }
-            return acc;
-        }, {} as Record<string, Observable<unknown>>);
+        .reduce(
+            (acc, param) => {
+                const [key, _value] = param.split('=');
+                if (key === 'exec_cmd') {
+                    const endpoint = decodeURIComponent(_value);
+                    acc[endpoint] = callback(endpoint.startsWith('/') ? endpoint : `/${endpoint}`);
+                }
+                return acc;
+            },
+            {} as Record<string, Observable<unknown>>,
+        );
 }
 
 const excludedEndpoints = [

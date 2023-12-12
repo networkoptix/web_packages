@@ -1,0 +1,5 @@
+Hej, {{message.userFullName}}
+
+{{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig.
+
+Visa i %CLOUD_NAME% Portal med denna länk: {{ config.portal_url }}

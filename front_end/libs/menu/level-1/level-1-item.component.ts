@@ -31,7 +31,10 @@ export class NxLevel1ItemComponent implements OnInit, OnChanges {
     _searchableItemsLength: number;
     icons = icons;
 
-    constructor(private router: Router, private menuService: NxMenuService) {}
+    constructor(
+        private router: Router,
+        private menuService: NxMenuService,
+    ) {}
 
     ngOnInit(): void {
         this.itemPath = this.base;

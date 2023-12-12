@@ -3743,6 +3743,11 @@ class Flag(AbstractUserFlag):
                 self.data_structure = ds
         ret = super().save(*args, **kwargs)
         caches['customization'].delete('features_cache_key')
+        # As flags changes can affect global settings we need to invalidate cached data
+        # Todo. Consider changing to scan-delete to avoid db requests
+        settings_keys = [cloud_portal_customization_cache_key(c.name) for c in Customization.objects.all()]
+        if settings_keys:
+            caches['customization'].delete_many(settings_keys)
         Flag.flush_global_vals()
         return ret
 

@@ -8,7 +8,7 @@ from model_bakery import baker
 from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser,
     Organization, OrganizationPermissions, ChannelPartnerStates,
-    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles
+    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles, SystemGroup
 )
 
 
@@ -291,6 +291,84 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is False
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
+        
+    def test_get_groups_structure_for_user(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
+                    system_group_factory, sys_group_user_factory, system_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+
+        def creat_groups(organization, degree=3):
+            groups = [[system_group_factory(organization=organization) for _ in range(degree)]]
+            for level in range(degree):
+                siblings = []
+                for group in groups[level]:
+                    for _ in range(degree):
+                        siblings.append(system_group_factory(organization=organization, parent=group))
+                groups.append(siblings)
+            return groups
+
+        org_groups = creat_groups(organization=org)
+
+        single_group_user = sys_group_user_factory(organization=org, group=org_groups[-1][-1])
+
+        single_group_structure = org.get_groups_structure_for_user(single_group_user.user)
+
+        assert len(single_group_structure) == 1
+        assert single_group_structure[0]['id'] == org_groups[-1][-1].id
+
+        one_sublevel_user = sys_group_user_factory(organization=org, group=org_groups[-2][-1])
+
+        one_sublevel_struct = org.get_groups_structure_for_user(one_sublevel_user.user)
+
+        assert len(one_sublevel_struct) == 1
+        assert one_sublevel_struct[0]['id'] == org_groups[-2][-1].id
+        assert len(one_sublevel_struct[0]['children']) == 3
+
+        combo_user = sys_group_user_factory(organization=org, group=org_groups[1][0])
+        sys_group_user_factory(organization=org, group=org_groups[-2][-1], cloud_user=combo_user.user)
+        combo_struct = org.get_groups_structure_for_user(combo_user.user)
+        assert len(combo_struct) == 2
+        assert combo_struct[1]['id'] == org_groups[-2][-1].id
+        assert len(combo_struct[1]['children']) == 3
+        assert len(combo_struct[1]['children'][0]['children']) == 0
+        assert combo_struct[0]['id'] == org_groups[1][0].id
+        assert len(combo_struct[0]['children']) == 3
+        assert len(combo_struct[0]['children'][0]['children']) == 3
+        assert all(g['id'] in (SystemGroup.objects
+                               .filter(parent__parent=org_groups[1][0]).values_list('id', flat=True))
+                   for g in combo_struct[0]['children'][0]['children'])
+        assert len(combo_struct[0]['children'][0]['children'][0]['children']) == 0
+
+        def check_all(children, parent_id=None):
+            parent_children = (SystemGroup.objects
+                                .filter(parent=parent_id, organization=org).values_list('id', flat=True))
+            cnt = 1 if parent_id else 0
+            for group in children:
+                assert group['parent_id'] == parent_id
+                assert group['id'] in parent_children
+                cnt += check_all(group['children'], group['id'])
+            return cnt
+
+        org_user = org_user_factory(organization=org)
+        org_struct = org.get_groups_structure_for_user(org_user.user)
+        assert len(org_struct) == 3
+        assert len(org_struct[0]['children']) == 3
+        assert len(org_struct[0]['children'][0]['children']) == 3
+        assert len(org_struct[0]['children'][0]['children'][0]['children']) == 3
+        assert len(org_struct[0]['children'][0]['children'][0]['children'][0]['children']) == 0
+        count = check_all(org_struct)
+        assert count == SystemGroup.objects.filter(organization=org).count()
+
+        org_struct = org.get_groups_structure_for_user(cp_user.user)
+        assert len(org_struct) == 3
+        assert len(org_struct[0]['children']) == 3
+        assert len(org_struct[0]['children'][0]['children']) == 3
+        assert len(org_struct[0]['children'][0]['children'][0]['children']) == 3
+        assert len(org_struct[0]['children'][0]['children'][0]['children'][0]['children']) == 0
+        check_all(org_struct)
+        assert count == SystemGroup.objects.filter(organization=org).count()
 
 
 class TestEffectiveStates:

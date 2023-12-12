@@ -88,8 +88,8 @@ export class NxThirdPartyWidgetComponent extends FirstPartyWidget<
                 const source = image
                     ? `<img class="fs-exclude" alt="Embedded Image" src="${result}" style="width: 100%; font-size: inherit;"/>`
                     : otherName.endsWith('.html') || otherName.endsWith('.htm')
-                    ? result
-                    : `<pre id="plain-text-editable" contenteditable>${result}</pre>`;
+                      ? result
+                      : `<pre id="plain-text-editable" contenteditable>${result}</pre>`;
                 card = {
                     name: image,
                     sizes: NxThirdPartyWidgetComponent.SIZES,

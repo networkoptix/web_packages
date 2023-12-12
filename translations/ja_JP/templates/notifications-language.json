@@ -37,5 +37,35 @@
   },
   "system_shared": {
     "emailSubject": "ビデオシステム{{{message.system_name}}が共有されました。"
+  },
+  "cps_organization_invite": {
+    "emailSubject": "{{message.sharer_name}} さんがあなたを %CLOUD_NAME%に招待しています"
+  },
+  "cps_organization_share": {
+    "emailSubject": "組織 {{message.organization_name}} が共有されました"
+  },
+  "cps_organization_state_active": {
+    "emailSubject": "組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました"
+  },
+  "cps_organization_state_confirmation": {
+    "emailSubject": "組織 {{message.organization_name}} のステータス {{message.status_name}} への遷移について確認してください"
+  },
+  "cps_organization_state_suspended": {
+    "emailSubject": "組織 {{message.organization_name}} のステータスが {{message.status_name}} に変更されました"
+  },
+  "cps_partner_invite": {
+    "emailSubject": "{{message.sharer_name}} さんがあなたを %CLOUD_NAME%に招待しています"
+  },
+  "cps_partner_share": {
+    "emailSubject": "パートナー {{message.partner_name}} が共有されました"
+  },
+  "cps_partner_state_active": {
+    "emailSubject": "パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました "
+  },
+  "cps_partner_state_confirmation": {
+    "emailSubject": "パートナー {{message.partner_name}} のステータス {{message.status_name}} への遷移について確認してください "
+  },
+  "cps_partner_state_suspended": {
+    "emailSubject": "パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました "
   }
 }

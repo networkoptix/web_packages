@@ -1,0 +1,5 @@
+Hei, {{message.userFullName}}
+
+Status for {{message.organization_name}} -organisasjonen endres til {{message.status_name}}.
+
+Ta kontakt med partneren din for mer informasjon.

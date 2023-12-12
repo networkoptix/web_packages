@@ -3,7 +3,7 @@
         <div *ngIf="!(inSubchannels$ | async); else outlet">
             <div class="actions p-3">
                 <button
-                    [disabled]="!isAdmin"
+                    [disabled]="!canCreatePartners$$()"
                     class="btn btn-default"
                     translate
                     (click)="newPartnerDialog()"

@@ -11,6 +11,7 @@ import {
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import dateFormat from 'dateformat';
+import { isEqual } from 'lodash-es';
 import { distinctUntilChanged } from 'rxjs';
 
 import { NxLanguageProviderService } from '@services/nx-language-provider';
@@ -99,11 +100,14 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
     // dragStop$: Subject<boolean> = new Subject<boolean>();
 
-    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
+    constructor(
+        languageService: NxLanguageProviderService,
+        private webglService: NxWebGLService,
+    ) {
         languageService.loadTimelineTranslations();
 
         this.webglService.selection$
-            .pipe(untilDestroyed(this), distinctUntilChanged())
+            .pipe(untilDestroyed(this), distinctUntilChanged(isEqual))
             .subscribe((selection: ExportSelection) => {
                 this.selection = selection;
                 if (this.selection.active) {

@@ -1,0 +1,17 @@
+@use 'typography' as typography;
+
+:host {
+    form {
+        label {
+            color: var(--body-text-color) !important;
+        }
+    }
+
+    .section-descr {
+        @include typography.regular12nocolor;
+    }
+
+    .section-link {
+        display: contents !important;
+    }
+}

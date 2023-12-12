@@ -8,8 +8,8 @@ const initialState: ChannelPartnersState = {
     currentOrgId: null,
     currentSubchannels: [],
     currentPartnerOrganizations: [],
-    channelPartners: [],
-    rootOrganizations: [],
+    channelPartners: null,
+    rootOrganizations: null,
     visitedPartners: {},
 };
 

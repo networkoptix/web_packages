@@ -24,7 +24,10 @@ export class NxUpdateInfoComponent implements OnInit {
     timerSubscription: Subscription;
     icons = icons;
 
-    constructor(private healthService: NxHealthService, private ribbonService: NxRibbonService) {}
+    constructor(
+        private healthService: NxHealthService,
+        private ribbonService: NxRibbonService,
+    ) {}
 
     ngOnInit(): void {
         this.initUpdateTime();

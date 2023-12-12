@@ -68,7 +68,7 @@
                         <div
                             *ngFor="
                                 let assetType of card.config.assetTypes
-                                    | as : { key: AssetTypeInterface }
+                                    | as: { key: AssetTypeInterface }
                                     | keyvalue
                             "
                             class="d-flex mb-1"
@@ -94,9 +94,7 @@
                 (click)="refreshData()"
             >
                 <span>
-                    {{
-                        LANG.components.widgets.lastUpdated | translate : { date: dataSource.last }
-                    }}
+                    {{ LANG.components.widgets.lastUpdated | translate: { date: dataSource.last } }}
                 </span>
                 <svg-icon
                     nx-add-svg-src

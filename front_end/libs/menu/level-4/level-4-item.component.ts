@@ -1,4 +1,4 @@
-import { Component, Input, OnChanges, computed, Signal } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 
 import { NxMenuService } from '@menu/menu.service';
 import { icons } from '@static-variables';
@@ -22,8 +22,8 @@ export class NxLevel4ItemComponent implements OnChanges {
     @Input() idx: number;
 
     itemPath: string;
-    menuNavItemId: Signal<string> = computed(() => this.menuService.navItemId());
-    search: Signal<RegExp> = computed(() => this.menuService.searchRegex());
+    menuNavItemId = this.menuService.navItemId.asReadonly();
+    search = this.menuService.searchRegex.asReadonly();
     icons = icons;
 
     constructor(private menuService: NxMenuService) {}

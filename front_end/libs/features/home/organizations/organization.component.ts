@@ -1,10 +1,12 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, signal } from '@angular/core';
+import { Component, DestroyRef, Input, OnInit, inject, signal } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { AngularSvgIconModule } from 'angular-svg-icon';
+import { distinctUntilChanged, firstValueFrom, map } from 'rxjs';
 
 import { selectCurrentUser } from '@common/store/account/account.selectors';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -18,6 +20,7 @@ import {
     GroupItem,
     Organization,
     State,
+    OrgPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
@@ -69,32 +72,28 @@ export class NxOrganizationsComponent implements OnInit {
     LANG = staticLang;
     icons = icons;
     State = State;
-    tabs: Tab[] = [
-        {
-            displayName: this.LANG.channelPartners.tabNames.systems,
-            route: 'systems',
-        },
-    ];
+    tabs: Tab[] = [];
 
     currentTabIndex$$ = signal(0);
     isLoading = true;
     userEmail: string;
+    destroyRef = inject(DestroyRef);
+    isChannelPartnerUser$$ = signal<boolean | undefined>(undefined);
     @Input() inChannelPartner: boolean;
-    @Input() isAdmin: boolean;
     @Input() currentTabRoute: string;
 
     account = this.store.selectSignal<Account>(selectCurrentUser);
     organizations$$ = this.store.selectSignal<Organization[]>(selectRootOrganizations);
     currentPartnerOrganizations$$ =
         this.store.selectSignal<Organization[]>(selectCurrentPartnerOrgs);
-    currentPartnerId = this.store.selectSignal<string>(selectCurrentPartnerId);
+    currentPartnerId$$ = this.store.selectSignal<string>(selectCurrentPartnerId);
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
 
     openGroups$ = this.store.select<OpenGroups>(selectOpenGroups);
     sidebarSettings: CustomAccountProperty<SidebarSettings>;
     hasGroups$ = this.store.select<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
-    currentOrganization$ = this.store.select(selectCurrentOrganization);
+    currentOrganization$$ = this.store.selectSignal(selectCurrentOrganization);
 
     constructor(
         private store: Store,
@@ -116,49 +115,66 @@ export class NxOrganizationsComponent implements OnInit {
         if (!this.inChannelPartner) {
             this.store.dispatch(CPActions.setCurrentPartnerId({ currentPartnerId: null }));
         }
-        if (this.isAdmin) {
-            const adminTabs = [
-                {
-                    displayName: this.LANG.channelPartners.tabNames.users,
-                    route: 'users',
-                },
-                ...(nxConfig.featureFlags.channelPartnersReports
-                    ? [
-                          {
-                              displayName: this.LANG.channelPartners.tabNames.reports,
-                              route: 'reports',
-                          },
-                      ]
-                    : []),
-                {
-                    displayName: this.LANG.channelPartners.tabNames.settings,
-                    route: 'settings',
-                },
-            ];
-            this.tabs.push(...adminTabs);
-        }
-        for (const [index, tab] of this.tabs.entries()) {
-            if (tab.route === this.currentTabRoute) {
-                this.currentTabIndex$$.set(index);
-                break;
-            }
-        }
 
-        this.cpService.paramStateHandler.state$.subscribe(({ params: { organizationId } }) => {
-            if (!organizationId) {
-                return;
-            }
-            this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: organizationId }));
-            const orgs = this.organizations$$();
-            const partnerOrgs = this.currentPartnerOrganizations$$();
-            if (
-                !orgs.find(o => o.id === organizationId) &&
-                !partnerOrgs.find(o => o.id === organizationId)
-            ) {
-                this.router.navigate(['404']);
-            }
-            this.isLoading = false;
-        });
+        this.cpService.paramStateHandler.state$
+            .pipe(
+                map(({ params }) => params.organizationId),
+                distinctUntilChanged(),
+                takeUntilDestroyed(this.destroyRef),
+            )
+            .subscribe(async id => {
+                this.tabs = [];
+                const orgs = this.organizations$$();
+                const partnerOrgs = this.currentPartnerOrganizations$$();
+                if (!orgs.find(o => o.id === id) && !partnerOrgs.find(o => o.id === id)) {
+                    return this.router.navigate(['404']);
+                }
+                this.store.dispatch(CPActions.setCurrentOrgId({ currentOrgId: id }));
+                const currOrg = this.currentOrganization$$();
+                const { ownPermissions } = currOrg;
+                await firstValueFrom(
+                    this.cpService.getSelfChannelPartnerUser(currOrg?.channelPartner),
+                )
+                    .then(() => this.isChannelPartnerUser$$.set(true))
+                    .catch(() => this.isChannelPartnerUser$$.set(false));
+                if (
+                    ownPermissions.includes(OrgPermissions.ACCESS_SYSTEMS) ||
+                    this.isChannelPartnerUser$$()
+                ) {
+                    this.tabs.push({
+                        displayName: this.LANG.channelPartners.tabNames.systems,
+                        route: 'systems',
+                    });
+                }
+                if (ownPermissions.includes(OrgPermissions.MANAGE_USERS)) {
+                    this.tabs.push({
+                        displayName: this.LANG.channelPartners.tabNames.users,
+                        route: 'users',
+                    });
+                }
+                if (
+                    ownPermissions.includes(OrgPermissions.VIEW_SERVICE_REPORTS) &&
+                    nxConfig.featureFlags.channelPartnersReports
+                ) {
+                    this.tabs.push({
+                        displayName: this.LANG.channelPartners.tabNames.reports,
+                        route: 'reports',
+                    });
+                }
+                if (ownPermissions.includes(OrgPermissions.CONFIGURE_ORGANIZATION)) {
+                    this.tabs.push({
+                        displayName: this.LANG.channelPartners.tabNames.settings,
+                        route: 'settings',
+                    });
+                }
+                for (const [index, tab] of this.tabs.entries()) {
+                    if (tab.route === this.currentTabRoute) {
+                        this.currentTabIndex$$.set(index);
+                        break;
+                    }
+                }
+                this.isLoading = false;
+            });
 
         this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
             this.store.dispatch(
@@ -218,6 +234,6 @@ export class NxOrganizationsComponent implements OnInit {
     }
 
     toRoot(): void {
-        this.router.navigate(['home', 'channelPartners', this.currentPartnerId()]);
+        this.router.navigate(['home', 'channelPartners', this.currentPartnerId$$()]);
     }
 }

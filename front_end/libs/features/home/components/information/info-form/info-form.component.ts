@@ -1,0 +1,58 @@
+import { CommonModule } from '@angular/common';
+import { Component, inject, Input, OnChanges } from '@angular/core';
+import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { AngularSvgIconModule } from 'angular-svg-icon';
+
+import { NxButtonComponent } from '@components/button/button.component';
+import { NxContentBlockComponent } from '@components/content-block/content-block.component';
+import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
+import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
+import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { InfoRow } from '@pages/home/components/information/information.types';
+import { icons } from '@static-variables';
+import { NgChanges } from '@utils/ng-changes';
+
+@Component({
+    selector: 'nx-info-form',
+    templateUrl: 'info-form.component.html',
+    styleUrls: ['info-form.component.scss'],
+    standalone: true,
+    imports: [
+        CommonModule,
+        AngularSvgIconModule,
+        NxContentBlockComponent,
+        NxContentBlockSectionComponent,
+        NxAddSvgSrcDirective,
+        ReactiveFormsModule,
+        NxButtonComponent,
+        NxPagePlaceholderV2Component,
+    ],
+})
+export class NxInfoGroupComponent implements OnChanges {
+    @Input() formId: string;
+    @Input() editMode: boolean;
+    @Input() linkPredicate: string;
+    @Input() data: InfoRow[];
+
+    icons = icons;
+    private formBuilder = inject(FormBuilder);
+    form: FormGroup = this.formBuilder.group({
+        records: this.formBuilder.array([]),
+    });
+
+    ngOnChanges(changes: NgChanges<NxInfoGroupComponent>): void {
+        if (changes.data?.currentValue) {
+            this.setInfoRows(changes.data.currentValue);
+        }
+    }
+
+    setInfoRows(data: InfoRow[]): void {
+        const rows = data.map(row => this.formBuilder.group(row));
+        const rowsFormArray = this.formBuilder.array(rows);
+        this.form.setControl('records', rowsFormArray);
+    }
+
+    get records(): FormArray {
+        return this.form.get('records') as FormArray;
+    }
+}

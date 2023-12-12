@@ -275,7 +275,8 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(queryset=OrganizationRole.objects.all(),
-                                                                   required=False, allow_null=True)
+                                                                   required=False, allow_null=True,
+                                                                   source='channel_partner_access_level')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
     currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
@@ -308,7 +309,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         if instance.channel_partner_access_level_id:
             if rel := self.user_access_matrix.get_cp_to_user_rel(instance.channel_partner_id):
                 if rel.roles:
-                    own_roles |= {self.organization_roles[instance.channel_partner_access_level_id]['name']}
+                    own_roles |= {instance.channel_partner_access_level_id}
         return list(own_roles)
 
     def get_roles_names(self, instance: Organization) -> List[str]:
@@ -632,27 +633,40 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         cloud_system.save()
 
 
+class ServiceQuantitySerializer(serializers.Serializer):
+    quantity = serializers.IntegerField(required=True)
+    used = serializers.IntegerField(required=False, read_only=True)
+
+
 @extend_schema_serializer(
     examples=[
          OpenApiExample(
             'Services Example',
             value={
                 'services': {'3fa85f64-5717-4562-b3fc-2c963f66afa6': {
-                    'quantity': 10
+                    'quantity': 10,
+                    'used': 5
                 }},
             },
+            response_only=True
+        ),
+        OpenApiExample(
+            'Services Example',
+            value={
+                'services': {'3fa85f64-5717-4562-b3fc-2c963f66afa6': {
+                    'quantity': 10,
+                }},
+            },
+            request_only=True
         ),
     ]
 )
 class SystemServiceQuantitySerializer(serializers.ModelSerializer):
-    services = serializers.DictField()
+    services = serializers.DictField(child=ServiceQuantitySerializer())
 
     class Meta:
         model = CloudSystemId
         fields = ['services']
-
-    class ServiceQuantitySerializer(serializers.Serializer):
-        quantity = serializers.IntegerField(required=True)
 
     def update(self, instance: CloudSystemId, validated_data):
         services = validated_data.get('services')
@@ -682,7 +696,7 @@ class SystemServiceQuantitySerializer(serializers.ModelSerializer):
             err = ''
             if not ChannelPartnerService.objects.filter(id=service_id).exists():
                 err += f'Service {service_id} does not exist'
-            ser = self.ServiceQuantitySerializer(data=service_qty)
+            ser = ServiceQuantitySerializer(data=service_qty)
             if not ser.is_valid():
                 err += ', Quantity is invalid:' + ' '.join(ser.errors['quantity'])
                 err += '.'
@@ -780,14 +794,14 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
     def bind_system(self):
         validated_data = self.validated_data
         request = self.context.get('request')
-        system_id = validated_data.get('id')
+        system_id = validated_data.get('id', '')
         organization = validated_data.get('organization')
         name = validated_data.get('name')
         customization = validated_data.get('customization')
         opaque = validated_data.get('opaque')
 
         system_bind_response, status_code = bind_system_to_cdb_organization(
-            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=organization.id, system_id=system_id,
+            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=str(organization.id), system_id=str(system_id),
             name=name, customization=customization, opaque=opaque
         )
 

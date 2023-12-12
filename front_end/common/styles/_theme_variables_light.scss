@@ -767,11 +767,14 @@ html[data-theme="light"], .theme-override[data-theme="light"] {
     --placeholder-error-color: var(--attention-red_dark);
     --placeholder-info-color: var(--dark11);
     --no-camera-placeholder-color: var(--dark17);
-    --sidebar-background: var(--light4);
+    --sidebar-background: var(--light5);
     --sidebar-tab-hover: var(--light6);
     --sidebar-tab-closed: var(--light8);
 
     --tree-locked-icon: var(--dark4);
+    --tree-editable-selection-override: var(--light3);
+    --tree-renaming-layout-background: var(--light6);
+    --tree-new-layout-background: var(--light4);
 
     --context-menu-bg: var(--drop-menu-navigation-bg);
     --context-menu-shadow: rgba(var(--dark15-rgb), 0.2);

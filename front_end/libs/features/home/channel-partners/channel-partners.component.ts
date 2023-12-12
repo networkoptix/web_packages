@@ -1,6 +1,6 @@
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit, DestroyRef, inject, signal } from '@angular/core';
+import { Component, Input, OnInit, DestroyRef, inject, signal, computed } from '@angular/core';
 import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterModule } from '@angular/router';
@@ -27,6 +27,7 @@ import staticLang from '@language_static';
 import {
     ChannelPartner,
     Organization,
+    ChannelPartnerPermissions,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { caseInsenstiveSearch } from '@utils/general';
 import { search as searchConfig, icons } from '@variables/static-variables';
@@ -69,12 +70,17 @@ export class NxChannelPartnersComponent implements OnInit {
     currentPartnerId: string;
     currentPartnerOrgs: Organization[];
     routeData$ = this.route.data;
+    canCreateOrganizations$$ = computed(() => {
+        const currPartner = this.currentPartner$$();
+        return currPartner?.ownPermissions?.includes(
+            ChannelPartnerPermissions.ADD_REMOVE_ORGANIZATIONS,
+        );
+    });
     channelPartners$ = this.store.select<ChannelPartner[]>(selectChannelPartners);
-    currentPartner$ = this.store.select<ChannelPartner>(selectCurrentPartner);
+    currentPartner$$ = this.store.selectSignal<ChannelPartner>(selectCurrentPartner);
     organizations$ = this.store.select<Organization[]>(selectCurrentPartnerOrgs);
     filteredOrganizations$: Observable<Organization[]>;
     destroyRef = inject(DestroyRef);
-    @Input() isAdmin: boolean;
     @Input() currentTabRoute: string;
     @Input() partnerId: string;
     currentTabIndex$$ = signal<number>(0);
@@ -84,7 +90,7 @@ export class NxChannelPartnersComponent implements OnInit {
             route: '',
         },
         {
-            displayName: this.LANG.channelPartners.tabNames.subchannel,
+            displayName: this.LANG.channelPartners.tabNames.partners,
             route: 'subchannels',
         },
         {
@@ -106,26 +112,6 @@ export class NxChannelPartnersComponent implements OnInit {
     ) {}
 
     ngOnInit(): void {
-        if (this.isAdmin) {
-            this.tabs.push(
-                ...[
-                    {
-                        displayName: this.LANG.channelPartners.tabNames.users,
-                        route: 'users',
-                    },
-                    {
-                        displayName: this.LANG.channelPartners.tabNames.settings,
-                        route: 'settings',
-                    },
-                ],
-            );
-        }
-        for (const [index, tab] of this.tabs.entries()) {
-            if (tab.route === this.currentTabRoute) {
-                this.currentTabIndex$$.set(index);
-                break;
-            }
-        }
         this.CPService.paramStateHandler.state$
             .pipe(
                 map(({ params }) => params.partnerId),
@@ -134,9 +120,34 @@ export class NxChannelPartnersComponent implements OnInit {
                 combineLatestWith(this.channelPartners$),
                 switchMap(([id, partners]) => {
                     this.currentPartnerId = id;
-                    if (partners.length && !partners.find(p => p.id === id)) {
+                    const currPartner = partners.find(
+                        partner => partner.id === this.currentPartnerId,
+                    );
+                    if (partners.length && !currPartner) {
                         return throwError(() => 'Partner not found');
                     }
+                    const { ownPermissions } = currPartner;
+                    if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+                        this.tabs.push({
+                            displayName: this.LANG.channelPartners.tabNames.users,
+                            route: 'users',
+                        });
+                    }
+                    if (
+                        ownPermissions.includes(ChannelPartnerPermissions.CONFIGURE_CHANNEL_PARTNER)
+                    ) {
+                        this.tabs.push({
+                            displayName: this.LANG.channelPartners.tabNames.settings,
+                            route: 'settings',
+                        });
+                    }
+                    for (const [index, tab] of this.tabs.entries()) {
+                        if (tab.route === this.currentTabRoute) {
+                            this.currentTabIndex$$.set(index);
+                            break;
+                        }
+                    }
+
                     return this.CPService.getPartnerOrganizations(id);
                 }),
             )
@@ -190,7 +201,7 @@ export class NxChannelPartnersComponent implements OnInit {
     }
 
     handleOrgClick(id: string): void {
-        this.router.navigate(['organization', id, 'systems'], { relativeTo: this.route });
+        this.router.navigate(['organization', id], { relativeTo: this.route });
     }
 
     searchSystems(): void {

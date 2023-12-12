@@ -184,7 +184,8 @@
             "saving": "Saving",
             "diverged": "Diverged",
             "overwrite": "Overwrite",
-            "save": "Save"
+            "save": "Save",
+            "error": "Repeat"
         },
         "additionalErrorMessages": {
             "UNAVAILABLE": "can't connect to the camera",
@@ -192,7 +193,7 @@
             "iodevice": "expect in future versions",
             "defaultPassword": "click to set up",
             "unauthorized": "click to set credentials",
-            "transcodingDisabled": "transcoding for H265 streams disabled for 5.1 systems",
+            "transcodingDisabled": "transcoding for H265 streams not supported",
             "mjpegDisabled": "transcoding for MJPEG streams not supported"
         },
         "titles": {
@@ -474,7 +475,6 @@
     "authorize": {
         "loginCloudHeader": "Log in to %CLOUD_NAME%",
         "connectHeader": "Connect System to %CLOUD_NAME%",
-        "expiredHeader": "Your session has expired",
         "loginSystemSubheader": "With your %CLOUD_NAME% Account",
         "connectSubheader": "To access it from anywhere and enable additional features",
         "expiredSubheader": "Please, log in again",
@@ -493,7 +493,6 @@
         "passwordRestart": "to restart server",
         "passwordDetach": "to detach server",
         "passwordTransfer": "to transfer system",
-        "expiredAccountSubheader": "Please, log in again as",
         "createAccountHeader": "Create %CLOUD_NAME% Account",
         "activateHeader": "Activate %CLOUD_NAME% Account",
         "createdText": "Account Created!",
@@ -606,7 +605,7 @@
             "defaultPassword": "PASSWORD REQUIRED",
             "websocket": "Can't connect to the camera",
             "unavailable": "UNAVAILABLE",
-            "transcodingDisabled": "DISABLED",
+            "transcodingDisabled": "NOT SUPPORTED",
             "mjpegDisabled": "NOT SUPPORTED"
         },
         "serverStates": {
@@ -821,6 +820,7 @@
             "differentOwners": "Both the selected and the current system are connected to %CLOUD_NAME% and have different owners. Cloud systems can be merged only if owner account is the same.",
             "duplicateServers": "<p class=\"mb-2\">A server appears to be listing itself under both the selected and the current system.</p><p>Remove offline and incompatible servers from each system and try again.</p>",
             "enterSystemAddressTitle": "Enter address of any server in the system you want to merge with this one.",
+            "incompatibleCloudToNonCloud": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
             "latestBuild": "latest build",
             "mergeConfirmation": "<p class=\"mb-0\">You are about to merge systems <strong>{primarySystem}</strong> and <strong>{secondarySystem}</strong>.</p><p>Settings and the name will be taken from <strong>{primarySystem}</strong>.</p>",
             "mergeFailedTitle": "System merge failed",
@@ -1238,7 +1238,7 @@
             "organizations": "Organizations",
             "reports": "Reports",
             "settings": "Settings",
-            "subchannel": "Subchannel",
+            "partners": "Partners",
             "systems": "Systems",
             "users": "Users"
         },

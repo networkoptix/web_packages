@@ -1,0 +1,7 @@
+Hej, {{message.userFullName}}
+
+{{message.sharer_name}} har delat åtkomst till kanalpartner "{{message.partner_name}}" med dig.
+
+För att se och hantera det, skapa ett konto på %CLOUD_NAME% med din nuvarande e-postadress och följ ytterligare instruktioner.
+
+Registrera ditt konto med den här länken: {{ config.portal_url }}/ register /{}

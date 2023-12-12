@@ -9,7 +9,7 @@
         {{ docAsset.title }}
     </header>
     <nx-section *ngFor="let block of docAsset.blocks">
-        <div [innerHTML]="block.contentHTML | safe : 'html'"></div>
+        <div [innerHTML]="block.contentHTML | safe: 'html'"></div>
     </nx-section>
 </nx-block>
 
@@ -176,8 +176,8 @@
                                     asyncInProgress[element[field.name].lookupKey]
                                         ? 'in-progress-wrapper'
                                         : asyncErrors[element[field.name].lookupKey]
-                                        ? 'async-error-wrapper'
-                                        : 'async-wrapper'
+                                          ? 'async-error-wrapper'
+                                          : 'async-wrapper'
                                 "
                             >
                                 <ng-template #showIcon>
@@ -318,7 +318,7 @@
                                     )
                                 "
                             >
-                                {{ element[field.name] | date : 'shortDate' }}
+                                {{ element[field.name] | date: 'shortDate' }}
                             </span>
                         </td>
                     </ng-container>

@@ -37,7 +37,10 @@ export class ReserveSpaceWarningModalContent extends ModalBase<DT['return']> {
     acceptOverwrite: Process;
     icons = icons;
 
-    constructor(private processService: NxProcessService, dialogRef: DialogRef<DT['return']>) {
+    constructor(
+        private processService: NxProcessService,
+        dialogRef: DialogRef<DT['return']>,
+    ) {
         super(dialogRef);
         this.acceptOverwrite = this.processService.createProcess(() => {
             this.dialogRef.close(true);

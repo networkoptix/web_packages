@@ -64,6 +64,11 @@ nx-webgl-canvas {
     height: 100%;
     width: 0px;
     transition-property: width, background;
+
+    &.resizing {
+        transition-property: background;
+    }
+
     transition-duration: 150ms;
     transition-timing-function: ease-in-out;
     background: var(--sidebar-background);
@@ -106,9 +111,11 @@ nx-webgl-canvas {
     --sidebar-width: calc(var(--base-width) + var(--tab-size));
     --min-sidebar-width: calc(var(--container-limit) / 12 * var(--column-limit) + var(--tab-size));
 
+    --calculated-sidebar-width: max(var(--sidebar-width), var(--min-sidebar-width));
+
     &.open-menu {
         padding: 16px 0 16px 16px;
-        width: max(var(--sidebar-width), var(--min-sidebar-width));
+        width: var(--calculated-sidebar-width);
     }
 }
 
@@ -153,6 +160,16 @@ div.tab {
     &:hover {
         background: var(--sidebar-tab-hover);
     }
+}
+
+.cdk-drag.menu-resize {
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    width: 2px;
+    background-color: transparent;
+    cursor: col-resize;
 }
 
 .resources-sidebar {
@@ -229,6 +246,7 @@ h2.auto-save-overlay {
     display: flex;
     align-items: center;
     gap: 8px;
+    margin-bottom: 2px;
 
     .info-svg {
         fill: #208fdf;
@@ -249,6 +267,7 @@ h2.auto-save-overlay {
         gap: 4px;
         border-radius: 4px !important;
         align-items: center;
+        white-space: nowrap;
         background: rgba(var(--light1--rgb), 0.1);
         color: var(--light1);
         padding: 3px 8px;
@@ -265,6 +284,10 @@ h2.auto-save-overlay {
     &.diverged {
         background-color: #594c0d;
     }
+
+    &.error {
+        background-color: #AA1E1E;
+    }
 }
 
 @keyframes slide-up-fade-out {
@@ -273,18 +296,15 @@ h2.auto-save-overlay {
     }
     to {
         opacity: 0;
-        transform: translate(0px, -40px);
+        margin-top: -40px;
+        margin-bottom: 0;
     }
 }
 
 .saving-ribbon {
-    position: relative;
+    // position: relative;
     .animated {
         background-color: #0d3959;
-        position: absolute;
-        left: 0;
-        top: 0;
-        width: 100%;
         line-height: 30px;
     }
 

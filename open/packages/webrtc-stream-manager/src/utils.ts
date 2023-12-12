@@ -124,3 +124,7 @@ export class ConnectionQueue {
         this.#runningTasks$.subscribe(count => console.info(`[${this.origin}] Running tasks: ${count}`));
     }
 }
+
+export function cleanId(id: unknown): string | undefined {
+    return (id as string)?.replace(/{|}/g, '');
+}

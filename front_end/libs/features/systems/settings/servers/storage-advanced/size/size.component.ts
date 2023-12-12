@@ -64,7 +64,7 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
     ) {}
 
     showLegend(template: TemplateRef<unknown>, target: HTMLElement): void {
-        if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
+        if (this.inaccessible) {
             return;
         }
         this.popoverService.open(
@@ -100,7 +100,9 @@ export class NxStorageSizeComponent implements OnDestroy, OnChanges, AfterViewIn
             this.cachedSizesClean?.[this.store.storageId]?.total || this.store.totalSpace;
         this.store.vmsSpace =
             this.cachedSizesClean?.[this.store.storageId]?.vms || this.store.vmsSpace;
-        if (this.store.status === STORAGE_STATUS.INACCESSIBLE) {
+        this.store.freeSpace = this.store.totalSpace - this.store.vmsSpace;
+
+        if (this.inaccessible) {
             this.totalSpace = '&mdash;';
             this.reserved = '0';
             this.reservedPercentage = 0;

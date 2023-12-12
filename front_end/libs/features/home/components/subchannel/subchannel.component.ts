@@ -7,7 +7,11 @@ import { switchMap } from 'rxjs';
 import { NxTabsModule } from '@components/tabs/tabs.module';
 import { Tab } from '@components/tabs/tabs.types';
 import staticLang from '@language_static';
-import { selectSubchannelPartner } from '@pages/home/store/channel-partners/channel-partners.selectors';
+import {
+    selectCurrentPartner,
+    selectSubchannelPartner,
+} from '@pages/home/store/channel-partners/channel-partners.selectors';
+import { ChannelPartnerPermissions } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 @Component({
     selector: 'nx-subchannel',
@@ -20,19 +24,12 @@ export class NxSubchannelComponent implements OnInit {
     LANG = staticLang;
 
     inSubChannel = this.route.params;
+    currentPartner$$ = this.store.selectSignal(selectCurrentPartner);
     currentTabIndex$$ = signal(0);
     tabs: Tab[] = [
         {
             displayName: this.LANG.channelPartners.tabNames.information,
             route: '',
-        },
-        {
-            displayName: this.LANG.channelPartners.tabNames.settings,
-            route: 'settings',
-        },
-        {
-            displayName: this.LANG.channelPartners.tabNames.users,
-            route: 'users',
         },
     ];
 
@@ -40,9 +37,26 @@ export class NxSubchannelComponent implements OnInit {
     currentSubchannel$ = this.route.params.pipe(
         switchMap(({ subchannelId }) => this.store.select(selectSubchannelPartner(subchannelId))),
     );
-    constructor(private route: ActivatedRoute, private router: Router, private store: Store) {}
+    constructor(
+        private route: ActivatedRoute,
+        private router: Router,
+        private store: Store,
+    ) {}
 
     ngOnInit(): void {
+        const { ownPermissions } = this.currentPartner$$();
+        if (ownPermissions.includes(ChannelPartnerPermissions.ALTER_STATE_SUB_CHANNEL_PARTNERS)) {
+            this.tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.settings,
+                route: 'settings',
+            });
+        }
+        if (ownPermissions.includes(ChannelPartnerPermissions.MANAGE_USERS)) {
+            this.tabs.push({
+                displayName: this.LANG.channelPartners.tabNames.users,
+                route: 'users',
+            });
+        }
         for (const [index, tab] of this.tabs.entries()) {
             if (tab.route === this.currentTabRoute) {
                 this.currentTabIndex$$.set(index);

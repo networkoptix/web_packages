@@ -12,7 +12,10 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 export class NxLandingDisplayComponent implements OnInit {
     compTemplate: SafeHtml;
 
-    constructor(private sanitizer: DomSanitizer, private apiService: NxCloudApiService) {}
+    constructor(
+        private sanitizer: DomSanitizer,
+        private apiService: NxCloudApiService,
+    ) {}
 
     ngOnInit(): void {
         this.apiService

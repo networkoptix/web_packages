@@ -6,9 +6,8 @@ import { NxOrganizationSettingsComponent } from '../components/settings/settings
 import { NxSubchannelComponent } from '../components/subchannel/subchannel.component';
 import { NxSubchannelsComponent } from '../components/subchannels/subchannels.component';
 import { NxChannelPartnerUsersComponent } from '../components/users/channel-partner-users/channel-partner-users.component';
+import { cpTabGuard } from '../resolvers/CP-tab-guard';
 import { WithParentDataResolver } from '../resolvers/data-resolver';
-import { RoleResolver } from '../resolvers/role-resolver';
-import { TabGuard } from '../resolvers/tab-guard';
 import { TabResolver } from '../resolvers/tab-resolver';
 
 import { NxChannelPartnersComponent } from './channel-partners.component';
@@ -20,7 +19,6 @@ const CPRoutes: Routes = [
         resolve: {
             currentTabRoute: TabResolver,
             parentData: WithParentDataResolver,
-            isAdmin: RoleResolver,
         },
         runGuardsAndResolvers: 'always',
         children: [
@@ -37,7 +35,7 @@ const CPRoutes: Routes = [
             },
             {
                 path: 'settings',
-                canActivate: [TabGuard],
+                canActivate: [cpTabGuard],
                 data: {
                     cpSettings: true,
                 },
@@ -58,10 +56,16 @@ const CPRoutes: Routes = [
                             },
                             {
                                 path: 'settings',
+                                canActivate: [cpTabGuard],
                                 data: {
                                     subchannelSettings: true,
                                 },
                                 component: NxOrganizationSettingsComponent,
+                            },
+                            {
+                                path: 'users',
+                                canActivate: [cpTabGuard],
+                                component: NxChannelPartnerUsersComponent,
                             },
                         ],
                     },
@@ -73,7 +77,7 @@ const CPRoutes: Routes = [
             },
             {
                 path: 'users',
-                canActivate: [TabGuard],
+                canActivate: [cpTabGuard],
                 component: NxChannelPartnerUsersComponent,
             },
         ],

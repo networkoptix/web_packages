@@ -17,7 +17,10 @@ export class ValidationComponent {
     change: Process;
     restore: Process;
 
-    constructor(private processService: NxProcessService, private menuService: NxMenuService) {}
+    constructor(
+        private processService: NxProcessService,
+        private menuService: NxMenuService,
+    ) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('components');

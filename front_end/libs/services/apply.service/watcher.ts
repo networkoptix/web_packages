@@ -20,7 +20,11 @@ export class Watcher<T extends any, Owner = any> {
     valueSubject = new BehaviorSubject<T>(undefined);
     identity: symbol;
 
-    constructor(value?: T, public owner: Owner = null, identifier = 'Watcher') {
+    constructor(
+        value?: T,
+        public owner: Owner = null,
+        identifier = 'Watcher',
+    ) {
         this.value = value;
         this.identity = Symbol(identifier);
     }
@@ -117,7 +121,11 @@ export class FormWatcher {
         return this.valueSubject.value;
     }
 
-    constructor(private form: NgForm, public owner: any = null, identifier = 'Form Watcher') {
+    constructor(
+        private form: NgForm,
+        public owner: any = null,
+        identifier = 'Form Watcher',
+    ) {
         form.valueChanges.subscribe(change => {
             if (
                 !this.originalValue ||

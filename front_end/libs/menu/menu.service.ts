@@ -4,7 +4,7 @@ import { cloneDeep } from 'lodash-es';
 import { NxSearchService } from '@services/search.service';
 import type { SearchModel } from '@services/search.service.types';
 
-import type { Level1Item, Level2Item, Level3Item } from './menu.types';
+import type { Level1Item, Level3Item } from './menu.types';
 
 @Injectable({
     providedIn: 'root',
@@ -14,7 +14,7 @@ export class NxMenuService {
     hoverItemId: WritableSignal<string> = signal('');
     navItemId: WritableSignal<string> = signal('');
 
-    searchRegex: WritableSignal<RegExp> = signal(null);
+    searchRegex = signal<string | RegExp>('');
 
     selectedSection: WritableSignal<string> = signal('');
     selectedSubSection: WritableSignal<string> = signal('');
@@ -33,84 +33,31 @@ export class NxMenuService {
         }
     }
 
-    filterItemsBy(model: SearchModel, searchSubMenus: boolean = false): Level1Item[] {
-        let filteredContent: Level1Item[] = [];
-        if (model.query) {
-            this.setHighlightPattern(model);
-
-            this.content().forEach(node => {
-                if (searchSubMenus && node.level2?.length) {
-                    node.level2.forEach(subNode => {
-                        if (subNode.level3?.length) {
-                            const haveNode = this.filterNodesIntoHaveNode(
-                                model,
-                                filteredContent,
-                                node,
-                                subNode,
-                            );
-                            if (haveNode?.level3?.length) {
-                                this.addHaveNodeToFilteredContent(haveNode, filteredContent);
-                            }
-                        }
-                    });
-                }
-                if (node.level3?.length) {
-                    const haveNode = this.filterNodesIntoHaveNode(model, filteredContent, node);
-                    if (haveNode?.level3?.length) {
-                        this.addHaveNodeToFilteredContent(haveNode, filteredContent);
-                    }
-                }
-            });
-        } else {
-            this.searchRegex.set(null);
-            filteredContent = [...this.content()];
+    filterMenu(model: SearchModel): Level1Item[] {
+        const content = cloneDeep(this.content());
+        if (!model.query) {
+            this.searchRegex.set('');
+            return content;
         }
+        this.setHighlightPattern(model);
+        return content.reduce(
+            (menu, level1) => {
+                level1.level3 = level1.level3?.filter(item => {
+                    const { additionalLabel } = item;
 
-        return filteredContent;
-    }
+                    let searchAggregate = item.label || '';
+                    searchAggregate += additionalLabel ? ` ${additionalLabel}` : '';
+                    searchAggregate += model.query.length > 10 && item.id ? ` ${item.id}` : '';
 
-    addHaveNodeToFilteredContent(haveNode: Level1Item, filteredContent: Level1Item[]): void {
-        // remove separator if last in search result
-        if (haveNode.level3[haveNode.level3.length - 1].horizontal) {
-            haveNode.level3.pop();
-        }
-        filteredContent.push(haveNode);
-    }
-
-    filterNodesIntoHaveNode(
-        model: SearchModel,
-        filteredContent: Level1Item[],
-        node: Level1Item,
-        subNode?: Level2Item,
-    ): Level1Item {
-        let haveNode = filteredContent.find(filtered => filtered.id === (subNode || node).id);
-
-        (subNode || node).level3.forEach(item => {
-            if (item.id) {
-                const { additionalLabel } = item;
-
-                let searchAggregate = item.label || '';
-                searchAggregate += additionalLabel ? ` ${additionalLabel}` : '';
-                searchAggregate += model.query.length > 10 && item.id ? ` ${item.id}` : '';
-
-                if (this.searchService.findMatch(searchAggregate, model)) {
-                    if (!haveNode) {
-                        haveNode = { ...node };
-                        haveNode.level3 = []; // remove items so we can all only matches
-                    }
-                    const filteredItem = cloneDeep(item);
-                    filteredItem.subNode = subNode || node;
-                    filteredItem.query = { search: model.query };
-                    haveNode.level3.push(filteredItem);
+                    return this.searchService.findMatch(searchAggregate, model);
+                });
+                if (level1.level3?.length) {
+                    menu.push(level1);
                 }
-            } else {
-                haveNode?.level3.push(item);
-            }
-        });
-        if (haveNode && subNode) {
-            haveNode.label = `${haveNode.label} - ${subNode.label}`;
-        }
-        return haveNode;
+                return menu;
+            },
+            <Level1Item[]>[],
+        );
     }
 
     /**

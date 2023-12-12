@@ -134,9 +134,12 @@ export class NxSystemGroupsService {
         this.disconnect();
         this.toastService.show(this.LANG.systemGroups.connectionLost, ToastType.Danger);
         this.attempt += 1;
-        setTimeout(() => {
-            this.connect();
-        }, 2000 * 2 ** this.attempt);
+        setTimeout(
+            () => {
+                this.connect();
+            },
+            2000 * 2 ** this.attempt,
+        );
     }
 
     disconnect(): void {

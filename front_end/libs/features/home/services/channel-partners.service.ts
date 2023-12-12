@@ -50,6 +50,7 @@ export class NxChannelPartnersService {
     updateChannelPartnerUser = this.cpApi.updateChannelPartnerUser;
     getChannelPartnerUser = this.cpApi.getChannelPartnerUser;
     deleteChannelPartnerUser = this.cpApi.deleteChannelPartnerUser;
+    getSelfChannelPartnerUser = this.cpApi.getSelfChannelPartnerUser;
 
     /* Organizations */
     getPartnerOrganizations = this.cpApi.getPartnerOrganizations;

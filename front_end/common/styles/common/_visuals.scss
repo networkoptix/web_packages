@@ -3,13 +3,13 @@
 
 ::-moz-selection {
     /* Code for Firefox */
-    color: var(--body-text-color);
-    background: var(--user-selected-highlight-color);
+    color: var(--selection-text-color-override, var(--body-text-color));
+    background: var(--selection-background-color-override, var(--user-selected-highlight-color));
 }
 
 ::selection {
-    color: var(--body-text-color);
-    background: var(--user-selected-highlight-color);
+    color: var(--selection-text-color-override, var(--body-text-color));
+    background: var(--selection-background-color-override, var(--user-selected-highlight-color));
 }
 
 .highlighted {

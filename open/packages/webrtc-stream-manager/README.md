@@ -17,34 +17,28 @@ The `WebRTCStreamManager` defaults to showing live but also allows for updating 
 to play streams from archive. The playback position could also be updated; when the position is updated
 all `WebRTCStreamManager` instances playback positions are synced to the new time stamp.
 
+Authentication and reconnections are handled automatically by the library for as long as there's an active subscription
+to the observable returned by `WebRTCStreamManager.connect`.
+
 ## Usage
 
 The `WebRTCStreamManager` class exposes a `connect` static method which is used to initialize a connection.
-Optionally it accepts a reference to a video element to automatically close the connection once the player
-is no longer on the DOM.
 
-### Example webRtcUrlFactory function:
+The `connect` static method could accept either a `WebRtcUrlConfig` or `WebRtcUrlFactory` as the first argument.
 
-The `WebRTCStreamManager.connect` method takes as a first argument a function that returns the
-webrtc-tracker endpoint.
+Using `WebRtcUrlConfig` is the recommended way to conect.
 
-The camera_id query parameters and x-server-guid query parameters are required, pos is optional.
+### Example webRtcUrlConfig:
 
-Authentication is handled either by cookie authentication before calling `WebRTCStreamManager.connect`
-or by passing a system scoped access token as the last argument or by providing an digest auth key
-using the auth query param.
-
-Cookie authentication is recommended because digest auth is disabled for 2fa enabled systems.
+The `WebRTCStreamManager.connect` method takes as a first argument a config. The systemId, cameraId, and system access
+token are required. Other properties are optional.
 
 ```typescript
-// Could be a direct connection '{serverIp}:{port}` or a cloud relayed connection '{serverId}.{cloudSystemId}.{relayUrl}'
-const systemUrl = 'Server url';
-const serverId = 'Server id';
-const cameraId = 'Camera id';
-const position = 0; // Initial position
-
-const webRtcUrlFactory = () =>
-  `wss://${systemUrl}/webrtc-tracker?camera_id=${cameraId}&x-server-guid=${serverId}&pos=${position}`;
+const webRtcConfig = {
+  systemId: '{system_id}',
+  cameraId: '{camera_id}',
+  accessToken: '{access_token}'
+}
 ```
 
 ### Example usage
@@ -63,38 +57,13 @@ To start autoplaying you can also set `muted` and `autoplay` to true.
 ```
 
 ```typescript
-const videoElement = document.querySelector('video#someTargetId')
+const targetVideoElement = document.querySelector('video#someTargetId')
 ```
 
 #### Initializing connection and setting video source
 
 ```typescript
-/**
- * Assumes that user is already authenticated using cookie authentication or an auth query param
- * is included as part of the url from webRtcUrlFactory.
- */
-
-WebRTCStreamManager.connect(webRtcUrlFactory, videoElement).subscribe(([stream, error]) => {
-  if (stream) {
-    targetVideoElement.srcObject = stream;
-    targetVideoElement.muted = true;
-    targetVideoElement.autoplay = true;
-  }
-
-  if (error) {
-    handleError(error)
-  }
-});
-```
-#### Initializing connection using access token and setting video source
-
-```typescript
-/**
- * The access token should be a system scoped access token.
- *
- * The connect static method can authenticate using cookie authentication automatically.
- */
-WebRTCStreamManager.connect(webRtcUrlFactory, videoElement, hasSecondaryStream, systemScopedAccessToken).subscribe(([stream, error]) => {
+WebRTCStreamManager.connect(webRtcConfig, videoElement).subscribe(([stream, error]) => {
   if (stream) {
     targetVideoElement.srcObject = stream;
     targetVideoElement.muted = true;

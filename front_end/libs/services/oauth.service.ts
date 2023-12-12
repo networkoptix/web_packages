@@ -15,7 +15,10 @@ import { NxStorageService } from './storage.service';
 export class OauthService {
     CONFIG: IConfig = nxConfig;
 
-    constructor(private http: HttpClient, private storage: NxStorageService) {}
+    constructor(
+        private http: HttpClient,
+        private storage: NxStorageService,
+    ) {}
 
     get cloudApiAccessToken() {
         return this.storage.cloudApiAccessToken;
@@ -112,8 +115,8 @@ export class OauthService {
         const host = environment.production
             ? `${this.CONFIG.cloudHost ?? ''}`
             : environment.cloudHost
-            ? `https://${environment.cloudHost}`
-            : this.CONFIG.cloudHost;
+              ? `https://${environment.cloudHost}`
+              : this.CONFIG.cloudHost;
         window.location.href = `${host}/authorize?${params.toString()}`;
         return false;
     }

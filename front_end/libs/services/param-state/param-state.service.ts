@@ -124,43 +124,46 @@ export class NxParamStateService {
                 ? updateStatePartialOrStateMapper(state)
                 : updateStatePartialOrStateMapper;
 
-        const queryParams = Object.entries(updatedQueryParams).reduce((curr, [_key, _value]) => {
-            const key = _key as keyof UpdateParams<State>['queryParams'];
-            const updatedValue = curr[key];
+        const queryParams = Object.entries(updatedQueryParams).reduce(
+            (curr, [_key, _value]) => {
+                const key = _key as keyof UpdateParams<State>['queryParams'];
+                const updatedValue = curr[key];
 
-            const handleMutation = (
-                {
-                    value,
-                    mutationType,
-                }: {
-                    value: string[];
-                    mutationType: MutationType;
-                },
-                previousValue: string[] = [],
-            ): string[] => {
-                if (mutationType === MutationType.SET) {
-                    return value;
+                const handleMutation = (
+                    {
+                        value,
+                        mutationType,
+                    }: {
+                        value: string[];
+                        mutationType: MutationType;
+                    },
+                    previousValue: string[] = [],
+                ): string[] => {
+                    if (mutationType === MutationType.SET) {
+                        return value;
+                    }
+
+                    if (mutationType === MutationType.REMOVE) {
+                        return previousValue.filter(val => !value.includes(val));
+                    }
+
+                    if (mutationType === MutationType.APPEND) {
+                        return [...previousValue, ...value];
+                    }
+                };
+
+                if (typeof updatedValue === 'string') {
+                    curr[key] = [updatedValue];
+                } else if (typeof updatedValue === 'object' && 'value' in updatedValue) {
+                    curr[key] = handleMutation(updatedValue, originalQueryParams[_key]);
+                } else if (Array.isArray(updatedValue)) {
+                    curr[key] = updatedValue;
                 }
 
-                if (mutationType === MutationType.REMOVE) {
-                    return previousValue.filter(val => !value.includes(val));
-                }
-
-                if (mutationType === MutationType.APPEND) {
-                    return [...previousValue, ...value];
-                }
-            };
-
-            if (typeof updatedValue === 'string') {
-                curr[key] = [updatedValue];
-            } else if (typeof updatedValue === 'object' && 'value' in updatedValue) {
-                curr[key] = handleMutation(updatedValue, originalQueryParams[_key]);
-            } else if (Array.isArray(updatedValue)) {
-                curr[key] = updatedValue;
-            }
-
-            return curr;
-        }, updatedQueryParams as UpdateParams<State>['queryParams']);
+                return curr;
+            },
+            updatedQueryParams as UpdateParams<State>['queryParams'],
+        );
 
         const missingFromUrl = Object.entries(updatedParams).some(
             ([key, value]) => value && !params[key],

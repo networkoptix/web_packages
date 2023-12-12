@@ -7,12 +7,12 @@
 </div>
 
 <h4 class="mb-3 subtitle">
-    {{ LANG.pages.downloadHistory.published | translate : { date: release.date } }}
+    {{ LANG.pages.downloadHistory.published | translate: { date: release.date } }}
 </h4>
 
 <div *ngIf="release.releaseNotes">
     <h4 translate>Release Notes</h4>
-    <div [innerHTML]="release.releaseNotes | safe : 'html'"></div>
+    <div [innerHTML]="release.releaseNotes | safe: 'html'"></div>
 </div>
 
 <h4 translate>In-Client Upgrade:</h4>

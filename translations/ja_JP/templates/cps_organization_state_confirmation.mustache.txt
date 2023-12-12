@@ -1,0 +1,6 @@
+{{message.userFullName}} さん、こんにちは。
+
+以下の確認コードを使用して、 {{message.organization_name}} の {{message.status_name}} へのステータス変更を完了させてください。
+
+確認コード:
+{{message.code}}

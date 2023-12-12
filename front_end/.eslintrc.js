@@ -3,7 +3,8 @@ const typeLintErrorCount = require('./type-lint-error-count');
 
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
 
-const onlyEditor = value => (lintTaskRunner || !showOptionalWarnings ? 'off' : value);
+const onlyEditor = (value, overrideShowOptional = false) =>
+    lintTaskRunner || ![showOptionalWarnings, overrideShowOptional].some(Boolean) ? 'off' : value;
 
 /**
  * https://github.com/typescript-eslint/typescript-eslint/tree/main/packages/eslint-plugin#extension-rules
@@ -47,11 +48,7 @@ module.exports = {
                 browser: true,
                 jasmine: true,
             },
-            plugins: [
-                'import',
-                // 'node',
-                // 'promise',
-            ],
+            plugins: ['import'],
             rules: {
                 'accessor-pairs': 'off',
                 camelcase: [
@@ -234,7 +231,6 @@ module.exports = {
                 'nx/no-untyped-arg': 'error',
                 'nx/no-untyped-init': 'error',
                 'nx/no-untyped-subject': 'error',
-
                 '@typescript-eslint/ban-types': [
                     'error',
                     {
@@ -310,22 +306,15 @@ module.exports = {
             files: ['*.ts'],
             excludedFiles: [
                 'layout-grid.component.ts',
-                'change-password.component.ts',
                 'merge.refactor.component.ts',
                 'downloads-releases.component.ts',
                 'subchannels.component.ts',
                 'organization.component.ts',
-                'admin.component.ts',
                 'cameras.component.ts',
                 'settings.component.ts',
-                'edit-user-base.component.ts',
-                'users-with-groups.component.ts',
-                'vms.service.ts',
                 'level-3-item.component.ts',
                 'level-4-item.component.ts',
                 'menu.service.ts',
-                'oauth.service.ts',
-                'permission-manager.ts',
             ],
             rules: {
                 'nx/signal-naming-convention': 'error',

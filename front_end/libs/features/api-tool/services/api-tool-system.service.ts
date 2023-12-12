@@ -582,13 +582,13 @@ export class NxAPIToolSystemService {
         return cachedObject;
     }
 
-    cacheJSON(
+    async cacheJSON(
         route: string,
         systemId: string,
         systemVersion: string,
         json: APIDoc,
         markdown: MarkdownObj = null,
-    ): void {
+    ): Promise<void> {
         if (this.queryParams.disableCache) {
             this.indexedDbService
                 .deleteByKey('jsons', this.makeCacheKey(systemId, route))
@@ -596,15 +596,18 @@ export class NxAPIToolSystemService {
                 .subscribe(() => {});
             return null;
         }
-        this.indexedDbService
-            .add('jsons', {
-                json,
-                version: systemVersion,
-                markdown,
-                key: this.makeCacheKey(systemId, route),
-            })
-            .pipe(take(1))
-            .subscribe(() => {});
+        const cachedObject = await this.getJSONFromCache(route, systemId, systemVersion);
+        if (!cachedObject) {
+            this.indexedDbService
+                .add('jsons', {
+                    json,
+                    version: systemVersion,
+                    markdown,
+                    key: this.makeCacheKey(systemId, route),
+                })
+                .pipe(take(1))
+                .subscribe(() => {});
+        }
     }
 
     private disableManualSystemChanging = (): void => {

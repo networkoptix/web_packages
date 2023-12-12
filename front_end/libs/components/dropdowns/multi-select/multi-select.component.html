@@ -11,7 +11,7 @@
         data-toggle="dropdown"
     >
         <span
-            [innerText]="textSelected | nxTranslate"
+            [innerText]="textSelected || '' | nxTranslate"
             class="ellipsis d-contents d-md-block"
         ></span>
         <div class="arrow-flip">

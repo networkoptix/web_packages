@@ -37,5 +37,35 @@
   },
   "system_shared": {
     "emailSubject": "Videosystemet {{{message.system_name}}} delades med dig"
+  },
+  "cps_organization_invite": {
+    "emailSubject": "{{message.sharer_name}} bjuder in dig till %CLOUD_NAME%"
+  },
+  "cps_organization_share": {
+    "emailSubject": "Organisation {{message.organization_name}} delades med dig"
+  },
+  "cps_organization_state_active": {
+    "emailSubject": "Organisationens status {{message.organization_name}} har ändrats till {{message.status_name}}"
+  },
+  "cps_organization_state_confirmation": {
+    "emailSubject": "Bekräfta överföringen av organisationen {{message.organization_name}} till status {{message.status_name}}"
+  },
+  "cps_organization_state_suspended": {
+    "emailSubject": "Organisationens status {{message.organization_name}} har ändrats till {{message.status_name}}"
+  },
+  "cps_partner_invite": {
+    "emailSubject": "{{message.sharer_name}} bjuder in dig till %CLOUD_NAME%"
+  },
+  "cps_partner_share": {
+    "emailSubject": "Partner {{message.partner_name}} delades med dig"
+  },
+  "cps_partner_state_active": {
+    "emailSubject": "Statusen för partnern {{message.partner_name}} ändras till {{message.status_name}} "
+  },
+  "cps_partner_state_confirmation": {
+    "emailSubject": "Bekräfta överföring av partnern {{message.partner_name}} till status {{message.status_name}} "
+  },
+  "cps_partner_state_suspended": {
+    "emailSubject": "Statusen för partnern {{message.partner_name}} ändras till {{message.status_name}} "
   }
 }

@@ -1,0 +1,5 @@
+Hei, {{message.userFullName}}
+
+{{message.sharer_name}} har delt tilgang til organisasjonen "{{message.organization_name}}" med deg.
+
+Se i %CLOUD_NAME% portalen ved å bruke denne lenken: {{ config.portal_url }}

@@ -17,6 +17,7 @@ export class ClipComponent {
     @Input({ transform: booleanAttribute }) disableDownload: boolean;
     @Input({ transform: booleanAttribute }) disablePictureInPicture: boolean;
     @Output() error = new EventEmitter<void>();
+    @Output() loadeddata = new EventEmitter<void>();
 
     readonly internalPoster: string;
     posterLoadingError = false;
@@ -33,6 +34,7 @@ export class ClipComponent {
                 break;
             case 'loadeddata':
                 this.posterLoadingError = false;
+                this.loadeddata.emit();
                 break;
             default:
                 break;

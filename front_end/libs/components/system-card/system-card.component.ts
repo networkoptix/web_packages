@@ -55,7 +55,10 @@ export class SystemCardComponent implements OnChanges {
         return this.LANG.systemStatuses[this.system.stateOfHealth] || this.system.stateOfHealth;
     }
 
-    constructor(configService: NxConfigService, private systemsService: NxSystemsService) {
+    constructor(
+        configService: NxConfigService,
+        private systemsService: NxSystemsService,
+    ) {
         this.CONFIG = configService.config;
     }
 

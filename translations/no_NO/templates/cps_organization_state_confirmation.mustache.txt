@@ -1,0 +1,6 @@
+Hei, {{message.userFullName}}
+
+Bruk bekreftelseskoden nedenfor for å fullføre statusendring fra {{message.organization_name}} til {{message.status_name}}.
+
+Bekreftelseskode:
+{{message.code}}

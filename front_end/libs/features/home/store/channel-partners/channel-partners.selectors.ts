@@ -1,6 +1,9 @@
 import { createFeatureSelector, createSelector, MemoizedSelector } from '@ngrx/store';
 
-import { ChannelPartner } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+import {
+    ChannelPartner,
+    Organization,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 
 import { ChannelPartnersState } from './channel-partners.state';
 
@@ -44,7 +47,7 @@ export const selectCurrentSubchannelPartners = createSelector(
 export const selectCurrentPartner = createSelector(
     selectChannelPartners,
     selectCurrentPartnerId,
-    (partners, id) => partners.find(partner => partner.id === id),
+    (partners, id) => partners?.find(partner => partner.id === id),
 );
 
 export const selectCurrentPartnerInfo = createSelector(
@@ -54,13 +57,18 @@ export const selectCurrentPartnerInfo = createSelector(
 
 export const selectCurrentOrganization = createSelector(
     selectRootOrganizations,
+    selectCurrentPartnerOrgs,
     selectCurrentOrgId,
-    (orgs, id) => orgs.find(org => org.id === id),
-);
-
-export const selectCurrentOrganizations = createSelector(
-    selectCurrentPartner,
-    partner => partner.organizations,
+    (rootOrgs, partnerOrgs, id) => {
+        const orgs: Organization[] = [];
+        if (rootOrgs) {
+            orgs.push(...rootOrgs);
+        }
+        if (partnerOrgs) {
+            orgs.push(...partnerOrgs);
+        }
+        return orgs.find(org => org.id === id);
+    },
 );
 
 export const selectSubchannelPartner = (

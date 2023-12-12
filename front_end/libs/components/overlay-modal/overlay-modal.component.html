@@ -212,7 +212,7 @@
             class="btn-helper mt-2 mb-0"
             [ngClass]="{ invisible: !(timeoutUntilRefresh$ | async) }"
         >
-            {{ LANG.servers.autoRefresh | translate : { time: (timeoutUntilRefresh$ | async) } }}
+            {{ LANG.servers.autoRefresh | translate: { time: (timeoutUntilRefresh$ | async) } }}
         </p>
     </div>
     <div
@@ -230,7 +230,7 @@
                 <li *ngFor="let server of servers">
                     <a
                         target="_blank"
-                        [href]="server.url + currentRoute | safe : 'url'"
+                        [href]="server.url + currentRoute | safe: 'url'"
                     >
                         <svg
                             version="1.1"

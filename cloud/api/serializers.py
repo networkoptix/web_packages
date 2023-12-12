@@ -499,3 +499,7 @@ class LicenseServerSerializer(SystemIdSerializer):
         if data := kwargs.pop('data', []):
             kwargs['data'] = check_license_cache(data)
         super().__init__(*args, **kwargs)
+
+
+class CustomizationNameSerializer(serializers.Serializer):
+    name = serializers.CharField(required=False, allow_null=True, read_only=True)

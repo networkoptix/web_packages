@@ -279,6 +279,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         }
 
         setTimeout(() => {
+            this.replaceHTMLAsterisk();
             this.addCustomTextareas();
             this.modifyCodeBlocksAndTextareas();
             this.addTabItemEventListener();
@@ -390,6 +391,13 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
                 }
                 highlightAllCode(element);
             }
+        }
+    };
+
+    private replaceHTMLAsterisk = (): void => {
+        const descriptions = this.document.querySelectorAll('.rendered-markdown');
+        for (const description of descriptions) {
+            description.innerHTML = description.innerHTML.replace(/&amp;ast;/g, '&ast;');
         }
     };
 

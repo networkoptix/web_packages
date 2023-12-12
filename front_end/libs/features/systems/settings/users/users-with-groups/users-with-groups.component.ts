@@ -36,7 +36,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const isOwner = this.system.permissionManager.isOwner$$();
 
         return this.processLdapGroups(
-            [...groups.filter(group => isOwner || userManager.isGroupPowerUser(group))],
+            [...groups.filter(group => isOwner || !userManager.isGroupPowerUser(group))],
             isLdap,
         );
     });

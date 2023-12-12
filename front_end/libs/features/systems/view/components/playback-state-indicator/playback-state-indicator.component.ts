@@ -27,7 +27,11 @@ export class PlaybackStateIndicatorComponent implements OnInit {
     // }
 
     get isPlaying(): boolean {
-        return this.state.mode === PLAYBACK_MODE.LIVE && !this.playback.livePaused;
+        return (
+            this.state.mode === PLAYBACK_MODE.LIVE &&
+            !this.playback.livePaused &&
+            this.vms.playerActive
+        );
     }
 
     get isRecording(): boolean {

@@ -1,26 +1,26 @@
-import json
 import random
 from uuid import uuid4
 
+import pytest
 from dateutil.relativedelta import relativedelta
 from django.core.cache import caches
 from django.db import transaction
-
-import pytest
+from django.http import HttpResponseNotFound, HttpResponseForbidden
+from django.test import Client
+from django.test import override_settings, RequestFactory
 from django.utils import timezone
-from model_bakery import baker
 from mock.mock import MagicMock
-
+from model_bakery import baker
 
 from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser,
     ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates,
-    OrganizationRoles, CloudUser
+    OrganizationRoles, SystemGroup, Organization
 )
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet, system_user, system_users, user_systems
+    SystemGroupUserViewSet, system_user, system_users, user_systems, SystemGroupViewSet, grant_access
 )
 from tools.serializers import VALUE_REPLACEMENT
 
@@ -669,6 +669,19 @@ class TestChannelPartnerViewSet:
                     assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
+    def test_partial_update(self, channel_partner_factory, cp_user_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        cp_user = cp_user_factory(channel_partner=cp)
+        view = ChannelPartnerViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
+        data = {'name': f'{uuid4()}'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=cp.id)
+        assert response.status_code == 200
+        cp.refresh_from_db()
+        assert cp.name == data['name']
+
 
 class TestOrganizationViewSet:
 
@@ -770,6 +783,58 @@ class TestOrganizationViewSet:
                     assert data['ownRolesIds'] == []
                     assert data['ownRoles'] == []
 
+    def test_groups_structure(self, channel_partner_factory, cp_user_factory, organization_factory,
+                              org_user_factory, system_group_factory, sys_group_user_factory,
+                              system_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        view = OrganizationViewSet.as_view(actions={'get': 'groups_structure'}, detail=True)
+
+        def creat_groups(organization, degree=3):
+            groups = [[system_group_factory(organization=organization) for _ in range(degree)]]
+            for level in range(degree):
+                siblings = []
+                for group in groups[level]:
+                    for _ in range(degree):
+                        siblings.append(system_group_factory(organization=organization, parent=group))
+                groups.append(siblings)
+            return groups
+
+        org_groups = creat_groups(organization=org)
+
+        single_group_user = sys_group_user_factory(organization=org, group=org_groups[-1][-1])
+        request = arf.get('/')
+        mock_auth_with_user(single_group_user)
+        response = view(request, pk=org.id)
+
+        assert len(response.data) == 1
+        assert response.data[0]['id'] == str(org_groups[-1][-1].id)
+
+        one_sublevel_user = sys_group_user_factory(organization=org, group=org_groups[-2][-1])
+        request = arf.get('/')
+        mock_auth_with_user(one_sublevel_user)
+        response = view(request, pk=org.id)
+        assert len(response.data) == 1
+        assert response.data[0]['id'] == str(org_groups[-2][-1].id)
+        assert len(response.data[0]['children']) == 3
+
+    def test_partial_update(self, channel_partner_factory, cp_user_factory, organization_factory,
+                            org_user_factory, arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        org = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(organization=org)
+        view = OrganizationViewSet.as_view(actions={'patch': 'partial_update'}, detail=True)
+        data = {'name': f'{uuid4()}'}
+        request = arf.patch('/', data=data, format='json')
+        mock_auth_with_user(org_user)
+        response = view(request, pk=org.id)
+        assert response.status_code == 200
+        org.refresh_from_db()
+        assert org.name == data['name']
+
 
 class TestSystemGroupUserViewSet:
 
@@ -778,9 +843,9 @@ class TestSystemGroupUserViewSet:
               cloud_user_factory, org_user_factory, system_group_factory):
         self.cp = channel_partner_factory()
         self.org = organization_factory(channel_partner=self.cp)
+        self.org_user = org_user_factory(email=f'{uuid4()}@networkoptix.com', organization=self.org)
+        self.other_user = org_user_factory(email=f'{uuid4()}@networkoptix.com')
         self.group = system_group_factory(organization=self.org)
-        self.org_user = org_user_factory(email='test@networkoptix.com', organization=self.org)
-        self.other_user = org_user_factory(email='test111@networkoptix.com')
         self.users = [sys_group_user_factory(organization=self.org, group=self.group) for _ in range(5)]
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
@@ -892,6 +957,7 @@ class TestSystemGroupUserViewSet:
         assert response.status_code == 204
 
     def test_can_access(self, system_group_factory, sys_group_user_factory, arf, mock_auth_with_user):
+        caches['default'].clear()
         self.group_1 = system_group_factory(organization=self.org, parent=self.group)
         self.group_2 = system_group_factory(organization=self.org, parent=self.group_1)
         self.group_3 = system_group_factory(organization=self.org, parent=self.group_2)
@@ -904,22 +970,25 @@ class TestSystemGroupUserViewSet:
         mock_auth_with_user(self.org_user)
 
         response = view(request, parent_lookup_system_group=self.group.id)
-
         assert response.status_code == 200
         assert len(response.data) == len(self.users + [self.org_user])
-        assert response.data[0]['hasAccessTo']
-        assert response.data[0]['hasAccessTo']['name'] == self.org.name
-        assert response.data[0]['hasAccessTo']['id'] == str(self.org.id)
-        assert response.data[0]['hasAccessTo']['membershipType'] == 'organization'
+        for data in response.data:
+            assert data['hasAccessTo']
+            instance_id = data['hasAccessTo']['id']
+            instance = SystemGroup.objects.filter(id=instance_id).first() or Organization.objects.get(id=instance_id)
+            assert data['hasAccessTo']['name'] == instance.name
+            assert data['hasAccessTo']['membershipType'] == instance._meta.model_name
 
         response = view(request, parent_lookup_system_group=self.group_2.id)
 
         assert response.status_code == 200
         assert len(response.data) == len(self.users + [self.org_user]) + 2
-        assert response.data[-1]['hasAccessTo']
-        assert response.data[-1]['hasAccessTo']['name'] == self.group_2.name
-        assert response.data[-1]['hasAccessTo']['id'] == str(self.group_2.id)
-        assert response.data[-1]['hasAccessTo']['membershipType'] == 'systemgroup'
+        for data in response.data:
+            assert data['hasAccessTo']
+            instance_id = data['hasAccessTo']['id']
+            instance = SystemGroup.objects.filter(id=instance_id).first() or Organization.objects.get(id=instance_id)
+            assert data['hasAccessTo']['name'] == instance.name
+            assert data['hasAccessTo']['membershipType'] == instance._meta.model_name
 
 
 def test_system_user(channel_partner_factory, cp_user_factory, organization_factory,
@@ -1000,3 +1069,109 @@ def test_user_systems(channel_partner_factory, cp_user_factory, organization_fac
     response = user_systems(request, group_user.user.email)
     assert response.status_code == 200
     assert len(response.data) == 1
+
+
+
+class TestSystemGroupViewSet:
+    @pytest.fixture(autouse=True)
+    def setup_method_fixture(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
+                             system_group_factory, sys_group_user_factory, system_factory, arf, mock_auth_with_user):
+        self.root = channel_partner_factory()
+        self.root_user = cp_user_factory(channel_partner=self.root)
+        self.cp = channel_partner_factory(parent_channel_partner=self.root)
+        self.other_cp = channel_partner_factory(parent_channel_partner=self.root)
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.other_cp_user = cp_user_factory(channel_partner=self.other_cp)
+        self.org_1 = organization_factory(channel_partner=self.cp)
+        self.org_user = org_user_factory(organization=self.org_1)
+        self.org_2 = organization_factory(channel_partner=self.cp)
+        self.other_org = organization_factory(channel_partner=self.other_cp)
+        self.group = system_group_factory(organization=self.org_1)
+        self.group_user = sys_group_user_factory(organization=self.org_1, group=self.group)
+        self.group2 = system_group_factory(organization=self.org_2)
+        self.other_group = system_group_factory(organization=self.other_org)
+        for _ in range(3):
+            system_group_factory(organization=self.org_1, parent=self.group)
+            system_group_factory(organization=self.org_2, parent=self.group2)
+            system_group_factory(organization=self.other_org, parent=self.other_group)
+
+    def test_retrieve(self, arf, mock_auth_with_user):
+        view = SystemGroupViewSet.as_view(actions={'get': 'retrieve'}, detail=True)
+        request = arf.get('/')
+        mock_auth_with_user(self.org_user)
+        response = view(request, pk=self.group.id)
+        assert response.status_code == 200
+        assert response.data['id'] == str(self.group.id)
+
+        sub_group = SystemGroup.objects.filter(parent=self.group).first()
+
+        response = view(request, pk=sub_group.id)
+        assert response.status_code == 200
+        assert response.data['id'] == str(sub_group.id)
+
+        mock_auth_with_user(self.cp_user)
+        response = view(request, pk=self.group.id)
+        assert response.status_code == 200
+        assert response.data['id'] == str(self.group.id)
+
+        sub_group = SystemGroup.objects.filter(parent=self.group).first()
+
+        response = view(request, pk=sub_group.id)
+        assert response.status_code == 200
+        assert response.data['id'] == str(sub_group.id)
+
+        mock_auth_with_user(self.other_cp_user)
+        response = view(request, pk=self.group.id)
+        assert response.status_code == 404
+
+
+class TestGrantAccessView:
+    @pytest.fixture(autouse=True)
+    def setUp(self,mock_auth_with_user,
+              system_factory, cp_service_factory,
+              service_record_factory, cp_user_factory,
+              organization_factory, channel_partner_factory, org_user_factory):
+        root = channel_partner_factory(parent_channel_partner=None)
+        child = channel_partner_factory(parent_channel_partner=root)
+        root_user = cp_user_factory(channel_partner=root)
+        child_user = cp_user_factory(channel_partner=child)
+        root_org = organization_factory(channel_partner=root)
+        root_org_user = org_user_factory(organization=root_org)
+        system = system_factory(organization=root_org)
+        service = cp_service_factory(channel_partner=root)
+        self.factory = RequestFactory()
+        self.url = '/internal/grant_access.html'
+        self.client = Client()
+
+    @override_settings(DEBUG=False)
+    def test_grant_access_debug_false_call_by_url(self):
+        response = self.client.get(self.url)
+        assert type(response) == HttpResponseNotFound
+        assert response.status_code == 404
+
+    @override_settings(DEBUG=False)
+    def test_grant_access_debug_false_call_by_method(self):
+        request = self.factory.get(self.url)
+        response = grant_access(request)
+        assert type(response) == HttpResponseForbidden
+        assert response.status_code == 403
+    @override_settings(DEBUG=True)
+    def test_grant_access_debug_true_valid_email(self):
+        data = {'email': 'test@networkoptix.com'}
+        request = self.factory.post(self.url, data=data)
+        request.cloud_host = 'cloud-test.hdw.mx'
+        response = grant_access(request)
+
+
+        expected_data = [
+            'test+nxadmin@networkoptix.com',
+            'test+cpadmin@networkoptix.com',
+            'test+orgadmin@networkoptix.com'
+        ]
+
+        for i, row in enumerate(response.content.decode().split('<tr')[2:-1]):
+            cols = [col.strip() for col in row.split('<td style="padding: 8px;">')[1:-1]]
+            user_email = [col.split('</td>')[0] for col in cols][0]
+
+            assert user_email == expected_data[i]
+        assert response.status_code == 200

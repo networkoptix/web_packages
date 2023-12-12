@@ -44,7 +44,10 @@ export class NxSystemGroupsSidebarComponent {
     currentOrg$$ = this.store.selectSignal<Organization>(selectCurrentOrganization);
     icons = icons;
     LANG = staticLang;
-    constructor(private dialogsService: NxDialogsService, private store: Store) {}
+    constructor(
+        private dialogsService: NxDialogsService,
+        private store: Store,
+    ) {}
 
     // Todo: Add opening all nested groups upon loading a group page
 

@@ -17,7 +17,10 @@ export class NxCopyToClipboardComponent {
     LANG = staticLang;
     icons = icons;
 
-    constructor(private clipboardService: ClipboardService, private toastService: NxToastService) {
+    constructor(
+        private clipboardService: ClipboardService,
+        private toastService: NxToastService,
+    ) {
         this.clipboardService.copyResponse$
             .pipe(untilDestroyed(this))
             .subscribe((res: IClipboardResponse) => {

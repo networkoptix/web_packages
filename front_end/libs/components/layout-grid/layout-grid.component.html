@@ -1,8 +1,15 @@
 <div
     *ngIf="layoutItemLookup && (layout$ | async) as layout"
     class="sidebar-wrapper left"
+    [ngStyle]="{
+        width:
+            layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+                ? (layoutStateService.menuResizePercentage$ | async)
+                : null
+    }"
     [ngClass]="{
-        'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+        'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
+        resizing: resizing
     }"
 >
     <div
@@ -10,12 +17,12 @@
             !layout || !layoutItemLookup
                 ? ''
                 : !layout.items.length
-                ? 'empty'
-                : !layout.id
-                ? 'unsaved'
-                : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
-                ? 'focus'
-                : layout.name as message
+                  ? 'empty'
+                  : !layout.id
+                    ? 'unsaved'
+                    : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
+                      ? 'focus'
+                      : layout.name as message
         "
         class="help-text"
     >
@@ -69,6 +76,13 @@
         >
         </svg-icon>
     </div>
+    <div
+        class="menu-resize"
+        cdkDrag
+        cdkDragLockAxis="x"
+        (cdkDragReleased)="resizeMenuComplete($event)"
+        (cdkDragMoved)="resizeMenu($event)"
+    ></div>
     <nx-layout-grid-tree
         [layout]="layout"
         [system]="system"
@@ -110,31 +124,6 @@
     [ngStyle]="cursorStyle$$()"
 >
     <div
-        *ngIf="mouseMoving$$() && layoutStateService.resolutionRibbonShown$$() as secondsLeft"
-        class="resolution-ribbon"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-            [src]="icons.dirNonStandard + 'warning.svg'"
-        ></svg-icon>
-        <span
-            class="ribbon-message"
-            translate
-        >
-            Set layout resolution to 'Auto' to increase performance
-        </span>
-        <button
-            class="ribbon-button"
-            (click)="layoutStateService.showResolutionRibbon$.next(0)"
-        >
-            <span translate>Dismiss</span>
-            <span class="countdown">
-                {{ secondsLeft }}
-            </span>
-        </button>
-    </div>
-    <div
         class="saving-ribbon"
         [ngClass]="{
             show: layoutSaving$$(),
@@ -156,17 +145,13 @@
         </div>
     </div>
     <div
-        *ngIf="
-            !layoutStateService.resolutionRibbonShown$$() &&
-            mouseMoving$$() &&
-            layout?.id &&
-            unsavedLayoutState$$()
-        "
+        *ngIf="mouseMoving$$() && layout?.id && unsavedLayoutState$$()"
         class="unsaved-ribbon"
         [ngClass]="{
             diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(
                 unsavedLayoutState$$()
-            )
+            ),
+            error: unsavedLayoutState$$() === unsavedStates.error
         }"
     >
         <ng-container [ngSwitch]="unsavedLayoutState$$()">
@@ -179,7 +164,9 @@
                         unsavedLayoutState$$()
                     )
                         ? 'warning.svg'
-                        : 'info.svg')
+                        : unsavedLayoutState$$() === unsavedStates.error
+                          ? 'error.svg'
+                          : 'info.svg')
                 "
             ></svg-icon>
             <ng-container *ngSwitchCase="unsavedStates.unsaved">
@@ -215,6 +202,13 @@
                 There is a another layout with the same name. Overwrite existing layout?
             </span>
             <span
+                *ngSwitchCase="unsavedStates.error"
+                class="ribbon-message"
+                translate
+            >
+                Failed to save layout. Try again.
+            </span>
+            <span
                 *ngSwitchDefault
                 class="ribbon-message"
                 translate
@@ -232,12 +226,17 @@
                         'width.px': '20',
                         'height.px': '20'
                     }"
-                    [src]="icons.dirLayouts + 'save.svg'"
+                    [src]="
+                        icons.dirLayouts +
+                        (unsavedLayoutState$$() === unsavedStates.error ? 'reload.svg' : 'save.svg')
+                    "
                 ></svg-icon>
                 <span>{{
                     (unsavedLayoutState$$() === unsavedStates.overwrite
                         ? unsavedStates.overwrite
-                        : unsavedStates.save
+                        : unsavedLayoutState$$() === unsavedStates.error
+                          ? unsavedStates.error
+                          : unsavedStates.save
                     ) | translate
                 }}</span>
             </button>
@@ -258,11 +257,19 @@
                 ></svg-icon>
                 <span translate>Reload</span>
             </button>
+            <button
+                *ngSwitchCase="unsavedStates.error"
+                class="ribbon-button"
+                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                translate
+            >
+                Cancel
+            </button>
             <ng-container *ngSwitchDefault>
                 <button
                     *ngIf="unsavedLayoutState$$() === unsavedStates.overwrite"
                     class="ribbon-button"
-                    (click)="layoutStateService.editedLayout$$.set(layout.id)"
+                    (click)="layoutStateService.editedLayout$$.set(layout)"
                     translate
                 >
                     Rename
@@ -276,6 +283,34 @@
                 </button>
             </ng-container>
         </ng-container>
+    </div>
+    <div
+        *ngIf="mouseMoving$$() && layoutStateService.resolutionRibbonShown$$() as secondsLeft"
+        class="resolution-ribbon"
+    >
+        <svg-icon
+            nx-add-svg-src
+            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+            [src]="icons.dirNonStandard + 'warning.svg'"
+        ></svg-icon>
+        <span
+            class="ribbon-message"
+            translate
+        >
+            Set layout resolution to 'Auto' to increase performance
+        </span>
+        <button
+            class="ribbon-button"
+            (click)="setResolutionToAuto()"
+        >
+            <span translate>Set to "Auto"</span>
+        </button>
+        <button
+            class="ribbon-button"
+            (click)="layoutStateService.showResolutionRibbon$.next(0)"
+        >
+            <span translate>Close</span>
+        </button>
     </div>
     <div
         *ngIf="layoutItemLookup && (layout$ | async) as layout; else preloader"
@@ -362,15 +397,20 @@
                             [cdkDropListEnterPredicate]="preventDrop"
                             [cdkDropListData]="item"
                             [ngStyle]="item.renderConfig"
-                            [style.transform]="(highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'"
-                            [style.transform-origin]="(highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'"
+                            [style.transform]="
+                                (highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'
+                            "
+                            [style.transform-origin]="
+                                (highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'
+                            "
                             class="layout-item-wrapper"
                             [ngClass]="{
                                 'full-screen-wrapper':
                                     layoutItemWrapper === window.document.fullscreenElement,
-                                'swap': (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
+                                swap:
+                                    (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
                             }"
-                            (resize)="resizeItem($event, dragContainer)"
+                            (resize)="checkUpdateAspectRatio($event, dragContainer)"
                         >
                             <div
                                 cdkDrag
@@ -387,16 +427,18 @@
                                 class="layout-item"
                                 [ngClass]="{
                                     'camera-layout-item':
-                                        layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.CAMERA,
+                                        layoutItemLookup[item.resourceId].type ===
+                                        RESOURCE_TYPE.CAMERA,
                                     'server-layout-item':
-                                        layoutItemLookup[item.resourceId].type === RESOURCE_TYPE.SERVER,
+                                        layoutItemLookup[item.resourceId].type ===
+                                        RESOURCE_TYPE.SERVER,
                                     'full-screen-override':
                                         layoutItemWrapper === window.document.fullscreenElement,
-                                    'collided': (collisions$ | async)[item.id],
+                                    collided: (collisions$ | async)[item.id]
                                 }"
                                 [ngStyle]="
                                     (collisions$ | async)[item.id]
-                                        | mergeObjects : item.renderConfig.child
+                                        | mergeObjects: item.renderConfig.child
                                 "
                             >
                                 <ng-template #notSupported>
@@ -426,30 +468,31 @@
                                                     itemDetail.details.unauthorized
                                                         ? 'unauthorized'
                                                         : !(
-                                                              (assertResourceOfType.camera(
+                                                                (assertResourceOfType.camera(
+                                                                    itemDetail
+                                                                ) ||
+                                                                    assertResourceOfType.server(
+                                                                        itemDetail
+                                                                    )) &&
+                                                                itemDetail.details.online
+                                                            )
+                                                          ? 'offline'
+                                                          : (assertResourceOfType.camera(
                                                                   itemDetail
                                                               ) ||
                                                                   assertResourceOfType.server(
                                                                       itemDetail
                                                                   )) &&
-                                                              itemDetail.details.online
-                                                          )
-                                                        ? 'offline'
-                                                        : (assertResourceOfType.camera(
-                                                              itemDetail
-                                                          ) ||
-                                                              assertResourceOfType.server(
+                                                              itemDetail.details.status !==
+                                                                  'archive'
+                                                            ? (assertResourceOfType.camera(
                                                                   itemDetail
-                                                              )) &&
-                                                          itemDetail.details.status !== 'archive'
-                                                        ? (assertResourceOfType.camera(
-                                                              itemDetail
-                                                          ) ||
-                                                              assertResourceOfType.server(
-                                                                  itemDetail
-                                                              )) &&
-                                                          itemDetail.details.status
-                                                        : 'offline') as status
+                                                              ) ||
+                                                                  assertResourceOfType.server(
+                                                                      itemDetail
+                                                                  )) &&
+                                                              itemDetail.details.status
+                                                            : 'offline') as status
                                                 "
                                                 (click)="
                                                     assertResourceOfType.camera(itemDetail) &&
@@ -507,21 +550,21 @@
                                                                   )
                                                                   .replace(
                                                                       'transcodingDisabled',
-                                                                      'disabled'
+                                                                      'offline'
                                                                   )
                                                                   .replace(
                                                                       'mjpegDisabled',
-                                                                      'disabled'
+                                                                      'offline'
                                                                   )
                                                             : [
-                                                                  RESOURCE_TYPE.WEB_PAGE,
-                                                                  RESOURCE_TYPE.IO_DEVICE
-                                                              ].includes(itemDetail.type)
-                                                            ? status
-                                                            : itemDetail.type ===
-                                                              RESOURCE_TYPE.SERVER
-                                                            ? 'unavailable'
-                                                            : 'offline') +
+                                                                    RESOURCE_TYPE.WEB_PAGE,
+                                                                    RESOURCE_TYPE.IO_DEVICE
+                                                                ].includes(itemDetail.type)
+                                                              ? status
+                                                              : itemDetail.type ===
+                                                                  RESOURCE_TYPE.SERVER
+                                                                ? 'unavailable'
+                                                                : 'offline') +
                                                         '.svg'
                                                     "
                                                     [svgStyle]="{
@@ -621,9 +664,6 @@
                                                                 itemDetail.details.id
                                                             ].resolution
                                                         "
-                                                        [accessToken]="
-                                                            $any(system.mediaserver).accessToken
-                                                        "
                                                     >
                                                     </nx-video-player>
                                                 </div>
@@ -684,7 +724,7 @@
                                                         "
                                                         [src]="
                                                             itemDetail.details.url
-                                                                | safe : 'resourceUrl'
+                                                                | safe: 'resourceUrl'
                                                         "
                                                         frameBorder="0"
                                                     ></iframe>
@@ -728,9 +768,9 @@
                                                 updateBackground($event, item, 'resize', alignment)
                                             "
                                             (cdkDragReleased)="moveItem(item)"
-                                            class="resize-handle {{
-                                                alignment[0]
-                                            }} {{ alignment?.[1] }}"
+                                            class="resize-handle {{ alignment[0] }} {{
+                                                alignment?.[1]
+                                            }}"
                                         ></div>
                                     </div>
                                 </ng-container>

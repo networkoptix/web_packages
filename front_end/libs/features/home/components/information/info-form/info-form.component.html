@@ -1,0 +1,49 @@
+<div>
+    <div *ngIf="!editMode; else itemForm">
+        <div
+            *ngFor="let item of data"
+            class="mb-1 d-flex flex-column"
+        >
+            <a
+                target="_blank"
+                class="section-link"
+                href="{{ linkPredicate + item.link }}"
+                >{{ item.link }}</a
+            >
+            <span class="section-descr">{{ item.descr }}</span>
+        </div>
+    </div>
+
+    <ng-template #itemForm>
+        <form
+            [formGroup]="form"
+            [id]="formId"
+            [name]="formId"
+        >
+            <div formArrayName="records">
+                <div
+                    class="form-group d-flex justify-between"
+                    *ngFor="let row of records.controls; let i = index"
+                    [formGroupName]="i"
+                >
+                    <div class="pr-3 w-100">
+                        <label style="text-transform: capitalize">{{ formId }}</label>
+                        <input
+                            class="form-control mr-1"
+                            type="text"
+                            formControlName="link"
+                        />
+                    </div>
+                    <div class="w-100">
+                        <label translate>Description</label>
+                        <input
+                            class="form-control mr-1"
+                            type="text"
+                            formControlName="descr"
+                        />
+                    </div>
+                </div>
+            </div>
+        </form>
+    </ng-template>
+</div>

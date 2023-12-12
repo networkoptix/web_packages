@@ -2,16 +2,18 @@ import datetime
 import random
 import uuid
 from datetime import timedelta
+from math import ceil
 
 import pytest
 from dateutil import relativedelta
 from django.core.cache import caches
 from django.db.models import Prefetch, Q
+from django.utils import timezone
 from model_bakery import baker
 
 from partners.models import (
     ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser,
-    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser
+    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser, ServiceUsage
 )
 from partners.serializers import (
     ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
@@ -218,6 +220,44 @@ class TestSystemServiceQuantitySerializer:
         for typ, name in ChannelPartnerService.SERVICE_TYPES[1:]:
             assert name[1] in ser.errors['services'][0].__str__()
 
+    def test_data(self, channel_partner_factory, organization_factory, system_factory,
+                  cp_service_factory, service_record_factory, arf, cp_user_factory):
+        root_cp = channel_partner_factory(parent_channel_partner=None)
+        cp = channel_partner_factory(parent_channel_partner=root_cp)
+        cp.monthly_additional_service_limit = 10
+        cp.save()
+        cp_orgs = [organization_factory(channel_partner=cp) for _ in range(3)]
+        systems = []
+        cp_services = [cp_service_factory(channel_partner=cp, service_type=tid)
+                       for tid, tname in ChannelPartnerService.SERVICE_TYPES]
+        for org in cp_orgs:
+            sys = system_factory(organization=org)
+            for service in cp_services:
+                systems.append(sys)
+                service_record_factory(service=service, cloud_system=sys, quantity=10)
+                old_record = service_record_factory(service=service, cloud_system=sys, quantity=10)
+                old_record.created_ts = old_record.created_ts - timedelta(days=40)
+                old_record.save()
+
+        serializer = SystemServiceQuantitySerializer(instance=systems[0])
+
+        assert serializer.data
+        for service in cp_services:
+            assert serializer.data['services'][str(service.id)]['quantity'] == 20
+            assert serializer.data['services'][str(service.id)]['used'] == 0
+
+        from_ts = timezone.now() - timedelta(hours=2)
+        to_ts = timezone.now() - timedelta(hours=1)
+        for idx, service in enumerate(cp_services):
+            ServiceUsage.objects.create(
+                usage=idx, cloud_system=systems[0],
+                service_id=service.id, from_ts=from_ts, to_ts=to_ts)
+
+        serializer = SystemServiceQuantitySerializer(instance=systems[0])
+        for idx, service in enumerate(cp_services):
+            assert serializer.data['services'][str(service.id)]['quantity'] == 20
+            assert serializer.data['services'][str(service.id)]['used'] == ceil(idx / ServiceUsage.CHECK_PERIOD)
+
 
 class TestChannelPartnerSerializer:
 
@@ -376,13 +416,12 @@ class TestOrganizationSerializer:
         organization.save()
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
-        assert serializer.data['ownRolesIds'] == [org_admin_role.name]
-
+        assert serializer.data['ownRolesIds'] == [org_admin_role.id]
 
 
 class TestChannelPartnerRecordsParamSerializer:
 
-    def setup(self):
+    def setup_method(self):
         self.ts = datetime.date(2023, 8, 31)
 
     def test_no_end_ts(self):

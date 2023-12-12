@@ -409,8 +409,8 @@ export type RecursivePick<T, Keys extends RecursiveKeyMap<T>> = Pick<
             ? NonNullable<Keys>[K] extends true
                 ? NonNullable<T>[K]
                 : NonNullable<Keys>[K] extends RecursiveKeyMap<NonNullable<T>[K]>
-                ? RecursivePick<NonNullable<T>[K], NonNullable<Keys>[K]>
-                : never
+                  ? RecursivePick<NonNullable<T>[K], NonNullable<Keys>[K]>
+                  : never
             : never;
     },
     keyof NonNullable<T> & keyof NonNullable<Keys>

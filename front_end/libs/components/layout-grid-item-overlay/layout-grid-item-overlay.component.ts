@@ -308,8 +308,8 @@ export class NxLayoutGridItemOverlayComponent {
                         const streamTitle = !hasStreamInfo
                             ? stream
                             : isPrimary
-                            ? primary
-                            : secondary;
+                              ? primary
+                              : secondary;
                         const streamDescription = hasStreamInfo && {
                             value: isPrimary ? high : low,
                             params: { codec: codecLookup[currentStream.codec] },

@@ -298,8 +298,8 @@ export class Storage extends StorageDataStructure {
         return this.status !== STORAGE_STATUS.RESERVED
             ? ''
             : this.storageStatus.includes('system')
-            ? 'reservedSystemTooltip'
-            : 'reservedTooSmallTooltip';
+              ? 'reservedSystemTooltip'
+              : 'reservedTooSmallTooltip';
     }
 
     get serialized() {

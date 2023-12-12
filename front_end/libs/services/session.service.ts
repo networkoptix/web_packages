@@ -22,7 +22,10 @@ export class NxSessionService {
     language$: BehaviorSubject<string>;
     langChanged$: BehaviorSubject<boolean>;
 
-    constructor(public nxCache: NxSwCacheService, private db: NxDbService) {
+    constructor(
+        public nxCache: NxSwCacheService,
+        private db: NxDbService,
+    ) {
         this.loginParams$ = new BehaviorSubject(
             this.loginParams ?? {
                 code: null,

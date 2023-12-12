@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnChanges, computed, Signal } from '@angular/core';
+import { Component, Input, OnChanges } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -39,8 +39,8 @@ export class NxLevel3ItemComponent implements OnChanges {
     @Input() idx: number;
 
     itemPath: string;
-    menuNavItemId: Signal<string> = computed(() => this.menuService.navItemId());
-    search: Signal<RegExp> = computed(() => this.menuService.searchRegex());
+    menuNavItemId = this.menuService.navItemId.asReadonly();
+    search = this.menuService.searchRegex.asReadonly();
     icons = icons;
 
     constructor(private menuService: NxMenuService) {}

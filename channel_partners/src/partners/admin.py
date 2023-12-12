@@ -2,9 +2,17 @@ from django.contrib import admin
 from django.apps import apps
 
 from partners.models import Organization, ChannelPartner, CloudSystemId, \
-    CloudHost, ChannelPartnerService, SystemGroup
+    CloudHost, ChannelPartnerService, SystemGroup, CloudUser
 
-excluded = [Organization, ChannelPartner, CloudSystemId, CloudHost, ChannelPartnerService, SystemGroup]
+excluded = [
+    Organization,
+    ChannelPartner,
+    CloudSystemId,
+    CloudHost,
+    ChannelPartnerService,
+    SystemGroup,
+    CloudUser
+]
 app = apps.get_app_config('partners')
 
 for model_name, model in app.models.items():
@@ -40,16 +48,23 @@ class ChannelPartnerOrganizationInline(admin.TabularInline):
         return False
 
 
+@admin.register(CloudUser)
+class CloudUserAdmin(admin.ModelAdmin):
+    list_display = ('id', 'email')
+    search_fields = ['email']
+
+
 @admin.register(ChannelPartner)
 class ChannelPartnerAdmin(admin.ModelAdmin):
-    list_display = ('name', 'cloud_host', 'parent_channel_partner')
-
+    list_display = ('id', 'name', 'cloud_host', 'parent_channel_partner')
+    readonly_fields = ('path',)
     inlines = [
         ChannelPartnerUserInline,
         ChannelPartnerOrganizationInline,
         ChannelPartnerInline
     ]
     exclude = ('users',)
+    search_fields = ['id', 'name', 'users__email']
 
 
 @admin.register(ChannelPartnerService)
@@ -78,12 +93,15 @@ class CloudSystemInline(admin.TabularInline):
 
 @admin.register(Organization)
 class OrganizationAdmin(admin.ModelAdmin):
-    list_display = ('name', 'channel_partner')
+    list_display = ('id', 'name', 'channel_partner')
+    readonly_fields = ('path',)
     inlines = [
         OrganizationUserInline,
         CloudSystemInline
     ]
     exclude = ('users',)
+    search_fields = ['id', 'name', 'users__email']
+
 
 @admin.register(SystemGroup)
 class SystemGroupAdmin(admin.ModelAdmin):
@@ -92,7 +110,6 @@ class SystemGroupAdmin(admin.ModelAdmin):
         OrganizationUserInline,
     ]
     exclude = ('users',)
-
 
 
 @admin.register(CloudSystemId)

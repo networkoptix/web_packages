@@ -1,0 +1,5 @@
+{{message.userFullName}} さん、こんにちは。
+
+パートナー {{message.partner_name}} のステータスが {{message.status_name}} に変更されました。
+
+詳細については、パートナーにお問い合わせください。

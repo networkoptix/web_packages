@@ -1,0 +1,5 @@
+Hej, {{message.userFullName}}
+
+Statusen för partnern {{message.partner_name}} ändras till {{message.status_name}}.
+
+Kontakta din partner för mer information.

@@ -44,7 +44,11 @@ export class NxGroupsSidebarLevelComponent {
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
 
     icons = icons;
-    constructor(private store: Store, private router: Router, private route: ActivatedRoute) {}
+    constructor(
+        private store: Store,
+        private router: Router,
+        private route: ActivatedRoute,
+    ) {}
 
     trackItem(_index: number, item: GroupItem): string {
         return item.id;

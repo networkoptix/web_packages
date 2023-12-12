@@ -1,5 +1,5 @@
 import { CommonModule } from '@angular/common';
-import { Component, Input, OnInit } from '@angular/core';
+import { Component, Input, OnInit, Signal, computed } from '@angular/core';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { BehaviorSubject, firstValueFrom, of } from 'rxjs';
@@ -15,6 +15,7 @@ import {
 } from '@pages/home/store/channel-partners/channel-partners.selectors';
 import {
     ChannelPartner,
+    OrgPermissions,
     Organization,
     State,
     UpdateChannelPartner,
@@ -25,6 +26,12 @@ import { Process } from '@services/process.service/process';
 
 import { NxSettingsGeneralComponent } from './components/general/general.component';
 import { NxSettingsStateComponent } from './components/state/state.component';
+
+interface SettingsState {
+    view?: string;
+    item?: ChannelPartner | Organization;
+    canUpdateStatus?: boolean;
+}
 
 @Component({
     selector: 'nx-organization-settings',
@@ -46,7 +53,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
     currentPartnerId$$ = this.store.selectSignal(selectCurrentPartnerId);
     currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
     updatedName = new BehaviorSubject<string>(null);
-    updatedExtId = new BehaviorSubject<string>(null);
     updatedPartnerAccess = new BehaviorSubject<boolean>(null);
     updatedState = new BehaviorSubject<State>(null);
     updateStateProcess: Process;
@@ -54,9 +60,24 @@ export class NxOrganizationSettingsComponent implements OnInit {
     @Input() cpSettings: boolean;
     @Input() orgSettings: boolean;
     @Input() subchannelSettings: boolean;
-    currentView: string;
-    currentItem: ChannelPartner | Organization;
-    canUpdateStatus: boolean;
+    currentState$$: Signal<SettingsState> = computed(() => {
+        const state: SettingsState = {};
+        if (this.cpSettings) {
+            state.item = this.currentPartner$$();
+            state.view = settingsViews.CHANNEL_PARTNERS;
+        } else if (this.orgSettings) {
+            state.item = this.currentOrg$$();
+            state.view = settingsViews.ORGANIZATIONS;
+            state.canUpdateStatus = state.item?.ownPermissions.includes(
+                OrgPermissions.CONFIGURE_ORGANIZATION,
+            );
+        } else if (this.subchannelSettings) {
+            // Todo: wire subchannel settings item
+            state.view = settingsViews.SUBCHANNELS;
+            state.canUpdateStatus = true;
+        }
+        return state;
+    });
     hasUpdate = false;
 
     State = State;
@@ -70,7 +91,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
     ngOnInit(): void {
         this.updateStateProcess = this.processService.createProcess(
             () => {
-                switch (this.currentView) {
+                switch (this.currentState$$().view) {
                     case this.settingsViews.CHANNEL_PARTNERS:
                         const cpBody: UpdateChannelPartner = {};
                         cpBody.name = this.updatedName.value;
@@ -82,11 +103,7 @@ export class NxOrganizationSettingsComponent implements OnInit {
                         // Todo: add handler to compare updated values to current values to avoid unnecessary API call
                         const orgBody: UpdateOrganization = {};
                         const currOrg = this.currentOrg$$();
-                        orgBody.state = this.updatedState.value || currOrg.effectiveState;
-                        orgBody.channelPartnerCanAdminister =
-                            this.updatedPartnerAccess.value !== null
-                                ? this.updatedPartnerAccess.value
-                                : currOrg.channelPartnerCanAdminister;
+                        orgBody.state = this.updatedState.value || currOrg.state;
                         orgBody.name = this.updatedName.value || currOrg.name;
                         return firstValueFrom(
                             this.cpService.updateOrganization(currOrg.id, orgBody),
@@ -102,18 +119,6 @@ export class NxOrganizationSettingsComponent implements OnInit {
             () => {},
             () => {},
         );
-        if (this.cpSettings) {
-            this.currentView = this.settingsViews.CHANNEL_PARTNERS;
-            this.currentItem = this.currentPartner$$();
-        } else if (this.orgSettings) {
-            this.currentView = this.settingsViews.ORGANIZATIONS;
-            this.currentItem = this.currentOrg$$();
-            // Todo: update this from API?
-            this.canUpdateStatus = true;
-        } else if (this.subchannelSettings) {
-            this.currentView = this.settingsViews.SUBCHANNELS;
-            this.canUpdateStatus = true;
-        }
     }
 
     handleUpdate = (

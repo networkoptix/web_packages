@@ -47,14 +47,14 @@
                     dir="auto"
                 >
                     <ng-container
-                        *ngIf="LANG.ipvd.disclaimer | translate : disclaimerParams as disclaimer"
+                        *ngIf="LANG.ipvd.disclaimer | translate: disclaimerParams as disclaimer"
                     >
-                        {{ disclaimer | translateCut : 0
+                        {{ disclaimer | translateCut: 0
                         }}<span
                             class="pseudo-anchor"
                             (click)="openPageFeedback()"
-                            >{{ disclaimer | translateCut : 1 }}</span
-                        >{{ disclaimer | translateCut : 2 }}
+                            >{{ disclaimer | translateCut: 1 }}</span
+                        >{{ disclaimer | translateCut: 2 }}
                         <!-- (0) ...Please -->
                         <!-- (1) submit a request -->
                         <!-- (2) for addional quesions/concerns... -->
@@ -108,16 +108,15 @@
                         >
                             <ng-container
                                 *ngIf="
-                                    LANG.ipvd.disclaimer
-                                        | translate : disclaimerParams as disclaimer
+                                    LANG.ipvd.disclaimer | translate: disclaimerParams as disclaimer
                                 "
                             >
-                                {{ disclaimer | translateCut : 0
+                                {{ disclaimer | translateCut: 0
                                 }}<span
                                     class="pseudo-anchor"
                                     (click)="openPageFeedback()"
-                                    >{{ disclaimer | translateCut : 1 }}</span
-                                >{{ disclaimer | translateCut : 2 }}
+                                    >{{ disclaimer | translateCut: 1 }}</span
+                                >{{ disclaimer | translateCut: 2 }}
                                 <!-- (0) ...Please -->
                                 <!-- (1) submit a request -->
                                 <!-- (2) for addional quesions/concerns... -->

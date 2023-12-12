@@ -59,6 +59,8 @@ export interface NxSystemCamera {
     vendor: string;
     model: string;
     url: string;
+    systemId: string;
+    accessToken: string;
 
     // Compatibility patches
     parentId: string; // serverId

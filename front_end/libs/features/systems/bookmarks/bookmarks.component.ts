@@ -2,6 +2,7 @@ import { SelectionModel } from '@angular/cdk/collections';
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
 import { DateRange } from '@angular/material/datepicker';
 import { ActivatedRoute, Router } from '@angular/router';
+import { isEqual } from 'lodash-es';
 import {
     BehaviorSubject,
     combineLatest,
@@ -350,7 +351,13 @@ export class NxBookmarksComponent implements OnInit {
                 this.visibleBookmarksCount = bks.length;
                 return bks;
             }),
-            distinctUntilChanged(),
+            distinctUntilChanged((...vals) =>
+                isEqual(
+                    ...(vals.map(bookmarks =>
+                        bookmarks.map(({ thumbnail, ...bookmark }) => bookmark),
+                    ) as typeof vals),
+                ),
+            ),
         );
     }
 

@@ -86,7 +86,7 @@
             </div>
 
             <div
-                *ngIf="!isMobile"
+                *ngIf="!isMobile && overlayEnabled"
                 class="mt-3 d-flex justify-content-between button-wrapper"
                 (contextmenu)="$event.preventDefault()"
             >

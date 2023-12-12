@@ -39,7 +39,7 @@
         class="fs-exclude"
         alt="{{ state }}"
         *ngIf="isLive && url; else noLivePreview"
-        [src]="url | safe : 'resourceUrl'"
+        [src]="url | safe: 'resourceUrl'"
         [style.height]="motionPreview || lightBackground ? '100%' : 'auto'"
         [style.width]="motionPreview || lightBackground ? '100%' : 'auto'"
         [attr.object-fit]="'cover'"

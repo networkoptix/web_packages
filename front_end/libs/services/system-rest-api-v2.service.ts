@@ -159,11 +159,14 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         this.responseWrapper(
             Object.entries(data)
                 .filter(([key, _]: [string, LogV2]) => key.includes('Log'))
-                .reduce((levels, [key, logInfo]: [string, LogV2]) => {
-                    const modifiedKey = key.replace(/Log/, '').toUpperCase();
-                    levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
-                    return levels;
-                }, <LogLevelReply>{}),
+                .reduce(
+                    (levels, [key, logInfo]: [string, LogV2]) => {
+                        const modifiedKey = key.replace(/Log/, '').toUpperCase();
+                        levels[modifiedKey] = logInfo?.primaryLevel || this.defaultLogLevel;
+                        return levels;
+                    },
+                    <LogLevelReply>{},
+                ),
         );
 
     override logLevel(): Observable<LogLevel> {
@@ -347,7 +350,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
         const {
             isAudioEnabled: audioEnabled,
             isControlEnabled: controlEnabled,
-            isDualStreamingEnabled,
+            isDualStreamingDisabled,
             ...backupOpts
         } = options;
         const { type: motionType, mask: motionMask } = motion;
@@ -357,7 +360,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             parentId: serverId,
             audioEnabled,
             controlEnabled,
-            disableDualStreaming: !isDualStreamingEnabled,
+            disableDualStreaming: isDualStreamingDisabled,
             ...backupOpts,
             parameters,
             motionType,
@@ -429,7 +432,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             url: true,
             serverId: true,
             options: {
-                isDualStreamingEnabled: true,
+                isDualStreamingDisabled: true,
                 preferredServerId: true,
             },
             schedule: {
@@ -445,7 +448,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             map(cameras =>
                 cameras.map(
                     ({
-                        options: { isDualStreamingEnabled, preferredServerId },
+                        options: { isDualStreamingDisabled, preferredServerId },
                         schedule: { isEnabled: scheduleEnabled },
                         serverId,
                         parameters = {},
@@ -455,7 +458,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
                             ...camera,
                             scheduleEnabled,
                             parentId: serverId,
-                            disableDualStreaming: !isDualStreamingEnabled,
+                            disableDualStreaming: isDualStreamingDisabled,
                             preferredServerId:
                                 preferredServerId !== ZERO_ID ? preferredServerId : serverId,
                             rotation: parameters.rotation || 0,

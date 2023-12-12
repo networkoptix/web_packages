@@ -1,0 +1,56 @@
+diff --git a/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs b/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
+index dda2385..a1ecee1 100755
+--- a/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
++++ b/node_modules/@angular/core/esm2022/rxjs-interop/src/to_signal.mjs
+@@ -6,6 +6,7 @@
+  * found in the LICENSE file at https://angular.io/license
+  */
+ import { assertInInjectionContext, assertNotInReactiveContext, computed, DestroyRef, inject, signal, ɵRuntimeError } from '@angular/core';
++import { map } from 'rxjs/operators';
+ /**
+  * Get the current value of an `Observable` as a reactive `Signal`.
+  *
+@@ -54,7 +55,7 @@ export function toSignal(source, options) {
+     // consumer only needs to be notified when the `state` signal changes through the observable
+     // subscription. Additional context (related to async pipe):
+     // https://github.com/angular/angular/pull/50522.
+-    const sub = source.subscribe({
++    const sub = source.pipe(map(value => value instanceof Object ? new Proxy(value, {}): value)).subscribe({
+         next: value => state.set({ kind: 1 /* StateKind.Value */, value }),
+         error: error => {
+             if (options?.rejectErrors) {
+diff --git a/node_modules/@angular/core/index.d.ts b/node_modules/@angular/core/index.d.ts
+index 85284ab..d3ad5da 100755
+--- a/node_modules/@angular/core/index.d.ts
++++ b/node_modules/@angular/core/index.d.ts
+@@ -12,6 +12,7 @@ import { SIGNAL } from '@angular/core/primitives/signals';
+ import { Subject } from 'rxjs';
+ import { Subscribable } from 'rxjs';
+ import { Subscription } from 'rxjs';
++import { Immutable } from '@utils/signals';
+ 
+ /**
+  * @description
+@@ -8183,6 +8184,7 @@ export declare type Signal<T> = (() => T) & {
+     [SIGNAL]: unknown;
+ };
+ 
++
+ /**
+  * Create a `Signal` that can be set or updated directly.
+  */
+@@ -10571,8 +10573,13 @@ export declare interface WritableSignal<T> extends Signal<T> {
+     /**
+      * Update the value of the signal based on its current value, and
+      * notify any dependents.
++     *
++     * PATCHED:
++     *
++     * Value is being treated as Immutable within the updateFn callback to prevent bugs
++     * caused by mutating and returning the same value
+      */
+-    update(updateFn: (value: T) => T): void;
++    update(updateFn: (value: Immutable<T>) => T | Immutable<T>): void;
+     /**
+      * Returns a readonly version of this signal. Readonly signals can be accessed to read their value
+      * but can't be changed using set, update or mutate methods. The readonly signals do _not_ have

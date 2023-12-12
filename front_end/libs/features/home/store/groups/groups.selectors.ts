@@ -12,8 +12,9 @@ export const selectHasGroups = createSelector(selectGroupItems, items => items.l
 
 export const selectCurrentGroupId = createSelector(selectGroupState, items => items.currentGroupId);
 
-export const selectRootGroups = createSelector(selectGroupItems, groups =>
-    groups?.filter(group => !group.parentId),
+export const selectRootGroups = createSelector(
+    selectGroupItems,
+    groups => groups?.filter(group => !group.parentId),
 );
 
 export const selectCurrentGroup = createSelector(

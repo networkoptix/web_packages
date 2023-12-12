@@ -1,5 +1,7 @@
+/* eslint-disable nx/ban-global-variables */
 import {
     Component,
+    effect,
     ElementRef,
     EventEmitter,
     forwardRef,
@@ -8,7 +10,9 @@ import {
     OnChanges,
     OnInit,
     Output,
+    signal,
     ViewEncapsulation,
+    WritableSignal,
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { escape } from 'lodash-es';
@@ -45,6 +49,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
     @Input() initialClass = 'editable-initial';
     @Input() errorClass = 'editable-error';
     @Input() allowUserFocus = true;
+    @Input() overrideSelectionClass = '';
+    @Input() overrideSelectionClassOnce = false;
+    @Input() selectAllOnFocus = false;
     @Input() editEnabled = false;
     @Input() required;
 
@@ -53,6 +60,7 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     private _initialValue: string;
     private _editing = false;
+    isOverrideSelectionClasses$$: WritableSignal<boolean | null> = signal(null);
 
     ngOnChanges(changes: NgChanges<NxTextEditableComponent>) {
         if (changes.editEnabled) {
@@ -71,15 +79,43 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
         }
     }
 
-    private focusTextEnd(el: ElementRef) {
+    private removeSelectionOverrides(): void {
+        this.isOverrideSelectionClasses$$.set(false);
+    }
+
+    private updateCaretAndSelection(el: ElementRef) {
         const selection = window.getSelection();
         selection?.selectAllChildren(el.nativeElement);
-        selection?.collapseToEnd();
+        if (!this.selectAllOnFocus) {
+            selection?.collapseToEnd();
+        }
         el.nativeElement.scrollBy(el.nativeElement.scrollWidth, 0);
+    }
+
+    classesOverrideEffect = effect(() => {
+        if (this.isOverrideSelectionClasses$$() === null) {
+            return;
+        }
+
+        if (this.overrideSelectionClass) {
+            this.el.nativeElement.classList.toggle(
+                this.overrideSelectionClass,
+                this.isOverrideSelectionClasses$$(),
+            );
+        }
+        if (!this.isOverrideSelectionClasses$$() && this.overrideSelectionClassOnce) {
+            this.overrideSelectionClass = '';
+        }
+    });
+
+    @HostListener('keydown')
+    callOnPointermove(): void {
+        this.removeSelectionOverrides();
     }
 
     @HostListener('click', ['$event'])
     callOnClick($event: MouseEvent): void {
+        this.removeSelectionOverrides();
         if (this.editEnabled) {
             $event.stopPropagation();
         }
@@ -87,6 +123,7 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
 
     @HostListener('input')
     callOnChange(): void {
+        this.removeSelectionOverrides();
         this.onChangeCallback(this.el.nativeElement.textContent);
         this.checkError();
     }
@@ -95,6 +132,7 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
     callOnTouched(): void {
         // set caret to beginning of the input so no weird ellipses
         this.el.nativeElement.scrollLeft = 0;
+        this.removeSelectionOverrides();
 
         if (this.required && !this.el.nativeElement.textContent) {
             this.el.nativeElement.textContent = this._initialValue;
@@ -120,8 +158,9 @@ export class NxTextEditableComponent implements OnInit, OnChanges, ControlValueA
         this.onFocusChanged.emit(true);
 
         if (!this.allowUserFocus) {
-            this.focusTextEnd(this.el);
+            this.updateCaretAndSelection(this.el);
         }
+        this.isOverrideSelectionClasses$$.set(!!this.overrideSelectionClass);
 
         this._editing = true;
     }

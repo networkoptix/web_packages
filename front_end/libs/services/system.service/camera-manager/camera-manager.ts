@@ -32,7 +32,7 @@ import {
 
 type PartialSystem = Pick<
     NxSystemOldModule,
-    'serverManager' | 'version' | 'useRest' | 'userManager' | 'permissionManager'
+    'serverManager' | 'version' | 'useRest' | 'userManager' | 'permissionManager' | 'id'
 >;
 
 export class CameraManager {
@@ -40,7 +40,7 @@ export class CameraManager {
     private serverManager: ServerManager;
     private serverTimes: ServerTime[];
 
-    cameras: NxSystemCamera[];
+    cameras: NxSystemCamera[] = [];
 
     constructor(private system: PartialSystem) {
         this.serverManager = this.system.serverManager;
@@ -156,13 +156,21 @@ export class CameraManager {
             backupPolicy,
             backupContentType,
         } = camera;
+
+        const getAccessToken = (): string =>
+            'accessToken' in this.serverManager.mediaserver
+                ? this.serverManager.mediaserver.accessToken
+                : '';
         return {
             id,
             name,
             vendor,
             model,
             url,
-
+            systemId: this.system.id,
+            get accessToken(): string {
+                return getAccessToken();
+            },
             parentId,
             audioEnabled,
             controlEnabled,

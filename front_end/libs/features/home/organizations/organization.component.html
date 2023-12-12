@@ -1,9 +1,9 @@
 <ng-template #body>
     <div class="name pb-3">
-        <h2>{{ (currentOrganization$ | async)?.name }}</h2>
+        <h2>{{ currentOrganization$$().name }}</h2>
         <ng-container
             class="status"
-            [ngSwitch]="(currentOrganization$ | async)?.effectiveState"
+            [ngSwitch]="currentOrganization$$().effectiveState"
         >
             <div
                 class="status suspended"
@@ -70,11 +70,11 @@
         class="cards"
         [ngClass]="{ 'back-button': inChannelPartner }"
     >
-        <nx-pre-loader *ngIf="isLoading; else cards"></nx-pre-loader>
+        <nx-pre-loader *ngIf="isLoading && !currentOrganization$$(); else cards"></nx-pre-loader>
         <ng-template #cards>
             <ng-container *ngIf="!inChannelPartner; else channelPartnerView">
                 <ng-template [ngTemplateOutlet]="body"></ng-template>
-                <nx-org-cards-container [inRoot]="true"></nx-org-cards-container>
+                <router-outlet></router-outlet>
             </ng-container>
             <ng-template #channelPartnerView>
                 <a

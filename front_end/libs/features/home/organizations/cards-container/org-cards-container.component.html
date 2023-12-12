@@ -8,7 +8,7 @@
 <ng-template #showContent>
     <div class="actions p-3">
         <button
-            [disabled]="!isAdmin"
+            [disabled]="!canCreateGroups$$()"
             class="btn btn-default"
             translate
             (click)="newGroupDialog()"
@@ -24,7 +24,7 @@
         </div>
     </div>
     <div
-        *ngIf="!currentGroups$$()?.length && !(currentSystems$ | async).length; else showGroups"
+        *ngIf="!currentGroups$$()?.length && !(currentSystems$ | async)?.length; else showGroups"
         class="no-systems"
     >
         <nx-no-systems-cards></nx-no-systems-cards>

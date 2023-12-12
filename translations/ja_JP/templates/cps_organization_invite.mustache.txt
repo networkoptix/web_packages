@@ -1,0 +1,6 @@
+{{message.userFullName}} さん、こんにちは。
+
+{{message.sharer_name}} が、組織 "{{message.organization_name}}" へのアクセス権を共有しました。
+表示および管理を行うには、このメールアドレスを使用して %CLOUD_NAME% にアカウントを作成し、続く指示に従ってください。
+
+このリンクを使用してアカウントを作成してください: {{ config.portal_url }}/authorize/register/

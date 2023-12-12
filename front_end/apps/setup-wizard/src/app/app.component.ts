@@ -12,7 +12,10 @@ require('what-input');
     styleUrls: ['./app.component.scss'],
 })
 export class AppComponent implements OnInit {
-    constructor(private themeService: NxThemeService, private wizardState: WizardStateService) {}
+    constructor(
+        private themeService: NxThemeService,
+        private wizardState: WizardStateService,
+    ) {}
 
     ngOnInit(): void {
         const theme = this.wizardState.hasNativeClient ? 'dark' : 'light';

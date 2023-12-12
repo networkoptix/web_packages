@@ -11,7 +11,7 @@
     >
         <div
             class="header pb-3"
-            *ngIf="currentPartner$ | async as currentPartner"
+            *ngIf="currentPartner$$() as currentPartner"
         >
             <h2>{{ currentPartner.name }}</h2>
         </div>
@@ -30,7 +30,7 @@
         <ng-container *ngIf="showOrganizations; else tabOutlet">
             <div class="actions p-3">
                 <button
-                    *ngIf="isAdmin"
+                    *ngIf="canCreateOrganizations$$()"
                     class="btn btn-default"
                     translate
                     (click)="newOrgDialog()"

@@ -65,6 +65,7 @@ export class NxMenusService {
         translate.onTranslationChange
             .pipe(
                 filter(lang => lang !== null),
+                map(({ lang }) => lang),
                 distinctUntilChanged(),
                 untilDestroyed(this),
             )
@@ -128,7 +129,9 @@ export class NxMenusService {
 
         return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$]).pipe(
             switchMap(
-                ([login]): Promise<[string, MenuStructure]> | Observable<[string, MenuStructure]> =>
+                ([login]):
+                    | Promise<[string, MenuStructure]>
+                    | Observable<[string, MenuStructure]> =>
                     ignoreCache || !menu
                         ? this.http
                               .get<MenuStructure>(this.apiBase + `/cms/menus/${encodeURI(name)}`)
@@ -371,7 +374,6 @@ export class NxMenusService {
         }
 
         if (
-            permissions.viewBookmarks &&
             activeSystem.canViewBookmarks(
                 this.deviceService.isMobile() || this.deviceService.isTablet(),
             )

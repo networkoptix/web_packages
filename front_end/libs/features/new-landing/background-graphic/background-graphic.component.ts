@@ -35,7 +35,10 @@ export class NxBackgroundGraphicComponent implements AfterViewInit, OnChanges {
         layerDistanceCoefficient: 0.00005,
     };
 
-    constructor(platform: Platform, public landingService: NxLandingService) {
+    constructor(
+        platform: Platform,
+        public landingService: NxLandingService,
+    ) {
         for (const graphic of this.graphicPaths) {
             this.layers.push({
                 path: 'land_layer_' + graphic + '.svg',

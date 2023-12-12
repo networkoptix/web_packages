@@ -91,7 +91,10 @@ class BitConverter {
 class FreeSpace {
     private freeExcludeReserved: BitConverter;
 
-    constructor(free: BitConverter, private reserved: BitConverter) {
+    constructor(
+        free: BitConverter,
+        private reserved: BitConverter,
+    ) {
         this.freeExcludeReserved = new BitConverter(free.bits + reserved.bits);
     }
 

@@ -707,18 +707,18 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
             d3.timeSecond(date) < date
                 ? this.formatMinorMillisecond
                 : d3.timeMinute(date) < date
-                ? this.formatMinorSecond
-                : d3.timeHour(date) < date
-                ? this.formatMinorMinute
-                : d3.timeDay(date) < date
-                ? this.formatMinorHour
-                : d3.timeMonth(date) < date
-                ? d3.timeWeek(date) < date
-                    ? this.formatMinorDay
-                    : this.formatMinorWeek
-                : d3.timeYear(date) < date
-                ? this.formatMinorMonth
-                : this.formatMinorYear
+                  ? this.formatMinorSecond
+                  : d3.timeHour(date) < date
+                    ? this.formatMinorMinute
+                    : d3.timeDay(date) < date
+                      ? this.formatMinorHour
+                      : d3.timeMonth(date) < date
+                        ? d3.timeWeek(date) < date
+                            ? this.formatMinorDay
+                            : this.formatMinorWeek
+                        : d3.timeYear(date) < date
+                          ? this.formatMinorMonth
+                          : this.formatMinorYear
         )(date);
     }
 
@@ -751,8 +751,8 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
         //     tickCount <= this.tickBreakpointMajor
         //         ? 12
         //         : tickCount <= this.tickBreakpointMinor
-        //         ? 10
-        //         : 8,
+        //           ? 10
+        //           : 8,
         // );
     }
 

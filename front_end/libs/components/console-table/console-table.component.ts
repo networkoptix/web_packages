@@ -291,7 +291,7 @@ export class NxConsoleTableComponent {
                 [ModalType.CLIENT_CREATE]: () => this.dialogService.edit(createClientModalContent),
                 [ModalType.CLIENT_EDIT]: () => this.dialogService.edit(modalContent),
                 // [ModalType.CLIENT_DOWNLOAD] : () => this.dialogService.downloadAsync(modalContent)
-            }[modal || ModalType.CLIENT_CREATE]());
+            })[modal || ModalType.CLIENT_CREATE]();
 
         const action = await actions(modalContent?.modal);
         if (action) {

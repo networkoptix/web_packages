@@ -771,11 +771,14 @@ html[data-theme="dark"], .theme-override[data-theme="dark"] {
     --placeholder-error-color: var(--attention-red_dark);
     --placeholder-info-color: var(--dark11);
     --no-camera-placeholder-color: var(--light10);
-    --sidebar-background: var(--dark4);
+    --sidebar-background: var(--dark5);
     --sidebar-tab-hover: var(--dark6);
     --sidebar-tab-closed: var(--dark8);
 
     --tree-locked-icon: var(--light4);
+    --tree-editable-selection-override: var(--dark9);
+    --tree-renaming-layout-background: var(--dark6);
+    --tree-new-layout-background: var(--dark4);
 
     --context-menu-bg: var(--drop-menu-navigation-bg); // $dark7
     --context-menu-shadow: rgba(var(--dark1--rgb), 0.4);

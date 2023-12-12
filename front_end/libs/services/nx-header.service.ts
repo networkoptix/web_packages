@@ -35,7 +35,10 @@ export class NxHeaderService {
         this.nodes$.next(menunodes);
     }
 
-    constructor(private router: Router, private menusService: NxMenusService) {
+    constructor(
+        private router: Router,
+        private menusService: NxMenusService,
+    ) {
         this.router.events.pipe(untilDestroyed(this)).subscribe(event => {
             if (event instanceof NavigationStart) {
                 this.setLocation(event.url);

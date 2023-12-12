@@ -7,6 +7,7 @@
     @include mixins.ellipsis;
     @include typography.regular13nocolor;
     color: var(--card-header-text);
+    font-size: 0.875rem !important;
 }
 
 .header-users {
@@ -81,14 +82,13 @@
 
     .group-name {
         @include mixins.ellipsis;
-            font-size: 16px;
             font-style: normal;
             line-height: normal;
             padding-bottom: 16px;
+            font-weight: 500 !important;
     }
 
     &.edit {
-        @include mixins.ellipsis;
         margin-bottom: 0;
         font-size: 0.875rem !important;
         padding-bottom: unset;
@@ -105,6 +105,10 @@
             display: unset;
             font-family: theme_vars.$font-family-light;
         }
+
+        .multiple-groups-item {
+            @include mixins.ellipsis;
+  }
     }
 }
 
@@ -156,3 +160,17 @@
         flex-direction: column;
     }
 }
+
+.dropdown-label {
+    font-size: 0.875rem !important;
+}
+
+  nx-multi-select::ng-deep {
+    button {
+      font-size: 0.875rem !important;
+    }
+  }
+
+  .alert-block {
+      padding-top: 16px;
+  }

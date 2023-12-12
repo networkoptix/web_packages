@@ -136,8 +136,8 @@ export class TimelineScrollComponent {
                 barLow < 0
                     ? 0
                     : barHigh < this.webglService.canvasWidth$.value
-                    ? barLow
-                    : this.webglService.canvasWidth$.value - this.barWidth;
+                      ? barLow
+                      : this.webglService.canvasWidth$.value - this.barWidth;
 
             this.scrollToPos.emit({ direction: SCROLL_DIRECTION.scrollTo, position: this.barPos });
         }

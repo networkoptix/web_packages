@@ -21,7 +21,10 @@ export class NgrxDemoBooksComponent {
         this.store.dispatch(removeBook({ bookId }));
     }
 
-    constructor(private booksService: GoogleBooksService, private store: Store) {}
+    constructor(
+        private booksService: GoogleBooksService,
+        private store: Store,
+    ) {}
 
     ngOnInit(): void {
         this.booksService

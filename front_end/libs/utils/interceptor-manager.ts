@@ -63,7 +63,10 @@ export class InterceptorManager {
         return true;
     }
 
-    private constructor(accessToken: string, public trafficRelayHost: string) {
+    private constructor(
+        accessToken: string,
+        public trafficRelayHost: string,
+    ) {
         if (accessToken) {
             this.scopedTokens.cloud.accessToken = Promise.resolve(accessToken);
         }

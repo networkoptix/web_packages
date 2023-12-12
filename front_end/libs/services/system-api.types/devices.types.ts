@@ -97,7 +97,7 @@ export interface DeviceV1Full {
         failoverPriority: string;
         isAudioEnabled: boolean;
         isControlEnabled: boolean;
-        isDualStreamingEnabled: boolean;
+        isDualStreamingDisabled: boolean;
         preferredServerId: string;
     };
     /** `_keepDefault` doesn't appear to work on `parameters`. `_with` will filter out
@@ -183,7 +183,7 @@ export const cameraKeyMapV1 = {
         backupQuality: true,
         isAudioEnabled: true,
         isControlEnabled: true,
-        isDualStreamingEnabled: true,
+        isDualStreamingDisabled: true,
     },
     parameters: {
         bitrateInfos: {

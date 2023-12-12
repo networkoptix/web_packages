@@ -123,6 +123,7 @@ export class MergeModalContent {
 
     readonly knownBothSystemsConnectedToCloud: string = 'knownBothSystemsConnectedToCloud';
     readonly unknownBothSystemsConnectedToCloud: string = 'unknownBothSystemsConnectedToCloud';
+    readonly incompatibleCloudToNonCloud: string = 'incompatibleCloudToNonCloud';
     readonly differentOwners: string = 'differentOwners';
     readonly duplicateServers: string = 'duplicateServers';
     readonly noServerFound: string = 'noServerFound';
@@ -991,6 +992,13 @@ export class MergeModalContent {
                 throw Error(this.knownBothSystemsConnectedToCloud);
             }
             throw Error(this.unknownBothSystemsConnectedToCloud);
+        }
+        if (
+            this.environment.isLocal &&
+            !this.targetSystem.cloudOwnerId &&
+            this.system.moduleInfo.cloudOwnerId
+        ) {
+            throw Error(this.incompatibleCloudToNonCloud);
         }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             if (!this.targetSystem.id) {

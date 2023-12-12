@@ -55,14 +55,7 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
     constructor(
         dialogRef: DialogRef<DT['return']>,
         @Inject(DIALOG_DATA)
-        {
-            state,
-            parentChannelPartner,
-            name,
-            id,
-            canCreateSubChannels,
-            monthlyAdditionalServiceLimit,
-        }: DT['data'],
+        { state, parentChannelPartner, name, id, monthlyAdditionalServiceLimit }: DT['data'],
         processService: NxProcessService,
         cpService: NxChannelPartnersService,
         toastService: NxToastService,
@@ -82,7 +75,6 @@ export class NxEditPartnerModalContent extends ModalBase<DT['return']> implement
             this.selectedParent = this.parentPartners.find(p => p.value === parentChannelPartner);
         });
         this.name = name;
-        this.canCreateSubChannels = canCreateSubChannels;
         if (monthlyAdditionalServiceLimit === null) {
             this.hasMonthlyLimit = false;
         } else {

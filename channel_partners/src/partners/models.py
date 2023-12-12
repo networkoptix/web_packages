@@ -1,5 +1,6 @@
 import datetime
 from datetime import timedelta
+from math import ceil
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
@@ -11,7 +12,7 @@ import string
 import time
 import llutil
 import queue
-from typing import Dict, List, Optional
+from typing import Dict, List, TypedDict, Optional
 import uuid
 
 from django.apps import apps
@@ -199,6 +200,11 @@ class CloudHost(models.Model):
         return f'https://{self.hostname}'
 
 
+class ServiceUsageDict(TypedDict):
+    used: float
+    quantity: int
+
+
 class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     system_id = models.UUIDField()
     usage_issue_detected = models.BooleanField(default=False)
@@ -336,13 +342,32 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             self.save()
         return self.current_services
 
-    @property
-    def services(self):
+    def get_current_services(self):
         current_services = self.current_services or self.calculate_current_services()
         if current_services:
-            return current_services.get('services', [])
+            return current_services.get('services', {})
         else:
             return {}
+
+    @property
+    def services(self) -> Dict[uuid.UUID, ServiceUsageDict]:
+        last_usage = self.service_usages.all().order_by('to_ts').last()
+        if not last_usage:
+            return {service: {'used': 0, **quantity} for service, quantity in self.get_current_services().items()}
+        service_usages = (self.service_usages.filter(from_ts=last_usage.from_ts, to_ts=last_usage.to_ts)
+                          .values('service').annotate(usage=Sum('usage')))
+
+        services = self.get_current_services()
+        usage = {
+            service_usage['service']: ServiceUsageDict(
+                used=ceil((service_usage['usage'] or 0) / ServiceUsage.CHECK_PERIOD),
+                quantity=services.get(str(service_usage['service']), {}).get('quantity', 0)
+            )
+            for service_usage in service_usages
+        }
+
+        return usage
+
 
     # def add_system_users_data(self):
     #     roles = OrganizationRole.objects \
@@ -518,7 +543,7 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     # instance = models.ForeignKey(CloudInstance, on_delete=models.CASCADE, default=get_cloud_test_instance)
     cloud_host = models.ForeignKey(CloudHost, on_delete=models.CASCADE)
     monthly_additional_service_limit = models.BigIntegerField(default=None, null=True, blank=True)
-    attributes = models.JSONField(default=dict)
+    attributes = models.JSONField(blank=True, default=dict)
     # allow_changing_services = models.BooleanField(default=False)
     support_information = models.JSONField(blank=True, default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
@@ -598,7 +623,10 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
             return self.can_configure(user)
 
     def can_configure(self, user: CloudUser):
-        return self.has_perm(user, ChannelPartnerPermissions.configure_channel_partner)
+        if self.has_perm(user, ChannelPartnerPermissions.configure_channel_partner):
+            return True
+        return (self.parent_channel_partner and
+                self.parent_channel_partner.can_add_or_remove_sub_chanel_partners(user))
 
     def can_manage_users(self, user: CloudUser):
         if self.has_perm(user, ChannelPartnerPermissions.manage_users):
@@ -906,7 +934,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                      default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
-    attributes = models.JSONField(default=dict)
+    attributes = models.JSONField(default=dict, blank=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
 
     objects = ExternalIdTargetManager()
@@ -1028,9 +1056,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def has_perm(self, user: CloudUser, perm: str):
         allowed_role_uuid = self.allowed_role_uuid(perm)
-        if self.users.filter(pk=user.pk,
-                             organizationtouser__roles__overlap=allowed_role_uuid,
-                             organizationtouser__system_group=None).exists():
+        if allowed_role_uuid and self.users.filter(pk=user.pk,
+                                                   organizationtouser__roles__overlap=allowed_role_uuid,
+                                                   organizationtouser__system_group=None).exists():
             return True
         channel_partner_manager = ChannelPartnerToUser.objects.filter(
             user=user, channel_partner=self.channel_partner,
@@ -1047,7 +1075,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
     def can_access(self, user: CloudUser):
         return self.users.filter(pk=user.pk).exists() or self.channel_partner.can_access(user)
 
-    def can_manage(self, user: CloudUser):
+    def can_add_or_remove(self, user: CloudUser):
         return self.channel_partner.can_add_or_remove_organizations(user)
 
     def can_modify_service_quantities(self, user: CloudUser):
@@ -1143,21 +1171,38 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
         return tree_roots
 
     def get_groups_structure_for_user(self, user: CloudUser):
-        def find_matching_nodes_in_tree(nodes):
-            trimmed_tree = []
-            for node in nodes:
-                if node['id'] in system_group_member_dict:
-                    trimmed_tree.append(node)
-                    node['roles'] = system_group_member_dict[node['id']]['roles']
-                else:
-                    trimmed_tree.extend(find_matching_nodes_in_tree(node['children']))
-            return trimmed_tree
+        # Todo. Where all duplicated roles will be deleted. Channel partner check
+        #  can be removed from here as soon as has been done in view early and absence
+        #  of organization roles means user has channel partner one.
+        groups_membership = [None]
+        if not (ChannelPartnerToUser.objects
+                .filter(channel_partner_id=self.channel_partner_id, user=user).exists()):
+            groups_membership = (
+                OrganizationToUser.objects
+                .filter(organization_id=self, user=user)
+                .values_list('system_group_id', flat=True)
+            )
+            groups_membership = list(groups_membership)
+            if len(groups_membership) == 0:
+                return []
+        user_groups = SystemGroup.objects.filter(organization=self)
+        if None not in groups_membership:
+            user_groups = SystemGroup.objects.filter(
+                Q(path__overlap=groups_membership) | Q(id__in=groups_membership),
+                organization=self
+            )
 
-        system_group_member_dict = self.system_group_member_dict(user)
-        groups_tree = self.groups_tree
-        if None not in system_group_member_dict:
-            groups_tree = find_matching_nodes_in_tree(groups_tree)
-        return groups_tree
+        sorter_groups = sorted(user_groups.values(), key=lambda x: len(x['path']))
+        trees = []
+        added = {}
+        for group in sorter_groups:
+            group['children'] = []
+            added[group['id']] = group
+            if parent := added.get(group['parent_id']):
+                parent['children'].append(group)
+            else:
+                trees.append(group)
+        return trees
 
     @property
     def user_list(self):
@@ -1242,12 +1287,24 @@ class SystemGroup(FieldOriginalMixin, models.Model):
         return False
 
     def can_access(self, user: CloudUser):
-        relations = self.organization.system_group_member_dict(user)
-        # system_group = None means direct organization user
-        if None in relations:
+        # check organization or groups
+        if (
+            OrganizationToUser.objects
+            .filter(user=user)
+            .filter(
+                Q(organization_id=self.organization_id, system_group__isnull=True)
+                | Q(system_group_id__in=self.visible_path)
+            ).exists()
+        ):
+            return True
+        if (
+            ChannelPartnerToUser.objects
+            .filter(user=user, channel_partner_id=self.visible_path[-1])
+            .exists()
+        ):
             return True
 
-        return bool(self.groups_path.intersection(relations))
+        return False
 
     def can_manage(self, user: CloudUser):
         return self.organization.can_manage_systems(user)
@@ -1453,7 +1510,7 @@ class ServiceUsage(models.Model):
                 to_ts=last_usage.to_ts, from_ts=last_usage.from_ts
             ).values('service').annotate(usage=Sum('usage'))
         }
-        current_services = cloud_system.services
+        current_services = cloud_system.get_current_services()
 
         # Check if any service usage is greater than the allowed usage
         cloud_system.usage_issue_detected = False
@@ -1466,6 +1523,7 @@ class ServiceUsage(models.Model):
         else:
             cloud_system.set_security_statuses(statuses={ChannelPartnerService.LOCAL_RECORDING: 'ok'})
         cloud_system.save()
+        return service_usages
 
 
 class ServiceToSubChannelProperties(models.Model):

@@ -41,10 +41,12 @@ export function withSystemBusUpdates(predicateCallback: PredicateCallback) {
                 }://${(this.urlBase || window.location.origin)
                     .split('://')
                     .pop()}/ec2/transactionBus/websocket?noInitialData=true`;
-                const connection = TransactionBusHandler.getConnection(transactionBusEndpoint, () =>
-                    this.authGet && !nxConfig.featureFlags.restCookieLogin
-                        ? `&auth=${this.authGet}`
-                        : '',
+                const connection = TransactionBusHandler.getConnection(
+                    transactionBusEndpoint,
+                    () =>
+                        this.authGet && !nxConfig.featureFlags.restCookieLogin
+                            ? `&auth=${this.authGet}`
+                            : '',
                 );
                 let lastResponse: T = null;
 

@@ -21,8 +21,18 @@
         .video {
             background-color: var(--bookmarks-card-video-bg);
 
-            // When uncommenting the CSS transitions, remove .error here
-            .error {
+            .clip {
+
+                nx-clip {
+
+                    &.clip--loading {
+                        display: none;
+                    }
+                }
+            }
+
+            // When uncommenting the CSS transitions, remove .placeholder here
+            .placeholder {
                 display: flex;
                 justify-content: center;
                 align-items: center;
@@ -51,7 +61,7 @@
                 }
             }
 
-            .error {
+            .placeholder {
                 transition: max-height 0.50s ease 0.2s;
                 max-height: 184px;
 
@@ -61,7 +71,7 @@
 
                 nx-player-placeholder {
 
-                    &.error--hidden {
+                    &.placeholder--hidden {
                         visibility: hidden;
                         opacity: 0 !important;
                         height: 0 !important;
@@ -70,7 +80,7 @@
                             height 0.50s ease 0.2s;
                     }
     
-                    &.error--visible {
+                    &.placeholder--visible {
                         visibility: visible;
                         opacity: 1 !important;
                         height: 100% !important;

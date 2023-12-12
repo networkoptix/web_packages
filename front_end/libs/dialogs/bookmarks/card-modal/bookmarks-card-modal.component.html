@@ -15,25 +15,32 @@
     <div class="modal-body">
         <div class="video">
             <div class="clip">
-                <!-- When uncommenting the CSS transitions, remove "*ngIf="!videoError"-->
+                <!-- When uncommenting the CSS transitions, remove *ngIf="!videoError$$()", add [ngClass]="{ 'clip--loading': !videoLoaded$$() }" -->
                 <nx-clip
-                    *ngIf="!videoError"
-                    [ngClass]="{ 'clip--hidden': videoError }"
+                    *ngIf="!videoError$$()"
+                    [ngClass]="{ 'clip--loading': !videoLoaded$$() }"
                     [sourceUrl]="bookmark.src"
                     [posterUrl]="bookmark.thumbnail | async"
                     disableDownload
                     disablePictureInPicture
-                    (error)="videoError = true"
+                    (error)="videoError$$.set(true); videoLoaded$$.set(true)"
+                    (loadeddata)="videoLoaded$$.set(true)"
                 >
                 </nx-clip>
+                <div
+                    *ngIf="!videoLoaded$$()"
+                    class="placeholder"
+                >
+                    <nx-pre-loader></nx-pre-loader>
+                </div>
             </div>
             <div
-                class="error"
-                [ngClass]="{ 'is-hidden': !videoError }"
+                class="placeholder"
+                [ngClass]="{ 'is-hidden': !videoError$$() }"
             >
                 <nx-player-placeholder
-                    class="error--hidden"
-                    [ngClass]="{ 'error--visible': videoError }"
+                    class="placeholder--hidden"
+                    [ngClass]="{ 'placeholder--visible': videoError$$() }"
                     svgFileName="placeholder_camera_alert"
                     [description]="
                         'The video format for this bookmark is not supported by your browser. Please download it to view locally'

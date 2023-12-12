@@ -24,7 +24,7 @@ class TestFieldAccessSerializer:
             email_can_be_written = serializers.CharField(max_length=64, validators=[validators.EmailValidator()], required=True)
             uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
 
-            def can_write_uuid_cannot_be_written(self):
+            def can_write_uuid_cannot_be_written(self, instance=None):
                 return True
 
         class CanNotWriteSerializer(FieldAccessSerializer):
@@ -32,7 +32,7 @@ class TestFieldAccessSerializer:
                                                          required=True)
             uuid_cannot_be_written = serializers.CharField(max_length=12, required=True)
 
-            def can_write_uuid_cannot_be_written(self):
+            def can_write_uuid_cannot_be_written(self, instance=None):
                 return False
 
         data = {

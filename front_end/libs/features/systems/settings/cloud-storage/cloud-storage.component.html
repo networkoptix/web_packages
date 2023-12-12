@@ -66,7 +66,7 @@
     <div class="license-info-block">
         <ng-container *ngIf="(systemLicenses$ | async)?.[0] as license; else preloader">
             <h2>{{ license.size }}</h2>
-            <span>{{ TRANSLATION_BASE.until | translate : license }}</span>
+            <span>{{ TRANSLATION_BASE.until | translate: license }}</span>
         </ng-container>
     </div>
 </ng-template>
@@ -144,7 +144,7 @@
     (onAction)="cloudStorageNotUsed = false"
     type="warning"
     id="cloud-storage-not-used"
-    [line1]="LANG.cloudStorage.notUsedWarning | translate : { serverSettings: serverSettings }"
+    [line1]="LANG.cloudStorage.notUsedWarning | translate: { serverSettings: serverSettings }"
     [iconSrc]="icons.dirTextButtons + 'info.svg'"
     [btnIconSrc]="icons.dirTextButtons + 'close.svg'"
 >
@@ -288,7 +288,7 @@
                         "
                         [ngSwitch]="field"
                     >
-                        <ng-container *ngSwitchCase="'key'">{{ value | mask : MASK }}</ng-container>
+                        <ng-container *ngSwitchCase="'key'">{{ value | mask: MASK }}</ng-container>
                         <span
                             *ngSwitchCase="'state'"
                             [ngClass]="element[field]"

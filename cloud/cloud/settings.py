@@ -857,6 +857,36 @@ NOTIFICATIONS_CONFIG = {
     'portal_notification': {
         'queue': 'portal-notifications'
     },
+    'cps_organization_invite': {
+        'engine': 'email'
+    },
+    'cps_organization_share': {
+        'engine': 'email'
+    },
+    'cps_organization_state_active': {
+        'engine': 'email'
+    },
+    'cps_organization_state_confirmation': {
+        'engine': 'email'
+    },
+    'cps_organization_state_suspended': {
+        'engine': 'email'
+    },
+    'cps_partner_invite': {
+        'engine': 'email'
+    },
+    'cps_partner_share': {
+        'engine': 'email'
+    },
+    'cps_partner_state_active': {
+        'engine': 'email'
+    },
+    'cps_partner_state_confirmation': {
+        'engine': 'email'
+    },
+    'cps_partner_state_suspended': {
+        'engine': 'email'
+    },
 }
 
 CONFIG_ERROR = "Customization Configuration Error. Please Notify Release Engineers."

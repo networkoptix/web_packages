@@ -29,13 +29,13 @@
             merged.
         </p>
         <p>
-            <span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut : 0"></span
+            <span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut: 0"></span
             ><a
                 routerLink="/download"
                 target="_blank"
-                [innerText]="LANG.dialogs.merge.update | translate | translateCut : 1"
+                [innerText]="LANG.dialogs.merge.update | translate | translateCut: 1"
             ></a
-            ><span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut : 2"></span>
+            ><span [innerHTML]="LANG.dialogs.merge.update | translate | translateCut: 2"></span>
         </p>
     </div>
     <div class="modal-footer">
@@ -210,7 +210,7 @@
             />
             <label
                 *ngIf="machine.state.show.passwordError"
-                [innerHTML]="machine.state.template.passwordErrorText | nxTranslate | safe : 'html'"
+                [innerHTML]="machine.state.template.passwordErrorText | nxTranslate | safe: 'html'"
                 class="error-label password-label-margin mb-0"
                 for="adminPassword"
             >
@@ -244,7 +244,7 @@
     name="serverUrlErrorsForm"
 >
     <div class="modal-body">
-        <p [innerHTML]="machine.state.template.urlErrorText | nxTranslate | safe : 'html'"></p>
+        <p [innerHTML]="machine.state.template.urlErrorText | nxTranslate | safe: 'html'"></p>
     </div>
     <div class="modal-footer next-button">
         <button
@@ -347,7 +347,7 @@
         <div *ngIf="tooManyServers">
             <p
                 class="error-label"
-                [innerHTML]="LANG.dialogs.merge.warning | translate : { maxServers: maxServers }"
+                [innerHTML]="LANG.dialogs.merge.warning | translate: { maxServers: maxServers }"
             ></p>
 
             <p
@@ -359,13 +359,13 @@
             </p>
 
             <p class="mb-3">
-                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut : 0 }}&nbsp;
+                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 0 }}&nbsp;
                 <a
                     [href]="CONFIG.company.links.support"
                     target="_blank"
-                    >{{ LANG.dialogs.merge.recommendSupport | translate | translateCut : 1 }}</a
+                    >{{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 1 }}</a
                 >&nbsp;
-                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut : 2 }}
+                {{ LANG.dialogs.merge.recommendSupport | translate | translateCut: 2 }}
             </p>
         </div>
         <div

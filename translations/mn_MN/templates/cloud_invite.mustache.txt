@@ -1,12 +1,12 @@
-Hello,
+Сайн байна уу,
 
-You have been invited to %CLOUD_NAME%.
+Таныг %CLOUD_NAME%-д урьж байна.
 {{#message.message}}
 
 {{ message.message }}
 
 {{/message.message}}
-Please create account on %CLOUD_NAME%
-using your current email address and follow further instructions.
+Та өөрийн имэйл хаягаараа %CLOUD_NAME%-д
+бүртгэл үүсгээрэй.
 
-Register your account using this link: {{ config.portal_url }}/authorize/register/{{ message.code }}
+Энэ холбоосыг ашиглан бүртгэл хийлгээрэй: {{ config.portal_url }}/зөвшөөрөх/бүртгүүлэх/{{ message.code }}

@@ -1,43 +1,140 @@
 <div class="information">
     <nx-page-placeholder-v2
-        *ngIf="!systems; else info"
+        *ngIf="!systems"
         [type]="PAGE_PLACEHOLDER.NO_INFO"
     >
     </nx-page-placeholder-v2>
+    <nx-block type="tile">
+        <header>
+            <h4
+                class="float-left"
+                translate
+            >
+                Support
+            </h4>
+            <div
+                class="float-right clickable"
+                (click)="editModeToggle()"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [src]="icons.dir + 'edit.svg'"
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [applyClass]="true"
+                ></svg-icon>
+            </div>
+        </header>
+        <nx-section>
+            <div
+                class="section-header"
+                [ngClass]="{ 'in-edit-mode': editMode }"
+            >
+                <div
+                    class="header-title"
+                    translate
+                >
+                    Sites
+                </div>
+                <div
+                    class="clickable"
+                    *ngIf="editMode"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'plus.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+            </div>
+            <ng-container *ngIf="information.supportInfo.sites.length; else noSites">
+                <nx-info-form
+                    [formId]="'site'"
+                    [editMode]="editMode"
+                    [linkPredicate]="''"
+                    [data]="information.supportInfo.sites"
+                ></nx-info-form>
+            </ng-container>
+        </nx-section>
+        <nx-section>
+            <div
+                class="section-header"
+                [ngClass]="{ 'in-edit-mode': editMode }"
+            >
+                <div
+                    class="header-title"
+                    translate
+                >
+                    Phones
+                </div>
+                <div
+                    class="clickable"
+                    *ngIf="editMode"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'plus.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+            </div>
+            <ng-container *ngIf="information.supportInfo.phones.length; else noPhones">
+                <nx-info-form
+                    [formId]="'phone'"
+                    [editMode]="editMode"
+                    [linkPredicate]="'tel:'"
+                    [data]="information.supportInfo.phones"
+                ></nx-info-form>
+            </ng-container>
+        </nx-section>
+        <nx-section>
+            <div
+                class="section-header"
+                [ngClass]="{ 'in-edit-mode': editMode }"
+            >
+                <div
+                    class="header-title"
+                    translate
+                >
+                    Emails
+                </div>
+                <div
+                    class="clickable"
+                    *ngIf="editMode"
+                >
+                    <svg-icon
+                        nx-add-svg-src
+                        [src]="icons.dir + 'plus.svg'"
+                        [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                        [applyClass]="true"
+                    ></svg-icon>
+                </div>
+            </div>
+            <ng-container *ngIf="information.supportInfo.emails.length; else noEmails">
+                <nx-info-form
+                    [formId]="'email'"
+                    [editMode]="editMode"
+                    [linkPredicate]="'mailto:'"
+                    [data]="information.supportInfo.emails"
+                ></nx-info-form>
+            </ng-container>
+        </nx-section>
+    </nx-block>
 </div>
 
-<ng-template #info>
-    <div
-        class="systems pane"
-        *ngIf="systems"
-    >
-        <div class="base">
-            <h4
-                class="header"
-                translate
-            >
-                Base parameters
-            </h4>
-            <div class="body">
-                <div class="data-row">
-                    <span translate>Count of systems</span>
-                    <span>{{ systems.length }}</span>
-                </div>
-            </div>
-        </div>
-        <div class="additional">
-            <h4
-                class="header"
-                translate
-            >
-                Additional Parameters
-            </h4>
-            <div class="body">
-                <div class="data-row">
-                    <span translate>Count of systems</span>
-                    <span>{{ systems.length }}</span>
-                </div>
-            </div>
-        </div>
-    </div>
+<ng-template #noSites>
+    <span translate>You have not yet added sites</span>
+</ng-template>
+
+<ng-template #noPhones>
+    <span translate>You have not yet added phones</span>
+</ng-template>
+
+<ng-template #noEmails>
+    <span translate>You have not yet added emails</span>
+</ng-template>
+
+<ng-template #noCustomInputs>
+    <span translate>You have not yet added custom inputs</span>
 </ng-template>

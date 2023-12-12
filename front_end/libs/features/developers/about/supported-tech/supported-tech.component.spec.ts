@@ -46,8 +46,8 @@ describe('For Developers Landing - Supported Tech Node', () => {
             title === 'Icon Links'
                 ? 'tech-wrapper'
                 : title === 'Text Links'
-                ? 'language-wrapper'
-                : '',
+                  ? 'language-wrapper'
+                  : '',
         );
 
         expect(sections).toEqual(expectedSections);

@@ -4,7 +4,7 @@
 >
     <main class="modal-body">
         <ng-container *ngIf="serverUrlErrorText">
-            <p [innerHTML]="serverUrlErrorText | translate | safe : 'html'"></p>
+            <p [innerHTML]="serverUrlErrorText | translate | safe: 'html'"></p>
         </ng-container>
         <ng-container *ngIf="failedToFindAnySystem">
             <p translate>
@@ -19,15 +19,13 @@
                 merged.
             </p>
             <p>
-                <span [innerText]="LANG.dialogs.merge.update | translate | translateCut : 0"></span
+                <span [innerText]="LANG.dialogs.merge.update | translate | translateCut: 0"></span
                 ><a
                     routerLink="/download"
                     target="_blank"
-                    [innerText]="LANG.dialogs.merge.update | translate | translateCut : 1"
+                    [innerText]="LANG.dialogs.merge.update | translate | translateCut: 1"
                 ></a
-                ><span
-                    [innerText]="LANG.dialogs.merge.update | translate | translateCut : 2"
-                ></span>
+                ><span [innerText]="LANG.dialogs.merge.update | translate | translateCut: 2"></span>
             </p>
         </ng-container>
     </main>

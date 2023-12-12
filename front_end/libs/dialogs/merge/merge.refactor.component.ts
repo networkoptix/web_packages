@@ -44,6 +44,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
+import { makeProxy } from '@utils/signals';
 import { servers } from '@variables/static-variables';
 
 import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.component';
@@ -88,6 +89,7 @@ const ResponseStrings = {
     timeoutError: 'TimeoutError',
     bothSystemsConnectedToCloud: 'bothSystemsConnectedToCloud',
     unknownTargetSystemConnectedToCloud: 'unknownTargetSystemConnectedToCloud',
+    incompatibleCloudToNonCloud: 'incompatibleCloudToNonCloud',
     systemOffline: 'systemOffline',
     systemOfflineUrl: 'systemOfflineUrl',
     secondarySystemUnavailable: 'secondarySystemUnavailable',
@@ -277,7 +279,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
     }
 
     updateStateHistory = (state?: MergeState): void => {
-        this.stateHistory.update(history => {
+        this.stateHistory.update(prev => {
+            const history = makeProxy(prev);
             if (state) {
                 history.push(state);
             } else {
@@ -612,8 +615,8 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                             <div class="larger"><strong>${
                                 this.secondaryName
                             }</strong> ${this.translateService.instant(
-                            this.LANG.ribbon.beingMerged.to,
-                        )}</div>
+                                this.LANG.ribbon.beingMerged.to,
+                            )}</div>
                             <div class="mt-2">${this.translateService.instant(
                                 this.LANG.ribbon.beingMerged.mayTake,
                             )}</div>
@@ -727,6 +730,12 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         ? ResponseStrings.unknownTargetSystemConnectedToCloud
                         : ResponseStrings.bothSystemsConnectedToCloud,
                 );
+            }
+            if (
+                !this.targetSystem.cloudOwnerId &&
+                this.system.serverManager.moduleInfo.cloudOwnerId
+            ) {
+                throw Error(ResponseStrings.incompatibleCloudToNonCloud);
             }
 
             if (!this.dryRunAvailable) {

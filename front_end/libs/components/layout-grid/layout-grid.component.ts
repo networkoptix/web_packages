@@ -1,4 +1,11 @@
-import { CdkDrag, CdkDropList, DragDropModule, Point } from '@angular/cdk/drag-drop';
+import {
+    CdkDrag,
+    CdkDragMove,
+    CdkDragRelease,
+    CdkDropList,
+    DragDropModule,
+    Point,
+} from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger } from '@angular/cdk/menu';
 import { PortalModule } from '@angular/cdk/portal';
 import { NestedTreeControl } from '@angular/cdk/tree';
@@ -334,6 +341,10 @@ export class NxLayoutGridComponent {
         this.layoutStateService.portal = null;
     }
 
+    @HostListener('document:fullscreenchange', ['$event']) onFullscreenChange(event: Event): void {
+        this.#fullscreenElement$.next(event.target as Element);
+    }
+
     @ViewChild('gridSection') set gridSection(value: ElementRef) {
         this.layoutStateService.gridSection = value.nativeElement;
     }
@@ -374,7 +385,7 @@ export class NxLayoutGridComponent {
     unsavedStates = staticLang.layouts.unsavedStates;
 
     mouseMoving$ = fromEvent(document, 'mousemove').pipe(
-        switchMap(() => of(false).pipe(delay(5000), startWith(true))),
+        switchMap(() => of(false).pipe(delay(10000), startWith(true))),
         distinctUntilChanged(),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
@@ -431,10 +442,15 @@ export class NxLayoutGridComponent {
 
     initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
+    #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
     // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
-    layout$ = combineLatest([this.initialLayout$, this.#wrapperSize$]).pipe(
+    layout$ = combineLatest([
+        this.initialLayout$,
+        this.#wrapperSize$,
+        this.#fullscreenElement$,
+    ]).pipe(
         filter(([layout]) => !!layout),
         map(
             ([layout, wrapperSize]) =>
@@ -491,7 +507,7 @@ export class NxLayoutGridComponent {
         };
     };
 
-    resizeItem = ($event: Size, dragContainer: HTMLElement): void => {
+    checkUpdateAspectRatio = ($event: Size, dragContainer: HTMLElement): void => {
         const aspectRatio = parseFloat(dragContainer.style?.aspectRatio.split('/')[0]);
 
         if (!aspectRatio) {
@@ -744,21 +760,26 @@ export class NxLayoutGridComponent {
 
     collisions$: Observable<Collisions> = combineLatest([this.#collisions$, this.layout$]).pipe(
         map(([{ draggingItem, collisions, swap }, { items }]) => {
-            const reducedCollisions = Object.keys(collisions).reduce((collisions, currentId) => {
-                const current = items.find(({ id }) => id === currentId && id !== draggingItem.id);
-                if (!current) {
-                    return collisions;
-                }
+            const reducedCollisions = Object.keys(collisions).reduce(
+                (collisions, currentId) => {
+                    const current = items.find(
+                        ({ id }) => id === currentId && id !== draggingItem.id,
+                    );
+                    if (!current) {
+                        return collisions;
+                    }
 
-                return {
-                    ...collisions,
-                    [currentId]: this.getCollisionStyle(current, draggingItem, items),
-                    [draggingItem.id || '']: {
-                        opacity: 0.25,
-                        background: 'var(--error)',
-                    },
-                };
-            }, {} as Record<string, Collisions>);
+                    return {
+                        ...collisions,
+                        [currentId]: this.getCollisionStyle(current, draggingItem, items),
+                        [draggingItem.id || '']: {
+                            opacity: 0.25,
+                            background: 'var(--error)',
+                        },
+                    };
+                },
+                {} as Record<string, Collisions>,
+            );
 
             const collisionInfo = Object.values(reducedCollisions);
             if (swap && draggingItem.id) {
@@ -1223,9 +1244,16 @@ export class NxLayoutGridComponent {
 
             if (
                 itemSize &&
-                (assertResourceOfType.camera(node) || assertResourceOfType.server(node))
+                (assertResourceOfType.camera(node) ||
+                    assertResourceOfType.server(node) ||
+                    assertResourceOfType.webpage(node) ||
+                    assertResourceOfType.iodevice(node))
             ) {
-                this.updatePlaceholderConfig(itemSize, updatedItem, node?.details.status);
+                this.updatePlaceholderConfig(
+                    itemSize,
+                    updatedItem,
+                    'status' in node?.details ? node?.details?.status : '',
+                );
             }
             return updatedItem;
         };
@@ -1278,13 +1306,15 @@ export class NxLayoutGridComponent {
             return size;
         }
 
-        const { height, width } = document.fullscreenElement
-            ? size
-            : this.calculateAspect([size, layout]).cellSize;
+        const { height, width } =
+            document.fullscreenElement &&
+            document.fullscreenElement !== this.layoutStateService.gridSection
+                ? size
+                : this.calculateAspect([size, layout]).cellSize;
         const { renderConfig, rotation } = item;
 
         renderConfig.showTooltip = width < 360;
-        if (assertResourceOfType.camera(node) && node.details.online) {
+        if (assertResourceOfType.camera(node)) {
             const initialAspect = node.aspectRatio || renderConfig.aspect || 1;
 
             const isRotated = Boolean((Math.round(rotation / 90) * 90) % 180);
@@ -1765,4 +1795,23 @@ export class NxLayoutGridComponent {
             this.layoutStateService.updateLayout({ ...this.layout, items });
         }
     };
+
+    resizing = false;
+
+    resizeMenuComplete(event: CdkDragRelease): void {
+        event.source._dragRef.reset();
+        this.resizing = false;
+    }
+
+    resizeMenu(event: CdkDragMove<unknown>): void {
+        this.layoutStateService.menuResizePixelUpdater$.next(event.pointerPosition.x);
+        this.resizing = true;
+    }
+
+    setResolutionToAuto(): void {
+        this.layoutStateService.setLayoutResolution({
+            layoutId: this.layout.id,
+            resolution: Resolution.AUTO,
+        });
+    }
 }

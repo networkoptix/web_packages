@@ -151,6 +151,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         private store: Store,
         private localStorageService: LocalStorageService,
     ) {
+        this.playback.viewTabActive$.next(true);
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.isMobile = deviceService.isMobile() || deviceService.isTablet();
@@ -222,6 +223,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     ngOnDestroy(): void {
         this.unsub$.next('done');
+        this.playback.viewTabActive$.next(false);
 
         this.unListenFullScreenChange();
         this.unListenWebkitFSChange();
