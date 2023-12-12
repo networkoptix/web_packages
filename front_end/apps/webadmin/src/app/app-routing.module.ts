@@ -21,11 +21,6 @@ const lazyRoutes: Routes = [
         pathMatch: 'full',
     },
     {
-        path: 'settings/advanced',
-        loadChildren: () =>
-            import('@pages/systems/webadmin-system.module').then(m => m.NxSystemModule),
-    },
-    {
         path: 'settings',
         loadChildren: () =>
             import('@pages/systems/webadmin-system.module').then(m => m.NxSystemModule),
