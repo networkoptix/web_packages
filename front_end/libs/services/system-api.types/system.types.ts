@@ -385,3 +385,11 @@ export type Statistics = NormalResponse<{
     updatePeriod: number;
     uptimeMs: number;
 }>;
+
+// In 23.3 or develop consolidate with type in oauth
+export interface CloudBindData {
+    systemId: string;
+    authKey: string;
+    owner?: string;
+    organizationId?: string;
+}

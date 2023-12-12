@@ -598,17 +598,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.get('/api/statistics', { params: { salt } });
     }
 
-    /**
-        @deprecated
-     */
-    saveCloudSystemCredentials(
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-    ): Observable<unknown> {
-        throw Error(this.forbiddenMsg);
-    }
-
     checkInternet(reload = true) {
         return this.getModuleInfo()
             .toPromise()

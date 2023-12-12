@@ -1147,18 +1147,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`);
     }
 
-    saveCloudSystemCredentials(
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-    ) {
-        return this.post('/rest/v1/system/cloudBind', {
-            systemId: cloudSystemID,
-            authKey: cloudAuthKey,
-            owner: cloudAccountName,
-        });
-    }
-
     getBookmarks(
         params: t.BookmarksParams = {
             order: 'desc',
