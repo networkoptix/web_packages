@@ -71,6 +71,28 @@
             </div>
         </div>
         <div class="form-group">
+            <ng-container *ngIf="!useGroups; else groupsDropdown">
+                <label
+                    for="permissionsSelect"
+                    translate
+                    >Access Level</label
+                >
+                <nx-permissions-select
+                    id="permissionsSelect"
+                    name="permissionsSelect"
+                    [system]="system"
+                    [roles]="accessRoles"
+                    [ngModel]="user.role"
+                    (ngModelChange)="setPermission($event)"
+                >
+                </nx-permissions-select>
+                <span
+                    *ngIf="accessDescription"
+                    class="help-block"
+                    data-testid="addUserHelpBlock"
+                    [innerText]="accessDescription | translate"
+                ></span>
+            </ng-container>
             <ng-template #groupsDropdown>
                 <label
                     for="addUserDialogGroupsSelect"
@@ -100,28 +122,6 @@
                     [innerText]="accessDescription | translate"
                 ></span>
             </ng-template>
-            <ng-container *ngIf="!useGroups$$(); else groupsDropdown">
-                <label
-                    for="permissionsSelect"
-                    translate
-                    >Access Level</label
-                >
-                <nx-permissions-select
-                    id="permissionsSelect"
-                    name="permissionsSelect"
-                    [system]="system"
-                    [roles]="system.userManager.accessRoles"
-                    [ngModel]="user.role"
-                    (ngModelChange)="setPermission($event)"
-                >
-                </nx-permissions-select>
-                <span
-                    *ngIf="accessDescription"
-                    class="help-block"
-                    data-testid="addUserHelpBlock"
-                    [innerText]="accessDescription | translate"
-                ></span>
-            </ng-container>
         </div>
     </div>
     <div class="modal-footer">

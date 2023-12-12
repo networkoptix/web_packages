@@ -1,6 +1,6 @@
 import { DialogRef, DIALOG_DATA } from '@angular/cdk/dialog';
 import { CommonModule } from '@angular/common';
-import { Component, Inject, signal, ViewChild } from '@angular/core';
+import { Component, Inject, ViewChild } from '@angular/core';
 import type { NgForm } from '@angular/forms';
 import { FormsModule } from '@angular/forms';
 import { TranslateModule } from '@ngx-translate/core';
@@ -51,6 +51,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
     LANG = staticLang;
     CONFIG: IConfig;
 
+    accessRoles: Role[];
     hideErrors: boolean = true;
     systemName: string;
     addUser: Process;
@@ -62,7 +63,7 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         permissions: '',
     });
     accessDescription: string;
-    useGroups$$ = signal<boolean>(false);
+    useGroups: boolean = false;
     groups: MultiSelectItem[];
 
     constructor(
@@ -133,14 +134,16 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
 
     ngOnInit(): void {
         this.systemName = this.system.info.systemName || this.system.info.name;
-        this.useGroups$$.set(this.system.version > 5.1);
+        this.useGroups = this.system.version > 5.1;
 
-        if (this.useGroups$$()) {
+        if (this.useGroups) {
             const groups = this.system.userManager.groups;
             this.groups = this.removeLdapGroups([...groups]);
         }
 
-        const defaultRole = this.system.userManager.accessRoles.find(
+        this.accessRoles = [...this.system.userManager.accessRoles];
+
+        const defaultRole = this.accessRoles.find(
             role => role.name === this.CONFIG.accessRoles.default,
         );
 
@@ -148,9 +151,10 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
             email: '',
             isEnabled: true,
             isCloud: true,
-            role: this.useGroups$$() ? undefined : defaultRole,
+            role: this.useGroups ? undefined : defaultRole,
             groupIds: [],
         };
+
         this.setPermission(this.user.role);
 
         this.addUser = this.processService.createProcess(
