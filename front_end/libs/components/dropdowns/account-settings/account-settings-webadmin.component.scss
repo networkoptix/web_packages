@@ -6,6 +6,9 @@
         clip-rule : evenodd;
         fill      : var(--tab-link-webadm-color) !important;
     }
+    .icon-accent-with-fill {
+        fill      : var(--tab-link-webadm-color);
+    }
     
     #accountSettingsSelect {
         color : var(--tab-link-webadm-color) !important;
