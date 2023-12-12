@@ -31,7 +31,11 @@ export class NxMultiDropdownComponent<T>
     extends BaseDropdownComponent<T, true>
     implements OnChanges
 {
-    constructor(overlay: Overlay, domSanitizer: DomSanitizer, private translate: TranslateService) {
+    constructor(
+        overlay: Overlay,
+        domSanitizer: DomSanitizer,
+        private translate: TranslateService,
+    ) {
         super(overlay, domSanitizer);
     }
 

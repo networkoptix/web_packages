@@ -26,7 +26,10 @@ export class NxSwaggerTextareaComponent implements OnInit, AfterViewInit {
     isInvalid = false;
     attributeMutationObserver: MutationObserver;
 
-    constructor(private APIToolService: NxAPIToolSystemService, private elementRef: ElementRef) {}
+    constructor(
+        private APIToolService: NxAPIToolSystemService,
+        private elementRef: ElementRef,
+    ) {}
 
     ngOnInit(): void {
         this.isDisabled = this.textarea.getAttribute('disabled') === '';

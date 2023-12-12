@@ -65,7 +65,10 @@ export class NxApplyService {
     applyOnNavSubject = new BehaviorSubject('');
     isOnline$ = new BehaviorSubject(true);
 
-    constructor(private dialog: Dialog, private processService: NxProcessService) {}
+    constructor(
+        private dialog: Dialog,
+        private processService: NxProcessService,
+    ) {}
 
     get popupActive() {
         return this.popupActive$.value;

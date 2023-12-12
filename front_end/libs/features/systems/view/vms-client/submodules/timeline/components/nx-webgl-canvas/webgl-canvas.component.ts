@@ -204,8 +204,9 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
 
             let lastData: DATA | undefined;
             this.data$$.update(data => {
-                lastData = data.pop();
-                return data;
+                const dataLen = Math.max(data.length - 1, 0);
+                lastData = data?.[dataLen];
+                return data.slice(0, dataLen);
             });
 
             // test data ***********************

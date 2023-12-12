@@ -18,7 +18,10 @@ export class NxUriService {
 
     queryParamsSubject: BehaviorSubject<Params> = new BehaviorSubject({});
 
-    constructor(private router: Router, private route: ActivatedRoute) {}
+    constructor(
+        private router: Router,
+        private route: ActivatedRoute,
+    ) {}
 
     get queryParams(): Params {
         return this.queryParamsSubject.getValue();

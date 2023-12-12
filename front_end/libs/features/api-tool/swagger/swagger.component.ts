@@ -395,7 +395,7 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
     };
 
     private replaceHTMLAsterisk = (): void => {
-        const descriptions = this.document.querySelectorAll('.rendered-markdown');
+        const descriptions = document.querySelectorAll('.rendered-markdown');
         for (const description of descriptions) {
             description.innerHTML = description.innerHTML.replace(/&amp;ast;/g, '&ast;');
         }
@@ -406,11 +406,6 @@ export class NxSwaggerComponent implements OnChanges, OnInit {
         for (const input of inputs) {
             input.removeAttribute('placeholder');
         }
-    };
-
-    private replaceHTMLAsterisk = (): void => {
-        const swaggerBody = document.querySelector('.opblock-body');
-        swaggerBody.innerHTML = swaggerBody.innerHTML.replace(/&amp;ast;/g, '&ast;');
     };
 
     private modifyTitlesInResponse = (): void => {

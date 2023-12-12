@@ -47,7 +47,10 @@ export abstract class BaseDropdownComponent<T, M extends boolean> implements Aft
     dropdownOpen: boolean = false;
     showPlaceholder: boolean = true;
 
-    constructor(public overlay: Overlay, public domSanitizer: DomSanitizer) {}
+    constructor(
+        public overlay: Overlay,
+        public domSanitizer: DomSanitizer,
+    ) {}
 
     ngAfterViewInit(): void {
         this.manuallySetSelectedOption();

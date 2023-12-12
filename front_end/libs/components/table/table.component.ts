@@ -127,7 +127,10 @@ export class NxBaseTableComponent<T> implements AfterContentInit, OnChanges {
 
     tableClasses: string;
 
-    constructor(private renderer: Renderer2, private uri: NxUriService) {
+    constructor(
+        private renderer: Renderer2,
+        private uri: NxUriService,
+    ) {
         this.uri
             .getParams()
             .pipe(untilDestroyed(this))

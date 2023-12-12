@@ -152,7 +152,10 @@ export class NxHealthLayoutService {
         this.tilesElementSubject.next(element);
     }
 
-    constructor(private ribbonService: NxRibbonService, private healthService: NxHealthService) {
+    constructor(
+        private ribbonService: NxRibbonService,
+        private healthService: NxHealthService,
+    ) {
         this.pageSize = layout.tableLarge.rows;
 
         this.dimensionsSubject.pipe(debounceTime(10)).subscribe(() => {

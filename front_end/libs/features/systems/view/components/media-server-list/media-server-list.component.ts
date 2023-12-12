@@ -68,7 +68,10 @@ export class MediaServerListComponent implements OnChanges {
         [serverId: string]: boolean;
     } = {};
 
-    constructor(private localStorage: LocalStorageService, configService: NxConfigService) {
+    constructor(
+        private localStorage: LocalStorageService,
+        configService: NxConfigService,
+    ) {
         this.CONFIG = configService.config;
     }
 

@@ -28,7 +28,10 @@ export class AuthService {
     readonly apiBase = '/cdb';
     readonly customization: string;
 
-    constructor(config: NxConfigService, private httpClient: HttpClient) {
+    constructor(
+        config: NxConfigService,
+        private httpClient: HttpClient,
+    ) {
         this.customization = config.getConfig().customization;
     }
 

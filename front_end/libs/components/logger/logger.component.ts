@@ -58,7 +58,10 @@ export class NxLoggerComponent implements OnChanges {
     systemRequires2fa = false;
     cancel$ = new Subject();
 
-    constructor(config: NxConfigService, private cookieService: CookieService) {
+    constructor(
+        config: NxConfigService,
+        private cookieService: CookieService,
+    ) {
         this.relayUrl = config.getConfig().trafficRelayHost;
     }
 
