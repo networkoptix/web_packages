@@ -35,7 +35,10 @@ export class WizardComponent implements OnInit {
         WIZARD_STATE.MergeProcess,
     ];
 
-    constructor(public wizardService: WizardStateService, @Inject(WINDOW) public window: Window) {}
+    constructor(
+        public wizardService: WizardStateService,
+        @Inject(WINDOW) public window: Window,
+    ) {}
 
     ngOnInit(): void {
         this.wizardService.init();

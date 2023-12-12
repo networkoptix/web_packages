@@ -125,8 +125,8 @@ export class NxDropMenu extends BaseDropdown {
             this.systems.length === maxSystems
                 ? maxSystems
                 : this.systems.length > maxSystems
-                ? maxSystems - 1
-                : this.systems.length,
+                  ? maxSystems - 1
+                  : this.systems.length,
         );
         this.systems$.next(systems);
 

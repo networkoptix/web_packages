@@ -99,7 +99,7 @@
                                 isCameraVisible[camera.id] &&
                                 (camera.thumbnailUrl | async) !== undefined
                             "
-                            [src]="camera.thumbnailUrl | async | safe : 'resourceUrl'"
+                            [src]="camera.thumbnailUrl | async | safe: 'resourceUrl'"
                             (load)="handlePreviewLoaded(camera.id)"
                             (error)="handlePreviewError(camera.id)"
                         />
@@ -117,8 +117,8 @@
                                 (!camera.isOnline
                                     ? 'offline'
                                     : !camera.isAuthorized
-                                    ? 'unauthorized'
-                                    : 'alert') +
+                                      ? 'unauthorized'
+                                      : 'alert') +
                                 '.svg'
                             "
                             [applyClass]="true"

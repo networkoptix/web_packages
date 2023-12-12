@@ -261,7 +261,10 @@ export class CloudStorageManager extends Destroyable {
               );
     }
 
-    constructor(private cloudStorageApi: CloudStorageAPI, private system: NxSystem) {
+    constructor(
+        private cloudStorageApi: CloudStorageAPI,
+        private system: NxSystem,
+    ) {
         super();
     }
 }

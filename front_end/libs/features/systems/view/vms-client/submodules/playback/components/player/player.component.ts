@@ -55,6 +55,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         public playback: PlaybackService,
         private vms: VideoManagementSystemService,
     ) {
+        this.vms.playerActive = true;
         this.handleClick = generateClickDubleClickPair(
             e => this.onClick(),
             e => this.onDblClick(),
@@ -71,6 +72,10 @@ export class PlayerComponent implements OnInit, AfterViewInit {
 
     ngOnInit(): void {
         this.onPlaybackSubjectChange(this.playback.state);
+    }
+
+    ngOnDestroy(): void {
+        this.vms.playerActive = false;
     }
 
     ngAfterViewInit(): void {

@@ -25,8 +25,8 @@
         idx === 0
             ? 'paginator-tile-first'
             : idx === (pages$ | async).length - 1
-            ? 'paginator-tile-last'
-            : 'paginator-tile-' + idx
+              ? 'paginator-tile-last'
+              : 'paginator-tile-' + idx
     }}"
     >{{ page || '...' }}</a
 >

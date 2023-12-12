@@ -2,7 +2,7 @@
     <div class="csv">
         <nx-csv-button
             [data]="csvCameraData"
-            filename="camera_list_{{ csvFilename | date : 'yyyy-MM-dd' }}"
+            filename="camera_list_{{ csvFilename | date: 'yyyy-MM-dd' }}"
             [options]="csvOptions"
         ></nx-csv-button>
     </div>
@@ -48,8 +48,8 @@
                     prop.key === 'isAptzSupported'
                         ? 'isPtzSupported'
                         : prop.key === 'isTwAudioSupported'
-                        ? 'isAudioSupported'
-                        : prop.key
+                          ? 'isAudioSupported'
+                          : prop.key
                 }}"
             >
                 <div *ngIf="!isBoolIcon(prop.value); else icon">

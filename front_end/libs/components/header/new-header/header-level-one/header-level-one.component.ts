@@ -25,7 +25,10 @@ export class NxHeaderLevelOneComponent {
     profileDropdownOpen = false;
     LANG = staticLang;
 
-    constructor(public headerService: NxHeaderService, private menusService: NxMenusService) {}
+    constructor(
+        public headerService: NxHeaderService,
+        private menusService: NxMenusService,
+    ) {}
 
     onNodeSelect(node: MenuNode, event: MouseEvent): false {
         this.handleNavigation(node, event);

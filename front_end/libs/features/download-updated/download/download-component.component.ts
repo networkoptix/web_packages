@@ -56,7 +56,10 @@ export class DownloadComponent implements OnChanges {
 
     // TODO: Fix arm supported. It says the same thing as linux
 
-    constructor(configService: NxConfigService, @Inject(DOCUMENT) private document: Document) {
+    constructor(
+        configService: NxConfigService,
+        @Inject(DOCUMENT) private document: Document,
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

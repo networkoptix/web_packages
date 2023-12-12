@@ -31,6 +31,7 @@ export class VideoManagementSystemService {
     state$$ = signal<VmsState>(initializeVmsState());
     serverTimes$$ = signal<Array<VmsServerTimeInfo>>([]);
     systemId$$ = computed<string>(() => this.state$$().systemId);
+    playerActive = false;
 
     constructor() {
         this.reset();

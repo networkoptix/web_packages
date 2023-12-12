@@ -5,7 +5,11 @@ import 'zone.js';
 
 import 'rvfc-polyfill';
 
-import 'container-query-polyfill';
+const supportsContainerQueries = 'container' in document.documentElement.style;
+
+if (!supportsContainerQueries) {
+    import('container-query-polyfill');
+}
 
 // Required for: Safari MacOS 12-16.3, Safari iOS all
 // @ts-expect-error: https://caniuse.com/mdn-api_element_requestfullscreen

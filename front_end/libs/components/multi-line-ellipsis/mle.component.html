@@ -1,11 +1,11 @@
 <div
     class="ellipsis"
-    [style.height]="viewHeight + 'px'"
+    [style.height]="fitContent ? 'fit-content' : viewHeight + 'px'"
     [style.line-height]="viewLineHeight + 'px'"
 >
     <div
         class="before"
-        [style.height]="viewHeight + 'px'"
+        [style.height]="fitContent ? 'fit-content' : viewHeight + 'px'"
     ></div>
     <div
         class="body"

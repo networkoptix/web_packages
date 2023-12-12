@@ -39,15 +39,15 @@ export const selectUnsavedLayoutsInfo = createSelector(
                     layout.unsaved === UnsavedState.ERROR
                         ? unsavedStates.error
                         : layout.unsaved === UnsavedState.PENDING
-                        ? unsavedStates.saving
-                        : existingWithSameName
-                        ? unsavedStates.overwrite
-                        : !existingLayouts.find(({ id }) => id === layout.id)
-                        ? unsavedStates.unsaved
-                        : hashItem(existingLayouts.find(({ id }) => id === layout.id)) ===
-                          layout.baseVersion
-                        ? unsavedStates.changed
-                        : unsavedStates.diverged;
+                          ? unsavedStates.saving
+                          : existingWithSameName
+                            ? unsavedStates.overwrite
+                            : !existingLayouts.find(({ id }) => id === layout.id)
+                              ? unsavedStates.unsaved
+                              : hashItem(existingLayouts.find(({ id }) => id === layout.id)) ===
+                                  layout.baseVersion
+                                ? unsavedStates.changed
+                                : unsavedStates.diverged;
                 return unsavedLayouts;
             },
             { states: {}, overwrites: {} } as {

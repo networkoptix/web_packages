@@ -160,6 +160,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         @Inject(DOCUMENT) private document: Document,
         @Inject(WINDOW) private window: Window & typeof globalThis,
     ) {
+        this.playback.viewTabActive$.next(true);
         this.fullscreenMode = false;
         this.showElementsInFSM = true;
         this.isMobile = deviceService.isMobile() || deviceService.isTablet();
@@ -231,6 +232,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     ngOnDestroy(): void {
         this.unsub$.next('done');
+        this.playback.viewTabActive$.next(false);
 
         this.unListenFullScreenChange();
         this.unListenWebkitFSChange();

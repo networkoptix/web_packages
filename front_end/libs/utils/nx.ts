@@ -381,10 +381,10 @@ export type NxRecursivePick<T, Keys extends NxRecursiveKeyMap<T>> = Pick<
             ? Keys[K] extends true
                 ? T[K]
                 : Keys[K] extends NxRecursiveKeyMap<ArrayType<T[K]>>
-                ? NxRecursivePick<ArrayType<T[K]>, Keys[K]>[]
-                : Keys[K] extends NxRecursiveKeyMap<T[K]>
-                ? NxRecursivePick<T[K], Keys[K]>
-                : never
+                  ? NxRecursivePick<ArrayType<T[K]>, Keys[K]>[]
+                  : Keys[K] extends NxRecursiveKeyMap<T[K]>
+                    ? NxRecursivePick<T[K], Keys[K]>
+                    : never
             : never;
     },
     keyof T & keyof Keys
@@ -399,8 +399,8 @@ export type NxRecursiveKeyMap<T> = {
     [K in keyof T]?: T[K] extends unknown[]
         ? NxRecursiveKeyMap<T[K][number]> | true
         : T[K] extends object
-        ? NxRecursiveKeyMap<T[K]> | true
-        : true;
+          ? NxRecursiveKeyMap<T[K]> | true
+          : true;
 };
 
 /** Generate string for the `_with` param for `/rest` endpoints.

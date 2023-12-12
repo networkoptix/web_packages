@@ -16,7 +16,7 @@
     <div class="tags">
         <button
             class="tag"
-            *ngFor="let tag of tags | slice : 0 : displayLimit"
+            *ngFor="let tag of tags | slice: 0 : displayLimit"
             [ngClass]="{ selected: selection.isSelected(tag) }"
             (click)="selection.toggle(tag); selectionChange.emit()"
         >

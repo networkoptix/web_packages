@@ -49,7 +49,10 @@ export class FormElementsComponent {
 
     @ViewChild('testForm', { static: true }) public testForm: NgForm;
 
-    constructor(private menuService: NxMenuService, @Inject(WINDOW) private window: Window) {}
+    constructor(
+        private menuService: NxMenuService,
+        @Inject(WINDOW) private window: Window,
+    ) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('components');

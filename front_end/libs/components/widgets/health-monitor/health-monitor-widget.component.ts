@@ -170,10 +170,13 @@ export class NxHealthMonitorWidgetComponent extends FirstPartyWidget<
 
     medium$ = this.alarmsFilteredByResource$.pipe(
         map(alarms =>
-            Object.entries(alarms).reduce((result, [key, value]) => {
-                result[key] = getLeafNodes(value).reduce(summarizeByLevel, {});
-                return result;
-            }, {} as Record<string, Record<string, any>>),
+            Object.entries(alarms).reduce(
+                (result, [key, value]) => {
+                    result[key] = getLeafNodes(value).reduce(summarizeByLevel, {});
+                    return result;
+                },
+                {} as Record<string, Record<string, any>>,
+            ),
         ),
     );
 

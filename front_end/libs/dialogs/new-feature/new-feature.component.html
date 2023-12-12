@@ -68,10 +68,7 @@
             <button
                 class="btn btn-primary btn-big"
                 translate
-                (click)="
-                    close();
-                    dialogsService.cloudStorageActivate({ licenseManager })
-                "
+                (click)="close(); dialogsService.cloudStorageActivate({ licenseManager })"
             >
                 Activate Cloud Storage
             </button>

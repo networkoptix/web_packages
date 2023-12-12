@@ -32,7 +32,10 @@ export class NxKnowledgebaseService {
 
     loadingMenu = false;
 
-    constructor(private menusService: NxMenusService, private accountService: NxAccountService) {
+    constructor(
+        private menusService: NxMenusService,
+        private accountService: NxAccountService,
+    ) {
         this.accountService.get().then(account => {
             this.account = account;
         });

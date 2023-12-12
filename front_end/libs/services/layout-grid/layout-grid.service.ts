@@ -29,7 +29,10 @@ export class NxLayoutGridService {
     changeView = new Subject<ResourceNode | LayoutItem>();
     // TODO - end
 
-    constructor(activatedRoute: ActivatedRoute, private cloudApi: NxCloudApiService) {
+    constructor(
+        activatedRoute: ActivatedRoute,
+        private cloudApi: NxCloudApiService,
+    ) {
         const systemId: string = activatedRoute.snapshot.params.systemId;
         this.layoutSettings = this.cloudApi.customAccountPropertyFactory(`layouts_${systemId}`, {
             openMenu: 'left',

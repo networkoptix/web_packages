@@ -4,12 +4,12 @@
     *ngIf="cookiePolicyExists && !cookieBannerReviewed"
 >
     <p>
-        <span [innerHTML]="LANG.cookieWarning | translate | translateCut : 0"></span
+        <span [innerHTML]="LANG.cookieWarning | translate | translateCut: 0"></span
         ><a
             routerLink="content/cookie-policy"
-            [innerText]="LANG.cookieWarning | translate | translateCut : 1"
+            [innerText]="LANG.cookieWarning | translate | translateCut: 1"
         ></a
-        ><span [innerHTML]="LANG.cookieWarning | translate | translateCut : 2"></span>
+        ><span [innerHTML]="LANG.cookieWarning | translate | translateCut: 2"></span>
     </p>
     <svg-icon
         nx-add-svg-src

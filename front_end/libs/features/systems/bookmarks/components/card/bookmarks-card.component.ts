@@ -24,7 +24,10 @@ export class NxBookmarksCardComponent implements OnInit {
     enableTooltip: boolean;
     thumbnailError: boolean;
 
-    constructor(private dialogs: NxDialogsService, private language: NxLanguageProviderService) {}
+    constructor(
+        private dialogs: NxDialogsService,
+        private language: NxLanguageProviderService
+    ) {}
 
     ngOnInit(): void {
         const currentLocale = this.language.currentLocale;

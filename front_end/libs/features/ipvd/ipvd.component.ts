@@ -259,8 +259,8 @@ export class NxIpvdComponent implements OnInit, OnDestroy {
         this.templateTableRows = this.isMobile
             ? '1fr'
             : isCamera
-            ? `1fr ${RIGHT_PANEL_WIDTH}px`
-            : '1fr';
+              ? `1fr ${RIGHT_PANEL_WIDTH}px`
+              : '1fr';
     }
 
     menuChanged(isHeight: boolean): void {

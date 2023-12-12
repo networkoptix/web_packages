@@ -23,7 +23,10 @@ export class NxRibbonComponent implements OnInit {
     updateFunction?: () => void;
     icons = icons;
 
-    constructor(private ribbonService: NxRibbonService, public headerService: NxHeaderService) {}
+    constructor(
+        private ribbonService: NxRibbonService,
+        public headerService: NxHeaderService,
+    ) {}
 
     ngOnInit(): void {
         this.ribbonService.contextSubject.pipe(untilDestroyed(this)).subscribe(context => {

@@ -1,6 +1,5 @@
-const typeLintErrorCount = require('./type-lint-error-count');
-
 const { showOptionalWarnings } = require('./eslintrc-options.json');
+const typeLintErrorCount = require('./type-lint-error-count');
 
 const lintTaskRunner = process.env.NX_TASK_TARGET_TARGET === 'lint';
 
@@ -49,11 +48,7 @@ module.exports = {
                 browser: true,
                 jasmine: true,
             },
-            plugins: [
-                'import',
-                // 'node',
-                // 'promise',
-            ],
+            plugins: ['import'],
             rules: {
                 'accessor-pairs': 'off',
                 camelcase: [
@@ -298,22 +293,15 @@ module.exports = {
             files: ['*.ts'],
             excludedFiles: [
                 'layout-grid.component.ts',
-                'change-password.component.ts',
                 'merge.refactor.component.ts',
                 'downloads-releases.component.ts',
                 'subchannels.component.ts',
                 'organization.component.ts',
-                'admin.component.ts',
                 'cameras.component.ts',
                 'settings.component.ts',
-                'edit-user-base.component.ts',
-                'users-with-groups.component.ts',
-                'vms.service.ts',
                 'level-3-item.component.ts',
                 'level-4-item.component.ts',
                 'menu.service.ts',
-                'oauth.service.ts',
-                'permission-manager.ts',
             ],
             rules: {
                 'nx/signal-naming-convention': 'error',

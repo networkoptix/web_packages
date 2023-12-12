@@ -55,5 +55,8 @@ export class SystemResourcesEffects {
         );
     });
 
-    constructor(private actions: Actions, private systemService: NxSystemService) {}
+    constructor(
+        private actions: Actions,
+        private systemService: NxSystemService,
+    ) {}
 }

@@ -66,7 +66,10 @@ export class NxSystemLicensesComponent implements OnInit {
     //         });
     // }
 
-    constructor(configService: NxConfigService, private menuService: NxMenuService) {
+    constructor(
+        configService: NxConfigService,
+        private menuService: NxMenuService,
+    ) {
         this.CONFIG = configService.getConfig();
 
         effect(() => {
@@ -215,8 +218,8 @@ export class NxSystemLicensesComponent implements OnInit {
                     item.info.status = item.info.expired
                         ? this.LANG.license.info.expired
                         : item.info.serverStatus === this.LANG.license.info.online
-                        ? item.info.status
-                        : this.LANG.license.info.error;
+                          ? item.info.status
+                          : this.LANG.license.info.error;
 
                     // monkey patch -> turn off all NVR licenses and then flip only the one with higher channels
                     if (item.info.type === this.LANG.license.licenseTypeTitles.NVR) {

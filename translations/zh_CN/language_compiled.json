@@ -272,6 +272,7 @@
     "Cannot initialize System": "无法初始化系统",
     "Cannot load preview": "Cannot load preview",
     "Cannot merge Systems": "不能合并系统",
+    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Cannot merge systems bound to the cloud",
     "Cannot merge two Cloud Systems with different owners": "Cannot merge two Cloud Systems with different owners",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "无法合并连接到云端的两个系统。请到 %CLOUD_NAME% 合并这些系统。",

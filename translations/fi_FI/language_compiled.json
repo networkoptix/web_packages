@@ -272,6 +272,7 @@
     "Cannot initialize System": "Järjestelmää ei voi alustaa",
     "Cannot load preview": "Cannot load preview",
     "Cannot merge Systems": "Järjestelmiä ei voi yhdistää",
+    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Cannot merge systems bound to the cloud",
     "Cannot merge two Cloud Systems with different owners": "Cannot merge two Cloud Systems with different owners",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.",

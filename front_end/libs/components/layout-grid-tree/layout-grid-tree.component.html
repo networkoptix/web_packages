@@ -114,8 +114,8 @@
                         (node.type === RESOURCE_TYPE.CAMERA
                             ? cameraTooltip
                             : node.type === RESOURCE_TYPE.SERVER && CONFIG.featureFlags.layoutsDemo
-                            ? serverTooltip
-                            : '')
+                              ? serverTooltip
+                              : '')
                     "
                     (mouseenter)="updateTooltipTarget(node.details.id)"
                     (mouseleave)="unsubTooltips()"
@@ -198,7 +198,7 @@
                         </h4>
                         <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
                             <div
-                                *ngIf="res.statistics | as : ServerStats as stats"
+                                *ngIf="res.statistics | as: ServerStats as stats"
                                 class="stats-grid"
                             >
                                 <div translate>Description</div>
@@ -290,7 +290,7 @@
                     <button
                         *ngFor="let menuItem of menuItems"
                         class="action-button"
-                        [nxTooltip]="menuItem.tooltip | translate : node.details"
+                        [nxTooltip]="menuItem.tooltip | translate: node.details"
                         (click)="menuItem.action($event, node)"
                         [tourAnchor]="'cloud-layouts_add_layout'"
                     >
@@ -350,7 +350,7 @@
                             nx-add-svg-src
                             [svgStyle]="{
                                 'width.px': '20',
-                                'height.px': '20',
+                                'height.px': '20'
                             }"
                             [src]="icons.dirLayouts + 'menu.svg'"
                         >
@@ -388,11 +388,12 @@
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{
-                'width.px': '20',
-                'height.px': '20',
-                fill: 'none !important',
-                opacity: expandable ? '1' : '0',
-                }"
+                        'width.px': '20',
+                        'height.px': '20',
+                        'padding-bottom.px': '4',
+                        fill: 'none !important',
+                        opacity: expandable ? '1' : '0'
+                    }"
                     svgClass="dark-17-svg"
                     [src]="icons.dirLayouts + (expanded ? 'arrow_close.svg' : 'arrow_open.svg')"
                 >
@@ -402,9 +403,9 @@
                 <svg-icon
                     nx-add-svg-src
                     [svgStyle]="{
-                'width.px': '20',
-                'height.px': '20',
-                }"
+                        'width.px': '20',
+                        'height.px': '20'
+                    }"
                     [src]="
                         icons.dirLayouts +
                         node.type +
@@ -419,12 +420,12 @@
                                         'incompatible'
                                     )
                                   : node.details.unauthorized
-                                  ? 'unauthorized'
-                                  : node.details.online && node.details.requiresTranscoding
-                                  ? 'warning'
-                                  : node.details.online
-                                  ? 'online'
-                                  : 'offline')
+                                    ? 'unauthorized'
+                                    : node.details.online && node.details.requiresTranscoding
+                                      ? 'warning'
+                                      : node.details.online
+                                        ? 'online'
+                                        : 'offline')
                             : '') +
                         (node.shared ? '_shared' : '') +
                         '.svg'

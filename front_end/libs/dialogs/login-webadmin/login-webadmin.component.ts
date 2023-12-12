@@ -241,10 +241,8 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         const errorCodes = {
             notFound: showWrongCredentialsError,
             invalidParameter: showWrongCredentialsError,
-            notAuthorized: showWrongCredentialsError,
             serviceUnavailable: showAccountBlockedError,
-            accountBlocked: showAccountBlockedError,
-            userDisabled: showUserDisabled,
+            forbidden: showUserDisabled,
         };
         errorCodes[cloudLogin] = () => this.LANG.toastMessage.webAdminCloudCredentialError;
         this.login = this.processService.createProcess(

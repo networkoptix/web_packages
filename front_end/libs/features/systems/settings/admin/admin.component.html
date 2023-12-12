@@ -173,6 +173,7 @@
                                         [viewHeight]="viewHeight"
                                         [viewLineHeight]="21"
                                         [viewLines]="viewLines"
+                                        [fitContent]="viewLines < 6"
                                     >
                                         {{ userRole$$() | translate }}
                                     </nx-ml-ellipsis>

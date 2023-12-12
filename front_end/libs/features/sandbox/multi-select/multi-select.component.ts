@@ -188,7 +188,10 @@ export class MultiSelectComponent {
         console.log('onChange', event);
     }
 
-    constructor(private menuService: NxMenuService, @Inject(DOCUMENT) private document: Document) {}
+    constructor(
+        private menuService: NxMenuService,
+        @Inject(DOCUMENT) private document: Document,
+    ) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('components');

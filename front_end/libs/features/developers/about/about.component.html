@@ -17,7 +17,7 @@
             <h1>{{ intro.title }}</h1>
         </ng-template>
         <ng-container *ngIf="intro.asset?.shortDescription">
-            <p [innerHTML]="intro.asset.shortDescription || '' | safe : 'html'"></p>
+            <p [innerHTML]="intro.asset.shortDescription || '' | safe: 'html'"></p>
         </ng-container>
     </div>
 </ng-template>

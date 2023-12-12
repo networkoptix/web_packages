@@ -33,7 +33,7 @@
                                     class="bookmarks-image-playIcon"
                                 ></svg-icon>
                                 <img
-                                    [src]="bookmark.thumbnail | async | safe : 'resourceUrl'"
+                                    [src]="bookmark.thumbnail | async | safe: 'resourceUrl'"
                                     [alt]="'thumbnail of ' + bookmark.name"
                                     (error)="thumbnailError = true"
                                 />

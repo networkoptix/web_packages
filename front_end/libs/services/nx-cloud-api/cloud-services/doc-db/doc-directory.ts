@@ -19,7 +19,11 @@ import { DocHandler } from './doc-handler';
  * between users.
  */
 export class DocDirectory<DocType extends DocId> {
-    constructor(private api: DocDbAPI, private prefix: string, private nameSpaceForUser = true) {}
+    constructor(
+        private api: DocDbAPI,
+        private prefix: string,
+        private nameSpaceForUser = true,
+    ) {}
 
     /**
      * Creates a DocDirectory for a child directory within the current directory.

@@ -399,10 +399,10 @@ export class MotionMaskRenderer {
                 const color = shadow
                     ? black20Percent
                     : solid
-                    ? selected
-                        ? this.brandColor
-                        : 'black'
-                    : white10Percent;
+                      ? selected
+                          ? this.brandColor
+                          : 'black'
+                      : white10Percent;
 
                 const instruction = (): void => {
                     ctx.strokeStyle = color;
@@ -416,13 +416,13 @@ export class MotionMaskRenderer {
                         horizontal && color === white10Percent
                             ? toX - 1
                             : !horizontal && selected
-                            ? toX + 0.5
-                            : toX,
+                              ? toX + 0.5
+                              : toX,
                         !horizontal && [white10Percent, black20Percent].includes(color)
                             ? toY - (color === white10Percent ? 1 : 0.5)
                             : selected
-                            ? toY + 0.5
-                            : toY,
+                              ? toY + 0.5
+                              : toY,
                     );
                     ctx.stroke();
                 };

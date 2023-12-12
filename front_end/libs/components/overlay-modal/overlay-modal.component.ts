@@ -121,8 +121,8 @@ export class NxOverlayModalComponent implements OnInit {
                     return !res
                         ? empty()
                         : this.appState.systemAvailable$.value
-                        ? empty()
-                        : interval(1000);
+                          ? empty()
+                          : interval(1000);
                 }),
             )
             .pipe(untilDestroyed(this))

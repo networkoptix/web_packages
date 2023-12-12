@@ -49,7 +49,10 @@ export class CamViewComponent implements OnInit {
     @ViewChild('nxCamView', { static: false })
     cameraView: ElementRef<HTMLDivElement>;
 
-    constructor(configService: NxConfigService, private uri: NxUriService) {
+    constructor(
+        configService: NxConfigService,
+        private uri: NxUriService,
+    ) {
         this.CONFIG = configService.getConfig();
     }
 

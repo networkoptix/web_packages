@@ -16,7 +16,10 @@ export class LogsComponent implements OnInit {
         map(paramMap => paramMap.get('serverId')),
     );
 
-    constructor(private menuService: NxMenuService, private route: ActivatedRoute) {}
+    constructor(
+        private menuService: NxMenuService,
+        private route: ActivatedRoute,
+    ) {}
 
     ngOnInit(): void {
         this.menuService.selectedSection.set('logs');

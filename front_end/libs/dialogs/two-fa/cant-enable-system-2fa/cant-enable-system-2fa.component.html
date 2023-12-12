@@ -23,12 +23,12 @@
     </p>
 
     <p *ngrxLet="LANG.dialogs.twoFa.enableItInSettings | translate as enableMsg">
-        <span>{{ enableMsg | translateCut : 0 }}</span
+        <span>{{ enableMsg | translateCut: 0 }}</span
         ><a
             routerLink="/account/security"
             (click)="close()"
-            >{{ enableMsg | translateCut : 1 }}</a
-        ><span>{{ enableMsg | translateCut : 2 }}</span>
+            >{{ enableMsg | translateCut: 1 }}</a
+        ><span>{{ enableMsg | translateCut: 2 }}</span>
     </p>
 </div>
 <div class="modal-footer">

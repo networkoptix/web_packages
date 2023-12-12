@@ -84,7 +84,10 @@ export class WebGlTimelineSelectionComponent implements OnChanges {
 
     dragStop$: Subject<boolean> = new Subject<boolean>();
 
-    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
+    constructor(
+        languageService: NxLanguageProviderService,
+        private webglService: NxWebGLService,
+    ) {
         languageService.loadTimelineTranslations();
 
         this.webglService.selection$

@@ -40,7 +40,10 @@ export class NxHeaderMobileComponent {
     currentSystemMenu: MenuNode;
     iconState: mobileIconState;
     icons = icons;
-    constructor(public headerService: NxHeaderService, scrollMechanics: NxScrollMechanicsService) {
+    constructor(
+        public headerService: NxHeaderService,
+        scrollMechanics: NxScrollMechanicsService,
+    ) {
         this.headerService.currentLocation$
             .pipe(untilDestroyed(this))
             .subscribe(currentLocation => {

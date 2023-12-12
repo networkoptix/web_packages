@@ -10,15 +10,18 @@ const definedTransactions = {
     [Commands.runtimeInfoRemoved]: RuntimeInfoRemovedTransaction,
 };
 
-const generatedTransactions = Object.keys(Commands).reduce((acc, command: Commands) => {
-    if (command in definedTransactions) {
-        return acc;
-    }
+const generatedTransactions = Object.keys(Commands).reduce(
+    (acc, command: Commands) => {
+        if (command in definedTransactions) {
+            return acc;
+        }
 
-    const transaction = genericTransactionFactory(command);
-    acc[command] = transaction;
-    return acc;
-}, {} as Record<Commands, ReturnType<typeof genericTransactionFactory>>);
+        const transaction = genericTransactionFactory(command);
+        acc[command] = transaction;
+        return acc;
+    },
+    {} as Record<Commands, ReturnType<typeof genericTransactionFactory>>,
+);
 
 /**
  * This is a list of all transactions classes that define what can be received from the transaction bus.

@@ -52,9 +52,11 @@
             <hr />
             <ul>
                 <li
-                    *ngFor="let match of matchEntry[1] | slice : 0 : 5; index as j"
+                    *ngFor="let match of matchEntry[1] | slice: 0 : 5; index as j"
                     class="suggestion__item"
-                    [class.suggestion__item--selected]="i === matchIndexes?.[0] && j === matchIndexes?.[1]"
+                    [class.suggestion__item--selected]="
+                        i === matchIndexes?.[0] && j === matchIndexes?.[1]
+                    "
                     (click)="writeValue(match)"
                 >
                     <nx-search-highlight
@@ -71,7 +73,7 @@
         class="suggestion__no-matches"
         [innerHTML]="
             noMatchMsg ||
-            (LANG.search.noMatchesFor | translate : { query: wrapStrong(escapeHTML(search)) })
+            (LANG.search.noMatchesFor | translate: { query: wrapStrong(escapeHTML(search)) })
         "
     ></li>
 </ul>

@@ -17,7 +17,7 @@
                 <nx-health-image
                     (loaded)="thumbnails[0].loaded = $event; showPreloader()"
                     [state]="state"
-                    [time]="thumbnails[0].time | NxHealthDate : 'MM/dd/yyyy, HH:mm'"
+                    [time]="thumbnails[0].time | NxHealthDate: 'MM/dd/yyyy, HH:mm'"
                     [isPrimary]="true"
                     [url]="thumbnails[0].url | async"
                 ></nx-health-image>
@@ -34,7 +34,7 @@
                     <nx-health-image
                         (loaded)="thumbnail.loaded = $event; showPreloader()"
                         [state]="state"
-                        [time]="thumbnail.time | NxHealthDate : 'MM/dd/yyyy, HH:mm'"
+                        [time]="thumbnail.time | NxHealthDate: 'MM/dd/yyyy, HH:mm'"
                         [url]="thumbnail.url | async"
                     ></nx-health-image>
                 </div>
@@ -51,7 +51,7 @@
                 <nx-health-image
                     (loaded)="thumbnail.loaded = $event; showPreloader()"
                     [state]="state"
-                    [time]="thumbnail.time | NxHealthDate : 'MM/dd/yyyy, HH:mm'"
+                    [time]="thumbnail.time | NxHealthDate: 'MM/dd/yyyy, HH:mm'"
                     [url]="thumbnail.url | async"
                 ></nx-health-image>
             </div>

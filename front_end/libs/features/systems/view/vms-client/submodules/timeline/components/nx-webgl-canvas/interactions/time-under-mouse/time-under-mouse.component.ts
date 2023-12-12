@@ -30,7 +30,10 @@ export class WebGlTimeUnderMouseComponent implements OnChanges {
     @ViewChild('timeUnderEar', { static: true })
     protected timeUnderEar: ElementRef<HTMLDivElement>;
 
-    constructor(languageService: NxLanguageProviderService, private webglService: NxWebGLService) {
+    constructor(
+        languageService: NxLanguageProviderService,
+        private webglService: NxWebGLService,
+    ) {
         languageService.loadTimelineTranslations();
     }
 

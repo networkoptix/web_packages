@@ -19,7 +19,10 @@ export class NxMatchHeightDirective implements AfterViewInit, OnDestroy {
 
     initialLoadInterval: ReturnType<typeof setInterval>;
 
-    constructor(private el: ElementRef, @Inject(WINDOW) private window: Window) {
+    constructor(
+        private el: ElementRef,
+        @Inject(WINDOW) private window: Window,
+    ) {
         fromEvent<Event>(this.window, 'resize')
             .pipe(untilDestroyed(this), debounceTime(160))
             .subscribe(() => {
