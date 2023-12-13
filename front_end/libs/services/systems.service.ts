@@ -120,8 +120,8 @@ export class NxSystemsService {
         }
         this.systemsSubject.pipe(first(systems => systems.length > 0)).subscribe(systems => {
             const systemService = this.injector.get(NxSystemService);
-            for (const { stateOfHealth, id, system2faEnabled } of systems) {
-                if (stateOfHealth === 'online' && !system2faEnabled) {
+            for (const { accessRole, stateOfHealth, id, system2faEnabled } of systems) {
+                if (stateOfHealth === 'online' && !system2faEnabled && accessRole !== 'none') {
                     systemService.createSystem(this.userEmail, id, null, true, true);
                 }
             }
