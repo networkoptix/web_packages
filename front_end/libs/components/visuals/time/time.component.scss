@@ -1,0 +1,12 @@
+@use "typography" as typography;
+
+:host {
+    display: flex;
+    flex-wrap: wrap;
+    align-content: center;
+
+    div {
+        @include typography.regular18nocolor;
+        color: var(--h2);
+    }
+}
