@@ -169,14 +169,9 @@
                                 alternateSecondary
                             >
                                 <ng-template #userGroups>
-                                    <nx-ml-ellipsis
-                                        [viewHeight]="viewHeight"
-                                        [viewLineHeight]="21"
-                                        [viewLines]="viewLines"
-                                        [fitContent]="viewLines < 6"
-                                    >
+                                    <nx-ml-ellipsis-clamp [viewLines]="viewLines">
                                         {{ userRole$$() | translate }}
-                                    </nx-ml-ellipsis>
+                                    </nx-ml-ellipsis-clamp>
                                 </ng-template>
                                 <span
                                     class="group-count"

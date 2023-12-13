@@ -12,6 +12,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxGenericDropdownModule } from '@components/dropdowns/generic/dropdown.module';
 import { EditableModule } from '@components/editable/editable.module';
 import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
+import { NxMultiLineEllipsisClampComponent } from '@components/multi-line-ellipsis-clamp/mle-clamp.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
 import { NxClientButtonComponent } from '@components/open-client-button/client-button.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -53,6 +54,7 @@ import { NxSystemStandardAdminComponent } from './standard/standard.component';
         TranslateModule,
         NxMultiLineEllipsisComponent,
         NxAlexaComponent,
+        NxMultiLineEllipsisClampComponent,
     ],
     providers: [],
     declarations: [
