@@ -304,7 +304,7 @@ class Mediaserver:
         local_users = {}
         permissions = CloudAccount.PERMISSIONS
         for permission in permissions:
-            self.api.save_user(
+            r = self.api.save_user(
                 "Local+" + permission,
                 permissions[permission],
                 f"noptixautoqa+local_{permission}@gmail.com",
@@ -316,6 +316,7 @@ class Mediaserver:
                 {permission: {
                     "login": f"Local+{permission}",
                     "email": f"noptixautoqa+local_{permission}@gmail.com",
+                    "id": r['id'].strip('{}')
                     },
                 }
             )
@@ -350,7 +351,8 @@ class Mediaserver:
 
     def share_with_user(self, user: 'CloudAccount', access_role: str, permissions: str):
         _auth = [self._cloud_owner.email, self._cloud_owner.password]
-        _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
+        r = _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
+        user.id = r['vmsUserId']
         print(f'MediaServer {self.name} shared with {user.email} as {access_role}.')
 
     def reset_settings(self):

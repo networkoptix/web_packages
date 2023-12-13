@@ -46,7 +46,7 @@ def owner_can_remove_user(server: Mediaserver):
                 SystemAdmin(driver)
                 left_menu = SystemLeftMenu(driver)
                 users_dropdown = left_menu.users_dropdown()
-                users_dropdown.get_user_with_email(tmp_user.email).click()
+                users_dropdown.get_user_link_by_id(tmp_user.id).click()
                 users_page = SystemUsers(driver)
                 users_page.remove_user_button().click()
                 users_page.remove_user_modal_button().click()
@@ -83,7 +83,8 @@ def cloud_admin_can_remove_user(server: Mediaserver):
                 SystemAdmin(driver)
                 left_menu = SystemLeftMenu(driver)
                 users_dropdown = left_menu.users_dropdown()
-                users_dropdown.get_user_with_email(tmp_user.email).click()
+                # Currently failing because users are not created with proper permissions
+                users_dropdown.get_user_link_by_id(tmp_user.id).click()
                 users_page = SystemUsers(driver)
                 users_page.remove_user_button().click()
                 users_page.remove_user_modal_button().click()
@@ -283,7 +284,7 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.users_dropdown()
-            users_dropdown.get_user_with_email(owner.email).click()
+            users_dropdown.get_user_link_by_id(owner.id).click()
             system_user = SystemUsers(driver)
             # --- this part tests that the owner can't remove himself or change his permissions
             # The sleep and refresh are to bypass bug CLOUD-11525
@@ -340,7 +341,7 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.users_dropdown()
-            users_dropdown.get_user_with_email(admin.email).click()
+            users_dropdown.get_user_link_by_id(admin.id).click()
             system_user = SystemUsers(driver)
             assert system_user.user_header_text().get_text() == admin.email
             # Each registered user is tested to make sure you can't share the system with them
@@ -385,7 +386,7 @@ def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.users_dropdown()
-            users_dropdown.get_user_with_email(admin.email).click()
+            users_dropdown.get_user_link_by_id(admin.id).click()
             system_user = SystemUsers(driver)
             system_user.remove_user_button().wait_until_not_visible()
             system_user.access_level_dropdown().wait_until_not_visible()
@@ -418,18 +419,18 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
                 # Verify can't edit/delete new admin
-                users_dropdown.get_user_with_email(tmp_admin.email).click()
+                users_dropdown.get_user_link_by_id(tmp_admin.id).click()
                 system_user = SystemUsers(driver)
                 system_user.remove_user_button().wait_until_not_visible()
                 system_user.access_level_dropdown().wait_until_not_visible()
                 assert system_user.user_header_text().get_text() == tmp_admin.email
                 # Verify can't edit/delete owner
-                users_dropdown.get_user_with_email(owner.email).click()
+                users_dropdown.get_user_link_by_id(owner.id).click()
                 system_user.remove_user_button().wait_until_not_visible()
                 system_user.access_level_dropdown().wait_until_not_visible()
                 assert system_user.user_header_text().get_text() == owner.email
                 # Verify can't edit/delete local cloud admin
-                users_dropdown.get_user_with_email(local_admin['login']).click()
+                users_dropdown.get_user_link_by_id(local_admin['id']).click()
                 system_user.remove_user_button().wait_until_not_visible()
                 system_user.access_level_dropdown().wait_until_not_visible()
                 assert system_user.user_header_text().get_text() == local_admin['login']
@@ -481,7 +482,7 @@ def user_data_should_match_registration(server: Mediaserver):
                 LoginDialog(driver).basic_cloud_login(combo_user.email, combo_user.password)
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
-                users_dropdown.get_user_with_email(combo_user.email).click()
+                users_dropdown.get_user_link_by_id(combo_user.id).click()
                 assert f"{combo_text} {combo_text}" in SystemUsers(driver).user_name_text().get_text()
             except Exception:
                 print("FAIL")
@@ -634,7 +635,7 @@ def change_role_for_cloud_user(server: Mediaserver):
                 LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
-                users_dropdown.get_user_with_email(tmp_user.email).click()
+                users_dropdown.get_user_link_by_id(tmp_user.id).click()
                 system_user = SystemUsers(driver)
                 system_user.user_header_text().wait_until_visible()
                 system_user.access_level_dropdown().wait_until_visible()
@@ -677,7 +678,7 @@ def edit_permission_works_for_owner(server: Mediaserver):
                 LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
-                users_dropdown.get_user_with_email(tmp_user.email).click()
+                users_dropdown.get_user_link_by_id(tmp_user.id).click()
                 system_user = SystemUsers(driver)
                 system_user.access_level_dropdown().click()
                 system_user.access_level_dropdown_option("Viewer").click()
@@ -715,7 +716,7 @@ def edit_permission_works_for_cloud_admin(server: Mediaserver):
                 LoginDialog(driver).basic_cloud_login(admin.email, admin.password)
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
-                users_dropdown.get_user_with_email(tmp_user.email).click()
+                users_dropdown.get_user_link_by_id(tmp_user.id).click()
                 system_user = SystemUsers(driver)
                 system_user.access_level_dropdown().click()
                 system_user.access_level_dropdown_option("Viewer").click()

@@ -147,7 +147,7 @@ class SearchField:
 class UsersDropdown(DropDown):
 
     def __init__(self, driver):
-        self._locator = '//nx-menu//a[@id="users"]/..'
+        self._locator = '//nx-menu//a[@id="users"]'
         super().__init__(driver, self._locator)
 
     def _add_user_button(self):
