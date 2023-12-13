@@ -39,33 +39,33 @@
     "emailSubject": "ระบบ {{{message.system_name}}} ถูกแชร์กับคุณ"
   },
   "cps_organization_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{message.sharer_name}} เชิญคุณมาที่ %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{message.organization_name}} was shared with you"
+    "emailSubject": "องค์กร {{message.organization_name}} ถูกแชร์กับคุณ"
   },
   "cps_organization_state_active": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "สถานะขององค์กร {{message.organization_name}} เปลี่ยนเป็น {{message.status_name}}"
   },
   "cps_organization_state_confirmation": {
-    "emailSubject": "Confirm the transfer of organization {{message.organization_name}} to the status {{message.status_name}}"
+    "emailSubject": "ยืนยันการโอนองค์กร {{message.organization_name}} เป็นสถานะ {{message.status_name}}"
   },
   "cps_organization_state_suspended": {
-    "emailSubject": "The status of organization {{message.organization_name}} is changed to {{message.status_name}}"
+    "emailSubject": "สถานะขององค์กร {{message.organization_name}} เปลี่ยนเป็น {{message.status_name}}"
   },
   "cps_partner_invite": {
-    "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
+    "emailSubject": "{{message.sharer_name}} เชิญคุณมาที่ %CLOUD_NAME%"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{message.partner_name}} was shared with you"
+    "emailSubject": "องค์กร {{message.partner_name}} ถูกแชร์กับคุณ"
   },
   "cps_partner_state_active": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "สถานะขององค์กร {{message.partner_name}} เปลี่ยนเป็น {{message.status_name}} "
   },
   "cps_partner_state_confirmation": {
-    "emailSubject": "Confirm the transfer of partner {{message.partner_name}} to status {{message.status_name}} "
+    "emailSubject": "ยืนยันการโอนพาทเนอร์ {{message.partner_name}} ไปยังสถานะ {{message.status_name}} "
   },
   "cps_partner_state_suspended": {
-    "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "
+    "emailSubject": "สถานะของพาทเนอร์ {{message.partner_name}} เปลี่ยนเป็น {{message.status_name}} "
   }
 }
