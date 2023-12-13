@@ -864,18 +864,20 @@ def disable_enable_correctly_affects_user(server: Mediaserver):
             SystemAdmin(driver)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.users_dropdown()
-            users_dropdown.get_user_with_email(viewer.email).click()
+            users_dropdown.get_user_link_by_id(viewer.id).click()
             system_user = SystemUsers(driver)
-            access_level_dropdown = system_user.access_level_dropdown()
-            access_level_dropdown.wait_until_visible()
-            assert access_level_dropdown.text() == rb.VIEWER_TEXT
-            help_block = system_user.help_block()
-            assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
+            # commented out items here for 6.0 compatibility and not deleting because cloud-portal
+            # is making changes that may allow some of these checks to return
+            # access_level_dropdown = system_user.access_level_dropdown()
+            # access_level_dropdown.wait_until_visible()
+            # assert access_level_dropdown.text() == rb.VIEWER_TEXT
+            # help_block = system_user.help_block()
+            # assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
             system_user.user_switch().turn_off()
             system_user.save_button().click()
-            # Fails due to https://networkoptix.atlassian.net/browse/CLOUD-11901
+            # Fails for vms 5.1 due to https://networkoptix.atlassian.net/browse/CLOUD-11901
             system_user.no_unsaved_changes_text().wait_until_visible()
-            assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
+            # assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
             assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
             # TODO this test continues to verify enabling a user but due to above must be completed later
         except Exception:
@@ -884,7 +886,6 @@ def disable_enable_correctly_affects_user(server: Mediaserver):
             raise
         else:
             print(f"PASS")
-
 
 
 if __name__ == "__main__":

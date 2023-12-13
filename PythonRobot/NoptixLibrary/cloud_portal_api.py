@@ -543,7 +543,7 @@ class CloudPortalAPI(object):
             "systemId": system_id,
             }
         share_response = requests.post(
-            url=f'{self.env}/cdb/systems/{system_id}/users',
+            url=f'{self.env}/cdb/v0/systems/{system_id}/users',
             auth=HTTPBasicAuth(auth[0], auth[1]),
             json=body,
             verify=False,
@@ -587,6 +587,7 @@ class CloudPortalAPI(object):
                 custom_permissions,
                 )
             logger.debug(r)
+            return r
 
     def get_account_info(self, email, password):
         account_info_response = requests.get(

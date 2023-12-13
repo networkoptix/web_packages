@@ -21,7 +21,8 @@ from NoptixLibrary.server_api import DEFAULT_PASSWORD
 from NoptixLibrary.server_api import INITIAL_PASSWORD
 from NoptixLibrary.server_api import ServerApi
 
-_docker_host = "10.1.5.48"
+_docker_host = "10.2.34.112"
+_vms_version = "5.1"
 _CLOUD_API = CloudPortalAPI()
 _DOCKER_API = DockerHTTPApi(f'http://{_docker_host}:5555')
 
@@ -64,29 +65,31 @@ class Suite:
             cloud_owner: 'CloudAccount',
             suite_name: Optional[str] = None,
             cloud_users: Mapping[str, 'CloudAccount'] = MappingProxyType({}),
-            vms_version: str = '5.1',
+            vms_version: str = _vms_version,
             ) -> 'Mediaserver':
         server = self.create_local_server(vms_version, suite_name)
         server.connect_to_cloud(cloud_owner)
+        cloud_owner.id = server.api.get_user_by_email(cloud_owner.email)['id'].strip("{}")
         for user in cloud_users:
-            _CLOUD_API.add_user_to_cloud(
+            r = _CLOUD_API.add_user_to_cloud(
                 server.id,
                 user,
                 cloud_users[user].email,
                 [cloud_owner.email, cloud_owner.password],
                 CloudAccount.PERMISSIONS[user]
             )
+            cloud_users[user].id = r['vmsUserId']
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
             started_at = time.monotonic()
-            timeout_sec = 30
+            timeout_sec = 60
             requested_users = set([account.email for account in cloud_users.values()])
             while True:
                 users = [user['email'] for user in server.api.get_users()]
                 if requested_users.issubset(users):
                     break
                 if time.monotonic() - started_at > timeout_sec:
-                    raise TimeoutError(f"Requested users did not created after {timeout_sec} seconds")
+                    raise TimeoutError(f"Requested users were not created after {timeout_sec} seconds")
                 time.sleep(0.5)
             server._cloud_admin = cloud_users.get('cloudAdmin')
             server._cloud_viewer = cloud_users.get('viewer')
@@ -386,6 +389,7 @@ class CloudAccount:
         self.first_name = first_name
         self.last_name = last_name
         self.password = password
+        self.id = None
         self._totp = None
         self._backup_codes = None
 

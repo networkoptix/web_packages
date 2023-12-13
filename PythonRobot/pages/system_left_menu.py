@@ -16,6 +16,7 @@ from generic_elements import Page
 from generic_elements import PageText
 from generic_elements import Pane
 from generic_elements import TextField
+from generic_elements import Link
 from nx_modal import NxModalDialog
 from variables import ENV
 
@@ -207,6 +208,10 @@ class UsersDropdown(DropDown):
         except _UserNotFoundError:
             return False
         return True
+
+    def get_user_link_by_id(self, user_id):
+        self.open()
+        return Link(self._driver, f'//a[@id="{user_id}"]')
 
     def get_local_user_with_username(self, user_name: str) -> DropDownOption:
         for user in self._list_user_options():
