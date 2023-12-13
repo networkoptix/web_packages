@@ -1,4 +1,5 @@
 import datetime
+import json
 import random
 import uuid
 from datetime import timedelta
@@ -508,12 +509,21 @@ class TestOrganizationUserSerializer:
         self.org_adm_name = 'Organization Administrator'
         self.org_power_user_name = 'Power User'
 
-    def test_create_valid(self, sys_group_user_factory):
+    def test_create_valid(self, sys_group_user_factory, arf, org_user_factory, mock_account_status,
+                          mock_get_customization_request, mock_post_notification, httpx_mock):
+
         data = {
             'email': self.user.email,
             'role': self.org_adm_name
         }
-        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+        org_admin = org_user_factory(organization=self.org)
+        request = arf.post('/')
+        request.user = org_admin.user
+        mock_account_status(email=self.user.email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
+        serializer = OrganizationUserSerializer(data=data,
+                                                context={'organization': self.org, 'request': request})
 
         serializer.is_valid()
         assert not serializer.errors
@@ -521,6 +531,12 @@ class TestOrganizationUserSerializer:
         serializer.save()
 
         assert serializer.data['roles'] == [self.org_adm_name]
+        notification_send_request = httpx_mock.get_request(url=notification_send_url)
+        notification_data = json.loads(notification_send_request.content)
+        assert notification_data['type'] == 'cps_organization_invite'
+        assert notification_data['user_email'] == self.user.email
+        assert notification_data['message']['organization_name'] == self.org.name
+        assert notification_data['message']['sharer_name'] == getattr(org_admin, 'full_name', org_admin.user.email)
 
         relations = OrganizationToUser.objects.filter(organization=self.org, user=self.user)
         assert relations.count() == 1
@@ -566,7 +582,7 @@ class TestOrganizationUserSerializer:
             'email': user.email,
             'role': self.org_adm_name
         }
-        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org})
+        serializer = OrganizationUserSerializer(data=data, context={'organization': self.org, 'request': request})
 
         serializer.is_valid()
         serializer.save()
@@ -592,16 +608,24 @@ class TestSystemGroupUserSerializer:
 
     @pytest.fixture(autouse=True)
     def setup(self, channel_partner_factory, organization_factory, sys_group_user_factory,
-              cloud_user_factory, org_user_factory, system_group_factory):
+                     cloud_user_factory, org_user_factory, system_group_factory, arf,
+                     mock_account_status, mock_get_customization_request,
+                     mock_post_notification, httpx_mock):
         self.cp = channel_partner_factory()
         self.org = organization_factory(channel_partner=self.cp)
         self.group = system_group_factory(organization=self.org)
+        self.org_admin = org_user_factory(organization=self.org)
         self.org_user = org_user_factory(email='test@networkoptix.com')
         self.users = [sys_group_user_factory(organization=self.org, group=self.group) for _ in range(5)]
         self.other_org = organization_factory(channel_partner=self.cp)
         self.other_group = system_group_factory(organization=self.other_org)
         self.org_adm_name = 'Organization Administrator'
         self.org_power_user_name = 'Power User'
+        self.request = arf.post('/')
+        self.request.user = self.org_admin.user
+        mock_account_status(email=self.org_user.user.email, active=False)
+        mock_get_customization_request()
+        self.notification_send_url = mock_post_notification()
 
     def test_data(self):
         serializer = SystemGroupUserSerializer(instance=self.users[0])
@@ -624,7 +648,7 @@ class TestSystemGroupUserSerializer:
             'role': 'Administrator'
         }
 
-        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group})
+        serializer = SystemGroupUserSerializer(data=data, context={'group': self.group, 'request': self.request})
         assert serializer.is_valid()
 
         group_rel = serializer.save()

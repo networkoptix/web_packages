@@ -4,6 +4,7 @@ import uuid
 from uuid import uuid4, UUID
 
 import pytest
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.db.models import Q
 from model_bakery import baker
@@ -282,10 +283,6 @@ def service_record_factory():
 
 
 @pytest.fixture()
-def with_access_levels(db):
-    setup_levels()
-
-@pytest.fixture()
 def system_group_factory():
     def factory(organization, parent=None):
         uid = uuid4()
@@ -309,3 +306,44 @@ def sys_group_user_factory(system_group_factory, cloud_user_factory):
 @pytest.fixture()
 def random_email():
     return f'{uuid4()}@networkoptix.com'
+
+
+@pytest.fixture()
+def request_host():
+    return settings.INSTANCE_CONFIG.get_instance_host(None)
+
+@pytest.fixture()
+def mock_get_customization_request(httpx_mock, request_host):
+    def mock_request(customization_name: str = 'default', status: int = 200):
+        url = f'https://{request_host}/api/utils/customization'
+        httpx_mock.add_response(url=url,
+                                json={'name': customization_name},
+                                status_code=status)
+        return url
+
+    return mock_request
+
+
+@pytest.fixture()
+def mock_account_status(httpx_mock, request_host):
+    def mock_request(email: str, active: bool = True):
+        url = f'https://{request_host}/cdb/account/{email}/status'
+        httpx_mock.add_response(url=url, json={}, status_code=200 if active else 404)
+
+    return mock_request
+
+
+@pytest.fixture()
+def mock_post_notification(httpx_mock, request_host):
+    def mock_request(response: str = None, status: int = 201):
+        url = f'https://{request_host}/notifications/send'
+        httpx_mock.add_response(url=url, json=response, status_code=201)
+        return url
+
+    return mock_request
+
+
+@pytest.fixture(autouse=True, scope='function')
+def mox_tasks_retries(mocker):
+    mocker.patch('partners.tasks.notification', 'MAX_RETRIES', 1)
+    mocker.patch('partners.tasks.notification', 'RETRY_TIMEOUT', 1)

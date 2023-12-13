@@ -34,50 +34,11 @@ from tools.helpers import get_path_from_parent
 from tools.serializers import FieldAccessModelSerializer
 from tools.utils import make_batch_request, bind_system_to_cdb_organization
 from .authentication import check_user_can_administer_system
+from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
 STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STATE_CHOICES}
 STATE_CHOICES_STR_MAP = {choice[1]: choice[0] for choice in ChannelPartnerStates.STATE_CHOICES}
-
-
-# def get_to_user_relation(to_user_rel: QuerySet[OrganizationToUser] | QuerySet[ChannelPartnerToUser],
-#                          instance: ChannelPartner | Organization,
-#                          instance_lookup: str) -> Optional[OrganizationToUser | ChannelPartnerToUser]:
-#     # todo. move it serializer and use with @cached_property decoration
-#     if not all([to_user_rel, instance]):
-#         return
-#     return next(filter(lambda rel: getattr(rel, instance_lookup, None) == instance.id, to_user_rel), None)
-#
-#
-# def get_organization_permissions_list(to_user_rel: QuerySet[OrganizationToUser],
-#                                       roles: dict,
-#                                       instance: Organization) -> Set[str]:
-#     if not all([to_user_rel, roles, instance]):
-#         return set()
-#     permissions = set()
-#     for instance_to_user in to_user_rel:
-#         if not instance_to_user.organization_id == instance.id or instance_to_user.system_group_id is not None:
-#             continue
-#         for role_uuid in instance_to_user.roles:
-#             permissions = permissions.union(roles.get(role_uuid, {}).get('permissions', set()))
-#         # there is still only one OrganizationToUser that have organization permissions
-#         return permissions
-#     return permissions
-#
-#
-# def get_channel_partner_permissions_list(to_user_rel: QuerySet[ChannelPartnerToUser],
-#                                          roles: dict,
-#                                          instance: ChannelPartner) -> Set[str]:
-#     if not all([to_user_rel, roles, instance]):
-#         return set()
-#     for instance_to_user in to_user_rel:
-#         if not instance_to_user.channel_partner_id == instance.id:
-#             continue
-#         permissions = set()
-#         for role_uuid in instance_to_user.roles:
-#             permissions = permissions.union(roles.get(role_uuid, {}).get('permissions', set()))
-#         return permissions
-#     return set()
 
 
 class CodeChoiceField(serializers.ChoiceField):
@@ -392,13 +353,12 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
                                              f" and cannot be added to channel partner {channel_partner.name}.")
         return user
 
-
     def create(self, validated_data):
         user = validated_data.get('user').get('email')
         role = validated_data.get('roleId') or validated_data.get('role')
         title = validated_data.get('title')
         channel_partner = self.context.get('channel_partner')
-
+        created_by = getattr(self.context.get('request'), 'user', None)
         # In case of some situation with multiple user records for same entity
         try:
             relation, _ = ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
@@ -410,6 +370,10 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         relation.title = title
         relation.roles = [role.id]
         relation.save()
+        added_channel_partner_role_task.apply_async(args=[
+            relation.channel_partner_id, created_by.id, relation.user_id,
+            settings.INSTANCE_CONFIG.get_instance_host(request=self.context.get('request'))
+        ])
         return relation
 
 
@@ -516,6 +480,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         user, _ = CloudUser.objects.get_or_create(email=validated_data['email'])
         title = validated_data.get('title', '')
         organization = self.context.get('organization')
+        created_by = self.context['request'].user
         try:
             relation, created = OrganizationToUser.objects.get_or_create(
                 user=user, organization=organization, system_group=None)
@@ -528,6 +493,10 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         relation.title = title
         relation.roles = [role.id] if role else []
         relation.save()
+        added_organization_role_task.apply_async(args=[
+            relation.organization_id, created_by.id, relation.user_id,
+            settings.INSTANCE_CONFIG.get_instance_host(request=self.context.get('request'))
+        ])
         OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=False).delete()
         user = CloudUser.objects.prefetch_related(
             Prefetch('organizationtouser_set',
@@ -1324,6 +1293,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         group = self.context.get('group')
         organization = group.organization
         user = validated_data['user']
+        created_by = self.context['request'].user
         relations = OrganizationToUser.objects.filter(user=user, organization=organization,
                                                       system_group=group).order_by('created_ts')
         relation = relations.first()
@@ -1338,6 +1308,10 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
                 relation.created_ts = first_relation.created_ts
         relation.roles = [role.id]
         relation.save()
+        added_organization_role_task.apply_async(args=[
+            relation.organization_id, created_by.id, relation.user_id,
+            settings.INSTANCE_CONFIG.get_instance_host(request=self.context.get('request'))
+        ])
         # Delete User's Organization Roles
         OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=True).delete()
         return relation

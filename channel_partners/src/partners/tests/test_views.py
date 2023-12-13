@@ -1,3 +1,4 @@
+import json
 import random
 from uuid import uuid4
 
@@ -222,7 +223,8 @@ class TestOrganizationUserViewSet:
     #     self.batch_url = 'https://cloud-test.hdw.mx/cdb/systems/users/batch'
 
     def test_create_200(self, organization_factory, org_user_factory, system_factory,
-                    mock_auth_with_user, arf, random_email):
+                        mock_auth_with_user, arf, random_email, mock_account_status,
+                        mock_get_customization_request, mock_post_notification, httpx_mock):
         gen_count = 10
         org = organization_factory()
         admin_user = org_user_factory(organization=org)
@@ -233,6 +235,9 @@ class TestOrganizationUserViewSet:
             "role": role.name
         }
         request = arf.post('/', data=new_user_data, format='json')
+        mock_account_status(email=random_email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
         mock_auth_with_user(admin_user)
         view = OrganizationUserViewSet.as_view(actions={'post': 'create'}, detail=True)
         response = view(request, parent_lookup_organization=org.id)
@@ -245,7 +250,8 @@ class TestOrganizationUserViewSet:
 
 
     def test_update_200(self, organization_factory, org_user_factory, system_factory,
-                    mock_auth_with_user, arf, random_email):
+                        mock_auth_with_user, arf, random_email, mock_account_status,
+                        mock_get_customization_request, mock_post_notification, httpx_mock):
         gen_count = 10
         org = organization_factory()
         admin_user = org_user_factory(organization=org)
@@ -257,6 +263,9 @@ class TestOrganizationUserViewSet:
         }
         user = org_user_factory(email=user_data['email'], organization=org)
         request = arf.post('/', data=user_data, format='json')
+        mock_account_status(email=random_email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
         mock_auth_with_user(admin_user)
         view = OrganizationUserViewSet.as_view(actions={'post': 'create'}, detail=True)
         response = view(request, parent_lookup_organization=org.id)
@@ -441,7 +450,8 @@ class TestChannelPartnerUserViewSet:
         assert response.data['detail']
         assert "is the only Administrator and may not be demoted or removed" in response.data['detail']
 
-    def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email):
+    def test_create(self, channel_partner_factory, cp_user_factory, mock_auth_with_user, arf, random_email,
+                    mock_account_status, mock_get_customization_request, mock_post_notification, httpx_mock):
         email = random_email
         cp = channel_partner_factory()
         cp_admin = cp_user_factory(channel_partner=cp)
@@ -452,9 +462,18 @@ class TestChannelPartnerUserViewSet:
         }
         view = ChannelPartnerUserViewSet.as_view(actions={'post': 'create'})
         request = arf.post('/', data=data, format='json')
+        mock_account_status(email=email, active=False)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
         mock_auth_with_user(cp_admin)
         response = view(request, parent_lookup_channel_partner=cp.id)
         assert response.status_code == 200
+        notification_send_request = httpx_mock.get_request(url=notification_send_url)
+        notification_data = json.loads(notification_send_request.content)
+        assert notification_data['type'] == 'cps_partner_invite'
+        assert notification_data['user_email'] == email
+        assert notification_data['message']['partner_name'] == cp.name
+        assert notification_data['message']['sharer_name'] == getattr(cp_admin, 'full_name', cp_admin.user.email)
 
     def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
                              mock_auth_with_user, arf, org_user_factory, random_email):
@@ -902,7 +921,9 @@ class TestSystemGroupUserViewSet:
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 403
 
-    def test_create_200(self, mock_auth_with_user, arf, org_user_factory):
+    def test_create_200(self, mock_auth_with_user, arf, org_user_factory,
+                        mock_account_status, mock_get_customization_request,
+                        mock_post_notification, httpx_mock):
         view = SystemGroupUserViewSet.as_view(actions={'post': 'create'})
         user_rel = org_user_factory(organization=self.org)
         user = user_rel.user
@@ -912,12 +933,15 @@ class TestSystemGroupUserViewSet:
         }
         request = arf.post('/', data=data)
         mock_auth_with_user(self.org_user)
-
+        mock_account_status(email=user.email, active=True)
+        mock_get_customization_request()
+        notification_send_url = mock_post_notification()
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 201
         assert response.data['email'] == user.email
         assert response.data['roles'] == ['Power User']
-
+        notification_data = json.loads(httpx_mock.get_request(url=notification_send_url).content)
+        assert notification_data['type'] == 'cps_organization_share'
         assert not OrganizationToUser.objects.filter(
             organization=self.org, user=user, system_group__isnull=True
         ).exists()
