@@ -7,7 +7,7 @@ import { FrameTracker, FocusTracker, MosScoreTracker, BytesReceivedTracker } fro
 import { MediaServerPeerConnection } from './media-server-peer-connection';
 import { SignalingMessage, PlaybackDetails, ConnectionError, SdpInit, IceInit, ErrorMsg, StreamQuality, IntRange, MimeInit, AvailableStreams, ApiVersions, Stream, RequiresTranscoding, isRequiresTranscoding, WebRtcUrlFactoryOrConfig, WebRtcUrlFactory, WebRtcUrlConfig, TargetStream } from './types';
 import { BaseTracker } from './trackers/base-tracker';
-import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId } from './utils';
+import { ConnectionQueue, WithSkip, calculateElementFocus, calculateWindowFocusThreshold, getConnectionKey, cleanId, fetchWithRedirectAuthorization } from './utils';
 
 type StreamsConfig = AvailableStreams | AvailableStreams[];
 
@@ -855,7 +855,7 @@ export class WebRTCStreamManager {
         const relayHost = new URL(this.webRtcUrlFactory({ position: 0 })).host;
         const endpoint = `https://${relayHost}/rest/v2/system/info?_with=version`;
         const fallback = { version: '5.1' }
-        const version = await fetch(
+        const version = await fetchWithRedirectAuthorization(
             endpoint,
             { headers: { authorization: `Bearer ${this.accessToken}` }}
         ).then(
@@ -915,7 +915,7 @@ export class WebRTCStreamManager {
             const fallback = ({ parameters: { mediaStreams: { streams: [] as Stream[] } }, serverId }) as const;
             const streamInfoEndpoint =
                 `https://${relayHost}/rest/v2/devices/${this.cameraId}?_keepDefault=true&_with=parameters.mediaStreams.streams.codec,parameters.mediaStreams.streams.encoderIndex,serverId`;
-            const fetchStreams = fetch(
+            const fetchStreams = fetchWithRedirectAuthorization(
                 streamInfoEndpoint,
                 { headers: { authorization: `Bearer ${this.accessToken}` }}
                 ).then(response => response.json() as Promise<typeof fallback>).catch(() => fallback);
