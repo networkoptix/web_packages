@@ -148,8 +148,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         .map(cleanId)
                         .forEach(cam => this.archivesPresent.add(cam));
                 });
+
                 this.updateCameraSettingsMenu();
-                this.updateContent();
             });
     }
 
@@ -623,7 +623,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.system.cameraManager.getCameras(),
             ]);
         }
-
         this.updateCameraSettingsMenu();
 
         if (this.editUsers()) {
@@ -825,7 +824,9 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     path: menus.systemSettings.cameras.path,
                     level3: [],
                 };
-                this.content.level1.push(camerasNode);
+                // Sometimes cameras node creation may be delayed
+                // this will just ensure the node will appear in correct place
+                this.content.level1.splice(1, 0, camerasNode);
             }
             if (this.system.cameraManager.cameras) {
                 this.system.cameraManager.cameras.sort(
@@ -850,6 +851,8 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             } else {
                 camerasNode.level3 = [];
             }
+
+            this.updateContent();
         } else {
             this.content.level1 = this.content.level1.filter(
                 node => node.id !== menus.systemSettings.cameras.id,
