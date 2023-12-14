@@ -106,6 +106,10 @@ class CloudUser(models.Model):
     def __str__(self):
         return self.email
 
+    @property
+    def full_name(self) -> str:
+        return "John Smith"
+
     def is_authenticated(self):
         return True
 

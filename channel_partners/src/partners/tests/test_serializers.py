@@ -536,7 +536,7 @@ class TestOrganizationUserSerializer:
         assert notification_data['type'] == 'cps_organization_invite'
         assert notification_data['user_email'] == self.user.email
         assert notification_data['message']['organization_name'] == self.org.name
-        assert notification_data['message']['sharer_name'] == getattr(org_admin, 'full_name', org_admin.user.email)
+        assert notification_data['message']['sharer_name'] == org_admin.user.full_name
 
         relations = OrganizationToUser.objects.filter(organization=self.org, user=self.user)
         assert relations.count() == 1
@@ -588,6 +588,7 @@ class TestOrganizationUserSerializer:
         serializer.save()
         assert not serializer.errors
         assert serializer.data['email'] == user.email
+        assert serializer.data['fullName'] == user.full_name
         assert len(serializer.data['groupRoles']) == 0
         assert serializer.data['roles'] == [self.org_adm_name]
         assert not OrganizationToUser.objects.filter(user=user, organization=self.org, system_group__isnull=False).exists()
@@ -632,6 +633,7 @@ class TestSystemGroupUserSerializer:
 
         assert serializer.data
         assert serializer.data['email'] == self.users[0].user.email
+        assert serializer.data['fullName'] == self.users[0].user.full_name
         assert serializer.data['roles'] == self.users[0].roles_name
 
         serializer = SystemGroupUserSerializer(instance=self.users, many=True)
@@ -639,6 +641,7 @@ class TestSystemGroupUserSerializer:
         assert serializer.data
         for i, data in enumerate(serializer.data):
             assert data['email'] == self.users[i].user.email
+            assert data['fullName'] == self.users[i].user.full_name
             assert data['roles'] == self.users[i].roles_name
 
     def test_create(self):

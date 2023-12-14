@@ -246,6 +246,7 @@ class TestOrganizationUserViewSet:
         assert OrganizationToUser.objects\
             .filter(user__email=new_user_data["email"], organization=org, roles__contains=[role.id]).exists()
         assert response.data["email"] == new_user_data["email"]
+        assert response.data['fullName'] == 'John Smith'
         assert response.data["roles"] == [role.name]
 
 
@@ -273,6 +274,7 @@ class TestOrganizationUserViewSet:
             .filter(user__email=user_data["email"], organization=org).count() == 1
         assert response.status_code == 200
         assert response.data["email"] == user_data["email"]
+        assert response.data['fullName'] == 'John Smith'
         user_data["title"] = f"{uuid4()}"
         request = arf.post('/', data=user_data, format='json')
         response = view(request, parent_lookup_organization=org.id)
@@ -473,7 +475,7 @@ class TestChannelPartnerUserViewSet:
         assert notification_data['type'] == 'cps_partner_invite'
         assert notification_data['user_email'] == email
         assert notification_data['message']['partner_name'] == cp.name
-        assert notification_data['message']['sharer_name'] == getattr(cp_admin, 'full_name', cp_admin.user.email)
+        assert notification_data['message']['sharer_name'] == cp_admin.user.full_name
 
     def test_user_validation(self, channel_partner_factory, cp_user_factory, organization_factory,
                              mock_auth_with_user, arf, org_user_factory, random_email):
@@ -889,6 +891,7 @@ class TestSystemGroupUserViewSet:
         assert len(response.data) == len(self.users)
         for i, data in enumerate(response.data):
             assert data['email'] == self.users[i].user.email
+            assert data['fullName'] == self.users[i].user.full_name
             assert data['roles'] == self.users[i].roles_name
 
     def test_retrieve_403(self, mock_auth_with_user, arf):
@@ -906,6 +909,7 @@ class TestSystemGroupUserViewSet:
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 200
         assert response.data['email'] == self.users[0].user.email
+        assert response.data['fullName'] == self.users[0].user.full_name
         assert response.data['roles'] == self.users[0].roles_name\
 
     def test_create_403(self, mock_auth_with_user, arf, org_user_factory):
@@ -922,7 +926,7 @@ class TestSystemGroupUserViewSet:
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 403
 
-    def test_create_200(self, mock_auth_with_user, arf, org_user_factory,
+    def test_create_201(self, mock_auth_with_user, arf, org_user_factory,
                         mock_account_status, mock_get_customization_request,
                         mock_post_notification, httpx_mock):
         view = SystemGroupUserViewSet.as_view(actions={'post': 'create'})
@@ -940,6 +944,7 @@ class TestSystemGroupUserViewSet:
         response = view(request, parent_lookup_system_group=str(self.group.id), email=self.users[0].user.email)
         assert response.status_code == 201
         assert response.data['email'] == user.email
+        assert response.data['fullName'] == user.full_name
         assert response.data['roles'] == ['Power User']
         notification_data = json.loads(httpx_mock.get_request(url=notification_send_url).content)
         assert notification_data['type'] == 'cps_organization_share'

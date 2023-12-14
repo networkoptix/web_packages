@@ -330,6 +330,7 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
 
 class ChannelPartnerUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(source='user.email', required=True)
+    fullName = serializers.CharField(source='user.full_name', read_only=True)
     roles = serializers.ListField(source='roles_name', read_only=True, default=[], child=serializers.CharField())
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
     role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
@@ -341,7 +342,7 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = ChannelPartnerToUser
-        fields = ['email', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId']
+        fields = ['email', 'fullName', 'roles', 'role', 'title', 'created', 'rolesIds', 'roleId']
 
     def validate_email(self, value: str):
         user, created = CloudUser.objects.get_or_create(email=value)
@@ -425,6 +426,7 @@ class GroupRolesSerializer(serializers.Serializer):
 # TODO: This serializer looks like spaghetti code. Need to consider how we store and generate this data.
 class OrganizationUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
+    fullName = serializers.CharField(source='full_name', read_only=True)
     roles = serializers.SerializerMethodField(method_name='get_roles', read_only=True)
     rolesIds = serializers.SerializerMethodField(method_name='get_roles_ids', read_only=True)
     groupRoles = GroupRolesSerializer(source="organization_relations", many=True, read_only=True)
@@ -439,7 +441,7 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = CloudUser
-        fields = ['email', 'roles', 'role', 'rolesIds', 'roleId', 'title', 'created', 'groupRoles']
+        fields = ['email', 'fullName', 'roles', 'role', 'rolesIds', 'roleId', 'title', 'created', 'groupRoles']
 
     def get_roles(self, obj: CloudUser) -> List[str]:
         relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
@@ -1259,7 +1261,8 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         membershipType = serializers.ChoiceField(source='_meta.model_name', read_only=True,
                                        choices=[Organization._meta.model_name, SystemGroup._meta.model_name])
 
-    email = serializers.EmailField(source='user.email', required=True)
+    email = serializers.EmailField(source='user.email')
+    fullName = serializers.CharField(source='user.full_name', read_only=True)
     roles = serializers.ListField(source='roles_name', allow_empty=True, allow_null=True, read_only=True)
     rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
     # todo. cache queryset. should we limit it to only roles containing system_role only
@@ -1275,6 +1278,7 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         model = OrganizationToUser
         fields = [
             'email',
+            'fullName',
             'roles',
             'role',
             'roleId',
