@@ -795,6 +795,7 @@ class TestOrganizationViewSet:
             for data in response.data['results']:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
+                    assert data['ownRolesIds']
                     assert data['ownRolesIds'] == user.roles
                     assert data['ownRoles'] == user.roles_name
                 else:

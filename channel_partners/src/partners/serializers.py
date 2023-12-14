@@ -426,7 +426,7 @@ class GroupRolesSerializer(serializers.Serializer):
 class OrganizationUserSerializer(serializers.ModelSerializer):
     email = serializers.EmailField(required=True)
     roles = serializers.SerializerMethodField(method_name='get_roles', read_only=True)
-    rolesIds = serializers.ListField(source='roles', read_only=True, default=[], child=serializers.CharField())
+    rolesIds = serializers.SerializerMethodField(method_name='get_roles_ids', read_only=True)
     groupRoles = GroupRolesSerializer(source="organization_relations", many=True, read_only=True)
     role = (extend_schema_field({'type': 'string', 'deprecated': True})(serializers.SlugRelatedField)(
         slug_field='name', write_only=True, required=False, queryset=OrganizationRole.objects.all()))
@@ -445,6 +445,13 @@ class OrganizationUserSerializer(serializers.ModelSerializer):
         relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
         if relation:
             return relation.roles_name
+        else:
+            return []
+
+    def get_roles_ids(self, obj: CloudUser) -> List[uuid.UUID]:
+        relation = next(filter(lambda rel: rel.system_group is None, obj.organization_relations), None)
+        if relation:
+            return relation.roles
         else:
             return []
 
