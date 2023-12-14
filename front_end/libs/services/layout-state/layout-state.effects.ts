@@ -109,7 +109,6 @@ export class LayoutStateEffects {
         return this.actions.pipe(
             ofType(SharedLayoutsActions.saveLayout),
             map(({ layoutIds }) => layoutIds),
-            distinctUntilChanged(isEqual),
             switchMap(layoutsToSave => {
                 return this.store.select(selectUnsavedLayoutsState).pipe(
                     map(layouts => layouts.filter(({ id }) => layoutsToSave.includes(id))),
