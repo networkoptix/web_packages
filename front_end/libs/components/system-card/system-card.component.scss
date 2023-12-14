@@ -4,9 +4,11 @@
 
 :host {
     .system-button {
+        height: 100%;
         user-select: none;
         cursor: pointer;
         overflow: hidden;
+        margin-bottom: 0;
 
         h2 {
             @include mixins.ellipsis;
