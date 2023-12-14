@@ -981,6 +981,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     public getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
+            timeout: this.storageRequestTimeout,
         });
         const cameraKeyMap = {
             serverId: true,

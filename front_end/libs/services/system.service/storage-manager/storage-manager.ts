@@ -71,7 +71,14 @@ export class StorageManager extends StorageState {
         const settings = (await firstValueFrom(this.system.updateOrGetSystemSettings())).reply
             ?.settings;
         try {
-            const { quality, backupNewCameras } = JSON.parse((<any>settings).backupSettings);
+            // TODO: 6.0 returns a parsed backupSettings object, 5.0 returns a string.
+            // Tried adding backupSettings to the Settings type but it broke a bunch of stuff.
+            // Seems that a lot of places expect all values in settings to be strings.
+            const settingsAny = settings as any;
+            const { quality, backupNewCameras } =
+                typeof settingsAny.backupSettings === 'string'
+                    ? JSON.parse(settingsAny.backupSettings)
+                    : settingsAny.backupSettings;
             await this.system.cameraManager.updateSystemCameras();
             const backup = this.system.cameraManager.cameras.some(({ backupPolicy }) =>
                 ['byDefault', 'on'].includes(backupPolicy),
