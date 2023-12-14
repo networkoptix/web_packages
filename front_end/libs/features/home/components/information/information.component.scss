@@ -16,6 +16,7 @@
         &.in-edit-mode {
             border-bottom: 1px solid var(--CP-pane-header-border);
             margin-bottom: 8px;
+            padding-bottom: 8px;
 
             .header-title {
                 @extend h4;
