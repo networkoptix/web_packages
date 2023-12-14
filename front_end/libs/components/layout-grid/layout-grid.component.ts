@@ -537,7 +537,8 @@ export class NxLayoutGridComponent {
                     const unknownItem = this.layoutItemLookup[resourceId];
                     if (assertResourceOfType.camera(unknownItem)) {
                         const initialAspect =
-                            unknownItem.details.parameters?.overrideAr ||
+                            (!unknownItem.details.parameters.VideoLayout &&
+                                unknownItem.details.parameters?.overrideAr) ||
                             unknownItem.details.defaultRatio;
                         const isRotated = Boolean(
                             (Math.round(
@@ -1351,8 +1352,8 @@ export class NxLayoutGridComponent {
         const aspectRatio = cellAspectRatio || DEFAULT_ASPECT_RATIO;
         const spacing = cellSpacing ?? 0;
         const { width, height, originX: x, originY: y } = this.calculateSize(items);
-        const columns = items.length <= 1 ? 1 : fixedWidth || width;
-        const rows = items.length <= 1 ? 1 : fixedHeight || height;
+        const columns = width;
+        const rows = height;
         // const widthPercent = 1 / columns * 100;
         // const heightPercent = 1 / rows * 100;
         const gridWrapper = {

@@ -428,3 +428,28 @@ export function buildTopLevelKeyMap<T>(
         true
     >;
 }
+
+export function extractVideoLayout(videoLayout: string): {
+    width: number;
+    height: number;
+    sensors: number[];
+    gridAspect: number;
+} {
+    const {
+        height: _height = '1',
+        sensors: _sensors = '',
+        width: _width = '1',
+    } = Object.fromEntries(new URLSearchParams(videoLayout.replace(/;/g, '&')).entries());
+
+    const width = parseInt(_width);
+    const height = parseInt(_height);
+    const sensors = _sensors.split(',').map(val => parseInt(val));
+    const gridAspect = width / height;
+
+    return {
+        width,
+        height,
+        sensors,
+        gridAspect,
+    };
+}

@@ -177,6 +177,7 @@ const camObjParamKeys = {
             value: { maxFps: true },
         },
     },
+    VideoLayout: true,
     mediaStreams: {
         streams: { codec: true, encoderIndex: true, resolution: true },
     },

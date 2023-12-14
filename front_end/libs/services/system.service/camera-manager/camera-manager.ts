@@ -9,7 +9,7 @@ import type {
     CameraValues,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { cleanId, KeyFilter, MS } from '@utils/general';
+import { cleanId, KeyFilter, MS, extractVideoLayout } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
 
@@ -301,6 +301,11 @@ export class CameraManager {
             .split('x')
             .map(Number);
         const defaultRatio = [x, y].every(Boolean) ? x / y : 1920 / 1080;
+
+        if (!parameters.overrideAr && parameters.VideoLayout) {
+            parameters.overrideAr =
+                extractVideoLayout(parameters.VideoLayout).gridAspect * defaultRatio;
+        }
 
         const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
         const motionLowResEnabled =

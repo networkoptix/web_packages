@@ -21,6 +21,7 @@ import {
     startWith,
     switchMap,
     tap,
+    timeout,
 } from 'rxjs/operators';
 
 import type { DropdownItem } from '@components/dropdowns/generic/dropdown.component.types';
@@ -54,7 +55,7 @@ import {
 import { NxSystemServer } from '@services/system.service/system-types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { selectResourcesValuesBySystemId } from '@store/system-resources/system-resources.selectors';
-import { alphaNumericSort, cleanId, dirtyId } from '@utils/general';
+import { alphaNumericSort, cleanId, dirtyId, extractVideoLayout } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 interface Resource {
@@ -528,23 +529,37 @@ export class NxLayoutViewComponent {
     });
 
     createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
-        const layoutItems = await firstValueFrom(this.layoutItemLookup$);
-        const node = layoutItems[`{${id}}`];
-        const { details } = node || {};
+        const node = await firstValueFrom(
+            this.layoutItemLookup$.pipe(
+                map(layoutItems => layoutItems[dirtyId(id)]),
+                filter(Boolean),
+                timeout({ each: 10000, with: () => Promise.resolve(false as const) }),
+            ),
+        );
 
-        if (!details) {
+        if (!node) {
             // Redirect to 404 if no layout or device found.
             await this.pageService.redirect404();
+            return;
         }
 
         let rotation = 0;
         let rotatedAspect = false;
         let aspect = 0;
+        let bottom = 1;
+        let right = 1;
 
         if (assertResourceOfType.camera(node)) {
             rotation = node.details.parameters?.rotation ?? 0;
             rotatedAspect = Boolean(rotation % 180);
-            aspect = node.details.parameters?.overrideAr || node.details.defaultRatio;
+            if (node.details.parameters?.VideoLayout) {
+                const { height, width } = extractVideoLayout(node.details.parameters.VideoLayout);
+                aspect = node.details.defaultRatio;
+                bottom = rotatedAspect ? width : height;
+                right = rotatedAspect ? height : width;
+            } else {
+                aspect = node.details.parameters?.overrideAr || node.details.defaultRatio;
+            }
         }
 
         const cellAspectRatio = rotatedAspect ? 1 / aspect : aspect;
@@ -560,7 +575,7 @@ export class NxLayoutViewComponent {
             id,
             items: [
                 {
-                    bottom: 1,
+                    bottom,
                     contrastParams: {
                         blackLevel: 0.001,
                         enabled: false,
@@ -583,7 +598,7 @@ export class NxLayoutViewComponent {
                     left: 0,
                     resourceId: `{${id}}`,
                     resourcePath: '',
-                    right: 1,
+                    right,
                     rotation: rotation || 0,
                     top: 0,
                     zoomBottom: 0,
