@@ -1,4 +1,4 @@
-Hello, {{message.userFullName}}
+Merhaba, {{message.userFullName}}
 
 {{message.sharer_name}} has shared access to organization  "{{message.organization_name}}" with you.
 Functionality is now fully available.
