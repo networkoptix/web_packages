@@ -11,6 +11,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxMultiSelectDropdown } from '@components/dropdowns/multi-select/multi-select.component';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxMultiLineEllipsisComponent } from '@components/multi-line-ellipsis/mle.component';
+import { NxMultiLineEllipsisClampComponent } from '@components/multi-line-ellipsis-clamp/mle-clamp.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxSwitchComponent } from '@components/switch/switch.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
@@ -36,6 +37,7 @@ import { NxSystemUsersComponent } from './users.component';
         NxAlertBlockComponent,
         NxMultiLineEllipsisComponent,
         NxApplyComponent,
+        NxMultiLineEllipsisClampComponent,
     ],
     providers: [],
     declarations: [
