@@ -570,7 +570,7 @@ class OrganizationNesetedViewSet(NestedViewSetMixin, mixins.ListModelMixin, Pare
     tags=['Organizations'],
 )
 @extend_schema_view(
-    list=extend_schema(summary='Get list of user\'s Organizations'),
+    list=extend_schema(summary='Get list of user\'s Organizations', parameters=[OrganizationQueryParamsSerializer]),
     retrieve=extend_schema(summary='Get an Organization'),
     create=extend_schema(summary='Create an Organization', extensions={'x-permission': f'{ChannelPartner.permissions.add_remove_organizations} for channelPartner'}),
     partial_update=extend_schema(summary='Update properties of an Organization', extensions={'x-permission': f'{Organization.permissions.configure_organization} for Organization'}),
@@ -606,8 +606,13 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     def get_queryset(self):
         if self.detail:
             return self.queryset.filter(channel_partner__cloud_host=self.request.cloud_host)
-        else:
-            return self.queryset.filter(channel_partner__cloud_host=self.request.cloud_host, users=self.request.user)
+        param_serializer = OrganizationQueryParamsSerializer(data=self.request.query_params)
+        param_serializer.is_valid(raise_exception=True)
+        query = Q(channel_partner__cloud_host=self.request.cloud_host, users=self.request.user)
+        if param_serializer.validated_data.get('includeChildOrgs'):
+            query |= Q(channel_partner__channelpartnertouser__user=self.request.user)
+        queryset = self.queryset.filter(query)
+        return queryset
 
     @extend_schema(request=CreateOrganizationSerializer, responses=OrganizationSerializer)
     def create(self, request, *args, **kwargs):

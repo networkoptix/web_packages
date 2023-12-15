@@ -208,6 +208,10 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
         return instance
 
 
+class OrganizationQueryParamsSerializer(serializers.Serializer):
+    includeChildOrgs = serializers.BooleanField(default=False)
+
+
 class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'organization'
 

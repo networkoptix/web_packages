@@ -857,6 +857,54 @@ class TestOrganizationViewSet:
         org.refresh_from_db()
         assert org.name == data['name']
 
+    def test_list(self, channel_partner_factory, organization_factory, cp_user_factory, org_user_factory,
+                  arf, mock_auth_with_user):
+        root = channel_partner_factory()
+        cp = channel_partner_factory(parent_channel_partner=root)
+        other_cp = channel_partner_factory(parent_channel_partner=root)
+        other_org = organization_factory(channel_partner=other_cp)
+        org = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(organization=org)
+        other_cp_user = cp_user_factory(channel_partner=other_cp, email=org_user.user.email)
+        cp_user = cp_user_factory(channel_partner=cp)
+        root_user = cp_user_factory(channel_partner=root)
+        mock_auth_with_user(org_user)
+        view = OrganizationViewSet.as_view(actions={'get': 'list'})
+        request = arf.get('/?includeChildOrgs=true')
+        response = view(request)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 2
+        assert response.data['results'][0]['id'] in [str(org.id), str(other_org.id)]
+
+        request = arf.get('/?')
+        response = view(request)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 1
+        assert response.data['results'][0]['id'] == str(org.id)
+
+        mock_auth_with_user(cp_user)
+        request = arf.get('/?includeChildOrgs=true')
+        response = view(request)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 1
+        assert response.data['results'][0]['id'] == str(org.id)
+
+        request = arf.get('/?includeChildOrgs=false')
+        response = view(request)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 0
+
+        request = arf.get('/?')
+        response = view(request)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 0
+
+        mock_auth_with_user(root_user)
+        request = arf.get('/?includeChildOrgs=true')
+        response = view(request)
+        assert response.status_code == 200
+        assert len(response.data['results']) == 0
+
 
 class TestSystemGroupUserViewSet:
 
