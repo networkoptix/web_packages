@@ -64,7 +64,6 @@ export const State: {
         errorText: {
             knownBothSystemsConnectedToCloud: '',
             unknownBothSystemsConnectedToCloud: '',
-            incompatibleCloudToNonCloud: '',
             differentOwners: '',
             duplicateServers: '',
             noServerFound: '',
