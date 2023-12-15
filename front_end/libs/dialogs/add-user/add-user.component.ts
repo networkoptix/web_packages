@@ -13,6 +13,7 @@ import {
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
+import { NxMultiLineEllipsisClampComponent } from '@components/multi-line-ellipsis-clamp/mle-clamp.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -44,6 +45,7 @@ import type { AddUser as DT } from '../dialogs.types';
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         NxMultiSelectDropdown,
+        NxMultiLineEllipsisClampComponent,
     ],
 })
 export class AddUserModalContent extends ModalBase<DT['return']> {

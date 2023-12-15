@@ -93,12 +93,16 @@
                     [moreLeftPadding]="true"
                 >
                 </nx-multi-select>
-                <span
+                <nx-ml-ellipsis-clamp
                     *ngIf="user.groupIds.length === 1 && accessDescription"
-                    class="help-block"
-                    data-testid="addUserHelpBlock"
-                    [innerText]="accessDescription | translate"
-                ></span>
+                    [viewLines]="5"
+                >
+                    <span
+                        class="help-block"
+                        data-testid="addUserHelpBlock"
+                        [innerText]="accessDescription | translate"
+                    ></span>
+                </nx-ml-ellipsis-clamp>
             </ng-template>
             <ng-container *ngIf="!useGroups$$(); else groupsDropdown">
                 <label
