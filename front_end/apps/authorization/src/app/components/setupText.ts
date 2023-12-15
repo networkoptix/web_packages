@@ -3,35 +3,38 @@
  */
 import staticLang from '@language_static';
 
+interface AuthHeader {
+    header: string;
+    subHeader?: string;
+    subHeaderSuffix?: string;
+}
+
 export interface TemplateText {
-    [clientType: string]: {
-        header: string;
-        subHeader?: string | undefined;
-        subHeaderSuffix?: string | undefined;
-    };
+    [clientType: string]: AuthHeader;
 }
 
 export function setupText(type?: string): TemplateText {
     const auth = staticLang.authorize;
     const subHeader = auth.asAccountSubheader;
 
-    const connect = {
+    const connect: AuthHeader = {
         header: auth.connectHeader,
         subHeader: auth.toAccountSubheader,
     };
-    const passwordApply = {
+    const passwordApply: AuthHeader = {
         header: auth.loginCloudHeader,
         subHeader,
         subHeaderSuffix: auth.passwordApply,
     };
-    const login = {
+    const login: AuthHeader = {
         header: auth.loginCloudHeader,
         subHeader,
     };
 
     if (type === 'email') {
         connect.subHeader = auth.connectSubheader;
-        login.subHeader = '';
+        delete login.subHeader;
+        delete passwordApply.subHeader;
     }
 
     return {
