@@ -19,6 +19,10 @@
         padding: 10px !important;
 
         .video {
+            display: flex;
+            justify-content: center;
+            width: 480px;
+            height: 270px;
             background-color: var(--bookmarks-card-video-bg);
 
             .clip {
