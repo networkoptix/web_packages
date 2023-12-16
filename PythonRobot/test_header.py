@@ -1,18 +1,19 @@
 from pathlib import Path
 
-from NoptixLibrary.suite import Mediaserver, CloudAccount
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
 def anon_header_correct():
-    """new: Anonymous Header shows correct items"""
+    """new: Anonymous Header shows correct items."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -27,7 +28,7 @@ def anon_header_correct():
 
 
 def logged_in_header_correct(server: Mediaserver):
-    """new: Logged in Header shows correct items"""
+    """new: Logged in Header shows correct items."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)

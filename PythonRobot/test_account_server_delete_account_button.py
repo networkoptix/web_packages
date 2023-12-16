@@ -1,16 +1,15 @@
-"""robot_tests/test-cases/account-server.robot"""
+"""robot_tests/test-cases/account-server.robot."""
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.account_page import AccountPage
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
@@ -20,7 +19,8 @@ def delete_account_button_becomes_enabled(
         server_2: Mediaserver,
         ):
     """
-    1. Delete account button becomes enabled
+    1. Delete account button becomes enabled.
+
     [Tags] C69856 delete_account
     """
     with get_chrome() as driver:

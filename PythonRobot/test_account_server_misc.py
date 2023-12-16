@@ -1,13 +1,12 @@
 from contextlib import ExitStack
 from pathlib import Path
 
-from colorama import Fore
-
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from browsers.chrome import get_chrome
+from colorama import Fore
 from email_access import get_random_email
 from pages.account_page import AccountPage
 from pages.account_page import SuccessToast
@@ -24,7 +23,8 @@ def name_change_shown_in_system(
         server: Mediaserver,
         ):
     """
-    4. Change first and last name shows in system
+    4. Change first and last name shows in system.
+
     [Tags] C41573 C30655 CLOUD-10176
     """
     # TODO: C30655 was copied from robot test but it involves Desktop Client and seems unrelated
@@ -82,7 +82,8 @@ def owner_can_not_delete_themselves(
         server: Mediaserver,
         ):
     """
-    5. User who owns a system cannot remove themselves
+    5. User who owns a system cannot remove themselves.
+
     [Tags] C69855 delete_account
     """
     owner = server.get_cloud_owner()
@@ -104,7 +105,8 @@ def delete_account_button_is_enabled(
         user_with_shared_systems: CloudAccount,
         ):
     """
-    6. Delete account button is enabled
+    6. Delete account button is enabled.
+
     [Tags] C69854 delete account
     """
     with ExitStack() as stack:
@@ -138,7 +140,8 @@ def user_deleted_from_all_shared_systems(
         *servers: Mediaserver,
         ):
     """
-    2. After account deletion user is deleted from all systems that were shared with this user
+    2. After account deletion user is deleted from all systems that were shared with this user.
+
     [Tags] C69862 delete_account
     """
     [server_1, server_2, server_3] = servers

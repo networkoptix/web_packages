@@ -1,20 +1,20 @@
-"""robot_tests/test-cases/health-monitor.robot"""
+"""robot_tests/test-cases/health-monitor.robot."""
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def json_upload_works(server: Mediaserver, rb: RobotVariables):
     """
-    4. Json upload works
+    4. Json upload works.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -34,7 +34,8 @@ def json_upload_works(server: Mediaserver, rb: RobotVariables):
 
 def can_close_out_of_json_imported_mode(server: Mediaserver, rb: RobotVariables):
     """
-    10. Can close out of json imported mode
+    10. Can close out of json imported mode.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -60,7 +61,8 @@ def can_close_out_of_json_imported_mode(server: Mediaserver, rb: RobotVariables)
 
 def hardware_types_with_only_one_item(server: Mediaserver, rb: RobotVariables):
     """
-    13. Hardware types with only one item should show tiles and not show tables
+    13. Hardware types with only one item should show tiles and not show tables.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -102,7 +104,8 @@ def hardware_types_with_only_one_item(server: Mediaserver, rb: RobotVariables):
 
 def hardware_types_with_multiple_items(server: Mediaserver, rb: RobotVariables):
     """
-    14. Hardware types with multiple items should show tables and not show tiles
+    14. Hardware types with multiple items should show tables and not show tiles.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:

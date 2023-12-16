@@ -1,21 +1,21 @@
 import logging
 from pathlib import Path
 
-from colorama import Fore
-
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def test_merge_button_available_for_owner(server: Mediaserver, rb: RobotVariables):
     """
-    1a. Merge button availability for owner
+    1a. Merge button availability for owner.
+
     [Tags]    C70976    C70977    should
     """
     with get_chrome() as driver:
@@ -30,7 +30,8 @@ def test_merge_button_available_for_owner(server: Mediaserver, rb: RobotVariable
 
 def test_merge_button_unavailable_for_user(server: Mediaserver, user: CloudAccount, rb: RobotVariables):
     """
-    1b. Merge button availability for user
+    1b. Merge button availability for user.
+
     [Tags]    C70976
     """
     with get_chrome() as driver:
@@ -44,7 +45,8 @@ def test_merge_button_unavailable_for_user(server: Mediaserver, user: CloudAccou
 
 def test_merge_button_unavailable_when_offline(server: Mediaserver, rb: RobotVariables):
     """
-    1c. Merge button unavailable when system is offline
+    1c. Merge button unavailable when system is offline.
+
     [Tags]    C70977
     """
     with get_chrome() as driver:

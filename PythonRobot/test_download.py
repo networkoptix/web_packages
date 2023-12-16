@@ -1,11 +1,10 @@
+import variables
+from browsers.chrome import get_chrome
+from pages.downloads_page import DownloadsPage
+from pages.footer import Footer
 from selenium import webdriver
 from selenium.webdriver.chrome.options import Options
 from selenium.webdriver.common.desired_capabilities import DesiredCapabilities
-
-import variables
-from pages.downloads_page import DownloadsPage
-from pages.footer import Footer
-from browsers.chrome import get_chrome
 
 
 def download_link_is_in_the_footer():

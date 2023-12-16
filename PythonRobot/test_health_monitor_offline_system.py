@@ -1,20 +1,20 @@
-"""robot_tests/test-cases/health-monitor.robot"""
+"""robot_tests/test-cases/health-monitor.robot."""
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def going_to_health_monitor_when_system_is_offline(server: Mediaserver, rb: RobotVariables):
     """
-    3. Going to health monitor when system is offline and shows offline message
+    3. Going to health monitor when system is offline and shows offline message.
+
     [Tags]    cloud
     """
     with get_chrome() as driver:
@@ -31,7 +31,8 @@ def going_to_health_monitor_when_system_is_offline(server: Mediaserver, rb: Robo
 
 def json_upload_works_on_offline_system(server: Mediaserver, rb: RobotVariables):
     """
-    5. Json upload works on offline system
+    5. Json upload works on offline system.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:

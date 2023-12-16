@@ -1,18 +1,18 @@
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from generic_elements import Button
 from generic_elements import PageText
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 
 rb = RobotVariables("en_US")
 
 
 def test_inaccessible_system_page(cloud_user: CloudAccount):
-    """Failed to access system page correctly shows when going to a non-existent system"""
+    """Failed to access system page correctly shows when going to a non-existent system."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         HeaderNav(driver).log_in_button().click()

@@ -1,18 +1,17 @@
-"""test-cases/history.robot"""
+"""test-cases/history.robot."""
+from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from colorama import Fore
-
 from pages.downloads_page import DownloadsPage
 from pages.header import HeaderNav
 from pages.history_page import HistoryPage
-from RobotVariables import RobotVariables
-from browsers.chrome import get_chrome
 from pages.login import LoginDialog
 
 variables = RobotVariables("en_US")
 
 
 def test_history_link_in_the_download_page():
-    """1. History link is in the downloads page for user with access and takes you to /downloads/releases"""
+    """1. History link is in the downloads page for user with access and takes you to /downloads/releases."""
     email = variables.replace_nested_variables(variables.BASE_EMAIL)
     with get_chrome() as driver:
         driver.get(variables.ENV)
@@ -29,7 +28,7 @@ def test_history_link_in_the_download_page():
 
 
 def test_expandable_sections():
-    """2. Make sure expandable sections show options"""
+    """2. Make sure expandable sections show options."""
     email = variables.replace_nested_variables(variables.BASE_EMAIL)
     with get_chrome() as driver:
         driver.get(variables.ENV)

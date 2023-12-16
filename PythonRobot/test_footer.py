@@ -1,17 +1,16 @@
 import time
 
-from colorama import Fore
-
 from RobotVariables import RobotVariables
-from pages.footer import Footer
 from browsers.chrome import get_chrome
+from colorama import Fore
+from pages.footer import Footer
 
 rb = RobotVariables("en_US")
 
 
 # Webadmin only
 def api_documentation_link():
-    """1. API documentation link leads to proper page"""
+    """1. API documentation link leads to proper page."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         Footer(driver).wait_until_footer_is_visible_webadmin()
@@ -19,14 +18,14 @@ def api_documentation_link():
 
 # Webadmin only
 def download_sdk_link():
-    """2. Download SDK link leads to proper page"""
+    """2. Download SDK link leads to proper page."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         Footer(driver).wait_until_footer_is_visible_webadmin()
 
 
 def support_link():
-    """3. Support leads to the proper support site"""
+    """3. Support leads to the proper support site."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         footer = Footer(driver)
@@ -39,7 +38,7 @@ def support_link():
 
 
 def copyright_link():
-    """4. Copyright leads to the proper site"""
+    """4. Copyright leads to the proper site."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         footer = Footer(driver)
@@ -53,7 +52,7 @@ def copyright_link():
 
 
 def terms_link():
-    """5. Terms leads to the proper EULA site"""
+    """5. Terms leads to the proper EULA site."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         footer = Footer(driver)
@@ -64,7 +63,7 @@ def terms_link():
 
 
 def privacy_link():
-    """6. Privacy leads to the proper page"""
+    """6. Privacy leads to the proper page."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         footer = Footer(driver)

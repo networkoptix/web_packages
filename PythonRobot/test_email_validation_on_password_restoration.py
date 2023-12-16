@@ -1,10 +1,10 @@
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.reset_password_dialog import ResetPasswordDialog
-from browsers.chrome import get_chrome
 from variables import ENV
 
 rb = RobotVariables("en_US")

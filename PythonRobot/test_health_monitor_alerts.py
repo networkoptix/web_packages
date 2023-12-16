@@ -1,21 +1,21 @@
-"""robot_tests/test-cases/health-monitor.robot"""
+"""robot_tests/test-cases/health-monitor.robot."""
 import time
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def no_alerts_message_shows_when_no_alerts(server: Mediaserver, rb: RobotVariables):
     """
-    9. No alerts message shows when there are no alerts
+    9. No alerts message shows when there are no alerts.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -36,7 +36,8 @@ def no_alerts_message_shows_when_no_alerts(server: Mediaserver, rb: RobotVariabl
 
 def errors_and_warnings_are_counted_correctly(server: Mediaserver, rb: RobotVariables):
     """
-    11. Errors and warnings are counted and shown correctly in the left pane and header tiles
+    11. Errors and warnings are counted and shown correctly in the left pane and header tiles.
+
     [Tags]    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -56,9 +57,11 @@ def errors_and_warnings_are_counted_correctly(server: Mediaserver, rb: RobotVari
         time.sleep(5)  # Wait for the data fully load
         alerts_summary = alerts_section.get_alerts_summary()
         alerts_summary_from_table = alerts_section.get_alerts_summary_from_table()
-        assert alerts_summary == alerts_summary_from_table, (f"The number of alerts does not match.\n"
-                                                             f"From cards: {alerts_summary}\n"
-                                                             f"From table: {alerts_summary_from_table}")
+        assert alerts_summary == alerts_summary_from_table, (
+            f"The number of alerts does not match.\n"
+            f"From cards: {alerts_summary}\n"
+            f"From table: {alerts_summary_from_table}"
+            )
         json_file = Path(__file__).parent.absolute() / 'test_data/one-page.json'
         tab_info.upload_json_report(json_file)
         tab_info.check_links_uploaded()
@@ -66,14 +69,17 @@ def errors_and_warnings_are_counted_correctly(server: Mediaserver, rb: RobotVari
         time.sleep(5)  # Wait for the data fully load
         alerts_summary = alerts_section.get_alerts_summary()
         alerts_summary_from_table = alerts_section.get_alerts_summary_from_table()
-        assert alerts_summary == alerts_summary_from_table, (f"The number of alerts does not match.\n"
-                                                             f"From cards: {alerts_summary}\n"
-                                                             f"From table: {alerts_summary_from_table}")
+        assert alerts_summary == alerts_summary_from_table, (
+            f"The number of alerts does not match.\n"
+            f"From cards: {alerts_summary}\n"
+            f"From table: {alerts_summary_from_table}"
+            )
 
 
 def change_page_height(server: Mediaserver, rb: RobotVariables):
     """
-    12. Changing page height and refreshing reduces row count and increases page count
+    12. Changing page height and refreshing reduces row count and increases page count.
+
     [Tags]    C69785    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -95,9 +101,11 @@ def change_page_height(server: Mediaserver, rb: RobotVariables):
         assert alerts_section.get_pages_count() != 2
         alerts_summary = alerts_section.get_alerts_summary()
         alerts_summary_from_table = alerts_section.get_alerts_summary_from_table()
-        assert alerts_summary == alerts_summary_from_table, (f"The number of alerts does not match.\n"
-                                                             f"From cards: {alerts_summary}\n"
-                                                             f"From table: {alerts_summary_from_table}")
+        assert alerts_summary == alerts_summary_from_table, (
+            "The number of alerts does not match.\n"
+            f"From cards: {alerts_summary}\n"
+            f"From table: {alerts_summary_from_table}"
+            )
 
 
 if __name__ == '__main__':

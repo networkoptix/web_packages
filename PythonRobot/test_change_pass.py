@@ -2,13 +2,12 @@ import random
 import string
 import time
 
-from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from pages.change_pass_form import ChangePassForm
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from variables import ENV
 
 rb = RobotVariables("en_US")
@@ -66,7 +65,7 @@ def password_with_symbols_is_valid(user):
 
         change_pass_form = ChangePassForm(driver)
         change_pass_form.current_password_input().input_text(user.password)
-        new_password = '''pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}'''
+        new_password = r"""pass!@#$%^&*()_-+=;:'"`~,./\|?[]{}"""
         change_pass_form.new_password_input().input_text(new_password)
         change_pass_form.save_button().click()
         time.sleep(1)

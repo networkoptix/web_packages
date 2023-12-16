@@ -1,14 +1,12 @@
 import logging
-import time
 from pathlib import Path
 from typing import Sequence
-
-from colorama import Fore
 
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.merge_dialog import MergeDialog
@@ -17,7 +15,8 @@ from pages.system_admin import SystemAdmin
 
 def test_dropdown_has_three_sections(servers: Sequence[Mediaserver], rb: RobotVariables):
     """
-    2. Merge Dialog - Dropdown has three sections
+    2. Merge Dialog - Dropdown has three sections.
+
     [Tags]    C70979    merge_dialog    should
     """
     [first_server, second_server, last_server] = servers
@@ -48,9 +47,11 @@ def test_dropdown_has_three_sections(servers: Sequence[Mediaserver], rb: RobotVa
         assert available_systems[1].state == 'incompatible'
         assert available_systems[2].state == 'offline'
 
+
 def test_dropdown_has_one_section(servers: Sequence[Mediaserver], rb: RobotVariables):
     """
-    3. Merge Dialog - Dropdown has two sections(no cloud systems)
+    3. Merge Dialog - Dropdown has two sections(no cloud systems).
+
     [Tags]    C70980    merge_dialog    should
     """
     [first_server, second_server] = servers
@@ -78,9 +79,11 @@ def test_dropdown_has_one_section(servers: Sequence[Mediaserver], rb: RobotVaria
         available_systems = merge_dialog.get_available_systems()
         assert available_systems[0].state == ''
 
+
 def test_dropdown_has_no_valid_systems(servers: Sequence[Mediaserver], rb: RobotVariables):
     """
-    5. Merge Dialog - Dropdown has no valid systems
+    5. Merge Dialog - Dropdown has no valid systems.
+
     [Tags]    C76420    merge_dialog
     """
     with get_chrome() as driver:
@@ -121,22 +124,21 @@ if __name__ == '__main__':
             suite.create_cloud_server(cloud_owner_1, f"{suite_name}", vms_version='5.0'),
             suite.create_cloud_server(cloud_owner_1, f"{suite_name}", vms_version='5.1'),
             suite.create_cloud_server(cloud_owner_1, f"{suite_name}", vms_version='5.0'),
-        ]
+            ]
         test_dropdown_has_three_sections(servers_1, variables)
 
         cloud_owner_2 = suite.create_cloud_account()
         servers_2 = [
             suite.create_cloud_server(cloud_owner_2, f"{suite_name}", vms_version='5.1'),
             suite.create_cloud_server(cloud_owner_2, f"{suite_name}", vms_version='5.1'),
-        ]
+            ]
         test_dropdown_has_one_section(servers_2, variables)
 
         cloud_owner_3 = suite.create_cloud_account()
         servers_3 = [
             suite.create_cloud_server(cloud_owner_3, f"{suite_name}", vms_version='5.1'),
-            suite.create_cloud_server(cloud_owner_3, f"{suite_name}", vms_version='5.0')
+            suite.create_cloud_server(cloud_owner_3, f"{suite_name}", vms_version='5.0'),
             ]
         test_dropdown_has_no_valid_systems(servers_3, variables)
 
         print(f'{Fore.WHITE}{test_dropdown_has_three_sections.__doc__.strip()}\t\t\t{Fore.GREEN}| PASS |')
-

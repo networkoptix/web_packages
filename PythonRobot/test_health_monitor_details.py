@@ -44,8 +44,7 @@ def test_health_monitor_details_panel_errors_and_warnings(server: Mediaserver):
 
         servers_section.get_table_problem("testserver warning").click()
         server_details3 = information_tab.get_details_pane()
-        server_details3.get_pane_warning_by_title(
-            "Server testserver warning is broken").wait_until_visible()
+        server_details3.get_pane_warning_by_title("Server testserver warning is broken").wait_until_visible()
 
         servers_section.get_table_problem("testserver 2 warnings").click()
         server_details4 = information_tab.get_details_pane()

@@ -4,29 +4,32 @@ from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
 from browsers.chrome import get_chrome
 from pages.header import HeaderNav
-from pages.ipvd_page import IVPDPage
 from pages.ipvd_page import FeedbackForm
+from pages.ipvd_page import IVPDPage
 from pages.login import LoginDialog
 
 rb = RobotVariables("en_US")
 
+
 def ipvd_page_loads_without_login():
-    """1. IPVD Page loads without Login"""
+    """1. IPVD Page loads without Login."""
     with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
 
+
 def ipvd_page_loads_while_logged_in(login, password):
-    """2. IPVD Page loads while Logged in"""
+    """2. IPVD Page loads while Logged in."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         HeaderNav(driver).log_in_button().click()
         LoginDialog(driver).basic_cloud_login(login, password)
 
+
 def ipvd_landing_page_actions():
-    """3. IPVD landing page actions"""
-        # step 1
+    """3. IPVD landing page actions."""
     with get_chrome() as driver:
+        # step 1
         ipvd_page = IVPDPage(driver)
         assert ipvd_page.validate_on_ipvd_page()
         ipvd_page.placeholder_text()
@@ -56,8 +59,9 @@ def ipvd_landing_page_actions():
         form.submit_a_request_button().click()
         form.feedback().wait_until_visible()
 
+
 def text_search_manufacturer():
-    """4. Text search correctly finds Manufacturers"""
+    """4. Text search correctly finds Manufacturers."""
     with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         ipvd_page.go_to_ipvd()
@@ -68,7 +72,7 @@ def text_search_manufacturer():
 
 
 def request_form_basic_validation():
-    """5. Request Form Basic Validations"""
+    """5. Request Form Basic Validations."""
     with get_chrome() as driver:
         ipvd_page = IVPDPage(driver)
         # step 1
@@ -96,8 +100,9 @@ def request_form_basic_validation():
         form.feedback_close_button().click()
         form.feedback().wait_until_not_visible()
 
+
 def feedback_form_basic_validations(login, password):
-    """6. Feedback Form Basic Validations"""
+    """6. Feedback Form Basic Validations."""
     with get_chrome() as driver:
         # step 1
         ipvd_page = IVPDPage(driver)
@@ -127,8 +132,9 @@ def feedback_form_basic_validations(login, password):
         form.feedback_cancel_button().click()
         form.feedback().wait_until_not_visible()
 
+
 def test_text_search(login, password):
-    """7. Text search"""
+    """7. Text search."""
     with get_chrome() as driver:
         # step 1
         ipvd_page = IVPDPage(driver)
@@ -139,7 +145,7 @@ def test_text_search(login, password):
 
         # step 2
         ipvd_page.search_text('h')
-        assert  ipvd_page.validate_device_table_has_contents()
+        assert ipvd_page.validate_device_table_has_contents()
         driver.location_should_be(ipvd_page.base_url + '?search=h')
         ipvd_page.clear_text_search_button().wait_until_visible()
         assert not ipvd_page.previous_page_button().is_enabled()
@@ -163,17 +169,17 @@ def test_text_search(login, password):
 
         # step 6
         ipvd_page.previous_page_button().wait_until_clickable()
-        active_page1 =ipvd_page.get_active_page_number()
+        active_page1 = ipvd_page.get_active_page_number()
         ipvd_page.previous_page_button().click()
         active_page2 = ipvd_page.get_active_page_number()
-        assert active_page2 + 1 ==  active_page1
+        assert active_page2 + 1 == active_page1
 
-        #step 7
+        # step 7
         ipvd_page.clear_text_search_button().click()
         driver.location_should_be(ipvd_page.base_url)
         assert ipvd_page.validate_on_ipvd_page()
 
-        #step 8
+        # step 8
         ipvd_page.search_text('h')
         driver.location_should_be(ipvd_page.base_url + "?search=h")
         last_page1 = ipvd_page.last_page_number()
@@ -219,7 +225,7 @@ def test_text_search(login, password):
         ipvd_page.select_device_from_table_randomly(include_last=False)
         make = ipvd_page.get_device_manufacturer()
         model = ipvd_page.get_device_model()
-        assert desired_text in  make + ' ' + model
+        assert desired_text in make + ' ' + model
 
         # step 14
         ipvd_page.clear_text_search_button().click()
@@ -237,9 +243,9 @@ def test_text_search(login, password):
         assert make1 == make2
         assert make2 < make3
 
+
 def text_search_filter(login, password):
-    """8 Text in Search Input is kept after clicking X on
-    Applied Features filter indicator"""
+    """8 Text in Search Input is kept after clicking X on Applied Features filter indicator."""
     with get_chrome() as driver:
         # step 1
         manufacturer = 'Axis'
@@ -255,11 +261,11 @@ def text_search_filter(login, password):
         ipvd_page.filters_applied_button().should_contain(button_text)
 
         ipvd_page.select_device_from_table_by_row(1)
-        assert  ipvd_page.get_device_manufacturer() == manufacturer
+        assert ipvd_page.get_device_manufacturer() == manufacturer
         ipvd_page.select_device_from_table_randomly()
-        assert  ipvd_page.get_device_manufacturer() == manufacturer
+        assert ipvd_page.get_device_manufacturer() == manufacturer
         ipvd_page.select_device_from_table_randomly()
-        assert  ipvd_page.get_device_manufacturer() == manufacturer
+        assert ipvd_page.get_device_manufacturer() == manufacturer
 
         # step 2
         ipvd_page.advanced_search_button().click()
@@ -267,6 +273,7 @@ def text_search_filter(login, password):
         assert filter_text == manufacturer
         ipvd_page.select_device_from_table_randomly()
         assert ipvd_page.get_device_manufacturer() == manufacturer
+
 
 if __name__ == "__main__":
     with Suite() as suite:
