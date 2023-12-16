@@ -1,15 +1,15 @@
 from NoptixLibrary.suite import CloudAccount
+from browsers.chrome import get_chrome
 from email_access import EmailClient
 from email_access import get_random_email
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.login import ResetPasswordForm
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
 def sets_new_password_and_successfully_logs_in(user: CloudAccount):
-    """C26260 email"""
+    """C26260 email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -37,7 +37,7 @@ def sets_new_password_and_successfully_logs_in(user: CloudAccount):
 
 
 def check_restore_password_email(user: CloudAccount):
-    """email"""
+    """Email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -56,14 +56,14 @@ def check_restore_password_email(user: CloudAccount):
                 "https://support.networkoptix.com",
                 "https://networkoptix.com",
                 ENV,
-                f'{ENV}/authorize/restore_password'
+                f'{ENV}/authorize/restore_password',
                 ]
             email.find_links_in_body(expected_links)
             client.delete_email(email)
 
 
 def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
-    """C41873 email"""
+    """C41873 email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -89,7 +89,7 @@ def check_can_still_log_in_if_restore_not_finished(user: CloudAccount):
 
 
 def test_should_not_allow_restore_twice(user: CloudAccount):
-    """C42079 email"""
+    """C42079 email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -120,7 +120,7 @@ def test_should_not_allow_restore_twice(user: CloudAccount):
 
 
 def check_password_masking(user: CloudAccount):
-    """C26260 email"""
+    """C26260 email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -154,7 +154,7 @@ def check_password_masking(user: CloudAccount):
 
 
 def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
-    """email"""
+    """Email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -167,7 +167,7 @@ def test_should_allow_visit_restore_after_log_in(user: CloudAccount):
 
 
 def test_account_activation_through_restore(user: CloudAccount):
-    """C41871 email"""
+    """C41871 email."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)

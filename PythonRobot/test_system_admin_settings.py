@@ -13,9 +13,7 @@ rb = RobotVariables("en_US")
 
 
 def system_settings_and_security_settings_should_match_settings_on_server(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C69736    C65697
-    """
+    """[tags]    system    cloud    webadmin    system settings    C69736    C65697."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -80,9 +78,7 @@ def system_settings_and_security_settings_should_match_settings_on_server(server
 
 
 def test_changing_settings_changes_it_on_server(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C65722    C65724    C69740
-    """
+    """[tags]    system    cloud    webadmin    system settings    C65722    C65724    C69740."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -150,9 +146,7 @@ def test_changing_settings_changes_it_on_server(server: Mediaserver):
 
 
 def changing_several_random_checkboxes_works(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings
-    """
+    """[tags]    system    cloud    webadmin    system settings."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -205,9 +199,7 @@ def changing_several_random_checkboxes_works(server: Mediaserver):
 
 
 def system_and_security_settings_block_is_not_available_for_other_users(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C69737    C65698
-    """
+    """[tags]    system    cloud    webadmin    system settings    C69737    C65698."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -255,9 +247,7 @@ def system_and_security_settings_block_is_not_available_for_other_users(server: 
 
 
 def changing_page_without_saving_changes(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C69739
-    """
+    """[tags]    system    cloud    webadmin    system settings    C69739."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -306,9 +296,7 @@ def changing_page_without_saving_changes(server: Mediaserver):
 
 
 def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C69741    C65723
-    """
+    """[tags]    system    cloud    webadmin    system settings    C69741    C65723."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -420,9 +408,7 @@ def changes_made_in_the_thick_client_are_displayed_in_system_settings(server: Me
 
 
 def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C69742
-    """
+    """[tags]    system    cloud    webadmin    system settings    C69742."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -451,9 +437,7 @@ def checking_the_dependency_of_system_settings_checkboxes(server: Mediaserver):
 
 
 def system_settings_block_is_not_available_when_the_system_is_offline(server: Mediaserver):
-    """
-    [tags]    system    cloud    webadmin    system settings    C69744
-    """
+    """[tags]    system    cloud    webadmin    system settings    C69744."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)
@@ -470,9 +454,7 @@ def system_settings_block_is_not_available_when_the_system_is_offline(server: Me
 
 
 def check_limit_session_duration(server: Mediaserver):
-    """
-    [tags]    C65703
-    """
+    """[tags]    C65703."""
     with get_chrome() as driver:
         url = ENV + f'/systems/{server.id}'
         driver.get(url)

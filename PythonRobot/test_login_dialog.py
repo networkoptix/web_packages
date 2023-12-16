@@ -6,22 +6,22 @@ import time
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
-from pages.change_pass_form import ChangePassForm
+from browsers.chrome import get_chrome
+from email_access import get_random_email
 from generic_elements import Button
 from generic_elements import TextField
+from pages.change_pass_form import ChangePassForm
 from pages.header import HeaderNav
 from pages.landing_page import LandingPage
 from pages.login import AccountActivatedPane
 from pages.login import LoginDialog
 from pages.register_form import RegisterForm
-from email_access import get_random_email
-from browsers.chrome import get_chrome
 from pages.systems_page import SystemsPage
 from variables import ENV
 
 
 def allows_login_with_correct_credentials_and_log_out(cloud_user: CloudAccount):
-    """C24212    C24213    smoke    ci    C94717    C94719"""
+    """C24212    C24213    smoke    ci    C94717    C94719."""
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
@@ -56,8 +56,8 @@ def allows_log_in_with_existing_email_in_uppercase(cloud_user: CloudAccount):
 
 def forgot_password_page_contains_prefilled_email(cloud_user: CloudAccount):
     """
-    Passes email from email input to Restore password page, even without clicking
-    'Log in' button
+    Passes email from email input to Restore password page, even without clicking 'Log in' button.
+
     [Tags]    C41872
     """
     with get_chrome() as driver:
@@ -74,7 +74,8 @@ def forgot_password_page_contains_prefilled_email(cloud_user: CloudAccount):
 
 def not_activated_user_login_check():
     """
-    Shows non-activated user message when not activated at login; Resend activation button sends email
+    Shows non-activated user message when not activated at login; Resend activation button sends email.
+
     [Tags]    email    C41865
     """
     with get_chrome() as driver:
@@ -231,9 +232,7 @@ def handles_two_tabs_updates_second_tab_state_if_logout_is_done_on_first(cloud_u
 
 
 def log_in_more_than_5_times(cloud_user: CloudAccount):
-    """
-    [Tags]    C42075
-    """
+    """[Tags]    C42075."""
     with get_chrome() as driver:
         wrong_password = "wrong 123"
         driver.get(ENV)
@@ -242,7 +241,7 @@ def log_in_more_than_5_times(cloud_user: CloudAccount):
         login = LoginDialog(driver)
         login.email_input().input_text(cloud_user.email)
         login.next_button().click()
-        for attempt in range(6):
+        for _attempt in range(6):
             login.password_input().input_text(wrong_password)
             login.login_button().click()
             time.sleep(1)
@@ -256,9 +255,7 @@ def log_in_more_than_5_times(cloud_user: CloudAccount):
 
 def user_is_logged_out_of_browser_after_a_password_change_in_another_browser(
         cloud_user: CloudAccount):
-    """
-    [Tags]    C41837
-    """
+    """[Tags]    C41837."""
     with get_chrome() as driver1:
         driver1.get(ENV)
         header = HeaderNav(driver1)

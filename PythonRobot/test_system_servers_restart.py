@@ -1,22 +1,22 @@
-"""robot_tests/test-cases/system-servers.robot"""
+"""robot_tests/test-cases/system-servers.robot."""
 import time
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def test_restart_close_cancel_button(server: Mediaserver, rb: RobotVariables):
     """
-    3-4. Restart close/cancel button works
+    3-4. Restart close/cancel button works.
+
     [Tags]    C70968    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -48,7 +48,8 @@ def test_restart_close_cancel_button(server: Mediaserver, rb: RobotVariables):
 
 def test_restart(server: Mediaserver, rb: RobotVariables, cloud_account: CloudAccount):
     """
-    5-6. Restart server as owner/admin
+    5-6. Restart server as owner/admin.
+
     [Tags]    C70968    webadmin    # cloud
     """
     with get_chrome() as driver:

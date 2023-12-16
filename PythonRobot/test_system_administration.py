@@ -5,16 +5,16 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
 from pages.header import HeaderNav
 from pages.information_page import InformationPage
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import FailedToAccessSystemPage
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.systems_page import SystemsPage
-from variables import ENV
 from pages.view_page import ViewPage
+from variables import ENV
 
 password = "qweasd 123"
 
@@ -23,7 +23,7 @@ viewer_permissions = 'GlobalViewArchivePermission|GlobalExportPermission|GlobalV
 
 
 def can_log_in_to_system_from_direct_link(server: Mediaserver):
-    """smoke    ci    C30825"""
+    """Smoke    ci    C30825."""
     with get_chrome() as driver:
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
@@ -34,7 +34,7 @@ def can_log_in_to_system_from_direct_link(server: Mediaserver):
 
 
 def owner_can_disconnect_system_from_cloud(server: Mediaserver):
-    """C41883   C47020    webadmin    smoke    ci    C69845"""
+    """C41883   C47020    webadmin    smoke    ci    C69845."""
     with get_chrome() as driver:
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
@@ -54,8 +54,9 @@ def owner_can_disconnect_system_from_cloud(server: Mediaserver):
         message = sys_admin.disconnect_from_cloud_toast_notification()
         message.wait_until_visible()
         message.wait_until_not_visible(10)
-        assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 0, "Number of systems owned " \
-                                                                                              "was not 0"
+        assert (len(CLOUD_API.get_account_systems(owner.email, password))) == 0, (
+            "Number of systems owned was not 0"
+            )
         print("pass")
 
 
@@ -169,9 +170,7 @@ def should_confirm_if_not_owner_deletes_system(server: Mediaserver):
 
 
 def correct_items_are_shown_for_owner(server: Mediaserver):
-    """
-    [Tags]    C41560    C81760    webadmin    CB-1596
-    """
+    """[Tags]    C41560    C81760    webadmin    CB-1596."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         driver.get(ENV + f"/systems/{server.id}")
@@ -197,9 +196,7 @@ def correct_items_are_shown_for_owner(server: Mediaserver):
 
 
 def correct_items_are_shown_for_admin(server: Mediaserver):
-    """
-    [Tags]    C41561    C81760    webadmin
-    """
+    """[Tags]    C41561    C81760    webadmin."""
     with get_chrome() as driver:
         cloud_admin = server.get_cloud_admin()
         owner = server.get_cloud_owner()
@@ -229,9 +226,7 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
 
 
 def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, role_name: str):
-    """
-    [Tags]    C41562    C81760    webadmin
-    """
+    """[Tags]    C41562    C81760    webadmin."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         driver.get(ENV + f"/systems/{server.id}")
@@ -259,9 +254,7 @@ def correct_items_are_shown_for_user(server: Mediaserver, user: CloudAccount, ro
 
 
 def left_menu_search_position_and_style(server: Mediaserver):
-    """
-    [Tags]    C81759    webadmin    search
-    """
+    """[Tags]    C81759    webadmin    search."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         driver.get(ENV + f"/systems/{server.id}")
@@ -284,9 +277,7 @@ def left_menu_search_position_and_style(server: Mediaserver):
 
 
 def left_menu_search_search_menu_for_offline_system(server: Mediaserver):
-    """
-    [Tags]    C81761    webadmin    CB-1596
-    """
+    """[Tags]    C81761    webadmin    CB-1596."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         server.stop()

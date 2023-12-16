@@ -8,6 +8,7 @@ from variables import ENV
 
 
 class ChangePassForm:
+
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)

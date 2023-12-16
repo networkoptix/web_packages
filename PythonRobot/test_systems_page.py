@@ -5,11 +5,11 @@ from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 from variables import ENV
 
 password = "qweasd 123"
@@ -71,7 +71,7 @@ def opens_system_admin_when_tile_is_clicked(server: Mediaserver):
 
 
 def search_highlights_system_name(server: Mediaserver):
-    """C41891"""
+    """C41891."""
     with get_chrome() as driver:
         url = ENV + "/systems"
         driver.get(url)
@@ -85,7 +85,7 @@ def search_highlights_system_name(server: Mediaserver):
 
 
 def search_highlights_owner_name(server: Mediaserver):
-    """C41891"""
+    """C41891."""
     with get_chrome() as driver:
         url = ENV + "/systems"
         driver.get(url)
@@ -99,7 +99,7 @@ def search_highlights_owner_name(server: Mediaserver):
 
 
 def search_is_cleared_by_x_button(server: Mediaserver):
-    """C41891"""
+    """C41891."""
     with get_chrome() as driver:
         url = ENV + "/systems"
         driver.get(url)
@@ -135,7 +135,7 @@ def search_only_visible_with_more_than_eight_systems(
         server_second: Mediaserver,
         api: CloudPortalAPI,
         ):
-    """C41890"""
+    """C41890."""
     owner_second = server_second.get_cloud_owner()
     api.disconnect_server_via_api(
         [owner_second.email, password],
@@ -157,7 +157,7 @@ def should_show_correct_content_for_owned_and_not_owned_system_tiles_and_search(
         owned_server: Mediaserver,
         not_owned_server: Mediaserver,
         ):
-    """C41893, C41891"""
+    """C41893, C41891."""
     rb = RobotVariables("en_US")
     user = owned_server.get_cloud_owner()
     with get_chrome() as driver:

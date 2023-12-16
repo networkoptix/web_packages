@@ -1,16 +1,14 @@
 import time
 
-from colorama import Fore
-
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
+from colorama import Fore
 from generic_elements import Button
 from generic_elements import Checkbox
+from generic_elements import Image
 from generic_elements import PageText
 from generic_elements import TextField
 from generic_elements import Tooltip
-from generic_elements import Image
-
 
 rb = RobotVariables("en_US")
 driver = ChromeBrowser()
@@ -22,7 +20,7 @@ GOOD_PASSWORDS = [
     rb.LOWER_UPPER_SYMBOL_PASSWORD,
     rb.LOWER_NUMBER_SYMBOL_PASSWORD,
     rb.UPPER_NUMBER_SYMBOL_PASSWORD,
-    rb.BASE_PASSWORD
+    rb.BASE_PASSWORD,
     ]
 
 WEAK_PASSWORDS = [
@@ -30,7 +28,7 @@ WEAK_PASSWORDS = [
     rb.LOWERCASE_PASSWORD,
     rb.COMMON_PASSWORD,
     rb.NUMBERS_PASSWORD,
-    rb.SYMBOL_ONLY_PASSWORD
+    rb.SYMBOL_ONLY_PASSWORD,
     ]
 
 FAIR_PASSWORDS = [
@@ -40,7 +38,7 @@ FAIR_PASSWORDS = [
     rb.UPPER_NUMBER_PASSWORD,
     rb.UPPER_SYMBOL_PASSWORD,
     rb.NUMBER_SYMBOL_PASSWORD,
-    rb.SYMBOL_PASSWORD
+    rb.SYMBOL_PASSWORD,
     ]
 
 INCORRECT_PASSWORDS = [
@@ -49,7 +47,7 @@ INCORRECT_PASSWORDS = [
     rb.GLYPH_TEXT,
     rb.TM_TEXT,
     f' {rb.BASE_PASSWORD}',
-    f'{rb.BASE_PASSWORD} '
+    f'{rb.BASE_PASSWORD} ',
     ]
 
 
@@ -75,7 +73,7 @@ def test_register_invalid(driver, first, last, email, password, checked):
                          rb.PASSWORD_IS_WEAK,
                          rb.FIRST_NAME_IS_REQUIRED,
                          rb.LAST_NAME_IS_REQUIRED,
-                         rb.TERMS_AND_CONDITIONS_ERROR
+                         rb.TERMS_AND_CONDITIONS_ERROR,
                          ]
     for element in invisible_elements:
         PageText(driver, element).wait_until_not_visible()
@@ -89,8 +87,9 @@ def test_register_invalid(driver, first, last, email, password, checked):
         check_first_name_outline(driver)
     if last != "hamill":
         check_last_name_outline(driver)
-    if checked == False:
+    if checked is False:
         check_terms_and_conditions_error(driver)
+
 
 def register_form_validation(driver, first_name, last_name, email, password, checked):
     TextField(driver, rb.REGISTER_FIRST_NAME_INPUT).input_text(first_name)
@@ -120,6 +119,7 @@ def check_email_outline(driver, email):
     if email != "" and email != " " and email != rb.EXISTING_EMAIL:
         PageText(driver, rb.EMAIL_INVALID).wait_until_visible()
 
+
 def check_first_name_outline(driver):
     field = TextField(driver, rb.REGISTER_FIRST_NAME_INPUT)
     assert field.value_of_css_property("border-bottom-color") == rb.ERROR_COLOR_WITH_OPACITY
@@ -129,18 +129,19 @@ def check_first_name_outline(driver):
     assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
     PageText(driver, rb.FIRST_NAME_IS_REQUIRED).wait_until_visible()
 
+
 def check_last_name_outline(driver):
     field = TextField(driver, rb.REGISTER_LAST_NAME_INPUT)
     assert field.value_of_css_property("border-color") == rb.ERROR_COLOR
     assert field.value_of_css_property("color") == rb.ERROR_COLOR_WITH_OPACITY
     PageText(driver, rb.LAST_NAME_IS_REQUIRED).wait_until_visible()
 
+
 def check_terms_and_conditions_error(driver):
     PageText(driver, rb.TERMS_AND_CONDITIONS_ERROR).wait_until_visible()
 
 
-def check_new_password_outline_and_error_message(driver, new_password, new_focus, input,
-                                                 input_name):
+def check_new_password_outline_and_error_message(driver, new_password, new_focus, input, input_name):
     TextField(driver, new_focus).click()
     if new_password not in FAIR_PASSWORDS and new_password not in GOOD_PASSWORDS:
         field = TextField(driver, input)
@@ -153,7 +154,7 @@ def check_new_password_outline_and_error_message(driver, new_password, new_focus
             driver,
             f"//nx-password-input[@name='{input_name}' "
             f"and contains(@class, 'ng-invalid')]//input[@id='{input_name}']",
-        )
+            )
         password_element.wait_until_visible()
     if new_password == "" or new_password == " ":
         TextField(driver, input).input_text("")
@@ -192,35 +193,35 @@ def check_password_badge(driver, password, new_focus):
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_TOO_COMMON_TEXT}"]',
-        )
+            )
         too_common.wait_until_visible()
     elif password in WEAK_PASSWORDS:
         weak_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
-        )
+            )
         weak_password.wait_until_visible()
     elif password in INCORRECT_PASSWORDS:
         incorrect_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_SPECIAL_CHARS_TEXT}"]',
-        )
+            )
         incorrect_password.wait_until_visible()
     elif password in FAIR_PASSWORDS:
         fair_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and text()="{rb.PASSWORD_IS_WEAK_TEXT}"]',
-        )
+            )
         fair_password.wait_until_visible()
     elif password == rb.SEVEN_CHAR_PASSWORD:
         seven_char_password = Tooltip(
             driver,
             f'{rb.PASSWORD_BADGE_TOOLTIP}//div[contains(@class, "tooltip-body") '
             f'and contains(text(), "{rb.PASSWORD_TOO_SHORT_TEXT}")]',
-        )
+            )
         seven_char_password.wait_until_visible()
 
     if password == rb.COMMON_PASSWORD:
@@ -251,197 +252,243 @@ def move_focus_and_check_element(driver, element, new_focus):
 
 # test-cases
 def invalid_email_1():
-    """1. Register Invalid Email 1 noptixqagmail.com"""
+    """1. Register Invalid Email 1 noptixqagmail.com."""
     test_register_invalid(driver, "mark", "hamill", "noptixqagmail.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_2():
-    """2. Register Invalid Email 2 @gmail.com"""
+    """2. Register Invalid Email 2 @gmail.com."""
     test_register_invalid(driver, "mark", "hamill", "@gmail.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_3():
-    """3. Register Invalid Email 3 noptixqa@gmail..com"""
+    """3. Register Invalid Email 3 noptixqa@gmail..com."""
     test_register_invalid(driver, "mark", "hamill", "noptixqa@gmail..com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_4():
-    """4. Register Invalid Email 4 noptixqa@192.168.1.1.0"""
+    """4. Register Invalid Email 4 noptixqa@192.168.1.1.0."""
     test_register_invalid(driver, "mark", "hamill", "noptixqa@192.168.1.1.0", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_5():
-    """5. Register Invalid Email 5 noptixqa.@gmail.com"""
+    """5. Register Invalid Email 5 noptixqa.@gmail.com."""
     test_register_invalid(driver, "mark", "hamill", "noptixqa.@gmail.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_6():
-    """6. Register Invalid Email 6 noptixq..a@gmail.c"""
+    """6. Register Invalid Email 6 noptixq..a@gmail.c."""
     test_register_invalid(driver, "mark", "hamill", "noptixq..a@gmail.", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_7():
-    """7. Register Invalid Email 7 noptixqa@-gmail.com"""
+    """7. Register Invalid Email 7 noptixqa@-gmail.com ."""
     test_register_invalid(driver, "mark", "hamill", "noptixqa@-gmail.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_8():
-    """8. Register Invalid Email 8 space"""
+    """8. Register Invalid Email 8 space."""
     test_register_invalid(driver, "mark", "hamill", " ", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_9():
-    """9. Register Invalid Email 9 myemail@"""
+    """9. Register Invalid Email 9 myemail@ ."""
     test_register_invalid(driver, "mark", "hamill", "myemail@", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_10():
-    """10. Register Invalid Email 10 myemail@gmail"""
+    """10. Register Invalid Email 10 myemail@gmail ."""
     test_register_invalid(driver, "mark", "hamill", "myemail@gmail", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_11():
-    """11. Register Invalid Email 11 myemail@.com"""
+    """11. Register Invalid Email 11 myemail@.com ."""
     test_register_invalid(driver, "mark", "hamill", "myemail@.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_12():
-    """12. Register Invalid Email 12 my@email@gmail.com"""
+    """12. Register Invalid Email 12 my@email@gmail.com ."""
     test_register_invalid(driver, "mark", "hamill", "my@email@gmail.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_13():
-    """13. Register Invalid Email 13 myemail@ gmail.com"""
+    """13. Register Invalid Email 13 myemail@ gmail.com ."""
     test_register_invalid(driver, "mark", "hamill", "myemail@ gmail.com", rb.BASE_PASSWORD, True)
 
+
 def invalid_email_14():
-    """14. Register Invalid Email 14 myemail@gmail.com;"""
+    """14. Register Invalid Email 14 myemail@gmail.com; ."""
     test_register_invalid(driver, "mark", "hamill", "myemail@gmail.com;", rb.BASE_PASSWORD, True)
 
+
 def empty_email():
-    """15. Register Empty Email"""
+    """15. Register Empty Email."""
     test_register_invalid(driver, "mark", "hamill", "", rb.BASE_PASSWORD, True)
 
+
 def registered_email():
-    """16. Register Registered Email"""
+    """16. Register Registered Email."""
     test_register_invalid(driver, "mark", "hamill", rb.EXISTING_EMAIL, rb.BASE_PASSWORD, True)
 
+
 def short_password():
-    """17. Register Short Password asdfghj"""
+    """17. Register Short Password asdfghj ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SEVEN_CHAR_PASSWORD, True)
 
+
 def weak_1_lowercase_password():
-    """18. Register Weak 1 Lowercase Password adrhartjad"""
+    """18. Register Weak 1 Lowercase Password adrhartjad ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWERCASE_PASSWORD, True)
 
+
 def weak_2_uppercase_password():
-    """19. Register Weak 2 Uppercase Password ADRHARTJAD"""
+    """19. Register Weak 2 Uppercase Password ADRHARTJAD ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPERCASE_PASSWORD, True)
 
+
 def weak_3_numbers_password():
-    """20. Register Weak 3 Numbers Password 13462344"""
+    """20. Register Weak 3 Numbers Password 13462344 ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.NUMBERS_PASSWORD, True)
 
+
 def weak_4_symbol_only_password():
-    """21. Register Weak 4 Symbol only Password !@#$%^&*()_-+="""
+    """21. Register Weak 4 Symbol only Password !@#$%^&*()_-+= ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SYMBOL_ONLY_PASSWORD, True)
 
+
 def fair_1_lower_and_uppercase():
-    """22. Register Fair 1 Lower and Uppercase"""
+    """22. Register Fair 1 Lower and Uppercase."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_UPPER_PASSWORD, True)
 
+
 def fair_2_lowercase_and_numbers():
-    """23. Register Fair 2 Lowercase and numbers"""
+    """23. Register Fair 2 Lowercase and numbers."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_NUMBER_PASSWORD, True)
 
+
 def fair_3_lowercase_and_symbols():
-    """24. Register Fair 3 Lowercase and Symbols"""
+    """24. Register Fair 3 Lowercase and Symbols."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_SYMBOL_PASSWORD, True)
 
+
 def fair_4_uppercase_and_numbers():
-    """25. Register Fair 4 Uppercase and numbers"""
+    """25. Register Fair 4 Uppercase and numbers."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPER_NUMBER_PASSWORD, True)
 
+
 def fair_5_uppercase_and_symbols():
-    """26. Register Fair 5 Uppercase and Symbols"""
+    """26. Register Fair 5 Uppercase and Symbols."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPER_SYMBOL_PASSWORD, True)
 
+
 def fair_6_numbers_and_symbols():
-    """27. Register Fair 6 Numbers and Symbols"""
+    """27. Register Fair 6 Numbers and Symbols."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.NUMBER_SYMBOL_PASSWORD, True)
 
+
 def good_1():
-    """28. Register Good 1 qweASD123"""
+    """28. Register Good 1 qweASD123."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_UPPER_NUMBER_PASSWORD, True)
 
+
 def good_2():
-    """29. Register Good 2 qweASD!@#"""
+    """29. Register Good 2 qweASD!@# ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_UPPER_SYMBOL_PASSWORD, True)
 
+
 def good_3():
-    """30. Register Good 3 qwe123!@#"""
+    """30. Register Good 3 qwe123!@# ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.LOWER_NUMBER_SYMBOL_PASSWORD, True)
 
+
 def good_4():
-    """31. Register Good 4 QWE123!@#"""
+    """31. Register Good 4 QWE123!@# ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.UPPER_NUMBER_SYMBOL_PASSWORD, True)
 
+
 def common_password():
-    """32. Register Common Password qweasd123"""
+    """32. Register Common Password qweasd123."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.COMMON_PASSWORD, True)
 
+
 def cyrillic_password():
-    """33. Register Cyrillic Password Кенгшщзх"""
+    """33. Register Cyrillic Password Кенгшщзх ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.CYRILLIC_TEXT, True)
 
+
 def smiley_password():
-    """34. Register Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★"""
+    r"""34. Register Smiley Password ☠☿☂⊗⅓∠∩λ℘웃♞⊀☻★ ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SMILEY_TEXT, True)
 
+
 def glyph_password():
-    """35. Register Glyph Password 您都可以享受源源不絕的好禮及優惠"""
+    """35. Register Glyph Password 您都可以享受源源不絕的好禮及優惠."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.GLYPH_TEXT, True)
 
+
 def tm_password():
-    """36. Register TM Password qweasdzxc123®™"""
+    """36. Register TM Password qweasdzxc123®™."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.TM_TEXT, True)
 
+
 def leading_space_password():
-    """37. Register Leading Space Password"""
+    """37. Register Leading Space Password."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, f' {rb.BASE_PASSWORD}', True)
 
+
 def trailing_space_password():
-    """38. Register Trailing Space Password"""
+    """38. Register Trailing Space Password."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, f'{rb.BASE_PASSWORD} ', True)
 
+
 def middle_space_password():
-    """39. Register Middle Space Password qweasd 123"""
+    """39. Register Middle Space Password qweasd 123 ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
+
 def empty_password():
-    """40. Register Empty Password"""
+    """40. Register Empty Password."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, "", True)
 
+
 def symbol_password():
-    """41. Register Symbol Password pass!@#$%^&*()_-+=;:''`~,./\|?[]{}"""
+    r"""41. Register Symbol Password pass!@#$%^&*()_-+=;:''`~,./\|?[]{} ."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.SYMBOL_PASSWORD, True)
 
+
 def invalid_first_name():
-    """42. Register Invalid First Name"""
+    """42. Register Invalid First Name."""
     test_register_invalid(driver, " ", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
+
 def empty_first_name():
-    """43. Register Empty First Name"""
+    """43. Register Empty First Name."""
     test_register_invalid(driver, "", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
+
 def invalid_last_name():
-    """44. Register Invalid Last Name"""
+    """44. Register Invalid Last Name."""
     test_register_invalid(driver, "mark", " ", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
+
 def empty_last_name():
-    """45. Register Empty Last Name"""
+    """45. Register Empty Last Name."""
     test_register_invalid(driver, "mark", "", rb.VALID_EMAIL, rb.BASE_PASSWORD, True)
 
+
 def invalid_all():
-    """46. Register Invalid All"""
+    """46. Register Invalid All."""
     test_register_invalid(driver, " ", " ", "noptixqagmail.com", rb.SEVEN_CHAR_PASSWORD, True)
 
+
 def terms_unchecked():
-    """47. Register Terms Unchecked"""
+    """47. Register Terms Unchecked."""
     test_register_invalid(driver, "mark", "hamill", rb.VALID_EMAIL, rb.BASE_PASSWORD, False)
 
-def empty_all():
-    """48. Register Empty All"""
-    test_register_invalid(driver, "", "", " ", "", False)
 
+def empty_all():
+    """48. Register Empty All."""
+    test_register_invalid(driver, "", "", " ", "", False)
 
 
 if __name__ == "__main__":

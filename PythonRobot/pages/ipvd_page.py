@@ -18,14 +18,17 @@ from generic_elements import TextField
 class ColumnDataNotVerified(Exception):
     pass
 
+
 class NoTableRowsReturned(Exception):
     pass
+
 
 class TableEmpty(Exception):
     pass
 
 
 class IPVDTable(Table):
+
     def __init__(self, driver: WebDriver):
         self.locator = "//nx-ipvd//nx-table"
         self.driver = driver
@@ -33,10 +36,10 @@ class IPVDTable(Table):
         self.contents = '/../../div[contains(@id, "hardwareType")]'
         super().__init__(driver, self.locator)
 
-    def column_should_contain(self, search_string:str) -> bool:
+    def column_should_contain(self, search_string: str) -> bool:
         data = self._get_data(search_string)
         if not data:
-            raise ColumnDataNotVerified
+            raise ColumnDataNotVerified()
         search_string_missing = False
         for row in data:
             if not [x.startswith(search_string) for x in row]:
@@ -45,7 +48,7 @@ class IPVDTable(Table):
             return False
         return True
 
-    def _get_data(self, manufacturer:str) -> List[list]:
+    def _get_data(self, manufacturer: str) -> List[list]:
         data = []
         rows = self.driver.find_elements(By.XPATH, '//div[contains(@class, "big-row analytics")]')
         for row in rows:
@@ -76,12 +79,13 @@ class IPVDTable(Table):
 
     def get_row(self, row_number: int) -> WebElement:
         rows = self._get_rows()
-        if row_number < 0 or row_number > len(rows) -1:
-            raise NoTableRowsReturned
-        return rows[row_number -1]
+        if row_number < 0 or row_number > len(rows) - 1:
+            raise NoTableRowsReturned()
+        return rows[row_number - 1]
 
 
 class FeedbackForm:
+
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
@@ -109,7 +113,7 @@ class FeedbackForm:
         return TextField(self.driver, field)
 
     def feedback_privacy_policy(self) -> Link:
-        form = f"//form[@name='feedbackForm']"
+        form = "//form[@name='feedbackForm']"
         policy = self.rb.replace_nested_variables(form + "//a[text() = '{PRIVACY_POLICY_LINK_TEXT}']")
         return Link(self.driver, policy)
 
@@ -276,9 +280,13 @@ class IVPDPage:
         return Button(self.driver, xpath)
 
     def ptz_camera_filter_button(self) -> Button:
-        xpath = (self.devices_pane().locator +
-                 self.rb.replace_nested_variables(
-                     '//nx-tag/a[contains(text(),"{IPVD_DEV_FILTER_PTZ_CAMERAS}")] /..'))
+        xpath = (
+            self.devices_pane().locator
+            + self.rb.replace_nested_variables(
+                '//nx-tag/a[contains(text(),"{IPVD_DEV_FILTER_PTZ_CAMERAS}")] /..',
+                )
+            )
+
         return Button(self.driver, xpath)
 
     def search_bar(self) -> SearchBar:
@@ -287,7 +295,7 @@ class IVPDPage:
     def search_text(self, text: str) -> None:
         self.search_bar().search_text(text)
 
-    def select_device_from_table_by_row(self, row_number=1, include_last=True)-> None:
+    def select_device_from_table_by_row(self, row_number=1, include_last=True) -> None:
         self.validate_device_table_has_contents(include_last)
         table = IPVDTable(self.driver)
         row = table.get_row(row_number)
@@ -308,12 +316,12 @@ class IVPDPage:
         self.export_to_csv_link().wait_until_not_visible()
 
     def validate_device_column_content(self, querystring: str) -> None:
-        """Validate IPVD Device Table Column contains Desired Value in all Rows"""
+        """Validate IPVD Device Table Column contains Desired Value in all Rows."""
         table = IPVDTable(self.driver)
         table.column_should_contain(querystring)
 
-    def validate_device_table_contents(self, querystring: str)-> bool:
-        """Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages"""
+    def validate_device_table_contents(self, querystring: str) -> bool:
+        """Validate IPVD Device Table Column contains Desired Value in all Rows on all Pages."""
         if self.validate_device_table_has_contents():
             self.first_page_button().click()
             last_page = self.last_page_number()
@@ -334,7 +342,7 @@ class IVPDPage:
         return True
 
     def validate_device_table_has_contents(self, include_last=True) -> bool:
-        """Validate IPVD Device Table Not Empty"""
+        """Validate IPVD Device Table Not Empty."""
         if not self.table_has_rows():
             return False
         if include_last:

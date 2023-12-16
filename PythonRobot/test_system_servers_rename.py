@@ -1,20 +1,20 @@
-"""robot_tests/test-cases/system-servers.robot"""
+"""robot_tests/test-cases/system-servers.robot."""
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def test_server_name_can_be_changed(server: Mediaserver, rb: RobotVariables):
     """
-    1. Server name can be changed
+    1. Server name can be changed.
+
     [Tags]    C71000    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -39,7 +39,8 @@ def test_server_name_can_be_changed(server: Mediaserver, rb: RobotVariables):
 
 def test_server_name_can_be_changed_via_api(server: Mediaserver, rb: RobotVariables):
     """
-    1. Server name changed via API
+    1. Server name changed via API.
+
     [Tags]    C71000    cloud    webadmin
     """
     with get_chrome() as driver:

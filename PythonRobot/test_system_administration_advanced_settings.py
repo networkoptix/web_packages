@@ -1,17 +1,17 @@
 import os
 
-from NoptixLibrary.suite import Suite, Mediaserver, CloudAccount
+from NoptixLibrary.suite import CloudAccount
+from NoptixLibrary.suite import Mediaserver
+from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
 from nx_modal import SettingsSavedModalWindow
 from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
 def advanced_system_settings_availability(server: Mediaserver, user: CloudAccount):
-    """
-    [Tags]    C76633    advanced settings
-    """
+    """[Tags]    C76633    advanced settings."""
     with get_chrome() as driver:
         driver.get(ENV + f"/systems/{server.id}")
         LoginDialog(driver).basic_cloud_login(user.email, user.password)
@@ -28,9 +28,7 @@ def advanced_system_settings_availability(server: Mediaserver, user: CloudAccoun
 
 
 def advanced_system_settings_inaccessibility(server: Mediaserver, user: CloudAccount):
-    """
-    [Tags]    C76633    advanced settings
-    """
+    """[Tags]    C76633    advanced settings."""
     with get_chrome() as driver:
         driver.get(ENV + f"/systems/{server.id}")
         LoginDialog(driver).basic_cloud_login(user.email, user.password)
@@ -44,9 +42,7 @@ def advanced_system_settings_inaccessibility(server: Mediaserver, user: CloudAcc
 
 
 def advanced_system_settings_for_offline_system(server: Mediaserver):
-    """
-    [Tags]    C76634
-    """
+    """[Tags]    C76634."""
     # Is now blocked by CLOUD-11655
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
@@ -65,9 +61,7 @@ def advanced_system_settings_for_offline_system(server: Mediaserver):
 
 
 def hide_advanced_settings_button_functionality(server: Mediaserver):
-    """
-    [Tags]    C76635    advanced settings
-    """
+    """[Tags]    C76635    advanced settings."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         driver.get(ENV + f"/systems/{server.id}")
@@ -82,10 +76,9 @@ def hide_advanced_settings_button_functionality(server: Mediaserver):
 
 
 def audit_trail_backup_and_statistics_section(server: Mediaserver):
-    """
-    [Tags]    C78244    advanced settings
-    """
-    # TODO: Add checkboxes check. NxCheckbox is not easy to click on and test is not of the highest priority so no need to spend a lot of time to fix it yet.
+    """[Tags]    C78244    advanced settings."""
+    # TODO: Add checkboxes check. NxCheckbox is not easy to click on and test is not of the
+    #  highest priority so no need to spend a lot of time to fix it yet.
     backup_settings_value = {
         'backupNewCameras': True,
         'id': '00000000-1111-0000-0000-000000000000',
@@ -136,9 +129,7 @@ def audit_trail_backup_and_statistics_section(server: Mediaserver):
 
 
 def connection_and_email(server: Mediaserver):
-    """
-    [Tags]    C78260    advanced settings
-    """
+    """[Tags]    C78260    advanced settings."""
     settings = {
         "cloudConnectRelayingEnabled": True,
         "cloudConnectUdpHolePunchingEnabled": True,

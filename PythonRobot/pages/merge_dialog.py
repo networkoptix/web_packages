@@ -14,6 +14,7 @@ from generic_elements import Pane
 
 
 class MergeDialog:
+
     def __init__(self, driver: ChromeBrowser, lang="en_US"):
         self._driver = driver
         self._rb = RobotVariables(lang)
@@ -31,7 +32,7 @@ class MergeDialog:
         merge_is_possible = PageText(
             self._driver,
             f'//nx-modal-merge-content//p[contains(text(),"{self._rb.MERGE_CURRENT_SYSTEM_WITH_TEXT}")]',
-        )
+            )
         merge_is_possible.wait_until_visible()
 
     def get_dialog_pane(self) -> Pane:
@@ -41,7 +42,7 @@ class MergeDialog:
         return Button(
             self._driver,
             f'//nx-modal-merge-content//button[contains(@class,"btn btn-primary") and contains(text(),"{self._rb.NEXT_TEXT}")]',
-        )
+            )
 
     def primary_first_system(self):
         return Checkbox(self._driver, "//label[@for='firstSystem']")
@@ -51,7 +52,7 @@ class MergeDialog:
 
     def merge_systems_button(self):
         translated_xpath = self._rb.replace_nested_variables(
-            "//button[text()='{MERGE_SYSTEMS_TEXT}']"
+            "//button[text()='{MERGE_SYSTEMS_TEXT}']",
             )
         return Button(self._driver, translated_xpath)
 
@@ -61,10 +62,13 @@ class MergeDialog:
         clicked_next_button = False
         while True:
             try:
-                PageText(
+                (PageText(
                     self._driver,
                     f'//nx-modal-merge-content//p[text()="{error_message}"]',
-                    ).wait_until_visible()
+                    )
+                 .wait_until_visible()
+                 )
+
             except ElementNotVisible:
                 break
             if time.monotonic() - started_at > timeout:
@@ -84,8 +88,8 @@ class MergeDialog:
     def get_available_systems(self) -> Sequence['System']:
         systems_list = ListWrapper(
             self._driver,
-            f'//nx-modal-merge-content//form[@name="checkMergeForm"]//ul[@class="dropdown-menu--list"]',
-        )
+            '//nx-modal-merge-content//form[@name="checkMergeForm"]//ul[@class="dropdown-menu--list"]',
+            )
         systems = []
         for item in systems_list.get_items():
             name = item.get_child_own_text('/a/span')
@@ -98,7 +102,7 @@ class MergeDialog:
         item = PageText(
             self._driver,
             f'//nx-modal-merge-content//button[@id="mergeSystemSelect"]//span[contains(text(), "{system_name}")]',
-        )
+            )
         item.wait_until_visible(30)
 
 

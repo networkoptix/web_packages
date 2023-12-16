@@ -29,7 +29,8 @@ liveViewer_permissions = permissions['liveViewer']
 
 def owner_can_remove_user(server: Mediaserver):
     """
-    15. Delete user works
+    15. Delete user works.
+
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
     """
     with get_chrome() as driver:
@@ -66,7 +67,8 @@ def owner_can_remove_user(server: Mediaserver):
 
 def cloud_admin_can_remove_user(server: Mediaserver):
     """
-    15. Delete user works
+    15. Delete user works.
+
     [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
     """
     with get_chrome() as driver:
@@ -103,7 +105,7 @@ def cloud_admin_can_remove_user(server: Mediaserver):
 
 
 def share_with_registered_user_sends_notification(server: Mediaserver):
-    """email    C41888    cloud    smoke    ci    C30446"""
+    """Email    C41888    cloud    smoke    ci    C30446."""
     with CloudAccount(get_random_email(sendemail=True)) as tmp_user:
         tmp_user.activate()
         server.share_with_user(tmp_user, 'viewer', viewer_permissions)
@@ -114,7 +116,7 @@ def share_with_registered_user_sends_notification(server: Mediaserver):
 
 
 def share_with_unregistered_user_sends_notification(server: Mediaserver):
-    """email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445"""
+    """Email    C41889    cloud    CLOUD-8643    smoke    ci    	C30445."""
     tmp_user = CloudAccount(get_random_email(sendemail=True))
     server.share_with_user(tmp_user, 'viewer', viewer_permissions)
     owner = server.get_cloud_owner()
@@ -147,7 +149,7 @@ def share_with_unregistered_user_sends_notification(server: Mediaserver):
 
 
 def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
-    """email    C41889    cloud    CLOUD-8643    smoke    ci"""
+    """Email    C41889    cloud    CLOUD-8643    smoke    ci."""
     with get_chrome() as driver:
         tmp_user = CloudAccount(get_random_email(sendemail=True))
         server.share_with_user(tmp_user, 'viewer', viewer_permissions)
@@ -178,7 +180,7 @@ def email_is_locked_when_unregistered_user_is_invited(server: Mediaserver):
 
 
 def share_with_registered_user_works(server: Mediaserver):
-    """email    C41888    cloud    smoke    ci    C30446"""
+    """Email    C41888    cloud    smoke    ci    C30446."""
     with get_chrome() as driver:
         with CloudAccount(get_random_email()) as tmp_user:
             tmp_user.activate()
@@ -204,7 +206,8 @@ def share_with_registered_user_works(server: Mediaserver):
 
 def cancel_disconnect(server: Mediaserver):
     """
-    1. Cancel should cancel disconnection and disconnect should remove it when not owner
+    1. Cancel should cancel disconnection and disconnect should remove it when not owner.
+
     [Tags]    C41884    cloud
     """
     with get_chrome() as driver:
@@ -231,7 +234,8 @@ def cancel_disconnect(server: Mediaserver):
 
 def disconnect_should_remove_system(server: Mediaserver):
     """
-    1. Cancel should cancel disconnection and disconnect should remove it when not owner
+    1. Cancel should cancel disconnection and disconnect should remove it when not owner.
+
     [Tags]    C41884    cloud
     """
     with get_chrome() as driver:
@@ -268,7 +272,8 @@ def disconnect_should_remove_system(server: Mediaserver):
 
 def owner_cannot_edit_users_via_share(server: Mediaserver):
     """
-    10. Admin and owner cannot edit self and other users via share
+    10. Admin and owner cannot edit self and other users via share.
+
     [Tags]    webadmin    cloud    C41904
     """
     with get_chrome() as driver:
@@ -325,7 +330,8 @@ def owner_cannot_edit_users_via_share(server: Mediaserver):
 
 def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
     """
-    10. Admin and owner cannot edit self and other users via share
+    10. Admin and owner cannot edit self and other users via share.
+
     [Tags]    webadmin    cloud    C41904
     """
     with get_chrome() as driver:
@@ -375,7 +381,8 @@ def cloud_admin_cannot_edit_users_via_share(server: Mediaserver):
 
 def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
     """
-    9. Cloud Admin/administrator cannot delete or edit self
+    9. Cloud Admin/administrator cannot delete or edit self.
+
     [Tags]    C41904    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -401,7 +408,8 @@ def cloud_admin_cannot_delete_or_edit_self(server: Mediaserver):
 
 def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
     """
-    11. Admin cannot delete or edit other admins or owner
+    11. Admin cannot delete or edit other admins or owner.
+
     [Tags]    C41905    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -444,7 +452,8 @@ def cloud_admin_cannot_delete_admins_or_owner(server: Mediaserver):
 
 def cloud_admin_cannot_invite_admin(server: Mediaserver):
     """
-    12. Administrator cannot invite another administrator
+    12. Administrator cannot invite another administrator.
+
     [Tags]    C41905    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -469,7 +478,8 @@ def cloud_admin_cannot_invite_admin(server: Mediaserver):
 
 def user_data_should_match_registration(server: Mediaserver):
     """
-    3. Should display same user data as user provided during registration
+    3. Should display same user data as user provided during registration.
+
     [Tags]    email    cloud
     """
     combo_text = "Кенг☿☂⊗⅓您都可以`~!@#$%계정이 이"
@@ -494,7 +504,8 @@ def user_data_should_match_registration(server: Mediaserver):
 
 def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
     """
-    2. Owner / Admin can unlink offline System from Cloud / Account
+    2. Owner / Admin can unlink offline System from Cloud / Account.
+
     [Tags]    C41897    cloud
     """
     with get_chrome() as driver:
@@ -532,7 +543,8 @@ def owner_can_unlink_offline_system_from_cloud(server: Mediaserver):
 
 def viewer_can_remove_offline_system_from_account(server: Mediaserver):
     """
-    2. Owner / Admin can unlink offline System from Cloud / Account
+    2. Owner / Admin can unlink offline System from Cloud / Account.
+
     [Tags]    C41898    cloud
     """
     with get_chrome() as driver:
@@ -569,7 +581,8 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
 
 def add_user_button_opens_cancellable_modal(server: Mediaserver):
     """
-    5. Share button - opens dialog
+    5. Share button - opens dialog.
+
     [Tags]    C41888    webadmin    cloud
     6. Check Add User Cancel and 'X' buttons
     [Tags]    C78228    webadmin    cloud
@@ -596,7 +609,8 @@ def add_user_button_opens_cancellable_modal(server: Mediaserver):
 
 def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
     """
-    8. When user selects role - special hint appears
+    8. When user selects role - special hint appears.
+
     [Tags]    C41901    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -622,7 +636,8 @@ def verify_special_hints_on_permissions_dropdown(server: Mediaserver):
 
 def change_role_for_cloud_user(server: Mediaserver):
     """
-    13. Change role for Cloud User
+    13. Change role for Cloud User.
+
     [Tags]    C41900    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -665,7 +680,8 @@ def change_role_for_cloud_user(server: Mediaserver):
 
 def edit_permission_works_for_owner(server: Mediaserver):
     """
-    14. Edit permission works
+    14. Edit permission works.
+
     [Tags]    C30657    C47041    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -703,7 +719,8 @@ def edit_permission_works_for_owner(server: Mediaserver):
 
 def edit_permission_works_for_cloud_admin(server: Mediaserver):
     """
-    14. Edit permission works
+    14. Edit permission works.
+
     [Tags]    C30657    C47041    webadmin    cloud
     """
     with get_chrome() as driver:
@@ -740,9 +757,7 @@ def edit_permission_works_for_cloud_admin(server: Mediaserver):
 
 
 def test_email_validation(server: Mediaserver):
-    """
-    [Tags]    C78227    C41902    C47296
-    """
+    """[Tags]    C78227    C41902    C47296."""
     owner = server.get_cloud_owner()
     url = ENV + f"/systems/{server.id}"
     with get_chrome() as driver:
@@ -815,7 +830,8 @@ def test_email_validation(server: Mediaserver):
 
 def users_can_disconnect_themselves(server: Mediaserver):
     """
-    21. Users should be able to disconnect themselves from cloud
+    21. Users should be able to disconnect themselves from cloud.
+
     This test fails on a custom user because the system's name is not present in
     the toast.
     https://networkoptix.atlassian.net/browse/CLOUD-11867
@@ -852,7 +868,8 @@ def users_can_disconnect_themselves(server: Mediaserver):
 
 def disable_enable_correctly_affects_user(server: Mediaserver):
     """
-    24. Disable enable User correctly affects the User
+    24. Disable enable User correctly affects the User.
+
     [Tags]    C63390    C76245    webadmin    cloud
     """
     owner = server.get_cloud_owner()
@@ -886,7 +903,7 @@ def disable_enable_correctly_affects_user(server: Mediaserver):
             driver.save_screenshot('error.png')
             raise
         else:
-            print(f"PASS")
+            print("PASS")
 
 
 if __name__ == "__main__":

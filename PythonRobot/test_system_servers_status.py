@@ -2,21 +2,21 @@ import logging
 import time
 from pathlib import Path
 
-from colorama import Fore
-
 from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def test_check_status(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):
     """
-    11. Check status
+    11. Check status.
+
     [Tags]    C70957    cloud    webadmin
     """
     server_name = server2.get_server_name()
@@ -51,7 +51,8 @@ def test_check_status(server1: Mediaserver, server2: Mediaserver, rb: RobotVaria
 
 def test_detailed_info_with_1_server(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):
     """
-    12. Detailed info 1 server
+    12. Detailed info 1 server.
+
     [Tags]    C70957    cloud    webadmin
     """
     server2.stop()
@@ -77,7 +78,8 @@ def test_detailed_info_with_1_server(server1: Mediaserver, server2: Mediaserver,
 
 def test_detailed_info_with_2_servers(server: Mediaserver, rb: RobotVariables):
     """
-    13. Detailed info 2 servers
+    13. Detailed info 2 servers.
+
     [Tags]    C70957    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -100,7 +102,8 @@ def test_detailed_info_with_2_servers(server: Mediaserver, rb: RobotVariables):
 
 def test_offline_system_1_server(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):
     """
-    14. Offline system 1 server settings
+    14. Offline system 1 server settings.
+
     [Tags]    C70950    cloud
     """
     with get_chrome() as driver:
@@ -126,7 +129,8 @@ def test_offline_system_1_server(server1: Mediaserver, server2: Mediaserver, rb:
 
 def test_online_2_servers(server: Mediaserver, rb: RobotVariables):
     """
-    15. Online two servers
+    15. Online two servers.
+
     [Tags]    C70957    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -147,7 +151,8 @@ def test_online_2_servers(server: Mediaserver, rb: RobotVariables):
 
 def test_1_online_1_offline(server1: Mediaserver, server2: Mediaserver, rb: RobotVariables):
     """
-    16. Server1 is online, Server2 is offline
+    16. Server1 is online, Server2 is offline.
+
     [Tags]    C70955    cloud   webadmin
     """
     server2_name = server2.get_server_name()

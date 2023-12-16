@@ -14,7 +14,7 @@ _logger = logging.getLogger(__name__)
 
 class HeaderNav:
 
-    def __init__(self, driver: WebDriver, lang="en_US", ):
+    def __init__(self, driver: WebDriver, lang="en_US"):
         self._locator = "//nx-header"
         self._driver = driver
         self._rb = RobotVariables(lang)
@@ -48,8 +48,10 @@ class HeaderNav:
         return Button(self._driver, translated_xpath)
 
     def japanese_log_out_option(self):
-        locator = ("//header//li[contains(@class, 'dropdown-item-container')]//a"
-                   "/span[contains(text(),'ログアウト')]")
+        locator = (
+            "//header//li[contains(@class, 'dropdown-item-container')]//a"
+            "/span[contains(text(),'ログアウト')]"
+            )
         return Button(self._driver, locator)
 
     def administration_selection(self):
@@ -69,7 +71,7 @@ class HeaderNav:
                 if attempt >= max_attempts:
                     raise
                 self._driver.refresh()
-                _logger.info(f"The 'Log in' button cannot be found. Retrying after refresh.")
+                _logger.info("The 'Log in' button cannot be found. Retrying after refresh.")
             else:
                 return button
 

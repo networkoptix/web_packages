@@ -3,8 +3,8 @@ from pathlib import Path
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
-from pages.login import LoginDialog
 from browsers.chrome import get_chrome
+from pages.login import LoginDialog
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.system_users import SystemUsers
@@ -14,10 +14,10 @@ password = "qweasd 123"
 
 
 def should_login_as_viewer_and_should_have_no_ability_to_search_in_left_menu(server: Mediaserver):
+    """1. Should login as "viewer" and should have no ability to "search" in left menu.
+
+    [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
     """
-        1. Should login as "viewer" and should have no ability to "search" in left menu
-        [Tags]    email    C41903    webadmin    cloud    smoke    ci    C30726
-        """
     with get_chrome() as driver:
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
@@ -44,9 +44,7 @@ def selected_node_has_different_color(server: Mediaserver):
 
 
 def users_are_seen_when_main_node_is_selected(server: Mediaserver):
-    """
-    [Tags]    C81771    webadmin    search
-    """
+    """[Tags]    C81771    webadmin    search."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         url = ENV + f"/systems/{server.id}"
@@ -62,9 +60,7 @@ def users_are_seen_when_main_node_is_selected(server: Mediaserver):
 
 
 def check_search_input(server: Mediaserver):
-    """
-    [Tags]    C81762    C81772    C81796    webadmin    search
-    """
+    """[Tags]    C81762    C81772    C81796    webadmin    search."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         viewer = server.get_cloud_viewer()
@@ -137,7 +133,7 @@ def should_perform_search_with_and_and_or_criteria(server: Mediaserver):
         assert not left_menu.has_node_with_name('Servers')
         search_field.input_text('noptix velociraptor')
         assert left_menu.has_nothing_found_text()
-        search_field.input_text(f'noptix | Server')
+        search_field.input_text('noptix | Server')
         assert left_menu.has_node_with_name('Users')
         assert left_menu.has_node_with_name(owner.email)
         assert left_menu.has_node_with_name('Servers')

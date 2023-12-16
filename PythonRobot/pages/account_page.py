@@ -85,7 +85,7 @@ class DeleteCloudAccountDialog(NxModalDialog):
     def _header(self):
         return PageText(
             self._driver,
-            self._locator + '//h1[@class="modal-title"]'
+            self._locator + '//h1[@class="modal-title"]',
             )
 
     def wait_until_loaded(self):

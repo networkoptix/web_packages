@@ -2,12 +2,11 @@ import time
 from urllib.request import Request
 from urllib.request import urlopen
 
-from selenium.webdriver.common.by import By
-
 from generic_elements import Button
 from generic_elements import Link
 from generic_elements import Page
 from generic_elements import TabItem
+from selenium.webdriver.common.by import By
 
 
 class DownloadsPage:

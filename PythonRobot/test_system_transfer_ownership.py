@@ -6,6 +6,7 @@ from NoptixLibrary.cloud_portal_api import CloudPortalAPI
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
 from email_access import EmailClient
 from email_access import get_random_email
 from pages.header import HeaderNav
@@ -18,12 +19,11 @@ from pages.system_transfer import SystemOwnership
 from pages.system_transfer import SystemTransferOwnershipModal
 from pages.system_users import SystemUsers
 from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
 def test_change_button_only_for_owner(server: Mediaserver):
-    """C105083 smoke"""
+    """C105083 smoke."""
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
         owner = server.get_cloud_owner()
@@ -48,7 +48,7 @@ def test_change_button_only_for_owner(server: Mediaserver):
 
 
 def test_initiate_transfer_then_cancel(server: Mediaserver):
-    """C105087 C105092 smoke"""
+    """C105087 C105092 smoke."""
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
         owner = server.get_cloud_owner()
@@ -73,7 +73,7 @@ def test_initiate_transfer_then_cancel(server: Mediaserver):
 
 
 def test_initiate_transfer_then_reject(server: Mediaserver):
-    """C105091 smoke"""
+    """C105091 smoke."""
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
         owner = server.get_cloud_owner()
@@ -102,7 +102,7 @@ def test_initiate_transfer_then_reject(server: Mediaserver):
 
 
 def test_initiate_transfer_then_accept(server: Mediaserver):
-    """C105093 smoke"""
+    """C105093 smoke."""
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
         owner = server.get_cloud_owner()
@@ -134,7 +134,7 @@ def test_initiate_transfer_then_accept(server: Mediaserver):
 
 
 def test_initiate_transfer_delete_user(server: Mediaserver):
-    """C105095 smoke"""
+    """C105095 smoke."""
     with get_chrome() as driver_admin, get_chrome() as driver_owner:
         owner = server.get_cloud_owner()
         admin = server.get_cloud_admin()
@@ -163,7 +163,7 @@ def test_initiate_transfer_delete_user(server: Mediaserver):
 
 
 def test_transfer_ownership_for_offline_system(server: Mediaserver):
-    """C105085 smoke"""
+    """C105085 smoke."""
     # TODO: DOES NOT WORK on develop, recheck later, maybe after manual tests
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
@@ -189,7 +189,7 @@ def test_transfer_ownership_for_offline_system(server: Mediaserver):
 
 
 def test_transfer_no_users(server: Mediaserver):
-    """C105084 smoke"""
+    """C105084 smoke."""
     with get_chrome() as driver:
         driver.get(f"{ENV}/systems/{server.id}")
         owner = server.get_cloud_owner()
@@ -206,7 +206,7 @@ def test_initiate_transfer_then_accept_and_check_email(
         server: Mediaserver,
         viewer_user: CloudAccount,
         ):
-    """C106290"""
+    """C106290."""
     owner = server.get_cloud_owner()
     cloud_auth = (owner.email, owner.password)
     viewer_role_name = "viewer"
@@ -237,8 +237,10 @@ def test_initiate_transfer_then_accept_and_check_email(
         with EmailClient(email_alias=owner.email) as client:
             email_message = client.wait_for_email_subject(
                 f"Ownership transfer for {server.name} - accepted")
-            expected_message = (f"Mark Hamill ({viewer_user.email}) has accepted your request "
-                                f"to transfer ownership of {server.name}.")
+            expected_message = (
+                f"Mark Hamill ({viewer_user.email}) has accepted your request "
+                f"to transfer ownership of {server.name}."
+                )
             actual_message = email_message.get_body()
             assert expected_message in actual_message
             expected_links = [
@@ -251,7 +253,7 @@ def test_initiate_transfer_then_accept_and_check_email(
 
 
 def can_not_transfer_to_user_that_is_not_in_system(server: Mediaserver):
-    """C105098"""
+    """C105098."""
     owner = server.get_cloud_owner()
     user_email = get_random_email()
     user_password = 'qweasd 123!'

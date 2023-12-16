@@ -3,19 +3,17 @@ from pathlib import Path
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
+from browsers.chrome import get_chrome
 from pages.login import LoginDialog
 from pages.system_admin import FailedToAccessSystemPage
 from pages.system_admin import SystemAdmin
 from pages.system_left_menu import SystemLeftMenu
 from pages.systems_page import SystemsPage
-from browsers.chrome import get_chrome
 from variables import ENV
 
 
 def page_is_opened_and_shows_the_user_list_to_owner(server: Mediaserver):
-    """
-    [Tags]    C41881    cloud
-    """
+    """[Tags]    C41881    cloud."""
     with get_chrome() as driver:
         owner = server.get_cloud_owner()
         url = ENV + f"/systems/{server.id}"
@@ -32,9 +30,7 @@ def offline_system_opens_system_page_by_link_to_user_without_permission(
         server: Mediaserver,
         user: CloudAccount,
         ):
-    """
-    [Tags]    C41572    cloud
-    """
+    """[Tags]    C41572    cloud."""
     with get_chrome() as driver:
         url = ENV + f"/systems/{server.id}"
         driver.get(url)
@@ -51,12 +47,10 @@ def system_changes_state_to_offline_if_all_its_servers_goes_offline(
         master_merged_server: Mediaserver,
         slave_merged_server: Mediaserver,
         ):
-    """
-    [Tags]    C41894    C30826    cloud
-    """
+    """[Tags]    C41894    C30826    cloud."""
     owner = master_merged_server.get_cloud_owner()
     with get_chrome() as driver:
-        url = ENV + f"/systems/"
+        url = ENV + "/systems/"
         driver.get(url)
         LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
         systems_page = SystemsPage(driver)
@@ -94,4 +88,3 @@ if __name__ == "__main__":
         cloud_server.cloud_merge(second_server)
         third_server = suite.create_cloud_server(cloud_owner, suite_name)
         system_changes_state_to_offline_if_all_its_servers_goes_offline(cloud_server, second_server)
-

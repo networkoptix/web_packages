@@ -22,7 +22,8 @@ CLOUD_API = CloudPortalAPI()
 
 def page_in_anonymous_state_register_header():
     """
-    1. Should open register page in anonymous state by clicking Register button on top right corner
+    1. Should open register page in anonymous state by clicking Register button on top right corner.
+
     [tags]    smoke    ci
     """
     with get_chrome() as driver:
@@ -33,7 +34,8 @@ def page_in_anonymous_state_register_header():
 
 def open_from_success_page():
     """
-    2. Should open register page from register success page by clicking Register button on top right corner
+    2. Should open register page from register success page by clicking Register button on top right corner.
+
     [Tags]    email
     """
     email = get_random_email(sendemail=True)
@@ -56,9 +58,7 @@ def open_from_success_page():
 
 
 def page_in_anonymous_state_redister_home():
-    """
-    3. Should open register page in anonymous state by clicking Register button on homepage
-    """
+    """3. Should open register page in anonymous state by clicking Register button on homepage."""
     with get_chrome() as driver:
         driver.get(rb.ENV)
         Button(driver, rb.CREATE_ACCOUNT_BODY).click()
@@ -66,8 +66,8 @@ def page_in_anonymous_state_redister_home():
 
 
 def page_in_anonymouse_state_navigation():
-    """
-    4. Should open register page in anonymous state
+    """4. Should open register page in anonymous state.
+
     [tags]    C24211    anonymous
     """
     with get_chrome() as driver:
@@ -77,7 +77,8 @@ def page_in_anonymouse_state_navigation():
 
 def register_user_with_correct_credentials():
     """
-    5. Should register user with correct credentials
+    5. Should register user with correct credentials.
+
     [tags]    smoke    ci
     """
     email = get_random_email(sendemail=True)
@@ -90,7 +91,8 @@ def register_user_with_correct_credentials():
 
 def valid_inputs_no_errors():
     """
-    7. With valid inputs no errors are displayed
+    7. With valid inputs no errors are displayed.
+
     [tags]    C41557
     """
     email = get_random_email()
@@ -114,7 +116,8 @@ def valid_inputs_no_errors():
 
 def password_masking_and_eye_icon():
     """
-    8. Displays password masked, shows password and changes eye icon when clicked
+    8. Displays password masked, shows password and changes eye icon when clicked.
+
     [tags]    C24211
     """
     with get_chrome() as driver:
@@ -131,9 +134,7 @@ def password_masking_and_eye_icon():
 
 
 def should_respond_to_enter_key():
-    """
-    9. Should respond to Enter key and save data
-    """
+    """9. Should respond to Enter key and save data."""
     email = get_random_email()
     with get_chrome() as driver:
         driver.get(f'{rb.ENV}/authorize?client_type=create')
@@ -149,7 +150,8 @@ def should_respond_to_enter_key():
 
 def should_respond_to_tab_key():
     """
-    10. Should respond to Tab key
+    10. Should respond to Tab key.
+
     [tags]    C41867
     """
     with get_chrome() as driver:
@@ -207,7 +209,8 @@ def should_respond_to_tab_key():
 
 def terms_and_conditions_in_new_page():
     """
-    11. Should open Terms and conditions in a new page
+    11. Should open Terms and conditions in a new page.
+
     [tags]    C41558
     """
     with get_chrome() as driver:
@@ -220,7 +223,8 @@ def terms_and_conditions_in_new_page():
 
 def privacy_policy_in_new_page():
     """
-    12. Should open Privacy Policy in a new page
+    12. Should open Privacy Policy in a new page.
+
     [tags]    C41558
     """
     with get_chrome() as driver:
@@ -233,7 +237,8 @@ def privacy_policy_in_new_page():
 
 def cant_register_email_already_registered():
     """
-    19. Cannot register email that is already registered
+    19. Cannot register email that is already registered.
+
     [tags]    C41563
     """
     email = get_random_email()
@@ -247,7 +252,8 @@ def cant_register_email_already_registered():
 
 def cant_register_email_already_activated(activated_cloud_user: CloudAccount):
     """
-    20. Cannot register email that is already activated
+    20. Cannot register email that is already activated.
+
     [tags]    C41563
     """
     with get_chrome() as driver:
@@ -264,7 +270,8 @@ def cant_register_email_already_activated(activated_cloud_user: CloudAccount):
 
 def check_register_email():
     """
-    21. Check registration email links, colors, cloud name, and user name
+    21. Check registration email links, colors, cloud name, and user name.
+
     [tags]    C24211    C43021    Customizations    smoke    ci
     """
     with get_chrome() as driver:

@@ -1,22 +1,22 @@
 import logging
 from pathlib import Path
 
-from colorama import Fore
-
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from generic_elements import ElementNotVisible
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def test_access_owner(server: Mediaserver, rb: RobotVariables):
     """
-    17. Owner/admin has access
+    17. Owner/admin has access.
+
     [Tags]    C70957    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -37,7 +37,8 @@ def test_access_owner(server: Mediaserver, rb: RobotVariables):
 
 def test_access_administrator(server: Mediaserver, rb: RobotVariables):
     """
-    18. Administrator has access
+    18. Administrator has access.
+
     [Tags]    C70957    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -58,7 +59,8 @@ def test_access_administrator(server: Mediaserver, rb: RobotVariables):
 
 def test_access_user(server: Mediaserver, user: CloudAccount, rb: RobotVariables):
     """
-    19-22. Users don't have access
+    19-22. Users don't have access.
+
     [Tags]    C69853    cloud    webadmin
     """
     with get_chrome() as driver:

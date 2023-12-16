@@ -1,4 +1,4 @@
-"""robot_tests/test-cases/system-servers.robot"""
+"""robot_tests/test-cases/system-servers.robot."""
 import logging
 from pathlib import Path
 
@@ -18,7 +18,8 @@ from pages.system_admin import SystemAdmin
 
 def test_change_port_only_for_owner(server: Mediaserver, rb: RobotVariables, cloud_account: CloudAccount):
     """
-    7. Change port is only available for owner
+    7. Change port is only available for owner.
+
     [Tags]    C70927    cloud    webadmin
     """
     with get_chrome() as driver:
@@ -40,7 +41,8 @@ def test_change_port_only_for_owner(server: Mediaserver, rb: RobotVariables, clo
 
 def test_change_port_field_validation(server: Mediaserver, rb: RobotVariables):
     """
-    8. Port field validation
+    8. Port field validation.
+
     [Tags]    C70929    cloud    webadmin     CLOUD-8753
     """
     logger = logging.getLogger('8. Port field validation')
@@ -106,7 +108,8 @@ def test_change_port_field_validation(server: Mediaserver, rb: RobotVariables):
 
 def test_change_port(server: Mediaserver, rb: RobotVariables):
     """
-    9. Change port
+    9. Change port.
+
     [Tags]    C70975    cloud    webadmin
     """
     logger = logging.getLogger('9. Change port')
@@ -138,7 +141,8 @@ def test_change_port(server: Mediaserver, rb: RobotVariables):
 
 def test_not_owner_cannot_change_port(server: Mediaserver, cloud_account: CloudAccount):
     """
-    10. Administrator cannot change port via API
+    10. Administrator cannot change port via API.
+
     [Tags]    C70927    cloud    webadmin   WIP
     """
     server.api.reconnect()  # Authorization could be broken after previous tests

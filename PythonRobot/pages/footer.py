@@ -3,6 +3,7 @@ from generic_elements import Button
 
 
 class Footer:
+
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
@@ -20,7 +21,11 @@ class Footer:
         return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.PRIVACY}')]")
 
     def copyright_link(self):
-        return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.COPYRIGHT_SYMBOL}')]/span[contains(text(),'{self.rb.COMPANY}')]/parent::a")
+        return Button(
+            self.driver,
+            f"//nx-nav-footer//a[contains(text(),{self.rb.COPYRIGHT_SYMBOL!r})]"
+            f"/span[contains(text(),{self.rb.COMPANY!r})]/parent::a",
+            )
 
     def integrations_link(self):
         return Button(self.driver, f"//nx-nav-footer//a[contains(text(),'{self.rb.INTEGRATIONS_TITLE_TEXT}')]")

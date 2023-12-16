@@ -11,6 +11,7 @@ from generic_elements import ToastNotification
 
 
 class LoginDialog:
+
     def __init__(self, driver, lang="en_US", twofa=""):
         self._driver = driver
         self.rb = RobotVariables(lang)
@@ -21,14 +22,14 @@ class LoginDialog:
 
     def email_does_not_exist_message(self) -> PageText:
         translated_xpath = self.rb.replace_nested_variables(
-            f"//p[contains(text(),'{self.rb.ACCOUNT_DOES_NOT_EXIST_TEXT}')]"
-        )
+            f"//p[contains(text(),'{self.rb.ACCOUNT_DOES_NOT_EXIST_TEXT}')]",
+            )
         return PageText(self._driver, translated_xpath)
 
     def you_can_create_account_message(self) -> PageText:
         translated_xpath = self.rb.replace_nested_variables(
-            f"//p[contains(text(),'{self.rb.YOU_CAN_CREATE_ACCOUNT_TEXT}')]"
-        )
+            f"//p[contains(text(),'{self.rb.YOU_CAN_CREATE_ACCOUNT_TEXT}')]",
+            )
         return PageText(self._driver, translated_xpath)
 
     def password_input(self) -> TextField:
@@ -38,7 +39,6 @@ class LoginDialog:
         translated_xpath = self.rb.replace_nested_variables(
             "//nx-authorize-component//p[contains(text(),'{WRONG_PASSWORD}')]")
         return TextField(self._driver, translated_xpath)
-
 
     def login_input_error_text(self):
         return TextField(self._driver, '//nx-authorize-component//p[contains(@class,"error-label")]').get_text()
@@ -67,7 +67,7 @@ class LoginDialog:
         return TextField(self._driver, "//nx-authorize-component//nx-authorize-auth-code-component//input[@id='authCode']")
 
     def twofa_login_button(self):
-        return Button(self._driver, f"//nx-authorize-component//nx-process-button//button[@type='submit']")
+        return Button(self._driver, "//nx-authorize-component//nx-process-button//button[@type='submit']")
 
     def twofa_backup_code_button(self):
         return Button(self._driver, f"//nx-authorize-auth-code-component//span[text()='{self.rb.TWOFA_BACKUP_CODE_BTN_TEXT}']")
@@ -76,7 +76,10 @@ class LoginDialog:
         return TextField(self._driver, "//nx-authorize-backup-code-component//input[@id='backupCode']")
 
     def twofa_error_login_code(self):
-        return PageText(self._driver, f'//nx-authorize-component//nx-authorize-auth-code-component//p[contains(text(),"{self.rb.TWOFA_INVALID_CODE_TEXT}")]')
+        return PageText(
+            self._driver,
+            f'//nx-authorize-component//nx-authorize-auth-code-component//p[contains(text(),{self.rb.TWOFA_INVALID_CODE_TEXT!r})]',
+              )
 
     def forgot_password_button(self):
         translated_xpath = self.rb.replace_nested_variables("//button//span[contains(text(),'{FORGOT_PASSWORD_TEXT}')]")
@@ -145,8 +148,13 @@ class LoginDialog:
         label.wait_until_visible()
 
     def wait_until_login_finished(self):
-        PageText(
-            self._driver, '//nx-account-settings-select//*[contains(@class, "displayed-name")]').wait_until_visible()
+        (
+            PageText(
+                self._driver,
+                '//nx-account-settings-select//*[contains(@class, "displayed-name")]',
+                )
+            .wait_until_visible()
+            )
 
 
 class AccountActivatedPane:
@@ -215,7 +223,7 @@ class ResetPasswordForm:
     def get_cannot_save_notification(self) -> ToastNotification:
         return ToastNotification(
             self._driver,
-            "//nx-toast//span[contains(text(),'Cannot save password')]"
+            "//nx-toast//span[contains(text(),'Cannot save password')]",
             )
 
     def wait_for_password_required_error(self):

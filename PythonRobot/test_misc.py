@@ -1,8 +1,8 @@
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
 from generic_elements import Button
 from generic_elements import Link
 from generic_elements import PageText
-from browsers.chrome import get_chrome
 from variables import ENV
 
 

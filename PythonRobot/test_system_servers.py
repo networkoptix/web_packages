@@ -1,21 +1,21 @@
-"""robot_tests/test-cases/system-servers.robot"""
+"""robot_tests/test-cases/system-servers.robot."""
 import time
 from pathlib import Path
-
-from colorama import Fore
 
 from NoptixLibrary.suite import Mediaserver
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
+from browsers.chrome import get_chrome
+from colorama import Fore
 from pages.header import HeaderNav
 from pages.login import LoginDialog
-from browsers.chrome import get_chrome
 from pages.system_admin import SystemAdmin
 
 
 def test_verify_server_buttons(server: Mediaserver, rb: RobotVariables):
     """
-    0.1 Verify server buttons are enabled
+    0.1 Verify server buttons are enabled.
+
     [Tags]    CLOUD-10255   cloud   webadmin
     """
     with get_chrome() as driver:

@@ -35,16 +35,22 @@ class HistoryPage:
         return collected_links
 
     def get_releases_tab(self) -> '_Tab':
-        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")'
-                             f' and text()="{self._variables.RELEASES_TAB_TEXT}"]')
+        return self._get_tab(
+            '//nx-download-history//span[contains(@class,"tab-heading")'
+            f' and text()="{self._variables.RELEASES_TAB_TEXT}"]',
+            )
 
     def get_patches_tab(self) -> '_Tab':
-        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")'
-                             f' and text()="{self._variables.PATCHES_TAB_TEXT}"]')
+        return self._get_tab(
+            '//nx-download-history//span[contains(@class,"tab-heading")'
+            f' and text()="{self._variables.PATCHES_TAB_TEXT}"]',
+            )
 
     def get_betas_tab(self) -> '_Tab':
-        return self._get_tab('//nx-download-history//span[contains(@class,"tab-heading")'
-                             f' and text()="{self._variables.BETAS_TAB_TEXT}"]')
+        return self._get_tab(
+            '//nx-download-history//span[contains(@class,"tab-heading")'
+            f' and text()="{self._variables.BETAS_TAB_TEXT}"]',
+            )
 
     def _get_tab(self, locator):
         TabItem(self._driver, locator).wait_until_visible()
@@ -83,6 +89,7 @@ class _Tab:
 
 
 class _PlatformDownloadBlock:
+
     def __init__(self, driver: WebDriver, element: WebElement):
         self._driver = driver
         self._element = element
@@ -109,6 +116,6 @@ def _check_link(link: str):
                 f"HEAD {link} request returned unexpected HTTP status {response.status_code}")
         content_length = int(response.headers.get('Content-Length'))
         if content_length is None:
-            raise RuntimeError(f"Response does not have the field Content-Length.")
+            raise RuntimeError("Response does not have the field Content-Length.")
         if content_length < 1000:
             raise RuntimeError(f"File {link} is too small ({content_length} bytes).")

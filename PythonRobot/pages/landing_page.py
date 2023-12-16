@@ -15,14 +15,12 @@ class LandingPage:
     def create_account_button(self):
         translated_xpath = self.rb.replace_nested_variables("//a[contains(text(), '{CREATE ACCOUNT BUTTON TEXT}')]")
         return Button(self.driver, translated_xpath)
-    
+
     def _session_expired_dismiss(self):
-        """
-        Deals with intermittent session expired modal after logging out.
-        """
+        """Deals with intermittent session expired modal after logging out."""
         try:
             PageText(self.driver, "//span[contains(text(), 'Your session has expired')]").wait_until_visible()
-        except:
+        except Exception:
             pass
         else:
             Button(self.driver, "//button[contains(text(),'OK')]").click()

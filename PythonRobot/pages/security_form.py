@@ -11,6 +11,7 @@ from generic_elements import TextField
 
 
 class SecurityForm:
+
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.twofa_modal = "//nx-enable-account-2fa"
@@ -45,7 +46,7 @@ class SecurityForm:
         return PageText(self.driver, f"{self.twofa_modal}//nx-info-block//div[@class='block-section-values']//p[contains(@title,'Key')]")
 
     def twofa_totp_input(self):
-        return TextField(self.driver, f"//nx-2fa-code-input/input")
+        return TextField(self.driver, "//nx-2fa-code-input/input")
 
     def twofa_verify_button(self):
         return Button(self.driver, f"{self.twofa_modal}//button[text()='{self.rb.TWOFA_VERIFY_BTN_TEXT}']")
@@ -69,7 +70,7 @@ class SecurityForm:
         return PageText(self.driver, f"//nx-require-code-on-login//p/span[text()='{self.rb.TWOFA_SETTINGS_MODAL_DESCRIPTION_TEXT1}']")
 
     def twofa_disable_modal_button(self):
-        return Button(self.driver, f"//nx-disable-account-2fa//button[@type='submit']")
+        return Button(self.driver, "//nx-disable-account-2fa//button[@type='submit']")
 
     def twofa_settings_modal_on_instructions(self):
         return PageText(self.driver, f"//nx-require-code-on-login//label/span[text()='{self.rb.TWOFA_SETTINGS_MODAL_INST_ON_TEXT}']")
@@ -78,7 +79,7 @@ class SecurityForm:
         return PageText(self.driver, f"//nx-require-code-on-login//label/span[text()='{self.rb.TWOFA_SETTINGS_MODAL_INST_OFF_TEXT}']")
 
     def twofa_settings_modal_apply(self):
-        return Button(self.driver, f"//nx-require-code-on-login//nx-process-button//button[@type='submit']/..")
+        return Button(self.driver, "//nx-require-code-on-login//nx-process-button//button[@type='submit']/..")
 
     def twofa_settings_modal_cancel(self):
         return Button(self.driver, f"//nx-require-code-on-login//button[(@type='reset') or contains(text(),'{self.rb.CANCEL_BUTTON_TEXT}')]")
@@ -128,4 +129,3 @@ class SecurityForm:
     def _wait_until_form_is_visible(self):
         self.twofa_enable_button().wait_until_visible()
         self.twofa_disabled_badge().wait_until_visible()
-
