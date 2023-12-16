@@ -15,7 +15,7 @@ import { NxThreeDotDropdown } from '@components/dropdowns/three-dot/three-dot.co
 import { EditableModule } from '@components/editable/editable.module';
 import { NxInfoBlockComponent } from '@components/info-block/info-block.component';
 import { NxNumericComponent } from '@components/numeric-input/numeric.component';
-import { OpenClientSectionPlaceholderModule } from '@components/placeholders/open-client-section/open-client-section.module';
+import { NxOpenClientSectionPlaceholderComponent } from '@components/placeholders/open-client-section/open-client-section.component';
 import { NxPagePlaceholderComponent } from '@components/placeholders/page/page-placeholder.component';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
 import { NxRadioComponent } from '@components/radio/radio.component';
@@ -48,7 +48,6 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxGenericDropdownModule,
         NxImageComponent,
         NxNumericComponent,
-        OpenClientSectionPlaceholderModule,
         NxPagePlaceholderComponent,
         PipesModule,
         NxPreLoaderComponent,
@@ -59,6 +58,7 @@ import { NxRecordingSettingsComponent } from './recording-settings/recording-set
         NxResizeObserver,
         NxAddSvgSrcDirective,
         NxDropdownModule,
+        NxOpenClientSectionPlaceholderComponent,
     ],
     providers: [],
     declarations: [

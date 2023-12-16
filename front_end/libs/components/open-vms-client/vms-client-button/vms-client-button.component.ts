@@ -20,6 +20,6 @@ export class NxVmsClientButtonComponent extends NxOpenVmsClientBase {
     CONFIG = nxConfig;
 
     override open(): void {
-        this.urlProtocol.openVmsClient(this.system);
+        this.clientService.openClient(this.system);
     }
 }

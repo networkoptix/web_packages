@@ -11,7 +11,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxProcessService } from '@services/process.service';
 import type { NxSystemWithUserInfo } from '@services/system.service/system-types';
 import { NxSystemsService } from '@services/systems.service';
-import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { NxVmsClientService } from '@services/url-protocol.service';
 import type { LinkSettings } from '@services/url-protocol.service';
 import { openClientTimeout, openMobileClientTimeout } from '@variables/static-variables';
 
@@ -70,7 +70,7 @@ export class NxDebugComponent {
         private dialogsService: NxDialogsService,
         private processService: NxProcessService,
         private systemsService: NxSystemsService,
-        private urlProtocol: NxUrlProtocolService,
+        private urlProtocol: NxVmsClientService,
     ) {
         this.accountService.get().then(acc => {
             this.init();

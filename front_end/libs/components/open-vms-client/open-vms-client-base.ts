@@ -1,14 +1,14 @@
 import { Injectable, computed } from '@angular/core';
 
-import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { NxVmsClientService } from '@services/vms-client.service';
 
 @Injectable()
 export abstract class NxOpenVmsClientBase {
-    openingSystem$$ = computed(() => this.urlProtocol.openingSystem$$());
+    openingSystem$$ = computed(() => this.clientService.openingSystem$$());
 
-    constructor(protected urlProtocol: NxUrlProtocolService) {}
+    constructor(protected clientService: NxVmsClientService) {}
 
     open(): void {
-        this.urlProtocol.openVmsClient();
+        this.clientService.openClient();
     }
 }

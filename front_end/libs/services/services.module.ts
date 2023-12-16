@@ -16,7 +16,7 @@ import { NxPageService } from './page.service';
 import { NxScrollMechanicsService } from './scroll-mechanics.service';
 import { NxSearchService } from './search.service';
 import { NxSystemsService } from './systems.service';
-import { NxUrlProtocolService } from './url-protocol.service';
+import { NxVmsClientService } from './vms-client.service';
 
 @NgModule({
     imports: [CommonModule],
@@ -31,7 +31,7 @@ import { NxUrlProtocolService } from './url-protocol.service';
         NxSystemsService,
         NxAccountService,
         NxSearchService,
-        NxUrlProtocolService,
+        NxVmsClientService,
         NxHeaderService,
         NxScrollMechanicsService,
         NxSwCacheService,

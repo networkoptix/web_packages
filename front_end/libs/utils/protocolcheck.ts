@@ -93,6 +93,9 @@ function isMobile(): boolean {
     return ['Android', 'iPhone', 'iPad', 'iPod'].some(agent => navigator.userAgent.includes(agent));
 }
 
+export const OPEN_DESKTOP_CLIENT_TIMEOUT_MS = 4000;
+export const OPEN_MOBILE_CLIENT_TIMEOUT_MS = 300;
+
 /**
  * Detect whether a custom protocol is available in browser.
  *
@@ -104,14 +107,8 @@ function isMobile(): boolean {
  *
  * Original source: https://github.com/vireshshah/custom-protocol-check
  */
-export function protocolCheck(
-    uri: string,
-    successCb: Callback,
-    failCb: Callback,
-    openClientTimeout: number,
-    openMobileClientTimeout: number,
-): void {
-    const timeout = !isMobile() ? openClientTimeout : openMobileClientTimeout;
+export function protocolCheck(uri: string, successCb: Callback, failCb: Callback): void {
+    const timeout = !isMobile() ? OPEN_DESKTOP_CLIENT_TIMEOUT_MS : OPEN_MOBILE_CLIENT_TIMEOUT_MS;
     if (isChromium()) {
         // Windows/MacOS/Linux/Android Chrome/Edge/Opera
         openUriWithTimeoutHack(uri, successCb, failCb, timeout);
@@ -120,7 +117,7 @@ export function protocolCheck(
         openUriWithHiddenFrame(uri, successCb, failCb, timeout);
     } else if (isDesktopSafari()) {
         // MacOS Safari
-        openUriWithHiddenFrame(uri, successCb, failCb, openClientTimeout);
+        openUriWithHiddenFrame(uri, successCb, failCb, OPEN_DESKTOP_CLIENT_TIMEOUT_MS);
     } else {
         // iOS browsers (all AppleWebKit based)
         openUriWithTimeoutHack(uri, successCb, failCb, timeout);

@@ -13,7 +13,6 @@ import { NxLoginService } from '@services/login.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
-import { NxUrlProtocolService } from '@services/url-protocol.service';
 import { images } from '@static-variables';
 
 @Component({
@@ -28,7 +27,6 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
 
     LANG = staticLang;
 
-    private urlProtocol = inject(NxUrlProtocolService);
     private nxSystemAPIService = inject(NxSystemAPIService);
     private account = inject(NxAccountService);
     private loginService = inject(NxLoginService);
@@ -52,11 +50,8 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
 
         this.temporaryUserToken = this.loginService.temporaryUserToken$$();
 
-        this.openDesktopApp();
-    }
-
-    openDesktopApp(): void {
-        this.urlProtocol.openDesktopAsTemporaryUser(this.temporaryUserToken);
+        const uri = `${this.CONFIG.clientProtocol}://${window.location.host}?tmp_token=${this.temporaryUserToken}`;
+        window.location.href = uri;
     }
 
     handleLoginToWeb(): void {

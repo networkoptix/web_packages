@@ -11,7 +11,7 @@ import type { Account } from '@services/account.service/account';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { Process } from '@services/process.service/process';
-import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { NxVmsClientService } from '@services/vms-client.service';
 import { icons } from '@static-variables';
 
 import type { SystemItem } from '../../home.types';
@@ -42,7 +42,7 @@ export class NxSystemCardComponent {
     modalActive: boolean;
     icons = icons;
 
-    openingClient$$ = computed(() => this.urlProtocol.openingSystem$$());
+    openingClient$$ = computed(() => this.clientService.openingSystem$$());
 
     get tagType(): string {
         return (
@@ -63,7 +63,7 @@ export class NxSystemCardComponent {
 
     constructor(
         configService: NxConfigService,
-        private urlProtocol: NxUrlProtocolService,
+        private clientService: NxVmsClientService,
         private router: Router,
     ) {
         this.CONFIG = configService.config;
@@ -96,6 +96,6 @@ export class NxSystemCardComponent {
     }
 
     openVmsClient(): void {
-        this.urlProtocol.openVmsClient({ id: this.system.id, useRest: this.useRest });
+        this.clientService.openClient({ id: this.system.id, useRest: this.useRest });
     }
 }

@@ -9,12 +9,6 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import { slashJoin } from '@utils/general';
 import { protocolCheck } from '@utils/protocolcheck';
 
-import {
-    openClientError,
-    openClientTimeout,
-    openMobileClientTimeout,
-} from '../variables/static-variables';
-
 import { NxAccountService } from './account.service';
 import { nxConfig as CONFIG } from './nx-config/config';
 import { NxSystemService } from './system.service/system.service';
@@ -27,7 +21,7 @@ import type { NxSystemInfo } from './systems.service.types';
 @Injectable({
     providedIn: 'root',
 })
-export class NxUrlProtocolService {
+export class NxVmsClientService {
     private host = environment.production ? window.location.host : environment.cloudHost;
 
     constructor(
@@ -38,12 +32,8 @@ export class NxUrlProtocolService {
         private dialogs: NxDialogsService,
     ) {}
 
-    private get baseUri(): string {
-        return `${CONFIG.clientProtocol}://`;
-    }
-
     private generateLink(systemId: string, auth: string, code: string): string {
-        const base = slashJoin([`${this.baseUri}${this.host}`, 'client', systemId], {
+        const base = slashJoin([`${CONFIG.clientProtocol}://${this.host}`, 'client', systemId], {
             trailing: true,
         });
         const url = new URL(base);
@@ -60,72 +50,47 @@ export class NxUrlProtocolService {
         return this.accountService.authKey().then(auth => this.generateLink(systemId, auth, ''));
     }
 
-    private getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
-        return (
-            environment.isLocal
-                ? Promise.resolve({ code: '' })
-                : this.cloudApiService.getCode('*').toPromise()
-        ).then(({ code }) => {
-            const link = this.generateLink(systemId, '', code);
-            return { code, link };
-        });
+    private async getLinkOauth(systemId: string): Promise<{ code: string; link: string }> {
+        const { code } = environment.isLocal
+            ? { code: '' }
+            : await firstValueFrom(this.cloudApiService.getCode('*'));
+        return { code, link: this.generateLink(systemId, '', code) };
     }
 
-    private checkLink(systemId: string, useOauth: boolean): Promise<void> {
+    private async checkLink(systemId: string, useOauth: boolean): Promise<void> {
         if (!useOauth) {
-            return this.getLinkLegacy(systemId).then(link => {
-                /* The browser opens a dialog that we cannot directly detect or get a response from.
-                 * However, when the browser dialog opens it causes the page to blur so we use that to detect what happens.
-                 */
-                return new Promise<void>((resolve, reject) => {
-                    protocolCheck(
-                        link,
-                        resolve,
-                        () => {
-                            reject({ resultCode: openClientError });
-                        },
-                        openClientTimeout,
-                        openMobileClientTimeout,
-                    );
-                });
+            const link = await this.getLinkLegacy(systemId);
+            /* The browser opens a dialog that we cannot directly detect or get a response from.
+            However, when the browser dialog opens it causes the page to blur so we use that to
+            detect what happens. */
+            return new Promise<void>((resolve, reject) => {
+                protocolCheck(link, resolve, reject);
             });
         } else {
-            return this.getLinkOauth(systemId).then(({ code, link }) => {
-                /* If user has previously checked "Always allow {location.host} to open {protocol} links"
-                in the browser dialog, the dialog will not appear and cause the page to blur
-                when the client is opened
+            const { code, link } = await this.getLinkOauth(systemId);
+            /* If user has previously checked "Always allow {location.host} to open {protocol} links"
+            in the browser dialog, the dialog will not appear and cause the page to blur
+            when the client is opened
 
-                In that case, we try to get cloud tokens using the access code. If this fails,
-                then the code has already been used (by the installed client). Otherwise, invalidate
-                the tokens and reject. */
-                return new Promise<void>((resolve, reject) => {
-                    protocolCheck(
-                        link,
-                        resolve,
-                        () => {
-                            firstValueFrom(this.cloudApiService.getTokensFromCloud(code))
-                                .then(res => {
-                                    this.cloudApiService
-                                        .logoutTokens(res.access_token, res.refresh_token)
-                                        .finally(() => reject());
-                                })
-                                .catch(() => resolve());
-                        },
-                        openClientTimeout,
-                        openMobileClientTimeout,
-                    );
+            In that case, we try to get cloud tokens using the access code. If this fails,
+            then the code has already been used (by the installed client). Otherwise, invalidate
+            the tokens and reject. */
+            return new Promise<void>((resolve, reject) => {
+                protocolCheck(link, resolve, () => {
+                    firstValueFrom(this.cloudApiService.getTokensFromCloud(code))
+                        .then(res => {
+                            this.cloudApiService
+                                .logoutTokens(res.access_token, res.refresh_token)
+                                .finally(() => reject());
+                        })
+                        .catch(() => resolve());
                 });
             });
         }
     }
 
-    openDesktopAsTemporaryUser(temporaryUserToken: string): void {
-        const uri = `${this.baseUri}${window.location.host}?tmp_token=${temporaryUserToken}`;
-        window.location.href = uri;
-    }
-
     openingSystem$$ = signal<string | null>(null);
-    openVmsClient(system?: Pick<NxSystemInfo, 'id' | 'useRest'>): void {
+    openClient(system?: Pick<NxSystemInfo, 'id' | 'useRest'>): void {
         const account = this.accountService.account;
         system ??= this.systemService.getCurrentSystem();
 

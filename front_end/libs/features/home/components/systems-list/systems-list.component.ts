@@ -27,7 +27,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxUriService } from '@services/uri.service';
-import { NxUrlProtocolService } from '@services/url-protocol.service';
+import { NxVmsClientService } from '@services/vms-client.service';
 import { icons, search } from '@static-variables';
 import { caseInsenstiveSearch } from '@utils/general';
 
@@ -60,7 +60,7 @@ export class HomeSystemListComponent {
     systemsService = inject(NxSystemsService);
     translateService = inject(TranslateService);
     uriService = inject(NxUriService);
-    urlProtocol = inject(NxUrlProtocolService);
+    clientService = inject(NxVmsClientService);
 
     private nonOrgSystemsIds$$ = signal<string[]>([]);
     @Input() set nonOrgSystemsIds(systems: string[]) {
@@ -106,7 +106,7 @@ export class HomeSystemListComponent {
                 {
                     name: openVms,
                     id: system.id,
-                    action: () => this.urlProtocol.openVmsClient(system),
+                    action: () => this.clientService.openClient(system),
                 },
             ];
             return actionMap;
