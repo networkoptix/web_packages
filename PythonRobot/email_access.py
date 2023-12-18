@@ -53,9 +53,9 @@ class EmailMessage:
         for expected_link in expected_links:
             for link in self._get_links():
                 if expected_link in link:
-                    break
-            else:
-                raise RuntimeError(f"Expected link not found in email: {expected_link}")
+                    return
+        else:
+            raise RuntimeError(f"Expected link not found in email: {expected_link}")
 
     def get_activate_account_link(self):
         for link in self._get_links():
