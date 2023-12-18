@@ -3,7 +3,8 @@ from time import sleep
 from typing import TypedDict, Tuple
 from uuid import uuid4, UUID
 
-from django.db.models import Subquery
+from django.core.cache import caches
+from django.db.models import Subquery, Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -100,7 +101,7 @@ def channel_partner_roles(request):
 
 
 @extend_schema(
-    tags=['Organization Users'], responses=OrganizationRoleSerializer,
+    tags=['Organization Users'], responses=OrganizationRoleSerializer(many=True),
     summary='Get roles for Organizations',
     description='Returns list of available roles that can be assigned for a user of an Organization'
 )

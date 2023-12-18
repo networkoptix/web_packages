@@ -21,7 +21,8 @@ from partners.models import (
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
     ChannelPartnerViewSet, ChannelPartnerNestedViewSet, OrganizationViewSet,
-    SystemGroupUserViewSet, system_user, system_users, user_systems, SystemGroupViewSet, grant_access
+    SystemGroupUserViewSet, system_user, system_users, user_systems, SystemGroupViewSet, organization_roles,
+    grant_access
 )
 from tools.serializers import VALUE_REPLACEMENT
 
@@ -422,7 +423,6 @@ class TestOrganizationUserViewSet:
         assert response.status_code == 400
         assert (f"User {cp_admin.user.email} has a role in the organization parent channel partner"
                 in response.data['email'][0])
-
 
 class TestChannelPartnerUserViewSet:
 
@@ -1203,6 +1203,41 @@ class TestSystemGroupViewSet:
         assert response.status_code == 404
 
 
+class TestOrganizationRole:
+    def test_organization_roles_has_all_fields(self, channel_partner_factory, cp_user_factory, arf):
+        cp = channel_partner_factory()
+        cp_admin = cp_user_factory(channel_partner=cp)
+
+        request = arf.get('/partners/organization_roles')
+        response = organization_roles(request)
+        actual_records = response.data
+
+        required_fields = ['id', 'permissions', 'systemRole', 'name', 'system_role_uuid', 'systemRoleId']
+        results = []
+        for record in actual_records:
+            results.append(not (set(required_fields) - record.keys()))
+
+        assert all(results)
+
+
+class TestSystemUser:
+    def test_system_user_has_all_fields(self,channel_partner_factory, cp_user_factory, arf):
+        cp = channel_partner_factory()
+        email = "my-test@aol.com"
+        cp_admin = cp_user_factory(email=email, channel_partner=cp)
+
+        request = arf.get(f'/internal/partners/users/{email}/systems')
+        response = user_systems(request, email=email)
+        actual_records = response.data
+
+        required_fields = ['system_id', 'systemId', 'vmsRoles', 'membership_type', 'membershipType']
+        results = []
+        for record in actual_records:
+            results.append(not (set(required_fields) - record.keys()))
+
+        assert all(results)
+
+
 class TestGrantAccessView:
     @pytest.fixture(autouse=True)
     def setUp(self,mock_auth_with_user,
@@ -1233,6 +1268,7 @@ class TestGrantAccessView:
         response = grant_access(request)
         assert type(response) == HttpResponseForbidden
         assert response.status_code == 403
+
     @override_settings(DEBUG=True)
     def test_grant_access_debug_true_valid_email(self):
         data = {'email': 'test@networkoptix.com'}
