@@ -331,7 +331,15 @@ class Mediaserver:
             DEFAULT_PASSWORD,
             is_cloud=False,
             )
+        new_local_user['id'] = new_local_user['id'].strip('{}')
         return new_local_user
+
+    def update_local_users(self, local_users):
+        if len(local_users) == 5:
+            self._local_users = local_users
+        else:
+            _logger.debug(local_users)
+            raise("Local user's list is incomplete.")
 
     def disconnect_from_cloud(self):
         _CLOUD_API.disconnect(

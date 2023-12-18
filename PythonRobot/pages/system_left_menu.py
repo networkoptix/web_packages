@@ -3,6 +3,7 @@ import time
 
 from selenium.common.exceptions import NoSuchElementException
 from selenium.common.exceptions import StaleElementReferenceException
+from generic_elements import ElementNotVisible
 from selenium.webdriver.common.by import By
 
 from RobotVariables import RobotVariables
@@ -223,6 +224,13 @@ class UsersDropdown(DropDown):
         try:
             self.get_local_user_with_username(user_name)
         except _UserNotFoundError:
+            return False
+        return True
+
+    def has_user_in_menu_with_id(self, user_id):
+        try:
+            self.get_user_link_by_id(user_id).wait_until_visible()
+        except ElementNotVisible:
             return False
         return True
 

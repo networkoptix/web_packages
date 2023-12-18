@@ -45,17 +45,15 @@ def local_user_deleted_on_server_gone_from_ui(server: Mediaserver):
     _reset_local_users(server)
     owner = server.get_cloud_owner()
     sys_admin_url = ENV + f"/systems/{server.id}"
-    deleted_user = "Local+viewer"
-    deleted_user_id = server.api.get_user_id_by_name(deleted_user)
-    server.api.remove_user(deleted_user_id)
+    deleted_user = server.get_local_users()['viewer']
+    server.api.remove_user(deleted_user['id'])
     with get_chrome() as driver:
         try:
             driver.get(sys_admin_url)
             LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
             SystemAdmin(driver)
             users_menu = SystemLeftMenu(driver).users_dropdown()
-            users_menu.open()
-            assert not users_menu.has_local_user_with_username(deleted_user)
+            assert not users_menu.has_user_in_menu_with_id(deleted_user['id'])
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -72,23 +70,21 @@ def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver):
     _reset_local_users(server)
     owner = server.get_cloud_owner()
     url = ENV + f"/systems/{server.id}"
-    deleted_user = "Local+viewer"
-    deleted_user_id = server.api.get_user_id_by_name(deleted_user)
+    deleted_user = server.get_local_users()['viewer']
     with get_chrome() as driver:
         try:
             driver.get(url)
             LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
             SystemAdmin(driver)
             users_menu = SystemLeftMenu(driver).users_dropdown()
-            users_menu.open()
-            users_menu.get_local_user_with_username(deleted_user).click()
+            users_menu.get_user_link_by_id(deleted_user['id']).click()
             user_screen = SystemUsers(driver)
             user_screen.local_user_delete_button().click()
             user_screen.local_user_delete_confirm_button().click()
             driver.get(url)
             SystemAdmin(driver)
             for user in server.api.get_users():
-                assert not user["id"] == deleted_user_id
+                assert not user["id"] == deleted_user['id']
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -112,8 +108,7 @@ def new_local_user_appears_in_cloud_portal(server: Mediaserver):
             LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
             SystemAdmin(driver)
             users_menu = SystemLeftMenu(driver).users_dropdown()
-            users_menu.open()
-            users_menu.get_local_user_with_username(new_local_user['name']).click()
+            users_menu.get_user_link_by_id(new_local_user['id']).click()
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -135,11 +130,9 @@ def owner_and_admin_see_local_users(server: Mediaserver, user: CloudAccount):
             LoginDialog(driver).basic_cloud_login(user.email, user.password)
             SystemAdmin(driver)
             users_menu = SystemLeftMenu(driver).users_dropdown()
-            users_menu.open()
             for permission in permissions:
-                assert users_menu.get_local_user_with_username(
-                    server.get_local_users()[permission]['login']).is_visible(), \
-                f"{user.email} is not able to see local {permission}"
+                assert users_menu.has_user_in_menu_with_id(
+                    server.get_local_users()[permission]['id']), f"{user.email} is not able to see local {permission}"
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -191,8 +184,9 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     if len(locals_list) == 5:
         _reset_local_users_api(locals_list, server)
     else:
-        _create_new_local_users(len(locals_list), server, locals_list)
-    return local_users
+        server.update_local_users(
+            _create_new_local_users(len(locals_list), server, locals_list))
+
 
 
 def _reset_local_users_api(locals, server):
@@ -221,10 +215,11 @@ def _reset_local_users_api(locals, server):
         )
 
 
+
 def _create_new_local_users(count, server: Mediaserver, locals_list):
     if count != 0:
         _delete_all_local_users_via_api(server, locals_list)
-    server.create_local_users()
+    return server.create_local_users()
 
 
 def _delete_all_local_users_via_api(server, locals_list):
