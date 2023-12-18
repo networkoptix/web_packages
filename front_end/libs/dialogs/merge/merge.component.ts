@@ -1024,7 +1024,7 @@ export class MergeModalContent {
                         .getRemoteServerInfo(this.serverUrl)
                         .toPromise()
                         .catch(err => {
-                            if (err.status === 504) {
+                            if ([0, 504].includes(err.status)) {
                                 throw Error(this.noServerFound);
                             } else {
                                 throw err;
