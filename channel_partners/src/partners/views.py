@@ -1019,7 +1019,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
     def get_permissions(self):
         if self.action == 'system_usage_report':
-            return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_field)]
+            return [IsAuthenticatedSystem(system_id_kwarg=self.lookup_url_kwarg)]
         perms = [IsAuthenticatedCloudUserOrSystem()]
         if self.action in ('retrieve', 'services', 'saas_report'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
