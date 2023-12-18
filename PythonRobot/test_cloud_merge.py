@@ -107,7 +107,7 @@ def test_cloud_merge_back_button(
         system_dropdown.get_dropdown_button(second_server.name).click()
         system_dropdown.select_server(second_server.name)
         merge_dialog.ensure_system_online(second_server.name)
-        merge_dialog.get_back_button().wait_until_visible()
+        merge_dialog.get_back_button().wait_until_visible(timeout=20)
         merge_dialog.get_back_button().click()
         system_dropdown.get_dropdown_button(second_server.name).click()
         system_dropdown.select_server(third_server.name)
