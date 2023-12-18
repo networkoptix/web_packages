@@ -1,5 +1,4 @@
-import { Component, Inject, OnInit } from '@angular/core';
-import { ActivatedRoute } from '@angular/router';
+import { Component, Inject, Input, OnInit } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
 
 import staticLang from '@language_static';
@@ -11,14 +10,26 @@ import { oauthStore } from '@static-variables';
 @Component({
     selector: 'nx-cloud-owner-authorization',
     template: '',
+    imports: [],
+    standalone: true,
 })
 export class CloudOwnerAuthorizationComponent implements OnInit {
+    // All inputs in this component are coming from the queryString
+    @Input() access_token: string = '';
+    @Input() authKey: string = '';
+    @Input() code: string = '';
+    @Input() email: string = '';
+    @Input() owner: string = '';
+    @Input() organizationId: string = '';
+    @Input() systemId: string = '';
+    @Input() system_name: string = '';
+    @Input() state: string = 'renew';
+
     LANG = staticLang;
     constructor(
         @Inject(WINDOW) protected window: Window,
         private oauthService: OauthService,
         private storageService: LocalStorageService,
-        private activatedRoute: ActivatedRoute,
     ) {}
 
     handleCode(code: string): void {
@@ -32,27 +43,24 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
     }
 
     ngOnInit(): void {
-        const params = this.activatedRoute.snapshot.queryParams;
-        const code = params?.code || '';
-        if (code) {
-            return this.handleCode(code);
+        if (this.code) {
+            return this.handleCode(this.code);
         }
 
-        if (params?.authKey) {
-            const { authKey, systemId, organizationId, owner } = params;
+        if (this.authKey) {
+            const { authKey, systemId, organizationId, owner } = this;
             return this.handleBind({ authKey, systemId, organizationId, owner });
         }
 
-        // eslint-disable-next-line camelcase
-        const accessToken = params?.access_token || '';
-        const state = params?.state || 'renew';
-        const email = this.storageService.retrieve('loginState') || '';
-        const systemName = params.system_name;
+        const { access_token, email, state, system_name } = this;
+
         this.oauthService.redirectOauth({
             state,
-            email: email.includes('@') ? email : '',
-            accessToken,
-            systemName,
+            email,
+            // eslint-disable-next-line camelcase
+            accessToken: access_token,
+            // eslint-disable-next-line camelcase
+            systemName: system_name,
         });
     }
 }
