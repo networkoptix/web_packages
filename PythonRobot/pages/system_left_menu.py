@@ -154,7 +154,7 @@ class UsersDropdown(DropDown):
     def _add_user_button(self):
         return Button(
             self._driver,
-            '//nx-menu-button[@data-testid="addUserBtn"]/button'
+            '//nx-menu-button[@data-testid="addUserBtn"]/button',
             )
 
     def _is_open(self):
@@ -258,7 +258,7 @@ class AddUserModalDialog(NxModalDialog):
     def _close_button(self):
         return Button(
             self._driver,
-            self._locator + '//button[@data-testid="closeAddUser"]'
+            self._locator + '//button[@data-testid="closeAddUser"]',
             )
 
     def _submit_button(self):
@@ -320,7 +320,7 @@ class PermissionsDropDown(DropDown):
     def _option_with_label(self, label: str):
         return DropDownOption(
             self._driver,
-            self._locator + f"//span[text()='{label}']"
+            self._locator + f"//span[text()='{label}']",
             )
 
     def has_option_with_label(self, label: str):

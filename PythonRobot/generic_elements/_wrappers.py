@@ -246,6 +246,7 @@ class TextField:
 
 
 class FileInput:
+
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._element = Element(self._driver, locator)
@@ -283,10 +284,11 @@ class SearchBar:
 
 class Table:
 
-    def __init__(self, driver: WebDriver,
-                 locator,
-                 target_item: str = "",
-                 target_contents: str = ""):
+    def __init__(
+            self, driver: WebDriver,
+            locator,
+            target_item: str = "",
+            target_contents: str = ""):
         self._driver = driver
         self._element = Element(self._driver, locator)
         self.locator = locator
@@ -504,6 +506,7 @@ class MenuNode:
 
 
 class ListItem:
+
     def __init__(self, driver: WebDriver, element: Element):
         self._driver = driver
         self._element = element
@@ -522,6 +525,7 @@ class ListItem:
 
 
 class ListWrapper:
+
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._locator = locator
@@ -602,6 +606,7 @@ class SpinBox:
 
 
 class Switch:
+
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
         self._locator = locator
@@ -613,6 +618,5 @@ class Switch:
     def turn_off(self):
         if self._element.get_attribute("class") == "selected":
             interactable_locator = f"{self._locator}/.."
-            interactable_element = Element(self._driver, interactable_locator) 
+            interactable_element = Element(self._driver, interactable_locator)
             interactable_element.click()
-

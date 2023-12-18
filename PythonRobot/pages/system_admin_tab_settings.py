@@ -2,7 +2,6 @@ import time
 from typing import Callable
 from typing import Literal
 from typing import Optional
-from typing import Union
 
 from selenium.webdriver.common.keys import Keys
 from selenium.webdriver.remote.webdriver import WebDriver
@@ -121,13 +120,15 @@ class _ServerPage:
         PageText(self._driver, f"//nx-alert-block//span[contains(text(),{self._rb.RESTARTING})]").wait_until_visible()
 
     def wait_until_restarting_alert_visible(self):
-        locator = ('//div[contains(@class,"toast")]//span[contains(@class,"toast-content")]'
-                   f'/../span[contains(text(),"{self._rb.SERVER_RESTARTED_TEXT}")]')
+        locator = (
+            '//div[contains(@class,"toast")]//span[contains(@class,"toast-content")]'
+            f'/../span[contains(text(),"{self._rb.SERVER_RESTARTED_TEXT}")]'
+            )
         PageText(self._driver, locator).wait_until_visible(timeout=30)
         PageText(self._driver, locator).wait_until_not_visible()
 
     def get_port_field(self) -> TextField:
-        return TextField(self._driver, f'//nx-numeric[@name="server-port"]/input[@id="server-port-numeric"]')
+        return TextField(self._driver, '//nx-numeric[@name="server-port"]/input[@id="server-port-numeric"]')
 
     def wait_until_error_server_port_is_required(self):
         self._get_input_error_element(self._rb.SERVER_PORT_IS_REQUIRED_TEXT).wait_until_visible()
@@ -142,20 +143,22 @@ class _ServerPage:
 
     def has_message_port_too_low(self) -> bool:
         try:
-            PageText(
+            (PageText(
                 self._driver,
-                f'//nx-apply//div[contains(@class,"warning-text") and contains(text(),"{self._rb.PORT_TOO_LOW_TEXT}")]'
-            ).wait_until_visible()
+                f'//nx-apply//div[contains(@class,"warning-text") and contains(text(),"{self._rb.PORT_TOO_LOW_TEXT}")]',
+                )
+             .wait_until_visible()
+             )
         except ElementNotVisible:
             return False
         else:
             return True
 
     def get_save_button(self) -> Button:
-        return Button(self._driver, f'//nx-process-button[@data-testid="saveSettingsBtn"]//button')
+        return Button(self._driver, '//nx-process-button[@data-testid="saveSettingsBtn"]//button')
 
     def get_cancel_button(self) -> Button:
-        return Button(self._driver, f'//nx-cancel-button[@data-testid="cancelSettingsBtn"]//button')
+        return Button(self._driver, '//nx-cancel-button[@data-testid="cancelSettingsBtn"]//button')
 
     def get_check_status_button(self) -> Button:
         return Button(self._driver, f'//nx-alert-block//button/span[contains(text(),"{self._rb.CHECK_STATUS_TEXT}")]')
@@ -164,11 +167,13 @@ class _ServerPage:
         return Button(self._driver, f'//nx-section//button/span[contains(text(), "{self._rb.RESTART}")]/parent::button')
 
     def get_detailed_info_button(self) -> Button:
-        return Button(self._driver,
-                      f'//nx-standard-server-component//header//button/span[contains(text(),"{self._rb.DETAILED_INFO_TEXT}")]')
+        return Button(
+            self._driver,
+            f'//nx-standard-server-component//header//button/span[contains(text(),"{self._rb.DETAILED_INFO_TEXT}")]',
+            )
 
     def get_name_field(self) -> TextField:
-        return TextField(self._driver, f'//nx-block//nx-editable-heading//nx-text-editable')
+        return TextField(self._driver, '//nx-block//nx-editable-heading//nx-text-editable')
 
     def wait_until_offline_status(self, timeout=10):
         started_at = time.monotonic()
@@ -231,13 +236,13 @@ class _ServerPage:
         return PageText(
             self._driver,
             f'//div/span[contains(@class,"input-error") and contains(text(),"{message_text}")]',
-        )
+            )
 
     def _get_checking_banner(self) -> PageText:
         return PageText(
             self._driver,
             f'//nx-alert-block//div[contains(text(),"{self._rb.CHECKING_TEXT}")]',
-        )
+            )
 
 
 class _RestartDialog:
@@ -496,8 +501,10 @@ class _LimitSessionOption(_GeneralSettingsOption):
         pane_locator = '//div[@class="dropdown-menu"]'
         dropdown_pane = Pane(self._driver, pane_locator)
         dropdown_pane.wait_until_visible()
-        DropDownOption(
+        (DropDownOption(
             self._driver,
             f'{pane_locator}//*[@id="serverTimeUnitSelect-{value}"]',
-            ).click()
+            )
+         .click()
+         )
         dropdown_pane.wait_until_not_visible()

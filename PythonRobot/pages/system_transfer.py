@@ -157,8 +157,9 @@ class SystemTransferOwnershipModal:
     def wait_for_user_not_found_error(self):
         error_label = PageText(
                 self._driver,
-                (f'{self.locator}//span[contains(@class,error-label) '
-                 'and contains(text(),"User not found")]'),
+                (
+                    f'{self.locator}//span[contains(@class,error-label) '
+                    'and contains(text(),"User not found")]'),
                 )
         error_label.wait_until_visible()
 

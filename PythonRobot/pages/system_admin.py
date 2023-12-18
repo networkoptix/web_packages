@@ -170,18 +170,23 @@ class SystemAdmin:
 
     def get_information_tab(self) -> 'TabInformation':
         """
-        Problem: the Information tab couldn't appear without switching to another tab or refreshing the page
+        Problem: the Information tab couldn't appear without switching to another tab or refreshing the page.
+
         See: https://networkoptix.atlassian.net/browse/CLOUD-11437
         """
-        locator = (f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
-                   f' | //header//div[contains(text(),"{self.rb.INFORMATION_TEXT}")]')
+        locator = (
+            f'//header//a[contains(text(),"{self.rb.INFORMATION_TEXT}")]'
+            f' | //header//div[contains(text(),"{self.rb.INFORMATION_TEXT}")]',
+            )
         self._wait_for_tab_loaded(locator)
         return TabInformation(self.driver, locator, self.rb)
 
     def get_tab_settings(self) -> TabSettings:
         # There are two variants of the locator, one for the active tab and another for the inactive tab
-        locator = (f'//header//nx-header-level-two//a[contains(text(),"{self.rb.SETTINGS_TEXT}")]'
-                   f' | //header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]')
+        locator = (
+            f'//header//nx-header-level-two//a[contains(text(),"{self.rb.SETTINGS_TEXT}")]'
+            f' | //header//nx-header-level-two//div[contains(text(),"{self.rb.SETTINGS_TEXT}")]',
+            )
         self._wait_for_tab_loaded(locator)
         return TabSettings(self.driver, locator, self.rb)
 
@@ -348,6 +353,7 @@ class _SystemName:
 
 
 class _AdvancedSettings:
+
     def __init__(self, driver: ChromeBrowser, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
@@ -400,6 +406,7 @@ class _AdvancedSettings:
 
 
 class _BlockOne:
+
     def __init__(self, driver: ChromeBrowser, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)

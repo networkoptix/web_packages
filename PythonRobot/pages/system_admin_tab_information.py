@@ -78,10 +78,12 @@ class TabInformation:
 
     def is_imported_report(self) -> bool:
         try:
-            PageText(
+            (PageText(
                 self._driver,
                 f'//nx-ribbon//div[@class="message"]//div[contains(text(),"{self._variables.VIEWING_IMPORTED_REPORT_TEXT}")]',
-            ).wait_until_visible()
+                )
+             .wait_until_visible()
+             )
         except ElementNotVisible:
             return False
         else:
@@ -136,6 +138,7 @@ class TabInformation:
 
     def get_details_pane(self) -> '_DetailsPane':
         return _DetailsPane(self._driver, "//nx-info-block")
+
 
 class _Section:
 
@@ -199,7 +202,7 @@ class _AlertsSection(_Section):
         xpath_template = Template(
             '//div[contains(@class, "card-header") and contains(text(), "$card_name")]'
             '/following-sibling::div[contains(@class, "card-body")]',
-        )
+            )
         card = Pane(self._driver, xpath_template.substitute(card_name='Servers'))
         servers_errors = card.find_element('//nx-alert-counter/div/span', 1)
         servers_warnings = card.find_element('//nx-alert-counter/div/span', 2)
@@ -221,7 +224,7 @@ class _AlertsSection(_Section):
             int(storages_warnings.text()),
             int(networks_errors.text()),
             int(networks_warnings.text()),
-        )
+            )
 
     def get_alerts_summary_from_table(self) -> _AlertsSummary:
         errors = {'Server': 0, 'Camera': 0, 'Storage': 0, 'Interface': 0}
@@ -251,7 +254,7 @@ class _AlertsSection(_Section):
             warnings['Storage'],
             errors['Interface'],
             warnings['Interface'],
-        )
+            )
 
     def get_pages_count(self):
         paginator = PageText(self._driver, '//nx-paginator//a[@id="paginator-tile-last"]')
@@ -285,6 +288,7 @@ class _ServersSection(_Section):
 
 
 class _DetailsPane():
+
     def __init__(self, driver: WebDriver, locator: str):
         self._driver = driver
         self._locator = locator
@@ -294,13 +298,13 @@ class _DetailsPane():
         return PageText(
             self._driver,
             f"{self._locator}//p[@title='{title}' and contains(@class, 'error')]",
-        )
+            )
 
     def get_pane_warning_by_title(self, title):
         return PageText(
             self._driver,
             f"{self._locator}//p[@title='{title}' and contains(@class, 'warning')]",
-        )
+            )
 
     def get_pane_problem_count(self, problem: PageText):
         return problem.get_count()

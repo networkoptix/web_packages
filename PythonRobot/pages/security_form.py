@@ -12,6 +12,7 @@ from generic_elements import TextField
 
 class SecurityForm:
 
+
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.twofa_modal = "//nx-enable-account-2fa"

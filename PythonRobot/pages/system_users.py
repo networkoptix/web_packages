@@ -10,6 +10,7 @@ from variables import ENV
 
 
 class SystemUsers:
+
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
@@ -36,9 +37,11 @@ class SystemUsers:
         return DropDown(self.driver, "//nx-system-settings-component//nx-block/..//nx-section//button[@id='componentId']")
 
     def access_level_dropdown_option(self, permissions):
-        return DropDownOption(self.driver,
+        return DropDownOption(
+            self.driver,
             f"//nx-system-settings-component//nx-block/..//nx-section"
-            f"//ul[contains(@class, 'dropdown-menu')]//span[text()='{permissions}']/..")
+            f"//ul[contains(@class, 'dropdown-menu')]//span[text()='{permissions}']/..",
+            )
 
     def save_button(self):
         return Button(self.driver, f"//nx-process-button//button[contains(text(), '{self.rb.SAVE_BUTTON_TEXT}')]")
@@ -53,15 +56,20 @@ class SystemUsers:
         return ToastNotification(self.driver, "//nx-toast//span[contains(text(),'Failed to apply changes')]")
 
     def help_block(self):
-        return PageText(self.driver,
-            f"//nx-system-settings-component//nx-block/..//nx-section//span[contains(@class,'help-block')]")
+        return PageText(
+            self.driver,
+            "//nx-system-settings-component//nx-block/..//nx-section//span[contains(@class,'help-block')]",
+            )
 
     def user_switch(self):
         return Switch(self.driver, "//nx-switch[@id='user-active-status']//input")
 
     def user_disabled_message(self):
-        return PageText(self.driver, f"//nx-system-settings-component//nx-block/.."
-            f"//span[contains(@class,'text-danger')]")
+        return PageText(
+            self.driver,
+            "//nx-system-settings-component//nx-block/.."
+            "//span[contains(@class,'text-danger')]",
+            )
 
     def local_user_delete_button(self):
         return Button(self.driver, f"//button[contains(text(),'{self.rb.DELETE_USER_TEXT}')]")

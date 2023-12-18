@@ -42,8 +42,9 @@ class ServerApi:
                 },
             'local': {
                 'password': new_password,
-                }
-        })
+                },
+            },
+                   )
         self._set_password(new_password)
 
     def api_connect_to_cloud(self, bind_info: Mapping[str, str]):

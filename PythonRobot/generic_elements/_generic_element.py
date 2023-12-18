@@ -30,13 +30,13 @@ class Element:
     def count(self, timeout: float = 10.0):
         # Wait for the page to fully load (by waiting for the document.readyState to be 'complete')
         WebDriverWait(self._driver, timeout).until(
-            lambda driver: driver.execute_script("return document.readyState") == "complete"
+            lambda driver: driver.execute_script("return document.readyState") == "complete",
             )
 
         # Now, wait for the presence of all elements matching the locator.
         # This ensures that at least one element is present before proceeding.
         WebDriverWait(self._driver, timeout).until(
-            ec.presence_of_all_elements_located((By.XPATH, self._locator))
+            ec.presence_of_all_elements_located((By.XPATH, self._locator)),
             )
         return len(self._driver.find_elements(By.XPATH, self._locator))
 

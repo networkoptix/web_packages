@@ -12,6 +12,7 @@ from generic_elements import ToastNotification
 
 class LoginDialog:
 
+
     def __init__(self, driver, lang="en_US", twofa=""):
         self._driver = driver
         self.rb = RobotVariables(lang)
@@ -78,7 +79,7 @@ class LoginDialog:
     def twofa_error_login_code(self):
         return PageText(
             self._driver,
-            f'//nx-authorize-component//nx-authorize-auth-code-component//p[contains(text(),{self.rb.TWOFA_INVALID_CODE_TEXT!r})]',
+            f'//nx-authorize-component//nx-authorize-auth-code-component//p[contains(text(),"{self.rb.TWOFA_INVALID_CODE_TEXT}")]',
               )
 
     def forgot_password_button(self):

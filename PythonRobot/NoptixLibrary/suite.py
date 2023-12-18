@@ -76,8 +76,8 @@ class Suite:
                 user,
                 cloud_users[user].email,
                 [cloud_owner.email, cloud_owner.password],
-                CloudAccount.PERMISSIONS[user]
-            )
+                CloudAccount.PERMISSIONS[user],
+                )
             cloud_users[user].id = r['vmsUserId']
             print(f"Added {user}: {cloud_users[user].email}")
         if cloud_users:
@@ -121,19 +121,22 @@ class Suite:
                 return
             _logger.info("System is offline. Waiting for online status")
             if time.monotonic() - started_at > timeout_sec:
-                raise RuntimeError(f"System is not ready within timeout. "
-                                   f"System status is {system_status}, "
-                                   f"System state of health is {state_of_health}",
-                                   )
+                raise RuntimeError(
+                    f"System is not ready within timeout. "
+                    f"System status is {system_status}, "
+                    f"System state of health is {state_of_health}",
+                                )
             time.sleep(2)
 
     def create_cloud_accounts(self, permissions: Optional[Collection[str]] = None):
         cloud_users = {}
         if permissions is not None:
             if not set(permissions).issubset(CloudAccount.PERMISSIONS.keys()):
-                raise RuntimeError("Expected permissions are not among available permissions. "
-                                   f"Expected: {permissions}, "
-                                   f"available: {CloudAccount.PERMISSIONS}")
+                raise RuntimeError(
+                    "Expected permissions are not among available permissions. "
+                    f"Expected: {permissions}, "
+                    f"available: {CloudAccount.PERMISSIONS}",
+                    )
         else:
             permissions = CloudAccount.PERMISSIONS
         for permission in permissions:
@@ -264,7 +267,7 @@ class Mediaserver:
     def cloud_merge(self, slave: 'Mediaserver'):
         # Systems may not be ready for merging immediately after binding them
         count_attempts = 5
-        for attempt in range(1, count_attempts+1):
+        for attempt in range(1, count_attempts + 1):
             try:
                 _CLOUD_API.cdb_merge_cloud_systems(
                     self.id,
@@ -273,7 +276,7 @@ class Mediaserver:
                     self._cloud_owner.password,
                     self.api.get_current_token(),
                     slave.api.get_current_token(),
-                )
+                    )
             except HTTPError as exc:
                 if attempt >= count_attempts and exc.response.status_code == 500:
                     raise exc
@@ -289,13 +292,16 @@ class Mediaserver:
         self.name = self.suite_name + str(self.run_id)
         self._primary_port = primary_port
         self._secondary_port = secondary_port
-        docker_configuration = ContainerConfiguration(vms_version, "latest").\
-            with_env({'CLOUD_HOST': 'test.ft-cloud.hdw.mx'}).\
-            with_exposed(tcp_ports=[primary_port, secondary_port])
+        docker_configuration = (
+            ContainerConfiguration(vms_version, "latest")
+            .with_env({'CLOUD_HOST': 'test.ft-cloud.hdw.mx'})
+            .with_exposed(tcp_ports=[primary_port, secondary_port])
+            )
+
         self._container = docker_configuration.create(_DOCKER_API, self.name)
         self.start()
         # Set up a local system.
-        time.sleep(2) # avoids connection errors
+        time.sleep(2)  # avoids connection errors
         self.api.setup_local_system(new_password=DEFAULT_PASSWORD, system_name=self.name)
         self._local_users = self.create_local_users()
         return self
@@ -313,13 +319,15 @@ class Mediaserver:
                 is_cloud=False,
                 )
             local_users.update(
-                {permission: {
-                    "login": f"Local+{permission}",
-                    "email": f"noptixautoqa+local_{permission}@gmail.com",
-                    "id": r['id'].strip('{}')
+                {
+                    permission: {
+                        "login": f"Local+{permission}",
+                        "email": f"noptixautoqa+local_{permission}@gmail.com",
+                        "id": r['id'].strip('{}'),
+                        },
                     },
-                }
-            )
+                )
+
         return local_users
 
     def create_new_local_user(self, permission):
@@ -356,7 +364,6 @@ class Mediaserver:
         finally:
             self._container.delete()
 
-
     def share_with_user(self, user: 'CloudAccount', access_role: str, permissions: str):
         _auth = [self._cloud_owner.email, self._cloud_owner.password]
         r = _CLOUD_API.share(_auth, self.id, access_role, user.email, permissions)
@@ -386,10 +393,24 @@ class Mediaserver:
 
 class CloudAccount:
     PERMISSIONS = {
-        "cloudAdmin": "GlobalAdminPermission|GlobalEditCamerasPermission|GlobalControlVideoWallPermission|GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
-        "viewer": "GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission",
+        "cloudAdmin": (
+            "GlobalAdminPermission|GlobalEditCamerasPermission|"
+            "GlobalControlVideoWallPermission|GlobalViewLogsPermission|"
+            "GlobalViewArchivePermission|GlobalExportPermission|"
+            "GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|"
+            "GlobalUserInputPermission|GlobalAccessAllMediaPermission"
+            ),
+        "viewer": (
+            "GlobalViewArchivePermission|GlobalExportPermission|"
+            "GlobalViewBookmarksPermission|GlobalAccessAllMediaPermission"
+            ),
         "liveViewer": "GlobalAccessAllMediaPermission",
-        "advancedViewer": "GlobalViewLogsPermission|GlobalViewArchivePermission|GlobalExportPermission|GlobalViewBookmarksPermission|GlobalManageBookmarksPermission|GlobalUserInputPermission|GlobalAccessAllMediaPermission",
+        "advancedViewer": (
+            "GlobalViewLogsPermission|GlobalViewArchivePermission|"
+            "GlobalExportPermission|GlobalViewBookmarksPermission|"
+            "GlobalManageBookmarksPermission|GlobalUserInputPermission|"
+            "GlobalAccessAllMediaPermission"
+            ),
         "custom": "NoGlobalPermissions",
         }
 
@@ -444,7 +465,9 @@ class CloudAccount:
     def _tear_down(self):
         self.delete_account()
 
+
 class PortNotMapped(Exception):
+
     def __init__(self, port: int):
         self.msg = f"Port {port} has not been mapped in Docker"
 

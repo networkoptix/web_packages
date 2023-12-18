@@ -142,7 +142,7 @@ class CloudPortalAPI(object):
         cdb_merge_response.raise_for_status()
         return cdb_merge_response.json()
 
-    def cdb_system_status(self, system_id: str, email: str, password: str,):
+    def cdb_system_status(self, system_id: str, email: str, password: str):
         cdb_system_status_response = requests.get(
             url=f'{self.env}/cdb/systems/{system_id}',
             auth=HTTPBasicAuth(email, password),
@@ -288,15 +288,18 @@ class CloudPortalAPI(object):
                 logger.debug(message_type)
                 get_code_response = s.post(
                     f'{self.env}/api/robot/get_code',
-                    json={'email': email, 'type': message_type}
+                    json={'email': email, 'type': message_type},
                     )
         logger.debug(get_code_response.content)
         get_code_response.raise_for_status()
         return get_code_response.json()['code']
 
     def disconnect_from_account(self, email, password, system_id):
-        """Doesn't completely remove user from system users, but sets their role to none instead.
-        Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page."""
+        """
+        Doesn't completely remove user from system users, but sets their role to none instead.
+
+        Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page.
+        """
         with self._session(email, password) as s:
             disconnect_response = s.post(
                 f'{self.env}/api/systems/{system_id}/users',
@@ -505,7 +508,7 @@ class CloudPortalAPI(object):
         body = {
             "cloudAuthKey": auth_key,
             "cloudSystemID": cloud_system_id,
-            "cloudAccountName": owner_email
+            "cloudAccountName": owner_email,
             }
         save_credentials_response = requests.post(
             url=f"{server_url}/api/saveCloudSystemCredentials",
@@ -520,7 +523,7 @@ class CloudPortalAPI(object):
     def rename_system(self, auth, system_id, new_name):
         body = {
             "systemId": system_id,
-            "name": new_name
+            "name": new_name,
             }
         rename_response = requests.post(
             url=f'{self.env}/cdb/system/rename',
@@ -634,7 +637,7 @@ class CloudPortalAPI(object):
                 time_elapsed = time.monotonic() - started_at
                 if time_elapsed > timeout:
                     raise TimeoutError("Failed to register account after %dsec", time_elapsed)
-                logger.info(f"Failed to register account. Retrying in 1 sec.")
+                logger.info("Failed to register account. Retrying in 1 sec.")
                 time.sleep(1)
         return register_response.json()
 

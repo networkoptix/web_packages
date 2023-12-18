@@ -15,6 +15,7 @@ from generic_elements import Pane
 
 class MergeDialog:
 
+
     def __init__(self, driver: ChromeBrowser, lang="en_US"):
         self._driver = driver
         self._rb = RobotVariables(lang)
