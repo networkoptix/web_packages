@@ -347,7 +347,7 @@ class Mediaserver:
             self._local_users = local_users
         else:
             _logger.debug(local_users)
-            raise("Local user's list is incomplete.")
+            raise RuntimeError("Local user's list is incomplete.")
 
     def disconnect_from_cloud(self):
         _CLOUD_API.disconnect(
