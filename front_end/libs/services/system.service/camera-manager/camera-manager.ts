@@ -93,8 +93,15 @@ export class CameraManager {
     }
 
     parseCamera = (camera: PreprocessCamera): NxSystemCamera => {
-        const { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled } =
-            this.parseParameters(camera);
+        const {
+            parameters,
+            credentials,
+            maxFps,
+            previewUrl,
+            defaultRatio,
+            motionLowResEnabled,
+            audioSupported,
+        } = this.parseParameters(camera);
 
         const nonWebRtcCodec = [7, 173].includes(
             (parameters.mediaStreams?.streams ?? [])[0]?.codec,
@@ -172,6 +179,7 @@ export class CameraManager {
 
             parentId,
             audioEnabled,
+            audioSupported,
             controlEnabled,
             motionType,
             motionMask,
@@ -201,7 +209,7 @@ export class CameraManager {
         camera: PreprocessCamera,
     ): Pick<
         NxSystemCamera,
-        'parameters' | 'credentials' | 'previewUrl' | 'defaultRatio' | 'maxFps'
+        'parameters' | 'credentials' | 'previewUrl' | 'defaultRatio' | 'maxFps' | 'audioSupported'
     > &
         Pick<RecordingSettings, 'motionLowResEnabled'> {
         let credentials: NxSystemCamera['credentials'];
@@ -300,7 +308,19 @@ export class CameraManager {
         const motionLowResEnabled =
             !camera.disableDualStreaming && (multiStream || !!parameters.hasDualStreaming);
 
-        return { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled };
+        // isAudioSupported is legacy, but some cameras will still use it
+        const audioSupported =
+            !!parameters.isAudioSupported || !!parameters.mediaCapabilities.hasAudio;
+
+        return {
+            parameters,
+            credentials,
+            maxFps,
+            previewUrl,
+            defaultRatio,
+            motionLowResEnabled,
+            audioSupported,
+        };
     }
 
     private parseRecordingSettings(

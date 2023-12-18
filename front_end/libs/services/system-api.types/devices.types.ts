@@ -176,6 +176,7 @@ const camObjParamKeys = {
             key: true,
             value: { maxFps: true },
         },
+        hasAudio: true,
     },
     mediaStreams: {
         streams: { codec: true },
