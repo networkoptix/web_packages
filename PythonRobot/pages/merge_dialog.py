@@ -2,6 +2,7 @@ import re
 import time
 from typing import NamedTuple
 from typing import Sequence
+from xml.sax.saxutils import escape
 
 from RobotVariables import RobotVariables
 from browsers.chrome import ChromeBrowser
@@ -13,16 +14,20 @@ from generic_elements import ListWrapper
 from generic_elements import PageText
 from generic_elements import Pane
 
+def _quoted_text(text: str) -> str:
+    # The XPath expressions are encoded in accordance with XML 1.0 rules
+    # See: https://www.w3.org/TR/1999/REC-xpath-19991116/
+    return "'" + escape(text, entities={"'": "&apos;", '"': "&quot;"}) + "'"
 
 class _SystemSelectDropdown(DropDown):
 
     def get_dropdown_button(self, server_name) -> Button:
-        return Button(self._driver, f'//nx-select//button/span[contains(text(), {server_name!r})]/..')
+        return Button(self._driver, f'//nx-select//button/span[contains(text(), {_quoted_text(server_name)})]/..')
 
     def select_server(self, name: str):
         server_in_list = Button(
             self._driver,
-            f"//form[@name='checkMergeForm']//nx-select//li//span[contains(text(),{name!r})]",
+            f"//form[@name='checkMergeForm']//nx-select//li//span[contains(text(),{_quoted_text(name)})]",
             )
         server_in_list.click()
 
@@ -39,14 +44,14 @@ class MergeDialog:
 
     def verify(self):
         header_text = PageText(
-            self._driver, f'//nx-modal-merge-content//h1/span[contains(text(), {self._rb.MERGE_SYSTEMS_TEXT}!r)]')
+            self._driver, f'//nx-modal-merge-content//h1/span[contains(text(), {_quoted_text(self._rb.MERGE_SYSTEMS_TEXT)})]')
         header_text.wait_until_visible()
         close_button = Button(self._driver, '//nx-modal-merge-content//button[contains(@class,"close")]')
         close_button.wait_until_clickable()
         self.get_next_button().wait_until_clickable()
         merge_is_possible = PageText(
             self._driver,
-            f'//nx-modal-merge-content//p[contains(text(),{self._rb.MERGE_CURRENT_SYSTEM_WITH_TEXT!r})]',
+            f'//nx-modal-merge-content//p[contains(text(),{_quoted_text(self._rb.MERGE_CURRENT_SYSTEM_WITH_TEXT)})]',
             )
         merge_is_possible.wait_until_visible()
 
@@ -56,7 +61,7 @@ class MergeDialog:
     def get_next_button(self) -> Button:
         return Button(
             self._driver,
-            f'//nx-modal-merge-content//button[contains(@class,"btn btn-primary") and contains(text(),{self._rb.NEXT_TEXT!r})]',
+            f'//nx-modal-merge-content//button[contains(@class,"btn btn-primary") and contains(text(),{_quoted_text(self._rb.NEXT_TEXT)})]',
             )
 
     def primary_first_system(self):
@@ -125,7 +130,7 @@ class MergeDialog:
     def wait_until_system_is_accessible(self, system_name: str):
         item = PageText(
             self._driver,
-            f'//nx-modal-merge-content//button[@id="mergeSystemSelect"]//span[contains(text(), {system_name!r})]',
+            f'//nx-modal-merge-content//button[@id="mergeSystemSelect"]//span[contains(text(), {_quoted_text(system_name)})]',
             )
         item.wait_until_visible(30)
 
