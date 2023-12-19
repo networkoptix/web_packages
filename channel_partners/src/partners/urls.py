@@ -44,7 +44,7 @@ channel_partners_router.register(
 )
 
 urlpatterns = [
-    re_path(r'^partners/', include(channel_partners_router.urls)),
-    re_path(r'^partners/', include(channel_partner_urls)),
-    re_path(r'^internal/partners/', include(channel_partner_internal_urls))
+    path('', include(channel_partners_router.urls)),
+    path('', include(channel_partner_urls)),
+    re_path(r'^internal/', include(channel_partner_internal_urls)),
 ]

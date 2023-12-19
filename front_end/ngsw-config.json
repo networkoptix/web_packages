@@ -83,6 +83,7 @@
     "!/authorize/**",
     "!/api/utils/language",
     "!/docs/developers",
-    "!/docs/developers/**"
+    "!/docs/developers/**",
+    "!/partners/**"
   ]
 }
