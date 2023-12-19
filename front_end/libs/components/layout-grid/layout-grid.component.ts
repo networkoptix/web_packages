@@ -97,6 +97,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxToastService } from '@services/toast.service';
 import { icons } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
+import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { cleanId, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
@@ -535,7 +536,8 @@ export class NxLayoutGridComponent {
                     const unknownItem = this.layoutItemLookup[resourceId];
                     if (assertResourceOfType.camera(unknownItem)) {
                         const initialAspect =
-                            unknownItem.details.parameters?.overrideAr ||
+                            (!unknownItem.details.parameters.VideoLayout &&
+                                unknownItem.details.parameters?.overrideAr) ||
                             unknownItem.details.defaultRatio;
                         const isRotated = Boolean(
                             (Math.round(
@@ -932,17 +934,19 @@ export class NxLayoutGridComponent {
         layout,
         layoutItemLookup,
     }: NgChanges<NxLayoutGridComponent>): Promise<void> {
-        if (layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue)) {
+        const layoutChanged =
+            layout?.currentValue && !isEqual(layout.currentValue, layout.previousValue);
+        const itemsChanged =
+            layoutItemLookup?.currentValue &&
+            !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue);
+        if (layout && (layoutChanged || itemsChanged)) {
             // this.openMenu = false;
             this.initialLayout$.next(layout.currentValue);
             this.changingLayout = false;
             this.updateLayout();
         }
 
-        if (
-            layoutItemLookup?.currentValue &&
-            !isEqual(layoutItemLookup.currentValue, layoutItemLookup.previousValue)
-        ) {
+        if (itemsChanged) {
             const cameras = Object.values(layoutItemLookup.currentValue).filter(
                 assertResourceOfType.camera,
             );
@@ -1348,8 +1352,8 @@ export class NxLayoutGridComponent {
         const aspectRatio = cellAspectRatio || DEFAULT_ASPECT_RATIO;
         const spacing = cellSpacing ?? 0;
         const { width, height, originX: x, originY: y } = this.calculateSize(items);
-        const columns = items.length <= 1 ? 1 : fixedWidth || width;
-        const rows = items.length <= 1 ? 1 : fixedHeight || height;
+        const columns = width;
+        const rows = height;
         // const widthPercent = 1 / columns * 100;
         // const heightPercent = 1 / rows * 100;
         const gridWrapper = {
@@ -1364,7 +1368,7 @@ export class NxLayoutGridComponent {
     };
 
     filterRemovedResources = (items: LayoutItems): LayoutItems =>
-        items.filter(({ resourceId }) => !!this.layoutItemLookup[resourceId]);
+        items.filter(({ resourceId }) => !!this.layoutItemLookup?.[resourceId]);
 
     parseLayout = (layout: Layout): ParsedLayout => ({
         ...layout,
@@ -1652,7 +1656,7 @@ export class NxLayoutGridComponent {
     }
 
     generateLayoutItem = (
-        { details: { id: resourceId } }: ResourceNode,
+        { details: { id: resourceId, ...details } }: ResourceNode,
         { x, y }: Point,
     ): LayoutItem => {
         const left = x === Infinity ? 0 : x;
@@ -1690,7 +1694,9 @@ export class NxLayoutGridComponent {
             id,
             left,
             resourceId: dirtyId(resourceId),
-            resourcePath: '',
+            resourcePath: `cloud://${
+                'systemId' in details ? details.systemId : this.system.id
+            }.${resourceId}`,
             right,
             rotation,
             top,
@@ -1732,7 +1738,17 @@ export class NxLayoutGridComponent {
                         this.layoutStateService.updateLayout({ ...this.layout, items });
                     }
                 } else {
-                    this.layoutStateService.createNewLocalLayout(items);
+                    const isLocalLayout = items
+                        .map(
+                            ({ resourcePath }) =>
+                                extractSystemAndResourceId(resourcePath).systemId || this.system.id,
+                        )
+                        .every(systemId => systemId === this.system.id);
+                    if (isLocalLayout) {
+                        this.layoutStateService.createNewLocalLayout(items);
+                    } else {
+                        this.layoutStateService.createNewCrossSystemLayout(items);
+                    }
                 }
                 if (this.layoutItemLookup[`{${this.layout.id}}`]) {
                     this.layout.id = '';

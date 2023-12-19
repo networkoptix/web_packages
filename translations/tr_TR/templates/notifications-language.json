@@ -42,7 +42,7 @@
     "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
   },
   "cps_organization_share": {
-    "emailSubject": "Organization {{message.organization_name}} was shared with you"
+    "emailSubject": "Kuruluş {{message.organization_name}} sizinle paylaşıldı"
   },
   "cps_organization_state_active": {
     "emailSubject": "{{message.organization_name}} Kuruluşun durumu {{message.status_name}} olarak değiştirildi"
@@ -57,7 +57,7 @@
     "emailSubject": "{{message.sharer_name}} invites you to %CLOUD_NAME%"
   },
   "cps_partner_share": {
-    "emailSubject": "Partner {{message.partner_name}} was shared with you"
+    "emailSubject": "İş Ortağı {{message.partner_name}} sizinle paylaşıldı"
   },
   "cps_partner_state_active": {
     "emailSubject": "The status of partner {{message.partner_name}} is changed to {{message.status_name}} "

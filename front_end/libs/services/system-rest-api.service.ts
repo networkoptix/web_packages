@@ -300,7 +300,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         this.sessionStorage.clear(this.token);
         storageService.clear(this.cloudToken);
         storageService.clear(this.refreshToken);
-        storageService.clear('loginState');
+        if (environment.isLocal) {
+            storageService.clear('loginState');
+        }
         this.accessToken = '';
     }
 
@@ -333,7 +335,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                         const refreshToken = storageService.refreshToken;
                         const errorId = error?.error?.errorId;
 
-                        const isLoginRequest = error.url.includes('/rest/v1/login/sessions/');
+                        const isLoginRequest = error.url.includes('/rest/v1/login/sessions');
                         const isInvalidParamterError =
                             error.status === 422 && errorId === servers.errors.invalidParameter;
                         const isBadRequestError =
@@ -591,6 +593,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         url = `${this.urlBase}${url}`;
+
+        if (url.includes('/rest/v1/login/sessions')) {
+            return this.#getHeaders(_headers, url).pipe(
+                switchMap(headers => this.http.post<T>(url, data || {}, { params, headers })),
+                // No need to use retryWhen() for Login or else it would send the Auth request twice if there's an error
+                timeout(customTimeout),
+            );
+        }
 
         return this.#getHeaders(_headers, url).pipe(
             switchMap(headers => this.http.post<T>(url, data || {}, { params, headers })),
@@ -997,6 +1007,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     public override getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
+            timeout: this.storageRequestTimeout,
         });
         const getCameras = this.getWith('/rest/v1/devices', {
             serverId: true,
@@ -1160,18 +1171,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     override restoreFactorySettings(password?: string, serverId?: string) {
         return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`);
-    }
-
-    override saveCloudSystemCredentials(
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-    ) {
-        return this.post('/rest/v1/system/cloudBind', {
-            systemId: cloudSystemID,
-            authKey: cloudAuthKey,
-            owner: cloudAccountName,
-        });
     }
 
     override getBookmarks(

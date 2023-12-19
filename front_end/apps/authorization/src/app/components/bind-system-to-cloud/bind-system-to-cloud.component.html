@@ -14,18 +14,6 @@
             [orgs]="orgs$$()"
             (selectedOrg)="selectedOrg = $event"
         ></nx-select-org>
-        <div
-            class="d-flex flex-column"
-            *ngSwitchCase="fsmStates.finished"
-        >
-            <h2 [style]="{ color: 'red !important' }">
-                {{ 'Debug info. Will replace later' }}
-            </h2>
-            <pre
-                *ngSwitchCase="fsmStates.finished"
-                [innerHtml]="bindInfo$$() | json"
-            ></pre>
-        </div>
     </div>
     <nx-auth-footer
         [bindProcess]="bindSystem"

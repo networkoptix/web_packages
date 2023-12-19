@@ -156,8 +156,7 @@ async def register(request):
             raise APIRequestException('Wrong form parameters', ErrorCodes.wrong_parameters,
                                       error_data=serializer.errors)
         logger.debug('/api/account/register calling serializer.save')
-        await sync_to_async(serializer.save)()
-        account = serializer
+        account = await sync_to_async(serializer.save)()
     elif account.is_active:
         raise APILogicException('User already registered',
                                 ErrorCodes.account_exists)

@@ -21,7 +21,8 @@
     --z-index-preloader: calc(var(--z-index-video) + 1);
     --z-index-overlay: calc(var(--z-index-preloader) + 1);
     --z-index-resize-handle: calc(var(--z-index-overlay) + 1);
-    --z-index-menu-tab: calc(var(--z-index-resize-handle) + 1);
+    --z-index-status-ribbon: calc(var(--z-index-resize-handle) + 1);
+    --z-index-menu-tab: calc(var(--z-index-status-ribbon) + 1);
 
     width: 100%;
     height: 100%;
@@ -242,26 +243,32 @@ h2.auto-save-overlay {
 .unsaved-ribbon,
 .resolution-ribbon,
 .saving-ribbon .animated {
+    max-width: 100vw;
     padding: 6px 16px;
     display: flex;
-    align-items: center;
+    align-items: flex-start;
     gap: 8px;
-    margin-bottom: 2px;
+
+    & > svg-icon {
+        margin-top: 3px;
+    }
 
     .info-svg {
         fill: #208fdf;
     }
 
     .ribbon-message {
-        @include mixins.ellipsis;
         @include typography.regular14nocolor;
         color: var(--light1);
+        line-height: 20px;
         flex-basis: 100%;
         flex-shrink: 1;
+        margin-top: 4px;
     }
 
     .ribbon-button {
         @include typography.regular14nocolor;
+        min-width: fit-content;
         height: 28px !important;
         display: flex;
         gap: 4px;
@@ -302,10 +309,13 @@ h2.auto-save-overlay {
 }
 
 .saving-ribbon {
-    // position: relative;
+    z-index: var(--z-index-status-ribbon);
     .animated {
         background-color: #0d3959;
-        line-height: 30px;
+        line-height: 20px;
+        svg-icon {
+            margin-bottom: 3px;
+        }
     }
 
     &.hide {

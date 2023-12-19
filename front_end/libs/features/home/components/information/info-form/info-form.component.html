@@ -27,20 +27,32 @@
                     [formGroupName]="i"
                 >
                     <div class="pr-3 w-100">
-                        <label style="text-transform: capitalize">{{ formId }}</label>
+                        <label style="text-transform: capitalize">{{ linkCaption }}</label>
                         <input
                             class="form-control mr-1"
                             type="text"
                             formControlName="link"
                         />
                     </div>
-                    <div class="w-100">
+                    <div class="pr-3 w-100">
                         <label translate>Description</label>
                         <input
                             class="form-control mr-1"
                             type="text"
                             formControlName="descr"
                         />
+                    </div>
+                    <div
+                        class="clickable"
+                        style="padding-top: 24px"
+                        (click)="removeRecord(i)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [src]="icons.dir + 'delete.svg'"
+                            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                            [applyClass]="true"
+                        ></svg-icon>
                     </div>
                 </div>
             </div>

@@ -2,8 +2,8 @@ import { Dialog } from '@angular/cdk/dialog';
 import { HttpClient } from '@angular/common/http';
 import { Injectable, signal } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { Subject } from 'rxjs';
-import { switchMap, take, takeUntil } from 'rxjs/operators';
+import { firstValueFrom } from 'rxjs';
+import { switchMap } from 'rxjs/operators';
 
 import { ToastType } from '@components/toast-container/toast.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
@@ -24,8 +24,6 @@ import { NxToastService } from './toast.service';
 export class NxLoginService {
     CONFIG: IConfig = nxConfig;
     LANG = staticLang;
-
-    done$: Subject<boolean> = new Subject<boolean>();
 
     private _currentSystem: NxSystem;
 
@@ -69,7 +67,7 @@ export class NxLoginService {
 
     login(keepPage: boolean = true): Promise<'newSystem' | void> {
         if (this.CONFIG.browserNotSupported) {
-            return;
+            return Promise.resolve();
         }
 
         if (environment.isLocal && NxBootstrapProvider.isNewSystem) {
@@ -83,10 +81,6 @@ export class NxLoginService {
         return this.dialogs.temporaryUserLogin();
     }
 
-    cancelCodeSubscription(): void {
-        this.done$.next(true);
-    }
-
     async updateSession(state: string): Promise<boolean> {
         if (
             (['disconnect', 'transfer'].includes(state) && !environment.isLocal) ||
@@ -98,18 +92,24 @@ export class NxLoginService {
 
                 return Promise.resolve(false);
             }
+
+            const params = new URLSearchParams();
+            if (state) {
+                params.append('state', state);
+            }
+            if (this._currentSystem.currentUserEmail?.includes('@')) {
+                params.append('email', this._currentSystem.currentUserEmail);
+            }
+            const queryString = params.toString();
             const authorizeUrl = `${environment.isLocal ? '/#' : ''}/cloud-authorize${
-                state ? '?state=' + state : ''
+                queryString ? '?' + queryString : ''
             }`;
-            window.open(authorizeUrl, '_blank').focus();
-            return this.storage
-                .observe(oauthStore.code)
-                .pipe(
-                    take(1),
-                    switchMap(code => this.handleCode(code)),
-                    takeUntil(this.done$),
-                )
-                .toPromise();
+            window.open(authorizeUrl, '_blank')?.focus();
+            return firstValueFrom(
+                this.storage
+                    .observe(oauthStore.code)
+                    .pipe(switchMap(code => this.handleCode(code))),
+            );
         }
         return Promise.resolve(false);
     }

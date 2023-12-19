@@ -1,4 +1,4 @@
-Hello, {{message.userFullName}}
+Merhaba, {{message.userFullName}}
 
 The status of partner {{message.partner_name}} is changed to {{message.status_name}}.
 Functionality is now fully available.

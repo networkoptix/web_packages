@@ -71,7 +71,9 @@ import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { RecordingStatus } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
+import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
+import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 
 const LANG = staticLang.layouts.overlay.menuActions;
 
@@ -171,6 +173,21 @@ export class NxLayoutGridItemOverlayComponent {
     layoutsEditable: boolean;
     layoutsItemStatus: boolean;
     layoutsItemChangeResolution: boolean;
+
+    nodeName$$ = computed(() => {
+        const name = this.node$$()?.name;
+        const resourcePath = this.item$$()?.resourcePath;
+        const { systemId } = extractSystemAndResourceId(resourcePath || '');
+        const currentSystemId =
+            this.layoutStateService.paramStateHandler.state$$()?.params?.systemId;
+        const systemName = this.systemsService.systems$$()?.find(({ id }) => id === systemId)?.name;
+
+        if (!name || systemId === currentSystemId || !systemName) {
+            return name || '';
+        }
+
+        return `${systemName} / ${name}`;
+    });
 
     displayInfo$$ = computed(() => {
         if (!this.cameraOnline$$()) {
@@ -542,7 +559,7 @@ export class NxLayoutGridItemOverlayComponent {
             this.cameraOnline$$() && this.MENU_ITEMS.info,
             this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
             this.MENU_ITEMS.screenshot,
-        ].filter(Boolean);
+        ].filter(Boolean) as (false | MenuItem<ResourceNode>)[];
     });
 
     recordingIcon$$ = computed(() => {
@@ -624,6 +641,7 @@ export class NxLayoutGridItemOverlayComponent {
         configService: NxConfigService,
         public layoutStateService: LayoutStateService,
         private store: Store,
+        private systemsService: NxSystemsService,
     ) {
         this.allowDebugMode = configService.getConfig().allowDebugMode;
         this.layoutsItemStatus = !!configService.getConfig().featureFlags.layoutsItemStatus;

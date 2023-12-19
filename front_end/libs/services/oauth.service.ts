@@ -9,6 +9,15 @@ import { nxConfig } from './nx-config/config';
 import type { IConfig } from './nx-config/config-types';
 import { NxStorageService } from './storage.service';
 
+interface OauthConfig {
+    state?: string;
+    email?: string;
+    code?: string;
+    accessToken?: string;
+    redirectTo?: string;
+    systemName?: string;
+}
+
 @Injectable({
     providedIn: 'root',
 })
@@ -50,13 +59,8 @@ export class OauthService {
     }
 
     @memoizeAsyncShort
-    redirectOauth(
-        state?: string,
-        email?: string,
-        code?: string,
-        accessToken?: string,
-        redirectTo?: string,
-    ) {
+    redirectOauth(config?: OauthConfig) {
+        let { redirectTo, state, email, code, accessToken, systemName } = config ?? {};
         redirectTo ??= window.location.href;
         const cleanRedirect = url => {
             const [baseUrl, query] = url.split('?');
@@ -99,8 +103,8 @@ export class OauthService {
                 }`,
             );
         }
-        if (state) {
-            params.append('state', state);
+        if (systemName) {
+            params.append('system_name', systemName);
         }
         if (email) {
             params.append('email', email);

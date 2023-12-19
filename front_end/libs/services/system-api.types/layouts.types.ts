@@ -60,7 +60,7 @@ export interface Layout {
     logicalId: int;
     name: string;
     systemId: uuid;
-    parentId: uuid;
+    parentId?: uuid;
 }
 
 export type Layouts = Layout[];

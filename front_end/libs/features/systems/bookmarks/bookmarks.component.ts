@@ -32,7 +32,7 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
-import { alphabeticalSort, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
+import { alphabeticalSort, cleanId, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
 
 import { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
@@ -365,19 +365,26 @@ export class NxBookmarksComponent implements OnInit {
         return bks
             .filter(bk => this.deviceMap.has(bk.deviceId))
             .map<Bookmark>(bk => {
+                const deviceId = cleanId(bk.deviceId);
+                const systemId = cleanId(this.system.id);
                 const timeZoneOffset =
                     this.localOffsetToUTCMs +
                     (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);
-                const deviceName = this.deviceMap.get(bk.deviceId).name;
+                const deviceName = this.deviceMap.get(bk.deviceId).name; // We don't use cleanId() for get() here
                 const getLink = (transport: string): string => {
                     return this.system.mediaserver.getExportUrl({
-                        cameraId: bk.deviceId,
+                        cameraId: deviceId,
                         duration: Math.floor(bk.durationMs / 1000),
                         endPos: bk.startTimeMs + bk.durationMs,
                         pos: bk.startTimeMs,
                         transport,
                     });
                 };
+                const aspectRatio =
+                    this.system.cameraManager.cameras.find(camera => {
+                        return deviceId === camera.id;
+                    })?.defaultRatio || 1.77; // Fallback aspect ratio of 16:9
+                const dpr = this.window.devicePixelRatio;
 
                 return {
                     ...bk,
@@ -385,16 +392,16 @@ export class NxBookmarksComponent implements OnInit {
                     src: getLink('mp4'),
                     downloadSrc: getLink('mkv'),
                     thumbnail: this.system.serverManager.getPreviewUrl(
-                        bk.deviceId,
+                        deviceId as string,
                         bk.startTimeMs,
-                        320,
-                        180,
+                        270 * aspectRatio * dpr,
+                        270 * dpr, // 270px is the height we want
                         0,
                     ),
                     isVisible: false,
                     deviceName,
-                    deviceId: bk.deviceId,
-                    systemId: this.system.id,
+                    deviceId,
+                    systemId,
                     timeZoneOffset,
                 };
             });

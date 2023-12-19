@@ -81,7 +81,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
     systemNameProcess: Process;
     icons = icons;
     viewLines: number;
-    viewHeight: number;
 
     @ViewChild('pageApply', { read: ViewContainerRef, static: true }) pageApply;
     @ViewChild('systemNameForm', { read: NgForm }) systemNameForm;
@@ -130,7 +129,6 @@ export class NxSystemAdminComponent implements OnInit, OnDestroy, AfterViewInit 
         if (accessRole) {
             const lineCalc = Math.ceil(accessRole.length / 26);
             this.viewLines = lineCalc < 6 ? lineCalc : 6;
-            this.viewHeight = this.viewLines * 21;
         }
         return accessRole;
     });

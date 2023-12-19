@@ -73,7 +73,7 @@ export class StorageState extends BaseManager {
             ),
         );
     #getStorageStatsHandler = id =>
-        this.serverManager.getStorages(id, false, 60000).pipe(retry(5), startWith(false));
+        this.serverManager.getStorages(id, false, 2 * 60000).pipe(retry(5), startWith(false));
     #getStorageMetricsHandler = id => this.serverManager.getServerStats(id).pipe(startWith(false));
     #getAnalyticsHandler = id => this.serverManager.getStorageAnalytics(id).pipe(startWith(false));
 

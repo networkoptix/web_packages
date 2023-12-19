@@ -393,6 +393,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     public override getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
+            timeout: this.storageRequestTimeout,
         });
         const getCameras = this.getWith('/rest/v2/devices', {
             serverId: true,

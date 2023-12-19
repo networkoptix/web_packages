@@ -1,4 +1,4 @@
-import { Component, OnDestroy, Input, ViewChild } from '@angular/core';
+import { Component, OnDestroy, Input, ViewChild, OnInit } from '@angular/core';
 import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { firstValueFrom, Subject } from 'rxjs';
@@ -24,7 +24,7 @@ type SystemSetting = {
     templateUrl: 'advanced.component.html',
     styleUrls: ['advanced.component.scss'],
 })
-export class NxSystemAdvancedAdminComponent implements OnDestroy {
+export class NxSystemAdvancedAdminComponent implements OnInit, OnDestroy {
     @Input() system: NxSystem;
     @ViewChild('advancedSystemSettingsForm', { read: NgForm }) advancedSystemSettingsForm: NgForm;
 

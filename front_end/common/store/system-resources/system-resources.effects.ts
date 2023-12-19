@@ -50,7 +50,9 @@ export class SystemResourcesEffects {
                         ) as Record<string, Observable<Partial<SystemResources>>>,
                 ),
             ),
-            tap(systemResourceAction => console.info({ systemResourceAction })),
+            tap(systemResourceAction => {
+                console.info({ systemResourceAction });
+            }),
             map(updatedResources => SystemResourcesActions.updateSystemResources(updatedResources)),
         );
     });

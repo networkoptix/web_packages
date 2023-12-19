@@ -315,13 +315,13 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
 
             if (!this.accountNotOnSystem && res.error === 'second_factor_required') {
                 this.storageService.system2faEnabled = true;
-                this.oauthService.redirectOauth(
-                    'system2faAuth',
-                    '',
+                this.oauthService.redirectOauth({
+                    state: 'system2faAuth',
+                    email: '',
                     code,
-                    res.access_token,
-                    window.location.href,
-                );
+                    accessToken: res.access_token,
+                    redirectTo: window.location.href,
+                });
                 return;
             }
 

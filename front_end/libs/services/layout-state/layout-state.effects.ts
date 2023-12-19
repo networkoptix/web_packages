@@ -1,7 +1,7 @@
 import { Injectable } from '@angular/core';
 import { Actions, createEffect, ofType } from '@ngrx/effects';
 import { Store } from '@ngrx/store';
-import { isEqual } from 'lodash-es';
+import { isEqual, uniq } from 'lodash-es';
 import {
     EMPTY,
     catchError,
@@ -20,16 +20,21 @@ import {
 import { nxConfig } from '@services/nx-config/config';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxSystemService } from '@services/system.service/system.service';
+import { NxSystemsService } from '@services/systems.service';
 import { SystemResourcesActions, SystemResourcesSelectors } from '@store/system-resources';
+import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { cleanId, dirtyId } from '@utils/general';
 
 import { LayoutStateService } from './layout-state.service';
 import { ActiveLayoutActions } from './store/active-layout';
+import { CrossSystemLayoutsActions } from './store/cross-system-layouts';
 import { LocalLayoutsActions } from './store/local-layouts';
 import { SharedLayoutsActions } from './store/shared';
-import { selectLayouts } from './store/shared/selectors';
+import { selectLayoutsState } from './store/shared/selectors';
 import {
     LayoutTypes,
+    UnsavedCrossSystemLayoutState,
+    UnsavedLayoutState,
     UnsavedLocalLayoutState,
     UnsavedState,
 } from './store/shared/types/layout-state.types';
@@ -45,6 +50,7 @@ export class LayoutStateEffects {
         return this.actions.pipe(
             ofType(
                 UnsavedLayoutsActions.createNewLocalLayout,
+                UnsavedLayoutsActions.createNewCrossSystemLayout,
                 UnsavedLayoutsActions.duplicateLayout,
             ),
             map(({ id }) => id),
@@ -54,7 +60,7 @@ export class LayoutStateEffects {
                     id: dirtyId(createdLayoutId),
                     isNew: true,
                 });
-                return this.store.select(selectLayouts).pipe(
+                return this.store.select(selectLayoutsState).pipe(
                     filter(layouts => layouts.some(({ id }) => id === dirtyId(createdLayoutId))),
                     map(() => createdLayoutId),
                     map(id => ActiveLayoutActions.set({ id })),
@@ -83,22 +89,99 @@ export class LayoutStateEffects {
     updateSystemResources$ = createEffect(() => {
         return this.layoutStateService.paramStateHandler.state$.pipe(
             map(({ params: { systemId, layoutId } }) => ({ systemId, layoutId })),
-            distinctUntilChanged(isEqual),
+            distinctUntilChanged(
+                (a, b) => a.systemId === b.systemId && !!a.layoutId === !!b.layoutId,
+            ),
             switchMap(({ systemId, layoutId }) =>
                 layoutId
                     ? interval(5 * 1000).pipe(
                           startWith(60),
-                          map(pollInterval =>
-                              SystemResourcesActions.refreshSystemResources({
-                                  systems: {
-                                      [systemId]: {
-                                          layouts: !(pollInterval % 3),
-                                          cameras: !(pollInterval % 6),
-                                          servers: !(pollInterval % 12),
-                                      },
-                                  },
-                              }),
+                          map(pollInterval => ({
+                              layouts: !(pollInterval % 3),
+                              cameras: !(pollInterval % 6),
+                              servers: !(pollInterval % 12),
+                          })),
+                          filter(refreshConfig => Object.values(refreshConfig).some(Boolean)),
+                          switchMap(async refreshConfig => {
+                              let systemsToRefresh = [systemId];
+                              if (
+                                  refreshConfig.layouts &&
+                                  nxConfig.featureFlags.layoutsCrossSystem
+                              ) {
+                                  const crossSystemLayouts = await firstValueFrom(
+                                      this.layoutStateService.loadCrossSystemLayouts(),
+                                  );
+
+                                  systemsToRefresh = uniq(
+                                      [
+                                          systemId,
+                                          ...crossSystemLayouts.flatMap(({ items }) =>
+                                              items.map(
+                                                  ({ resourcePath }) =>
+                                                      extractSystemAndResourceId(resourcePath)
+                                                          ?.systemId,
+                                              ),
+                                          ),
+                                      ].filter(Boolean),
+                                  );
+                              }
+                              return SystemResourcesActions.refreshSystemResources({
+                                  systems: systemsToRefresh.reduce(
+                                      (acc, systemId) => ({ ...acc, [systemId]: refreshConfig }),
+                                      {},
+                                  ),
+                              });
+                          }),
+                      )
+                    : EMPTY,
+            ),
+        );
+    });
+
+    updateOtherSystemResources$ = createEffect(() => {
+        return this.layoutStateService.paramStateHandler.state$.pipe(
+            map(
+                ({
+                    params: { systemId: currentSystemId },
+                    queryParams: { openNodes: openSystemIds },
+                }) => ({
+                    currentSystemId,
+                    openSystemIds,
+                }),
+            ),
+            distinctUntilChanged((a, b) => isEqual(a, b)),
+            switchMap(({ currentSystemId, openSystemIds = [] }) =>
+                nxConfig.featureFlags.layoutsCrossSystemEditing && openSystemIds.length
+                    ? this.systemsService.systemsSubject.pipe(
+                          map(systems =>
+                              systems
+                                  .map(({ id }) => id)
+                                  .filter(
+                                      id => id !== currentSystemId && openSystemIds.includes(id),
+                                  ),
                           ),
+                      )
+                    : Promise.resolve([] as string[]),
+            ),
+            distinctUntilChanged((a, b) => isEqual(a, b)),
+            switchMap(otherSystems =>
+                otherSystems.length
+                    ? interval(5 * 1000).pipe(
+                          startWith(60),
+                          map(pollInterval => {
+                              return SystemResourcesActions.refreshSystemResources({
+                                  systems: otherSystems.reduce(
+                                      (curr, systemId) => ({
+                                          ...curr,
+                                          [systemId]: {
+                                              cameras: !(pollInterval % 6),
+                                              servers: !(pollInterval % 12),
+                                          },
+                                      }),
+                                      {},
+                                  ),
+                              });
+                          }),
                       )
                     : EMPTY,
             ),
@@ -109,10 +192,10 @@ export class LayoutStateEffects {
         return this.actions.pipe(
             ofType(SharedLayoutsActions.saveLayout),
             map(({ layoutIds }) => layoutIds),
-            distinctUntilChanged(isEqual),
             switchMap(layoutsToSave => {
                 return this.store.select(selectUnsavedLayoutsState).pipe(
                     map(layouts => layouts.filter(({ id }) => layoutsToSave.includes(id))),
+                    take(1),
                     switchMap(async layouts => {
                         const mediaserver = this.systemService.getCurrentSystem()
                             .mediaserver as NxSystemRestAPI3;
@@ -121,7 +204,7 @@ export class LayoutStateEffects {
                             this.store.select(selectUnsavedLayoutsOverwrites),
                         );
 
-                        const errorLayouts: UnsavedLocalLayoutState[] = [];
+                        const errorLayouts: UnsavedLayoutState[] = [];
 
                         const savingLocalLayouts = layouts
                             .filter(({ layoutType }) => layoutType === LayoutTypes.LOCAL)
@@ -142,11 +225,42 @@ export class LayoutStateEffects {
                                 );
                             });
 
-                        const savedLayouts = (await Promise.all(savingLocalLayouts)).filter(
+                        const savingCrossSystemLayouts = layouts
+                            .filter(({ layoutType }) => layoutType === LayoutTypes.CROSS_SYSTEM)
+                            .map((unsavedLocalLayoutState: UnsavedCrossSystemLayoutState) => {
+                                const serialized =
+                                    this.layoutStateService.crossSystemLayoutSerializer.serialize(
+                                        unsavedLocalLayoutState.layout,
+                                    );
+                                return firstValueFrom(
+                                    this.layoutStateService.crossSystemLayoutApi
+                                        .save(serialized)
+                                        .pipe(
+                                            catchError(() => {
+                                                errorLayouts.push({
+                                                    ...unsavedLocalLayoutState,
+                                                    unsaved: UnsavedState.ERROR,
+                                                });
+                                                return of(null);
+                                            }),
+                                            map(layout =>
+                                                this.layoutStateService.crossSystemLayoutSerializer.deserialize(
+                                                    layout,
+                                                ),
+                                            ),
+                                        ),
+                                );
+                            });
+
+                        const savedLocalLayouts = (await Promise.all(savingLocalLayouts)).filter(
                             Boolean,
                         );
 
-                        const toDelete = savedLayouts
+                        const savedCrossSystemLayouts = (
+                            await Promise.all(savingCrossSystemLayouts)
+                        ).filter(Boolean);
+
+                        const toDelete = [...savedLocalLayouts, ...savedCrossSystemLayouts]
                             .map(
                                 ({ id }) =>
                                     Object.entries(overwriteLayouts).find(
@@ -166,7 +280,10 @@ export class LayoutStateEffects {
 
                         return [
                             LocalLayoutsActions.update({
-                                layouts: savedLayouts,
+                                layouts: savedLocalLayouts,
+                            }),
+                            CrossSystemLayoutsActions.update({
+                                layouts: savedCrossSystemLayouts,
                             }),
                             SharedLayoutsActions.deleteLayout({ layoutIds: toDelete }),
                             UnsavedLayoutsActions.update({ layouts: errorLayouts }),
@@ -181,7 +298,8 @@ export class LayoutStateEffects {
 
     discardPersistedLayout$ = createEffect(() => {
         return this.actions.pipe(
-            ofType(LocalLayoutsActions.update),
+            ofType(LocalLayoutsActions.update, CrossSystemLayoutsActions.update),
+            filter(({ layouts }) => !!layouts.length),
             map(({ layouts }) => layouts.map(({ id }) => id)),
             map(layoutIds => UnsavedLayoutsActions.remove({ layoutIds })),
         );
@@ -214,5 +332,6 @@ export class LayoutStateEffects {
         private store: Store,
         private systemService: NxSystemService,
         private layoutStateService: LayoutStateService,
+        private systemsService: NxSystemsService,
     ) {}
 }

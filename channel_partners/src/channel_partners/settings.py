@@ -183,7 +183,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'nxlicensed.utils.custom_exception_handler',
     'DEFAULT_SCHEMA_CLASS': 'channel_partners.utils.NxAutoSchema',
-    'DEFAULT_AUTHENTICATION_CLASSES': []
+    'DEFAULT_AUTHENTICATION_CLASSES': [],
+    'EXCEPTION_HANDLER': 'tools.helpers.custom_exception_handler'
 }
 
 
@@ -226,6 +227,7 @@ if SILK_ENABLED:
     MIDDLEWARE.append('silk.middleware.SilkyMiddleware')
 
 # Celery config
+CELERY_IS_READY = False
 
 # CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
 CELERY_BROKER_URL = INSTANCE_CONFIG.queue_broker_uri
@@ -246,8 +248,7 @@ CELERY_BROKER_HEARTBEAT = 10  # Supposed to check connection with broker
 
 # Run celery tasks locally if set to true
 CELERY_TASK_ALWAYS_EAGER = False
-# IMPORTANT!!! This is useful to test celery task
-if (LOCAL_ENV and os.environ.get('RUN_CELERY_LOCALLY')) or CI:
+if TESTING or CI or not CELERY_IS_READY:
     CELERY_TASK_ALWAYS_EAGER = True
 
 DJANGO_CELERY_BEAT_TZ_AWARE = False

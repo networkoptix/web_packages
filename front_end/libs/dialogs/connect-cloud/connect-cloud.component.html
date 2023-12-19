@@ -23,7 +23,7 @@
     </div>
     <div class="modal-body">
         <div>
-            <ng-template #noCode>
+            <ng-template #noBindData>
                 <p
                     class="mb-3"
                     translate
@@ -32,7 +32,7 @@
                 </p>
             </ng-template>
             <p
-                *ngIf="codeExists; else noCode"
+                *ngIf="bindDataExists; else noBindData"
                 class="mb-3"
                 translate
             >
@@ -77,7 +77,7 @@
                     autocomplete="new-password"
                     name="password"
                     type="password"
-                    [disabled]="!codeExists"
+                    [disabled]="!bindDataExists"
                     required
                 />
                 <ng-container *ngIf="password.invalid">
@@ -106,7 +106,7 @@
             [process]="connectProcess"
             [form]="connectForm"
             [actionType]="'primary'"
-            [buttonDisabled]="!codeExists"
+            [buttonDisabled]="!bindDataExists"
             buttonText="{{ 'Connect' | translate }}"
         ></nx-process-button>
         <nx-cancel-button

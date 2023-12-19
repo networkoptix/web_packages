@@ -7,6 +7,7 @@ import {
     RecordingStatus,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemServer } from '@services/system.service/types/servers.types';
+import { NxSystemInfo } from '@services/systems.service.types';
 
 export interface Setting {
     label: string;
@@ -94,6 +95,8 @@ export enum ResourceType {
     WEB_PAGE = 'webpage',
     WEB_PAGES = 'webpages',
     IO_DEVICE = 'iodevice',
+    SYSTEM = 'system_cloud',
+    OTHER_SYSTEMS = 'other_systems',
 }
 
 export interface BaseResourceNode {
@@ -118,6 +121,7 @@ export interface SharableResourceLeafNode<T = { id: string }>
     extends Omit<ResourceLeafNode<T>, 'aspectRatio'> {
     owned: boolean;
     shared: boolean;
+    crossSystem: boolean;
     locked: boolean;
 }
 
@@ -142,6 +146,7 @@ export interface ResourceParentNodeMap {
     [ResourceType.CAMERAS]: ResourceParentNode<NxSystemCameraWithMappedFields>;
     [ResourceType.SERVERS]: ResourceParentNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGES]: ResourceParentNode<WebPage>;
+    [ResourceType.OTHER_SYSTEMS]: ResourceParentNode<NxSystemInfo>;
 }
 
 export interface ResourceLeafNodeMap {
@@ -150,6 +155,7 @@ export interface ResourceLeafNodeMap {
     [ResourceType.SERVER]: ResourceLeafNode<NxSystemServerWithMappedFields>;
     [ResourceType.WEB_PAGE]: ResourceLeafNode<WebPage>;
     [ResourceType.IO_DEVICE]: ResourceLeafNode<NxSystemCameraWithMappedFields>;
+    [ResourceType.SYSTEM]: ResourceParentNode<NxSystemCameraWithMappedFields>;
 }
 
 export interface ResourceNodeMap extends ResourceParentNodeMap, ResourceLeafNodeMap {}

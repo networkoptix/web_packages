@@ -1,4 +1,3 @@
-import { Location } from '@angular/common';
 import {
     AfterViewInit,
     Component,
@@ -10,9 +9,10 @@ import {
     OnDestroy,
     OnInit,
     Renderer2,
+    signal,
 } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
-import { ActivatedRoute } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { DeviceDetectorService } from 'ngx-device-detector';
@@ -69,6 +69,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
 
     camera: ViewCamera;
     @Input({ required: true }) system: NxSystem;
+    // time is updated from the query params because of withComponentInputBinding.
+    @Input() set time(time: string) {
+        this.time$$.set(time);
+    }
+    time$$ = signal<string>('live');
 
     CONFIG = nxConfig;
     LANG = staticLang;
@@ -91,9 +96,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     drawQualityDivider$ = new BehaviorSubject<string>('');
 
     controlsShown: boolean = false;
-    showPlayerSection = true;
-    cameraError: string;
-    // private cameraCurrentState: PlaybackState;
     private unsub$ = new Subject<string>();
     isLocal: boolean = false;
     cameraDetailsShown: boolean = false;
@@ -138,9 +140,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     constructor(
         deviceService: DeviceDetectorService,
         private renderer: Renderer2,
-        private location: Location,
         private self: ElementRef<HTMLElement>,
         private route: ActivatedRoute,
+        private router: Router,
         private vms: VideoManagementSystemService,
         private playback: PlaybackService,
         private timeline: TimelineService,
@@ -195,11 +197,33 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             }
             if (mode !== PLAYBACK_MODE.STOPPED && (canViewArchive || canViewDevice)) {
                 this.restorePlayback(canViewArchive && this.camera.hasArchive);
-            } else if (!canViewArchive && !canViewDevice) {
-                this.playback.stop(this.PLAYBACK_ERROR.NO_ACCESS);
             }
         });
     }
+
+    state$$ = computed(() => {
+        const canViewArchive = this.canViewArchive$$();
+        const canViewDevice = this.canViewDevice$$();
+        const { error = '' } = this.playback.state$$();
+        const { hasArchive, isAuthorized, isOnline, isVirtual } =
+            this.vms.state$$().selectedCamera || {};
+        const isLive = this.time$$() === 'live';
+
+        const canPlayLive = canViewDevice && isAuthorized && isOnline && !isVirtual;
+        const canPlayArchive = canViewArchive && isAuthorized && (isVirtual || hasArchive);
+        const noAccess = (!canPlayLive && isLive) || (!canPlayArchive && !isLive);
+        return {
+            error,
+            noAccess,
+            playerError: !!error || noAccess || !isOnline || !isAuthorized,
+        };
+    });
+
+    stopOnNoAccess = effect(() => {
+        if (this.state$$().noAccess) {
+            this.playback.stop();
+        }
+    });
 
     ngOnInit(): void {
         this.initSubscriptions();
@@ -244,7 +268,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.playback.subject
             .pipe(throttleTime(TIMESTAMP_UPDATE_THROTTLE_MS), untilDestroyed(this))
             .subscribe(s => {
-                const uriPlaybackMode = this.getQueryParam('time');
+                const uriPlaybackMode = this.time$$();
                 if (uriPlaybackMode === 'live' && s.mode === PLAYBACK_MODE.LIVE) {
                     return; // don't constantly update for 'live'
                 }
@@ -260,7 +284,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                     default:
                         return;
                 }
-                this.location.replaceState(this.location.path().split('?')[0], `time=${time}`);
+                this.router.navigate([], { queryParamsHandling: 'merge', queryParams: { time } });
             });
 
         this.route.params.pipe(untilDestroyed(this)).subscribe(params => {
@@ -551,11 +575,6 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             : {};
     }
 
-    private getQueryParam(q: string): string {
-        // return (this.location.path().match(new RegExp('[?&]' + q + '=([^&]+)')) || [, null])[1];
-        return new URLSearchParams(this.location.path().split('?')[1] || '').get(q) ?? '';
-    }
-
     private restorePlayback(archiveAvailable: boolean = false): void {
         const canViewArchive = this.canViewArchive$$();
         const canViewLive = this.canViewDevice$$();
@@ -565,7 +584,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
             return;
         }
 
-        const time = this.getQueryParam('time');
+        const time = this.time$$();
         if (canViewLive && (!canViewArchive || !archiveAvailable || time === 'live' || !time)) {
             this.playback.playLive();
         } else if (canViewArchive && archiveAvailable) {
@@ -724,7 +743,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     get enableControls(): boolean {
         return (
             this.camera &&
-            !this.cameraError &&
+            !this.playback.state$$()?.error &&
             ((this.camera.isOnline && !this.camera.isUnauthorized) ||
                 (this.camera.hasArchive && this.canViewArchive$$()))
         );
@@ -738,20 +757,10 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
             this.selectedTransport = state.transport;
-            // this.cameraCurrentState = state;
-            this.cameraError = state.error;
 
             if (state.error !== '' && this.playback.state.mode === PLAYBACK_MODE.LIVE) {
                 this.playback.stop(state.error);
             }
-            // Moved into a function to detect camera's state change Offline<->Online ..etc.
-            this.showPlayerSection =
-                state.error === '' &&
-                ((this.camera?.isAuthorized &&
-                    this.camera?.isOnline &&
-                    !this.camera?.isVirtual &&
-                    (state.mode === PLAYBACK_MODE.STOPPED || state.mode === PLAYBACK_MODE.LIVE)) ||
-                    (this.camera?.hasArchive && state.mode === PLAYBACK_MODE.ARCHIVE));
         });
 
         if (this.camera?.hasArchive) {

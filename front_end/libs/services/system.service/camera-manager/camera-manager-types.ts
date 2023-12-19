@@ -65,6 +65,7 @@ export interface NxSystemCamera {
     // Compatibility patches
     parentId: string; // serverId
     audioEnabled: boolean; // options.isAudioEnabled
+    audioSupported: boolean;
     controlEnabled: boolean; // options.isControlEnabled
     motionType: MotionType; // motion.type
     motionMask: string; // motion.mask

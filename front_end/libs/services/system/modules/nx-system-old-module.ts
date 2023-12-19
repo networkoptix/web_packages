@@ -616,6 +616,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     startPoll(systemId?: string): void {
         if (this.subscriberCount === 0) {
             if (this.mediaserver instanceof NxSystemRestAPI3) {
+                this.subscriberCount++;
                 this.killPoll$.next(true);
                 return this.useRpcOverPolling();
             }
@@ -643,7 +644,7 @@ export class NxSystemOldModule extends NxSystemModuleBase {
     stopPoll(): void {
         if (this.subscriberCount > 1) {
             this.subscriberCount--;
-        } else {
+        } else if (!environment.isLocal) {
             if (this.activeSubscription instanceof Subscription) {
                 this.activeSubscription.unsubscribe();
             }

@@ -281,6 +281,11 @@ export class UserManager {
             permissions: role?.permissions || '',
             name: user.email,
         };
+
+        if (userData.permissions?.includes('NoPermission')) {
+            userData.permissions = this.CONFIG.accessRoles.globalCustomUserPermission;
+        }
+
         const saveAction =
             this.mediaserver instanceof NxSystemRestAPI
                 ? this.mediaserver.addUser(userData)

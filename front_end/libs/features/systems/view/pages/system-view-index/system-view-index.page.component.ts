@@ -357,7 +357,9 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
 
                             return mediaServers.map(ms => ({
                                 ...setServerIpAndPort(ms),
-                                cameras: cameras.filter(c => c.parentId === ms.id),
+                                cameras: cameras.filter(
+                                    c => c.parentId === ms.id && c.mediaStreams.length,
+                                ),
                             }));
                         }),
                     )

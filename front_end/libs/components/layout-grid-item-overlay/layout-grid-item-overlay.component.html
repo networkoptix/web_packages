@@ -5,16 +5,6 @@
     />
 </ng-template>
 
-<ng-template #tooSmall>
-    <div
-        [nxTooltip]="'Too Small' | translate"
-        class="too-small"
-        translate
-    >
-        Too Small
-    </div>
-</ng-template>
-
 <div
     class="nx-layout-grid-item-overlay"
     [ngStyle]="getScaleStyle$ | async"
@@ -29,20 +19,21 @@
         let-size="size"
         let-tooltipExtra="tooltipExtra"
     >
-        <svg-icon
-            *ngIf="menuItem"
-            nx-add-svg-src
-            [ngClass]="{
-                checked: menuItem.checked$$?.()
-            }"
-            [src]="menuItem.icon"
-            [svgStyle]="{
-                'width.px': '{{size || 24}}',
-                'height.px': '{{size || 24}}'
-            }"
-            [nxTooltip]="(menuItem.tooltip | translate) + (tooltipExtra || '')"
-            (click)="handleIconClick(menuItem.action, $event)"
-        ></svg-icon>
+        @if (menuItem) {
+            <svg-icon
+                nx-add-svg-src
+                [ngClass]="{
+                    checked: menuItem.checked$$?.()
+                }"
+                [src]="menuItem.icon"
+                [svgStyle]="{
+                    'width.px': '{{size || 24}}',
+                    'height.px': '{{size || 24}}'
+                }"
+                [nxTooltip]="(menuItem.tooltip | translate) + (tooltipExtra || '')"
+                (click)="handleIconClick(menuItem.action, $event)"
+            ></svg-icon>
+        }
     </ng-template>
 
     <div class="name">
@@ -56,34 +47,41 @@
                 }
             "
         />
-        <div
-            class="resource-name ellipsis"
-            [nxTooltip]="node$$()?.name || ('Not Supported' | translate)"
-        >
-            {{ node$$()?.name || ('Not Supported' | translate) }}
-        </div>
+        @if (nodeName$$() || ('Not Supported' | translate); as nodeName) {
+            <div
+                class="resource-name ellipsis"
+                [nxTooltip]="nodeName"
+            >
+                {{ nodeName }}
+            </div>
+        }
     </div>
 
     <div class="quick-actions">
-        <div
-            class="action-icon"
-            *ngIf="quickActionsMenu$$()"
-            [cdkMenuTriggerFor]="!scaled$$() ? nodeActionMenu : null"
-            (cdkMenuOpened)="isMenuOpened$$.set(true)"
-            (cdkMenuClosed)="isMenuOpened$$.set(false)"
-        >
-            <ng-container
-                *ngTemplateOutlet="svgIcon; context: { menuItem: quickActionsMenu$$() }"
-            />
-        </div>
-        <ng-container *ngIf="quickActions$$()">
+        @if (quickActionsMenu$$()) {
             <div
-                *ngFor="let quickActionItem of quickActions$$()"
                 class="action-icon"
+                [cdkMenuTriggerFor]="!scaled$$() ? nodeActionMenu : null"
+                (cdkMenuOpened)="isMenuOpened$$.set(true)"
+                (cdkMenuClosed)="isMenuOpened$$.set(false)"
             >
-                <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: quickActionItem }" />
+                <ng-container
+                    *ngTemplateOutlet="svgIcon; context: { menuItem: quickActionsMenu$$() }"
+                />
             </div>
-        </ng-container>
+        }
+        @if (quickActions$$()) {
+            @for (
+                quickActionItem of quickActions$$();
+                track quickActionItem && quickActionItem.id
+            ) {
+                <div class="action-icon">
+                    <ng-container
+                        *ngTemplateOutlet="svgIcon; context: { menuItem: quickActionItem }"
+                    />
+                </div>
+            }
+        }
     </div>
 
     <div class="menu-group">
@@ -92,41 +90,46 @@
                 *ngTemplateOutlet="svgIcon; context: { menuItem: fullscreenAction$$() }"
             />
         </div>
-        <div
-            class="remove"
-            *ngIf="removeAction$$()"
-        >
-            <ng-container *ngTemplateOutlet="svgIcon; context: { menuItem: removeAction$$() }" />
-        </div>
-    </div>
-
-    <div
-        *ngIf="displayInfo$$() && cameraOnline$$()"
-        class="info"
-    >
-        <ng-template #preloader>
-            <nx-pre-loader type="short"></nx-pre-loader>
-        </ng-template>
-        <ng-container *ngIf="bitrateInfo$ | async as bitrateInfo; else preloader">
-            <div
-                *ngFor="let metric of bitrateInfo; let i = index"
-                [ngClass]="{ 'info-type': !i }"
-            >
-                {{ metric | nxTranslate }}
+        @if (removeAction$$()) {
+            <div class="remove">
+                <ng-container
+                    *ngTemplateOutlet="svgIcon; context: { menuItem: removeAction$$() }"
+                />
             </div>
-        </ng-container>
+        }
     </div>
 
-    <div
-        class="status"
-        *ngIf="layoutsItemStatus && !!statusText$$()"
-    >
-        {{ statusText$$().toUpperCase() | translate }}
-    </div>
+    @if (displayInfo$$() && cameraOnline$$()) {
+        <div class="info">
+            @if (bitrateInfo$ | async; as bitrateInfo) {
+                @for (metric of bitrateInfo; track metric; let i = $index) {
+                    <div [ngClass]="{ 'info-type': !i }">
+                        {{ metric | nxTranslate }}
+                    </div>
+                }
+            } @else {
+                <nx-pre-loader type="short"></nx-pre-loader>
+            }
+        </div>
+    }
+
+    @if (layoutsItemStatus && !!statusText$$()) {
+        <div class="status">
+            {{ statusText$$().toUpperCase() | translate }}
+        </div>
+    }
 
     <div class="content">
-        <ng-container *ngIf="!scaled$$(); else tooSmall">
+        @if (!scaled$$()) {
             <ng-content />
-        </ng-container>
+        } @else {
+            <div
+                [nxTooltip]="'Too Small' | translate"
+                class="too-small"
+                translate
+            >
+                Too Small
+            </div>
+        }
     </div>
 </div>

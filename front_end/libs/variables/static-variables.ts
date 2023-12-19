@@ -479,6 +479,7 @@ export const menus = {
 };
 
 export const oauthStore = {
+    bindData: 'bindData',
     code: 'code',
     verify2fa: 'verify2fa',
 };

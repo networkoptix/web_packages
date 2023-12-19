@@ -1,4 +1,4 @@
-Hello, {{message.userFullName}}
+Merhaba, {{message.userFullName}}
 
 The status of the {{message.organization_name}} organization is changed to {{message.status_name}}.
 

@@ -1,4 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
@@ -73,6 +74,9 @@ export class NxSystemsService {
               }),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
+
+    systems$$ = toSignal(this.systemsSubject);
+
     finishedMerged: boolean = false;
     systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {
         primary: undefined,
@@ -119,8 +123,8 @@ export class NxSystemsService {
         }
         this.systemsSubject.pipe(first(systems => systems.length > 0)).subscribe(systems => {
             const systemService = this.injector.get(NxSystemService);
-            for (const { stateOfHealth, id, system2faEnabled } of systems) {
-                if (stateOfHealth === 'online' && !system2faEnabled) {
+            for (const { accessRole, stateOfHealth, id, system2faEnabled } of systems) {
+                if (stateOfHealth === 'online' && !system2faEnabled && accessRole !== 'none') {
                     systemService.createSystem(this.userEmail, id, null, true, true);
                 }
             }

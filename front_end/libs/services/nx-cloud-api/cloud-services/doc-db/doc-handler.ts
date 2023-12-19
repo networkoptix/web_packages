@@ -92,10 +92,8 @@ export class DocHandler<DocType extends DocId> {
      */
     save(docId: string, doc: DocType): Observable<DocType>;
     save(docIdOrDoc: string | DocType, doc?: DocType): Observable<DocType> {
-        return this.withPrefix(prefix => {
-            const { body } = this.normalizeFromOverloads(docIdOrDoc, doc, prefix);
-            return this.update(body).pipe(catchError(() => this.create(body)));
-        });
+        const { body } = this.normalizeFromOverloads(docIdOrDoc, doc);
+        return this.update(body).pipe(catchError(() => this.create(body)));
     }
 
     /**
@@ -174,11 +172,12 @@ export class DocHandler<DocType extends DocId> {
     private normalizeFromOverloads(
         docIdOrDoc: string | (DocId & Partial<Pick<DocType, 'id'>>),
         doc: DocType,
-        prefix: string,
+        prefix: string = '',
     ): { docId: string; body: DocType } {
         const isDocId = typeof docIdOrDoc === 'string';
-        const id = isDocId ? docIdOrDoc : docIdOrDoc.id || uuid();
-        const docId = `${prefix}/${cleanId(id)}`;
+        const docIdKey = isDocId ? docIdOrDoc : docIdOrDoc.docId || docIdOrDoc.id || uuid();
+        const id = isDocId ? docIdOrDoc : docIdOrDoc.id || docIdOrDoc.docId || uuid();
+        const docId = prefix ? `${prefix}/${cleanId(docIdKey)}` : cleanId(docIdKey);
         const body = { ...(isDocId ? doc : docIdOrDoc), id, docId } as DocType;
         return { docId, body };
     }

@@ -9,6 +9,7 @@ import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/ada
 import { addUserRestV3 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
 import { UserSessionV3 } from '@services/system-api.types/users.types';
+import { CloudBindData } from '@services/system-api.types';
 import {
     AddUser,
     BaseNewUser,
@@ -54,6 +55,10 @@ export class NxSystemRestAPI3 extends NxSystemRestAPI2 {
             injector,
         );
         this.version = 6.0;
+    }
+
+    saveCloudSystemCredentials(data: CloudBindData): Observable<unknown> {
+        return this.post('/rest/v3/system/cloud/bind', { ...data });
     }
 
     @memoizeAsync(defaultHashFunction, forceReload => !!forceReload, 10 * 1000)

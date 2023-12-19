@@ -15,6 +15,12 @@ import { BaseRole, PredefinedLegacyRole } from '@services/system-user.types';
 
 import type { MenuNode } from '../menus.service.types';
 
+export interface OauthStoreFlags {
+    bindData: string;
+    code: string;
+    verify2fa: string;
+}
+
 export interface ThemeConfig {
     default: string;
     dark: string;
@@ -198,6 +204,8 @@ const FeatureFlagKeys = [
     'layoutsIoDevices',
     'layoutsDeviceSettings',
     'layoutsUnsavedSync',
+    'layoutsCrossSystem',
+    'layoutsCrossSystemEditing',
     'layoutsRemoveItemDialog',
     'enableAnimations',
     'tosRequired',

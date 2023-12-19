@@ -86,7 +86,7 @@ export class NxBootstrapProvider {
                     this.CONFIG.viewsDir = 'static/lang_' + language.language + '/views/';
                     if (!!moduleInfo && Object.keys(moduleInfo).length > 0) {
                         NxBootstrapProvider.isNewSystem =
-                            moduleInfo.serverFlags.includes('SF_NewSystem');
+                            moduleInfo?.serverFlags?.includes('SF_NewSystem'); // In the event serverFlags are missing we can assume that the system isn't new.
                         this.setLocalInfo(moduleInfo).then(() => {
                             this.configService.updateConfigUsingOverrides();
                             NxBootstrapProvider.isLoaded = true;

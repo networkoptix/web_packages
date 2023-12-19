@@ -419,3 +419,28 @@ export type RecursivePick<T, Keys extends RecursiveKeyMap<T>> = Pick<
 export type RecursiveKeyMap<T> = {
     [K in keyof T]?: NonNullable<T[K]> extends object ? RecursiveKeyMap<T[K]> | true : true;
 };
+
+export function extractVideoLayout(videoLayout: string): {
+    width: number;
+    height: number;
+    sensors: number[];
+    gridAspect: number;
+} {
+    const {
+        height: _height = '1',
+        sensors: _sensors = '',
+        width: _width = '1',
+    } = Object.fromEntries(new URLSearchParams(videoLayout.replace(/;/g, '&')).entries());
+
+    const width = parseInt(_width);
+    const height = parseInt(_height);
+    const sensors = _sensors.split(',').map(val => parseInt(val));
+    const gridAspect = width / height;
+
+    return {
+        width,
+        height,
+        sensors,
+        gridAspect,
+    };
+}

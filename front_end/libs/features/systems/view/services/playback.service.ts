@@ -1,4 +1,5 @@
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     animationFrameScheduler,
@@ -179,6 +180,7 @@ export class PlaybackService {
     }
 
     subject = new BehaviorSubject<PlaybackState>(createInitialStoppedState());
+    state$$ = toSignal(this.subject, { initialValue: createInitialStoppedState() });
 
     private emit(): void {
         this.subject.next(this.state);

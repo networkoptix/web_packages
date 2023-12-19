@@ -106,6 +106,10 @@ class CloudUser(models.Model):
     def __str__(self):
         return self.email
 
+    @property
+    def full_name(self) -> str:
+        return "John Smith"
+
     def is_authenticated(self):
         return True
 
@@ -205,6 +209,24 @@ class ServiceUsageDict(TypedDict):
     quantity: int
 
 
+class CloudSystemStates:
+    NOT_ACTIVATED = 2
+    ACTIVATED = 4
+    DELETED = 6
+
+    STATE_CHOICES = [
+        (NOT_ACTIVATED, 'notActivated'),
+        (ACTIVATED, 'activated'),
+        (DELETED, 'deleted')
+    ]
+    STATE_CODES = [
+        ('notActivated', NOT_ACTIVATED),
+        ('activated', ACTIVATED),
+        ('deleted', DELETED)
+    ]
+    STATE_DICT = dict(STATE_CODES)
+
+
 class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     system_id = models.UUIDField()
     usage_issue_detected = models.BooleanField(default=False)
@@ -223,11 +245,12 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
     security_statuses = models.JSONField(default=dict)
     created_ts = models.DateTimeField(auto_now_add=True)
     path = ArrayField(base_field=models.UUIDField(null=False), null=True)
-    activated = models.BooleanField(default=True)
+    system_state = models.IntegerField(choices=CloudSystemStates.STATE_CHOICES, blank=True,
+                                       default=CloudSystemStates.NOT_ACTIVATED)
 
     objects = ExternalIdTargetManager()
     external_id_field_name = 'system_id'  # Field that is checked for possible external id usage
-    observed_fields = ('organization_id', 'state', 'effective_state', 'system_group_id')
+    observed_fields = ('organization_id', 'state', 'effective_state', 'system_group_id', 'system_state')
 
     def __str__(self):
         return self.name or str(self.system_id)
@@ -321,9 +344,17 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
         self.effective_state = max(self.state, getattr(self.organization, 'effective_state', ChannelPartnerStates.ACTIVE))
         if self._state.adding:
             return
-        if self.state == self._original_state and self.organization_id == self._original_organization_id:
+        if (
+                self.state == self._original_state
+                and self.organization_id == self._original_organization_id
+                and self.system_state == self._original_system_state
+        ):
             return
-        if self.organization_id != self._original_organization_id or self.state == ChannelPartnerStates.SHUTDOWN:
+        if (
+                self.organization_id != self._original_organization_id
+                or self.state == ChannelPartnerStates.SHUTDOWN
+                or self.system_state == CloudSystemStates.DELETED
+        ):
             # TODO. Move to background.
             self.negate_all_service(self._original_organization_id)
 

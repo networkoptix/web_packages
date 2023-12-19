@@ -12,7 +12,6 @@ import { NxDialogsService } from '@dialogs/dialogs.service';
 import { BookmarkDetails as DT } from '@dialogs/dialogs.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import type { Bookmark } from '@pages/systems/bookmarks/bookmarks.types';
-import { cleanId } from '@utils/general';
 import { icons } from '@variables/static-variables';
 
 @Component({
@@ -50,9 +49,7 @@ export class NxBookmarksCardModalComponent {
         this.exportName = `${bookmark.deviceId}.mkv`; // Will switch to mp4 in the future
         this.time = startTime;
         this.date = startDate;
-        this.fullRecordingUrl = `systems/${cleanId(bookmark.systemId)}/view/${cleanId(
-            bookmark.deviceId,
-        )}?time=${bookmark.startTimeMs}`;
+        this.fullRecordingUrl = `systems/${bookmark.systemId}/view/${bookmark.deviceId}?time=${bookmark.startTimeMs}`;
     }
 
     openDownloadDialog(): void {

@@ -198,6 +198,7 @@ export const cameraKeyMapV1 = {
                 key: true,
                 value: { maxFps: true },
             },
+            hasAudio: true,
         },
         mediaStreams: {
             streams: { codec: true, encoderIndex: true, resolution: true },
@@ -206,6 +207,7 @@ export const cameraKeyMapV1 = {
         overrideAr: true,
         rotation: true,
         supportedMotion: true,
+        VideoLayout: true,
     },
     motion: {
         mask: true,

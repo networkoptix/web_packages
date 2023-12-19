@@ -1,6 +1,9 @@
+<ng-template #systemNotReady>
+    <nx-pre-loader></nx-pre-loader>
+</ng-template>
 <nx-block
     type="mt-3"
-    *ngIf="haveAdvSettings"
+    *ngIf="haveAdvSettings; else systemNotReady"
 >
     <header>
         <h4 translate>Advanced System Settings</h4>

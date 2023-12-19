@@ -8,7 +8,7 @@ from model_bakery import baker
 from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser,
     Organization, OrganizationPermissions, ChannelPartnerStates,
-    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles, SystemGroup
+    ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles, SystemGroup, CloudUser
 )
 
 
@@ -291,7 +291,7 @@ class TestOrganization:
         assert org.has_perm(admin.user, OrganizationPermissions.view_service_reports) is False
         assert org.has_perm(admin.user, OrganizationPermissions.access_systems) is True
         assert org.has_perm(admin.user, OrganizationPermissions.view_health_monitoring) is True
-        
+
     def test_get_groups_structure_for_user(self, channel_partner_factory, cp_user_factory, organization_factory, org_user_factory,
                     system_group_factory, sys_group_user_factory, system_factory, arf, mock_auth_with_user):
         root = channel_partner_factory()
@@ -760,6 +760,9 @@ class TestCloudUser:
         # only other org systems must be in the list
         assert systems.count() == 2
 
+    def test_full_name(self, cloud_user_factory):
+        user: CloudUser = cloud_user_factory(email='test@example.com')
+        assert user.full_name == 'John Smith'
 
     def test_systems_memberships(self, channel_partner_factory, cp_user_factory, organization_factory,
                                     org_user_factory, system_group_factory, system_factory,

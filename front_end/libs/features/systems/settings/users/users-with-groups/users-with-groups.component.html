@@ -84,18 +84,24 @@
                             *ngFor="let group of selectedGroupsList"
                         >
                             <ng-container *ngIf="selectedGroupsList.length > 1; else singleGroup">
-                                <div class="multiple-groups-item">
-                                    <span class="font-weight-bold group-name">
-                                        {{ group.name | translate
-                                        }}<span *ngIf="group.description">:</span>
-                                    </span>
-                                    <span class="help-block">{{
-                                        group.description | translate
-                                    }}</span>
-                                </div>
+                                <nx-ml-ellipsis-clamp [viewLines]="1">
+                                    <div class="multiple-groups-item">
+                                        <span class="font-weight-bold group-name">
+                                            {{ group.name | translate
+                                            }}<span *ngIf="group.description">:</span>
+                                        </span>
+                                        <span class="help-block">{{
+                                            group.description | translate
+                                        }}</span>
+                                    </div>
+                                </nx-ml-ellipsis-clamp>
                             </ng-container>
                             <ng-template #singleGroup>
-                                <span class="help-block">{{ group.description | translate }}</span>
+                                <nx-ml-ellipsis-clamp [viewLines]="1">
+                                    <span class="help-block">{{
+                                        group.description | translate
+                                    }}</span></nx-ml-ellipsis-clamp
+                                >
                             </ng-template>
                         </div>
                     </ng-container>

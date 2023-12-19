@@ -33,17 +33,22 @@ export class NxSystemService {
     currentSystem$ = new BehaviorSubject<NxSystem>(undefined);
 
     getCurrentSystem(): NxSystem {
-        return this.currentSystem$$();
+        const system = this.currentSystem$$();
+        if (!system?.subscriberCount) {
+            system?.startPoll(system.id);
+        }
+        return system;
     }
 
     setSystem(system: NxSystem): void {
-        this.currentSystem$.next(system);
-        this.store.dispatch(
-            SystemResourcesActions.refreshSystemResources({
-                systems: { [system.id]: { all: true } },
-            }),
-        );
-        this.currentSystem$.next(system);
+        if (system.id !== this.currentSystem$$()?.id) {
+            this.currentSystem$.next(system);
+            this.store.dispatch(
+                SystemResourcesActions.refreshSystemResources({
+                    systems: { [system.id]: { all: true } },
+                }),
+            );
+        }
     }
 
     currentSystem$$ = toSignal(this.currentSystem$);
@@ -137,11 +142,14 @@ export class NxSystemService {
                 .setAccessTokenAsCookie()
                 .subscribe(() => {});
         }
+        if (id !== this.currentSystem$$()?.id) {
+            this.currentSystem$$()?.stopPoll();
+        }
 
         this.setSystem(this.system);
         // this.system.lostConnection = false;
         if (!skipPoll) {
-            this.currentSystem$$().startPoll(systemId);
+            this.currentSystem$$()?.startPoll(systemId);
         }
         return this.currentSystem$$();
     }

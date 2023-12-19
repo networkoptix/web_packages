@@ -1,5 +1,6 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, ViewEncapsulation, booleanAttribute } from '@angular/core';
+import { RouterLink } from '@angular/router';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule, TranslateService } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
@@ -40,6 +41,7 @@ import { NgChanges } from '@utils/ng-changes';
         NxFooterComponent,
         PipesModule,
         NxAddSvgSrcDirective,
+        RouterLink,
     ],
 })
 export class NxPagePlaceholderComponent implements OnInit {

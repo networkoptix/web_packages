@@ -200,16 +200,12 @@
                                 name="audioEnabled"
                                 componentId="audioEnabled"
                                 [(ngModel)]="audioEnabled"
-                                [disabled]="!camera.parameters.isAudioSupported"
+                                [disabled]="!camera.audioSupported"
                             >
                             </nx-checkbox>
                             <label
                                 class="control-label mb-0"
-                                [ngClass]="
-                                    !camera.parameters.isAudioSupported
-                                        ? 'disabled-audio-label'
-                                        : ''
-                                "
+                                [ngClass]="!camera.audioSupported ? 'disabled-audio-label' : ''"
                                 for="audioEnabled"
                             >
                                 <span translate>Enable Audio</span>

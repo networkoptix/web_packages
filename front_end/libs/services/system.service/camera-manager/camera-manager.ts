@@ -7,7 +7,7 @@ import type { ec2CameraEx } from '@services/system-api.types/devices.types';
 import type { ServerTime } from '@services/system-api.types/servers.types';
 import type { CameraValues } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { cleanId, KeyFilter, MS } from '@utils/general';
+import { cleanId, KeyFilter, MS, extractVideoLayout } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
 
@@ -91,8 +91,15 @@ export class CameraManager {
     }
 
     parseCamera = (camera: PreprocessCamera): NxSystemCamera => {
-        const { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled } =
-            this.parseParameters(camera);
+        const {
+            parameters,
+            credentials,
+            maxFps,
+            previewUrl,
+            defaultRatio,
+            motionLowResEnabled,
+            audioSupported,
+        } = this.parseParameters(camera);
 
         const backupQuality = (camera as ec2CameraEx).backupType || camera.backupQuality;
 
@@ -173,6 +180,7 @@ export class CameraManager {
             },
             parentId,
             audioEnabled,
+            audioSupported,
             controlEnabled,
             motionType,
             motionMask,
@@ -202,7 +210,7 @@ export class CameraManager {
         camera: PreprocessCamera,
     ): Pick<
         NxSystemCamera,
-        'parameters' | 'credentials' | 'previewUrl' | 'defaultRatio' | 'maxFps'
+        'parameters' | 'credentials' | 'previewUrl' | 'defaultRatio' | 'maxFps' | 'audioSupported'
     > &
         Pick<RecordingSettings, 'motionLowResEnabled'> {
         let credentials: NxSystemCamera['credentials'];
@@ -303,11 +311,28 @@ export class CameraManager {
             .map(Number);
         const defaultRatio = [x, y].every(Boolean) ? x / y : 1920 / 1080;
 
+        if (!parameters.overrideAr && parameters.VideoLayout) {
+            parameters.overrideAr =
+                extractVideoLayout(parameters.VideoLayout).gridAspect * defaultRatio;
+        }
+
         const multiStream = bitrateInfos && bitrateInfos.streams.length >= 2;
         const motionLowResEnabled =
             !camera.disableDualStreaming && (multiStream || !!parameters.hasDualStreaming);
 
-        return { parameters, credentials, maxFps, previewUrl, defaultRatio, motionLowResEnabled };
+        // isAudioSupported is legacy, but some cameras will still use it
+        const audioSupported =
+            !!parameters.isAudioSupported || !!parameters.mediaCapabilities?.hasAudio;
+
+        return {
+            parameters,
+            credentials,
+            maxFps,
+            previewUrl,
+            defaultRatio,
+            motionLowResEnabled,
+            audioSupported,
+        };
     }
 
     private parseRecordingSettings(

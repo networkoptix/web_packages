@@ -38,6 +38,7 @@
                 <div
                     class="clickable"
                     *ngIf="editMode"
+                    (click)="addSiteRecord()"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -47,12 +48,14 @@
                     ></svg-icon>
                 </div>
             </div>
-            <ng-container *ngIf="information.supportInfo.sites.length; else noSites">
+            <ng-container *ngIf="information.sites.length; else noSites">
                 <nx-info-form
-                    [formId]="'site'"
+                    [formId]="'sites'"
+                    [linkCaption]="'site'"
                     [editMode]="editMode"
                     [linkPredicate]="''"
-                    [data]="information.supportInfo.sites"
+                    [data]="information.sites"
+                    (recordToBeRemoved)="removeRecord($event)"
                 ></nx-info-form>
             </ng-container>
         </nx-section>
@@ -70,6 +73,7 @@
                 <div
                     class="clickable"
                     *ngIf="editMode"
+                    (click)="addPhoneRecord()"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -79,12 +83,14 @@
                     ></svg-icon>
                 </div>
             </div>
-            <ng-container *ngIf="information.supportInfo.phones.length; else noPhones">
+            <ng-container *ngIf="information.phones.length; else noPhones">
                 <nx-info-form
-                    [formId]="'phone'"
+                    [formId]="'phones'"
+                    [linkCaption]="'phone'"
                     [editMode]="editMode"
                     [linkPredicate]="'tel:'"
-                    [data]="information.supportInfo.phones"
+                    [data]="information.phones"
+                    (recordToBeRemoved)="removeRecord($event)"
                 ></nx-info-form>
             </ng-container>
         </nx-section>
@@ -102,6 +108,7 @@
                 <div
                     class="clickable"
                     *ngIf="editMode"
+                    (click)="addEmailRecord()"
                 >
                     <svg-icon
                         nx-add-svg-src
@@ -111,12 +118,14 @@
                     ></svg-icon>
                 </div>
             </div>
-            <ng-container *ngIf="information.supportInfo.emails.length; else noEmails">
+            <ng-container *ngIf="information.emails.length; else noEmails">
                 <nx-info-form
-                    [formId]="'email'"
+                    [formId]="'emails'"
+                    [linkCaption]="'email'"
                     [editMode]="editMode"
                     [linkPredicate]="'mailto:'"
-                    [data]="information.supportInfo.emails"
+                    [data]="information.emails"
+                    (recordToBeRemoved)="removeRecord($event)"
                 ></nx-info-form>
             </ng-container>
         </nx-section>

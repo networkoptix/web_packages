@@ -430,7 +430,7 @@ export class ServerManager {
         return mediaServer.getApiPreamble();
     }
 
-    getStorages(serverId: string, useCache: boolean = false, customTimeout: number = 8000) {
+    getStorages(serverId: string, useCache: boolean = false, customTimeout?: number) {
         return this.mediaserverConnections[serverId].getStorages(useCache, customTimeout);
     }
 

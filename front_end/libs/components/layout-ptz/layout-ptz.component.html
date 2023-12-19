@@ -4,17 +4,11 @@
     let-label="label"
 >
     <ng-template #buttonTooltip>
-        <ng-template
-            #actionTooltip
-            translate
-            >Click action to perform fine adjustments. Hold down to do larger
-            adjustments.</ng-template
-        >
-        <ng-container
-            *ngIf="value === 'exit'; else actionTooltip"
-            translate
-            >Exit PTZ Mode</ng-container
-        >
+        @if (value === 'exit') {
+            <ng-container translate>Exit PTZ Mode</ng-container>
+        } @else {
+            Click action to perform fine adjustments. Hold down to do larger adjustments.
+        }
     </ng-template>
     <button
         [style]="{ 'grid-area': value }"
@@ -44,10 +38,10 @@
         (mouseup)="triggerAction()"
         (mouseleave)="triggerAction()"
     >
-        <ng-container *ngFor="let action of LANG.layouts.ptzActionLabels | keyvalue">
+        @for (action of LANG.layouts.ptzActionLabels | keyvalue; track action) {
             <ng-container
                 *ngTemplateOutlet="actionButton; context: { value: action.key }"
             ></ng-container>
-        </ng-container>
+        }
     </div>
 </div>

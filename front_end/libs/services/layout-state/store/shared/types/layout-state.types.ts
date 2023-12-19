@@ -1,11 +1,5 @@
 import { Layout } from '@services/system-api.types/layouts.types';
 
-// TODO: Need to figure out where this type should go
-export interface CrossSystemLayout {
-    id: string;
-    name: string;
-}
-
 export const enum LayoutTypes {
     LOCAL = 'local',
     CROSS_SYSTEM = 'cross-system',
@@ -26,27 +20,29 @@ interface BaseLayoutState<LayoutTypeName, LayoutType, Unsaved> {
     baseVersion: string;
 }
 
+interface LayoutTypeCrossSystem {
+    layoutType: LayoutTypes.CROSS_SYSTEM;
+}
+
 export interface LocalLayoutState
     extends BaseLayoutState<LayoutTypes.LOCAL, Layout, UnsavedState> {}
 
 export interface CrossSystemLayoutState
-    extends BaseLayoutState<LayoutTypes.CROSS_SYSTEM, CrossSystemLayout, UnsavedState> {}
+    extends BaseLayoutState<LayoutTypes.CROSS_SYSTEM, Layout, UnsavedState> {}
 
 export interface SavedLocalLayoutState
     extends BaseLayoutState<LayoutTypes.LOCAL, Layout, UnsavedState.SAVED> {}
 
 export interface SavedCrossSystemLayoutState
-    extends BaseLayoutState<LayoutTypes.CROSS_SYSTEM, CrossSystemLayout, UnsavedState.SAVED> {}
+    extends Omit<SavedLocalLayoutState, 'layoutType'>,
+        LayoutTypeCrossSystem {}
 
 export interface UnsavedLocalLayoutState
     extends BaseLayoutState<LayoutTypes.LOCAL, Layout, Exclude<UnsavedState, UnsavedState.SAVED>> {}
 
 export interface UnsavedCrossSystemLayoutState
-    extends BaseLayoutState<
-        LayoutTypes.CROSS_SYSTEM,
-        CrossSystemLayout,
-        Exclude<UnsavedState, UnsavedState.SAVED>
-    > {}
+    extends Omit<UnsavedLocalLayoutState, 'layoutType'>,
+        LayoutTypeCrossSystem {}
 
 export type LayoutState = LocalLayoutState | CrossSystemLayoutState;
 
