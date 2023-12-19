@@ -15,7 +15,7 @@ import {
     UserType,
     RestV3User,
 } from '@services/system-user.types';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 
 import { coerceUserType } from '../../helpers/coerce-user-type';
 
@@ -283,7 +283,7 @@ export class PermissionManager {
                     const _resourceAccessRights: ResourceAccessRights = Object.fromEntries(
                         Object.entries(data.resourceAccessRights).map(
                             ([resourceOrResourceGroupId, accessRights]) => [
-                                cleanId(resourceOrResourceGroupId),
+                                cleanIdLegacy(resourceOrResourceGroupId),
                                 this.convertAccessRightsStringToObj(accessRights),
                             ],
                         ),

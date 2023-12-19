@@ -3,7 +3,7 @@ import { ActivatedRouteSnapshot, ResolveFn, Router, RouterStateSnapshot } from '
 
 import { NxUser } from '@services/system-user.types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 
 export const userResolver: ResolveFn<NxUser> = async (
     route: ActivatedRouteSnapshot,
@@ -15,12 +15,12 @@ export const userResolver: ResolveFn<NxUser> = async (
     const users = currentSystem.userManager.users;
     const user = users?.find(({ id }) => id.includes(userId));
     if (user) {
-        const cleanUserId = cleanId(user.id);
+        const cleanUserId = cleanIdLegacy(user.id);
         if (!state.url.includes(cleanUserId)) {
             await router.navigate([state.url, cleanUserId]);
         }
         return user;
     }
-    await router.navigate([state.url, cleanId(users[0]?.id)]);
+    await router.navigate([state.url, cleanIdLegacy(users[0]?.id)]);
     return users[0];
 };

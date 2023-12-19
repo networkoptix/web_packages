@@ -169,7 +169,7 @@
                         @if (
                             layoutStateService
                                 .duplicatedLayouts$$()
-                                .includes(cleanId(this.layout.id))
+                                .includes(cleanIdLegacy(this.layout.id))
                         ) {
                             <span
                                 class="ribbon-message"

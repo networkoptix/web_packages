@@ -42,7 +42,7 @@ import {
     ViewBaseCamera,
     ViewPreprocessServer,
 } from '@services/system.service/system-server-types';
-import { buildTopLevelKeyMap } from '@utils/general';
+import { buildTopLevelKeyMap, cleanIdLegacy } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
@@ -897,7 +897,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     getCamera(id: string): Observable<RestV1CameraCompat> {
         return this.getWith('/rest/v1/devices', cameraKeyMapV1, {
-            params: { id: this.cleanId(id) },
+            params: { id: cleanIdLegacy(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV1(cameras[0])));
     }
 
@@ -1235,7 +1235,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             height?: number | string;
             rotate?: number | string;
         } = {
-            cameraId: this.cleanId(cameraId),
+            cameraId: cleanIdLegacy(cameraId),
         };
         let endpoint = '/ec2/cameraThumbnail';
 
@@ -1349,6 +1349,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     }
 
     deleteUser(userId: string): Observable<ChangedIdReturned> {
-        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${this.cleanId(userId)}`);
+        return this.delete<t.ChangedIdReturned>(`/rest/v1/users/${cleanIdLegacy(userId)}`);
     }
 }

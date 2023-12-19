@@ -100,7 +100,7 @@ import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
-import { cleanId, dirtyId } from '@utils/general';
+import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
@@ -1083,7 +1083,7 @@ export class NxLayoutGridComponent {
         }
     }
 
-    cleanId = cleanId;
+    cleanIdLegacy = cleanIdLegacy;
 
     getScale = (itemId: string, resize: Point): string => {
         if (resize.x === 0 && resize.y === 0) {
@@ -1491,9 +1491,9 @@ export class NxLayoutGridComponent {
         }
 
         const isLayoutItem = 'id' in node;
-        const id = cleanId(isLayoutItem ? node.id : node.details?.id);
+        const id = cleanIdLegacy(isLayoutItem ? node.id : node.details?.id);
 
-        if (id && id !== cleanId(this.layout.id)) {
+        if (id && id !== cleanIdLegacy(this.layout.id)) {
             this.changingLayout = id;
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;

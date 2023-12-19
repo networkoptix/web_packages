@@ -124,7 +124,8 @@
                     alternateStyle
                     [tourAnchor]="
                         layout?.id &&
-                        cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id)
+                        cleanIdLegacy(changingLayout || layout?.id) ===
+                            cleanIdLegacy(node?.details?.id)
                             ? 'cloud-layouts_selected-' +
                               (node.type === RESOURCE_TYPE.LAYOUT ? RESOURCE_TYPE.LAYOUT : 'focus')
                             : ''
@@ -132,7 +133,8 @@
                     [ngClass]="{
                         selected:
                             layout?.id &&
-                            cleanId(changingLayout || layout?.id) === cleanId(node?.details?.id),
+                            cleanIdLegacy(changingLayout || layout?.id) ===
+                                cleanIdLegacy(node?.details?.id),
                         offline:
                             node.type !== RESOURCE_TYPE.LAYOUT &&
                             !node.details.unauthorized &&

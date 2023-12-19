@@ -49,7 +49,7 @@ import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { icons } from '@static-variables';
-import { cleanId, cleanSmbUrl } from '@utils/general';
+import { cleanIdLegacy, cleanSmbUrl } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 enum MODE_INDEX {
@@ -348,7 +348,7 @@ export class NxSystemStorageComponent implements OnInit {
             this.changedModes = [];
             modeWatchers.forEach(([id, watcher]) => {
                 watcher.reset();
-                const store = storage.find(({ storageId }) => storageId === cleanId(id));
+                const store = storage.find(({ storageId }) => storageId === cleanIdLegacy(id));
                 if (!store) {
                     return;
                 }
@@ -535,7 +535,7 @@ export class NxSystemStorageComponent implements OnInit {
         }
     };
 
-    normalizeId = (id: unknown): string => `{${cleanId(id || '')}}`;
+    normalizeId = (id: unknown): string => `{${cleanIdLegacy(id || '')}}`;
 
     getIconSrc(store: Storage): string {
         const svgName =
@@ -679,7 +679,7 @@ export class NxSystemStorageComponent implements OnInit {
         const updating: string[] = [];
         for (const id in this.modeWatchers) {
             const store = this.currentStorageState.locations.find(
-                ({ storageId }) => storageId === cleanId(id),
+                ({ storageId }) => storageId === cleanIdLegacy(id),
             );
             const currentMode = `mode${store?.mode.charAt(0).toUpperCase() + store?.mode.slice(1)}`;
             if (store && this.modeWatchers[id].originalValue !== currentMode) {
@@ -773,7 +773,7 @@ export class NxSystemStorageComponent implements OnInit {
                             if (response.id) {
                                 this.currentStorageState.locations =
                                     this.currentStorageState.locations.filter(
-                                        ({ storageId }) => storageId !== cleanId(response.id),
+                                        ({ storageId }) => storageId !== cleanIdLegacy(response.id),
                                     );
                                 await firstValueFrom(
                                     this.system.storageManager.update().pipe(take(1)),

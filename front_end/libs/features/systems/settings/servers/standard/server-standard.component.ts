@@ -33,7 +33,7 @@ import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { ChildRoutes } from '@services/uri.service.types';
 import { icons, clientMode, menus, servers } from '@static-variables';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import type { DropdownStorage } from './server-standard.component.types';
@@ -219,7 +219,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     this.setServer(currentValue?.id !== previousValue?.id);
                 });
             }
-            this.checkIfOnline(cleanId(currentValue.id));
+            this.checkIfOnline(cleanIdLegacy(currentValue.id));
         }
     }
 
@@ -238,7 +238,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         this.serverNameWatcher.originalValue = this.selectedServer.name;
         const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
-        this.parsedServerId = cleanId(this.selectedServer.id);
+        this.parsedServerId = cleanIdLegacy(this.selectedServer.id);
         const osName = this.selectedServer.osInfo?.platform;
         const { isAdmin, editAdmins } = this.system.permissionManager.permissions$$();
         this.enableEdit = isAdmin;
@@ -401,7 +401,9 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
                     if (res) {
                         this.setStatus(
                             res
-                                .find(server => cleanId(server.id) === cleanId(serverId))
+                                .find(
+                                    server => cleanIdLegacy(server.id) === cleanIdLegacy(serverId),
+                                )
                                 .status.toLowerCase(),
                         );
                         this.applyService.setVisible(true);
