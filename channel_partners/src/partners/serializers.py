@@ -554,10 +554,14 @@ class SaaSReportSerializer(SignSerializerMixin, serializers.Serializer):
         lastCheck = serializers.DateTimeField(source='last_usage_report', format='%Y-%m-%d %H:%M:%S')
         tmpExpirationDate = serializers.SerializerMethodField()
         status = serializers.DictField(source='get_security_statuses')
+        checkPeriodS = serializers.SerializerMethodField()
 
         def get_tmpExpirationDate(self, obj: CloudSystemId) -> str:
             ret_ts = obj.last_usage_report + datetime.timedelta(seconds=LocalRecordingUsage.CHECK_PERIOD * 30)
             return ret_ts.strftime('%Y-%m-%d %H:%M:%S')
+
+        def get_checkPeriodS(self, obj: CloudSystemId) -> int:
+            return LocalRecordingUsage.CHECK_PERIOD
 
     class ChannelPartneNestedSerializer(serializers.ModelSerializer):
         supportInformation = SupportInformationSerializer(source='support_information')
