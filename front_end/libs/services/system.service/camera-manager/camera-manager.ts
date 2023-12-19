@@ -310,7 +310,7 @@ export class CameraManager {
 
         // isAudioSupported is legacy, but some cameras will still use it
         const audioSupported =
-            !!parameters.isAudioSupported || !!parameters.mediaCapabilities.hasAudio;
+            !!parameters.isAudioSupported || !!parameters.mediaCapabilities?.hasAudio;
 
         return {
             parameters,
