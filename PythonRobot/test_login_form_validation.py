@@ -1,3 +1,5 @@
+import time
+
 from NoptixLibrary.suite import CloudAccount
 from NoptixLibrary.suite import Suite
 from RobotVariables import RobotVariables
@@ -5,6 +7,7 @@ from browsers.chrome import get_chrome
 from pages.header import HeaderNav
 from pages.login import LoginDialog
 from variables import ENV
+from email_access import get_random_email
 
 rb = RobotVariables("en_US")
 
@@ -46,13 +49,13 @@ def test_email_validation():
     print("pass")
 
 
-def test_password_validation(user):
+def test_password_validation(test_user):
     with get_chrome() as driver:
         driver.get(ENV)
         header = HeaderNav(driver)
         header.log_in_button().click()
         login = LoginDialog(driver)
-        login.email_input().input_text(user.email)
+        login.email_input().input_text(test_user.email)
         login.next_button().click()
         login.password_input().wait_until_visible()
         login.login_button().click()
@@ -67,5 +70,6 @@ def test_password_validation(user):
 if __name__ == "__main__":
     with Suite() as suite:
         test_email_validation()
-        with CloudAccount() as user:
+        with CloudAccount(get_random_email()) as user:
+            user.activate()
             test_password_validation(user)
