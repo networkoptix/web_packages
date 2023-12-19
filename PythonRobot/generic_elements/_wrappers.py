@@ -241,7 +241,10 @@ class TextField:
         self.send_keys(Keys.TAB + Keys.TAB)
 
     def clear_text_like_users(self):
-        self.send_keys(Keys.CONTROL + 'a')
+        if platform.system() == 'Darwin':
+            self.send_keys(Keys.COMMAND + 'a')
+        else:
+            self.send_keys(Keys.CONTROL + 'a')
         self.send_keys(Keys.BACKSPACE)
 
 
