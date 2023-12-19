@@ -84,24 +84,26 @@
                             *ngFor="let group of selectedGroupsList"
                         >
                             <ng-container *ngIf="selectedGroupsList.length > 1; else singleGroup">
-                                <nx-ml-ellipsis-clamp [viewLines]="1">
-                                    <div class="multiple-groups-item">
-                                        <span class="font-weight-bold group-name">
-                                            {{ group.name | translate
-                                            }}<span *ngIf="group.description">:</span>
-                                        </span>
-                                        <span class="help-block">{{
-                                            group.description | translate
-                                        }}</span>
-                                    </div>
-                                </nx-ml-ellipsis-clamp>
+                                <div class="multiple-groups-item">
+                                    <span class="font-weight-bold group-name">
+                                        {{ group.custom ? group.name : (group.name | translate) }}
+                                        <span *ngIf="group.description">:</span>
+                                    </span>
+                                    <span class="help-block">
+                                        {{
+                                            group.custom
+                                                ? group.description
+                                                : (group.description | translate)
+                                        }}
+                                    </span>
+                                </div>
                             </ng-container>
                             <ng-template #singleGroup>
-                                <nx-ml-ellipsis-clamp [viewLines]="1">
-                                    <span class="help-block">{{
-                                        group.description | translate
-                                    }}</span></nx-ml-ellipsis-clamp
-                                >
+                                <span class="help-block">{{
+                                    group.custom
+                                        ? group.description
+                                        : (group.description | translate)
+                                }}</span>
                             </ng-template>
                         </div>
                     </ng-container>
@@ -111,9 +113,15 @@
                             *ngFor="let group of selectedGroupsList"
                         >
                             <div class="font-weight-bold group-name">
-                                {{ group.name | translate }}
+                                {{ group.custom ? group.name : (group.name | translate) }}
                             </div>
-                            <div class="help-block">{{ group.description | translate }}</div>
+                            <div class="help-block">
+                                {{
+                                    group.custom
+                                        ? group.description
+                                        : (group.description | translate)
+                                }}
+                            </div>
                         </div>
                     </ng-template>
                 </div>

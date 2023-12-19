@@ -24,7 +24,7 @@ import { type UserGroupFormControls } from '../user-form.types';
 export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent {
     roles: string[];
     selectedGroups: string[];
-    selectedGroupsList: { name: string; description: string }[];
+    selectedGroupsList: { name: string; description: string; custom?: boolean }[];
     user$$ = signal<NxUser>({} as NxUser);
     filteredGroups$$ = computed<MultiSelectItem[]>(() => {
         const groups = this.system.userManager.groups$$() || [];
@@ -160,6 +160,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                     customGroup.push({
                         name,
                         description,
+                        custom: true,
                     });
                 }
             },
