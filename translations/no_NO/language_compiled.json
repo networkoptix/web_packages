@@ -272,7 +272,6 @@
     "Cannot initialize System": "Kan ikke initialisere systemet",
     "Cannot load preview": "Cannot load preview",
     "Cannot merge Systems": "Kan ikke slå sammen systemer",
-    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Kan ikke slå sammen systemer som er bundet til skyen",
     "Cannot merge two Cloud Systems with different owners": "Kan ikke slå sammen to skysystemer med forskjellige eiere",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Kan ikke slå sammen to systemer koblet til skyen. Gå til %CLOUD_NAME% for å slå sammen disse systemene.",

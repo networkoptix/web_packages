@@ -272,7 +272,6 @@
     "Cannot initialize System": "Không thể khởi tạo hệ thống",
     "Cannot load preview": "Không thể tải xem trước",
     "Cannot merge Systems": "Không thể hợp nhất các hệ thống",
-    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Không thể hợp nhất các hệ thống liên kết với đám mây",
     "Cannot merge two Cloud Systems with different owners": "Không thể hợp nhất hai Hệ thống đám mây có chủ sở hữu khác nhau",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Không thể hợp nhất hai hệ thống được kết nối với đám mây. Vui lòng chuyển đến %CLOUD_NAME% để hợp nhất các hệ thống này.",
