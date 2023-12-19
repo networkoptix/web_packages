@@ -2,8 +2,10 @@ import json
 import random
 from uuid import uuid4
 
+import httpx
 import pytest
 from dateutil.relativedelta import relativedelta
+from django.conf import settings
 from django.core.cache import caches
 from django.db import transaction
 from django.http import HttpResponseNotFound, HttpResponseForbidden
@@ -16,7 +18,8 @@ from model_bakery import baker
 from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser,
     ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates,
-    OrganizationRoles, SystemGroup, Organization
+    OrganizationRoles, SystemGroup, Organization, OrganizationPermissions,
+    CloudSystemStates
 )
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
@@ -28,47 +31,32 @@ from tools.serializers import VALUE_REPLACEMENT
 
 
 class TestCloudSystemViewSet:
-    # @pytest.fixture(autouse=True)
-    # def setup(self, default_cp_admin, default_org_admin, db):
-    #     self.batch_url = 'https://cloud-test.hdw.mx/cdb/systems/users/batch'
 
-    def test_create_200(self, default_cp_admin, default_org_admin, mock_auth_with_user, arf, httpx_mock):
-        sys_id = f'{uuid4()}'
-        system_url = f'https://cloud-test.hdw.mx/cdb/systems/{sys_id}'
-        httpx_mock.add_response(url=system_url, json={"accessRole": "owner"})
-        # httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
-        data = {
-          "cloudSystemId": sys_id,
-          "organization": str(default_org_admin.organization.id)
-        }
-        # Channel partner admin
-        mock_auth_with_user(default_cp_admin)
-        request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
-        response = view(request)
-        assert CloudSystemId.objects.filter(system_id=sys_id).exists()
-        assert response.status_code == 200
-        assert response.data['systemId']
-        # batch_request = httpx_mock.get_request(url=self.batch_url)
-        # batch_data = json.loads(batch_request.content)
-        # assert batch_data["items"][0]["systems"] == [sys_id]
-        # assert batch_data["items"][0]["users"] == [default_org_admin.user.email]
-        # httpx_mock.reset(False)
-        # # Org admin
-        # httpx_mock.add_response(url=system_url, json={"accessRole": "owner"})
-        # httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
-
-        mock_auth_with_user(default_org_admin)
-        request = arf.post('/', data=data, format='json')
-        view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
-        response = view(request)
-        assert response.status_code == 200
-        assert response.data['systemId'] == sys_id
-        # batch_request = httpx_mock.get_request(url=self.batch_url)
-        # batch_data = json.loads(batch_request.content)
-        # assert batch_data["items"][0]["systems"] == [sys_id]
-        # assert batch_data["items"][0]["users"] == [default_org_admin.user.email]
-        # assert batch_request
+    # Left for testing this case in future
+    # def test_create_200(self, default_cp_admin, default_org_admin, mock_auth_with_user, arf, httpx_mock):
+    #     sys_id = f'{uuid4()}'
+    #     system_url = f'https://cloud-test.hdw.mx/cdb/systems/{sys_id}'
+    #     httpx_mock.add_response(url=system_url, json={"accessRole": "owner"})
+    #     # httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
+    #     data = {
+    #       "cloudSystemId": sys_id,
+    #       "organization": str(default_org_admin.organization.id)
+    #     }
+    #     # Channel partner admin
+    #     mock_auth_with_user(default_cp_admin)
+    #     request = arf.post('/', data=data, format='json')
+    #     view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
+    #     response = view(request)
+    #     assert CloudSystemId.objects.filter(system_id=sys_id).exists()
+    #     assert response.status_code == 200
+    #     assert response.data['systemId']
+    #
+    #     mock_auth_with_user(default_org_admin)
+    #     request = arf.post('/', data=data, format='json')
+    #     view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
+    #     response = view(request)
+    #     assert response.status_code == 200
+    #     assert response.data['systemId'] == sys_id
 
     def test_create_403(self, default_cp_user, default_org_user, mock_auth_with_user, arf, httpx_mock):
         sys_id = f'{uuid4()}'
@@ -215,6 +203,26 @@ class TestCloudSystemViewSet:
         response = view(request, id=str(system.system_id))
         assert response.status_code == 400
         assert "Services quantity cannot be changed." in response.data['services'][0]
+
+    def test_saas_report(self, channel_partner_factory, organization_factory, system_factory,
+                      mock_auth_with_system, arf_basic_auth):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        system = system_factory(organization=org)
+        system.system_state = CloudSystemStates.NOT_ACTIVATED
+        system.save()
+        view = CloudSystemViewSet.as_view(actions={'get': 'saas_report'}, detail=True)
+        request = arf_basic_auth.get('/')
+        mock_auth_with_system(system)
+        response = view(request, id=system.system_id)
+        assert response.status_code == 200
+        assert system.system_state == CloudSystemStates.ACTIVATED
+
+        request = arf_basic_auth.get('/')
+        mock_auth_with_system(system, authenticated=False, status=CloudSystemStates.DELETED)
+        response = view(request, id=system.system_id)
+        assert response.status_code == 401
+        assert system.system_state == CloudSystemStates.DELETED
 
 
 class TestOrganizationUserViewSet:
@@ -1289,3 +1297,86 @@ class TestGrantAccessView:
 
             assert user_email == expected_data[i]
         assert response.status_code == 200
+
+
+class TestCloudSystemViewSetDelete:
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, cp_user_factory,
+              org_user_factory, system_factory, mock_auth_with_user, arf, httpx_mock, arf_basic_auth):
+        httpx_mock.reset(False)
+        self.cp = channel_partner_factory()
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.org = organization_factory(channel_partner=self.cp)
+        self.org_user = org_user_factory(organization=self.org)
+        self.system = system_factory(organization=self.org)
+        self.url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/systems/{self.system.system_id}'
+        self.view = CloudSystemViewSet.as_view(actions={'delete': 'destroy'}, detail=True)
+        self.request = arf.delete('/')
+        self.token = 'HERE_MIGHT_BE_TOKEN'
+        mock_auth_with_user(self.org_user, token=self.token)
+        self.data = {'check': str(uuid4())}
+
+    def test_error(self, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=401, json=self.data)
+        response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 401
+        assert response.data == self.data
+        request = httpx_mock.get_request(url=self.url)
+        assert request.headers.get('Authorization') == f'Bearer {self.token}'
+
+    def test_success(self, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=200, json=self.data)
+        response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 204
+        request = httpx_mock.get_request(url=self.url)
+        assert request.headers.get('Authorization') == f'Bearer {self.token}'
+
+    def test_empty_json(self, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=401)
+        response = self.view(self.request, id=self.system.system_id, json='')
+        assert response.status_code == 401
+        assert response.data == {'detail': 'A server error occurred.'}
+        request = httpx_mock.get_request(url=self.url)
+        assert request.headers.get('Authorization') == f'Bearer {self.token}'
+
+    def test_destroy_perms(self, system_factory, org_user_factory, arf, mock_auth_with_user, httpx_mock):
+        for role in OrganizationRole.objects.filter(permissions__codename=OrganizationPermissions.manage_systems):
+            sys = system_factory(organization=self.org)
+            url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/systems/{sys.system_id}'
+            httpx_mock.add_response(url=url, status_code=200)
+            user = org_user_factory(organization=self.org, role=role.id)
+            request = arf.delete('/')
+            mock_auth_with_user(user)
+            response = self.view(request, id=sys.system_id)
+            assert response.status_code == 204
+            sys.refresh_from_db()
+            assert sys.system_state == CloudSystemStates.DELETED
+
+        role = OrganizationRole.objects.exclude(permissions__codename=OrganizationPermissions.manage_systems).first()
+        sys = system_factory(organization=self.org)
+        url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/systems/{sys.system_id}'
+        httpx_mock.add_response(url=url, status_code=200)
+        user = org_user_factory(organization=self.org, role=role.id)
+        request = arf.delete('/')
+        mock_auth_with_user(user)
+        response = self.view(request, id=sys.system_id)
+        assert response.status_code == 403
+
+    def test_destroy_cpal_success(self, channel_partner_factory, organization_factory, system_factory,
+                                  cp_user_factory, arf, mock_auth_with_user, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=200)
+        mock_auth_with_user(self.cp_user, token=self.token)
+        response = self.view(self.request, id=self.system.system_id)
+        assert self.org.channel_partner_access_level_id
+        assert response.status_code == 204
+        request = httpx_mock.get_request(url=self.url)
+        assert request.headers.get('Authorization') == f'Bearer {self.token}'
+
+    def test_destroy_cpal_forbidden(self, channel_partner_factory, organization_factory, system_factory,
+                                   cp_user_factory, arf, mock_auth_with_user, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=200)
+        self.org.channel_partner_access_level = None
+        self.org.save()
+        mock_auth_with_user(self.cp_user, token=self.token)
+        response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 403

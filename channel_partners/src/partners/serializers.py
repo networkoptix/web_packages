@@ -25,13 +25,13 @@ from partners.models import (
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent,
     CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId,
     ServiceToSubChannelProperties, ServiceToOrganizationProperties, SystemGroup,
-    get_channel_partner_roles, get_organization_roles, OrganizationRoles
+    get_channel_partner_roles, get_organization_roles, OrganizationRoles, CloudSystemStates
 )
 from tools.helpers import get_path_from_parent
 from tools.serializers import AccessMatrixMixin
 from tools.serializers import FieldAccessModelSerializer
 from tools.utils import bind_system_to_cdb_organization
-from .authentication import check_user_can_administer_system
+from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
 STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STATE_CHOICES}
@@ -332,6 +332,7 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     effectiveState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     systemId = serializers.UUIDField(source='system_id', read_only=True)
+    system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CHOICES, read_only=True)
     services = serializers.DictField(read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(), allow_null=True)
@@ -339,8 +340,8 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     class Meta:
         model = CloudSystemId
         fields = ['id', 'state', 'effectiveState', 'systemId', 'name',
-                  'organization', 'services', 'created', 'activated', 'groupId']
-        read_only_fields = ['users', 'organization', 'activated', 'name']
+                  'organization', 'services', 'created', 'system_state', 'groupId']
+        read_only_fields = ['users', 'organization', 'system_state', 'name']
 
     def validate_groupId(self, value: SystemGroup):
         if value:
@@ -815,11 +816,12 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
         cloud_host = validated_data.get('cloud_host')
         system_id = validated_data.get('system_id')
         organization = validated_data.get('organization')
+        system_state = validated_data.get('system_state')
         name = validated_data.get('name')
-        system = CloudSystemId.objects.get_or_create(system_id=system_id, cloud_host=cloud_host)[0]
+        system = CloudSystemId.objects.get_or_create(
+            system_id=system_id, cloud_host=cloud_host, defaults=dict(system_state=system_state))[0]
         system.name = name
         system.organization = organization
-        system.activated = False
         system.save()
         # data = system.add_system_users_data()
         # make_batch_request(self.context['request'], data)
@@ -850,9 +852,7 @@ class CreateSystemSerializer(serializers.ModelSerializer):
         fields = ['cloudSystemId', 'organization']
 
     def validate_cloudSystemId(self, value):
-        req = self.context.get('request')
-        check_user_can_administer_system(value, req.auth, req.cloud_host.hostname)
-        return value
+        raise NotImplementedError('Warning. This method does no validation. Implement yours before using it.')
 
     def validate_organization(self, value: Organization):
         req = self.context.get('request')

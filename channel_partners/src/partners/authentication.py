@@ -1,7 +1,9 @@
 from hashlib import sha256
+from typing import Tuple
 
 import httpx
 from django.core.cache import caches
+from django.db import transaction
 from django.http import HttpRequest
 
 from drf_spectacular.openapi import OpenApiAuthenticationExtension
@@ -10,12 +12,13 @@ from nx_cloud_api_client.apis import CdbSystemAPIBase
 from nx_cloud_api_client.base_auth import BearerTokenAuth
 from requests.auth import HTTPBasicAuth
 from rest_framework.authentication import TokenAuthentication, BasicAuthentication, get_authorization_header
-from rest_framework import exceptions
+from rest_framework import exceptions, status
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
 
-from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken
+from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken, CloudSystemStates
+from tools.exception import APIErrorWithoutRollback
 
 
 def get_host(request: HttpRequest) -> str:
@@ -87,67 +90,67 @@ class NxTokenAuthentication(TokenAuthentication):
         return get_user_model()(), token
 
 
-def check_system_credentials(system_id, system_auth_key, cloud_host):
-    response = requests.get(
-            f'https://{cloud_host}/cdb/systems/{system_id}',
-            auth=HTTPBasicAuth(username=system_id, password=system_auth_key))
-    if response.ok:
+def check_system_credentials(system_id: str, system_auth_key: str, cloud_host: str) -> Tuple[bool, None | int]:
+    system_api = CdbSystemAPIBase(host=cloud_host, client=httpx.Client())
+    response = system_api.get_system(system_id, auth=httpx.BasicAuth(username=system_id, password=system_auth_key))
+    if response.is_success:
         resp = response.json()
         resp_system_id = resp.get('id')
         status = resp.get('status')
-        if status != 'activated':
-            return False
-        if resp_system_id:
-            return resp_system_id == system_id
-        return False
-    elif response.status_code == 401:
-        return False
-    else:
-        response.raise_for_status()
-
-
-def check_user_can_administer_system(system_id, access_token, cloud_host, raise_exception=True):
-
-    with CdbSystemAPIBase(host=f'https://{cloud_host}', client=httpx.Client()) as api:
-        response = api.get_system(system_id=system_id, auth=BearerTokenAuth(token=access_token))
-    try:
-        if response.is_success:
-            resp = response.json()
-            access_role = resp.get('accessRole', '')
-            if access_role in ('owner', 'cloudAdmin'):
-                return True
-            else:
-                raise exceptions.PermissionDenied('Cloud user does not have necessary access role for this system')
-        elif response.status_code == 401:
-            raise exceptions.AuthenticationFailed('Unable to authenticate with access token')
-        elif response.status_code == 403:
-            raise exceptions.NotFound('Invalid Cloud system id or user does not have access')
-        else:
-            response.raise_for_status()
-    except Exception as exc:
-        if raise_exception or response.status_code > 500:
-            raise exc
-        else:
-            return False
+        status = CloudSystemStates.STATE_DICT.get(status)
+        if status != CloudSystemStates.ACTIVATED and resp_system_id == system_id:
+            return False, status
+        if status == CloudSystemStates.ACTIVATED and resp_system_id == system_id:
+            return True, status
+        return False, None
+    if response.headers.get('content-type') == 'application/json':
+        error = response.json()
+        if error.get('resultCode') == 'credentialsRemovedPermanently':
+            return False, CloudSystemStates.DELETED
+    if response.status_code == 401:
+        return False, None
+    response.raise_for_status()
 
 
 class NxCloudSystemBasicAuthentication(BasicAuthentication):
+
+    @staticmethod
+    def get_system(system_id, request=None):
+        return CloudSystemId.objects.filter(
+            system_id=system_id, cloud_host=request.cloud_host).first()
+
+    @staticmethod
+    def get_or_create_system(system_id, request=None):
+        return CloudSystemId.objects.get_or_create(
+            system_id=system_id, cloud_host=request.cloud_host)[0]
+
     def authenticate_credentials(self, userid, password, request=None):
         cloud_system_id = userid
         if not request.cloud_host:
             raise exceptions.ParseError('Invalid cloud-host header or hostname.')
-
-        if check_system_credentials(system_id=userid, system_auth_key=password,
-                                    cloud_host=request.cloud_host.hostname):
-            cloud_system = CloudSystemId.objects.get_or_create(
-                system_id=cloud_system_id, cloud_host=request.cloud_host)[0]
-            if not cloud_system.activated:
-                cloud_system.activated = True
-                cloud_system.save()
+        authenticated, system_status = check_system_credentials(
+            system_id=userid, system_auth_key=password,
+            cloud_host=request.cloud_host.hostname
+        )
+        with transaction.atomic():
+            if authenticated:
+                cloud_system = self.get_or_create_system(system_id=cloud_system_id, request=request)
+            elif system_status:
+                cloud_system = self.get_system(system_id=cloud_system_id, request=request)
+            else:
+                cloud_system = None
+            if cloud_system:
+                # can fail if system is not added to CPS
+                if cloud_system.system_state != system_status:
+                    with transaction.atomic():
+                        cloud_system.system_state = system_status
+                        cloud_system.save()
+        if authenticated:
             request.cloud_system = cloud_system
             return get_user_model()(), None
-        else:
-            raise exceptions.AuthenticationFailed('Invalid system id or auth key')
+
+        raise APIErrorWithoutRollback(detail='Invalid system id or auth key',
+                                      status_code=status.HTTP_401_UNAUTHORIZED)
 
 
 class NxCloudSystemBasicAuthenticationExtension(OpenApiAuthenticationExtension):

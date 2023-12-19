@@ -3,6 +3,7 @@ import typing
 import uuid
 from uuid import uuid4, UUID
 
+import httpx
 import pytest
 from django.conf import settings
 from django.contrib.auth import get_user_model
@@ -15,7 +16,7 @@ from partners.models import CloudUser, CloudInstance, CloudHost, ChannelPartner,
     ChannelPartnerToUser, CloudSystemId, OrganizationRole, ChannelPartnerService, ServiceToOrganizationProperties, \
     ChannelPartnerServiceRecord, ChannelPartnerAccessLevel, ChannelPartnerService, \
     ServiceToOrganizationProperties, ChannelPartnerServiceRecord, ChannelPartnerStates, ChannelPartnerRole, \
-    OrganizationRoles, SystemGroup, AuthToken
+    OrganizationRoles, SystemGroup, AuthToken, CloudSystemStates
 
 
 @pytest.fixture()
@@ -177,7 +178,7 @@ def default_org_system_generator(default_organization, cloud_test_host):
     def generate():
         sys_id = f'{uuid4()}'
         return CloudSystemId.objects.get_or_create(
-            system_id=sys_id, name=f'Test System {sys_id}',
+            system_id=sys_id, name=f'Test System {sys_id}', system_state=CloudSystemStates.ACTIVATED,
             organization=default_organization, cloud_host=cloud_test_host)[0]
 
     return generate
@@ -204,6 +205,20 @@ def mock_internal_token_auth(mocker):
 
     return mock
 
+
+@pytest.fixture()
+def mock_auth_with_system(mocker):
+    def mock(system, status: int = CloudSystemStates.ACTIVATED, authenticated: bool = True):
+        mocked_check = mocker.patch('partners.authentication.check_system_credentials',
+                                    return_value=(authenticated, status))
+        mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_or_create_system',
+                     return_value=system)
+        mocker.patch('partners.authentication.NxCloudSystemBasicAuthentication.get_system',
+                     return_value=system)
+        return mocked_check
+    return mock
+
+
 class RequestFactory(APIRequestFactory):
     def request(self, **kwargs):
         request = super().request(**kwargs)
@@ -219,6 +234,13 @@ def arf(cloud_test_host):
 
 
 @pytest.fixture()
+def arf_basic_auth(cloud_test_host):
+    auth = httpx.BasicAuth(username='username', password='password')._auth_header
+    api_factory = RequestFactory(cloud_host=cloud_test_host, headers={"Authorization": auth})
+    return api_factory
+
+
+@pytest.fixture()
 def arf_host_factory(cloud_test_host):
     def factory(cloud_host=cloud_test_host):
         api_factory = RequestFactory(cloud_host=cloud_host,
@@ -227,19 +249,6 @@ def arf_host_factory(cloud_test_host):
 
     return factory
 
-def mock_check_user_can_administer_system(mocker, ret=True):
-    return mocker.patch('partners.authentication.check_user_can_administer_system', return_value=ret)
-
-
-@pytest.fixture()
-def allow_user_administer_system(mocker):
-    return mock_check_user_can_administer_system(mocker)
-
-
-@pytest.fixture()
-def deny_user_administer_system(mocker):
-    return mock_check_user_can_administer_system(mocker, ret=False)
-
 
 @pytest.fixture()
 def system_factory(cloud_test_host, default_organization):
@@ -247,9 +256,11 @@ def system_factory(cloud_test_host, default_organization):
     def factory(organization=default_organization, cloud_host=cloud_test_host,
                 system_id=None, state=ChannelPartnerStates.ACTIVE, system_group=None):
         return baker.make(CloudSystemId, system_id=system_id or f'{uuid4()}', system_group=system_group,
-                          organization=organization, cloud_host=cloud_host, state=state)
+                          organization=organization, cloud_host=cloud_host, state=state,
+                          system_state=CloudSystemStates.ACTIVATED)
 
     return factory
+
 
 @pytest.fixture()
 def cp_service_factory(default_channel_partner):

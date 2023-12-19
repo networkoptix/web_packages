@@ -3,13 +3,17 @@ from time import sleep
 from typing import TypedDict, Tuple
 from uuid import uuid4, UUID
 
+import httpx
 from django.core.cache import caches
 from django.db.models import Subquery, Q
+from django.db.models import Subquery
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.encoding import force_str
 from django_filters.rest_framework import DjangoFilterBackend
+from nx_cloud_api_client.apis import CdbSystemAPIBase
+from nx_cloud_api_client.base_auth import BearerTokenAuth
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import extend_schema_view, OpenApiParameter
 from rest_framework import status
@@ -25,7 +29,7 @@ from tools.exception import Conflict
 from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from .forms.grant_access_form import GrantAccessForm
-from .models import ChannelPartnerRoles
+from .models import ChannelPartnerRoles, CloudSystemStates
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, \
     IsInternalToken
 from .serializers import *
@@ -813,7 +817,8 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     http_method_names = ['get']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudOauthTokenAuthentication,)
-    queryset = CloudSystemId.objects.all().order_by('created_ts').select_related('organization')
+    queryset = (CloudSystemId.objects.exclude(system_state=CloudSystemStates.DELETED)
+                .order_by('created_ts').select_related('organization'))
     pagination_class = DefaultPagination
     filter_backends = [DjangoFilterBackend]
     filterset_class = filters.CreatedTsAndIdAndNameFilter
@@ -821,8 +826,14 @@ class CloudSystemNestedViewSet(ParentLookUpMixin, NestedViewSetMixin, mixins.Lis
     def get_queryset(self):
         root_only = self.request.query_params.get('rootOnly', False)
         if root_only:
-            return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host, activated=True, system_group=None)
-        return super().get_queryset().filter(organization__channel_partner__cloud_host=self.request.cloud_host, activated=True)
+            return super().get_queryset().filter(
+                organization__channel_partner__cloud_host=self.request.cloud_host,
+                system_state=True, system_group=None
+            )
+        return super().get_queryset().filter(
+            organization__channel_partner__cloud_host=self.request.cloud_host,
+            system_state=True
+        )
 
     def get_permissions(self):
         return IsAuthenticated(), CanPerformChannelPartnerAction(Organization.can_access_systems)
@@ -984,8 +995,9 @@ class CloudSystemViewSet(NestedViewSetMixin,
                          mixins.RetrieveModelMixin,
                          mixins.UpdateModelMixin,
                          mixins.ListModelMixin,
+                         mixins.DestroyModelMixin,
                          GenericViewSet):
-    http_method_names = ['get', 'post', 'patch']
+    http_method_names = ['get', 'post', 'patch', 'delete']
     serializer_class = CloudSystemSerializer
     authentication_classes = (NxCloudSystemBasicAuthentication, NxCloudOauthTokenAuthentication)
     pagination_class = DefaultPagination
@@ -1008,13 +1020,12 @@ class CloudSystemViewSet(NestedViewSetMixin,
             return self.queryset.filter(cloud_host=self.request.cloud_host)
         else:
             return self.queryset.filter(cloud_host=self.request.cloud_host,
-                                        organization__users=self.request.user, activated=True)
+                                        organization__users=self.request.user,
+                                        system_state=CloudSystemStates.ACTIVATED)
 
     def get_serializer_class(self):
         if self.action == 'create':
             return BindLocalSystemSerializer
-        elif self.action == 'bind_existing':
-            return CreateSystemSerializer
         else:
             return CloudSystemSerializer
 
@@ -1025,6 +1036,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if self.action in ('retrieve', 'services', 'saas_report'):
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
                                                         system_allowed=True, direct_access_allowed=True))
+        if self.action == 'destroy':
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
         if self.action == 'service_quantity':
             if self.request.method == 'PATCH':
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
@@ -1038,18 +1051,27 @@ class CloudSystemViewSet(NestedViewSetMixin,
         serializer.is_valid(raise_exception=True)
         system_reponse, status_code = serializer.bind_system()
         if status_code < 300:
-            serializer.save(cloud_host=request.cloud_host, system_id=system_reponse['id'])
+            serializer.save(cloud_host=request.cloud_host, system_id=system_reponse['id'],
+                            system_state=CloudSystemStates.STATE_DICT[system_reponse['status']])
         return Response(system_reponse, status=status_code)
 
-    @extend_schema(auth=[{'Cloud Oauth Token': []}], request=CreateSystemSerializer, responses=CloudSystemSerializer)
-    @action(methods=['post'], detail=False)
-    def bind_existing(self, request, *args, **kwargs):
-        serializer = self.get_serializer(data={**request.data})
-        serializer.is_valid(raise_exception=True)
-        system = serializer.save(cloud_host=request.cloud_host)
+    def perform_destroy(self, instance: CloudSystemId):
+        systems_api = CdbSystemAPIBase(host=self.request.cloud_host.hostname, client=httpx.Client())
+        headers = {'Authorization': self.request.headers.get('Authorization')}
+        response = systems_api.delete_system(system_id=str(instance.system_id),
+                                             headers=headers)
+        if response.status_code == 200:
+            instance.system_state = CloudSystemStates.DELETED
+            instance.save()
+            return
 
-        response_serializer = CloudSystemSerializer(system, context=self.get_serializer_context())
-        return Response(response_serializer.data)
+        if response.headers.get('content-type') == 'application/json':
+            detail = response.json()
+        else:
+            detail = None
+        exception = exceptions.APIException(detail=detail)
+        exception.status_code = response.status_code
+        raise exception
 
     @extend_schema(responses=SaaSReportSerializer,
                    summary='Get SaaS report',

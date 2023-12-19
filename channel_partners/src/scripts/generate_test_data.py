@@ -57,7 +57,9 @@ def run():
                 OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization, created_by=channel_partner)
                 systems = []
                 for k in range(25):
-                    sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}', organization=organization, cloud_host=cloud_test_host)
+                    sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}',
+                                                       organization=organization, cloud_host=cloud_test_host,
+                                                       system_state=CloudSystemStates.ACTIVATED)
                     CloudSystemExternalId.objects.create(custom_id=uuid.uuid4(), cloud_system=sys, created_by=channel_partner)
                     from_ts = timezone.now() - timedelta(hours=4)
                     to_ts = timezone.now() - timedelta(hours=3)
@@ -82,6 +84,7 @@ def run():
                 for sys in systems[20:]:
                     sys.system_group = group
                 CloudSystemId.objects.bulk_update(systems[20:], fields=['system_group'])
+
             if i % 5 == 0:
                 sub_channel_partner = ChannelPartner.objects.create(name=f'Test CP {i + 1}',
                                                                 parent_channel_partner=channel_partner,
@@ -101,8 +104,9 @@ def run():
                     add_random_users_to_organization(organization)
                     systems = []
                     for k in range(25):
-                        sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k + 1}', organization=organization,
-                                                              cloud_host=cloud_test_host)
+                        sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k + 1}',
+                                                           organization=organization, cloud_host=cloud_test_host,
+                                                           system_state=CloudSystemStates.ACTIVATED)
                         CloudSystemExternalId.objects.create(custom_id=uuid.uuid4(), cloud_system=sys,
                                                              created_by=channel_partner)
                         for service in services:
