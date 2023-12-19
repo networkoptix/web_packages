@@ -1,5 +1,5 @@
 import staticLang from '@language_static';
-import { LayoutItem } from '@services/system-api.types';
+import { LayoutItem } from '@services/system-api.types/layouts.types';
 import { dirtyId } from '@utils/general';
 
 import { UnsavedLayoutState, LayoutTypes, UnsavedState } from '../shared/types/layout-state.types';

@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 
 import { UnsavedLayoutState } from '@services/layout-state/store/shared/types/layout-state.types';
-import { Layout } from '@services/system-api.types';
+import { Layout } from '@services/system-api.types/layouts.types';
 
 import { WithFreshSession } from '../../nx-cloud-api.types';
 import {

@@ -8,8 +8,8 @@ import { NxHealthService } from '@pages/health/health.service';
 import { RequestOpts } from '@services/mediaserver-apis/connections/adapters/adapter-target-types';
 import { addUserRestV3 } from '@services/mediaserver-apis/endpoints/add-user';
 import { getUsersRestV3 } from '@services/mediaserver-apis/endpoints/get-users';
+import { CloudBindData } from '@services/system-api.types/system.types';
 import { UserSessionV3 } from '@services/system-api.types/users.types';
-import { CloudBindData } from '@services/system-api.types';
 import {
     AddUser,
     BaseNewUser,

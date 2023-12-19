@@ -32,7 +32,14 @@ import type { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
-import { alphabeticalSort, cleanId, MS, msToParts, offsetDate, paramSortFunc } from '@utils/general';
+import {
+    alphabeticalSort,
+    cleanId,
+    MS,
+    msToParts,
+    offsetDate,
+    paramSortFunc,
+} from '@utils/general';
 
 import { Bookmark, BookmarksDevice, TimeRange } from './bookmarks.types';
 import type { NxDateAndTimeFilterComponent } from './components/date-and-time-filter/date-and-time-filter.component';
@@ -384,7 +391,7 @@ export class NxBookmarksComponent implements OnInit {
                     this.system.cameraManager.cameras.find(camera => {
                         return deviceId === camera.id;
                     })?.defaultRatio || 1.77; // Fallback aspect ratio of 16:9
-                const dpr = this.window.devicePixelRatio;
+                const dpr = window.devicePixelRatio;
 
                 return {
                     ...bk,

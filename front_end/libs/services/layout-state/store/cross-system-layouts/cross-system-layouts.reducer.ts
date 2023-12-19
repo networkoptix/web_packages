@@ -1,6 +1,6 @@
 import { createReducer, on } from '@ngrx/store';
 
-import { Layouts } from '@services/system-api.types';
+import { Layouts } from '@services/system-api.types/layouts.types';
 import { onSyncState } from '@store/sync.utils';
 
 import * as CrossSystemLayoutActions from './cross-system-layouts.actions';

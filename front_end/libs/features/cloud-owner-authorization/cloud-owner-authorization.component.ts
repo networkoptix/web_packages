@@ -3,7 +3,7 @@ import { LocalStorageService } from 'ngx-webstorage';
 
 import staticLang from '@language_static';
 import { OauthService } from '@services/oauth.service';
-import { CloudBindData } from '@services/system-api.types';
+import { CloudBindData } from '@services/system-api.types/system.types';
 import { oauthStore } from '@static-variables';
 
 @Component({
@@ -37,7 +37,7 @@ export class CloudOwnerAuthorizationComponent implements OnInit {
 
     handleBind(data: CloudBindData): void {
         this.storageService.store(oauthStore.bindData, data);
-        this.window.close();
+        window.close();
     }
 
     ngOnInit(): void {

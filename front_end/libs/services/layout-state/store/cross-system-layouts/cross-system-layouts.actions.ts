@@ -1,6 +1,6 @@
 import { createAction, props } from '@ngrx/store';
 
-import { Layouts, Layout } from '@services/system-api.types';
+import { Layouts, Layout } from '@services/system-api.types/layouts.types';
 
 export const set = createAction(
     '[Cross System Layouts] Set Cross System Layouts',

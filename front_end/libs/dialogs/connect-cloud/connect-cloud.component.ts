@@ -19,7 +19,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
-import { CloudBindData } from '@services/system-api.types';
+import { CloudBindData } from '@services/system-api.types/system.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { oauthStore } from '@static-variables';
 
@@ -82,7 +82,7 @@ export class ConnectCloudModalContent extends ModalBase<DT['return']> implements
             .observe(oauthStore.bindData)
             .subscribe((code: CloudBindData) => this.handleBindInfo(code));
 
-        this.window
+        window
             .open(
                 `/#/cloud-authorize?state=connect&system_name=${this.system.info.systemName}`,
                 '_blank',
