@@ -192,14 +192,11 @@ export class NxCloudApiService {
             refreshToken,
         )(this.targetInstance, () => this.CONFIG.customization);
 
-        // TODO: Remove it
-        // const tempPartnersInstance = 'https://nxlicensed.test.hdw.mx';
-        const tempPartnersInstance = 'https://partners.test.hdw.mx';
         this.cloudChannelPartnersApi = ChannelPartnersApi.createApiFactory(
             this.http,
             this.#withFreshSession,
             refreshToken,
-        )(tempPartnersInstance);
+        )(this.targetInstance, () => this.CONFIG.customization);
     }
 
     getSubAPI(route: ConsoleSection) {

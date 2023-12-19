@@ -22,6 +22,7 @@ USE_SQLITE = os.getenv('USE_SQLITE', False)
 INSTANCE = os.getenv('INSTANCE_NAME', 'LOCAL')
 MIGRATING = 'makemigrations' in sys.argv or 'migrate' in sys.argv
 DOMAIN_NAME = os.getenv('DOMAIN_NAME', '')
+TRAFFIC_RELAY_HOSTS = os.getenv('TRAFFIC_RELAY_HOSTS', '').split(',')
 
 if LOCAL_ENV:
     ENV_NAME = 'local'
@@ -173,7 +174,7 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
 STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 # STATIC_LOCATION = os.path.join(BASE_DIR, 'static')
-STATIC_URL = 'static/'
+STATIC_URL = 'partners/static/'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/4.2/ref/settings/#default-auto-field
@@ -196,7 +197,7 @@ SPECTACULAR_SETTINGS = {
     'GENERIC_ADDITIONAL_PROPERTIES': 'dict',
     'SERVERS': [
         {
-            'url': f'https://{DOMAIN_NAME}/api/v2' if DOMAIN_NAME else '/api/v2'
+            'url': f'https://{DOMAIN_NAME}/partners/api/v2' if DOMAIN_NAME else '/partners/api/v2'
         }
     ],
     'POSTPROCESSING_HOOKS': [
@@ -221,6 +222,7 @@ KEYS_PATH = os.path.join(BASE_DIR, 'keys')
 RSA_KEY1 = open(os.path.join(KEYS_PATH, 'vms.nop.pvt')).read()
 RSA_KEY2 = open(os.path.join(KEYS_PATH, 'vms2.nop.pvt')).read()
 RSA_KEY3 = open(os.path.join(KEYS_PATH, 'vms3.nop.pvt')).read()
+RSA_KEY4 = os.getenv('RSA_KEY_PRIVATE', RSA_KEY3)
 
 if SILK_ENABLED:
     INSTALLED_APPS.append('silk')

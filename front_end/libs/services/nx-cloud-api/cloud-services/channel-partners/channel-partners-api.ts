@@ -68,8 +68,7 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     /**
      * Api base for supported license server version. Future versions of license server can be supported by extending LicenseServerAPI.
      */
-    // static readonly API_BASE = '/nxlicensed/api/v2/partners';
-    static readonly API_BASE = '/api/v2/partners';
+    static readonly API_BASE = '/partners/api/v2';
 
     static INSTANCES: Record<string, ChannelPartnersApi> = {};
 

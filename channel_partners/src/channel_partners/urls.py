@@ -26,3 +26,7 @@ if settings.DEBUG:
 
 if settings.SILK_ENABLED:
     urlpatterns.insert(0, path('profiler/', include('silk.urls')))
+
+urlpatterns = [
+    re_path(r'^partners/', include(urlpatterns))
+]
