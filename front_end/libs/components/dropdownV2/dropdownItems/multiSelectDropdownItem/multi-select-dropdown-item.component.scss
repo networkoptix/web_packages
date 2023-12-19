@@ -1,0 +1,34 @@
+@use "theme_variables_common" as *;
+@use "typography";
+
+:host {
+    display: block;
+    white-space: nowrap;
+    overflow: clip;
+    text-overflow: ellipsis;
+    cursor: pointer;
+
+    user-select: none;
+    color: var(--dropdown-item-color);
+    @include typography.regular13nocolor;
+    height: 26px;
+    line-height: 26px;
+    padding: 0 rem(6px);
+
+    // TODO: Set this when focus works
+    &.active,
+    &:focus {}
+
+    &:hover:not([disabled]):not(.disabled) {
+        background-color: var(--dropdown-item-hover-bg);
+        color: var(--dropdown-item-hover-color);
+    }
+
+    &.disabled {
+        cursor: auto;
+    }
+
+    .container {
+        display: flex;
+    }
+}

@@ -1,6 +1,7 @@
-import { Component, HostBinding, HostListener, Input } from '@angular/core';
+import { Component, HostBinding, HostListener, Inject, Input } from '@angular/core';
 
-import { NxDropdownComponent } from '../../dropdown.component';
+import { BaseDropdownComponent } from '../../base-dropdown.component';
+import { BaseDropdownInjectionToken } from '../../dropdown.types';
 
 @Component({ template: '' })
 export abstract class BaseDropdownItem<T> {
@@ -15,15 +16,13 @@ export abstract class BaseDropdownItem<T> {
     @HostListener('click', ['$event']) onClick(event: UIEvent): void {
         event.preventDefault();
         if (!this.disabled) {
-            if (this.value !== undefined) {
-                this.select.handleOptionSelected(this);
-            } else {
-                this.select.handleOptionSelected(undefined);
-            }
+            this.select.handleOptionSelected(this);
         }
     }
 
-    constructor(private select: NxDropdownComponent<T>) {}
+    constructor(
+        @Inject(BaseDropdownInjectionToken) private select: BaseDropdownComponent<T, boolean>,
+    ) {}
 
     // This can be any html string that you want displayed in the selected portion of the dropdown
     abstract getOptionHtml(): string;

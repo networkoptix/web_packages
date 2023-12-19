@@ -16,13 +16,16 @@
         [innerHTML]="displayText"
         class="select-box"
         [ngClass]="{
-            error: this.error,
-            disabled: this.disabled,
-            placeholder: this.showPlaceholder
+            error: error,
+            disabled: disabled,
+            placeholder: showPlaceholder
         }"
     ></div>
     <svg-icon
-        class="dropdown-arrow"
+        class="dropdown-arrow rotationTransition"
+        [ngClass]="{
+            rotate: dropdownOpen
+        }"
         nx-add-svg-src
         [src]="icons.dirTextButtons + 'arrow_expand.svg'"
         (click)="onDropMenuIconClick($event)"
