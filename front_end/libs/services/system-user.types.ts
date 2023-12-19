@@ -72,6 +72,7 @@ export interface UserGroupDropdown {
 export interface UserPermissionDescription {
     description: string;
     name: string;
+    custom?: boolean;
 }
 
 export enum UserType {
