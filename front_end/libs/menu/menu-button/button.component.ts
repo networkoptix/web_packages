@@ -7,6 +7,7 @@ import type { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxUriService } from '@services/uri.service';
+import { cleanIdLegacy } from '@utils/general';
 
 import type { Level2Button } from '../menu.types';
 
@@ -48,7 +49,7 @@ export class NxMenuButtonComponent {
                     .then(userId => {
                         if (userId) {
                             const systemId = this.system.id;
-                            userId = this.system.mediaserver.cleanId(userId);
+                            userId = cleanIdLegacy(userId);
                             this.menuService.selectedDetailsSection.set(userId);
                             this.uriService
                                 .updateURI(

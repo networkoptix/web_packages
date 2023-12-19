@@ -10,6 +10,7 @@ import { getSystemMetricsAlarmsV2 } from '@services/mediaserver-apis/endpoints/s
 import { getSystemMetricsManifestV2 } from '@services/mediaserver-apis/endpoints/system-metrics-manifest';
 import { getSystemMetricsValuesV2 } from '@services/mediaserver-apis/endpoints/system-metrics-values';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
+import { cleanIdLegacy } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncMedium } from '@utils/memoize';
 import { ZERO_ID, type NxRecursiveKeyMap, type NxRecursivePick } from '@utils/nx';
 
@@ -372,7 +373,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     override getCamera(id: string): Observable<RestV2CameraCompat> {
         return this.getWith('/rest/v2/devices', cameraKeyMapV2, {
-            params: { id: this.cleanId(id) },
+            params: { id: cleanIdLegacy(id) },
         }).pipe(map(cameras => this.patchCameraCompatibilityV2(cameras[0])));
     }
 

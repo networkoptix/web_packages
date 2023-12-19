@@ -26,7 +26,7 @@ import {
     TimeDetail,
 } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystem } from '@services/system.service/system';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { WebGlTimelineActionsComponent } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/actions/timeline-actions.component';
 import {
@@ -297,7 +297,7 @@ export class NxWebGLCanvasComponent implements AfterViewInit, OnChanges {
                 // test data
                 this.selectedCameraId = this.cameras[0];
                 this.selectedCamera = this.system.cameraManager.cameras.find(
-                    camera => camera.id === cleanId(this.selectedCameraId),
+                    camera => camera.id === cleanIdLegacy(this.selectedCameraId),
                 );
                 // ****************************
 

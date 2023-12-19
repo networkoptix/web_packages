@@ -34,7 +34,7 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { icons } from '@static-variables';
 import {
     alphabeticalSort,
-    cleanId,
+    cleanIdLegacy,
     MS,
     msToParts,
     offsetDate,
@@ -372,8 +372,8 @@ export class NxBookmarksComponent implements OnInit {
         return bks
             .filter(bk => this.deviceMap.has(bk.deviceId))
             .map<Bookmark>(bk => {
-                const deviceId = cleanId(bk.deviceId);
-                const systemId = cleanId(this.system.id);
+                const deviceId = cleanIdLegacy(bk.deviceId);
+                const systemId = cleanIdLegacy(this.system.id);
                 const timeZoneOffset =
                     this.localOffsetToUTCMs +
                     (this.offsetTimes.get(this.deviceMap.get(bk.deviceId).serverId) || 0);

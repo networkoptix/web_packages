@@ -7,9 +7,28 @@ import { last, zip } from 'lodash-es';
 import { combineLatest, Observable, timer } from 'rxjs';
 import { map } from 'rxjs/operators';
 
+import { environment } from '@environments/environment';
+
 /* String */
-export function cleanId(id: unknown): string | undefined {
+/** @deprecated Old version has nullish coalescing for undefined argument, but this shouldn't ever happen.
+ *
+ * TODO: Phase out old version and move cleaning as close to API return point as possible
+ */
+export function cleanIdLegacy(id: unknown): string | undefined {
     return (id as string)?.replace(/{|}/g, '');
+}
+
+const __wrappedIdRegex = /^{[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}}$/;
+const __unwrappedIdRegex = /^[\da-f]{8}-[\da-f]{4}-[\da-f]{4}-[\da-f]{4}-[\da-f]{12}$/;
+export function cleanId(dirtyId: string): string {
+    if (!environment.production) {
+        if (__unwrappedIdRegex.test(dirtyId)) {
+            console.warn('Attempting to clean already clean uuid');
+        } else if (!__wrappedIdRegex.test(dirtyId)) {
+            console.warn('Attempting to clean non-uuid string');
+        }
+    }
+    return dirtyId.replace(/{|}/g, '');
 }
 
 export function dirtyId(id: string): string {

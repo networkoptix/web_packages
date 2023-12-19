@@ -13,7 +13,7 @@ import {
     UserGroupDropdown,
     UserType,
 } from '@services/system-user.types';
-import { alphabeticalSort, cleanId } from '@utils/general';
+import { alphabeticalSort, cleanIdLegacy } from '@utils/general';
 
 import { UserManager } from './user-manager';
 
@@ -362,7 +362,7 @@ export class UserWithGroupsManager extends UserManager {
         delete user.permissions;
 
         return lastValueFrom(
-            this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanId(user.id)),
+            this.mediaserver.modifyUser(this.cleanupUserObject(user), cleanIdLegacy(user.id)),
         ).then((savedUser: NxUser) => {
             user.id = savedUser.id;
             if (userCreated) {

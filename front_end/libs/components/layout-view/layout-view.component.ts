@@ -48,7 +48,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { SystemResourcesSelectors } from '@store/system-resources';
 import { SystemResourceTypeEnums } from '@store/system-resources/system-resources.types';
-import { alphaNumericSort, cleanId, dirtyId, extractVideoLayout } from '@utils/general';
+import { alphaNumericSort, cleanIdLegacy, dirtyId, extractVideoLayout } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
 
 import { parseCameras, parseOtherSystems, parseServers, parseWebPages } from './layout-view-utils';
@@ -310,7 +310,7 @@ export class NxLayoutViewComponent {
             const camera = tree
                 .find(assertResourceOfType.cameras)
                 .children.shift() as ResourceNode<NxSystemCamera>;
-            const layoutId = cleanId((layout || camera)?.details?.id);
+            const layoutId = cleanIdLegacy((layout || camera)?.details?.id);
             if (layoutId) {
                 await this.layoutStateService.paramStateHandler.state$$.set({
                     params: { layoutId },
@@ -357,7 +357,7 @@ export class NxLayoutViewComponent {
     ]).pipe(
         switchMap(async ([system, layoutId, layouts, layoutItems]): Promise<Layout> => {
             if (layoutId && system.mediaserver instanceof NxSystemRestAPI) {
-                const existingLayout = layouts.find(({ id }) => cleanId(id) === layoutId);
+                const existingLayout = layouts.find(({ id }) => cleanIdLegacy(id) === layoutId);
                 const isResourceId = Object.values(layoutItems).some(
                     items => items?.some(({ id }) => id === layoutId),
                 );
@@ -467,7 +467,7 @@ export class NxLayoutViewComponent {
     };
 
     changeLayout(layout: string | DropdownItem<string>): void {
-        const layoutId = typeof layout === 'string' ? cleanId(layout) : layout.value;
+        const layoutId = typeof layout === 'string' ? cleanIdLegacy(layout) : layout.value;
         this.layoutStateService.paramStateHandler.state$$.set({ params: { layoutId } });
         if (layoutId) {
             this.#fetchingLayout$.next('fetching');
@@ -477,7 +477,7 @@ export class NxLayoutViewComponent {
     }
 
     layoutToDropdown({ name, id }: Resource): DropdownItem<string> {
-        return { name, value: cleanId(id) };
+        return { name, value: cleanIdLegacy(id) };
     }
 
     createNewLayout = (

@@ -17,7 +17,7 @@ import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxSystem } from '@services/system.service/system';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 import { DropdownItem } from '../dropdowns/generic/dropdown.component.types';
@@ -82,7 +82,7 @@ export class NxLoggerComponent implements OnChanges {
                 }
                 loggerHost = this.relayUrl.replace(
                     '{systemId}',
-                    `${cleanId(this.selectedServerId)}.${this.system.id}`,
+                    `${cleanIdLegacy(this.selectedServerId)}.${this.system.id}`,
                 );
                 const localProxy = this.cookieService.get('cors_bypass') || '';
                 this.logUrl = `${localProxy}${protocol}//${loggerHost}/web/api/showLog?${params.toString()}`;
