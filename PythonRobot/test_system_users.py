@@ -866,38 +866,45 @@ def users_can_disconnect_themselves(server: Mediaserver):
                     print(f"PASS {role}")
 
 
-def disable_enable_correctly_affects_user(server: Mediaserver):
+def disable_enable_correctly_affects_user(server: Mediaserver, user: CloudAccount):
     """
     24. Disable enable User correctly affects the User.
 
     [Tags]    C63390    C76245    webadmin    cloud
     """
-    owner = server.get_cloud_owner()
     viewer = server.get_cloud_viewer()
     url = ENV + f"/systems/{server.id}"
     with get_chrome() as driver:
         try:
             driver.get(url)
-            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
             SystemAdmin(driver)
             system_left_menu = SystemLeftMenu(driver)
             users_dropdown = system_left_menu.users_dropdown()
             users_dropdown.get_user_link_by_id(viewer.id).click()
             system_user = SystemUsers(driver)
-            # commented out items here for 6.0 compatibility and not deleting because cloud-portal
-            # is making changes that may allow some of these checks to return
-            # access_level_dropdown = system_user.access_level_dropdown()
-            # access_level_dropdown.wait_until_visible()
-            # assert access_level_dropdown.text() == rb.VIEWER_TEXT
-            # help_block = system_user.help_block()
-            # assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
             system_user.user_switch().turn_off()
             system_user.save_button().click()
             # Fails for vms 5.1 due to https://networkoptix.atlassian.net/browse/CLOUD-11901
             system_user.no_unsaved_changes_text().wait_until_visible()
-            # assert help_block.get_text() == rb.ADD_USER_PERMISSIONS_HINT_VIEWER
             assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
-            # TODO this test continues to verify enabling a user but due to above must be completed later
+            header = HeaderNav(driver)
+            header.log_out()
+            header.log_in_button().click()
+            LoginDialog(driver).basic_cloud_login(viewer.email, viewer.password)
+            SystemsPage(driver).no_systems().wait_until_visible()
+            header.log_out()
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(user.email, user.password)
+            users_dropdown.get_user_link_by_id(viewer.id).click()
+            system_user.user_switch().turn_on()
+            system_user.save_button().click()
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            assert not system_user.user_disabled_message().is_visible()
+            header.log_out()
+            header.log_in_button().click()
+            LoginDialog(driver).basic_cloud_login(viewer.email, viewer.password)
+            SystemAdmin(driver)
         except Exception:
             print("FAIL")
             driver.save_screenshot('error.png')
@@ -938,4 +945,5 @@ if __name__ == "__main__":
         edit_permission_works_for_cloud_admin(cloud_server)
         test_email_validation(cloud_server)
         users_can_disconnect_themselves(cloud_server)
-        disable_enable_correctly_affects_user(cloud_server)
+        disable_enable_correctly_affects_user(cloud_server, cloud_server.get_cloud_owner())
+        disable_enable_correctly_affects_user(cloud_server, cloud_server.get_cloud_admin())

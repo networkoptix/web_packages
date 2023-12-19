@@ -1,5 +1,6 @@
 import platform
 import time
+import logging
 from typing import Optional
 from typing import Sequence
 
@@ -10,6 +11,8 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from generic_elements import ElementNotVisible
 from generic_elements._generic_element import Element
+
+_logger = logging.getLogger(__name__)
 
 
 class Button:
@@ -623,3 +626,13 @@ class Switch:
             interactable_locator = f"{self._locator}/.."
             interactable_element = Element(self._driver, interactable_locator)
             interactable_element.click()
+        else:
+            _logger.debug("Switch already off")
+
+    def turn_on(self):
+        if self._element.get_attribute("class") != "selected":
+            interactable_locator = f"{self._locator}/.."
+            interactable_element = Element(self._driver, interactable_locator)
+            interactable_element.click()
+        else:
+            _logger.debug("Switch already on")
