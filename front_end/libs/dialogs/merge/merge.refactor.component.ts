@@ -91,7 +91,6 @@ const ResponseStrings = {
     timeoutError: 'TimeoutError',
     bothSystemsConnectedToCloud: 'bothSystemsConnectedToCloud',
     unknownTargetSystemConnectedToCloud: 'unknownTargetSystemConnectedToCloud',
-    incompatibleCloudToNonCloud: 'incompatibleCloudToNonCloud',
     systemOffline: 'systemOffline',
     systemOfflineUrl: 'systemOfflineUrl',
     secondarySystemUnavailable: 'secondarySystemUnavailable',
@@ -509,6 +508,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                             this.targetSystem.id,
                             true,
                             this.adminPassword,
+                            !!this.system.serverManager.moduleInfo.cloudOwnerId,
                         ),
                     );
                 }
@@ -735,12 +735,6 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                         : ResponseStrings.bothSystemsConnectedToCloud,
                 );
             }
-            if (
-                !this.targetSystem.cloudOwnerId &&
-                this.system.serverManager.moduleInfo.cloudOwnerId
-            ) {
-                throw Error(ResponseStrings.incompatibleCloudToNonCloud);
-            }
 
             if (!this.dryRunAvailable) {
                 // used to be code that would update system/systems and then check if dryRunAvailable again
@@ -748,7 +742,13 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 return this.targetSystem.isMergeable ? { error: '0' } : 'skip';
             }
             const res = await lastValueFrom(
-                this.system.mediaserver.mergeSystems(this.serverUrl, this.targetSystem.id, true),
+                this.system.mediaserver.mergeSystems(
+                    this.serverUrl,
+                    this.targetSystem.id,
+                    true,
+                    '',
+                    !!this.targetSystem.cloudOwnerId,
+                ),
             );
             if (res.error && res.error !== '0') {
                 throw Error(MergeServerErrorCodes[res.error] || ResponseStrings.unknownError);

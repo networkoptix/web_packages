@@ -13,6 +13,7 @@ import {
 } from '@components/dropdowns/multi-select/multi-select.component.types';
 import { NxPermissionsDropdown } from '@components/dropdowns/permissions/permissions.component';
 import { NxEmailComponent } from '@components/email-input/email.component';
+import { NxMultiLineEllipsisClampComponent } from '@components/multi-line-ellipsis-clamp/mle-clamp.component';
 import { NxProcessButtonComponent } from '@components/process-button/process-button.component';
 import { NxProcessCancelButtonComponent } from '@components/process-cancel-Button/process-cancel-button.component';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -24,6 +25,7 @@ import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
 import type { ChangedIdReturned } from '@services/system-api.types';
 import { AddUser, Role } from '@services/system-user.types';
+import { UserWithGroupsManager } from '@services/system.service/user-manager/user-with-groups-manager';
 import { NxToastService } from '@services/toast.service';
 
 import type { AddUser as DT } from '../dialogs.types';
@@ -43,6 +45,7 @@ import type { AddUser as DT } from '../dialogs.types';
         NxProcessButtonComponent,
         NxProcessCancelButtonComponent,
         NxMultiSelectDropdown,
+        NxMultiLineEllipsisClampComponent,
     ],
 })
 export class AddUserModalContent extends ModalBase<DT['return']> {
@@ -136,8 +139,12 @@ export class AddUserModalContent extends ModalBase<DT['return']> {
         this.useGroups = this.system.version > 5.1;
 
         if (this.useGroups) {
-            const groups = this.system.userManager.groups;
-            this.groups = this.removeLdapGroups([...groups]);
+            const userManager = this.system.userManager as UserWithGroupsManager;
+            const isOwner = this.system.permissionManager.isOwner$$();
+            const groups = userManager.groups;
+            this.groups = this.removeLdapGroups(
+                groups.filter(group => isOwner || !userManager.isGroupPowerUser(group)),
+            );
         }
 
         this.accessRoles = [...this.system.userManager.accessRoles];

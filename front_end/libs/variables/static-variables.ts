@@ -483,6 +483,7 @@ export const menus: configTypes.Menus = {
 };
 
 export const oauthStore: configTypes.OauthStoreFlags = {
+    bindData: 'bindData',
     code: 'code',
     verify2fa: 'verify2fa',
 };

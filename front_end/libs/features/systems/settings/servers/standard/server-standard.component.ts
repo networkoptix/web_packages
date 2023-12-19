@@ -239,7 +239,7 @@ export class NxSystemStandardServerComponent implements OnChanges, OnDestroy {
         const { ip, port: serverPort } = this.selectedServer;
         this.selectedServer.ip = ip;
         this.parsedServerId = cleanId(this.selectedServer.id);
-        const osName = this.selectedServer.osInfo.platform;
+        const osName = this.selectedServer.osInfo?.platform;
         const { isAdmin, editAdmins } = this.system.permissionManager.permissions$$();
         this.enableEdit = isAdmin;
         this.restartDisabled = !isAdmin;

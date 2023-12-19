@@ -131,7 +131,6 @@ export class MergeModalContent {
 
     readonly knownBothSystemsConnectedToCloud: string = 'knownBothSystemsConnectedToCloud';
     readonly unknownBothSystemsConnectedToCloud: string = 'unknownBothSystemsConnectedToCloud';
-    readonly incompatibleCloudToNonCloud: string = 'incompatibleCloudToNonCloud';
     readonly differentOwners: string = 'differentOwners';
     readonly duplicateServers: string = 'duplicateServers';
     readonly noServerFound: string = 'noServerFound';
@@ -638,6 +637,7 @@ export class MergeModalContent {
                             this.targetSystem.id,
                             true,
                             this.machine.state.template.passwordValue,
+                            !this.system.moduleInfo.cloudOwnerId,
                         )
                         .toPromise()
                         .catch(res => {
@@ -1009,13 +1009,6 @@ export class MergeModalContent {
             }
             throw Error(this.unknownBothSystemsConnectedToCloud);
         }
-        if (
-            this.environment.isLocal &&
-            !this.targetSystem.cloudOwnerId &&
-            this.system.moduleInfo.cloudOwnerId
-        ) {
-            throw Error(this.incompatibleCloudToNonCloud);
-        }
         if (!this.targetSystem.id || this.targetSystem.localSystemId) {
             if (!this.targetSystem.id) {
                 let secondarySystem: any;
@@ -1024,7 +1017,7 @@ export class MergeModalContent {
                         .getRemoteServerInfo(this.serverUrl)
                         .toPromise()
                         .catch(err => {
-                            if (err.status === 504) {
+                            if ([0, 504].includes(err.status)) {
                                 throw Error(this.noServerFound);
                             } else {
                                 throw err;
@@ -1045,7 +1038,13 @@ export class MergeModalContent {
                 }
             }
             return this.system.mediaserver
-                .mergeSystems(this.serverUrl, this.targetSystem.id, true)
+                .mergeSystems(
+                    this.serverUrl,
+                    this.targetSystem.id,
+                    true,
+                    '',
+                    !this.system.moduleInfo.cloudOwnerId,
+                )
                 .toPromise()
                 .catch(res => {
                     if (res.error && res.error !== '0') {

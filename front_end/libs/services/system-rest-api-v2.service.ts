@@ -391,6 +391,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
     public getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
+            timeout: this.storageRequestTimeout,
         });
         const cameraKeyMap = {
             serverId: true,

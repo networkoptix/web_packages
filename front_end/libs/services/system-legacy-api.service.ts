@@ -598,17 +598,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.get('/api/statistics', { params: { salt } });
     }
 
-    /**
-        @deprecated
-     */
-    saveCloudSystemCredentials(
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-    ): Observable<unknown> {
-        throw Error(this.forbiddenMsg);
-    }
-
     checkInternet(reload = true) {
         return this.getModuleInfo()
             .toPromise()
@@ -703,7 +692,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         );
     }
 
-    public getStorages(useCache = false, customTimeout = 8000) {
+    public getStorages(useCache = false, customTimeout = this.storageRequestTimeout) {
         return this.get<t.NormalResponse<any>>('/api/storageSpace', {
             headers: this.cacheHeader(useCache),
             timeout: customTimeout,
@@ -733,6 +722,8 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.get(url);
     }
 
+    protected storageRequestTimeout = 2 * 60 * 1000;
+
     @memoizeAsyncLong
     checkForAnalyticsData() {
         const params = {
@@ -740,7 +731,10 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             endTime: Number.MAX_SAFE_INTEGER,
             limit: 1,
         };
-        return this.get('/ec2/analyticsLookupObjectTracks', { params });
+        return this.get('/ec2/analyticsLookupObjectTracks', {
+            params,
+            timeout: this.storageRequestTimeout,
+        });
     }
 
     // End of storage

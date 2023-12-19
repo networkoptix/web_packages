@@ -270,7 +270,6 @@
     "Cannot initialize System": "Kan het systeem niet initialiseren",
     "Cannot load preview": "Cannot load preview",
     "Cannot merge Systems": "Kan systemen niet samenvoegen",
-    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.",
     "Cannot merge systems bound to the cloud": "Kan systemen gekoppeld aan de cloud niet samenvoegen",
     "Cannot merge two Cloud Systems with different owners": "Kan twee Cloud-systemen met verschillende eigenaren niet samenvoegen",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Kan twee systemen die zijn verbonden met de cloud niet samenvoegen. Ga naar %CLOUD_NAME% om deze systemen samen te voegen.",

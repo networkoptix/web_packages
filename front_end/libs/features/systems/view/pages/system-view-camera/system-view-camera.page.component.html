@@ -154,27 +154,25 @@
     >
         <div class="player-wrapper">
             <nx-player
-                *ngIf="camera && showPlayerSection; else noPlayer"
+                *ngIf="camera && !state$$().playerError; else noPlayer"
                 (videoDblClick)="onVideoDblClick()"
                 class="fs-exclude"
             ></nx-player>
             <ng-template #noPlayer>
                 <div class="offline-message">
-                    <ng-container
-                        *ngIf="cameraError; else unreachable"
-                        [ngSwitch]="cameraError"
-                    >
+                    <ng-container *ngIf="state$$().playerError; else unreachable">
+                        <ng-template #otherError>
+                            <nx-player-placeholder
+                                svgFileName="placeholder_camera_alert"
+                                [heading]="LANG.common.cameraStates.error"
+                                [description]="state$$().error"
+                            ></nx-player-placeholder>
+                        </ng-template>
                         <nx-player-placeholder
-                            *ngSwitchCase="PLAYBACK_ERROR.NO_ACCESS"
+                            *ngIf="state$$().noAccess; else otherError"
                             svgFileName="placeholder_camera_alert"
                             [heading]="LANG.common.cameraStates.noAccess"
                             [description]="''"
-                        ></nx-player-placeholder>
-                        <nx-player-placeholder
-                            *ngSwitchDefault
-                            svgFileName="placeholder_camera_alert"
-                            [heading]="LANG.common.cameraStates.error"
-                            [description]="cameraError"
                         ></nx-player-placeholder>
                     </ng-container>
                     <ng-template #unreachable>

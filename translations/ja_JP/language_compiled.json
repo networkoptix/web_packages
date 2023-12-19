@@ -270,7 +270,6 @@
     "Cannot initialize System": "システムを初期化できません",
     "Cannot load preview": "プレビューを読み込めません",
     "Cannot merge Systems": "システムを統合できません",
-    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "非クラウドシステムからシステム名と設定を取得する場合、クラウドシステムを非クラウドシステムと統合することはできません。逆の設定で統合することをご検討ください。",
     "Cannot merge systems bound to the cloud": "クラウド に紐付けされているシステムは統合できません",
     "Cannot merge two Cloud Systems with different owners": "異なるオーナーを持つ2つのクラウドシステムを統合することはできません",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "クラウドに接続されている2つのシステムを統合することはできません。これらのシステムを統合するには %CLOUD_NAME% に移動してください。",

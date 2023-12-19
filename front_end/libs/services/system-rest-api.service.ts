@@ -324,7 +324,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                         const refreshToken = storageService.refreshToken;
                         const errorId = error?.error?.errorId;
 
-                        const isLoginRequest = error.url.includes('/rest/v1/login/sessions/');
+                        const isLoginRequest = error.url.includes('/rest/v1/login/sessions');
                         const isInvalidParamterError =
                             error.status === 422 && errorId === servers.errors.invalidParameter;
                         const isBadRequestError =
@@ -582,6 +582,14 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         const { params, _headers, customTimeout } = this.parseRequestOpts(opts);
 
         url = `${this.urlBase}${url}`;
+
+        if (url.includes('/rest/v1/login/sessions')) {
+            return this.#getHeaders(_headers, url).pipe(
+                switchMap(headers => this.http.post<T>(url, data || {}, { params, headers })),
+                // No need to use retryWhen() for Login or else it would send the Auth request twice if there's an error
+                timeout(customTimeout),
+            );
+        }
 
         return this.#getHeaders(_headers, url).pipe(
             switchMap(headers => this.http.post<T>(url, data || {}, { params, headers })),
@@ -979,6 +987,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
     public getStorageAnalytics(): Observable<StorageAnalytics> {
         const getAnalytics = this.get<unknown[]>('/ec2/analyticsLookupObjectTracks', {
             params: { limit: 1 },
+            timeout: this.storageRequestTimeout,
         });
         const cameraKeyMap = {
             serverId: true,
@@ -1143,18 +1152,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     restoreFactorySettings(password?: string, serverId?: string) {
         return this.post(`/rest/v1/servers/${serverId || 'this'}/reset`);
-    }
-
-    saveCloudSystemCredentials(
-        cloudSystemID: string,
-        cloudAuthKey: string,
-        cloudAccountName: string,
-    ) {
-        return this.post('/rest/v1/system/cloudBind', {
-            systemId: cloudSystemID,
-            authKey: cloudAuthKey,
-            owner: cloudAccountName,
-        });
     }
 
     getBookmarks(

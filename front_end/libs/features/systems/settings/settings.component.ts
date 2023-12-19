@@ -375,9 +375,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     }
 
     ngOnDestroy(): void {
-        if (this.system) {
-            this.system.stopPoll();
-        }
         this.ribbonService.hide();
         this.pageService.setDefaultLayout();
     }

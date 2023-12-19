@@ -270,7 +270,6 @@
     "Cannot initialize System": "Kan inte initiera System",
     "Cannot load preview": "Det går inte att ladda förhandsgranskningen",
     "Cannot merge Systems": "Kan inte slå samman system",
-    "Cannot merge a Cloud system into a non-Cloud system, when System name and settings would be taken from the non-Cloud system. Consider merging in the other direction.": "Kan inte slå ihop ett molnsystem till ett icke-moln-system, när systemnamn och inställningar skulle tas från icke-moln-systemet. Överväg sammanslagning i den andra riktningen.",
     "Cannot merge systems bound to the cloud": "Kan inte slå samman system som är bundna till molnet",
     "Cannot merge two Cloud Systems with different owners": "Det går inte att slå samman två molnsystem med olika ägare",
     "Cannot merge two systems connected to cloud. Please go to %CLOUD_NAME% to merge these systems.": "Det går inte att slå samman två system anslutna till molnet. Gå till %CLOUD_NAME% att slå samman dessa system.",

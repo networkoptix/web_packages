@@ -49,13 +49,12 @@ export const TwofaGuard: CanActivateFn = (
                     }
                 } else {
                     const accessToken = await lastValueFrom(cloudApi.getAccessToken());
-                    oauthService.redirectOauth(
-                        'system2faAuth',
-                        account.email,
-                        undefined,
+                    oauthService.redirectOauth({
+                        state: 'system2faAuth',
+                        email: account.email,
                         accessToken,
-                        Location.joinWithSlash(iWindow.location.origin, state.url),
-                    );
+                        redirectTo: Location.joinWithSlash(iWindow.location.origin, state.url),
+                    });
                 }
             } else {
                 return true;
