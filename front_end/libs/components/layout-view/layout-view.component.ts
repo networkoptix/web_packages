@@ -1,4 +1,5 @@
 // import { Location } from '@angular/common';
+
 import {
     ChangeDetectionStrategy,
     ChangeDetectorRef,
@@ -11,13 +12,14 @@ import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { cloneDeep, uniq } from 'lodash-es';
 import { TourService } from 'ngx-ui-tour-md-menu';
-import { combineLatest, firstValueFrom, merge, Observable, Subject } from 'rxjs';
+import { combineLatest, firstValueFrom, forkJoin, merge, Observable, Subject } from 'rxjs';
 import {
     catchError,
     distinctUntilChanged,
     filter,
     map,
     shareReplay,
+    skip,
     startWith,
     switchMap,
     tap,
@@ -34,7 +36,7 @@ import {
 } from '@components/layout-grid/layout-grid.types';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
-import { WebRTCStreamManager, isRequiresTranscoding } from '@openLibs/webrtc-stream-manager';
+import { WebRTCStreamManager } from '@openLibs/webrtc-stream-manager';
 import { NxTranslatePipe } from '@pipes/nx-translate.pipe';
 import { NxAccountService } from '@services/account.service';
 import { NxLayoutGridService } from '@services/layout-grid/layout-grid.service';
@@ -44,19 +46,19 @@ import { SharedLayoutsSelectors } from '@services/layout-state/store/shared';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
-import { Layout, LayoutItem, WebPage } from '@services/system-api.types';
+import { Layout, LayoutItem } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
 import { CurrentUser } from '@services/system-user.types';
-import {
-    CameraStatus,
-    NxSystemCamera,
-    RecordingStatus,
-} from '@services/system.service/camera-manager/camera-manager-types';
-import { NxSystemServer } from '@services/system.service/system-types';
+import { NxSystemCamera } from '@services/system.service/camera-manager/camera-manager-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { selectResourcesValuesBySystemId } from '@store/system-resources/system-resources.selectors';
+import { NxSystemsService } from '@services/systems.service';
+import { NxSystemInfo } from '@services/systems.service.types';
+import { SystemResourcesSelectors } from '@store/system-resources';
+import { SystemResourceTypeEnums } from '@store/system-resources/system-resources.types';
 import { alphaNumericSort, cleanId, dirtyId, extractVideoLayout } from '@utils/general';
 import { generateTour, translateStep } from '@utils/nx';
+
+import { parseCameras, parseOtherSystems, parseServers, parseWebPages } from './layout-view-utils';
 
 interface Resource {
     name: string;
@@ -81,10 +83,6 @@ const cloudLayoutTours = {
         'help',
     ],
 };
-
-interface ResourceLookup<T = { id: string }> {
-    [id: string]: ResourceNode<T>;
-}
 
 @UntilDestroy()
 @Component({
@@ -121,116 +119,80 @@ export class NxLayoutViewComponent {
 
     layoutItemLookup$ = this.systemService.currentSystem$.pipe(
         switchMap(system =>
-            nxConfig.featureFlags.layoutsUnsavedSync
-                ? this.layoutStateService.loadUnsavedLayouts(system.id).pipe(map(() => system))
-                : Promise.resolve(system),
+            forkJoin([
+                this.layoutStateService.loadUnsavedLayouts(system.id),
+                this.layoutStateService.loadCrossSystemLayouts(),
+            ]).pipe(map(() => system)),
         ),
         switchMap(({ permissionManager, id }) => {
             return combineLatest([
-                this.store.select(selectResourcesValuesBySystemId(id)),
+                // Update this to fetch system resources for all systems
+                this.store.select(SystemResourcesSelectors.selectResourceValuesAllSystems),
+                Promise.resolve(id),
                 this.#selectedLayout$.pipe(startWith(null)),
-                this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
+                this.store.select(SharedLayoutsSelectors.selectLayouts),
                 new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser$$())),
+                nxConfig.featureFlags.layoutsCrossSystemEditing
+                    ? this.systemsService.systemsSubject
+                    : Promise.resolve([] as NxSystemInfo[]),
             ]);
         }),
         filter(([resources]) => Object.values(resources).every(Boolean)),
         map(cloneDeep),
+        filter(([allSystemResources, currentSystemId]) => !!allSystemResources[currentSystemId]),
         map(
             ([
-                { cameras, servers, webPages = [] },
+                allSystemResources,
+                currentSystemId,
                 currentLayout,
                 layouts,
                 currentUser,
+                otherSystemsInfo,
             ]): LayoutResourceTree => {
+                const { [currentSystemId]: currentSystem, ...otherSystems } = allSystemResources;
+                const { cameras = [], servers = [], webPages = [] } = currentSystem;
+                const {
+                    cameras: otherSystemsCameras,
+                    servers: otherSystemsServers,
+                    webPages: OtherSystemsWebPages,
+                } = Object.values(otherSystems).reduce(
+                    (allResources, currentSystemResources) => {
+                        Object.entries(currentSystemResources).forEach(
+                            ([resourceType, resources]) =>
+                                allResources[resourceType]?.push(...resources),
+                        );
+                        return allResources;
+                    },
+                    { cameras: [], servers: [], webPages: [] } as Omit<
+                        typeof currentSystem,
+                        SystemResourceTypeEnums.LAYOUTS
+                    >,
+                );
                 const aspectRatio = currentLayout?.cellAspectRatio || 0;
 
-                const isIoOnly = (camera: NxSystemCamera): boolean =>
-                    !(!!camera.parameters.mediaStreams || !camera.parameters.ioSettings?.length);
-                const parsedCameras = cameras.reduce(
-                    (cameras, camera) => {
-                        const parentServerOnline =
-                            servers.find(({ id }) => id === camera.parentId)?.status === 'Online';
-                        const online =
-                            isIoOnly(camera) ||
-                            (camera.status === CameraStatus.Online && parentServerOnline);
-                        const unauthorized =
-                            camera.status === CameraStatus.Unauthorized && parentServerOnline;
-                        if (!parentServerOnline) {
-                            if (camera.status === CameraStatus.Unauthorized) {
-                                camera.status = CameraStatus.Offline;
-                            }
-                            if (camera.recordingStatus === RecordingStatus.Recording) {
-                                camera.recordingStatus = RecordingStatus.Scheduled;
-                            }
-                        }
+                const parsedCameras = parseCameras(cameras, servers, this.useV2api, aspectRatio);
 
-                        const nonWebRtcCodec = (camera.parameters.mediaStreams?.streams ?? [])
-                            .filter(({ encoderIndex }) => encoderIndex !== -1)
-                            .every(({ codec }) => isRequiresTranscoding(codec));
+                const parsedServers = parseServers(servers, aspectRatio);
 
-                        const requiresTranscoding = nonWebRtcCodec && !this.useV2api;
+                const parsedWebPages = parseWebPages(webPages, aspectRatio);
 
-                        return {
-                            ...cameras,
-                            [camera.id]: {
-                                id: camera.id,
-                                type: isIoOnly(camera)
-                                    ? ResourceType.IO_DEVICE
-                                    : ResourceType.CAMERA,
-                                name: camera.name,
-                                details: {
-                                    ...camera,
-                                    online,
-                                    unauthorized,
-                                    requiresTranscoding,
-                                    resourceType:
-                                        this.LANG.layouts.titles.resourceTypes[ResourceType.CAMERA],
-                                    status: (camera.recordingStatus || camera.status).toLowerCase(),
-                                    // Compatibility patch for status
-                                },
-                                aspectRatio:
-                                    camera.parameters.overrideAr ||
-                                    camera.defaultRatio ||
-                                    aspectRatio,
-                            },
-                        };
-                    },
-                    {} as ResourceLookup<(typeof cameras)[0]>,
+                const parsedOtherSystemsCameras = parseCameras(
+                    otherSystemsCameras,
+                    otherSystemsServers,
+                    false,
+                    aspectRatio,
                 );
 
-                const parsedServers = servers.reduce(
-                    (servers, server) => ({
-                        ...servers,
-                        [server.id]: {
-                            id: server.id,
-                            type: ResourceType.SERVER,
-                            name: server.name,
-                            details: {
-                                ...server,
-                                status: server.status.toLowerCase(),
-                                online: server.status === 'Online',
-                                resourceType:
-                                    this.LANG.layouts.titles.resourceTypes[ResourceType.SERVER],
-                            },
-                            aspectRatio,
-                        } as ResourceNode<NxSystemServer>,
-                    }),
-                    {} as ResourceLookup<(typeof servers)[0]>,
+                const parsedOtherSystemsServers = parseServers(otherSystemsServers, aspectRatio);
+                const parsedOtherSystemsWebPages = parseWebPages(OtherSystemsWebPages, aspectRatio);
+
+                const parsedOtherSystems = parseOtherSystems(
+                    otherSystemsInfo.filter(({ id }) => id !== currentSystemId),
+                    otherSystemsCameras,
+                    otherSystemsServers,
+                    aspectRatio,
                 );
 
-                const parsedWebPages = webPages.reduce(
-                    (webPages, webPage) => ({
-                        ...webPages,
-                        [webPage.id]: {
-                            id: webPage.id,
-                            type: ResourceType.WEB_PAGE,
-                            name: webPage.name,
-                            details: webPage,
-                            aspectRatio,
-                        } as ResourceNode<WebPage>,
-                    }),
-                    {} as ResourceLookup<(typeof webPages)[0]>,
-                );
                 const byName = alphaNumericSort<Pick<Resource, 'name'>>(
                     LayoutStateService.runInInjectionContext(() => inject(LOCALE_ID)),
                     r => r.name || '',
@@ -238,10 +200,12 @@ export class NxLayoutViewComponent {
 
                 const layoutsForTree = layouts
                     .filter(layout => layout.id && layout.id !== 'new')
-                    .filter(layout =>
-                        [currentUser?.id, '{00000000-0000-0000-0000-000000000000}'].includes(
-                            layout.parentId,
-                        ),
+                    .filter(
+                        layout =>
+                            !layout.parentId ||
+                            [currentUser?.id, '{00000000-0000-0000-0000-000000000000}'].includes(
+                                layout.parentId,
+                            ),
                     )
                     .map(
                         details =>
@@ -249,9 +213,13 @@ export class NxLayoutViewComponent {
                                 id: details.id,
                                 type: ResourceType.LAYOUT,
                                 name: details.name,
-                                owned: currentUser?.id === details.parentId || currentUser?.isAdmin,
+                                owned:
+                                    !details.parentId ||
+                                    currentUser?.id === details.parentId ||
+                                    currentUser?.isAdmin,
                                 shared:
                                     details.parentId === '{00000000-0000-0000-0000-000000000000}',
+                                crossSystem: !details.parentId,
                                 locked: details.locked,
                                 details,
                             }) as SharableResourceLeafNode<Layout>,
@@ -259,6 +227,10 @@ export class NxLayoutViewComponent {
                     .sort((a, b) => (a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1));
 
                 const parsedResources = Object.entries({
+                    ...parsedOtherSystems,
+                    ...parsedOtherSystemsCameras,
+                    ...parsedOtherSystemsServers,
+                    ...parsedOtherSystemsWebPages,
                     ...parsedServers,
                     ...parsedCameras,
                     ...parsedWebPages,
@@ -282,6 +254,8 @@ export class NxLayoutViewComponent {
                     );
 
                 const webPagesForTree = Object.values(parsedWebPages).sort(byName);
+
+                const otherSystemsForTree = Object.values(parsedOtherSystems).sort(byName);
 
                 return {
                     tree: [
@@ -314,6 +288,14 @@ export class NxLayoutViewComponent {
                             details: { id: ResourceType.WEB_PAGES },
                             type: ResourceType.WEB_PAGES,
                             children: webPagesForTree,
+                        },
+                        otherSystemsInfo.length && {
+                            name: staticLang.layouts.titles.resourceTypes[
+                                ResourceType.OTHER_SYSTEMS
+                            ],
+                            details: { id: ResourceType.OTHER_SYSTEMS },
+                            type: ResourceType.OTHER_SYSTEMS,
+                            children: otherSystemsForTree,
                         },
                     ].filter(item => !!item),
                     ...parsedResources,
@@ -376,9 +358,11 @@ export class NxLayoutViewComponent {
     #selectedLayout$ = combineLatest([
         this.selectedSystem$,
         this.#layoutId$,
-        this.store.select(SharedLayoutsSelectors.selectLocalLayouts),
+        this.store.select(SharedLayoutsSelectors.selectLayouts),
         this.selectedSystem$.pipe(
-            switchMap(({ id }) => this.store.select(selectResourcesValuesBySystemId(id))),
+            switchMap(({ id }) =>
+                this.store.select(SystemResourcesSelectors.selectResourcesValuesBySystemId(id)),
+            ),
         ),
     ]).pipe(
         switchMap(async ([system, layoutId, layouts, layoutItems]): Promise<Layout> => {
@@ -448,6 +432,7 @@ export class NxLayoutViewComponent {
         // private location: Location,
         private pageService: NxPageService,
         private systemService: NxSystemService,
+        private systemsService: NxSystemsService,
         private tourService: TourService,
         private translate: TranslateService,
         private store: Store,
@@ -530,12 +515,21 @@ export class NxLayoutViewComponent {
 
     createFocusLayout = async (systemId: string, id: string): Promise<Layout> => {
         const node = await firstValueFrom(
-            this.layoutItemLookup$.pipe(
-                map(layoutItems => layoutItems[dirtyId(id)]),
-                filter(Boolean),
-                timeout({ each: 10000, with: () => Promise.resolve(false as const) }),
-            ),
+            merge(
+                this.layoutItemLookup$.pipe(
+                    map(layoutItems => layoutItems[dirtyId(id)]),
+                    filter(Boolean),
+                ),
+                this.#selectedLayout$.pipe(
+                    skip(1),
+                    map(() => 'cancel'),
+                ),
+            ).pipe(timeout({ first: 10000, with: () => Promise.resolve(false as const) })),
         );
+
+        if (typeof node === 'string') {
+            return;
+        }
 
         if (!node) {
             // Redirect to 404 if no layout or device found.
@@ -597,7 +591,9 @@ export class NxLayoutViewComponent {
                     id: `{${id}}`,
                     left: 0,
                     resourceId: `{${id}}`,
-                    resourcePath: '',
+                    resourcePath: `cloud://${
+                        'systemId' in node.details ? node.details.systemId : systemId
+                    }.${node.details.id}`,
                     right,
                     rotation: rotation || 0,
                     top: 0,

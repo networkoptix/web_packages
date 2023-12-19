@@ -84,6 +84,8 @@ class FLAGS(metaclass=_FlagType):
     layouts_change_resolution = ('Show resolution menu item for layouts', 'layoutsChangeResolution', '%LAYOUTS_CHANGE_RESOLUTION%')
     layouts_item_change_resolution = ('Show resolution menu item for layout items', 'layoutsItemChangeResolution', '%LAYOUTS_ITEM_CHANGE_RESOLUTION%')
     layouts_item_status = ('Show show status in the bottom right of the layout element', 'layoutsItemStatus', '%LAYOUTS_ITEM_STATUS%')
+    layouts_cross_system = ('Show cross system for layouts', 'layoutsCrossSystem', '%LAYOUTS_CROSS_SYSTEM%')
+    layouts_cross_editing = ('Show other systems to allow full cross system layout editing features for layouts', 'layoutsCrossSystemEditing', '%LAYOUTS_CROSS_SYSTEM_EDITING%')
 
     use_json_rpc = ('Use Json Rpc', 'useJsonRpc', '%USE_JSON_RPC%')
 

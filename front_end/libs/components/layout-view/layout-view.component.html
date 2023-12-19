@@ -1,28 +1,27 @@
-<ng-template #offlinePlaceholder>
+@if (systemOnline$ | async) {
+    <div class="layout-wrapper">
+        <nx-layout-grid
+            (layoutChanged)="updateLayout($event)"
+            (showPtz)="ptzControlTarget = $event"
+            [layout]="selectedLayout$ | async"
+            [layoutItemLookup]="layoutItemLookup$ | async"
+            [system]="selectedSystem$ | async"
+            [cameras]="cameras$ | async"
+        ></nx-layout-grid>
+
+        @if (
+            ptzControlTarget && (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo)
+        ) {
+            <nx-layout-ptz
+                [camera]="ptzControlTarget"
+                [system]="selectedSystem$ | async"
+                (exitPtz)="ptzControlTarget = null"
+            ></nx-layout-ptz>
+        }
+    </div>
+} @else {
     <nx-page-placeholder
         type="OFFLINE"
         class="page-placeholder"
     ></nx-page-placeholder>
-</ng-template>
-<div
-    *ngIf="systemOnline$ | async; else offlinePlaceholder"
-    class="layout-wrapper"
->
-    <nx-layout-grid
-        (layoutChanged)="updateLayout($event)"
-        (showPtz)="ptzControlTarget = $event"
-        [layout]="selectedLayout$ | async"
-        [layoutItemLookup]="layoutItemLookup$ | async"
-        [system]="selectedSystem$ | async"
-        [cameras]="cameras$ | async"
-    ></nx-layout-grid>
-
-    <nx-layout-ptz
-        *ngIf="
-            ptzControlTarget && (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo)
-        "
-        [camera]="ptzControlTarget"
-        [system]="selectedSystem$ | async"
-        (exitPtz)="ptzControlTarget = null"
-    ></nx-layout-ptz>
-</div>
+}

@@ -5,23 +5,25 @@ import { LayoutStateService } from '@services/layout-state/layout-state.service'
 import { Layout } from '@services/system-api.types';
 import { alphabeticalSort } from '@utils/general';
 
-import { selectLocalLayoutsState } from '../../local-layouts/local-layouts.selectors';
-import { selectUnsavedLayoutsState } from '../../unsaved-layouts/unsaved-layouts.selectors';
-import { LayoutState, LayoutTypes, LocalLayoutState } from '../types/layout-state.types';
-import { toLocalLayoutState } from '../utils';
+import { CrossSystemLayoutsSelectors } from '../../cross-system-layouts';
+import { LocalLayoutsSelectors } from '../../local-layouts';
+import { UnsavedLayoutsSelectors } from '../../unsaved-layouts';
+import { LayoutState } from '../types/layout-state.types';
+import { toCrossSystemLayoutState, toLocalLayoutState } from '../utils';
 
-const isLocalLayoutState = (layout: LayoutState): layout is LocalLayoutState =>
-    layout.layoutType === LayoutTypes.LOCAL;
-
-export const selectLayouts = createSelector(
-    selectLocalLayoutsState,
-    selectUnsavedLayoutsState,
-    (localLayouts, unsavedLayouts): LayoutState[] => {
+export const selectLayoutsState = createSelector(
+    LocalLayoutsSelectors.selectLocalLayoutsState,
+    CrossSystemLayoutsSelectors.selectCrossSystemLayoutsState,
+    UnsavedLayoutsSelectors.selectUnsavedLayoutsState,
+    (localLayouts, crossSystemLayouts, unsavedLayouts): LayoutState[] => {
         const unsaved = unsavedLayouts.map(({ id }) => id);
         const savedLocalLayouts = localLayouts
             .filter(({ id }) => !unsaved.includes(id))
             .map(toLocalLayoutState);
-        return [...unsavedLayouts, ...savedLocalLayouts].sort(
+        const savedCrossSystemLayouts = crossSystemLayouts
+            .filter(({ id }) => !unsaved.includes(id))
+            .map(toCrossSystemLayoutState);
+        return [...unsavedLayouts, ...savedLocalLayouts, ...savedCrossSystemLayouts].sort(
             alphabeticalSort(
                 LayoutStateService.runInInjectionContext(() => inject(LOCALE_ID)),
                 ({ layout }) => layout.name,
@@ -30,6 +32,15 @@ export const selectLayouts = createSelector(
     },
 );
 
-export const selectLocalLayouts = createSelector(selectLayouts, (layouts): Layout[] =>
-    layouts.filter(isLocalLayoutState).map(({ layout }) => layout),
+export const selectLayouts = createSelector(selectLayoutsState, (layouts): Layout[] =>
+    layouts.map(({ layout }) => layout),
+);
+
+export const selectLayoutsBaseVersion = createSelector(
+    LocalLayoutsSelectors.selectLocalLayoutsBaseVersion,
+    CrossSystemLayoutsSelectors.selectCrossSystemLayoutsBaseVersion,
+    (localLayoutsBaseVersion, crossSystemLayoutsBaseVersion): Record<string, string> => ({
+        ...localLayoutsBaseVersion,
+        ...crossSystemLayoutsBaseVersion,
+    }),
 );

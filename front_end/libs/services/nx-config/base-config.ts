@@ -202,6 +202,8 @@ const FeatureFlagKeys = [
     'layoutsIoDevices',
     'layoutsDeviceSettings',
     'layoutsUnsavedSync',
+    'layoutsCrossSystem',
+    'layoutsCrossSystemEditing',
     'layoutsRemoveItemDialog',
     'tosRequired',
 ] as const;

@@ -29,6 +29,21 @@ export const selectResourcesValuesBySystemId = memoize((systemId: string) =>
     ),
 );
 
+export const selectResourceValuesAllSystems = createSelector(
+    selectSystemResourcesState,
+    (state): Record<string, SystemResourcesTypeMap> =>
+        Object.entries(state).reduce(
+            (acc, [systemId, systemResources]) => ({
+                ...acc,
+                [systemId]: Object.entries(systemResources).reduce(
+                    (acc, [key, { value }]) => ({ ...acc, [key]: value }),
+                    {} as SystemResourcesTypeMap,
+                ),
+            }),
+            {},
+        ),
+);
+
 const selectByResourceType = memoize(
     <T extends SystemResourceState<unknown>['value'] | SystemResourceState<unknown>>(
         extractResourceCallback: (resources: SystemResources) => T,

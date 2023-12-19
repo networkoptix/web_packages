@@ -1,19 +1,18 @@
-<div
-    *ngIf="layoutItemLookup && (layout$ | async) as layout"
-    class="sidebar-wrapper left"
-    [ngStyle]="{
-        width:
-            layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
-                ? (layoutStateService.menuResizePercentage$ | async)
-                : null
-    }"
-    [ngClass]="{
-        'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
-        resizing: resizing
-    }"
->
+@if (layoutItemLookup && (layout$ | async); as layout) {
     <div
-        *ngIf="
+        class="sidebar-wrapper left"
+        [ngStyle]="{
+            width:
+                layoutItemLookup && layoutGridService.isLeftMenuOpen$$()
+                    ? (layoutStateService.menuResizePercentage$ | async)
+                    : null
+        }"
+        [ngClass]="{
+            'open-menu': layoutItemLookup && layoutGridService.isLeftMenuOpen$$(),
+            resizing: resizing
+        }"
+    >
+        @if (
             !layout || !layoutItemLookup
                 ? ''
                 : !layout.items.length
@@ -22,84 +21,1113 @@
                     ? 'unsaved'
                     : layoutItemLookup[layout.id]?.type !== RESOURCE_TYPE.LAYOUT
                       ? 'focus'
-                      : layout.name as message
-        "
-        class="help-text"
-    >
-        <ng-template #showName>
-            <h4 class="name-message">{{ message }}</h4>
-        </ng-template>
-        <div
-            *ngIf="CONFIG.featureFlags.layoutsHelper || CONFIG.featureFlags.layoutsDemo"
-            tourAnchor="cloud-layouts_help"
-            class="help-message"
-        >
-            <ng-container *ngIf="LANG.layouts.helpMessages[message] as helpMessage; else showName">
-                <h4 *ngIf="helpMessage.title as title">
-                    <span>{{ title | translate }}</span>
-                    <svg-icon
-                        *ngIf="helpMessage.help"
-                        nx-add-svg-src
-                        [svgStyle]="{ 'width.px': '20', 'height.px': '20', 'margin.px': '4' }"
-                        [src]="icons.dirTextButtons + 'info.svg'"
-                    ></svg-icon>
-                    <button
-                        *ngIf="CONFIG.featureFlags.layoutsTour || CONFIG.featureFlags.layoutsDemo"
-                        (click)="startTour()"
-                        class="start-tour"
-                        translate
+                      : layout.name;
+            as message
+        ) {
+            <div class="help-text">
+                @if (CONFIG.featureFlags.layoutsHelper || CONFIG.featureFlags.layoutsDemo) {
+                    <div
+                        tourAnchor="cloud-layouts_help"
+                        class="help-message"
                     >
-                        Take Tour
-                    </button>
-                </h4>
-                <p *ngIf="helpMessage.help as help">{{ help | translate }}</p>
-                <button
-                    *ngIf="layout.items.length"
-                    (click)="layoutStateService.createNewLocalLayout()"
-                    class="btn btn-primary"
+                        @if (LANG.layouts.helpMessages[message]; as helpMessage) {
+                            @if (helpMessage.title; as title) {
+                                <h4>
+                                    <span>{{ title | translate }}</span>
+                                    @if (helpMessage.help) {
+                                        <svg-icon
+                                            nx-add-svg-src
+                                            [svgStyle]="{
+                                                'width.px': '20',
+                                                'height.px': '20',
+                                                'margin.px': '4'
+                                            }"
+                                            [src]="icons.dirTextButtons + 'info.svg'"
+                                        ></svg-icon>
+                                    }
+                                    @if (
+                                        CONFIG.featureFlags.layoutsTour ||
+                                        CONFIG.featureFlags.layoutsDemo
+                                    ) {
+                                        <button
+                                            (click)="startTour()"
+                                            class="start-tour"
+                                            translate
+                                        >
+                                            Take Tour
+                                        </button>
+                                    }
+                                </h4>
+                            }
+                            @if (helpMessage.help; as help) {
+                                <p>{{ help | translate }}</p>
+                            }
+                            @if (layout.items.length) {
+                                <button
+                                    (click)="layoutStateService.createNewLocalLayout()"
+                                    class="btn btn-primary"
+                                    translate
+                                >
+                                    Add Layout
+                                </button>
+                            }
+                        } @else {
+                            <h4 class="name-message">{{ message }}</h4>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div
+            class="tab"
+            [ngClass]="{ 'active-menu': layoutGridService.isLeftMenuOpen$$() }"
+        >
+            <svg-icon
+                #resources
+                (click)="layoutGridService.toggleMenu('left', true)"
+                nx-add-svg-src
+                [src]="icons.dirTextButtons + 'arrow_left.svg'"
+            >
+            </svg-icon>
+        </div>
+        <div
+            class="menu-resize"
+            cdkDrag
+            cdkDragLockAxis="x"
+            (cdkDragReleased)="resizeMenuComplete($event)"
+            (cdkDragMoved)="resizeMenu($event)"
+        ></div>
+        <nx-layout-grid-tree
+            [layout]="layout"
+            [system]="system"
+            [layoutItemLookup]="layoutItemLookup"
+            [dataSource]="layoutItemLookup.tree"
+            [treeControl]="treeControl"
+            [errorIcons]="errorIcons"
+            [showTooltip$]="showTooltip$"
+            [changingLayout]="changingLayout"
+        ></nx-layout-grid-tree>
+    </div>
+}
+
+@if (!(layoutStateService.portal && CONFIG.featureFlags.layoutsDeviceSettings)) {
+    <div
+        #gridSection
+        class="grid-section"
+        (dblclick)="layoutStateService.toggleLayoutFullScreen()"
+        [cdkContextMenuTriggerFor]="layoutStateService.contextMenu"
+        [ngStyle]="cursorStyle$$()"
+    >
+        <div
+            class="saving-ribbon"
+            [ngClass]="{
+                show: layoutSaving$$(),
+                hide: !layoutSaving$$()
+            }"
+        >
+            <div class="animated">
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [src]="icons.dirNonStandard + 'info.svg'"
+                ></svg-icon>
+                <span
+                    class="ribbon-message"
                     translate
                 >
-                    Add Layout
-                </button>
-            </ng-container>
+                    Saving layout...
+                </span>
+            </div>
         </div>
-    </div>
-    <div
-        class="tab"
-        [ngClass]="{ 'active-menu': layoutGridService.isLeftMenuOpen$$() }"
-    >
-        <svg-icon
-            #resources
-            (click)="layoutGridService.toggleMenu('left', true)"
-            nx-add-svg-src
-            [src]="icons.dirTextButtons + 'arrow_left.svg'"
-        >
-        </svg-icon>
-    </div>
-    <div
-        class="menu-resize"
-        cdkDrag
-        cdkDragLockAxis="x"
-        (cdkDragReleased)="resizeMenuComplete($event)"
-        (cdkDragMoved)="resizeMenu($event)"
-    ></div>
-    <nx-layout-grid-tree
-        [layout]="layout"
-        [system]="system"
-        [layoutItemLookup]="layoutItemLookup"
-        [dataSource]="layoutItemLookup.tree"
-        [treeControl]="treeControl"
-        [errorIcons]="errorIcons"
-        [showTooltip$]="showTooltip$"
-        [changingLayout]="changingLayout"
-    ></nx-layout-grid-tree>
-</div>
+        @if (mouseMoving$$() && layout?.id && unsavedLayoutState$$()) {
+            <div
+                class="unsaved-ribbon"
+                [ngClass]="{
+                    diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(
+                        unsavedLayoutState$$()
+                    ),
+                    error: unsavedLayoutState$$() === unsavedStates.error
+                }"
+            >
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [src]="
+                        icons.dirNonStandard +
+                        ([unsavedStates.diverged, unsavedStates.overwrite].includes(
+                            unsavedLayoutState$$()
+                        )
+                            ? 'warning.svg'
+                            : unsavedLayoutState$$() === unsavedStates.error
+                              ? 'error.svg'
+                              : 'info.svg')
+                    "
+                ></svg-icon>
 
-<ng-template #preloader>
-    <nx-pre-loader></nx-pre-loader>
-</ng-template>
+                @switch (unsavedLayoutState$$()) {
+                    @case (unsavedStates.unsaved) {
+                        @if (
+                            layoutStateService
+                                .duplicatedLayouts$$()
+                                .includes(cleanId(this.layout.id))
+                        ) {
+                            <span
+                                class="ribbon-message"
+                                translate
+                                >This duplicated layout hasn't been saved yet</span
+                            >
+                        } @else {
+                            <span
+                                class="ribbon-message"
+                                translate
+                                >This layout hasn't been saved yet</span
+                            >
+                        }
+                    }
+                    @case (unsavedStates.diverged) {
+                        <span
+                            class="ribbon-message"
+                            translate
+                        >
+                            This layout was recently updated by another user. What do you want to
+                            do?
+                        </span>
+                    }
+                    @case (unsavedStates.overwrite) {
+                        <span
+                            class="ribbon-message"
+                            translate
+                        >
+                            There is a another layout with the same name. Overwrite existing layout?
+                        </span>
+                    }
+                    @case (unsavedStates.error) {
+                        <span
+                            class="ribbon-message"
+                            translate
+                        >
+                            Failed to save layout. Try again.
+                        </span>
+                    }
+                    @default {
+                        <span
+                            class="ribbon-message"
+                            translate
+                        >
+                            There are unsaved changes on the layout
+                        </span>
+                    }
+                }
 
-<ng-template #showPortal>
+                @if (unsavedLayoutState$$() !== unsavedStates.saving) {
+                    <button
+                        class="ribbon-button"
+                        (click)="layoutStateService.saveLayout(layout.id)"
+                    >
+                        <svg-icon
+                            nx-add-svg-src
+                            [svgStyle]="{
+                                'width.px': '20',
+                                'height.px': '20'
+                            }"
+                            [src]="
+                                icons.dirLayouts +
+                                (unsavedLayoutState$$() === unsavedStates.error
+                                    ? 'reload.svg'
+                                    : 'save.svg')
+                            "
+                        ></svg-icon>
+                        <span>{{
+                            (unsavedLayoutState$$() === unsavedStates.overwrite
+                                ? unsavedStates.overwrite
+                                : unsavedLayoutState$$() === unsavedStates.error
+                                  ? unsavedStates.error
+                                  : unsavedStates.save
+                            ) | translate
+                        }}</span>
+                    </button>
+                }
+
+                @switch (unsavedLayoutState$$()) {
+                    @case (unsavedStates.diverged) {
+                        <button
+                            class="ribbon-button"
+                            (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                        >
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="{
+                                    'width.px': '20',
+                                    'height.px': '20'
+                                }"
+                                [src]="icons.dirLayouts + 'reload.svg'"
+                            ></svg-icon>
+                            <span translate>Reload</span>
+                        </button>
+                    }
+                    @case (unsavedStates.error) {
+                        <button
+                            class="ribbon-button"
+                            (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                            translate
+                        >
+                            Cancel
+                        </button>
+                    }
+                    @default {
+                        @if (unsavedLayoutState$$() === unsavedStates.overwrite) {
+                            <button
+                                class="ribbon-button"
+                                (click)="layoutStateService.editedLayout$$.set(layout)"
+                                translate
+                            >
+                                Rename
+                            </button>
+                        }
+                        <button
+                            class="ribbon-button"
+                            (click)="layoutStateService.discardUnsavedLayout(layout.id)"
+                            translate
+                        >
+                            Discard
+                        </button>
+                    }
+                }
+            </div>
+        }
+        @if (mouseMoving$$() && layoutStateService.resolutionRibbonShown$$(); as secondsLeft) {
+            <div class="resolution-ribbon">
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
+                    [src]="icons.dirNonStandard + 'warning.svg'"
+                ></svg-icon>
+                <span
+                    class="ribbon-message"
+                    translate
+                >
+                    Set layout resolution to 'Auto' to increase performance
+                </span>
+                <button
+                    class="ribbon-button"
+                    (click)="setResolutionToAuto()"
+                >
+                    <span translate>Set to "Auto"</span>
+                </button>
+                <button
+                    class="ribbon-button"
+                    (click)="layoutStateService.showResolutionRibbon$.next(0)"
+                >
+                    <span translate>Close</span>
+                </button>
+            </div>
+        }
+        @if (layoutItemLookup && (layout$ | async); as layout) {
+            <div
+                class="grid-wrapper"
+                [ngClass]="{ locked: layout.locked || changingLayout, dragging: dragging$$() }"
+                (resize)="updateWrapperSize($event)"
+                [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
+            >
+                @if (aspectHandler$ | async; as aspectStyle) {
+                    <div
+                        class="layout-grid"
+                        cdkDropListGroup
+                        [ngStyle]="aspectStyle"
+                    >
+                        <div
+                            tourAnchor="cloud-layouts_grid"
+                            class="centered-anchor"
+                        ></div>
+                        @if ((highlightState$ | async)?.added; as added) {
+                            <div
+                                [style.transform]="added.transform || 'translate(0, 0)'"
+                                [style.transform-origin]="added.transformOrigin || 'top left'"
+                                class="layout-item-wrapper highlight-adding"
+                            ></div>
+                        }
+                        @if (!changingLayout) {
+                            @if (!dragging$$() && !layout?.items?.length) {
+                                <div class="no-camera-placeholder">
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [svgStyle]="{
+                                            'width.px': '64',
+                                            'height.px': '64'
+                                        }"
+                                        [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
+                                    ></svg-icon>
+                                    <h3 translate>No Cameras</h3>
+                                    @if (
+                                        CONFIG.featureFlags.layoutsEditable ||
+                                        CONFIG.featureFlags.layoutsDemo
+                                    ) {
+                                        <p translate>
+                                            Drag and drop a camera or other items from the resource
+                                            tree to add it to the layout
+                                        </p>
+                                    } @else {
+                                        <p translate>Add them in the %VMS_NAME% client</p>
+                                    }
+                                </div>
+                            }
+                            @if (
+                                layout?.items.length === 1 &&
+                                !layoutItemLookup[layout.items[0].resourceId] &&
+                                layout.items[0].resourceId === layout.items[0].id
+                            ) {
+                                <div class="no-layout-placeholder">
+                                    <svg-icon
+                                        nx-add-svg-src
+                                        [svgStyle]="{
+                                            'width.px': '64',
+                                            'height.px': '64'
+                                        }"
+                                        [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
+                                    ></svg-icon>
+                                    <h3 translate>Layout has been deleted</h3>
+                                </div>
+                            } @else {
+                                @for (item of layout.items; track itemId($index, item)) {
+                                    @if (layoutItemLookup) {
+                                        <div
+                                            #layoutItemWrapper
+                                            cdkDropList
+                                            [cdkDropListDisabled]="
+                                                layout.locked ||
+                                                (window.document.fullscreenElement &&
+                                                    window.document.fullscreenElement !==
+                                                        layoutStateService.gridSection)
+                                            "
+                                            [cdkDropListEnterPredicate]="preventDrop"
+                                            [cdkDropListData]="item"
+                                            [ngStyle]="item.renderConfig"
+                                            [style.transform]="
+                                                (highlightState$ | async)?.[item.id]?.transform ||
+                                                'translate(0, 0)'
+                                            "
+                                            [style.transform-origin]="
+                                                (highlightState$ | async)?.[item.id]
+                                                    ?.transformOrigin || 'top left'
+                                            "
+                                            class="layout-item-wrapper"
+                                            [ngClass]="{
+                                                'full-screen-wrapper':
+                                                    layoutItemWrapper ===
+                                                    window.document.fullscreenElement,
+                                                swap:
+                                                    (highlightState$ | async)?.[item.id]
+                                                        ?.highlightClass === 'swap'
+                                            }"
+                                            (resize)="checkUpdateAspectRatio($event, dragContainer)"
+                                        >
+                                            <div
+                                                cdkDrag
+                                                #dragContainer
+                                                [cdkDragDisabled]="
+                                                    !editItems$$() ||
+                                                    (window.document.fullscreenElement &&
+                                                        window.document.fullscreenElement !==
+                                                            layoutStateService.gridSection)
+                                                "
+                                                [cdkDragData]="item"
+                                                (cdkDragReleased)="moveItem(item)"
+                                                (cdkDragMoved)="
+                                                    updateBackground($event, item, 'move')
+                                                "
+                                                class="layout-item"
+                                                [ngClass]="{
+                                                    'camera-layout-item':
+                                                        layoutItemLookup[item.resourceId].type ===
+                                                        RESOURCE_TYPE.CAMERA,
+                                                    'server-layout-item':
+                                                        layoutItemLookup[item.resourceId].type ===
+                                                        RESOURCE_TYPE.SERVER,
+                                                    'full-screen-override':
+                                                        layoutItemWrapper ===
+                                                        window.document.fullscreenElement,
+                                                    collided: (collisions$ | async)[item.id]
+                                                }"
+                                                [ngStyle]="
+                                                    (collisions$ | async)[item.id]
+                                                        | mergeObjects: item.renderConfig.child
+                                                "
+                                            >
+                                                <ng-template #notSupported>
+                                                    <div
+                                                        class="not-supported"
+                                                        translate
+                                                    >
+                                                        Not supported
+                                                    </div>
+                                                </ng-template>
+                                                <ng-template #tileContent>
+                                                    @if (
+                                                        layoutItemLookup[item.resourceId];
+                                                        as itemDetail
+                                                    ) {
+                                                        <ng-template
+                                                            #showError
+                                                            let-status="status"
+                                                        >
+                                                            @if (
+                                                                status ||
+                                                                    errors[itemDetail.details.id] ||
+                                                                    (assertResourceOfType.camera(
+                                                                        itemDetail
+                                                                    ) &&
+                                                                    itemDetail.details.unauthorized
+                                                                        ? 'unauthorized'
+                                                                        : !(
+                                                                                (assertResourceOfType.camera(
+                                                                                    itemDetail
+                                                                                ) ||
+                                                                                    assertResourceOfType.server(
+                                                                                        itemDetail
+                                                                                    )) &&
+                                                                                itemDetail.details
+                                                                                    .online
+                                                                            )
+                                                                          ? 'offline'
+                                                                          : (assertResourceOfType.camera(
+                                                                                  itemDetail
+                                                                              ) ||
+                                                                                  assertResourceOfType.server(
+                                                                                      itemDetail
+                                                                                  )) &&
+                                                                              itemDetail.details
+                                                                                  .status !==
+                                                                                  'archive'
+                                                                            ? (assertResourceOfType.camera(
+                                                                                  itemDetail
+                                                                              ) ||
+                                                                                  assertResourceOfType.server(
+                                                                                      itemDetail
+                                                                                  )) &&
+                                                                              itemDetail.details
+                                                                                  .status
+                                                                            : 'offline');
+                                                                as status
+                                                            ) {
+                                                                <div
+                                                                    (click)="
+                                                                        assertResourceOfType.camera(
+                                                                            itemDetail
+                                                                        ) &&
+                                                                            (status ===
+                                                                                'defaultPassword' ||
+                                                                                itemDetail.details
+                                                                                    .unauthorized) &&
+                                                                            updateCameraCredentials(
+                                                                                system,
+                                                                                itemDetail.details
+                                                                            )
+                                                                    "
+                                                                    [ngClass]="{
+                                                                        'not-supported':
+                                                                            assertResourceOfType.webpage(
+                                                                                itemDetail
+                                                                            ) ||
+                                                                            assertResourceOfType.iodevice(
+                                                                                itemDetail
+                                                                            ),
+                                                                        'has-action':
+                                                                            assertResourceOfType.camera(
+                                                                                itemDetail
+                                                                            ) &&
+                                                                            editItems$$() &&
+                                                                            (status ===
+                                                                                'defaultPassword' ||
+                                                                                itemDetail.details
+                                                                                    .unauthorized),
+                                                                        'has-secondary-panel':
+                                                                            item.renderConfig
+                                                                                .hasSecondaryPanel,
+                                                                        small:
+                                                                            item.renderConfig
+                                                                                .placeholderClass ===
+                                                                            'small',
+                                                                        medium:
+                                                                            item.renderConfig
+                                                                                .placeholderClass ===
+                                                                            'medium',
+                                                                        large:
+                                                                            item.renderConfig
+                                                                                .placeholderClass ===
+                                                                            'large'
+                                                                    }"
+                                                                    class="item-error content-container"
+                                                                >
+                                                                    <svg-icon
+                                                                        nx-add-svg-src
+                                                                        [ngClass]="{
+                                                                            'main-panel':
+                                                                                item.renderConfig
+                                                                                    .placeholderState >=
+                                                                                PLACEHOLDER_STATE.ICON_ONLY
+                                                                        }"
+                                                                        [src]="
+                                                                            icons.dirLayouts +
+                                                                            'placeholders/' +
+                                                                            ([
+                                                                                'online',
+                                                                                'unauthorized',
+                                                                                'defaultPassword',
+                                                                                'transcodingDisabled',
+                                                                                'mjpegDisabled'
+                                                                            ].includes(status)
+                                                                                ? status
+                                                                                      .replace(
+                                                                                          'defaultPassword',
+                                                                                          'alert'
+                                                                                      )
+                                                                                      .replace(
+                                                                                          'transcodingDisabled',
+                                                                                          'offline'
+                                                                                      )
+                                                                                      .replace(
+                                                                                          'mjpegDisabled',
+                                                                                          'offline'
+                                                                                      )
+                                                                                : [
+                                                                                        RESOURCE_TYPE.WEB_PAGE,
+                                                                                        RESOURCE_TYPE.IO_DEVICE
+                                                                                    ].includes(
+                                                                                        itemDetail.type
+                                                                                    )
+                                                                                  ? status
+                                                                                  : itemDetail.type ===
+                                                                                      RESOURCE_TYPE.SERVER
+                                                                                    ? 'unavailable'
+                                                                                    : 'offline') +
+                                                                            '.svg'
+                                                                        "
+                                                                        [svgStyle]="{
+                                                                            'width.%': '100%',
+                                                                            'height.%': '100%',
+                                                                            'width.px':
+                                                                                item.renderConfig
+                                                                                    .maxPlaceholderSize,
+                                                                            'height.px':
+                                                                                item.renderConfig
+                                                                                    .maxPlaceholderSize
+                                                                        }"
+                                                                    >
+                                                                    </svg-icon>
+                                                                    <h3
+                                                                        [ngClass]="{
+                                                                            'main-panel':
+                                                                                item.renderConfig
+                                                                                    .placeholderState >=
+                                                                                PLACEHOLDER_STATE.WITH_TITLE
+                                                                        }"
+                                                                    >
+                                                                        {{
+                                                                            (itemDetail.type ===
+                                                                            RESOURCE_TYPE.CAMERA
+                                                                                ? LANG.common
+                                                                                      .cameraStates
+                                                                                : LANG.common
+                                                                                      .serverStates)[
+                                                                                status
+                                                                            ] ||
+                                                                                LANG.layouts.errors[
+                                                                                    status
+                                                                                ] ||
+                                                                                status | translate
+                                                                        }}
+                                                                    </h3>
+                                                                    @if (
+                                                                        additionalErrorMessages[
+                                                                            itemDetail.details.id
+                                                                        ] ||
+                                                                            additionalErrorMessages[
+                                                                                status
+                                                                            ];
+                                                                        as additionalMessage
+                                                                    ) {
+                                                                        <h4
+                                                                            [ngClass]="{
+                                                                                'main-panel':
+                                                                                    item
+                                                                                        .renderConfig
+                                                                                        .placeholderState ===
+                                                                                    PLACEHOLDER_STATE.FULL
+                                                                            }"
+                                                                        >
+                                                                            {{
+                                                                                additionalMessage
+                                                                                    | nxTranslate
+                                                                            }}
+                                                                        </h4>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        </ng-template>
+                                                        @if (
+                                                            !errors[itemDetail.details.id] &&
+                                                            !(
+                                                                assertResourceOfType.camera(
+                                                                    itemDetail
+                                                                ) && itemDetail.details.unauthorized
+                                                            ) &&
+                                                            (((assertResourceOfType.camera(
+                                                                itemDetail
+                                                            ) ||
+                                                                assertResourceOfType.server(
+                                                                    itemDetail
+                                                                )) &&
+                                                                itemDetail.details.online) ||
+                                                                assertResourceOfType.webpage(
+                                                                    itemDetail
+                                                                ))
+                                                        ) {
+                                                            <div class="content-container">
+                                                                @switch (itemDetail.type) {
+                                                                    @case (RESOURCE_TYPE.CAMERA) {
+                                                                        <ng-template
+                                                                            #offlinePlaceholder
+                                                                        >
+                                                                            <ng-container
+                                                                                *ngTemplateOutlet="
+                                                                                    showError;
+                                                                                    context: {
+                                                                                        status: 'offline'
+                                                                                    }
+                                                                                "
+                                                                            ></ng-container>
+                                                                        </ng-template>
+                                                                        @if (
+                                                                            assertResourceOfType.camera(
+                                                                                itemDetail
+                                                                            ) && itemDetail;
+                                                                            as itemDetail
+                                                                        ) {
+                                                                            <div
+                                                                                class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
+                                                                            >
+                                                                                <nx-video-player
+                                                                                    [camera]="
+                                                                                        itemDetail.details
+                                                                                    "
+                                                                                    [rotation]="
+                                                                                        item.rotation
+                                                                                    "
+                                                                                    (showError)="
+                                                                                        handleVideoError(
+                                                                                            itemDetail,
+                                                                                            $event
+                                                                                        )
+                                                                                    "
+                                                                                    (showPtz)="
+                                                                                        showPtz.emit(
+                                                                                            $event
+                                                                                        )
+                                                                                    "
+                                                                                    [zoom]="item"
+                                                                                    [lostConnectionPlaceholder]="
+                                                                                        offlinePlaceholder
+                                                                                    "
+                                                                                    [skipCredentialsCheck]="
+                                                                                        skipDefaultCredentialsCheck[
+                                                                                            itemDetail
+                                                                                                .details
+                                                                                                .id
+                                                                                        ]
+                                                                                    "
+                                                                                    [resolution]="
+                                                                                        layoutStateService.cameraResolutionLookup$$()[
+                                                                                            itemDetail
+                                                                                                .details
+                                                                                                .id
+                                                                                        ].resolution
+                                                                                    "
+                                                                                >
+                                                                                </nx-video-player>
+                                                                            </div>
+                                                                        }
+                                                                    }
+                                                                    @case (RESOURCE_TYPE.SERVER) {
+                                                                        <ng-template
+                                                                            #offlinePlaceholder
+                                                                        >
+                                                                            <ng-container
+                                                                                *ngTemplateOutlet="
+                                                                                    showError;
+                                                                                    context: {
+                                                                                        status: 'offline'
+                                                                                    }
+                                                                                "
+                                                                            ></ng-container>
+                                                                        </ng-template>
+                                                                        @if (
+                                                                            assertResourceOfType.server(
+                                                                                itemDetail
+                                                                            ) && itemDetail;
+                                                                            as itemDetail
+                                                                        ) {
+                                                                            <nx-monitoring-graph
+                                                                                [systemIdOrResourcePath]="
+                                                                                    item.resourcePath
+                                                                                "
+                                                                                [selectedServerId]="
+                                                                                    itemDetail
+                                                                                        .details.id
+                                                                                "
+                                                                                [lostConnectionPlaceholder]="
+                                                                                    offlinePlaceholder
+                                                                                "
+                                                                                noFrame
+                                                                                class="theme-override"
+                                                                                data-theme="dark"
+                                                                            ></nx-monitoring-graph>
+                                                                        }
+                                                                    }
+                                                                    @case (RESOURCE_TYPE.WEB_PAGE) {
+                                                                        @if (
+                                                                            CONFIG.featureFlags
+                                                                                .layoutsWebpages ||
+                                                                            CONFIG.featureFlags
+                                                                                .layoutsDemo
+                                                                        ) {
+                                                                            <nx-pre-loader></nx-pre-loader>
+                                                                            @if (
+                                                                                assertResourceOfType.webpage(
+                                                                                    itemDetail
+                                                                                ) && itemDetail;
+                                                                                as itemDetail
+                                                                            ) {
+                                                                                <iframe
+                                                                                    #webpage
+                                                                                    (load)="
+                                                                                        checkIframeContent(
+                                                                                            itemDetail
+                                                                                                .details
+                                                                                                .id,
+                                                                                            webpage
+                                                                                        )
+                                                                                    "
+                                                                                    [src]="
+                                                                                        itemDetail
+                                                                                            .details
+                                                                                            .url
+                                                                                            | safe
+                                                                                                : 'resourceUrl'
+                                                                                    "
+                                                                                    frameBorder="0"
+                                                                                ></iframe>
+                                                                            }
+                                                                        } @else {
+                                                                            <ng-container
+                                                                                *ngTemplateOutlet="
+                                                                                    showError;
+                                                                                    context: {
+                                                                                        status: RESOURCE_TYPE.WEB_PAGE
+                                                                                    }
+                                                                                "
+                                                                            ></ng-container>
+                                                                        }
+                                                                    }
+                                                                    @case (
+                                                                        RESOURCE_TYPE.IO_DEVICE
+                                                                    ) {
+                                                                        <ng-container
+                                                                            *ngTemplateOutlet="
+                                                                                showError;
+                                                                                context: {
+                                                                                    status: RESOURCE_TYPE.IO_DEVICE
+                                                                                }
+                                                                            "
+                                                                        ></ng-container>
+                                                                    }
+                                                                    @default {
+                                                                        <ng-container
+                                                                            *ngTemplateOutlet="
+                                                                                notSupported
+                                                                            "
+                                                                        ></ng-container>
+                                                                    }
+                                                                }
+                                                            </div>
+                                                        } @else {
+                                                            @if (
+                                                                errors[itemDetail.details.id] ||
+                                                                    (assertResourceOfType.camera(
+                                                                        itemDetail
+                                                                    ) &&
+                                                                    itemDetail.details.unauthorized
+                                                                        ? 'unauthorized'
+                                                                        : !(
+                                                                                (assertResourceOfType.camera(
+                                                                                    itemDetail
+                                                                                ) ||
+                                                                                    assertResourceOfType.server(
+                                                                                        itemDetail
+                                                                                    )) &&
+                                                                                itemDetail.details
+                                                                                    .online
+                                                                            )
+                                                                          ? 'offline'
+                                                                          : (assertResourceOfType.camera(
+                                                                                  itemDetail
+                                                                              ) ||
+                                                                                  assertResourceOfType.server(
+                                                                                      itemDetail
+                                                                                  )) &&
+                                                                              itemDetail.details
+                                                                                  .status !==
+                                                                                  'archive'
+                                                                            ? (assertResourceOfType.camera(
+                                                                                  itemDetail
+                                                                              ) ||
+                                                                                  assertResourceOfType.server(
+                                                                                      itemDetail
+                                                                                  )) &&
+                                                                              itemDetail.details
+                                                                                  .status
+                                                                            : 'offline');
+                                                                as status
+                                                            ) {
+                                                                <div
+                                                                    (click)="
+                                                                        assertResourceOfType.camera(
+                                                                            itemDetail
+                                                                        ) &&
+                                                                            (status ===
+                                                                                'defaultPassword' ||
+                                                                                itemDetail.details
+                                                                                    .unauthorized) &&
+                                                                            updateCameraCredentials(
+                                                                                system,
+                                                                                itemDetail.details
+                                                                            )
+                                                                    "
+                                                                    [ngClass]="{
+                                                                        'not-supported':
+                                                                            assertResourceOfType.webpage(
+                                                                                itemDetail
+                                                                            ) ||
+                                                                            assertResourceOfType.iodevice(
+                                                                                itemDetail
+                                                                            ),
+                                                                        'has-action':
+                                                                            assertResourceOfType.camera(
+                                                                                itemDetail
+                                                                            ) &&
+                                                                            editItems$$() &&
+                                                                            (status ===
+                                                                                'defaultPassword' ||
+                                                                                itemDetail.details
+                                                                                    .unauthorized),
+                                                                        'has-secondary-panel':
+                                                                            item.renderConfig
+                                                                                .hasSecondaryPanel,
+                                                                        small:
+                                                                            item.renderConfig
+                                                                                .placeholderClass ===
+                                                                            'small',
+                                                                        medium:
+                                                                            item.renderConfig
+                                                                                .placeholderClass ===
+                                                                            'medium',
+                                                                        large:
+                                                                            item.renderConfig
+                                                                                .placeholderClass ===
+                                                                            'large'
+                                                                    }"
+                                                                    class="item-error content-container"
+                                                                >
+                                                                    <svg-icon
+                                                                        nx-add-svg-src
+                                                                        [ngClass]="{
+                                                                            'main-panel':
+                                                                                item.renderConfig
+                                                                                    .placeholderState >=
+                                                                                PLACEHOLDER_STATE.ICON_ONLY
+                                                                        }"
+                                                                        [src]="
+                                                                            icons.dirLayouts +
+                                                                            'placeholders/' +
+                                                                            ([
+                                                                                'online',
+                                                                                'unauthorized',
+                                                                                'defaultPassword',
+                                                                                'transcodingDisabled',
+                                                                                'mjpegDisabled'
+                                                                            ].includes(status)
+                                                                                ? status
+                                                                                      .replace(
+                                                                                          'defaultPassword',
+                                                                                          'alert'
+                                                                                      )
+                                                                                      .replace(
+                                                                                          'transcodingDisabled',
+                                                                                          'offline'
+                                                                                      )
+                                                                                      .replace(
+                                                                                          'mjpegDisabled',
+                                                                                          'offline'
+                                                                                      )
+                                                                                : [
+                                                                                        RESOURCE_TYPE.WEB_PAGE,
+                                                                                        RESOURCE_TYPE.IO_DEVICE
+                                                                                    ].includes(
+                                                                                        itemDetail.type
+                                                                                    )
+                                                                                  ? status
+                                                                                  : itemDetail.type ===
+                                                                                      RESOURCE_TYPE.SERVER
+                                                                                    ? 'unavailable'
+                                                                                    : 'offline') +
+                                                                            '.svg'
+                                                                        "
+                                                                        [svgStyle]="{
+                                                                            'width.%': '100%',
+                                                                            'height.%': '100%',
+                                                                            'width.px':
+                                                                                item.renderConfig
+                                                                                    .maxPlaceholderSize,
+                                                                            'height.px':
+                                                                                item.renderConfig
+                                                                                    .maxPlaceholderSize
+                                                                        }"
+                                                                    >
+                                                                    </svg-icon>
+                                                                    <h3
+                                                                        [ngClass]="{
+                                                                            'main-panel':
+                                                                                item.renderConfig
+                                                                                    .placeholderState >=
+                                                                                PLACEHOLDER_STATE.WITH_TITLE
+                                                                        }"
+                                                                    >
+                                                                        {{
+                                                                            (itemDetail.type ===
+                                                                            RESOURCE_TYPE.CAMERA
+                                                                                ? LANG.common
+                                                                                      .cameraStates
+                                                                                : LANG.common
+                                                                                      .serverStates)[
+                                                                                status
+                                                                            ] ||
+                                                                                LANG.layouts.errors[
+                                                                                    status
+                                                                                ] ||
+                                                                                status | translate
+                                                                        }}
+                                                                    </h3>
+                                                                    @if (
+                                                                        additionalErrorMessages[
+                                                                            itemDetail.details.id
+                                                                        ] ||
+                                                                            additionalErrorMessages[
+                                                                                status
+                                                                            ];
+                                                                        as additionalMessage
+                                                                    ) {
+                                                                        <h4
+                                                                            [ngClass]="{
+                                                                                'main-panel':
+                                                                                    item
+                                                                                        .renderConfig
+                                                                                        .placeholderState ===
+                                                                                    PLACEHOLDER_STATE.FULL
+                                                                            }"
+                                                                        >
+                                                                            {{
+                                                                                additionalMessage
+                                                                                    | nxTranslate
+                                                                            }}
+                                                                        </h4>
+                                                                    }
+                                                                </div>
+                                                            }
+                                                        }
+                                                    } @else {
+                                                        <div
+                                                            class="not-supported"
+                                                            translate
+                                                        >
+                                                            Not supported
+                                                        </div>
+                                                    }
+                                                </ng-template>
+                                                @if (
+                                                    !window.document.fullscreenElement ||
+                                                    window.document.fullscreenElement ===
+                                                        layoutStateService.gridSection
+                                                ) {
+                                                    @for (
+                                                        alignment of alignments;
+                                                        track alignment
+                                                    ) {
+                                                        <div
+                                                            cdkDropList
+                                                            [cdkDropListDisabled]="layout.locked"
+                                                            [cdkDropListConnectedTo]="[]"
+                                                        >
+                                                            <div
+                                                                cdkDrag
+                                                                [cdkDragDisabled]="layout.locked"
+                                                                [cdkDragData]="item"
+                                                                (cdkDragMoved)="
+                                                                    updateBackground(
+                                                                        $event,
+                                                                        item,
+                                                                        'resize',
+                                                                        alignment
+                                                                    )
+                                                                "
+                                                                (cdkDragReleased)="moveItem(item)"
+                                                                class="resize-handle {{
+                                                                    alignment[0]
+                                                                }} {{ alignment?.[1] }}"
+                                                            ></div>
+                                                        </div>
+                                                    }
+                                                }
+                                                <nx-layout-grid-item-overlay
+                                                    cdkDragHandle
+                                                    [cdkDragHandleDisabled]="
+                                                        layout.locked ||
+                                                        (window.document.fullscreenElement &&
+                                                            window.document.fullscreenElement !==
+                                                                layoutStateService.gridSection)
+                                                    "
+                                                    [ngClass]="'overlay'"
+                                                    [item]="item"
+                                                    [node]="layoutItemLookup[item.resourceId]"
+                                                    [fullScreenTarget]="layoutItemWrapper"
+                                                    [showRemove]="editItems$$()"
+                                                    [hide]="dragging$$()"
+                                                    [canEdit]="editItems$$()"
+                                                    (removeItem)="removeItem($event)"
+                                                    [system]="system"
+                                                >
+                                                    <ng-container *ngTemplateOutlet="tileContent" />
+                                                </nx-layout-grid-item-overlay>
+                                            </div>
+                                        </div>
+                                    }
+                                }
+                            }
+                        }
+                    </div>
+                }
+
+                @if (CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo) {
+                    <nx-webgl-canvas
+                        [cameras]="cameras"
+                        [system]="system"
+                        [selectedLayout]="layout"
+                    ></nx-webgl-canvas>
+                }
+            </div>
+        } @else {
+            <nx-pre-loader></nx-pre-loader>
+        }
+    </div>
+} @else {
     <div class="portal-wrapper">
         <div
             (click)="layoutStateService.portal = null"
@@ -110,702 +1138,4 @@
         </div>
         <ng-container [cdkPortalOutlet]="layoutStateService.portal"></ng-container>
     </div>
-</ng-template>
-
-<div
-    *ngIf="
-        !(layoutStateService.portal && CONFIG.featureFlags.layoutsDeviceSettings);
-        else showPortal
-    "
-    #gridSection
-    class="grid-section"
-    (dblclick)="layoutStateService.toggleLayoutFullScreen()"
-    [cdkContextMenuTriggerFor]="layoutStateService.contextMenu"
-    [ngStyle]="cursorStyle$$()"
->
-    <div
-        class="saving-ribbon"
-        [ngClass]="{
-            show: layoutSaving$$(),
-            hide: !layoutSaving$$()
-        }"
-    >
-        <div class="animated">
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                [src]="icons.dirNonStandard + 'info.svg'"
-            ></svg-icon>
-            <span
-                class="ribbon-message"
-                translate
-            >
-                Saving layout...
-            </span>
-        </div>
-    </div>
-    <div
-        *ngIf="mouseMoving$$() && layout?.id && unsavedLayoutState$$()"
-        class="unsaved-ribbon"
-        [ngClass]="{
-            diverged: [unsavedStates.diverged, unsavedStates.overwrite].includes(
-                unsavedLayoutState$$()
-            ),
-            error: unsavedLayoutState$$() === unsavedStates.error
-        }"
-    >
-        <ng-container [ngSwitch]="unsavedLayoutState$$()">
-            <svg-icon
-                nx-add-svg-src
-                [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-                [src]="
-                    icons.dirNonStandard +
-                    ([unsavedStates.diverged, unsavedStates.overwrite].includes(
-                        unsavedLayoutState$$()
-                    )
-                        ? 'warning.svg'
-                        : unsavedLayoutState$$() === unsavedStates.error
-                          ? 'error.svg'
-                          : 'info.svg')
-                "
-            ></svg-icon>
-            <ng-container *ngSwitchCase="unsavedStates.unsaved">
-                <ng-template #notDuplicated>
-                    <span
-                        class="ribbon-message"
-                        translate
-                        >This layout hasn't been saved yet</span
-                    >
-                </ng-template>
-                <span
-                    *ngIf="
-                        layoutStateService.duplicatedLayouts$$().includes(cleanId(this.layout.id));
-                        else notDuplicated
-                    "
-                    class="ribbon-message"
-                    translate
-                    >This duplicated layout hasn't been saved yet</span
-                >
-            </ng-container>
-            <span
-                *ngSwitchCase="unsavedStates.diverged"
-                class="ribbon-message"
-                translate
-            >
-                This layout was recently updated by another user. What do you want to do?
-            </span>
-            <span
-                *ngSwitchCase="unsavedStates.overwrite"
-                class="ribbon-message"
-                translate
-            >
-                There is a another layout with the same name. Overwrite existing layout?
-            </span>
-            <span
-                *ngSwitchCase="unsavedStates.error"
-                class="ribbon-message"
-                translate
-            >
-                Failed to save layout. Try again.
-            </span>
-            <span
-                *ngSwitchDefault
-                class="ribbon-message"
-                translate
-            >
-                There are unsaved changes on the layout
-            </span>
-            <button
-                *ngIf="unsavedLayoutState$$() !== unsavedStates.saving"
-                class="ribbon-button"
-                (click)="layoutStateService.saveLayout(layout.id)"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [svgStyle]="{
-                        'width.px': '20',
-                        'height.px': '20'
-                    }"
-                    [src]="
-                        icons.dirLayouts +
-                        (unsavedLayoutState$$() === unsavedStates.error ? 'reload.svg' : 'save.svg')
-                    "
-                ></svg-icon>
-                <span>{{
-                    (unsavedLayoutState$$() === unsavedStates.overwrite
-                        ? unsavedStates.overwrite
-                        : unsavedLayoutState$$() === unsavedStates.error
-                          ? unsavedStates.error
-                          : unsavedStates.save
-                    ) | translate
-                }}</span>
-            </button>
-        </ng-container>
-        <ng-container [ngSwitch]="unsavedLayoutState$$()">
-            <button
-                *ngSwitchCase="unsavedStates.diverged"
-                class="ribbon-button"
-                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
-            >
-                <svg-icon
-                    nx-add-svg-src
-                    [svgStyle]="{
-                        'width.px': '20',
-                        'height.px': '20'
-                    }"
-                    [src]="icons.dirLayouts + 'reload.svg'"
-                ></svg-icon>
-                <span translate>Reload</span>
-            </button>
-            <button
-                *ngSwitchCase="unsavedStates.error"
-                class="ribbon-button"
-                (click)="layoutStateService.discardUnsavedLayout(layout.id)"
-                translate
-            >
-                Cancel
-            </button>
-            <ng-container *ngSwitchDefault>
-                <button
-                    *ngIf="unsavedLayoutState$$() === unsavedStates.overwrite"
-                    class="ribbon-button"
-                    (click)="layoutStateService.editedLayout$$.set(layout)"
-                    translate
-                >
-                    Rename
-                </button>
-                <button
-                    class="ribbon-button"
-                    (click)="layoutStateService.discardUnsavedLayout(layout.id)"
-                    translate
-                >
-                    Discard
-                </button>
-            </ng-container>
-        </ng-container>
-    </div>
-    <div
-        *ngIf="mouseMoving$$() && layoutStateService.resolutionRibbonShown$$() as secondsLeft"
-        class="resolution-ribbon"
-    >
-        <svg-icon
-            nx-add-svg-src
-            [svgStyle]="{ 'width.px': '20', 'height.px': '20' }"
-            [src]="icons.dirNonStandard + 'warning.svg'"
-        ></svg-icon>
-        <span
-            class="ribbon-message"
-            translate
-        >
-            Set layout resolution to 'Auto' to increase performance
-        </span>
-        <button
-            class="ribbon-button"
-            (click)="setResolutionToAuto()"
-        >
-            <span translate>Set to "Auto"</span>
-        </button>
-        <button
-            class="ribbon-button"
-            (click)="layoutStateService.showResolutionRibbon$.next(0)"
-        >
-            <span translate>Close</span>
-        </button>
-    </div>
-    <div
-        *ngIf="layoutItemLookup && (layout$ | async) as layout; else preloader"
-        class="grid-wrapper"
-        [ngClass]="{ locked: layout.locked || changingLayout, dragging: dragging$$() }"
-        (resize)="updateWrapperSize($event)"
-        [ngStyle]="(aspectHandler$ | async)?.outerWrapper"
-    >
-        <div
-            *ngIf="aspectHandler$ | async as aspectStyle"
-            class="layout-grid"
-            cdkDropListGroup
-            [ngStyle]="aspectStyle"
-        >
-            <div
-                tourAnchor="cloud-layouts_grid"
-                class="centered-anchor"
-            ></div>
-            <div
-                *ngIf="(highlightState$ | async)?.added as added"
-                [style.transform]="added.transform || 'translate(0, 0)'"
-                [style.transform-origin]="added.transformOrigin || 'top left'"
-                class="layout-item-wrapper highlight-adding"
-            ></div>
-            <ng-container *ngIf="!changingLayout">
-                <div
-                    *ngIf="!dragging$$() && !layout?.items?.length"
-                    class="no-camera-placeholder"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="{
-                            'width.px': '64',
-                            'height.px': '64'
-                        }"
-                        [src]="icons.dirLayouts + 'cameras_placeholder.svg'"
-                    ></svg-icon>
-                    <h3 translate>No Cameras</h3>
-                    <ng-template #editingNotSupported>
-                        <p translate>Add them in the %VMS_NAME% client</p>
-                    </ng-template>
-                    <p
-                        *ngIf="
-                            CONFIG.featureFlags.layoutsEditable || CONFIG.featureFlags.layoutsDemo;
-                            else editingNotSupported
-                        "
-                        translate
-                    >
-                        Drag and drop a camera or other items from the resource tree to add it to
-                        the layout
-                    </p>
-                </div>
-                <div
-                    *ngIf="
-                        layout?.items.length === 1 &&
-                            !layoutItemLookup[layout.items[0].resourceId] &&
-                            layout.items[0].resourceId === layout.items[0].id;
-                        else showLayoutItems
-                    "
-                    class="no-layout-placeholder"
-                >
-                    <svg-icon
-                        nx-add-svg-src
-                        [svgStyle]="{
-                            'width.px': '64',
-                            'height.px': '64'
-                        }"
-                        [src]="icons.dirLayouts + 'layouts_placeholder.svg'"
-                    ></svg-icon>
-                    <h3 translate>Layout has been deleted</h3>
-                </div>
-                <ng-template #showLayoutItems>
-                    <ng-container *ngFor="let item of layout.items; trackBy: itemId">
-                        <div
-                            *ngIf="layoutItemLookup"
-                            #layoutItemWrapper
-                            cdkDropList
-                            [cdkDropListDisabled]="
-                                layout.locked ||
-                                (window.document.fullscreenElement &&
-                                    window.document.fullscreenElement !==
-                                        layoutStateService.gridSection)
-                            "
-                            [cdkDropListEnterPredicate]="preventDrop"
-                            [cdkDropListData]="item"
-                            [ngStyle]="item.renderConfig"
-                            [style.transform]="
-                                (highlightState$ | async)?.[item.id]?.transform || 'translate(0, 0)'
-                            "
-                            [style.transform-origin]="
-                                (highlightState$ | async)?.[item.id]?.transformOrigin || 'top left'
-                            "
-                            class="layout-item-wrapper"
-                            [ngClass]="{
-                                'full-screen-wrapper':
-                                    layoutItemWrapper === window.document.fullscreenElement,
-                                swap:
-                                    (highlightState$ | async)?.[item.id]?.highlightClass === 'swap'
-                            }"
-                            (resize)="checkUpdateAspectRatio($event, dragContainer)"
-                        >
-                            <div
-                                cdkDrag
-                                #dragContainer
-                                [cdkDragDisabled]="
-                                    !editItems$$() ||
-                                    (window.document.fullscreenElement &&
-                                        window.document.fullscreenElement !==
-                                            layoutStateService.gridSection)
-                                "
-                                [cdkDragData]="item"
-                                (cdkDragReleased)="moveItem(item)"
-                                (cdkDragMoved)="updateBackground($event, item, 'move')"
-                                class="layout-item"
-                                [ngClass]="{
-                                    'camera-layout-item':
-                                        layoutItemLookup[item.resourceId].type ===
-                                        RESOURCE_TYPE.CAMERA,
-                                    'server-layout-item':
-                                        layoutItemLookup[item.resourceId].type ===
-                                        RESOURCE_TYPE.SERVER,
-                                    'full-screen-override':
-                                        layoutItemWrapper === window.document.fullscreenElement,
-                                    collided: (collisions$ | async)[item.id]
-                                }"
-                                [ngStyle]="
-                                    (collisions$ | async)[item.id]
-                                        | mergeObjects: item.renderConfig.child
-                                "
-                            >
-                                <ng-template #notSupported>
-                                    <div
-                                        class="not-supported"
-                                        translate
-                                    >
-                                        Not supported
-                                    </div>
-                                </ng-template>
-                                <ng-template #tileContent>
-                                    <ng-container
-                                        *ngIf="
-                                            layoutItemLookup[item.resourceId] as itemDetail;
-                                            else notSupported
-                                        "
-                                    >
-                                        <ng-template
-                                            #showError
-                                            let-status="status"
-                                        >
-                                            <div
-                                                *ngIf="
-                                                    status ||
-                                                    errors[itemDetail.details.id] ||
-                                                    (assertResourceOfType.camera(itemDetail) &&
-                                                    itemDetail.details.unauthorized
-                                                        ? 'unauthorized'
-                                                        : !(
-                                                                (assertResourceOfType.camera(
-                                                                    itemDetail
-                                                                ) ||
-                                                                    assertResourceOfType.server(
-                                                                        itemDetail
-                                                                    )) &&
-                                                                itemDetail.details.online
-                                                            )
-                                                          ? 'offline'
-                                                          : (assertResourceOfType.camera(
-                                                                  itemDetail
-                                                              ) ||
-                                                                  assertResourceOfType.server(
-                                                                      itemDetail
-                                                                  )) &&
-                                                              itemDetail.details.status !==
-                                                                  'archive'
-                                                            ? (assertResourceOfType.camera(
-                                                                  itemDetail
-                                                              ) ||
-                                                                  assertResourceOfType.server(
-                                                                      itemDetail
-                                                                  )) &&
-                                                              itemDetail.details.status
-                                                            : 'offline') as status
-                                                "
-                                                (click)="
-                                                    assertResourceOfType.camera(itemDetail) &&
-                                                        (status === 'defaultPassword' ||
-                                                            itemDetail.details.unauthorized) &&
-                                                        updateCameraCredentials(
-                                                            system,
-                                                            itemDetail.details
-                                                        )
-                                                "
-                                                [ngClass]="{
-                                                    'not-supported':
-                                                        assertResourceOfType.webpage(itemDetail) ||
-                                                        assertResourceOfType.iodevice(itemDetail),
-                                                    'has-action':
-                                                        assertResourceOfType.camera(itemDetail) &&
-                                                        editItems$$() &&
-                                                        (status === 'defaultPassword' ||
-                                                            itemDetail.details.unauthorized),
-                                                    'has-secondary-panel':
-                                                        item.renderConfig.hasSecondaryPanel,
-                                                    small:
-                                                        item.renderConfig.placeholderClass ===
-                                                        'small',
-                                                    medium:
-                                                        item.renderConfig.placeholderClass ===
-                                                        'medium',
-                                                    large:
-                                                        item.renderConfig.placeholderClass ===
-                                                        'large'
-                                                }"
-                                                class="item-error content-container"
-                                            >
-                                                <svg-icon
-                                                    nx-add-svg-src
-                                                    [ngClass]="{
-                                                        'main-panel':
-                                                            item.renderConfig.placeholderState >=
-                                                            PLACEHOLDER_STATE.ICON_ONLY
-                                                    }"
-                                                    [src]="
-                                                        icons.dirLayouts +
-                                                        'placeholders/' +
-                                                        ([
-                                                            'online',
-                                                            'unauthorized',
-                                                            'defaultPassword',
-                                                            'transcodingDisabled',
-                                                            'mjpegDisabled'
-                                                        ].includes(status)
-                                                            ? status
-                                                                  .replace(
-                                                                      'defaultPassword',
-                                                                      'alert'
-                                                                  )
-                                                                  .replace(
-                                                                      'transcodingDisabled',
-                                                                      'offline'
-                                                                  )
-                                                                  .replace(
-                                                                      'mjpegDisabled',
-                                                                      'offline'
-                                                                  )
-                                                            : [
-                                                                    RESOURCE_TYPE.WEB_PAGE,
-                                                                    RESOURCE_TYPE.IO_DEVICE
-                                                                ].includes(itemDetail.type)
-                                                              ? status
-                                                              : itemDetail.type ===
-                                                                  RESOURCE_TYPE.SERVER
-                                                                ? 'unavailable'
-                                                                : 'offline') +
-                                                        '.svg'
-                                                    "
-                                                    [svgStyle]="{
-                                                        'width.%': '100%',
-                                                        'height.%': '100%',
-                                                        'width.px':
-                                                            item.renderConfig.maxPlaceholderSize,
-                                                        'height.px':
-                                                            item.renderConfig.maxPlaceholderSize
-                                                    }"
-                                                >
-                                                </svg-icon>
-                                                <h3
-                                                    [ngClass]="{
-                                                        'main-panel':
-                                                            item.renderConfig.placeholderState >=
-                                                            PLACEHOLDER_STATE.WITH_TITLE
-                                                    }"
-                                                >
-                                                    {{
-                                                        (itemDetail.type === RESOURCE_TYPE.CAMERA
-                                                            ? LANG.common.cameraStates
-                                                            : LANG.common.serverStates)[status] ||
-                                                            LANG.layouts.errors[status] ||
-                                                            status | translate
-                                                    }}
-                                                </h3>
-                                                <h4
-                                                    *ngIf="
-                                                        additionalErrorMessages[
-                                                            itemDetail.details.id
-                                                        ] ||
-                                                        additionalErrorMessages[
-                                                            status
-                                                        ] as additionalMessage
-                                                    "
-                                                    [ngClass]="{
-                                                        'main-panel':
-                                                            item.renderConfig.placeholderState ===
-                                                            PLACEHOLDER_STATE.FULL
-                                                    }"
-                                                >
-                                                    {{ additionalMessage | nxTranslate }}
-                                                </h4>
-                                            </div>
-                                        </ng-template>
-                                        <div
-                                            *ngIf="
-                                                !errors[itemDetail.details.id] &&
-                                                    !(
-                                                        assertResourceOfType.camera(itemDetail) &&
-                                                        itemDetail.details.unauthorized
-                                                    ) &&
-                                                    (((assertResourceOfType.camera(itemDetail) ||
-                                                        assertResourceOfType.server(itemDetail)) &&
-                                                        itemDetail.details.online) ||
-                                                        assertResourceOfType.webpage(itemDetail));
-                                                else showError
-                                            "
-                                            class="content-container"
-                                            [ngSwitch]="itemDetail.type"
-                                        >
-                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.CAMERA">
-                                                <ng-template #offlinePlaceholder>
-                                                    <ng-container
-                                                        *ngTemplateOutlet="
-                                                            showError;
-                                                            context: { status: 'offline' }
-                                                        "
-                                                    ></ng-container>
-                                                </ng-template>
-                                                <div
-                                                    *ngIf="
-                                                        assertResourceOfType.camera(itemDetail) &&
-                                                        itemDetail as itemDetail
-                                                    "
-                                                    class="d-flex flex-column h-100 w-100 align-items-center justify-content-center"
-                                                >
-                                                    <nx-video-player
-                                                        [camera]="itemDetail.details"
-                                                        [rotation]="item.rotation"
-                                                        (showError)="
-                                                            handleVideoError(itemDetail, $event)
-                                                        "
-                                                        (showPtz)="showPtz.emit($event)"
-                                                        [zoom]="item"
-                                                        [lostConnectionPlaceholder]="
-                                                            offlinePlaceholder
-                                                        "
-                                                        [skipCredentialsCheck]="
-                                                            skipDefaultCredentialsCheck[
-                                                                itemDetail.details.id
-                                                            ]
-                                                        "
-                                                        [resolution]="
-                                                            layoutStateService.cameraResolutionLookup$$()[
-                                                                itemDetail.details.id
-                                                            ].resolution
-                                                        "
-                                                    >
-                                                    </nx-video-player>
-                                                </div>
-                                            </ng-container>
-                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.SERVER">
-                                                <ng-template #offlinePlaceholder>
-                                                    <ng-container
-                                                        *ngTemplateOutlet="
-                                                            showError;
-                                                            context: { status: 'offline' }
-                                                        "
-                                                    ></ng-container>
-                                                </ng-template>
-                                                <nx-monitoring-graph
-                                                    *ngIf="
-                                                        assertResourceOfType.server(itemDetail) &&
-                                                        itemDetail as itemDetail
-                                                    "
-                                                    [systemId]="layout.systemId"
-                                                    [selectedServerId]="itemDetail.details.id"
-                                                    [lostConnectionPlaceholder]="offlinePlaceholder"
-                                                    noFrame
-                                                    class="theme-override"
-                                                    data-theme="dark"
-                                                ></nx-monitoring-graph>
-                                            </ng-container>
-                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.WEB_PAGE">
-                                                <ng-template #webPageDisabled>
-                                                    <ng-container
-                                                        *ngTemplateOutlet="
-                                                            showError;
-                                                            context: {
-                                                                status: RESOURCE_TYPE.WEB_PAGE
-                                                            }
-                                                        "
-                                                    ></ng-container>
-                                                </ng-template>
-                                                <ng-container
-                                                    *ngIf="
-                                                        CONFIG.featureFlags.layoutsWebpages ||
-                                                            CONFIG.featureFlags.layoutsDemo;
-                                                        else webPageDisabled
-                                                    "
-                                                >
-                                                    <nx-pre-loader></nx-pre-loader>
-                                                    <iframe
-                                                        *ngIf="
-                                                            assertResourceOfType.webpage(
-                                                                itemDetail
-                                                            ) && itemDetail as itemDetail
-                                                        "
-                                                        #webpage
-                                                        (load)="
-                                                            checkIframeContent(
-                                                                itemDetail.details.id,
-                                                                webpage
-                                                            )
-                                                        "
-                                                        [src]="
-                                                            itemDetail.details.url
-                                                                | safe: 'resourceUrl'
-                                                        "
-                                                        frameBorder="0"
-                                                    ></iframe>
-                                                </ng-container>
-                                            </ng-container>
-                                            <ng-container *ngSwitchCase="RESOURCE_TYPE.IO_DEVICE">
-                                                <ng-container
-                                                    *ngTemplateOutlet="
-                                                        showError;
-                                                        context: { status: RESOURCE_TYPE.IO_DEVICE }
-                                                    "
-                                                ></ng-container>
-                                            </ng-container>
-                                            <ng-container *ngSwitchCaseDefault>
-                                                <ng-container
-                                                    *ngTemplateOutlet="notSupported"
-                                                ></ng-container
-                                                >>
-                                            </ng-container>
-                                        </div>
-                                    </ng-container>
-                                </ng-template>
-                                <ng-container
-                                    *ngIf="
-                                        !window.document.fullscreenElement ||
-                                        window.document.fullscreenElement ===
-                                            layoutStateService.gridSection
-                                    "
-                                >
-                                    <div
-                                        *ngFor="let alignment of alignments"
-                                        cdkDropList
-                                        [cdkDropListDisabled]="layout.locked"
-                                        [cdkDropListConnectedTo]="[]"
-                                    >
-                                        <div
-                                            cdkDrag
-                                            [cdkDragDisabled]="layout.locked"
-                                            [cdkDragData]="item"
-                                            (cdkDragMoved)="
-                                                updateBackground($event, item, 'resize', alignment)
-                                            "
-                                            (cdkDragReleased)="moveItem(item)"
-                                            class="resize-handle {{ alignment[0] }} {{
-                                                alignment?.[1]
-                                            }}"
-                                        ></div>
-                                    </div>
-                                </ng-container>
-                                <nx-layout-grid-item-overlay
-                                    cdkDragHandle
-                                    [cdkDragHandleDisabled]="
-                                        layout.locked ||
-                                        (window.document.fullscreenElement &&
-                                            window.document.fullscreenElement !==
-                                                layoutStateService.gridSection)
-                                    "
-                                    [ngClass]="'overlay'"
-                                    [item]="item"
-                                    [node]="layoutItemLookup[item.resourceId]"
-                                    [fullScreenTarget]="layoutItemWrapper"
-                                    [showRemove]="editItems$$()"
-                                    [hide]="dragging$$()"
-                                    [canEdit]="editItems$$()"
-                                    (removeItem)="removeItem($event)"
-                                    [system]="system"
-                                >
-                                    <ng-container *ngTemplateOutlet="tileContent" />
-                                </nx-layout-grid-item-overlay>
-                            </div>
-                        </div>
-                    </ng-container>
-                </ng-template>
-            </ng-container>
-        </div>
-
-        <nx-webgl-canvas
-            *ngIf="CONFIG.featureFlags.layoutsTimeline || CONFIG.featureFlags.layoutsDemo"
-            [cameras]="cameras"
-            [system]="system"
-            [selectedLayout]="layout"
-        ></nx-webgl-canvas>
-    </div>
-</div>
+}

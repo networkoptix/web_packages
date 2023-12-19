@@ -3,6 +3,7 @@ import { createSelector } from '@ngrx/store';
 import staticLang from '@common/language/language_i18n_static.json';
 import { dirtyId } from '@utils/general';
 
+import { selectCrossSystemLayoutsState } from '../cross-system-layouts/cross-system-layouts.selectors';
 import { selectLocalLayoutsState } from '../local-layouts/local-layouts.selectors';
 import { UnsavedState } from '../shared/types/layout-state.types';
 import { hashItem } from '../shared/utils';
@@ -16,18 +17,21 @@ const { unsavedStates } = staticLang.layouts;
 export const selectUnsavedLayoutsInfo = createSelector(
     selectUnsavedLayoutsState,
     selectLocalLayoutsState,
+    selectCrossSystemLayoutsState,
     (
         unsavedLayoutsState,
-        existingLayouts,
-    ): { states: Record<string, string>; overwrites: Record<string, string> } =>
-        unsavedLayoutsState.reduce(
+        existingLocalLayouts,
+        existingCrossSystemLayouts,
+    ): { states: Record<string, string>; overwrites: Record<string, string> } => {
+        const existingLayouts = [...existingLocalLayouts, ...existingCrossSystemLayouts];
+
+        return unsavedLayoutsState.reduce(
             (unsavedLayouts, layout) => {
                 const layoutId = dirtyId(layout.id);
                 const existingWithSameName = existingLayouts.find(
                     ({ name, id, parentId }) =>
                         name === layout.layout.name &&
                         id !== layout.id &&
-                        'parentId' in layout.layout &&
                         layout.layout.parentId === parentId,
                 );
 
@@ -54,7 +58,8 @@ export const selectUnsavedLayoutsInfo = createSelector(
                 states: Record<string, string>;
                 overwrites: Record<string, string>;
             },
-        ),
+        );
+    },
 );
 
 export const selectUnsavedLayoutsIds = createSelector(

@@ -34,6 +34,8 @@ import {
     Resolution,
 } from '@services/layout-state/store/layouts-resolution/resolution.types';
 import { NxCloudApiService } from '@services/nx-cloud-api';
+import { CrossSystemLayoutSerializer } from '@services/nx-cloud-api/cloud-services/doc-db/doc-db-serializers';
+import { DocHandler } from '@services/nx-cloud-api/cloud-services/doc-db/doc-handler';
 import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types';
@@ -42,12 +44,12 @@ import { dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
+import { CrossSystemLayoutsActions } from './store/cross-system-layouts';
 import { LayoutsResolutionActions } from './store/layouts-resolution';
 import {
     selectCurrentLayoutCamerasLookup,
     selectCurrentLayoutHighResolution,
 } from './store/layouts-resolution/resolution.selectors';
-import { LocalLayoutsSelectors } from './store/local-layouts';
 import { SharedLayoutsActions, SharedLayoutsSelectors } from './store/shared';
 import {
     LayoutState,
@@ -63,6 +65,10 @@ import { incrementUntilUnique } from './store/utils/increment-until-unique';
 @Injectable()
 export class LayoutStateService {
     static runInInjectionContext: <T>(callback: () => T) => T;
+
+    crossSystemLayoutSerializer = new CrossSystemLayoutSerializer();
+
+    crossSystemLayoutApi: DocHandler<Layout>;
 
     duplicatedLayouts$$ = signal<string[]>([]);
 
@@ -97,7 +103,7 @@ export class LayoutStateService {
         const id = uuid();
 
         this.store
-            .select(SharedLayoutsSelectors.selectLayouts)
+            .select(SharedLayoutsSelectors.selectLayoutsState)
             .pipe(take(1))
             .subscribe(layouts => {
                 const currentUser = this.systemService
@@ -115,6 +121,40 @@ export class LayoutStateService {
                 LayoutStateService.runInInjectionContext(() =>
                     this.store.dispatch(
                         UnsavedLayoutsActions.createNewLocalLayout({
+                            id,
+                            name: incrementUntilUnique(name, existingNames),
+                            items,
+                        }),
+                    ),
+                );
+            });
+
+        return id;
+    }
+
+    createNewCrossSystemLayout(items?: LayoutItem[]): string;
+    createNewCrossSystemLayout(name: string, items?: LayoutItem[]): string;
+    createNewCrossSystemLayout(
+        nameOrItems: string | LayoutItem[] = staticLang.layouts.newLayout,
+        items: LayoutItem[] = [],
+    ): string {
+        const isName = typeof nameOrItems === 'string';
+        const name = isName
+            ? nameOrItems
+            : this.translate.instant(staticLang.layouts.newCrossSystemLayout);
+        items = isName ? items : nameOrItems;
+        const id = uuid();
+
+        this.store
+            .select(SharedLayoutsSelectors.selectLayoutsState)
+            .pipe(take(1))
+            .subscribe(layouts => {
+                const existingNames = layouts
+                    .filter(({ layout }) => !('parentId' in layout))
+                    .map(layout => layout.layout.name);
+                LayoutStateService.runInInjectionContext(() =>
+                    this.store.dispatch(
+                        UnsavedLayoutsActions.createNewCrossSystemLayout({
                             id,
                             name: incrementUntilUnique(name, existingNames),
                             items,
@@ -146,7 +186,7 @@ export class LayoutStateService {
         this.duplicatedLayouts$$.update(layouts => [...layouts, id]);
 
         this.store
-            .select(SharedLayoutsSelectors.selectLayouts)
+            .select(SharedLayoutsSelectors.selectLayoutsState)
             .pipe(take(1))
             .subscribe((layouts: LayoutState[]) => {
                 const copyName = this.translate.instant(staticLang.layouts.layoutCopy, layout);
@@ -194,7 +234,7 @@ export class LayoutStateService {
                 switchMap(async activeLayoutId => {
                     const dirtyLayoutId = dirtyId(activeLayoutId);
                     const savedLayouts = await firstValueFrom(
-                        this.store.select(LocalLayoutsSelectors.selectLocalLayoutsState),
+                        this.store.select(SharedLayoutsSelectors.selectLayoutsState),
                     );
                     if (
                         layoutIds.includes(dirtyLayoutId) &&
@@ -301,7 +341,7 @@ export class LayoutStateService {
     updateLayout(layouts: Layout[]): void;
     updateLayout(layouts: Layout | Layout[]): void {
         this.store
-            .select(LocalLayoutsSelectors.selectLocalLayoutsBaseVersion)
+            .select(SharedLayoutsSelectors.selectLayoutsBaseVersion)
             .pipe(take(1))
             .subscribe(layoutBaseHashes => {
                 const updatedLayouts = Array.isArray(layouts) ? layouts : [layouts];
@@ -310,7 +350,9 @@ export class LayoutStateService {
                     UnsavedLayoutsActions.update({
                         layouts: updatedLayouts.map(layout => ({
                             id: layout.id,
-                            layoutType: LayoutTypes.LOCAL,
+                            layoutType: layout.parentId
+                                ? LayoutTypes.LOCAL
+                                : LayoutTypes.CROSS_SYSTEM,
                             unsaved: UnsavedState.UNSAVED,
                             layout,
                             baseVersion: layoutBaseHashes[layout.id] || hashItem(layout),
@@ -341,7 +383,26 @@ export class LayoutStateService {
         );
     }
 
-    unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds));
+    public loadCrossSystemLayouts(): Observable<Layout[]> {
+        const crossSystemLayouts$ = nxConfig.featureFlags.layoutsCrossSystem
+            ? this.crossSystemLayoutApi
+                  .list()
+                  .pipe(map(layouts => this.crossSystemLayoutSerializer.deserializeMany(layouts)))
+            : of([] as Layout[]);
+        return crossSystemLayouts$.pipe(
+            tap(layouts => {
+                this.store.dispatch(
+                    CrossSystemLayoutsActions.set({
+                        layouts,
+                    }),
+                );
+            }),
+        );
+    }
+
+    unsavedLayoutsIds$$ = toSignal(this.store.select(selectUnsavedLayoutsIds), {
+        initialValue: {},
+    });
 
     showResolutionRibbon$ = new Subject<number>();
 
@@ -411,6 +472,7 @@ export class LayoutStateService {
         private accountService: NxAccountService,
         private systemService: NxSystemService,
     ) {
+        this.crossSystemLayoutApi = this.cloudApi.docDbApi.crossSystemLayout;
         LayoutStateService.runInInjectionContext = callback =>
             runInInjectionContext(this.injector, callback);
         // eslint-disable-next-line ngrx/no-store-subscription

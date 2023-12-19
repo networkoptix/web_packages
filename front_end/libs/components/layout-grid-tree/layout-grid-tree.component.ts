@@ -246,6 +246,8 @@ export class NxLayoutGridTreeComponent {
         ResourceType.CAMERAS,
         ResourceType.SERVERS,
         ResourceType.WEB_PAGES,
+        ResourceType.SYSTEM,
+        ResourceType.OTHER_SYSTEMS,
     ].reduce((acc, type) => ({ ...acc, [type]: true }), {} as Record<ResourceType, boolean>);
 
     ServerStats: ServerStats;
@@ -560,7 +562,12 @@ export class NxLayoutGridTreeComponent {
     getLayoutShareActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (!node.owned || node.locked || !nxConfig.featureFlags.layoutsEditable) {
+        if (
+            node.crossSystem ||
+            !node.owned ||
+            node.locked ||
+            !nxConfig.featureFlags.layoutsEditable
+        ) {
             return [];
         }
 
@@ -720,6 +727,17 @@ export class NxLayoutGridTreeComponent {
                                 }),
                         },
                     ])),
+        ].filter(Boolean),
+        [ResourceType.SYSTEM]: [
+            {
+                id: 'connectToSystem',
+                name: this.ACTIONS_LANG.connectToSystem.name,
+                tooltip: this.ACTIONS_LANG.connectToSystem.tooltip,
+                action: ($event, node) =>
+                    this.layoutStateService.paramStateHandler.state$$.set({
+                        params: { systemId: node.details.id },
+                    }),
+            },
         ].filter(Boolean),
     };
 

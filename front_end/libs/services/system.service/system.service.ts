@@ -37,13 +37,14 @@ export class NxSystemService {
     }
 
     setSystem(system: NxSystem): void {
-        this.currentSystem$.next(system);
-        this.store.dispatch(
-            SystemResourcesActions.refreshSystemResources({
-                systems: { [system.id]: { all: true } },
-            }),
-        );
-        this.currentSystem$.next(system);
+        if (system.id !== this.currentSystem$$()?.id) {
+            this.currentSystem$.next(system);
+            this.store.dispatch(
+                SystemResourcesActions.refreshSystemResources({
+                    systems: { [system.id]: { all: true } },
+                }),
+            );
+        }
     }
 
     currentSystem$$ = toSignal(this.currentSystem$);

@@ -21,7 +21,7 @@ export const duplicateLayout = createAction(
 
 export const createNewCrossSystemLayout = createAction(
     '[Unsaved Layouts] Create New Unsaved Cross System Layout',
-    props<{ name: string; items?: [] }>(),
+    props<{ id: string; name: string; items?: LayoutItem[] }>(),
 );
 
 export const remove = createAction(

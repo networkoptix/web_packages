@@ -24,6 +24,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
 import { WINDOW } from '@services/window-provider';
+import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
 import { NgChanges } from '@utils/ng-changes';
 
 /* USAGE
@@ -47,7 +48,7 @@ import { NgChanges } from '@utils/ng-changes';
 })
 export class NxMonitoringGraphComponent implements OnChanges {
     @Input() system: NxSystem;
-    @Input() systemId: string;
+    @Input() systemIdOrResourcePath: string;
     @Input() selectedServerId: string;
     @Input({ transform: booleanAttribute }) noFrame: boolean;
     @Input() refreshInterval: number = 1000;
@@ -109,15 +110,19 @@ export class NxMonitoringGraphComponent implements OnChanges {
         if (
             changes.system?.currentValue ||
             changes.selectedServerId?.currentValue ||
-            changes.systemId?.currentValue
+            changes.systemIdOrResourcePath?.currentValue
         ) {
             this.destroy$.next(true);
 
-            if (this.systemId && !this.system) {
-                await this.systemsService.getSystemAsPromise(this.systemId);
+            if (this.systemIdOrResourcePath && !this.system) {
+                const systemId = extractSystemAndResourceId(this.systemIdOrResourcePath).systemId;
+                await this.systemsService.getSystemAsPromise(systemId);
                 this.system = this.systemService.createSystem(
                     this.accountService.account.email,
-                    this.systemId,
+                    systemId,
+                    this.selectedServerId,
+                    true,
+                    true,
                 );
                 await this.system.update();
                 // await this.system.serverManager.initSystemMediaServers();

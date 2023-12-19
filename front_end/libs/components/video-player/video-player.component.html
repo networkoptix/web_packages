@@ -1,16 +1,16 @@
-<div
-    *ngIf="ribbonContent$ | async as ribbonContent"
-    class="status-banner"
-    [ngClass]="ribbonContent.type"
->
-    {{ ribbonContent.message | nxTranslate }}
-</div>
-<div
-    *ngIf="lostConnection && lostConnectionPlaceholder"
-    class="placeholder-wrapper"
->
-    <ng-container *ngTemplateOutlet="lostConnectionPlaceholder"></ng-container>
-</div>
+@if (ribbonContent$ | async; as ribbonContent) {
+    <div
+        class="status-banner"
+        [ngClass]="ribbonContent.type"
+    >
+        {{ ribbonContent.message | nxTranslate }}
+    </div>
+}
+@if (lostConnection && lostConnectionPlaceholder) {
+    <div class="placeholder-wrapper">
+        <ng-container *ngTemplateOutlet="lostConnectionPlaceholder"></ng-container>
+    </div>
+}
 
 <canvas #zoomCanvas></canvas>
 
@@ -30,25 +30,26 @@
     [nxRotate]="rotation"
 ></video>
 
-<nx-pre-loader
-    *ngIf="!error && (loading || lostConnection || !webRtcStream.currentTime)"
-></nx-pre-loader>
+@if (!error && (loading || lostConnection || !webRtcStream.currentTime)) {
+    <nx-pre-loader></nx-pre-loader>
+}
 
-<ng-container *ngIf="webRtcStream.paused && error">
+@if (webRtcStream.paused && error) {
     <div class="connection-error">
         {{ error }}
     </div>
-</ng-container>
+}
 
-<div
-    *ngIf="
-        !streamManager.position &&
-        (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo) &&
-        camera.controlEnabled
-    "
-    class="ptz parent-hover"
-    (click)="showPtz.emit(camera)"
-    translate
->
-    Ptz Controls
-</div>
+@if (
+    !streamManager.position &&
+    (CONFIG.featureFlags.layoutsPtz || CONFIG.featureFlags.layoutsDemo) &&
+    camera.controlEnabled
+) {
+    <div
+        class="ptz parent-hover"
+        (click)="showPtz.emit(camera)"
+        translate
+    >
+        Ptz Controls
+    </div>
+}

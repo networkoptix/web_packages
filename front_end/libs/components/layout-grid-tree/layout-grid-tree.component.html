@@ -6,13 +6,14 @@
 </ng-template>
 
 <div class="resource-tree-wrapper">
-    <nx-search
-        *ngIf="layoutGridService.isLeftMenuOpen$$()"
-        [ngModel]="layoutStateService.paramStateHandler.state$$().queryParams.search"
-        layout="search"
-        instant
-    >
-    </nx-search>
+    @if (layoutGridService.isLeftMenuOpen$$()) {
+        <nx-search
+            [ngModel]="layoutStateService.paramStateHandler.state$$().queryParams.search"
+            layout="search"
+            instant
+        >
+        </nx-search>
+    }
     <div
         cdkDropList
         tourAnchor="cloud-layouts_left-menu"
@@ -144,19 +145,17 @@
                         class="tooltip-offset-target"
                     ></div>
                     <div *cdkDragPreview>
-                        <div
-                            class="add-preview"
-                            *ngIf="node.type !== RESOURCE_TYPE.CAMERA"
-                        >
-                            <ng-container
-                                [ngTemplateOutlet]="nodeInfo"
-                                [ngTemplateOutletContext]="{ node: node, preview: true }"
-                            ></ng-container>
-                        </div>
-                        <ng-container
-                            *ngIf="node.type == RESOURCE_TYPE.CAMERA"
-                            [ngTemplateOutlet]="cameraTooltip"
-                        ></ng-container>
+                        @if (node.type !== RESOURCE_TYPE.CAMERA) {
+                            <div class="add-preview">
+                                <ng-container
+                                    [ngTemplateOutlet]="nodeInfo"
+                                    [ngTemplateOutletContext]="{ node: node, preview: true }"
+                                ></ng-container>
+                            </div>
+                        }
+                        @if (node.type == RESOURCE_TYPE.CAMERA) {
+                            <ng-container [ngTemplateOutlet]="cameraTooltip"></ng-container>
+                        }
                     </div>
 
                     <ng-container
@@ -186,9 +185,6 @@
                 </ng-template>
 
                 <ng-template #serverTooltip>
-                    <ng-template #tooltipLoading>
-                        <nx-pre-loader [minHeight]="108"></nx-pre-loader>
-                    </ng-template>
                     <div class="server-tooltip-wrapper">
                         <h4>
                             {{
@@ -196,29 +192,29 @@
                                     | nxTranslate
                             }}
                         </h4>
-                        <ng-container *ngIf="serverStats$ | async as res; else tooltipLoading">
-                            <div
-                                *ngIf="res.statistics | as: ServerStats as stats"
-                                class="stats-grid"
-                            >
-                                <div translate>Description</div>
-                                <div translate>Usage</div>
-                                <ng-container *ngFor="let type of stats">
-                                    <div>
-                                        {{ type.description }}
-                                    </div>
-                                    <div>
-                                        {{ type.value }}
-                                    </div>
-                                </ng-container>
-                            </div>
-                            <div
-                                *ngIf="res.error as error"
-                                class="error-label"
-                            >
-                                {{ error | translate }}
-                            </div>
-                        </ng-container>
+                        @if (serverStats$ | async; as res) {
+                            @if (res.statistics | as: ServerStats; as stats) {
+                                <div class="stats-grid">
+                                    <div translate>Description</div>
+                                    <div translate>Usage</div>
+                                    @for (type of stats; track type.description) {
+                                        <div>
+                                            {{ type.description }}
+                                        </div>
+                                        <div>
+                                            {{ type.value }}
+                                        </div>
+                                    }
+                                </div>
+                            }
+                            @if (res.error; as error) {
+                                <div class="error-label">
+                                    {{ error | translate }}
+                                </div>
+                            }
+                        } @else {
+                            <nx-pre-loader [minHeight]="108"></nx-pre-loader>
+                        }
                     </div>
                 </ng-template>
             </div>
@@ -227,14 +223,14 @@
             #renderChildren
             let-nodes="nodes"
         >
-            <ng-container *ngFor="let node of nodes; trackBy: nodeId">
+            @for (node of nodes; track nodeId($index, node)) {
                 <ng-container
                     *ngTemplateOutlet="
                         node?.children?.length ? expandableNode : leafNode;
                         context: { node: node }
                     "
                 ></ng-container>
-            </ng-container>
+            }
         </ng-template>
         <ng-container
             *ngTemplateOutlet="renderChildren; context: { nodes: (dataSource$ | async) }"
@@ -256,89 +252,82 @@
             <ng-container
                 *ngIf="preview || node.type === RESOURCE_TYPE.CAMERA; then recordingIcon"
             />
-            <svg-icon
-                *ngIf="node.type === RESOURCE_TYPE.LAYOUT"
-                nx-add-svg-src
-                [svgStyle]="{
-                    'width.px': '20',
-                    'height.px': '20',
-                    opacity:
-                        layoutStateService.unsavedLayoutsIds$$()[node.id] || node.locked ? '1' : '0'
-                }"
-                [nxTooltip]="
-                    node.locked
-                        ? 'Layout locked'
-                        : (layoutStateService.unsavedLayoutsIds$$()[node.id] | translate)
-                "
-                svgClass="recording-icon  {{ node.locked ? 'locked-icon' : '' }}"
-                [src]="icons.dirLayouts + (node.locked ? 'locked.svg' : 'unsaved.svg')"
-            >
-            </svg-icon>
+            @if (node.type === RESOURCE_TYPE.LAYOUT) {
+                <svg-icon
+                    nx-add-svg-src
+                    [svgStyle]="{
+                        'width.px': '20',
+                        'height.px': '20',
+                        opacity:
+                            layoutStateService.unsavedLayoutsIds$$()[node.id] || node.locked
+                                ? '1'
+                                : '0'
+                    }"
+                    [nxTooltip]="
+                        node.locked
+                            ? 'Layout locked'
+                            : (layoutStateService.unsavedLayoutsIds$$()[node.id] | translate)
+                    "
+                    svgClass="recording-icon  {{ node.locked ? 'locked-icon' : '' }}"
+                    [src]="icons.dirLayouts + (node.locked ? 'locked.svg' : 'unsaved.svg')"
+                >
+                </svg-icon>
+            }
             <ng-container *ngTemplateOutlet="nodeTypeIcon" />
             <ng-container *ngIf="!menuItemsByType[node.type]; then simpleNodeText" />
-            <ng-container *ngIf="menuItemsByType[node.type] as menuItems">
-                <ng-container
-                    *ngIf="
-                        node.type === RESOURCE_TYPE.LAYOUTS;
-                        then layoutsNode;
-                        else nodeWithContextMenu
-                    "
-                />
-
-                <ng-template #layoutsNode>
+            @if (menuItemsByType[node.type]; as menuItems) {
+                @if (node.type === RESOURCE_TYPE.LAYOUTS) {
                     <ng-container [ngTemplateOutlet]="simpleNodeText" />
-                    <button
-                        *ngFor="let menuItem of menuItems"
-                        class="action-button"
-                        [nxTooltip]="menuItem.tooltip | translate: node.details"
-                        (click)="menuItem.action($event, node)"
-                        [tourAnchor]="'cloud-layouts_add_layout'"
-                    >
-                        <svg-icon
-                            nx-add-svg-src
-                            [svgStyle]="{
-                                'width.px': '20',
-                                'height.px': '20'
-                            }"
-                            [src]="icons.dirLayouts + 'add.svg'"
+                    @for (menuItem of menuItems; track menuItem.id) {
+                        <button
+                            class="action-button"
+                            [nxTooltip]="menuItem.tooltip | translate: node.details"
+                            (click)="menuItem.action($event, node)"
+                            [tourAnchor]="'cloud-layouts_add_layout'"
                         >
-                        </svg-icon>
-                    </button>
-                </ng-template>
-
-                <ng-template #nodeWithContextMenu>
+                            <svg-icon
+                                nx-add-svg-src
+                                [svgStyle]="{
+                                    'width.px': '20',
+                                    'height.px': '20'
+                                }"
+                                [src]="icons.dirLayouts + 'add.svg'"
+                            >
+                            </svg-icon>
+                        </button>
+                    }
+                } @else {
                     <div
                         class="node-editable"
                         [cdkContextMenuTriggerFor]="nodeActionMenu"
                     >
-                        <ng-template #searchHighlight>
+                        @if (layoutStateService.editedLayout$$()?.id === node.id) {
+                            <nx-text-editable
+                                class="node-name"
+                                [(ngModel)]="node.name"
+                                [allowUserFocus]="false"
+                                [overrideSelectionClass]="
+                                    layoutStateService.editedLayout$$()?.isNew
+                                        ? 'override-selection'
+                                        : ''
+                                "
+                                [selectAllOnFocus]="
+                                    layoutStateService.editedLayout$$()?.isNew || false
+                                "
+                                [overrideSelectionClassOnce]="true"
+                                [editEnabled]="true"
+                                [required]="true"
+                                (onFocusChanged)="!$event && handleRename(node)"
+                                (onEditModeCancelled)="layoutStateService.editedLayout$$.set(null)"
+                            >
+                            </nx-text-editable>
+                        } @else {
                             <nx-search-highlight
                                 class="ellipsis node-name"
                                 [text]="node.name"
                                 [search]="query$ | async"
                             ></nx-search-highlight>
-                        </ng-template>
-                        <nx-text-editable
-                            *ngIf="
-                                layoutStateService.editedLayout$$()?.id === node.id;
-                                else searchHighlight
-                            "
-                            class="node-name"
-                            [(ngModel)]="node.name"
-                            [allowUserFocus]="false"
-                            [overrideSelectionClass]="
-                                layoutStateService.editedLayout$$()?.isNew
-                                    ? 'override-selection'
-                                    : ''
-                            "
-                            [selectAllOnFocus]="layoutStateService.editedLayout$$()?.isNew || false"
-                            [overrideSelectionClassOnce]="true"
-                            [editEnabled]="true"
-                            [required]="true"
-                            (onFocusChanged)="!$event && handleRename(node)"
-                            (onEditModeCancelled)="layoutStateService.editedLayout$$.set(null)"
-                        >
-                        </nx-text-editable>
+                        }
                     </div>
                     <button
                         [cdkMenuTriggerFor]="nodeActionMenu"
@@ -362,27 +351,27 @@
                             [menuItems]="menuItemsByType[node.type]"
                         />
                     </ng-template>
-                </ng-template>
-            </ng-container>
+                }
+            }
 
             <ng-template #recordingIcon>
-                <svg-icon
-                    *ngIf="
-                        ['recording', 'scheduled', 'archive'].includes(node.details.status)
-                            ? '1'
-                            : '0' as opacity
-                    "
-                    nx-add-svg-src
-                    [svgStyle]="{
-                        'width.px': '20',
-                        'height.px': '20',
-                        opacity: opacity,
-                        display: opacity === '0' && preview && 'none'
-                    }"
-                    svgClass="recording-icon"
-                    [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
-                >
-                </svg-icon>
+                @if (
+                    ['recording', 'scheduled', 'archive'].includes(node.details.status) ? '1' : '0';
+                    as opacity
+                ) {
+                    <svg-icon
+                        nx-add-svg-src
+                        [svgStyle]="{
+                            'width.px': '20',
+                            'height.px': '20',
+                            opacity: opacity,
+                            display: opacity === '0' && preview && 'none'
+                        }"
+                        svgClass="recording-icon"
+                        [src]="icons.dirLayouts + node.type + '_' + node.details.status + '.svg'"
+                    >
+                    </svg-icon>
+                }
             </ng-template>
             <ng-template #expandStateIcon>
                 <svg-icon
@@ -428,6 +417,7 @@
                                         : 'offline')
                             : '') +
                         (node.shared ? '_shared' : '') +
+                        (node.crossSystem ? '_cloud' : '') +
                         '.svg'
                     "
                 />

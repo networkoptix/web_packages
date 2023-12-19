@@ -8,6 +8,7 @@ import { onSyncState } from '@store/sync.utils';
 
 import { SharedLayoutsActions } from '../shared';
 import { UnsavedLayoutState, UnsavedState } from '../shared/types/layout-state.types';
+import { createNewUnsavedCrossSystemLayout } from '../utils/create-new-cross-system-layout';
 import {
     createNewUnsavedLocalLayout,
     createNewUnsavedLocalLayoutDuplicate,
@@ -62,6 +63,16 @@ export const reducer = createReducer(
         (state, { id, name, items }): UnsavedLayoutState[] => [
             ...state,
             syncUnsavedLayoutState([createNewUnsavedLocalLayout(id, name, items)], 'save').pop(),
+        ],
+    ),
+    on(
+        UnsavedLayoutActions.createNewCrossSystemLayout,
+        (state, { id, name, items }): UnsavedLayoutState[] => [
+            ...state,
+            syncUnsavedLayoutState(
+                [createNewUnsavedCrossSystemLayout(id, name, items)],
+                'save',
+            ).pop(),
         ],
     ),
     on(UnsavedLayoutActions.duplicateLayout, (state, { id, layout }): UnsavedLayoutState[] => [

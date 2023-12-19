@@ -1,4 +1,5 @@
 import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
@@ -73,6 +74,9 @@ export class NxSystemsService {
               }),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
+
+    systems$$ = toSignal(this.systemsSubject);
+
     finishedMerged: boolean = false;
     systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {
         primary: undefined,

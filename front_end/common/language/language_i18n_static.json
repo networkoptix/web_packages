@@ -92,6 +92,7 @@
     },
     "layouts": {
         "newLayout": "New Layout",
+        "newCrossSystemLayout": "New Cross System Layout",
         "layoutCopy": "{name} (copy)",
         "statistics": "{resourceType} \"{name}\" Statistics",
         "treeActions": {
@@ -176,6 +177,10 @@
             "serverSettings": {
                 "name": "Server Settings",
                 "tooltip": "\"{name}\" server Settings"
+            },
+            "connectToSystem": {
+                "name": "Connect to System",
+                "tooltip": "Open \"{name}\" layouts"
             }
         },
         "unsavedStates": {
@@ -203,7 +208,8 @@
                 "server": "Server",
                 "cameras": "Cameras & Devices",
                 "camera": "Camera",
-                "webpages": "Web Pages"
+                "webpages": "Web Pages",
+                "other_systems": "Other Systems"
             }
         },
         "toasts": {
@@ -223,6 +229,10 @@
                 "title": "Focus Mode",
                 "help": "Currently showing resource focus mode. Click the + icon next to \"Layouts\" or the \"Add Layout\" below to create a new layout from this view or you can also drag additional items before creating new layout."
             }
+        },
+        "otherSystems": {
+            "noCameras": "No Cameras available",
+            "systemOffline": "System is offline"
         },
         "removeItem": {
             "title": "Remove item from layout",
