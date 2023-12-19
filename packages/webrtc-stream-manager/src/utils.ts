@@ -128,3 +128,13 @@ export class ConnectionQueue {
 export function cleanId(id: unknown): string | undefined {
     return (id as string)?.replace(/{|}/g, '');
 }
+
+export const fetchWithRedirectAuthorization = async (input: string, init: RequestInit, retries = 10): Promise<Response> => {
+    const response = await fetch(input, init);
+
+    if (response.redirected && response.status === 401) {
+        return retries ? fetchWithRedirectAuthorization(response.url, init, retries - 1) : fetch(response.url, init)
+    }
+
+    return response;
+}
