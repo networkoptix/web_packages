@@ -805,7 +805,7 @@
     "Licenses Summary": "ライセンス概要",
     "Licenses that were used in this system will be deactivated for this system but can be activated again in another system": "このシステムで使用されていたライセンスは、このシステムで無効になりますが、別のシステムで再度有効化することができます",
     "Light": "ライト",
-    "Limit session duration to": "セッション期間を制限",
+    "Limit session duration to": "セッション期間を制限する",
     "List of Integrations": "インテグレーション一覧",
     "List of cameras by manufacturer and device type": "メーカーおよびデバイスタイプ別のカメラリスト",
     "Live Viewer": "ライブビューアー",
