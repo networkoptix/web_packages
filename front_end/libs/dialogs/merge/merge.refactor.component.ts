@@ -45,7 +45,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxSystemInfo } from '@services/systems.service.types';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
-import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanId } from '@utils/general';
+import { assignFrom, alphabeticalSort, cleanIp, strSplice, cleanIdLegacy } from '@utils/general';
 import { servers } from '@variables/static-variables';
 
 import { NxMergeAdminPasswordComponent } from './admin-password/admin-password.component';
@@ -367,7 +367,7 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
         if (remoteAddresses?.length) {
             remoteAddresses.forEach((addy: string) => {
                 const ip = cleanIp(addy);
-                systemUrls[`${ip}:${port}`] = cleanId(id);
+                systemUrls[`${ip}:${port}`] = cleanIdLegacy(id);
             });
             // remoteAddress might give a weird address with systemId.serverId
             // finds first valid ipv4/ipv6 address
@@ -378,10 +378,10 @@ export class NxMergeComponent extends ModalBase<DT['return']> implements OnInit,
                 ) || remoteAddresses[0];
         }
         return {
-            id: cleanId(id),
+            id: cleanIdLegacy(id),
             cloudSystemId,
-            cloudOwnerId: cleanId(cloudOwnerId),
-            localSystemId: cleanId(localSystemId),
+            cloudOwnerId: cleanIdLegacy(cloudOwnerId),
+            localSystemId: cleanIdLegacy(localSystemId),
             name: systemName || name,
             stateOfHealth: status.toLowerCase(),
             protoVersion,

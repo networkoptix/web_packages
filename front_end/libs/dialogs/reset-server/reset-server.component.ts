@@ -25,7 +25,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { servers } from '@static-variables';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 
 @Component({
     selector: 'nx-modal-reset-server-content',
@@ -89,7 +89,7 @@ export class ResetServerModalContent extends ModalBase<DT['return']> implements 
         const routeToNextServer = (): void => {
             const { servers } = this.system.serverManager;
             const currentServerIndex = servers.findIndex(s => s.id === server.id);
-            const nextServerId = cleanId(
+            const nextServerId = cleanIdLegacy(
                 currentServerIndex === servers.length - 1
                     ? servers[0].id
                     : servers[currentServerIndex + 1].id,

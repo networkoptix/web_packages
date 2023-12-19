@@ -81,7 +81,7 @@ import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
 import { ViewportBreakpoints } from '@styles/theme-variables-common';
-import { cleanId, dirtyId } from '@utils/general';
+import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { ExtractObservable } from '@utils/type-helpers';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
@@ -837,7 +837,7 @@ export class NxLayoutGridComponent {
         }
     }
 
-    cleanId = cleanId;
+    cleanIdLegacy = cleanIdLegacy;
 
     getScale = (itemId: string, resize: Point): string => {
         if (resize.x === 0 && resize.y === 0) {
@@ -1189,8 +1189,8 @@ export class NxLayoutGridComponent {
         const isLayoutItem = 'id' in node;
         const id = isLayoutItem ? node.id : node.details?.id;
 
-        if (id && cleanId(id) !== cleanId(this.layout.id)) {
-            this.changingLayout = cleanId(id);
+        if (id && cleanIdLegacy(id) !== cleanIdLegacy(this.layout.id)) {
+            this.changingLayout = cleanIdLegacy(id);
             this.errors = {};
             this.additionalErrorMessages = this.LANG.layouts.additionalErrorMessages;
             if (!this.system.permissionManager.permissions$$().editCameras) {

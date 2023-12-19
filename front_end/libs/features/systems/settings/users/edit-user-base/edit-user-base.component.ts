@@ -30,7 +30,7 @@ import type { NxSystem } from '@services/system.service/system';
 import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { credentialsValidation, icons, menus } from '@static-variables';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 import { NxFormGroup } from '@utils/reactive-form-builder';
 
@@ -183,7 +183,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
         const decIndex = currentUserIndex - 1;
         const nextIndex = incIndex !== this.system.userManager.users?.length ? incIndex : decIndex;
         // single-user list case check required here, too?
-        return cleanId(this.system.userManager.users[nextIndex].id) ?? '';
+        return cleanIdLegacy(this.system.userManager.users[nextIndex].id) ?? '';
     }
 
     protected checkIfEditable(form: NxFormGroup<UserFormControls>): Promise<Error | void> {
@@ -223,7 +223,7 @@ export abstract class NxSystemUsersBaseComponent implements OnInit, OnChanges, A
             ? this.LANG.system.users.cloudDelete
             : this.LANG.system.users.localDelete;
 
-        this.menuService.selectedDetailsSection.set(cleanId(user.id) ?? '');
+        this.menuService.selectedDetailsSection.set(cleanIdLegacy(user.id) ?? '');
 
         this.fullName = user.fullName;
         this.email = user.email;

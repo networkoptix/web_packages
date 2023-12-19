@@ -29,7 +29,7 @@ import { Process } from '@services/process.service/process';
 import { StorageManager } from '@services/system.service/storage-manager/storage-manager';
 import { NxToastService } from '@services/toast.service';
 import { responseOk } from '@static-variables';
-import { cleanId, assignFrom } from '@utils/general';
+import { cleanIdLegacy, assignFrom } from '@utils/general';
 
 @UntilDestroy({ checkProperties: true })
 @Component({
@@ -244,7 +244,8 @@ export class AddStorageModalContent extends ModalBase<DT['return']> implements A
                                   filter(
                                       state =>
                                           !!state.locations.find(
-                                              ({ storageId }) => storageId === cleanId(res.id),
+                                              ({ storageId }) =>
+                                                  storageId === cleanIdLegacy(res.id),
                                           ),
                                   ),
                               )

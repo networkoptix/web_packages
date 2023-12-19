@@ -62,7 +62,7 @@ import { Layout } from '@services/system-api.types';
 import { NxSystem } from '@services/system.service/system';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
-import { cleanId, dirtyId } from '@utils/general';
+import { cleanIdLegacy, dirtyId } from '@utils/general';
 import { NgChanges } from '@utils/ng-changes';
 
 const filterSearch = <DataType extends ResourceNode, QueryType extends string>(
@@ -104,7 +104,7 @@ const findNode = (
     }
 
     for (const item of items) {
-        if (cleanId(item.details.id) === cleanId(id)) {
+        if (cleanIdLegacy(item.details.id) === cleanIdLegacy(id)) {
             return { ...item, parent };
         }
 
@@ -260,7 +260,7 @@ export class NxLayoutGridTreeComponent {
         }
     };
 
-    cleanId = cleanId;
+    cleanIdLegacy = cleanIdLegacy;
 
     readonly OPEN_WINDOW_ACTIONS = [
         {
@@ -424,7 +424,10 @@ export class NxLayoutGridTreeComponent {
     };
 
     openWindow = (id: string, isNewWindow = false): void => {
-        const params = [`${this.router.url.split('layouts')[0]}layouts/${cleanId(id)}`, '_blank'];
+        const params = [
+            `${this.router.url.split('layouts')[0]}layouts/${cleanIdLegacy(id)}`,
+            '_blank',
+        ];
         if (isNewWindow) {
             params.push('"width=100%, height=100%"');
         }

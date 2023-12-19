@@ -4,7 +4,7 @@ import { ActivatedRoute, ActivatedRouteSnapshot, ResolveFn, Router } from '@angu
 import { environment } from '@environments/environment';
 import type { NxSystemServer } from '@services/system.service/system-server-types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 
 const buildUpdatedPath = (path: string, systemId: string, serverId: string): string => {
     let base = `/systems/${systemId}`;
@@ -35,8 +35,8 @@ export const serverResolver: ResolveFn<NxSystemServer | undefined> = async (
     if (!server) {
         const path = buildUpdatedPath(
             route.routeConfig.path,
-            cleanId(currentSystem.id),
-            cleanId(serverId),
+            cleanIdLegacy(currentSystem.id),
+            cleanIdLegacy(serverId),
         );
 
         await router.navigate([path], {

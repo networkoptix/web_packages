@@ -9,7 +9,7 @@ import type {
     CameraValues,
 } from '@services/system-api.types';
 import { NxSystemRestAPI } from '@services/system-rest-api.service';
-import { cleanId, KeyFilter, MS } from '@utils/general';
+import { cleanIdLegacy, KeyFilter, MS } from '@utils/general';
 
 import type { ServerManager } from '../server-manager/server-manager';
 
@@ -146,11 +146,11 @@ export class CameraManager {
             'HTTP_URL_PLUGIN',
         ].includes(camera.vendor);
 
-        const id = cleanId(camera.id);
+        const id = cleanIdLegacy(camera.id);
         const deviceType =
             'deviceType' in camera
                 ? camera.deviceType
-                : this.camerasHealth[cleanId(camera.id)]?.info.type ?? DeviceType.Camera;
+                : this.camerasHealth[cleanIdLegacy(camera.id)]?.info.type ?? DeviceType.Camera;
 
         const canEdit = id ? this.system?.permissionManager.canEditDevice(id) : false;
 

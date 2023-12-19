@@ -3,7 +3,7 @@ import { Observable, catchError, from, map, switchMap } from 'rxjs';
 import { v4 as uuid } from 'uuid';
 
 import { NxCloudApiService } from '@services/nx-cloud-api/nx-cloud-api';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { sha256 } from '@utils/sha256';
 
 import { BaseCloudServiceAPI } from '../base-cloud-service-api';
@@ -149,7 +149,7 @@ export class DocHandler<DocType extends DocId> {
     delete(docId: DocType): Observable<unknown>;
     delete(docIdOrDoc: string | DocType): Observable<unknown> {
         const docId = typeof docIdOrDoc === 'string' ? docIdOrDoc : docIdOrDoc.id;
-        return this.withPrefix(prefix => this.api.delete(`${prefix}/${cleanId(docId)}`));
+        return this.withPrefix(prefix => this.api.delete(`${prefix}/${cleanIdLegacy(docId)}`));
     }
 
     /**
@@ -178,7 +178,7 @@ export class DocHandler<DocType extends DocId> {
     ): { docId: string; body: DocType } {
         const isDocId = typeof docIdOrDoc === 'string';
         const id = isDocId ? docIdOrDoc : docIdOrDoc.id || uuid();
-        const docId = `${prefix}/${cleanId(id)}`;
+        const docId = `${prefix}/${cleanIdLegacy(id)}`;
         const body = { ...(isDocId ? doc : docIdOrDoc), id, docId } as DocType;
         return { docId, body };
     }

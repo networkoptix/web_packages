@@ -1,4 +1,4 @@
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 
 import { ServerManager } from '../server-manager/server-manager';
 
@@ -20,7 +20,7 @@ export const currentStorageStateFactory = (
             (storages, [storageId, value]: [string, any]) => {
                 return {
                     ...storages,
-                    [cleanId(storageId)]: {
+                    [cleanIdLegacy(storageId)]: {
                         vmsSpace: value?.space?.mediaSpaceB || 0,
                     },
                 };
@@ -36,7 +36,7 @@ export const currentStorageStateFactory = (
                 { id, parentId: serverId, spaceLimit: reservedSpace, addParams, ...info },
             ) => ({
                 ...allInfo,
-                [cleanId(id)]: {
+                [cleanIdLegacy(id)]: {
                     ...info,
                     reservedSpace,
                     serverId,
@@ -51,7 +51,7 @@ export const currentStorageStateFactory = (
         (storagesStats, { storageId, id, isUsedForWriting, ...storageStats }) => ({
             ...storagesStats,
             [(storageId || id) !== '{00000000-0000-0000-0000-000000000000}'
-                ? cleanId(storageId || id)
+                ? cleanIdLegacy(storageId || id)
                 : storageStats.url]: {
                 ...storageStats,
                 isOnline: storageStats?.isOnline || storageStats?.status === 'Online',

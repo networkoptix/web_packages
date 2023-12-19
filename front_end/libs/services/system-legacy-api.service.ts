@@ -24,6 +24,7 @@ import { environment } from '@environments/environment';
 import type { APIDoc } from '@pages/api-tool/api-tool-types';
 import { NxHealthService } from '@pages/health/health.service';
 import { LegacyNewUser, LegacyUser, Role, SystemUser } from '@services/system-user.types';
+import { cleanIdLegacy } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     memoizeAsync,
@@ -414,10 +415,6 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         return this.ping().pipe(map(() => this.currentRelayHost));
     }
 
-    cleanId(id: string) {
-        return id.replace('{', '').replace('}', '');
-    }
-
     /* Authentication */
     getAuthKeys() {
         const { authGet, authPost, authPlay } = this;
@@ -573,7 +570,9 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     }
 
     ping() {
-        return this.get('/api/ping', { params: { 'x-server-guid': this.cleanId(this.serverId) } });
+        return this.get('/api/ping', {
+            params: { 'x-server-guid': cleanIdLegacy(this.serverId) },
+        });
     }
 
     private updateRelayHost$ = new Subject<null>();
@@ -581,7 +580,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
         startWith(null),
         throttleTime(5000),
         switchMap(() =>
-            fetch(`${this.urlBase}/api/ping?x-server-guid=${this.cleanId(this.serverId)}`).then(
+            fetch(`${this.urlBase}/api/ping?x-server-guid=${cleanIdLegacy(this.serverId)}`).then(
                 response => new URL(response.url).host,
             ),
         ),
@@ -894,7 +893,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
     /* End of Working with users */
     /* Cameras and Servers */
     getCamera(id: string): Observable<PreprocessCamera> {
-        const params = { id: this.cleanId(id) };
+        const params = { id: cleanIdLegacy(id) };
         return this.get<t.ec2CameraEx[]>('/ec2/getCamerasEx', { params }).pipe(
             map(cameras => cameras[0]),
         );
@@ -1028,7 +1027,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             rotate?: number | string;
             auth?: string;
         } = {
-            cameraId: this.cleanId(cameraId),
+            cameraId: cleanIdLegacy(cameraId),
         };
         let endpoint = '/ec2/cameraThumbnail';
 
@@ -1109,7 +1108,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             periodsType = 0;
         }
         const params: RequestParams = {
-            cameraId: this.cleanId(cameraId),
+            cameraId: cleanIdLegacy(cameraId),
             detail,
             endTime,
             periodsType,
@@ -1200,19 +1199,19 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             case 'webRtc':
                 url = `${
                     resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
-                }/webrtc-tracker/?camera_id=${this.cleanId(cameraId)}&x-server-guid=${this.cleanId(
-                    this.serverId,
-                )}&`;
+                }/webrtc-tracker/?camera_id=${cleanIdLegacy(
+                    cameraId,
+                )}&x-server-guid=${cleanIdLegacy(this.serverId)}&`;
                 break;
             case 'webRtc2':
                 url = `${
                     resolvedRelay ? `wss://${resolvedRelay}` : this.getUrlBase('wss:')
-                }/rest/v3/devices/${this.cleanId(cameraId)}/webrtc?x-server-guid=${this.cleanId(
+                }/rest/v3/devices/${cleanIdLegacy(cameraId)}/webrtc?x-server-guid=${cleanIdLegacy(
                     this.serverId,
                 )}&api=v2&deliveryMethod=${deliveryMethod || 'srtp'}&`;
                 break;
             case 'hls':
-                url = `${this.getUrlBase()}/web/hls/${this.cleanId(
+                url = `${this.getUrlBase()}/web/hls/${cleanIdLegacy(
                     cameraId,
                 )}.m3u8?${hlsResolutionOrEmpty(resolution)}&`;
                 break;
@@ -1222,7 +1221,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 if (!urlBase) {
                     urlBase = this.window.location.origin;
                 }
-                url = `${urlBase}/${this.cleanId(cameraId)}?stream=${resolution}&`.replace(
+                url = `${urlBase}/${cleanIdLegacy(cameraId)}?stream=${resolution}&`.replace(
                     /https?:\/\//,
                     'rtsp://',
                 );
@@ -1232,7 +1231,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                 if (transport === 'mjpeg') {
                     transport = 'webm';
                 }
-                url = `${this.getUrlBase()}/web/media/${this.cleanId(
+                url = `${this.getUrlBase()}/web/media/${cleanIdLegacy(
                     cameraId,
                 )}.${transport}?resolution=${resolution || ''}&`;
         }

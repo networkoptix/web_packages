@@ -28,7 +28,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 import { cleanIds, setServerIpAndPort } from '@utils/nx';
 import { TimelineService } from '@vms-client/submodules/timeline/services/timeline.service';
 import { ViewCamera, CAMERA_STATUS } from '@vms-client/submodules/vms/datatypes/Camera';
@@ -319,7 +319,7 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                     const rec = result.find(rec => rec.serverGuid === `{${mediaServer.id}}`);
                     rec?.archivedCameras.forEach(cameraId => {
                         // trick camera 'hasArchive' - here we don't need a real info -- TT
-                        archiveRanges[cleanId(cameraId)] = newBaseTimeRange(1, 2);
+                        archiveRanges[cleanIdLegacy(cameraId)] = newBaseTimeRange(1, 2);
                     });
                 });
             });

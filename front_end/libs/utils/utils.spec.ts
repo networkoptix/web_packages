@@ -4,15 +4,15 @@ import * as generalUtils from './general';
 import * as nxUtils from './nx';
 
 describe('General purpose utils', () => {
-    describe('cleanId', () => {
+    describe('cleanIdLegacy', () => {
         it('should clean up id', () => {
-            expect(generalUtils.cleanId('{1ba9a833-0885-9649-8f1f-8400edf48868}')).toBe(
+            expect(generalUtils.cleanIdLegacy('{1ba9a833-0885-9649-8f1f-8400edf48868}')).toBe(
                 '1ba9a833-0885-9649-8f1f-8400edf48868',
             );
         });
 
         it('should return the same id', () => {
-            expect(generalUtils.cleanId('1ba9a833-0885-9649-8f1f-8400edf48868')).toBe(
+            expect(generalUtils.cleanIdLegacy('1ba9a833-0885-9649-8f1f-8400edf48868')).toBe(
                 '1ba9a833-0885-9649-8f1f-8400edf48868',
             );
         });

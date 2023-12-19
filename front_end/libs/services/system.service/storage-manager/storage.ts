@@ -2,7 +2,7 @@ import { v4 as uuid } from 'uuid';
 
 import type { ec2Storage } from '@services/system-api.types';
 import { ServerManager } from '@services/system.service/server-manager/server-manager';
-import { cleanId, isUUID } from '@utils/general';
+import { cleanIdLegacy, isUUID } from '@utils/general';
 
 /**
  * TODO: Need to add better types to some of the system-api methods
@@ -164,7 +164,7 @@ export class CurrentStorageState {
             isBackup === !main && isOnline && isWritable && usedForWriting;
 
     #parseAnalytics = ({ hasAnalyticsData, hasPlugins, metadataStorageId }): void => {
-        this.#metadataStorageId = cleanId(metadataStorageId || '');
+        this.#metadataStorageId = cleanIdLegacy(metadataStorageId || '');
         this.#hasAnalyticsData = hasAnalyticsData;
         this.#hasPlugins = hasPlugins;
     };

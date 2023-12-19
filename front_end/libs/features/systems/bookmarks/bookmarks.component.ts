@@ -35,7 +35,7 @@ import { icons } from '@static-variables';
 import {
     alphabeticalSort,
     caseInsenstiveSearch,
-    cleanId,
+    cleanIdLegacy,
     MS,
     msToParts,
     offsetDate,
@@ -377,7 +377,7 @@ export class NxBookmarksComponent implements OnInit {
                     ),
                     isVisible: false,
                     deviceName,
-                    deviceId: cleanId(bk.deviceId),
+                    deviceId: cleanIdLegacy(bk.deviceId),
                     systemId: this.system.id,
                     timeZoneOffset,
                 };

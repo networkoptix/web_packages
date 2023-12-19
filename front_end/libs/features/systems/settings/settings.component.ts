@@ -47,7 +47,7 @@ import { NxToastService } from '@services/toast.service';
 import { NxUriService } from '@services/uri.service';
 import { alertTimeout, clientMode, menus, redirect } from '@static-variables';
 import { GridBreakpoints } from '@styles/theme-variables-common';
-import { alphabeticalSort, cleanId } from '@utils/general';
+import { alphabeticalSort, cleanIdLegacy } from '@utils/general';
 
 /**
  * TODO: A lot of the observable usage in this component should be cleaned up.
@@ -145,7 +145,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 this.archivesPresent.clear();
                 response.forEach(server => {
                     server.archivedCameras
-                        .map(cleanId)
+                        .map(cleanIdLegacy)
                         .forEach(cam => this.archivesPresent.add(cam));
                 });
                 this.updateCameraSettingsMenu();
@@ -665,7 +665,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const ldapUsers: Level3Item[] = [];
                 // TODO: Reconcile UserManager types
                 this.system.userManager.users.forEach((user: NxUser) => {
-                    const id = cleanId(user.id);
+                    const id = cleanIdLegacy(user.id);
                     const additionalLabel = this.getUserMenuAdditionalLabel(user);
                     const svgIcon = this.getUserMenuSvgIcon(user);
                     const label =
@@ -747,7 +747,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
                 serversNode.level3 = [];
                 this.system.serverManager.servers.forEach(server => {
-                    const id = cleanId(server.id);
+                    const id = cleanIdLegacy(server.id);
 
                     serversNode.level3.push({
                         id: server.id,
@@ -759,7 +759,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                         disabled: server.status.toLowerCase() === 'offline',
                     });
                 });
-                serversNode.path = `${menus.systemSettings.servers.path}/${cleanId(
+                serversNode.path = `${menus.systemSettings.servers.path}/${cleanIdLegacy(
                     serversNode.level3[0]?.id || '',
                 )}`;
             }

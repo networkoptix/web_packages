@@ -11,7 +11,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import type { NxSystem } from '@services/system.service/system';
 import type { License, NxSystemServer } from '@services/system.service/system-types';
 import { menus } from '@static-variables';
-import { cleanId } from '@utils/general';
+import { cleanIdLegacy } from '@utils/general';
 
 import { getDynamicLicense } from './dynamic-license';
 
@@ -203,7 +203,7 @@ export class NxSystemLicensesComponent implements OnInit {
                 if (Object.keys(server).length) {
                     if (serversTime.length) {
                         item.info.serverTime = serversTime.find(time => {
-                            return cleanId(server.id) === time.serverId;
+                            return cleanIdLegacy(server.id) === time.serverId;
                         }).vmsTime;
                     }
 
