@@ -192,7 +192,7 @@ export class NxCloudApiService {
             this.http,
             this.#withFreshSession,
             refreshToken,
-        )(this.targetInstance, () => this.CONFIG.customization);
+        )(this.targetInstance);
     }
 
     getSubAPI(route: ConsoleSection) {
