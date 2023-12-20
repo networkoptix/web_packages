@@ -1,13 +1,12 @@
+from datetime import timedelta
+from unittest import mock
 from uuid import uuid4
 
 import pytest
-from django.db.models import Subquery
-from datetime import timedelta
-from model_bakery import baker
+from django.core.cache import caches
 
 from partners.models import (
-    CloudSystemId, OrganizationRole, OrganizationToUser,
-    Organization, OrganizationPermissions, ChannelPartnerStates,
+    CloudSystemId, Organization, OrganizationPermissions, ChannelPartnerStates,
     ChannelPartnerService, ChannelPartner, ChannelPartnerEvent, OrganizationRoles, SystemGroup, CloudUser
 )
 
@@ -160,6 +159,127 @@ class TestChannelPartner:
         assert set(partners_ids) == set([p.id for p in partners[6:]])
         assert set(partners_ids) == {cp.id for cp in partners[5].successors()}
 
+    def test_get_direct_children_count(self, channel_partner_factory):
+        parent = channel_partner_factory()
+
+        # Create some children for the parent
+        child1 = channel_partner_factory(parent_channel_partner=parent)
+        child2 = channel_partner_factory(parent_channel_partner=parent)
+        child3 = channel_partner_factory(parent_channel_partner=parent)
+
+        # Test the method with the parent
+        assert ChannelPartner.get_direct_channel_partner_children_count(parent) == 3
+
+        # Create a grandchild for one of the children
+        grandchild = channel_partner_factory(parent_channel_partner=child1)
+
+        # Test the method with the parent again, it should still return 3
+        assert ChannelPartner.get_direct_channel_partner_children_count(parent) == 3
+
+        # Test the method with the child that has a grandchild, it should return 1
+        assert ChannelPartner.get_direct_channel_partner_children_count(child1) == 1
+
+    def test_get_direct_children_count_cache(self, channel_partner_factory):
+        parent = channel_partner_factory()
+
+        # Create some children for the parent
+        child1 = channel_partner_factory(parent_channel_partner=parent)
+        child2 = channel_partner_factory(parent_channel_partner=parent)
+        child3 = channel_partner_factory(parent_channel_partner=parent)
+
+        # Test the method with the parent, it should return 3 and cache the result
+        assert ChannelPartner.get_direct_channel_partner_children_count(parent) == 3
+        cached_result = caches['default'].get(f'cp_direct_children-count-{str(parent.id)}')
+        assert cached_result == 3
+
+        # Test the method with the parent again, it should return 3 and not hit the database
+        with mock.patch.object(ChannelPartner.objects, 'filter', wraps=ChannelPartner.objects.filter) as filter_mock:
+            assert ChannelPartner.get_direct_channel_partner_children_count(parent) == 3
+            filter_mock.assert_not_called()  # The database should not be hit again
+
+        # Create a grandchild for one of the children and test the method with the parent again
+        grandchild = channel_partner_factory(parent_channel_partner=child1)
+        assert ChannelPartner.get_direct_channel_partner_children_count(parent) == 3
+
+        # The cached result should be updated
+        cached_result = caches['default'].get(f'cp_direct_children-count-{str(parent.id)}')
+        assert cached_result == 3
+
+    def test_get_direct_children_count_cache_flow(self, channel_partner_factory):
+        # Create a parent ChannelPartner
+        parent = channel_partner_factory()
+
+        cache_key: str = f'cp_direct_children-count-{str(parent.id)}'
+
+        # Check that the cache is initially empty for this parent
+        assert caches['default'].get(cache_key) is None
+
+        # Call get_direct_children_count for the first time, it should return 0 and cache the result
+        ChannelPartner.get_direct_channel_partner_children_count(parent)
+        assert caches['default'].get(cache_key) == 0
+
+        # Create a child for the parent
+        child1 = channel_partner_factory(parent_channel_partner=parent)
+
+        # The cache should be invalidated now, so it should return None
+        assert caches['default'].get(cache_key) is None
+
+        # Call get_direct_children_count again, it should return 1 and cache the result
+        ChannelPartner.get_direct_channel_partner_children_count(parent)
+        assert caches['default'].get(cache_key) == 1
+
+    def test_get_direct_organization_children_count(self, channel_partner_factory, organization_factory):
+        cp = channel_partner_factory()
+
+        # Create some organizations for the ChannelPartner
+        org1 = organization_factory(channel_partner=cp)
+        org2 = organization_factory(channel_partner=cp)
+        org3 = organization_factory(channel_partner=cp)
+
+        # Test the method with the ChannelPartner, it should return 3
+        assert ChannelPartner.get_direct_organization_children_count(cp) == 3
+    def test_get_direct_organization_children_count_cache(self, channel_partner_factory, organization_factory):
+        cp = channel_partner_factory()
+        cache_key = f'direct_organization_children_count_{str(cp.id)}'
+
+        # Create some organizations for the ChannelPartner
+        org1 = organization_factory(channel_partner=cp)
+        org2 = organization_factory(channel_partner=cp)
+        org3 = organization_factory(channel_partner=cp)
+
+        # Test the method with the ChannelPartner, it should return 3
+        assert ChannelPartner.get_direct_organization_children_count(cp) == 3
+        cached_result = caches['default'].get(cache_key)
+        assert cached_result == 3
+
+        # Test the method with the parent again, it should return 3 and not hit the database
+        with mock.patch.object(Organization.objects, 'filter', wraps=Organization.objects.filter) as filter_mock:
+            assert ChannelPartner.get_direct_organization_children_count(cp) == 3
+            filter_mock.assert_not_called()  # The database should not be hit again
+
+        # Create another Organization that has the same ChannelPartner
+        org4 = organization_factory(channel_partner=cp)
+        assert ChannelPartner.get_direct_organization_children_count(cp) == 4
+
+        # The Cache should be updated
+        cached_result = caches['default'].get(cache_key)
+        assert cached_result == 4
+
+    def test_get_direct_organization_children_count_cache_flow(self, channel_partner_factory, organization_factory):
+        cp = channel_partner_factory()
+        cache_key = f'direct_organization_children_count_{str(cp.id)}'
+        # Check that the cache is initially empty
+        assert caches['default'].get(cache_key) is None
+        # Call for the first time, it should return 0 and cache the result
+        assert ChannelPartner.get_direct_organization_children_count(cp) == 0
+        # Create an association
+        org1 = organization_factory(channel_partner=cp)
+        # Cache should be None
+        assert caches['default'].get(cache_key) is None
+        # Cache should now be 1
+        assert ChannelPartner.get_direct_organization_children_count(cp) == 1
+        assert caches['default'].get(cache_key) == 1
+
     def test_can_modify_organization_service_quantities(self, channel_partner_factory, cp_user_factory):
         root = channel_partner_factory(parent_channel_partner=None)
         child = channel_partner_factory(parent_channel_partner=root)
@@ -170,27 +290,6 @@ class TestChannelPartner:
         assert root.can_modify_organization_service_quantities(child_user.user) is False
         assert child.can_modify_organization_service_quantities(root_user.user) is False
 
-        # root.allow_changing_services = True
-        # root.save()
-        # assert root.can_modify_organization_service_quantities(root_user.user) is True
-        # assert child.can_modify_organization_service_quantities(child_user.user) is False
-        #
-        # child.allow_changing_services = True
-        # child.save()
-        # assert root.can_modify_organization_service_quantities(root_user.user) is True
-        # assert child.can_modify_organization_service_quantities(child_user.user) is True
-
-    # def test_disable_successors_acs_on_save(self, channel_partner_factory):
-    #     partners = []
-    #     for _ in range(5):
-    #         partners.append(channel_partner_factory(parent_channel_partner=partners[-1] if partners else None, acs=True))
-    #
-    #     partners[2].allow_changing_services = False
-    #     partners[2].save()
-    #
-    #     for i in range(5):
-    #         partners[i].refresh_from_db()
-    #         assert partners[i].allow_changing_services == (i < 2)
 
     def test_calculate_monthly_changes(self, channel_partner_factory, organization_factory, system_factory,
                                        cp_service_factory, service_record_factory):

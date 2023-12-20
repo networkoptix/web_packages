@@ -32,32 +32,6 @@ from tools.serializers import VALUE_REPLACEMENT
 
 class TestCloudSystemViewSet:
 
-    # Left for testing this case in future
-    # def test_create_200(self, default_cp_admin, default_org_admin, mock_auth_with_user, arf, httpx_mock):
-    #     sys_id = f'{uuid4()}'
-    #     system_url = f'https://cloud-test.hdw.mx/cdb/systems/{sys_id}'
-    #     httpx_mock.add_response(url=system_url, json={"accessRole": "owner"})
-    #     # httpx_mock.add_response(url=self.batch_url, json={'batchId': f'{uuid4()}'})
-    #     data = {
-    #       "cloudSystemId": sys_id,
-    #       "organization": str(default_org_admin.organization.id)
-    #     }
-    #     # Channel partner admin
-    #     mock_auth_with_user(default_cp_admin)
-    #     request = arf.post('/', data=data, format='json')
-    #     view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
-    #     response = view(request)
-    #     assert CloudSystemId.objects.filter(system_id=sys_id).exists()
-    #     assert response.status_code == 200
-    #     assert response.data['systemId']
-    #
-    #     mock_auth_with_user(default_org_admin)
-    #     request = arf.post('/', data=data, format='json')
-    #     view = CloudSystemViewSet.as_view({'post': 'bind_existing'})
-    #     response = view(request)
-    #     assert response.status_code == 200
-    #     assert response.data['systemId'] == sys_id
-
     def test_create_403(self, default_cp_user, default_org_user, mock_auth_with_user, arf, httpx_mock):
         sys_id = f'{uuid4()}'
         system_url = f'https://cloud-test.hdw.mx/cdb/systems/{sys_id}'
@@ -111,12 +85,6 @@ class TestCloudSystemViewSet:
             response = view(req, id=str(system.system_id))
         assert response.status_code == 200
 
-        # root.allow_changing_services = True
-        # root.save()
-        # req.user = root_user.user
-        # with transaction.atomic():
-        #     response = view(req, id=str(system.system_id))
-        # assert response.status_code == 200
 
     def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
@@ -172,14 +140,6 @@ class TestCloudSystemViewSet:
         assert response.data['services'][str(services[0].id)]['quantity'] == 15
         assert response.data['services'][str(services[1].id)]['quantity'] == 10
 
-        # # test disabled acs
-        # cp.allow_changing_services = False
-        # cp.save()
-        # mocker.patch('django.core.cache.backends.redis.RedisCache.add', return_value=True)
-        # request = arf.patch('/', data={"services": {str(services[0].id): {"quantity": 15}}}, format='json')
-        # with transaction.atomic():
-        #     response = view(request, id=str(system.system_id))
-        # assert response.status_code == 403
 
     def test_service_quantity_patch_shutdown(selfself, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,
@@ -226,10 +186,6 @@ class TestCloudSystemViewSet:
 
 
 class TestOrganizationUserViewSet:
-
-    # @pytest.fixture(autouse=True)
-    # def setup(self, db):
-    #     self.batch_url = 'https://cloud-test.hdw.mx/cdb/systems/users/batch'
 
     def test_create_200(self, organization_factory, org_user_factory, system_factory,
                         mock_auth_with_user, arf, random_email, mock_account_status,
@@ -822,7 +778,7 @@ class TestOrganizationViewSet:
         org = organization_factory(channel_partner=cp)
         view = OrganizationViewSet.as_view(actions={'get': 'groups_structure'}, detail=True)
 
-        def creat_groups(organization, degree=3):
+        def create_groups(organization, degree=3):
             groups = [[system_group_factory(organization=organization) for _ in range(degree)]]
             for level in range(degree):
                 siblings = []
@@ -832,7 +788,7 @@ class TestOrganizationViewSet:
                 groups.append(siblings)
             return groups
 
-        org_groups = creat_groups(organization=org)
+        org_groups = create_groups(organization=org)
 
         single_group_user = sys_group_user_factory(organization=org, group=org_groups[-1][-1])
         request = arf.get('/')

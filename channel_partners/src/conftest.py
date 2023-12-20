@@ -356,5 +356,5 @@ def mock_post_notification(httpx_mock, request_host):
 
 @pytest.fixture(autouse=True, scope='function')
 def mox_tasks_retries(mocker):
-    mocker.patch('partners.tasks.notification', 'MAX_RETRIES', 1)
-    mocker.patch('partners.tasks.notification', 'RETRY_TIMEOUT', 1)
+    mocker.patch('partners.tasks.notification.MAX_RETRIES', 1)
+    mocker.patch('partners.tasks.notification.RETRY_TIMEOUT', 1)

@@ -1,19 +1,19 @@
 import logging
+from django.core.cache import caches
+from django.db.models import Q, Subquery
 from time import sleep
 from typing import TypedDict, Tuple
 from uuid import uuid4, UUID
 
 import httpx
 from django.core.cache import caches
-from django.db.models import Subquery, Q
+from django.db.models import Q
 from django.db.models import Subquery
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
 from django.utils.encoding import force_str
 from django_filters.rest_framework import DjangoFilterBackend
-from nx_cloud_api_client.apis import CdbSystemAPIBase
-from nx_cloud_api_client.base_auth import BearerTokenAuth
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import extend_schema_view, OpenApiParameter
 from rest_framework import status
@@ -24,12 +24,14 @@ from rest_framework.response import Response
 from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
+from nx_cloud_api_client.apis import CdbSystemAPIBase
 from partners import filters
 from tools.exception import Conflict
 from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from .forms.grant_access_form import GrantAccessForm
-from .models import ChannelPartnerRoles, CloudSystemStates
+from .models import ChannelPartnerRoles, GroupStructure
+
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, \
     IsInternalToken
 from .serializers import *
@@ -672,7 +674,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
     @action(methods=['get'], detail=True)
     def groups_structure(self, request, pk=None):
         organization: Organization = self.get_object()
-        serializer = GroupsStructureSerializer(data=organization.get_groups_structure_for_user(request.user), many=True)
+        user_groups_structure: List[GroupStructure | None] = organization.get_groups_structure_for_user(request.user)
+        serializer = GroupsStructureSerializer(data=user_groups_structure, many=True)
         serializer.is_valid()
         return Response(serializer.data)
 
