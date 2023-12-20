@@ -332,7 +332,7 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     effectiveState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     systemId = serializers.UUIDField(source='system_id', read_only=True)
-    system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CHOICES, read_only=True)
+    system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CODES, read_only=True)
     services = serializers.DictField(read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(), allow_null=True)
