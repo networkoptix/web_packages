@@ -1,0 +1,55 @@
+<ng-container *ngrxLet="group$ as group">
+    <div
+        class="mb-3 d-flex"
+        [style]="{ gap: '5px' }"
+    >
+        <button
+            class="btn btn-default"
+            (click)="back()"
+        >
+            <h2>⬅️ Back</h2>
+        </button>
+        <button
+            class="btn btn-default"
+            (click)="up(group.parentId)"
+        >
+            <h2>⬆️ Up</h2>
+        </button>
+    </div>
+
+    <ng-container *ngIf="error as error"
+        ><h1>{{ error.code }} — {{ error.msg }}</h1></ng-container
+    >
+
+    <ng-container *ngIf="!error">
+        <h1>{{ group.name }}</h1>
+        <ul>
+            <li *ngFor="let prop of group | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>
+        </ul>
+
+        <h2>Users</h2>
+        <ng-container *ngIf="usersError as error"> {{ error.code }} — {{ error.msg }}</ng-container>
+        <ng-container *ngIf="!usersError">
+            <div *ngFor="let user of users$ | ngrxPush">
+                <h4>{{ user.email }}</h4>
+                <ul>
+                    <li *ngFor="let prop of user | keyvalue">
+                        {{ prop.key }}: {{ prop.value | json }}
+                    </li>
+                </ul>
+            </div>
+        </ng-container>
+
+        <h2>Groups</h2>
+        <div *ngFor="let group of group.children">
+            <h4>
+                <a [routerLink]="'../' + group.id">{{ group.name }}</a>
+            </h4>
+            <ul>
+                <li *ngFor="let prop of group | keyvalue">
+                    {{ prop.key }}: {{ prop.value | json }}
+                </li>
+            </ul>
+        </div>
+    </ng-container>
+</ng-container>

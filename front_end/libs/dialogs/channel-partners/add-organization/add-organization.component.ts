@@ -62,7 +62,8 @@ export class AddOrganizationModalContent extends ModalBase<DT['return']> {
                 this.cpService
                     .createOrganizationUser(res.id, {
                         email: this.accountService.email,
-                        role: 'Organization Administrator',
+                        roleId: '00000000-0000-4000-8000-000000000001',
+                        // TOOD: Make a enum of base roles
                     })
                     .subscribe();
                 this.close(res);

@@ -9,6 +9,7 @@ import { NxChannelPartnerModule } from './channel-partner/channel-partner.module
 import { NxChannelPartnersComponent } from './channel-partners.component';
 import { NxOrganizationComponent } from './organization/organization.component';
 import { NxOrganizationModule } from './organization/organization.module';
+import { NxSystemGroupComponent } from './system-group/system-group.component';
 
 const appRoutes: Routes = [
     {
@@ -17,12 +18,16 @@ const appRoutes: Routes = [
         component: NxChannelPartnersComponent,
     },
     {
-        path: ':id',
+        path: ':partnerId',
         component: NxChannelPartnerComponent,
     },
     {
-        path: 'org/:id',
+        path: ':partnerId/:orgId',
         component: NxOrganizationComponent,
+    },
+    {
+        path: ':partnerId/:orgId/:groupId',
+        component: NxSystemGroupComponent,
     },
 ];
 

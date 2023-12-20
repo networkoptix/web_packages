@@ -12,7 +12,7 @@
         <button
             *ngIf="org"
             class="btn btn-default"
-            (click)="up(org.channelPartner)"
+            (click)="up()"
         >
             <h2>⬆️ Up</h2>
         </button>
@@ -48,12 +48,23 @@
         <h2>Users</h2>
         <ng-container *ngIf="usersError as error"> {{ error.code }} — {{ error.msg }}</ng-container>
         <ng-container *ngIf="!usersError">
-            <button
-                class="btn-primary"
-                (click)="newOrgUser(org.id)"
+            <div
+                class="mb-3 d-flex"
+                [style]="{ gap: '5px' }"
             >
-                New User
-            </button>
+                <button
+                    class="btn-primary"
+                    (click)="newOrgUser()"
+                >
+                    New User
+                </button>
+                <button
+                    class="btn-primary"
+                    (click)="newOrgUserV2()"
+                >
+                    New User v2
+                </button>
+            </div>
             <div *ngFor="let user of users$ | ngrxPush">
                 <h4>{{ user.email }}</h4>
                 <div
@@ -62,13 +73,13 @@
                 >
                     <button
                         class="btn-primary"
-                        (click)="updateOrgUser(org.id, user)"
+                        (click)="updateOrgUser(user)"
                     >
                         Update
                     </button>
                     <button
                         class="btn-danger"
-                        (click)="deleteOrgUser(org.id, user.email)"
+                        (click)="deleteOrgUser(user.email)"
                     >
                         Delete
                     </button>
@@ -81,5 +92,48 @@
                 </ul>
             </div>
         </ng-container>
+
+        <h2>Groups</h2>
+        <label class="mr-2">New group name</label><input [(ngModel)]="newGroupName" />
+        <button
+            class="btn-primary"
+            (click)="createGroup(null)"
+        >
+            New org group
+        </button>
+        <div
+            *ngFor="let group of flatGroups$ | ngrxPush"
+            [ngStyle]="{ paddingLeft: 50 * group.level + 'px', position: 'relative' }"
+        >
+            <div
+                [ngStyle]="{
+                    position: 'absolute',
+                    top: '0',
+                    left: '0',
+                    width: 50 * group.level - 10 + 'px',
+                    height: '20px',
+                    backgroundColor: 'rgba(125, 125, 125, 0.3)'
+                }"
+            ></div>
+            <h4>
+                <a [routerLink]="group.id">{{ group.name }}</a>
+            </h4>
+            <div
+                class="mb-3 d-flex"
+                [style]="{ gap: '5px' }"
+            >
+                <button
+                    class="btn-primary"
+                    (click)="createGroup(group.id)"
+                >
+                    New subgroup
+                </button>
+            </div>
+            <ul>
+                <li *ngFor="let prop of group | keyvalue">
+                    {{ prop.key }}: {{ prop.value | json }}
+                </li>
+            </ul>
+        </div>
     </ng-container>
 </ng-container>

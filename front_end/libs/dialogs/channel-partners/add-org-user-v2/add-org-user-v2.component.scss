@@ -1,0 +1,127 @@
+@use "typography";
+
+:host {
+    .dropdown-wrapper {
+        position: relative;
+    }
+
+    #org-tree-search {
+        padding-right: 32px !important;
+        text-overflow: ellipsis;
+        background: var(--btn-dropdown-toggle-bg) !important;
+        @include typography.medium13nocolor;
+
+        &.warning {
+            border-color: #e1a700 !important;
+            outline: none !important;
+        }
+        &.error {
+            border-color: var(--input-error-border-color) !important;
+            outline: none !important;
+        }
+
+        &:focus {
+            border-color: var(--input-focus-border-color) !important;
+        }
+    }
+
+    .dropdown-open-btn {
+        position: absolute;
+        right: 6px; // TODO: Find a better way to match normal dropdown
+        top: 50%;
+        transform: translateY(-50%);
+
+        padding: 0 !important;
+        height: 25px !important;
+        width: 25px !important;
+        background: none !important;
+
+        svg path {
+            stroke: var(--btn-dropdown-toggle-color);
+        }
+
+        &:hover,
+        &:focus {
+            background: var(--btn-dropdown-toggle-hover-bg) !important;
+        }
+    }
+
+    .warning {
+        color: #e1a700;
+    }
+}
+
+.org-tree {
+    // position: absolute;
+    // top: 32px;
+    // left: 0;
+    // right: 0;
+
+    width: 100%;
+    padding: 5px;
+    background-color: var(--dropdown-menu-bg);
+
+    max-height: 300px;
+    overflow-y: auto;
+    overflow-x: hidden;
+
+    &__item {
+        list-style: none;
+        display: flex;
+        height: 25px;
+        cursor: pointer;
+        border-radius: 2px;
+        color: var(--dropdown-item-color);
+
+        // Padding is already used in template for level indentation
+        & > :first-child {
+            margin-inline-start: 5px;
+        }
+        & > :last-child {
+            margin-inline-end: 5px;
+        }
+
+        &:hover,
+        &--highlight {
+            background-color: var(--dropdown-item-hover-bg);
+            color: var(--dropdown-item-hover-color);
+        }
+
+        // Extra specificity to override :hover
+        &.org-tree__item--selected {
+            background-color: var(--dropdown-item-selected-bg);
+            color: var(--dropdown-item-selected-color);
+        }
+    }
+
+    #org-item {
+        svg path {
+            fill: var(--dropdown-item-color);
+        }
+        &.org-tree__item--selected {
+            svg path {
+                fill: var(--dropdown-item-selected-color);
+            }
+        }
+    }
+
+    &__arrow-btn {
+        height: 25px !important;
+        width: 25px !important;
+        padding: 0 !important;
+        background: none !important;
+        border-radius: 2px;
+
+        &:hover {
+            background: var(--btn-dropdown-toggle-hover-bg) !important;
+        }
+
+    }
+
+    span {
+        user-select: none;
+        margin-left: 5px;
+        height: 25px;
+        line-height: 25px;
+    }
+}
