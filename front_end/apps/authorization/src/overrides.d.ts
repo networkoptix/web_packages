@@ -1,4 +1,5 @@
 import { CloudBindData } from './app/types/cloud-bind.types';
+import { CloudTokens } from './app/types/bind-service.types';
 
 declare global {
     interface Window {
@@ -6,6 +7,7 @@ declare global {
     }
 
     class nativeClient {
+        static setTokens(tokens: CloudTokens): void;
         static twoFaVerified(code: string): void;
         static openUrlInBrowser(url: string): void;
         static setCode(code: string): void;

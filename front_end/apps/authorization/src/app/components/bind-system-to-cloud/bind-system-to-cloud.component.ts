@@ -108,12 +108,6 @@ export class BindSystemToCloudComponent implements OnInit {
         this.state$$.update(state => ({ ...state, selectedOrg: org }));
     }
 
-    // Debugging state
-    currentState = effect(() => {
-        // eslint-disable-next-line no-console
-        console.log(this.state$$());
-    });
-
     // Auto Fetching orgs
     getOrgsEffect = effect(async () => {
         const code = this.code$$();
@@ -158,7 +152,6 @@ export class BindSystemToCloudComponent implements OnInit {
             },
             { errorCodes: { badRequest: 'Org was not selected' }, ignoreError: true },
             (res: BindResponse) => {
-                this.cleanup();
                 this.handleBindData(res);
             },
         );
@@ -166,7 +159,6 @@ export class BindSystemToCloudComponent implements OnInit {
 
     cleanup(): void {
         this.bindService.deleteTokens().subscribe(() => {
-            // Todo: handling returning info to the client
             // eslint-disable-next-line no-console
             console.log('jobs done');
         });
@@ -182,7 +174,12 @@ export class BindSystemToCloudComponent implements OnInit {
 
         if (window.nativeClient) {
             nativeClient.setBindInfo(bindInfo);
-        } else if (this.redirectUri?.includes('https')) {
+            nativeClient.setTokens(this.bindService.tokensForVMS$$());
+            return;
+        }
+        // If oauth isn't open in the desktop client kill off the tokens used for binding
+        this.cleanup();
+        if (this.redirectUri?.includes('https')) {
             const params = new URLSearchParams();
             Object.entries(bindInfo).forEach(([k, v]) => params.set(k, v));
             const bindQs = params.toString();
