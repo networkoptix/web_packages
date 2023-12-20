@@ -2,6 +2,9 @@ import typing
 import httpx
 import inspect
 from functools import wraps
+
+from httpx import Headers
+
 from .apis import (
     CdbAccountAPIBase, CdbSystemTransferAPIBase,
     CdbAuthSupportAPIBase, CdbSystemAPIBase, Cdb2faAPIBase, CdbOrganizationAPIBase
@@ -47,6 +50,7 @@ class AddAuthMixin:
     per client class using `auto_refresh` argument or per handler using `auto_auth` keyword.
     Also possible to use original handlers with `_orig_` prefix.
     """
+
     def __init__(self, authenticator: CdbAuthAPIClient, *args, auto_refresh=False, **kwargs):
         self.authenticator = authenticator
         self.auto_refresh = auto_refresh
@@ -62,8 +66,8 @@ class AddAuthMixin:
         return [
             f for f in funcs
             if not f[0].startswith('_') and f[0] not in excluded
-            and f[1].__annotations__.get("return") == RESPONSES_TYPE
-            and f[1].__annotations__.get("auth")
+               and f[1].__annotations__.get("return") == RESPONSES_TYPE
+               and f[1].__annotations__.get("auth")
         ]
 
     def _copy_func(self, name, func):
@@ -136,16 +140,23 @@ class AOrganizationAPI(AddAuthMixin, CdbOrganizationAPIBase):
 
 class NxCloudAPIClient(ContextAPIMixin):
     """
-    NX CDB API Client. Used for access API with auto credentials refresh. Class automatically
-    determined request methods requiring authentication and select appropriate authentication
-    based on available credentials and method `auth` keyword annotation.
-    Credentials can be set per class instance by passing one of credentials acceptable for
-    making success request and/or requesting an access_token.
-    If credentials is not set or there is another user authentication required it is possible
-    to use credentials directly to request handler passing CdbAuthAPIClient in `authenticator`
-    keyword argument or object of `httpx.Auth` subclass to `auth` keyword argument.
-    Due to using dynamic methods overrides auto-completion is not work properly. For request
-    methods added keyword arguments `auto_auth` and `authenticator` are not shown inn IDE.
+    NX CDB API Client.
+    - Used for access API with auto credentials refresh. Class automatically
+      determined request methods requiring authentication and select appropriate authentication
+      based on available credentials and method `auth` keyword annotation.
+    - Credentials can be set per class instance by passing one of credentials acceptable for
+      making success request and/or requesting an access_token.
+    - If credentials is not set or there is another user authentication required it is possible
+      to use credentials directly to request handler passing CdbAuthAPIClient in `authenticator`
+      keyword argument or object of `httpx.Auth` subclass to `auth` keyword argument.
+    - Due to using dynamic methods overrides auto-completion is not work properly. For request
+      methods added keyword arguments `auto_auth` and `authenticator` are not shown in IDE.
+    - Added functionality to handle User-Agent headers.
+        - The client now sets the User-Agent header from the provided headers.
+            - If it exists, or uses a default value.
+            - if no User-Agent is provided.
+            - If the User-Agent is set to None in the headers,
+              the User-Agent header will be removed from the request.
     """
     _default_client_class: typing.Union[typing.Type[httpx.Client], typing.Type[httpx.AsyncClient], None] = None
 
@@ -181,6 +192,7 @@ class NxCloudAPIClient(ContextAPIMixin):
             )
         else:
             self.authentication = None
+        self._handle_user_agent(kwargs.get("headers", {}))
         self.system = CdbSystemAPIBase(client=self.client, host=host)
         self.system_transfer = CdbSystemTransferAPIBase(client=self.client, host=host)
         self.account = CdbAccountAPIBase(client=self.client, host=host)
@@ -192,6 +204,16 @@ class NxCloudAPIClient(ContextAPIMixin):
     @property
     def is_async(self):
         return hasattr(self.client, '__aenter__')
+
+    def _handle_user_agent(self, headers: typing.Dict) -> None:
+        key = 'User-Agent'
+        # Check if key exists in Client headers and provided headers
+        if key in self.client.headers and key in headers:
+            user_agent = headers.get(key)
+            if user_agent is None:
+                del self.client.headers[key]
+            else:
+                self.client.headers['User-Agent'] = user_agent
 
     def _update_api_modules(self):
         apis = [
@@ -214,8 +236,8 @@ class NxCloudAPIClient(ContextAPIMixin):
         return [
             f for f in funcs
             if not f[0].startswith('_') and f[0] not in excluded
-            and f[1].__annotations__.get("return") == RESPONSES_TYPE
-            and f[1].__annotations__.get("auth")
+               and f[1].__annotations__.get("return") == RESPONSES_TYPE
+               and f[1].__annotations__.get("auth")
         ]
 
     def _get_authenticator(self):
