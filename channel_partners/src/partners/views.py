@@ -1037,7 +1037,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_access,
                                                         system_allowed=True, direct_access_allowed=True))
         if self.action == 'destroy':
-            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage))
+            perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage, system_allowed=True))
         if self.action == 'service_quantity':
             if self.request.method == 'PATCH':
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
