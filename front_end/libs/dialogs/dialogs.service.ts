@@ -319,13 +319,20 @@ export class NxDialogsService {
         ),
     );
 
-    /* Groups */
     createSystemGroup = this.dialogV2Factory<Dt.CreateSystemGroup>(
         () =>
             import('./create-system-group/create-system-group.component').then(
                 m => m.CreateSystemGroupModalContent,
             ),
         { autoFocus: 'input' },
+    );
+
+    addOrgUserV2 = this.dialogV2Factory<Dt.AddOrgUserV2>(
+        () =>
+            import('./channel-partners/add-org-user-v2/add-org-user-v2.component').then(
+                m => m.NxAddOrgUserV2ModalContent,
+            ),
+        { width: '360px' },
     );
 
     /* Admin */

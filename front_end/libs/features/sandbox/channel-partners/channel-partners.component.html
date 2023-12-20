@@ -37,7 +37,7 @@
 <h2>Organizations</h2>
 <div *ngFor="let org of organizations$ | ngrxPush">
     <h4>
-        <a [routerLink]="'org/' + org.id">{{ org.name }}</a>
+        <a [routerLink]="org.channelPartner + '/' + org.id">{{ org.name }}</a>
     </h4>
     <ul>
         <li *ngFor="let prop of org | keyvalue">{{ prop.key }}: {{ prop.value | json }}</li>

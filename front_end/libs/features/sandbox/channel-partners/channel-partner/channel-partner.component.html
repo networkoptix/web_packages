@@ -76,7 +76,7 @@
         </button>
         <div *ngFor="let org of organizations$ | ngrxPush">
             <h4>
-                <a [routerLink]="'../org/' + org.id">{{ org.name }}</a>
+                <a [routerLink]="org.id">{{ org.name }}</a>
             </h4>
             <button
                 class="btn-danger"

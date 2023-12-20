@@ -18,7 +18,7 @@ import { NxToastService } from '@services/toast.service';
     styleUrls: ['channel-partner.component.scss'],
 })
 export class NxChannelPartnerComponent implements OnInit {
-    private id$ = this.route.params.pipe(map<Params, string>(p => p.id));
+    private id$ = this.route.params.pipe(map<Params, string>(p => p.partnerId));
     private refresh$ = new Subject<void>();
     private update$ = merge(this.id$, this.refresh$.pipe(mergeMap(() => this.id$)));
 

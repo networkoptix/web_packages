@@ -987,7 +987,10 @@
             "systemsAccess": "All systems have access to services",
             "systemsNoAccess": "All systems have \u200B | no access | \u200B to services",
             "recordingEnabled": "Recording is enabled for cameras",
-            "recordingDisabled": "Recording is \u200B | disabled | \u200B for cameras "
+            "recordingDisabled": "Recording is \u200B | disabled | \u200B for cameras",
+            "directAccess": "User has access as { role }. Permissions for the selected folder will be overwritten",
+            "parentAccess": "User already has accesss to the current or parent folder",
+            "restrictedRole": "{ roleName } role can only be assigned to users in { orgName }"
         }
     },
     "downloads": {

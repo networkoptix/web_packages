@@ -48,8 +48,8 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
     // permissions: MultiSelectItem[];
     // selectedPermissions: string[] = [];
 
-    roles: DropdownItem<number>[] = [];
-    selectedRole: DropdownItem<number>;
+    roles: DropdownItem<string>[] = [];
+    selectedRole: DropdownItem<string>;
 
     title: string;
 
@@ -64,7 +64,7 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
     ) {
         super(dialogRef);
         cpService.getOrganizationRoles().subscribe(roles => {
-            this.roles = roles.map<DropdownItem<number>>(role => ({
+            this.roles = roles.map<DropdownItem<string>>(role => ({
                 name: role.name,
                 value: role.id,
             }));
@@ -77,7 +77,7 @@ export class NxAddOrgUserModalContent extends ModalBase<DT['return']> implements
                 return firstValueFrom(
                     cpService.createOrganizationUser(orgId, {
                         email: this.email,
-                        role: this.selectedRole.name,
+                        roleId: this.selectedRole.value,
                         title: this.title,
                     }),
                 );

@@ -10,7 +10,10 @@ import type { Translatable } from '@pipes/nx-translate.types';
 import type {
     ChannelPartner,
     ChannelPartnerUser,
+    GroupItem,
+    GroupUser,
     Organization,
+    OrganizationRole,
     OrganizationUser,
     State,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -145,7 +148,6 @@ export type ChangeCpState = DialogType<
     State
 >;
 
-/* Groups */
 export type CreateSystemGroup = DialogType<
     {
         hasGroups: boolean;
@@ -153,6 +155,15 @@ export type CreateSystemGroup = DialogType<
         parentGroup: string;
     },
     void
+>;
+export type AddOrgUserV2 = DialogType<
+    {
+        organization: Organization;
+        roles: OrganizationRole[];
+        users: OrganizationUser[];
+        groups: GroupItem[];
+    },
+    OrganizationUser | GroupUser
 >;
 
 /* Admin */

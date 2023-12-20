@@ -180,7 +180,7 @@ export interface BindSystemToOrganization {
 
 /* Oraganization users */
 export interface OrganizationRole {
-    id: number;
+    id: string;
     permissions: string[];
     systemRole: string;
     name: string;
@@ -202,7 +202,7 @@ export interface GroupRole {
 
 export interface CreateOrganizationUser {
     email: string;
-    role: string;
+    roleId: string;
     title?: string;
 }
 
