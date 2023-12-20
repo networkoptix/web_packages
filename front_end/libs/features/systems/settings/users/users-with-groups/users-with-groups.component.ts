@@ -136,8 +136,10 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         const customGroup: UserPermissionDescription[] = [];
         const ldapGroup: UserPermissionDescription[] = [];
         let ldapDefault: UserPermissionDescription | undefined;
-        Object.values((this.system.userManager as UserWithGroupsManager).userGroups).forEach(
-            ({ id, name, description, attributes, type }) => {
+        const userGroups = (this.system.userManager as UserWithGroupsManager).userGroups;
+
+        if (userGroups) {
+            Object.values(userGroups).forEach(({ id, name, description, attributes, type }) => {
                 if (!newList.includes(id)) {
                     return;
                 }
@@ -163,9 +165,8 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
                         custom: true,
                     });
                 }
-            },
-            [],
-        );
+            }, []);
+        }
 
         // Each Permission option needs to be in alphabetical order in their respective category, builtInGroup is an exception
         customGroup.sort(alphabeticalSort(this.locale, groups => groups.name));
