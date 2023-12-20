@@ -12,7 +12,6 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
 from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, OpenApiExample
-from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -24,14 +23,16 @@ from partners.models import (
     LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService,
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent,
     CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId,
-    ServiceToSubChannelProperties, ServiceToOrganizationProperties, SystemGroup,
-    get_channel_partner_roles, get_organization_roles, OrganizationRoles, CloudSystemStates
+    CloudSystemStates,
+
+    ServiceToSubChannelProperties, ServiceToOrganizationProperties, SystemGroup, get_channel_partner_roles,
+    get_organization_roles, OrganizationRoles
 )
+from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 from tools.helpers import get_path_from_parent
 from tools.serializers import AccessMatrixMixin
 from tools.serializers import FieldAccessModelSerializer
 from tools.utils import bind_system_to_cdb_organization
-from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
 STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STATE_CHOICES}
@@ -59,10 +60,9 @@ class CodeChoiceField(serializers.ChoiceField):
             self.fail('invalid_choice', input=data)
 
 
-
 @extend_schema_serializer(
     examples=[
-         OpenApiExample(
+        OpenApiExample(
             'Support Information Example',
             value={
                 'sites': ['https://www.example.com'],
@@ -123,19 +123,20 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             }
             return reverse(view_name, kwargs=url_kwargs, request=request, format=format)
 
-    # users = UsersField(source='*', read_only=True)
-    # organizations = OrganizationsField(source='*', read_only=True)
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', read_only=True)
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit')
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False, help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
-    # allowChangingServices = serializers.BooleanField(source='allow_changing_services', default=False, required=False)
-    supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False, read_only=False)
+    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
+                                       help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+    supportInformation = SupportInformationSerializer(source='support_information', default={}, required=False,
+                                                      read_only=False)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
     ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
     ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
+    partnerCount = serializers.IntegerField(source='partner_count', read_only=True)
+    organizationCount = serializers.IntegerField(source='organization_count', read_only=True)
 
     class Meta:
         model = ChannelPartner
@@ -151,9 +152,11 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             "ownPermissions",
             "ownRolesIds",
             "ownRoles",
-            "name"
+            "name",
+            'partnerCount',
+            'organizationCount'
         ]
-        read_only_fields = ['users', 'parentChannelPartner']
+        read_only_fields = ['users', 'parentChannelPartner', 'partnerCount', 'organizationCount']
 
     @cached_property
     def channel_partner_roles(self):
@@ -162,14 +165,9 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     def validate_parent_channel_partner(self, value: ChannelPartner):
         req = self.context.get('request')
         if not value.can_add_or_remove_sub_chanel_partners(req.user):
-            raise exceptions.PermissionDenied(detail=f'User does not have {ChannelPartner.permissions.add_remove_sub_channel_partners} permission for {value.id}.')
+            raise exceptions.PermissionDenied(
+                detail=f'User does not have {ChannelPartner.permissions.add_remove_sub_channel_partners} permission for {value.id}.')
         return value
-
-    # def validate_allowChangingServices(self, value):
-    #     if self.instance and self.instance.parent_channel_partner is not None \
-    #             and not getattr(self.instance.parent_channel_partner, 'allow_changing_services'):
-    #         raise exceptions.ValidationError(detail='Parent Channel Partner does not allow changing services.')
-    #     return value
 
     def update(self, instance: ChannelPartner, validated_data):
         instance.set_attributes(validated_data.get('attributes', {}), partial=self.partial)
@@ -193,7 +191,8 @@ class ChannelPartnerSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
 
 
 class CreateChannelPartnerSerializer(serializers.ModelSerializer):
-    parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', required=True, queryset=ChannelPartner.objects.all())
+    parentChannelPartner = serializers.PrimaryKeyRelatedField(source='parent_channel_partner', required=True,
+                                                              queryset=ChannelPartner.objects.all())
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
     monthlyAdditionalServiceLimit = serializers.IntegerField(source='monthly_additional_service_limit', required=False)
@@ -205,7 +204,8 @@ class CreateChannelPartnerSerializer(serializers.ModelSerializer):
     def validate_parent_channel_partner(self, value: ChannelPartner):
         req = self.context.get('request')
         if not value.can_add_or_remove_sub_chanel_partners(req.user):
-            raise exceptions.PermissionDenied(f'User does not have {ChannelPartner.permissions.add_remove_sub_channel_partners} permission')
+            raise exceptions.PermissionDenied(
+                f'User does not have {ChannelPartner.permissions.add_remove_sub_channel_partners} permission')
         return value
 
     def create(self, validated_data):
@@ -256,6 +256,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
     ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
     ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
+    systemCount = serializers.IntegerField(source='system_count', read_only=True)
 
     class Meta:
         model = Organization
@@ -272,9 +273,10 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             "ownRolesIds",
             "ownRoles",
             "name",
-            "users"
+            "users",
+            'systemCount'
         ]
-        read_only_fields = ['channelPartner', 'users', 'currentServices', 'created']
+        read_only_fields = ['channelPartner', 'users', 'currentServices', 'created', 'systemCount']
 
     @cached_property
     def organization_roles(self):
@@ -307,7 +309,8 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
 
 class CreateOrganizationSerializer(serializers.ModelSerializer):
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
-    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False, help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
+    attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
+                                       help_text='Set any custom properties. Pass value "*unset*" to remove a key.')
 
     class Meta:
         model = Organization
@@ -316,7 +319,8 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
     def validate_channelPartner(self, value: ChannelPartner):
         req = self.context.get('request')
         if not value.can_add_or_remove_organizations(req.user):
-            raise exceptions.PermissionDenied(f'User does not have {ChannelPartner.permissions.add_remove_organizations} permission')
+            raise exceptions.PermissionDenied(
+                f'User does not have {ChannelPartner.permissions.add_remove_organizations} permission')
         return value
 
     def create(self, validated_data):
@@ -335,7 +339,8 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CODES, read_only=True)
     services = serializers.DictField(read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
-    groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(), allow_null=True)
+    groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(),
+                                                 allow_null=True)
 
     class Meta:
         model = CloudSystemId
@@ -350,7 +355,8 @@ class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         return value
 
     def validate(self, data):
-        if not self.instance and CloudSystemId.objects.filter(system_id=data['system_id'], cloud_host=data['cloud_host']):
+        if not self.instance and CloudSystemId.objects.filter(system_id=data['system_id'],
+                                                              cloud_host=data['cloud_host']):
             raise serializers.ValidationError('Cloud system with this id already exists')
         return data
 
@@ -391,7 +397,8 @@ class ChannelPartnerUserSerializer(serializers.ModelSerializer):
         try:
             relation, _ = ChannelPartnerToUser.objects.get_or_create(user=user, channel_partner=channel_partner)
         except ChannelPartnerToUser.MultipleObjectsReturned:
-            relations = ChannelPartnerToUser.objects.filter(user=user, channel_partner=channel_partner).order_by('created_ts')
+            relations = ChannelPartnerToUser.objects.filter(user=user, channel_partner=channel_partner).order_by(
+                'created_ts')
             relation = relations.first()
             relations.exclude(id=relation.id).delete()
 
@@ -418,10 +425,10 @@ class ReadWriteSerializerMethodField(serializers.Field):
         # my_field = serializer.SerializerMethodField(method_name='get_my_field')
         default_method_name = 'get_{field_name}'.format(field_name=field_name)
         assert self.method_name != default_method_name, (
-            "It is redundant to specify `%s` on SerializerMethodField '%s' in "
-            "serializer '%s', because it is the same as the default method name. "
-            "Remove the `method_name` argument." %
-            (self.method_name, field_name, parent.__class__.__name__)
+                "It is redundant to specify `%s` on SerializerMethodField '%s' in "
+                "serializer '%s', because it is the same as the default method name. "
+                "Remove the `method_name` argument." %
+                (self.method_name, field_name, parent.__class__.__name__)
         )
 
         # The method name should default to `get_{field_name}`.
@@ -435,7 +442,7 @@ class ReadWriteSerializerMethodField(serializers.Field):
         return method(value)
 
     def to_internal_value(self, data):
-        return { self.field_name: data }
+        return {self.field_name: data}
 
 
 class GroupRolesSerializer(serializers.Serializer):
@@ -611,7 +618,8 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         from_ts = data.get('from')
         to_ts = data.get('to')
         if to_ts - from_ts != datetime.timedelta(seconds=LocalRecordingUsage.CHECK_PERIOD):
-            raise serializers.ValidationError(f'Time range must cover exactly {LocalRecordingUsage.CHECK_PERIOD} seconds')
+            raise serializers.ValidationError(
+                f'Time range must cover exactly {LocalRecordingUsage.CHECK_PERIOD} seconds')
         return data
 
     def save_security_metrics(self, cloud_system: CloudSystemId):
@@ -642,7 +650,7 @@ class ServiceQuantitySerializer(serializers.Serializer):
 
 @extend_schema_serializer(
     examples=[
-         OpenApiExample(
+        OpenApiExample(
             'Services Example',
             value={
                 'services': {'3fa85f64-5717-4562-b3fc-2c963f66afa6': {
@@ -794,7 +802,8 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
         if value.can_manage_systems(req.user):
             return value
         else:
-            raise exceptions.PermissionDenied(detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
+            raise exceptions.PermissionDenied(
+                detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
 
     def bind_system(self):
         validated_data = self.validated_data
@@ -806,7 +815,8 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
         opaque = validated_data.get('opaque')
 
         system_bind_response, status_code = bind_system_to_cdb_organization(
-            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=str(organization.id), system_id=str(system_id),
+            access_token=request.auth, cloud_host=request.cloud_host.hostname, organization_id=str(organization.id),
+            system_id=str(system_id),
             name=name, customization=customization, opaque=opaque
         )
 
@@ -834,7 +844,8 @@ class SystemBindResponseSerializer(serializers.Serializer):
     customization = serializers.CharField()
     authKey = serializers.CharField()
     authKeyHash = serializers.CharField()
-    status = serializers.ChoiceField(choices=('invalid', 'notActivated', 'activated', 'deleted_', 'beingMerged', 'deletedByMerge'))
+    status = serializers.ChoiceField(
+        choices=('invalid', 'notActivated', 'activated', 'deleted_', 'beingMerged', 'deletedByMerge'))
     systemSequence = serializers.CharField()
     opaque = serializers.CharField()
     version = serializers.CharField()
@@ -859,7 +870,8 @@ class CreateSystemSerializer(serializers.ModelSerializer):
         if value.can_manage_systems(req.user):
             return value
         else:
-            raise exceptions.PermissionDenied(detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
+            raise exceptions.PermissionDenied(
+                detail=f'User does not have {Organization.permissions.manage_systems} permission for this organization')
 
     def create(self, validated_data):
         cloud_host = validated_data.get('cloud_host')
@@ -888,8 +900,8 @@ class OrganizationRoleSerializer(serializers.ModelSerializer):
     systemRoleId = serializers.UUIDField(source='system_role_uuid', required=False, allow_null=True)
 
     class Meta:
-            model = OrganizationRole
-            fields = ['id', 'permissions', 'systemRole', 'name', 'system_role_uuid', 'systemRoleId']
+        model = OrganizationRole
+        fields = ['id', 'permissions', 'systemRole', 'name', 'system_role_uuid', 'systemRoleId']
 
 
 class ChannelPartnerEventParamSerializer(serializers.Serializer):
@@ -932,7 +944,8 @@ class ChannelPartnerExternalIdSerializer(ExternalIdSerializerBase, serializers.M
     channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
-                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"',
+                                   read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
@@ -950,7 +963,8 @@ class ChannelPartnerExternalIdSerializer(ExternalIdSerializerBase, serializers.M
 class OrganizationExternalIdSerializer(ExternalIdSerializerBase, serializers.ModelSerializer):
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
-                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"',
+                                   read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
@@ -966,10 +980,12 @@ class OrganizationExternalIdSerializer(ExternalIdSerializerBase, serializers.Mod
 
 
 class CloudSystemIdExternalIdSerializer(ExternalIdSerializerBase, serializers.ModelSerializer):
-    cloudSystemId = serializers.SlugRelatedField(slug_field='system_id', source='cloud_system', queryset=CloudSystemId.objects.exclude(organization=None))
+    cloudSystemId = serializers.SlugRelatedField(slug_field='system_id', source='cloud_system',
+                                                 queryset=CloudSystemId.objects.exclude(organization=None))
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
-                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"',
+                                   read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
@@ -985,10 +1001,12 @@ class CloudSystemIdExternalIdSerializer(ExternalIdSerializerBase, serializers.Mo
 
 
 class ChannelPartnerServiceExternalIdSerializer(ExternalIdSerializerBase, serializers.ModelSerializer):
-    channelPartnerService = serializers.PrimaryKeyRelatedField(source='channel_partner_service', queryset=ChannelPartnerService.objects.all())
+    channelPartnerService = serializers.PrimaryKeyRelatedField(source='channel_partner_service',
+                                                               queryset=ChannelPartnerService.objects.all())
     customId = serializers.CharField(source='custom_id')
     fullId = serializers.CharField(source='full_id',
-                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"', read_only=True)
+                                   help_text='The id to use in API requests. It is "{channel_partner_id}--{custom_id}"',
+                                   read_only=True)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
 
     class Meta:
@@ -1119,7 +1137,7 @@ class ChannelPartnerAggDataSerializer(serializers.Serializer):
 
     @cached_property
     def children_systems(self):
-        return CloudSystemId.objects.filter(organization__in=self.children_organizations)\
+        return CloudSystemId.objects.filter(organization__in=self.children_organizations) \
             .exclude(state=ChannelPartnerStates.SHUTDOWN)
 
     def get_channel_partners_count(self, instance):
@@ -1139,7 +1157,7 @@ class ChannelPartnerAggDataSerializer(serializers.Serializer):
         return count
 
     def get_service_usage_quantity(self, instance):
-        service_records_quantity = ChannelPartnerServiceRecord.objects\
+        service_records_quantity = ChannelPartnerServiceRecord.objects \
             .filter(organization__in=self.children_organizations).aggregate(Sum('quantity'))
         return service_records_quantity.get('quantity__sum', 0) or 0
 
@@ -1153,7 +1171,7 @@ class OrganizationAggDataSerializer(serializers.Serializer):
         return count
 
     def get_service_usage_quantity(self, instance):
-        service_records_quantity = ChannelPartnerServiceRecord.objects\
+        service_records_quantity = ChannelPartnerServiceRecord.objects \
             .filter(organization=instance).aggregate(Sum('quantity'))
         return service_records_quantity.get('quantity__sum', 0) or 0
 
@@ -1164,11 +1182,16 @@ class GroupsStructureSerializer(serializers.Serializer):
     name = serializers.CharField()
     parentId = serializers.UUIDField(source='parent_id')
     children = serializers.SerializerMethodField()
+    systemCount = serializers.SerializerMethodField(method_name='get_system_count', read_only=True)
 
     def get_children(self, obj):
         serializer = GroupsStructureSerializer(data=obj['children'], many=True)
         serializer.is_valid()
         return serializer.data
+
+    def get_system_count(self, instance) -> int:
+        system_group_id: uuid.UUID = instance.get('id')
+        return CloudSystemId.get_systems_in_group_and_children_count(system_group_id)
 
 
 class CreateGroupSerializer(serializers.ModelSerializer):
@@ -1277,13 +1300,12 @@ class UserListSerializer(serializers.Serializer):
 
 
 class SystemGroupUserSerializer(serializers.ModelSerializer):
-
     class MembershipSerializer(serializers.Serializer):
 
         id = serializers.UUIDField(read_only=True)
         name = serializers.CharField(read_only=True)
         membershipType = serializers.ChoiceField(source='_meta.model_name', read_only=True,
-                                       choices=[Organization._meta.model_name, SystemGroup._meta.model_name])
+                                                 choices=[Organization._meta.model_name, SystemGroup._meta.model_name])
 
     email = serializers.EmailField(source='user.email')
     fullName = serializers.CharField(source='user.full_name', read_only=True)

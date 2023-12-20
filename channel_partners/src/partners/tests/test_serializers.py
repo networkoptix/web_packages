@@ -8,7 +8,7 @@ from math import ceil
 import pytest
 from dateutil import relativedelta
 from django.core.cache import caches
-from django.db.models import Prefetch, Q
+from django.db.models import Prefetch
 from django.utils import timezone
 from model_bakery import baker
 
@@ -21,7 +21,7 @@ from partners.serializers import (
     SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer,
     SystemGroupUserSerializer, ChannelPartnerRecordsParamSerializer, GroupSerializer
 )
-from tools.helpers import get_period_start
+
 
 class TestChannelPartnerAggDataSerializer:
 
@@ -262,61 +262,30 @@ class TestSystemServiceQuantitySerializer:
 
 class TestChannelPartnerSerializer:
 
-    # def test_allow_changing_services(self, channel_partner_factory, cp_user_factory, arf):
-    #     root = channel_partner_factory(parent_channel_partner=None)
-    #     child = channel_partner_factory(parent_channel_partner=root)
-    #     grandchild = channel_partner_factory(parent_channel_partner=child)
-    #     root_user = cp_user_factory(channel_partner=root)
-    #     request = arf.get('/')
-    #     request.user = root_user.user
-    #     context = {
-    #         'request': request,
-    #         'channel_partner_roles': None,
-    #         'channel_partner_to_user': None,
-    #     }
-    #     # Test child when parent has disabled ACS
-    #     ser = ChannelPartnerSerializer(instance=child, context=context)
-    #
-    #     assert child.allow_changing_services is False
-    #     assert ser.data['allowChangingServices'] is False
-    #
-    #     ser = ChannelPartnerSerializer(instance=child, data={'allowChangingServices': True},
-    #                                    partial=True, context=context)
-    #
-    #     ser.is_valid(raise_exception=False)
-    #
-    #     assert ser.errors
-    #     assert ser.errors['allowChangingServices']
-    #     assert 'Parent Channel Partner does not allow changing services.' in ser.errors['allowChangingServices']
-    #
-    #     # Test root CP, ACS changes must be allowed
-    #     ser = ChannelPartnerSerializer(instance=root, context=context)
-    #
-    #     assert root.allow_changing_services is False
-    #     assert ser.data['allowChangingServices'] is False
-    #
-    #     ser = ChannelPartnerSerializer(instance=root, data={'allowChangingServices': True},
-    #                                    partial=True, context=context)
-    #     assert ser.is_valid()
-    #     instance = ser.save()
-    #
-    #     assert instance.id == root.id
-    #     assert instance.allow_changing_services is True
-    #
-    #     # Test child when parent has enabled ACS
-    #     ser = ChannelPartnerSerializer(instance=child, context=context)
-    #
-    #     assert root.allow_changing_services is True
-    #     assert ser.data['allowChangingServices'] is False
-    #
-    #     ser = ChannelPartnerSerializer(instance=child, data={'allowChangingServices': True},
-    #                                    partial=True, context=context)
-    #
-    #     assert ser.is_valid()
-    #     instance = ser.save()
-    #
-    #     assert instance.id == child.id
-    #     assert instance.allow_changing_services is True
+    def test_partner_count_and_organization_count(self, channel_partner_factory, organization_factory, cp_user_factory, arf):
+        def context(cloud_user):
+            context = {}
+            context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
+            context['request'] = arf.get('/')
+            context['request'].user = cloud_user
+            return context
+
+
+        parent = channel_partner_factory()
+        role = ChannelPartnerRole.objects.all().first()
+        user = cp_user_factory(channel_partner=parent, role=role.name)
+        # Create some children for the parent
+        child1 = channel_partner_factory(parent_channel_partner=parent)
+        child2 = channel_partner_factory(parent_channel_partner=parent)
+        child3 = channel_partner_factory(parent_channel_partner=parent)
+
+        serializer = ChannelPartnerSerializer(parent, context=context(user.user))
+        data = serializer.data
+
+        assert data['partnerCount'] == 3
+        assert data['organizationCount'] == 0
+
+
 
     def test_ownPermissions(self, channel_partner_factory, cp_user_factory, arf):
         cp = channel_partner_factory()
@@ -356,8 +325,11 @@ class TestOrganizationSerializer:
                               default_cp_admin):
         request = arf.get('/')
         request.user = default_cp_admin.user
+
         org = organization_factory()
+
         systems = [system_factory(organization=org) for _ in range(5)]
+
         disabled_system = system_factory(organization=org)
         services = [cp_service_factory() for _ in range(3)]
         org_service_properties = [org_service_factory(organization=org, service=service, price=10-i) for i, service in enumerate(services)]
@@ -369,9 +341,10 @@ class TestOrganizationSerializer:
         disabled_system.save()
 
         ser = OrganizationSerializer(org, context={'request': request})
+        data = ser.data
 
-        current_services = ser.data["currentServices"]
-
+        current_services = data["currentServices"]
+        assert data['systemCount'] == 6
         assert set(current_services.keys()) == set([str(service.id) for service in services])
         for i, service in enumerate(services):
             assert current_services[str(service.id)]["price"] == 10 - i
@@ -418,7 +391,6 @@ class TestOrganizationSerializer:
         serializer = OrganizationSerializer(organization, context=context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
         assert serializer.data['ownRolesIds'] == [org_admin_role.id]
-
 
 class TestChannelPartnerRecordsParamSerializer:
 

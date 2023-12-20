@@ -9,6 +9,7 @@ users = [
     CloudUser.objects.get_or_create(email='vyacheslav.ogai@clearscale.com')[0],
     CloudUser.objects.get_or_create(email='rbarsegian@networkoptix.com')[0],
     CloudUser.objects.get_or_create(email='kapanovich@networkoptix.com')[0],
+    CloudUser.objects.get_or_create(email='kbrostoff@networkoptix.com')[0],
 ]
 
 many_users = [
@@ -48,6 +49,7 @@ def run():
             print(f'Iteration #{i+1}')
             channel_partner = ChannelPartner.objects.create(name=f'Test CP {i+1}', parent_channel_partner=nx_channel_partner_cloud_test, cloud_host=cloud_test_host)
             add_users_or_channel_partner(channel_partner)
+
             services = [
                 ChannelPartnerService.objects.create(name=uuid.uuid4(), type=st,
                                                      created_by_channel_partner=channel_partner)
@@ -55,6 +57,7 @@ def run():
             for j in range(25):
                 organization = Organization.objects.create(name=f'Test Org {j+1}', channel_partner=channel_partner)
                 OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization, created_by=channel_partner)
+                add_users_to_organization(organization)
                 systems = []
                 for k in range(25):
                     sys = CloudSystemId.objects.create(system_id=uuid.uuid4(), name=f'Test System {k+1}',
@@ -101,6 +104,7 @@ def run():
                                                                channel_partner=sub_channel_partner)
                     OrganizationExternalId.objects.create(custom_id=uuid.uuid4(), organization=organization,
                                                           created_by=channel_partner)
+                    add_users_to_organization(organization)
                     add_random_users_to_organization(organization)
                     systems = []
                     for k in range(25):
@@ -116,19 +120,24 @@ def run():
                     root_group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}')
                     for sys in systems[:10]:
                         sys.system_group = root_group
-                    CloudSystemId.objects.bulk_update(systems[:10], fields=['system_group'])
+                        sys.path = [group.id] + group.path
+                    CloudSystemId.objects.bulk_update(systems[:10], fields=['system_group', 'path'])
                     group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}',
                                                        parent=root_group)
                     for sys in systems[10:15]:
                         sys.system_group = group
-                    CloudSystemId.objects.bulk_update(systems[10:15], fields=['system_group'])
+                        sys.path = [group.id] + group.path
+                    CloudSystemId.objects.bulk_update(systems[10:15], fields=['system_group', 'path'])
                     group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}',
                                                        parent=root_group)
                     for sys in systems[15:20]:
                         sys.system_group = group
-                    CloudSystemId.objects.bulk_update(systems[15:20], fields=['system_group'])
+                        sys.path = [group.id] + group.path
+                    CloudSystemId.objects.bulk_update(systems[15:20], fields=['system_group', 'path'])
+
                     group = SystemGroup.objects.create(organization=organization, name=f'{uuid.uuid4()}', parent=group)
                     for sys in systems[20:]:
                         sys.system_group = group
-                    CloudSystemId.objects.bulk_update(systems[20:], fields=['system_group'])
+                        sys.path = [group.id] + group.path
+                    CloudSystemId.objects.bulk_update(systems[20:], fields=['system_group', 'path'])
 
