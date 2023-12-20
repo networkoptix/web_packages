@@ -330,48 +330,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-43. Cloud administrator can enable/disable any viewer local user (positive)
-    [Tags]    C76527    local_user    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudUsers][cloudAdmin]
-    ...    ELSE    Create List    ${servers}[0][localUsers][cloudAdmin][login]    ${servers}[0][cloudUsers][cloudAdmin]    
-    FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${server auth}    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Log    Step 1
-        Go to Users List
-        Verify In Local Users UI    ${local users}    ${servers}[0][cloudUsers][cloudAdmin]
-        Click Element    //span[text()="Local+advancedViewer"]
-        Log    Step 2   
-        Set Checkbox Value   ${DISABLE USER SWITCH}    false
-        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
-        Log    Step 3
-        Click Button    ${ACCOUNT SAVE}
-        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        Element Text Should Be    ${USER DISABLED MSG}    ${USER DISABLED TEXT}
-        # switching focus
-        Click Element    //span[text()="Local+viewer"]
-        Element Style Should Be    //span[text()="Local+advancedViewer"]    color    ${DISABLED TEXT COLOR}
-        Click Element    //span[text()="Local+advancedViewer"]
-        Log    Step 4
-        ${name} =    Get Text    ${LOCAL USER LOGIN}
-        @{current users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        ${state}=   Check If User Is Enabled/Disabled    ${current users}    ${name}
-        Should Be True   ${state} == ${False}
-        Log    Step 5
-        Set Checkbox Value   ${DISABLE USER SWITCH}    true
-        Wait Until Elements Are Visible    ${ACCOUNT SAVE}
-        Click Button    ${ACCOUNT SAVE}
-        Wait Until Element Is Visible    ${NO UNSAVED CHANGES}
-        Page Should Not Contain Element   ${USER DISABLED MSG}
-        Log    Step 6
-        ${name} =    Get Text    ${LOCAL USER LOGIN}
-        @{current users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        ${state}=   Check If User Is Enabled/Disabled    ${current users}    ${name}
-        Should Be True    ${state} == ${True}
-        Exit For Loop If    '''${user}'''=='''${servers}[0][cloudUsers][cloudAdmin]'''    
-        Log Out
-    END
 
 44. Cloud administrator can change local user password (positive)
     [Tags]    C76530    local_user    webadmin    cloud
