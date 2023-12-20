@@ -21,7 +21,7 @@ def get_auth_header(request: HttpRequest) -> dict:
 
 
 def bind_system_to_cdb_organization(cloud_host, access_token, organization_id, system_id, name, customization, opaque):
-    with NxCloudAPISyncClient(host=cloud_host) as cdb_client:
+    with NxCloudAPISyncClient(host=cloud_host, headers={'User-Agent': None}) as cdb_client:
         response = cdb_client.system.bind(organization_id=organization_id, id=system_id, name=name, customization=customization, opaque=opaque, auth=BearerTokenAuth(token=access_token))
         try:
             system_response = response.json()
