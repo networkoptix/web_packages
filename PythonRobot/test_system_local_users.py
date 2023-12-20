@@ -204,7 +204,6 @@ def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     saved again with camel case.
     """
     locals_list = []
-    local_users = list(role_names.keys())
     users = server.api.get_users()
     for user in users:
         local_state = True
