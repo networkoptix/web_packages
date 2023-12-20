@@ -99,6 +99,12 @@ class ServerApi:
             if user['email'] == email:
                 return user
 
+    def get_user_by_id(self, id):
+        users = self.get_users()
+        for user in users:
+            if user['id'].strip("{}") == id:
+                return user
+
     def get_user_id_by_name(self, name):
         users = self.get_users()
         for user in users:

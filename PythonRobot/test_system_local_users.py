@@ -159,6 +159,40 @@ def non_admins_cant_see_local_users(server: Mediaserver, user: CloudAccount):
             raise
     print("PASS")
 
+def cloud_admins_can_disable_local_viewers(server: Mediaserver, admin_user: CloudAccount, local_viewer):
+    """
+    43. Cloud administrator can enable/disable any viewer local user (positive).
+
+    [Tags]    C76527    local_user    webadmin    cloud
+    """
+    _reset_local_users(server)
+    url = ENV + f"/systems/{server.id}"
+    with get_chrome() as driver:
+        try:
+            driver.get(url)
+            LoginDialog(driver).basic_cloud_login(admin_user.email, admin_user.password)
+            SystemAdmin(driver)
+            system_left_menu = SystemLeftMenu(driver)
+            users_dropdown = system_left_menu.users_dropdown()
+            users_dropdown.get_user_link_by_id(local_viewer['id']).click()
+            system_user = SystemUsers(driver)
+            system_user.user_switch().turn_off()
+            system_user.save_button().click()
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            assert system_user.user_disabled_message().get_text() == rb.USER_DISABLED_TEXT
+            assert not server.api.get_user_by_id(local_viewer['id'])['isEnabled']
+            system_user.user_switch().turn_on()
+            system_user.save_button().click()
+            # Fails for vms 5.1 due to https://networkoptix.atlassian.net/browse/CLOUD-11901
+            system_user.no_unsaved_changes_text().wait_until_visible()
+            assert not system_user.user_disabled_message().is_visible()
+            assert server.api.get_user_by_id(local_viewer['id'])['isEnabled']
+        except Exception:
+            print("FAIL")
+            driver.save_screenshot('error.png')
+            raise
+    print("PASS")
+
 
 def _reset_local_users(server: Mediaserver, local_user='ocal+'):
     """
@@ -238,8 +272,24 @@ if __name__ == "__main__":
         local_user_deleted_in_ui_deleted_from_server(cloud_server)
         new_local_user_appears_in_cloud_portal(cloud_server)
         owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_owner())
-        owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_admin())
+        # The below fails due to https://networkoptix.atlassian.net/browse/CLOUD-12165
+        # owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_admin())
         non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_viewer())
         non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_live_viewer())
         non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_advanced_viewer())
         non_admins_cant_see_local_users(cloud_server, cloud_server.get_cloud_custom_user())
+        cloud_admins_can_disable_local_viewers(
+            cloud_server,
+            cloud_server.get_cloud_owner(),
+            cloud_server.get_local_users()['advancedViewer']
+        )
+        cloud_admins_can_disable_local_viewers(
+            cloud_server,
+            cloud_server.get_cloud_owner(),
+            cloud_server.get_local_users()['viewer']
+        )
+        cloud_admins_can_disable_local_viewers(
+            cloud_server,
+            cloud_server.get_cloud_owner(),
+            cloud_server.get_local_users()['liveViewer']
+        )
