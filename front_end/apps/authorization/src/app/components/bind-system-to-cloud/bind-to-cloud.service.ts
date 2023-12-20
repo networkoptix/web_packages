@@ -6,6 +6,7 @@ import { map } from 'rxjs/operators';
 import {
     CdbBindResponse,
     ChannelPartnerBindResponse,
+    CloudTokens,
     DeleteResponse,
 } from '@authorization/src/app/types/bind-service.types';
 import { environment } from '@environments/environment';
@@ -13,19 +14,14 @@ import { nxConfig } from '@services/nx-config/config';
 
 import { Org } from '../../types/cloud-bind.types';
 
-interface CloudTokens {
-    access_token: string;
-    refresh_token: string;
-}
-
 @Injectable()
 export class BindToCloudService {
     // Todo: Comeback and define this dynamically
-    readonly cpsUrl = 'https://partners.test.hdw.mx';
-    readonly apiBase = 'api/v2/partners';
+    readonly apiBase = 'partners/api/v2';
     http = inject(HttpClient);
 
     private tokens$$ = signal<CloudTokens>({ access_token: '', refresh_token: '' });
+    tokensForVMS$$ = this.tokens$$.asReadonly();
 
     private buildRequestHeaders(): HttpHeaders {
         let headers = new HttpHeaders();
@@ -74,17 +70,15 @@ export class BindToCloudService {
             organization: orgId,
             opaque: '',
         };
-        return this.http.post<ChannelPartnerBindResponse>(
-            `${this.cpsUrl}/${this.apiBase}/cloud_systems/`,
-            data,
-            { headers },
-        );
+        return this.http.post<ChannelPartnerBindResponse>(`/${this.apiBase}/cloud_systems/`, data, {
+            headers,
+        });
     }
 
     getOrgs(code: string): Observable<Org[]> {
         return this.getTokens(code).pipe(
             switchMap(() =>
-                this.http.get<{ results: Org[] }>(`${this.cpsUrl}/${this.apiBase}/organizations/`, {
+                this.http.get<{ results: Org[] }>(`/${this.apiBase}/organizations/`, {
                     headers: this.buildRequestHeaders(),
                 }),
             ),

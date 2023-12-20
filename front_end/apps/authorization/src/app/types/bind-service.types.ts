@@ -1,3 +1,8 @@
+export interface CloudTokens {
+    access_token: string;
+    refresh_token: string;
+}
+
 export interface DeleteResponse {
     errorClass: string;
     errorDetail: string;
