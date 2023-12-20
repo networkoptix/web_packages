@@ -244,7 +244,7 @@ def test_text_search(login, password):
         assert make2 < make3
 
 
-def text_search_filter(login, password):
+def text_search_filter():
     """8 Text in Search Input is kept after clicking X on Applied Features filter indicator."""
     with get_chrome() as driver:
         # step 1
@@ -286,4 +286,4 @@ if __name__ == "__main__":
         request_form_basic_validation()
         feedback_form_basic_validations(cloud_user.email, cloud_user.password)
         test_text_search(cloud_user.email, cloud_user.password)
-        text_search_filter(cloud_user.email, cloud_user.password)
+        text_search_filter()
