@@ -1,6 +1,6 @@
-New message
+Pesan baru
 
-Type: {{message.type}}
+Tipe: {{message.type}}
 Data: {{{message.data}}}
 
-There is no specific template for this type of message
+Tidak ada template khusus untuk jenis pesan ini
