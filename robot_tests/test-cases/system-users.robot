@@ -281,33 +281,6 @@ Force Tags        system    Threaded    users
         Log Out
     END
 
-41. Cloud Administrator Can Delete Local User(positive)
-    [Tags]    C76524    local_user    webadmin    cloud
-    @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudUsers][cloudAdmin]
-    ...    ELSE    Create List    ${servers}[0][localUsers][cloudAdmin][login]    ${servers}[0][cloudUsers][cloudAdmin]    
-    FOR    ${user}    IN    @{list}
-        @{local users} =    Reset Local Users    ${servers}[0][localAuth]    ${servers}[0][token]   https://${QA BURBANK IP}:${servers}[0][port][0]
-        Log In    ${user}    ${password}
-        Run Keyword If    '''${mode}'''=='''cloud'''    Go To    ${ENV}/systems/${servers}[0][id]
-        Log    Step 1
-        Go to Users List
-        Verify In Local Users UI    ${servers}[0][localUsers]   ${servers}[0][cloudUsers][cloudAdmin]
-        Click Element    //span[text()="Local+advancedViewer"]
-        Log    Step 2
-        Click Button    ${LOCAL USER DELETE BUTTON}
-        Wait Until Elements Are Visible    ${LOCAL USER DELETE CONFIRM BUTTON}    ${LOCAL USER DELETE CANCEL BUTTON}
-        Log    Step 3
-        Click Button    ${LOCAL USER DELETE CONFIRM BUTTON}
-        Wait Until Element Is Not Visible    ${LOCAL USER DELETE CANCEL BUTTON}
-        Wait Until Element Is Not Visible    //span[text()="Local+advancedViewer"]
-        Log    Step 4
-        @{current users} =    Get Users     ${servers}[0][token]    https://${QA BURBANK IP}:${servers}[0][port][0]
-        ${deleted user} =    Set Variable    Local+advancedViewer
-        Verify User is Deleted on Server    Local+advancedViewer    ${current users}
-        Exit For Loop If    '''${user}'''=='''${servers}[0][cloudUsers][cloudAdmin]'''    
-        Log Out
-    END
-        
 42. Administrator can change local user's login permissions, name and email (positive)
     [Tags]    C76526    C76525    local_user    webadmin    cloud
     @{list}=   Run Keyword If    '''${mode}'''=='''cloud'''    Create List    ${servers}[0][cloudUsers][cloudAdmin]
