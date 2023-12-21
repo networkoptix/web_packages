@@ -76,6 +76,7 @@ export class BindToCloudService {
         return this.getTokens(code).pipe(
             switchMap(() =>
                 this.http.get<{ results: Org[] }>(`/${this.apiBase}/organizations/`, {
+                    params: { includeChildOrgs: true },
                     headers: this.buildRequestHeaders(),
                 }),
             ),
