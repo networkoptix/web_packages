@@ -9,8 +9,9 @@ import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
-import { selectCurrentGroupId } from '@pages/home/store/groups/groups.selectors';
+import { selectCurrentGroupId, selectGroupItems } from '@pages/home/store/groups/groups.selectors';
 import {
+    GroupItem,
     GroupUserCanAccess,
     OrganizationUser,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
@@ -30,13 +31,17 @@ const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
     }));
 };
 
-const mapOrgUsers = (users: OrganizationUser[]): UserRecord[] => {
+const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord[] => {
     const showOrg = (user: OrganizationUser): boolean => {
         // Still needs clarification on all ways to see if user is from org
-        return user.roles.includes('Administrator');
+        return user.roles.includes('Administrator') || !user.groupRoles.length;
     };
     return users.map(user => ({
         ...user,
+        groupRoles: user.groupRoles.map(group => ({
+            ...group,
+            name: groups.find(groupItem => groupItem.id === group.groupId),
+        })),
         userId: user.email,
         fullName: 'N/A',
         showOrg: showOrg(user),
@@ -63,6 +68,7 @@ export class NxOrganizationUsersComponent implements OnInit {
     records$: Observable<UserRecord[]>;
 
     currentItemId$$: Signal<string>;
+    groupItems$$ = this.store.selectSignal(selectGroupItems);
 
     constructor(
         private dialogsService: NxDialogsService,
@@ -79,7 +85,7 @@ export class NxOrganizationUsersComponent implements OnInit {
                   map(users => mapGroupUsers(users)),
               )
             : this.CPService.getOrganizationUsers(this.currentItemId$$()).pipe(
-                  map(users => mapOrgUsers(users)),
+                  map(users => mapOrgUsers(users, this.groupItems$$())),
               );
         this.headers = [
             {

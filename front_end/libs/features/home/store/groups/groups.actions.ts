@@ -8,7 +8,7 @@ export const reset = createAction('[System Groups] Reset');
 
 export const setGroups = createAction(
     '[System Groups] Set groups',
-    props<{ groups: GroupItem[]; groupsMap: GroupItem[] }>(),
+    props<{ groups: GroupItem[] }>(),
 );
 
 export const setCurrentGroupId = createAction(

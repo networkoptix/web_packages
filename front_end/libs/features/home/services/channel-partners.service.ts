@@ -72,11 +72,13 @@ export class NxChannelPartnersService {
     getUserSystems = this.cpApi.getUserSystems;
     getOrgSystems = this.cpApi.getOrgSystems;
     bindSystemToOrg = this.cpApi.bindSystemToOrg;
+    updateSystemGroup = this.cpApi.updateSystemGroup;
 
     /* Groups */
     getOrgGroups = this.cpApi.getOrgGroups;
     createGroup = this.cpApi.createGroup;
     getGroup = this.cpApi.getGroup;
+    patchGroup = this.cpApi.patchGroup;
 
     /* Group Users */
     getGroupUsers = this.cpApi.getGroupUsers;

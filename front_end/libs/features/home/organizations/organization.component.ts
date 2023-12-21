@@ -178,7 +178,9 @@ export class NxOrganizationsComponent implements OnInit {
 
         this.cpService.getOrgGroups(this.currentOrgId$$()).subscribe(groups => {
             this.store.dispatch(
-                groupActions.setGroups({ groupsMap: groups, groups: this.flattenGroups(groups) }),
+                groupActions.setGroups({
+                    groups: this.processGroups(groups),
+                }),
             );
         });
     }
@@ -190,19 +192,19 @@ export class NxOrganizationsComponent implements OnInit {
         }, true);
     }
 
-    flattenGroups = (orgGroups: GroupItem[]): GroupItem[] => {
-        const res: GroupItem[] = [];
+    processGroups = (orgGroups: GroupItem[]): GroupItem[] => {
+        const groups: GroupItem[] = [];
         const getChildren = (group: GroupItem): void => {
             for (const child of group.children) {
-                res.push(child);
+                groups.push(child);
                 getChildren(child);
             }
         };
         for (const group of orgGroups) {
-            res.push(group);
+            groups.push(group);
             getChildren(group);
         }
-        return res;
+        return groups;
     };
 
     dismiss(): void {

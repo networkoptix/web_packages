@@ -246,25 +246,32 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     /* System Services */
-    getSystem(id: string): Observable<unknown> {
+    getSystem = (id: string): Observable<unknown> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]));
-    }
-    getSystemSassReport(id: string): Observable<unknown> {
+    };
+    getSystemSassReport = (id: string): Observable<unknown> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'saas_report']));
-    }
+    };
 
-    getSystemServiceQuantity(id: string): Observable<SystemServices> {
+    getSystemServiceQuantity = (id: string): Observable<SystemServices> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']));
-    }
-    getSystemServices(id: string): Observable<ServiceData[]> {
+    };
+    getSystemServices = (id: string): Observable<ServiceData[]> => {
         return this.get(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'services']));
-    }
+    };
 
-    updateSystemServiceQuantity(id: string, data: SystemServices): Observable<SystemServices> {
+    updateSystemServiceQuantity = (
+        id: string,
+        data: SystemServices,
+    ): Observable<SystemServices> => {
         return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id, 'service_quantity']), {
             body: data,
         });
-    }
+    };
+
+    updateSystemGroup = (id: string, body: { groupId: string }): Observable<CloudSystem> => {
+        return this.patch(this.makeUrl(urlBases.CLOUD_SYSTEMS, [id]), { body });
+    };
 
     /* Internal */
 
@@ -281,8 +288,8 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         return this.post('/groups/', { body });
     };
 
-    patchGroup = (body: PatchGroup): Observable<GroupItem> => {
-        return this.patch('/groups/', { body });
+    patchGroup = (groupId: string, body: PatchGroup): Observable<GroupItem> => {
+        return this.patch(this.makeUrl(urlBases.GROUPS, [groupId]), { body });
     };
 
     /* Group Users */

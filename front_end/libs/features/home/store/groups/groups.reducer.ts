@@ -5,7 +5,6 @@ import type { GroupsState } from './groups.state';
 
 const initialState: GroupsState = {
     groups: null,
-    groupsMap: null,
     currentGroupId: undefined,
     openGroups: {},
 };
@@ -19,10 +18,9 @@ export const groupsReducer = createReducer(
     // })),
     on(
         GroupActions.setGroups,
-        (state, { groups, groupsMap }): GroupsState => ({
+        (state, { groups }): GroupsState => ({
             ...state,
             groups,
-            groupsMap,
         }),
     ),
     on(
