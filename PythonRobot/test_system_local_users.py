@@ -62,19 +62,20 @@ def local_user_deleted_on_server_gone_from_ui(server: Mediaserver):
             print("PASS")
 
 
-def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver):
+def local_user_deleted_in_ui_deleted_from_server(server: Mediaserver, cloud_admin: CloudAccount):
     """
-    33. Verify Local Users Deleted On Server
-    [Tags]    local_user    C76242    webadmin    cloud
+    33. Verify Local Users Deleted On Server.
+
+    41. Cloud Administrator Can Delete Local User(positive).
+    [Tags]    local_user    C76242    C76524    webadmin    cloud
     """
     _reset_local_users(server)
-    owner = server.get_cloud_owner()
     url = ENV + f"/systems/{server.id}"
     deleted_user = server.get_local_users()['viewer']
     with get_chrome() as driver:
         try:
             driver.get(url)
-            LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
+            LoginDialog(driver).basic_cloud_login(cloud_admin.email, cloud_admin.password)
             SystemAdmin(driver)
             users_menu = SystemLeftMenu(driver).users_dropdown()
             users_menu.get_user_link_by_id(deleted_user['id']).click()
@@ -268,7 +269,9 @@ if __name__ == "__main__":
         cloud_users = suite.create_cloud_accounts()
         cloud_server = suite.create_cloud_server(cloud_owner, suite_name, cloud_users)
         local_user_deleted_on_server_gone_from_ui(cloud_server)
-        local_user_deleted_in_ui_deleted_from_server(cloud_server)
+        local_user_deleted_in_ui_deleted_from_server(cloud_server, cloud_owner)
+        # The below fails due to https://networkoptix.atlassian.net/browse/CLOUD-12165
+        # local_user_deleted_in_ui_deleted_from_server(cloud_server, cloud_server.get_cloud_admin())
         new_local_user_appears_in_cloud_portal(cloud_server)
         owner_and_admin_see_local_users(cloud_server, cloud_server.get_cloud_owner())
         # The below fails due to https://networkoptix.atlassian.net/browse/CLOUD-12165
