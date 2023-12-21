@@ -22,7 +22,7 @@ def page_is_opened_and_shows_the_user_list_to_owner(server: Mediaserver):
         # Falls down because of CLOUD-11715 and CLOUD-11629
         SystemAdmin(driver).system_offline_text().wait_until_visible(timeout=65)
         users_dropdown = SystemLeftMenu(driver).users_dropdown()
-        users_dropdown.wait_for_user_with_email(server.get_cloud_viewer().email)
+        users_dropdown.wait_for_user_with_id(server.get_cloud_viewer().id)
         # TODO: Add check on CLOUD-6615 when blocking bugs are fixed and test is ready
 
 

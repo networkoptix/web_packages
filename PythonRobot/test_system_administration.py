@@ -86,7 +86,7 @@ def non_owner_can_disconnect_account_from_system(server: Mediaserver, cloud_view
         LoginDialog(driver).basic_cloud_login(owner.email, password)
         left_menu = SystemLeftMenu(driver)
         users_dropdown = left_menu.users_dropdown()
-        assert not users_dropdown.has_user_with_email(cloud_viewer.email), (
+        assert not users_dropdown.has_user_in_menu_with_id(cloud_viewer.id), (
             "User was still in the users list.")
         print("pass")
 
@@ -191,7 +191,7 @@ def correct_items_are_shown_for_owner(server: Mediaserver):
         system_page.wait_for_security_form()
         assert header.get_system_name() == server.name
         users_dropdown = left_menu.users_dropdown()
-        users_dropdown.wait_for_user_with_email(owner.email)
+        users_dropdown.wait_for_user_with_id(owner.id)
         print("pass")
 
 
@@ -221,7 +221,7 @@ def correct_items_are_shown_for_admin(server: Mediaserver):
         system_page.wait_for_security_form()
         assert header.get_system_name() == server.name
         users_dropdown = left_menu.users_dropdown()
-        users_dropdown.wait_for_user_with_email(owner.email)
+        users_dropdown.wait_for_user_with_id(owner.id)
         print("pass")
 
 

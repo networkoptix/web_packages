@@ -195,7 +195,7 @@ def share_with_registered_user_works(server: Mediaserver):
                 SystemAdmin(driver)
                 left_menu = SystemLeftMenu(driver)
                 users_dropdown = left_menu.users_dropdown()
-                assert users_dropdown.has_user_with_email(tmp_user.email)
+                assert users_dropdown.has_user_in_menu_with_id(tmp_user.id)
             except Exception:
                 print("FAIL")
                 driver.save_screenshot('error.png')
@@ -261,7 +261,7 @@ def disconnect_should_remove_system(server: Mediaserver):
                 login_dialog.basic_cloud_login(owner.email, owner.password)
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
-                assert not users_dropdown.has_user_with_email(tmp_user.email)
+                assert not users_dropdown.has_user_in_menu_with_id(tmp_user.id)
             except Exception:
                 print("FAIL")
                 driver.save_screenshot('error.png')
@@ -568,7 +568,7 @@ def viewer_can_remove_offline_system_from_account(server: Mediaserver):
                 LoginDialog(driver).basic_cloud_login(owner.email, owner.password)
                 system_left_menu = SystemLeftMenu(driver)
                 users_dropdown = system_left_menu.users_dropdown()
-                assert not users_dropdown.has_user_with_email(tmp_user.email)
+                assert not users_dropdown.has_user_in_menu_with_id(tmp_user.id)
             except Exception:
                 print("FAIL")
                 driver.save_screenshot('error.png')

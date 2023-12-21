@@ -70,8 +70,7 @@ def name_change_shown_in_system(
         driver.get(base_url + f'/systems/{server.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
         users_dropdown = left_menu.users_dropdown()
-        owner_menu_option = users_dropdown.get_user_with_email(owner.email)
-        owner_menu_option.click()
+        users_dropdown.get_user_link_by_id(owner.id).click()
         system_user = SystemUsers(driver)
         assert system_user.user_header_text().get_text() == owner.email
         assert system_user.user_name_text().get_text() == f"{new_first_name} {new_last_name}"
@@ -201,15 +200,15 @@ def user_deleted_from_all_shared_systems(
         driver.get(base_url + f'/systems/{server_1.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
         users_dropdown = left_menu.users_dropdown()
-        assert not users_dropdown.has_user_with_email(cloud_account.email)
+        assert not users_dropdown.has_user_in_menu_with_id(cloud_account.id)
         driver.get(base_url + f'/systems/{server_2.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
         users_dropdown = left_menu.users_dropdown()
-        assert not users_dropdown.has_user_with_email(cloud_account.email)
+        assert not users_dropdown.has_user_in_menu_with_id(cloud_account.id)
         driver.get(base_url + f'/systems/{server_3.id}')
         left_menu = SystemAdmin(driver).get_left_menu()
         users_dropdown = left_menu.users_dropdown()
-        assert not users_dropdown.has_user_with_email(cloud_account.email)
+        assert not users_dropdown.has_user_in_menu_with_id(cloud_account.id)
 
 
 if __name__ == '__main__':

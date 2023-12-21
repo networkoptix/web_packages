@@ -182,50 +182,9 @@ class UsersDropdown(DropDown):
         dialog.wait_until_visible()
         return dialog
 
-    def _list_user_options(self):
-        self.open()
-        locator = (
-            "//nx-level-3-item//span[contains(@class, 'user')]/nx-search-highlight")
-        elements = self._driver.find_elements(By.XPATH, locator)
-        try:
-            return [
-                _UserOption(self._driver, locator + f"[contains(text(), '{e.text}')]") for e in elements]
-        except StaleElementReferenceException:
-            time.sleep(2)
-            _logger.debug(f"StaleElementReferenceException caught on {self._locator}")
-            elements = self._driver.find_elements(By.XPATH, locator)
-            return [
-                _UserOption(self._driver, locator + f"[contains(text(), '{e.text}')]") for e in elements]
-
-    def get_user_with_email(self, email: str):
-        for user in self._list_user_options():
-            if user.label() == email:
-                return user
-        raise _UserNotFoundError(email)
-
-    def has_user_with_email(self, email: str):
-        try:
-            self.get_user_with_email(email)
-        except _UserNotFoundError:
-            return False
-        return True
-
     def get_user_link_by_id(self, user_id):
         self.open()
         return Link(self._driver, f'//a[@id="{user_id}"]')
-
-    def get_local_user_with_username(self, user_name: str) -> DropDownOption:
-        for user in self._list_user_options():
-            if user.label() == user_name:
-                return user
-        raise _UserNotFoundError(user_name)
-
-    def has_local_user_with_username(self, user_name: str):
-        try:
-            self.get_local_user_with_username(user_name)
-        except _UserNotFoundError:
-            return False
-        return True
 
     def has_user_in_menu_with_id(self, user_id):
         try:
@@ -234,15 +193,15 @@ class UsersDropdown(DropDown):
             return False
         return True
 
-    def wait_for_user_with_email(self, email: str):
+    def wait_for_user_with_id(self, id: str):
         started_at = time.monotonic()
         while True:
             try:
-                return self.get_user_with_email(email)
+                return self.get_user_link_by_id(id)
             except _UserNotFoundError:
-                _logger.info(f"Waiting for user with email {email} in users list")
+                _logger.info(f"Waiting for user with id {id} in users list")
             if time.monotonic() - started_at > 5:
-                raise _UserNotFoundError(email)
+                raise _UserNotFoundError(id)
 
 
 class _UserOption(DropDownOption):
