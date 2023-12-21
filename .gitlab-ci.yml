@@ -48,6 +48,11 @@ stages:
  - desktop_notifications/**/*
  - .gitlab-ci.yml
 
+.channel_partners_changes:
+ - common/python/**/*
+ - channel_partners/**/*
+ - .gitlab-ci.yml
+
 .webadmin_changes:
   - front_end/**/*
   - webadmin/**/*
@@ -470,17 +475,36 @@ jenkins-build-notification:
   - if: !reference [ .enable_for_mr_branch ]
     changes: !reference [ .notification_changes ]
 
+jenkins-build-channel-partners:
+  extends: .jenkins-builds
+  script:
+    - echo "Running channel partners build"
+    - runJenkinsJob.sh gitlab.cloud.channel_partners
+      "BRANCH=$CI_MERGE_REQUEST_TARGET_BRANCH_NAME"
+      "BUILD_IDENTITY=$CI_PIPELINE_ID"
+      "GITLAB_BRANCH=$CI_COMMIT_REF_NAME"
+      "GITLAB_COMMIT=$CI_COMMIT_SHA"
+      "GITLAB_PIPELINE_URL=$CI_PIPELINE_URL"
+      "GITLAB_JOB_ID=$CI_JOB_ID"
+      "GITLAB_JOB_PROJECT=$CI_PROJECT_PATH"
+      "GITLAB_JOB_URL=$CI_JOB_URL"
+      "REVISION=$CI_COMMIT_SHA"
+  rules:
+  - if: !reference [ .enable_for_mr_branch ]
+    changes: !reference [ .channel_partners_changes ]
+
 cloud-deploy:
   extends: .jenkins-builds
   stage: deploy
   variables:
-    CLOUD_BACKEND_IMAGE_TAG: stable
+    CLOUD_BACKEND_IMAGE_TAG: latest
   script:
     - set -ex
     - runJenkinsJob.sh gitlab.cloud.deploy
         "CLOUD_PORTAL_IMAGE_TAG=${CI_PIPELINE_ID}.gitlab"
         "CLOUD_BACKEND_IMAGE_TAG=${CLOUD_BACKEND_IMAGE_TAG}"
-        "RELEASE_NAME=${K8S_PRODUCT_RELEASE}" 2>&1 | tee "deploy.log"
+        "RELEASE_NAME=${K8S_PRODUCT_RELEASE}" 
+        "CUSTOMIZATIONS=default" 2>&1 | tee "deploy.log"
     - |
       JENKINS_JOB_URL="$(grep 'Job Url:' "deploy.log" | \
         head -1 | \
