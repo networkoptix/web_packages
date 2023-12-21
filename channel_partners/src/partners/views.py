@@ -7,8 +7,7 @@ from uuid import uuid4, UUID
 
 import httpx
 from django.core.cache import caches
-from django.db.models import Q
-from django.db.models import Subquery
+from django.db.models import Subquery, Q
 from django.http import HttpResponseForbidden
 from django.shortcuts import get_object_or_404
 from django.shortcuts import render
@@ -16,6 +15,8 @@ from django.utils.encoding import force_str
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import extend_schema_view, OpenApiParameter
+from nx_cloud_api_client.apis import CdbSystemAPIBase
+from nx_cloud_api_client.base_auth import BearerTokenAuth
 from rest_framework import status
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.pagination import PageNumberPagination
@@ -27,6 +28,7 @@ from rest_framework_extensions.mixins import NestedViewSetMixin
 from nx_cloud_api_client.apis import CdbSystemAPIBase
 from partners import filters
 from tools.exception import Conflict
+from tools.helpers import forward_cdb_resp
 from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from .forms.grant_access_form import GrantAccessForm
@@ -1041,6 +1043,8 @@ class CloudSystemViewSet(NestedViewSetMixin,
                                                         system_allowed=True, direct_access_allowed=True))
         if self.action == 'destroy':
             perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_manage, system_allowed=True))
+        if self.action == 'transfer_offer':
+            perms.append(CanPerformChannelPartnerAction(Organization.can_manage_systems))
         if self.action == 'service_quantity':
             if self.request.method == 'PATCH':
                 perms.append(CanPerformChannelPartnerAction(CloudSystemId.can_set_services))
@@ -1149,6 +1153,18 @@ class CloudSystemViewSet(NestedViewSetMixin,
         caches['default'].delete(self.get_service_quantity_cache_key(request.cloud_system))
         serializer.save_security_metrics(cloud_system=request.cloud_system)
         return Response(serializer.data)
+
+    @extend_schema(
+        request=SystemToOrgTransferSerializer,
+        responses=SystemSerializer(many=False),
+        extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'})
+    @action(methods=['post'], detail=True)
+    def transfer_offer(self, request, id):
+        ser = SystemToOrgTransferSerializer(data=request.data, context=self.get_serializer_context())
+        ser.is_valid(raise_exception=True)
+        self.check_object_permissions(request, ser.validated_data['organizationId'])
+        system = ser.save(system_id=id)
+        return Response(CloudSystemSerializer(system, context=self.get_serializer_context()).data)
 
 
 @extend_schema(

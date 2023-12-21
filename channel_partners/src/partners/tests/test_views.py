@@ -1336,3 +1336,108 @@ class TestCloudSystemViewSetDelete:
         mock_auth_with_user(self.cp_user, token=self.token)
         response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 403
+
+
+class TestSystemTransferOffer:
+
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, org_user_factory, arf):
+        self.cp = channel_partner_factory()
+        self.org = organization_factory(channel_partner=self.cp)
+        self.other_org = organization_factory(channel_partner=self.cp)
+        self.org_admin = org_user_factory(organization=self.org)
+        self.org_viewer = org_user_factory(organization=self.org, role=OrganizationRoles.VIEWER)
+        self.comment = f'{uuid4()}'
+        self.sys_id = f'{uuid4()}'
+        self.valid_request = arf.post('/', data={'organizationId': self.org.id, 'comment': self.comment}, format='json')
+        self.invalid_request = arf.post('/', data={'organizationId': self.comment, 'comment': self.comment}, format='json')
+        self.other_org_request = arf.post('/', data={'organizationId': self.other_org.id, 'comment': self.comment}, format='json')
+        self.view = CloudSystemViewSet.as_view(actions={'post': 'transfer_offer'}, detail=True)
+        self.offer_url = f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/v0/systems/{self.sys_id}/offer'
+        self.accept_url = (f'https://{settings.INSTANCE_CONFIG.default_host}/cdb/v0'
+                           f'/organizations/{self.org.id}/system-offers/{self.sys_id}/accept')
+        self.offer_response = {
+            "fromAccount": self.org_admin.user.email,
+            "organizationId": f"{self.org.id}",
+            "systemId": self.sys_id,
+            "systemName": "string",
+            "comment": self.comment,
+            "status": "offered"
+        }
+        self.accept_response = {
+            "errorClass": "noError",
+            "errorDetail": "0",
+            "errorText": "",
+            "resultCode": "ok"
+        }
+
+    def test_invalid_organization_id(self, mock_auth_with_user):
+        mock_auth_with_user(self.org_admin)
+        response = self.view(self.invalid_request, id=uuid4())
+        assert response.status_code == 400
+
+    def test_other_organization_id(self, mock_auth_with_user):
+        mock_auth_with_user(self.org_admin)
+        response = self.view(self.other_org_request, id=uuid4())
+        assert response.status_code == 403
+
+    def test_failed_offer_request(self, mock_auth_with_user, httpx_mock):
+        offer_error = {
+            "errorClass": "unauthorized",
+            "errorDetail": "101",
+            "errorText": "forbidden",
+            "resultCode": "forbidden"
+        }
+        httpx_mock.add_response(url=self.offer_url, status_code=403, json=offer_error)
+        httpx_mock.add_response(url=self.accept_url, status_code=400)
+        mock_auth_with_user(self.org_admin)
+        response = self.view(self.valid_request, id=self.sys_id)
+        assert response.status_code == 403
+        assert response.data == offer_error
+        accept_request = httpx_mock.get_request(url=self.accept_url)
+        assert accept_request is None
+
+    def test_failed_accept_request(self, mock_auth_with_user, httpx_mock):
+        accept_error = {
+            "errorClass": "badRequest",
+            "errorDetail": "112",
+            "errorText": "Offer not in valid state",
+            "resultCode": "badRequest"
+        }
+        httpx_mock.add_response(url=self.offer_url, status_code=200, json=self.offer_response)
+        httpx_mock.add_response(url=self.accept_url, status_code=400, json=accept_error)
+        token = f'{uuid4()}'
+        mock_auth_with_user(self.org_admin, token=token)
+        response = self.view(self.valid_request, id=self.sys_id)
+        assert response.status_code == 400
+        assert response.data == accept_error
+        offer_request = httpx_mock.get_request(url=self.offer_url)
+        assert offer_request.headers.get('Authorization') == f'Bearer {token}'
+        assert json.loads(offer_request.content) == {
+            'comment': self.comment,
+            'organizationId': f'{self.org.id}'
+        }
+        accept_request = httpx_mock.get_request(url=self.accept_url)
+        assert accept_request.headers.get('Authorization') == f'Bearer {token}'
+
+    def test_success_request(self, mock_auth_with_user, httpx_mock):
+        httpx_mock.add_response(url=self.offer_url, status_code=200, json=self.offer_response)
+        httpx_mock.add_response(url=self.accept_url, status_code=200, json=self.accept_response)
+        token = f'{uuid4()}'
+        mock_auth_with_user(self.org_admin, token=token)
+        response = self.view(self.valid_request, id=self.sys_id)
+        assert response.status_code == 200
+        assert response.data['systemId'] == self.sys_id
+        assert response.data['organization'] == self.org.id
+
+        offer_request = httpx_mock.get_request(url=self.offer_url)
+        assert offer_request.headers.get('Authorization') == f'Bearer {token}'
+        assert json.loads(offer_request.content) == {
+            'comment': self.comment,
+            'organizationId': f'{self.org.id}'
+        }
+
+        accept_request = httpx_mock.get_request(url=self.accept_url)
+        assert accept_request.headers.get('Authorization') == f'Bearer {token}'
+
+        assert CloudSystemId.objects.filter(system_id=self.sys_id, organization=self.org).exists()

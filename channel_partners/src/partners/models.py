@@ -1120,16 +1120,14 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                                    organizationtouser__roles__overlap=allowed_role_uuid,
                                                    organizationtouser__system_group=None).exists():
             return True
+        if not self.channel_partner_access_level_id:
+            return False
         channel_partner_manager = ChannelPartnerToUser.objects.filter(
             user=user, channel_partner=self.channel_partner,
             roles__overlap=[ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER]
         ).exists()
         if channel_partner_manager:
-            if self.channel_partner_access_level_id == OrganizationRoles.ORGANIZATION_ADMINISTRATOR:
-                role = OrganizationRoles.ORGANIZATION_ADMINISTRATOR
-            else:
-                role = OrganizationRoles.SYSTEM_HEALTH_VIEWER
-            return role in allowed_role_uuid
+            return self.channel_partner_access_level_id in allowed_role_uuid
         return False
 
     def can_access(self, user: CloudUser):

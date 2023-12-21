@@ -1,12 +1,16 @@
 import typing
 import uuid
+from logging import getLogger
 
-from rest_framework.response import Response
-from rest_framework.views import exception_handler, set_rollback
-from rest_framework import exceptions
+import httpx
+from rest_framework.views import exception_handler
+from django.conf import settings
 from django.utils import timezone
-
+from rest_framework.exceptions import APIException
+from rest_framework.response import Response
 from tools.exception import APIErrorWithoutRollback
+
+logger = getLogger(__name__)
 
 
 def get_period_start():
@@ -33,3 +37,29 @@ def custom_exception_handler(exc, context):
 
         return Response(data, status=exc.status_code, headers=headers)
     return exception_handler(exc, context)
+
+
+def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
+    """
+    Forwards response data from cdb to rest_framework view response.
+    Params:
+        response: original response from CDB
+        via_exception: if set to true then raises APIException with data
+         and status code from original response
+    """
+    if response.headers.get('content-type') == 'application/json' and response.content:
+        detail = response.json()
+    else:
+        content = response.content.decode()
+        logger.error(f'Cannot parse CDB response. Status: {response.status_code}')
+        logger.error(f'Cannot parse CDB response. Content: {content}')
+        if settings.DEBUG:
+            detail = content
+        else:
+            detail = None
+    if via_exception:
+        exception = APIException(detail=detail)
+        exception.status_code = response.status_code
+        raise exception
+    return Response(data=detail, status=response.status_code,
+                    content_type=response.headers.get('content-type'))

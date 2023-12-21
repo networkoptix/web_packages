@@ -4,6 +4,7 @@ import uuid
 from collections import defaultdict
 from typing import List
 
+import httpx
 import llutil
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -12,6 +13,8 @@ from django.utils import timezone
 from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
 from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, OpenApiExample
+from nx_cloud_api_client.base_auth import BearerTokenAuth
+from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -29,9 +32,8 @@ from partners.models import (
     get_organization_roles, OrganizationRoles
 )
 from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
-from tools.helpers import get_path_from_parent
-from tools.serializers import AccessMatrixMixin
-from tools.serializers import FieldAccessModelSerializer
+from tools.serializers import FieldAccessModelSerializer, AccessMatrixMixin
+from tools.helpers import get_path_from_parent, forward_cdb_resp
 from tools.utils import bind_system_to_cdb_organization
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
@@ -1372,3 +1374,33 @@ class SystemGroupUserSerializer(serializers.ModelSerializer):
         # Delete User's Organization Roles
         OrganizationToUser.objects.filter(user=user, organization=organization, system_group__isnull=True).delete()
         return relation
+
+
+class SystemToOrgTransferSerializer(serializers.Serializer):
+    organizationId = serializers.PrimaryKeyRelatedField(queryset=Organization.objects.all())
+    comment = serializers.CharField()
+
+    def save(self, system_id: str | uuid.UUID, **kwargs):
+        organization = self.validated_data['organizationId']
+        # TODO. CLOUD-12144. replace with common API
+        base_url = f'https://{organization.channel_partner.cloud_host.hostname}/cdb/v0'
+        offer_url = f'{base_url}/systems/{system_id}/offer'
+        accept_url = f'{base_url}/organizations/{organization.id}/system-offers/{system_id}/accept'
+        auth = BearerTokenAuth(token=self.context["request"].auth)
+        offer = {
+            'organizationId': str(organization.id),
+            'comment': self.validated_data['comment']
+        }
+        offer_response = httpx.post(offer_url, json=offer, auth=auth)
+        if offer_response.status_code != 200:
+            forward_cdb_resp(offer_response, via_exception=True)
+        accept_response = httpx.post(accept_url, auth=auth)
+        if accept_response.status_code != 200:
+            forward_cdb_resp(accept_response, via_exception=True)
+        system = CloudSystemId.objects.create(
+            system_id=system_id,
+            organization=organization,
+            cloud_host=organization.channel_partner.cloud_host
+        )
+        # TODO. call background task to refresh system status from cdb
+        return system
