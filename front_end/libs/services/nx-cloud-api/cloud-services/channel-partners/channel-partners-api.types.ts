@@ -227,12 +227,23 @@ export interface ServiceData {
     created: string;
 }
 /* Groups */
-export interface GroupItem {
+export interface GroupItem extends SystemItem {
     id: string;
     roles: string[];
     name: string;
     parentId: string;
     children: GroupItem[];
+}
+
+export interface SystemItem {
+    name: string | undefined;
+    systemId: string;
+    type: OrgCardItem;
+}
+
+export enum OrgCardItem {
+    SYSTEM = 'system',
+    GROUP = 'group',
 }
 
 export interface GetGroupItem extends GroupItem {
@@ -246,7 +257,7 @@ export interface CreateGroup {
 }
 
 export interface PatchGroup {
-    name: string;
+    name?: string;
     parentId: string;
 }
 

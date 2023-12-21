@@ -1,5 +1,7 @@
 import { createSelector, createFeatureSelector } from '@ngrx/store';
 
+import { OrgCardItem } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
+
 import { GroupsState } from './groups.state';
 
 const selectGroupState = createFeatureSelector<GroupsState>('groups');
@@ -26,5 +28,6 @@ export const selectCurrentGroup = createSelector(
 export const selectCurrentGroups = createSelector(
     selectCurrentGroup,
     selectRootGroups,
-    (group, rootGroups) => group?.children || rootGroups,
+    (group, rootGroups) =>
+        (group?.children || rootGroups)?.map(group => ({ ...group, type: OrgCardItem.GROUP })),
 );

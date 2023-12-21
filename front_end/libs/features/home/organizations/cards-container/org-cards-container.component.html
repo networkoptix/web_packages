@@ -1,7 +1,7 @@
 <!-- Issue with "Unable to preventDefault inside passive event listener invocation." caused by monitoring? -->
 <!-- https://github.com/angular/components/issues/24979#issuecomment-1203583528 -->
 
-<ng-container *ngIf="isLoading; else showContent">
+<ng-container *ngIf="!(currentGroups$ | async); else showContent">
     <nx-pre-loader></nx-pre-loader>
 </ng-container>
 
@@ -24,7 +24,10 @@
         </div>
     </div>
     <div
-        *ngIf="!currentGroups$$()?.length && !(currentSystems$ | async)?.length; else showGroups"
+        *ngIf="
+            !(currentGroups$ | async)?.length && !(currentSystems$ | async)?.length;
+            else showGroups
+        "
         class="no-systems"
     >
         <nx-no-systems-cards></nx-no-systems-cards>
@@ -38,7 +41,7 @@
 >
     <div class="px-3 cards-container">
         <div
-            *ngFor="let group of currentGroups$$(); trackBy: trackGroup"
+            *ngFor="let group of currentGroups$ | async; trackBy: trackGroup"
             class="group-card"
             cdkDropList
             cdkDropListSortingDisabled

@@ -4,7 +4,6 @@ import type { OpenGroups } from '../../home.types';
 
 export interface GroupsState {
     groups: GroupItem[] | null;
-    groupsMap: GroupItem[] | null;
     currentGroupId: string;
     openGroups: OpenGroups;
 }

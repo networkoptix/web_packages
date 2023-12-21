@@ -2,6 +2,7 @@ import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
 import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -21,7 +22,9 @@ import {
 import {
     CloudSystem,
     GroupItem,
+    OrgCardItem,
     OrgPermissions,
+    SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@variables/static-variables';
@@ -33,13 +36,10 @@ import {
     selectCurrentGroup,
     selectCurrentGroupId,
     selectCurrentGroups,
+    selectGroupItems,
     selectHasGroups,
 } from '../../store/groups/groups.selectors';
 
-interface SystemInfo {
-    name: string;
-    systemId: string;
-}
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -69,9 +69,15 @@ export class NxOrganizationCardContainerComponent {
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentGroup$$ = this.store.selectSignal<GroupItem>(selectCurrentGroup);
-    currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
+    currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroups);
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
-    currentSystems$: Observable<SystemInfo[]>;
+    currentSystems$: Observable<SystemItem[]>;
+    systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
+    groupItems$$ = this.store.selectSignal(selectGroupItems);
+    systemMap$$ = computed(() => {
+        const systems = this.systemsFromSubject$$();
+        return new Map(systems?.map(sys => [sys.id, sys]));
+    });
 
     isLoading = true;
     constructor(
@@ -89,22 +95,28 @@ export class NxOrganizationCardContainerComponent {
             });
 
         effect(() => {
+            const systemMap = this.systemMap$$();
             this.currentSystems$ = this.inRoot
-                ? this.cpService.getOrgSystems(this.currentOrgId$$())
+                ? this.cpService.getOrgSystems(this.currentOrgId$$()).pipe(
+                      map(orgSystems =>
+                          orgSystems.map(sys => ({
+                              ...sys,
+                              type: OrgCardItem.SYSTEM,
+                              name: systemMap.get(sys.systemId)?.name,
+                          })),
+                      ),
+                  )
                 : this.cpService.getGroup(this.currentGroupId$$()).pipe(
                       map(group => {
-                          const systems = this.systemsService.systems;
-                          return group.systems.map(sys => {
+                          return group.systems.map(systemId => {
                               return {
-                                  systemId: sys,
-                                  name: systems.find(system => system.id === sys)?.name,
+                                  systemId,
+                                  name: systemMap.get(systemId)?.name,
+                                  type: OrgCardItem.SYSTEM,
                               };
                           });
                       }),
                   );
-            if (this.currentGroups$$()) {
-                this.isLoading = false;
-            }
         });
     }
 
@@ -112,16 +124,57 @@ export class NxOrganizationCardContainerComponent {
         return item.id;
     }
 
-    trackSystem(_index: number, item: CloudSystem | SystemInfo): string {
+    trackSystem(_index: number, item: CloudSystem | SystemItem): string {
         return item.systemId;
     }
 
     onDrop(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
-        // const dragged = event.item.data;
-        // const droppedOn = event.container.data;
-        // if (!event.isPointerOverContainer || dragged.id === droppedOn.id) {
-        // }
-        // Placeholder for new logic
+        const dragged = event.item.data;
+        const droppedOn = event.container.data;
+        if (!event.isPointerOverContainer || dragged.id === droppedOn.id) {
+            return;
+        }
+        if (dragged.type === OrgCardItem.GROUP) {
+            this.cpService
+                .patchGroup(dragged.id, { parentId: droppedOn.id })
+                .subscribe(updatedGroup => {
+                    // Use ngrx effect to update store
+                    const groups: GroupItem[] = [...this.groupItems$$()];
+                    const parentId = dragged.parentId;
+                    if (parentId) {
+                        const parent = Object.assign(
+                            {},
+                            groups.find(group => group.id === parentId),
+                        );
+                        if (parent) {
+                            parent.children = [
+                                ...parent.children.filter(child => child.id !== dragged.id),
+                            ];
+                        }
+                        const parentIndex = groups?.findIndex(group => group.id === parentId);
+                        groups[parentIndex] = parent;
+                    }
+                    const droppedOnGroup = Object.assign(
+                        {},
+                        groups.find(group => group.id === droppedOn.id),
+                    );
+                    droppedOnGroup.children = [...droppedOnGroup?.children, updatedGroup];
+                    const droppedOnIndex = groups?.findIndex(group => group.id === droppedOn.id);
+                    groups[droppedOnIndex] = droppedOnGroup;
+
+                    const movedGroupIndex = groups.findIndex(group => group.id === dragged.id);
+                    groups[movedGroupIndex] = updatedGroup;
+                    this.store.dispatch(GroupActions.setGroups({ groups }));
+                });
+        } else if (dragged.type === OrgCardItem.SYSTEM) {
+            this.cpService
+                .updateSystemGroup(dragged.systemId, { groupId: droppedOn.id })
+                .subscribe(() => {
+                    this.currentSystems$ = this.currentSystems$.pipe(
+                        map(systems => systems.filter(system => system.systemId !== dragged.id)),
+                    );
+                });
+        }
     }
 
     newGroupDialog(): void {
@@ -137,7 +190,7 @@ export class NxOrganizationCardContainerComponent {
         this.router.navigate(route, { relativeTo: this.route.parent });
     }
 
-    handleSystemClick(system: CloudSystem | SystemInfo): void {
+    handleSystemClick(system: CloudSystem | SystemItem): void {
         this.router.navigate(['systems', system.systemId]);
     }
 }
