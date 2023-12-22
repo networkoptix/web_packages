@@ -869,6 +869,7 @@ export interface SettingsConfig {
     remoteSessionUpdateS: Setting;
     resourceFileUri: Setting;
     rtpTimeoutMs: Setting;
+    securityForPowerUsers: Setting;
     sequentialFlirOnvifSearcherEnabled: Setting;
     serverDiscoveryPingTimeoutSec: Setting;
     sessionLimitMinutes: Setting;
