@@ -50,6 +50,13 @@ const TIMESTAMP_UPDATE_THROTTLE_MS = 1000;
 
 type AvailableTransportsAndResolutions = ViewCamera['availableTransportsAndResolutions'];
 
+enum CameraError {
+    noData = 'noData',
+    noFormat = 'noFormat',
+    offline = 'offline',
+    unauthorized = 'unauthorized',
+}
+
 @UntilDestroy()
 @Component({
     selector: 'nx-system-view-camera-page',
@@ -61,6 +68,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private readonly isChrome: boolean;
     readonly isMobileSafari: boolean;
     readonly PLAYBACK_ERROR = PLAYBACK_ERROR;
+    protected readonly CameraError = CameraError;
 
     private cameraId$$ = toSignal(this.route.params.pipe(map(({ cameraId }) => cameraId ?? '')), {
         initialValue: '',
@@ -112,6 +120,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
         this.system.permissionManager.permissions$$();
         return this.system.permissionManager.canExportDeviceArchive(this.cameraId$$());
     });
+
+    playerError$$ = signal<string>('');
 
     private user$$ = this.store.selectSignal(accountSelectors.selectCurrentUser);
     get user(): string {
@@ -204,16 +214,28 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     state$$ = computed(() => {
         const canViewArchive = this.canViewArchive$$();
         const canViewDevice = this.canViewDevice$$();
-        const { error = '' } = this.playback.state$$();
-        const { hasArchive, isAuthorized, isOnline, isVirtual } =
+        const error = this.playerError$$();
+        const { hasArchive, isAuthorized, isOnline, isOffline, isUnauthorized, isVirtual } =
             this.vms.state$$().selectedCamera || {};
         const isLive = this.time$$() === 'live';
 
         const canPlayLive = canViewDevice && isAuthorized && isOnline && !isVirtual;
         const canPlayArchive = canViewArchive && isAuthorized && (isVirtual || hasArchive);
         const noAccess = (!canPlayLive && isLive) || (!canPlayArchive && !isLive);
+
+        let errorState: CameraError | undefined;
+        if (!isOffline && !isUnauthorized && isVirtual) {
+            errorState = CameraError.noData;
+        } else if (!isOffline && !isUnauthorized && !isVirtual) {
+            errorState = CameraError.noFormat;
+        } else if (isOffline && !isUnauthorized) {
+            errorState = CameraError.offline;
+        } else if (!isOffline && isUnauthorized) {
+            errorState = CameraError.unauthorized;
+        }
         return {
             error,
+            errorState,
             noAccess,
             playerError: !!error || noAccess || !isOnline || !isAuthorized,
         };
@@ -594,7 +616,8 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
                 this.playback.restore(archiveAvailable);
             }
         } else {
-            this.playback.stop(this.PLAYBACK_ERROR.NO_ACCESS);
+            this.playerError$$.set(this.PLAYBACK_ERROR.NO_ACCESS);
+            this.playback.stop();
         }
     }
 
@@ -743,7 +766,7 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     get enableControls(): boolean {
         return (
             this.camera &&
-            !this.playback.state$$()?.error &&
+            !this.playerError$$() &&
             ((this.camera.isOnline && !this.camera.isUnauthorized) ||
                 (this.camera.hasArchive && this.canViewArchive$$()))
         );
@@ -752,15 +775,11 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     private initSelectedCamera(): void {
         this.resetTransport();
         this.resetQuality();
-        this.playback.setError('');
+        this.playerError$$();
 
         this.unsub$.next('done');
         this.playback.subject.pipe(takeUntil(this.unsub$)).subscribe((state: PlaybackState) => {
             this.selectedTransport = state.transport;
-
-            if (state.error !== '' && this.playback.state.mode === PLAYBACK_MODE.LIVE) {
-                this.playback.stop(state.error);
-            }
         });
 
         if (this.camera?.hasArchive) {

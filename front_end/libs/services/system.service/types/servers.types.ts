@@ -45,6 +45,7 @@ export interface NxSystemServer {
 
 export interface ViewBaseCamera {
     disableDualStreaming: boolean;
+    deviceType: string;
     id: string;
     model: string;
     name: string;

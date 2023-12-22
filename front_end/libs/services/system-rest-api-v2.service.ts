@@ -433,6 +433,7 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
             status: true,
             url: true,
             serverId: true,
+            deviceType: true,
             options: {
                 isDualStreamingDisabled: true,
                 preferredServerId: true,

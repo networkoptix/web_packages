@@ -72,6 +72,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
     PlaybackStateTemp: ArchivePlaybackState;
 
     @Output() videoDblClick = new EventEmitter<void>();
+    @Output() playBackError = new EventEmitter<string>();
 
     private transport: PlaybackTransport;
 
@@ -129,10 +130,6 @@ export class PlayerComponent implements OnInit, AfterViewInit {
         if (s.transport !== this.transport) {
             this.transport = s.transport;
         }
-
-        this.errorPlayback = s.error?.length > 0;
-        // No translation at this time ... we should re-jigger error messages
-        this.errorPlaybackDescription = s.error;
 
         this.errorEncryption = (<ArchivePlaybackState>s).encrypted;
         this.showOverlay = !this.errorEncryption && !this.errorPlayback ? this.showOverlay : false;
@@ -192,7 +189,7 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                                 if (response.errorString === this.serverErrors.cannotDecrypt) {
                                     this.playback.unplayableArchive();
                                 } else {
-                                    this.playback.setError(response.errorString);
+                                    this.playBackError.emit(response.errorString);
                                 }
                                 break;
                             default:
@@ -208,7 +205,9 @@ export class PlayerComponent implements OnInit, AfterViewInit {
                         message: "Http failure during parsing for https://38b5790a-523a-4124-ac07-a958c4ad13c3.relay.regress.cloud.hdw.mx/web/hls/01ea275f-287f-277b-6978-4cbcd93c4763.m3u8?hi&"
                          */
                         if (error.name !== 'HttpErrorResponse') {
-                            this.playback.setError(error.message);
+                            this.errorPlayback = error.message?.length;
+                            this.errorPlaybackDescription = error.message;
+                            this.playBackError.emit(error.message);
                         }
                     },
                 );

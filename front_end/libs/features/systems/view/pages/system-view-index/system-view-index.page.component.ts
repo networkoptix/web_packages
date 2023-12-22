@@ -21,6 +21,7 @@ import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { nxConfig } from '@services/nx-config/config';
+import { DeviceType } from '@services/system.service/camera-manager/camera-manager-types';
 import type { NxSystem } from '@services/system.service/system';
 import type { ViewBaseServer, ViewBaseCamera } from '@services/system.service/types/servers.types';
 import { NxSystemsService } from '@services/systems.service';
@@ -358,7 +359,12 @@ export class NxSystemViewIndexPageComponent implements OnInit, OnDestroy {
                             return mediaServers.map(ms => ({
                                 ...setServerIpAndPort(ms),
                                 cameras: cameras.filter(
-                                    c => c.parentId === ms.id && c.mediaStreams.length,
+                                    c =>
+                                        c.parentId === ms.id &&
+                                        [
+                                            DeviceType.Camera.valueOf(),
+                                            DeviceType.MultisensorCamera.valueOf(),
+                                        ].includes(c.deviceType),
                                 ),
                             }));
                         }),

@@ -1,5 +1,4 @@
 import { Injectable } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import {
     animationFrameScheduler,
@@ -90,7 +89,6 @@ export class PlaybackService {
      * Any additional cleanup before switching to a new camera should be done here.
      */
     private cleanUp = (): void => {
-        this.setError('');
         (<ArchivePlaybackState>this.state).encrypted = false;
     };
 
@@ -180,7 +178,6 @@ export class PlaybackService {
     }
 
     subject = new BehaviorSubject<PlaybackState>(createInitialStoppedState());
-    state$$ = toSignal(this.subject, { initialValue: createInitialStoppedState() });
 
     private emit(): void {
         this.subject.next(this.state);
@@ -272,14 +269,8 @@ export class PlaybackService {
         this.emit();
     }
 
-    setError(error: string): void {
-        this.state.error = error;
-        this.emit();
-    }
-
-    stop(withError: string = ''): void {
+    stop(): void {
         this.state = createInitialStoppedState(this.state.quality, this.state.transport);
-        this.state.error = withError;
         this.emit();
     }
 

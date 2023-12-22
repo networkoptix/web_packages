@@ -22,7 +22,6 @@ export interface StoppedPlaybackState extends AbstractPlaybackState {
     mode: PLAYBACK_MODE.STOPPED;
     quality: PlaybackQuality;
     transport: PlaybackTransport;
-    error: string;
 }
 
 export interface ArchivePlaybackState extends AbstractPlaybackState {
@@ -36,7 +35,6 @@ export interface ArchivePlaybackState extends AbstractPlaybackState {
     encrypted: boolean;
     quality: PlaybackQuality;
     transport: PlaybackTransport;
-    error: string;
 }
 
 export interface LivePlaybackState extends AbstractPlaybackState {
@@ -47,7 +45,6 @@ export interface LivePlaybackState extends AbstractPlaybackState {
     started: boolean;
     quality: PlaybackQuality;
     transport: PlaybackTransport;
-    error: string;
 }
 
 export type PlaybackState = StoppedPlaybackState | ArchivePlaybackState | LivePlaybackState;
@@ -63,7 +60,6 @@ export function createInitialStoppedState(
         initializedAt: Date.now(),
         quality,
         transport,
-        error: '',
     };
 }
 
@@ -86,7 +82,6 @@ export function createInitialArchiveState(
         quality,
         transport,
         initializedAt: Date.now(),
-        error: '',
     };
 }
 
@@ -105,6 +100,5 @@ export function createInitialLiveState(
         transport,
         currentTime: Date.now(),
         initializedAt: Date.now(),
-        error: '',
     };
 }

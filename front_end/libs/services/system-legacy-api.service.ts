@@ -996,7 +996,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
                         status,
                         url,
                     } = cam_;
-                    const cam: Omit<ViewBaseCamera, 'mediaStreams' | 'rotation'> = {
+                    const cam: Omit<ViewBaseCamera, 'mediaStreams' | 'rotation' | 'deviceType'> = {
                         id,
                         disableDualStreaming,
                         model,
@@ -1019,6 +1019,7 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
 
                     return {
                         ...cam,
+                        deviceType: 'Camera',
                         mediaStreams,
                         rotation,
                     };
