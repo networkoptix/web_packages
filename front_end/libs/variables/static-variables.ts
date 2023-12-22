@@ -662,6 +662,7 @@ export const settingsConfig = {
     remoteSessionUpdateS: { type: 'number' },
     resourceFileUri: { type: 'text' },
     rtpTimeoutMs: { type: 'number' },
+    securityForPowerUsers: { type: 'checkbox' },
     sequentialFlirOnvifSearcherEnabled: { type: 'checkbox' },
     serverDiscoveryPingTimeoutSec: { type: 'number' },
     sessionLimitMinutes: { type: 'number' },
