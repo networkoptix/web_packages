@@ -106,6 +106,7 @@ export enum RecordingStatus {
 export enum DeviceType {
     Camera = 'Camera',
     Nvr = 'NVR',
+    MultisensorCamera = 'MultisensorCamera',
     // io device
     // virtual camera
     // Supposed to be more than two types, but no example checks for them

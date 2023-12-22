@@ -938,6 +938,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 isEnabled: true,
             },
             parameters: {
+                deviceType: true,
                 mediaStreams: true,
                 rotation: true,
             },
@@ -962,6 +963,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                                 preferredServerId !== ZERO_ID ? preferredServerId : serverId,
                             rotation: parameters.rotation || 0,
                             mediaStreams: parameters.mediaStreams?.streams ?? [],
+                            deviceType: parameters.deviceType,
                         };
                     },
                 ),

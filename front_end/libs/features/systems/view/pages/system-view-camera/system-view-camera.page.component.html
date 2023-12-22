@@ -156,11 +156,12 @@
             <nx-player
                 *ngIf="camera && !state$$().playerError; else noPlayer"
                 (videoDblClick)="onVideoDblClick()"
+                (playBackError)="playerError$$.set($event)"
                 class="fs-exclude"
             ></nx-player>
             <ng-template #noPlayer>
                 <div class="offline-message">
-                    <ng-container *ngIf="state$$().playerError; else unreachable">
+                    <ng-container *ngIf="!state$$().errorState; else unreachable">
                         <ng-template #otherError>
                             <nx-player-placeholder
                                 svgFileName="placeholder_camera_alert"
@@ -176,33 +177,35 @@
                         ></nx-player-placeholder>
                     </ng-container>
                     <ng-template #unreachable>
-                        <nx-player-placeholder
-                            *ngIf="!camera.isOffline && !camera.isUnauthorized && camera.isVirtual"
-                            svgFileName="placeholder_camera_alert"
-                            [heading]="LANG.common.cameraStates.noData"
-                            [description]="''"
-                        ></nx-player-placeholder>
-                        <nx-player-placeholder
-                            *ngIf="!camera.isOffline && !camera.isUnauthorized && !camera.isVirtual"
-                            svgFileName="placeholder_camera_alert"
-                            [heading]="LANG.common.cameraStates.error"
-                            [description]="LANG.common.cameraStates.noFormat"
-                        ></nx-player-placeholder>
-                        <nx-player-placeholder
-                            *ngIf="camera.isOffline && !camera.isUnauthorized"
-                            svgFileName="placeholder_camera_offline"
-                            [heading]="LANG.common.cameraStates.offline"
-                            description=""
-                        ></nx-player-placeholder>
-                        <nx-player-placeholder
-                            *ngIf="!camera.isOffline && camera.isUnauthorized"
-                            svgFileName="placeholder_camera_unauthorized"
-                            [heading]="LANG.common.cameraStates.unauthorized"
-                            [showSettingsLink]="camera.canEdit"
-                            [camera]="camera"
-                            [system]="system"
-                            description=""
-                        ></nx-player-placeholder>
+                        <ng-container [ngSwitch]="state$$().errorState">
+                            <nx-player-placeholder
+                                *ngSwitchCase="CameraError.noData"
+                                svgFileName="placeholder_camera_alert"
+                                [heading]="LANG.common.cameraStates.noData"
+                                [description]="''"
+                            ></nx-player-placeholder>
+                            <nx-player-placeholder
+                                *ngSwitchCase="CameraError.noFormat"
+                                svgFileName="placeholder_camera_alert"
+                                [heading]="LANG.common.cameraStates.error"
+                                [description]="LANG.common.cameraStates.noFormat"
+                            ></nx-player-placeholder>
+                            <nx-player-placeholder
+                                *ngSwitchCase="CameraError.offline"
+                                svgFileName="placeholder_camera_offline"
+                                [heading]="LANG.common.cameraStates.offline"
+                                description=""
+                            ></nx-player-placeholder>
+                            <nx-player-placeholder
+                                *ngSwitchCase="CameraError.unauthorized"
+                                svgFileName="placeholder_camera_unauthorized"
+                                [heading]="LANG.common.cameraStates.unauthorized"
+                                [showSettingsLink]="camera.canEdit"
+                                [camera]="camera"
+                                [system]="system"
+                                description=""
+                            ></nx-player-placeholder>
+                        </ng-container>
                     </ng-template>
                 </div>
             </ng-template>

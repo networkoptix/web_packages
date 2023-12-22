@@ -425,7 +425,15 @@ export class NxSystemRestAPI2 extends NxSystemRestAPI {
 
     protected getViewCameras(): Observable<ViewBaseCamera[]> {
         const viewCamKeyMap = {
-            ...buildTopLevelKeyMap(['id', 'model', 'name', 'status', 'url', 'serverId']),
+            ...buildTopLevelKeyMap([
+                'id',
+                'model',
+                'name',
+                'status',
+                'url',
+                'serverId',
+                'deviceType',
+            ]),
             options: {
                 isDualStreamingDisabled: true,
                 preferredServerId: true,
