@@ -12,6 +12,8 @@ subinclude:robot_tests/.hgignore
 *.deb
 *.sqlite3
 
+.env.webadmin.*
+
 env
 env_*
 nenv
