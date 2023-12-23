@@ -425,6 +425,16 @@ function setup_git_aliases() {
     done
 }
 
+function setup_webadmin_conan_update_scripts() {
+    echo "Installing dependencies for updating webadmin"
+    setup_or_activate_virtualenv
+    pip install gitpython httpx
+    echo "pip packages have been installed"
+
+    echo "Please run 'python build_webadmin_commit_message.py old_sha new_sha'"
+    echo "This will generate your env file and provide instructions for env configuration"
+}
+
 # Default values
 CONNECT_TO_CLOUD="false"
 CLOUD_HOST="cloud-test.hdw.mx"
@@ -660,6 +670,9 @@ do
         update_py_package)
             update_package $2
             ;;
+        setup_webadmin_conan)
+            setup_webadmin_conan_update_scripts
+            ;;
         *)
             echo Usage: cloud_shortcuts '[init_backend|init_frontend|add_env|build_frontend|login_db|rebuild_frontend|set_cloud_instance|setup_cms|setup_db|setup_env|start_celery|start_docker|stop_docker|remove_mediaserver|run_local_servers|stop_mediaserver|start_https_tunnel]'
             echo 'init_backend - Initializes the backend. Only run this once'
@@ -691,6 +704,7 @@ do
             echo 'install_cli - Installs cloud-helper CLI command globally'
             echo 'setup_git_aliases - Sets up git aliases for cloud_portal project'
             echo 'update_py_package - Updates poetry requirements. Accepts package name. "./cloud_helper.sh update_py_package {package name}"'
+            echo 'setup_webadmin_conan - Sets up the env for the conan helper script'
             echo ''
             if ! command -v cloud-helper &> /dev/null
             then
