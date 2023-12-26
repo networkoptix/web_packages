@@ -120,10 +120,7 @@ export class NxBootstrapProvider {
         this.CONFIG.localSystemId = data.localSystemId;
         this.CONFIG.localServerId = data.id;
         this.CONFIG.system.name = data.systemName || data.name;
-        // Webadmin overrides;
-        if (environment.isLocal) {
-            this.CONFIG.featureFlags.usersWithGroups = true;
-        }
+
         const [_, major, minor] = data.version.match(/(\d+\.\d+)\.\d+\.(\d+)/);
         this.CONFIG.system.version = { major: parseFloat(major), minor: parseInt(minor) };
     };

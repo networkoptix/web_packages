@@ -859,7 +859,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
 
     getUserMenuAdditionalLabel(user: NxUser): Translatable {
         let additionalLabel: Translatable = this.LANG.accessRoles.Custom.label;
-        if (this.system.version > 5.1 && nxConfig.featureFlags.usersWithGroups) {
+        if (this.system.version > 5.1) {
             if (user.groupIds.length === 0 && user.attributes === 'readonly') {
                 additionalLabel = this.LANG.accessRoles.Owner.label || 'Owner';
             } else if (user.groupIds.length === 1) {
