@@ -173,6 +173,7 @@ export interface System {
     opaque: string;
     ownerAccountEmail: string;
     ownerFullName: string;
+    organizationId?: string;
     registrationTime: string;
     sharingPermissions: { accessRole: string }[];
     stateOfHealth: string;
