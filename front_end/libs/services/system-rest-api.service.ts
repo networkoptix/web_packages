@@ -298,11 +298,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     private deleteToken(cloudAccessToken, token) {
         const host = environment.isLocal ? this.CONFIG.cloudHost : '';
-        return this.http.post(
-            `${host}/api/systems/revokeToken`,
-            { token },
-            { headers: { Authorization: `Bearer ${cloudAccessToken}` } },
-        );
+        const options = environment.isLocal
+            ? { headers: { Authorization: `Bearer ${cloudAccessToken}` } }
+            : undefined;
+        return this.http.post(`${host}/api/systems/revokeToken`, { token }, options);
     }
 
     protected retryHandler(request) {
@@ -768,7 +767,8 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
 
     async logout() {
         let { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
-        let cloudLogoutObservable = of({});
+        let logoutObservable$ = of({});
+        // Logout a cloud session in webadmin.
         if (this.CONFIG.cloudSystemId && refreshToken) {
             // Generate new tokens if they are missing
             if (!accessToken) {
@@ -781,18 +781,19 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                 // eslint-disable-next-line camelcase
                 cloudAccessToken = res.access_token;
             }
-            cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
+            logoutObservable$ = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, {
                 accessToken,
                 cloudAccessToken,
                 refreshToken,
             });
+            // Logout a cloud session on cloud.
+        } else if (!environment.isLocal) {
+            logoutObservable$ = this.deleteToken('', accessToken);
+            // Logout a local session.
+        } else {
+            logoutObservable$ = this.delete('/rest/v1/login/sessions/current');
         }
-        return cloudLogoutObservable
-            .pipe(
-                map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this._vmsToken}`)),
-                map(() => this.clearTokens()),
-            )
-            .toPromise();
+        return firstValueFrom(logoutObservable$.pipe(map(() => this.clearTokens())));
     }
 
     @memoizeAsyncPersistent
