@@ -1,9 +1,14 @@
 import { Injectable } from '@angular/core';
-// import { firstValueFrom, Observable } from 'rxjs';
+import { Observable } from 'rxjs';
 
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { ChannelPartnersApi as CpApi } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api';
+import type {
+    ChannelPartner,
+    Organization,
+} from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxParamStateService } from '@services/param-state/param-state.service';
+import { memoizeAsyncShort } from '@utils/memoize';
 
 @Injectable({
     providedIn: 'root',
@@ -36,7 +41,10 @@ export class NxChannelPartnersService {
     // }
 
     /* Channel Partners */
-    getChannelPartners = this.cpApi.getChannelPartners;
+    @memoizeAsyncShort
+    getChannelPartners(): Observable<ChannelPartner[]> {
+        return this.cpApi.getChannelPartners();
+    }
     createChannelPartner = this.cpApi.createChannelPartner;
     getSubChannelPartners = this.cpApi.getSubChannelPartners;
     getChannelPartner = this.cpApi.getChannelPartner;
@@ -54,7 +62,10 @@ export class NxChannelPartnersService {
 
     /* Organizations */
     getPartnerOrganizations = this.cpApi.getPartnerOrganizations;
-    getOrganizations = this.cpApi.getOrganizations;
+    @memoizeAsyncShort
+    getOrganizations(includeChildOrgs = false): Observable<Organization[]> {
+        return this.cpApi.getOrganizations(includeChildOrgs);
+    }
     createOrganization = this.cpApi.createOrganization;
     getOrganization = this.cpApi.getOrganization;
     updateOrganization = this.cpApi.updateOrganization;
