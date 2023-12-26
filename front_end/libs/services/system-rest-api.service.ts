@@ -601,7 +601,7 @@ export class NxSystemRestAPI extends NxSystemAPI {
 
     async logout() {
         let { accessToken, cloudAccessToken, refreshToken } = this.getTokens();
-        let cloudLogoutObservable = of({});
+        let logoutObservable$ = of({});
         if (this.CONFIG.cloudSystemId && refreshToken) {
             // Generate new tokens if they are missing
             if (!accessToken) {
@@ -612,10 +612,13 @@ export class NxSystemRestAPI extends NxSystemAPI {
                 // eslint-disable-next-line camelcase
                 cloudAccessToken = await this.refreshTokens(refreshToken, false).toPromise()?.access_token;
             }
-            cloudLogoutObservable = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken });
+            logoutObservable$ = this.http.post(`${this.CONFIG.cloudHost}/oauth/logout/`, { accessToken, cloudAccessToken, refreshToken });
+        } else if (!environment.isLocal) {
+            logoutObservable$ = this.deleteToken('', accessToken);
+        } else {
+            logoutObservable$ = this.delete('/rest/v1/login/sessions/current');
         }
-        return cloudLogoutObservable.pipe(
-            map(() => this.delete(`/rest/v1/login/sessions/${accessToken || this.#vmsToken}`)),
+        return logoutObservable$.pipe(
             map(() => this.clearTokens())
         ).toPromise();
     }
