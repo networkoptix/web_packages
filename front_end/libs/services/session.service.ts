@@ -1,8 +1,10 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
+import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
+import { NxSystemService } from '@services/system.service/system.service';
 
 import { NxConfigService } from './nx-config/nx-config.service';
 import { LOGIN_STATE } from './session.service.types';
@@ -15,6 +17,7 @@ export class NxSessionService {
     readonly LOGIN_STATE = LOGIN_STATE;
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
     private session: LocalStorageService = inject(LocalStorageService);
+    private systemService = inject(NxSystemService);
 
     private state$$ = signal<LOGIN_STATE>(LOGIN_STATE.UNAUTHORIZED);
 
@@ -45,7 +48,12 @@ export class NxSessionService {
                     return true;
                 }),
             )
-            .subscribe((state: LOGIN_STATE) => {
+            .subscribe(async (state: LOGIN_STATE) => {
+                if (prevState === LOGIN_STATE.CHANGED) {
+                    // logout all systems
+                    await firstValueFrom(this.systemService.logoutAllSystems());
+                }
+
                 prevState = state;
                 // Clear config overrides between sessions
                 this.session.store(NxConfigService.OVERRIDE_KEY, {});
