@@ -173,7 +173,6 @@ const FeatureFlagKeys = [
     'themesEnabled',
     'themeGenerator',
     'mergeRefactorEnabled',
-    'usersWithGroups',
     'paginatorExperimental',
     'newHeader',
     'cloudStorage',

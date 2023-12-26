@@ -1,4 +1,3 @@
-import { nxConfig } from '@services/nx-config/config';
 import { NxSystemModuleBase } from '@services/system/system-module';
 import { AllSystemVersions } from '@services/system/system-version';
 import { UserManager } from '@services/system.service/user-manager/user-manager';
@@ -16,8 +15,6 @@ export class UserManagerModule extends NxSystemModuleBase {
     constructor(version: number, ...args: ConstructorParameters<typeof UserWithGroupsManager>) {
         super();
         this.userManager =
-            version > 5.1 && nxConfig.featureFlags.usersWithGroups
-                ? new UserWithGroupsManager(...args)
-                : new UserManager(...args);
+            version > 5.1 ? new UserWithGroupsManager(...args) : new UserManager(...args);
     }
 }

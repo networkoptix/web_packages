@@ -10,7 +10,6 @@ import { NxSystemRestAPI2 } from '@services/system-rest-api-v2.service';
 import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxAppStateService } from './nx-app-state.service';
-import { nxConfig } from './nx-config/config';
 import type { UnauthorizedCallback } from './system-api.types';
 import { NxSystemAPI } from './system-legacy-api.service';
 import { NxSystemRestAPI3 } from './system-rest-api-v3.service';
@@ -69,7 +68,7 @@ export class NxSystemAPIService {
 
         if (useRest || environment.isLocal) {
             let restApi: NxSystemRestAPI | NxSystemRestAPI2 | NxSystemRestAPI3;
-            if (version > 5.1 && nxConfig.featureFlags.usersWithGroups) {
+            if (version > 5.1) {
                 restApi = new NxSystemRestAPI3(...args);
             } else if (version > 5.0) {
                 restApi = new NxSystemRestAPI2(...args);
