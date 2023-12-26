@@ -7,6 +7,7 @@ import { CookieService } from 'ngx-cookie-service';
 import { combineLatest, distinctUntilChanged, firstValueFrom, of, timer } from 'rxjs';
 import { catchError, debounceTime, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
+import { accountSelectors } from '@common/store/account';
 import { AppDB } from '@db/index';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
@@ -68,24 +69,26 @@ export class CloudAccount extends BaseAccount {
             db,
         );
         this.account = this.CONFIG.preloadedAccount as Account;
-        const loginState$ = this.sessionService.loginStateSubject.pipe(
-            debounceTime(1000),
-            distinctUntilChanged(),
-            shareReplay({ bufferSize: 1, refCount: true }),
-        );
+        const currentEmail$ = this.store
+            .select(accountSelectors.selectCurrentEmail)
+            .pipe(
+                debounceTime(1000),
+                distinctUntilChanged(),
+                shareReplay({ bufferSize: 1, refCount: true }),
+            );
 
         // Distinct until changed is used to prevent the logout function from looping.
-        loginState$.subscribe(loginState => {
-            if (loginState !== '') {
-                if (!loginState) {
+        currentEmail$.subscribe(email => {
+            if (email !== '') {
+                if (!email) {
                     this.clearLoginState();
                 }
             }
         });
 
-        combineLatest([timer(0, updateInterval), loginState$])
+        combineLatest([timer(0, updateInterval), currentEmail$])
             .pipe(
-                filter(([_, loginState]) => !!loginState),
+                filter(([_, email]) => !!email),
                 switchMap(() => this.cloudApi.account(false)),
                 map((account: Account) => {
                     if (!account?.is_authenticated) {
@@ -165,10 +168,10 @@ export class CloudAccount extends BaseAccount {
         return this.requestingLogin
             .then((result: any) => {
                 if (!this.cloudApi.checkResponseHasError(result)) {
-                    if (this.sessionService.loginState) {
+                    if (!this.sessionService.isUnauthorized$$()) {
                         // If the user that logged in matches the current session there's no need to show
                         // the logout dialog.
-                        if (result.email !== this.sessionService.loginState) {
+                        if (this.sessionService.changed$$()) {
                             return this.logoutAuthorised();
                         }
 
@@ -182,7 +185,7 @@ export class CloudAccount extends BaseAccount {
 
                     if (result.email || result.name) {
                         // (result.data.resultCode === L.errorCodes.ok)
-                        this.sessionService.loginState = result.email || result.name; // Forcing changing loginState to reload interface
+                        this.sessionService.loginState = this.sessionService.LOGIN_STATE.AUTHORIZED; // Forcing changing loginState to reload interface
                     }
 
                     return Promise.resolve({

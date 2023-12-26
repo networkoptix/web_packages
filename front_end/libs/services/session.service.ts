@@ -1,43 +1,32 @@
-import { Injectable, inject } from '@angular/core';
+import { Injectable, inject, signal, computed } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { BehaviorSubject, Observable } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
-import { NxSystemInfo } from '@services/systems.service.types';
 
-import { NxDbService } from './db.service';
 import { NxConfigService } from './nx-config/nx-config.service';
-import type { LoginParams } from './session.service.types';
+import { LOGIN_STATE } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
 
 @Injectable({
     providedIn: 'root',
 })
 export class NxSessionService {
+    readonly LOGIN_STATE = LOGIN_STATE;
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
     private session: LocalStorageService = inject(LocalStorageService);
-    loginStateSubject: BehaviorSubject<string> = new BehaviorSubject(this.loginState || '');
-    loginParams$: BehaviorSubject<LoginParams>;
-    language$: BehaviorSubject<string>;
-    langChanged$: BehaviorSubject<boolean>;
 
-    constructor(
-        public nxCache: NxSwCacheService,
-        private db: NxDbService,
-    ) {
-        this.loginParams$ = new BehaviorSubject(
-            this.loginParams ?? {
-                code: null,
-                auth: null,
-                refreshToken: null,
-            },
-        );
-        this.language$ = new BehaviorSubject(this.session.retrieve('language'));
+    private state$$ = signal<LOGIN_STATE>(LOGIN_STATE.UNAUTHORIZED);
 
-        let hasSkippedFirstNull = !!this.session.retrieve('loginState');
+    public isUnauthorized$$ = computed(() => this.state$$() === LOGIN_STATE.UNAUTHORIZED);
+    public isAuthorized$$ = computed(() => this.state$$() === LOGIN_STATE.AUTHORIZED);
+    public changed$$ = computed(() => this.state$$() === LOGIN_STATE.CHANGED);
 
-        if (!hasSkippedFirstNull) {
+    constructor(public nxCache: NxSwCacheService) {
+        let prevState = this.session.retrieve('loginState') || LOGIN_STATE.UNAUTHORIZED;
+        this.state$$.set(prevState);
+
+        if (prevState === LOGIN_STATE.UNAUTHORIZED) {
             // Session doesn't get cleared until closed. Clear it now to prevent leaking access tokens.
             sessionStorage.clear();
         }
@@ -46,57 +35,33 @@ export class NxSessionService {
         this.session
             .observe('loginState')
             .pipe(
-                filter(val => {
-                    if (!val && !hasSkippedFirstNull) {
-                        hasSkippedFirstNull = true;
+                filter((nextState: LOGIN_STATE) => {
+                    if (nextState === prevState) {
+                        return false;
+                    } else if (nextState === LOGIN_STATE.CHANGED) {
+                        prevState = nextState;
                         return false;
                     }
                     return true;
                 }),
             )
-            .subscribe(() => {
-                hasSkippedFirstNull = true;
+            .subscribe((state: LOGIN_STATE) => {
+                prevState = state;
                 // Clear config overrides between sessions
                 this.session.store(NxConfigService.OVERRIDE_KEY, {});
 
-                if (!document.hasFocus() && !environment.testing) {
-                    // Don't reload on null since that state should show a session expired dialog
-                    window.location.reload();
+                if (!window.document.hasFocus() && !environment.testing) {
+                    if (state === LOGIN_STATE.LOGGED_OUT) {
+                        window.location.href = window.location.host;
+                    } else {
+                        window.location.reload();
+                    }
                 }
             });
     }
 
-    get systems$(): Observable<NxSystemInfo[]> {
-        return this.db.personal.systems.$.toArray();
-    }
-
-    get systems(): NxSystemInfo[] {
-        return this.session.retrieve('systems');
-    }
-
-    set systems(systems: NxSystemInfo[]) {
-        this.db.personal.systems.bulkPut(systems);
-        this.session.store('systems', systems);
-    }
-
-    get hslTheme(): Record<string, Record<string, string>[] | number> {
-        return this.session.retrieve('theme-hsl') || {};
-    }
-
-    set hslTheme(themeHsl: Record<string, Record<string, string>[] | number>) {
-        this.session.store('theme-hsl', themeHsl);
-    }
-
-    get systemId(): string {
-        return this.session.retrieve('systemId');
-    }
-
-    set systemId(systemId: string) {
-        this.session.store('systemId', systemId);
-    }
-
     invalidateSession(): void {
-        this.loginState = null;
+        this.loginState = this.LOGIN_STATE.UNAUTHORIZED;
         this.session.store('loginRegister', false);
         // Session doesn't get cleared until closed. Clear it now to prevent leaking access tokens.
         sessionStorage.clear();
@@ -105,52 +70,12 @@ export class NxSessionService {
         });
     }
 
-    get language(): string | undefined {
-        return this.language$?.getValue();
-    }
-
-    set language(lang: string) {
-        this.session.store('language', lang);
-        this.language$.next(lang);
-    }
-
-    get langChanged(): boolean | undefined {
-        return this.langChanged$?.getValue();
-    }
-
-    set langChanged(bool: boolean) {
-        this.session.store('langChanged', bool);
-        this.langChanged$.next(bool);
-    }
-
-    get loginState(): string {
+    get loginState(): LOGIN_STATE {
         return this.session.retrieve('loginState');
     }
 
-    set loginState(email: string) {
-        this.session.store('loginState', email);
-        this.loginStateSubject.next(email);
-    }
-
-    get loginParams(): LoginParams {
-        return this.session.retrieve('loginParams');
-    }
-
-    set loginParams(newParams: LoginParams) {
-        const params = {
-            ...this.loginParams,
-            ...Object.fromEntries<string>(
-                Object.entries(newParams).filter(([_k, v]) => v !== null),
-            ),
-        };
-        this.session.store('loginParams', params);
-        this.loginParams$.next(params);
-    }
-
-    // Setter ignores nulls
-    clearLoginParams(): void {
-        const cleared = { code: null, auth: null, refreshToken: null };
-        this.session.store('loginParams', cleared);
-        this.loginParams$.next(cleared);
+    set loginState(state: LOGIN_STATE) {
+        this.session.store('loginState', state);
+        this.state$$.set(state);
     }
 }

@@ -1,5 +1,6 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { TranslateService } from '@ngx-translate/core';
 import { i18n } from 'dateformat';
 import { LocalStorageService } from 'ngx-webstorage';
@@ -15,7 +16,6 @@ import { Language, processLanguageFactory } from '@utils/nx';
 
 import { nxConfig } from './nx-config/config';
 import { IConfig } from './nx-config/config-types';
-import { NxSessionService } from './session.service';
 
 const i18nOriginal = { ...i18n };
 
@@ -29,8 +29,7 @@ export class NxLanguageProviderService {
         private http: HttpClient,
         private cloudApi: NxCloudApiService,
         private toastService: NxToastService,
-        private sessionService: NxSessionService,
-        private storageService: LocalStorageService,
+        private localStorageService: LocalStorageService,
         public cacheService: NxUriCacheService,
         public swCacheService: NxSwCacheService,
     ) {
@@ -44,11 +43,11 @@ export class NxLanguageProviderService {
         if (environment.isLocal && !environment.isWizard) {
             // Fixes circular dependency with local-system-status-interceptor.
             setTimeout(() => {
-                this.currentLang = this.sessionService.language;
+                this.currentLang = this.language;
             });
         }
 
-        this.storageService.observe('language').subscribe(_ => {
+        this.localStorageService.observe('language').subscribe(_ => {
             // webadmin will handle the reload
             if (!environment.isLocal && !document.hasFocus()) {
                 window.location.reload();
@@ -61,6 +60,16 @@ export class NxLanguageProviderService {
          * this.translate.onTranslationChange.subscribe((event: TranslationChangeEvent) => {
          * });
          */
+    }
+
+    private languageFromStorage$$ = toSignal<string>(this.localStorageService.observe('language'));
+
+    private set language(lang: string) {
+        this.localStorageService.store('language', lang);
+    }
+
+    private get language(): string {
+        return this.languageFromStorage$$() || nxConfig.defaultLanguage;
     }
 
     loadLanguage(): Promise<Language> {
@@ -118,17 +127,14 @@ export class NxLanguageProviderService {
 
     public set currentLang(language: string) {
         // avoid undefined "language"
-        if (
-            !language ||
-            (language === this.translate.currentLang && this.sessionService.language === language)
-        ) {
+        if (!language || (language === this.translate.currentLang && this.language === language)) {
             return;
         }
 
         this.translate.currentLang = language;
         this.loadLanguage().then(translation => {
             this.setTranslations(language, translation);
-            this.sessionService.language = language;
+            this.language = language;
         });
 
         this.cacheService.clearData();

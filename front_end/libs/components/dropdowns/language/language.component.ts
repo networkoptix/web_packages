@@ -10,13 +10,13 @@ import {
     signal,
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
+import { LocalStorageService } from 'ngx-webstorage';
 import { take } from 'rxjs';
 
 import { environment } from '@environments/environment';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { ILanguage, ILanguages } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxLanguageProviderService } from '@services/nx-language-provider';
-import { NxSessionService } from '@services/session.service';
 import { icons, images } from '@static-variables';
 import { alphabeticalSort } from '@utils/general';
 
@@ -49,7 +49,7 @@ class BaseLanguageDropdown extends BaseDropdown {
     constructor(
         private cloudApi: NxCloudApiService,
         private languageService: NxLanguageProviderService,
-        private sessionService: NxSessionService,
+        private localStorageService: LocalStorageService,
     ) {
         super();
         this.currentLang = languageService.currentLang;
@@ -92,7 +92,7 @@ class BaseLanguageDropdown extends BaseDropdown {
 
             if (this.languageService.currentLang !== this.langCode) {
                 if (environment.isLocal) {
-                    this.sessionService.language = this.langCode;
+                    this.localStorageService.store('language', this.langCode);
                     window.location.reload();
                 } else {
                     this.cloudApi.changeLanguage(this.langCode).then(() => {

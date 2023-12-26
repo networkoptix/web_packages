@@ -1,5 +1,5 @@
 import { Injectable, Injector } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
@@ -103,15 +103,17 @@ export class NxSystemsService {
         private store: Store,
         private db: NxDbService,
     ) {
-        this.systemsSubject.subscribe(systems => {
+        this.systemsSubject.pipe(takeUntilDestroyed()).subscribe(systems => {
             this.#systems = systems;
         });
 
         // Singleton service
-        // eslint-disable-next-line ngrx/no-store-subscription
-        this.store.select(selectCurrentUser).subscribe(user => {
-            this.userEmail = user?.email;
-        });
+        this.store
+            .select(selectCurrentUser)
+            .pipe(takeUntilDestroyed())
+            .subscribe(user => {
+                this.userEmail = user?.email;
+            });
 
         this.populateSystems();
     }

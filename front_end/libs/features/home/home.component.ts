@@ -41,7 +41,7 @@ export class NxHomeComponent implements OnInit {
 
     ngOnInit(): void {
         this.initChannelPartners();
-        const redirect = !this.route.snapshot.children[0].routeConfig.path;
+        const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         const systems$ = this.systemsService.systemsSubject.pipe(
             distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         );
@@ -58,6 +58,10 @@ export class NxHomeComponent implements OnInit {
                 if (!homeNode) {
                     return;
                 }
+
+                channelPartners ||= [];
+                organizations ||= [];
+
                 const nodes = [
                     new MenuNode('', '/home'),
                     ...channelPartners.map(partner => {

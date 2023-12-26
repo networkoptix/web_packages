@@ -12,6 +12,7 @@ import {
 import { FormsModule, NgForm } from '@angular/forms';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { TranslateModule } from '@ngx-translate/core';
+import { LocalStorageService } from 'ngx-webstorage';
 
 import { NxCheckboxComponent } from '@components/checkbox/checkbox.component';
 import { NxContentBlockComponent } from '@components/content-block/content-block.component';
@@ -21,7 +22,6 @@ import { PrimaryButtonModule } from '@components/primary-button/primary-button.m
 import { NxThemeSwitcherComponent } from '@components/theme-switcher/theme-switcher.component';
 import staticLang from '@language_static';
 import { NxMenuService } from '@menu/menu.service';
-import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 
 @UntilDestroy()
@@ -103,7 +103,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     @ViewChild('backgroundInput', { static: false }) backgroundInput: ElementRef<HTMLInputElement>;
 
     constructor(
-        private sessionService: NxSessionService,
+        private localStorageService: LocalStorageService,
         private menuService: NxMenuService,
         public themeService: NxThemeService,
     ) {}
@@ -366,7 +366,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
     }
 
     updateStorage(): void {
-        this.sessionService.hslTheme = {
+        this.localStorageService.store('theme-hsl', {
             'theme-mode': this.isLiteTheme ? 1 : 0,
             'brand-h': this.brand.hue,
             'brand-s': this.brand.saturation,
@@ -388,7 +388,7 @@ export class NxThemeGeneratorComponent implements OnInit, AfterViewInit {
             'color-level-d3': this.colorLuminosity.d3,
             'color-level-d4': this.colorLuminosity.d4,
             'color-level-d5': this.colorLuminosity.d5,
-        };
+        });
     }
 
     setColors(): void {

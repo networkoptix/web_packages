@@ -2,11 +2,13 @@ import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, from, combineLatest, Observable, Subject } from 'rxjs';
 import { filter, distinctUntilChanged, map, switchMap } from 'rxjs/operators';
 
+import { accountSelectors } from '@common/store/account';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { Auth, MenuNode } from '@services/menus.service.types';
@@ -17,7 +19,6 @@ import { apiBase } from '../variables/static-variables';
 
 import { MenuStructure, MenusStructure } from './nx-config/base-config';
 import { nxConfig } from './nx-config/config';
-import { NxSessionService } from './session.service';
 
 @UntilDestroy({ checkProperties: true })
 @Injectable({
@@ -56,7 +57,7 @@ export class NxMenusService {
 
     constructor(
         private translate: TranslateService,
-        private sessionService: NxSessionService,
+        private store: Store,
         private http: HttpClient,
         private deviceService: DeviceDetectorService,
     ) {
@@ -127,7 +128,10 @@ export class NxMenusService {
             return from([menu]);
         }
 
-        return combineLatest([this.sessionService.loginStateSubject, this.languageChanged$]).pipe(
+        return combineLatest([
+            this.store.select(accountSelectors.selectCurrentEmail),
+            this.languageChanged$,
+        ]).pipe(
             switchMap(
                 ([login]):
                     | Promise<[string, MenuStructure]>

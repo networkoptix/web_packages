@@ -73,7 +73,7 @@ export class LocalAccount extends BaseAccount {
     }
 
     async get(forceUpdate = false): Promise<Account | undefined> {
-        if (this.sessionService.loginState || this.storageService.cloudAccessToken) {
+        if (this.sessionService.isAuthorized$$() || this.storageService.cloudAccessToken) {
             const user = await this.mediaServerApi.getCurrentUser(forceUpdate).catch(error => {
                 return Promise.reject(error);
             });
@@ -105,7 +105,7 @@ export class LocalAccount extends BaseAccount {
                     Promise.reject({ resultCode: err.error.errorId }),
                 ),
                 tap(_ => {
-                    this.sessionService.loginState = login;
+                    this.sessionService.loginState = this.sessionService.LOGIN_STATE.AUTHORIZED;
                 }),
             ),
         );

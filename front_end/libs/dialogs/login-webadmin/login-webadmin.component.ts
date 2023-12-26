@@ -23,6 +23,7 @@ import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { OauthService } from '@services/oauth.service';
 import { NxProcessService } from '@services/process.service';
 import type { Process } from '@services/process.service/process';
+import { LOGIN_STATE } from '@services/session.service.types';
 import { NxStorageService } from '@services/storage.service';
 import { NxToastService } from '@services/toast.service';
 import { icons, redirect } from '@static-variables';
@@ -360,7 +361,10 @@ export class LoginWebadminModalContent extends ModalBase<DT['return']> implement
         this.account.mediaServerApi.loginTokenUrl(token).subscribe(
             () => {
                 this.account.mediaServerApi.getCurrentUser().then(account => {
-                    this.account.loginState = account.email || account.name;
+                    this.account.loginState =
+                        account.email || account.name
+                            ? LOGIN_STATE.AUTHORIZED
+                            : LOGIN_STATE.UNAUTHORIZED;
                     // If the page reloads too soon. Webadmin redirects to /
                     setTimeout(() => window.location.reload(), this.urlUpdateTimeout);
                 });
