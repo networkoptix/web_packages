@@ -1,20 +1,20 @@
 import { DOCUMENT } from '@angular/common';
 import { Inject, Injectable } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { ActivatedRoute } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { CookieService } from 'ngx-cookie-service';
-import { SessionStorageService } from 'ngx-webstorage';
+import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject } from 'rxjs';
 
+import { accountSelectors } from '@common/store/account';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
-import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
 import { CustomAccountProperty } from './nx-cloud-api/custom-account-property';
 import { AuthorizeParams } from './nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from './nx-config/config';
-
 enum AvailableThemes {
     auto = 'auto',
     light = 'light',
@@ -22,7 +22,6 @@ enum AvailableThemes {
     hsl = 'hsl',
 }
 
-@UntilDestroy()
 @Injectable({
     providedIn: 'root',
 })
@@ -39,10 +38,11 @@ export class NxThemeService {
 
     constructor(
         private cloudApi: NxCloudApiService,
+        private localStorageService: LocalStorageService,
         private sessionStorage: SessionStorageService,
-        private sessionService: NxSessionService,
         private cookieService: CookieService,
         private route: ActivatedRoute,
+        private store: Store,
         @Inject(WINDOW) private window: Window,
         @Inject(DOCUMENT) protected document: Document,
     ) {
@@ -63,7 +63,7 @@ export class NxThemeService {
         }
 
         this.route.queryParams
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed())
             .subscribe(async (params: AuthorizeParams) => {
                 if (!params.view_type) {
                     this.viewType =
@@ -74,7 +74,7 @@ export class NxThemeService {
 
         this.sessionStorage
             .observe('theme')
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed())
             .subscribe(theme => {
                 if (!this.window.document.hasFocus()) {
                     this.window.document.documentElement.setAttribute(
@@ -84,12 +84,13 @@ export class NxThemeService {
                 }
             });
 
-        this.sessionService.loginStateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe(async (loginState: string) => {
+        this.store
+            .select(accountSelectors.selectCurrentEmail)
+            .pipe(takeUntilDestroyed())
+            .subscribe(async (email: string) => {
                 if (this.viewType !== 'web') {
                     this.themeSelected = this.CONFIG.themeConfig.dark;
-                } else if (loginState && nxConfig.featureFlags.themesEnabled) {
+                } else if (email && nxConfig.featureFlags.themesEnabled) {
                     await this.themeCustomProperty.get(false, true).then(
                         result => {
                             this.themeSelected = result.theme || this.CONFIG.themeConfig.default;
@@ -105,11 +106,11 @@ export class NxThemeService {
                             : this.getThemeRealName(this.CONFIG.themeConfig.default);
                 }
 
-                await this.setTheme(this.themeSelected, loginState);
+                await this.setTheme(this.themeSelected, email);
             });
 
         this.scope = this.document.documentElement;
-        this.themeMode$.pipe(untilDestroyed(this)).subscribe((mode: number) => {
+        this.themeMode$.pipe(takeUntilDestroyed()).subscribe((mode: number) => {
             if (mode) {
                 // 0 - dark, 1 - light
                 this.setColorsFor('background', {
@@ -423,7 +424,7 @@ export class NxThemeService {
     }
 
     initHslTheme(): void {
-        const themeSelected = this.sessionService.hslTheme;
+        const themeSelected = this.localStorageService.retrieve('theme-hsl');
 
         if (Object.keys(themeSelected).length === 21) {
             // on initial load some properties may not be initialized

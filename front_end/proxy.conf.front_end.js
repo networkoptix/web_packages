@@ -17,6 +17,7 @@ const PROXY_CONFIG = [
             '/cs',
             '/cdb',
             '/docdb',
+            '/partners',
             // mediaserver specific apis
             '/ec2',
             '/hls',

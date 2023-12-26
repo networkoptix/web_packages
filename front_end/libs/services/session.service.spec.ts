@@ -1,4 +1,5 @@
 import { NxSessionService } from './session.service';
+import { LOGIN_STATE } from './session.service.types';
 import { setupTestBed } from './src/setup';
 
 const setupSessionService = async (): Promise<{
@@ -22,24 +23,10 @@ describe('Session service', () => {
         expect(session).toBeTruthy();
     });
 
-    it('should have setter and getter (language)', async () => {
-        const { sessionService: session } = await setupSessionService();
-        session.language = 'en_US';
-        expect(session.language).toBe('en_US');
-
-        session.language$.subscribe(value => {
-            expect(value).toBe('en_US');
-        });
-    });
-
     it('should have setter and getter (loginState)', async () => {
         const { sessionService: session } = await setupSessionService();
-        session.loginState = 'roadrunner@acme.com';
-        expect(session.loginState).toBe('roadrunner@acme.com');
-
-        session.loginStateSubject.subscribe(value => {
-            expect(value).toBe('roadrunner@acme.com');
-        });
+        session.loginState = LOGIN_STATE.AUTHORIZED;
+        expect(session.loginState).toBe(LOGIN_STATE.AUTHORIZED);
     });
 
     it('should invalidate session', async () => {
@@ -49,12 +36,11 @@ describe('Session service', () => {
 
         session.invalidateSession();
 
-        expect(session['session'].retrieve('loginState')).toBeNull();
+        expect(session['session'].retrieve('loginState')).toBe(LOGIN_STATE.UNAUTHORIZED);
         expect(session['session'].retrieve('loginRegister')).toBeFalsy();
         session.cloudUserCaches.forEach(cacheName => {
             expect(clearByName).toBeCalledWith(cacheName);
         });
         expect(clearByName).toBeCalledTimes(session.cloudUserCaches.length);
-        expect(session.loginStateSubject.value).toBeNull();
     });
 });
