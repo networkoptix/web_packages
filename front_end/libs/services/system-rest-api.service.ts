@@ -293,7 +293,6 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         this.sessionStorage.clear(this.token);
         storageService.clear(this.cloudToken);
         storageService.clear(this.refreshToken);
-        storageService.clear('loginState');
         this.accessToken = '';
     }
 

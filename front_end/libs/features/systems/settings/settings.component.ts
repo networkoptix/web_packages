@@ -26,7 +26,6 @@ import { Translatable } from '@pipes/nx-translate.types';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
-import { NxDbService } from '@services/db.service';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { nxConfig } from '@services/nx-config/config';
 import { NxPageService } from '@services/page.service';
@@ -210,7 +209,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
         private appStateService: NxAppStateService,
         private ribbonService: NxRibbonService,
         @Inject(LOCALE_ID) private locale: string,
-        private db: NxDbService,
     ) {
         this.setupDefaults();
 
@@ -279,9 +277,6 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                 const isCameraRoute = route.url.includes('/cameras');
                 if (isSystemRoute && !isCameraRoute && this.system) {
                     this.system.show404 = false;
-                }
-                if (route.url === '/systems') {
-                    this.db.personal.menuContent.delete(this.content.base);
                 }
             }
         });

@@ -1,6 +1,6 @@
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
 import { Injectable, Injector, runInInjectionContext } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { Observable, of, switchMap, take, tap } from 'rxjs';
@@ -264,7 +264,7 @@ export class LayoutStateService {
         LayoutStateService.runInInjectionContext = callback =>
             runInInjectionContext(this.injector, callback);
         // eslint-disable-next-line ngrx/no-store-subscription
-        this.store.subscribe(state => {
+        this.store.pipe(takeUntilDestroyed()).subscribe(state => {
             console.info('currentState', state);
         });
     }

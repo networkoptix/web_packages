@@ -7,7 +7,10 @@ import {
     ViewChild,
     ViewContainerRef,
     effect,
+    inject,
+    DestroyRef,
 } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import {
     ActivatedRoute,
     NavigationEnd,
@@ -15,7 +18,7 @@ import {
     Router,
     RoutesRecognized,
 } from '@angular/router';
-import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
+import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
 import { sum } from 'lodash-es';
 import { CookieService } from 'ngx-cookie-service';
@@ -23,6 +26,7 @@ import { LocalStorageService, SessionStorageService } from 'ngx-webstorage';
 import { BehaviorSubject, combineLatest, fromEvent } from 'rxjs';
 import { map, startWith } from 'rxjs/operators';
 
+import { accountSelectors } from '@common/store/account';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
@@ -33,7 +37,6 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
 import { NxHeaderService } from '@services/nx-header.service';
-import { NxSessionService } from '@services/session.service';
 import type { NxSystem } from '@services/system.service/system';
 import { NxSystemService } from '@services/system.service/system.service';
 import { NxSystemsService } from '@services/systems.service';
@@ -61,7 +64,6 @@ enum sizes {
     XL = 96,
 }
 
-@UntilDestroy()
 @Component({
     selector: 'nx-header',
     templateUrl: 'header.component.html',
@@ -71,6 +73,7 @@ export class NxHeaderComponent implements OnInit {
     CONFIG = nxConfig;
     readonly environment = environment;
     LANG = staticLang;
+    destroyRef = inject(DestroyRef);
 
     userEmail: string;
     canSeeInfo: boolean;
@@ -122,9 +125,9 @@ export class NxHeaderComponent implements OnInit {
         private systemsService: NxSystemsService,
         private systemService: NxSystemService,
         private accountService: NxAccountService,
-        private sessionService: NxSessionService,
         private storageService: LocalStorageService,
         private router: Router,
+        private store: Store,
         public headerService: NxHeaderService,
         public menusService: NxMenusService,
         private sessionStorage: SessionStorageService,
@@ -133,7 +136,7 @@ export class NxHeaderComponent implements OnInit {
         @Inject(DOCUMENT) private document: Document,
         public loginService: NxLoginService,
     ) {
-        translateService.onTranslationChange.pipe(untilDestroyed(this)).subscribe(() => {
+        translateService.onTranslationChange.pipe(takeUntilDestroyed()).subscribe(() => {
             setTimeout(() => {
                 this.getMenu();
             });
@@ -162,7 +165,7 @@ export class NxHeaderComponent implements OnInit {
         // Updates windowWidth$ behavior subject on window resize
         fromEvent<Event>(this.window, 'resize')
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(),
                 map(event => (event.target as Window).innerWidth),
                 startWith(this.window.innerWidth),
             )
@@ -178,7 +181,7 @@ export class NxHeaderComponent implements OnInit {
             this.breadcrumbWidth$,
         ])
             .pipe(
-                untilDestroyed(this),
+                takeUntilDestroyed(),
                 map(([icon, mainButton, tabs, rightNav, windowWidth, breadcrumbWidths]) => ({
                     totalWidths: icon + mainButton + tabs + rightNav + sum(breadcrumbWidths),
                     icon,
@@ -278,7 +281,7 @@ export class NxHeaderComponent implements OnInit {
     private getMenu(): void {
         this.menusService
             .getMenu(nxConfig.featureFlags.newHeader ? 'new header' : 'header', true)
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(header => {
                 const nodes = this.menusService.cleanEmptyNodes(header.nodes);
                 if (environment.isLocal) {
@@ -346,7 +349,7 @@ export class NxHeaderComponent implements OnInit {
     ngOnInit(): void {
         this.sessionStorage
             .observe('theme')
-            .pipe(untilDestroyed(this))
+            .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(() => {
                 // wait CONFIG to update
                 setTimeout(() => {
@@ -356,7 +359,7 @@ export class NxHeaderComponent implements OnInit {
                 });
             });
 
-        this.route.queryParams.pipe(untilDestroyed(this)).subscribe(params => {
+        this.route.queryParams.pipe(takeUntilDestroyed(this.destroyRef)).subscribe(params => {
             this.inline = params.inline !== 'undefined';
         });
 
@@ -365,42 +368,47 @@ export class NxHeaderComponent implements OnInit {
         this.viewHeader = this.showHeaderAndFooter;
         this.active = {};
 
-        this.appState.headerVisibleSubject.pipe(untilDestroyed(this)).subscribe(visible => {
-            this.viewHeader = visible || NxBootstrapProvider.isNewSystem;
-        });
+        this.appState.headerVisibleSubject
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(visible => {
+                this.viewHeader = visible || NxBootstrapProvider.isNewSystem;
+            });
 
-        this.router.events.pipe(untilDestroyed(this)).subscribe((event: RouterEvent) => {
-            if (event instanceof RoutesRecognized) {
-                this.systemId = event.state.root.firstChild.params.systemId || '';
-                this.storageService.store('systemId', this.systemId);
-                this.updateActiveSystem();
-                this.updateActive();
-            }
-
-            if (this.userEmail && event instanceof NavigationEnd) {
-                // You only receive NavigationEnd events
-                if (this.systemId && !this.systems) {
-                    this.systemsService
-                        .forceUpdateSystems()
-                        .toPromise()
-                        .then(() => {
-                            this.updateActiveSystem();
-                            this.updateActive();
-                        });
-                } else {
+        this.router.events
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe((event: RouterEvent) => {
+                if (event instanceof RoutesRecognized) {
+                    this.systemId = event.state.root.firstChild?.params.systemId || '';
+                    this.storageService.store('systemId', this.systemId);
                     this.updateActiveSystem();
                     this.updateActive();
                 }
-                this.headerService.setLocation(event.url);
-                this.headerService.show$ = false;
-            }
-        });
 
-        this.sessionService.loginStateSubject
-            .pipe(untilDestroyed(this))
-            .subscribe((loginState: string) => {
-                if (loginState) {
-                    this.userEmail = loginState;
+                if (this.userEmail && event instanceof NavigationEnd) {
+                    // You only receive NavigationEnd events
+                    if (this.systemId && !this.systems) {
+                        this.systemsService
+                            .forceUpdateSystems()
+                            .toPromise()
+                            .then(() => {
+                                this.updateActiveSystem();
+                                this.updateActive();
+                            });
+                    } else {
+                        this.updateActiveSystem();
+                        this.updateActive();
+                    }
+                    this.headerService.setLocation(event.url);
+                    this.headerService.show$ = false;
+                }
+            });
+
+        this.store
+            .select(accountSelectors.selectCurrentEmail)
+            .pipe(takeUntilDestroyed(this.destroyRef))
+            .subscribe(email => {
+                if (email) {
+                    this.userEmail = email;
                     this.dropdownsVisible = true;
                     this.loginState = true;
                     this.renderer.removeClass(this.document.body, 'anonymous');
@@ -450,38 +458,42 @@ export class NxHeaderComponent implements OnInit {
                 this.system.update().then(() => {
                     this.singleSystem = true;
                     this.systemCounter = 1;
-                    this.system.infoSubject.pipe(untilDestroyed(this)).subscribe(system => {
-                        this.systems = [system as any]; // TODO: Not sure what is happening with this type, either this.systems should not be assigned to the value that comes out of infoSubject or the NxSystemOldModule type should be updated
-                        this.updateActiveSystem();
-                        this.updateActive();
-                    });
+                    this.system.infoSubject
+                        .pipe(takeUntilDestroyed(this.destroyRef))
+                        .subscribe(system => {
+                            this.systems = [system as any]; // TODO: Not sure what is happening with this type, either this.systems should not be assigned to the value that comes out of infoSubject or the NxSystemOldModule type should be updated
+                            this.updateActiveSystem();
+                            this.updateActive();
+                        });
                 });
             });
         } else {
-            this.systemsService.systemsSubject.pipe(untilDestroyed(this)).subscribe(systems => {
-                if (!systems) {
-                    return;
-                }
+            this.systemsService.systemsSubject
+                .pipe(takeUntilDestroyed(this.destroyRef))
+                .subscribe(systems => {
+                    if (!systems) {
+                        return;
+                    }
 
-                this.systemId = this.storageService.retrieve('systemId');
-                if (this.router.url.startsWith('/systems/')) {
-                    this.systemId = this.router.url.split('/')[2].split('?')[0];
-                }
+                    this.systemId = this.storageService.retrieve('systemId');
+                    if (this.router.url.startsWith('/systems/')) {
+                        this.systemId = this.router.url.split('/')[2].split('?')[0];
+                    }
 
-                if (
-                    !this.systemId &&
-                    this.route.firstChild &&
-                    this.route.firstChild.snapshot.params.systemId
-                ) {
-                    this.systemId = this.route.firstChild.snapshot.params.systemId;
-                }
-                this.systems = systems;
-                this.singleSystem = this.systems.length === 1;
-                this.systemCounter = this.systems.length;
+                    if (
+                        !this.systemId &&
+                        this.route.firstChild &&
+                        this.route.firstChild.snapshot.params.systemId
+                    ) {
+                        this.systemId = this.route.firstChild.snapshot.params.systemId;
+                    }
+                    this.systems = systems;
+                    this.singleSystem = this.systems.length === 1;
+                    this.systemCounter = this.systems.length;
 
-                this.updateActiveSystem();
-                this.updateActive();
-            });
+                    this.updateActiveSystem();
+                    this.updateActive();
+                });
         }
     }
 
@@ -528,8 +540,20 @@ export class NxHeaderComponent implements OnInit {
         if (!this.systems) {
             return;
         }
+        const sessionVerified = this.accountService.account?.sessionVerified || environment.isLocal;
+        let nextActiveSystem: NxSystemInfo;
+        if (this.singleSystem || this.environment.isLocal) {
+            // Special case for a single system - it always active
+            nextActiveSystem = this.systems[0];
+        } else if (this.systemId) {
+            // Will only have multiple systems on cloud
+            nextActiveSystem = this.systems.find(system => {
+                return this.systemId === system.id;
+            });
+        }
         const system = this.systemService.getCurrentSystem();
-        this.headerService.activeSystem = system;
+        this.headerService.activeSystem =
+            nextActiveSystem?.system2faEnabled && !sessionVerified ? undefined : system;
 
         if (!this.environment.isLocal) {
             if (system) {

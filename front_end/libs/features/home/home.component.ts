@@ -37,12 +37,11 @@ export class NxHomeComponent implements OnInit {
         private systemsService: NxSystemsService,
         private headerService: NxHeaderService,
         private CPService: NxChannelPartnersService,
-    ) {
-        this.initChannelPartners();
-    }
+    ) {}
 
     ngOnInit(): void {
-        const redirect = !this.route.snapshot.children[0].routeConfig.path;
+        this.initChannelPartners();
+        const redirect = !this.route.snapshot.children[0].routeConfig?.path;
         const systems$ = this.systemsService.systemsSubject.pipe(
             distinctUntilChanged((prev, curr) => isEqual(prev, curr)),
         );
@@ -59,6 +58,10 @@ export class NxHomeComponent implements OnInit {
                 if (!homeNode) {
                     return;
                 }
+
+                channelPartners ||= [];
+                organizations ||= [];
+
                 const nodes = [
                     new MenuNode('', '/home'),
                     ...channelPartners.map(partner => {
@@ -111,9 +114,18 @@ export class NxHomeComponent implements OnInit {
     }
 
     initChannelPartners(): void {
-        this.CPService.getChannelPartners().subscribe(partners =>
-            this.store.dispatch(CPActions.setChannelPartners({ channelPartners: partners })),
-        );
+        this.CPService.getChannelPartners().subscribe(partners => {
+            const channelPartnerIds = new Set<string>(partners.map(partner => partner.id));
+            this.store.dispatch(
+                CPActions.setChannelPartners({
+                    channelPartners: partners.filter(
+                        partner =>
+                            !partner.parentChannelPartner ||
+                            !channelPartnerIds.has(partner.parentChannelPartner),
+                    ),
+                }),
+            );
+        });
         this.CPService.getOrganizations().subscribe(orgs =>
             this.store.dispatch(CPActions.setOrganizations({ rootOrganizations: orgs })),
         );

@@ -11,6 +11,7 @@ import staticLang from '@language_static';
 import { NxAccountService } from '@services/account.service';
 import { NxLoginService } from '@services/login.service';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { LOGIN_STATE } from '@services/session.service.types';
 import { NxSystemAPIService } from '@services/system-api.service';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxUrlProtocolService } from '@services/url-protocol.service';
@@ -65,8 +66,7 @@ export class TemporaryAuthLoginComponent extends ModalBase<DT['return']> impleme
         this.mediaServerApi.temporaryUserTokenExchange(this.temporaryUserToken).subscribe({
             next: res => {
                 this.mediaServerApi.loginTokenUrl(res.token).subscribe(loggedInAccount => {
-                    this.account.loginState =
-                        loggedInAccount.email || loggedInAccount.name || loggedInAccount.username;
+                    this.account.loginState = LOGIN_STATE.AUTHORIZED;
                     setTimeout(() => this.window.location.reload(), this.urlUpdateTimeout);
                 });
             },

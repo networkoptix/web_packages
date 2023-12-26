@@ -60,11 +60,15 @@ export const generateDbName = (dbName?: string): string => {
 // We would add wrappers here to call those functions.
 export class AppDB extends Dexie {
     static createDb(dbName: string): AppDB & typeof tableDefs {
-        // Delete randomly generate DBs. Used to make sure a personal instance is created before accessing it.
-        Dexie.getDatabaseNames().then(names => {
-            const randomDbNames = names.filter(name => name.includes('random') && name !== dbName);
-            randomDbNames.forEach(name => Dexie.delete(name));
-        });
+        if (window.document.hasFocus()) {
+            // Delete randomly generate DBs. Used to make sure a personal instance is created before accessing it.
+            Dexie.getDatabaseNames().then(names => {
+                const randomDbNames = names.filter(
+                    name => name.includes('random') && name !== dbName,
+                );
+                randomDbNames.forEach(name => Dexie.delete(name));
+            });
+        }
 
         return new AppDB(dbName) as AppDB & typeof tableDefs;
     }

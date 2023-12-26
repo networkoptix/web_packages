@@ -3,7 +3,7 @@ import { NgForm } from '@angular/forms';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
-import { filter, firstValueFrom, map, take } from 'rxjs';
+import { filter, firstValueFrom, take } from 'rxjs';
 
 import { accountActions } from '@common/store/account';
 import { ToastType } from '@components/toast-container/toast.types';
@@ -13,7 +13,6 @@ import { NxMenuService } from '@menu/menu.service';
 import { NxAccountService } from '@services/account.service';
 import { Account } from '@services/account.service/account';
 import { NxApplyService } from '@services/apply.service';
-import { NxDbService } from '@services/db.service';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { AccountEdit } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { nxConfig } from '@services/nx-config/config';
@@ -24,6 +23,7 @@ import { NxSystemsService } from '@services/systems.service';
 import { NxToastService } from '@services/toast.service';
 import { WINDOW } from '@services/window-provider';
 import { icons } from '@static-variables';
+import { selectCurrentUser } from '@store/account/account.selectors';
 
 @UntilDestroy()
 @Component({
@@ -62,7 +62,6 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
         private toastService: NxToastService,
         private store: Store,
         @Inject(WINDOW) protected window: Window,
-        private db: NxDbService,
     ) {
         this.menuService.navItemId.set('settings');
         this.icons = icons;
@@ -80,10 +79,10 @@ export class NxAccountSettingsComponent implements OnInit, OnDestroy {
 
         this.initProcess();
 
-        this.db.personal.unstructured.$.get('account')
+        this.store
+            .select<Account>(selectCurrentUser)
             .pipe(
-                filter(({ value }) => !!value),
-                map(({ value }) => value as Account),
+                filter(value => !!value),
                 // Eventually update to also update realtime. Right now having issues with clearing apply service on changes.
                 take(1),
             )

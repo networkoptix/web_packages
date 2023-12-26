@@ -1,5 +1,6 @@
 import { Location } from '@angular/common';
-import { Injector, Injectable } from '@angular/core';
+import { Injectable, Injector } from '@angular/core';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { Router } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -14,6 +15,7 @@ import staticLang from '@language_static';
 import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { OauthService } from '@services/oauth.service';
+import { LOGIN_STATE } from '@services/session.service.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
 import { oauthStore, redirect } from '@static-variables';
@@ -97,7 +99,7 @@ export abstract class BaseAccount {
         // Singleton service will be destroyed with application
         this.store
             .select(accountSelectors.selectCurrentUser)
-            // eslint-disable-next-line ngrx/no-store-subscription
+            .pipe(takeUntilDestroyed())
             .subscribe(account => {
                 this._account = account;
             });
@@ -126,7 +128,7 @@ export abstract class BaseAccount {
             this.localStorage.clear(oauthStore.verify2fa);
             this.localStorage.clear('systemId');
             // Changing "loginState" is enough here. Re-init routes are subscribed to it.
-            this.sessionService.loginState = res.email;
+            this.sessionService.loginState = this.sessionService.LOGIN_STATE.AUTHORIZED;
             setTimeout(() => this.window.location.reload());
         });
     }
@@ -157,10 +159,14 @@ export abstract class BaseAccount {
 
     set account(account: Account) {
         this.initStoreUpdater(account);
-        const loginState = this.sessionService.loginState;
         const login = account?.email || account?.name;
-        if (login && (!loginState || loginState !== login)) {
-            this.sessionService.loginState = login;
+        const currentLogin = this._account?.email || this._account?.name;
+        const LOGIN_STATE = this.sessionService.LOGIN_STATE;
+        if (currentLogin && login) {
+            this.sessionService.loginState =
+                currentLogin === login ? LOGIN_STATE.AUTHORIZED : LOGIN_STATE.CHANGED;
+        } else if (currentLogin || login) {
+            this.sessionService.loginState = LOGIN_STATE.AUTHORIZED;
         }
     }
 
@@ -173,23 +179,13 @@ export abstract class BaseAccount {
         // This is name on local, not email
     }
 
-    set loginState(username: string) {
-        this.sessionService.loginState = username;
+    set loginState(state: LOGIN_STATE) {
+        this.sessionService.loginState = state;
     }
 
     async authKey() {
         const { auth_key: auth } = await this.cloudApi.authKey();
         return auth;
-    }
-
-    async checkVisitedKey(key: string) {
-        const { visited } = await this.cloudApi.visitedKey(key);
-        return !!visited;
-    }
-
-    async checkCode(code: string) {
-        const { emailExists } = (await this.cloudApi.checkCode(code)) as any;
-        return !!emailExists;
     }
 
     protected clearLoginState(): void {
@@ -231,11 +227,6 @@ export abstract class BaseAccount {
                 this.window.location.reload();
             });
         }
-    }
-
-    // Temporary aid for AJS
-    getCredentialsFromAuth(authKey: string) {
-        return atob(authKey).split(':');
     }
 
     loginWithAuthKey(authKey: string): Promise<boolean> {
@@ -290,10 +281,13 @@ export abstract class BaseAccount {
                         },
                     })
                     .then(result => {
+                        const LOGIN_STATE = this.sessionService.LOGIN_STATE;
                         if ((isRestore || isRegister || isActivate) && result === false) {
+                            this.sessionService.loginState = LOGIN_STATE.CHANGED;
                             this.logout(true, skipReload);
                             return true;
                         } else {
+                            this.sessionService.loginState = LOGIN_STATE.AUTHORIZED;
                             this.redirectAuthorised();
                             return false;
                         }
@@ -350,7 +344,7 @@ export abstract class BaseAccount {
             return this.cloudApi
                 .loginCode(code)
                 .then(res => {
-                    this.sessionService.loginState = res.email;
+                    this.sessionService.loginState = LOGIN_STATE.AUTHORIZED;
                     this.clearCodeFromUri();
                     this.window.location.reload();
                 })
@@ -396,7 +390,9 @@ export abstract class BaseAccount {
                     },
                 },
             });
+
             if (res) {
+                this.sessionService.loginState = this.sessionService.LOGIN_STATE.CHANGED;
                 return this.loginTokens(tokens);
             }
             return logoutTokens(tokens, true);

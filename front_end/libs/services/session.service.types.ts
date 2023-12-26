@@ -1,5 +1,6 @@
-export interface LoginParams {
-    code?: string | null;
-    auth?: string | null;
-    refreshToken?: string | null;
+export enum LOGIN_STATE {
+    UNAUTHORIZED = 'unauthorized',
+    AUTHORIZED = 'authorized',
+    CHANGED = 'changed',
+    LOGGED_OUT = 'logged_out',
 }

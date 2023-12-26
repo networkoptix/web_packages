@@ -34,7 +34,6 @@ import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { nxConfig } from '@services/nx-config/config';
 import type { IConfig } from '@services/nx-config/config-types';
 import { NxScrollMechanicsService } from '@services/scroll-mechanics.service';
-import { NxSessionService } from '@services/session.service';
 import { NxThemeService } from '@services/theme.service';
 import { NxUriService } from '@services/uri.service';
 import { windowFactory } from '@services/window-provider';
@@ -159,7 +158,6 @@ export class AppComponent implements OnInit {
         private localStorageService: LocalStorageService,
         private accountService: NxAccountService,
         private themeService: NxThemeService,
-        private sessionService: NxSessionService,
     ) {
         this.reauthorizing = this.window.location.href.includes('cloud-authorize');
 
@@ -167,8 +165,6 @@ export class AppComponent implements OnInit {
         const auth = url.searchParams.get('auth');
         const code = url.searchParams.get('code');
         const refreshToken = url.searchParams.get('refresh_token');
-
-        this.sessionService.loginParams = { auth, code, refreshToken };
 
         if (refreshToken) {
             this.accountService.handleRefreshTokenLogin(refreshToken).finally(() => {
