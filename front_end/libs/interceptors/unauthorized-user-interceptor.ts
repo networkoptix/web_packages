@@ -7,12 +7,11 @@ import { catchError } from 'rxjs/operators';
 
 import staticLang from '@language_static';
 import { NxSessionService } from '@services/session.service';
-import { UserType } from '@services/system-user.types';
 import { NxSystemService } from '@services/system.service/system.service';
 import { servers, redirect } from '@static-variables';
 
 @Injectable()
-export class TempUserExpiredInterceptor implements HttpInterceptor {
+export class UnauthorizedUserInterceptor implements HttpInterceptor {
     LANG = staticLang;
 
     constructor(
@@ -25,10 +24,12 @@ export class TempUserExpiredInterceptor implements HttpInterceptor {
     intercept(request: HttpRequest<unknown>, next: HttpHandler): Observable<HttpEvent<unknown>> {
         return next.handle(request).pipe(
             catchError(error => {
+                const {
+                    error: { errorString, errorId },
+                } = error || { error: {} };
                 if (
-                    error?.error?.errorString === servers.errors.wrongSessionToken &&
-                    this.systemService.getCurrentSystem().userManager.currentUser.type ===
-                        UserType.temporaryLocal
+                    errorString === servers.errors.wrongSessionToken ||
+                    errorId === servers.errors.unauthorized
                 ) {
                     this.router.navigate([redirect.unauthorised]).finally(() => {
                         this.systemService
