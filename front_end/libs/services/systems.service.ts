@@ -77,6 +77,39 @@ export class NxSystemsService {
 
     systems$$ = toSignal(this.systemsSubject);
 
+    // Todo: Partition these from systemsSubject
+    splitSystems = this.systemsSubject.pipe(
+        map(systems => {
+            const map = new Map<'personal' | 'shared', Map<string, NxSystemInfo>>([
+                ['personal', new Map()],
+                ['shared', new Map()],
+            ]);
+            for (const system of systems) {
+                if (system.isMine) {
+                    map.set('personal', map.get('personal').set(system.id, system));
+                } else {
+                    map.set('shared', map.get('shared').set(system.id, system));
+                }
+            }
+            return map;
+        }),
+    );
+    orgSystems = this.systemsSubject.pipe(
+        map((systems: NxSystemInfo[]) => {
+            const newSystems = systems.filter(sys => sys.organizationId);
+            const map = new Map<string, Map<string, NxSystemInfo>>();
+            for (const system of newSystems) {
+                if (!map.has(system.organizationId)) {
+                    map.set(system.organizationId, new Map<string, NxSystemInfo>());
+                }
+                map.set(
+                    system.organizationId,
+                    map.get(system.organizationId).set(system.id, system),
+                );
+            }
+            return map;
+        }),
+    );
     finishedMerged: boolean = false;
     systemsMerging: Pick<MergeInfo, 'primary' | 'secondary'> = {
         primary: undefined,

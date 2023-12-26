@@ -178,8 +178,10 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
         ).pipe(getResults());
     };
 
-    getOrganizations = (): Observable<Organization[]> => {
-        return this.get<PaginatedOrganizationList>('/organizations/').pipe(getResults());
+    getOrganizations = (includeChildOrgs = false): Observable<Organization[]> => {
+        return this.get<PaginatedOrganizationList>('/organizations/', {
+            params: { includeChildOrgs },
+        }).pipe(getResults());
     };
 
     createOrganization = (body: CreateOrganization): Observable<Organization> => {
