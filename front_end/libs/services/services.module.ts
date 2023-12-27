@@ -6,7 +6,6 @@ import { NxThemeService } from '@services/theme.service';
 
 import { NxAccountService } from './account.service';
 import { NxApplyService } from './apply.service';
-import { NxDbService } from './db.service';
 import { NxAppSourceService } from './nx-app-source.service';
 import { NxAppStateService } from './nx-app-state.service';
 import { NxConfigService } from './nx-config/nx-config.service';
@@ -36,7 +35,6 @@ import { NxUrlProtocolService } from './url-protocol.service';
         NxScrollMechanicsService,
         NxSwCacheService,
         NxThemeService,
-        NxDbService,
     ],
     exports: [],
 })

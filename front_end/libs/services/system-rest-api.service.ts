@@ -53,7 +53,6 @@ import {
     memoizeAsyncShort,
 } from '@utils/memoize';
 import { withKeyMap, NxRecursiveKeyMap, NxRecursivePick, ZERO_ID } from '@utils/nx';
-import { startWithCache } from '@utils/start-with-cached';
 
 import { apiTool, servers } from '../variables/static-variables';
 
@@ -507,10 +506,10 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
                     request = this.http.get(fullUrl, { ...otherOpts, responseType });
                 } else if (responseType === 'blob') {
                     request = this.http.get(fullUrl, { ...otherOpts, responseType });
-                } else if (responseType === 'text') {
-                    request = this.http.get(fullUrl, { ...otherOpts, responseType });
+                } else {
+                    request = this.http.get(fullUrl, { ...otherOpts, responseType: 'text' });
                 }
-                return request.pipe(startWithCache(fullUrl, { ...otherOpts, responseType }));
+                return request;
             }),
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),

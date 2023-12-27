@@ -9,7 +9,6 @@ import { firstValueFrom } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
-import { NxDbService } from '@services/db.service';
 import type { UserSession } from '@services/system-api.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
@@ -46,7 +45,6 @@ export class LocalAccount extends BaseAccount {
         protected store: Store,
         protected dialogs: NxDialogsService,
         protected toasts: NxToastService,
-        protected db: NxDbService,
     ) {
         super(
             translateService,
@@ -65,7 +63,6 @@ export class LocalAccount extends BaseAccount {
             store,
             dialogs,
             toasts,
-            db,
         );
         this.mediaServerApi = this.nxSystemAPIService.createConnection({
             version: this.CONFIG.system.version.major,

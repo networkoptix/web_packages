@@ -9,17 +9,14 @@ import { LocalStorageService } from 'ngx-webstorage';
 
 import { accountActions, accountSelectors } from '@common/store/account';
 import { ToastType } from '@components/toast-container/toast.types';
-// import { UnstructuredTable } from '@db/models/unstructured';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
-import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { OauthService } from '@services/oauth.service';
 import { LOGIN_STATE } from '@services/session.service.types';
 import { NxSystemRestAPI3 } from '@services/system-rest-api-v3.service';
 import { NxToastService } from '@services/toast.service';
 import { oauthStore, redirect } from '@static-variables';
-import { memoizeAsyncPersistent } from '@utils/memoize';
 
 import { NxApplyService } from '../apply.service';
 import { NxAppStateService } from '../nx-app-state.service';
@@ -88,7 +85,6 @@ export abstract class BaseAccount {
         protected store: Store,
         protected dialogs: NxDialogsService,
         protected toasts: NxToastService,
-        protected db: NxDbService,
     ) {
         // language provider will be ready at this point
         // we don't support dynamic lang switch ... ==TT
@@ -134,21 +130,7 @@ export abstract class BaseAccount {
     }
 
     // Methods shared between local and cloud versions of account service.
-    @memoizeAsyncPersistent
     private initStoreUpdater(account: Account) {
-        // Dexie is having a weird interaction and causing a memory leak
-        // this.db.updatePersonal(account);
-        // this.db.personal.unstructured.put({ key: 'account', value: account });
-        // return this.db.personal.unstructured.$.get('account')
-        //     .pipe(
-        //         tap(d => console.log(d)),
-        //         filter(({ value }) => !!value),
-        //     )
-        //     .subscribe(({ value: currentUser }: UnstructuredTable<Account>) => {
-        //         console.log('observe the db update store');
-        //         this._account = currentUser;
-        //         this.store.dispatch(accountActions.setCurrentUser({ currentUser }));
-        //     });
         this._account = account;
         this.store.dispatch(accountActions.setCurrentUser({ currentUser: account }));
     }

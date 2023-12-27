@@ -9,7 +9,6 @@ import {
     timer,
     firstValueFrom,
     combineLatest,
-    identity,
     Subject,
     merge,
     filter,
@@ -22,7 +21,6 @@ import { NxRibbonService } from '@components/ribbon/ribbon.service';
 import { ToastType } from '@components/toast-container/toast.types';
 import { environment } from '@environments/environment';
 import staticLang from '@language_static';
-import { nxConfig } from '@services/nx-config/config';
 import { NxToastService } from '@services/toast.service';
 import { alphabeticalSort, paramSortFunc } from '@utils/general';
 import { memoizeAsyncPersistent } from '@utils/memoize';
@@ -32,7 +30,6 @@ import { memoizeAsyncPersistent } from '@utils/memoize';
 import { clientMode, updateInterval } from '../variables/static-variables';
 
 import type { Account } from './account.service/account';
-import { NxDbService } from './db.service';
 import { NxCloudApiService } from './nx-cloud-api';
 import type { System } from './nx-cloud-api/nx-cloud-api.types';
 import { NxStorageService } from './storage.service';
@@ -65,13 +62,6 @@ export class NxSystemsService {
         // Ignore manual update signal if email has not been assigned
         switchMap(() => (environment.isLocal ? Promise.resolve([]) : this._getSystems())),
         map(systems => this.processSystems(systems)),
-        !nxConfig.featureFlags.requestCaching || environment.isLocal
-            ? identity
-            : switchMap(systems => {
-                  this.db.personal.systems.clear();
-                  this.db.personal.systems.bulkPut(systems);
-                  return this.db.personal.systems.$.toArray();
-              }),
         shareReplay({ bufferSize: 1, refCount: false }),
     );
 
@@ -134,7 +124,6 @@ export class NxSystemsService {
         private cloudApi: NxCloudApiService,
         private injector: Injector,
         private store: Store,
-        private db: NxDbService,
         @Inject(LOCALE_ID) private locale: string,
     ) {
         this.systemsSubject.pipe(takeUntilDestroyed()).subscribe(systems => {

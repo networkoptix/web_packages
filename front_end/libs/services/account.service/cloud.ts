@@ -8,10 +8,8 @@ import { combineLatest, distinctUntilChanged, firstValueFrom, of, timer } from '
 import { catchError, debounceTime, filter, map, shareReplay, switchMap } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
-import { AppDB } from '@db/index';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import { environment } from '@environments/environment';
-import { NxDbService } from '@services/db.service';
 import { NxLoginService } from '@services/login.service';
 import { nxConfig } from '@services/nx-config/config';
 import { OauthService } from '@services/oauth.service';
@@ -47,7 +45,6 @@ export class CloudAccount extends BaseAccount {
         protected store: Store,
         protected dialogs: NxDialogsService,
         protected toasts: NxToastService,
-        protected db: NxDbService,
     ) {
         super(
             translateService,
@@ -66,7 +63,6 @@ export class CloudAccount extends BaseAccount {
             store,
             dialogs,
             toasts,
-            db,
         );
         this.account = this.CONFIG.preloadedAccount as Account;
         const currentEmail$ = this.store
@@ -147,13 +143,6 @@ export class CloudAccount extends BaseAccount {
                     // We explicitly check if account is null to determine if session has expired
                     // We should probably refactor account since it's a little unclear that null and undefined have different behavior
                     return null;
-                }
-
-                if (res instanceof AppDB.PrematureCommitError) {
-                    // There's an error being thrown by dexie when it tries to commit a transaction.
-                    // Can't seem to find where it's coming from, so we're catching it here.
-                    // Doesn't seem to affect the behavior of the app.
-                    return;
                 }
 
                 this.router.navigate([redirect.unauthorised]).catch(error => {

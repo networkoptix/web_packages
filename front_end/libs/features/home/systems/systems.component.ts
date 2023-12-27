@@ -45,12 +45,13 @@ export class NxSystemsComponent implements OnChanges {
         const showPersonal = this.showPersonal$$();
         const systemsFromSubject = this.systemsFromSubject$$();
         let systems: NxSystemInfo[] = [];
-        for (const [_, sys] of systemsFromSubject?.get(showPersonal ? 'personal' : 'shared')) {
+        for (const [_, sys] of systemsFromSubject?.get(showPersonal ? 'personal' : 'shared') ||
+            []) {
             systems.push(sys);
         }
         if (!showPersonal) {
-            const orgMap = this.orgMap$$();
-            systems = systems.filter(sys => !orgMap.get(sys.organizationId));
+            const orgMap = this.orgMap$$() || new Map<string, Organization>();
+            systems = systems.filter(sys => !orgMap.get(sys?.organizationId || ''));
         }
         return systems?.map(sys => sys.id);
     });
