@@ -15,6 +15,8 @@ import { NxFormBuilder, NxFormGroup } from '@utils/reactive-form-builder';
 import { NxSystemUsersBaseComponent } from '../edit-user-base/edit-user-base.component';
 import { type UserGroupFormControls } from '../user-form.types';
 
+type selectedGroups = { name: string; description: string; custom?: boolean };
+
 @UntilDestroy({ checkProperties: true })
 @Component({
     selector: 'nx-system-user-with-groups-component',
@@ -24,7 +26,7 @@ import { type UserGroupFormControls } from '../user-form.types';
 export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent {
     roles: string[];
     selectedGroups: string[];
-    selectedGroupsList: { name: string; description: string; custom?: boolean }[];
+    selectedGroupsList$$ = signal<selectedGroups[]>([]);
     user$$ = signal<NxUser>({} as NxUser);
     filteredGroups$$ = computed<MultiSelectItem[]>(() => {
         const groups = this.system.userManager.groups$$() || [];
@@ -173,7 +175,7 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         if (ldapDefault) {
             ldapGroup.unshift(ldapDefault);
         }
-        this.selectedGroupsList = builtInGroup.concat(customGroup, ldapGroup);
+        this.selectedGroupsList$$.set(builtInGroup.concat(customGroup, ldapGroup));
     }
 
     private processLdapGroups(groups: MultiSelectItem[], isLdap: boolean): MultiSelectItem[] {
@@ -202,6 +204,13 @@ export class NxSystemUsersWithGroupsComponent extends NxSystemUsersBaseComponent
         }
         return groups;
     }
+
+    showPermissionGroupSection$$ = computed(() => {
+        if (this.isTemporary$$() && this.selectedGroupsList$$().length === 0) {
+            return false;
+        }
+        return true;
+    });
 
     protected readonly DATA_TYPE = DATA_TYPE;
 }
