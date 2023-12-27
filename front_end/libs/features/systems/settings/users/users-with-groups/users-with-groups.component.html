@@ -46,7 +46,7 @@
                 </div>
             </header>
 
-            <nx-section>
+            <nx-section *ngIf="showPermissionGroupSection$$()">
                 <div
                     *ngIf="editPermissions$$().changePermissions"
                     class="mr-2 mt-2 mb-3 pl-2"
@@ -78,12 +78,14 @@
                     class="pl-2"
                     [ngClass]="{ 'mt-2': !canBeEdited$$() }"
                 >
-                    <ng-container *ngIf="canBeEdited$$(); else cantEdit">
+                    <ng-container *ngIf="canBeEdited$$() && !isTemporary$$(); else cantEdit">
                         <div
                             class="group-list-item edit"
-                            *ngFor="let group of selectedGroupsList"
+                            *ngFor="let group of selectedGroupsList$$()"
                         >
-                            <ng-container *ngIf="selectedGroupsList.length > 1; else singleGroup">
+                            <ng-container
+                                *ngIf="selectedGroupsList$$().length > 1; else singleGroup"
+                            >
                                 <nx-ml-ellipsis-clamp [viewLines]="1">
                                     <div class="multiple-groups-item">
                                         <span class="font-weight-bold group-name">
@@ -114,7 +116,7 @@
                     <ng-template #cantEdit>
                         <div
                             class="group-list-item"
-                            *ngFor="let group of selectedGroupsList"
+                            *ngFor="let group of selectedGroupsList$$()"
                         >
                             <div class="font-weight-bold group-name">
                                 {{ group.custom ? group.name : (group.name | translate) }}

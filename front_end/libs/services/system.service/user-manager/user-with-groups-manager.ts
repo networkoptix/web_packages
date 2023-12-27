@@ -307,9 +307,6 @@ export class UserWithGroupsManager extends UserManager {
          * Furthermore, if the system is not mine and the user is an admin,
          *   they also can not be edited
          */
-        if (user.type === UserType.temporaryLocal) {
-            return false;
-        }
         return (
             !user.isOwner &&
             !user.attributes?.includes('readonly') &&
