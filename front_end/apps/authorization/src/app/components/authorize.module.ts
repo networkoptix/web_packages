@@ -3,7 +3,6 @@ import { HttpClientModule } from '@angular/common/http';
 import { NgModule } from '@angular/core';
 import { ReactiveFormsModule, FormsModule } from '@angular/forms';
 import { RouterModule, Routes } from '@angular/router';
-import { StoreModule } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
@@ -73,7 +72,6 @@ export const authorizedRoutes: Routes = [
         HttpClientModule,
         RouterModule.forChild(authorizedRoutes),
         AngularSvgIconModule,
-        StoreModule.forRoot({}),
         NxAddSvgSrcDirective,
         PipesModule,
         NxFooterComponent,

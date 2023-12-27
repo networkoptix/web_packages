@@ -2,6 +2,7 @@
 import { HttpClientModule, HttpClientXsrfModule } from '@angular/common/http';
 import { APP_INITIALIZER, NgModule /* , Inject, APP_ID, PLATFORM_ID */ } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { StoreModule } from '@ngrx/store';
 import { TranslateCompiler, TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import {
@@ -13,6 +14,7 @@ import { NgxWebstorageModule } from 'ngx-webstorage';
 import { NxBootstrapProvider } from '@services/nx-bootstrap-provider';
 import { NxUriCacheService } from '@services/uri-cache.service';
 import { WINDOWS_PROVIDERS } from '@services/window-provider';
+import { accountReducer } from '@store/account';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
@@ -26,6 +28,7 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
     declarations: [AppComponent],
     imports: [
         BrowserModule.withServerTransition({ appId: 'authorization' }),
+        StoreModule.forRoot({ account: accountReducer }),
         AppRoutingModule,
         HttpClientModule,
         HttpClientXsrfModule.withOptions({
