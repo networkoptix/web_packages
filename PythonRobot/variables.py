@@ -1,4 +1,4 @@
-
+import sys
 
 ALERT = "//div[contains(@class,'toast')]//span[contains(@class,'toast-content')]"
 ALERT_CLOSE = "//div[contains(@class,'toast')]/button[contains(@class,'close') and @data-dismiss='alert']"
@@ -17,8 +17,10 @@ MODAL_DIALOG = "//nx-modal-generic-content"
 LOGGED_IN_CLOSE_BUTTON = f"{MODAL_DIALOG}//button//span[@class=close-icon]/../.."
 
 
-ENV = "https://test.ft-cloud.hdw.mx"
-
+if len(sys.argv) >= 2:
+    ENV = sys.argv[1]
+else:
+    ENV = "https://test.ft-cloud.hdw.mx"
 
 # Log In Elements
 # TODO: fix button text translations

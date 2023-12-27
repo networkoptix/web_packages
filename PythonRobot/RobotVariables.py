@@ -1,6 +1,7 @@
 import json
 import os
 import re
+import sys
 from pathlib import Path
 
 from variables_dict import variables
@@ -22,6 +23,10 @@ class RobotVariables:
         # Load the variables from variables_dict.py
         self.variables.update(variables_dict)
         self.variables.update(variables)
+        if len(sys.argv) >= 2:
+            self.variables.update({"ENV": sys.argv[1]})
+        else:
+            self.variables.update({"ENV": "https://test.ft-cloud.hdw.mx"})
 
     def load_variables(self, filepath):
         if not os.path.isfile(filepath):

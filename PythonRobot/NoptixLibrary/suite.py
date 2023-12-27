@@ -1,4 +1,6 @@
 import logging
+import re
+import sys
 import time
 from contextlib import ExitStack
 from types import MappingProxyType
@@ -23,7 +25,11 @@ from NoptixLibrary.server_api import ServerApi
 
 _docker_host = "10.2.34.112"
 _vms_version = "5.1"
-_CLOUD_API = CloudPortalAPI()
+if len(sys.argv) >= 2:
+    _CLOUD_HOST = sys.argv[1]
+else:
+    _CLOUD_HOST = "https://test.ft-cloud.hdw.mx"
+_CLOUD_API = CloudPortalAPI(env=_CLOUD_HOST)
 _DOCKER_API = DockerHTTPApi(f'http://{_docker_host}:5555')
 
 _logger = logging.getLogger(__name__)
@@ -292,9 +298,11 @@ class Mediaserver:
         self.name = self.suite_name + str(self.run_id)
         self._primary_port = primary_port
         self._secondary_port = secondary_port
+        pattern = re.compile(r'https?://')
+        url_without_protocol = pattern.sub('', _CLOUD_HOST)
         docker_configuration = (
             ContainerConfiguration(vms_version, "latest")
-            .with_env({'CLOUD_HOST': 'test.ft-cloud.hdw.mx'})
+            .with_env({'CLOUD_HOST': url_without_protocol})
             .with_exposed(tcp_ports=[primary_port, secondary_port])
             )
 
