@@ -34,7 +34,6 @@ import {
     defaultHashFunction,
     memoizeAsyncShort,
 } from '@utils/memoize';
-import { startWithCache } from '@utils/start-with-cached';
 
 import { apiTool, healthMonitoring } from '../variables/static-variables';
 
@@ -340,12 +339,11 @@ export class NxSystemAPI extends MediaserverLegacyConnection {
             request = this.http.get(fullUrl, { headers, params, responseType });
         } else if (responseType === 'blob') {
             request = this.http.get(fullUrl, { headers, params, responseType });
-        } else if (responseType === 'text') {
-            request = this.http.get(fullUrl, { headers, params, responseType });
+        } else {
+            request = this.http.get(fullUrl, { headers, params, responseType: 'text' });
         }
 
         return request.pipe(
-            startWithCache(fullUrl, { headers, params, responseType }),
             retryWhen(request => this.retryHandler(request)),
             timeout(customTimeout),
             tap(undefined, error => {

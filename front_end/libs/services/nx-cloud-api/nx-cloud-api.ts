@@ -9,16 +9,13 @@ import type { Observable } from 'rxjs';
 import { catchError, concatMap, switchMap, map, tap, shareReplay, filter } from 'rxjs/operators';
 
 import { ConsoleSection } from '@components/console-table/console-table.component.types';
-import { UnstructuredTable } from '@db/models/unstructured';
 import { environment } from '@environments/environment';
 import { NxConsoleService } from '@pages/developer-console/console/console.service';
-import { NxDbService } from '@services/db.service';
 import { OauthService } from '@services/oauth.service';
 import { NxSwCacheService } from '@services/sw-cache.service';
 import { apiBase, redirect, responseOk, staticBase } from '@static-variables';
 import { mapValuesToStrings } from '@utils/general';
 import { memoizeAsyncLong, memoizeAsyncPersistent, memoizeAsyncShort } from '@utils/memoize';
-import { startWithCache } from '@utils/start-with-cached';
 
 import { Account, CloudAccount } from '../account.service/account';
 import { nxConfig } from '../nx-config/config';
@@ -147,7 +144,6 @@ export class NxCloudApiService {
         private consoleService: NxConsoleService,
         private oauthService: OauthService,
         private cookieService: CookieService,
-        private db: NxDbService,
         private injector: Injector,
     ) {
         DocHandler.runInInjectionContext = callback =>
@@ -224,7 +220,7 @@ export class NxCloudApiService {
         } else {
             request = this.http.get(url, { responseType, ...other });
         }
-        return request.pipe(startWithCache(url, opts));
+        return request;
     }
 
     checkResponseHasError<_T extends any>(data: any) {
@@ -362,14 +358,7 @@ export class NxCloudApiService {
 
     @memoizeAsyncLong
     getIPVD() {
-        this.cachedGet<t.IPVDCameras>(apiBase + '/ipvd').subscribe(value =>
-            this.db.shared.unstructured.put({ key: 'ipvd', value }),
-        );
-
-        return this.db.shared.unstructured.$.get('ipvd').pipe(
-            filter(value => !!value),
-            map(({ value }) => value as t.IPVDCameras),
-        );
+        return this.http.get<t.IPVDCameras>(apiBase + 'ipvd');
     }
 
     getCode(systemId: string) {
@@ -642,44 +631,18 @@ export class NxCloudApiService {
         return this.http.get<TosInfo>('/api/cms/agreement?type=tos');
     }
 
+    private lastUpdateTime = 0;
+
     account(forceUpdate = false): Observable<Account> {
-        const checkIfShouldUpdate = () =>
-            this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
-                const lastUpdate = (await this.db.personal.unstructured.get(
-                    'lastAccountUpdate',
-                )) as UnstructuredTable<number>;
-                const current = (await this.db.personal.unstructured.get(
-                    'account',
-                )) as UnstructuredTable<Account>;
-
-                if (
-                    !current?.value ||
-                    (forceUpdate && (lastUpdate?.value || 0) < Date.now() - 10 * 1000)
-                ) {
-                    await this.db.personal.unstructured.put({
-                        key: 'lastAccountUpdate',
-                        value: Date.now(),
-                    });
-                    return true;
-                }
-                return false;
-            });
-        return from(checkIfShouldUpdate()).pipe(
-            switchMap(force => this.getAllAccountInfo(force)),
-            switchMap(async value =>
-                value ? this.db.personal.unstructured.put({ key: 'account', value }) : null,
-            ),
-            switchMap(() => this.handleAccount()),
-            // skip(forceUpdate ? 1 : 0)
-        );
-    }
-
-    @memoizeAsyncPersistent
-    private handleAccount(): Observable<Account> {
-        return this.db.personal.unstructured.$.get('account').pipe(
-            filter(current => !!current?.value),
-            map(({ value }) => value as Account),
-        );
+        const checkIfShouldUpdate = () => {
+            const now = Date.now();
+            if (forceUpdate || this.lastUpdateTime < now - 10 * 1000) {
+                this.lastUpdateTime = now;
+                return true;
+            }
+            return false;
+        };
+        return of(checkIfShouldUpdate()).pipe(switchMap(force => this.getAllAccountInfo(force)));
     }
 
     // @memoizeAsyncShort
@@ -822,21 +785,7 @@ export class NxCloudApiService {
             is_superuser: account.is_superuser || false,
             permissions: account.permissions,
         };
-        return this.http
-            .post<t.AccountEdit>(apiBase + '/account', accountInfo)
-            .pipe(
-                switchMap(account =>
-                    this.db.personal.transaction('rw', this.db.personal.unstructured, async () => {
-                        const currentAccount = (await this.db.personal.unstructured.get(
-                            'account',
-                        )) as UnstructuredTable<Account>;
-                        currentAccount.value = { ...currentAccount.value, ...account };
-                        await this.db.personal.unstructured.put(currentAccount);
-                        return account;
-                    }),
-                ),
-            )
-            .toPromise();
+        return this.http.post<t.AccountEdit>(apiBase + '/account', accountInfo).toPromise();
     }
 
     changePassword(newPassword: string, oldPassword: string, mfaCode?: string) {

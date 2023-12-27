@@ -4,7 +4,6 @@ import { catchError, Observable, switchMap } from 'rxjs';
 import { environment } from '@environments/environment';
 import { staticImplements } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
-import { startWithCache } from '@utils/start-with-cached';
 
 import { WithFreshSession } from '../nx-cloud-api.types';
 
@@ -82,8 +81,7 @@ export abstract class BaseCloudServiceAPI {
     public get = <T>(endpoint: string, options?: BaseRequestOptions): Observable<T> =>
         this.#handle<T>(
             endpoint,
-            (url, { body, ...options }) =>
-                this.http.get<T>(url, options).pipe(startWithCache(url, options)),
+            (url, { body, ...options }) => this.http.get<T>(url, options), // .pipe(startWithCache(url, options)),
             this.#processOptionsFactory(options),
         );
 

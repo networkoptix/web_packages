@@ -14,6 +14,7 @@ import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 import { BehaviorSubject } from 'rxjs';
+import { filter } from 'rxjs/operators';
 
 import { accountSelectors } from '@common/store/account';
 import { accountDropdown } from '@components/static-variables-components';
@@ -122,31 +123,18 @@ export class NxAccountSettingsDropdown extends BaseDropdown {
     ngOnInit(): void {
         this.store
             .select(accountSelectors.selectCurrentUser)
-            .pipe(untilDestroyed(this))
+            .pipe(filter(Boolean), untilDestroyed(this))
             .subscribe(account => {
-                if (account) {
-                    this.settings$$.set({
-                        name: account.name,
-                        first_name: account.first_name,
-                        last_name: account.last_name,
-                        email: account.email,
-                        is_staff: account.is_staff,
-                        is_superuser: account.is_superuser,
-                        type: account.type,
-                    });
-                    this.displayedFullName = this.makeFullName(account);
-                } else {
-                    this.settings$$.set({
-                        name: '',
-                        email: '',
-                        first_name: '',
-                        last_name: '',
-                        is_staff: false,
-                        is_superuser: false,
-                        type: undefined,
-                    });
-                    this.displayedFullName = '';
-                }
+                this.settings$$.set({
+                    name: account.name,
+                    first_name: account.first_name,
+                    last_name: account.last_name,
+                    email: account.email,
+                    is_staff: account.is_staff,
+                    is_superuser: account.is_superuser,
+                    type: account.type,
+                });
+                this.displayedFullName = this.makeFullName(account);
             });
     }
 
