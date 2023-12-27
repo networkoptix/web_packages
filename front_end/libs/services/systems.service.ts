@@ -1,5 +1,5 @@
 import { Inject, Injectable, Injector, LOCALE_ID } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { UntilDestroy } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { isEqual } from 'lodash-es';
