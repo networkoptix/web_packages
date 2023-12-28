@@ -29,7 +29,7 @@ class RequestWrapper:
         else:
             raise ValueError(f"method must be get, post, put, or delete not {method}")
 
-        res = request(f"{self.instance}{url}", params=query, json=data)
+        res = request(f"{self.instance}{url}", params=query, json=data, headers={'Referer': self.instance})
         res.raise_for_status()
         return res.json()
 
