@@ -14,7 +14,8 @@ from model_bakery import baker
 
 from partners.models import (
     ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser,
-    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser, ServiceUsage
+    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser, ServiceUsage,
+    ChannelPartnerRoles
 )
 from partners.serializers import (
     ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
@@ -320,6 +321,18 @@ class TestChannelPartnerSerializer:
 
 class TestOrganizationSerializer:
 
+    @pytest.fixture(autouse=True)
+    def setup(self, arf):
+        def context(cloud_user):
+            context = {}
+            context['organizations_to_user'] = OrganizationToUser.objects.filter(user=cloud_user)
+            context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
+            context['request'] = arf.get('/')
+            context['request'].user = cloud_user
+            return context
+
+        self.context = context
+
     def test_current_services(self, default_channel_partner, organization_factory, system_factory,
                               cp_service_factory, org_service_factory, service_record_factory, arf,
                               default_cp_admin):
@@ -364,16 +377,8 @@ class TestOrganizationSerializer:
             user = org_user_factory(organization=org, role=role.name)
             users.append(user)
 
-        def context(cloud_user):
-            context = {}
-            context['organizations_to_user'] = OrganizationToUser.objects.filter(user=cloud_user)
-            context['channel_partner_to_user'] = ChannelPartnerToUser.objects.filter(user=cloud_user)
-            context['request'] = arf.get('/')
-            context['request'].user = cloud_user
-            return context
-
         for role, org, user in zip(roles, orgs, users):
-            serializer = OrganizationSerializer(orgs, many=True, context=context(user.user))
+            serializer = OrganizationSerializer(orgs, many=True, context=self.context(user.user))
             for data in serializer.data:
                 if str(org.id) == data['id']:
                     assert set(data['ownPermissions']) == set([p.codename for p in role.permissions.all()])
@@ -388,9 +393,44 @@ class TestOrganizationSerializer:
         org_admin_role = roles.get(id=OrganizationRoles.ORGANIZATION_ADMINISTRATOR)
         organization.channel_partner_access_level = org_admin_role
         organization.save()
-        serializer = OrganizationSerializer(organization, context=context(cp_user.user))
+        serializer = OrganizationSerializer(organization, context=self.context(cp_user.user))
         assert set(serializer.data['ownPermissions']) == set([p.codename for p in org_admin_role.permissions.all()])
         assert serializer.data['ownRolesIds'] == [org_admin_role.id]
+
+    def test_channelPartnerAccessLevel(self, channel_partner_factory, organization_factory,
+                                       org_user_factory, arf):
+        cp = channel_partner_factory()
+        org = organization_factory(channel_partner=cp)
+        org_user = org_user_factory(organization=org)
+
+        serializer = OrganizationSerializer(instance=org, context=self.context(org_user.user))
+        assert serializer.data['channelPartnerAccessLevel'] == OrganizationRoles.ORGANIZATION_ADMINISTRATOR
+        org.channel_partner_access_level = None
+        org.save()
+
+        serializer = OrganizationSerializer(instance=org, context=self.context(org_user.user))
+        assert serializer.data['channelPartnerAccessLevel'] is None
+
+        data = {'channelPartnerAccessLevel': None}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
+        assert serializer.is_valid()
+        assert serializer.validated_data['channel_partner_access_level'] is None
+
+        data = {'channelPartnerAccessLevel': OrganizationRoles.SYSTEM_HEALTH_VIEWER}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
+        assert serializer.is_valid()
+        assert (serializer.validated_data['channel_partner_access_level'] ==
+                OrganizationRole.objects.get(id=OrganizationRoles.SYSTEM_HEALTH_VIEWER))
+
+        data = {'channelPartnerAccessLevel': OrganizationRoles.POWER_USER}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
+        assert serializer.is_valid() is False
+
+        data = {'name': 'new name'}
+        serializer = OrganizationSerializer(instance=org, data=data, context=self.context(org_user.user), partial=True)
+        assert serializer.is_valid()
+        assert 'channel_partner_access_level' not in serializer.validated_data
+
 
 class TestChannelPartnerRecordsParamSerializer:
 

@@ -920,6 +920,8 @@ class OrganizationRoles:
     VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000006')
     LIVE_VIEWER = uuid.UUID('00000000-0000-4000-8000-000000000007')
 
+    CPAL_ROLES = [ORGANIZATION_ADMINISTRATOR, SYSTEM_HEALTH_VIEWER]
+
 
 class OrganizationRole(models.Model):
 
@@ -973,6 +975,7 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                                           blank=False, default=ChannelPartnerStates.ACTIVE)
     channel_partner_access_level = models.ForeignKey(OrganizationRole, null=True,
                                                      default=OrganizationRoles.ORGANIZATION_ADMINISTRATOR,
+                                                     limit_choices_to={'id__in': OrganizationRoles.CPAL_ROLES},
                                                      on_delete=models.SET_NULL)
     created_ts = models.DateTimeField(auto_now_add=True)
     attributes = models.JSONField(default=dict, blank=True)
