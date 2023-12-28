@@ -467,6 +467,8 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_configure))
         if self.action in ('service_changes_history', 'service_changes_summary'):
             perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_view_service_reports))
+        if self.action in ('change_state', 'confirm_state'):
+            perms.append(CanPerformChannelPartnerAction(ChannelPartner.can_alter_state))
         return perms
 
     def get_serializer_class(self):
@@ -476,8 +478,11 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             return ChannelPartnerSerializer
 
     def get_queryset(self):
-        # common case with filtering by cloud_host
+        # common case with filtering by cloud_host and user's channel partners
         query = Q(cloud_host=self.request.cloud_host, id__in=Subquery(
+                ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
+        # or channel partner is a direct child of user's channel partner
+        query |= Q(cloud_host=self.request.cloud_host, parent_channel_partner_id__in=Subquery(
                 ChannelPartnerToUser.objects.filter(user=self.request.user).values('channel_partner_id')))
         if self.action == 'retrieve':
             # LIC-278
@@ -491,10 +496,10 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
             # /channel_partners/{id} should work even if the request is coming from a different cloud host
             parent_channel_partners_query = (
                 ChannelPartnerToUser.objects
-                .filter(user=self.request.user, channel_partner__parent_channel_partner__isnull=True)
-                .values('channel_partner')
+                .filter(user=self.request.user, channel_partner__parent_channel_partner_id__isnull=True)
+                .values('channel_partner_id')
             )
-            query |= Q(parent_channel_partner__in=Subquery(parent_channel_partners_query))
+            query |= Q(parent_channel_partner_id__in=Subquery(parent_channel_partners_query))
             return self.queryset.filter(query)
         return self.queryset.filter(query)
 
@@ -545,6 +550,40 @@ class ChannelPartnerViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet)
     @action(methods=['get'], detail=True)
     def aggregate(self, request, pk=None):
         serializer = ChannelPartnerAggDataSerializer(instance=self.get_object())
+        return Response(serializer.data)
+
+    @extend_schema(summary='Change state of Channel Partner',
+                   methods=['POST'],
+                   request=ChannelPartnerStateChangeSerializer(many=False),
+                   responses=ChannelPartnerStateChangeSerializer(many=False),
+                   extensions={
+                       'x-permission': f'{ChannelPartner.permissions.alter_state_sub_channel_partners}'
+                                       f' for parent Channel Partner'
+                   })
+    @action(methods=['post'], detail=True)
+    def change_state(self, request, pk=None):
+        partner = self.get_object()
+        serializer = ChannelPartnerStateChangeSerializer(instance=partner, data=request.data,
+                                                         context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @extend_schema(summary='Confirm changing state of Channel Partner',
+                   methods=['POST'],
+                   request=ChannelPartnerStateConfirmationSerializer(many=False),
+                   responses=ChannelPartnerStateConfirmationSerializer(many=False),
+                   extensions={
+                       'x-permission': f'{ChannelPartner.permissions.alter_state_sub_channel_partners}'
+                                       f' for parent Channel Partner'
+                   })
+    @action(methods=['post'], detail=True)
+    def confirm_state(self, request, pk=None):
+        partner = self.get_object()
+        serializer = ChannelPartnerStateConfirmationSerializer(instance=partner, data=request.data,
+                                                               context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
 
@@ -610,6 +649,8 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
             perms.append(CanPerformChannelPartnerAction(Organization.can_view_service_reports))
         if self.action == 'groups_structure':
             perms.append(CanPerformChannelPartnerAction(Organization.can_access))
+        if self.action in ('change_state', 'confirm_state'):
+            perms.append(CanPerformChannelPartnerAction(Organization.can_alter_state))
         return perms
 
     def get_queryset(self):
@@ -679,6 +720,40 @@ class OrganizationViewSet(ParentLookUpMixin, NestedViewSetMixin, ModelViewSet):
         user_groups_structure: List[GroupStructure | None] = organization.get_groups_structure_for_user(request.user)
         serializer = GroupsStructureSerializer(data=user_groups_structure, many=True)
         serializer.is_valid()
+        return Response(serializer.data)
+
+    @extend_schema(summary='Change state of Organization',
+                   methods=['POST'],
+                   request=OrganizationStateChangeSerializer(many=False),
+                   responses=OrganizationStateChangeSerializer(many=False),
+                   extensions={
+                       'x-permission': f'{ChannelPartner.permissions.alter_state_organizations}'
+                                       f' for parent Channel Partner'
+                   })
+    @action(methods=['post'], detail=True)
+    def change_state(self, request, pk=None):
+        organization: Organization = self.get_object()
+        serializer = OrganizationStateChangeSerializer(instance=organization, data=request.data,
+                                                       context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
+        return Response(serializer.data)
+
+    @extend_schema(summary='Confirm changing state of Organization',
+                   methods=['POST'],
+                   request=OrganizationStateConfirmationSerializer(many=False),
+                   responses=OrganizationStateConfirmationSerializer(many=False),
+                   extensions={
+                       'x-permission': f'{ChannelPartner.permissions.alter_state_organizations}'
+                                       f' for parent Channel Partner'
+                   })
+    @action(methods=['post'], detail=True)
+    def confirm_state(self, request, pk=None):
+        organization: Organization = self.get_object()
+        serializer = OrganizationStateConfirmationSerializer(instance=organization, data=request.data,
+                                                             context=self.get_serializer_context())
+        serializer.is_valid(raise_exception=True)
+        serializer.save()
         return Response(serializer.data)
 
 

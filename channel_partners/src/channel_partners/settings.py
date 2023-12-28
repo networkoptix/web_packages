@@ -39,6 +39,7 @@ SECRET_KEY = 'django-insecure-!gefm+0ps6f!vlc^*wqby=k6%o81$=s2jjum@qre=5pqf)d&yk
 
 CACHE_SALT = 'just-a-salt-Jah2ro2zaex7ChieChieShaiz)ah5ieh>ieR*uku1xeecheeCh$ae3aero8w'
 
+CONFIRMATION_CODE_LEN = 6
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 SILK_ENABLED = os.getenv('SILK_ENABLED', False)

@@ -10,7 +10,7 @@ from django.conf import settings
 from django.core.cache import caches
 from nx_cloud_api_client.apis import CdbAccountAPIBase
 
-from partners.models import ChannelPartner, CloudUser, Organization
+from partners.models import ChannelPartner, CloudUser, Organization, NotificationTypes, ActionConfirmation
 
 logger = logging.getLogger(__name__)
 
@@ -34,13 +34,42 @@ class TaskWithLogging(Task):
         logger.error(f"Task {task_id} retrying. Exception: \n{''.join(traceback.format_exception(exc))}")
 
 
-def get_general_notification_type(added_to: typing.Literal["organization", "partner"],
-                                  host: str, email: str) -> str:
+def is_existing_user(host: str, email: str) -> bool:
     api = CdbAccountAPIBase(host=host, client=httpx.Client())
     response = api.status(email)
     if response.status_code == 200:
-        return f'cps_{added_to}_share'
-    return f'cps_{added_to}_invite'
+        return True
+    return False
+
+
+def post_notification(host: str, user: CloudUser, message_type: str, message: dict):
+    data = {
+        'type': message_type,
+        'user_email': user.email,
+        'userFullName': user.full_name,
+        'message': message
+    }
+    if 'userFullName' not in message:
+        # Notification module takes userFullName from message object.
+        message['userFullName'] = data['userFullName']
+    customization_name = get_customization(host)
+    data['customization'] = customization_name
+    response = httpx.post(f'https://{host}/notifications/send', json=data,
+                          auth=settings.INSTANCE_CONFIG.notification_auth)
+    if not response.is_success:
+        msg = f'Request failed. Request: {data}. Response: {response.content}'
+        raise MessageNotPosted(msg)
+
+
+def get_customization(cloud_host_name: str):
+    cache_key = f'customization-name-{cloud_host_name}'
+    if not (customization_name := caches['default'].get(cache_key)):
+        response = httpx.get(f'https://{cloud_host_name}/api/utils/customization')
+        response.raise_for_status()
+        customization = response.json()
+        customization_name = customization.get('name')
+        caches['default'].set(cache_key, customization_name, timeout=600)
+    return customization_name
 
 
 @shared_task(bind=True, base=TaskWithLogging, autoretry_for=(Exception,),
@@ -69,10 +98,11 @@ def notification_added_channel_partner_role(
         raise Ignore()
     message = {
         'partner_name': partner.name,
-        'sharer_name': getattr(sharer, 'full_name', None) or sharer.email,
-        'userFullName': getattr(user, 'full_name', None) or user.email
+        'sharer_name': user.full_name or sharer.email,
+        'userFullName': user.full_name or user.email
     }
-    message_type = get_general_notification_type(added_to="partner", host=cloud_host_name, email=user.email)
+    user_exists = is_existing_user(host=cloud_host_name, email=user.email)
+    message_type = NotificationTypes.cps_partner_share if user_exists else NotificationTypes.cps_partner_invite
     post_notification(host=cloud_host_name, user=user, message_type=message_type, message=message)
 
 
@@ -102,35 +132,35 @@ def notification_added_organization_role(
         raise Ignore()
     message = {
         'organization_name': organization.name,
-        'sharer_name': getattr(sharer, 'full_name', None) or sharer.email,
-        'userFullName': getattr(user, 'full_name', None) or user.email
+        'sharer_name': user.full_name or sharer.email,
+        'userFullName': user.full_name or user.email
     }
-    message_type = get_general_notification_type(added_to="organization", host=cloud_host_name, email=user.email)
+    user_exists = is_existing_user(host=cloud_host_name, email=user.email)
+    message_type = (
+        NotificationTypes.cps_organization_share if user_exists else NotificationTypes.cps_organization_invite
+    )
     post_notification(host=cloud_host_name, user=user, message_type=message_type, message=message)
 
 
-def post_notification(host: str, user: CloudUser, message_type: str, message: dict):
-    data = {
-        'type': message_type,
-        'user_email': user.email,
-        'userFullName': getattr(user, 'full_name', None) or user.email,
-        'message': message
-    }
-    customization_name = get_customization(host)
-    data['customization'] = customization_name
-    response = httpx.post(f'https://{host}/notifications/send', json=data,
-                          auth=settings.INSTANCE_CONFIG.notification_auth)
-    if not response.is_success:
-        msg = f'Request failed. Request: {data}. Response: {response.content}'
-        raise MessageNotPosted(msg)
-
-
-def get_customization(cloud_host_name: str):
-    cache_key = f'customization-name-{cloud_host_name}'
-    if not (customization_name := caches['default'].get(cache_key)):
-        response = httpx.get(f'https://{cloud_host_name}/api/utils/customization')
-        response.raise_for_status()
-        customization = response.json()
-        customization_name = customization.get('name')
-        caches['default'].set(cache_key, customization_name, timeout=600)
-    return customization_name
+@shared_task(bind=True, base=TaskWithLogging, autoretry_for=(Exception,),
+             retry_kwargs={'max_retries': MAX_RETRIES, 'countdown': RETRY_TIMEOUT})
+def state_confirmation_task(self: TaskWithLogging, confirmation_id: int, cloud_host_name: str):
+    confirmation = ActionConfirmation.objects.filter(pk=confirmation_id).first()
+    if not confirmation:
+        logger.warning(f'Cannot resolve some data. ConfirmationAction with id {confirmation_id} is missing.')
+        self.update_state(
+            state=states.FAILURE,
+            meta='Cannot resolve initial data.'
+        )
+        raise Ignore()
+    user = CloudUser.objects.filter(email=confirmation.created_by).first()
+    if not user:
+        logger.warning(f'Cannot resolve some data. CloudUser with email {confirmation.email} is missing.')
+        self.update_state(
+            state=states.FAILURE,
+            meta='Cannot resolve initial data.'
+        )
+        raise Ignore()
+    message = confirmation.get_state_confirmation_message()
+    message_type = confirmation.get_notification_type()
+    post_notification(host=cloud_host_name, user=user, message_type=message_type, message=message)

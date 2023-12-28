@@ -1,4 +1,5 @@
 import json
+import re
 import random
 from uuid import uuid4
 
@@ -19,7 +20,7 @@ from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser,
     ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates,
     OrganizationRoles, SystemGroup, Organization, OrganizationPermissions,
-    CloudSystemStates
+    CloudSystemStates, ActionConfirmation, ChannelPartnerRoles
 )
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
@@ -539,8 +540,9 @@ class TestChannelPartnerViewSet:
         request.cloud_host = host
         response = view(request)
         assert response.status_code == 200
-        # must contain only root_cp
-        assert set([cp['id'] for cp in response.data['results']]) == {str(root_cp.id)}
+        # must contain only root_cp and its children
+        assert (set([cp['id'] for cp in response.data['results']]) ==
+                {str(root_cp.id)} | {str(cp.id) for cp in default_host_subs})
 
         # Test organization user retrieve parent channel partner
         org = organization_factory(channel_partner=sub_cp)
@@ -666,6 +668,79 @@ class TestChannelPartnerViewSet:
         assert response.status_code == 200
         cp.refresh_from_db()
         assert cp.name == data['name']
+
+    def test_change_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+                          mock_auth_with_user, httpx_mock, mock_get_customization_request):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        sub_cp = channel_partner_factory(parent_channel_partner=cp)
+        notification_url = f'https://{cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+        request_data = {
+            "targetState": "shutdown"
+        }
+        request = arf.post('/', data=request_data, format='json')
+        view = ChannelPartnerViewSet.as_view(actions={'post': 'change_state'}, detail=True)
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=sub_cp.id)
+        assert response.status_code == 200
+        assert response.data['id'] == str(sub_cp.id)
+        assert response.data['targetState'] == 'shutdown'
+        changeId = response.data['changeId']
+        confirmation = ActionConfirmation.objects.get(pk=changeId)
+        assert confirmation.state == int(ActionConfirmation.ConfirmationState.PENDING)
+        assert confirmation.action == ActionConfirmation.ConfirmationActionType.PARTNER_STATE_CHANGE
+        assert confirmation.target_id == sub_cp.id
+        assert confirmation.changes == {'targetState': ChannelPartnerStates.SHUTDOWN}
+        assert confirmation.created_by == cp_user.user.email
+        assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
+        notification_request = httpx_mock.get_request(url=notification_url)
+        assert notification_request
+
+        accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.ACCOUNTANT)
+        request = arf.post('/', data=request_data, format='json')
+        mock_auth_with_user(accountant)
+        response = view(request, pk=sub_cp.id)
+        assert response.status_code == 403
+
+    def test_confirm_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+                           mock_auth_with_user, httpx_mock, mock_get_customization_request):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        sub_cp = channel_partner_factory(parent_channel_partner=cp)
+        notification_url = f'https://{cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+        request_data = {
+            "targetState": "shutdown"
+        }
+        request = arf.post('/', data=request_data, format='json')
+        view = ChannelPartnerViewSet.as_view(actions={'post': 'change_state'}, detail=True)
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=sub_cp.id)
+        changeId = response.data['changeId']
+        request_data = {
+            "code": response.data['code'],
+            "changeId": response.data['changeId']
+        }
+        request = arf.post('/', data=request_data, format='json')
+        view = ChannelPartnerViewSet.as_view(actions={'post': 'confirm_state'}, detail=True)
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=sub_cp.id)
+
+        assert response.status_code == 200
+        assert response.data['id'] == str(sub_cp.id)
+        assert response.data['state'] == 'shutdown'
+        sub_cp.refresh_from_db()
+        assert sub_cp.state == ChannelPartnerStates.SHUTDOWN
+        confirmation = ActionConfirmation.objects.get(pk=changeId)
+        assert confirmation.state == int(ActionConfirmation.ConfirmationState.CONFIRMED)
+        assert confirmation.action == ActionConfirmation.ConfirmationActionType.PARTNER_STATE_CHANGE
+        assert confirmation.target_id == sub_cp.id
+        assert confirmation.changes == {'targetState': ChannelPartnerStates.SHUTDOWN}
+        assert confirmation.created_by == cp_user.user.email
+        assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
 
 
 class TestOrganizationViewSet:
@@ -868,6 +943,78 @@ class TestOrganizationViewSet:
         response = view(request)
         assert response.status_code == 200
         assert len(response.data['results']) == 0
+
+    def test_change_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+                          mock_auth_with_user, httpx_mock, mock_get_customization_request):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        notification_url = f'https://{cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+        request_data = {
+            "targetState": "shutdown"
+        }
+        request = arf.post('/', data=request_data, format='json')
+        view = OrganizationViewSet.as_view(actions={'post': 'change_state'}, detail=True)
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=org.id)
+        assert response.status_code == 200
+        assert response.data['id'] == str(org.id)
+        assert response.data['targetState'] == 'shutdown'
+        changeId = response.data['changeId']
+        confirmation = ActionConfirmation.objects.get(pk=changeId)
+        assert confirmation.state == int(ActionConfirmation.ConfirmationState.PENDING)
+        assert confirmation.action == ActionConfirmation.ConfirmationActionType.ORGANIZATION_STATE_CHANGE
+        assert confirmation.target_id == org.id
+        assert confirmation.changes == {'targetState': ChannelPartnerStates.SHUTDOWN}
+        assert confirmation.created_by == cp_user.user.email
+        assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
+        notification_request = httpx_mock.get_request(url=notification_url)
+        assert notification_request
+        accountant = cp_user_factory(channel_partner=cp, role=ChannelPartnerRoles.ACCOUNTANT)
+        request = arf.post('/', data=request_data, format='json')
+        mock_auth_with_user(accountant)
+        response = view(request, pk=org.id)
+        assert response.status_code == 403
+
+    def test_confirm_state(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+                           mock_auth_with_user, httpx_mock, mock_get_customization_request):
+        cp = channel_partner_factory()
+        cp_user = cp_user_factory(channel_partner=cp)
+        org = organization_factory(channel_partner=cp)
+        notification_url = f'https://{cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+        request_data = {
+            "targetState": "shutdown"
+        }
+        request = arf.post('/', data=request_data, format='json')
+        view = OrganizationViewSet.as_view(actions={'post': 'change_state'}, detail=True)
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=org.id)
+        changeId = response.data['changeId']
+        request_data = {
+            "code": response.data['code'],
+            "changeId": response.data['changeId']
+        }
+        request = arf.post('/', data=request_data, format='json')
+        view = OrganizationViewSet.as_view(actions={'post': 'confirm_state'}, detail=True)
+        mock_auth_with_user(cp_user)
+        response = view(request, pk=org.id)
+
+        assert response.status_code == 200
+        assert response.data['id'] == str(org.id)
+        assert response.data['state'] == 'shutdown'
+        org.refresh_from_db()
+        assert org.state == ChannelPartnerStates.SHUTDOWN
+        confirmation = ActionConfirmation.objects.get(pk=changeId)
+        assert confirmation.state == int(ActionConfirmation.ConfirmationState.CONFIRMED)
+        assert confirmation.action == ActionConfirmation.ConfirmationActionType.ORGANIZATION_STATE_CHANGE
+        assert confirmation.target_id == org.id
+        assert confirmation.changes == {'targetState': ChannelPartnerStates.SHUTDOWN}
+        assert confirmation.created_by == cp_user.user.email
+        assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
 
 
 class TestSystemGroupUserViewSet:
