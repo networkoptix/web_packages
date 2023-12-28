@@ -207,10 +207,6 @@ class IVPDPage:
             "//*[@class='export-button']/a[contains(text(), '{IPVD_EXPORT_TO_CSV_TEXT}')]")
         return Link(self.driver, export_to_csv_link)
 
-    def filter_button(self) -> Button:
-        filter_button = '//nx-search//span[@class="filter-label"]'
-        return Button(self.driver, filter_button)
-
     def filters_applied_button(self) -> Button:
         xpath = "//nx-ipvd//nx-search/div/div/div[1]//span[contains(@class,'filter-label')]"
         return Button(self.driver, xpath)
@@ -222,10 +218,6 @@ class IVPDPage:
     def go_to_ipvd(self) -> None:
         url = self.rb.ENV + "/ipvd"
         self.driver.get(url)
-
-    def table_heading_manufacturer(self) -> PageText:
-        xpath = self.rb.replace_nested_variables("//span[contains(text(), '{IPVD_ADV_FILTER_MFR}')]/..")
-        return PageText(self.driver, xpath)
 
     def click_table_heading_manufacturer(self) -> None:
         xpath = self.rb.replace_nested_variables("//span[contains(text(), '{IPVD_ADV_FILTER_MFR}')]/..")
