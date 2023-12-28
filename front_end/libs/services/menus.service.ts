@@ -129,7 +129,7 @@ export class NxMenusService {
         }
 
         return combineLatest([
-            this.store.select(accountSelectors.selectCurrentEmail),
+            this.store.select(accountSelectors.selectCurrentUserName),
             this.languageChanged$,
         ]).pipe(
             switchMap(
