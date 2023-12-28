@@ -404,7 +404,7 @@ export class NxHeaderComponent implements OnInit {
             });
 
         this.store
-            .select(accountSelectors.selectCurrentEmail)
+            .select(accountSelectors.selectCurrentUserName)
             .pipe(takeUntilDestroyed(this.destroyRef))
             .subscribe(email => {
                 if (email) {

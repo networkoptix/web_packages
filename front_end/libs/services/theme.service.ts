@@ -85,7 +85,7 @@ export class NxThemeService {
             });
 
         this.store
-            .select(accountSelectors.selectCurrentEmail)
+            .select(accountSelectors.selectCurrentUserName)
             .pipe(takeUntilDestroyed())
             .subscribe(async (email: string) => {
                 if (this.viewType !== 'web') {
