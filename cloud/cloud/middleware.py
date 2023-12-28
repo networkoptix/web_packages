@@ -3,6 +3,7 @@ import logging
 
 import waffle
 from django.conf import settings
+from django.contrib.auth import logout
 from django.urls import reverse_lazy
 from django.utils.deprecation import MiddlewareMixin
 from django.http import HttpResponse
@@ -30,6 +31,19 @@ class CatchExceptionMiddleware(MiddlewareMixin):
             f"{exception.__class__.__name__}: {exception}\nCall Stack:\n{stack_trace}")
         if not settings.DEBUG:
             return HttpResponse("Error with request", status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+
+
+class CookieMonsterMiddleware(MiddlewareMixin):
+    """
+    Middleware that removes the session cookie from the request if the csrftoken is missing.
+    This seems to happen when there's a cloud outage and the csrftoken goes missing.
+    Refer to CLOUD-11854
+    """
+    @staticmethod
+    def process_request(request):
+        cookies = request.COOKIES
+        if 'loginCode' in request.path_info and 'csrftoken' not in cookies and 'sessionid' in cookies:
+            logout(request)
 
 
 class HeaderMiddleware(MiddlewareMixin):
