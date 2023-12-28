@@ -70,7 +70,7 @@ export class CloudAccount extends BaseAccount {
         );
         this.account = this.CONFIG.preloadedAccount as Account;
         const currentEmail$ = this.store
-            .select(accountSelectors.selectCurrentEmail)
+            .select(accountSelectors.selectCurrentUserName)
             .pipe(
                 debounceTime(1000),
                 distinctUntilChanged(),

@@ -59,7 +59,7 @@ export class NxLandingComponent implements OnInit {
             this.loaded = true;
         } else {
             this.store
-                .select(accountSelectors.selectCurrentEmail)
+                .select(accountSelectors.selectCurrentUserName)
                 .pipe(takeUntilDestroyed(this.destroyRef))
                 .subscribe(email => {
                     if (email && !this.startParams.next) {

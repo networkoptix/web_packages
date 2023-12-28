@@ -25,7 +25,7 @@ export class NxAccountComponent {
         level1: [],
     };
     menuReady = false;
-    userEmail$$ = this.store.selectSignal(accountSelectors.selectCurrentEmail);
+    userEmail$$ = this.store.selectSignal(accountSelectors.selectCurrentUserName);
 
     constructor(
         router: Router,
