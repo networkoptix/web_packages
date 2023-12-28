@@ -273,7 +273,7 @@ function stop_mediaserver {
         echo "Stopping all auto-nx-servers"
         docker ps --format '{{.Names}}' | grep auto-nx-server- | xargs docker rm -f
     else
-        smart_stop_mediaserver $PORTS
+        smart_stop_mediaserver "$PORTS"
     fi
 }
 
@@ -634,7 +634,7 @@ do
                 SKIP_BUILD="false"
             fi
 
-            smart_stop_mediaserver $PORTS
+            smart_stop_mediaserver "$PORTS"
 
             if [ "$LOCAL_WEBADMIN" == "true" ]; then
                 build_webadmin_locally
