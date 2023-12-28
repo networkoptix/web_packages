@@ -252,7 +252,7 @@ class CloudSystemId(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     class Meta:
         constraints = [
-            models.UniqueConstraint(fields=['system_id', 'cloud_host'], name='unique_cloud_system')
+            models.UniqueConstraint(fields=['system_id'], name='unique_system_id')
         ]
         indexes = [
             GinIndex(name="cloudsystemid_path_gin", fields=['path'], opclasses=['array_ops'])
