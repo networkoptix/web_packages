@@ -1250,17 +1250,30 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
                 organization=self
             )
 
-        sorter_groups = sorted(user_groups.values(), key=lambda x: len(x['path']))
-        trees= []
+        groups = user_groups.values()
+        trees = []
         added = {}
-        for group in sorter_groups:
-            group['children'] = []
+        orphans = {}
+        for group in groups:
+            # get groups from orphans which are direct children
+            group['children'] = orphans.pop(group['id'], [])
             added[group['id']] = group
+            # check if group is on top of user branch or root group
+            if not group['parent_id'] or group['id'] in groups_membership:
+                trees.append(group)
+                continue
+
             if parent := added.get(group['parent_id']):
                 parent['children'].append(group)
             else:
-                trees.append(group)
+                # add groups that cannot find parent to orphans dict
+                if siblings := orphans.get(group['parent_id']):
+                    siblings.append(group)
+                else:
+                    orphans[group['parent_id']] = [group]
+        assert not orphans
         return trees
+
 
     @property
     def user_list(self):
