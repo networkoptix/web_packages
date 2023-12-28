@@ -248,13 +248,14 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     effectiveState = CodeChoiceField(source='effective_state', choices=ChannelPartnerStates.STATE_CODES, read_only=True)
-    channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', queryset=ChannelPartner.objects.all())
-    channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(queryset=OrganizationRole.objects.all(),
-                                                                   required=False, allow_null=True,
-                                                                   source='channel_partner_access_level')
+    channelPartner = serializers.PrimaryKeyRelatedField(source='channel_partner', read_only=True)
+    channelPartnerAccessLevel = serializers.PrimaryKeyRelatedField(
+        queryset=OrganizationRole.objects.filter(id__in=OrganizationRoles.CPAL_ROLES),
+        required=False, allow_null=True,
+        source='channel_partner_access_level')
     attributes = serializers.DictField(allow_empty=True, allow_null=True, required=False,
                                        help_text='Set any custom properties. Pass value "\*unset\*" to remove a key.')
-    currentServices = serializers.DictField(allow_empty=True, allow_null=True, source='current_services')
+    currentServices = serializers.DictField(source='current_services', read_only=True)
     ownPermissions = serializers.SerializerMethodField(method_name='get_permissions_list', read_only=True)
     ownRolesIds = serializers.SerializerMethodField(method_name='get_roles_list', read_only=True)
     ownRoles = serializers.SerializerMethodField(method_name='get_roles_names', read_only=True)
@@ -278,7 +279,7 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             "users",
             'systemCount'
         ]
-        read_only_fields = ['channelPartner', 'users', 'currentServices', 'created', 'systemCount']
+        read_only_fields = ['users']
 
     @cached_property
     def organization_roles(self):
