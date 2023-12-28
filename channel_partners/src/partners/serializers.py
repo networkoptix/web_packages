@@ -1,3 +1,4 @@
+import copy
 import datetime
 import json
 import uuid
@@ -14,7 +15,6 @@ from django.utils.functional import cached_property
 from drf_spectacular.openapi import OpenApiTypes
 from drf_spectacular.utils import extend_schema_serializer, extend_schema_field, OpenApiExample
 from nx_cloud_api_client.base_auth import BearerTokenAuth
-from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
 from rest_framework import serializers, exceptions
 from rest_framework.exceptions import ValidationError
 from rest_framework.reverse import reverse
@@ -26,15 +26,18 @@ from partners.models import (
     LocalRecordingUsage, ChannelPartnerServiceRecord, ChannelPartnerService,
     ChannelPartnerToUser, OrganizationToUser, ChannelPartnerRole, OrganizationRole, ServiceUsage, ChannelPartnerEvent,
     CloudHost, ChannelPartnerExternalId, OrganizationExternalId, ChannelPartnerServiceExternalId, CloudSystemExternalId,
-    CloudSystemStates,
-
-    ServiceToSubChannelProperties, ServiceToOrganizationProperties, SystemGroup, get_channel_partner_roles,
-    get_organization_roles, OrganizationRoles
+    ServiceToSubChannelProperties, ServiceToOrganizationProperties, SystemGroup,
+    get_channel_partner_roles, get_organization_roles, OrganizationRoles, ActionConfirmation, ConfirmationCodeInvalid,
+    CloudSystemStates
 )
-from partners.tasks.notification import added_channel_partner_role_task, added_organization_role_task
-from tools.serializers import FieldAccessModelSerializer, AccessMatrixMixin
-from tools.helpers import get_path_from_parent, forward_cdb_resp
+from tools.helpers import forward_cdb_resp
+from tools.helpers import get_path_from_parent
+from tools.serializers import AccessMatrixMixin
+from tools.serializers import FieldAccessModelSerializer
 from tools.utils import bind_system_to_cdb_organization
+from partners.tasks.notification import (
+    added_channel_partner_role_task, added_organization_role_task, state_confirmation_task
+)
 
 STATE_CHOICES_STRS = [choice[1] for choice in ChannelPartnerStates.STATE_CHOICES]
 STATE_CHOICES_MAP = {choice[0]: choice[1] for choice in ChannelPartnerStates.STATE_CHOICES}
@@ -1409,3 +1412,150 @@ class SystemToOrgTransferSerializer(serializers.Serializer):
         )
         # TODO. call background task to refresh system status from cdb
         return system
+
+
+class RequestConfirmationBaseSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True)
+    changeId = serializers.UUIDField(read_only=True)
+    code = serializers.SerializerMethodField(method_name='get_confirmation_code', read_only=True)
+    action = None
+
+    def __init__(self, instance=None, action: ActionConfirmation.ConfirmationActionType = None, **kwargs):
+        if action:
+            self.action = action
+        super().__init__(instance=instance, **kwargs)
+
+    def get_confirmation_code(self, instance) -> str:
+        return instance.confirmation.code
+
+    def changes(self, instance, validated_data):
+        raise NotImplementedError("Please override this method due to requested changes.")
+
+    def update(self, instance, validated_data):
+        confirmation = ActionConfirmation.objects.create(
+            action=self.action,
+            target_id=instance.id,
+            changes=self.changes(instance, validated_data),
+            created_by=self.context['request'].user.email
+        )
+        # dirty hack to reuse serializer for response with serializer.data
+        instance.confirmation = confirmation
+        return instance
+
+
+class ChangeStateBaseSerializer(RequestConfirmationBaseSerializer):
+    targetState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
+
+    action = None
+
+    def __init__(self, instance=None, action: ActionConfirmation.ConfirmationActionType = None, **kwargs):
+        if action:
+            self.action = action
+        super().__init__(instance=instance, **kwargs)
+
+    def changes(self, instance, validated_data):
+        return copy.deepcopy(validated_data)
+
+    def validate_targetState(self, value):
+        if value == self.instance.state:
+            raise exceptions.ValidationError(
+                detail=f"Instance is already in {dict(ChannelPartnerStates.STATE_CHOICES).get(value)} state.")
+        return value
+
+    def update(self, instance, validated_data):
+        instance = super().update(instance, validated_data)
+        instance.changeId = instance.confirmation.id
+        instance.targetState = instance.confirmation.changes['targetState']
+        state_confirmation_task.apply_async(args=[
+            instance.confirmation.id,
+            self.context['request'].cloud_host.hostname
+        ])
+        return instance
+
+
+# Note. Subclasses must be initialized to generate schema.
+class ConfirmActionBaseSerializer(serializers.ModelSerializer):
+    id = serializers.UUIDField(read_only=True)
+    changeId = serializers.UUIDField(write_only=True)
+    code = serializers.CharField(write_only=True)
+
+    action = None
+
+    def __init__(self, instance=None, action: ActionConfirmation.ConfirmationActionType = None, **kwargs):
+        if action:
+            self.action = action
+        super().__init__(instance=instance, **kwargs)
+
+    def validate(self, attrs):
+        change_id = attrs.get('changeId')
+        code = attrs.get('code')
+        try:
+            attrs['changes'] = ActionConfirmation.confirm_and_get_changes(
+                confirmation_id=change_id, action=self.action,
+                code=code, target_id=self.instance.id, confirmed_by=self.context['request'].user)
+        except ConfirmationCodeInvalid as ex:
+            raise exceptions.ValidationError(detail={"code": [str(ex)]})
+        return attrs
+
+
+class StateConfirmationSerializer(ConfirmActionBaseSerializer):
+    state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
+
+    def validate(self, attrs):
+        attrs = super().validate(attrs)
+        validated_data = {
+            'state': attrs['changes']['targetState']
+        }
+        return validated_data
+
+
+class OrganizationStateChangeSerializer(ChangeStateBaseSerializer):
+    action = ActionConfirmation.ConfirmationActionType.ORGANIZATION_STATE_CHANGE
+
+    class Meta:
+        model = Organization
+        fields = [
+            'id',
+            'targetState',
+            'changeId',
+            'code'
+        ]
+
+
+class OrganizationStateConfirmationSerializer(StateConfirmationSerializer):
+    action = ActionConfirmation.ConfirmationActionType.ORGANIZATION_STATE_CHANGE
+
+    class Meta:
+        model = Organization
+        fields = [
+            'id',
+            'state',
+            'changeId',
+            'code',
+        ]
+
+
+class ChannelPartnerStateChangeSerializer(ChangeStateBaseSerializer):
+    action = ActionConfirmation.ConfirmationActionType.PARTNER_STATE_CHANGE
+
+    class Meta:
+        model = ChannelPartner
+        fields = [
+            'id',
+            'targetState',
+            'changeId',
+            'code'
+        ]
+
+
+class ChannelPartnerStateConfirmationSerializer(StateConfirmationSerializer):
+    action = ActionConfirmation.ConfirmationActionType.PARTNER_STATE_CHANGE
+
+    class Meta:
+        model = ChannelPartner
+        fields = [
+            'id',
+            'state',
+            'changeId',
+            'code',
+        ]

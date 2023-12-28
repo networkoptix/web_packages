@@ -2,7 +2,7 @@ from uuid import uuid4
 
 from django.core.cache import caches
 
-from partners.tasks.notification import get_customization, get_general_notification_type
+from partners.tasks.notification import get_customization, is_existing_user
 
 
 def test_get_customization(mock_get_customization_request, request_host, httpx_mock):
@@ -23,15 +23,10 @@ def test_get_customization(mock_get_customization_request, request_host, httpx_m
 def test_get_general_notification_type(mock_account_status, request_host, httpx_mock):
     email = f'{uuid4()}@example.com'
     mock_account_status(email=email, active=True)
-    msg_type = get_general_notification_type(added_to='organization', host=request_host, email=email)
-    assert msg_type == 'cps_organization_share'
-    msg_type = get_general_notification_type(added_to='partner', host=request_host, email=email)
-    assert msg_type == 'cps_partner_share'
+    assert is_existing_user(host=request_host, email=email)
+
     httpx_mock.reset(True)
     mock_account_status(email=email, active=False)
-    msg_type = get_general_notification_type(added_to='organization', host=request_host, email=email)
-    assert msg_type == 'cps_organization_invite'
-    msg_type = get_general_notification_type(added_to='partner', host=request_host, email=email)
-    assert msg_type == 'cps_partner_invite'
+    assert is_existing_user(host=request_host, email=email) is False
 
 

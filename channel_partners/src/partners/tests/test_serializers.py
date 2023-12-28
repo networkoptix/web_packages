@@ -1,6 +1,7 @@
 import datetime
 import json
 import random
+import re
 import uuid
 from datetime import timedelta
 from math import ceil
@@ -14,13 +15,15 @@ from model_bakery import baker
 
 from partners.models import (
     ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser,
-    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles, CloudUser, ServiceUsage,
-    ChannelPartnerRoles
+    ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles,
+    CloudUser, ActionConfirmation, ServiceUsage, NotificationTypes,
 )
 from partners.serializers import (
     ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
     SystemServiceQuantitySerializer, OrganizationSerializer, OrganizationUserSerializer,
-    SystemGroupUserSerializer, ChannelPartnerRecordsParamSerializer, GroupSerializer
+    SystemGroupUserSerializer, ChannelPartnerRecordsParamSerializer, GroupSerializer, OrganizationStateChangeSerializer,
+    OrganizationStateConfirmationSerializer, ChannelPartnerStateChangeSerializer,
+    ChannelPartnerStateConfirmationSerializer
 )
 
 
@@ -684,3 +687,354 @@ class TestSystemGroupUserSerializer:
         serializer = SystemGroupUserSerializer(data=data, context={'group': self.group})
         assert serializer.is_valid() is False
         assert 'overlap' in serializer.errors['email'][0]
+
+
+class TestOrganizationStateChangeSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, cp_user_factory, arf,
+              httpx_mock, mock_get_customization_request):
+        self.cp = channel_partner_factory()
+        self.org_user = cp_user_factory(channel_partner=self.cp)
+        self.org = organization_factory(channel_partner=self.cp)
+        self.request = arf.post('/')
+        self.request.user = self.org_user.user
+        self.context = {'request': self.request}
+        self.notification_url = f'https://{self.cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=self.notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+
+    def test_update(self, httpx_mock):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+
+        serializer = OrganizationStateChangeSerializer(instance=self.org, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        self.org.refresh_from_db()
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+        assert instance.targetState == ChannelPartnerStates.SHUTDOWN
+
+        confirmation = ActionConfirmation.objects.get(pk=instance.changeId)
+        assert confirmation.state == int(ActionConfirmation.ConfirmationState.PENDING)
+        assert confirmation.action == ActionConfirmation.ConfirmationActionType.ORGANIZATION_STATE_CHANGE
+        assert confirmation.target_id == instance.id
+        assert confirmation.created_by == self.org_user.user.email
+        assert confirmation.changes == {'targetState': ChannelPartnerStates.SHUTDOWN}
+        assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
+
+        notification_request = httpx_mock.get_request(url=self.notification_url)
+        assert notification_request
+        notification_data = json.loads(notification_request.content)
+        assert notification_data['customization'] == 'default'
+        assert notification_data['type'] == NotificationTypes.cps_organization_state_confirmation
+        assert notification_data['user_email'] == self.org_user.user.email
+        assert notification_data['message']['code'] == confirmation.code
+        assert notification_data['message']['status_name'] == 'Shutdown'
+        assert notification_data['message']['organization_name'] == self.org.name
+
+
+    def test_data(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+
+        serializer = OrganizationStateChangeSerializer(instance=self.org, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        changeId = instance.changeId
+        assert serializer.data['id'] == str(self.org.id)
+        assert serializer.data['changeId'] == str(changeId)
+        assert serializer.data['targetState'] == data['targetState']
+        assert re.match(r'^[A-Z0-9]{6}$', serializer.data['code'])
+
+
+class TestOrganizationStateConfirmationSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, cp_user_factory,
+              arf, httpx_mock, mock_get_customization_request):
+        self.cp = channel_partner_factory()
+        self.org_user = cp_user_factory(channel_partner=self.cp)
+        self.org = organization_factory(channel_partner=self.cp)
+        self.request = arf.post('/')
+        self.request.user = self.org_user.user
+        self.context = {'request': self.request}
+        self.notification_url = f'https://{self.cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=self.notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+
+    def test_update(self):
+        request_data = {
+            "targetState": "shutdown"
+        }
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+
+        serializer = OrganizationStateChangeSerializer(instance=self.org, data=request_data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": ActionConfirmation.objects.get(pk=instance.changeId).code
+        }
+
+        serializer = OrganizationStateConfirmationSerializer(instance=self.org, data=request_data, context=self.context)
+        serializer.is_valid()
+        assert serializer.validated_data['state'] == ChannelPartnerStates.SHUTDOWN
+        instance = serializer.save()
+        data = serializer.data
+        assert data['id'] == str(self.org.id)
+        assert data['state'] == 'shutdown'
+        assert len(data) == 2
+        self.org.refresh_from_db()
+        assert self.org.state == ChannelPartnerStates.SHUTDOWN
+
+    def test_expired_code(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+
+        serializer = OrganizationStateChangeSerializer(instance=self.org, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        confirmation = ActionConfirmation.objects.get(pk=instance.changeId)
+        confirmation.created_ts = timezone.now() - timedelta(days=1)
+        confirmation.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": confirmation.code
+        }
+
+        serializer = OrganizationStateConfirmationSerializer(instance=self.org, data=request_data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['code'][0] == "Provided confirmation code is expired."
+
+    def test_invalid_code(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+
+        serializer = OrganizationStateChangeSerializer(instance=self.org, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": '000000'
+        }
+
+        serializer = OrganizationStateConfirmationSerializer(instance=self.org, data=request_data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['code'][0] == "Provided confirmation code is invalid."
+
+    def test_different_user(self, cp_user_factory):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.org.state == ChannelPartnerStates.ACTIVE
+
+        serializer = OrganizationStateChangeSerializer(instance=self.org, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": instance.confirmation.code
+        }
+        user = cp_user_factory(channel_partner=self.cp)
+        self.request.user = user.user
+        serializer = OrganizationStateConfirmationSerializer(instance=self.org, data=request_data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['code'][0] == "Provided confirmation code is invalid."
+        
+        
+class TestChannelPartnerStateChangeSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, cp_user_factory,
+              arf, httpx_mock, mock_get_customization_request):
+        self.cp = channel_partner_factory()
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
+        self.request = arf.post('/')
+        self.request.user = self.cp_user.user
+        self.context = {'request': self.request}
+        self.notification_url = f'https://{self.cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=self.notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+
+    def test_update(self, httpx_mock):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(instance=self.sub_cp, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        self.sub_cp.refresh_from_db()
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+        assert instance.targetState == ChannelPartnerStates.SHUTDOWN
+
+        confirmation = ActionConfirmation.objects.get(pk=instance.changeId)
+        assert confirmation.state == int(ActionConfirmation.ConfirmationState.PENDING)
+        assert confirmation.action == ActionConfirmation.ConfirmationActionType.PARTNER_STATE_CHANGE
+        assert confirmation.target_id == instance.id
+        assert confirmation.changes == {'targetState': ChannelPartnerStates.SHUTDOWN}
+        assert confirmation.created_by == self.cp_user.user.email
+        assert re.match(r'^[A-Z0-9]{6}$', confirmation.code)
+        notification_request = httpx_mock.get_request(url=self.notification_url)
+        assert notification_request
+        notification_data = json.loads(notification_request.content)
+        assert notification_data['customization'] == 'default'
+        assert notification_data['type'] == NotificationTypes.cps_partner_state_confirmation
+        assert notification_data['user_email'] == self.cp_user.user.email
+        assert notification_data['message']['code'] == confirmation.code
+        assert notification_data['message']['status_name'] == 'Shutdown'
+        assert notification_data['message']['partner_name'] == self.sub_cp.name
+
+    def test_data(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(instance=self.sub_cp, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        changeId = instance.changeId
+        assert serializer.data['id'] == str(self.sub_cp.id)
+        assert serializer.data['changeId'] == str(changeId)
+        assert serializer.data['targetState'] == data['targetState']
+        assert re.match(r'^[A-Z0-9]{6}$', serializer.data['code'])
+
+
+class TestChannelPartnerStateConfirmationSerializer:
+
+    @pytest.fixture(autouse=True)
+    def setUp(self, channel_partner_factory, organization_factory, cp_user_factory,
+              arf, httpx_mock, mock_get_customization_request):
+        self.cp = channel_partner_factory()
+        self.cp_user = cp_user_factory(channel_partner=self.cp)
+        self.sub_cp = channel_partner_factory(parent_channel_partner=self.cp)
+        self.request = arf.post('/')
+        self.request.user = self.cp_user.user
+        self.context = {'request': self.request}
+        self.notification_url = f'https://{self.cp.cloud_host.hostname}/notifications/send'
+        httpx_mock.add_response(url=self.notification_url, status_code=200, json={})
+        mock_get_customization_request('default')
+
+    def test_update(self, httpx_mock):
+        request_data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(instance=self.sub_cp, data=request_data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": instance.confirmation.code
+        }
+
+        serializer = ChannelPartnerStateConfirmationSerializer(instance=self.sub_cp, data=request_data,
+                                                               context=self.context)
+        serializer.is_valid()
+        assert serializer.validated_data['state'] == ChannelPartnerStates.SHUTDOWN
+        instance = serializer.save()
+        data = serializer.data
+        assert data['id'] == str(self.sub_cp.id)
+        assert data['state'] == 'shutdown'
+        assert len(data) == 2
+        self.sub_cp.refresh_from_db()
+        assert self.sub_cp.state == ChannelPartnerStates.SHUTDOWN
+
+    def test_data(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(instance=self.sub_cp, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        changeId = instance.changeId
+        assert serializer.data['id'] == str(self.sub_cp.id)
+        assert serializer.data['changeId'] == str(changeId)
+        assert serializer.data['targetState'] == data['targetState']
+        assert re.match(r'^[A-Z0-9]{6}$', serializer.data['code'])
+
+    def test_expired_code(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(
+            instance=self.sub_cp, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+        confirmation = ActionConfirmation.objects.get(pk=instance.changeId)
+        confirmation.created_ts = timezone.now() - timedelta(days=1)
+        confirmation.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": confirmation.code
+        }
+
+        serializer = ChannelPartnerStateConfirmationSerializer(
+            instance=self.sub_cp, data=request_data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['code'][0] == "Provided confirmation code is expired."
+
+    def test_invalid_code(self):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(instance=self.sub_cp, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": '000000'
+        }
+
+        serializer = ChannelPartnerStateConfirmationSerializer(
+            instance=self.sub_cp, data=request_data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['code'][0] == "Provided confirmation code is invalid."
+
+    def test_different_user(self, cp_user_factory):
+        data = {
+            "targetState": "shutdown"
+        }
+        assert self.sub_cp.state == ChannelPartnerStates.ACTIVE
+
+        serializer = ChannelPartnerStateChangeSerializer(
+            instance=self.sub_cp, data=data, context=self.context)
+        serializer.is_valid()
+        instance = serializer.save()
+
+        request_data = {
+            "changeId": instance.changeId,
+            "code": ActionConfirmation.objects.get(pk=instance.changeId).code
+        }
+        user = cp_user_factory(channel_partner=self.cp)
+        self.request.user = user.user
+        serializer = ChannelPartnerStateConfirmationSerializer(
+            instance=self.sub_cp, data=request_data, context=self.context)
+        assert serializer.is_valid() is False
+        assert serializer.errors['code'][0] == "Provided confirmation code is invalid."

@@ -1,6 +1,9 @@
 import datetime
 import queue
 import uuid
+import enum
+import secrets
+import string
 from datetime import timedelta
 from enum import StrEnum
 from math import ceil
@@ -21,6 +24,7 @@ from django.utils import timezone
 from django_cte import CTEManager
 from rest_framework.authtoken.models import Token
 
+from partners.tasks.states import expire_confirmation
 from channel_partners.utils import FieldOriginalMixin
 from partners.utils.cache_keys import cache_key_cloud_system_group_children_count, cp_direct_children_count, \
     direct_organization_children_count, cp_monthly_charges, organization_system_count
@@ -634,7 +638,8 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     def has_perm(self, user: CloudUser, perm: str):
         allowed_role_uuid = self.allowed_role_uuid(perm)
-        return self.users.filter(pk=user.pk, channelpartnertouser__roles__overlap=allowed_role_uuid).exists()
+        return ChannelPartnerToUser.objects.filter(
+            user=user, roles__overlap=allowed_role_uuid, channel_partner=self).exists()
 
     def can_access(self, user: CloudUser):
         return ((self.users.filter(pk=user.pk).exists()
@@ -672,6 +677,11 @@ class ChannelPartner(FieldOriginalMixin, ChannelPartnerStates, models.Model):
 
     def can_alter_sub_channel_partner_state(self, user: CloudUser):
         return self.has_perm(user, ChannelPartnerPermissions.alter_state_sub_channel_partners)
+
+    def can_alter_state(self, user: CloudUser):
+        # switch to calculation on current instance instead of calling parent's one
+        if self.parent_channel_partner:
+            return self.parent_channel_partner.can_alter_sub_channel_partner_state(user)
 
     def can_alter_organization_state(self, user: CloudUser):
         return self.has_perm(user, ChannelPartnerPermissions.alter_state_organizations)
@@ -1165,6 +1175,9 @@ class Organization(FieldOriginalMixin, ChannelPartnerAccessLevel, ChannelPartner
 
     def can_access_systems(self, user: CloudUser):
         return self.has_perm(user, OrganizationPermissions.access_systems)
+
+    def can_alter_state(self, user: CloudUser):
+        return self.channel_partner.can_alter_organization_state(user)
 
     @property
     def all_services(self):
@@ -1858,3 +1871,119 @@ def get_roles_with_vms_perms() -> Dict[uuid.UUID | str, dict]:
         uid: role for uid, role in get_organization_roles().items()
         if isinstance(uid, uuid.UUID) and role.get('system_role_uuid')
     }
+
+
+def gen_confirmation_code():
+    return ''.join([
+        secrets.choice(string.ascii_uppercase + string.digits)
+        for _ in range(settings.CONFIRMATION_CODE_LEN)
+    ])
+
+
+class ConfirmationCodeInvalid(Exception):
+    pass
+
+
+class ActionConfirmation(models.Model):
+    class ConfirmationActionType(models.IntegerChoices):
+        PARTNER_STATE_CHANGE = 0, 'Channel Partner State Change'
+        ORGANIZATION_STATE_CHANGE = 1, 'Channel Partner State Change'
+
+    class ConfirmationState(models.IntegerChoices):
+        PENDING = 0, 'pending'
+        CONFIRMED = 10, 'confirmed'
+        EXPIRED = 20, 'expired'
+
+    EXPIRATION = {
+        ConfirmationActionType.ORGANIZATION_STATE_CHANGE: 60*60,
+        ConfirmationActionType.PARTNER_STATE_CHANGE: 60*60,
+    }
+
+    id = models.UUIDField(primary_key=True, editable=False, default=uuid.uuid4)
+    state = models.IntegerField(choices=ConfirmationState.choices, default=ConfirmationState.PENDING)
+    action = models.IntegerField(choices=ConfirmationActionType.choices)
+    target_id = models.UUIDField()
+    changes = models.JSONField(null=True)
+    code = models.CharField(max_length=40, default=gen_confirmation_code)
+    created_ts = models.DateTimeField(auto_now_add=True)
+    created_by = models.EmailField()
+    confirmed_ts = models.DateTimeField(null=True)
+
+    def save(
+        self, force_insert=False, force_update=False, using=None, update_fields=None
+    ):
+        new = self._state.adding
+        if new:
+            ActionConfirmation.objects.filter(
+                action=self.action, target_id=self.target_id,
+                state=self.ConfirmationState.PENDING, created_by=self.created_by
+            ).update(state=self.ConfirmationState.EXPIRED)
+        super().save(force_insert=force_insert, force_update=force_update,
+                     using=using, update_fields=update_fields)
+
+    @property
+    def is_expired(self) -> bool:
+        expiring_at = self.created_ts + timedelta(seconds=self.EXPIRATION[self.action])
+        return timezone.now() > expiring_at
+
+    @classmethod
+    def confirm_and_get_changes(cls, confirmation_id: uuid.UUID, action: int, code: str,
+                                target_id: uuid.UUID, confirmed_by: CloudUser) -> dict:
+        confirmation = cls.objects.filter(
+            pk=confirmation_id, action=action,
+            target_id=target_id, code=code,
+            state=cls.ConfirmationState.PENDING,
+            created_by=confirmed_by.email
+        ).order_by('-created_ts').first()
+
+        if not confirmation:
+            raise ConfirmationCodeInvalid("Provided confirmation code is invalid.")
+        if confirmation.is_expired:
+            # Must be tested when celery will be available on cloud instance
+            expire_confirmation.apply_async(args=(confirmation.id,))
+            raise ConfirmationCodeInvalid("Provided confirmation code is expired.")
+        confirmation.state = cls.ConfirmationState.CONFIRMED
+        confirmation.confirmed_ts = timezone.now()
+        confirmation.save()
+        # Make all pending confirmations for the target and action expired
+        cls.objects.filter(
+            state=cls.ConfirmationState.PENDING,
+            target_id=confirmation.target_id,
+            action=confirmation.action
+        ).exclude(id=confirmation.id).update(state=cls.ConfirmationState.EXPIRED)
+        return confirmation.changes
+
+    def get_notification_type(self) -> str | None:
+        match self.action:
+            case self.ConfirmationActionType.ORGANIZATION_STATE_CHANGE:
+                return NotificationTypes.cps_organization_state_confirmation
+            case self.ConfirmationActionType.PARTNER_STATE_CHANGE:
+                return NotificationTypes.cps_partner_state_confirmation
+
+    def get_state_confirmation_message(self) -> dict:
+        message = {
+            'status_name': dict(ChannelPartnerStates.STATE_CHOICES)[self.changes['targetState']],
+            'code': self.code
+        }
+        match self.action:
+            case self.ConfirmationActionType.ORGANIZATION_STATE_CHANGE:
+                message['organization_name'] = Organization.objects.get(pk=self.target_id).name
+            case self.ConfirmationActionType.PARTNER_STATE_CHANGE:
+                message['partner_name'] = ChannelPartner.objects.get(pk=self.target_id).name
+        return message
+
+
+class NotificationTypes(enum.StrEnum):
+    cps_organization_invite = 'cps_organization_invite'
+    cps_organization_share = 'cps_organization_share'
+    cps_organization_state_active = 'cps_organization_state_active'
+    cps_organization_state_confirmation = 'cps_organization_state_confirmation'
+    cps_organization_state_suspended = 'cps_organization_state_suspended'
+    cps_partner_invite = 'cps_partner_invite'
+    cps_partner_share = 'cps_partner_share'
+    cps_partner_state_active = 'cps_partner_state_active'
+    cps_partner_state_confirmation = 'cps_partner_state_confirmation'
+    cps_partner_state_suspended = 'cps_partner_state_suspended'
+
+
+
