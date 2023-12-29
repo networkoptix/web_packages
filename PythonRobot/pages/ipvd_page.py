@@ -88,7 +88,6 @@ class IPVDTable(Table):
 
 class FeedbackForm:
 
-
     def __init__(self, driver, lang="en_US"):
         self.driver = driver
         self.rb = RobotVariables(lang)
