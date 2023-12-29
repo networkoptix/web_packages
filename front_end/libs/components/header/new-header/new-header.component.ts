@@ -34,37 +34,30 @@ export class NxNewHeaderComponent {
 
     constructor(
         public headerService: NxHeaderService,
-        menusService: NxMenusService,
-        router: Router,
+        private menusService: NxMenusService,
+        private router: Router,
         private scrollMechanicsService: NxScrollMechanicsService,
         systemsService: NxSystemsService,
         private store: Store,
     ) {
-        menusService.currentSystemNode$
+        this.menusService.currentSystemNode$
             .pipe(
                 filter(node => !!node),
                 untilDestroyed(this),
             )
-            .subscribe(node => {
-                if (
-                    router.url.includes('systems') &&
-                    (this.selectedNode?.url !== node.url ||
-                        this.selectedNode.nodes.length !== node.nodes.length)
-                ) {
-                    // specific system page
-                    this.selectedNode = cloneDeep({ ...node, name: 'systems' });
-                }
+            .subscribe(() => {
+                this.showActiveSystem();
             });
 
         this.headerService.nodes$.pipe(untilDestroyed(this)).subscribe(nodes => {
             this.displayedNodes = nodes;
             this.selectedNode = this.findNodeBasedOnURL(
                 nodes,
-                this.headerService.currentLocation?.path || router.url,
+                this.headerService.currentLocation?.path || this.router.url,
             );
         });
 
-        router.events
+        this.router.events
             .pipe(
                 filter(event => event instanceof NavigationEnd),
                 untilDestroyed(this),
@@ -74,6 +67,7 @@ export class NxNewHeaderComponent {
                     this.displayedNodes,
                     this.headerService.currentLocation?.path,
                 );
+                this.showActiveSystem();
             });
 
         this.scrollMechanicsService.windowSizeSubject
@@ -91,6 +85,19 @@ export class NxNewHeaderComponent {
             !(this.selectedNode?.url.includes('/systems') && node.url.includes('/systems'))
         ) {
             this.selectedNode = node;
+        }
+    }
+
+    showActiveSystem(): void {
+        const activeSystemNode = this.menusService.currentSystemNode$.getValue();
+        if (
+            activeSystemNode &&
+            this.router.url.includes('systems/') &&
+            (this.selectedNode?.url !== activeSystemNode.url ||
+                this.selectedNode.nodes.length !== activeSystemNode.nodes.length)
+        ) {
+            // specific system page
+            this.selectedNode = cloneDeep({ ...activeSystemNode, name: 'systems' });
         }
     }
 
