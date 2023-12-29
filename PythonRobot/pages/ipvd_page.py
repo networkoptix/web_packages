@@ -7,6 +7,8 @@ from selenium.webdriver.remote.webelement import WebElement
 
 from RobotVariables import RobotVariables
 from generic_elements import Button
+from generic_elements import DropDown
+from generic_elements import DropDownOption
 from generic_elements import Link
 from generic_elements import PageText
 from generic_elements import Pane
@@ -50,7 +52,7 @@ class IPVDTable(Table):
 
     def _get_data(self, manufacturer: str) -> List[list]:
         data = []
-        rows = self.driver.find_elements(By.XPATH, '//div[contains(@class, "big-row analytics")]')
+        rows = self.driver.find_elements(By.XPATH, '//div[contains(@class, "big-row ng-star-inserted")]')
         for row in rows:
             data_row = []
             items = row.find_elements(By.XPATH, f"//*[starts-with(@id, '{manufacturer}')]")
@@ -149,6 +151,49 @@ class IVPDPage:
         self.validate_on_ipvd_page()
         self.base_url = self.rb.ENV + '/ipvd'
         self.filters = "//nx-ipvd//nx-search/div/div"
+        self._advanced_features = "//nx-ipvd//nx-search/div/div//div/label[text()='Features']/.."
+
+    def advanced_features_audio_button(self) -> Button:
+        path = self.rb.replace_nested_variables(
+            "//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_AUDIO}')"
+            "and not(contains(text(),'{IPVD_ADV_FEATURE_2-WAY_AUDIO}'))]/.."
+            )
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_2way_audio_button(self) -> Button:
+        path = self.rb.replace_nested_variables("//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_TWO_WAY_AUDIO}')]/..")
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_advanced_ptz_button(self) -> Button:
+        path = self.rb.replace_nested_variables("//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_ADV_PTZ}')]/..")
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_advanced_ptz_close_button(self) -> Button:
+        return Button(self.driver, '//a[@name="tag-Advanced PTZ"]/span')
+
+    def advanced_features_fisheye_button(self) -> Button:
+        path = self.rb.replace_nested_variables("//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_FISHEYE}')]/..")
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_h265_button(self) -> Button:
+        path = self.rb.replace_nested_variables("//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_H265}')]/..")
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_motion_button(self) -> Button:
+        return Button(self.driver, self._advanced_features)
+
+    def advanced_features_multi_sensor(self) -> Button:
+        path = self.rb.replace_nested_variables("//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_MULTI_SENSOR}')]/..")
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_ptz_button(self) -> Button:
+        path = self.rb.replace_nested_variables("//nx-tag/a[contains(text(),'{IPVD_ADV_FEATURE_PTZ}')"
+                                                "and not(contains(text(),'{IPVD_ADV_FEATURE_ADV_PTZ}'))]/..")
+        return Button(self.driver, self._advanced_features + path)
+
+    def advanced_features_ptz_close_button(self) -> Button:
+        xpath = self.advanced_features_ptz_button().locator + "//span[contains(@class,'close-button')]"
+        return Button(self.driver, xpath)
 
     def get_active_page_number(self) -> int:
         self.get_pagination().wait_until_visible()
@@ -163,7 +208,7 @@ class IVPDPage:
         return Button(self.driver, ipvd_adv_features_close_button)
 
     def advanced_search_button(self) -> Button:
-        locator = "//span[contains(text(),'{IPVD_ADV_SEARCH_BUTTON_TEXT}')]/.."
+        locator = "//span[contains(text(),'{IPVD_ADV_SEARCH_BUTTON_TEXT}')]"
         adv_search_button = self.rb.replace_nested_variables(locator)
         return Button(self.driver, adv_search_button)
 
@@ -248,6 +293,33 @@ class IVPDPage:
         manufacturers_pane = "//nx-ipvd//nx-vendor-list/nx-block[@id='vendors-block']"
         return Pane(self.driver, manufacturers_pane)
 
+    def manufactures_dropdown(self) -> DropDown:
+        return DropDown(self.driver, '//*[@id="vendors"]')
+
+    def manufactures_dropdown_select(self, item: str) -> None:
+        dropdown = self.driver.find_element(By.XPATH, self.manufactures_dropdown().locator)
+        dropdown.click()
+        label_xpath = f"//label[@for='vendors-{item}']"
+        label = self.driver.find_element(By.XPATH, label_xpath)
+        self.driver.execute_script("arguments[0].click();", label)
+
+    def minimum_resolution_dropdown(self) -> DropDown:
+        return DropDown(self.driver, '//*[@id="resolution"]')
+
+    def minimum_resolution_dropdown_deployed(self) -> DropDown:
+        xpath = "//div[@class='dropdown-menu' and contains(@style, 'display: inline-block;')]"
+        return DropDown(self.driver, xpath)
+
+    def minimum_resolution_dropdown_selection(self) -> DropDownOption:
+        xpath = "//button[@id='resolution']//span[@class='ellipsis ng-star-inserted']"
+        return DropDownOption(self.driver, xpath)
+
+    def minimum_resolution_select(self, resolution: str) -> None:
+        xpath = f"//a[.//span[contains(text(), '{resolution}')]]"
+        resolution_option = self.driver.find_element(By.XPATH, xpath)
+        self.driver.execute_script("arguments[0].click();", resolution_option)
+        self.manufactures_dropdown().click()
+
     def next_page_button(self) -> Button:
         xpath = '//*[@id="paginator-next"]'
         return Button(self.driver, xpath)
@@ -308,6 +380,18 @@ class IVPDPage:
         self.get_pagination().wait_until_not_visible()
         self.export_to_csv_link().wait_until_not_visible()
 
+    def types_dropdown(self) -> DropDown:
+        return DropDown(self.driver, '//*[@id="hardwareTypes"]')
+
+    def type_dropdown_choose(self, item: str) -> None:
+        dropdown = self.driver.find_element(By.XPATH, self.types_dropdown().locator)
+        dropdown.click()
+        checkbox_id = f"hardwareTypes-{item.lower()}"
+        checkbox_xpath = f"//input[@id='{checkbox_id}']"
+        checkbox = self.driver.find_element(By.XPATH, checkbox_xpath)
+        self.driver.execute_script("arguments[0].click();", checkbox)
+        dropdown.click()
+
     def validate_device_column_content(self, querystring: str) -> None:
         """Validate IPVD Device Table Column contains Desired Value in all Rows."""
         table = IPVDTable(self.driver)
@@ -332,6 +416,34 @@ class IVPDPage:
         row_count = table.row_count()
         if not row_count:
             return False
+        return True
+
+    def validate_advanced_search_is_closed(self) -> bool:
+        self.advanced_search_button().wait_until_visible()
+        self.search_bar().click()
+        self.minimum_resolution_dropdown().wait_until_not_visible()
+        self.types_dropdown().wait_until_not_visible()
+        self.advanced_features_audio_button().wait_until_not_visible()
+        self.advanced_features_2way_audio_button().wait_until_not_visible()
+        self.advanced_features_advanced_ptz_button().wait_until_not_visible()
+        self.advanced_features_fisheye_button().wait_until_not_visible()
+        self.advanced_features_motion_button().wait_until_not_visible()
+        self.advanced_features_h265_button().wait_until_not_visible()
+        self.advanced_features_multi_sensor().wait_until_not_visible()
+        return True
+
+    def validate_advanced_search_is_open(self) -> bool:
+        self.advanced_search_button().wait_until_visible()
+        self.search_bar().click()
+        self.minimum_resolution_dropdown().wait_until_visible()
+        self.types_dropdown().wait_until_visible()
+        self.advanced_features_audio_button().wait_until_visible()
+        self.advanced_features_2way_audio_button().wait_until_visible()
+        self.advanced_features_advanced_ptz_button().wait_until_visible()
+        self.advanced_features_fisheye_button().wait_until_visible()
+        self.advanced_features_motion_button().wait_until_visible()
+        self.advanced_features_h265_button().wait_until_visible()
+        self.advanced_features_multi_sensor().wait_until_visible()
         return True
 
     def validate_device_table_has_contents(self, include_last=True) -> bool:

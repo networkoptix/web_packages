@@ -131,6 +131,12 @@ class Element:
                 raise ElementNotClickable(f'Element locator: {self._locator}')
             time.sleep(.1)
 
+    def has_style(self, style: str, style_property: str):
+        current_property = self.value_of_css_property(style)
+        if style_property == current_property:
+            return
+        raise ElementStyleIncorrect(f'Element locator: {self._locator} has style {current_property} instead of {style_property}')
+
     def wait_until_not_clickable(self, timeout: float = _DEFAULT_TIMEOUT):
         started_at = time.monotonic()
         while True:
@@ -229,4 +235,8 @@ class ElementInDOM(Exception):
 
 
 class ElementTextIncorrect(Exception):
+    pass
+
+
+class ElementStyleIncorrect(Exception):
     pass

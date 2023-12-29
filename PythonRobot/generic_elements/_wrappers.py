@@ -34,6 +34,9 @@ class Button:
     def should_contain(self, text: str):
         self._element.should_contain(text)
 
+    def get_attribute(self, attribute: str) -> Optional[str]:
+        return self._element.get_attribute(attribute)
+
     def get_text(self):
         if self._element.text():
             return self._element.text()
@@ -41,6 +44,9 @@ class Button:
             return self._element.get_attribute("value")
         else:
             raise RuntimeError("Element had no text")
+
+    def value_of_css_property(self, style_property: str):
+        return self._element.value_of_css_property(style_property)
 
     def wait_until_visible(self, timeout: float = 5):
         self._element.wait_until_visible(timeout)
@@ -53,6 +59,9 @@ class Button:
 
     def wait_until_not_clickable(self, timeout: float = 5):
         self._element.wait_until_not_clickable(timeout)
+
+    def has_style(self, style: str, style_property: str):
+        self._element.has_style(style, style_property)
 
     def is_enabled(self) -> bool:
         self._element.wait_until_visible()
@@ -407,6 +416,7 @@ class DropDown:
 
     def __init__(self, driver: WebDriver, locator):
         self._driver = driver
+        self.locator = locator
         self._element = Element(self._driver, locator)
 
     def wait_until_visible(self, timeout: float = 5):
@@ -430,6 +440,9 @@ class DropDown:
     def wait_until_clickable(self, timeout_sec: float = 5):
         self._element.wait_until_clickable(timeout_sec)
 
+    def should_contain(self, text: str) -> bool:
+        return self._element.should_contain(text)
+
     def is_visible(self):
         self._element.is_visible()
 
@@ -439,6 +452,7 @@ class DropDownOption:
     # TODO: Move functionality to DropDown class.
 
     def __init__(self, driver: WebDriver, locator):
+        self.locator = locator
         self._driver = driver
         self._element = Element(self._driver, locator)
 
@@ -450,6 +464,9 @@ class DropDownOption:
 
     def click(self):
         self._element.click()
+
+    def text(self) -> str:
+        return self._element.text()
 
     def is_visible(self):
         return self._element.is_visible()

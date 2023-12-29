@@ -275,6 +275,96 @@ def text_search_filter():
         assert ipvd_page.get_device_manufacturer() == manufacturer
 
 
+def advanced_search():
+    with get_chrome() as driver:
+        button_text = '2 ' + rb.IPVD_FILTERS_APPLIED_TEXT
+        manufacturer = '3S'
+        # Step 1
+        ipvd_page = IVPDPage(driver)
+        ipvd_page.go_to_ipvd()
+        assert ipvd_page.validate_advanced_search_is_closed()
+        before_color = ipvd_page.advanced_search_button().value_of_css_property('color')
+        ipvd_page.advanced_search_button().click()
+        after_color = ipvd_page.advanced_search_button().value_of_css_property('color')
+        assert before_color != after_color
+        assert ipvd_page.validate_advanced_search_is_open()
+        # Step 2
+        ipvd_page.advanced_features_ptz_button().click()
+        ipvd_page.advanced_features_ptz_button().has_style('color', 'rgba(43, 56, 63, 1)')
+        ipvd_page.advanced_features_ptz_close_button().wait_until_visible()
+        # Step 3
+        ipvd_page.ipvd_table().wait_until_visible()
+        ipvd_page.minimum_resolution_dropdown().click()
+        ipvd_page.minimum_resolution_dropdown_deployed().wait_until_visible()
+        ipvd_page.minimum_resolution_select('1080p')
+        assert ipvd_page.minimum_resolution_dropdown_selection().text() == '1080p'
+        ipvd_page.advanced_features_advanced_ptz_button().wait_until_visible()
+        ipvd_page.advanced_search_button().click()
+        ipvd_page.filters_applied_button().wait_until_visible()
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().should_contain(button_text)
+        # step 4
+        ipvd_page.advanced_search_button().click()
+        ipvd_page.advanced_features_ptz_close_button().wait_until_visible()
+        ipvd_page.advanced_features_ptz_close_button().click()
+        ipvd_page.advanced_features_ptz_close_button().wait_until_not_visible()
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().wait_until_visible()
+        ipvd_page.filters_applied_button().should_contain('Minimum Resolution – 1080p')
+        # step 5
+        ipvd_page.manufactures_dropdown().click()
+        ipvd_page.manufactures_dropdown_select(manufacturer)
+        ipvd_page.manufactures_dropdown().should_contain(manufacturer)
+        ipvd_page.filters_applied_button().wait_until_visible()
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().should_contain(button_text)
+        ipvd_page.select_device_from_table_randomly()
+        assert ipvd_page.get_device_manufacturer() == manufacturer
+        # Step 6
+        ipvd_page.manufactures_dropdown_select('2M Technology')
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.manufactures_dropdown().should_contain('2 ' + rb.IPVD_FILTERS_SELECTED_TEXT)
+        ipvd_page.filters_applied_button().should_contain('3 ' + rb.IPVD_FILTERS_APPLIED_TEXT)
+        ipvd_page.table_has_rows()
+        # step 7
+        ipvd_page.type_dropdown_choose(rb.IPVD_ADV_TYPE_CAMERA)
+        ipvd_page.types_dropdown().should_contain(rb.IPVD_ADV_TYPE_CAMERA)
+        ipvd_page.type_dropdown_choose(rb.IPVD_ADV_TYPE_ENCODER)
+        ipvd_page.types_dropdown().should_contain('2 ' + rb.IPVD_FILTERS_SELECTED_TEXT)
+        ipvd_page.type_dropdown_choose(rb.IPVD_ADV_TYPE_DVR)
+        ipvd_page.types_dropdown().should_contain('3 ' + rb.IPVD_FILTERS_SELECTED_TEXT)
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().should_contain('6 ' + rb.IPVD_FILTERS_APPLIED_TEXT)
+        ipvd_page.table_has_rows()
+        # step 8
+        ipvd_page.advanced_search_button().click()
+        ipvd_page.validate_advanced_search_is_closed()
+        ipvd_page.filters_applied_button().should_contain('6 ' + rb.IPVD_FILTERS_APPLIED_TEXT)
+        ipvd_page.table_has_rows()
+        # step 9
+        ipvd_page.select_device_from_table_randomly()
+        ipvd_page.device_details().wait_until_visible()
+        # step 10
+        ipvd_page.get_advanced_features_button().click()
+        ipvd_page.validate_on_ipvd_page()
+        ipvd_page.advanced_search_button().click()
+        ipvd_page.validate_advanced_search_is_open()
+        ipvd_page.advanced_features_2way_audio_button().click()
+        ipvd_page.advanced_features_ptz_button().click()
+        ipvd_page.filters_applied_button().wait_until_visible()
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().should_contain('2 ' + rb.IPVD_FILTERS_APPLIED_TEXT)
+        # step 11
+        ipvd_page.advanced_features_advanced_ptz_button().click()
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().should_contain('3 ' + rb.IPVD_FILTERS_APPLIED_TEXT)
+        # step 12
+        ipvd_page.advanced_features_advanced_ptz_close_button().click()
+        ipvd_page.advanced_features_advanced_ptz_close_button().wait_until_not_visible()
+        time.sleep(1)  # needed to allow button text to refresh
+        ipvd_page.filters_applied_button().should_contain('2 ' + rb.IPVD_FILTERS_APPLIED_TEXT)
+
+
 if __name__ == "__main__":
     with Suite() as suite:
         cloud_user = suite.create_cloud_account()
@@ -287,3 +377,4 @@ if __name__ == "__main__":
         feedback_form_basic_validations(cloud_user.email, cloud_user.password)
         test_text_search(cloud_user.email, cloud_user.password)
         text_search_filter()
+        advanced_search()
