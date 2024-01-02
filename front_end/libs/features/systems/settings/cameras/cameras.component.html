@@ -250,16 +250,13 @@
                 [enableMotion]="recordingSettings?.enableMotion"
                 [disableMotion]="recordingSettings?.disableMotion"
                 [resetSensitivity]="resetSensitivity"
-                [toggleMotionGrid]="toggleMotionGrid"
-                (updateMask)="updateMask($event)"
                 [sensitivityButtons$]="sensitivityButtons$"
-                [motionGridChangeWatcher]="motionGridChangeWatcher"
-                [motionMaskWatcher]="motionMaskWatcher"
                 [healthImageUrl]="preview$"
                 [selectedRotation]="selectedRotationWatcher.value || 0"
                 [selectedAspectRatio]="selectedAspectWatcher.value || aspectRatioOptions['16:9']"
                 [imageState]="camera.status"
                 [overlayEnabled]="overlayEnabled()"
+                [(motionMaskString)]="motionMaskWatcher.value"
             ></nx-motion-detection-settings>
         </ng-container>
     </ng-container>

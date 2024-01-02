@@ -107,7 +107,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         return (
             !this.isMobile &&
             !!this.camera &&
-            !!this.motionMask &&
+            !!this.motionMaskWatcher.value &&
             this.camera.status !== CameraStatus.Offline &&
             this.camera.status !== CameraStatus.Unauthorized
         );
@@ -135,7 +135,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
     settingsDisabled = false;
     settingsRecordingDisabled = true;
 
-    motionGridChangeWatcher = new Watcher<boolean>();
     cameraNameWatcher = new Watcher<string>();
     selectedAspectWatcher = new Watcher<number | null>();
     selectedRotationWatcher = new Watcher<number>();
@@ -197,14 +196,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     set audioEnabled(value: boolean) {
         this.audioEnabledWatcher.value = value;
-    }
-
-    private get motionMask(): string {
-        return this.motionMaskWatcher.value;
-    }
-
-    private set motionMask(value: string) {
-        this.motionMaskWatcher.value = value;
     }
 
     private set motionType(value: MotionType) {
@@ -274,8 +265,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 }
             });
 
-        this.motionGridChangeWatcher.originalValue = false;
-
         this.setPreviewImage();
     }
 
@@ -284,13 +273,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             this.viewContainerRef,
             this.saveSettingsProcess,
             () => {
-                this.toggleMotionGrid();
-                this.motionMaskWatcher.reset = function () {
-                    // Force change detection
-                    setTimeout(() => {
-                        this.value = this.originalValue;
-                    });
-                };
                 this.applyService.reset();
             },
             [
@@ -304,7 +286,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 this.selectedRotationWatcher,
                 this.motionEnabledWatcher,
                 this.motionMaskWatcher,
-                this.motionGridChangeWatcher,
             ],
         );
     }
@@ -373,7 +354,7 @@ export class NxCamerasComponent implements OnInit, OnChanges {
             audioEnabled: this.audioEnabledWatcher.value,
             scheduleEnabled: this.recordingWatcher.value,
             motionType: this.motionType,
-            motionMask: this.motionMask || settingsConfig.defaultMotionMask,
+            motionMask: this.motionMaskWatcher.value || settingsConfig.defaultMotionMask,
         };
         const overrideAr =
             this.selectedAspectWatcher.value === this.camera.defaultRatio
@@ -394,7 +375,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                     const newNxSystemCamera = this.system.cameraManager.parseCamera(updatedCamera);
                     this.camera = newNxSystemCamera;
                     this.setCamera();
-                    this.toggleMotionGrid();
                     // this updates the menu with any changes. we should look to avoid this pattern
                     this.system.systemInfo = this.system;
                     return newNxSystemCamera;
@@ -444,16 +424,12 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         });
     }
 
-    toggleMotionGrid(): void {
-        this.sensitivityButtons$.next(false);
-    }
-
     resetSensitivity(): void {
         this.sensitivityButtons$.next('reset');
     }
 
     updateMask(maskString: string): void {
-        this.motionMask = maskString;
+        this.motionMaskWatcher.value = maskString;
     }
 
     private setCamera = async (): Promise<void> => {
@@ -526,7 +502,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         this.updateAlerts();
 
         this.setWatcherDefaults({
-            motionGridChange: false,
             cameraName: this.cameraName,
             selectedAspect: this.selectedAspectWatcher.value,
             selectedRotation: this.selectedRotationWatcher.value,
@@ -545,7 +520,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
 
     // TODO: Temporary until we remove watchers
     private setWatcherDefaults({
-        motionGridChange,
         cameraName,
         selectedAspect,
         selectedRotation,
@@ -557,7 +531,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         motionEnabled,
         motionMask,
     }: {
-        motionGridChange: boolean;
         cameraName: string;
         selectedAspect: number;
         selectedRotation: number;
@@ -569,7 +542,6 @@ export class NxCamerasComponent implements OnInit, OnChanges {
         motionEnabled: MotionType;
         motionMask: string;
     }): void {
-        this.motionGridChangeWatcher.originalValue = motionGridChange;
         this.cameraNameWatcher.originalValue = cameraName;
         this.selectedAspectWatcher.originalValue = selectedAspect;
         this.selectedRotationWatcher.originalValue = selectedRotation;

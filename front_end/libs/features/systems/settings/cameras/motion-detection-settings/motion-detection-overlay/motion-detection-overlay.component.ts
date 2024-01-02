@@ -28,7 +28,8 @@ import { MotionMaskState } from './MotionMaskState';
 export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked {
     @Input() height: number;
     @Input() width: number;
-    @Input() initialMask: string;
+    @Input() motionMaskString: string | undefined;
+    @Output() motionMaskStringChange = new EventEmitter<string>();
     @Input() rotation: number | string = 0;
     @Input() sensitivityButtons$: BehaviorSubject<number | boolean | 'reset'>;
     @ViewChild('motionCanvas') motionCanvas: ElementRef<HTMLCanvasElement>;
@@ -36,8 +37,8 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
     @HostListener('contextmenu', ['$event'])
     preventContext = (event: Event): void => event.preventDefault();
     unsub$: Subject<boolean> = new Subject();
-    motionMask: MotionMaskState;
-    motionMaskRenderer: MotionMaskRenderer;
+    motionMask: MotionMaskState | undefined;
+    motionMaskRenderer: MotionMaskRenderer | undefined;
     readonly cameraSettings = {
         sensitivityColors: [
             '#FFFFFF',
@@ -53,8 +54,6 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         ],
     };
 
-    @Output() updateMask: EventEmitter<string> = new EventEmitter();
-
     constructor(private deviceService: DeviceDetectorService) {
         this.firstCanvasSubject.pipe(take(1), takeUntilDestroyed()).subscribe(() => {
             setTimeout(() => {
@@ -67,17 +66,29 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
         this.initMask();
     }
 
-    ngOnChanges({ initialMask, height, width }: NgChanges<NxMotionDetectionOverlay>): void {
-        const initialMaskChanged = initialMask && !initialMask.isFirstChange() && this.motionMask;
-        const heightChanged = height && !height.isFirstChange();
-        const widthChanged = width && !width.isFirstChange();
-        const changed = initialMaskChanged || heightChanged || widthChanged;
-        if (initialMaskChanged) {
-            this.motionMask.reInitialize(this.initialMask);
+    ngOnChanges({ motionMaskString, height, width }: NgChanges<NxMotionDetectionOverlay>): void {
+        if (this.motionMaskString === undefined) {
+            return;
+        }
+        const motionMaskStringDoesNotMatchMotionMaskState =
+            motionMaskString?.currentValue !== this.motionMask?.getMaskString();
+        const motionMaskStringWasChanged = !!motionMaskString;
+        const motionMaskWasUpdated =
+            motionMaskStringWasChanged && motionMaskStringDoesNotMatchMotionMaskState;
+
+        if (motionMaskWasUpdated) {
+            this.motionMask?.reInitialize(this.motionMaskString);
         }
 
-        if (changed && this.motionMaskRenderer && this.motionMaskRenderer.canvas) {
-            this.motionMaskRenderer.initCanvas(this.motionCanvas, this.selectionCanvas);
+        const heightChanged = height && !height.isFirstChange();
+        const widthChanged = width && !width.isFirstChange();
+        if (heightChanged || widthChanged) {
+            // TODO: Investigate how to remove this timeout
+            setTimeout(() => {
+                this.unsub$.next(true);
+                this.initMask();
+                this.initRenderer();
+            });
         }
     }
 
@@ -97,12 +108,15 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
 
     // Init methods
     private initMask(): void {
+        if (!this.motionMaskString) {
+            return;
+        }
         this.motionMask = new MotionMaskState(
-            this.initialMask,
+            this.motionMaskString,
             this.motionCanvas,
             this.sensitivityButtons$,
             this.unsub$,
-            this.updateMask,
+            this.motionMaskStringChange,
             this.rotation as number,
         );
     }
@@ -111,6 +125,9 @@ export class NxMotionDetectionOverlay implements OnChanges, AfterContentChecked 
      * Renderer has to be initialized after content checked, needs motionCanvas ref.
      */
     private initRenderer(): void {
+        if (!this.motionMask) {
+            return;
+        }
         this.motionMaskRenderer = new MotionMaskRenderer(
             this.motionMask,
             this.cameraSettings.sensitivityColors,
