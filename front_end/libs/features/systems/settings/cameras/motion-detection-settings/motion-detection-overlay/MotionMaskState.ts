@@ -29,17 +29,25 @@ export class MotionMaskState {
         this.maskMatrix = new BehaviorSubject(this.zonesToMatrix(parsedInitial));
 
         this.maskZones.pipe(skip(1), takeUntil(unsub$)).subscribe(zones => {
-            const matrix = this.rotateMatrix(this.zonesToMatrix(zones), 360 - this.rotation, true);
-            const latestZones = this.matrixToZones(matrix);
-            const maskString = latestZones
-                .map(
-                    ({ sensitivity, x, y, width, height }) =>
-                        `${sensitivity},${x},${y},${width},${height}`,
-                )
-                .join(';');
+            const maskString = this.getMaskString(zones);
             updateMask.emit(maskString);
         });
         this.initSensitivityButtons();
+    }
+
+    getMaskString(): string;
+    getMaskString(zones: Area[]): string;
+    getMaskString(zones?: Area[]): string {
+        const zonesToUse = zones || this.maskZones.value;
+        const matrix = this.rotateMatrix(this.zonesToMatrix(zonesToUse), 360 - this.rotation, true);
+        const latestZones = this.matrixToZones(matrix);
+        const maskString = latestZones
+            .map(
+                ({ sensitivity, x, y, width, height }) =>
+                    `${sensitivity},${x},${y},${width},${height}`,
+            )
+            .join(';');
+        return maskString;
     }
 
     /**
@@ -86,12 +94,13 @@ export class MotionMaskState {
                 return rotated.reverse();
             }
         }
+        return matrix;
     }
 
     initSensitivityButtons = (): void => {
         this.selectionZones.pipe(takeUntil(this.unsub$)).subscribe(zones => {
             if (zones.length && this.sensitivityButtons$.value === false) {
-                this.sensitivityButtons$.next(!!zones.length);
+                this.sensitivityButtons$.next(true);
             }
         });
         this.sensitivityButtons$.pipe(takeUntil(this.unsub$)).subscribe(sensitivity => {

@@ -49,7 +49,6 @@
                 class="m-3 preview-wrapper"
                 [style.height.px]="height"
                 (resize)="handleResize($event)"
-                (click)="lockGrid(true)"
             >
                 <div
                     class="position-relative mx-auto"
@@ -62,17 +61,16 @@
                         [preloader]="true"
                         [state]="imageState"
                         [url]="healthImageUrl | async"
-                        (loaded)="toggleMotionGrid()"
                         [lightBackground]="true"
                     ></nx-health-image>
                     <nx-motion-detection-overlay
                         *ngIf="overlayEnabled"
-                        (updateMask)="updateMask.emit($event)"
+                        [motionMaskString]="motionMaskString"
+                        (motionMaskStringChange)="motionMaskStringChange.emit($event)"
                         [height]="height"
                         [width]="width"
                         [rotation]="selectedRotation"
                         [sensitivityButtons$]="sensitivityButtons$"
-                        [initialMask]="motionMaskWatcher.value"
                     ></nx-motion-detection-overlay>
                 </div>
             </div>
