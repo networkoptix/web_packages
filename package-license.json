@@ -2818,14 +2818,6 @@
             "path": "cloud_portal/front_end/node_modules/@babel/types",
             "licenseFile": "cloud_portal/front_end/node_modules/@babel/types/LICENSE"
         },
-        "@bartholomej/ngx-translate-extract@8.0.2": {
-            "licenses": "MIT",
-            "repository": "https://github.com/biesbjerg/ngx-translate-extract",
-            "publisher": "Kim Biesbjerg",
-            "email": "kim@biesbjerg.com",
-            "path": "cloud_portal/front_end/node_modules/@bartholomej/ngx-translate-extract",
-            "licenseFile": "cloud_portal/front_end/node_modules/@bartholomej/ngx-translate-extract/LICENSE"
-        },
         "@bcoe/v8-coverage@0.2.3": {
             "licenses": "MIT",
             "repository": "https://github.com/demurgos/v8-coverage",
@@ -4268,14 +4260,6 @@
             "path": "cloud_portal/front_end/node_modules/@nx/workspace",
             "licenseFile": "cloud_portal/front_end/node_modules/@nx/workspace/LICENSE"
         },
-        "@phenomnomnominal/tsquery@4.2.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/phenomnomnominal/tsquery",
-            "publisher": "Craig Spence",
-            "email": "craigspence0@gmail.com",
-            "path": "cloud_portal/front_end/node_modules/@phenomnomnominal/tsquery",
-            "licenseFile": "cloud_portal/front_end/node_modules/@phenomnomnominal/tsquery/LICENSE"
-        },
         "@pkgjs/parseargs@0.11.0": {
             "licenses": "MIT",
             "repository": "https://github.com/pkgjs/parseargs",
@@ -4985,6 +4969,12 @@
             "path": "cloud_portal/front_end/node_modules/@types/eslint",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/eslint/LICENSE"
         },
+        "@types/esquery@1.5.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/esquery",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/esquery/LICENSE"
+        },
         "@types/estree@1.0.1": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
@@ -5239,6 +5229,20 @@
             "path": "cloud_portal/front_end/node_modules/@types/stack-utils",
             "licenseFile": "cloud_portal/front_end/node_modules/@types/stack-utils/LICENSE"
         },
+        "@types/strip-bom@3.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "publisher": "Mohamed Hegazy",
+            "email": "https://github.com/mhegazy",
+            "path": "cloud_portal/front_end/node_modules/@types/strip-bom",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/strip-bom/README.md"
+        },
+        "@types/strip-json-comments@0.0.30": {
+            "licenses": "MIT",
+            "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
+            "path": "cloud_portal/front_end/node_modules/@types/strip-json-comments",
+            "licenseFile": "cloud_portal/front_end/node_modules/@types/strip-json-comments/LICENSE"
+        },
         "@types/swagger-ui@3.52.0": {
             "licenses": "MIT",
             "repository": "https://github.com/DefinitelyTyped/DefinitelyTyped",
@@ -5353,6 +5357,14 @@
             "publisher": "Andrea Giammarchi",
             "path": "cloud_portal/front_end/node_modules/@ungap/structured-clone",
             "licenseFile": "cloud_portal/front_end/node_modules/@ungap/structured-clone/LICENSE"
+        },
+        "@vendure/ngx-translate-extract@9.0.3": {
+            "licenses": "MIT",
+            "repository": "https://github.com/vendure-ecommerce/ngx-translate-extract",
+            "publisher": "Kim Biesbjerg",
+            "email": "kim@biesbjerg.com",
+            "path": "cloud_portal/front_end/node_modules/@vendure/ngx-translate-extract",
+            "licenseFile": "cloud_portal/front_end/node_modules/@vendure/ngx-translate-extract/LICENSE"
         },
         "@videojs/http-streaming@2.14.2": {
             "licenses": "Apache-2.0",
@@ -5656,13 +5668,6 @@
             "publisher": "David Czeck",
             "path": "cloud_portal/front_end/node_modules/angular-svg-icon",
             "licenseFile": "cloud_portal/front_end/node_modules/angular-svg-icon/LICENSE"
-        },
-        "ansi-align@3.0.1": {
-            "licenses": "ISC",
-            "repository": "https://github.com/nexdrew/ansi-align",
-            "publisher": "nexdrew",
-            "path": "cloud_portal/front_end/node_modules/ansi-align",
-            "licenseFile": "cloud_portal/front_end/node_modules/ansi-align/LICENSE"
         },
         "ansi-colors@4.1.3": {
             "licenses": "MIT",
@@ -6076,15 +6081,6 @@
             "path": "cloud_portal/front_end/node_modules/bootstrap",
             "licenseFile": "cloud_portal/front_end/node_modules/bootstrap/LICENSE"
         },
-        "boxen@6.2.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/boxen",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/boxen",
-            "licenseFile": "cloud_portal/front_end/node_modules/boxen/license"
-        },
         "bplist-parser@0.2.0": {
             "licenses": "MIT",
             "repository": "https://github.com/nearinfinity/node-bplist-parser",
@@ -6428,15 +6424,6 @@
             "url": "sindresorhus.com",
             "path": "cloud_portal/front_end/node_modules/clean-stack",
             "licenseFile": "cloud_portal/front_end/node_modules/clean-stack/license"
-        },
-        "cli-boxes@3.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/cli-boxes",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/cli-boxes",
-            "licenseFile": "cloud_portal/front_end/node_modules/cli-boxes/license"
         },
         "cli-cursor@3.1.0": {
             "licenses": "MIT",
@@ -11603,14 +11590,6 @@
             "path": "cloud_portal/front_end/node_modules/path-type",
             "licenseFile": "cloud_portal/front_end/node_modules/path-type/license"
         },
-        "path@0.12.7": {
-            "licenses": "MIT",
-            "repository": "https://github.com/jinder/path",
-            "publisher": "Joyent",
-            "url": "http://www.joyent.com",
-            "path": "cloud_portal/front_end/node_modules/path",
-            "licenseFile": "cloud_portal/front_end/node_modules/path/LICENSE"
-        },
         "picocolors@1.0.0": {
             "licenses": "ISC",
             "repository": "https://github.com/alexeyraspopov/picocolors",
@@ -13751,15 +13730,6 @@
             "path": "cloud_portal/front_end/node_modules/supports-color",
             "licenseFile": "cloud_portal/front_end/node_modules/supports-color/license"
         },
-        "supports-hyperlinks@2.3.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/jamestalmage/supports-hyperlinks",
-            "publisher": "James Talmage",
-            "email": "james@talmage.io",
-            "url": "github.com/jamestalmage",
-            "path": "cloud_portal/front_end/node_modules/supports-hyperlinks",
-            "licenseFile": "cloud_portal/front_end/node_modules/supports-hyperlinks/license"
-        },
         "supports-preserve-symlinks-flag@1.0.0": {
             "licenses": "MIT",
             "repository": "https://github.com/inspect-js/node-supports-preserve-symlinks-flag",
@@ -13854,15 +13824,6 @@
             "email": "brwcodes@gmail.com",
             "path": "cloud_portal/front_end/node_modules/temp",
             "licenseFile": "cloud_portal/front_end/node_modules/temp/LICENSE"
-        },
-        "terminal-link@3.0.0": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/terminal-link",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/terminal-link",
-            "licenseFile": "cloud_portal/front_end/node_modules/terminal-link/license"
         },
         "terser-webpack-plugin@5.3.9": {
             "licenses": "MIT",
@@ -14142,6 +14103,15 @@
             "path": "cloud_portal/front_end/node_modules/tsconfig-paths",
             "licenseFile": "cloud_portal/front_end/node_modules/tsconfig-paths/LICENSE"
         },
+        "tsconfig@7.0.0": {
+            "licenses": "MIT",
+            "repository": "https://github.com/TypeStrong/tsconfig",
+            "publisher": "Blake Embrey",
+            "email": "hello@blakeembrey.com",
+            "url": "http://blakeembrey.me",
+            "path": "cloud_portal/front_end/node_modules/tsconfig",
+            "licenseFile": "cloud_portal/front_end/node_modules/tsconfig/LICENSE"
+        },
         "tslib@2.6.2": {
             "licenses": "0BSD",
             "repository": "https://github.com/Microsoft/tslib",
@@ -14203,15 +14173,6 @@
             "url": "http://alogicalparadox.com",
             "path": "cloud_portal/front_end/node_modules/type-detect",
             "licenseFile": "cloud_portal/front_end/node_modules/type-detect/LICENSE"
-        },
-        "type-fest@2.19.0": {
-            "licenses": "(MIT OR CC0-1.0)",
-            "repository": "https://github.com/sindresorhus/type-fest",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/type-fest",
-            "licenseFile": "cloud_portal/front_end/node_modules/type-fest/readme.md"
         },
         "type-is@1.6.18": {
             "licenses": "MIT",
@@ -14460,14 +14421,6 @@
             "url": "http://n8.io/",
             "path": "cloud_portal/front_end/node_modules/util-deprecate",
             "licenseFile": "cloud_portal/front_end/node_modules/util-deprecate/LICENSE"
-        },
-        "util@0.10.4": {
-            "licenses": "MIT",
-            "repository": "https://github.com/defunctzombie/node-util",
-            "publisher": "Joyent",
-            "url": "http://www.joyent.com",
-            "path": "cloud_portal/front_end/node_modules/util",
-            "licenseFile": "cloud_portal/front_end/node_modules/util/LICENSE"
         },
         "utils-merge@1.0.1": {
             "licenses": "MIT",
@@ -14795,15 +14748,6 @@
             "url": "http://re-becca.org/",
             "path": "cloud_portal/front_end/node_modules/wide-align",
             "licenseFile": "cloud_portal/front_end/node_modules/wide-align/LICENSE"
-        },
-        "widest-line@4.0.1": {
-            "licenses": "MIT",
-            "repository": "https://github.com/sindresorhus/widest-line",
-            "publisher": "Sindre Sorhus",
-            "email": "sindresorhus@gmail.com",
-            "url": "https://sindresorhus.com",
-            "path": "cloud_portal/front_end/node_modules/widest-line",
-            "licenseFile": "cloud_portal/front_end/node_modules/widest-line/license"
         },
         "wildcard@2.0.1": {
             "licenses": "MIT",
