@@ -297,7 +297,7 @@ export class NxHeaderComponent implements OnInit {
                         }
                     }
                 }
-                this.headerService.setLocation(window.location.pathname);
+
                 if (nxConfig.featureFlags.newHeader) {
                     if (!this.loginState) {
                         nodes.unshift(this.menusService.makeWelcomeNode());
@@ -309,7 +309,7 @@ export class NxHeaderComponent implements OnInit {
                 }
                 this.headerService.nodes = nodes;
 
-                this.headerService.setLocation(window.location.pathname);
+                this.headerService.setLocation(this.router.url);
             });
     }
 
