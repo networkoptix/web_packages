@@ -2034,5 +2034,10 @@
         "yellowLabel": "{hex} - yellow {label}",
         "lightLabel": "{hex} - light{number}",
         "darkLabel": "{hex} - dark{number}"
+    },
+    "customValidatorMsg": {
+        "siteInvalid": "URL is invalid",
+        "emailInvalid": "Email is invalid",
+        "phoneInvalid": "Phone number is invalid"
     }
 }

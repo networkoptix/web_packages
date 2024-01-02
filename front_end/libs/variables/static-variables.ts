@@ -14,8 +14,12 @@ import {
 export const alertTimeout: number = 3 * 1000; // Alerts are shown for 3 seconds
 export const longAlertTimeout: number = 6 * 1000; // Alerts are shown for 6 seconds
 export const apiBase: string = '/api';
+export const simplePhoneRegex: string =
+    '^(\\+\\s?[0-9]{1,6}\\s?)?[(]?[0-9]{3,6}[)]?[-\\s\\.]?[0-9]{3}[-\\s\\.]?[0-9]{4,6}$';
+export const simpleEmailRegex: string =
+    "^[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+(\\.[-!#$%&'*+/=?^_`{}|~0-9a-zA-Z]+)*@(?:[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?\\.)+[a-zA-Z]{2,63}\\.?$";
 export const simpleURLRegex: string =
-    '^(https:\\/\\/)?[a-zA-Z0-9@:%._\\+~#=]{2,256}(\\.[a-z]{2,6})?:[0-9]{2,6}$';
+    '^(https?:\\/\\/)?(www\\.)?[-a-zA-Z0-9@:%._\\+~#=]{1,256}\\.[a-zA-Z0-9()]{1,6}\\b([-a-zA-Z0-9()!@:%_\\+.~#?&\\/\\/=]*)$';
 export const buildFromEnv: string = '{{BUILD}}'.trim();
 export const buildSubstituted: boolean = buildFromEnv && !buildFromEnv.includes('BUILD');
 export const staticBase: string =

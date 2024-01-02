@@ -11,6 +11,7 @@ import { NxContentBlockSectionComponent } from '@components/content-block/sectio
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { PAGE_PLACEHOLDER } from '@components/placeholders/pageV2/page-placeholder.types';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import { NxValidators } from '@libs/validators/input-validators';
 import { NxInfoGroupComponent } from '@pages/home/components/information/info-form/info-form.component';
 import { CPInfo, InfoRow } from '@pages/home/components/information/information.types';
 import { selectCurrentPartnerInfo } from '@pages/home/store/channel-partners/channel-partners.selectors';
@@ -37,34 +38,6 @@ import { icons } from '@static-variables';
 //     ],
 // };
 
-const mockInfo: CPInfo = {
-    sites: [
-        {
-            link: { value: 'www.test.com', validation: [Validators.required] },
-            descr: { value: 'Main site', validation: [] },
-        },
-        {
-            link: { value: 'www.test.com/support', validation: [Validators.required] },
-            descr: {
-                value: 'Support site for suggestions, complaints and death wishes.',
-                validation: [],
-            },
-        },
-    ],
-    phones: [
-        {
-            link: { value: '(555) 523-4567', validation: [Validators.required] },
-            descr: { value: 'Main support line. Ask AI for Neil.', validation: [] },
-        },
-    ],
-    emails: [
-        {
-            link: { value: 'omg@test.com', validation: [Validators.required, Validators.email] },
-            descr: { value: 'Dead email. No one is checking it.', validation: [] },
-        },
-    ],
-};
-
 const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
 
 @Component({
@@ -84,18 +57,60 @@ const mockSystems = ['sys1', 'sys2', 'sys3', 'sys4', 'sys5'];
     ],
 })
 export class NxChannelPartnerInformationComponent implements OnInit {
+    information: CPInfo = {
+        sites: [
+            {
+                link: {
+                    value: 'www.test.com',
+                    validation: [Validators.required, this.nxValidators.URL()],
+                },
+                descr: { value: 'Main site', validation: [] },
+            },
+            {
+                link: {
+                    value: 'www.test.com/support',
+                    validation: [Validators.required, this.nxValidators.URL()],
+                },
+                descr: {
+                    value: 'Support site for suggestions, complaints and death wishes.',
+                    validation: [],
+                },
+            },
+        ],
+        phones: [
+            {
+                link: {
+                    value: '(555) 523-4567',
+                    validation: [Validators.required, this.nxValidators.phone()],
+                },
+                descr: { value: 'Main support line. Ask AI for Neil.', validation: [] },
+            },
+        ],
+        emails: [
+            {
+                link: {
+                    value: 'omg@test.com',
+                    validation: [Validators.required, this.nxValidators.email()],
+                },
+                descr: { value: 'Dead email. No one is checking it.', validation: [] },
+            },
+        ],
+    };
+
     protected readonly CONFIG_TYPE = ConfigType;
     protected readonly PAGE_PLACEHOLDER = PAGE_PLACEHOLDER;
 
     systems = mockSystems;
-    information = mockInfo;
     icons = icons;
 
     currPartnerSupportInfo$$ = this.store.selectSignal(selectCurrentPartnerInfo);
 
     editMode: boolean = false;
 
-    constructor(private store: Store) {}
+    constructor(
+        private store: Store,
+        private nxValidators: NxValidators,
+    ) {}
     ngOnInit(): void {
         // effect(() => {
         //     this.currPartnerSupportInfo$$();
@@ -109,7 +124,7 @@ export class NxChannelPartnerInformationComponent implements OnInit {
 
     addSiteRecord(): void {
         const newRecord: InfoRow = {
-            link: { value: '', validation: [Validators.required] },
+            link: { value: '', validation: [Validators.required, this.nxValidators.URL()] },
             descr: { value: '', validation: [] },
         };
 
@@ -118,7 +133,7 @@ export class NxChannelPartnerInformationComponent implements OnInit {
 
     addPhoneRecord(): void {
         const newRecord: InfoRow = {
-            link: { value: '', validation: [Validators.required] },
+            link: { value: '', validation: [Validators.required, this.nxValidators.phone()] },
             descr: { value: '', validation: [] },
         };
 
@@ -127,7 +142,7 @@ export class NxChannelPartnerInformationComponent implements OnInit {
 
     addEmailRecord(): void {
         const newRecord: InfoRow = {
-            link: { value: '', validation: [Validators.required, Validators.email] },
+            link: { value: '', validation: [Validators.required, this.nxValidators.email()] },
             descr: { value: '', validation: [] },
         };
 
