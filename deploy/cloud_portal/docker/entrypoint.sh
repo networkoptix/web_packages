@@ -75,6 +75,7 @@ do
             echo "CREATE DATABASE IF NOT EXISTS $DB_NAME" | mysql -Dinformation_schema
 
             yes "yes" | python manage.py migrate
+            python manage.py update_hosts_from_ireg
             python manage.py readstructure
             sleep 10 # Wait a bit to make sure cache is set
             ;;
