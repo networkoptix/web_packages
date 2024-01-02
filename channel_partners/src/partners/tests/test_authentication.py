@@ -4,6 +4,7 @@ from uuid import uuid4
 from django.conf import settings
 from mock.mock import MagicMock
 from rest_framework.test import APIRequestFactory
+
 from partners.authentication import get_cloud_user_from_token, TokenCache, cloud_host_middleware, \
     check_system_credentials
 from partners.models import CloudSystemStates
@@ -18,15 +19,23 @@ def test_get_cloud_user_from_token(httpx_mock):
         "username": email,
         "expires_in": '3600',
     }
+
+    # Mock the client and authentication response
     httpx_mock.add_response(url=url, json=token_resp)
+
+    # Call the function with mocked client and authentication
     auth = get_cloud_user_from_token(token, cloud_host)
+
     request = httpx_mock.get_request(url=url)
     assert auth == email
     assert request.headers['authorization'] == f'Bearer {token}'
 
+    # Reset the mock and add a new response for the second call
     httpx_mock.reset(False)
     httpx_mock.add_response(url=url, json=token_resp)
+
     auth = get_cloud_user_from_token(token, cloud_host)
+
     request = httpx_mock.get_request(url=url)
     assert auth == email
     assert request is None
@@ -98,7 +107,7 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
 
     assert authenticated is True
     assert status == CloudSystemStates.ACTIVATED
-    
+
     httpx_mock.reset(False)
     httpx_mock.add_response(url=cdb_url, json=not_activated_system, status_code=200)
     authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
@@ -128,4 +137,3 @@ def test_check_system_credentials(mocker, httpx_mock, channel_partner_factory,
     authenticated, status = check_system_credentials(system_id, system_auth_key, cloud_host)
     assert authenticated is False
     assert status == CloudSystemStates.DELETED
-

@@ -2,23 +2,22 @@ from hashlib import sha256
 from typing import Tuple
 
 import httpx
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.cache import caches
 from django.db import transaction
 from django.http import HttpRequest
-
-from drf_spectacular.openapi import OpenApiAuthenticationExtension
-import requests
-from nx_cloud_api_client.apis import CdbSystemAPIBase
-from nx_cloud_api_client.base_auth import BearerTokenAuth
-from requests.auth import HTTPBasicAuth
-from rest_framework.authentication import TokenAuthentication, BasicAuthentication, get_authorization_header
-from rest_framework import exceptions, status
-from django.conf import settings
-from django.contrib.auth import get_user_model
 from django.utils.translation import gettext_lazy as _
+from drf_spectacular.openapi import OpenApiAuthenticationExtension
+from httpx import Response
+from rest_framework import exceptions, status
+from rest_framework.authentication import TokenAuthentication, BasicAuthentication, get_authorization_header
 
+from nx_cloud_api_client.base_auth import CdbAuthAPIClient
+from nx_cloud_api_client.client import NxCloudAPISyncClient
 from partners.models import CloudSystemId, CloudHost, CloudUser, AuthToken, CloudSystemStates
 from tools.exception import APIErrorWithoutRollback
+from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
 
 def get_host(request: HttpRequest) -> str:
@@ -43,6 +42,7 @@ def cloud_host_middleware(get_response):
         return response
 
     return middleware
+
 
 class TokenCache:
     timeout: int = 600
@@ -91,22 +91,30 @@ class NxTokenAuthentication(TokenAuthentication):
 
 
 def check_system_credentials(system_id: str, system_auth_key: str, cloud_host: str) -> Tuple[bool, None | int]:
-    system_api = CdbSystemAPIBase(host=cloud_host, client=httpx.Client())
-    response = system_api.get_system(system_id, auth=httpx.BasicAuth(username=system_id, password=system_auth_key))
+    system_api: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=cloud_host)
+    response: Response = system_api.system.get_system(system_id, auth=httpx.BasicAuth(username=system_id,
+                                                                                      password=system_auth_key))
+
     if response.is_success:
-        resp = response.json()
-        resp_system_id = resp.get('id')
-        status = resp.get('status')
-        status = CloudSystemStates.STATE_DICT.get(status)
-        if status != CloudSystemStates.ACTIVATED and resp_system_id == system_id:
-            return False, status
-        if status == CloudSystemStates.ACTIVATED and resp_system_id == system_id:
-            return True, status
+        response_body = response.json()
+        response_system_id = response_body.get('id')
+        response_status = response_body.get('status')
+
+        state = CloudSystemStates.STATE_DICT.get(response_status)
+        is_activated: bool = state == CloudSystemStates.ACTIVATED
+
+        if response_system_id == system_id:
+            if not is_activated:
+                return False, state
+            if is_activated:
+                return True, state
         return False, None
+
     if response.headers.get('content-type') == 'application/json':
         error = response.json()
         if error.get('resultCode') == 'credentialsRemovedPermanently':
             return False, CloudSystemStates.DELETED
+
     if response.status_code == 401:
         return False, None
     response.raise_for_status()
@@ -168,9 +176,15 @@ class NxCloudSystemBasicAuthenticationExtension(OpenApiAuthenticationExtension):
 def get_cloud_user_from_token(token, cloud_host):
     if email := TokenCache.get_token(token):
         return email
-    response = httpx.get(
-        f'https://{cloud_host}/cdb/oauth2/token/{token}',
-        headers={"Authorization": f"Bearer {token}"})
+
+    auth_client: CdbAuthAPIClient = NxCloudApiClientFactory.get_sync_client(
+        host=cloud_host,
+        access_token=token
+    ).authentication
+
+    headers = {"Authorization": f"Bearer {token}"}
+    response: Response = auth_client.token_get(token, headers=headers)
+
     if response.is_success:
         resp = response.json()
         email = resp.get('username')
@@ -244,7 +258,8 @@ def system_authentication_hook(result, generator, request, public):
                         break
                     for scheme in security_schemes:
                         if scheme in [
-                            NxCloudSystemBasicAuthenticationExtension.name, NxCloudOauthTokenAuthenticationExtension.name
+                            NxCloudSystemBasicAuthenticationExtension.name,
+                            NxCloudOauthTokenAuthenticationExtension.name
                         ]:
                             if 'parameters' not in method:
                                 method['parameters'] = []

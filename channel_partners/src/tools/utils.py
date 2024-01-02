@@ -1,53 +1,50 @@
 """
 Only common utils/helpers without imports apps and models
 """
+import json
+import typing
 from logging import getLogger
 
 import httpx
-from django.conf import settings
-from django.http import HttpRequest
-import json
-from nx_cloud_api_client.apis import BatchRequestItems, CdbSystemAPIBase
+from rest_framework.response import Response
+
 from nx_cloud_api_client.base_auth import BearerTokenAuth
 from nx_cloud_api_client.client import NxCloudAPISyncClient
-from rest_framework.response import Response
+from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
 logger = getLogger(__name__)
 
 
-def get_auth_header(request: HttpRequest) -> dict:
-    auth_header = {'Authorization': request.headers['Authorization']}
-    return auth_header
+def bind_system_to_cdb_organization(
+        cloud_host: str,
+        access_token: str,
+        organization_id: str,
+        system_id: str,
+        name: str,
+        customization: str,
+        opaque: str
+) -> typing.Tuple[typing.Any, int]:
+    client: NxCloudAPISyncClient = NxCloudApiClientFactory.get_sync_client(host=cloud_host)
 
+    response: Response = client.system.bind(
+        id=system_id,
+        name=name,
+        customization=customization,
+        opaque=opaque,
+        organization_id=organization_id,
+        auth=BearerTokenAuth(token=access_token))
 
-def bind_system_to_cdb_organization(cloud_host, access_token, organization_id, system_id, name, customization, opaque):
-    with NxCloudAPISyncClient(host=cloud_host, headers={'User-Agent': None}) as cdb_client:
-        response = cdb_client.system.bind(organization_id=organization_id, id=system_id, name=name, customization=customization, opaque=opaque, auth=BearerTokenAuth(token=access_token))
-        try:
-            system_response = response.json()
-        except (httpx.DecodingError, json.JSONDecodeError) as exception:
-            logger.error(f'Error binding system to CDB:\n'
-                         f'Request Headers: {response.request.headers}\n'
-                         f'Request Content: {response.request.content}\n'
-                         f'Response Status: {response.status_code}\n'
-                         f'Response Headers: {response.headers}\n'
-                         f'Response Content: {response.content}')
-            raise exception
-
-        return system_response, response.status_code
-
-
-def make_batch_request(request: HttpRequest, data: BatchRequestItems) -> dict:
-    # TODO: Remove once we have cloud_db updates
-    if not settings.TESTING:
-        return
-    cloud_host = request.cloud_host.hostname
-    with CdbSystemAPIBase(host=f'https://{cloud_host}', client=httpx.Client()) as api:
-        response = api.systems_users_batch_request(batch_items=data, headers=get_auth_header(request))
-    response.raise_for_status()
-    batch_data = response.json()
-    logger.info(f"Batch request has been sent: {batch_data}")
-    return batch_data
+    try:
+        body = response.json()
+        return body, response.status_code
+    except (httpx.DecodingError, json.JSONDecodeError) as exception:
+        logger.error(f'Error binding system to CDB:\n'
+                     f'Request Headers: {response.request.headers}\n'
+                     f'Request Content: {response.request.content}\n'
+                     f'Response Status: {response.status_code}\n'
+                     f'Response Headers: {response.headers}\n'
+                     f'Response Content: {response.content}')
+        raise exception
 
 
 def paginated_response(viewset, queryset, serializer_class, serializer_context=None) -> Response:

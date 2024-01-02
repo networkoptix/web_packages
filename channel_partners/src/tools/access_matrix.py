@@ -9,14 +9,12 @@ from logging import getLogger
 from uuid import UUID
 
 from django.conf import settings
-from django.contrib.auth.models import Permission
 from django.core.cache import caches
-from django.db.models import Prefetch, QuerySet
 from django.utils.functional import cached_property
 
 from partners.models import (
-    CloudUser, CloudHost, ChannelPartnerRole, OrganizationRole,
-    ChannelPartner, Organization, ChannelPartnerToUser, OrganizationToUser, CloudSystemId, get_channel_partner_roles,
+    CloudUser, ChannelPartner, Organization, ChannelPartnerToUser, OrganizationToUser, CloudSystemId,
+    get_channel_partner_roles,
     get_organization_roles, ChannelPartnerRoles
 )
 
