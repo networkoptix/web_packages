@@ -43,7 +43,6 @@ export class MotionMaskRenderer {
     private ctx: CanvasRenderingContext2D;
     private maskZones: BehaviorSubject<Area[]>;
     private selectionZones: BehaviorSubject<Area[]>;
-    public canvas: ElementRef<HTMLCanvasElement>;
     public selectionCanvas: ElementRef<HTMLCanvasElement>;
     private selectionCtx: CanvasRenderingContext2D;
     public renderer: Subscription;
@@ -84,8 +83,12 @@ export class MotionMaskRenderer {
         this.cellHeight = canvasHeight / this.rows;
         this.width = canvasWidth;
         this.height = canvasHeight;
-        this.ctx = canvas.nativeElement.getContext('2d');
-        this.selectionCtx = selectionCanvas.nativeElement.getContext('2d');
+        this.ctx = canvas.nativeElement.getContext('2d') as CanvasRenderingContext2D;
+        this.ctx.reset();
+        this.selectionCtx = selectionCanvas.nativeElement.getContext(
+            '2d',
+        ) as CanvasRenderingContext2D;
+        this.selectionCtx.reset();
         this.ctx.scale(2, 2);
         this.selectionCtx.scale(2, 2);
         this.ctx.imageSmoothingEnabled = false;
@@ -114,17 +117,21 @@ export class MotionMaskRenderer {
         this.brandColor = getComputedStyle(canvas).color;
 
         // Initialize base observables from events ... unless we're on mobile device (CLOUD-6752)
-        const track = (eventName: string): Observable<MouseEvent> =>
-            this.isMobile ? EMPTY : fromEvent<MouseEvent>(canvas, eventName);
+        const track$ = (eventName: string): Observable<MouseEvent> =>
+            this.isMobile
+                ? EMPTY
+                : fromEvent<MouseEvent>(canvas, eventName).pipe(takeUntil(this.unsub$));
         const [mouseDown$, mouseUp$, mouseLeave$, mouseMove$] = [
             'mousedown',
             'mouseup',
             'mouseleave',
             'mousemove',
-        ].map(track);
+        ].map(track$);
 
         const [keyDown$, keyUp$] = ['keydown', 'keyup'].map(event =>
-            this.isMobile ? EMPTY : fromEvent<KeyboardEvent>(this.window, event),
+            this.isMobile
+                ? EMPTY
+                : fromEvent<KeyboardEvent>(this.window, event).pipe(takeUntil(this.unsub$)),
         );
 
         // Utility functions
@@ -174,7 +181,6 @@ export class MotionMaskRenderer {
                 distinctUntilChanged(
                     (x, y) => x.ctrlKey === y.ctrlKey && x.shiftKey === y.shiftKey,
                 ),
-                takeUntil(this.unsub$),
             )
             .subscribe(shiftCtrlSubject$);
         const mouseState$ = new BehaviorSubject({ x: 0, y: 0 });
@@ -191,17 +197,13 @@ export class MotionMaskRenderer {
                         map(() => ({ x: 0, y: 0 })),
                     ),
                 ),
-                takeUntil(this.unsub$),
             )
             .subscribe(mouseState$);
         const clickAction$ = merge(mouseDown$, mouseUp$, mouseLeave$);
         const clickBuffer$ = clickAction$.pipe(delay(0));
 
         const initialHover = mouseState$
-            .pipe(
-                tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })),
-                takeUntil(this.unsub$),
-            )
+            .pipe(tap(({ x, y }) => this.drawHoverOrSelection({ x, y, height: 1, width: 1 })))
             .subscribe();
 
         clickAction$
@@ -298,7 +300,6 @@ export class MotionMaskRenderer {
                                     width: 1,
                                 }),
                             ),
-                            takeUntil(this.unsub$),
                         );
                     },
                 ),

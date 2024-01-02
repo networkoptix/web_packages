@@ -5,7 +5,6 @@ import { DeviceDetectorService } from 'ngx-device-detector';
 import { BehaviorSubject, Observable } from 'rxjs';
 
 import type { Size } from '@directives/resize/nx-resize.directive.types';
-import { Watcher } from '@services/apply.service/watcher';
 import type { CameraStatus } from '@services/system.service/camera-manager/camera-manager-types';
 
 import { SensitivityButtonValue } from '../cameras.component.types';
@@ -20,18 +19,16 @@ export class NxMotionDetectionSettingsComponent implements OnInit {
     @Input() motionEnabled: boolean;
     @Input() enableMotion: () => void;
     @Input() disableMotion: () => void;
+    // Reset Sensitivity sets the sensitivity buttons to 'reset'. This clears the users selected squares
     @Input() resetSensitivity: () => void;
-    @Input() toggleMotionGrid: () => void;
     @Input() sensitivityButtons$: BehaviorSubject<SensitivityButtonValue>;
-    @Input() motionGridChangeWatcher: Watcher<boolean>;
-    @Input() motionMaskWatcher: Watcher<string>;
     @Input() healthImageUrl: Observable<string>;
     @Input() selectedRotation: number;
     @Input() selectedAspectRatio: number;
     @Input() imageState: CameraStatus;
     @Input() overlayEnabled: boolean;
-
-    @Output() updateMask: EventEmitter<string> = new EventEmitter();
+    @Input() motionMaskString: string;
+    @Output() motionMaskStringChange = new EventEmitter<string>();
 
     width$ = new BehaviorSubject(0);
     sensitivity = new FormGroup({
@@ -42,6 +39,9 @@ export class NxMotionDetectionSettingsComponent implements OnInit {
 
     constructor(private deviceService: DeviceDetectorService) {}
 
+    // TODO: sensitivityButtons controls if the buttons are visible
+    // They also send the value of which number is selected
+    // This should be split into two different things
     ngOnInit(): void {
         this.isMobile = this.deviceService.isMobile() || this.deviceService.isTablet();
         this.sensitivity.controls.current.valueChanges.pipe(untilDestroyed(this)).subscribe(val => {
@@ -49,15 +49,8 @@ export class NxMotionDetectionSettingsComponent implements OnInit {
         });
     }
 
-    lockGrid(lock: boolean): void {
-        if (!this.isMobile && this.overlayEnabled) {
-            this.motionGridChangeWatcher.value = lock;
-        }
-    }
-
     handleResize({ width }: Size): void {
         this.width$.next(width);
-        this.toggleMotionGrid();
     }
 
     get height(): number {
