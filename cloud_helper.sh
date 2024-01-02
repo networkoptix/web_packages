@@ -261,6 +261,7 @@ function smart_stop_mediaserver() {
         do
             if [[ $CONTAINER == *"$PORT" ]] ; then
                 docker rm -f $CONTAINER
+                break
             fi
         done
     done
@@ -311,6 +312,25 @@ function move_local_build() {
         echo "Copying external.dat to tools"
         cp external.dat $REPO/tools/docker
     popd
+}
+
+function extract_logs_from_container() {
+    local PORTS=$1
+    RUNNING_CONTAINERS="$(docker ps --format '{{.Names}}' | grep auto-nx-server-)"
+
+    for CONTAINER in $RUNNING_CONTAINERS
+    do
+        for PORT in $PORTS
+        do
+            if [[ $CONTAINER == *"$PORT" ]] ; then
+                CONTAINER_NAME=auto-nx-server-$PORT
+                LOG_DIR="tools/docker_server_logs/$CONTAINER_NAME"
+                mkdir -p "$LOG_DIR"
+                docker cp "$CONTAINER_NAME:/opt/networkoptix/mediaserver/var/log/" "./$LOG_DIR"
+                break
+            fi
+        done
+    done
 }
 
 function run_virtual_cameras() {
@@ -648,6 +668,12 @@ do
         run_virtual_cameras)
             echo "Adding cameras to running servers"
             run_virtual_cameras
+            ;;
+        get_mediaserver_logs)
+            PORTS=$2
+            echo "Extracting logs from docker containers and placing them in ./tools/docker_server_logs"
+            extract_logs_from_container "$PORTS"
+            break
             ;;
         check_licenses)
             check_licenses
