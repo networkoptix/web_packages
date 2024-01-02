@@ -7,10 +7,10 @@
             <a
                 target="_blank"
                 class="section-link"
-                href="{{ linkPredicate + item.link }}"
-                >{{ item.link }}</a
+                href="{{ linkPredicate + item.link.value }}"
+                >{{ item.link.value }}</a
             >
-            <span class="section-descr">{{ item.descr }}</span>
+            <span class="section-descr">{{ item.descr.value }}</span>
         </div>
     </div>
 
@@ -31,8 +31,33 @@
                         <input
                             class="form-control mr-1"
                             type="text"
+                            name="link"
                             formControlName="link"
                         />
+                        <ng-container
+                            *ngIf="
+                                row.get('link').invalid &&
+                                ((row.get('link').dirty && !row.get('link').errors?.pattern) ||
+                                    row.get('link').touched)
+                            "
+                        >
+                            <p
+                                *ngIf="row.get('link').errors.required; else customError"
+                                class="error-label mt-2 mb-0"
+                                data-testid="linkRequiredError"
+                                translate
+                            >
+                                Required
+                            </p>
+                            <ng-template #customError>
+                                <p
+                                    class="error-label mt-2 mb-0"
+                                    data-testid="linkCustomError"
+                                >
+                                    {{ row.get('link').errors.msg }}
+                                </p>
+                            </ng-template>
+                        </ng-container>
                     </div>
                     <div class="pr-3 w-100">
                         <label translate>Description</label>

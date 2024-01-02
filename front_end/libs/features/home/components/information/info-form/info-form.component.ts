@@ -1,6 +1,12 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, inject, Input, OnChanges, Output } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import {
+    FormArray,
+    FormBuilder,
+    FormGroup,
+    FormsModule,
+    ReactiveFormsModule,
+} from '@angular/forms';
 import { AngularSvgIconModule } from 'angular-svg-icon';
 
 // import type { AuthorizeStateType } from '@authorization/src/app/components/authorize.component.types';
@@ -9,6 +15,7 @@ import { NxContentBlockComponent } from '@components/content-block/content-block
 import { NxContentBlockSectionComponent } from '@components/content-block/section/section.component';
 import { NxPagePlaceholderV2Component } from '@components/placeholders/pageV2/page-placeholder.component';
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
+import staticLang from '@language_static';
 import { InfoRow } from '@pages/home/components/information/information.types';
 import { icons } from '@static-variables';
 import { NgChanges } from '@utils/ng-changes';
@@ -20,11 +27,12 @@ import { NgChanges } from '@utils/ng-changes';
     standalone: true,
     imports: [
         CommonModule,
+        FormsModule,
+        ReactiveFormsModule,
         AngularSvgIconModule,
         NxContentBlockComponent,
         NxContentBlockSectionComponent,
         NxAddSvgSrcDirective,
-        ReactiveFormsModule,
         NxButtonComponent,
         NxPagePlaceholderV2Component,
     ],
@@ -38,6 +46,7 @@ export class NxInfoGroupComponent implements OnChanges {
 
     @Output() recordToBeRemoved = new EventEmitter<{ formId: string; idx: number }>();
 
+    LANG = staticLang;
     icons = icons;
     private formBuilder = inject(FormBuilder);
     form: FormGroup = this.formBuilder.group({
@@ -73,4 +82,6 @@ export class NxInfoGroupComponent implements OnChanges {
             idx,
         });
     }
+
+    protected readonly Object = Object;
 }
