@@ -1,16 +1,26 @@
 import { CdkDragDrop, DragDropModule } from '@angular/cdk/drag-drop';
 import { CdkMenuModule } from '@angular/cdk/menu';
 import { CommonModule } from '@angular/common';
-import { Component, Input, booleanAttribute, computed, effect } from '@angular/core';
-import { toSignal } from '@angular/core/rxjs-interop';
+import {
+    Component,
+    DestroyRef,
+    Input,
+    booleanAttribute,
+    computed,
+    effect,
+    inject,
+} from '@angular/core';
+import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, distinctUntilChanged, map } from 'rxjs';
+import { Observable, Subject, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
+import { NxSearchComponent } from '@components/search/search.component';
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { NxCardComponent } from '@pages/home/components/card/card.component';
@@ -27,7 +37,8 @@ import {
     SystemItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { NxSystemsService } from '@services/systems.service';
-import { icons } from '@variables/static-variables';
+import { caseInsenstiveSearch } from '@utils/general';
+import { search as searchConfig, icons } from '@variables/static-variables';
 
 import { NxNoSystemsCardsComponent } from '../../components/no-systems/no-systems.component';
 import { NxSystemCardComponent } from '../../components/system-card/system-card.component';
@@ -39,7 +50,6 @@ import {
     selectGroupItems,
     selectHasGroups,
 } from '../../store/groups/groups.selectors';
-
 @Component({
     selector: 'nx-org-cards-container',
     templateUrl: 'org-cards-container.component.html',
@@ -56,22 +66,33 @@ import {
         AngularSvgIconModule,
         NxPreLoaderComponent,
         RouterOutlet,
+        NxSearchComponent,
+        FormsModule,
     ],
 })
 export class NxOrganizationCardContainerComponent {
     LANG = staticLang;
     icons = icons;
+    searchConfig = searchConfig;
+    destroyRef = inject(DestroyRef);
     @Input({ transform: booleanAttribute }) inRoot: boolean;
     canCreateGroups$$ = computed(() => {
         const currOrg = this.store.selectSignal(selectCurrentOrganization);
         return currOrg()?.ownPermissions.includes(OrgPermissions.MANAGE_SYSTEMS);
     });
+    hasEnoughGroups$$ = computed(() => {
+        return this.currentGroups$$().length > searchConfig.channelPartners.searchMinimumCards;
+    });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
     currentGroup$$ = this.store.selectSignal<GroupItem>(selectCurrentGroup);
-    currentGroups$ = this.store.select<GroupItem[]>(selectCurrentGroups);
+    currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
+    filteredGroups: GroupItem[];
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
     currentSystems$: Observable<SystemItem[]>;
+    filteredSystems$: Observable<SystemItem[]>;
+    search = { value: '' };
+    searchChanged = new Subject<void>();
     systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     systemMap$$ = computed(() => {
@@ -118,6 +139,15 @@ export class NxOrganizationCardContainerComponent {
                       }),
                   );
         });
+
+        this.searchChanged
+            .pipe(debounceTime(this.searchConfig.debounceTime), takeUntilDestroyed(this.destroyRef))
+            .subscribe(() => {
+                this.searchSystems();
+            });
+
+        this.search.value = this.route.snapshot.queryParams.search;
+        this.searchSystems();
     }
 
     trackGroup(_index: number, item: GroupItem): string {
@@ -192,5 +222,30 @@ export class NxOrganizationCardContainerComponent {
 
     handleSystemClick(system: CloudSystem | SystemItem): void {
         this.router.navigate(['systems', system.systemId]);
+    }
+
+    searchSystems(): void {
+        const search = this.search.value;
+        if (search) {
+            if (this.currentGroups$$()) {
+                this.filteredGroups = this.currentGroups$$().filter(system =>
+                    caseInsenstiveSearch(system.name, search),
+                );
+            }
+
+            if (this.currentSystems$) {
+                this.filteredSystems$ = this.currentSystems$.pipe(
+                    map(res => res.filter(system => caseInsenstiveSearch(system.name, search))),
+                );
+            }
+        } else {
+            this.filteredGroups = this.currentGroups$$();
+            this.filteredSystems$ = this.currentSystems$;
+        }
+    }
+
+    setSearch(model: { query: string }): void {
+        this.search.value = model.query;
+        this.searchChanged.next();
     }
 }
