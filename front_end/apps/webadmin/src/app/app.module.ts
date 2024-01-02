@@ -32,6 +32,7 @@ import { environment } from '@environments/environment';
 import { CloudUnavailableInterceptor } from '@interceptors/cloud-unavailable-interceptor';
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
+import { ServerErrorInterceptor } from '@interceptors/server-error.interceptor';
 import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
 import { UnauthorizedUserInterceptor } from '@interceptors/unauthorized-user-interceptor';
 import { NxUriCachingInterceptor } from '@interceptors/uri-cache-interceptor.service';
@@ -119,6 +120,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: UnauthorizedUserInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ServerErrorInterceptor,
             multi: true,
         },
         NxConfigService,

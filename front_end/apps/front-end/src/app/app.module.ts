@@ -44,6 +44,7 @@ import { NxCurrentRelayInterceptor } from '@interceptors/current-relay-intercept
 import { FeatureInterceptor } from '@interceptors/feature-interceptor';
 import { LocalSystemStatusInterceptor } from '@interceptors/local-system-status-interceptor.service';
 import { RedirectAuthenticationInterceptor } from '@interceptors/redirect-authentication-interceptor';
+import { ServerErrorInterceptor } from '@interceptors/server-error.interceptor';
 import { SessionExpiredInterceptor } from '@interceptors/session-expired-interceptor';
 import { NxSwCacheInterceptor } from '@interceptors/sw-cache-interceptor.interceptor';
 import { TosInterceptor } from '@interceptors/tos-interceptor';
@@ -173,6 +174,11 @@ export function NxBootstrapProviderFactory(provider: NxBootstrapProvider) {
         {
             provide: HTTP_INTERCEPTORS,
             useClass: TosInterceptor,
+            multi: true,
+        },
+        {
+            provide: HTTP_INTERCEPTORS,
+            useClass: ServerErrorInterceptor,
             multi: true,
         },
         NxConfigService,

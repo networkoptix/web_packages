@@ -99,6 +99,7 @@ class FLAGS(metaclass=_FlagType):
 
     cross_tab_sync_enabled = ('Cross Tab Sync Enabled', 'crossTabSyncEnabled', '%CROSS_TAB_SYNC_ENABLED%')
     use_authentication_interceptor = ('Use Authentication Interceptor', 'useAuthenticationInterceptor', '%USE_AUTHENTICATION_INTERCEPTOR%')
+    use_500_error_interceptor = ('Use 500 Error Interceptor', 'use500ErrorInterceptor', '%USE_500_ERROR_INTERCEPTOR%')
 
     # beta features
     access_integration_store = ('Lets the desktop client know if the integration store is enabled.',

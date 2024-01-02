@@ -208,6 +208,7 @@ const FeatureFlagKeys = [
     'layoutsRemoveItemDialog',
     'enableAnimations',
     'tosRequired',
+    'use500ErrorInterceptor',
 ] as const;
 
 export type FeatureFlagType = (typeof FeatureFlagKeys)[number];
