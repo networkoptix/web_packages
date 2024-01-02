@@ -286,6 +286,17 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
             ],
         };
 
+        // avoid delay in Camera node creation if we know we have some cameras.
+        if (this.system.cameraManager.cameras?.some(({ canEdit }) => canEdit)) {
+            this.content.level1.push({
+                id: menus.systemSettings.cameras.id,
+                svg: menus.systemSettings.cameras.icon,
+                label: this.LANG.menu.titles.cameras,
+                path: menus.systemSettings.cameras.path,
+                level3: [],
+            });
+        }
+
         // TODO: add processes back
         // Retrieve users list
         this.gettingSystemUsers = this.processService
@@ -798,8 +809,7 @@ export class NxSystemSettingsComponent implements OnInit, OnDestroy {
                     path: menus.systemSettings.cameras.path,
                     level3: [],
                 };
-                // Sometimes cameras node creation may be delayed
-                // this will just ensure the node will appear in correct place
+                // camerasNode should be already created in Init() ... leaving this just in case --TT
                 this.content.level1.splice(1, 0, camerasNode);
             }
             if (this.system.cameraManager.cameras) {
