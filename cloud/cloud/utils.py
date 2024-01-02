@@ -121,3 +121,21 @@ def method_decorator_async(decorator, name=""):
     obj = decorator if hasattr(decorator, "__name__") else decorator.__class__
     _dec.__name__ = "method_decorator(%s)" % obj.__name__
     return _dec
+
+
+# distutils is deprecated since 3.12, just copied this here
+
+def strtobool(val):
+    """Convert a string representation of truth to true (1) or false (0).
+
+    True values are 'y', 'yes', 't', 'true', 'on', and '1'; false values
+    are 'n', 'no', 'f', 'false', 'off', and '0'.  Raises ValueError if
+    'val' is anything else.
+    """
+    val = val.lower()
+    if val in ('y', 'yes', 't', 'true', 'on', '1'):
+        return 1
+    elif val in ('n', 'no', 'f', 'false', 'off', '0'):
+        return 0
+    else:
+        raise ValueError("invalid truth value %r" % (val,))

@@ -12,7 +12,7 @@ import uuid
 from contextlib import suppress
 from concurrent.futures import as_completed
 from datetime import datetime, timedelta
-from distutils.util import strtobool
+from cloud.utils import strtobool
 from uuid import uuid4
 
 import waffle

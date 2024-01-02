@@ -1,4 +1,4 @@
-FROM python:3.8-slim-bullseye AS builder
+FROM python:3.11-slim-bullseye AS builder
 
 ARG CACHE_DATE
 ARG ARTIFACTORY_HOST

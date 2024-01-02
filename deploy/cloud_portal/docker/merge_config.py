@@ -71,7 +71,7 @@ def main(args):
     base_config = base_read()
 
     extra_config_b64 = sys.stdin.read()
-    extra_config_yaml = base64.decodestring(extra_config_b64.encode('ascii')).decode('utf-8')
+    extra_config_yaml = base64.decodebytes(extra_config_b64.encode('ascii')).decode('utf-8')
     extra_config = yaml.safe_load(extra_config_yaml)
 
     merge_dictionaries(base_config, extra_config)

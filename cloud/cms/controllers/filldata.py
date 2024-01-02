@@ -5,7 +5,6 @@ import base64
 import binascii
 from dataclasses import dataclass
 import zipfile
-import distutils.dir_util
 import errno
 from typing import Dict, Callable
 import traceback

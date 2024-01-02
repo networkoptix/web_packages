@@ -925,6 +925,8 @@ VERSION = os.getenv('VERSION', '0')
 
 # upload app shared settings
 UPLOAD_BUCKET = conf.get('upload_bucket', f'{AWS_STORAGE_BUCKET_NAME}-uploads')
+if LOCAL_ENVIRONMENT:
+    UPLOAD_BUCKET = conf.get('upload_bucket', AWS_STORAGE_BUCKET_NAME)
 UPLOAD_SEPARATOR = '--CHUNKED--UPLOAD--SEPARATOR--'
 
 # Testing

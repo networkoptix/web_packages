@@ -21,8 +21,8 @@ function env_checker() {
         exit 1
     fi
 
-    if [[ $(python -V | grep -c "3.8.10") -eq 0 ]]; then
-        echo "Python version must be 3.8.10 Got: $(python -V) instead"
+    if [[ $(python -V | grep -c "3.11") -eq 0 ]]; then
+        echo "Python version must be 3.11 Got: $(python -V) instead"
         exit 1
     fi
 
@@ -44,7 +44,7 @@ function brew_install() {
     echo "installing virtualenv"
     pip install virtualenv
     echo "installing poetry"
-    pip install poetry==1.4.0
+    pip install poetry==1.5.1
     echo 'Installing node v18.15.0'
     n 18.15.0
     echo 'Installing python 3.8.10'
@@ -82,7 +82,7 @@ function modify_bashprofile(){
 
 function setup_cms(){
     printf "Installing all dependencies...\n\n"
-
+    setup_env
     printf "Moving into cloud directory\n\n"
     pushd cloud
 

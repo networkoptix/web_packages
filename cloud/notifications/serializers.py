@@ -355,5 +355,5 @@ class SystemEmailSerializer(serializers.ModelSerializer):
         super().__init__(*args, **kwargs)
 
     def create(self, *, customization):
-        self.is_valid(True)
+        self.is_valid(raise_exception=True)
         return SystemEmail(**self.validated_data, customization=customization)

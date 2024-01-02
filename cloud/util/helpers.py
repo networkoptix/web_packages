@@ -1,5 +1,4 @@
 import re
-from typing import Type
 
 import httpx
 from asgiref.sync import async_to_sync
@@ -9,7 +8,7 @@ from django.core.exceptions import ObjectDoesNotExist
 
 from cloud.customization_context import customization_ctx
 from cms.helpers.cached_asset import CustomizationCache
-from cms.models import cloud_portal_customization_cache, Language, Customization, cloud_portal_customization_cache_async
+from cms.models import Language, Customization, cloud_portal_customization_cache_async
 from django.urls import reverse
 from meilisearch import Client
 
