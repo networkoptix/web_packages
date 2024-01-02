@@ -4,7 +4,7 @@ import { debounceTime } from 'rxjs';
 import { takeUntil } from 'rxjs/operators';
 
 import { NxSystemUsersBaseComponent } from '@pages/systems/settings/users/edit-user-base/edit-user-base.component';
-import { NxUser } from '@services/system-user.types';
+import { NxUser, Role } from '@services/system-user.types';
 import { NxFormBuilder, NxFormGroup } from '@utils/reactive-form-builder';
 
 import { type UserRoleFormControls } from '../user-form.types';
@@ -16,6 +16,7 @@ import { type UserRoleFormControls } from '../user-form.types';
     styleUrls: ['users-with-roles.component.scss'],
 })
 export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent {
+    permissionRoles: Role[];
     accessDescription: string;
     userRoleForm: NxFormGroup<UserRoleFormControls>;
 
@@ -28,6 +29,8 @@ export class NxSystemUsersWithRolesComponent extends NxSystemUsersBaseComponent 
     protected changeUser(user: NxUser): void {
         this.setPermission();
         this.removeOldForm$.next(true);
+
+        this.permissionRoles = this.system.userManager.accessRoles;
 
         if (this.userRoleForm) {
             this.userForm.emit(undefined);
