@@ -1,16 +1,21 @@
 import logging
 import traceback
-import typing
 import uuid
 
 import httpx
-from celery import Task, shared_task, states
+from celery import Task
+from celery import shared_task
+from celery import states
 from celery.exceptions import Ignore
 from django.conf import settings
 from django.core.cache import caches
-from nx_cloud_api_client.apis import CdbAccountAPIBase
 
-from partners.models import ChannelPartner, CloudUser, Organization, NotificationTypes, ActionConfirmation
+from nx_cloud_api_client.apis import CdbAccountAPIBase
+from partners.models import ActionConfirmation
+from partners.models import ChannelPartner
+from partners.models import CloudUser
+from partners.models import NotificationTypes
+from partners.models import Organization
 
 logger = logging.getLogger(__name__)
 

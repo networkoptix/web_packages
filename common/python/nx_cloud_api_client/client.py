@@ -1,9 +1,8 @@
-import typing
-import httpx
 import inspect
+import typing
 from functools import wraps
 
-from httpx import Headers
+import httpx
 
 from .apis import (
     CdbAccountAPIBase, CdbSystemTransferAPIBase,
@@ -184,21 +183,21 @@ class NxCloudAPIClient(ContextAPIMixin):
         else:
             raise TypeError("Client of _default_client_class must be defined.")
 
+        self.authentication: CdbAuthAPIClient | None = None
+
         if any([access_token, refresh_token, code, (username and password)]):
             self.authentication = CdbAuthAPIClient(
-                client=client, client_id=client_id, scope=scope, password=password, username=username,
+                client=self.client, client_id=client_id, scope=scope, password=password, username=username,
                 access_token=access_token, refresh_token=refresh_token, code=code, host=host,
                 refresh_token_lifetime=refresh_token_lifetime, raise_error_on_refresh=raise_error_on_refresh
             )
-        else:
-            self.authentication = None
         self._handle_user_agent(kwargs.get("headers", {}))
-        self.system = CdbSystemAPIBase(client=self.client, host=host)
-        self.system_transfer = CdbSystemTransferAPIBase(client=self.client, host=host)
-        self.account = CdbAccountAPIBase(client=self.client, host=host)
-        self.auth_support = CdbAuthSupportAPIBase(client=self.client, host=host)
-        self.mfa = Cdb2faAPIBase(client=self.client, host=host)
-        self.organizations = CdbOrganizationAPIBase(client=self.client, host=host)
+        self.system: CdbSystemAPIBase = CdbSystemAPIBase(client=self.client, host=host)
+        self.system_transfer: CdbSystemTransferAPIBase = CdbSystemTransferAPIBase(client=self.client, host=host)
+        self.account: CdbAccountAPIBase = CdbAccountAPIBase(client=self.client, host=host)
+        self.auth_support: CdbAuthSupportAPIBase = CdbAuthSupportAPIBase(client=self.client, host=host)
+        self.mfa: Cdb2faAPIBase = Cdb2faAPIBase(client=self.client, host=host)
+        self.organizations: CdbOrganizationAPIBase = CdbOrganizationAPIBase(client=self.client, host=host)
         self._update_api_modules()
 
     @property
@@ -255,17 +254,19 @@ class NxCloudAPIClient(ContextAPIMixin):
         def wrapper_sync(*args, auto_auth=True, authenticator: CdbAuthAPIClient = None, **kwargs):
             if auto_auth and not kwargs.get('auth'):
                 authenticator = authenticator or self._get_authenticator()
-                if auto_auth and self.auto_refresh and authenticator.token.needs_refresh:
-                    authenticator.refresh_token_and_save()
-                kwargs["auth"] = authenticator.get_auth(classes)
+                if authenticator:
+                    if auto_auth and self.auto_refresh and authenticator.token.needs_refresh:
+                        authenticator.refresh_token_and_save()
+                    kwargs["auth"] = authenticator.get_auth(classes)
             return module.__getattribute__(f'_orig_{name}')(*args, **kwargs)
 
         async def wrapper_async(*args, auto_auth=True, authenticator: CdbAuthAPIClient = None, **kwargs):
             if auto_auth and not kwargs.get('auth'):
                 authenticator = authenticator or self._get_authenticator()
-                if auto_auth and self.auto_refresh and authenticator.token.needs_refresh:
-                    await authenticator.refresh_token_and_save()
-                kwargs["auth"] = authenticator.get_auth(classes)
+                if authenticator:
+                    if auto_auth and self.auto_refresh and authenticator.token.needs_refresh:
+                        await authenticator.refresh_token_and_save()
+                    kwargs["auth"] = authenticator.get_auth(classes)
             return await module.__getattribute__(f'_orig_{name}')(*args, **kwargs)
 
         wrapper = wrapper_async if self.is_async else wrapper_sync

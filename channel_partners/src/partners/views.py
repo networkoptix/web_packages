@@ -1,11 +1,8 @@
 import logging
-from django.core.cache import caches
-from django.db.models import Q, Subquery
 from time import sleep
 from typing import TypedDict, Tuple
 from uuid import uuid4, UUID
 
-import httpx
 from django.core.cache import caches
 from django.db.models import Subquery, Q
 from django.http import HttpResponseForbidden
@@ -15,8 +12,6 @@ from django.utils.encoding import force_str
 from django_filters.rest_framework import DjangoFilterBackend
 from drf_spectacular.utils import extend_schema
 from drf_spectacular.utils import extend_schema_view, OpenApiParameter
-from nx_cloud_api_client.apis import CdbSystemAPIBase
-from nx_cloud_api_client.base_auth import BearerTokenAuth
 from rest_framework import status
 from rest_framework.decorators import action, api_view, authentication_classes, permission_classes
 from rest_framework.pagination import PageNumberPagination
@@ -26,14 +21,14 @@ from rest_framework.viewsets import ModelViewSet, GenericViewSet, mixins
 from rest_framework_extensions.mixins import NestedViewSetMixin
 
 from nx_cloud_api_client.apis import CdbSystemAPIBase
+from nx_cloud_api_client.client import NxCloudAPISyncClient
 from partners import filters
 from tools.exception import Conflict
-from tools.helpers import forward_cdb_resp
+from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 from tools.utils import paginated_response
 from .authentication import NxCloudOauthTokenAuthentication, NxCloudSystemBasicAuthentication, NxTokenAuthentication
 from .forms.grant_access_form import GrantAccessForm
 from .models import ChannelPartnerRoles, GroupStructure
-
 from .permissions import IsAuthenticatedCloudUserOrSystem, CanPerformChannelPartnerAction, IsAuthenticatedSystem, \
     IsInternalToken
 from .serializers import *
@@ -1138,10 +1133,19 @@ class CloudSystemViewSet(NestedViewSetMixin,
         return Response(system_reponse, status=status_code)
 
     def perform_destroy(self, instance: CloudSystemId):
-        systems_api = CdbSystemAPIBase(host=self.request.cloud_host.hostname, client=httpx.Client())
-        headers = {'Authorization': self.request.headers.get('Authorization')}
-        response = systems_api.delete_system(system_id=str(instance.system_id),
-                                             headers=headers)
+        host: str = self.request.cloud_host.hostname
+        auth_token: str = self.request.headers.get('Authorization')
+        system_id: str = str(instance.system_id)
+
+        headers = {'Authorization': auth_token}
+
+        client: NxCloudAPISyncClient= NxCloudApiClientFactory.get_sync_client(host=host)
+        systems_api: CdbSystemAPIBase = client.system
+
+        response: httpx.Response = systems_api.delete_system(
+            system_id=system_id,
+            headers=headers)
+
         if response.status_code == 200:
             instance.system_state = CloudSystemStates.DELETED
             instance.save()

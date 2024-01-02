@@ -827,8 +827,6 @@ class BindLocalSystemSerializer(serializers.ModelSerializer):
         system.name = name
         system.organization = organization
         system.save()
-        # data = system.add_system_users_data()
-        # make_batch_request(self.context['request'], data)
         return system
 
 
@@ -874,8 +872,6 @@ class CreateSystemSerializer(serializers.ModelSerializer):
         system = CloudSystemId.objects.get_or_create(system_id=system_id, cloud_host=cloud_host)[0]
         system.organization = organization
         system.save()
-        # data = system.add_system_users_data()
-        # make_batch_request(self.context['request'], data)
         return system
 
 
