@@ -18,5 +18,8 @@ do
         celery)
             exec celery -A channel_partners worker -l DEBUG --concurrency=2 --pidfile=/tmp/celery-w1.pid
         ;;
+        celery_beat)
+            exec celery -A channel_partners beat -l info --scheduler django_celery_beat.schedulers:DatabaseScheduler --pidfile=/tmp/celery-beat.pid
+        ;;
     esac
 done
