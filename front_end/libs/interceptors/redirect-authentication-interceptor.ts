@@ -28,7 +28,6 @@ export class RedirectAuthenticationInterceptor implements HttpInterceptor {
                     const previousRedirects = parseInt(request.headers.get(REDIRECT_HEADER) || '0');
                     const redirectCount = isNaN(previousRedirects) ? 0 : previousRedirects;
                     const requestUrl = `${
-                        // eslint-disable-next-line nx/ban-global-variables
                         request.urlWithParams.startsWith('/') ? window.location.origin : ''
                     }${request.urlWithParams}`;
 

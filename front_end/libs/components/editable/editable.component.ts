@@ -1,4 +1,3 @@
-/* eslint-disable nx/ban-global-variables */
 import {
     Component,
     effect,

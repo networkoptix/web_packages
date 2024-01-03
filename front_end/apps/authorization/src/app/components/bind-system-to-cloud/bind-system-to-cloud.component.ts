@@ -172,7 +172,6 @@ export class BindSystemToCloudComponent implements OnInit {
             organizationId: ('organizationId' in data && data.organizationId) || '',
         };
 
-        // eslint-disable-next-line nx/ban-global-variables
         if (window.nativeClient) {
             nativeClient.setBindInfo(bindInfo);
             nativeClient.setTokens(this.bindService.tokensForVMS$$());
@@ -184,7 +183,6 @@ export class BindSystemToCloudComponent implements OnInit {
             const params = new URLSearchParams();
             Object.entries(bindInfo).forEach(([k, v]) => params.set(k, v));
             const bindQs = params.toString();
-            // eslint-disable-next-line nx/ban-global-variables
             window.location.href = `${this.redirectUri}${
                 this.redirectUri?.includes('?') ? '&' : '?'
             }${bindQs}`;

@@ -890,7 +890,6 @@ export class NxLayoutGridComponent {
             const layout = this.layout$$();
             const { width = 0, height = 0 } = this.wrapperSize$$() || {};
             if (!layout || !width || !height) {
-                // eslint-disable-next-line nx/ban-global-variables
                 document.documentElement.style.setProperty('--current-layout-gap', '0px');
                 return;
             }
@@ -898,7 +897,6 @@ export class NxLayoutGridComponent {
             const cellHeight = height / layout.renderConfig.rows;
             const constraint = Math.min(cellWidth, cellHeight);
             const size = constraint * layout.cellSpacing;
-            // eslint-disable-next-line nx/ban-global-variables
             document.documentElement.style.setProperty(
                 '--current-layout-gap',
                 `${(size / 2) * this.CELL_SPACE_RATIO}px`,

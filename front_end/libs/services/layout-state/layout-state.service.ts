@@ -1,4 +1,3 @@
-/* eslint-disable nx/ban-global-variables */
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
 import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
@@ -82,9 +81,7 @@ export class LayoutStateService {
     gridSection: HTMLElement;
 
     toggleLayoutFullScreen(): void {
-        // eslint-disable-next-line nx/ban-global-variables
         if (document.fullscreenElement === this.gridSection) {
-            // eslint-disable-next-line nx/ban-global-variables
             document.exitFullscreen();
         } else {
             this.gridSection.requestFullscreen({ navigationUI: 'hide' });

@@ -454,7 +454,6 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         this.highlightIndex = null;
         /* If the user goes "down" from the bottom of the dropdown after having
         clicked on one of the "buttons" (and unfocused the input), then refocus the input */
-        // eslint-disable-next-line nx/ban-global-variables
         if (document.activeElement === this.orgTreeRef.nativeElement) {
             this.orgTreeSearchRef.nativeElement.focus();
         }
