@@ -778,7 +778,8 @@ export class MergeModalContent {
                     if (
                         res.mergeInProgress ||
                         res.error === '0' ||
-                        res.resultCode === this.LANG.errorCodes.ok
+                        res.resultCode === this.LANG.errorCodes.ok ||
+                        !res.failedServers.length
                     ) {
                         // handles telling the app which systems are getting merged and the proper messaging
                         if (this.environment.isLocal) {
