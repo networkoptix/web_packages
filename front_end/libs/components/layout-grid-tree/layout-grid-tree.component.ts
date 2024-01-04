@@ -48,7 +48,8 @@ import { v4 as uuid } from 'uuid';
 import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
     MenuItem,
-    MenuItemsOrMenuItemsCallback,
+    BaseMenuItem,
+    MenuItemsOrMenuItemsFactory,
 } from '@components/context-menu/context-menu.types';
 import { EditableModule } from '@components/editable/editable.module';
 import {
@@ -437,12 +438,10 @@ export class NxLayoutGridTreeComponent {
     getLayoutUpdateActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        const unsaved = this.layoutStateService.unsavedLayoutsIds$$();
-        if (
-            !node.owned ||
-            !nxConfig.featureFlags.layoutsEditable ||
-            (unsaved && !unsaved[node.details.id])
-        ) {
+        const disabled$$ = signal(
+            !this.layoutStateService.unsavedLayoutsIds$$()?.[node.details.id],
+        );
+        if (!node.owned || node.locked || !nxConfig.featureFlags.layoutsEditable) {
             return [];
         }
 
@@ -456,11 +455,13 @@ export class NxLayoutGridTreeComponent {
                 name: node.shared
                     ? this.ACTIONS_LANG.publishChanges.name
                     : this.ACTIONS_LANG.saveChanges.name,
+                disabled$$,
                 action: () => this.layoutStateService.saveLayout(node.details.id),
             },
             {
                 id: 'discard',
                 name: this.ACTIONS_LANG.discardChanges.name,
+                disabled$$,
                 action: () => this.layoutStateService.discardUnsavedLayout(node.details.id),
             },
         ];
@@ -481,7 +482,7 @@ export class NxLayoutGridTreeComponent {
         const resourceId = dirtyId(id);
         const unknownItem = this.layoutItemLookup$$()?.[resourceId];
 
-        if (assertResourceOfType.camera(unknownItem)) {
+        if (unknownItem && assertResourceOfType.camera(unknownItem)) {
             rotation = unknownItem.details.parameters?.rotation ?? 0;
         }
 
@@ -562,12 +563,7 @@ export class NxLayoutGridTreeComponent {
     getLayoutShareActions = (
         node: ResourceNodeMap[ResourceType.LAYOUT],
     ): MenuItem<ResourceNodeMap[ResourceType.LAYOUT]>[] => {
-        if (
-            node.crossSystem ||
-            !node.owned ||
-            node.locked ||
-            !nxConfig.featureFlags.layoutsEditable
-        ) {
+        if (node.crossSystem || !node.owned || node.locked || !nxConfig.featureFlags.layoutsShare) {
             return [];
         }
 
@@ -597,25 +593,23 @@ export class NxLayoutGridTreeComponent {
             return [];
         }
 
-        return !node.locked
-            ? [
-                  {
+        return [
+            {
+                id: 'divider',
+                name: 'divider',
+            },
+            node.locked
+                ? {
+                      id: 'unlockLayout',
+                      name: this.ACTIONS_LANG.unlockLayout.name,
+                      action: () => this.layoutStateService.unlockLayout(node.details),
+                  }
+                : {
                       id: 'lockLayout',
                       name: this.ACTIONS_LANG.lockLayout.name,
                       action: () => this.layoutStateService.lockLayout(node.details),
                   },
-              ]
-            : [
-                  {
-                      id: 'divider',
-                      name: 'divider',
-                  },
-                  {
-                      id: 'unlockLayout',
-                      name: this.ACTIONS_LANG.unlockLayout.name,
-                      action: () => this.layoutStateService.unlockLayout(node.details),
-                  },
-              ];
+        ];
     };
 
     getFullScreenActions = (
@@ -639,7 +633,13 @@ export class NxLayoutGridTreeComponent {
     };
 
     menuItemsByType: Partial<{
-        [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
+        [key in keyof ResourceNodeMap]:
+            | MenuItemsOrMenuItemsFactory<ResourceNodeMap[key]>
+            | {
+                  [Property in keyof { tree: string; scene: string }]: MenuItemsOrMenuItemsFactory<
+                      ResourceNodeMap[key]
+                  >;
+              };
     }> = {
         [ResourceType.LAYOUTS]: nxConfig.featureFlags.layoutsEditable
             ? [
@@ -675,16 +675,27 @@ export class NxLayoutGridTreeComponent {
                   },
               ]
             : [],
-        [ResourceType.LAYOUT]: node =>
-            [
-                ...this.OPEN_WINDOW_ACTIONS,
-                ...this.getLayoutEditActions(node),
-                ...this.getLayoutResolutionActions(node),
-                ...this.getLayoutUpdateActions(node),
-                ...this.getLayoutShareActions(node),
-                ...this.getLayoutLockActions(node),
-                ...this.getFullScreenActions(node),
-            ].filter(Boolean),
+        [ResourceType.LAYOUT]: {
+            tree: node =>
+                [
+                    ...this.OPEN_WINDOW_ACTIONS,
+                    ...this.getLayoutEditActions(node),
+                    ...this.getLayoutUpdateActions(node),
+                    ...this.getLayoutLockActions(node),
+                    ...this.getLayoutShareActions(node),
+                ].filter(Boolean),
+            scene: node =>
+                [
+                    ...this.OPEN_WINDOW_ACTIONS,
+                    ...this.getLayoutEditActions(node).filter(
+                        (menu: BaseMenuItem) => menu.id !== 'startRename',
+                    ),
+                    ...this.getLayoutUpdateActions(node),
+                    ...this.getLayoutLockActions(node),
+                    ...this.getFullScreenActions(node),
+                    ...this.getLayoutResolutionActions(node),
+                ].filter(Boolean),
+        },
         [ResourceType.CAMERA]: [
             ...this.OPEN_WINDOW_ACTIONS,
             ...([] ||
@@ -739,6 +750,16 @@ export class NxLayoutGridTreeComponent {
             },
         ].filter(Boolean),
     };
+
+    treeMenuItems = Object.entries(this.menuItemsByType).reduce((acc, [type, value]) => {
+        acc[type] = value && 'tree' in value ? value.tree : value;
+        return acc;
+    }, {});
+
+    sceneMenuItems = Object.entries(this.menuItemsByType).reduce((acc, [type, value]) => {
+        acc[type] = value && 'scene' in value ? value.scene : value;
+        return acc;
+    }, {});
 
     openWindow = (id: string, isNewWindow = false): void => {
         const params = [

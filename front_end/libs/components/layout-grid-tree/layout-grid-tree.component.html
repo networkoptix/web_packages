@@ -1,7 +1,7 @@
 <ng-template #currentItemContext>
     <nx-context-menu
         [context]="currentNode"
-        [menuItems]="menuItemsByType[currentNode.type]"
+        [menuItems]="sceneMenuItems[currentNode.type]"
     />
 </ng-template>
 
@@ -350,7 +350,7 @@
                     <ng-template #nodeActionMenu>
                         <nx-context-menu
                             [context]="node"
-                            [menuItems]="menuItemsByType[node.type]"
+                            [menuItems]="treeMenuItems[node.type]"
                         />
                     </ng-template>
                 }

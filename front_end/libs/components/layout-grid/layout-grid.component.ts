@@ -438,6 +438,7 @@ export class NxLayoutGridComponent {
         transformOrigin: 'top left',
     };
     readonly SETTINGS_CONFIG = SETTINGS_CONFIG;
+    readonly dirtyId = dirtyId;
 
     initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);

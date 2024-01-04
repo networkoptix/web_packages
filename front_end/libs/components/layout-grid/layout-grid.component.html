@@ -1098,9 +1098,11 @@
                                                     [item]="item"
                                                     [node]="layoutItemLookup[item.resourceId]"
                                                     [fullScreenTarget]="layoutItemWrapper"
-                                                    [showRemove]="editItems$$()"
-                                                    [hide]="dragging$$()"
+                                                    [hideRemove]="
+                                                        dirtyId(layout.id) === dirtyId(item.id)
+                                                    "
                                                     [canEdit]="editItems$$()"
+                                                    [hide]="dragging$$()"
                                                     (removeItem)="removeItem($event)"
                                                     [system]="system"
                                                 >

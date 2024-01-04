@@ -16,6 +16,7 @@ import {
     WritableSignal,
 } from '@angular/core';
 import { toObservable, toSignal } from '@angular/core/rxjs-interop';
+import { Router } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
@@ -43,7 +44,7 @@ import { NxContextMenu } from '@components/context-menu/context-menu';
 import {
     MenuItem,
     MenuItemAction,
-    MenuItemsOrMenuItemsCallback,
+    MenuItemsOrMenuItemsFactory,
 } from '@components/context-menu/context-menu.types';
 import { NxMonitoringGraphComponent } from '@components/graph/graph.component';
 import { assertResourceOfType } from '@components/layout-grid/layout-grid.type-guards';
@@ -76,6 +77,7 @@ import { NxSystem } from '@services/system.service/system';
 import { NxSystemsService } from '@services/systems.service';
 import { icons } from '@static-variables';
 import { extractSystemAndResourceId } from '@utils/extract-system-and-resources';
+import { cleanId } from '@utils/general';
 import { WebGLTimelineModule } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/webgl-timeline.module';
 
 const LANG = staticLang.layouts.overlay.menuActions;
@@ -128,9 +130,9 @@ export class NxLayoutGridItemOverlayComponent {
     @Input() set node(value: BaseResourceNode) {
         this.node$$.set(value);
     }
-    showRemove$$ = signal(false);
-    @Input() set showRemove(value: boolean) {
-        this.showRemove$$.set(value);
+    hideRemove$$ = signal(false);
+    @Input() set hideRemove(value: boolean) {
+        this.hideRemove$$.set(value);
     }
     @Input() hide: boolean;
     @Input() fullScreenTarget: HTMLElement;
@@ -405,6 +407,7 @@ export class NxLayoutGridItemOverlayComponent {
         showOnItem: {
             id: 'showOnItem',
             ...LANG.showOnItem,
+            disabled$$: computed(() => !this.cameraOnline$$()),
             subMenu: () => [this.MENU_ITEMS.info],
         },
         rotate: {
@@ -542,6 +545,16 @@ export class NxLayoutGridItemOverlayComponent {
         divider: {
             name: 'divider',
         },
+        newTab: {
+            id: 'openNewTab',
+            ...LANG.openNewTab,
+            action: ($event, node) => this.openWindow(node, false),
+        },
+        newWindow: {
+            id: 'openNewWindow',
+            ...LANG.openNewWindow,
+            action: ($event, node) => this.openWindow(node, true),
+        },
     };
 
     quickActions$$ = computed(() => {
@@ -580,10 +593,14 @@ export class NxLayoutGridItemOverlayComponent {
     });
 
     removeAction$$ = computed(() => {
-        if (this.canEdit$$() && this.showRemove$$() && !this.isFullscreen$$()) {
-            return this.MENU_ITEMS.remove;
+        if (this.hideRemove$$()) {
+            return null;
         }
-        return null;
+
+        return {
+            ...this.MENU_ITEMS.remove,
+            disabled$$: signal(!this.canEdit$$()),
+        };
     });
 
     mouseInactive$$ = toSignal(
@@ -607,18 +624,20 @@ export class NxLayoutGridItemOverlayComponent {
     });
 
     menuItemsByType: Partial<{
-        [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsCallback<ResourceNodeMap[key]>;
+        [key in keyof ResourceNodeMap]: MenuItemsOrMenuItemsFactory<ResourceNodeMap[key]>;
     }> = {
         [ResourceType.CAMERA]: (item): MenuItem<ResourceNode>[] =>
             (
                 [
+                    this.MENU_ITEMS.newTab,
+                    this.MENU_ITEMS.newWindow,
+                    this.MENU_ITEMS.divider,
                     this.fullscreenAction$$(),
+                    this.MENU_ITEMS.showOnItem,
+                    this.MENU_ITEMS.screenshot,
                     this.allowDebugMode && this.canEdit$$() && this.MENU_ITEMS.rotate,
                     this.layoutsItemChangeResolution && this.MENU_ITEMS.resolution,
                     this.allowDebugMode && this.MENU_ITEMS.zoomWindow,
-                    this.MENU_ITEMS.screenshot,
-                    this.cameraOnline$$() && this.MENU_ITEMS.divider,
-                    this.cameraOnline$$() && this.MENU_ITEMS.showOnItem,
                     this.removeAction$$() && this.MENU_ITEMS.divider,
                     this.removeAction$$(),
                 ] as MenuItem<ResourceNode>[]
@@ -634,12 +653,13 @@ export class NxLayoutGridItemOverlayComponent {
     };
 
     constructor(
-        @Inject(DOCUMENT) public document: Document,
-        public ref: ElementRef<HTMLElement>,
-        @Inject(LOCALE_ID) private locale: string,
-        private resizeObserver: NxResizeObserver,
         configService: NxConfigService,
+        @Inject(DOCUMENT) public document: Document,
         public layoutStateService: LayoutStateService,
+        @Inject(LOCALE_ID) private locale: string,
+        public ref: ElementRef<HTMLElement>,
+        private resizeObserver: NxResizeObserver,
+        private router: Router,
         private store: Store,
         private systemsService: NxSystemsService,
     ) {
@@ -666,4 +686,20 @@ export class NxLayoutGridItemOverlayComponent {
         }
         return node;
     }
+
+    // should be moved to common component to be reused on grid and tree and overlay
+    openWindow = (node: ResourceNode | undefined, isNewWindow = false): void => {
+        const id = node?.details?.id;
+        if (!id) {
+            return;
+        }
+
+        const params = [`${this.router.url.split('layouts')[0]}layouts/${cleanId(id)}`, '_blank'];
+        if (isNewWindow) {
+            params.push('"width=100%, height=100%"');
+        }
+
+        // eslint-disable-next-line nx/ban-global-variables
+        window.open(...params);
+    };
 }

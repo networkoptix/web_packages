@@ -179,6 +179,7 @@ const FeatureFlagKeys = [
     'layouts',
     'layoutsNonChrome',
     'layoutsEditable',
+    'layoutsShare',
     'layoutsHelper',
     'layoutsServers',
     'layoutsWebpages',

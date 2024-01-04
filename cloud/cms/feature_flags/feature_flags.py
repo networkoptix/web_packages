@@ -67,6 +67,7 @@ class FLAGS(metaclass=_FlagType):
 
     layouts = ('Layouts', 'layouts', '%LAYOUTS_ENABLED%')
     layouts_editable = ('Layouts Editable', 'layoutsEditable', '%LAYOUTS_EDITABLE%')
+    layouts_share = ('Layouts Share', 'layoutsShare', '%LAYOUTS_SHARE%')
     layouts_helper = ('Layouts Helper', 'layoutsHelper', '%LAYOUTS_HELPER%')
     layouts_authorize_camera = ('Layouts let user authorize a camera', 'layoutsAuthorizeCamera', '%LAYOUTS_AUTHORIZE_CAMERA%')
     layouts_servers = ('Layouts Servers', 'layoutsServers', '%LAYOUTS_SERVERS%')
