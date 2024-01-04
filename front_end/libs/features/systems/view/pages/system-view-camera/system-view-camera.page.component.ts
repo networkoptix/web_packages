@@ -79,7 +79,9 @@ export class NxSystemViewCameraPageComponent implements OnInit, OnDestroy, After
     @Input({ required: true }) system: NxSystem;
     // time is updated from the query params because of withComponentInputBinding.
     @Input() set time(time: string) {
-        this.time$$.set(time);
+        if (time) {
+            this.time$$.set(time);
+        }
     }
     time$$ = signal<string>('live');
 
