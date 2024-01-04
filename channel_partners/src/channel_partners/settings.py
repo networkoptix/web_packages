@@ -31,7 +31,6 @@ elif CI:
 else:
     ENV_NAME = 'prod'
 
-
 INSTANCE_CONFIG = get_config(ENV_NAME)
 
 # SECURITY WARNING: keep the secret key used in production secret!
@@ -45,6 +44,12 @@ DEBUG = True
 SILK_ENABLED = os.getenv('SILK_ENABLED', False)
 ALLOWED_HOSTS = ['*']
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
+# Cookies
+BASE_COOKIE_PATH = os.getenv("BASE_COOKIE_PATH", "/partners")
+LANGUAGE_COOKIE_PATH = BASE_COOKIE_PATH
+SESSION_COOKIE_PATH = BASE_COOKIE_PATH
+CSRF_COOKIE_PATH = BASE_COOKIE_PATH
 
 # Application definition
 
@@ -120,7 +125,6 @@ DATABASES = {
 REDIS_CACHE_BACKEND = "django.core.cache.backends.redis.RedisCache"
 REDIS_CACHE_LOCATION = f'redis://{INSTANCE_CONFIG.redis_host}:6379'
 
-
 CACHES = {
     "local": {
         'BACKEND': 'django.core.cache.backends.locmem.LocMemCache',
@@ -138,7 +142,6 @@ CACHES = {
         "TIMEOUT": None
     },
 }
-
 
 # Password validation
 # https://docs.djangoproject.com/en/4.2/ref/settings/#auth-password-validators
@@ -158,7 +161,6 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
-
 # Internationalization
 # https://docs.djangoproject.com/en/4.2/topics/i18n/
 
@@ -169,7 +171,6 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 
 USE_TZ = True
-
 
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/4.2/howto/static-files/
@@ -188,7 +189,6 @@ REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': [],
     'EXCEPTION_HANDLER': 'tools.helpers.custom_exception_handler'
 }
-
 
 SPECTACULAR_SETTINGS = {
     # 'SERVE_PERMISSIONS': ['licensing.views.ui.api_management.APIManagementPermission'],
@@ -217,7 +217,6 @@ CORS_ALLOW_HEADERS = list(default_headers) + [
     'cloud-host',
     'requestinterceptorrequest'
 ]
-
 
 KEYS_PATH = os.path.join(BASE_DIR, 'keys')
 RSA_KEY1 = open(os.path.join(KEYS_PATH, 'vms.nop.pvt')).read()
