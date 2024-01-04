@@ -80,11 +80,15 @@ export class LayoutStateService {
 
     gridSection: HTMLElement;
 
-    toggleLayoutFullScreen(): void {
-        if (document.fullscreenElement === this.gridSection) {
-            document.exitFullscreen();
-        } else {
-            this.gridSection.requestFullscreen({ navigationUI: 'hide' });
+    async toggleLayoutFullScreen(target: HTMLElement = this.gridSection): Promise<void> {
+        const { fullscreenElement } = document;
+
+        if (fullscreenElement) {
+            await document.exitFullscreen();
+        }
+
+        if (fullscreenElement !== target) {
+            await target.requestFullscreen({ navigationUI: 'hide' });
         }
     }
 

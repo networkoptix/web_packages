@@ -515,19 +515,13 @@ export class NxLayoutGridItemOverlayComponent {
             id: 'fullscreenOn',
             icon: icons.dirLayoutsOverlay + 'full_screen.svg',
             ...LANG.fullscreenOn,
-            action: () => {
-                this.fullScreenTarget.requestFullscreen({
-                    navigationUI: 'hide',
-                });
-            },
+            action: () => this.layoutStateService.toggleLayoutFullScreen(this.fullScreenTarget),
         },
         fullscreenOff: {
             id: 'fullscreenOff',
             icon: icons.dirLayoutsOverlay + 'collapse.svg',
             ...LANG.fullscreenOff,
-            action: () => {
-                this.document.exitFullscreen();
-            },
+            action: () => this.layoutStateService.toggleLayoutFullScreen(),
         },
         remove: {
             id: 'remove',

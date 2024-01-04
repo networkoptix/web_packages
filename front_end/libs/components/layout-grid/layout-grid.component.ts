@@ -344,10 +344,6 @@ export class NxLayoutGridComponent {
         this.layoutStateService.portal = null;
     }
 
-    @HostListener('document:fullscreenchange', ['$event']) onFullscreenChange(event: Event): void {
-        this.#fullscreenElement$.next(event.target as Element);
-    }
-
     @ViewChild('gridSection') set gridSection(value: ElementRef) {
         this.layoutStateService.gridSection = value.nativeElement;
     }
@@ -445,15 +441,10 @@ export class NxLayoutGridComponent {
 
     initialLayout$ = new BehaviorSubject<Layout>(null);
     #wrapperSize$ = new BehaviorSubject<Size>(null);
-    #fullscreenElement$ = new BehaviorSubject<Element>(null);
     unsubTooltip$ = new Subject<string>();
 
     // : Observable<{ items: ParsedLayoutItems[], renderConfig: any }>
-    layout$ = combineLatest([
-        this.initialLayout$,
-        this.#wrapperSize$,
-        this.#fullscreenElement$,
-    ]).pipe(
+    layout$ = combineLatest([this.initialLayout$, this.#wrapperSize$]).pipe(
         filter(([layout]) => !!layout),
         map(
             ([layout, wrapperSize]) =>
