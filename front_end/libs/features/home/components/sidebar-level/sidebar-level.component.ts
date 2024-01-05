@@ -9,15 +9,21 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 
 import { NxAddSvgSrcDirective } from '@directives/add-data.directive';
 import { NxTooltipDirective } from '@directives/nx-tooltip.directive';
+import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
 import {
     GroupItem,
+    OrgCardItem,
     Organization,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import { icons } from '@static-variables';
 
 import { OpenGroups } from '../../home.types';
 import * as GroupActions from '../../store/groups/groups.actions';
-import { selectCurrentGroupId } from '../../store/groups/groups.selectors';
+import {
+    selectCurrentGroupId,
+    selectCurrentSystems,
+    selectGroupItems,
+} from '../../store/groups/groups.selectors';
 
 @UntilDestroy()
 @Component({
@@ -42,12 +48,15 @@ export class NxGroupsSidebarLevelComponent {
     @Input() rootOrg: Organization;
 
     currentGroupId$ = this.store.select<string>(selectCurrentGroupId);
+    groupItems$$ = this.store.selectSignal<GroupItem[]>(selectGroupItems);
+    currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
 
     icons = icons;
     constructor(
         private store: Store,
         private router: Router,
         private route: ActivatedRoute,
+        private cpService: NxChannelPartnersService,
     ) {}
 
     trackItem(_index: number, item: GroupItem): string {
@@ -55,12 +64,47 @@ export class NxGroupsSidebarLevelComponent {
     }
 
     onDrop(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
-        // const dragged = event.item.data;
-        // const droppedOn = event.container.data;
-        // if (!event.isPointerOverContainer) {
-        //     return;
-        // }
-        // Todo: Update group from service
+        if (!event.isPointerOverContainer || event.previousContainer === event.container) {
+            return;
+        }
+        const dragged = event.item.data;
+        const droppedOn = event.container.data;
+        if (dragged.type === OrgCardItem.GROUP) {
+            this.cpService
+                .patchGroup(dragged.id, { parentId: droppedOn.id })
+                .subscribe(updatedGroup => {
+                    // Use ngrx effect to update store
+                    const groups: GroupItem[] = [...this.groupItems$$()];
+                    const parentId = dragged.parentId;
+                    if (parentId) {
+                        const parentIndex = groups?.findIndex(group => group.id === parentId);
+                        const parent = structuredClone(groups[parentIndex]);
+                        parent.children = parent.children.filter(child => child.id !== dragged.id);
+                        groups[parentIndex] = parent;
+                    }
+                    const droppedOnGroup = structuredClone(droppedOn);
+                    if (droppedOnGroup.children) {
+                        droppedOnGroup.children.push(updatedGroup);
+                    } else {
+                        droppedOnGroup.children = [updatedGroup];
+                    }
+                    const droppedOnIndex = groups?.findIndex(group => group.id === droppedOn.id);
+                    groups[droppedOnIndex] = droppedOnGroup;
+
+                    const movedGroupIndex = groups.findIndex(group => group.id === dragged.id);
+                    groups[movedGroupIndex] = updatedGroup;
+                    this.store.dispatch(GroupActions.setGroups({ groups }));
+                });
+        } else if (dragged.type === OrgCardItem.SYSTEM) {
+            this.cpService
+                .updateSystemGroup(dragged.systemId, { groupId: droppedOn.id })
+                .subscribe(() => {
+                    const systems = this.currentSystems$$().filter(
+                        sys => sys.systemId !== dragged.systemId,
+                    );
+                    this.store.dispatch(GroupActions.setSystems({ systems }));
+                });
+        }
     }
 
     toggleOpenState(groupId?: string): boolean | void {

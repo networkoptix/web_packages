@@ -7,6 +7,7 @@ const initialState: GroupsState = {
     groups: null,
     currentGroupId: undefined,
     openGroups: {},
+    systems: [],
 };
 
 export const groupsReducer = createReducer(
@@ -38,6 +39,13 @@ export const groupsReducer = createReducer(
                 ...state.openGroups,
                 ...openGroups,
             },
+        }),
+    ),
+    on(
+        GroupActions.setSystems,
+        (state, { systems }): GroupsState => ({
+            ...state,
+            systems,
         }),
     ),
 );

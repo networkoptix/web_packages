@@ -47,6 +47,7 @@ import {
     selectCurrentGroup,
     selectCurrentGroupId,
     selectCurrentGroups,
+    selectCurrentSystems,
     selectGroupItems,
     selectHasGroups,
 } from '../../store/groups/groups.selectors';
@@ -93,6 +94,7 @@ export class NxOrganizationCardContainerComponent {
     filteredSystems$: Observable<SystemItem[]>;
     search = { value: '' };
     searchChanged = new Subject<void>();
+    currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
     systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     systemMap$$ = computed(() => {
@@ -116,28 +118,27 @@ export class NxOrganizationCardContainerComponent {
             });
 
         effect(() => {
+            this.searchSystems();
             const systemMap = this.systemMap$$();
-            this.currentSystems$ = this.inRoot
-                ? this.cpService.getOrgSystems(this.currentOrgId$$()).pipe(
-                      map(orgSystems =>
-                          orgSystems.map(sys => ({
-                              ...sys,
-                              type: OrgCardItem.SYSTEM,
-                              name: systemMap.get(sys.systemId)?.name,
-                          })),
-                      ),
-                  )
-                : this.cpService.getGroup(this.currentGroupId$$()).pipe(
-                      map(group => {
-                          return group.systems.map(systemId => {
-                              return {
-                                  systemId,
-                                  name: systemMap.get(systemId)?.name,
-                                  type: OrgCardItem.SYSTEM,
-                              };
-                          });
-                      }),
-                  );
+            if (this.inRoot) {
+                this.cpService.getOrgSystems(this.currentOrgId$$()).subscribe(orgSystems => {
+                    const systems = orgSystems.map(sys => ({
+                        ...sys,
+                        type: OrgCardItem.SYSTEM,
+                        name: systemMap.get(sys.systemId)?.name,
+                    }));
+                    this.store.dispatch(GroupActions.setSystems({ systems }));
+                });
+            } else {
+                this.cpService.getGroup(this.currentGroupId$$()).subscribe(group => {
+                    const systems = group.systems.map(systemId => ({
+                        systemId,
+                        name: systemMap.get(systemId)?.name,
+                        type: OrgCardItem.SYSTEM,
+                    }));
+                    this.store.dispatch(GroupActions.setSystems({ systems }));
+                });
+            }
         });
 
         this.searchChanged
@@ -159,11 +160,11 @@ export class NxOrganizationCardContainerComponent {
     }
 
     onDrop(event: CdkDragDrop<GroupItem, GroupItem, GroupItem>): void {
-        const dragged = event.item.data;
-        const droppedOn = event.container.data;
-        if (!event.isPointerOverContainer || dragged.id === droppedOn.id) {
+        if (!event.isPointerOverContainer || event.container === event.previousContainer) {
             return;
         }
+        const dragged = event.item.data;
+        const droppedOn = event.container.data;
         if (dragged.type === OrgCardItem.GROUP) {
             this.cpService
                 .patchGroup(dragged.id, { parentId: droppedOn.id })
@@ -172,23 +173,17 @@ export class NxOrganizationCardContainerComponent {
                     const groups: GroupItem[] = [...this.groupItems$$()];
                     const parentId = dragged.parentId;
                     if (parentId) {
-                        const parent = Object.assign(
-                            {},
-                            groups.find(group => group.id === parentId),
-                        );
-                        if (parent) {
-                            parent.children = [
-                                ...parent.children.filter(child => child.id !== dragged.id),
-                            ];
-                        }
                         const parentIndex = groups?.findIndex(group => group.id === parentId);
+                        const parent = structuredClone(groups[parentIndex]);
+                        parent.children = parent.children.filter(child => child.id !== dragged.id);
                         groups[parentIndex] = parent;
                     }
-                    const droppedOnGroup = Object.assign(
-                        {},
-                        groups.find(group => group.id === droppedOn.id),
-                    );
-                    droppedOnGroup.children = [...droppedOnGroup?.children, updatedGroup];
+                    const droppedOnGroup = structuredClone(droppedOn);
+                    if (droppedOnGroup.children) {
+                        droppedOnGroup.children.push(updatedGroup);
+                    } else {
+                        droppedOnGroup.children = [updatedGroup];
+                    }
                     const droppedOnIndex = groups?.findIndex(group => group.id === droppedOn.id);
                     groups[droppedOnIndex] = droppedOnGroup;
 
@@ -200,9 +195,10 @@ export class NxOrganizationCardContainerComponent {
             this.cpService
                 .updateSystemGroup(dragged.systemId, { groupId: droppedOn.id })
                 .subscribe(() => {
-                    this.currentSystems$ = this.currentSystems$.pipe(
-                        map(systems => systems.filter(system => system.systemId !== dragged.id)),
+                    const systems = this.currentSystems$$().filter(
+                        sys => sys.systemId !== dragged.systemId,
                     );
+                    this.store.dispatch(GroupActions.setSystems({ systems }));
                 });
         }
     }
@@ -226,9 +222,10 @@ export class NxOrganizationCardContainerComponent {
 
     searchSystems(): void {
         const search = this.search.value;
+        const currGroups = this.currentGroups$$();
         if (search) {
-            if (this.currentGroups$$()) {
-                this.filteredGroups = this.currentGroups$$().filter(system =>
+            if (currGroups) {
+                this.filteredGroups = currGroups.filter(system =>
                     caseInsenstiveSearch(system.name, search),
                 );
             }
@@ -239,7 +236,7 @@ export class NxOrganizationCardContainerComponent {
                 );
             }
         } else {
-            this.filteredGroups = this.currentGroups$$();
+            this.filteredGroups = currGroups;
             this.filteredSystems$ = this.currentSystems$;
         }
     }
