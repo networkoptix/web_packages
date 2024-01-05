@@ -30,7 +30,7 @@
         ></nx-search>
     </div>
     <div
-        *ngIf="!currentGroups$$()?.length && !(currentSystems$ | async)?.length; else showGroups"
+        *ngIf="!currentGroups$$().length && !currentSystems$$()?.length; else showGroups"
         class="no-systems"
     >
         <nx-no-systems-cards></nx-no-systems-cards>
@@ -69,7 +69,7 @@
             </div>
         </div>
         <div
-            *ngFor="let system of filteredSystems$ | async; trackBy: trackSystem"
+            *ngFor="let system of currentSystems$$(); trackBy: trackSystem"
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled

@@ -10,6 +10,8 @@ export const selectGroupItems = createSelector(selectGroupState, state => state.
 
 export const selectOpenGroups = createSelector(selectGroupState, state => state.openGroups);
 
+export const selectCurrentSystems = createSelector(selectGroupState, state => state.systems);
+
 export const selectHasGroups = createSelector(selectGroupItems, items => items.length > 0);
 
 export const selectCurrentGroupId = createSelector(selectGroupState, items => items.currentGroupId);

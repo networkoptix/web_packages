@@ -21,6 +21,7 @@ import {
     Organization,
     State,
     OrgPermissions,
+    OrgCardItem,
 } from '@services/nx-cloud-api/cloud-services/channel-partners/channel-partners-api.types';
 import type { CustomAccountProperty } from '@services/nx-cloud-api/custom-account-property';
 import { nxConfig } from '@services/nx-config/config';
@@ -196,11 +197,13 @@ export class NxOrganizationsComponent implements OnInit {
         const groups: GroupItem[] = [];
         const getChildren = (group: GroupItem): void => {
             for (const child of group.children) {
+                child.type = OrgCardItem.GROUP;
                 groups.push(child);
                 getChildren(child);
             }
         };
         for (const group of orgGroups) {
+            group.type = OrgCardItem.GROUP;
             groups.push(group);
             getChildren(group);
         }
