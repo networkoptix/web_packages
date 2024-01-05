@@ -135,7 +135,6 @@ def substitute_branding(repl_dict, text):
     return re.sub("|".join(repl_dict.keys()), lambda match: repl_dict[re.escape(match.group(0))], text)
 
 
-
 class HttpxAsyncRequest:
     @staticmethod
     async def get(*args, request_timeout=60, **kwargs):
@@ -166,3 +165,4 @@ class HttpxAsyncRequest:
         async with httpx.AsyncClient() as client:
             response = await client.delete(*args, **kwargs)
         return response
+

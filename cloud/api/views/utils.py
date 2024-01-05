@@ -15,6 +15,7 @@ from django.urls import reverse
 from uuid import uuid4
 
 from asgiref.sync import sync_to_async
+from rest_framework.request import Request
 
 from cloud.customization_context import customization_ctx
 from util.helpers import HttpxAsyncRequest
@@ -36,7 +37,7 @@ from nx_drf.drf_async import async_api_view as api_view, async_api_view
 from api.serializers import CustomizationCacheSerializer, SettingsSerializer, IpvdSerializer, process_cameras, \
     CustomizationNameSerializer
 from cms.models import Customization, cloud_portal_customization_cache, UserGroupsToAssetPermissions, \
-    cloud_portal_customization_cache_async, global_version_key
+    cloud_portal_customization_cache_async, global_version_key, get_or_set_global_cache
 from cms.feature_flags.feature_flags import FLAGS, SWITCHES, SAMPLES
 from cms.permissions import IsSuperuser
 
@@ -500,21 +501,36 @@ async def get_settings(request):
     customization = request.CUSTOMIZATION
     global_cache = caches['customization']
     user = request.query_params.get('cached')
+    features_cache_key = 'features_cache_key'
     user_key = getattr(request.user, 'email', 'anonymous_user')
     current_user = str(uuid4())
-    if not (await cache.aadd(user_key, current_user)):
+    if not (await cache.aadd(user_key, current_user, timeout=86400)):
         current_user = await cache.aget(user_key)
     user_changed = not user or not current_user or user != current_user
     version = request.query_params.get('version')
-    current_version = await global_cache.aget(global_version_key(customization))
-
-    version_changed = version != str(current_version)
+    try:
+        version = int(version)
+    except:
+        version = None
+    current_version = await get_or_set_global_cache(customization)
+    sync_version = global_cache.get(global_version_key(customization))
+    version_changed = version != current_version
     features = request.query_params.get('features')
     current_features = str(uuid4())
-    if not (await global_cache.aadd('features_cache_key', current_features)):
-        current_features = await global_cache.aget('features_cache_key')
+    if not (await global_cache.aadd(features_cache_key, current_features, timeout=86400)):
+        current_features = await global_cache.aget(features_cache_key)
     features_changed = features != current_features
     if user_changed or version_changed or features_changed:
+        tag = '[GET SETTINGS DEBUG]'
+        logger.info(f"{tag} Something has been changed {customization} and user:{user_changed}, "
+                    f"version:{version_changed}, features:{features_changed}")
+        logger.info(f"{tag} For request: {request.get_full_path()}")
+        logger.info(f"{tag} User {user}. current: {current_user}")
+        logger.info(f"{tag} Version {version}. current: {current_version}, {sync_version}")
+        logger.info(f"{tag} Features: {features}, current: {current_features}")
+        logger.info(f'{tag} Redirecting to "?cached={current_user}'
+                    f'&version={current_version}&features={current_features}"')
+
         return redirect(f'{reverse("get_settings")}?cached={current_user}&version={current_version}&features={current_features}')
 
     data = await get_settings_from_cache(customization=customization)

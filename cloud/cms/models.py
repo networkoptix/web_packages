@@ -1,6 +1,7 @@
 import asyncio
 import hashlib
 import json
+import typing
 from json.decoder import JSONDecodeError
 import os
 import re
@@ -283,6 +284,28 @@ def get_asset_by_revision(version_id):
 def update_global_cache(customization, version_id):
     global_cache = caches['customization']
     global_cache.set(global_version_key(customization), version_id)
+
+
+async def get_or_set_global_cache(customization: str) -> typing.Optional[int]:
+    global_cache = caches['customization']
+    version_id = global_cache.aget(global_version_key(customization))
+    if version_id is not None:
+        try:
+            return int(version_id)
+        except:
+            pass
+    cloud_portal = await Asset.objects.filter(
+        customizations__name__in=[customization], asset_type__name="",
+        asset_type__type=AssetType.ASSET_TYPES.cloud_portal).afirst()
+    if not cloud_portal:
+        return None
+    accepted_review = await AssetCustomizationReview.objects.filter(
+        customization__name=customization,
+        state=AssetCustomizationReview.REVIEW_STATES.accepted,
+        version__asset_id=cloud_portal.id).order_by('version_id').alast()
+    version_id = accepted_review.version_id if accepted_review else 0
+    global_cache.set(global_version_key(customization), version_id)
+    return version_id
 
 
 def check_update_cache(customization, version_id):
@@ -975,9 +998,9 @@ class Asset(models.Model):
         accepted_review = AssetCustomizationReview.objects. \
             filter(customization__name=customization,
                    state=AssetCustomizationReview.REVIEW_STATES.accepted,
-                   version__asset=self).last()
+                   version__asset=self).order_by('version_id').last()
 
-        return accepted_review.version.id if accepted_review else 0
+        return accepted_review.version_id if accepted_review else 0
 
     @classmethod
     def version_ids(cls, assets, customization=None, request=None):
