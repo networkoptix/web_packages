@@ -394,7 +394,7 @@ export const menus: configTypes.Menus = {
         },
     },
     download: {
-        baseUrl: '/downloads-releases',
+        baseUrl: '/download',
         icon: '',
         releases: {
             id: 'releases',

@@ -1,15 +1,16 @@
-<div class="block-container mt-3">
-    <div class="row">
+<div class="block-container">
+    <div class="d-flex">
         <div
-            class="fixed-sidebar col-12 d-flex flex-column fill-screen-height"
+            class="menu-container"
             [ngStyle]="{ height: 'calc(100% - (' + headerHeight + 'px + 16px))' }"
         >
-            <nx-menu [content]="content"></nx-menu>
+            <nx-menu
+                [content]="content"
+                [autoFit]="true"
+            ></nx-menu>
         </div>
 
-        <div
-            class="col-12 col-lg-8 col-xl-7 pt-3 pt-lg-0 px-3 pl-lg-0 pl-xl-3 offset-lg-4 offset-xl-3"
-        >
+        <div class="content">
             <router-outlet></router-outlet>
             <nx-footer></nx-footer>
         </div>

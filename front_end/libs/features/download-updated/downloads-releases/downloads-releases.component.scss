@@ -1,36 +1,23 @@
 @use "typography";
 @use "theme_variables_common" as theme_vars;
-@use "bootstrap_utils" as bootstrap;
 
-.fixed-sidebar {
-  margin: 0 !important;
-  padding-left: 1rem !important;
-  padding-right: 0 !important;
-
-  @include bootstrap.media-breakpoint-down(lg) {
-    height: auto;
-    padding-right: 1rem !important;
-  }
-
-  // replicate col-md-4
-  @include bootstrap.media-breakpoint-up(lg) {
+.menu-container {
     position: fixed;
-    left: 0;
-    width: calc((100% - #{theme_vars.$scrollbar-height}) / 3)
-  }
+    display: flex;
+    background: var(--left-menu-bg);
+    margin: 0 -16px -16px -16px;
+    padding-top: 16px;
+}
 
-  // replicate col-xl-3
-  @include bootstrap.media-breakpoint-up(xl) {
-    width: calc((100% - #{theme_vars.$scrollbar-height}) / 4);
-    max-width: calc(#{theme_vars.$fluid-container-max-width} / 4);
-  }
-
-  nx-menu::ng-deep {
+:host nx-menu {
+    flex: 1;
     height: 100%;
-    margin: -16px 0 0 -16px;
-    .nx-menu {
-      height: 100%;
-    }
-  }
+    width: 360px;
+}
+
+.content {
+    overflow-y: auto;
+    flex: 1;
+    margin-left: 360px;
 }
 
