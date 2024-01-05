@@ -66,7 +66,7 @@ export class DownloadHistoryComponent implements OnInit {
         this.currentTab = name;
         this.activeBuilds = this.downloadsData[name];
 
-        this.router.navigate([`/downloads-releases/other/${name}`]);
+        this.router.navigate([`/download/other/${name}`]);
         return false;
     }
 }

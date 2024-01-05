@@ -390,7 +390,7 @@ export const menus = {
         },
     },
     download: {
-        baseUrl: '/downloads-releases',
+        baseUrl: '/download',
         icon: '',
         releases: {
             id: 'releases',

@@ -83,8 +83,10 @@ export class NxDownloadsReleasesComponentNew implements AfterViewInit {
                         this.menuService.selectedSection.set('other');
                     }
                 }
-                this.content.selectedSection = this.menuService.selectedSection();
-                this.content = { ...this.content };
+                if (this.content) {
+                    this.content.selectedSection = this.menuService.selectedSection();
+                    this.content = { ...this.content };
+                }
             },
             { allowSignalWrites: true },
         );

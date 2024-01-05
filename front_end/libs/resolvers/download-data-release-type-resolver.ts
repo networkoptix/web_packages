@@ -37,7 +37,7 @@ export const DownloadDataReleaseTypeResolver: ResolveFn<Promise<Downloads>> = as
         const fallbackPlatform =
             platformMatch[deviceInfo.os.toLowerCase()]?.toLowerCase() || windows;
         return router
-            .navigate(['/downloads-releases/' + releaseType + '/' + fallbackPlatform])
+            .navigate(['/download/' + releaseType + '/' + fallbackPlatform])
             .catch(error => {
                 console.error(error);
             });

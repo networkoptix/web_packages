@@ -130,18 +130,17 @@ const lazyRoutes: Routes = [
             import('@pages/integration/integrations.module').then(m => m.IntegrationsModule),
     },
     {
-        path: 'downloads-releases',
-        loadChildren: () =>
-            import('@pages/download-updated/downloads-releases.module').then(
-                m => m.NxDownloadsReleasesModuleNew,
-            ),
-    },
-    {
         path: 'download',
-        loadChildren: () => import('@pages/download/download.module').then(m => m.DownloadModule),
+        loadChildren: () =>
+            !nxConfig.featureFlags.enhancedDownloads
+                ? import('@pages/download/download.module').then(m => m.DownloadModule)
+                : import('@pages/download-updated/downloads-releases.module').then(
+                      m => m.NxDownloadsReleasesModuleNew,
+                  ),
     },
     {
         path: 'downloads',
+        canMatch: [() => !nxConfig.featureFlags.enhancedDownloads],
         loadChildren: () =>
             import('@pages/download-history/download-history.module').then(
                 m => m.DownloadHistoryModule,

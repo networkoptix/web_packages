@@ -20,9 +20,7 @@
                             href=""
                             class="nav-link"
                             [id]="platform.name"
-                            [routerLink]="
-                                '/downloads-releases/' + releaseType + '/' + platform.name
-                            "
+                            [routerLink]="'/download/' + releaseType + '/' + platform.name"
                             [routerLinkActive]="'active'"
                             [attr.aria-selected]="platform.name === activePlatform"
                             aria-disabled="false"

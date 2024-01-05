@@ -208,6 +208,7 @@ const FeatureFlagKeys = [
     'layoutsRemoveItemDialog',
     'enableAnimations',
     'tosRequired',
+    'enhancedDownloads',
     'use500ErrorInterceptor',
 ] as const;
 

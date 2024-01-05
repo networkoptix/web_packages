@@ -105,6 +105,7 @@ class FLAGS(metaclass=_FlagType):
     access_integration_store = ('Lets the desktop client know if the integration store is enabled.',
                                 'accessIntegrationStore', '%INTEGRATION_STORE_ENABLED%')
     access_developers = ('Enable For Developers pages.', 'accessDevelopers', '%DEVELOPERS_ENABLED%')
+    enhanced_downloads = ('Enable Enhanced Downloads pages.', 'enhancedDownloads')
 
     # TODO: Remove this with https://networkoptix.atlassian.net/browse/CLOUD-8667 *********
     five_r = ('Paginator(experimental)', 'paginatorExperimental', '%FIVE_R_ENABLED%')
