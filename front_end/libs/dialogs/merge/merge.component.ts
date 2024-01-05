@@ -529,7 +529,7 @@ export class MergeModalContent {
                         this.checkMergeButtonText = this.LANG.dialogs.merge.next;
                         this.checking = false;
                         // covers case where system (cloud & non-cloud) is not set up yet
-                        if (res.isNew) {
+                        if (res.isNew || this.targetSystem.isNew) {
                             if (this.serverUrl) {
                                 const index = this.serverUrl.indexOf('//') + 2;
                                 this.serverUrl = strSplice(this.serverUrl, index, 'admin:admin@');
@@ -637,7 +637,7 @@ export class MergeModalContent {
                             this.targetSystem.id,
                             true,
                             this.machine.state.template.passwordValue,
-                            !this.system.moduleInfo.cloudOwnerId,
+                            !this.system.moduleInfo.cloudOwnerId && !this.targetSystem.isNew,
                         )
                         .toPromise()
                         .catch(res => {
@@ -1043,7 +1043,7 @@ export class MergeModalContent {
                     this.targetSystem.id,
                     true,
                     '',
-                    !this.system.moduleInfo.cloudOwnerId,
+                    !this.system.moduleInfo.cloudOwnerId && !this.targetSystem.isNew,
                 )
                 .toPromise()
                 .catch(res => {

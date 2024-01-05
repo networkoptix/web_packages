@@ -212,7 +212,7 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         return this._vmsToken;
     }
 
-    private refreshTokens(
+    refreshTokens(
         refreshToken: string,
         isSystem?: boolean,
         remoteSystemId?: string,
@@ -1078,74 +1078,9 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
         remoteServerId: string,
         dryRun: boolean,
         password = '',
-        takeRemoteSettings = true,
-    ) {
-        const [basicCredentials, _] = remoteEndpoint.includes('@') ? remoteEndpoint.split('@') : [];
-        remoteEndpoint = remoteEndpoint.replace(/https?:\/\/(?:.*@)?/, '').replace(/\/$/, '');
-        const request = remoteServerId
-            ? of({ id: remoteServerId, cloudSystemId: '' })
-            : this.proxy('get', 'https', remoteEndpoint, 'rest/v1/servers/this/info', {});
-        return request.pipe(
-            // Gets the remoteServerID and checks if the remote system is connected to cloud.
-            switchMap((data: any) => {
-                if (!remoteServerId) {
-                    remoteServerId = data.id.replace(/{|}/g, '');
-                }
-                return of({ token: '', cloudSystemId: data.cloudSystemId || '' });
-            }),
-            // Adds the remoteToken to the merge request.
-            switchMap((info: any) => {
-                if (!dryRun || (password && !this.isSessionOauth)) {
-                    const refreshToken = this.storageService.refreshToken;
-                    // Using oauth and target system is connected to cloud.
-                    if (info.cloudSystemId && refreshToken) {
-                        // Request for a cloud token that has the targetSystem scope.
-                        return this.refreshTokens(refreshToken, true, info.cloudSystemId).pipe(
-                            map((res: any) => ({ token: res.access_token })),
-                        );
-                    } else if (password || basicCredentials) {
-                        if (!password && basicCredentials) {
-                            const [_, basicPassword] = basicCredentials
-                                .replace(/https?:\/\//, '')
-                                .split(':');
-                            if (basicPassword) {
-                                password = basicPassword;
-                            }
-                        }
-                        const data = { username: 'admin', password, remember: false };
-                        return this.proxy(
-                            'post',
-                            'https',
-                            remoteEndpoint,
-                            'rest/v1/login/sessions',
-                            data,
-                            true,
-                        );
-                    }
-                }
-                return of(info);
-            }),
-            // Executes the merge request
-            switchMap((res: any) => {
-                const remoteSessionToken = res.token ?? '';
-                const data = {
-                    remoteServerId,
-                    takeRemoteSettings,
-                    dryRun,
-                    remoteEndpoint,
-                    remoteSessionToken,
-                    // remoteCertificatePem          : '', // Currently optional.
-                    mergeOneServer: false,
-                    ignoreIncompatible: false,
-                    ignoreOfflineServerDuplicates: true,
-                };
-                return this.post<t.MergeSystems>('/rest/v1/system/merge', data, {
-                    headers: {
-                        'Accept-Language': 'en-US',
-                    },
-                });
-            }),
-        );
+        takeRemoteSettings: boolean,
+    ): Observable<t.MergeSystems> {
+        throw new Error('Should only be using rest v3 version');
     }
 
     restartServer(serverId?: string) {
