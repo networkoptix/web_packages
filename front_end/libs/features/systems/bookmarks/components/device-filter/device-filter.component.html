@@ -13,7 +13,10 @@
     </button>
 </div>
 <div class="body">
-    <nx-simple-search [(ngModel)]="search"></nx-simple-search>
+    <nx-simple-search
+        [(ngModel)]="search"
+        class="withDarkBorder"
+    ></nx-simple-search>
     <div class="devices">
         <label
             *ngFor="let device of searchMatches | slice: 0 : displayLimit"

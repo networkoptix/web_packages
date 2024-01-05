@@ -1,4 +1,5 @@
 @use '../filter.scss';
+@use 'typography';
 
 $label-height: 1.75rem;
 
@@ -24,6 +25,12 @@ $label-height: 1.75rem;
             &.selected,
             &:hover {
                 background-color: var(--bookmarks-text-highlight-bg);
+            }
+
+            &.selected {
+                span {
+                    font-family: typography.$font-family-bold;
+                }
             }
 
             span {
