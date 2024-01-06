@@ -228,15 +228,6 @@ class OrganizationQueryParamsSerializer(serializers.Serializer):
 class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = 'organization'
 
-    class UsersField(serializers.HyperlinkedRelatedField):
-        view_name = 'organizations-user-list'
-
-        def get_url(self, obj, view_name, request, format):
-            url_kwargs = {
-                'parent_lookup_organization': obj.pk
-            }
-            return reverse(view_name, kwargs=url_kwargs, request=request, format=format)
-
     class CloudSystemsField(serializers.HyperlinkedRelatedField):
         view_name = 'organizations-cloudsystem-list'
 
@@ -246,7 +237,6 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             }
             return reverse(view_name, kwargs=url_kwargs, request=request, format=format)
 
-    # users = UsersField(source='*', read_only=True)
     # cloudSystems = CloudSystemsField(source='*', read_only=True)
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     created = serializers.DateTimeField(source='created_ts', read_only=True)
@@ -279,10 +269,8 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
             "ownRolesIds",
             "ownRoles",
             "name",
-            "users",
             'systemCount'
         ]
-        read_only_fields = ['users']
 
     @cached_property
     def organization_roles(self):
@@ -295,8 +283,8 @@ class OrganizationSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
         return super().update(instance, validated_data_filtered)
 
     def get_permissions_list(self, instance) -> List[str]:
-        perms = self.user_access_matrix.get_org_permissions(
-            self.get_roles_list(instance), filtered=False)
+        user_roles = self.get_roles_list(instance)
+        perms = self.user_access_matrix.get_org_permissions(user_roles, filtered=False)
         return list(perms)
 
     def get_roles_list(self, instance: Organization) -> List[uuid.UUID]:
