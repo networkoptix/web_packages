@@ -206,6 +206,14 @@ export class ServerManager {
         resourceId: string,
         params: Record<string, string>,
     ): Promise<EmptyObjectReturned> {
+        if (this.mediaserver instanceof NxSystemRestAPI) {
+            const isServer = dirtyId(resourceId) in this.mediaserverConnections;
+            const updater = isServer
+                ? this.mediaserver.updateServerParams
+                : this.mediaserver.updateDeviceParams;
+            return updater.call(this.mediaserver, resourceId, params).then(() => ({}));
+        }
+
         if (params.id) {
             params.id = dirtyId(params.id);
         }
