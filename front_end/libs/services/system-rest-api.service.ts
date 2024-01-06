@@ -46,7 +46,7 @@ import {
     ViewBaseCamera,
     ViewPreprocessServer,
 } from '@services/system.service/system-server-types';
-import { buildTopLevelKeyMap, cleanIdLegacy } from '@utils/general';
+import { buildTopLevelKeyMap, cleanId, cleanIdLegacy } from '@utils/general';
 import { InterceptorManager } from '@utils/interceptor-manager';
 import {
     defaultHashFunction,
@@ -1021,6 +1021,18 @@ export class NxSystemRestAPI extends NxSystemAPI implements MediaserverRestConne
             caption: action,
             backupNewCameras: true,
             quality: 'CameraBackupBoth',
+        }).toPromise();
+    }
+
+    updateServerParams(serverId: string, parameters: Record<string, unknown>) {
+        return this.patch<unknown>(`/rest/v1/servers/${cleanId(serverId)}`, {
+            parameters,
+        }).toPromise();
+    }
+
+    updateDeviceParams(deviceId: string, parameters: Record<string, unknown>) {
+        return this.patch<unknown>(`/rest/v1/devices/${cleanId(deviceId)}`, {
+            parameters,
         }).toPromise();
     }
 

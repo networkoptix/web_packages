@@ -170,8 +170,11 @@ export class CurrentStorageState {
     };
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
-    #checkCanStoreAnalytics = ({ storageType, isWritable }: Storage) =>
-        isWritable && [STORAGE_TYPES.LOCAL, STORAGE_TYPES.REMOVABLE].includes(storageType);
+    #checkCanStoreAnalytics = ({ storageType, isWritable, storageId, usedForWriting }: Storage) =>
+        storageId === this.#metadataStorageId ||
+        (isWritable &&
+            usedForWriting &&
+            [STORAGE_TYPES.LOCAL, STORAGE_TYPES.REMOVABLE].includes(storageType));
 
     // eslint-disable-next-line @typescript-eslint/no-use-before-define
     checkAnalytics = (storage: Storage) => ({
