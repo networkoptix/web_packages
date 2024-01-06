@@ -4,6 +4,9 @@ set -e
 NODE_VERSION="18.15.0"
 NPM_VERSION="9.5.0"
 
+BUILD_NUMBER=${BUILD_NUMBER:-0}
+VERSION="23.3.0.$BUILD_NUMBER"
+
 
 function build_frontend () {
     echo "Building front_end"
@@ -17,7 +20,8 @@ function build_frontend () {
         # Save the repository info.
         echo -e "\nCreate version.txt"
         if [ -e "$PORTAL_REPOSITORY/.git" ]; then
-            git -C "$PORTAL_REPOSITORY" log -n 1 > dist/version.txt
+            echo "build ${VERSION}" >> dist/version.txt
+            git -C "$PORTAL_REPOSITORY" log --format="commit %H%nDate: %cd" -n 1 >> dist/version.txt
             git -C "$PORTAL_REPOSITORY" rev-parse --abbrev-ref HEAD | xargs echo 'Branch:' >> dist/version.txt
         else
             echo "Neither git nor hg has been detected in $2" && exit 1
