@@ -16,7 +16,7 @@ from model_bakery import baker
 from partners.models import (
     ChannelPartnerServiceRecord, ChannelPartnerService, OrganizationRole, OrganizationToUser,
     ChannelPartnerRole, ChannelPartnerToUser, ChannelPartnerStates, OrganizationRoles,
-    CloudUser, ActionConfirmation, ServiceUsage, NotificationTypes,
+    CloudUser, ActionConfirmation, ServiceUsage, NotificationTypes, Organization,
 )
 from partners.serializers import (
     ChannelPartnerSerializer, ChannelPartnerAggDataSerializer, OrganizationAggDataSerializer,
@@ -335,6 +335,41 @@ class TestOrganizationSerializer:
             return context
 
         self.context = context
+
+    @pytest.mark.django_db
+    def test_fields_existence(self, arf, default_cp_admin):
+        """
+        Test that all expected fields exist in the serialized data of an Organization object.
+        """
+        # Build out Request
+        request = arf.get('/')
+        request.user = default_cp_admin.user
+
+        # Build out Organizational instance
+        organization = baker.make(Organization)
+
+        # Serialize with request for context and Organization
+        serializer = OrganizationSerializer(organization, context={'request': request})
+        data = serializer.data
+
+        expected_fields = [
+            "id",
+            "state",
+            "created",
+            "effectiveState",
+            "channelPartner",
+            "channelPartnerAccessLevel",
+            "attributes",
+            "currentServices",
+            "ownPermissions",
+            "ownRolesIds",
+            "ownRoles",
+            "name",
+            'systemCount'
+        ]
+        # Test for all fields
+        for field in expected_fields:
+            assert field in data, f"Expected field {field} not found in serialized data."
 
     def test_current_services(self, default_channel_partner, organization_factory, system_factory,
                               cp_service_factory, org_service_factory, service_record_factory, arf,
