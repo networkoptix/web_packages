@@ -284,14 +284,23 @@ export class Storage extends StorageDataStructure {
             return STORAGE_STATUS.INACCESSIBLE;
         }
 
-        if (
-            (!this.isWritable && !this.usedForWriting) ||
-            this.totalSpace < 0 ||
-            this.storageStatus.includes('tooSmall') ||
-            (this.storageId.startsWith('/') && !this.storageStatus.includes('removable')) ||
-            (this.storageStatus.includes('system') &&
-                this.totalSpace < this.currentStorageState.freeSpace / 6)
-        ) {
+        const isStorageReserved = (storage: Storage, recursive = true): boolean =>
+            (!storage.isWritable && !storage.usedForWriting) ||
+            storage.totalSpace < 0 ||
+            storage.storageStatus.includes('tooSmall') ||
+            (storage.storageId.startsWith('/') &&
+                !storage.storageStatus.includes('removable') &&
+                storage.storageStatus !== 'none') ||
+            (storage.totalSpace < storage.currentStorageState.freeSpace / 6 &&
+                (storage.storageStatus.includes('system') ||
+                    (recursive &&
+                        storage.currentStorageState.locations.some(
+                            storage =>
+                                storage.storageId !== this.storageId &&
+                                isStorageReserved(storage, false),
+                        ))));
+
+        if (isStorageReserved(this)) {
             return STORAGE_STATUS.RESERVED;
         }
         return STORAGE_STATUS.IN_USE;
