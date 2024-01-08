@@ -374,12 +374,37 @@ export class NxCamerasComponent implements OnInit, OnChanges {
                 .then(updatedCamera => {
                     const newNxSystemCamera = this.system.cameraManager.parseCamera(updatedCamera);
                     this.camera = newNxSystemCamera;
+
+                    this.immediatelyUpdateCamera();
+
                     this.setCamera();
                     // this updates the menu with any changes. we should look to avoid this pattern
                     this.system.systemInfo = this.system;
                     return newNxSystemCamera;
                 });
         });
+    }
+
+    /**
+     * @deprecated
+     *
+     * There is some weird issue where the camera is not updated in the camera manager.
+     *
+     * This is a temporary fix since refactoring the camera manager state to be more reactive
+     * is probably outside the scope of 6.0
+     */
+    immediatelyUpdateCamera(): void {
+        const cameraIndex = this.system.cameraManager.cameras.findIndex(
+            camera => camera.id === this.camera.id,
+        );
+
+        if (cameraIndex === -1) {
+            this.system.cameraManager.cameras.push(this.camera);
+        } else {
+            this.system.cameraManager.cameras[cameraIndex] = this.camera;
+        }
+
+        this.system.cameraManager.updateCamerasSubject();
     }
 
     updateCredentials(): void {

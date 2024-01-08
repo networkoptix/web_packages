@@ -1,5 +1,5 @@
 import { flatten } from 'lodash-es';
-import { firstValueFrom, map, Observable } from 'rxjs';
+import { BehaviorSubject, firstValueFrom, map, Observable } from 'rxjs';
 
 import { NxSystemOldModule } from '@services/system/modules/nx-system-old-module';
 import type { ChangedIdReturned } from '@services/system-api.types';
@@ -40,6 +40,16 @@ export class CameraManager {
     private serverManager: ServerManager;
     private serverTimes: ServerTime[];
 
+    cameras$ = new BehaviorSubject<NxSystemCamera[]>([]);
+    /**
+     * @deprecated
+     *
+     * This is a temporary solution to have a reactive version for the cameras property.
+     *
+     * We should move the cameras state into either an ngrx store or signal store.
+     */
+    updateCamerasSubject = (): void => this.cameras$.next(this.cameras);
+
     cameras: NxSystemCamera[] = [];
 
     constructor(private system: PartialSystem) {
@@ -73,6 +83,7 @@ export class CameraManager {
                     return this.processCameras(cameras, serverTimes);
                 }
             });
+        this.updateCamerasSubject();
         return this.cameras;
     }
 

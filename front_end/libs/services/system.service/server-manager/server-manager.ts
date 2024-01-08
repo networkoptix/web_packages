@@ -65,6 +65,16 @@ export class ServerManager {
         return this.handleInitSystemMediaServers();
     }
 
+    servers$ = new BehaviorSubject<NxSystemServer[]>([]);
+    /**
+     * @deprecated
+     *
+     * This is a temporary solution to have a reactive version for the servers property.
+     *
+     * We should move the servers state into either an ngrx store or signal store.
+     */
+    updateServersSubject = (): void => this.servers$.next(this.servers);
+
     servers: NxSystemServer[] = [];
     moduleInfo: ModuleInformationReply;
     serverSubscription: Observable<NxSystemServer[]>;
@@ -165,6 +175,7 @@ export class ServerManager {
                     this.servers = res
                         .map(setServerIpAndPort)
                         .sort(alphabeticalSort(server => server.name));
+                    this.updateServersSubject();
                     return this.servers;
                 }),
             );
