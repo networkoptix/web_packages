@@ -1,6 +1,13 @@
 /* eslint-disable nx/ban-global-variables */
 import { ComponentPortal, ComponentType, Portal } from '@angular/cdk/portal';
-import { Injectable, Injector, TemplateRef, runInInjectionContext, signal } from '@angular/core';
+import {
+    Injectable,
+    Injector,
+    TemplateRef,
+    effect,
+    runInInjectionContext,
+    signal,
+} from '@angular/core';
 import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -40,7 +47,7 @@ import { nxConfig } from '@services/nx-config/config';
 import { NxParamStateService } from '@services/param-state/param-state.service';
 import { LayoutItem, Layout } from '@services/system-api.types/layouts.types';
 import { NxSystemService } from '@services/system.service/system.service';
-import { dirtyId } from '@utils/general';
+import { cleanId, dirtyId } from '@utils/general';
 
 import { ActiveLayoutActions } from './store/active-layout';
 import { selectActiveLayoutState } from './store/active-layout/active-layout.selectors';
@@ -230,17 +237,21 @@ export class LayoutStateService {
             .pipe(
                 take(1),
                 switchMap(async activeLayoutId => {
+                    this.activeLayoutHistory = this.activeLayoutHistory.filter(
+                        val => !layoutIds.map(dirtyId).includes(dirtyId(val)),
+                    );
                     const dirtyLayoutId = dirtyId(activeLayoutId);
                     const savedLayouts = await firstValueFrom(
-                        this.store.select(SharedLayoutsSelectors.selectLayoutsState),
+                        this.store.select(SharedLayoutsSelectors.selectLayoutsSavedState),
                     );
                     if (
                         layoutIds.includes(dirtyLayoutId) &&
                         (deleted || !savedLayouts.find(({ id }) => id === dirtyLayoutId))
                     ) {
+                        const previous = this.activeLayoutHistory.pop();
                         await this.paramStateHandler.updater({
                             params: {
-                                layoutId: 'default',
+                                layoutId: cleanId(previous || 'default'),
                             },
                         });
                     }
@@ -461,6 +472,8 @@ export class LayoutStateService {
         shareReplay({ bufferSize: 1, refCount: false }),
     );
 
+    activeLayoutHistory: string[] = [];
+
     constructor(
         private cloudApi: NxCloudApiService,
         private injector: Injector,
@@ -476,6 +489,15 @@ export class LayoutStateService {
         // eslint-disable-next-line ngrx/no-store-subscription
         this.store.pipe(takeUntilDestroyed()).subscribe(state => {
             console.info('currentState', state);
+        });
+
+        const activeLayoutId$$ = this.store.selectSignal(selectActiveLayoutState);
+
+        effect(() => {
+            const activeLayoutId = activeLayoutId$$();
+            if (activeLayoutId && activeLayoutId !== 'default') {
+                this.activeLayoutHistory.push(activeLayoutId);
+            }
         });
     }
 }

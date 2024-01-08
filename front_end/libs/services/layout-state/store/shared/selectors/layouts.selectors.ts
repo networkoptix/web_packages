@@ -6,7 +6,7 @@ import { alphabeticalSort } from '@utils/general';
 import { CrossSystemLayoutsSelectors } from '../../cross-system-layouts';
 import { LocalLayoutsSelectors } from '../../local-layouts';
 import { UnsavedLayoutsSelectors } from '../../unsaved-layouts';
-import { LayoutState } from '../types/layout-state.types';
+import { LayoutState, UnsavedState } from '../types/layout-state.types';
 import { toCrossSystemLayoutState, toLocalLayoutState } from '../utils';
 
 export const selectLayoutsState = createSelector(
@@ -25,6 +25,11 @@ export const selectLayoutsState = createSelector(
             alphabeticalSort(({ layout }) => layout.name),
         );
     },
+);
+
+export const selectLayoutsSavedState = createSelector(
+    selectLayoutsState,
+    (layouts): LayoutState[] => layouts.filter(({ unsaved }) => unsaved === UnsavedState.SAVED),
 );
 
 export const selectLayouts = createSelector(selectLayoutsState, (layouts): Layout[] =>
