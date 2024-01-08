@@ -26,7 +26,7 @@ import type { NgChanges } from '@utils/ng-changes';
 })
 export class NxSearchHighlightComponent implements OnChanges {
     @Input() text: string;
-    @Input() search: string | RegExp;
+    @Input() search: string | RegExp | null;
     @Input() flags: string = 'i';
     @Input({ transform: booleanAttribute }) bold: boolean = false;
 
@@ -44,9 +44,10 @@ export class NxSearchHighlightComponent implements OnChanges {
 
         if (!textValue || !searchValue) {
             this.subStrings = textValue ? [textValue] : [];
+            return;
         }
 
-        this.subStrings = (textValue || '').split(
+        this.subStrings = textValue.split(
             typeof searchValue === 'string'
                 ? new RegExp(`(${escapeRegExp(searchValue)})`, flagsValue)
                 : searchValue,
