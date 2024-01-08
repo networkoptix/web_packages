@@ -12,7 +12,7 @@ import {
 import { ActivatedRoute, Router, NavigationStart } from '@angular/router';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { escape } from 'lodash-es';
-import { firstValueFrom, Subject, Subscription } from 'rxjs';
+import { combineLatest, firstValueFrom, Subject, Subscription } from 'rxjs';
 import { debounceTime, filter, take, takeUntil, tap } from 'rxjs/operators';
 
 import { NxRibbonService } from '@components/ribbon/ribbon.service';
@@ -66,7 +66,19 @@ import { alphabeticalSort, cleanIdLegacy } from '@utils/general';
 export class NxSystemSettingsComponent implements OnInit, OnDestroy {
     @Input() uriParamSystemId;
     @Input() callShare;
-    @Input() system: NxSystem;
+    #system: NxSystem;
+    unsubscribe$ = new Subject();
+    @Input() set system(system: NxSystem) {
+        this.#system = system;
+        this.unsubscribe$.next('unsubscribe');
+        combineLatest([this.system.cameraManager.cameras$, this.system.serverManager.servers$])
+            .pipe(takeUntil(this.unsubscribe$), untilDestroyed(this))
+            .subscribe(() => this.updateMenu());
+    }
+
+    get system(): NxSystem {
+        return this.#system;
+    }
 
     editCameras: Signal<boolean> = computed(
         () => this.system.permissionManager.permissions$$().editCameras,
