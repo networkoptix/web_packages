@@ -23,6 +23,7 @@
                     [posterUrl]="bookmark.thumbnail | async"
                     disableDownload
                     disablePictureInPicture
+                    autoplay
                     (error)="videoError$$.set(true); videoLoaded$$.set(true)"
                     (loadeddata)="videoLoaded$$.set(true)"
                 >
