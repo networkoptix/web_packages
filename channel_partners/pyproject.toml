@@ -2,7 +2,10 @@
 name = "channel-partners"
 version = "0.1.0"
 description = ""
-authors = ["Kyrylo Apanovych <kapanovich@networkoptix.com>"]
+authors = [
+    "Kyrylo Apanovych <kapanovich@networkoptix.com>",
+    "Kevin Brostoff <kBrostoff@NetworkOptix.com>"
+]
 readme = "README.md"
 packages = []
 
@@ -29,6 +32,7 @@ celery = { version="5.3.4", extras=["redis", "django", "sqs"] }
 django-celery-results = "^2.5.1"
 django-celery-beat = "^2.5.0"
 gevent = "^23.9.1"
+django-structlog = "7.1.0"
 
 [tool.poetry.group.test.dependencies]
 django-silk = "^5.0.4"

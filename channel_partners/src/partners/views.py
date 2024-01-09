@@ -1,4 +1,5 @@
-import logging
+import structlog
+
 from time import sleep
 from typing import TypedDict, Tuple
 from uuid import uuid4, UUID
@@ -36,7 +37,7 @@ from .serializers import *
 VIEW_LOCK_WAIT_TIME = 2
 
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def grant_access(request):
@@ -1365,7 +1366,10 @@ def system_users(request, system_id, email=None):
 # TODO: CLOUD-11974
 def all_org_users(request):
     users_dict = {
-        'users': CloudUser.objects.filter(Q(organizations__isnull=False) | Q(channel_partners__isnull=False)).distinct().values_list('email', flat=True)
+        'users': CloudUser.objects.filter(
+            Q(organizations__isnull=False) |
+            Q(channel_partners__isnull=False))
+        .distinct().values_list('email', flat=True)
     }
     serializer = UserListSerializer(users_dict)
     return Response(serializer.data)
@@ -1458,7 +1462,9 @@ class InternalGrantAccess:
             organization=organization)
 
         if organization_user.exists():
-            logger.info(f"Found user {user.email} and deleting from organization_to_user")
+            logger.info(
+                "Found user and deleting from organization_to_user",
+                email=user.email)
             organization_user.delete()
 
         return OrganizationToUser(
@@ -1478,7 +1484,9 @@ class InternalGrantAccess:
             channel_partner=channel_partner)
 
         if channel_partner_user.exists():
-            logger.info(f"Found user {user.email} and deleting from channel_partner_to_user")
+            logger.info(
+                "Found user and deleting from channel_partner_to_user",
+                email=user.email)
             channel_partner_user.delete()
 
         return ChannelPartnerToUser(

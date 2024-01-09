@@ -1,16 +1,15 @@
-import asyncio
-import logging
-from time import sleep
-
 import httpx
-from django.db import connections, DEFAULT_DB_ALIAS
+import structlog
+from django.core.cache import caches
+from django.db import DEFAULT_DB_ALIAS
+from django.db import connections
 from django.db.migrations.executor import MigrationExecutor
 from django.http import JsonResponse
-from django.core.cache import caches
 from django.views import View
+
 from nx_drf.drf_async import AsyncAPIView
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def simple_health_check(request):
@@ -39,7 +38,9 @@ class HealthCheckView(View):
         try:
             info = caches['default']._cache.get_client().info()
         except Exception as ex:
-            logger.error(f"Cannot retrieve cache server info. Exception: {ex}")
+            logger.error(
+                "Cannot retrieve cache server info.",
+                exception=ex)
             errors = True
         return errors
 

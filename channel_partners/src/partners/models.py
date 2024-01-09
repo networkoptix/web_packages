@@ -1984,6 +1984,3 @@ class NotificationTypes(enum.StrEnum):
     cps_partner_state_active = 'cps_partner_state_active'
     cps_partner_state_confirmation = 'cps_partner_state_confirmation'
     cps_partner_state_suspended = 'cps_partner_state_suspended'
-
-
-
