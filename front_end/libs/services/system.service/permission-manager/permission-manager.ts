@@ -1,5 +1,6 @@
 import { computed, signal } from '@angular/core';
 
+import { environment } from '@environments/environment';
 import staticLang from '@language/language_i18n_static.json';
 import { NxCloudApiService } from '@services/nx-cloud-api';
 import { NxSystemAPI } from '@services/system-legacy-api.service';
@@ -14,6 +15,7 @@ import {
     UserGroup,
     UserType,
     RestV3User,
+    CloudUserCompat,
 } from '@services/system-user.types';
 import { cleanIdLegacy } from '@utils/general';
 
@@ -152,7 +154,7 @@ export class PermissionManager {
                 .map(groupId => groups.find(({ id }) => groupId === id)?.name)
                 .filter(role => !!role)
                 .join(', ');
-        } else if (roles) {
+        } else if (roles.length) {
             accessRole =
                 roles.find(
                     role =>
@@ -160,6 +162,10 @@ export class PermissionManager {
                         role.isOwner === isOwner &&
                         role.permissions === permissionsString,
                 )?.name || '';
+        } else if (!environment.isLocal) {
+            // If roles is empty that means we couldn't fetch them from the system.
+            // As a fallback for cloud we can try to get the accessRole from cdb.
+            accessRole = (user as CloudUserCompat)?.accessRole;
         }
 
         if (!accessRole) {
