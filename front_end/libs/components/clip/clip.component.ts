@@ -17,6 +17,7 @@ export class ClipComponent {
     @Input() posterUrl: string;
     @Input({ transform: booleanAttribute }) disableDownload: boolean;
     @Input({ transform: booleanAttribute }) disablePictureInPicture: boolean;
+    @Input({ transform: booleanAttribute }) autoplay: boolean;
     @Output() error = new EventEmitter<void>();
     @Output() loadeddata = new EventEmitter<void>();
 
