@@ -16,7 +16,7 @@ import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Observable, Subject, debounceTime, distinctUntilChanged, map } from 'rxjs';
+import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -81,8 +81,11 @@ export class NxOrganizationCardContainerComponent {
         const currOrg = this.store.selectSignal(selectCurrentOrganization);
         return currOrg()?.ownPermissions.includes(OrgPermissions.MANAGE_SYSTEMS);
     });
-    hasEnoughGroups$$ = computed(() => {
-        return this.currentGroups$$().length > searchConfig.channelPartners.searchMinimumCards;
+    hasEnoughGroupsOrSystems$$ = computed(() => {
+        return (
+            this.currentGroups$$().length + this.currentSystems$$().length >
+            searchConfig.channelPartners.searchMinimumCards
+        );
     });
     hasGroups$$ = this.store.selectSignal<boolean>(selectHasGroups);
     currentGroupId$$ = this.store.selectSignal<string>(selectCurrentGroupId);
@@ -90,11 +93,10 @@ export class NxOrganizationCardContainerComponent {
     currentGroups$$ = this.store.selectSignal<GroupItem[]>(selectCurrentGroups);
     filteredGroups: GroupItem[];
     currentOrgId$$ = this.store.selectSignal<string>(selectCurrentOrgId);
-    currentSystems$: Observable<SystemItem[]>;
-    filteredSystems$: Observable<SystemItem[]>;
     search = { value: '' };
     searchChanged = new Subject<void>();
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
+    filteredSystems$: SystemItem[];
     systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
     groupItems$$ = this.store.selectSignal(selectGroupItems);
     systemMap$$ = computed(() => {
@@ -222,22 +224,23 @@ export class NxOrganizationCardContainerComponent {
 
     searchSystems(): void {
         const search = this.search.value;
-        const currGroups = this.currentGroups$$();
+        const currentGroups = this.currentGroups$$();
+        const currentSystems = this.currentSystems$$();
         if (search) {
-            if (currGroups) {
-                this.filteredGroups = currGroups.filter(system =>
+            if (currentGroups) {
+                this.filteredGroups = currentGroups.filter(system =>
                     caseInsenstiveSearch(system.name, search),
                 );
             }
 
-            if (this.currentSystems$) {
-                this.filteredSystems$ = this.currentSystems$.pipe(
-                    map(res => res.filter(system => caseInsenstiveSearch(system.name, search))),
+            if (currentSystems) {
+                this.filteredSystems$ = currentSystems.filter(system =>
+                    caseInsenstiveSearch(system.name as string, search),
                 );
             }
         } else {
-            this.filteredGroups = currGroups;
-            this.filteredSystems$ = this.currentSystems$;
+            this.filteredGroups = currentGroups;
+            this.filteredSystems$ = currentSystems;
         }
     }
 
