@@ -143,8 +143,8 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         this.organization = organization;
         this.roles = roles;
         this.selectedRole$$ = signal(roles[0].id);
-        this.users = users;
         this.groups = groups;
+        this.users = users as OrganizationUser[];
         users.forEach(user => {
             if (user.roles[0]) {
                 // Has org role, is org user

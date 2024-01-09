@@ -34,6 +34,8 @@ import type { NxSystemServer } from '@services/system.service/types/servers.type
 import type { NxSystemInfo } from '@services/systems.service.types';
 import type { ExportSelection } from '@vms-client/submodules/timeline/components/nx-webgl-canvas/interactions/selection/selection.types';
 
+import type { UserRecord } from '../features/home/components/users/channel-partner-users/channel-partner-users.types';
+
 import { MergeError } from './merge/merge.refactor.component.types';
 import { NewFeatureTemplate } from './new-feature/new-feature.component.types';
 import type { SessionState } from './update-session/update-session.component.types';
@@ -160,7 +162,7 @@ export type AddOrgUserV2 = DialogType<
     {
         organization: Organization;
         roles: OrganizationRole[];
-        users: OrganizationUser[];
+        users: OrganizationUser[] | UserRecord[];
         groups: GroupItem[];
     },
     OrganizationUser | GroupUser

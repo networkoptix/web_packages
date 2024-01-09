@@ -49,6 +49,7 @@ export class NxChannelPartnerUsersComponent implements OnInit {
     headers: HEADER_ITEM[] | undefined;
     records$: Observable<UserRecord[]>;
     records$$: Signal<UserRecord[] | undefined>;
+    roles$$ = toSignal(this.CPService.getChannelPartnerRoles());
     searchQuery$$ = signal<string>('');
     filteredRecords: UserRecord[] | undefined = undefined;
     selectedUserEmail: string | undefined;
@@ -68,7 +69,6 @@ export class NxChannelPartnerUsersComponent implements OnInit {
                 users.map(user => ({
                     ...user,
                     userId: user.email,
-                    fullName: 'N/A',
                     userType: UserType.CHANNEL_PARTNER,
                 })),
             ),

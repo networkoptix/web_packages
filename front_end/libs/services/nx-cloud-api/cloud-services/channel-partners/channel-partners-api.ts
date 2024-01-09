@@ -306,7 +306,9 @@ export class ChannelPartnersApi extends BaseCloudServiceAPI {
     };
 
     deleteGroupUsers = (groupId: string, emails: string[]): Observable<GroupUser[]> => {
-        return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'bulk_delete']));
+        return this.post(this.makeUrl(urlBases.GROUPS, [groupId, 'users', 'bulk_delete']), {
+            body: emails,
+        });
     };
 
     getGroupUsersWithAccess = (groupId: string): Observable<GroupUserCanAccess[]> => {

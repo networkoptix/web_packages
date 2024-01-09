@@ -241,6 +241,10 @@
                 stroke: none;
             }
         }
+
+        .roles {
+            width: 100%;
+        }
     }
 }
 
@@ -286,10 +290,10 @@
 .CP-users {
     .nx-new-table {
         .header {
-            grid-template-columns: 42px 245px 150px 308px 42px;
+            grid-template-columns: 42px 1fr 1fr 1fr 42px;
         }
         .big-row {
-            grid-template-columns: 42px 245px 150px 308px 42px;
+            grid-template-columns: 42px 1fr 1fr 1fr 42px;
             grid-template-rows: 40px;
 
             & > div:last-child {
@@ -306,16 +310,27 @@
 .org-users {
     .nx-new-table {
         .header {
-            grid-template-columns: 42px auto repeat(3, 150px) 50px;
+            grid-template-columns: 42px 1fr .5fr 1fr 1fr 42px 42px;
         }
         .big-row {
-            grid-template-columns: 42px auto repeat(3, 150px) 50px;
+            grid-template-columns: 42px 1fr .5fr 1fr 1fr 42px 42px;
             grid-template-rows: 40px;
 
             div {
                 align-items: center;
                 display: flex;
                 gap: 0.25rem;
+
+            }
+            .icon {
+                cursor: pointer;
+                justify-content: center;
+            }
+            .delete {
+                svg .st0 {
+                    fill: red;
+                    stroke: none;
+                }
             }
         }
 

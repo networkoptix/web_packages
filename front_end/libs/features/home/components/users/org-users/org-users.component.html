@@ -20,5 +20,7 @@
     [inGroup]="inGroup"
     [headers]="headers"
     [records]="records$ | async"
+    [roles]="orgRoles$$()"
     (onDeleteClick)="deleteSingleUser($event)"
+    (onExpandClick)="expandClick($event)"
 ></nx-users-table>

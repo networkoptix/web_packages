@@ -27,6 +27,7 @@
             [selectedRecordId]="selectedUserEmail"
             (onDeleteClick)="deleteChannelPartnerUser($event)"
             (onRowClick)="selectUser($event)"
+            [roles]="roles$$()"
         ></nx-users-table>
     </div>
 </div>

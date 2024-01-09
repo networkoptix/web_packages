@@ -26,6 +26,7 @@ export interface ChannelPartnerUser {
     email: string;
     roles: string[];
     title: string;
+    fullName: string;
     created: string; // e.g. "2023-08-24T19:14:46.748Z"
 }
 
@@ -213,6 +214,7 @@ export interface OrganizationRole {
 
 export interface OrganizationUser {
     email: string;
+    fullName: string;
     roles: string[];
     title: string;
     created: string;
