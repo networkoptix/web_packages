@@ -1,7 +1,7 @@
 import { Injectable, Injector } from '@angular/core';
 import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
-import { BehaviorSubject, Observable, catchError, forkJoin, from, map, switchMap, of } from 'rxjs';
+import { BehaviorSubject, Observable, catchError, forkJoin, from, map, switchMap } from 'rxjs';
 
 import { SystemResourcesActions, SystemResourcesTypes } from '@common/store/system-resources';
 import { environment } from '@environments/environment';
@@ -180,9 +180,11 @@ export class NxSystemService {
         return this.system;
     }
 
-    logoutAllSystems(): Observable<unknown> {
-        return forkJoin([
-            Object.values(this.systemsCache).map(system => system.mediaserver.logout()),
-        ]).pipe(switchMap(() => of(false)));
+    logoutAllSystems(): Promise<unknown> {
+        return Promise.all(
+            Object.values(this.systemsCache).map(system =>
+                system.mediaserver.logout().catch(() => false),
+            ),
+        );
     }
 }

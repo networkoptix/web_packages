@@ -124,8 +124,11 @@ export abstract class BaseAccount {
             this.localStorage.clear(oauthStore.verify2fa);
             this.localStorage.clear('systemId');
             // Changing "loginState" is enough here. Re-init routes are subscribed to it.
+            const prevState = this.sessionService.loginState;
             this.sessionService.loginState = this.sessionService.LOGIN_STATE.AUTHORIZED;
-            setTimeout(() => this.window.location.reload());
+            if (prevState !== this.sessionService.LOGIN_STATE.CHANGED) {
+                setTimeout(() => this.window.location.reload());
+            }
         });
     }
 

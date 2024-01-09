@@ -1,6 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -9,7 +8,6 @@ import { NxSystemService } from '@services/system.service/system.service';
 import { NxConfigService } from './nx-config/nx-config.service';
 import { LOGIN_STATE } from './session.service.types';
 import { NxSwCacheService } from './sw-cache.service';
-import { windowFactory } from './window-provider';
 
 @Injectable({
     providedIn: 'root',
@@ -19,7 +17,6 @@ export class NxSessionService {
     readonly cloudUserCaches = ['apiFresh', 'cloudSystemAPI'];
     private session: LocalStorageService = inject(LocalStorageService);
     private systemService = inject(NxSystemService);
-    public window: Window = windowFactory();
 
     private state$$ = signal<LOGIN_STATE>(LOGIN_STATE.UNAUTHORIZED);
 
@@ -53,18 +50,19 @@ export class NxSessionService {
             .subscribe(async (state: LOGIN_STATE) => {
                 if (prevState === LOGIN_STATE.CHANGED) {
                     // logout all systems
-                    await firstValueFrom(this.systemService.logoutAllSystems());
+                    await this.systemService.logoutAllSystems();
+                    window.location.reload();
                 }
 
                 prevState = state;
                 // Clear config overrides between sessions
                 this.session.store(NxConfigService.OVERRIDE_KEY, {});
 
-                if (!this.window.document.hasFocus() && !environment.testing) {
+                if (!window.document.hasFocus() && !environment.testing) {
                     if (state === LOGIN_STATE.LOGGED_OUT) {
-                        this.window.location.href = this.window.location.host;
+                        window.location.href = window.location.host;
                     } else {
-                        this.window.location.reload();
+                        window.location.reload();
                     }
                 }
             });
