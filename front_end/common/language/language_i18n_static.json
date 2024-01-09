@@ -1268,6 +1268,9 @@
             "accessLevel": "Has access to",
             "groups": "Permission Groups"
         },
+        "usersTable": {
+            "infoToolTip": "Users with access based on access to higher-level folders"
+        },
         "userWantsToTransferToOrg": "<strong>{username}</strong> wants to transfer the system to the organization"
     },
     "menu": {

@@ -7,7 +7,7 @@ export interface UserRecord {
     userType: UserType;
     roles?: string[];
     groupRoles?: GroupRole[];
-    showOrg?: boolean;
+    isOrgUser?: boolean;
     accessLevel?: {
         id: string;
         name: string;

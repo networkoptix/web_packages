@@ -1,15 +1,23 @@
 import { CommonModule } from '@angular/common';
 import { Component, Input, OnInit, Signal, booleanAttribute } from '@angular/core';
+import { toSignal } from '@angular/core/rxjs-interop';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
-import { map, Observable } from 'rxjs';
+import { map, Observable, take } from 'rxjs';
 
 import { NxDialogsService } from '@dialogs/dialogs.service';
 import staticLang from '@language_static';
 import { HEADER_ITEM } from '@pages/home/home.types';
 import { NxChannelPartnersService } from '@pages/home/services/channel-partners.service';
-import { selectCurrentOrgId } from '@pages/home/store/channel-partners/channel-partners.selectors';
-import { selectCurrentGroupId, selectGroupItems } from '@pages/home/store/groups/groups.selectors';
+import {
+    selectCurrentOrgId,
+    selectCurrentOrganization,
+} from '@pages/home/store/channel-partners/channel-partners.selectors';
+import {
+    selectCurrentGroupId,
+    selectCurrentGroups,
+    selectGroupItems,
+} from '@pages/home/store/groups/groups.selectors';
 import {
     GroupItem,
     GroupUserCanAccess,
@@ -25,14 +33,14 @@ const mapGroupUsers = (users: GroupUserCanAccess[]): UserRecord[] => {
         userId: user.email,
         fullName: 'N/A',
         roles: user.roles,
-        showOrg: user.hasAccessTo?.membershipType === 'organization',
+        isOrgUser: user.hasAccessTo?.membershipType === 'organization',
         accessLevel: user.hasAccessTo,
         userType: UserType.GROUP,
     }));
 };
 
 const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord[] => {
-    const showOrg = (user: OrganizationUser): boolean => {
+    const isOrgUser = (user: OrganizationUser): boolean => {
         // Still needs clarification on all ways to see if user is from org
         return user.roles.includes('Administrator') || !user.groupRoles.length;
     };
@@ -40,11 +48,10 @@ const mapOrgUsers = (users: OrganizationUser[], groups: GroupItem[]): UserRecord
         ...user,
         groupRoles: user.groupRoles.map(group => ({
             ...group,
-            name: groups.find(groupItem => groupItem.id === group.groupId),
+            name: groups.find(groupItem => groupItem.id === group.groupId)?.name,
         })),
         userId: user.email,
-        fullName: 'N/A',
-        showOrg: showOrg(user),
+        isOrgUser: isOrgUser(user),
         userType: UserType.ORGANIZATION,
     }));
 };
@@ -68,6 +75,9 @@ export class NxOrganizationUsersComponent implements OnInit {
     records$: Observable<UserRecord[]>;
 
     currentItemId$$: Signal<string>;
+    currentOrg$$ = this.store.selectSignal(selectCurrentOrganization);
+    currentGroups$$ = this.store.selectSignal(selectCurrentGroups);
+    orgRoles$$ = toSignal(this.CPService.getOrganizationRoles());
     groupItems$$ = this.store.selectSignal(selectGroupItems);
 
     constructor(
@@ -104,19 +114,53 @@ export class NxOrganizationUsersComponent implements OnInit {
     }
 
     newUserDialog(orgId: string): void {
-        // Todo: Add support for adding group user
-        this.dialogsService.addOrgUser(orgId);
-    }
-
-    deleteSingleUser(email: string): void {
-        if (this.inGroup) {
-            this.CPService.deleteOrganizationUser(this.currentItemId$$(), email).subscribe({
-                error: err => console.error(err),
-            });
-        } else {
-            this.CPService.deleteGroupUsers(this.currentItemId$$(), [email]).subscribe({
-                error: err => console.error(err),
+        const roles = this.orgRoles$$();
+        const org = this.currentOrg$$();
+        // Currently only shows child groups in dialog
+        const groups: GroupItem[] = this.currentGroups$$();
+        if (org) {
+            this.records$.pipe(take(1)).subscribe(users => {
+                this.dialogsService
+                    .addOrgUserV2({ organization: org, roles, users, groups })
+                    .then(user => {
+                        const userRecord = this.inGroup
+                            ? mapGroupUsers([user as GroupUserCanAccess])
+                            : mapOrgUsers([user as OrganizationUser], this.groupItems$$());
+                        this.records$ = this.records$.pipe(
+                            map(records => {
+                                records.push(...userRecord);
+                                return records;
+                            }),
+                        );
+                    });
             });
         }
     }
+
+    deleteSingleUser(user: UserRecord): void {
+        const { email, isOrgUser } = user;
+        if (!isOrgUser) {
+            if (this.inGroup) {
+                this.CPService.deleteGroupUsers(this.currentItemId$$(), [email]).subscribe({
+                    error: err => console.error(err),
+                });
+            } else {
+                for (const group of user.groupRoles) {
+                    const groupId = group.groupId;
+                    this.CPService.deleteGroupUsers(groupId, [email]).subscribe({
+                        error: err => console.error(err),
+                    });
+                }
+            }
+        } else {
+            this.CPService.deleteOrganizationUser(this.currentItemId$$(), email).subscribe({
+                error: err => console.error(err),
+            });
+        }
+        this.records$ = this.records$.pipe(
+            map(users => users.filter(user => user.email !== email)),
+        );
+    }
+
+    expandClick(user: UserRecord): void {}
 }

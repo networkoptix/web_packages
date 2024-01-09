@@ -113,7 +113,7 @@
                 *ngIf="userType !== UserType.CHANNEL_PARTNER"
             >
                 <ng-container *ngIf="userType === UserType.ORGANIZATION; else group">
-                    <ng-container *ngIf="row.showOrg; else showFolder">
+                    <ng-container *ngIf="row.isOrgUser; else showFolder">
                         <svg-icon
                             [src]="icons.dir + 'organization_2.svg'"
                             [svgStyle]="{ 'width.px': '20px' }"
@@ -134,7 +134,7 @@
                 </ng-container>
                 <ng-template #group>
                     <svg-icon
-                        [src]="icons.dir + (row.showOrg ? 'organization_2.svg' : 'folder2.svg')"
+                        [src]="icons.dir + (row.isOrgUser ? 'organization_2.svg' : 'folder2.svg')"
                     ></svg-icon>
                     {{ row.accessLevel.name }}
                 </ng-template>
@@ -175,8 +175,27 @@
                 style="grid-area: roles"
                 *ngIf="row.roles?.length || row.groupRoles?.length"
             >
-                <div class="div-container">
-                    {{ row.roles[0] || getRoles(row.groupRoles) }}
+                <div class="div-container roles">
+                    <div
+                        *ngIf="
+                            row?.isOrgUser || hasMultipleRoles(row) || !canManageUsers;
+                            else dropdown
+                        "
+                    >
+                        {{ getDisplayRole(row) | translate }}
+                    </div>
+                    <ng-template #dropdown>
+                        <nx-dropdown
+                            [selected]="getRowRoleId(row)"
+                            (selectedChange)="updateRole(row, $event)"
+                        >
+                            <ng-container *ngFor="let role of roles">
+                                <nx-simple-dropdown-item [value]="role.id">
+                                    {{ role.name }}
+                                </nx-simple-dropdown-item>
+                            </ng-container>
+                        </nx-dropdown>
+                    </ng-template>
                 </div>
             </div>
             <div
@@ -212,23 +231,37 @@
             </div>
 
             <div
-                class="div-container-wrapper"
+                class="div-container-wrapper icon"
                 style="grid-area: delete"
             >
                 <svg-icon
-                    *ngIf="
-                        row.accessLevel?.id === currentGroupId$$() ||
-                            userType === UserType.CHANNEL_PARTNER;
-                        else info
-                    "
+                    *ngIf="canManageUsers && !row.isOrgUser; else info"
+                    class="delete"
                     nx-add-svg-src
-                    (click)="onDeleteClick.emit(row[idPropName])"
-                    [src]="icons.dir + 'delete.svg'"
+                    (click)="onDeleteClick.emit(row)"
+                    [src]="icons.dirTextButtons + 'delete.svg'"
                     [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
                 ></svg-icon>
                 <ng-template #info>
-                    <svg-icon [src]="icons.dirTextButtons + 'info.svg'"></svg-icon>
+                    <svg-icon
+                        class="info"
+                        [nxTooltip]="LANG.channelPartners.usersTable.infoToolTip | translate"
+                        [src]="icons.dirTextButtons + 'info.svg'"
+                        [svgStyle]="{ 'width.px': '24', 'height.px': '24' }"
+                    ></svg-icon>
                 </ng-template>
+            </div>
+
+            <div
+                class="div-container-wrapper icon"
+                style="grid-area: expand"
+                *ngIf="userType === UserType.ORGANIZATION"
+            >
+                <svg-icon
+                    [src]="icons.dirTextButtons + 'arrow_right.svg'"
+                    (click)="onExpandClick.emit(row)"
+                >
+                </svg-icon>
             </div>
         </ng-template>
     </nx-table>
