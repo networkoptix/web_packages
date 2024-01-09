@@ -68,18 +68,6 @@ export class UserManager {
         return this.users.find(user => user.isCloudOwner);
     }
 
-    nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxUser[] {
-        return this.users.filter(user => {
-            if (user.type === UserType.cloud && cloud) {
-                return !user.isCloudOwner;
-            } else if (user.type !== UserType.cloud && local) {
-                return !user.isLocalOwner;
-            } else {
-                return false;
-            }
-        });
-    }
-
     // Local owners id will always be localOwnerId for all versions
     private isLocalOwner(user: SystemUser): boolean {
         return user.id === this.localOwnerId;

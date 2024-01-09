@@ -1,0 +1,59 @@
+<input
+    #autocompleteInput
+    [ngModel]="value"
+    (ngModelChange)="onInputModelChange($event)"
+    (click)="openDropdown()"
+    (focus)="openDropdown()"
+    (blur)="onInputBlur($event)"
+    (keydown.Esc)="onInputEsc($event)"
+    (keydown.arrowdown)="$event.preventDefault(); incrementHighlightIndex()"
+    (keydown.arrowup)="$event.preventDefault(); decrementHighlightIndex()"
+    (keydown.Enter)="onInputEnter($event)"
+    type="text"
+    class="form-control"
+    name="autocomplete-input"
+    autocomplete="off"
+    [placeholder]="placeholder"
+/>
+<!-- Default behavior of up/down keys is to navigate to input start/end -->
+<button
+    #closeBtn
+    class="clear-btn"
+    *ngIf="value"
+    (click)="clear()"
+    (blur)="onInputBlur($event)"
+>
+    <svg-icon
+        [src]="icons.dirTextButtons + 'close.svg'"
+        [svgStyle]="{ 'width.rem': '1.25', 'height.rem': '1.25' }"
+    ></svg-icon>
+</button>
+<!-- Custom tabindex is so blur handler on input doesn't run before item is selected -->
+<ul
+    #suggestionsList
+    class="suggestions"
+    *ngIf="dropdownOpen"
+    tabindex="-1"
+>
+    <li
+        *ngFor="let match of matchList; index as i"
+        class="suggestions__item"
+        [class.suggestions__item--highlighted]="i === highlightIndex"
+        (click)="select(match)"
+    >
+        <nx-search-highlight
+            [text]="match"
+            [search]="searchRegex"
+            bold
+        ></nx-search-highlight>
+    </li>
+
+    <li
+        *ngIf="!matchList.length"
+        class="suggestions__no-matches"
+        [innerHTML]="
+            noMatchMsg ||
+            (LANG.search.noMatchesFor | translate: { query: wrapStrong(escapeHTML(value)) })
+        "
+    ></li>
+</ul>

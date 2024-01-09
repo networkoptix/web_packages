@@ -23,7 +23,7 @@
         </button>
     </div>
 
-    <nx-pre-loader *ngIf="!(userItems$$() && orgItems$$()); else content"></nx-pre-loader>
+    <nx-pre-loader *ngIf="!(userEmails$$() && orgItems$$()); else content"></nx-pre-loader>
 
     <ng-template #content>
         <nx-transfer-stepper [(selectedIndex)]="selectedIndex">
@@ -34,17 +34,15 @@
     </ng-template>
 
     <ng-template #userSelect>
-        <nx-searchable-select
+        <nx-autocomplete
             class="fs-mask"
-            [items]="userItems$$()"
-            [ngModel]="selectedUser"
+            [ngModel]="userSearch"
             (ngModelChange)="selectUser($event)"
-            (onClickElsewhere)="checkUser($event)"
-            [selected]="selectedUser"
-            [noMatchMsg]="LANG.search.userNotFound"
-            [ngModelOptions]="{ standalone: true }"
+            name="emailAutocomplete"
+            [suggestions]="userEmails$$()"
             [placeholder]="'Email' | translate"
-        ></nx-searchable-select>
+            [noMatchMsg]="LANG.search.userNotFound | translate"
+        ></nx-autocomplete>
         <div
             class="col-12 ml-n2 d-flex"
             *ngIf="transferOwnershipForm.errors"
@@ -170,7 +168,7 @@
                 [form]="transferOwnershipForm"
                 [buttonText]="'Next' | translate"
                 [buttonDisabled]="
-                    (transferTargetType$$() === 'user' && !selectedUser) ||
+                    (transferTargetType$$() === 'user' && !userSearch) ||
                     (transferTargetType$$() === 'org' && !selectedOrg) ||
                     !!transferOwnershipForm.errors
                 "
