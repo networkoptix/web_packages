@@ -1,6 +1,6 @@
 import typing
 import uuid
-from logging import getLogger
+import structlog
 
 import httpx
 from rest_framework.views import exception_handler
@@ -10,7 +10,7 @@ from rest_framework.exceptions import APIException
 from rest_framework.response import Response
 from tools.exception import APIErrorWithoutRollback
 
-logger = getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def get_period_start():
@@ -51,8 +51,12 @@ def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
         detail = response.json()
     else:
         content = response.content.decode()
-        logger.error(f'Cannot parse CDB response. Status: {response.status_code}')
-        logger.error(f'Cannot parse CDB response. Content: {content}')
+        status_code = response.status_code
+
+        logger.error("Unable to decode response from CDB",
+                     status_code=status_code,
+                     content=content)
+
         if settings.DEBUG:
             detail = content
         else:
@@ -61,5 +65,7 @@ def forward_cdb_resp(response: httpx.Response, via_exception=False) -> Response:
         exception = APIException(detail=detail)
         exception.status_code = response.status_code
         raise exception
-    return Response(data=detail, status=response.status_code,
-                    content_type=response.headers.get('content-type'))
+    return Response(
+        data=detail,
+        status=response.status_code,
+        content_type=response.headers.get('content-type'))

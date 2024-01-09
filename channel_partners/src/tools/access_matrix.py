@@ -5,7 +5,6 @@ import os.path
 import typing as t
 from dataclasses import dataclass
 from enum import StrEnum
-from logging import getLogger
 from uuid import UUID
 
 from django.conf import settings
@@ -17,8 +16,6 @@ from partners.models import (
     get_channel_partner_roles,
     get_organization_roles, ChannelPartnerRoles
 )
-
-logger = getLogger(__name__)
 
 
 class NoFieldAccess(Exception):
@@ -57,7 +54,7 @@ class FieldPermission:
         if level <= 1 and level in levels:
             return True
         if level > 1 and None in levels:
-                return True
+            return True
         return False
 
     def get_levels(self, access_type: AccessTypes) -> t.List:
@@ -72,7 +69,7 @@ class FieldPermissionDict(dict):
         if level <= 1 and level in levels:
             return True
         if level > 1 and None in levels:
-                return True
+            return True
         return False
 
     def get_levels(self, access_type: AccessTypes) -> t.List:

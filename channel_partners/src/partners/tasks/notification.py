@@ -1,8 +1,8 @@
-import logging
 import traceback
 import uuid
 
 import httpx
+import structlog
 from celery import Task
 from celery import shared_task
 from celery import states
@@ -17,7 +17,7 @@ from partners.models import CloudUser
 from partners.models import NotificationTypes
 from partners.models import Organization
 
-logger = logging.getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 MAX_RETRIES = 40
 RETRY_TIMEOUT = 60
@@ -30,13 +30,23 @@ class MessageNotPosted(Exception):
 class TaskWithLogging(Task):
 
     def on_failure(self, exc, task_id, args, kwargs, einfo):
-        logger.critical(f"Task {task_id} failed. Args:{args}, Kwargs:{kwargs}.")
-        logger.critical(f"Task {task_id} failed. Exception: \n{''.join(traceback.format_exception(exc))}")
+        logger.critical(
+            "Task failed",
+            task_id=task_id,
+            task_name=self.name,
+            args=args,
+            kwargs=kwargs,
+            exception=''.join(traceback.format_exception(exc)))
 
     def on_retry(self, exc, task_id, args, kwargs, einfo):
         # needed for printing in
-        logger.error(f"Task {task_id} retrying. Args:{args}, Kwargs:{kwargs}.")
-        logger.error(f"Task {task_id} retrying. Exception: \n{''.join(traceback.format_exception(exc))}")
+        logger.error(
+            "Task retrying",
+            task_id=task_id,
+            task_name=self.name,
+            args=args,
+            kwargs=kwargs,
+            exception=''.join(traceback.format_exception(exc)))
 
 
 def is_existing_user(host: str, email: str) -> bool:
@@ -94,8 +104,17 @@ def notification_added_channel_partner_role(
     sharer = CloudUser.objects.filter(id=sharer_id).first()
     user = CloudUser.objects.filter(id=user_id).first()
     if not all([partner, sharer, user]):
-        logger.warning(f'Cannot resolve some data. CP id {channel_partner_id}: {partner}, '
-                       f'Sharer id {sharer_id}: {sharer}, User id {user_id}: {user}.')
+        logger.error(
+            "Unable to resolve",
+            task_id=task.request.id,
+            task_name=task.name,
+            channel_partner_id=channel_partner_id,
+            partner=partner,
+            sharer_id=sharer_id,
+            sharer=sharer,
+            user_id=user_id,
+            user=user)
+
         task.update_state(
             state=states.FAILURE,
             meta='Cannot resolve initial data.'
@@ -128,8 +147,17 @@ def notification_added_organization_role(
     sharer = CloudUser.objects.filter(id=sharer_id).first()
     user = CloudUser.objects.filter(id=user_id).first()
     if not all([organization, sharer, user]):
-        logger.error(f'Cannot resolve some data. CP id {organization_id}: {organization}, '
-                     f'Sharer id {sharer_id}: {sharer}, User id {user_id}: {user}.')
+        logger.error(
+            "Unable to resolve",
+            task_id=task.request.id,
+            task_name=task.name,
+            organization_id=organization_id,
+            organization=organization,
+            sharer_id=sharer_id,
+            sharer=sharer,
+            user_id=user_id,
+            user=user)
+
         task.update_state(
             state=states.FAILURE,
             meta='Cannot resolve initial data.'
@@ -152,15 +180,22 @@ def notification_added_organization_role(
 def state_confirmation_task(self: TaskWithLogging, confirmation_id: int, cloud_host_name: str):
     confirmation = ActionConfirmation.objects.filter(pk=confirmation_id).first()
     if not confirmation:
-        logger.warning(f'Cannot resolve some data. ConfirmationAction with id {confirmation_id} is missing.')
+        logger.error(
+            "Unable to find confirmation with id",
+            id=confirmation_id)
+
         self.update_state(
             state=states.FAILURE,
             meta='Cannot resolve initial data.'
         )
         raise Ignore()
     user = CloudUser.objects.filter(email=confirmation.created_by).first()
+
     if not user:
-        logger.warning(f'Cannot resolve some data. CloudUser with email {confirmation.email} is missing.')
+        logger.error(
+            "Unable to find cloud user with email",
+            email=confirmation.email)
+
         self.update_state(
             state=states.FAILURE,
             meta='Cannot resolve initial data.'

@@ -1,8 +1,8 @@
+from typing import List
+
 from drf_spectacular.openapi import AutoSchema
 from drf_spectacular.utils import *
 from rest_framework.serializers import *
-
-from typing import List
 
 
 class NxAutoSchema(AutoSchema):

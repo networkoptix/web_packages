@@ -3,16 +3,16 @@ Only common utils/helpers without imports apps and models
 """
 import json
 import typing
-from logging import getLogger
 
 import httpx
-from rest_framework.response import Response
+import structlog
+from httpx import Response
 
 from nx_cloud_api_client.base_auth import BearerTokenAuth
 from nx_cloud_api_client.client import NxCloudAPISyncClient
 from tools.nx_cloud_api_client_factory import NxCloudApiClientFactory
 
-logger = getLogger(__name__)
+logger = structlog.get_logger(__name__)
 
 
 def bind_system_to_cdb_organization(
@@ -38,12 +38,13 @@ def bind_system_to_cdb_organization(
         body = response.json()
         return body, response.status_code
     except (httpx.DecodingError, json.JSONDecodeError) as exception:
-        logger.error(f'Error binding system to CDB:\n'
-                     f'Request Headers: {response.request.headers}\n'
-                     f'Request Content: {response.request.content}\n'
-                     f'Response Status: {response.status_code}\n'
-                     f'Response Headers: {response.headers}\n'
-                     f'Response Content: {response.content}')
+        logger.error("Unable to bind system to CDB",
+                     request_headers=response.request.headers,
+                     request_content=response.request.content,
+                     response_status_code=response.status_code,
+                     response_headers=response.headers,
+                     response_content=response.content,
+                     exception=exception)
         raise exception
 
 
