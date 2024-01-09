@@ -43,7 +43,7 @@ def test_can_access_account_page_from_direct_link():
         header.log_in_button().click()
         LoginDialog(driver).basic_cloud_login("noptixautoqa+owner@gmail.com", password)
         header.account_dropdown().wait_until_visible()
-        driver.get(rb.env + "/account")
+        driver.get(rb.ENV + "/account")
         AccountPage(driver).wait_until_loaded()
 
 
