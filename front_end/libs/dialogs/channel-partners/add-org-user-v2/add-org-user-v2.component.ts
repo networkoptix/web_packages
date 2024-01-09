@@ -77,7 +77,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
 
     addOrgUserProcess: Process;
 
-    organization: Organization;
+    organization: Pick<Organization, 'id' | 'name'>;
     groups: GroupItem[];
 
     selectedFolder$$: WritableSignal<SelectedFolder>;
@@ -145,6 +145,7 @@ export class NxAddOrgUserV2ModalContent extends ModalBase<DT['return']> {
         this.selectedRole$$ = signal(roles[0].id);
         this.groups = groups;
         this.users = users as OrganizationUser[];
+        this.groups = groups;
         users.forEach(user => {
             if (user.roles[0]) {
                 // Has org role, is org user
