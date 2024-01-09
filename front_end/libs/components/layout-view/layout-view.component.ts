@@ -7,6 +7,7 @@ import {
     LOCALE_ID,
     inject,
 } from '@angular/core';
+import { toObservable } from '@angular/core/rxjs-interop';
 import { UntilDestroy, untilDestroyed } from '@ngneat/until-destroy';
 import { Store } from '@ngrx/store';
 import { TranslateService } from '@ngx-translate/core';
@@ -98,6 +99,7 @@ export class NxLayoutViewComponent {
     ptzControlTarget: NxSystemCamera;
 
     selectedSystem$ = this.systemService.currentSystem$;
+    editedLayout$ = toObservable(this.layoutStateService.editedLayout$$).pipe(untilDestroyed(this));
 
     // Temporary version refrence. To prevent conflicts with Parti's open MR.
     useV2api = false;
@@ -132,6 +134,7 @@ export class NxLayoutViewComponent {
                 this.#selectedLayout$.pipe(startWith(null)),
                 this.store.select(SharedLayoutsSelectors.selectLayouts),
                 new Promise<CurrentUser>(resolve => resolve(permissionManager.currentUser$$())),
+                this.editedLayout$,
                 nxConfig.featureFlags.layoutsCrossSystemEditing
                     ? this.systemsService.systemsSubject
                     : Promise.resolve([] as NxSystemInfo[]),
@@ -147,6 +150,7 @@ export class NxLayoutViewComponent {
                 currentLayout,
                 layouts,
                 currentUser,
+                editedLayout,
                 otherSystemsInfo,
             ]): LayoutResourceTree => {
                 const { [currentSystemId]: currentSystem, ...otherSystems } = allSystemResources;
@@ -224,7 +228,14 @@ export class NxLayoutViewComponent {
                                 details,
                             }) as SharableResourceLeafNode<Layout>,
                     )
-                    .sort((a, b) => (a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1));
+                    .sort((a, b) => {
+                        // newly created layout is displayed first in the tree
+                        if (editedLayout?.isNew && editedLayout.id === a.details.id) {
+                            return -1;
+                        }
+                        // shared layouts are at the top sorted alphabetically
+                        return a.shared === b.shared ? byName(a, b) : a.shared ? -1 : 1;
+                    });
 
                 const parsedResources = Object.entries({
                     ...parsedOtherSystems,

@@ -69,8 +69,9 @@
                     <ng-container
                         *ngTemplateOutlet="renderChildren; context: { nodes: node.children }"
                     ></ng-container>
-                </div></div
-        ></ng-template>
+                </div>
+            </div>
+        </ng-template>
         <ng-template
             #leafNode
             let-node="node"
@@ -310,19 +311,55 @@
                                 [allowUserFocus]="false"
                                 [overrideSelectionClass]="
                                     layoutStateService.editedLayout$$()?.isNew
-                                        ? 'override-selection'
-                                        : ''
+                                        ? 'text-value-as-placeholder'
+                                        : 'text-with-cursor'
                                 "
-                                [selectAllOnFocus]="
-                                    layoutStateService.editedLayout$$()?.isNew || false
-                                "
+                                [selectAllOnFocus]="true"
                                 [overrideSelectionClassOnce]="true"
                                 [editEnabled]="true"
                                 [required]="true"
                                 (onFocusChanged)="!$event && handleRename(node)"
                                 (onEditModeCancelled)="layoutStateService.editedLayout$$.set(null)"
+                                cdkOverlayOrigin
+                                #newLayoutOverlay="cdkOverlayOrigin"
                             >
                             </nx-text-editable>
+
+                            <ng-template
+                                cdkConnectedOverlay
+                                [cdkConnectedOverlayOrigin]="newLayoutOverlay"
+                                [cdkConnectedOverlayOpen]="
+                                    !!layoutStateService.editedLayout$$()?.isNew
+                                "
+                                [cdkConnectedOverlayPanelClass]="'new-layout-tip'"
+                                [cdkConnectedOverlayPositions]="[
+                                    {
+                                        originX: 'end',
+                                        originY: 'center',
+                                        overlayX: 'start',
+                                        overlayY: 'top'
+                                    }
+                                ]"
+                            >
+                                <svg-icon
+                                    nx-add-svg-src
+                                    [svgStyle]="{
+                                        'width.px': '80',
+                                        'height.px': '80'
+                                    }"
+                                    svgClass="arrow-tip"
+                                    [src]="icons.dirLayouts + 'arrow-tip.svg'"
+                                />
+                                <p>
+                                    <span translate>
+                                        Enter a name for the new layout and press </span
+                                    ><span
+                                        class="key"
+                                        translate
+                                        >Enter</span
+                                    >
+                                </p>
+                            </ng-template>
                         } @else {
                             <nx-search-highlight
                                 class="ellipsis node-name"

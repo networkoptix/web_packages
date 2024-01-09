@@ -347,7 +347,11 @@
                             ></div>
                         }
                         @if (!changingLayout) {
-                            @if (!dragging$$() && !layout?.items?.length) {
+                            @if (
+                                !dragging$$() &&
+                                !layout?.items?.length &&
+                                !layoutStateService.editedLayout$$()?.isNew
+                            ) {
                                 <div class="no-camera-placeholder">
                                     <svg-icon
                                         nx-add-svg-src

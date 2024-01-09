@@ -1,6 +1,6 @@
 import { CdkDrag, CdkDragPreview, CdkDropList } from '@angular/cdk/drag-drop';
 import { CdkContextMenuTrigger, CdkMenu, CdkMenuItem, CdkMenuTrigger } from '@angular/cdk/menu';
-import { ConnectedPosition } from '@angular/cdk/overlay';
+import { CdkConnectedOverlay, CdkOverlayOrigin, ConnectedPosition } from '@angular/cdk/overlay';
 import { NestedTreeControl } from '@angular/cdk/tree';
 import { CommonModule } from '@angular/common';
 import {
@@ -177,6 +177,8 @@ const findNode = (
         NxSearchComponent,
         NxSearchHighlightComponent,
         CdkDragPreview,
+        CdkConnectedOverlay,
+        CdkOverlayOrigin,
     ],
     changeDetection: ChangeDetectionStrategy.OnPush,
     templateUrl: './layout-grid-tree.component.html',
