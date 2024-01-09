@@ -20,7 +20,7 @@ from partners.models import (
     CloudSystemId, OrganizationRole, OrganizationToUser, ChannelPartnerToUser,
     ChannelPartnerServiceRecord, ChannelPartnerRole, ChannelPartnerStates,
     OrganizationRoles, SystemGroup, Organization, OrganizationPermissions,
-    CloudSystemStates, ActionConfirmation, ChannelPartnerRoles
+    CloudSystemStates, ActionConfirmation, ChannelPartnerRoles, ServiceUsage
 )
 from partners.views import (
     CloudSystemViewSet, OrganizationUserViewSet, ChannelPartnerUserViewSet,
@@ -68,7 +68,10 @@ class TestCloudSystemViewSet:
         root_org_user = org_user_factory(organization=root_org)
         system = system_factory(organization=root_org)
         service = cp_service_factory(channel_partner=root)
-        service_record = service_record_factory(service, system, quantity=10.5)
+        service_record = service_record_factory(service, system, quantity=10)
+        baker.make(ServiceUsage, service=service, cloud_system=system, usage=330,
+                   from_ts=timezone.now() - relativedelta(hours=2),
+                   to_ts=timezone.now() - relativedelta(hours=1))
         req = arf.get(f'/partners/cloud_systems/{system.system_id}/service_quantity/')
         CloudSystemViewSet.detail = True
         view = CloudSystemViewSet.as_view({'get': 'service_quantity'}, detail=True)
@@ -85,7 +88,11 @@ class TestCloudSystemViewSet:
         with transaction.atomic():
             response = view(req, id=str(system.system_id))
         assert response.status_code == 200
-
+        assert response.data['services']
+        for service, usage in response.data['services'].items():
+            # 330 / (5*60) = 1.1 -> rounded to 2
+            assert usage['used'] == 2
+            assert usage['quantity'] == 10
 
     def test_service_quantity_patch(selfself, channel_partner_factory, organization_factory, cp_user_factory,
                                     service_record_factory, cp_service_factory, system_factory,

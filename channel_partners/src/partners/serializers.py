@@ -325,13 +325,18 @@ class CreateOrganizationSerializer(serializers.ModelSerializer):
         return instance
 
 
+class ServiceQuantitySerializer(serializers.Serializer):
+    quantity = serializers.IntegerField(required=True)
+    used = serializers.IntegerField(required=False, read_only=True)
+
+
 class CloudSystemSerializer(AccessMatrixMixin, FieldAccessModelSerializer):
     CONTENT_TYPE = "cloudsystemid"
     state = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES)
     effectiveState = CodeChoiceField(choices=ChannelPartnerStates.STATE_CODES, read_only=True)
     systemId = serializers.UUIDField(source='system_id', read_only=True)
     system_state = CodeChoiceField(choices=CloudSystemStates.STATE_CODES, read_only=True)
-    services = serializers.DictField(read_only=True)
+    services = serializers.DictField(read_only=True, child=ServiceQuantitySerializer())
     created = serializers.DateTimeField(source='created_ts', read_only=True)
     groupId = serializers.PrimaryKeyRelatedField(source='system_group', queryset=SystemGroup.objects.all(),
                                                  allow_null=True)
@@ -639,11 +644,6 @@ class SystemUsageReportSerializer(SignSerializerMixin, serializers.Serializer):
         ServiceUsage.check_excess(cloud_system)
         cloud_system.last_usage_report = timezone.now()
         cloud_system.save()
-
-
-class ServiceQuantitySerializer(serializers.Serializer):
-    quantity = serializers.IntegerField(required=True)
-    used = serializers.IntegerField(required=False, read_only=True)
 
 
 @extend_schema_serializer(
