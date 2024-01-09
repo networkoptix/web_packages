@@ -133,7 +133,7 @@ export class NxUsersTableComponent {
     }
 
     getRowRoleId(user: UserRecord): string {
-        return this.roles.find(role => role.name === this.getDisplayRole(user))?.id.toString();
+        return this.roles?.find(role => role.name === this.getDisplayRole(user))?.id.toString();
     }
 
     isUserRole(role: OrganizationRole, user: UserRecord): boolean {

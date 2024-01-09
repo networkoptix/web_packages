@@ -10,13 +10,13 @@ import {
     effect,
     inject,
 } from '@angular/core';
-import { takeUntilDestroyed, toSignal } from '@angular/core/rxjs-interop';
+import { takeUntilDestroyed } from '@angular/core/rxjs-interop';
 import { FormsModule } from '@angular/forms';
 import { ActivatedRoute, Router, RouterOutlet } from '@angular/router';
 import { Store } from '@ngrx/store';
 import { TranslateModule } from '@ngx-translate/core';
 import { AngularSvgIconModule } from 'angular-svg-icon';
-import { Subject, debounceTime, distinctUntilChanged } from 'rxjs';
+import { Subject, combineLatestWith, debounceTime, distinctUntilChanged, map } from 'rxjs';
 import stringify from 'safe-stable-stringify';
 
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -97,13 +97,10 @@ export class NxOrganizationCardContainerComponent {
     searchChanged = new Subject<void>();
     currentSystems$$ = this.store.selectSignal(selectCurrentSystems);
     filteredSystems$: SystemItem[];
-    systemsFromSubject$$ = toSignal(this.systemsService.systemsSubject);
+    systemMap$ = this.systemsService.systemsSubject.pipe(
+        map(systems => new Map(systems?.map(sys => [sys.id, sys]))),
+    );
     groupItems$$ = this.store.selectSignal(selectGroupItems);
-    systemMap$$ = computed(() => {
-        const systems = this.systemsFromSubject$$();
-        return new Map(systems?.map(sys => [sys.id, sys]));
-    });
-
     isLoading = true;
     constructor(
         private store: Store,
@@ -120,26 +117,33 @@ export class NxOrganizationCardContainerComponent {
             });
 
         effect(() => {
-            this.searchSystems();
-            const systemMap = this.systemMap$$();
+            const groups = this.currentGroups$$();
             if (this.inRoot) {
-                this.cpService.getOrgSystems(this.currentOrgId$$()).subscribe(orgSystems => {
-                    const systems = orgSystems.map(sys => ({
-                        ...sys,
-                        type: OrgCardItem.SYSTEM,
-                        name: systemMap.get(sys.systemId)?.name,
-                    }));
-                    this.store.dispatch(GroupActions.setSystems({ systems }));
-                });
+                this.cpService
+                    .getOrgSystems(this.currentOrgId$$())
+                    .pipe(combineLatestWith(this.systemMap$))
+                    .subscribe(([orgSystems, systemMap]) => {
+                        const systems = orgSystems.map(sys => ({
+                            ...sys,
+                            type: OrgCardItem.SYSTEM,
+                            name: systemMap.get(sys.systemId)?.name,
+                        }));
+                        this.store.dispatch(GroupActions.setSystems({ systems }));
+                        this.searchSystems(systems, groups);
+                    });
             } else {
-                this.cpService.getGroup(this.currentGroupId$$()).subscribe(group => {
-                    const systems = group.systems.map(systemId => ({
-                        systemId,
-                        name: systemMap.get(systemId)?.name,
-                        type: OrgCardItem.SYSTEM,
-                    }));
-                    this.store.dispatch(GroupActions.setSystems({ systems }));
-                });
+                this.cpService
+                    .getGroup(this.currentGroupId$$())
+                    .pipe(combineLatestWith(this.systemMap$))
+                    .subscribe(([group, systemMap]) => {
+                        const systems = group.systems.map(systemId => ({
+                            systemId,
+                            name: systemMap.get(systemId)?.name,
+                            type: OrgCardItem.SYSTEM,
+                        }));
+                        this.store.dispatch(GroupActions.setSystems({ systems }));
+                        this.searchSystems(systems, groups);
+                    });
             }
         });
 
@@ -222,10 +226,11 @@ export class NxOrganizationCardContainerComponent {
         this.router.navigate(['systems', system.systemId]);
     }
 
-    searchSystems(): void {
+    searchSystems(
+        currentSystems = this.currentSystems$$(),
+        currentGroups = this.currentGroups$$(),
+    ): void {
         const search = this.search.value;
-        const currentGroups = this.currentGroups$$();
-        const currentSystems = this.currentSystems$$();
         if (search) {
             if (currentGroups) {
                 this.filteredGroups = currentGroups.filter(system =>
