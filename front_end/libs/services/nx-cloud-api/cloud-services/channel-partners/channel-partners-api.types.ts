@@ -54,6 +54,8 @@ export interface ChannelPartner {
     created_ts: string;
     path: string[];
     users: number[];
+    organizationCount: number;
+    partnerCount: number;
 }
 
 export enum ChannelPartnerPermissions {
@@ -146,6 +148,7 @@ export interface Organization {
     ownRoles: string[];
     ownRoleIds: string[];
     state: State;
+    systemCount: number;
     users: number[];
 }
 
@@ -255,6 +258,7 @@ export interface GroupItem extends SystemItem {
     name: string;
     parentId: string;
     children: GroupItem[];
+    systemCount: number;
 }
 
 export interface SystemItem {

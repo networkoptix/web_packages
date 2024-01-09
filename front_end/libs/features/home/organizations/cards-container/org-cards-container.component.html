@@ -16,10 +16,7 @@
             New Group
         </button>
         <nx-search
-            *ngIf="
-                (currentSystems$ | async)?.length >
-                    searchConfig.channelPartners.searchMinimumCards || hasEnoughGroups$$()
-            "
+            *ngIf="hasEnoughGroupsOrSystems$$()"
             class="input-overlay"
             [style.width.px]="searchConfig.channelPartners.searchWidth"
             [ngModel]="search"
@@ -63,13 +60,13 @@
                     (click)="handleGroupClick(group)"
                 >
                     <h3>{{ group.name }}</h3>
-                    <div>12</div>
+                    <div>{{ group.systemCount }}</div>
                 </nx-card>
                 <div class="placeholder-shadow"></div>
             </div>
         </div>
         <div
-            *ngFor="let system of currentSystems$$(); trackBy: trackSystem"
+            *ngFor="let system of filteredSystems$; trackBy: trackSystem"
             class="system-card"
             cdkDropList
             cdkDropListSortingDisabled
@@ -86,7 +83,6 @@
                     (click)="handleSystemClick(system)"
                 >
                     <h3>{{ system.name }}</h3>
-                    <div>12</div>
                 </nx-card>
                 <div class="placeholder-shadow"></div>
             </div>
