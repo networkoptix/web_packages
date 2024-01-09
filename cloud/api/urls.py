@@ -21,7 +21,7 @@ urlpatterns = [
     re_path(r'^utils/settings/?$',                  utils.get_settings, name='get_settings'),
     re_path(r'^utils/webadmin_feature_flags/?$',    utils.webadmin_feature_flags),
     re_path(r'^utils/cloudCapabilities/?$',         utils.cloud_capabilities),
-    re_path(r'^ipvd$',                              utils.get_ipvd, name='get-ipvd'),
+    # re_path(r'^ipvd$',                              utils.get_ipvd, name='get-ipvd'),
     re_path(r'^utils/customizations/?$',            utils.get_customizations),
     re_path(r'^utils/customization/?$',             utils.get_customization),
     re_path(r'^utils/python-licenses/$',            utils.python_licenses, name='py-licenses'),

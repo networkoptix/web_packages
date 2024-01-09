@@ -474,51 +474,50 @@ class TestGetSettings:
         assert response.data
         assert response.data['integrationStoreEnabled']
 
-
-class TestIPVD:
-    def test_post(self, arf, mocker):
-        version = str(uuid4())
-        delete_cache_mock = mocker.patch.object(
-            utils.cache, 'adelete', return_value=True)
-        mocker.patch.object(utils.cache, 'aget', return_value=version)
-        request = arf.post('/api/ipvd')
-
-        # Test cache cleared
-        response = async_to_sync(utils.get_ipvd)(request)
-        assert response.status_code == status.HTTP_200_OK
-        assert response.data == {utils.IPVD_CACHE_CLEARED}
-        delete_cache_mock.assert_called_with(version)
-
-        # Test no cached IPVD
-        delete_cache_mock.return_value = False
-        response = async_to_sync(utils.get_ipvd)(request)
-        assert response.status_code == status.HTTP_202_ACCEPTED
-        assert response.data == {utils.IPVD_CACHE_NOT_CLEARED}
-
-    def test_get(self, arf, mocker, ipvd_data, ipvd_data_processed):
-        ipvd_mock = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
-        ipvd_mock.return_value = MockResponse(json=ipvd_data)
-
-        # Should redirect if not versioned request
-        request = arf.get('/api/ipvd')
-        response: HttpResponse = async_to_sync(utils.get_ipvd)(request)
-
-        versioned_url = response.url
-
-        assert response.status_code == status.HTTP_302_FOUND
-
-        # Versioned request should return data
-        request = arf.get(versioned_url)
-        response = async_to_sync(utils.get_ipvd)(request)
-        assert response.status_code == status.HTTP_200_OK
-        assert response.content == json.dumps(ipvd_data_processed).encode()
-        ipvd_mock.assert_has_calls([mocker.call(settings.IPVD_CONNECT, params="[]")], any_order=True)
-        # Test cached
-        request = arf.get(versioned_url)
-        response = async_to_sync(utils.get_ipvd)(request)
-        ipvd_data_processed['cached'] = True
-        assert response.status_code == status.HTTP_200_OK
-        assert response.content == json.dumps(ipvd_data_processed).encode()
+# class TestIPVD:
+#     def test_post(self, arf, mocker):
+#         version = str(uuid4())
+#         delete_cache_mock = mocker.patch.object(
+#             utils.cache, 'adelete', return_value=True)
+#         mocker.patch.object(utils.cache, 'aget', return_value=version)
+#         request = arf.post('/api/ipvd')
+#
+#         # Test cache cleared
+#         response = async_to_sync(utils.get_ipvd)(request)
+#         assert response.status_code == status.HTTP_200_OK
+#         assert response.data == {utils.IPVD_CACHE_CLEARED}
+#         delete_cache_mock.assert_called_with(version)
+#
+#         # Test no cached IPVD
+#         delete_cache_mock.return_value = False
+#         response = async_to_sync(utils.get_ipvd)(request)
+#         assert response.status_code == status.HTTP_202_ACCEPTED
+#         assert response.data == {utils.IPVD_CACHE_NOT_CLEARED}
+#
+#     def test_get(self, arf, mocker, ipvd_data, ipvd_data_processed):
+#         ipvd_mock = mocker.patch.object(utils.HttpxAsyncRequest, 'get')
+#         ipvd_mock.return_value = MockResponse(json=ipvd_data)
+#
+#         # Should redirect if not versioned request
+#         request = arf.get('/api/ipvd')
+#         response: HttpResponse = async_to_sync(utils.get_ipvd)(request)
+#
+#         versioned_url = response.url
+#
+#         assert response.status_code == status.HTTP_302_FOUND
+#
+#         # Versioned request should return data
+#         request = arf.get(versioned_url)
+#         response = async_to_sync(utils.get_ipvd)(request)
+#         assert response.status_code == status.HTTP_200_OK
+#         assert response.content == json.dumps(ipvd_data_processed).encode()
+#         ipvd_mock.assert_has_calls([mocker.call(settings.IPVD_CONNECT, params="[]")], any_order=True)
+#         # Test cached
+#         request = arf.get(versioned_url)
+#         response = async_to_sync(utils.get_ipvd)(request)
+#         ipvd_data_processed['cached'] = True
+#         assert response.status_code == status.HTTP_200_OK
+#         assert response.content == json.dumps(ipvd_data_processed).encode()
 
 
 @pytest.mark.asyncio
