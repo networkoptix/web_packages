@@ -1,6 +1,5 @@
 import { Injectable, inject, signal, computed } from '@angular/core';
 import { LocalStorageService } from 'ngx-webstorage';
-import { firstValueFrom } from 'rxjs';
 import { filter } from 'rxjs/operators';
 
 import { environment } from '@environments/environment';
@@ -51,7 +50,8 @@ export class NxSessionService {
             .subscribe(async (state: LOGIN_STATE) => {
                 if (prevState === LOGIN_STATE.CHANGED) {
                     // logout all systems
-                    await firstValueFrom(this.systemService.logoutAllSystems());
+                    await this.systemService.logoutAllSystems();
+                    window.location.reload();
                 }
 
                 prevState = state;
