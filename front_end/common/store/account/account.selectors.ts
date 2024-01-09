@@ -15,5 +15,5 @@ export const selectCurrentUserName = createSelector(selectAccountState, state =>
 
 export const selectIsAuthenticated = createSelector(
     selectAccountState,
-    state => state.currentUser?.is_authenticated,
+    state => !!state.currentUser?.is_authenticated,
 );

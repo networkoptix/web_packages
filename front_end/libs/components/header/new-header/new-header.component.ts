@@ -24,7 +24,6 @@ import { GridBreakpoints } from '@styles/theme-variables-common';
 export class NxNewHeaderComponent {
     @Input() nodes: MenuNode[];
     @Input() systems: NxSystem[];
-    @Input() loginState: boolean;
     @Input() width: Observable<number>;
     selectedNode: MenuNode;
     displayedNodes: MenuNode[];
