@@ -118,6 +118,14 @@ http {
             try_files /static/ngsw-worker.js =404;
         }
 
+        location ^~ /api/ipvd {
+            proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com/ipvd/cameras.json;
+        }
+
+        location /static/ipvd/ipvd.json {
+            proxy_pass http://$PORTAL_BUCKET.s3.amazonaws.com/ipvd/cameras.json;
+        }
+
         location = /static/styles/skin.css {
             proxy_cache_key ${DOLLAR}scheme://${DOLLAR}host${DOLLAR}uri${DOLLAR}is_args${DOLLAR}query_string;
             proxy_cache static_cache;

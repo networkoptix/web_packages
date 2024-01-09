@@ -77,6 +77,7 @@ do
             yes "yes" | python manage.py migrate
             python manage.py update_hosts_from_ireg
             python manage.py readstructure
+            python manage.py update_ipvd
             sleep 10 # Wait a bit to make sure cache is set
             ;;
         config)
