@@ -10,6 +10,7 @@ import { AngularSvgIconModule } from 'angular-svg-icon';
 import { NgxTranslateCutModule } from 'ngx-translate-cut';
 import { firstValueFrom, map } from 'rxjs';
 
+import { NxAutocompleteComponent } from '@components/autocomplete/autocomplete.component';
 import { NxSearchableDropdown } from '@components/dropdowns/searchable/searchable.component';
 import type { SearchableDropdownItem } from '@components/dropdowns/searchable/searchable.component.types';
 import { NxPreLoaderComponent } from '@components/placeholders/pre-loader/pre-loader.component';
@@ -27,6 +28,7 @@ import { NxCloudApiService } from '@services/nx-cloud-api';
 import type { SystemTransferInfo } from '@services/nx-cloud-api/nx-cloud-api.types';
 import { NxProcessService } from '@services/process.service';
 import { Process } from '@services/process.service/process';
+import { UserType } from '@services/system-user.types';
 import { NxToastService } from '@services/toast.service';
 import { icons, servers } from '@static-variables';
 
@@ -37,7 +39,6 @@ import { NxTransferStepperComponent } from './transfer-stepper/transfer-stepper.
 interface UserItem extends SearchableDropdownItem {
     userEnabled: boolean;
 }
-
 type OrgItem = SearchableDropdownItem;
 
 @Component({
@@ -55,6 +56,7 @@ type OrgItem = SearchableDropdownItem;
         NgxTranslateCutModule,
         LetDirective,
         NxSearchableDropdown,
+        NxAutocompleteComponent,
         NxRadioComponent,
         NxPreLoaderComponent,
         NxProcessButtonComponent,
@@ -76,9 +78,11 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     transferToUser: Process;
     transferToOrg: Process;
 
-    userItems$$ = signal<UserItem[]>(undefined);
+    userSearch: string = '';
+    userEmails = new Set<string>();
+    userEmails$$ = signal<string[] | null>(null);
     selectedUser: UserItem;
-    usersInSystem$$ = computed<boolean>(() => !!this.userItems$$()?.length);
+    usersInSystem$$ = computed<boolean>(() => !!this.userEmails$$()?.length);
 
     orgItems$$ = signal<OrgItem[]>(undefined);
     selectedOrg: OrgItem;
@@ -91,7 +95,7 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
 
     advanceProcess = this.processService.createProcess(() => {
         this.newOwner =
-            this.transferTargetType$$() === 'user' ? this.selectedUser.name : this.selectedOrg.name;
+            this.transferTargetType$$() === 'user' ? this.userSearch : this.selectedOrg.name;
         this.selectedIndex += 1;
         return Promise.resolve();
     });
@@ -110,13 +114,14 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
     }
 
     ngOnInit(): void {
-        const items = this.system.userManager.nonOwners({ cloud: true }).map(user => ({
-            name: user.email,
-            value: user.email,
-            help: user.fullName,
-            userEnabled: user.isEnabled,
-        }));
-        this.userItems$$.set(items);
+        const items: string[] = [];
+        this.system.userManager.users.forEach(user => {
+            if (user.type === UserType.cloud && !user.isOwner && user.isEnabled) {
+                this.userEmails.add(user.email);
+                items.push(user.email);
+            }
+        });
+        this.userEmails$$.set(items);
 
         this.partnersService.getOrganizations().subscribe(orgs => {
             const items = orgs.map(org => ({
@@ -142,9 +147,8 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         this.transferToUser = this.processService.createProcess(
             async () => {
                 this.lock();
-                const newOwnerEmail = this.selectedUser.value;
                 return firstValueFrom(
-                    this.cloudService.startTransfer(this.system.id, newOwnerEmail),
+                    this.cloudService.startTransfer(this.system.id, this.userSearch),
                 );
             },
             { errorCodes, ignoreError: true },
@@ -207,23 +211,13 @@ export class TransferOwnershipModalContent extends ModalBase<DT['return']> imple
         );
     }
 
-    selectUser(user: UserItem): void {
-        if (user.value !== this.selectedUser?.value) {
-            this.form.control.setErrors(null);
+    selectUser(value: string): void {
+        if (value === this.userSearch) {
+            return;
         }
-        if (!user.userEnabled && user.disabled === undefined) {
-            // Not a "free type" user --TT
-            this.form.control.setErrors({ userDisabled: true });
-        }
-        if (!user.value) {
-            this.form.control.setErrors({ userDisabled: false });
-        }
-        this.checkUser(user.value);
-        this.selectedUser = { ...user };
-    }
-
-    checkUser(input: string): void {
-        if (input !== '' && !this.userItems$$().some(el => el.value === input)) {
+        this.userSearch = value;
+        this.form.control.setErrors(null);
+        if (value !== '' && !this.userEmails.has(value)) {
             this.form.control.setErrors({ userNotFound: true });
         }
     }

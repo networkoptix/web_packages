@@ -81,16 +81,6 @@ export class UserWithGroupsManager extends UserManager {
         });
     }
 
-    // returns all users that are not owners
-    override nonOwners({ cloud, local }: { cloud?: boolean; local?: boolean }): NxUser[] {
-        return this.users.filter((user: NxUser) => {
-            if ((user.type === 'cloud' && cloud) || (user.type === 'local' && local)) {
-                return !user.isOwner;
-            }
-            return false;
-        });
-    }
-
     override async deleteUser(removedUser: NxUser): Promise<void> {
         try {
             await lastValueFrom(this.mediaserver.deleteUser(removedUser.id));
