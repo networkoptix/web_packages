@@ -75,6 +75,8 @@ export class NxMultiSelectDropdown extends BaseDropdown {
     public textSelected: Translatable = '';
 
     private innerValue: MultiSelectItem['id'][] = [];
+    // Weird UX request ... gotta keep them happy --TT
+    private autoClose: boolean = true;
 
     constructor() {
         super();
@@ -110,6 +112,10 @@ export class NxMultiSelectDropdown extends BaseDropdown {
 
         item.selected = this.innerValue.includes(item.id);
         this.updateModel();
+
+        if (this.autoClose) {
+            this.show = false;
+        }
     }
 
     applyLocalFilter(value: string): void {
