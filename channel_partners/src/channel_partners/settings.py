@@ -235,10 +235,10 @@ CELERY_IS_READY = False
 # CELERY_BROKER_URL = os.getenv('QUEUE_CELERY_BROKER_URL')
 CELERY_BROKER_URL = INSTANCE_CONFIG.queue_broker_uri
 CELERY_BROKER_CONNECTION_MAX_RETRIES = 1
-
+BROKER_QUEUE_NAME_PREFIX = os.getenv('QUEUE_PREFIX')
 if not LOCAL_ENV:
     CELERY_BROKER_TRANSPORT_OPTIONS = {
-        'queue_name_prefix': 'celery_queue_',
+        'queue_name_prefix': BROKER_QUEUE_NAME_PREFIX,
         'region': os.getenv('AWS_REGION', 'us-east-1')
     }
 
