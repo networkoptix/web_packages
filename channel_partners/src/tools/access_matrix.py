@@ -3,8 +3,9 @@ import dataclasses
 import json
 import os.path
 import typing as t
+import uuid
 from dataclasses import dataclass
-from enum import StrEnum
+from enum import StrEnum, IntEnum
 from uuid import UUID
 
 from django.conf import settings
@@ -14,7 +15,7 @@ from django.utils.functional import cached_property
 from partners.models import (
     CloudUser, ChannelPartner, Organization, ChannelPartnerToUser, OrganizationToUser, CloudSystemId,
     get_channel_partner_roles,
-    get_organization_roles, ChannelPartnerRoles
+    get_organization_roles, ChannelPartnerRoles, SystemGroup, HierarchyLevels
 )
 
 
@@ -51,10 +52,10 @@ class FieldPermission:
 
     def has_level_access(self, access_type: AccessTypes,  level: int):
         levels = getattr(self, access_type, [])
-        if level <= 1 and level in levels:
+        if level <= HierarchyLevels.direct_child and level in levels:
             return True
-        if level > 1 and None in levels:
-            return True
+        if level > HierarchyLevels.direct_child and None in levels:
+                return True
         return False
 
     def get_levels(self, access_type: AccessTypes) -> t.List:
@@ -66,10 +67,10 @@ class FieldPermissionDict(dict):
 
     def has_level_access(self, access_type: AccessTypes,  level: int):
         levels = self.get(access_type, [])
-        if level <= 1 and level in levels:
+        if level <= HierarchyLevels.direct_child and level in levels:
             return True
-        if level > 1 and None in levels:
-            return True
+        if level > HierarchyLevels.direct_child and None in levels:
+                return True
         return False
 
     def get_levels(self, access_type: AccessTypes) -> t.List:
@@ -276,8 +277,7 @@ class UserAccessMatrix:
 
     @cached_property
     def user_organizations(self):
-        return (self.cloud_user.organizationtouser_set
-                .filter(system_group__isnull=True).prefetch_related('organization'))
+        return self.cloud_user.organizationtouser_set.all().prefetch_related('organization', 'system_group')
 
     def get_cp_to_user_rel(self, channel_partner_id: UUID) -> None | ChannelPartnerToUser:
         return next(
@@ -285,12 +285,23 @@ class UserAccessMatrix:
 
     def get_org_to_user_rels(self, organization_id: UUID) -> t.List[OrganizationToUser]:
         def filter_func(rel):
-            return rel.organization_id == organization_id
+            return rel.organization_id == organization_id and rel.system_group_id is None
+
+        return [rel for rel in filter(filter_func, self.user_organizations)]
+
+    def get_group_to_user_rels(
+            self, group_id: UUID = None, organization_id: UUID = None) -> t.List[OrganizationToUser]:
+        if group_id:
+            def filter_func(rel):
+                return rel.system_group_id == group_id
+        else:
+            def filter_func(rel):
+                return rel.organization_id == organization_id and rel.system_group_id is not None
 
         return [rel for rel in filter(filter_func, self.user_organizations)]
 
     def get_instance_to_user_rels(
-            self, instance: ChannelPartner | Organization
+            self, instance: ChannelPartner | Organization | CloudSystemId
     ) -> t.List[ChannelPartnerToUser | OrganizationToUser]:
         if isinstance(instance, ChannelPartner):
             if rel := self.get_cp_to_user_rel(instance.id):
@@ -299,14 +310,21 @@ class UserAccessMatrix:
         if isinstance(instance, Organization):
             return self.get_org_to_user_rels(instance.id)
 
-    def get_user_instance_roles(self, instance: ChannelPartner | Organization):
+        if isinstance(instance, CloudSystemId):
+            rels = self.get_org_to_user_rels(instance.organization_id)
+            for group_id in instance.groups_path:
+                rels += self.get_group_to_user_rels(group_id)
+            return rels
+
+    def get_user_instance_roles(self, instance: ChannelPartner | Organization | CloudSystemId):
         roles = set()
         for rel in self.get_instance_to_user_rels(instance):
             roles |= set(rel.roles or [])
         return roles
 
-    def get_user_permissions(self, instance: Organization | ChannelPartner, user_roles: t.Iterable[UUID]):
-        if isinstance(instance, Organization):
+    def get_user_permissions(self, instance: Organization | ChannelPartner | CloudSystemId,
+                             user_roles: t.Iterable[UUID]):
+        if isinstance(instance, Organization) or isinstance(instance, CloudSystemId):
             return self.get_org_permissions(user_roles=user_roles)
         elif isinstance(instance, ChannelPartner):
             return self.get_cp_permissions(user_roles=user_roles)
@@ -332,65 +350,46 @@ class UserAccessMatrix:
             return {perm for perm in permissions if perm.startswith('field_access')}
         return permissions
 
-    def get_user_to_child_rel(self, target_instance_id: UUID) -> t.Generator:
-        computed = set()
-        # do not return relation on same instance twice
-        for user_rel in self.user_channel_partners:
-            if (user_rel.channel_partner.id not in computed
-                    and user_rel.channel_partner.parent_channel_partner_id == target_instance_id):
-                computed.add(user_rel.channel_partner.id)
-                yield user_rel
-        for user_rel in self.user_organizations:
-            if (user_rel.organization.id not in computed
-                    and user_rel.organization.channel_partner_id == target_instance_id):
-                computed.add(user_rel.organization.id)
-                yield user_rel
+    def get_instance_hierarchy_level(self, instance):
+        for qs in (self.user_channel_partners, self.user_organizations):
+            for user_rel in qs:
+                if (hierarchy_level := user_rel.get_hierarchy_level(instance)) is None:
+                    continue
+                if hierarchy_level > HierarchyLevels.direct_child:
+                    yield None, user_rel
+                yield hierarchy_level, user_rel
 
     def check_permission(self, field_name: str, access_type: AccessTypes,
                          target_instance: ChannelPartner | Organization | CloudSystemId) -> bool:
-        if isinstance(target_instance, CloudSystemId):
-            target_instance = target_instance.organization
         if field_name not in self.access_matrix.fields:
             # if field not explicitly defined in json access is always allowed
             return True
         levels_permissions = self.access_matrix.fields.allowed_field_levels(field_name=field_name,
                                                                             access_type=access_type)
-        # First check own level as most probable
-        if needed := levels_permissions.get(0, set()):
-            if user_roles := self.get_user_instance_roles(target_instance):
-                user_perms = self.get_user_permissions(target_instance, user_roles=user_roles)
-                if needed.intersection(user_perms):
-                    return True
-            # calculating cpal
-            cpal_id = getattr(target_instance, 'channel_partner_access_level_id', None)
-            if (cpal_id
-                    and (user_rel := self.get_cp_to_user_rel(channel_partner_id=target_instance.channel_partner_id))):
-                if set(user_rel.roles).intersection({ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER}):
-                    user_perms = self.get_org_permissions(user_roles={cpal_id})
-                    if needed.intersection(user_perms):
-                        return True
-        # check if target instance is parent of some user instances
-        # Only channel partner has children
-        if isinstance(target_instance, ChannelPartner) and (needed := levels_permissions.get(-1, set())):
-            for child_rel in self.get_user_to_child_rel(target_instance.id):
-                if isinstance(child_rel, OrganizationToUser):
-                    user_perms = self.get_org_permissions(child_rel.roles)
+        for level, user_rel in self.get_instance_hierarchy_level(instance=target_instance):
+            # group roles do not allow to write
+            if access_type == AccessTypes.write and getattr(user_rel, 'system_group_id', None):
+                continue
+            if needed_permissions := levels_permissions.get(level):
+                if isinstance(user_rel, OrganizationToUser):
+                    user_permissions = self.get_org_permissions(user_rel.roles)
                 else:
-                    user_perms = self.get_cp_permissions(child_rel.roles)
-                if needed.intersection(user_perms):
+                    user_permissions = self.get_cp_permissions(user_rel.roles)
+                if needed_permissions.intersection(user_permissions):
                     return True
-        # get path starting from direct instance parent upto root
-        if not (path := target_instance.path):
-            # target instance is root
-            return False
-        # calculating parents upto root, they all are channel partners
-        current_level = 1
-        for channel_partner_id in path:
-            if needed := levels_permissions.get(current_level, set()):
-                if user_rel := self.get_cp_to_user_rel(channel_partner_id):
-                    user_perms = self.get_cp_permissions(user_roles=user_rel.roles)
-                    if needed.intersection(user_perms):
-                        return True
-            # when direct parent calculated there is no difference in levels
-            current_level = None
+            # cpal
+            cpal_needs = levels_permissions.get(HierarchyLevels.own)
+            if all([
+                    level == HierarchyLevels.direct_child,
+                    cpal_needs,
+                    isinstance(user_rel, ChannelPartnerToUser),
+                    not isinstance(target_instance, ChannelPartner),
+                    set(user_rel.roles).intersection({ChannelPartnerRoles.ADMINISTRATOR, ChannelPartnerRoles.MANAGER})
+            ]):
+                if isinstance(target_instance, Organization):
+                    cpal = target_instance.channel_partner_access_level_id
+                else:
+                    cpal = target_instance.organization.channel_partner_access_level_id
+                if cpal_needs.intersection(self.get_org_permissions([cpal])):
+                    return True
         return False

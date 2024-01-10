@@ -1,16 +1,18 @@
 import datetime
-import queue
-import uuid
 import enum
 import secrets
-import string
 from datetime import timedelta
-from enum import StrEnum
 from math import ceil
-from typing import Dict, List, TypedDict
 
 import django.db.transaction
 from dateutil.relativedelta import relativedelta
+from enum import Enum, StrEnum, IntEnum
+import string
+import queue
+from typing import Dict, List, TypedDict, Optional
+import uuid
+
+from django.apps import apps
 from django.conf import settings
 from django.contrib.auth.models import Permission
 from django.contrib.postgres.aggregates import ArrayAgg
@@ -528,6 +530,12 @@ class LocalRecordingUsage(models.Model):
         cloud_system.save()
 
 
+class HierarchyLevels(IntEnum):
+    parent = -1
+    own = 0
+    direct_child = 1
+
+
 class ChannelPartnerRoles:
     ADMINISTRATOR = uuid.UUID('00000000-0000-4000-8000-000000000001')
     MANAGER = uuid.UUID('00000000-0000-4000-8000-000000000002')
@@ -919,6 +927,21 @@ class ChannelPartnerToUser(models.Model):
     def roles_name(self):
         roles = get_channel_partner_roles()
         return [roles[r]['name'] for r in self.roles]
+
+    def get_hierarchy_level(self, instance) -> None | int:
+        # instance is relation's channel partner
+        if instance.id == self.channel_partner_id:
+            return HierarchyLevels.own
+        if isinstance(instance, ChannelPartner):
+            # instance is the parent of relation's channel partner
+            if instance.id == self.channel_partner.parent_channel_partner_id:
+                return HierarchyLevels.parent
+        # instance some of relation's partner children, calculating level
+        if instance.path and self.channel_partner_id in instance.path:
+            if isinstance(instance, ChannelPartner) or isinstance(instance, Organization):
+                return instance.path.index(self.channel_partner_id) + 1
+            if isinstance(instance, CloudSystemId) or isinstance(instance, SystemGroup):
+                return instance.path.index(self.channel_partner_id) - instance.path.index(instance.organization_id)
 
 
 class OrganizationRoles:
@@ -1448,6 +1471,17 @@ class OrganizationToUser(models.Model):
     @property
     def has_access_to(self):
         return self.system_group or self.organization
+
+    def get_hierarchy_level(self, instance) -> None | int:
+        # instance is relation's organization
+        if instance.id == self.organization_id:
+            return HierarchyLevels.own
+        # instance some of relation's organization children and calculated on own level
+        if instance.path and self.organization_id in instance.path:
+            return HierarchyLevels.own
+        # instance is parent channel partner of organization
+        if instance.id == self.organization.channel_partner_id:
+            return HierarchyLevels.parent
 
 
 class ChannelPartnerService(models.Model):
