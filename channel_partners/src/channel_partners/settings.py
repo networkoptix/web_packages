@@ -201,7 +201,10 @@ REST_FRAMEWORK = {
     # 'EXCEPTION_HANDLER': 'nxlicensed.utils.custom_exception_handler',
     'DEFAULT_SCHEMA_CLASS': 'channel_partners.utils.NxAutoSchema',
     'DEFAULT_AUTHENTICATION_CLASSES': [],
-    'EXCEPTION_HANDLER': 'tools.helpers.custom_exception_handler'
+    'EXCEPTION_HANDLER': 'tools.helpers.custom_exception_handler',
+    'DEFAULT_RENDERER_CLASSES': [
+        'rest_framework.renderers.JSONRenderer'
+    ]
 }
 
 
