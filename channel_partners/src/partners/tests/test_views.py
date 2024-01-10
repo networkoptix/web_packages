@@ -3,7 +3,7 @@ import re
 import random
 from uuid import uuid4
 
-
+import httpx
 import pytest
 from dateutil.relativedelta import relativedelta
 from django.conf import settings
@@ -1448,7 +1448,7 @@ class TestCloudSystemViewSetDelete:
 
     def test_empty_json(self, httpx_mock):
         httpx_mock.add_response(url=self.url, status_code=401)
-        response = self.view(self.request, id=self.system.system_id, json='')
+        response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 401
         assert response.data == {'detail': 'A server error occurred.'}
         request = httpx_mock.get_request(url=self.url)
@@ -1496,6 +1496,35 @@ class TestCloudSystemViewSetDelete:
         response = self.view(self.request, id=self.system.system_id)
         assert response.status_code == 403
 
+    def test_destroy_ignored_errors(self, httpx_mock):
+        httpx_mock.add_response(url=self.url, status_code=502, content=b'some text content')
+        with transaction.atomic():
+            response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 204
+        httpx_mock.reset(True)
+        httpx_mock.add_response(url=self.url, status_code=504)
+        with transaction.atomic():
+            response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 204
+        httpx_mock.add_response(url=self.url, status_code=401, content=b'not authorized')
+        with transaction.atomic():
+            response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 401
+        assert response.data['detail'] == 'not authorized'
+        httpx_mock.reset(True)
+        httpx_mock.add_exception(exception=httpx.ReadTimeout('timeout'), url=self.url)
+        with transaction.atomic():
+            response = self.view(self.request, id=self.system.system_id)
+        assert response.status_code == 204
+
+    def test_raised_error(self, httpx_mock):
+        httpx_mock.add_exception(exception=httpx.TooManyRedirects('too many redirects'), url=self.url)
+        try:
+            response = self.view(self.request, id=self.system.system_id)
+        except httpx.TooManyRedirects as e:
+            pass
+        else:
+            assert False, 'Too many redirects must be raised'
 
 class TestSystemTransferOffer:
 
