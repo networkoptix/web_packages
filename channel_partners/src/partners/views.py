@@ -4,6 +4,7 @@ from time import sleep
 from typing import TypedDict, Tuple
 from uuid import uuid4, UUID
 
+import httpx
 from django.core.cache import caches
 from django.db.models import Subquery, Q
 from django.http import HttpResponseForbidden
@@ -1142,12 +1143,22 @@ class CloudSystemViewSet(NestedViewSetMixin,
 
         client: NxCloudAPISyncClient= NxCloudApiClientFactory.get_sync_client(host=host)
         systems_api: CdbSystemAPIBase = client.system
+        ignored_errors: bool = False
+        try:
+            response: httpx.Response = systems_api.delete_system(
+                system_id=system_id,
+                headers=headers)
+            if response.status_code in [502, 504]:
+                logger.warning("Got server error. Error will be ignored.",
+                               status_code=response.status_code,
+                               response=response.text)
+        except httpx.TransportError as ex:
+            # ignoring transport errors, DecodingError and TooManyRedirects are still raised
+            logger.warning("Got transport error.",
+                           exception=ex)
+            ignored_errors = True
 
-        response: httpx.Response = systems_api.delete_system(
-            system_id=system_id,
-            headers=headers)
-
-        if response.status_code == 200:
+        if ignored_errors or response.status_code in [200, 502, 504]:
             instance.system_state = CloudSystemStates.DELETED
             instance.save()
             return
@@ -1155,7 +1166,7 @@ class CloudSystemViewSet(NestedViewSetMixin,
         if response.headers.get('content-type') == 'application/json':
             detail = response.json()
         else:
-            detail = None
+            detail = response.text or 'A server error occurred.'
         exception = exceptions.APIException(detail=detail)
         exception.status_code = response.status_code
         raise exception
