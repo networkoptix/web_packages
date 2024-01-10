@@ -260,14 +260,13 @@ export class DynamicConfig {
                             nxConfig.downloads.groups[platform].appTypes = appTypes;
                         }
 
-                        if (
-                            nxConfig.downloads.downloadsPlatformNameOverride &&
-                            nxConfig.downloads.downloadsPlatformNameOverride[platform]
-                        ) {
-                            staticLang.downloads.groups[platform].label =
-                                nxConfig.downloads.downloadsPlatformNameOverride[platform];
-                            staticLang.downloads.groups[platform].shortLabel =
-                                nxConfig.downloads.downloadsPlatformNameOverride[platform];
+                        const overridePlatformName = data.downloadsPlatformNameOverride[platform];
+
+                        if (overridePlatformName) {
+                            staticLang.downloads.groups[platform] = {
+                                label: overridePlatformName,
+                                shortLabel: overridePlatformName,
+                            };
                         }
                     },
                 );
