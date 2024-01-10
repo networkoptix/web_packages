@@ -1060,7 +1060,7 @@ class SystemGroupUserViewSet(ParentLookUpMixin,
 
 
 @extend_schema_view(
-    list=extend_schema(summary='Get list of user\'s Systems'),
+    list=extend_schema(summary='Get list of user\'s Systems', deprecated=True),
     retrieve=extend_schema(summary='Get a System', extensions={'x-permission': f'{Organization.permissions.access_systems} for Organization'}),
     create=extend_schema(summary='Bind a local system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
     bind_existing=extend_schema(summary='Bind an existing cloud system to an Organization', extensions={'x-permission': f'{Organization.permissions.manage_systems} for Organization'}),
