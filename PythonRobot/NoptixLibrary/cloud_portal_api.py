@@ -1,12 +1,7 @@
-import base64
-import json
 import logging
 import os
-import random
-import string
 import tempfile
 import time
-import uuid
 from contextlib import contextmanager
 from pathlib import Path
 from typing import ContextManager
@@ -18,7 +13,6 @@ import urllib3
 from urllib.parse import unquote
 from requests import HTTPError
 from requests.auth import HTTPBasicAuth
-from requests.auth import HTTPDigestAuth
 
 from NoptixLibrary.cloud_2fa import TimeBasedOtp
 from NoptixLibrary.cloud_session import CloudSession
@@ -77,16 +71,6 @@ class CloudPortalAPI(object):
         cloud_session.login()
         return cloud_session
 
-    def api_log_out(self, session_id, csrftoken):
-        with requests.session() as s:
-            s.headers.update({'X-CSRFToken': csrftoken})
-            s.headers.update({'cookie': 'csrftoken=' + csrftoken + '; sessionid=' + session_id})
-            s.headers.update({'Referer': self.env})
-            logout_response = s.post(f'{self.env}/api/account/logout', verify=_ssl_certs_path)
-            logger.debug(logout_response.content)
-            logout_response.raise_for_status()
-            return logout_response.status_code
-
     def get_access_code(self, email, password):
         data = {
             "client_id": "cloud_portal",
@@ -105,20 +89,6 @@ class CloudPortalAPI(object):
             logger.debug(authenticate_response.content)
             authenticate_response.raise_for_status()
             return authenticate_response.json()
-
-    def merge_cloud_systems(self, master_id, slave_id, email, password):
-        with self._session(email, password) as s:
-            logger.debug(f'The headers are {s.headers}')
-            data = {
-                'master_system_id': master_id,
-                'password': password,
-                'slave_system_id': slave_id,
-                }
-            s.headers.update({"referer": f"{self.env}"})
-            merge_response = s.post(f'{self.env}/api/systems/merge', data)
-            logger.debug(f'Value of merge_response.content: {merge_response.content}')
-            merge_response.raise_for_status()
-            return merge_response.json()
 
     def cdb_merge_cloud_systems(
             self,
@@ -157,35 +127,6 @@ class CloudPortalAPI(object):
             data = {'old_password': old_password, 'new_password': new_password}
             change_pass_response = s.post(f'{self.env}/api/account/changePassword', data)
             return change_pass_response.raise_for_status()
-
-    def api_restore_password(self, email, code=None, new_password=None):
-        with requests.Session() as s:
-            s.headers.update({'X-CSRFToken': s.cookies['csrftoken']})
-            data = {'user_email': email}
-            if code and new_password:
-                data.update({'code': code, 'new_password': new_password})
-            restore_pass_response = s.post(
-                f'{self.env}/api/account/restorePassword',
-                data,
-                verify=_ssl_certs_path,
-                )
-            restore_pass_response.raise_for_status()
-            return restore_pass_response.status_code
-
-    def get_language_anonymous(self, env):
-        language_response = requests.get(
-            f'{env}/api/utils/language',
-            verify=_ssl_certs_path,
-            )
-        language_response.raise_for_status()
-        return language_response.json()['language']
-
-    def get_account_language(self, email, password):
-        with self._session(email, password) as s:
-            s.headers.update({"Referer": self.env})
-            account_language_response = s.get(f'{self.env}/api/utils/language')
-            account_language_response.raise_for_status()
-            return account_language_response.json()['language']
 
     def get_account_data(self, email, password):
         with self._session(email, password) as s:
@@ -294,246 +235,6 @@ class CloudPortalAPI(object):
         get_code_response.raise_for_status()
         return get_code_response.json()['code']
 
-    def disconnect_from_account(self, email, password, system_id):
-        """
-        Doesn't completely remove user from system users, but sets their role to none instead.
-
-        Should be used to emulate disconnection by clicking "Disconnect my account" button on system's page.
-        """
-        with self._session(email, password) as s:
-            disconnect_response = s.post(
-                f'{self.env}/api/systems/{system_id}/users',
-                json={'user_email': email, 'role': 'none'},
-                )
-            disconnect_response.raise_for_status()
-            return disconnect_response.json()
-
-    def subscribe_push_notification(self, email, password, token, name):
-        auth_ascii = f'{email}:{password}'
-        auth_ascii = auth_ascii.encode('ascii')
-        auth = b"Basic " + base64.b64encode(auth_ascii)
-        headers = {'Authorization': auth}
-        subscription_response = requests.put(
-            f'{self.env}/api/notifications/subscriptions/{token}',
-            headers=headers,
-            json={
-                'type': 'notification',
-                'systems': ['all'],
-                'deviceInfo': {'name': name, 'os': 'web'},
-                'provider': 'firebase',
-                },
-            verify=_ssl_certs_path,
-            )
-        subscription_response.raise_for_status()
-        return subscription_response.json()
-
-    def get_new_FCM_token(self, key, auth, body):
-        headers = {
-            'Content-Type': 'application/json',
-            'x-goog-api-key': key,
-            'x-goog-firebase-installations-auth': auth,
-            }
-        registration_response = requests.post(
-            url='https://fcmregistrations.googleapis.com/v1/projects/nx-push-test/registrations',
-            headers=headers,
-            data=body,
-            )
-        token = registration_response.json()['token']
-        return token
-
-    def push_notifications_requests(self, env, email, password, process, min: int, max: int):
-        r = requests.get(
-            url=f"{env}cdb/system/get",
-            auth=HTTPDigestAuth(email, password),
-            verify=_ssl_certs_path,
-            )
-        self.systems_dict = r.json()
-        self.systems_list = []
-        for system in self.systems_dict['systems']:
-            self.systems_list.append(system)
-        self.sorted_list = sorted(self.systems_list, key=lambda i: i['registrationTime'])
-        uid = 0
-        self.user_id = str(uuid.uuid1())
-        text_file = os.environ['LOCUSTTEXT']
-        f = open(f'{text_file}.txt', 'a')
-        for system in self.sorted_list[min:max]:
-            auth_key = system["authKey"]
-            id = system["id"]
-            name = system["name"]
-            title = process + " " + str(uid) + "_" + self.user_id
-            email_int_start = (int(name.strip(string.ascii_letters))) * 10
-            email_int_end = email_int_start + 10
-            target_list = []
-            for x in range(email_int_start, email_int_end):
-                target_list.append(f"noptixautoqa+notifications{x}@gmail.com")
-            body = {
-                "systemId": id,
-                "targets": target_list,
-                "notification": {
-                    "title": title,
-                    "body": name,
-                    "payload": {
-                        "url": "nx-vms://test4.cloud.hdw.mx/client/" + id + "/view",
-                        "imageUrl": (
-                            "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/"
-                            "ec2/cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"),
-                        },
-                    },
-                }
-            # to test script comment out the post and write to file instead
-            r = requests.post(
-                f'{self.env}api/notifications/push_notification',
-                auth=HTTPBasicAuth(id, auth_key),
-                headers={'Content-Type': 'application/json'},
-                data=json.dumps(body),
-                verify=_ssl_certs_path,
-                )
-            f.write(f"{r.text} {title}\n")
-            uid += 1
-        f.close()
-
-    def create_systems_json(self, env, email, password):
-        r = requests.get(
-            url=f"{env}cdb/system/get",
-            auth=HTTPBasicAuth(email, password),
-            verify=_ssl_certs_path,
-            )
-        systems_dict = r.json()
-        systems_list = []
-        for system in systems_dict['systems']:
-            systems_list.append(system)
-        sorted_list = sorted(systems_list, key=lambda i: i['registrationTime'])
-        sys_id = 1
-        systems_json = []
-        for system in sorted_list:
-            auth_key = system["authKey"]
-            id = system["id"]
-            name = system["name"]
-            title = str(sys_id) + " " + str(uuid.uuid1())
-            email_int_start = (int(name.strip(string.ascii_letters))) * 10
-            email_int_end = email_int_start + 10
-            target_list = []
-            for x in range(email_int_start, email_int_end):
-                target_list.append(f"noptixautoqa+notifications{x}@gmail.com")
-            body = {
-                "process": True,
-                "object": True,
-                "queue": True,
-                "pre-authenticate": True,
-                "systemId": id,
-                "targets": target_list,
-                "notification": {
-                    "title": title,
-                    "body": name,
-                    "payload": {
-                        "url": "nx-vms://test4.cloud.hdw.mx/client/" + id + "/view",
-                        "imageUrl": (
-                            "https://0b04fa6d-877c-48ba-aaf0-74dbfd87f082/ec2/"
-                            "cameraThumbnail?cameraId=ed93120e-0f50-3cdf-39c8-dd52a640688c"),
-                        },
-                    },
-                }
-            systems_json.append(
-                {"authKey": auth_key, "id": id, "body": json.dumps(body), "title": title})
-            sys_id += 1
-        f = open('systems.json', 'w')
-        f.write(json.dumps(systems_json))
-        f.close()
-
-    def check_connection(self, url, verify=True):
-        try:
-            r = requests.get(url, verify=verify)
-        except requests.exceptions.SSLError:
-            return 'SSL Error'
-        return r.status_code
-
-    def camera_search(
-            self,
-            server_url,
-            camera_port,
-            camera_file,
-            server_ip,
-            user='mark',
-            password='hamill',
-            ):
-        search_response = requests.get(
-            url=f"{server_url}/api/manualCamera/search",
-            auth=HTTPDigestAuth('admin', 'qweasd 123'),
-            params={
-                'url': f'http://{server_ip}:{camera_port}/{camera_file}.mjpeg',
-                'user': user,
-                'password': password,
-                },
-            verify=False,
-            )
-        search_response.raise_for_status()
-        return search_response.json()['reply']['processUuid']
-
-    def camera_status(self, server_url, uuid):
-        status_response = requests.get(
-            url=f"{server_url}/api/manualCamera/status",
-            auth=HTTPDigestAuth('admin', 'qweasd 123'),
-            params={'uuid': uuid},
-            verify=False,
-            )
-        status_response.raise_for_status()
-        return status_response.json()
-
-    def add_fake_camera(self, server_url, cameras):
-        logger.debug("cameras value")
-        logger.debug(cameras)
-        body = {"cameras": cameras, "user": "mark", "password": "hamill"}
-        logger.debug(body)
-        add_camera_response = requests.post(
-            url=f'{server_url}/api/manualCamera/add',
-            auth=HTTPDigestAuth('admin', 'qweasd 123'),
-            headers={'Content-Type': 'application/json'},
-            json=body,
-            verify=False,
-            )
-        add_camera_response.raise_for_status()
-        return add_camera_response.text
-
-    def unbind_system(self, auth, cloud_url, system_id):
-        unbind_response = requests.post(
-            url=f'{cloud_url}/cdb/system/unbind',
-            auth=HTTPBasicAuth(auth[0], auth[1]),
-            json={"systemId": system_id},
-            verify=False,
-            )
-        unbind_response.raise_for_status()
-        return unbind_response.json()
-
-    def save_cloud_system_credentials(self, auth, server_url, auth_key, cloud_system_id, owner_email):
-        body = {
-            "cloudAuthKey": auth_key,
-            "cloudSystemID": cloud_system_id,
-            "cloudAccountName": owner_email,
-            }
-        save_credentials_response = requests.post(
-            url=f"{server_url}/api/saveCloudSystemCredentials",
-            auth=HTTPBasicAuth(auth[0], auth[1]),
-            json=body,
-            verify=False,
-            )
-        logger.debug(f'status:{save_credentials_response.status_code}')
-        save_credentials_response.raise_for_status()
-        return save_credentials_response.json()
-
-    def rename_system(self, auth, system_id, new_name):
-        body = {
-            "systemId": system_id,
-            "name": new_name,
-            }
-        rename_response = requests.post(
-            url=f'{self.env}/cdb/system/rename',
-            auth=HTTPBasicAuth(auth[0], auth[1]),
-            json=body,
-            verify=False,
-            )
-        rename_response.raise_for_status()
-        return rename_response.json()
-
     def share(self, auth, system_id, access_role, account_email, custom_permissions):
         body = {
             "accessRole": access_role,
@@ -591,24 +292,6 @@ class CloudPortalAPI(object):
                 )
             logger.debug(r)
             return r
-
-    def get_account_info(self, email, password):
-        account_info_response = requests.get(
-            f'{self.env}/cdb/account/get',
-            auth=HTTPBasicAuth(email, password),
-            verify=_ssl_certs_path,
-            )
-        account_info_response.raise_for_status()
-        return account_info_response.json()
-
-    def integration_store_is_enabled(self, auth):
-        capabilities_response = requests.get(
-            url=f'{self.env}/api/utils/cloudCapabilites',
-            auth=HTTPBasicAuth(auth[0], auth[1]),
-            verify=_ssl_certs_path,
-            )
-        capabilities_response.raise_for_status()
-        return capabilities_response.json()['integrationStoreEnabled']
 
     def register_account(self, first_name, last_name, email, password):
         body = {
@@ -743,20 +426,6 @@ class CloudPortalAPI(object):
             backup_post_response.raise_for_status()
             backup_list = backup_post_response.json()
             return [backup['backup_code'] for backup in backup_list]
-
-    def get_2fa_backup_codes_api(self, email, password, backup_code=None, verification_code=None):
-        with self._session(
-                email, password,
-                backup_code=backup_code,
-                verification_code=verification_code) as s:
-            s.headers.update({'Referer': self.env})
-            backup_code_response = s.get(
-                f'{self.env}/api/2fa/backup/codes', data=None)
-            backup_code_response.raise_for_status()
-            backup_list = backup_code_response.json()
-            backup_dict = backup_list[random.randint(0, 7)]
-            backup_code = backup_dict.get("backup_code")
-            return backup_code
 
     def set_feature_flags(self, features_dict):
         set_flags_response = requests.post(
