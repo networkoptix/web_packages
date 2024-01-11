@@ -15,6 +15,7 @@ import { environment } from '@environments/environment';
 import { NxAppStateService } from '@services/nx-app-state.service';
 import { IConfig } from '@services/nx-config/config-types';
 import { NxConfigService } from '@services/nx-config/nx-config.service';
+import { NxSessionService } from '@services/session.service';
 import { WINDOW } from '@services/window-provider';
 
 import { servers } from '../variables/static-variables';
@@ -28,6 +29,7 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
         configService: NxConfigService,
         private appState: NxAppStateService,
         private dialogs: NxDialogsService,
+        private sessionService: NxSessionService,
         @Inject(WINDOW) private window: Window,
     ) {
         this.CONFIG = configService.config;
@@ -100,7 +102,10 @@ export class LocalSystemStatusInterceptor implements HttpInterceptor {
             // remove overlay if visible
             this.appState.systemAvailable$.next(true);
             this.isDialogActive = true;
-            this.dialogs.expiredSession().then(() => this.window.location.reload());
+            this.dialogs.expiredSession().then(() => {
+                this.sessionService.loginState = this.sessionService.LOGIN_STATE.UNAUTHORIZED;
+                this.window.location.reload();
+            });
         } else if (
             res instanceof HttpResponse &&
             this.appState.systemAvailable$.value === false &&
